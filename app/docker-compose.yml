@@ -1,0 +1,76 @@
+# Anatolia AI — tek komutla offline, API anahtarsız ayağa kalkar.
+# İlgili: ../decisions/on-premise-calistirilabilir-mimari.md, CLAUDE.md §7, §20
+# Kullanım:  docker-compose up
+# LLM: vllm (GPU) birincil; gpu yoksa ollama profili (`--profile ollama`).
+
+services:
+  postgres:
+    image: pgvector/pgvector:pg16        # PostgreSQL + pgvector (açık kaynak)
+    environment:
+      POSTGRES_USER: anatolia
+      POSTGRES_PASSWORD: anatolia
+      POSTGRES_DB: anatolia
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U anatolia"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  vllm:
+    image: vllm/vllm-openai:latest       # Apache-2.0, OpenAI-uyumlu
+    command: >
+      --model Trendyol/Trendyol-LLM-8B-T1
+      --quantization awq --max-model-len 8192
+    environment:
+      HF_HUB_OFFLINE: "1"                # offline: önceden indirilmiş ağırlık
+    volumes:
+      - ./models:/root/.cache/huggingface
+    ports:
+      - "8001:8000"
+    profiles: ["gpu"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: ["gpu"]
+
+  ollama:
+    image: ollama/ollama:latest          # MIT, demo yedeği (CPU/GPU)
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    profiles: ["ollama"]
+
+  api:
+    build: { context: ., dockerfile: Dockerfile.api }
+    environment:
+      DATABASE_PATH: ":memory:"          # demo: önceden doldurulmuş in-memory
+      BANKS_CONFIG: config/banks.yaml
+      RAW_DIR: data/raw
+      LLM_BACKEND: ""                    # "vllm"/"ollama" ile aktifleştir
+      VLLM_URL: http://vllm:8000
+      OLLAMA_URL: http://ollama:11434
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  web:
+    build: { context: ./web, dockerfile: Dockerfile }
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  ollama:

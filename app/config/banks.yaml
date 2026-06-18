@@ -1,0 +1,68 @@
+# Katılım bankaları — config-driven scraping kaynağı
+# İlgili: ../../decisions/bddk-listesi-veri-kaynagi-kapsami.md
+#         ../../entities/katilim-bankalari.md, CLAUDE.md §13
+# Yeni banka eklemek = tek blok (yenilikçilik: config-driven onboarding).
+# BDDK Liste 77 doğrulanmalı: https://www.bddk.org.tr/Kurulus/Liste/77
+# scrape_mode: static (requests+bs4) | js (playwright) | manual (data/raw fixture)
+
+banks:
+  - slug: kuveyt-turk
+    name: Kuveyt Türk
+    website_url: https://www.kuveytturk.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /tr/kampanyalar
+  - slug: albaraka
+    name: Albaraka Türk
+    website_url: https://www.albaraka.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar
+  - slug: turkiye-finans
+    name: Türkiye Finans
+    website_url: https://www.turkiyefinans.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /tr-tr/kampanyalar
+  - slug: ziraat-katilim
+    name: Ziraat Katılım
+    website_url: https://www.ziraatkatilim.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar
+  - slug: vakif-katilim
+    name: Vakıf Katılım
+    website_url: https://www.vakifkatilim.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar
+  - slug: turkiye-emlak-katilim
+    name: Türkiye Emlak Katılım
+    website_url: https://www.emlakkatilim.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar
+  - slug: tom-katilim
+    name: T.O.M. Katılım
+    website_url: https://www.tomkatilim.com.tr
+    scrape_mode: js
+    campaign_paths:
+      - /kampanyalar
+  - slug: hayat-finans
+    name: Hayat Finans
+    website_url: https://www.hayatfinans.com.tr
+    scrape_mode: js
+    campaign_paths:
+      - /kampanyalar
+  - slug: dunya-katilim
+    name: Dünya Katılım
+    website_url: https://www.dunyakatilim.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar
+  - slug: adil-katilim
+    name: Adil Katılım
+    website_url: https://www.adilkatilim.com.tr
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar

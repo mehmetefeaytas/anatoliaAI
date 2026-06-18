@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# DB / veri (ham HTML cache hariç fixtures korunur)
+*.db
+*.sqlite
+
+# modeller (offline; repo'ya konmaz)
+models/
+
+# Node / Next.js
+web/node_modules/
+web/.next/
+web/out/
+
+# ortam
+.env
+
+# OS
+.DS_Store
