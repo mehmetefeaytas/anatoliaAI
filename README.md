@@ -117,8 +117,7 @@ Ayrıntılı komut listesi: [`app/README.md`](app/README.md).
 **Herkese açık indirme bağlantısı:** _(yükleme tamamlandığında buraya eklenecektir)_
 
 > ⚠️ **NOT:** Veri seti kamuya açık bir bağlantıya (ör. Hugging Face Datasets /
-> Kaggle / Zenodo) yüklenecek ve bağlantı buraya eklenecektir. Yarışma teslim
-> tarihinden (12.07.2026 23:59) önce bu alanın doldurulması zorunludur.
+> Kaggle / Zenodo) yüklenecek ve bağlantı buraya eklenecektir. 
 
 **Veri toplama yöntemi ve kaynağı (provenance):**
 
