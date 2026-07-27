@@ -1,0 +1,19 @@
+# API konteynerinin ÇALIŞMA ZAMANI bağımlılıkları.
+#
+# Neden ayrı dosya: requirements.txt geliştirme listesidir (transformers,
+# playwright, gliner, sentence-transformers) ve imajı gereksiz yere GB'lara
+# çıkarır. Çekirdek (kurallar + normalizasyon + karşılaştırma + eval) saf
+# stdlib ile çalıştığı için API konteyneri çok ince kalabilir.
+#
+# Model katmanı (BERTurk, embedding) ayrı bir imaj/volume ile gelir —
+# bkz. docs/OFFLINE-KANIT.md ve scripts/fetch_models.sh.
+#
+# KISIT: yalnızca açık kaynak (Apache/MIT/BSD); ücretli API/servis YOK.
+
+fastapi>=0.110           # MIT
+uvicorn>=0.29            # BSD
+pydantic>=2.6            # MIT
+
+# PostgreSQL backend (DATABASE_URL verilmişse); yoksa SQLite fallback devrede
+psycopg[binary]>=3.1     # LGPL — yalnızca istemci kütüphanesi, dinamik bağlı
+pgvector>=0.2            # PostgreSQL lisansı

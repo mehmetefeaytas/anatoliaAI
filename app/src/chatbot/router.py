@@ -14,6 +14,8 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
+from ..preprocessing.clean import tr_fold_ascii
+
 # Soru içindeki ifade → alan adı
 _FIELD_KEYWORDS = {
     "kar_payi_orani": ["kâr payı", "kar payı", "getiri oran", "kâr oran", "oran"],
@@ -30,6 +32,23 @@ _SUPERLATIVE_HIGH = ["en yüksek", "en fazla", "en uzun", "en çok", "maksimum",
 _LIST_INTENT = ["hangi banka", "hangi bankalar", "listele", "göster", "var mı",
                 "veren", "sunan", "olanlar"]
 
+# Kullanıcı sorusu ALL-CAPS veya diakritiksiz gelebilir ("EN DÜŞÜK KÂR PAYI",
+# "en dusuk kar payi"). Eşleşme tr_fold_ascii üzerinden yapılır; anahtar
+# kelimeler de modül yüklenirken aynı forma indirgenir.
+_F = tr_fold_ascii
+_FOLDED_FIELD_KEYWORDS = {k: [_F(v) for v in vals]
+                          for k, vals in _FIELD_KEYWORDS.items()}
+_FOLDED_SUP_LOW = [_F(s) for s in _SUPERLATIVE_LOW]
+_FOLDED_SUP_HIGH = [_F(s) for s in _SUPERLATIVE_HIGH]
+_FOLDED_LIST_INTENT = [_F(s) for s in _LIST_INTENT]
+
+# Kampanya türü filtresi: soru içindeki ipucu → 8 sınıftan biri
+_FOLDED_TYPE_MAP = {_F(k): v for k, v in {
+    "konut": "Konut Finansmanı", "taşıt": "Taşıt Finansmanı",
+    "ihtiyaç": "İhtiyaç Finansmanı", "kart": "Kart",
+    "yatırım": "Yatırım Ürünü",
+}.items()}
+
 
 @dataclass
 class Route:
@@ -40,7 +59,7 @@ class Route:
 
 
 def route(question: str) -> Route:
-    q = question.lower()
+    q = tr_fold_ascii(question)
 
     field = _detect_field(q)
     intent = _detect_intent(q)
@@ -57,18 +76,18 @@ def route(question: str) -> Route:
 
 
 def _detect_field(q: str) -> Optional[str]:
-    for fname, kws in _FIELD_KEYWORDS.items():
+    for fname, kws in _FOLDED_FIELD_KEYWORDS.items():
         if any(kw in q for kw in kws):
             return fname
     return None
 
 
 def _detect_intent(q: str) -> Optional[str]:
-    if any(s in q for s in _SUPERLATIVE_LOW):
+    if any(s in q for s in _FOLDED_SUP_LOW):
         return "lowest"
-    if any(s in q for s in _SUPERLATIVE_HIGH):
+    if any(s in q for s in _FOLDED_SUP_HIGH):
         return "highest"
-    if any(s in q for s in _LIST_INTENT):
+    if any(s in q for s in _FOLDED_LIST_INTENT):
         return "list"
     return None
 
@@ -77,15 +96,11 @@ def _detect_filters(q: str) -> dict:
     filters: dict = {}
     # "36 ay" gibi vade filtresi: "X ay veren/üzeri"
     m = re.search(r"(\d{1,3})\s*ay", q)
-    if m and ("veren" in q or "üzeri" in q or "ve üzeri" in q or "en az" in q):
+    # q katlanmış (ascii) geldiği için eşik sözcükleri de katlanmış yazılır.
+    if m and any(s in q for s in ("veren", "uzeri", "ve uzeri", "en az")):
         filters["vade_ay_min"] = int(m.group(1))
     # kampanya türü filtresi
-    type_map = {
-        "konut": "Konut Finansmanı", "taşıt": "Taşıt Finansmanı",
-        "tasit": "Taşıt Finansmanı", "ihtiyaç": "İhtiyaç Finansmanı",
-        "kart": "Kart", "yatırım": "Yatırım Ürünü",
-    }
-    for kw, label in type_map.items():
+    for kw, label in _FOLDED_TYPE_MAP.items():
         if kw in q:
             filters["campaign_type"] = label
             break

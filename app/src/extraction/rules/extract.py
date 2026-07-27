@@ -15,6 +15,7 @@ import re
 from typing import Optional
 
 from ...normalization import normalize as N
+from ...preprocessing.clean import tr_fold
 from ...schemas import ExtractedField, Extractor
 
 # Kural katmanının güveni yüksektir (deterministik); LLM'inkinden ayrışsın diye 0.95.
@@ -71,7 +72,9 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     matches = list(pat.finditer(text))
     if not matches:
         return None
-    low = text.lower()
+    # tr_fold: 'İLK 6 AY' -> .lower() 'i̇lk' promo tespitini kaçırıyordu.
+    # Katlama karakter sayısını korur, bu yüzden offset'ler text ile hizalı kalır.
+    low = tr_fold(text)
     vade_pos = [mm.start() for mm in re.finditer(r"vade", low)]
 
     def score(m):

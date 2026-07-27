@@ -24,14 +24,19 @@ def _post_json(url: str, payload: dict, timeout: float = 60.0) -> dict:
 class VLLMClient:
     """vLLM'in OpenAI-uyumlu /v1/chat/completions ucu + guided_json.
 
-    Varsayılan: http://localhost:8000  (docker-compose'ta vllm servisi)
-    Model: Trendyol-LLM-8B-T1 (Apache-2.0) veya Qwen3-8B.
+    Varsayılan: http://localhost:8001  (docker-compose'ta vllm servisi host'a
+    8001'den yayınlanır; 8000 API'nin KENDİ portudur — eski varsayılan 8000
+    olduğu için host'ta uvicorn + Docker'da vllm senaryosu kendi kendine
+    istek atıyordu.)
+
+    Model: Qwen3-8B (Apache-2.0, birincil). Trendyol-LLM-8B-T1 yalnızca
+    docs/model-license-audit.md'deki taban model denetiminden geçerse.
     """
 
     def __init__(self, base_url: Optional[str] = None, model: Optional[str] = None):
         self.base_url = (base_url or os.environ.get("VLLM_URL",
-                         "http://localhost:8000")).rstrip("/")
-        self.model = model or os.environ.get("VLLM_MODEL", "Trendyol-LLM-8B-T1")
+                         "http://localhost:8001")).rstrip("/")
+        self.model = model or os.environ.get("VLLM_MODEL", "Qwen/Qwen3-8B")
 
     def generate_json(self, system: str, user: str, schema: dict) -> dict:
         payload = {

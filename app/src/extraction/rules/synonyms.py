@@ -2,7 +2,14 @@
 
 İlgili: ../../concepts/katilim-bankaciligi.md, ../../sorun/katilim-bankaciligi-terminoloji-farkliligi.md
 Kâr payı = faiz değil (murabaha kâr marjı); finansman = kredi.
+
+Eşleşme `tr_fold_ascii` üzerinden yapılır (bkz. preprocessing/clean.py): hem
+ALL-CAPS banka başlıkları hem diakritiksiz yazımlar aynı forma indirgenir.
+Bu yüzden aşağıdaki listelerde 'taşıt'/'tasit' gibi varyantlar bulunması
+zararsızdır — katlama sonrası set'e indirgenip tek kez sayılırlar.
 """
+
+from ...preprocessing.clean import tr_fold_ascii
 
 # Bir alanı tetikleyen anahtar ifadeler (hepsi küçük harf, TR sadeleştirilmiş eşleşme
 # çağrı tarafında yapılır). Sıra önemsiz; eşleşme "içeriyor mu" mantığıyla.
@@ -44,3 +51,19 @@ TYPE_HINTS: dict[str, list[str]] = {
     "Yatırım Ürünü": ["yatırım", "yatirim", "katılma hesabı", "altın hesabı", "fon"],
     "Finansman": ["finansman", "kredi"],  # en genel; en sona düşer
 }
+
+
+def _fold_all(mapping: dict[str, list[str]]) -> dict[str, frozenset[str]]:
+    """Sözlükteki tüm anahtar ifadeleri katlanmış forma indirger.
+
+    Varyantlar (ör. 'taşıt' ve 'tasit') katlama sonrası aynı dizeye düşer;
+    frozenset mükerrer sayımı engeller — aksi halde bir eşleşme iki kez
+    sayılıp güven skorunu şişirirdi.
+    """
+    return {k: frozenset(tr_fold_ascii(v) for v in vals)
+            for k, vals in mapping.items()}
+
+
+# Eşleşmede kullanılacak önceden katlanmış görünümler (modül yüklenirken bir kez).
+FOLDED_TYPE_HINTS: dict[str, frozenset[str]] = _fold_all(TYPE_HINTS)
+FOLDED_FIELD_TRIGGERS: dict[str, frozenset[str]] = _fold_all(FIELD_TRIGGERS)

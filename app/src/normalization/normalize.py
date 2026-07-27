@@ -13,6 +13,8 @@ from __future__ import annotations
 import re
 from typing import Optional, Union
 
+from ..preprocessing.clean import tr_fold, tr_fold_ascii
+
 Number = Union[int, float]
 
 
@@ -102,6 +104,10 @@ _CURRENCY = {
     "türk lirası": "TRY", "lira": "TRY",
 }
 
+# Katlanmış görünüm: 'TÜRK LİRASI' gibi ALL-CAPS yazımlar da eşleşsin.
+# '₺' katlama sonrası değişmez, sözlükte kalır.
+_FOLDED_CURRENCY = {tr_fold_ascii(k): v for k, v in _CURRENCY.items()}
+
 
 def normalize_money(text: str) -> Optional[dict]:
     """Para ifadesini {value, currency} sözlüğüne çevirir.
@@ -112,9 +118,9 @@ def normalize_money(text: str) -> Optional[dict]:
     """
     if text is None:
         return None
-    low = text.lower()
+    low = tr_fold_ascii(text)
     currency = None
-    for token, code in _CURRENCY.items():
+    for token, code in _FOLDED_CURRENCY.items():
         if token in low:
             currency = code
             break
@@ -139,7 +145,7 @@ def normalize_term_months(text: str) -> Optional[int]:
     """
     if text is None:
         return None
-    low = text.lower()
+    low = tr_fold(text)
     # TR çekim ekleri ("aya", "ayda", "ayı", "yıla") yakalanır; 'ay' sözcük başı
     # değilse (örn. 'ayrıca') eşleşmez çünkü hemen önünde rakam aranır.
     m = re.search(r"(\d[\d.,]*)\s*(ay|yıl|yil|sene)(?:a|da|ta|dan|tan|ı|i|lık|lik)?\b", low)
@@ -163,6 +169,8 @@ _TR_MONTHS = {
     "eylül": 9, "eylul": 9, "ekim": 10, "kasım": 11, "kasim": 11,
     "aralık": 12, "aralik": 12,
 }
+
+_FOLDED_TR_MONTHS = {tr_fold_ascii(k): v for k, v in _TR_MONTHS.items()}
 
 
 def normalize_date(text: str) -> Optional[str]:
@@ -193,7 +201,7 @@ def normalize_date(text: str) -> Optional[str]:
     m = re.search(r"(\d{1,2})\s+([A-Za-zÇĞİÖŞÜçğıöşü]+)\s+(\d{4})", s)
     if m:
         d = int(m.group(1))
-        mo = _TR_MONTHS.get(m.group(2).lower())
+        mo = _FOLDED_TR_MONTHS.get(tr_fold_ascii(m.group(2)))
         y = int(m.group(3))
         if mo:
             return _iso(y, mo, d)
@@ -213,6 +221,16 @@ _FREE_TOKENS = ["masrafsız", "masrafsiz", "ücretsiz", "ucretsiz",
                 "dosya masrafı yok", "dosya masrafi yok", "masraf yok",
                 "sıfır masraf", "sifir masraf", "tahsis ücreti yok"]
 
+# Katlanmış görünüm. Bu katlama olmadan 'ÜCRETSİZ' -> .lower() -> 'ücretsi̇z'
+# (birleşen nokta) hiçbir token'a eşleşmiyordu ve fonksiyon has_fee=True
+# döndürüyordu — yani "masrafsız" yazan metni "masraf var" diye okuyordu.
+_FOLDED_FREE_TOKENS = frozenset(tr_fold_ascii(t) for t in _FREE_TOKENS)
+
+# Masraf bahsi tetikleyicileri (katlanmış).
+_FOLDED_FEE_HINTS = frozenset(
+    tr_fold_ascii(t) for t in ("masraf", "ücret", "ucret", "tahsis")
+)
+
 
 def normalize_fee_status(text: str) -> Optional[dict]:
     """Masraf durumunu yorumlar. NEGASYON kritik: 'masrafsız' = masraf 0,
@@ -224,10 +242,10 @@ def normalize_fee_status(text: str) -> Optional[dict]:
     """
     if text is None:
         return None
-    low = text.lower()
-    if any(tok in low for tok in _FREE_TOKENS):
+    low = tr_fold_ascii(text)
+    if any(tok in low for tok in _FOLDED_FREE_TOKENS):
         return {"has_fee": False, "amount": 0.0}
-    if "masraf" in low or "ücret" in low or "ucret" in low or "tahsis" in low:
+    if any(tok in low for tok in _FOLDED_FEE_HINTS):
         money = normalize_money(text)
         if money:
             return {"has_fee": True, "amount": money["value"]}

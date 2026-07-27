@@ -1,14 +1,31 @@
-# FastAPI backend — offline çalışır
+# FastAPI backend — offline çalışır, ağ erişimi olmadan test edilebilir.
 FROM python:3.11-slim
 
 WORKDIR /app
-COPY requirements.txt .
-# yalnız çekirdek + API bağımlılıkları (model katmanı ayrı imajlarda)
-RUN pip install --no-cache-dir fastapi uvicorn pydantic
+
+# Çalışma zamanı bağımlılıkları ayrı dosyadan (bkz. requirements-api.txt).
+# Elle yazılmış paket listesi yerine dosya kullanılır ki imaj ile geliştirme
+# ortamı arasında sürüm kayması olmasın.
+COPY requirements-api.txt .
+RUN pip install --no-cache-dir -r requirements-api.txt
+
+# Offline / telemetri kapalı: konteyner hiçbir dış servise ulaşmaya çalışmaz.
+ENV HF_HUB_OFFLINE=1 \
+    TRANSFORMERS_OFFLINE=1 \
+    HF_HUB_DISABLE_TELEMETRY=1 \
+    HF_HUB_DISABLE_UPDATE_CHECK=1 \
+    ANATOLIA_OFFLINE=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
 COPY src/ ./src/
 COPY config/ ./config/
 COPY data/ ./data/
+# eval/ ve tests/ imaja DAHİL: `docker run --network none ... python -m
+# unittest` ve `python -m eval.ablation` offline kanıt senaryosunun parçası
+# (bkz. docs/OFFLINE-KANIT.md). Bunlar olmadan kanıt koşusu imkânsızdı.
+COPY eval/ ./eval/
+COPY tests/ ./tests/
 
 EXPOSE 8000
 CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

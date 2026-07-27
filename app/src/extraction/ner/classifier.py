@@ -14,8 +14,9 @@ from __future__ import annotations
 
 from typing import Optional, Protocol
 
+from ...preprocessing.clean import tr_fold_ascii
 from ...schemas import CAMPAIGN_TYPES
-from ..rules.synonyms import TYPE_HINTS
+from ..rules.synonyms import FOLDED_TYPE_HINTS
 
 
 class Classifier(Protocol):
@@ -36,10 +37,13 @@ class RuleHintClassifier:
     ]
 
     def classify(self, text: str) -> tuple[Optional[str], float]:
-        low = text.lower()
+        # TR-doğru katlama: ALL-CAPS başlıklar ve diakritiksiz yazımlar da eşleşir.
+        # Düz .lower() burada 'TAŞIT' -> 'taşit' üretip eşleşmeyi kaçırıyordu.
+        low = tr_fold_ascii(text)
         scores: dict[str, int] = {}
         for label in self._ORDER:
-            hits = sum(1 for kw in TYPE_HINTS.get(label, []) if kw in low)
+            hits = sum(1 for kw in FOLDED_TYPE_HINTS.get(label, frozenset())
+                       if kw in low)
             if hits:
                 scores[label] = hits
         if not scores:

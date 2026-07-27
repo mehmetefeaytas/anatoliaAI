@@ -14,6 +14,51 @@ import unicodedata
 # Kısaltmalar: nokta sonrası cümle bölmeyi engellemek için (TR yaygın)
 _ABBREV = {"vb", "vs", "örn", "bkz", "no", "tl", "a.ş", "sn", "dr", "prof"}
 
+# TR-doğru küçük harf: Python'un varsayılanı bu iki harfte yanlış davranır.
+_TR_LOWER = str.maketrans({"I": "ı", "İ": "i"})
+
+# Diakritik sadeleştirme (tr_fold_ascii için; slugify_tr ile aynı harita)
+_TR_ASCII = str.maketrans({
+    "ş": "s", "ç": "c", "ğ": "g", "ü": "u", "ö": "o", "ı": "i", "â": "a",
+    "î": "i", "û": "u",
+})
+
+
+def tr_fold(text: str) -> str:
+    """Türkçe-doğru küçük harfe çevirme (case folding).
+
+    Python'un `str.lower()` metodu Türkçe için HATALIDIR ve bu hata sistemi
+    sessizce bozar — banka sitelerindeki başlıklar büyük harflidir:
+
+        'TAŞIT FİNANSMANI'.lower()  -> 'taşit fi̇nansmani'
+                                          ^          ^^
+        I → i  (olması gereken: ı)   İ → i + U+0307 (birleşen nokta)
+
+    Sonuç: 'taşıt' anahtar kelimesi 'taşit' içinde bulunamaz, sınıflandırma
+    ve tetikleyici eşleşmesi çöker. Bu fonksiyon önce iki sorunlu harfi
+    çevirir, sonra kalanı standart `lower()`'a bırakır.
+
+    >>> tr_fold('TAŞIT FİNANSMANI')
+    'taşıt finansmanı'
+    """
+    if not text:
+        return ""
+    return text.translate(_TR_LOWER).lower()
+
+
+def tr_fold_ascii(text: str) -> str:
+    """tr_fold + diakritik sadeleştirme — diakritiksiz yazımları yakalamak için.
+
+    Kullanıcılar ve bazı banka sayfaları 'kar payi orani' diye yazar; bu
+    fonksiyon hem onu hem 'Kâr Payı Oranı'nı aynı forma indirger.
+
+    >>> tr_fold_ascii('Kâr Payı Oranı') == tr_fold_ascii('KAR PAYI ORANI')
+    True
+    """
+    s = tr_fold(text).translate(_TR_ASCII)
+    return "".join(c for c in unicodedata.normalize("NFKD", s)
+                   if not unicodedata.combining(c))
+
 
 def strip_html(text: str) -> str:
     """Kaba HTML etiket temizliği + entity çözme. (trafilatura yoksa yedek.)"""
