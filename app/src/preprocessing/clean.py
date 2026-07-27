@@ -17,6 +17,9 @@ _ABBREV = {"vb", "vs", "örn", "bkz", "no", "tl", "a.ş", "sn", "dr", "prof"}
 # TR-doğru küçük harf: Python'un varsayılanı bu iki harfte yanlış davranır.
 _TR_LOWER = str.maketrans({"I": "ı", "İ": "i"})
 
+# TR-doğru büyük harf (simetrik): 'i' → 'İ', 'ı' → 'I'.
+_TR_UPPER = str.maketrans({"i": "İ", "ı": "I"})
+
 # Diakritik sadeleştirme (tr_fold_ascii için; slugify_tr ile aynı harita)
 _TR_ASCII = str.maketrans({
     "ş": "s", "ç": "c", "ğ": "g", "ü": "u", "ö": "o", "ı": "i", "â": "a",
@@ -44,6 +47,24 @@ def tr_fold(text: str) -> str:
     if not text:
         return ""
     return text.translate(_TR_LOWER).lower()
+
+
+def tr_upper(text: str) -> str:
+    """Türkçe-doğru BÜYÜK harfe çevirme — `tr_fold`'un simetriği.
+
+    Python'un `str.upper()` metodu da Türkçe için hatalıdır:
+        'ihtiyaç'.upper() -> 'IHTIYAÇ'   (i → I, olması gereken İ)
+
+    Banka sayfalarındaki gerçek ALL-CAPS başlıkları üretmek için gerekir;
+    değişmez (invariant) testleri bu fonksiyonla sentetik büyük-harf varyantı
+    üretip çıkarımın değişmediğini doğrular.
+
+    >>> tr_upper('ihtiyaç finansmanı')
+    'İHTİYAÇ FİNANSMANI'
+    """
+    if not text:
+        return ""
+    return text.translate(_TR_UPPER).upper()
 
 
 def tr_fold_ascii(text: str) -> str:
