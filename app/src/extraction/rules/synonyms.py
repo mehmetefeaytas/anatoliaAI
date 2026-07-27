@@ -9,6 +9,7 @@ Bu yüzden aşağıdaki listelerde 'taşıt'/'tasit' gibi varyantlar bulunması
 zararsızdır — katlama sonrası set'e indirgenip tek kez sayılırlar.
 """
 
+from ...normalization.normalize import NEGATION_RE as _NEGATION_RE
 from ...preprocessing.clean import tr_fold_ascii
 
 # Bir alanı tetikleyen anahtar ifadeler (hepsi küçük harf, TR sadeleştirilmiş eşleşme
@@ -55,12 +56,10 @@ TYPE_HINTS: dict[str, list[str]] = {
 
 # Negasyon: "tahsis ücreti ALINMAZ" gibi ifadeler ücretin YOK olduğunu değil,
 # SIFIR olduğunu söyler (bkz. ../../decisions/zor-anlama-vakalari-merkezi.md).
-# Sözcük listesi yerine desen kullanılır ki fiil çekimleri de yakalansın.
-NEGATION_RE = (
-    r"(?:al[ıi]nma[zy]\w*|al[ıi]nm[ıi]yor|tahsil\s+edilme[zy]\w*|"
-    r"talep\s+edilme[zy]\w*|yoktur|yok\b|bulunmamaktad[ıi]r|"
-    r"muaf|s[ıi]f[ıi]r|ücretsiz|ucretsiz|bedelsiz)"
-)
+# Tek doğruluk kaynağı normalization/normalize.py'dir; burada yalnızca yeniden
+# ihraç edilir ki çıkarım ve normalizasyon katmanları AYNI deseni kullansın
+# (iki ayrı kopya kaçınılmaz olarak birbirinden ayrışırdı).
+NEGATION_RE = _NEGATION_RE
 
 
 def _fold_all(mapping: dict[str, list[str]]) -> dict[str, frozenset[str]]:

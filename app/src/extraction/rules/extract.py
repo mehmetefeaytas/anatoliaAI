@@ -15,7 +15,7 @@ import re
 from typing import Optional
 
 from ...normalization import normalize as N
-from ...preprocessing.clean import tr_fold
+from ...preprocessing.clean import split_sentences, tr_fold
 from ...schemas import ExtractedField, Extractor
 from . import confidence as C
 from .synonyms import NEGATION_RE
@@ -209,8 +209,12 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
                      re.IGNORECASE)
     first_positive = None
     for m in pat.finditer(text):
-        # tutar keyword'den SONRA gelir ("tahsis ücreti 500 TL") → ileri pencere
+        # tutar keyword'den SONRA gelir ("tahsis ücreti 500 TL") → ileri pencere.
+        # Pencere CÜMLE SINIRINDA kesilir: aksi halde sonraki cümledeki bir sayı
+        # ("... alınmaz. Kampanya 31 Aralık 2026") 31 TL'lik hayali bir ücret
+        # olarak okunuyordu. Nokta binlik ayırıcı da olduğu için lookaround şart.
         fwd = text[m.start(): min(len(text), m.end() + 40)]
+        fwd = re.split(r"(?<!\d)[.;](?!\d)|\n", fwd, maxsplit=1)[0]
         canon = N.normalize_fee_status(fwd)
         if canon is None:
             continue
@@ -306,6 +310,209 @@ def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
                   candidate_count=len(pat.findall(text)))
 
 
+def extract_odul_miktari(text: str) -> Optional[ExtractedField]:
+    """Kampanya ödülü: 'X TL hediye', '500 TL para puan', 'cashback'.
+
+    §5.7'nin "En Yüksek Ödül Miktarı" kriteri bu alan olmadan cevaplanamıyordu.
+
+    TUZAK — koşul/ödül ayrımı: "500 TL alışveriş yapana 50 TL hediye"
+    cümlesinde 500 TL bir KOŞUL, 50 TL ise ÖDÜLdür. Bu yüzden tutar, ödül
+    sözcüğünün kendi cümleciğinde ve tercihen ondan ÖNCE aranır
+    ("50 TL hediye"), koşul ifadelerinin ardından değil.
+    """
+    reward = re.compile(
+        r"(hediye|para\s*puan|cashback|nakit\s*iade|iade|bonus|çek|"
+        r"kazan\w*|ödül)",
+        re.IGNORECASE,
+    )
+    money = re.compile(r"\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])", re.IGNORECASE)
+
+    best = None
+    for rm in reward.finditer(text):
+        # ödül sözcüğünün ÖNCESİNDEKİ 30 karakterde tutar ara ("50 TL hediye")
+        back = text[max(0, rm.start() - 30): rm.start()]
+        cands = list(money.finditer(back))
+        if cands:
+            mm = cands[-1]           # ödül sözcüğüne en yakın olan
+            s = max(0, rm.start() - 30) + mm.start()
+            e = max(0, rm.start() - 30) + mm.end()
+            dist = rm.start() - e
+        else:
+            # sonrasında ara ("hediye 50 TL")
+            fwd_off = rm.end()
+            fwd = text[fwd_off: fwd_off + 30]
+            mm = money.search(fwd)
+            if not mm:
+                continue
+            s, e = fwd_off + mm.start(), fwd_off + mm.end()
+            dist = s - rm.end()
+        if best is None or dist < best[2]:
+            best = (s, e, dist)
+
+    if best is None:
+        return None
+    s, e, dist = best
+    raw = text[s:e]
+    canon = N.normalize_money(raw)
+    if canon is None:
+        return None
+    return _field("odul_miktari", raw, canon, _window(text, s, e),
+                  span_start=s, span_end=e, trigger_distance=dist)
+
+
+def extract_indirim_orani(text: str) -> Optional[ExtractedField]:
+    """İndirim oranı: '%20 indirim', 'indirim oranı %15', "%25'e varan indirim".
+
+    TUZAK: "%5 puan iadesi" bir indirim değil `alisveris_puani`'dır; bu yüzden
+    'puan/iade' bağlamındaki oranlar dışlanır.
+    """
+    pat = re.compile(
+        r"(?:%\s*(\d[\d.,]*)|(\d[\d.,]*)\s*%)"
+        r"(?:[^.;\n]{0,20}?)\bindirim",
+        re.IGNORECASE,
+    )
+    m = pat.search(text)
+    if m is None:
+        pat2 = re.compile(r"indirim\s*(?:oran[ıi])?[^%\d]{0,12}"
+                          r"(%\s*\d[\d.,]*|\d[\d.,]*\s*%)", re.IGNORECASE)
+        m = pat2.search(text)
+        if m is None:
+            return None
+        s, e = m.span(1)
+    else:
+        s, e = (m.span(1) if m.group(1) else m.span(2))
+
+    # 'puan iadesi' bağlamıysa bu indirim değil, alışveriş puanıdır
+    ctx = text[max(0, s - 25): min(len(text), e + 25)]
+    if re.search(r"puan", ctx, re.IGNORECASE):
+        return None
+
+    raw = text[s:e]
+    canon = N.normalize_rate(raw)
+    return _field("indirim_orani", raw, canon, _window(text, s, e),
+                  span_start=s, span_end=e, trigger_distance=0)
+
+
+def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
+    """Alışveriş puanı — ORAN ya da ADET olabilir, ikisi farklı kanonik şekil.
+
+        "%5 puan iadesi"      -> {"kind": "rate",   "value": 5.0}
+        "1.000 chip-para"     -> {"kind": "points", "value": 1000.0}
+
+    İki şekli ayrı tutmak §5.7 karşılaştırmasında elmayla armutun
+    kıyaslanmasını engeller (bkz. CLAUDE.md §17 adil kıyas garantisi).
+    """
+    trigger = re.compile(r"(chip[\s-]*para|alışveriş\s*puan\w*|alisveris\s*puan\w*|"
+                         r"puan\s*iade\w*|bonus\s*puan\w*|puan)", re.IGNORECASE)
+    tm = trigger.search(text)
+    if tm is None:
+        return None
+
+    ctx_s = max(0, tm.start() - 30)
+    ctx = text[ctx_s: min(len(text), tm.end() + 30)]
+
+    rate = re.search(r"%\s*(\d[\d.,]*)|(\d[\d.,]*)\s*%", ctx)
+    if rate:
+        off = ctx_s + (rate.start(1) if rate.group(1) else rate.start(2))
+        end = ctx_s + (rate.end(1) if rate.group(1) else rate.end(2))
+        val = N.parse_tr_number(text[off:end])
+        if val is None:
+            return None
+        canon = {"kind": "rate", "value": val}
+        s, e = off, end
+    else:
+        num = re.search(r"(\d[\d.,]*)\s*(?:adet\s*)?(?:chip|puan)?", ctx)
+        if not num or not num.group(1):
+            return None
+        off, end = ctx_s + num.start(1), ctx_s + num.end(1)
+        val = N.parse_tr_number(text[off:end])
+        if val is None:
+            return None
+        canon = {"kind": "points", "value": val}
+        s, e = off, end
+
+    return _field("alisveris_puani", text[s:e], canon, _window(text, s, e),
+                  span_start=s, span_end=e, trigger_distance=0)
+
+
+def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:
+    """Hedef kitle — §5.3'ün 4 segmenti, ÇOK ETİKETLİ.
+
+        yeni_musteri | mevcut_musteri | maas_musterisi | belirli_segment
+
+    Sinyal yoksa `None` döner — "mevcut müşteri" varsayılanı YAPILMAZ
+    (halüsinasyon yasağı). Negasyon penceresi kontrol edilir: "yeni müşteri
+    olmayanlar" ifadesi yeni_musteri etiketi ÜRETMEZ.
+    """
+    segments = {
+        "yeni_musteri": r"(yeni\s*müşteri|yeni\s*musteri|ilk\s*kez|hoş\s*geldin|"
+                        r"hos\s*geldin|yeni\s*üye)",
+        "mevcut_musteri": r"(mevcut\s*müşteri|mevcut\s*musteri|halihazırda|"
+                          r"müşterilerimize\s*özel)",
+        "maas_musterisi": r"(maaş\s*müşteri\w*|maas\s*musteri\w*|maaşını\s*"
+                          r"bankamızdan|maaş\s*ödemesi)",
+        "belirli_segment": r"(emekli|öğrenci|ogrenci|esnaf|kamu\s*çalışan\w*|"
+                           r"kobi|serbest\s*meslek)",
+    }
+    found: list[str] = []
+    first_span = None
+    for label, pat in segments.items():
+        m = re.search(pat, text, re.IGNORECASE)
+        if not m:
+            continue
+        # negasyon penceresi: "... olmayanlar", "... hariç", "... dışında"
+        after = text[m.end(): m.end() + 25]
+        if re.search(r"(olmayan\w*|hari[çc]|d[ıi][şs][ıi]nda|ge[çc]erli\s*de[ğg]il)",
+                     after, re.IGNORECASE):
+            continue
+        found.append(label)
+        if first_span is None:
+            first_span = m.span()
+
+    if not found:
+        return None
+    s, e = first_span
+    return _field("hedef_kitle", text[s:e], sorted(found), _window(text, s, e),
+                  span_start=s, span_end=e, trigger_distance=0)
+
+
+def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
+    """Kampanya koşulları — SKALER DEĞİL, cümle listesi.
+
+    Koşul tetikleyicisi içeren cümleler toplanır. Eşleşme ölçütü diğer
+    alanlardan farklıdır (küme-F1 / token-Jaccard); bu yüzden eval'de ayrı
+    bölümde raporlanır.
+    """
+    # DİKKAT: tek başına "geçerli\w*" TETİKLEYİCİ DEĞİLDİR. Neredeyse her
+    # kampanya metni "Kampanya <tarih> tarihine kadar geçerlidir" cümlesiyle
+    # biter; bu bir GEÇERLİLİK TARİHİdir (zaten `kampanya_suresi` yakalar),
+    # yararlanma koşulu değil. Tetikleyici olarak bırakılması her belgede
+    # yanlış pozitif üretiyordu. Yalnızca "için geçerli" biçimi koşul sayılır.
+    triggers = re.compile(
+        r"(şart\w*|koşul\w*|kosul\w*|gerekmekte\w*|gerekli\w*|zorunlu\w*|"
+        r"asgari|en\s*az\s+\d|minimum|yalnızca|sadece|hariç|"
+        r"için\s*geçerli|olmas[ıi]\s*gerek)",
+        re.IGNORECASE,
+    )
+    sentences = split_sentences(text)
+    picked = [s.strip() for s in sentences if triggers.search(s)]
+    if not picked:
+        return None
+
+    # span: ilk koşul cümlesinin metindeki yeri
+    first = picked[0]
+    idx = text.find(first)
+    if idx < 0:
+        idx, end = 0, 0
+    else:
+        end = idx + len(first)
+    return _field("kampanya_kosullari", text[idx:end] if end > idx else first,
+                  picked, _window(text, idx, end),
+                  span_start=idx if end > idx else None,
+                  span_end=end if end > idx else None,
+                  trigger_distance=0)
+
+
 # Tüm kural çıkarıcılar — sırayla denenir.
 _EXTRACTORS = [
     extract_kar_payi,
@@ -315,6 +522,11 @@ _EXTRACTORS = [
     extract_masraf,
     extract_tahsis_ucreti,
     extract_kampanya_suresi,
+    extract_odul_miktari,
+    extract_indirim_orani,
+    extract_alisveris_puani,
+    extract_hedef_kitle,
+    extract_kampanya_kosullari,
 ]
 
 

@@ -226,6 +226,19 @@ _FREE_TOKENS = ["masrafsız", "masrafsiz", "ücretsiz", "ucretsiz",
 # döndürüyordu — yani "masrafsız" yazan metni "masraf var" diye okuyordu.
 _FOLDED_FREE_TOKENS = frozenset(tr_fold_ascii(t) for t in _FREE_TOKENS)
 
+# FİİL NEGASYONU. Sabit token listesi yalnızca sıfat/isim biçimlerini
+# ("masrafsız", "ücretsiz") yakalıyordu; Türkçe kampanya metinleri ise
+# çoğunlukla fiil kullanır: "ücret ALINMAZ", "masraf TALEP EDİLMEZ".
+# Bu desen olmadan "Yıllık kart ücreti alınmaz" ifadesi has_fee=True okunuyor,
+# üstelik cümle sonrası tarihten ("31 Aralık") 31 TL'lik hayali bir tutar
+# üretiliyordu. Tek doğruluk kaynağı burasıdır; synonyms.py bunu yeniden ihraç
+# eder, böylece çıkarım ve normalizasyon katmanları aynı deseni kullanır.
+NEGATION_RE = (
+    r"(?:al[ıi]nma[zy]\w*|al[ıi]nm[ıi]yor|tahsil\s+edilme[zy]\w*|"
+    r"talep\s+edilme[zy]\w*|yans[ıi]t[ıi]lma[zy]\w*|yoktur|yok\b|"
+    r"bulunmamaktad[ıi]r|muaf|s[ıi]f[ıi]r|bedelsiz)"
+)
+
 # Masraf bahsi tetikleyicileri (katlanmış).
 _FOLDED_FEE_HINTS = frozenset(
     tr_fold_ascii(t) for t in ("masraf", "ücret", "ucret", "tahsis")
@@ -246,6 +259,9 @@ def normalize_fee_status(text: str) -> Optional[dict]:
     if any(tok in low for tok in _FOLDED_FREE_TOKENS):
         return {"has_fee": False, "amount": 0.0}
     if any(tok in low for tok in _FOLDED_FEE_HINTS):
+        # Fiil negasyonu: "ücret alınmaz" = ücret SIFIR, bilgi yok değil.
+        if re.search(NEGATION_RE, low):
+            return {"has_fee": False, "amount": 0.0}
         money = normalize_money(text)
         if money:
             return {"has_fee": True, "amount": money["value"]}
