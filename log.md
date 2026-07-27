@@ -2,6 +2,91 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-07-27] kod+yöntem | Gün 1c: Veri modeli, gerçek güven, 12/12 alan, değişmez denetimi
+
+Üç blok iş yapıldı. Sonuncusu bir **yöntem değişikliğidir** ve kalan 29 günün
+verimini doğrudan etkiler.
+
+### 1. Veri modeli (sonraki her katman buna bağlanacağı için önce)
+
+- `ExtractedField`'a `span_start`/`span_end` eklendi. `source_span` yalnızca
+  ±40 karakterlik bir pencere METNİydi ve orijinalde güvenilir bulunamıyordu;
+  dashboard'daki kaynak vurgulaması (yenilikçilik hedefi #1) kesin offset ister.
+  `verify_span(text)` kendi kendini denetler.
+- `confidence` sabit 0.95'ti. Sabit skor kalibre edilemez (ECE tek bin'e düşer),
+  abstain eşiği ayrım yapamaz, jüriye savunulamaz. `rules/confidence.py` eklendi:
+  tetikleyici yakınlığı + makullük + belirsizlik + aralık cezasından hesaplanır.
+  Ölçülen ayrım: ideal 0.95, aralık 0.90, belirsiz 0.85, makul dışı 0.50.
+  Skorlar **kalibre edilmemiştir** (yalnız sıralayıcı); `confidence_source`
+  alanında işaretli.
+
+### 2. Kural katmanı 7/12 → 12/12 alan
+
+§5.3'ün "Kampanya Bilgileri" ve "Hedef Kitle" kolonları tamamen boştu; §5.7'nin
+"En Yüksek Ödül Miktarı" kriteri cevaplanamıyordu. Eklenen 5 çıkarıcının her
+biri bir ayırt etme tuzağı çözüyor (koşul/ödül, indirim/puan, oran/adet,
+segment/negasyon).
+
+### 3. YÖNTEM: değişmez (invariant) denetimi
+
+Bugün bulunan **beş hatanın hiçbiri çökme değildi** — hepsi sessizce yanlış
+değer üretiyordu. Bu, asıl riskin "model yeterince iyi değil" değil
+**"kendinden emin çöp üretiliyor ve fark edilmiyor"** olduğunu gösteriyor.
+
+`eval/properties.py` — girdinin anlamını değiştirmeyen dönüşümler çıktıyı
+değiştiriyorsa doğru cevabı bilmeden hata olduğu kesindir. Dolayısıyla
+**gold etiketi gerekmez**:
+
+| Değişmez | Yakalayacağı hata |
+|---|---|
+| P1 span bütünlüğü | vurgulanan yer ≠ raporlanan değer |
+| P2 ortografik değişmezlik | **H1** (ALL-CAPS işaret ters çevirme) |
+| P3 alakasız ekleme | **hayali 31 TL ücret** |
+| P4 cümle sırası | **H2** (çelişkinin sıraya bağlılığı) |
+
+Bugünkü beş hatanın **dördü** bunlarla otomatik yakalanırdı.
+
+Bu, gold set kritik yolda beklerken (anotasyon insan işi, yavaş) anote
+**edilmemiş** 150–250 belgede hemen hata avlar. Kritik yolu kısaltmaz ama
+paralel bir kalite hattı açar.
+
+META test eklendi: her zaman geçen bir denetleyici işe yaramaz. `tr_fold`
+düzeltmesi geçici geri alındığında denetleyicinin gerçekten ihlal ürettiği
+doğrulanıyor (`masraf_durumu` has_fee False→True). Bu test geçmezse diğer
+"0 ihlal" sonuçları anlamsızdır.
+
+### Bu bloklarda bulunan gerçek hatalar (hepsi düzeltildi)
+
+1. **Sahte aralık:** `"kâr payı oranı %1,89 ile 120 aya kadar"` →
+   `{min: 1.89, max: 120.0}`. 'ile' bağlacı aralık ayırıcı sanılıyor, bir
+   VADE oran üst sınırı olarak karşılaştırma tablosuna yazılıyordu.
+   İlk düzeltme denemesi regex geri izlemesiyle atlatıldı (`"36"`dan `"3"`),
+   `(?![\d.,])` ile sayının tamamının tüketilmesi zorlandı.
+2. **Fiil negasyonu eksikti:** `normalize_fee_status` yalnızca sıfat
+   biçimlerini biliyordu. `"Yıllık kart ücreti alınmaz. Kampanya 31 Aralık
+   2026..."` → `{has_fee: True, amount: 31.0}` — hem negasyon kaçıyor hem
+   tarihten **hayali ücret** uyduruluyordu. `NEGATION_RE` tek doğruluk
+   kaynağına alındı + ücret penceresi cümle sınırında kesiliyor.
+3. **Koşul/geçerlilik karışması:** tek başına "geçerli" tetikleyicisi her
+   belgedeki *"Kampanya <tarih> tarihine kadar geçerlidir"* cümlesini koşul
+   sanıyordu (zaten `kampanya_suresi` yakalıyor). Her belgede yanlış pozitif.
+4. **is_plausible yalnız min'e bakıyordu** — bozuk aralıkları makul gösteriyordu.
+
+Dokunulan dosyalar:
+- `app/src/schemas.py` (span offsetleri, confidence_source, verify_span)
+- `app/src/extraction/rules/confidence.py` (yeni)
+- `app/src/extraction/rules/extract.py` (5 yeni alan, offsetler, düzeltmeler)
+- `app/src/normalization/normalize.py` (NEGATION_RE, fiil negasyonu)
+- `app/src/extraction/rules/synonyms.py` (NEGATION_RE yeniden ihracı)
+- `app/src/preprocessing/clean.py` (tr_upper)
+- `app/eval/properties.py` (yeni, CLI dahil)
+- `app/tests/{test_confidence_span,test_kampanya_alanlari,test_properties}.py` (yeni)
+
+Test durumu: **129 test yeşil** (85 → 129), tamamen offline.
+
+Açık uçlar (değişmedi): gerçek scraping, gold set 3→250, LLM'in Colab'da ilk
+kez çalıştırılması. Bunlar kritik yolda ve insan katılımı gerektiriyor.
+
 ## [2026-07-27] sorun+kod | Gün 1b: Çelişki tespiti canlandırıldı (H2)
 
 Bağlam: `contradiction.detect()`'in birincil kuralı `masrafsiz_ama_ucret` hem
