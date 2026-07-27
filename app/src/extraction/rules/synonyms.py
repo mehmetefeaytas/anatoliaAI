@@ -53,6 +53,16 @@ TYPE_HINTS: dict[str, list[str]] = {
 }
 
 
+# Negasyon: "tahsis ücreti ALINMAZ" gibi ifadeler ücretin YOK olduğunu değil,
+# SIFIR olduğunu söyler (bkz. ../../decisions/zor-anlama-vakalari-merkezi.md).
+# Sözcük listesi yerine desen kullanılır ki fiil çekimleri de yakalansın.
+NEGATION_RE = (
+    r"(?:al[ıi]nma[zy]\w*|al[ıi]nm[ıi]yor|tahsil\s+edilme[zy]\w*|"
+    r"talep\s+edilme[zy]\w*|yoktur|yok\b|bulunmamaktad[ıi]r|"
+    r"muaf|s[ıi]f[ıi]r|ücretsiz|ucretsiz|bedelsiz)"
+)
+
+
 def _fold_all(mapping: dict[str, list[str]]) -> dict[str, frozenset[str]]:
     """Sözlükteki tüm anahtar ifadeleri katlanmış forma indirger.
 

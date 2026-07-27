@@ -2,6 +2,63 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-07-27] sorun+kod | Gün 1b: Çelişki tespiti canlandırıldı (H2)
+
+Bağlam: `contradiction.detect()`'in birincil kuralı `masrafsiz_ama_ucret` hem
+`masraf_durumu` hem `tahsis_ucreti` alanını istiyor. Kural katmanı
+`tahsis_ucreti` alanını hiç üretmediği için bu kural **bugüne kadar hiç
+tetiklenemedi** — yani `decisions/daraltilmis-yenilikcilik-hedefleri.md`'deki
+yenilikçilik hedefi #2 ölü kodmuş.
+
+Yapılanlar:
+- `extract_tahsis_ucreti()` eklendi. `masraf_durumu`'ndan **bağımsız** koşar.
+  Negasyon ("alınmaz", "talep edilmez", "yoktur") → `{value: 0.0}`, yani
+  "bilgi yok" değil "ücret sıfır" (§5.5 "masrafsız finansman" yorumu).
+- `synonyms.py`'ye `NEGATION_RE` eklendi (sözcük listesi değil desen — fiil
+  çekimlerini yakalasın diye).
+
+Bu sırada bulunan iki hata:
+
+1. **Binlik ayırıcı / cümle sonu karışması.** Cümlecik ayırıcı naif olarak
+   `[.;\n]` üzerinden bölüyordu; `.` Türkçede aynı zamanda binlik ayırıcı
+   olduğu için `"1.500,00 TL"` ifadesi `"1"`de kesilip **1500 yerine 1.0**
+   üretiliyordu. Düzeltme: `(?<!\d)[.;](?!\d)` — rakamlar arasındaki noktada
+   bölme.
+
+2. **Çelişki tespiti yazım sırasına bağlıydı.** `extract_masraf` `re.search`
+   (yalnız ilk eşleşme) kullanıyordu:
+   - `"Masrafsızdır. Tahsis ücreti 500 TL."` → çelişki yakalanıyor ✓
+   - `"Tahsis ücreti 500 TL. Masrafsızdır."` → **kaçıyordu** ✗
+
+   Düzeltme: `finditer` ile tüm masraf bahisleri taranır. `masraf_durumu` artık
+   kampanyanın **iddiasını** taşır — metinde herhangi bir yerde "masrafsız"
+   iddiası varsa `has_fee=False` döner; gerçekte ücret olup olmadığını
+   `tahsis_ucreti` söyler, uyuşmazlığı `contradiction.detect()` yakalar.
+   Böylece her iki yazım sırası ve ALL-CAPS çalışıyor, yanlış pozitif yok.
+
+**Değerlendirme semantiği bulgusu (H3'ün somut kanıtı):** yeni alan eklenince
+eval `tahsis_ucreti` için P=0.00, FP=1 raporladı. İnceleyince görüldü ki bu
+**doğru bir çıkarım**: gold kayıt #1'in metni birebir "Tahsis ücreti 500 TL"
+diyor, ama gold `fields` sözlüğü bu alanı hiç anote etmemiş. Yani doğru çıkarım
+yanlış pozitif sayılıyordu. Gold kaydı düzeltildi.
+
+Bu, gold formatının **"gerçekten yok" ile "anote edilmemiş"i ayırt edemediğini**
+gösteriyor — `absent_fields` alanı olmadan precision tanımsız, halüsinasyon
+oranı ölçülemez. Gold şema göçü (İH2b) sırasında bu ayrım eklenecek.
+
+Dokunulan dosyalar:
+- `app/src/extraction/rules/extract.py` (extract_tahsis_ucreti, extract_masraf)
+- `app/src/extraction/rules/synonyms.py` (NEGATION_RE)
+- `app/data/gold/gold.sample.json` (kayıt #1'e tahsis_ucreti eklendi)
+- `app/tests/test_contradiction.py` (yeni — 13 test)
+
+Test durumu: **85 test yeşil** (72 → 85).
+
+UYARI: eval şu an MICRO F1 = 1.00 raporluyor ama gold set **3 kayıt** —
+istatistiksel olarak anlamsız, yalnızca "regresyon yok" demek. Gerçek sayı
+gold set 150–300'e çıkınca (İH2b) üretilecek; o zamana kadar hiçbir yerde
+başarı iddiası olarak kullanılmayacak.
+
 ## [2026-07-27] sorun+kod | Gün 1: Türkçe küçük-harf hatası (H1) + lisans denetimi
 
 Bağlam: Yarışmanın çevrimiçi süreci bugün başladı (Kick Off; 26 Ağustos'a kadar

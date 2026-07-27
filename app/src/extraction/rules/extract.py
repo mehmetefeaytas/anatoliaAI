@@ -17,6 +17,7 @@ from typing import Optional
 from ...normalization import normalize as N
 from ...preprocessing.clean import tr_fold
 from ...schemas import ExtractedField, Extractor
+from .synonyms import NEGATION_RE
 
 # Kural katmanının güveni yüksektir (deterministik); LLM'inkinden ayrışsın diye 0.95.
 _RULE_CONF = 0.95
@@ -124,17 +125,83 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
 
     Tutar, masraf sözcüğünün YEREL penceresinde aranır; aksi halde metnin
     başka yerindeki bir oran/sayı yanlışlıkla masraf tutarı sanılır.
+
+    TÜM masraf bahisleri taranır (`finditer`), sadece ilki değil. Eskiden
+    `re.search` kullanıldığı için sonuç yazım SIRASINA bağlıydı:
+
+        "Masrafsızdır. Tahsis ücreti 500 TL."  -> has_fee=False  ✓ çelişki
+        "Tahsis ücreti 500 TL. Masrafsızdır."  -> has_fee=True   ✗ çelişki kaçtı
+
+    Bu alan kampanyanın İDDİASINI taşır. Metinde herhangi bir yerde
+    "masrafsız/ücretsiz" iddiası varsa `has_fee=False` döner; gerçekte ücret
+    olup olmadığını `tahsis_ucreti` alanı söyler ve uyuşmazlığı
+    `contradiction.detect()` yakalar.
     """
-    m = re.search(r"(masrafs[ıi]z|ücretsiz|ucretsiz|masraf|tahsis|ücret)",
-                  text, re.IGNORECASE)
+    pat = re.compile(r"(masrafs[ıi]z|ücretsiz|ucretsiz|masraf|tahsis|ücret)",
+                     re.IGNORECASE)
+    first_positive = None
+    for m in pat.finditer(text):
+        # tutar keyword'den SONRA gelir ("tahsis ücreti 500 TL") → ileri pencere
+        fwd = text[m.start(): min(len(text), m.end() + 40)]
+        canon = N.normalize_fee_status(fwd)
+        if canon is None:
+            continue
+        if canon.get("has_fee") is False:
+            # "masrafsız" iddiası bulundu — sırası ne olursa olsun bu kazanır.
+            return _field("masraf_durumu", m.group(0), canon,
+                          _window(text, m.start(), m.end()))
+        if first_positive is None:
+            first_positive = (m, canon)
+
+    if first_positive is None:
+        return None
+    m, canon = first_positive
+    return _field("masraf_durumu", m.group(0), canon, _window(text, m.start(), m.end()))
+
+
+def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
+    """Tahsis ücreti / dosya masrafı — `masraf_durumu`'ndan BAĞIMSIZ çıkarılır.
+
+    Neden ayrı: `contradiction.detect()`'in birincil kuralı
+    (`masrafsiz_ama_ucret`) hem `masraf_durumu` hem `tahsis_ucreti` ister.
+    Bu alan hiç üretilmediği için o kural bugüne kadar hiç tetiklenemedi ve
+    yenilikçilik hedefi #2 (bkz. CLAUDE.md §18) ölüydü.
+
+        "tahsis ücreti 500 TL"     -> {"value": 500.0, "currency": "TRY"}
+        "TAHSİS ÜCRETİ ALINMAZ"    -> {"value": 0.0,   "currency": "TRY"}
+        (hiç geçmiyorsa)           -> None  (uydurma yok)
+
+    Negasyon "bilgi yok" DEĞİL "ücret sıfır" demektir; bu ayrım §5.5'teki
+    "masrafsız finansman" teriminin doğru yorumlanmasının temelidir.
+    """
+    trigger = re.compile(
+        r"(tahsis\s*ücret\w*|tahsis\s*ucret\w*|dosya\s*masraf\w*|"
+        r"tahsis\s*bedel\w*)",
+        re.IGNORECASE,
+    )
+    m = trigger.search(text)
     if m is None:
         return None
-    # tutar keyword'den SONRA gelir ("tahsis ücreti 500 TL"); ileri pencere kullan
-    fwd = text[m.start(): min(len(text), m.end() + 40)]
-    canon = N.normalize_fee_status(fwd)
-    if canon is None:
-        return None
-    return _field("masraf_durumu", m.group(0), canon, _window(text, m.start(), m.end()))
+
+    # Aynı cümlecik içinde kal: tetikleyiciden sonraki ilk cümle/virgül sonuna
+    # kadar bak. Aksi halde metnin başka yerindeki bir tutar yanlışlıkla
+    # tahsis ücreti sanılır.
+    tail = text[m.end(): m.end() + 60]
+    # DİKKAT: '.' Türkçede hem cümle sonu hem BİNLİK AYIRICIDIR. Düz
+    # re.split(r"[.;\n]") "1.500,00 TL"yi "1"de kesip 1500 yerine 1 üretiyordu.
+    # Rakamlar arasındaki noktada bölmemek için etrafına lookaround konur.
+    clause = re.split(r"(?<!\d)[.;](?!\d)|\n", tail, maxsplit=1)[0]
+
+    if re.search(NEGATION_RE, clause, re.IGNORECASE):
+        canon = {"value": 0.0, "currency": "TRY"}
+    else:
+        canon = N.normalize_money(clause)
+        if canon is None:
+            # Tetikleyici var ama ne tutar ne negasyon → bilgi belirsiz.
+            return None
+
+    return _field("tahsis_ucreti", m.group(0) + clause.rstrip(), canon,
+                  _window(text, m.start(), m.end()))
 
 
 def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
@@ -160,6 +227,7 @@ _EXTRACTORS = [
     extract_tutar,
     extract_taksit,
     extract_masraf,
+    extract_tahsis_ucreti,
     extract_kampanya_suresi,
 ]
 

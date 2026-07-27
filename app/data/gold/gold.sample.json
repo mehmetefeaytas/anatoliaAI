@@ -1,7 +1,7 @@
 [
   {
     "text": "Konut finansmanında kâr payı oranı %1,89, 120 aya kadar vade. Tahsis ücreti 500 TL. Kampanya 31.12.2026 tarihine kadar geçerlidir.",
-    "fields": {"kar_payi_orani": 1.89, "vade_ay": 120, "masraf_durumu": {"has_fee": true, "amount": 500.0}, "kampanya_suresi": "2026-12-31"},
+    "fields": {"kar_payi_orani": 1.89, "vade_ay": 120, "masraf_durumu": {"has_fee": true, "amount": 500.0}, "tahsis_ucreti": {"value": 500.0, "currency": "TRY"}, "kampanya_suresi": "2026-12-31"},
     "hard": false
   },
   {
