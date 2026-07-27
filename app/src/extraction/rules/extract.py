@@ -17,6 +17,7 @@ from typing import Optional
 from ...normalization import normalize as N
 from ...preprocessing.clean import tr_fold
 from ...schemas import ExtractedField, Extractor
+from . import confidence as C
 from .synonyms import NEGATION_RE
 
 # Kural katmanının güveni yüksektir (deterministik); LLM'inkinden ayrışsın diye 0.95.
@@ -30,14 +31,43 @@ def _window(text: str, start: int, end: int, pad: int = 40) -> str:
     return text[a:b].strip()
 
 
-def _field(name: str, raw: str, canon, span: str, conf: float = _RULE_CONF):
+def _field(
+    name: str,
+    raw: str,
+    canon,
+    span: str,
+    conf: Optional[float] = None,
+    *,
+    span_start: Optional[int] = None,
+    span_end: Optional[int] = None,
+    trigger_distance: Optional[int] = None,
+    candidate_count: int = 1,
+):
+    """ExtractedField üretir; güven verilmezse kanıt sinyallerinden hesaplanır.
+
+    `conf` açıkça verilirse (geriye uyumluluk) o kullanılır; verilmezse
+    `confidence.score()` tetikleyici yakınlığı + makullük + belirsizlikten
+    gerçek bir skor üretir. Bkz. rules/confidence.py.
+    """
+    if conf is not None:
+        value, csource = (conf if canon is not None else 0.0), "constant"
+    else:
+        value, _reason = C.score(
+            name, canon,
+            trigger_distance=trigger_distance,
+            candidate_count=candidate_count,
+        )
+        csource = "rule_heuristic"
     return ExtractedField(
         field_name=name,
         raw_value=raw,
         canonical_value=canon,
-        confidence=conf if canon is not None else 0.0,
+        confidence=value,
         source_span=span,
         extractor=Extractor.RULE,
+        span_start=span_start,
+        span_end=span_end,
+        confidence_source=csource,
     )
 
 
@@ -46,17 +76,35 @@ def _field(name: str, raw: str, canon, span: str, conf: float = _RULE_CONF):
 # --------------------------------------------------------------------------- #
 def extract_kar_payi(text: str) -> Optional[ExtractedField]:
     """Kâr payı oranı: '... kâr payı oranı %1,99 ...' veya aralık."""
+    # Aralık ikinci operandı bir BİRİM sözcüğü ile devam ediyorsa aralık DEĞİLDİR:
+    #   "kâr payı oranı %1,89 ile 120 aya kadar vade"
+    # buradaki "ile" bağlaçtır, aralık ayırıcı değil. Negatif ileri-bakış olmadan
+    # sistem bunu {min: 1.89, max: 120.0} diye okuyup karşılaştırma tablosuna
+    # bir VADEYİ oran üst sınırı olarak yazıyordu.
     pat = re.compile(
         r"(kâr|kar)\s*pay[ıi]\s*(oran[ıi])?[^%\d]{0,15}"
-        r"(%?\s*\d[\d.,]*\s*%?(?:\s*(?:-|–|ile|ila)\s*%?\s*\d[\d.,]*\s*%?)?)",
+        r"(%?\s*\d[\d.,]*\s*%?"
+        r"(?:\s*(?:-|–|ile|ila)\s*%?\s*"
+        # (?![\d.,]) sayının TAMAMININ tüketilmesini zorlar. Bu olmadan regex
+        # geri izleyip "36"dan yalnız "3"ü alarak birim kontrolünü atlatıyordu.
+        r"\d[\d.,]*(?![\d.,])\s*%?"
+        r"(?!\s*(?:ay|y[ıi]l|sene|taksit|tl|₺|adet))"
+        r")?)",
         re.IGNORECASE,
     )
     m = pat.search(text)
     if not m:
         return None
     raw = m.group(3)
+    s, e = m.span(3)
     canon = N.normalize_rate(raw)
-    return _field("kar_payi_orani", raw, canon, _window(text, m.start(), m.end()))
+    return _field(
+        "kar_payi_orani", raw, canon, _window(text, m.start(), m.end()),
+        span_start=s, span_end=e,
+        # "kâr payı oranı" bitişi ile değerin başı arası
+        trigger_distance=s - m.end(1),
+        candidate_count=len(pat.findall(text)),
+    )
 
 
 def extract_vade(text: str) -> Optional[ExtractedField]:
@@ -87,8 +135,15 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
 
     chosen = min(matches, key=score)
     raw = chosen.group(0)
+    s, e = chosen.span()
     canon = N.normalize_term_months(raw)
-    return _field("vade_ay", raw, canon, _window(text, chosen.start(), chosen.end()))
+    dist = min((abs(s - v) for v in vade_pos), default=None)
+    return _field(
+        "vade_ay", raw, canon, _window(text, s, e),
+        span_start=s, span_end=e,
+        trigger_distance=dist,
+        candidate_count=len(matches),
+    )
 
 
 def extract_tutar(text: str) -> Optional[ExtractedField]:
@@ -101,8 +156,14 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
     if not m:
         return None
     raw = m.group(2)
+    s, e = m.span(2)
     canon = N.normalize_money(raw)
-    return _field("finansman_tutari", raw, canon, _window(text, m.start(), m.end()))
+    return _field(
+        "finansman_tutari", raw, canon, _window(text, m.start(), m.end()),
+        span_start=s, span_end=e,
+        trigger_distance=s - m.end(1),
+        candidate_count=len(pat.findall(text)),
+    )
 
 
 def extract_taksit(text: str) -> Optional[ExtractedField]:
@@ -117,7 +178,14 @@ def extract_taksit(text: str) -> Optional[ExtractedField]:
         canon = int(num)
     except (TypeError, ValueError):
         canon = None
-    return _field("taksit_sayisi", m.group(0), canon, _window(text, m.start(), m.end()))
+    s, e = m.span()
+    return _field(
+        "taksit_sayisi", m.group(0), canon, _window(text, s, e),
+        span_start=s, span_end=e,
+        # "taksit" sözcüğü eşleşmenin kendi içinde → bitişik kabul edilir
+        trigger_distance=0,
+        candidate_count=len(pat.findall(text)),
+    )
 
 
 def extract_masraf(text: str) -> Optional[ExtractedField]:
@@ -148,15 +216,19 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
             continue
         if canon.get("has_fee") is False:
             # "masrafsız" iddiası bulundu — sırası ne olursa olsun bu kazanır.
+            s, e = m.span()
             return _field("masraf_durumu", m.group(0), canon,
-                          _window(text, m.start(), m.end()))
+                          _window(text, s, e),
+                          span_start=s, span_end=e, trigger_distance=0)
         if first_positive is None:
             first_positive = (m, canon)
 
     if first_positive is None:
         return None
     m, canon = first_positive
-    return _field("masraf_durumu", m.group(0), canon, _window(text, m.start(), m.end()))
+    s, e = m.span()
+    return _field("masraf_durumu", m.group(0), canon, _window(text, s, e),
+                  span_start=s, span_end=e, trigger_distance=0)
 
 
 def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
@@ -200,8 +272,12 @@ def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
             # Tetikleyici var ama ne tutar ne negasyon → bilgi belirsiz.
             return None
 
-    return _field("tahsis_ucreti", m.group(0) + clause.rstrip(), canon,
-                  _window(text, m.start(), m.end()))
+    # raw_value BİTİŞİK bir dilim olmalı, yoksa span doğrulaması kırılır
+    # (önceden `m.group(0) + clause.rstrip()` birleştirmesi kullanılıyordu).
+    s, e = m.start(), m.end() + len(clause)
+    raw = text[s:e]
+    return _field("tahsis_ucreti", raw, canon, _window(text, m.start(), m.end()),
+                  span_start=s, span_end=e, trigger_distance=0)
 
 
 def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
@@ -214,10 +290,20 @@ def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
     if not m:
         return None
     raw = m.group(1)
+    s, e = m.span(1)
     canon = N.normalize_date(raw)
     if canon is None:
         return None
-    return _field("kampanya_suresi", raw, canon, _window(text, m.start(), m.end()))
+    # Tarih genelde "kampanya süresi/son başvuru/tarihine kadar" ifadesinin
+    # yakınındadır; tetikleyici varsa uzaklığı ölç, yoksa None (ceza).
+    trig = None
+    for tm in re.finditer(r"(kampanya|son\s+ba[şs]vuru|ge[çc]erli|tarihine\s+kadar)",
+                          text, re.IGNORECASE):
+        d = abs(s - tm.start())
+        trig = d if trig is None else min(trig, d)
+    return _field("kampanya_suresi", raw, canon, _window(text, s, e),
+                  span_start=s, span_end=e, trigger_distance=trig,
+                  candidate_count=len(pat.findall(text)))
 
 
 # Tüm kural çıkarıcılar — sırayla denenir.
