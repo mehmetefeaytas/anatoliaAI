@@ -110,7 +110,17 @@ KURALLAR:
 - "alınmaz / talep edilmez / yoktur" negasyondur -> ücret 0, null değil.
 - Aylık ve yıllık oranları karıştırma.
 - TR sayı biçimi: 1.500,00 = bin beş yüz. Nokta binlik, virgül ondalıktır.
-- "X aya kadar vade" bir VADEDİR; oran aralığının üst sınırı DEĞİLDİR."""
+- "X aya kadar vade" bir VADEDİR; oran aralığının üst sınırı DEĞİLDİR.
+
+ÇELİŞKİ KURALI (çok önemli):
+Metin kendi içinde çelişiyorsa çelişkiyi KENDİN ÇÖZME, İKİSİNİ DE KAYDET.
+- masraf_durumu alanına metnin İDDİASINI yaz.
+- tahsis_ucreti alanına gerçekte belirtilen TUTARI yaz.
+Örnek: "Bu kampanya masrafsızdır. Ancak tahsis ücreti 500 TL alınır."
+  dogru  -> masraf_durumu: {"has_fee": false, "amount": 0}, tahsis_ucreti: 500
+  yanlis -> masraf_durumu: {"has_fee": true, "amount": 500}
+Çelişkiyi kendin çözersen yanıltıcı pazarlama iddiası KAYBOLUR; oysa
+kullanıcının tam da bunu görmesi gerekir."""
 
 TESTS = [
     (
@@ -334,11 +344,26 @@ def main() -> int:
         (b.get("masraf_durumu") or {}).get("has_fee") is False,
         repr(b.get("masraf_durumu")))
 
+    # 3) Çelişki KORUNUYOR mu? (çözülüyor mu?)
+    #
+    # Bu test "model yanlış cevap verdi mi" diye BAKMAZ. Model çelişkiyi
+    # kendi içinde çözerse ("gerçekte 500 TL ücret var") mantıken haklıdır
+    # ama bizim amacımız için yanlıştır: bankanın "masrafsız" İDDİASI
+    # kaybolur ve kullanıcı yanıltıldığını göremez.
+    #
+    # Kural katmanı iddia ile gerçeği AYRI tutar ve çelişkiyi bayrağa çeker.
+    # Bu test, LLM'in de aynı konvansiyonu izleyip izlemediğini ölçer.
     c = sonuclar.get("celiski") or {}
-    yaz("celiski", "3) celiski sinyali",
-        (c.get("masraf_durumu") or {}).get("has_fee") is False
-        and (c.get("tahsis_ucreti") or 0) > 0,
+    md = c.get("masraf_durumu") or {}
+    iddia_korundu = md.get("has_fee") is False
+    tutar_var = (c.get("tahsis_ucreti") or 0) > 0
+    yaz("celiski", "3) celiski KORUNDU mu (cozulmedi mi)",
+        iddia_korundu and tutar_var,
         f"masraf={c.get('masraf_durumu')!r} tahsis={c.get('tahsis_ucreti')!r}")
+    if tutar_var and not iddia_korundu:
+        print("       NOT: model celiskiyi COZDU (mantikli ama bizim icin")
+        print("       yanlis) -- 'masrafsiz' iddiasi kayboldu. Kural katmani")
+        print("       bu vakayi dogru yapiyor; hibrit mimarinin gerekcesi bu.")
 
     print()
     if "halusinasyon-testi" in hatalar:
