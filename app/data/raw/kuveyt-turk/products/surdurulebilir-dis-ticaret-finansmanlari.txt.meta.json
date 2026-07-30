@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/surdurulebilir-dis-ticaret-finansmanlari",
+  "scraped_at": "2026-07-30T19:40:08+00:00",
+  "content_hash": "aeef4c7aba476a7bd259ada5249153185c92b4a80340b388e5a9787fa81ee4ed",
+  "collection_method": "live",
+  "title": "Sürdürülebilir Dış Ticaret Finansmanları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132359,
+  "text_chars": 3502
+}

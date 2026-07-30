@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/ara-donem-kar-payi",
+  "scraped_at": "2026-07-30T19:41:48+00:00",
+  "content_hash": "6c4c227910f2726d4cfa12255f2144ba721c4716db6ade0e25d794d903763261",
+  "collection_method": "live",
+  "title": "Ara Dönem Kâr Payı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184257,
+  "text_chars": 1880
+}

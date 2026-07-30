@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/egitim-finansmani",
+  "scraped_at": "2026-07-30T19:43:10+00:00",
+  "content_hash": "93040db7a9c519ba5be12d907930b76306a2a6080327cf173776b51c4f633cae",
+  "collection_method": "live",
+  "title": "Eğitim Finansmanı | Albaraka Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 186091,
+  "text_chars": 3142
+}

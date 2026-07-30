@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/leasinge-konu-urunler-ve-kdv-oranlari",
+  "scraped_at": "2026-07-30T19:39:59+00:00",
+  "content_hash": "27754ba1aadca748f3ae52fd9df3569bc92b132d06edf51d0b57fa183919f0a4",
+  "collection_method": "live",
+  "title": "Leasing'e Konu Ürünler ve KDV Oranları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135537,
+  "text_chars": 2407
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/birikimlerinizi-koruyan-bes-teminatli-finansman-albarakada",
+  "scraped_at": "2026-07-30T19:42:00+00:00",
+  "content_hash": "d9606061d66e6f59a62ae83289b8fc85dc2ed9068e7b13dd88dc091e4fcd42f9",
+  "collection_method": "live",
+  "title": "BES Teminatlı Finansman | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 187607,
+  "text_chars": 4927
+}

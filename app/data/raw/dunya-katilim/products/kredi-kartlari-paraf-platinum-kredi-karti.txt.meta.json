@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar/kredi-kartlari/paraf-platinum-kredi-karti",
+  "scraped_at": "2026-07-30T19:50:07+00:00",
+  "content_hash": "c4fb9e1da54f2578bff9afd7bfe7c3125cefbd7eb08fa1b4d63d77bd68faf7b7",
+  "collection_method": "live",
+  "title": "Paraf Platinum Kredi Kart&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 509969,
+  "text_chars": 12940
+}

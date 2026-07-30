@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/leasing-nedir-avantajlari-nelerdir",
+  "scraped_at": "2026-07-30T19:41:00+00:00",
+  "content_hash": "f2178a3e200dc7d60070f1c13b9d4760126c953137264e8dc839afda56fd9ec2",
+  "collection_method": "live",
+  "title": "Leasing Nedir? Avantajları Nelerdir? | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130080,
+  "text_chars": 1561
+}

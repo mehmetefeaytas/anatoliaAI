@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar/kredi-kartlari",
+  "scraped_at": "2026-07-30T19:49:28+00:00",
+  "content_hash": "6cfa40d122f85ea3a7dcdbff1373366133741ef39b172629c9586f63976818d6",
+  "collection_method": "live",
+  "title": "Kredi Kartlar&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 499525,
+  "text_chars": 9325
+}

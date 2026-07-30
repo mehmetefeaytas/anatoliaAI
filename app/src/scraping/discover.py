@@ -21,6 +21,33 @@ from urllib.parse import urljoin, urlsplit, urlunsplit
 # banks.yaml `detail_patterns` ile ezilir).
 DEFAULT_DETAIL_PATTERNS = ("kampanya", "firsat", "avantaj", "finansman")
 
+# Ürün sayfası olma ihtimali yüksek yol parçaları (2. toplama turu).
+# Ölçüm: kampanya sayfalarının yalnızca %3,8'inde kâr payı oranı vardı; vade,
+# tahsis ücreti ve oran bilgisi ürün sayfalarında yayımlanıyor.
+DEFAULT_PRODUCT_PATTERNS = (
+    # finansman ürünleri (kâr payı + vade + tahsis ücreti)
+    r"finansman", r"kredi", r"leasing",
+    # yatırım / birikim ürünleri (getiri, kâr paylaşım oranı)
+    r"hesap", r"katilma", r"yatirim", r"birikim", r"fon", r"sukuk",
+    r"kira-sertifikasi", r"altin", r"maden", r"doviz",
+    # kart ürünleri
+    r"kart",
+    # ücret tarifesi / bilgilendirme (tahsis ücreti ve masraf oranları tablosu)
+    r"urun-ve-hizmet-ucret", r"urun-hizmet", r"ucretler", r"tarife",
+    r"bilgilendirme-form", r"sozlesme",
+    # oran sayfaları — en yüksek değerli sınıf
+    r"kar-payi", r"kar-paylasim", r"oranlar",
+)
+
+# Ürün keşfinde ayrıca elenenler: kampanya belgeleri `live/` altında zaten var
+# (çift toplamayı önler), blog/haber/kurumsal içerik ise ürün değildir.
+PRODUCT_EXCLUDE_PATTERNS = (
+    r"/kampanya", r"kampanyalar", r"kampanyasi", r"/blog/", r"/haberler",
+    r"/duyuru", r"/basin", r"/fotograf-galerisi", r"/yatirimci-iliskileri",
+    r"/hakkimizda", r"/finansal-kilavuz", r"/bizi-taniyin", r"/insan-kaynaklari",
+    r"/kvkk", r"/cerez", r"/site-haritasi", r"/subelerimiz", r"/iletisim",
+)
+
 # Asla kampanya belgesi olmayan yollar.
 DEFAULT_EXCLUDE_PATTERNS = (
     r"/en/", r"/ar/", r"/english", r"\.pdf$", r"\.jpg$", r"\.png$", r"\.svg$",
@@ -137,6 +164,37 @@ def discover(bank, fetch, *, max_docs: int = 40,
     exclude = list(exclude_patterns if exclude_patterns is not None
                    else DEFAULT_EXCLUDE_PATTERNS)
     exclude += list(getattr(bank, "exclude_patterns", None) or [])
+    return _discover(bank, fetch, max_docs=max_docs,
+                     paths=list(bank.campaign_paths),
+                     sitemaps=list(getattr(bank, "sitemap_urls", None) or []),
+                     include=include, exclude=exclude, ranker=rank)
+
+
+def discover_products(bank, fetch, *, max_docs: int = 80,
+                      exclude_patterns: Optional[Iterable[str]] = None
+                      ) -> DiscoveryResult:
+    """Bir banka için ÜRÜN sayfası URL'lerini keşfeder (kampanyadan ayrı).
+
+    Kampanya keşfiyle aynı iki aşamalı mekanizmayı kullanır, yalnızca girdi
+    kümesi farklıdır: `product_paths` / `product_sitemap_urls` /
+    `product_patterns`. Kampanya URL'leri elenir — onlar `live/` altında zaten
+    toplanmıştır, ikinci kez toplanmaları çift kayıt üretirdi.
+    """
+    include = list(getattr(bank, "product_patterns", None) or DEFAULT_PRODUCT_PATTERNS)
+    exclude = list(exclude_patterns if exclude_patterns is not None
+                   else DEFAULT_EXCLUDE_PATTERNS + PRODUCT_EXCLUDE_PATTERNS)
+    exclude += list(getattr(bank, "product_exclude_patterns", None) or [])
+    sitemaps = list(getattr(bank, "product_sitemap_urls", None)
+                    or getattr(bank, "sitemap_urls", None) or [])
+    return _discover(bank, fetch, max_docs=max_docs,
+                     paths=list(getattr(bank, "product_paths", None) or []),
+                     sitemaps=sitemaps, include=include, exclude=exclude,
+                     ranker=rank_products)
+
+
+def _discover(bank, fetch, *, max_docs: int, paths: list[str], sitemaps: list[str],
+              include: list[str], exclude: list[str], ranker) -> DiscoveryResult:
+    """Kampanya ve ürün keşfinin ortak çekirdeği (tek gezinme mantığı)."""
     base = bank.website_url.rstrip("/")
     # Banka kampanyalarını ayrı alan adında yayımlıyorsa (ör. TOM Bank →
     # tombankhadi.com) o alan da "aynı site" sayılır.
@@ -161,7 +219,6 @@ def discover(bank, fetch, *, max_docs: int = 40,
             result.from_listing += 1
 
     # --- Aşama 1: sitemap ---
-    sitemaps = list(getattr(bank, "sitemap_urls", None) or [])
     if sitemaps:
         locs, notes = collect_sitemap_urls(sitemaps, fetch)
         result.notes.extend(notes)
@@ -169,7 +226,7 @@ def discover(bank, fetch, *, max_docs: int = 40,
             add(loc, "sitemap")
 
     # --- Aşama 2: liste sayfalarından iki aşamalı gezinme ---
-    for path in bank.campaign_paths:
+    for path in paths:
         list_url = path if path.startswith("http") else base + path
         res = fetch(list_url)
         if not getattr(res, "ok", False):
@@ -183,7 +240,7 @@ def discover(bank, fetch, *, max_docs: int = 40,
     if max_docs and len(result.urls) > max_docs:
         result.notes.append(
             f"{len(result.urls)} aday bulundu, max_docs={max_docs} ile kirpildi")
-        result.urls = rank(result.urls)[:max_docs]
+        result.urls = ranker(result.urls)[:max_docs]
     return result
 
 
@@ -211,5 +268,33 @@ def rank(urls: Iterable[str]) -> list[str]:
                 break
         depth = url.count("/")
         return (bucket, depth, url)
+
+    return sorted(urls, key=key)
+
+
+# Ürün kırpmasında önceliklendirme. Sıra ölçümle belirlendi (2. tur keşif spike'ı):
+# oran/ücret tarifesi sayfaları kâr payı oranını METİN olarak yayımlıyor;
+# finansman ürün sayfaları vade + tahsis ücreti veriyor; kart sayfaları en zayıf.
+_PRODUCT_PRIORITY = (
+    (r"kar-payi|kar-paylasim|oranlar|urun-ve-hizmet-ucret|urun-hizmet|ucretler|tarife", 0),
+    (r"katilma|finansman|kredi|leasing", 1),
+    (r"hesap|yatirim|birikim|fon|sukuk|kira-sertifikasi|altin|maden|doviz", 2),
+    (r"bilgilendirme-form|sozlesme", 3),
+    (r"kart", 4),
+)
+
+
+def rank_products(urls: Iterable[str]) -> list[str]:
+    """Ürün adaylarını bilgi yoğunluğuna göre sıralar (kararlı/deterministik)."""
+
+    def key(url: str) -> tuple[int, int, str]:
+        bucket = len(_PRODUCT_PRIORITY)
+        for pattern, score in _PRODUCT_PRIORITY:
+            if re.search(pattern, url, re.I):
+                bucket = score
+                break
+        # Derin sayfalar gerçek ürün, sığ sayfalar kategori indeksidir; ancak
+        # kategori sayfaları da ürün listesi taşır, bu yüzden sığdan derine.
+        return (bucket, url.count("/"), url)
 
     return sorted(urls, key=key)

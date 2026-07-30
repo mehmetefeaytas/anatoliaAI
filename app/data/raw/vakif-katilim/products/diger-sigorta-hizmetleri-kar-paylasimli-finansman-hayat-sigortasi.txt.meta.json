@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/sigorta-ve-emeklilik/sigorta/diger-sigorta-hizmetleri/kar-paylasimli-finansman-hayat-sigortasi",
+  "scraped_at": "2026-07-30T19:45:44+00:00",
+  "content_hash": "3ab517cb225c73e7c9d52f1dbb2d573ab0c4dc4745194c7eeddb8b74c6e92713",
+  "collection_method": "live",
+  "title": "Kar Paylaşımlı Finansman Hayat Sigortası | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 157083,
+  "text_chars": 3925
+}

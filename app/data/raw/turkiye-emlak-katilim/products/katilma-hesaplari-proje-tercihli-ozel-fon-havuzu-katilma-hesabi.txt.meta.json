@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/proje-tercihli-ozel-fon-havuzu-katilma-hesabi",
+  "scraped_at": "2026-07-30T19:48:51+00:00",
+  "content_hash": "654beea0f1b1310d16f0b1cb15c0a01abc2bd8d0771814df979d51ece822f4c8",
+  "collection_method": "live",
+  "title": "Proje Tercihli &#214;zel Fon Havuzu Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 187078,
+  "text_chars": 4378
+}

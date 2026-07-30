@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/eflatun-bankacilik/eflatun-kartlar/eflatun-kredi-karti",
+  "scraped_at": "2026-07-30T19:42:51+00:00",
+  "content_hash": "9d01098a6f1e58ab31b1cf45e5809d5353c1eb944f4a4165823348f87c3eb827",
+  "collection_method": "live",
+  "title": "Eflatun Kredi Kartı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 186939,
+  "text_chars": 3984
+}

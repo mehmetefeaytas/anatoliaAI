@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/surdurulebilirlik-temali-bireysel-urunler/enerji-verimliligi-yonetim-finansmani",
+  "scraped_at": "2026-07-30T19:44:38+00:00",
+  "content_hash": "a0d9fb8cf25be8def3c2146cb12ef035230509f3c6ec6e884bcc77512f0d81d7",
+  "collection_method": "live",
+  "title": "Enerji Verimliliği Yönetim Finansmanı | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 470957,
+  "text_chars": 1047
+}

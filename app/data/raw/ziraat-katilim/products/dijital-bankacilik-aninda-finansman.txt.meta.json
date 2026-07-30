@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/dijital-bankacilik/aninda-finansman",
+  "scraped_at": "2026-07-30T19:44:17+00:00",
+  "content_hash": "e89804d1a427fa1e6809417c5ca489b08f2b9c4ee14ea103531c63bd8fe39375",
+  "collection_method": "live",
+  "title": "Anında Finansman Platformu | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 458629,
+  "text_chars": 3616
+}

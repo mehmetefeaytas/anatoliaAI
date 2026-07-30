@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/sigorta/finansman-hayat-sigortalari/tasit-finansmani-hayat-sigortasi",
+  "scraped_at": "2026-07-30T19:44:59+00:00",
+  "content_hash": "3ea7e560614808486af071e9f2869736e7847dad9588372c38c237a8da2beade",
+  "collection_method": "live",
+  "title": "Taşıt Finansmanı Hayat Sigortası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 455272,
+  "text_chars": 575
+}

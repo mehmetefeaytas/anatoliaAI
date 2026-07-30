@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/finansal-kiralamalar",
+  "scraped_at": "2026-07-30T19:46:05+00:00",
+  "content_hash": "ffe35e87f139759dff390435b5e0305f38b1f0c50deee90e58b42aacf876d7ce",
+  "collection_method": "live",
+  "title": "Finansal Kiralamalar | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 137410,
+  "text_chars": 1025
+}

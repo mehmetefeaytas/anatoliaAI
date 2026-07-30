@@ -43,6 +43,8 @@ METHOD_FIXTURE = "fixture"  # repodaki sentetik örnek
 
 LIVE_SUBDIR = "live"
 MANUAL_SUBDIR = "manual"
+# 2. toplama turu: ürün sayfaları kampanyalarla karışmasın diye ayrı klasör
+PRODUCTS_SUBDIR = "products"
 
 
 def utc_now_iso() -> str:
@@ -227,7 +229,8 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
                  bundle: Optional[FetcherBundle] = None,
                  robots: Optional[RobotsCache] = None,
                  max_docs: int = 40,
-                 report: Optional[dict[str, Any]] = None) -> list[RawDoc]:
+                 report: Optional[dict[str, Any]] = None,
+                 discover_fn: Optional[Any] = None) -> list[RawDoc]:
     """Canlı toplama — `scrape_mode` dispatch'li, robots.txt uyumlu.
 
     Bağımlılık yoksa boş liste döner (çağıran fixture'a düşer). `report` verilirse
@@ -261,7 +264,10 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
             return FetchResult(url, error="robots disallow", method=fetcher.method)
         return fetcher.fetch(url)
 
-    found = discover(bank, guarded_fetch, max_docs=max_docs)
+    # Keşif fonksiyonu enjekte edilebilir: kampanya turu `discover`,
+    # ürün turu `discover_products` kullanır. Getirme/robots/tekilleştirme
+    # mantığı ikisinde de aynıdır, yalnızca URL kümesi farklıdır.
+    found = (discover_fn or discover)(bank, guarded_fetch, max_docs=max_docs)
     diag["discovered"] = len(found.urls)
     diag["from_sitemap"] = found.from_sitemap
     diag["from_listing"] = found.from_listing

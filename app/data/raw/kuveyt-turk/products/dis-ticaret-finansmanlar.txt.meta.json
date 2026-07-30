@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/finansmanlar",
+  "scraped_at": "2026-07-30T19:40:35+00:00",
+  "content_hash": "1313923f5089e76e6bba755879c52b4d2a0a0fef387225c1402696853ed9771b",
+  "collection_method": "live",
+  "title": "Finansmanlar | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129928,
+  "text_chars": 451
+}

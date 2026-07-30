@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/gayri-nakdi-finansman/teminat-mektuplari",
+  "scraped_at": "2026-07-30T19:49:34+00:00",
+  "content_hash": "d135a3c0dbaeb7b9bd8bf79eafae58bc4f0d55319b50f1de68f49d53a0cab432",
+  "collection_method": "live",
+  "title": "Teminat Mektuplar&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 501080,
+  "text_chars": 11398
+}

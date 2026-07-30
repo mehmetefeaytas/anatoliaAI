@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/biriktiren-hesaplar",
+  "scraped_at": "2026-07-30T19:48:33+00:00",
+  "content_hash": "33bd6b6604ae61933060f012f5da27e595e53b7e047237624676b741eccaf717",
+  "collection_method": "live",
+  "title": "Biriktiren Hesaplar | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166280,
+  "text_chars": 1462
+}

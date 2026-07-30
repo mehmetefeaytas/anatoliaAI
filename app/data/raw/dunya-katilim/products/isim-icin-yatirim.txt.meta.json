@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/yatirim",
+  "scraped_at": "2026-07-30T19:50:16+00:00",
+  "content_hash": "53a911f2d93837631bf818d936622c385ac6b9accd6629cc7378c0867463f206",
+  "collection_method": "live",
+  "title": "Yat&#x131;r&#x131;m | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 503445,
+  "text_chars": 9537
+}

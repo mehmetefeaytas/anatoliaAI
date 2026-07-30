@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/gayrinakdi-finansman",
+  "scraped_at": "2026-07-30T19:48:09+00:00",
+  "content_hash": "4c42304e3e018fc53646d27fe0dc64045e0f6a0dcc8aa28a65100d0c876b1a37",
+  "collection_method": "live",
+  "title": "Gayrinakdi Finansman | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 158863,
+  "text_chars": 514
+}

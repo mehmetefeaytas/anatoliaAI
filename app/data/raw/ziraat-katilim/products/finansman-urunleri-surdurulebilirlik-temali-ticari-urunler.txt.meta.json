@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/surdurulebilirlik-temali-ticari-urunler",
+  "scraped_at": "2026-07-30T19:44:23+00:00",
+  "content_hash": "33a4ca65616f864ec4bc84c0291e5b88c88c86b6089f2915032d6ec9a74cb44c",
+  "collection_method": "live",
+  "title": "Sürdürülebilirlik Temalı Ticari Ürünler | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 459073,
+  "text_chars": 1116
+}

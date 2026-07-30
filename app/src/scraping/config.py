@@ -32,6 +32,15 @@ class BankConfig:
     sitemap_urls: list[str] = field(default_factory=list)
     detail_patterns: list[str] = field(default_factory=list)
     exclude_patterns: list[str] = field(default_factory=list)
+    # ÜRÜN keşfi — kampanya keşfinden AYRI tutulur (2. toplama turu).
+    # Kâr payı oranı / vade / tahsis ücreti kampanya sayfasında değil, ürün
+    # sayfasındadır ("avantajlı oranlarla" deyip ürüne link verirler).
+    # Boşsa `sitemap_urls` / varsayılan desenler kullanılır.
+    product_paths: list[str] = field(default_factory=list)
+    product_sitemap_urls: list[str] = field(default_factory=list)
+    product_patterns: list[str] = field(default_factory=list)
+    product_exclude_patterns: list[str] = field(default_factory=list)
+    max_product_docs: int = 80
     # Bankanın kampanyalarını AYRI alan adında yayımladığı durumlar
     # (ör. TOM Bank → tombankhadi.com). Keşifte bu alanlar da "aynı site" sayılır.
     extra_hosts: list[str] = field(default_factory=list)
@@ -41,7 +50,10 @@ class BankConfig:
 
 # banks.yaml'de tanınan liste alanları (mini-parser için)
 _LIST_KEYS = ("campaign_paths", "sitemap_urls", "detail_patterns", "exclude_patterns",
-              "extra_hosts")
+              "extra_hosts", "product_paths", "product_sitemap_urls",
+              "product_patterns", "product_exclude_patterns")
+# int'e çevrilmesi gereken alanlar (mini-parser YAML tip çıkarımı yapmaz)
+_INT_KEYS = ("max_docs", "max_product_docs")
 # BankConfig'de karşılığı olmayan anahtarlar sessizce yok sayılır (ileri uyumluluk)
 _KNOWN_KEYS = {f.name for f in fields(BankConfig)}
 
@@ -52,8 +64,9 @@ def load_banks(path: str | Path) -> list[BankConfig]:
     out: list[BankConfig] = []
     for raw in data.get("banks", []) or []:
         clean = {k: v for k, v in raw.items() if k in _KNOWN_KEYS}
-        if "max_docs" in clean:
-            clean["max_docs"] = int(clean["max_docs"])
+        for key in _INT_KEYS:
+            if key in clean:
+                clean[key] = int(clean[key])
         out.append(BankConfig(**clean))
     return out
 

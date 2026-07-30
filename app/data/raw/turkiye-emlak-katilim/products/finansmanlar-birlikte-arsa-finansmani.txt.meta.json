@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/birlikte-arsa-finansmani",
+  "scraped_at": "2026-07-30T19:47:21+00:00",
+  "content_hash": "3eea79e607473a8004009d6453f7bf8bab7b387e534ec25a1e149a91a6a635b6",
+  "collection_method": "live",
+  "title": "Birlikte Arsa Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164756,
+  "text_chars": 1693
+}

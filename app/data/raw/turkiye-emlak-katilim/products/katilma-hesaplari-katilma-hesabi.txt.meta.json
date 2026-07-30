@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/katilma-hesabi",
+  "scraped_at": "2026-07-30T19:48:45+00:00",
+  "content_hash": "5844eb133d990107e65105ae8a50e9b36f2f8be850e15591a10c296d857531c4",
+  "collection_method": "live",
+  "title": "Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 230936,
+  "text_chars": 3681
+}

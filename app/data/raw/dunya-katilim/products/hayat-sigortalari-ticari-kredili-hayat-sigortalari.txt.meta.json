@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/sigortalar/hayat-sigortalari/ticari-kredili-hayat-sigortalari",
+  "scraped_at": "2026-07-30T19:49:43+00:00",
+  "content_hash": "4128535fe8be724b1dc221fdbdeafaef13ece48d412ed97f7767db4af6669876",
+  "collection_method": "live",
+  "title": "Ticari Kredili Hayat Sigortalar&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 499563,
+  "text_chars": 9952
+}

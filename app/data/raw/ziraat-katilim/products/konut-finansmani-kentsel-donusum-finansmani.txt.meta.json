@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/konut-finansmani/kentsel-donusum-finansmani",
+  "scraped_at": "2026-07-30T19:44:32+00:00",
+  "content_hash": "87c4031cbd85ced5531cb086463a6be74a09352ddaa49cfe2a0a1642891491d4",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm Finansmanı | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 471920,
+  "text_chars": 2036
+}

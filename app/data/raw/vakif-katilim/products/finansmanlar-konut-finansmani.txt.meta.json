@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/konut-finansmani",
+  "scraped_at": "2026-07-30T19:46:44+00:00",
+  "content_hash": "dfef0860d6b05e4316614cd70268e44c6ced98c58ebe959829f998926eb6c4f7",
+  "collection_method": "live",
+  "title": "Konut Finansmanı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 161497,
+  "text_chars": 7072
+}

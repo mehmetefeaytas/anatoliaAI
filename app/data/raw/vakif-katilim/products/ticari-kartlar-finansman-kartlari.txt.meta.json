@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/ticari-kartlar/finansman-kartlari",
+  "scraped_at": "2026-07-30T19:46:23+00:00",
+  "content_hash": "668f8d07c5b3c821cc8e8fc3b56baca52914a9f60af024fa1994a995a93145b4",
+  "collection_method": "live",
+  "title": "Finansman Kartları | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 130821,
+  "text_chars": 386
+}

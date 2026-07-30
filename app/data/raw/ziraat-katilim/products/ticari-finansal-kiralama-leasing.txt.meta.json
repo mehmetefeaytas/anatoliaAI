@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansal-kiralama-leasing",
+  "scraped_at": "2026-07-30T19:43:53+00:00",
+  "content_hash": "9c493d564ace432104215056c1b84f68cd8d0dd21e97081fe8a1d7209bbfe9fb",
+  "collection_method": "live",
+  "title": "Finansal Kiralama (Leasing) | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 465414,
+  "text_chars": 382
+}

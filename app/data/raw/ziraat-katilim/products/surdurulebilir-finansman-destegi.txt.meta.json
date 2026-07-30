@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/surdurulebilir-finansman-destegi",
+  "scraped_at": "2026-07-30T19:43:41+00:00",
+  "content_hash": "87849960907fa72c248f3fe4c334bcc84a843ea665f7e161aac5941fad122f48",
+  "collection_method": "live",
+  "title": "Sürdürülebilir Finansman Desteği | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 453104,
+  "text_chars": 936
+}

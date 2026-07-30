@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/gayri-nakdi-finansman/referans-mektuplari",
+  "scraped_at": "2026-07-30T19:49:31+00:00",
+  "content_hash": "536e142b0b40bd57214e33c8cfa343d4ba35933593027df8f5877d846d24b65b",
+  "collection_method": "live",
+  "title": "Referans Mektuplar&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 498929,
+  "text_chars": 9485
+}

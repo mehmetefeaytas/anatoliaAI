@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/urun-hizmet-ve-ucretleri",
+  "scraped_at": "2026-07-30T19:48:55+00:00",
+  "content_hash": "1f4ea60646f25e1a0f37a7780d294d93ac554854b85bb153e4e8092e6b07d18e",
+  "collection_method": "live",
+  "title": "&#xDC;r&#xFC;n Hizmet ve &#xDC;cretleri | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 497890,
+  "text_chars": 8944
+}

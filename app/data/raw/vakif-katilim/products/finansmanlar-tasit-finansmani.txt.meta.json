@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/tasit-finansmani",
+  "scraped_at": "2026-07-30T19:46:50+00:00",
+  "content_hash": "d150febeb07e3d16a1caac3a3f9eaa83e6a0fb1c75e697bfdf7438b13c206486",
+  "collection_method": "live",
+  "title": "Taşıt Finansmanı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 158074,
+  "text_chars": 5598
+}

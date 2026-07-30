@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/sigorta/finansman-hayat-sigortalari/ihtiyac-finansmani-hayat-sigortasi",
+  "scraped_at": "2026-07-30T19:44:53+00:00",
+  "content_hash": "d72d3fd0f11fc82d264e68ce6af1ef17ff253ab93d77b031f34a057c8199bf7d",
+  "collection_method": "live",
+  "title": "İhtiyaç Finansmanı Hayat Sigortası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 454064,
+  "text_chars": 586
+}

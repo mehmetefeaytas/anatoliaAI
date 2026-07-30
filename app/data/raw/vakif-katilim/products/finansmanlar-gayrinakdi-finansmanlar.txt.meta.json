@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar",
+  "scraped_at": "2026-07-30T19:46:08+00:00",
+  "content_hash": "6522b4eb425beb9a707e5bd7b86da061a1a607dc60a533aa089b5e9ca7f2348e",
+  "collection_method": "live",
+  "title": "Gayrinakdi Finansmanlar | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 146591,
+  "text_chars": 1540
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/jet-finansman",
+  "scraped_at": "2026-07-30T19:43:19+00:00",
+  "content_hash": "b61949272803cee7aba840dbcddf8a4bba32edfe2e5574369ba4f781bfff5f6d",
+  "collection_method": "live",
+  "title": "Jet Finansman | Hızlı Finansman Başvurusu",
+  "http_status": 200,
+  "raw_bytes": 186352,
+  "text_chars": 4335
+}

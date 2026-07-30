@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/konut-finansmani/cevreci-konut-finansmani",
+  "scraped_at": "2026-07-30T19:48:30+00:00",
+  "content_hash": "d3488fd4e210545800e3512c75e73520a6f31f25b14f30fcfa089b71d9b15b09",
+  "collection_method": "live",
+  "title": "&#199;evreci Konut Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 157295,
+  "text_chars": 295
+}

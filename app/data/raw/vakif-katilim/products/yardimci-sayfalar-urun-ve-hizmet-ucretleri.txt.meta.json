@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/yardimci-sayfalar/urun-ve-hizmet-ucretleri",
+  "scraped_at": "2026-07-30T19:45:23+00:00",
+  "content_hash": "7f96cd9022298a8936686e11eed27fd13ebacab4c4b3787575ca4a6e8be9ccd8",
+  "collection_method": "live",
+  "title": "&#220;r&#252;n ve Hizmet &#220;cretleri | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 131132,
+  "text_chars": 744
+}

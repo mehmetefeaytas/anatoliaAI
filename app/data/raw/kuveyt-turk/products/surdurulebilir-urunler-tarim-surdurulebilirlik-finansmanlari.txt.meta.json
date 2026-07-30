@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/surdurulebilir-urunler/tarim-surdurulebilirlik-finansmanlari",
+  "scraped_at": "2026-07-30T19:41:17+00:00",
+  "content_hash": "6e793a53dde22d642aa13034eff889abe25b790691cf3b875792c89175ca4e1e",
+  "collection_method": "live",
+  "title": "Tarım Sürdürülebilirlik Finansmanları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132217,
+  "text_chars": 2859
+}

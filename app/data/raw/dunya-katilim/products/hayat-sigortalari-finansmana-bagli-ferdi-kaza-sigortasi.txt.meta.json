@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/sigortalar/hayat-sigortalari/finansmana-bagli-ferdi-kaza-sigortasi",
+  "scraped_at": "2026-07-30T19:50:10+00:00",
+  "content_hash": "b7f84a44d8b86852f3f22e7038c06b1dafa48d6c5be5958391825ca64a2d0358",
+  "collection_method": "live",
+  "title": "Finansmana Ba&#x11F;l&#x131; Ferdi Kaza Sigortas&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 499419,
+  "text_chars": 9479
+}

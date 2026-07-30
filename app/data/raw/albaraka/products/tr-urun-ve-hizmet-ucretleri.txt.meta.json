@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/urun-ve-hizmet-ucretleri",
+  "scraped_at": "2026-07-30T19:41:44+00:00",
+  "content_hash": "b9d3ccb2657ad2ad0b9c0e8429e941b3ddeeeddaceb8a09a44fecb55d3cb5967",
+  "collection_method": "live",
+  "title": "Ürün ve Hizmet Ücretleri - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 669222,
+  "text_chars": 77310
+}

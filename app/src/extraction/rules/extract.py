@@ -12,6 +12,7 @@ Halüsinasyon yasağı: değer uydurma.
 from __future__ import annotations
 
 import re
+from dataclasses import dataclass
 from typing import Optional
 
 from ...normalization import normalize as N
@@ -310,6 +311,168 @@ def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
                   candidate_count=len(pat.findall(text)))
 
 
+@dataclass
+class RateRow:
+    """Oran tablosunun tek satırı: bir vade ve o vadeye ait oranlar."""
+
+    vade_ay: int
+    kar_payi: float
+    tahsis_ucreti: Optional[float] = None
+
+
+def parse_rate_table(text: str) -> list[RateRow]:
+    """Banka ürün sayfalarındaki ORAN TABLOSUNU ayrıştırır.
+
+    Gerçek veride bulundu (Türkiye Finans, Vakıf Katılım ürün sayfaları).
+    Sayfalar oranı düz cümle olarak değil TABLO olarak yayımlıyor:
+
+        Vade  Kâr Payı Oranı  Tahsis Ücreti  Aylık Maliyet  Yıllık Maliyet
+          3       4,09%           0,50%          5,63%         92,88%
+         12       4,05%           0,50%          5,37%         87,29%
+         36       3,89%           0,50%          5,10%         81,69%
+
+    HTML→metin dönüşümünden sonra bu düz bir belirteç dizisine iner:
+        "... Vade Kâr Payı Oranı Tahsis Ücreti ... 3 4,09% 0,50% 5,63%
+         92,88% 12 4,05% 0,50% ..."
+
+    `extract_kar_payi` bunu kaçırır çünkü "kâr payı" etiketi tablo
+    BAŞLIĞINDA, değerlerden onlarca karakter uzakta. Oysa şartnamenin
+    §5.3/§5.7'de istediği bilgi (vade + kâr payı + tahsis ücreti bir arada)
+    tam olarak burada.
+
+    Dönüş: satır listesi. Tablo bulunamazsa boş liste.
+    """
+    # Başlık. Bankalar farklı etiket kullanıyor — gerçek veride görülenler:
+    #   "Vade  Kâr Payı Oranı  Tahsis Ücreti ..."        (Türkiye Finans)
+    #   "Finansman Tutarı  Vade  Kar Oranı  Taksit ..."  (Emlak Katılım)
+    # Bu yüzden "payı" ZORUNLU DEĞİL ve kolon sırası esnek.
+    baslik = re.search(
+        r"vade[^%\d]{0,40}?(kâr|kar)\s*(pay[ıi]\s*|payla[şs][ıi]m\s*)?oran[ıi]",
+        text, re.IGNORECASE)
+    if not baslik:
+        return []
+
+    kuyruk = text[baslik.end(): baslik.end() + 4000]
+
+    yuzde = r"(?:%\s*\d{1,3}[.,]\d{1,2}|\d{1,3}[.,]\d{1,2}\s*%)"
+
+    # DİKKAT — kredi/değer oranı tuzağı. Vakıf Katılım konut sayfasında
+    #   "Değer x 90%  Değer x 80%  Değer x 70%"
+    # geçiyor; bunlar KREDİ/DEĞER oranıdır, kâr payı DEĞİLDİR. Bir yüzdenin
+    # hemen öncesinde "değer x" varsa satır atlanır.
+    kredi_deger = re.compile(r"de[ğg]er\s*[x×]\s*$", re.IGNORECASE)
+
+    # İki satır biçimi gözlendi:
+    #   A) "3 4,09% 0,50% 5,63%"        -> vade çıplak tamsayı
+    #   B) "30.000,00 ₺ 12 Ay 1,69% ..." -> vade "12 Ay"
+    # Genel çözüm: vade adayını bul, ONDAN SONRAKİ ilk yüzdeyi kâr payı say.
+    # (?![\d.,]) ZORUNLU: bu olmadan "30.000,00 ₺ 12 Ay" ifadesinden "30"
+    # kapılıp vade 30 sanılıyordu (doğrusu 12). Sayının tamamı tüketilmeli.
+    vade_re = re.compile(r"\b(\d{1,3})(?![\d.,])\s*(?:ay\b)?", re.IGNORECASE)
+    yuzde_re = re.compile(yuzde)
+
+    yuzdeler = [(m.start(), m.end(), m.group(0))
+                for m in yuzde_re.finditer(kuyruk)]
+    if not yuzdeler:
+        return []
+
+    # BİÇİM A önce denenir: "3 4,09% 0,50% 5,63% 92,88% 12 4,05% ..."
+    # Vade çıplak tamsayı, ardından 2-5 yüzde bir arada. Bu düzen KATI
+    # eşleştirmeyle doğru okunur; esnek eşleştirme burada çöp satır üretir
+    # (her vade adayını en yakın yüzdeyle çiftler, kolonlar kayar).
+    kati = re.compile(rf"\b(\d{{1,3}})(?![\d.,])\s+((?:{yuzde}\s*){{2,5}})")
+    kati_rows: list[RateRow] = []
+    for m in kati.finditer(kuyruk):
+        try:
+            vade = int(m.group(1))
+        except ValueError:
+            continue
+        if not (1 <= vade <= 480):
+            continue
+        oranlar = [N.parse_tr_number(x) for x in re.findall(yuzde, m.group(2))]
+        oranlar = [o for o in oranlar if o is not None]
+        if len(oranlar) < 2 or not (0 < oranlar[0] <= 15):
+            continue
+        kati_rows.append(RateRow(
+            vade_ay=vade, kar_payi=oranlar[0],
+            tahsis_ucreti=oranlar[1] if 0 <= oranlar[1] <= 10 else None))
+    if kati_rows:
+        return kati_rows
+
+    # BİÇİM B: "30.000,00 ₺ 12 Ay 1,69% 2.841,66 ₺ 157,50 ₺"
+    # Kolonlar arasında para birimi var, katı düzen tutmaz — vade adayını
+    # kendisinden SONRAKİ ilk yüzdeyle çiftle.
+    rows: list[RateRow] = []
+    kullanilan: set[int] = set()
+    for vm in vade_re.finditer(kuyruk):
+        try:
+            vade = int(vm.group(1))
+        except ValueError:
+            continue
+        if not (1 <= vade <= 480):
+            continue
+        # Vadeden sonraki ilk yüzde, ve 60 karakterden uzaksa ilgisizdir.
+        sonraki = [y for y in yuzdeler
+                   if y[0] >= vm.end() and y[0] - vm.end() <= 60
+                   and y[0] not in kullanilan]
+        if not sonraki:
+            continue
+        s0, e0, ham = sonraki[0]
+        if kredi_deger.search(kuyruk[max(0, s0 - 12): s0]):
+            continue
+        kar = N.parse_tr_number(ham)
+        if kar is None or not (0 < kar <= 15):
+            # Kâr payı makul bandın dışındaysa bu bir maliyet/iskonto
+            # kolonudur (yıllık toplam maliyet %92 gibi) — satır değil.
+            continue
+        kullanilan.add(s0)
+        # Tahsis ücreti: bir sonraki yüzde, varsa ve makulse.
+        tahsis = None
+        ardindan = [y for y in yuzdeler if y[0] >= e0 and y[0] - e0 <= 30]
+        if ardindan:
+            t = N.parse_tr_number(ardindan[0][2])
+            if t is not None and 0 <= t <= 10:
+                tahsis = t
+        rows.append(RateRow(vade_ay=vade, kar_payi=kar, tahsis_ucreti=tahsis))
+    return rows
+
+
+def extract_from_rate_table(text: str) -> list[ExtractedField]:
+    """Oran tablosundan `kar_payi_orani`, `vade_ay`, `tahsis_ucreti` üretir.
+
+    Tablo birden çok vade içerir, şema ise alan başına tek değer ister.
+    Karar: kâr payı **aralık** olarak verilir (dürüst — vadeye göre değişir),
+    vade **en uzun** vade, tahsis ücreti tablodaki sabit değer.
+    §5.7 "En Düşük Kâr Payı" karşılaştırması aralığın alt sınırını kullanır.
+    """
+    rows = parse_rate_table(text)
+    if not rows:
+        return []
+
+    m = re.search(r"vade[^%\d]{0,40}?(kâr|kar)\s*pay[ıi]\s*oran[ıi]",
+                  text, re.IGNORECASE)
+    s, e = (m.span() if m else (0, 0))
+    pencere = _window(text, s, e)
+
+    oranlar = [r.kar_payi for r in rows]
+    lo, hi = min(oranlar), max(oranlar)
+    kar_payi = N.collapse_degenerate_range({"min": lo, "max": hi})
+
+    out = [
+        _field("kar_payi_orani", text[s:e], kar_payi, pencere,
+               span_start=s, span_end=e, trigger_distance=0),
+        _field("vade_ay", text[s:e], max(r.vade_ay for r in rows), pencere,
+               span_start=s, span_end=e, trigger_distance=0),
+    ]
+    ucretler = {r.tahsis_ucreti for r in rows if r.tahsis_ucreti is not None}
+    if len(ucretler) == 1:
+        # Tahsis ücreti tabloda ORAN olarak veriliyor (%0,50), tutar değil.
+        out.append(_field("tahsis_ucreti", text[s:e],
+                          {"rate": ucretler.pop()}, pencere,
+                          span_start=s, span_end=e, trigger_distance=0))
+    return out
+
+
 def extract_odul_miktari(text: str) -> Optional[ExtractedField]:
     """Kampanya ödülü: 'X TL hediye', '500 TL para puan', 'cashback'.
 
@@ -565,6 +728,12 @@ def extract_all(text: str) -> list[ExtractedField]:
     çok kez yakalanırsa ilk (en yüksek güvenli) tutulur.
     """
     out: dict[str, ExtractedField] = {}
+    # ORAN TABLOSU önce denenir: tablo varsa kâr payı/vade/tahsis ücreti
+    # oradan gelir ve tekil çıkarıcıların tablo gövdesinden yanlış değer
+    # devşirmesi engellenir (tabloda onlarca sayı yan yana durur).
+    for f in extract_from_rate_table(text):
+        if f.is_present:
+            out[f.field_name] = f
     for fn in _EXTRACTORS:
         f = fn(text)
         if f and f.is_present and f.field_name not in out:

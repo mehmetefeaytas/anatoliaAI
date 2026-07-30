@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/ozel-bankacilik-ayricaliklari/egitim-finansman",
+  "scraped_at": "2026-07-30T19:44:11+00:00",
+  "content_hash": "369bef9751f4b4a8c45cc59c0836fd9f2e61cd54bb10b414d5090415758d3c41",
+  "collection_method": "live",
+  "title": "Eğitim Finansmanı | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 458182,
+  "text_chars": 1573
+}

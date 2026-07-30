@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/hesaplama-araclari/finansman-hesaplama/tasit-finansmani-hesaplama",
+  "scraped_at": "2026-07-30T19:42:21+00:00",
+  "content_hash": "67fd5dfc9298f02e95c7e41b7a4ef61d6da5fb7f60d31614b4d0c010def9139e",
+  "collection_method": "live",
+  "title": "Araç Finansmanı Hesaplama Aracı | Sıfır & 2. El Araç Kredisi Hesaplama",
+  "http_status": 200,
+  "raw_bytes": 147303,
+  "text_chars": 4296
+}

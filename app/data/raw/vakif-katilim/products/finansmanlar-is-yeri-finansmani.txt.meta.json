@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/is-yeri-finansmani",
+  "scraped_at": "2026-07-30T19:46:38+00:00",
+  "content_hash": "2124732f38fd0fc7d75368f17eab2beffdb6a55c4f7f97f69f3e72947f3ef34f",
+  "collection_method": "live",
+  "title": "İş Yeri Finansmanı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 145785,
+  "text_chars": 2169
+}

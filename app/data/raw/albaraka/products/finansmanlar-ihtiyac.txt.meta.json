@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac",
+  "scraped_at": "2026-07-30T19:42:04+00:00",
+  "content_hash": "86b0c953fdf4a47f429a55de4b1bb23f759df4ea96a1bc80e0955d2828f95d57",
+  "collection_method": "live",
+  "title": "İhtiyaç Finansmanı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 247570,
+  "text_chars": 8875
+}

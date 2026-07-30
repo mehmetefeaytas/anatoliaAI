@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari",
+  "scraped_at": "2026-07-30T19:42:10+00:00",
+  "content_hash": "298e60c4f2b646c4d3f96d4376350252c0372a8d0784ebbb00867849593f5086",
+  "collection_method": "live",
+  "title": "Katılma Hesapları ile Faizsiz Birikim Yapabilirsiniz - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 207293,
+  "text_chars": 2794
+}

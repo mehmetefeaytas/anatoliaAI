@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/tarim/tarim-finansmani",
+  "scraped_at": "2026-07-30T19:43:50+00:00",
+  "content_hash": "11ee658dac8861c19c81bef0ffd86c6738ab877a79e00d78cd2743ba07bc739a",
+  "collection_method": "live",
+  "title": "Tarım Finansmanı | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 455536,
+  "text_chars": 1399
+}

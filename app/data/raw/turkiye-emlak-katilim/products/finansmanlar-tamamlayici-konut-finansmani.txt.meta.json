@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/tamamlayici-konut-finansmani",
+  "scraped_at": "2026-07-30T19:47:51+00:00",
+  "content_hash": "948aa075cc1f5818abf6d327823e41f0d76293f7fda864783eecaffed8a00802",
+  "collection_method": "live",
+  "title": "Tamamlayıcı Konut Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165977,
+  "text_chars": 2604
+}

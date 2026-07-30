@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/bayide-finansman",
+  "scraped_at": "2026-07-30T19:42:27+00:00",
+  "content_hash": "8d25fc229ef41dfdbde70237f3ab9304e8eae2f5b26dddbacc8f4754cecdef80",
+  "collection_method": "live",
+  "title": "Bayide Finansman - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182785,
+  "text_chars": 2427
+}

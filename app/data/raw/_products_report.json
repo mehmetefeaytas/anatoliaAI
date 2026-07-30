@@ -1,0 +1,197 @@
+{
+  "started_at": "2026-07-30T19:39:53+00:00",
+  "raw_dir": "data/raw",
+  "tur": "urun",
+  "ignore_robots": false,
+  "delay_s": 3.0,
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "banks": {
+    "kuveyt-turk": {
+      "blocked": [],
+      "notes": [
+        "232 aday bulundu, max_docs=35 ile kirpildi"
+      ],
+      "discovered": 35,
+      "from_sitemap": 232,
+      "from_listing": 0,
+      "name": "Kuveyt Türk",
+      "scrape_mode": "static",
+      "docs": 35,
+      "files_written": 70,
+      "bytes": 5202664,
+      "robots": "HTTP 200; 0 Allow / 0 Disallow; 1 sitemap"
+    },
+    "albaraka": {
+      "blocked": [],
+      "notes": [
+        "191 aday bulundu, max_docs=35 ile kirpildi"
+      ],
+      "discovered": 35,
+      "from_sitemap": 191,
+      "from_listing": 0,
+      "name": "Albaraka Türk",
+      "scrape_mode": "static",
+      "docs": 35,
+      "files_written": 70,
+      "bytes": 7362057,
+      "robots": "HTTP 200; 1 Allow / 8 Disallow; agent='*'; 1 sitemap"
+    },
+    "turkiye-finans": {
+      "blocked": [],
+      "notes": [],
+      "discovered": 0,
+      "from_sitemap": 0,
+      "from_listing": 0,
+      "name": "Türkiye Finans",
+      "scrape_mode": "static",
+      "docs": 0,
+      "files_written": 0,
+      "bytes": 0,
+      "robots": "HTTP 200; 0 Allow / 12 Disallow; agent='*'; 1 sitemap"
+    },
+    "ziraat-katilim": {
+      "blocked": [],
+      "notes": [
+        "62 aday bulundu, max_docs=35 ile kirpildi"
+      ],
+      "discovered": 35,
+      "from_sitemap": 62,
+      "from_listing": 0,
+      "name": "Ziraat Katılım",
+      "scrape_mode": "static",
+      "docs": 35,
+      "files_written": 70,
+      "bytes": 16219776,
+      "robots": "HTTP 200; 18 Allow / 33 Disallow; agent='*'; 2 sitemap"
+    },
+    "vakif-katilim": {
+      "blocked": [
+        {
+          "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/dijital-bankacilik/goruntulu-gorusmeyle-aidatsiz-kredi-karti-basvurunuzu-aninda-yapin",
+          "reason": "HTTP 404",
+          "detail": ""
+        },
+        {
+          "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kartlar/troy-dijital-kredi-karti",
+          "reason": "HTTP 404",
+          "detail": ""
+        }
+      ],
+      "notes": [
+        "164 aday bulundu, max_docs=35 ile kirpildi"
+      ],
+      "discovered": 35,
+      "from_sitemap": 164,
+      "from_listing": 0,
+      "name": "Vakıf Katılım",
+      "scrape_mode": "static",
+      "docs": 33,
+      "files_written": 66,
+      "bytes": 4796650,
+      "robots": "HTTP 200; 4 Allow / 6 Disallow; agent='*'; 2 sitemap"
+    },
+    "turkiye-emlak-katilim": {
+      "blocked": [],
+      "notes": [
+        "128 aday bulundu, max_docs=35 ile kirpildi"
+      ],
+      "discovered": 35,
+      "from_sitemap": 128,
+      "from_listing": 0,
+      "name": "Türkiye Emlak Katılım",
+      "scrape_mode": "static",
+      "docs": 35,
+      "files_written": 70,
+      "bytes": 6108172,
+      "robots": "HTTP 200; 1 Allow / 0 Disallow; agent='*'"
+    },
+    "tom-katilim": {
+      "blocked": [],
+      "notes": [
+        "tom-katilim: playwright kurulu degil — atlandi"
+      ],
+      "skipped_reason": "playwright kurulu degil",
+      "name": "T.O.M. Katılım",
+      "scrape_mode": "js",
+      "docs": 0,
+      "files_written": 0,
+      "bytes": 0,
+      "robots": "cekilemedi (404); REP geregi izin varsayildi"
+    },
+    "hayat-finans": {
+      "blocked": [],
+      "notes": [
+        "hayat-finans: playwright kurulu degil — atlandi"
+      ],
+      "skipped_reason": "playwright kurulu degil",
+      "name": "Hayat Finans",
+      "scrape_mode": "js",
+      "docs": 0,
+      "files_written": 0,
+      "bytes": 0,
+      "robots": "HTTP 200; 1 Allow / 0 Disallow; agent='*'; 1 sitemap"
+    },
+    "dunya-katilim": {
+      "blocked": [],
+      "notes": [
+        "61 aday bulundu, max_docs=35 ile kirpildi"
+      ],
+      "discovered": 35,
+      "from_sitemap": 61,
+      "from_listing": 0,
+      "name": "Dünya Katılım",
+      "scrape_mode": "static",
+      "docs": 35,
+      "files_written": 70,
+      "bytes": 18066556,
+      "robots": "HTTP 200; 1 Allow / 1 Disallow; agent='*'; 1 sitemap"
+    },
+    "adil-katilim": {
+      "blocked": [],
+      "notes": [
+        "adil-katilim: playwright kurulu degil — atlandi"
+      ],
+      "skipped_reason": "playwright kurulu degil",
+      "name": "Adil Katılım",
+      "scrape_mode": "js",
+      "docs": 0,
+      "files_written": 0,
+      "bytes": 0,
+      "robots": "HTTP 200; 0 Allow / 0 Disallow"
+    }
+  },
+  "finished_at": "2026-07-30T19:50:37+00:00",
+  "total_docs": 208,
+  "field_coverage": {
+    "before": {
+      "kar_payi_orani": 14,
+      "vade_ay": 100,
+      "masraf_durumu": 133,
+      "tahsis_ucreti": 11,
+      "kampanya_suresi": 209,
+      "hedef_kitle": 72,
+      "kampanya_kosullari": 233,
+      "odul_miktari": 102,
+      "taksit_sayisi": 102,
+      "indirim_orani": 39,
+      "finansman_tutari": 57,
+      "alisveris_puani": 46
+    },
+    "after": {
+      "kar_payi_orani": 22,
+      "vade_ay": 201,
+      "masraf_durumu": 212,
+      "tahsis_ucreti": 14,
+      "kampanya_suresi": 219,
+      "hedef_kitle": 115,
+      "kampanya_kosullari": 326,
+      "finansman_tutari": 77,
+      "odul_miktari": 105,
+      "alisveris_puani": 50,
+      "taksit_sayisi": 105,
+      "indirim_orani": 42
+    },
+    "docs_before": 304,
+    "docs_after": 500
+  }
+}
