@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/kobi-destekli-finansmanlar/katilim-finans-kefalet",
+  "scraped_at": "2026-07-30T20:19:25+00:00",
+  "content_hash": "e79bcdd1a0a6cce2cdd9a9cb50f6245fe9f051309af3a1e0007e1644156912ef",
+  "collection_method": "live",
+  "title": "Katılım Finans Kefalet | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 135923,
+  "text_chars": 2372
+}

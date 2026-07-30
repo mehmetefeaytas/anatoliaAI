@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/hesaplar/cari-hesap",
+  "scraped_at": "2026-07-30T20:26:12+00:00",
+  "content_hash": "86a4caf3a691f39d2fa6387ec76367cb50f4802a8d2f12a48adedeb0253c2dcc",
+  "collection_method": "browser",
+  "title": "Cari Hesap | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 312006,
+  "text_chars": 3657
+}

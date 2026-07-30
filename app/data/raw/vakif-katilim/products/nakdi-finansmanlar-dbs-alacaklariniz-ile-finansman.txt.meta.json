@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/dbs-alacaklariniz-ile-finansman",
+  "scraped_at": "2026-07-30T20:19:31+00:00",
+  "content_hash": "69843b165ccb1da1b6773a794aa7f6d3741886ad6eb5e49b326ab47b73031623",
+  "collection_method": "live",
+  "title": "DBS Alacakları ile Finansman | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 134431,
+  "text_chars": 1308
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/gayri-nakdi-finansman/teminat-mektuplari",
+  "scraped_at": "2026-07-30T20:04:12+00:00",
+  "content_hash": "cb8b09e9814d8799d56abd99bce7275d1d90686561111166a1b0a39774b04c84",
+  "collection_method": "live",
+  "title": "Teminat Mektupları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 139409,
+  "text_chars": 6304
+}

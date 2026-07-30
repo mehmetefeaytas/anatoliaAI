@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/ozel-bankacilik/ozel-bankacilik-kartlari/ozel-bankacilik-kredi-karti",
+  "scraped_at": "2026-07-30T20:09:38+00:00",
+  "content_hash": "d39aa4d43f05658d0c66874254f48f840095fadf9e936601791de332ddbe16e9",
+  "collection_method": "live",
+  "title": "Özel Bankacılık Kredi Kartı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181527,
+  "text_chars": 963
+}

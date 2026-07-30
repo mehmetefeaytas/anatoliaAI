@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/sigorta-ve-emeklilik/calisanlarinizin-sagligi-icin/ticari-kredi-hayat-sigortasi",
+  "scraped_at": "2026-07-30T20:10:44+00:00",
+  "content_hash": "f3f0e509372073f9efa3ff9ab424d230743faf819da3ddc2ab56d2af08b7fb37",
+  "collection_method": "live",
+  "title": "Ticari Kredi Hayat Sigortası - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181614,
+  "text_chars": 733
+}

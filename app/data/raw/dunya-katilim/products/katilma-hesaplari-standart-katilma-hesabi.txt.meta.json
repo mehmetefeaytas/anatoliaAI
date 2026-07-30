@@ -1,8 +1,8 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/katilma-hesaplari/standart-katilma-hesabi",
-  "scraped_at": "2026-07-30T19:49:58+00:00",
-  "content_hash": "60afbd5e0c8d7aba6c816f8bb232026c0fe41c8ea4645bdda5ade25b25c47e0f",
+  "scraped_at": "2026-07-30T20:29:13+00:00",
+  "content_hash": "b0a19d45eb75e55707e0419b5c7f18929a3fd929c25a3b83d59d904f181ee395",
   "collection_method": "live",
   "title": "Standart Kat&#x131;lma Hesab&#x131; | Dünya Katılım",
   "http_status": 200,

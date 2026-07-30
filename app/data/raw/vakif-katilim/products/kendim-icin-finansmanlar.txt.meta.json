@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar",
-  "scraped_at": "2026-07-30T19:45:50+00:00",
-  "content_hash": "625df8205efcfdd9066b52958d9f6991b238de88d1749eaa31957b47ffa2d784",
+  "scraped_at": "2026-07-30T20:16:43+00:00",
+  "content_hash": "b25fd3acb2609df69df560de8a58bf0a9873e6e4d430d591cfd044915bdf97ce",
   "collection_method": "live",
   "title": "Finansmanlar | Bireysel | Vakıf Katılım",
   "http_status": 200,

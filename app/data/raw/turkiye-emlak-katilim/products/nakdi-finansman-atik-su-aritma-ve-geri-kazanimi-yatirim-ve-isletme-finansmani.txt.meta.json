@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/atik-su-aritma-ve-geri-kazanimi-yatirim-ve-isletme-finansmani",
+  "scraped_at": "2026-07-30T20:23:21+00:00",
+  "content_hash": "e657c5e8b08319c5bc1ddf01df945ab8f3ca2af0930dd38452316b5d26504980",
+  "collection_method": "live",
+  "title": "Atık Su Arıtma ve Geri Kazanımı Yatırım ve İşletme Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164409,
+  "text_chars": 1159
+}

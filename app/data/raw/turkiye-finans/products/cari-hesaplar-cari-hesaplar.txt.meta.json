@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/cari-hesaplar/Sayfalar/cari-hesaplar.aspx",
+  "scraped_at": "2026-07-30T20:11:17+00:00",
+  "content_hash": "14c19d7234339b18a971f2eb4000b0f02bdb7fc8c6c56403c82998e8106aa362",
+  "collection_method": "live",
+  "title": "Cari Hesap | Bireysel Finansman | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 108345,
+  "text_chars": 9035
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/sigorta-ve-emeklilik/kurumsal-sigorta-urunleri/finansmana-bagli-hayat-sigortasi",
+  "scraped_at": "2026-07-30T20:24:24+00:00",
+  "content_hash": "2056c39dbf5617f66e411e0b212abaf79dde5f33b09f890c3a4e7561531dc3a3",
+  "collection_method": "live",
+  "title": "Finansmana Bağlı Hayat Sigortası | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167173,
+  "text_chars": 2346
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/finansmanlar-is/e-teminat-mektubu",
+  "scraped_at": "2026-07-30T20:26:19+00:00",
+  "content_hash": "754b63baebfe10769d29b8e4b078fc8e5b0637d4d5b146dab0bdfba12b5dd256",
+  "collection_method": "browser",
+  "title": "E-Teminat Mektubu | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 293629,
+  "text_chars": 1521
+}

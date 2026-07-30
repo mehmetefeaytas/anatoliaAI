@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/tuzel-musterilerimizin-doviz-pozisyon-raporlamasi-hakkinda-bilgilendir",
+  "scraped_at": "2026-07-30T20:15:18+00:00",
+  "content_hash": "c9ce80d6a348fd875c5f97b79ab629ad3fe41cb5694837f85d27f6f0bb671366",
+  "collection_method": "live",
+  "title": "Tüzel Müşterilerimizin Döviz Pozisyon Raporlaması Hakkında Bilgilendirme | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 452778,
+  "text_chars": 1259
+}

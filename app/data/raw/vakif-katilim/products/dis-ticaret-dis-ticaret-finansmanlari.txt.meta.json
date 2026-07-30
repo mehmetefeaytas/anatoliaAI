@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/dis-ticaret/dis-ticaret-finansmanlari",
-  "scraped_at": "2026-07-30T19:46:02+00:00",
-  "content_hash": "8ff40861ab9c5aedc376fdfc40d973f1cb15e06977bbfd010fc053fdd98e5191",
+  "scraped_at": "2026-07-30T20:16:55+00:00",
+  "content_hash": "31c095d472e56fdd9b28ea1972679e7b88503b055f4a94731089861b95512de1",
   "collection_method": "live",
   "title": "Dış Ticaret Finansmanları | Kurumsal | Vakıf Katılım",
   "http_status": 200,

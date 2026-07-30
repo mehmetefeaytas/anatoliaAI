@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/hac-umre-finansmani",
+  "scraped_at": "2026-07-30T20:05:39+00:00",
+  "content_hash": "961eecfd3fc8499697d358f1cfd6936eaa2f7c7b21e1be4d8ec711b4eedd4222",
+  "collection_method": "live",
+  "title": "Hac-Umre Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 148092,
+  "text_chars": 4019
+}

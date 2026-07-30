@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/dijital-icerik-ureticisi-hesabi",
+  "scraped_at": "2026-07-30T20:25:12+00:00",
+  "content_hash": "68174ea530eb8496af23ee9be4f5c174fe156d379092c4915b4def106c6bd8e0",
+  "collection_method": "live",
+  "title": "Dijital İ&#231;erik &#220;reticisi Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165468,
+  "text_chars": 2071
+}

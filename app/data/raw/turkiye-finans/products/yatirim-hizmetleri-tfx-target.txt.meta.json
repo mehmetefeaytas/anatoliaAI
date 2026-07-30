@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/yatirim-hizmetleri/Sayfalar/tfx-target.aspx",
+  "scraped_at": "2026-07-30T20:11:44+00:00",
+  "content_hash": "110acc256bf557d626b50f251ba47139fab55f1807b6ede8979a4dc1838dfd38",
+  "collection_method": "live",
+  "title": "TFX Target: Yurt İçi / Dışı Fon Alım Satımı - Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 119782,
+  "text_chars": 12787
+}

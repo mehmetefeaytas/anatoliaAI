@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/karli-hesap",
+  "scraped_at": "2026-07-30T20:08:55+00:00",
+  "content_hash": "20eac5c0f4b84d1edbadccfdf55c9bb70a9c66ec76f99aee07053ee4e0a09487",
+  "collection_method": "live",
+  "title": "Kâr Zarar Ortaklığı ile Kârlı Hesap Sizin İçin En Uygunu - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 185197,
+  "text_chars": 2643
+}

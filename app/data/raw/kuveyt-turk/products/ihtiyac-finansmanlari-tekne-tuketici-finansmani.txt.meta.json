@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/tekne-tuketici-finansmani",
+  "scraped_at": "2026-07-30T20:05:54+00:00",
+  "content_hash": "512214e193643775a2fb316a8c610f8df70bf5bb9094fd1365b325818c10fddf",
+  "collection_method": "live",
+  "title": "Tekne Tüketici Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 146760,
+  "text_chars": 2756
+}

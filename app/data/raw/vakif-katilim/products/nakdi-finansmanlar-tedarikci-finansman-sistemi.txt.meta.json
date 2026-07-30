@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/tedarikci-finansman-sistemi",
+  "scraped_at": "2026-07-30T20:19:56+00:00",
+  "content_hash": "3064c2a53eb34b83275fef1cbde4b97fb207dc9dfb37d30a2a7cf2ae257ea8b4",
+  "collection_method": "live",
+  "title": "Tedarik&#231;i Finansman Sistemi | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 133721,
+  "text_chars": 2427
+}

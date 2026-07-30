@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/dis-ticaret/dis-ticaret-odemeleri/kabul-kredili-odeme",
+  "scraped_at": "2026-07-30T20:10:02+00:00",
+  "content_hash": "d9e82ac0de4564ed07e2321e9f1d3664f16979dee72750d047125ae38ac19db3",
+  "collection_method": "live",
+  "title": "Kabul Kredili Ödeme - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180959,
+  "text_chars": 503
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/nakdi-finansman/savunma-sanayii-baskanligi-finansman-destek-paketi",
+  "scraped_at": "2026-07-30T20:04:18+00:00",
+  "content_hash": "2e36a338b943b942548e42beaa2d3ba52f0a2015781f1f7d027ea38121822303",
+  "collection_method": "live",
+  "title": "Savunma Sanayii Başkanlığı Finansman Destek Paketi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130286,
+  "text_chars": 2052
+}

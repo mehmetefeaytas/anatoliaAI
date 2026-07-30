@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr:443/tr-tr/bireysel/yatirim-hizmetleri/Sayfalar/yatirim-hizmetleri.aspx",
+  "scraped_at": "2026-07-30T20:12:29+00:00",
+  "content_hash": "d062ba3b00386d26b438280190b72d4c24d00ad441b56a1f5c1e856790d11ce4",
+  "collection_method": "live",
+  "title": "Yatırım Hizmetleri | Bireysel | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 107610,
+  "text_chars": 7185
+}

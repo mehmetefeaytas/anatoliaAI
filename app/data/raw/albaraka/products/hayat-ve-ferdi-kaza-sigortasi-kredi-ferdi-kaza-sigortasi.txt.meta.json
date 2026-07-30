@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/sigorta-ve-emeklilik/hayat-ve-ferdi-kaza-sigortasi/kredi-ferdi-kaza-sigortasi",
+  "scraped_at": "2026-07-30T20:09:41+00:00",
+  "content_hash": "bd468e86fa47c3faa4268373dabccf97d5a22bafe9b8f205ec5d56f27da0b785",
+  "collection_method": "live",
+  "title": "Kredi Ferdi Kaza Sigortası - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182311,
+  "text_chars": 1072
+}

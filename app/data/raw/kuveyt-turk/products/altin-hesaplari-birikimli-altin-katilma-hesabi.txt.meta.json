@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/altin-bankaciligi/altin-hesaplari/birikimli-altin-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:04:42+00:00",
+  "content_hash": "fd47231f9d886a62965cc46aa077aa46134ed8e63a3d5dddd6fc86e0223d948e",
+  "collection_method": "live",
+  "title": "Birikimli Altın Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134712,
+  "text_chars": 2680
+}

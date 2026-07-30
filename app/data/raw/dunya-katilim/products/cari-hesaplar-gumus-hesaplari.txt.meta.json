@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar/gumus-hesaplari",
+  "scraped_at": "2026-07-30T20:28:58+00:00",
+  "content_hash": "8849c75ad9656d11b7a702d8f2d8fbfe6001f4bc79319b53911c6d2b77e17b8d",
+  "collection_method": "live",
+  "title": "G&#xFC;m&#xFC;&#x15F; Hesaplar&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 500916,
+  "text_chars": 10187
+}

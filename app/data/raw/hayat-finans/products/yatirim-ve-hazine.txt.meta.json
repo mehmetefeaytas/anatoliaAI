@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/yatirim-ve-hazine",
+  "scraped_at": "2026-07-30T20:25:55+00:00",
+  "content_hash": "007d3791d080c559c9ffa524aff47e9e8b62947a3149c6d3188c75f3593a22d4",
+  "collection_method": "browser",
+  "title": "Yatırım ve Hazine | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 288118,
+  "text_chars": 821
+}

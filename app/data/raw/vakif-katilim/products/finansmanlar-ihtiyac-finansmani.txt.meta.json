@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/ihtiyac-finansmani",
-  "scraped_at": "2026-07-30T19:46:35+00:00",
-  "content_hash": "d42d6f3d06756d20760108ab7c7c8428f4757f3eeb872339a8e0763b263ef35c",
+  "scraped_at": "2026-07-30T20:17:28+00:00",
+  "content_hash": "b1ff496d35763969364dd45fa7c4f92957901f9762d3cf0aa36605582325e9cb",
   "collection_method": "live",
   "title": "İhtiya&#231; Finansmanı | Bireysel | Vakıf Katılım",
   "http_status": 200,

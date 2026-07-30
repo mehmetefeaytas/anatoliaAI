@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/kira-sertifikasi-teminatli-kredi",
+  "scraped_at": "2026-07-30T20:10:29+00:00",
+  "content_hash": "3fbe92e00d8aa4266e6b3382c27cb6c1b0ee24ccf47c75bb8c85c5e4db842f50",
+  "collection_method": "live",
+  "title": "Kira Sertifikası Teminatlı Kredi - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181923,
+  "text_chars": 860
+}

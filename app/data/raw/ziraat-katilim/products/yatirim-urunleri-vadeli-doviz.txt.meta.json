@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/yatirim-urunleri/vadeli-doviz",
+  "scraped_at": "2026-07-30T20:13:54+00:00",
+  "content_hash": "79fb6b52623617d720bf1083356c918f3d3109a323e690a59a519b5e87d364bd",
+  "collection_method": "live",
+  "title": "Vaade Dayalı Döviz Alım / Satım İşlemleri (Forward) | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 458374,
+  "text_chars": 1858
+}

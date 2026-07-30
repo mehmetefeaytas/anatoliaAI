@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri",
+  "scraped_at": "2026-07-30T20:14:34+00:00",
+  "content_hash": "505114e5a3ce4d4c4ae382187a8961d934b12e3a9023e83f1e437f3e349f17e3",
+  "collection_method": "live",
+  "title": "Yatırım ve Hazine Ürünleri | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 461759,
+  "text_chars": 1561
+}

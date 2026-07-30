@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/finansmanlar-is/mikro-finansman",
+  "scraped_at": "2026-07-30T20:26:57+00:00",
+  "content_hash": "dd208a701e339399470c231630ac62b8dc3ef5b026283f205f0fa4bb67d8a576",
+  "collection_method": "browser",
+  "title": "Mikro Finansman | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 291169,
+  "text_chars": 877
+}

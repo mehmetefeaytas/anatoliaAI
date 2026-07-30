@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-gayri-nakdi-finansman/jet-teminat-mektubu",
+  "scraped_at": "2026-07-30T20:10:07+00:00",
+  "content_hash": "c26ea835be2078b1c0f421cb26731166b8288b656955435b429d347b5f310f13",
+  "collection_method": "live",
+  "title": "Jet Teminat Mektubu | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182743,
+  "text_chars": 1993
+}

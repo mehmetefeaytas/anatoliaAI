@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/katilma-hesaplari",
+  "scraped_at": "2026-07-30T20:18:34+00:00",
+  "content_hash": "edc15a9c81c6fe48d57ddc9bf820f4ef92bdff3ef7b8843e34a79724dab27201",
+  "collection_method": "live",
+  "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 129398,
+  "text_chars": 429
+}

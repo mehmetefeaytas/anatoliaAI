@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/proje-finansmani",
+  "scraped_at": "2026-07-30T20:19:49+00:00",
+  "content_hash": "3a3e2d8ca785d846b11519e105581af88df560f37159b58adfd034b67c52dce1",
+  "collection_method": "live",
+  "title": "Proje Finansmanı | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 134286,
+  "text_chars": 1128
+}

@@ -1,8 +1,8 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman",
-  "scraped_at": "2026-07-30T19:48:12+00:00",
-  "content_hash": "9a563c36b527cd9789064a6f20404e6a574eb8e85e1420c6f2fa232be969cd3f",
+  "scraped_at": "2026-07-30T20:21:51+00:00",
+  "content_hash": "255770e2fcee618a01907e990216a27236601b00cbfe744e5031f8371cebdfab",
   "collection_method": "live",
   "title": "Nakdi Finansman | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,

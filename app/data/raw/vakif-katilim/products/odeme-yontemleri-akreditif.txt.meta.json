@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/dis-ticaret/odeme-yontemleri/akreditif",
+  "scraped_at": "2026-07-30T20:18:52+00:00",
+  "content_hash": "ce6ade58832d5a9ba8209d9301cbc358bdee1c6ea202899412a0ed2f35fc3d52",
+  "collection_method": "live",
+  "title": "Akreditif | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 136046,
+  "text_chars": 3178
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/elus-teminatli-kredi",
+  "scraped_at": "2026-07-30T20:10:23+00:00",
+  "content_hash": "9131397e18d933f0c3fa059383ca4718017ab8c64d059e9f1332a4d504d8107a",
+  "collection_method": "live",
+  "title": "Elüs Teminatlı Kredi - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181804,
+  "text_chars": 864
+}

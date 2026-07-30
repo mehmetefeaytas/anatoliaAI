@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/konut-finansmanlari/arsa-finansmani",
+  "scraped_at": "2026-07-30T20:06:00+00:00",
+  "content_hash": "070173291d14f6c973d490feb99956fdaef526de0115f30480e9fcfad805ccd6",
+  "collection_method": "live",
+  "title": "Arsa Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 145386,
+  "text_chars": 2323
+}

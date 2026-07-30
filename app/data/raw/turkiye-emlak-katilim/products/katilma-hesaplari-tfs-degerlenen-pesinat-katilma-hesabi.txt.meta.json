@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/tfs-degerlenen-pesinat-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:22:33+00:00",
+  "content_hash": "3751435fd85f49455427302bd83327e58726d93fd797d60cac3d616bd29c1de3",
+  "collection_method": "live",
+  "title": "TFŞ Değerlenen Peşinat Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 162613,
+  "text_chars": 331
+}

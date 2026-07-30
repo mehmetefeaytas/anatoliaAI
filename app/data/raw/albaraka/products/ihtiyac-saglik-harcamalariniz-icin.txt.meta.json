@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/saglik-harcamalariniz-icin",
+  "scraped_at": "2026-07-30T20:08:05+00:00",
+  "content_hash": "574bd44f4669ec6d43ecca0a6b40c512e22165fa2811674c7199e9246aac6c0e",
+  "collection_method": "live",
+  "title": "Sağlık Harcamalarınız İçin - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 183095,
+  "text_chars": 550
+}

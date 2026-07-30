@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/sozlesme-ve-formlar.html",
+  "scraped_at": "2026-07-30T20:25:23+00:00",
+  "content_hash": "5a8140f91df5cef34c4ca78796d4c48fa128b7f9146439655dec5b1e67431909",
+  "collection_method": "browser",
+  "title": "Sözleşme ve Formlar | TOM Bank",
+  "http_status": 200,
+  "raw_bytes": 50260,
+  "text_chars": 6445
+}

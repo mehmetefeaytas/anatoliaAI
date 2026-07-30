@@ -1,0 +1,219 @@
+{
+  "started_at": "2026-07-30T20:01:39+00:00",
+  "raw_dir": "data/raw",
+  "tur": "urun",
+  "ignore_robots": false,
+  "delay_s": 3.0,
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "banks": {
+    "kuveyt-turk": {
+      "blocked": [],
+      "notes": [
+        "232 aday bulundu, max_docs=90 ile kirpildi"
+      ],
+      "discovered": 90,
+      "from_sitemap": 232,
+      "from_listing": 0,
+      "name": "Kuveyt Türk",
+      "scrape_mode": "static",
+      "docs": 90,
+      "files_written": 180,
+      "bytes": 13112194,
+      "robots": "HTTP 200; 0 Allow / 0 Disallow; 1 sitemap"
+    },
+    "albaraka": {
+      "blocked": [],
+      "notes": [
+        "191 aday bulundu, max_docs=90 ile kirpildi"
+      ],
+      "discovered": 90,
+      "from_sitemap": 191,
+      "from_listing": 0,
+      "name": "Albaraka Türk",
+      "scrape_mode": "static",
+      "docs": 90,
+      "files_written": 180,
+      "bytes": 18080380,
+      "robots": "HTTP 200; 1 Allow / 8 Disallow; agent='*'; 1 sitemap"
+    },
+    "turkiye-finans": {
+      "blocked": [],
+      "notes": [],
+      "discovered": 44,
+      "from_sitemap": 0,
+      "from_listing": 44,
+      "name": "Türkiye Finans",
+      "scrape_mode": "static",
+      "docs": 44,
+      "files_written": 88,
+      "bytes": 6758647,
+      "robots": "HTTP 200; 0 Allow / 12 Disallow; agent='*'; 1 sitemap"
+    },
+    "ziraat-katilim": {
+      "blocked": [
+        {
+          "url": "https://www.ziraatkatilim.com.tr/yatirimci-kosesi",
+          "reason": "HTTP 404",
+          "detail": ""
+        },
+        {
+          "url": "https://www.ziraatkatilim.com.tr/clone-hesaplar",
+          "reason": "HTTP 404",
+          "detail": ""
+        },
+        {
+          "url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/surdurulebilirlik-temali-ticari-urunler/yenilenebilir-enerji-kapsamindaki-yatirim-ve-isletme-finansmanlari",
+          "reason": "HTTP 493",
+          "detail": ""
+        }
+      ],
+      "notes": [],
+      "discovered": 62,
+      "from_sitemap": 62,
+      "from_listing": 0,
+      "name": "Ziraat Katılım",
+      "scrape_mode": "static",
+      "docs": 59,
+      "files_written": 118,
+      "bytes": 27415107,
+      "robots": "HTTP 200; 18 Allow / 33 Disallow; agent='*'; 2 sitemap"
+    },
+    "vakif-katilim": {
+      "blocked": [
+        {
+          "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/dijital-bankacilik/goruntulu-gorusmeyle-aidatsiz-kredi-karti-basvurunuzu-aninda-yapin",
+          "reason": "HTTP 404",
+          "detail": ""
+        },
+        {
+          "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kartlar/troy-dijital-kredi-karti",
+          "reason": "HTTP 404",
+          "detail": ""
+        },
+        {
+          "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kartlar/kredi-karti/troy-kredi-karti",
+          "reason": "HTTP 404",
+          "detail": ""
+        },
+        {
+          "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kartlar/kredi-karti/vkart",
+          "reason": "HTTP 404",
+          "detail": ""
+        }
+      ],
+      "notes": [
+        "164 aday bulundu, max_docs=90 ile kirpildi"
+      ],
+      "discovered": 90,
+      "from_sitemap": 164,
+      "from_listing": 0,
+      "name": "Vakıf Katılım",
+      "scrape_mode": "static",
+      "docs": 86,
+      "files_written": 172,
+      "bytes": 12204808,
+      "robots": "HTTP 200; 4 Allow / 6 Disallow; agent='*'; 2 sitemap"
+    },
+    "turkiye-emlak-katilim": {
+      "blocked": [],
+      "notes": [
+        "128 aday bulundu, max_docs=90 ile kirpildi"
+      ],
+      "discovered": 90,
+      "from_sitemap": 128,
+      "from_listing": 0,
+      "name": "Türkiye Emlak Katılım",
+      "scrape_mode": "static",
+      "docs": 90,
+      "files_written": 180,
+      "bytes": 15241352,
+      "robots": "HTTP 200; 1 Allow / 0 Disallow; agent='*'"
+    },
+    "tom-katilim": {
+      "blocked": [],
+      "notes": [],
+      "discovered": 2,
+      "from_sitemap": 0,
+      "from_listing": 2,
+      "name": "T.O.M. Katılım",
+      "scrape_mode": "js",
+      "docs": 2,
+      "files_written": 4,
+      "bytes": 104814,
+      "robots": "cekilemedi (404); REP geregi izin varsayildi"
+    },
+    "hayat-finans": {
+      "blocked": [],
+      "notes": [],
+      "discovered": 35,
+      "from_sitemap": 35,
+      "from_listing": 0,
+      "name": "Hayat Finans",
+      "scrape_mode": "js",
+      "docs": 35,
+      "files_written": 70,
+      "bytes": 11122149,
+      "robots": "HTTP 200; 1 Allow / 0 Disallow; agent='*'; 1 sitemap"
+    },
+    "dunya-katilim": {
+      "blocked": [],
+      "notes": [],
+      "discovered": 61,
+      "from_sitemap": 61,
+      "from_listing": 0,
+      "name": "Dünya Katılım",
+      "scrape_mode": "static",
+      "docs": 61,
+      "files_written": 122,
+      "bytes": 31392825,
+      "robots": "HTTP 200; 1 Allow / 1 Disallow; agent='*'; 1 sitemap"
+    },
+    "adil-katilim": {
+      "blocked": [],
+      "notes": [],
+      "discovered": 0,
+      "from_sitemap": 0,
+      "from_listing": 0,
+      "name": "Adil Katılım",
+      "scrape_mode": "js",
+      "docs": 0,
+      "files_written": 0,
+      "bytes": 0,
+      "robots": "HTTP 200; 0 Allow / 0 Disallow"
+    }
+  },
+  "finished_at": "2026-07-30T20:30:21+00:00",
+  "total_docs": 557,
+  "field_coverage": {
+    "before": {
+      "kar_payi_orani": 31,
+      "vade_ay": 201,
+      "masraf_durumu": 212,
+      "tahsis_ucreti": 14,
+      "kampanya_suresi": 219,
+      "hedef_kitle": 115,
+      "kampanya_kosullari": 326,
+      "finansman_tutari": 77,
+      "odul_miktari": 105,
+      "alisveris_puani": 50,
+      "taksit_sayisi": 105,
+      "indirim_orani": 42
+    },
+    "after": {
+      "kar_payi_orani": 54,
+      "vade_ay": 337,
+      "masraf_durumu": 370,
+      "tahsis_ucreti": 32,
+      "kampanya_suresi": 252,
+      "hedef_kitle": 227,
+      "kampanya_kosullari": 550,
+      "alisveris_puani": 97,
+      "taksit_sayisi": 121,
+      "indirim_orani": 45,
+      "finansman_tutari": 132,
+      "odul_miktari": 120
+    },
+    "docs_before": 500,
+    "docs_after": 849
+  }
+}

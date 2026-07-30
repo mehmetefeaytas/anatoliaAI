@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/gercek-kisi-ticari-cari-hesap",
+  "scraped_at": "2026-07-30T20:25:16+00:00",
+  "content_hash": "63321135cc5261149dde863fa56e1d4d7f579485079611e9566659c636eac1ae",
+  "collection_method": "live",
+  "title": "Ger&#231;ek Kişi Ticari Cari Hesap | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 163822,
+  "text_chars": 1023
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr",
+  "scraped_at": "2026-07-30T20:09:04+00:00",
+  "content_hash": "86b47c19f53f37e10cde55c8f020fd991ebe4e4bf696e3e0fb273e03116f5414",
+  "collection_method": "live",
+  "title": "Albaraka Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 199156,
+  "text_chars": 7100
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/isim-icin-detay/kosgeb-destekli-finansman",
+  "scraped_at": "2026-07-30T20:18:07+00:00",
+  "content_hash": "31ca2ed63575f44d3c752e99425694276d91c5dc5eed4f33ec1543c9ef70cc46",
+  "collection_method": "live",
+  "title": "Yardım Merkezi | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 127891,
+  "text_chars": 201
+}

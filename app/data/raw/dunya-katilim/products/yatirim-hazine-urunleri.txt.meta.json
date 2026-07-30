@@ -1,8 +1,8 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/yatirim/hazine-urunleri",
-  "scraped_at": "2026-07-30T19:50:34+00:00",
-  "content_hash": "5ec38fe9445bfe3fa3257003d103d7d77aab506c3f755e010e8dca0c67c163f3",
+  "scraped_at": "2026-07-30T20:27:49+00:00",
+  "content_hash": "dc513bfa5271fe550632eab6f00b9a3bfae7c004452b91b57df722717c551e58",
   "collection_method": "live",
   "title": "Hazine &#xDC;r&#xFC;nleri | Dünya Katılım",
   "http_status": 200,

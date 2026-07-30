@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/dbs-fatura-teminatli-kredi",
+  "scraped_at": "2026-07-30T20:10:20+00:00",
+  "content_hash": "91e0d44c54f3620963eb77ad1bf7d63369a5893412f559c2b1969cd612aa0f62",
+  "collection_method": "live",
+  "title": "DBS Fatura Teminatlı Kredi - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181546,
+  "text_chars": 707
+}

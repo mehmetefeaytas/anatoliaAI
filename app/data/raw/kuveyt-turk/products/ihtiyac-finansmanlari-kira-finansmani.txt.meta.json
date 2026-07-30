@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/kira-finansmani",
+  "scraped_at": "2026-07-30T20:05:48+00:00",
+  "content_hash": "2af8b6c0fc138403463cbfbbeb6a3e725fa62bc49aa2f17b61c61cd197e0c818",
+  "collection_method": "live",
+  "title": "Kira Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 145525,
+  "text_chars": 2205
+}

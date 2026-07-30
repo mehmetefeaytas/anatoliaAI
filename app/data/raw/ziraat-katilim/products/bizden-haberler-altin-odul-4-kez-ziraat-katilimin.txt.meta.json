@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bizden-haberler/altin-odul-4-kez-ziraat-katilimin",
+  "scraped_at": "2026-07-30T20:14:43+00:00",
+  "content_hash": "b50f7562c541d0a9f5c506d105de86312018d3b133222720f3cc2e345b4d9264",
+  "collection_method": "live",
+  "title": "Altın Ödül 4. Kez Ziraat Katılım&#039;ın! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 456121,
+  "text_chars": 645
+}

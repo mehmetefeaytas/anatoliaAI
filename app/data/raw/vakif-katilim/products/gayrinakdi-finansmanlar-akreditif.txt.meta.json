@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/akreditif",
+  "scraped_at": "2026-07-30T20:19:04+00:00",
+  "content_hash": "700ee809315b2f8b92eefcbe1785f9ad69910c667ce3380c42442a13d03153a9",
+  "collection_method": "live",
+  "title": "Akreditif | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 136014,
+  "text_chars": 3186
+}

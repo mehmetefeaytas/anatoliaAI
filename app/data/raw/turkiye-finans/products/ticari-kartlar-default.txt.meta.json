@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/ticari-kartlar/Sayfalar/default.aspx",
+  "scraped_at": "2026-07-30T20:11:56+00:00",
+  "content_hash": "b7322fafb2f74e9675abbdc16bb52d2e7c2ab133394e76de35b8b2cf48b5397a",
+  "collection_method": "live",
+  "title": "Ticari Kartlar | Kredi Kartları | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 117327,
+  "text_chars": 10640
+}

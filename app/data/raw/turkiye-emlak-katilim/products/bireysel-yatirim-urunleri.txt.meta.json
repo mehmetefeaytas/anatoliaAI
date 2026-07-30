@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri",
+  "scraped_at": "2026-07-30T20:24:37+00:00",
+  "content_hash": "db112f02c89e7a0f2367b816c565b845c4a88fcfd11539982ae3f1b7aab11311",
+  "collection_method": "live",
+  "title": "Yatırım &#220;r&#252;nleri | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 177071,
+  "text_chars": 2691
+}

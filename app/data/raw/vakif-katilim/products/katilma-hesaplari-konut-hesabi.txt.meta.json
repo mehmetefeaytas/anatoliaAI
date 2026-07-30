@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/konut-hesabi",
+  "scraped_at": "2026-07-30T20:20:35+00:00",
+  "content_hash": "183c33b74fb2f8e6a5146736c699afb354fc32489a8c1b1d13ff98cdf8c6ebc1",
+  "collection_method": "live",
+  "title": "Konut Hesabı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 156184,
+  "text_chars": 3917
+}

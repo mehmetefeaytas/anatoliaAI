@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/subesiz-umre-finansmani",
+  "scraped_at": "2026-07-30T20:08:10+00:00",
+  "content_hash": "fd792ea920b12b1b75b49f1c2dbf4520439bbb54661a178478510a6a962a3eea",
+  "collection_method": "live",
+  "title": "Şubesiz Umre Finansmanı | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 192536,
+  "text_chars": 3528
+}

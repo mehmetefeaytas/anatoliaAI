@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/gayrinakdi-finansman/referans-mektuplari",
+  "scraped_at": "2026-07-30T20:23:15+00:00",
+  "content_hash": "559214a7c0bd323ac672e21e15b26bb1ebab337d8c76258343baf339c1ec80aa",
+  "collection_method": "live",
+  "title": "Referans Mektupları | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164702,
+  "text_chars": 638
+}

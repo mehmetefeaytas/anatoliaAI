@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/arsa-finansmani",
-  "scraped_at": "2026-07-30T19:46:32+00:00",
-  "content_hash": "65c072fc557e48e29d0872f290ba80d03ff1617132399de49f51262d514c5387",
+  "scraped_at": "2026-07-30T20:17:25+00:00",
+  "content_hash": "a6bc289df8320b4920ea3ae0b078cc47478a800b15145ec2410616165776e459",
   "collection_method": "live",
   "title": "Arsa Finansmanı | Bireysel | Vakıf Katılım",
   "http_status": 200,

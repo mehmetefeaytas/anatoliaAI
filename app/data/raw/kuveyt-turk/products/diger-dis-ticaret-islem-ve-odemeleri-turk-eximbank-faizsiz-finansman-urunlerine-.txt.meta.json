@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/diger-dis-ticaret-islem-ve-odemeleri/turk-eximbank-faizsiz-finansman-urunlerine-yonelik-teminat-mektubu",
+  "scraped_at": "2026-07-30T20:03:42+00:00",
+  "content_hash": "8448e5fd95d2ce8e9c921072f62206b1df7c2f8b384b20b5e7f4a4baf00a9732",
+  "collection_method": "live",
+  "title": "Türk Eximbank Faizsiz Finansman Ürünlerine Yönelik Teminat Mektubu | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129452,
+  "text_chars": 2214
+}

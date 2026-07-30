@@ -1,8 +1,8 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/ceyiz-hesabi",
-  "scraped_at": "2026-07-30T19:48:39+00:00",
-  "content_hash": "a45f57628ce3ee61c56043f696c3a0ec998b25b3fffff6ad78142d31341efb9d",
+  "scraped_at": "2026-07-30T20:22:18+00:00",
+  "content_hash": "a5f2056676599985a87c15c9f3c8dfbf9b4b7bcf43550b2f31fba825905d6224",
   "collection_method": "live",
   "title": "&#199;eyiz Hesabı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,

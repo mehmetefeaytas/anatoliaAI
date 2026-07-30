@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/tarim-bankaciligi/elektronik-urun-senedi-elus-teminatli-finansman",
-  "scraped_at": "2026-07-30T19:41:21+00:00",
-  "content_hash": "76ed684730b6bdcac1ebc9103b6c2a9778eded2068c672189139cdade7b6f89b",
+  "scraped_at": "2026-07-30T20:03:06+00:00",
+  "content_hash": "1ee9aa9c956911877f345ea470cd5e5b93c904c3db257ecff3eccfc499d0ca11",
   "collection_method": "live",
   "title": "Elektronik Ürün Senedi (ELÜS) Teminatlı Finansman | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

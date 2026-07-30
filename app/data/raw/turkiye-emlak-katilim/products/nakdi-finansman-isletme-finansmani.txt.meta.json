@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/isletme-finansmani",
+  "scraped_at": "2026-07-30T20:23:48+00:00",
+  "content_hash": "7f811bb67c30a891e6a5265bb6679fd67520e707584d57162bca03b9116c937a",
+  "collection_method": "live",
+  "title": "İşletme Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 156076,
+  "text_chars": 815
+}

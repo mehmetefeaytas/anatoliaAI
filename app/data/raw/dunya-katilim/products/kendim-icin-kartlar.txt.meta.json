@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar",
+  "scraped_at": "2026-07-30T20:29:16+00:00",
+  "content_hash": "e94786310106e0190569e95219edaf944e81af157bcc276eef68c87141f1e8e8",
+  "collection_method": "live",
+  "title": "Kartlar | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 503375,
+  "text_chars": 9600
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/tatiliniz-icin",
+  "scraped_at": "2026-07-30T20:08:14+00:00",
+  "content_hash": "ae4380675d9dfe658b17e10c90584f29ba8298c6cf92f7f1380fd0da800d6242",
+  "collection_method": "live",
+  "title": "Tatiliniz İçin - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184827,
+  "text_chars": 664
+}

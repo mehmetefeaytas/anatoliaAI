@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/altin-urunleri/Sayfalar/altin-hesap.aspx",
+  "scraped_at": "2026-07-30T20:12:38+00:00",
+  "content_hash": "55e92be8cb3b711df7bfe21004aff562a771baea0f5f5cc1821fe4691a1462c4",
+  "collection_method": "live",
+  "title": "Altın Hesap | Kıymetli Maden Ürünleri | Bireysel | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 133328,
+  "text_chars": 11963
+}

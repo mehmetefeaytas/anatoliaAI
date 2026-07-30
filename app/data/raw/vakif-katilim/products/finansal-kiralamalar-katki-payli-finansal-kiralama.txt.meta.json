@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/finansal-kiralamalar/katki-payli-finansal-kiralama",
+  "scraped_at": "2026-07-30T20:19:01+00:00",
+  "content_hash": "fc5e8164215f658d944c38a09c948cb6c8a03967d70c7c7496d6a45013707620",
+  "collection_method": "live",
+  "title": "Katkı Paylı Finansal Kiralama | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 132403,
+  "text_chars": 1344
+}

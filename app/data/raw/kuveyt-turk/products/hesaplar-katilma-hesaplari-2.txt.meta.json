@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/yatirim/hesaplar/katilma-hesaplari",
+  "scraped_at": "2026-07-30T20:04:36+00:00",
+  "content_hash": "d43306ed5149f1c616cf4c865257f01a7029a4254e562facc78faa021e852b81",
+  "collection_method": "live",
+  "title": "Katılma Hesapları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 136095,
+  "text_chars": 3944
+}

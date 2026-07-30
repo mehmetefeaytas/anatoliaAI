@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/ara-donem-kar-payi-odemeli-hesaplar",
-  "scraped_at": "2026-07-30T19:40:05+00:00",
-  "content_hash": "1095cf1142687dea208c0fff95917e700b09ff63e60190d4f7aa63b32eaf1150",
+  "scraped_at": "2026-07-30T20:01:51+00:00",
+  "content_hash": "a570301c489231d9d9166455e18d0a58bf52e3918b5bef8fa36c0df0c29c31f4",
   "collection_method": "live",
   "title": "Ara Dönem Kâr Payı Ödemeli Hesaplar | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/kazandiran-hesap",
+  "scraped_at": "2026-07-30T20:20:32+00:00",
+  "content_hash": "7e8c738e021dff9a7bbe60ba9b902856c7bf0a345db2fcce5744c740039826bd",
+  "collection_method": "live",
+  "title": "Kazandıran Hesap | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 143139,
+  "text_chars": 5153
+}

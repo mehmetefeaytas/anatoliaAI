@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/finansmanlarda-size-ozel-oranlar",
-  "scraped_at": "2026-07-30T19:40:02+00:00",
-  "content_hash": "ecf6bf65439c3c7adeeb58c5fa40c22aa39515b797aef1976a4fe1486dff7aac",
+  "scraped_at": "2026-07-30T20:01:48+00:00",
+  "content_hash": "e91f233a7a120756c13f10a340581703839d78e180caa2a48ecb290193b84ed7",
   "collection_method": "live",
   "title": "Finansmanlarda Size Özel Oranlar | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

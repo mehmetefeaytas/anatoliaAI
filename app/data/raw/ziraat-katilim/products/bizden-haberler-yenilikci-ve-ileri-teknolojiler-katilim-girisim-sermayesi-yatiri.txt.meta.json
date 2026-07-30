@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bizden-haberler/yenilikci-ve-ileri-teknolojiler-katilim-girisim-sermayesi-yatirim-fonu-imza-toreni",
+  "scraped_at": "2026-07-30T20:13:30+00:00",
+  "content_hash": "b77a50dbe00f29091c7a9daef8dc3f46bc052eff3c3611b6a4d81606468fa330",
+  "collection_method": "live",
+  "title": "‘Yenilikçi ve İleri Teknolojiler Katılım Girişim Sermayesi Yatırım Fonu’ İmza Töreni Gerçekleşti | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 459481,
+  "text_chars": 1757
+}

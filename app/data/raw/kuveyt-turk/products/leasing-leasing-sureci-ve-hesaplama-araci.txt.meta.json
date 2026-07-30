@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/leasing-sureci-ve-hesaplama-araci",
-  "scraped_at": "2026-07-30T19:41:02+00:00",
-  "content_hash": "0383907b74fe8bbbc04728eb2bb979729d34b5e58ac4793d21d750aec20f9f91",
+  "scraped_at": "2026-07-30T20:02:48+00:00",
+  "content_hash": "be7ab550d071953f5acfe4d78ff09208b9e62145db3ae3f0d217ec7189a7f339",
   "collection_method": "live",
   "title": "Leasing Süreci ve Hesaplama Aracı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

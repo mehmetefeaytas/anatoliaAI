@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim",
+  "scraped_at": "2026-07-30T20:25:51+00:00",
+  "content_hash": "010b8a37238f63f5a4f2fc634904219d424668edaffa407eb1344c2648032eb2",
+  "collection_method": "browser",
+  "title": "Yatırım ve Birikim | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 294534,
+  "text_chars": 1197
+}

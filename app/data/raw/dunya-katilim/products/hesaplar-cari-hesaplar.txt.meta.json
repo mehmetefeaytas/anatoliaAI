@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar",
+  "scraped_at": "2026-07-30T20:28:49+00:00",
+  "content_hash": "4e4a36ef937e64033b9e972331572e394b5306f47c0d8818fc61a862c16ffb06",
+  "collection_method": "live",
+  "title": "Cari Hesaplar | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 501707,
+  "text_chars": 9488
+}

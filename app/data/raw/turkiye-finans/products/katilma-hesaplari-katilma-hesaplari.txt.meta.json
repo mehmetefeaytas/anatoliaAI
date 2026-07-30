@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/katilma-hesaplari/Sayfalar/katilma-hesaplari.aspx",
+  "scraped_at": "2026-07-30T20:11:20+00:00",
+  "content_hash": "e4e04451ad4604f4dcb4773852806a501bf50dae4543769439ce48c29269009e",
+  "collection_method": "live",
+  "title": "Katılma Hesapları | Vadeli Hesaplar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 111658,
+  "text_chars": 9803
+}

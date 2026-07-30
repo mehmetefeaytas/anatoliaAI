@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim/kira-sertifikasi-yatirim-ve-birikim",
+  "scraped_at": "2026-07-30T20:26:54+00:00",
+  "content_hash": "b467e850d0dd546618f398c8d886c731cc69ed3d37cd199c0f2e61bcceeacb71",
+  "collection_method": "browser",
+  "title": "Kira Sertifikası | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 311438,
+  "text_chars": 3849
+}

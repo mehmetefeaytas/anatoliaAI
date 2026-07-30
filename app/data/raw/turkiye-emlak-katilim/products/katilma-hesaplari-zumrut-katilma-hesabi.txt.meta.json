@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/zumrut-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:22:45+00:00",
+  "content_hash": "ee018748724c14f3b84572be37ab80753b72ea76a8f479545a85f9127341c3dc",
+  "collection_method": "live",
+  "title": "Z&#252;mr&#252;t Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164762,
+  "text_chars": 1461
+}

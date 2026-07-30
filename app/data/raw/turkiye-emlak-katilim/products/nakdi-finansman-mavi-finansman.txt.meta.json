@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/mavi-finansman",
+  "scraped_at": "2026-07-30T20:24:00+00:00",
+  "content_hash": "3522edc59cc936d4594d2ce0ed3d5d6d4b493131856dd0a51dd73658797e21c9",
+  "collection_method": "live",
+  "title": "Mavi Finansman | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165870,
+  "text_chars": 2269
+}

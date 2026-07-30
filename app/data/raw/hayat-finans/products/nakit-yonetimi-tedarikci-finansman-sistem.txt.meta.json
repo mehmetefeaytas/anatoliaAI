@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/nakit-yonetimi/tedarikci-finansman-sistem",
+  "scraped_at": "2026-07-30T20:27:03+00:00",
+  "content_hash": "c8cbb8df22510f8701d92da91356c14be11ba41e0fc802afb47b4cefc7b6d359",
+  "collection_method": "browser",
+  "title": "Tedarikçi Finansman Sistemi (TFS) | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 296083,
+  "text_chars": 2022
+}

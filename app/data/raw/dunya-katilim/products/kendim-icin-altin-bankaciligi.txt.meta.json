@@ -1,8 +1,8 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi",
-  "scraped_at": "2026-07-30T19:50:19+00:00",
-  "content_hash": "801ed3f010432c3248906c043c3073a41f303d3ed9ad2041f9658d50dd03a3b4",
+  "scraped_at": "2026-07-30T20:28:07+00:00",
+  "content_hash": "648f3daeafea257760cae47d188da476adce38f7f2db015ab74320cea911ef6e",
   "collection_method": "live",
   "title": "Alt&#x131;n Bankac&#x131;l&#x131;&#x11F;&#x131; | Dünya Katılım",
   "http_status": 200,

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/kredi-kartlari.aspx",
+  "scraped_at": "2026-07-30T20:11:32+00:00",
+  "content_hash": "3347219d1eca7316ffa2851ceb9ae4f95e3e75427e576ba59eb8741d7e1acfba",
+  "collection_method": "live",
+  "title": "Kredi Kartları | Bireysel | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 190832,
+  "text_chars": 25440
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/tasit-finansmani/Sayfalar/Tasit-Finansmani.aspx",
+  "scraped_at": "2026-07-30T20:12:53+00:00",
+  "content_hash": "99a146d9590e5e906fdadc8ee2aafbfb419d573862a95f01b70adf16c0061c2a",
+  "collection_method": "live",
+  "title": "Araç Finansmanı - Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 120904,
+  "text_chars": 13748
+}

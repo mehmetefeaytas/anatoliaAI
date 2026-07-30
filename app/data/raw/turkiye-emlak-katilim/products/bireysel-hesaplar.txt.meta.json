@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar",
+  "scraped_at": "2026-07-30T20:24:33+00:00",
+  "content_hash": "07d6e43d5a08e782fc403ef501be32863b94d55a796dd3a5fc554a0e85414e05",
+  "collection_method": "live",
+  "title": "Hesaplar",
+  "http_status": 200,
+  "raw_bytes": 185816,
+  "text_chars": 5541
+}

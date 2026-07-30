@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/hesaplar/katilma-hesabi/katilma-hesabi-basvurusu",
+  "scraped_at": "2026-07-30T20:26:52+00:00",
+  "content_hash": "749d81e205ae981c98a6d4598d8d36b061d06ed6b64db0b1f612c37737dfce53",
+  "collection_method": "browser",
+  "title": "Katılma Hesabı Başvurusu | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 309564,
+  "text_chars": 953
+}

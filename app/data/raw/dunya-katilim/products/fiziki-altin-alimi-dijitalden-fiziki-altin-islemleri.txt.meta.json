@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi/fiziki-altin-alimi/dijitalden-fiziki-altin-islemleri",
+  "scraped_at": "2026-07-30T20:28:19+00:00",
+  "content_hash": "f7a34e9ef97a68efd610208b14f85dfdee550137ae96a97760cafe6b23d67939",
+  "collection_method": "live",
+  "title": "Dijitalden Fiziki Alt&#x131;n &#x130;&#x15F;lemleri | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 501023,
+  "text_chars": 10862
+}

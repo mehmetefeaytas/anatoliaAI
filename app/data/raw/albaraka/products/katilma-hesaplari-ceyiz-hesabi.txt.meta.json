@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/ceyiz-hesabi",
+  "scraped_at": "2026-07-30T20:08:41+00:00",
+  "content_hash": "23cc8dfdeac9b432333d2eaf55201e7a0897529a57adcbd2daa4d64cbbb4bd97",
+  "collection_method": "live",
+  "title": "Çeyiz Hesabı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 219121,
+  "text_chars": 10749
+}

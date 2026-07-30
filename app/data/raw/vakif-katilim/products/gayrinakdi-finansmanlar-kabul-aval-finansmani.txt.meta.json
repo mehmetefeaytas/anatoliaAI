@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/kabul-aval-finansmani",
+  "scraped_at": "2026-07-30T20:19:16+00:00",
+  "content_hash": "abee82f153502c67afe10fab31f182725f1e7194fac4313da49fa32b302619c6",
+  "collection_method": "live",
+  "title": "Kabul Aval Finansmanı | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 133803,
+  "text_chars": 1129
+}

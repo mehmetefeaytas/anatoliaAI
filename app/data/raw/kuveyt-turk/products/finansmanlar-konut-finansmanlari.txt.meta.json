@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/konut-finansmanlari",
-  "scraped_at": "2026-07-30T19:41:36+00:00",
-  "content_hash": "b7d78bc5ebdc7c1425e029ccee82bedd442137a5cc0372d339f5d84fea9e315c",
+  "scraped_at": "2026-07-30T20:03:21+00:00",
+  "content_hash": "96f4acbd68bde8f35ea04a79f7a3ef1c0307b14c977b53432c3f720abfb44ecf",
   "collection_method": "live",
   "title": "Konut Finansmanları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

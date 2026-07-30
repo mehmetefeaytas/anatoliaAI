@@ -1,8 +1,8 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/katilma-hesaplari",
-  "scraped_at": "2026-07-30T19:49:25+00:00",
-  "content_hash": "640d54dd20130c5265ed60e5da687a86dcba13409322527bf82815790be4de3d",
+  "scraped_at": "2026-07-30T20:29:07+00:00",
+  "content_hash": "2571ddb8f7d94349289d81d28344e43b750ec52601364d086aa5724baa578be1",
   "collection_method": "live",
   "title": "Kat&#x131;lma Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,

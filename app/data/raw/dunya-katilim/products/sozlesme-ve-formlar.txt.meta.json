@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/sozlesme-ve-formlar",
+  "scraped_at": "2026-07-30T20:30:16+00:00",
+  "content_hash": "fb37bad2ab3a2be1e7a1ccd4843e433a1ddb10c1ffaf35511df334e5ea75e545",
+  "collection_method": "live",
+  "title": "S&#xF6;zle&#x15F;me ve Formlar | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 506436,
+  "text_chars": 9044
+}

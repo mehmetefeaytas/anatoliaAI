@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/ihtiyac-kart",
+  "scraped_at": "2026-07-30T20:05:42+00:00",
+  "content_hash": "07bee7ac89c5f20d073fbbafcbdfbe0dcdf0bfbd0909561633b35c15d80cd7fd",
+  "collection_method": "live",
+  "title": "İhtiyaç Kart | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 151435,
+  "text_chars": 6039
+}

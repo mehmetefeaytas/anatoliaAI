@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/hesaplar",
+  "scraped_at": "2026-07-30T20:25:39+00:00",
+  "content_hash": "0c7d616da7bc2493d0cde266c04434eacfcd84b5f2ef4cf6781a19a3c379aaea",
+  "collection_method": "browser",
+  "title": "Hesaplar | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 286172,
+  "text_chars": 800
+}

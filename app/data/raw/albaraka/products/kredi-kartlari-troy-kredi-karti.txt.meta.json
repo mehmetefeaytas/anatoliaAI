@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/troy-kredi-karti",
+  "scraped_at": "2026-07-30T20:09:25+00:00",
+  "content_hash": "9fa95a5bebdb39695ae4212b1cb08ee568f99b30bf5785a351504a0873063bce",
+  "collection_method": "live",
+  "title": "Troy Kredi Kartı | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181580,
+  "text_chars": 1620
+}

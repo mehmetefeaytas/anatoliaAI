@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/gayri-nakdi-finansman",
-  "scraped_at": "2026-07-30T19:40:42+00:00",
-  "content_hash": "ba47c5418ddd756fd3e33aa9f224eda1bb056ef6f39ee176978655e66b993d46",
+  "scraped_at": "2026-07-30T20:02:27+00:00",
+  "content_hash": "ea36db9be9e29fff1b74450a39718af1b2aaab3756adbc3ada2c20729c88825a",
   "collection_method": "live",
   "title": "Gayri Nakdi Finansman | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

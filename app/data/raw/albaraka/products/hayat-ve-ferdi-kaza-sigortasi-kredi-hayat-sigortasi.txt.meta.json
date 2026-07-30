@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/sigorta-ve-emeklilik/hayat-ve-ferdi-kaza-sigortasi/kredi-hayat-sigortasi",
+  "scraped_at": "2026-07-30T20:09:44+00:00",
+  "content_hash": "ebf4dcccba2d9d553bb7b24cb7875b70be1568d3be5130d603534d65483082a0",
+  "collection_method": "live",
+  "title": "Kredi Hayat Sigortası ile Güvende Hissedin - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182806,
+  "text_chars": 1245
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/finansmanlar-is/isletme-finansmani",
+  "scraped_at": "2026-07-30T20:26:44+00:00",
+  "content_hash": "f31eb6d3ce986dcd7822dd95e4eb83a20e82a223ddea8592b92c810058a9040d",
+  "collection_method": "browser",
+  "title": "İşletme Finansmanı | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 291981,
+  "text_chars": 1148
+}

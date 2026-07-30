@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/ticari-kartlar/finansman-kartlari/ferah-kart",
+  "scraped_at": "2026-07-30T20:20:17+00:00",
+  "content_hash": "09421c01fb09a27b17e2090ae6f51f3367f8b5bd464282e60d7d342859f6381b",
+  "collection_method": "live",
+  "title": "Ferah Kart | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141900,
+  "text_chars": 2071
+}

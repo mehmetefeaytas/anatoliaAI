@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-gayri-nakdi-finansman/referans-mektuplari",
+  "scraped_at": "2026-07-30T20:10:14+00:00",
+  "content_hash": "12f44fdb3687763c6812915ec026ebb7307bcf67b3458ce867337c35a4b44169",
+  "collection_method": "live",
+  "title": "Referans Mektupları - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181168,
+  "text_chars": 675
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/kobi-destekli-finansmanlar/kosgeb-destekli-finansman",
+  "scraped_at": "2026-07-30T20:19:28+00:00",
+  "content_hash": "fa79e8fc1254da27731c2d70c10c407eb75c64bbf8981bbf512d58e46a463328",
+  "collection_method": "live",
+  "title": "KOSGEB Destekli Finansman | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 137882,
+  "text_chars": 2106
+}

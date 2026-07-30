@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/fon-biriktiren-hesap",
+  "scraped_at": "2026-07-30T20:08:52+00:00",
+  "content_hash": "32e42a01fea309b99f0ef178b4d1b4cd8e807d4c3bdb2d5452b2bc86c588dfeb",
+  "collection_method": "live",
+  "title": "Fon Biriktiren Hesap - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182151,
+  "text_chars": 1050
+}

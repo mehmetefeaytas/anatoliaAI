@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/krediler",
+  "scraped_at": "2026-07-30T20:25:47+00:00",
+  "content_hash": "ee04c2cc9bb309de06ddc64354d1dc370d4ed463c6fca90521312de682e5f017",
+  "collection_method": "browser",
+  "title": "Krediler | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 283514,
+  "text_chars": 301
+}

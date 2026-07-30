@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/yatirim-urunleri/hazine-urunleri/doviz-kiymetli-maden-alim-satimi",
+  "scraped_at": "2026-07-30T20:29:52+00:00",
+  "content_hash": "568c500557489c087b9697570d88aa2dfce558766eec15f8c6c0aebc2fd1368c",
+  "collection_method": "live",
+  "title": "D&#xF6;viz/K&#x131;ymetli Maden Al&#x131;m Sat&#x131;m&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 498794,
+  "text_chars": 9220
+}

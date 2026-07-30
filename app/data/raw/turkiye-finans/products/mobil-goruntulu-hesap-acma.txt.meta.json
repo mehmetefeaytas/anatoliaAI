@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/dijital-bankacilik/mobil/Sayfalar/goruntulu_hesap_acma.aspx",
+  "scraped_at": "2026-07-30T20:12:35+00:00",
+  "content_hash": "ce96071cfde8309f6ca4cf22dff0bb02a9f6bcd37749927ee06c2c5cbe48a8c4",
+  "collection_method": "live",
+  "title": "Digital Onboarding: Görüntülü Başvuru | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 158124,
+  "text_chars": 14399
+}

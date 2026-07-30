@@ -186,8 +186,17 @@ def discover_products(bank, fetch, *, max_docs: int = 80,
     exclude += list(getattr(bank, "product_exclude_patterns", None) or [])
     sitemaps = list(getattr(bank, "product_sitemap_urls", None)
                     or getattr(bank, "sitemap_urls", None) or [])
+    paths = list(getattr(bank, "product_paths", None) or [])
+    # BAŞLANGIÇ NOKTASI YOKSA ANA SAYFADAN GEZ.
+    # Gerçek veride ölçüldü: Türkiye Finans'ın ne `sitemap_urls`'i ne
+    # `product_paths`'i var (kampanya yolları ASP.NET'e özgü `.aspx`
+    # adresleri). Ürün keşfi 0 URL buluyordu — banka ürün sayfası
+    # yayımlamadığı için değil, gezmeye BAŞLAYACAK yer olmadığı için.
+    # Ana sayfa her bankada vardır ve ürün menüsünü içerir.
+    if not paths and not sitemaps:
+        paths = ["/"]
     return _discover(bank, fetch, max_docs=max_docs,
-                     paths=list(getattr(bank, "product_paths", None) or []),
+                     paths=paths,
                      sitemaps=sitemaps, include=include, exclude=exclude,
                      ranker=rank_products)
 

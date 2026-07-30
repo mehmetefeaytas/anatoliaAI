@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/birikimli-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:08:35+00:00",
+  "content_hash": "82696113cfc231f4355c73bd986215dbbf80c02453e8a1514ada3018f954887f",
+  "collection_method": "live",
+  "title": "Birikimli Katılma Hesabı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184255,
+  "text_chars": 2153
+}

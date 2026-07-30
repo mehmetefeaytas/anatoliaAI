@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi/altin-hesaplari/altin-cari-hesabi",
+  "scraped_at": "2026-07-30T20:28:13+00:00",
+  "content_hash": "e49278119640034d61359f067f7bf6b0c1cf574bb5988ba43b8d8f79752849a2",
+  "collection_method": "live",
+  "title": "Alt&#x131;n Cari Hesab&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 500164,
+  "text_chars": 9478
+}

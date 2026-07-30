@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/mevsim-donemsel-isletme-finansmani",
+  "scraped_at": "2026-07-30T20:19:46+00:00",
+  "content_hash": "73724db638e15bce57220f3f2e614268abfe989ec79569c73a47d1388c1270e0",
+  "collection_method": "live",
+  "title": "Mevsim (D&#246;nemsel İşletme Finansmanı) | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 134338,
+  "text_chars": 1640
+}

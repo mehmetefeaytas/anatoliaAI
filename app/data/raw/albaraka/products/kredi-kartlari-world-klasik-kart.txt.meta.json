@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/world-klasik-kart",
+  "scraped_at": "2026-07-30T20:09:32+00:00",
+  "content_hash": "28f0a8c2ee76484fdbf2fd58cf1e889cf74606ce76fcbc0408ccf303866c249c",
+  "collection_method": "live",
+  "title": "World Klasik Kart - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 187120,
+  "text_chars": 3196
+}

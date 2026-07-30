@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/altin-cocuk-hesabi",
+  "scraped_at": "2026-07-30T20:25:00+00:00",
+  "content_hash": "0c0ca26b4e7f570270e42fd9e21da0e2ace8f90cb2933dcb8c7002ac5f126aa5",
+  "collection_method": "live",
+  "title": "Altın &#199;ocuk Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166316,
+  "text_chars": 3274
+}

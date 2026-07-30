@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/nakit-yonetimi/tahsilat-sistemleri/tedarikci-finansmani",
+  "scraped_at": "2026-07-30T20:04:30+00:00",
+  "content_hash": "6dcb1ca1435a5dab24d7c276d35f65ea9bd9dc9d92614aa6ca9033dd9e07cc93",
+  "collection_method": "live",
+  "title": "Tedarikçi Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 139415,
+  "text_chars": 5049
+}

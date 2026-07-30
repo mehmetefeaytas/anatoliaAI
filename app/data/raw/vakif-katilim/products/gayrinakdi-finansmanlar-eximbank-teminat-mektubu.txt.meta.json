@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/eximbank-teminat-mektubu",
+  "scraped_at": "2026-07-30T20:19:10+00:00",
+  "content_hash": "a7d6227ef39a6c96eeb2d210f60218d43e7d97fd9f99348b9312ccd8a828aba7",
+  "collection_method": "live",
+  "title": "Eximbank Teminat Mektubu | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 137019,
+  "text_chars": 1867
+}

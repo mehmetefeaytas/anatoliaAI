@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/sanal-kart",
+  "scraped_at": "2026-07-30T20:09:23+00:00",
+  "content_hash": "377036f34cb76727d45c3cdcb9873cbbaf32ca7e59a0bf41a7248c2487a9b11b",
+  "collection_method": "live",
+  "title": "Sanal Kart - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 191308,
+  "text_chars": 5083
+}

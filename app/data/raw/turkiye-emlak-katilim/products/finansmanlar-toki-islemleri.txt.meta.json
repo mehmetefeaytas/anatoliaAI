@@ -1,8 +1,8 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/toki-islemleri",
-  "scraped_at": "2026-07-30T19:47:57+00:00",
-  "content_hash": "0f927cf4f3a761e21972af1a30d0ae0d43ec2b94ffbde9dd05c117169f16c640",
+  "scraped_at": "2026-07-30T20:21:36+00:00",
+  "content_hash": "0525211ce66cdc53f64455cf2c13ca95d72639cb8c543323e2874ee060455430",
   "collection_method": "live",
   "title": "TOKİ İşlemleri | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,

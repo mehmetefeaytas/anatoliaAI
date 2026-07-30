@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/Sayfalar/default.aspx",
+  "scraped_at": "2026-07-30T20:11:59+00:00",
+  "content_hash": "789cf4e06c84a51a9cc50b1826a34c47f64e71af8f29ee1095c45c1d430d7dc2",
+  "collection_method": "live",
+  "title": "Sözleşmeler ve Formlar | KOBİ | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 253311,
+  "text_chars": 9389
+}

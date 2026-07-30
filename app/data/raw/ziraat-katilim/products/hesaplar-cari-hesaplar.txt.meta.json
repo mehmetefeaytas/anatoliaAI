@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/cari-hesaplar",
+  "scraped_at": "2026-07-30T20:16:13+00:00",
+  "content_hash": "5e32c29a68646b954271788a98510450113d75b7660aa9cf470793a5bd868c1f",
+  "collection_method": "live",
+  "title": "Cari Hesap | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 479877,
+  "text_chars": 5102
+}

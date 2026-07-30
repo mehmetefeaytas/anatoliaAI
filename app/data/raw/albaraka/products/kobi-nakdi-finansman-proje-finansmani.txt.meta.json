@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/proje-finansmani",
+  "scraped_at": "2026-07-30T20:10:35+00:00",
+  "content_hash": "57f28d2b3d2ff998f459d100d7b5439c67424cf6b25f752dd78ce4ba087da2d4",
+  "collection_method": "live",
+  "title": "Proje Finansmanı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181420,
+  "text_chars": 728
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/odemeler/ihracat-pesin-vesaik-mukabili-mal-mukabili-akreditif",
+  "scraped_at": "2026-07-30T20:23:03+00:00",
+  "content_hash": "c5090837610abea78af5a6a14ecc3c598c7f56a23f97fe1d83c148a2d8227eb7",
+  "collection_method": "live",
+  "title": "İhracat (Peşin, Vesaik Mukabili, Mal Mukabili, Akreditif) | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 158111,
+  "text_chars": 2323
+}

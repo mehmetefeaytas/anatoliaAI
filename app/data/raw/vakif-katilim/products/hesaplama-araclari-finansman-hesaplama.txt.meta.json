@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/yardimci-sayfalar/hesaplama-araclari/finansman-hesaplama",
-  "scraped_at": "2026-07-30T19:47:02+00:00",
-  "content_hash": "51f69ffcd16fe4ebacf33ce5485d48a255ef577ec3f601bab438606888ac9b83",
+  "scraped_at": "2026-07-30T20:17:55+00:00",
+  "content_hash": "d91581bcaf772158575ca393eb9f582dc59a7ae9a40e2121acb730d7b0278027",
   "collection_method": "live",
   "title": "Finansman Hesaplama | Vakıf Katılım",
   "http_status": 200,

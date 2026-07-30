@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/atik-yonetimi-finansmani",
+  "scraped_at": "2026-07-30T20:23:24+00:00",
+  "content_hash": "22005d5d0b6d6dffbc2a5ef81435646b1372a865296628bde1bb35f097ada1a9",
+  "collection_method": "live",
+  "title": "Atık Y&#246;netimi Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 171907,
+  "text_chars": 6643
+}

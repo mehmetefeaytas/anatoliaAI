@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/harcadikca-mil-kazandiran-milesandsmiles-kredi-karti-ucretsiz",
+  "scraped_at": "2026-07-30T20:04:48+00:00",
+  "content_hash": "cb763af7eb2de8c8a269d0504e8165eaced3af40ba7a0263123110b46b0103a1",
+  "collection_method": "live",
+  "title": "Harcadıkça Mil Kazandıran Miles&Smiles Kredi Kartı Ücretsiz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134727,
+  "text_chars": 4049
+}

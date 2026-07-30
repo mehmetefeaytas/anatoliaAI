@@ -1,8 +1,8 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/leasing/leasing",
-  "scraped_at": "2026-07-30T19:48:15+00:00",
-  "content_hash": "56eede08a56df3a5acb826b1652b76f286f44fa770818877d692bb868b930410",
+  "scraped_at": "2026-07-30T20:21:54+00:00",
+  "content_hash": "90cd4ee6e5e1219b16dca0e328d38d6ecfce317b4fb0a9d2876e4b0adfe866d1",
   "collection_method": "live",
   "title": "Leasing | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,

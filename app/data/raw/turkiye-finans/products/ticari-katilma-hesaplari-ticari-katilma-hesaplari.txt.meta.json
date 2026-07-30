@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/ticari/ticari-katilma-hesaplari/Sayfalar/ticari-katilma-hesaplari.aspx",
+  "scraped_at": "2026-07-30T20:12:14+00:00",
+  "content_hash": "c58f8e34cb423fe3f2b2c604afd0a7ace4bafb714baf39fa0a9f25471b75a021",
+  "collection_method": "live",
+  "title": "Şirketiniz İçin Katılma Hesapları | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 102438,
+  "text_chars": 8241
+}

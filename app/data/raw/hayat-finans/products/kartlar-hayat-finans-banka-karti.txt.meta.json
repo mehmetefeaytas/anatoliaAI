@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kartlar/hayat-finans-banka-karti",
+  "scraped_at": "2026-07-30T20:26:22+00:00",
+  "content_hash": "617db0317548d994c678ee2eeebc3a1fdc2209ca0af4a516a07483c4ee99437c",
+  "collection_method": "browser",
+  "title": "Hayat Finans Banka Kartı | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 319295,
+  "text_chars": 5248
+}

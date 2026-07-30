@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/kiymetli-maden-bankaciligi",
+  "scraped_at": "2026-07-30T20:24:48+00:00",
+  "content_hash": "461542b8ba369b10f54e8da9667aa2afb14ec8feb6d864deafb5f0a916bb1dd6",
+  "collection_method": "live",
+  "title": "Kıymetli Maden Bankacılığı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 158163,
+  "text_chars": 484
+}

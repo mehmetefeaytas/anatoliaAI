@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/diger-nakdi-fon-kullandirim",
+  "scraped_at": "2026-07-30T20:23:30+00:00",
+  "content_hash": "5e24013d9ed076adacaa3ec96d6b5d2d54e5ee970f205dc7dc728457905f10d6",
+  "collection_method": "live",
+  "title": "Diğer Nakdi Fon Kullandırım | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164706,
+  "text_chars": 890
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/gayrinakdi-finansman/kabul-aval-finansmani",
+  "scraped_at": "2026-07-30T20:23:12+00:00",
+  "content_hash": "ee6aea4c18ee603000615c759e55c45b7e182b5fceff36170754ec753765ad36",
+  "collection_method": "live",
+  "title": "Kabul-Aval Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 163594,
+  "text_chars": 957
+}

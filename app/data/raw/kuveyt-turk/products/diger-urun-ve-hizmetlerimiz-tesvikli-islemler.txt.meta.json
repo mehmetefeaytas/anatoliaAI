@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/diger-urun-ve-hizmetlerimiz/tesvikli-islemler",
-  "scraped_at": "2026-07-30T19:41:09+00:00",
-  "content_hash": "ef6ab15db273c6035d1a1070de824fe6ce15c4331e675a68deef32475c59cca9",
+  "scraped_at": "2026-07-30T20:02:54+00:00",
+  "content_hash": "680a3beb6e0bb33654c98e4b610bd183e652cad2e8bcbe59d9d94d8ffbd977ba",
   "collection_method": "live",
   "title": "Teşvikli İşlemler | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

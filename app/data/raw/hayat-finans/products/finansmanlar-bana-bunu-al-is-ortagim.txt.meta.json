@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/finansmanlar/bana-bunu-al-is-ortagim",
+  "scraped_at": "2026-07-30T20:26:06+00:00",
+  "content_hash": "c2a82fc0e323469627bc01f75ae0280daa63cc97976a03bcd5c3a6e23050cd2a",
+  "collection_method": "browser",
+  "title": "Bana Bunu Al İş Ortağım | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 301813,
+  "text_chars": 2613
+}

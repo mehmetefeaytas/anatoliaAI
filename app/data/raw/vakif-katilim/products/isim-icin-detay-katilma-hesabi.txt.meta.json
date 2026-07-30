@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/isim-icin-detay/katilma-hesabi",
+  "scraped_at": "2026-07-30T20:18:04+00:00",
+  "content_hash": "75a8d68b55cb313c59e03233ed842d9611f20975aa33b64b4e2bdb1272b24424",
+  "collection_method": "live",
+  "title": "Yardım Merkezi | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 127858,
+  "text_chars": 201
+}

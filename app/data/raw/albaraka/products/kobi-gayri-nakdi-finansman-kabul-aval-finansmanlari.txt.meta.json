@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-gayri-nakdi-finansman/kabul-aval-finansmanlari",
+  "scraped_at": "2026-07-30T20:10:11+00:00",
+  "content_hash": "015374df47f1d641d070b1371677349b7ab05cc13b187478b27a3a15a8876184",
+  "collection_method": "live",
+  "title": "Kabul-Aval Finansmanları - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181578,
+  "text_chars": 826
+}

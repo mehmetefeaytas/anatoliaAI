@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/leasing-finansman-urunlerimiz",
-  "scraped_at": "2026-07-30T19:40:53+00:00",
-  "content_hash": "ce2c0ad900b924f87ef0d7e8cd758e2d0694304c08cab371163a146e5577d5d8",
+  "scraped_at": "2026-07-30T20:02:39+00:00",
+  "content_hash": "0c69473b40ed12611fd625a2f497bf7f4903a89222d0e6ab2cd22798c3e1e8ce",
   "collection_method": "live",
   "title": "Leasing Finansman Ürünlerimiz | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

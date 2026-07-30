@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/tarim-bankaciligi/tarim-ve-hayvancilik-finansmani",
-  "scraped_at": "2026-07-30T19:41:24+00:00",
-  "content_hash": "a7ecaccadf0738580057aa4e958b5a9de60c3876126b2b4f20095b8fd5868276",
+  "scraped_at": "2026-07-30T20:03:09+00:00",
+  "content_hash": "ad959886afb4b653eb741685b8c61f7cfe965efeba548cb23cca66440bc083d8",
   "collection_method": "live",
   "title": "Tarım ve Hayvancılık Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/odeme-hizmetleri-ve-nakit-yonetimi/nakit-yonetimi/tedarikci-finansmani",
+  "scraped_at": "2026-07-30T20:24:18+00:00",
+  "content_hash": "22f38dfc484f1ea277f7b2998a96cc90431aaef6d65379e79bb9fd4b14a6c18d",
+  "collection_method": "live",
+  "title": "Tedarik&#231;i Finansmanı Sistemi | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168467,
+  "text_chars": 3485
+}

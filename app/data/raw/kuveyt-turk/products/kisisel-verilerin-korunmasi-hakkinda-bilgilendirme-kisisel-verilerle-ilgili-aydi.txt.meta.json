@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kisisel-verilerin-korunmasi-hakkinda-bilgilendirme/kisisel-verilerle-ilgili-aydinlatma-finansman-islemleri-satici",
-  "scraped_at": "2026-07-30T19:40:26+00:00",
-  "content_hash": "1a0b4ce69c7a8eac57ad7c020ba60b3cb3e8b8d76aa09a7c1a6d970c558cc8ae",
+  "scraped_at": "2026-07-30T20:02:12+00:00",
+  "content_hash": "efdd654f2628c9f5a8b85e16460881ea8c0778e1356d3628a416e8e9836f792d",
   "collection_method": "live",
   "title": "Kişisel Verilerle İlgili Aydınlatma - Finansman İşlemleri - Satıcı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

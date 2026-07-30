@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/ticari-kartlar/kredi-karti",
-  "scraped_at": "2026-07-30T19:46:26+00:00",
-  "content_hash": "ba5d3beb9d9e89ea6086c1d5aa2d5eeb3cc29cb46f4084e17dd43c67ed1deae6",
+  "scraped_at": "2026-07-30T20:17:19+00:00",
+  "content_hash": "47d2e08c28f3bbce0ab91bf569c2c15064dd0e9f283beeb93c74d9f95465c65b",
   "collection_method": "live",
   "title": "Kredi Kartı | Kurumsal | Vakıf Katılım",
   "http_status": 200,

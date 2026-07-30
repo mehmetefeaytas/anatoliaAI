@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/ticari-kartlar/kredi-karti/vkart-business",
+  "scraped_at": "2026-07-30T20:20:20+00:00",
+  "content_hash": "2dd4c9603cd1ef79b1f221aa32be47c9bc35286f4d4abe2dd8833524cea09689",
+  "collection_method": "live",
+  "title": "VKart Business | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 142770,
+  "text_chars": 2426
+}

@@ -1,8 +1,8 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar/kredi-kartlari/dkart-kredi-karti",
-  "scraped_at": "2026-07-30T19:50:01+00:00",
-  "content_hash": "2b6c30fe6f718da759b8d576aab15d4be2bb177f25d7522093cd2fa3ccd3a83f",
+  "scraped_at": "2026-07-30T20:29:28+00:00",
+  "content_hash": "80805dd01ec44e35c39b2599c34fdb8d9275e3d7469599b86643aa6504865fea",
   "collection_method": "live",
   "title": "DKart Kredi Kart&#x131; | Dünya Katılım",
   "http_status": 200,

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/yuvam-katilim-hesabi",
+  "scraped_at": "2026-07-30T20:22:39+00:00",
+  "content_hash": "426b4b978d62fe55f9d0ffa16ff2e8e203425a55dfd5607f373abc11784ca269",
+  "collection_method": "live",
+  "title": "Yuvam Katılım Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 169235,
+  "text_chars": 4030
+}

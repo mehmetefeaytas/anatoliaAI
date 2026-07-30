@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/hesaplama-araclari/Sayfalar/hesaplama-araclari.aspx",
+  "scraped_at": "2026-07-30T20:12:50+00:00",
+  "content_hash": "6a861580a9936e080422ce27637b90361526ad392ce8a30cb179c7913868a86c",
+  "collection_method": "live",
+  "title": "Hesaplama Araçları",
+  "http_status": 200,
+  "raw_bytes": 96539,
+  "text_chars": 5975
+}

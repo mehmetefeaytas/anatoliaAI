@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/yatirim-urunleri/yatirim-fonlari",
+  "scraped_at": "2026-07-30T20:14:06+00:00",
+  "content_hash": "afcba6b757fc635fe51d00d60ab90259ef33bf511a0a331272f31a6b19c7b5bf",
+  "collection_method": "live",
+  "title": "Yatırım Fonları | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 479421,
+  "text_chars": 6440
+}

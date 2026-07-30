@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/surdurulebilir-urunler/isletme-finansmani",
-  "scraped_at": "2026-07-30T19:41:11+00:00",
-  "content_hash": "9ed49694aa1d77904108db200db6b2834bbd6120473ef22c5b609a41a446e580",
+  "scraped_at": "2026-07-30T20:02:57+00:00",
+  "content_hash": "0d5acf074db09f64df46ef1948987558ab95616fce30a7eefca97e93e1f2c59c",
   "collection_method": "live",
   "title": "İşletme Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

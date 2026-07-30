@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/sigortalar/hayat-sigortalari/isveren-grup-emeklilik-sozlesmeleri",
+  "scraped_at": "2026-07-30T20:27:40+00:00",
+  "content_hash": "9bcfb4dfb36dd08c54382b8067bc43e4de697dddeb3c71c2fa8f6466a90c56b1",
+  "collection_method": "live",
+  "title": "&#x130;&#x15F;veren Grup Emeklilik S&#xF6;zle&#x15F;meleri | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 499280,
+  "text_chars": 9678
+}

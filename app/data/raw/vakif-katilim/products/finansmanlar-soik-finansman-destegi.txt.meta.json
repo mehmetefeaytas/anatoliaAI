@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/isim-icin-detay/finansmanlar/soik-finansman-destegi",
+  "scraped_at": "2026-07-30T20:18:01+00:00",
+  "content_hash": "f9d600fb6c766849da4d363340b11377774c677b52f03eaf97dc3cdcb3fadcec",
+  "collection_method": "live",
+  "title": "Yardım Merkezi | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 131794,
+  "text_chars": 679
+}

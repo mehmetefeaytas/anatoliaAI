@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/gft-alacaklariniz-ile-finansman",
+  "scraped_at": "2026-07-30T20:19:37+00:00",
+  "content_hash": "c98c0b4939ef3f78c74c72999ebf97ca5ecf09f9476181bbc30839bf934bfc81",
+  "collection_method": "live",
+  "title": "GFT Alacakları ile Finansman | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 133705,
+  "text_chars": 1047
+}

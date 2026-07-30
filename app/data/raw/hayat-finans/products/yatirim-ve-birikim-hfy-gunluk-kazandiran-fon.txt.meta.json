@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim/hfy-gunluk-kazandiran-fon",
+  "scraped_at": "2026-07-30T20:26:37+00:00",
+  "content_hash": "37789b27c5452813149f39c8087533a56640e86a59d321b7d9b8267119ba9201",
+  "collection_method": "browser",
+  "title": "HFY - Günlük Kazandıran Fon | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 314748,
+  "text_chars": 4170
+}

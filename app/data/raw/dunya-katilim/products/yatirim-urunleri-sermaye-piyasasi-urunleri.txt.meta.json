@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/yatirim-urunleri/sermaye-piyasasi-urunleri",
+  "scraped_at": "2026-07-30T20:29:55+00:00",
+  "content_hash": "134baba17080791b23ab1962f5b2cbef701dfec19d63d959544d4573c73e1075",
+  "collection_method": "live",
+  "title": "Sermaye Piyasas&#x131; &#xDC;r&#xFC;nleri | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 499699,
+  "text_chars": 9247
+}

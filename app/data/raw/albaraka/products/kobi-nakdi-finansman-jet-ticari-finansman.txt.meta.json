@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/jet-ticari-finansman",
+  "scraped_at": "2026-07-30T20:10:26+00:00",
+  "content_hash": "fa84c1ca839b23fc49160a9e61fa4083f8ba53fbe11ecee23f7f69d126f2424c",
+  "collection_method": "live",
+  "title": "Jet Ticari Finansman | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181884,
+  "text_chars": 1947
+}

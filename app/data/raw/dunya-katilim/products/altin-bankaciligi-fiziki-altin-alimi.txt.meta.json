@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi/fiziki-altin-alimi",
+  "scraped_at": "2026-07-30T20:28:16+00:00",
+  "content_hash": "8272a5b45690126e80d4aa6b8bb6897fa7c819ce826d72a82fc8e991af45b1f7",
+  "collection_method": "live",
+  "title": "Fiziki Alt&#x131;n Al&#x131;m&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 497285,
+  "text_chars": 8930
+}

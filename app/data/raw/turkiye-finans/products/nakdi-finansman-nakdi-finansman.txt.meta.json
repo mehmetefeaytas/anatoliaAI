@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/ticari/nakdi-finansman/Sayfalar/nakdi-finansman.aspx",
+  "scraped_at": "2026-07-30T20:12:17+00:00",
+  "content_hash": "52e8768a071f615ece55966175bb2c884a9588246d514ef64de03ff05f878e2a",
+  "collection_method": "live",
+  "title": "Nakdi Finansman | Ticari | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 99300,
+  "text_chars": 7118
+}

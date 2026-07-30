@@ -1,8 +1,8 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/surdurulebilir-urunlerimiz",
-  "scraped_at": "2026-07-30T19:41:15+00:00",
-  "content_hash": "a22f651f74e29a3e2c4fc0b85da51d86c3a03cdceb4db9fb54dcc21fdf492c66",
+  "scraped_at": "2026-07-30T20:03:00+00:00",
+  "content_hash": "f55c50fcb70b93caf6182942d0fc2a2286a7db7f332633060a3abf495e0fc7ad",
   "collection_method": "live",
   "title": "Sürdürülebilir Ürünlerimiz | Kuveyt Türk Katılım Bankası",
   "http_status": 200,

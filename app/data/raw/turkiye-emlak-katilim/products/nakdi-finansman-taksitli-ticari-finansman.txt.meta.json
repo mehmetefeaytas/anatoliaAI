@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/taksitli-ticari-finansman",
+  "scraped_at": "2026-07-30T20:24:03+00:00",
+  "content_hash": "0613c27ff5ffbe1de11c0bff7bc887e5662a8dd00a0b2972a65a015409b2d817",
+  "collection_method": "live",
+  "title": "Taksitli Ticari Finansman | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164818,
+  "text_chars": 893
+}

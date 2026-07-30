@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/cevreci-ihracat-finansmani",
+  "scraped_at": "2026-07-30T20:23:27+00:00",
+  "content_hash": "4cf05159cabcc4c86b9dc6b0974e59edf1dcdf6cf341a4a2509f1b0aeb3b6475",
+  "collection_method": "live",
+  "title": "&#199;evreci İhracat Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166230,
+  "text_chars": 2225
+}

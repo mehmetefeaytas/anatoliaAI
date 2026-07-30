@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kartlar/bankkart-ucretsiz",
+  "scraped_at": "2026-07-30T20:14:39+00:00",
+  "content_hash": "53ef6997451ebf00c3811830f5aa8b4533b8cff3039350dca85eafac854a4302",
+  "collection_method": "live",
+  "title": "Bankkart (Ücretsiz) | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 453509,
+  "text_chars": 344
+}

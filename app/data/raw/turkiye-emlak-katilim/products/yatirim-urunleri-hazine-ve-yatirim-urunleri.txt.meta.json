@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/hazine-ve-yatirim-urunleri",
+  "scraped_at": "2026-07-30T20:24:45+00:00",
+  "content_hash": "c7deed49010be4e4e048dc1ab603fe0eebdf1e4f668fd83bdef843de20007d9c",
+  "collection_method": "live",
+  "title": "Hazine ve Yatırım &#220;r&#252;nleri | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 157989,
+  "text_chars": 436
+}

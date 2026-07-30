@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/kosgeb-istihdami-koruma-destek-finansmani",
+  "scraped_at": "2026-07-30T20:23:57+00:00",
+  "content_hash": "dc33dc96ae29fd003a75474fc595650461ecf4357685088d232381d8614ab3ea",
+  "collection_method": "live",
+  "title": "KOSGEB İstihdamı Koruma Destek Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165310,
+  "text_chars": 1269
+}

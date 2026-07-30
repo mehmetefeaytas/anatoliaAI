@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/finansmanlar/ithalatin-finansmani",
+  "scraped_at": "2026-07-30T20:03:48+00:00",
+  "content_hash": "28b1bcc6476978dd75464c73a5e5b859364e2024ef25bb6afcc5059326d07433",
+  "collection_method": "live",
+  "title": "İthalatın Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130504,
+  "text_chars": 2269
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/hesaplama-araclari",
+  "scraped_at": "2026-07-30T20:24:32+00:00",
+  "content_hash": "08d6105167bf43c25b89e8d3ea30d828de03549d0dee1b58451eb27c0dfbc911",
+  "collection_method": "live",
+  "title": "Hesaplama Ara&#231;ları",
+  "http_status": 200,
+  "raw_bytes": 197841,
+  "text_chars": 978
+}

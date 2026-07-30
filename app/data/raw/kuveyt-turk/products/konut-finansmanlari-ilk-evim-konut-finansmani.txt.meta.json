@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/konut-finansmanlari/ilk-evim-konut-finansmani",
+  "scraped_at": "2026-07-30T20:06:06+00:00",
+  "content_hash": "7561c345ce480c3a2478342e42c0a193cbb2983f2563ba20658b7f6e5566050a",
+  "collection_method": "live",
+  "title": "İlk Evim Konut Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 155020,
+  "text_chars": 7017
+}

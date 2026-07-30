@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/dijital-bankacilik/api-bankaciligi/api-market/finansman",
+  "scraped_at": "2026-07-30T20:03:36+00:00",
+  "content_hash": "1cb8a05ecdc8aaf37036209b447a51c499df96d5a0578a7f5f8e8c719237e024",
+  "collection_method": "live",
+  "title": "Finansman | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129521,
+  "text_chars": 2805
+}

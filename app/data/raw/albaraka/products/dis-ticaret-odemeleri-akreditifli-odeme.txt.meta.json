@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/dis-ticaret/dis-ticaret-odemeleri/akreditifli-odeme",
+  "scraped_at": "2026-07-30T20:09:59+00:00",
+  "content_hash": "4b4e1775ad83f05b1fac0c319b3cf09bce822cc12921eebe95be8c9c10ee65d6",
+  "collection_method": "live",
+  "title": "Akreditifli Ödeme - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181542,
+  "text_chars": 1007
+}

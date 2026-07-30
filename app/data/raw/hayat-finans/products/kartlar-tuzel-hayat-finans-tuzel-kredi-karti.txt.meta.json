@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kartlar-tuzel/hayat-finans-tuzel-kredi-karti",
+  "scraped_at": "2026-07-30T20:26:31+00:00",
+  "content_hash": "eb7fb38eca42e6aa8d785b2a1f6d9f4e2a12ac9ab3b648801ce41fc5d93d527b",
+  "collection_method": "browser",
+  "title": "MasterCard Tüzel Kredi Kartı | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 295318,
+  "text_chars": 2810
+}

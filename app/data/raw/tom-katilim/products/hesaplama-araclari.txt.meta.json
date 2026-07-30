@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/hesaplama-araclari.html",
+  "scraped_at": "2026-07-30T20:25:20+00:00",
+  "content_hash": "10dffa498fc4528004a804460d5479f73b88e2a4c0426a758f92b6f403dc62af",
+  "collection_method": "browser",
+  "title": "Hesaplama Araçları | TOM Bank",
+  "http_status": 200,
+  "raw_bytes": 46574,
+  "text_chars": 769
+}

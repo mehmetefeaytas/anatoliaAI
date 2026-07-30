@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/isim-icin-detay/altin-katilma-hesabi",
-  "scraped_at": "2026-07-30T19:47:05+00:00",
-  "content_hash": "60b6640203233adcc1b9f330c35c092223ae6c6fee7ac65ea4251acb198f750b",
+  "scraped_at": "2026-07-30T20:17:58+00:00",
+  "content_hash": "aabc6aff3d1ce32d2387414892c72c3cc0b6380b47779ef568f41eea3beafad2",
   "collection_method": "live",
   "title": "Yardım Merkezi | Kurumsal | Vakıf Katılım",
   "http_status": 200,

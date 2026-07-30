@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/arsa-finansmani",
+  "scraped_at": "2026-07-30T20:18:19+00:00",
+  "content_hash": "ca2ebbca73adccd78a2f92a9ae3085aeca085b797e310471937326ed501b8522",
+  "collection_method": "live",
+  "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 129436,
+  "text_chars": 483
+}

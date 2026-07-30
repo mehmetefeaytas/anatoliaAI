@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/altin-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:20:23+00:00",
+  "content_hash": "e82201210d4eb970ce5a0b341375e57cc5ad1cdfc2aa193fe80c486e2571ca31",
+  "collection_method": "live",
+  "title": "Altın Katılma Hesabı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 153260,
+  "text_chars": 2872
+}

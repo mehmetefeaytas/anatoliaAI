@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/kredi-karti",
+  "scraped_at": "2026-07-30T20:18:40+00:00",
+  "content_hash": "ed14741d2ae189019bf7a643f7e48fffb2c7e97179fd671f3e3096116e97ac35",
+  "collection_method": "live",
+  "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 129269,
+  "text_chars": 328
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kartlar",
+  "scraped_at": "2026-07-30T20:14:45+00:00",
+  "content_hash": "50e24f202e7bcf7c8905c8cc7f934e3eff9355594ca4dfa7a0ff77f9101f5e66",
+  "collection_method": "live",
+  "title": "Kartlar | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 459984,
+  "text_chars": 1099
+}

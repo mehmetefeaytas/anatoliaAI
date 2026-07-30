@@ -1,8 +1,8 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/leasing/turk-eximbank-finansal-kiralama",
-  "scraped_at": "2026-07-30T19:48:21+00:00",
-  "content_hash": "931d2efd43ceab9594989b2b62e80fa71f74aff6b1896cdde45609c35c19ef04",
+  "scraped_at": "2026-07-30T20:22:00+00:00",
+  "content_hash": "66cc338ca41e6aa23609b625968832c30c9f5caa4fa2864ff773472df55905fe",
   "collection_method": "live",
   "title": "T&#252;rk Eximbank Finansal Kiralama | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,

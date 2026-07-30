@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/tasit-finansmani/deniz-tasitlari-finansmani",
+  "scraped_at": "2026-07-30T20:08:20+00:00",
+  "content_hash": "d668d4bfde8a73a456f8eb3db5a28e276cf20ebe806d1d79e97e4e0ce1787a9a",
+  "collection_method": "live",
+  "title": "Deniz Taşıtları Finansmanı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182471,
+  "text_chars": 1480
+}

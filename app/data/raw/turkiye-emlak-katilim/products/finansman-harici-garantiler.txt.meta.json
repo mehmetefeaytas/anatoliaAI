@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/finansman/harici-garantiler",
+  "scraped_at": "2026-07-30T20:22:54+00:00",
+  "content_hash": "1b5d1bb55466833a6922a175de5d57d8647142bf97f033fb333f8a8175401366",
+  "collection_method": "live",
+  "title": "Harici Garantiler | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 156035,
+  "text_chars": 905
+}

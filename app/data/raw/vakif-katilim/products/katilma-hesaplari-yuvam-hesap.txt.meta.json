@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/yuvam-hesap",
+  "scraped_at": "2026-07-30T20:20:38+00:00",
+  "content_hash": "6ea496bb64b3de2fca529f962e43245eb9a32a757a6b00e648b61a8dc872a56f",
+  "collection_method": "live",
+  "title": "Yuvam Hesap | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 136994,
+  "text_chars": 2804
+}

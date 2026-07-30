@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/cari-hesap",
+  "scraped_at": "2026-07-30T20:25:07+00:00",
+  "content_hash": "d3badb0b5fc7880eacbba99e3b42ab994e7755ae9995d7a6e9bd2ea7db1db1e0",
+  "collection_method": "live",
+  "title": "Cari Hesaplar | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 163842,
+  "text_chars": 1169
+}

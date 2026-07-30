@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/altin-bankaciligi/altin-hesaplari/ziynet-altin-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:04:45+00:00",
+  "content_hash": "5655b2863160e4d6b3ea2fb5930cbaf8286794b52ea5e201cd00c8877bfef3da",
+  "collection_method": "live",
+  "title": "Ziynet Altın Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133646,
+  "text_chars": 2491
+}

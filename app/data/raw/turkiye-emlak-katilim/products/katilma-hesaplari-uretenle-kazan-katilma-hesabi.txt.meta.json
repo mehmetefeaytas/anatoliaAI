@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/uretenle-kazan-katilma-hesabi",
+  "scraped_at": "2026-07-30T20:22:36+00:00",
+  "content_hash": "9b5f6358330931347d289246aed889beae16899a25568eaa5f96145dc9f915b7",
+  "collection_method": "live",
+  "title": "&#220;retenle Kazan Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168054,
+  "text_chars": 4141
+}

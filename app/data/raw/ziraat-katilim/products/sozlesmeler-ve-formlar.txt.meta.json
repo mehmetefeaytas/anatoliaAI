@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sozlesmeler-ve-formlar",
+  "scraped_at": "2026-07-30T20:13:18+00:00",
+  "content_hash": "907b78694e85117eb093e38516ed48227f73cc65dab172611b0e27dda021e2a0",
+  "collection_method": "live",
+  "title": "Sözleşmeler ve Formlar | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 472486,
+  "text_chars": 816
+}

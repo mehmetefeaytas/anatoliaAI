@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/yatirim-urunleri/sermaye-piyasasi-urunleri",
+  "scraped_at": "2026-07-30T20:24:57+00:00",
+  "content_hash": "865972262a673e30e8d9b20afe9a2e94070c4c680bfe6631e922362fb22c833f",
+  "collection_method": "live",
+  "title": "Sermaye Piyasası &#220;r&#252;nleri | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 160199,
+  "text_chars": 477
+}

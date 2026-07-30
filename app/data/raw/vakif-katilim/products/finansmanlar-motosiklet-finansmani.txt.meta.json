@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/motosiklet-finansmani",
-  "scraped_at": "2026-07-30T19:46:47+00:00",
-  "content_hash": "bf93c88c13b0f14210e26e660e07ae2b0bfcf889c36e55f10eb68e70894ab640",
+  "scraped_at": "2026-07-30T20:17:40+00:00",
+  "content_hash": "6701c3d828280e2052399777d4fcff9345e77799a7b51428361d9fdfe6256bed",
   "collection_method": "live",
   "title": "Motosiklet Finansmanı | Bireysel | Vakıf Katılım",
   "http_status": 200,

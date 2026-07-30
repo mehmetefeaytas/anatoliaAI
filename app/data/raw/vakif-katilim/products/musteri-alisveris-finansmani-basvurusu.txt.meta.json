@@ -1,8 +1,8 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/musteri/alisveris-finansmani-basvurusu",
-  "scraped_at": "2026-07-30T19:45:53+00:00",
-  "content_hash": "2cc713d8a6ad59c7ef5587d09e196c1854a07a65bcb3272a1625711c740d1fcc",
+  "scraped_at": "2026-07-30T20:16:46+00:00",
+  "content_hash": "29978ffdb6c1052514f1b67a1fcc48ee3382c21c594838b383a77af4491b5ae4",
   "collection_method": "live",
   "title": "M&#252;şteri | Vakıf Katılım",
   "http_status": 200,

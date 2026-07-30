@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/dis-ticaret/dis-ticaret-finansmanlari/dis-kaynak-temini",
+  "scraped_at": "2026-07-30T20:09:47+00:00",
+  "content_hash": "96dc4398eace67ddfd0676a4bbb57a074cdc624eefbc05d012df8a05a67de15f",
+  "collection_method": "live",
+  "title": "Dış Kaynak Temini - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181121,
+  "text_chars": 783
+}

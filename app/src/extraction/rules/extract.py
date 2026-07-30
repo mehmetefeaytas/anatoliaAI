@@ -256,33 +256,54 @@ def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
         r"tahsis\s*bedel\w*)",
         re.IGNORECASE,
     )
-    m = trigger.search(text)
-    if m is None:
-        return None
+    # TÜM tetikleyiciler taranır, sadece ilki değil.
+    #
+    # `re.search` (ilk eşleşme) kullanıldığında sonuç metindeki yazım
+    # SIRASINA bağlı oluyordu: sayfada birden çok ücret bahsi varsa
+    # cümleleri ters çevirmek çıkan değeri — dolayısıyla çelişki tespitini —
+    # değiştiriyordu. 849 belgelik gerçek korpusta değişmez denetimi (P4)
+    # bunu 15 belgede yakaladı.
+    #
+    # Kardeş alan `masraf_durumu` "masrafsız İDDİASI her sırada kazanır"
+    # kuralını izliyor. Simetrik karar: burada POZİTİF ÜCRET kazanır.
+    # Böylece ikisi de sıradan bağımsız olur ve çelişki, her iki sinyal de
+    # metinde varsa hangi sırada yazıldığından bağımsız olarak tetiklenir.
+    ilk_sifir = None
+    for m in trigger.finditer(text):
+        # Aynı cümlecik içinde kal: aksi halde metnin başka yerindeki bir
+        # tutar yanlışlıkla tahsis ücreti sanılır.
+        tail = text[m.end(): m.end() + 60]
+        # DİKKAT: '.' Türkçede hem cümle sonu hem BİNLİK AYIRICIDIR. Düz
+        # re.split(r"[.;\n]") "1.500,00 TL"yi "1"de kesip 1500 yerine 1
+        # üretiyordu. Rakam arası noktada bölmemek için lookaround konur.
+        clause = re.split(r"(?<!\d)[.;](?!\d)|\n", tail, maxsplit=1)[0]
 
-    # Aynı cümlecik içinde kal: tetikleyiciden sonraki ilk cümle/virgül sonuna
-    # kadar bak. Aksi halde metnin başka yerindeki bir tutar yanlışlıkla
-    # tahsis ücreti sanılır.
-    tail = text[m.end(): m.end() + 60]
-    # DİKKAT: '.' Türkçede hem cümle sonu hem BİNLİK AYIRICIDIR. Düz
-    # re.split(r"[.;\n]") "1.500,00 TL"yi "1"de kesip 1500 yerine 1 üretiyordu.
-    # Rakamlar arasındaki noktada bölmemek için etrafına lookaround konur.
-    clause = re.split(r"(?<!\d)[.;](?!\d)|\n", tail, maxsplit=1)[0]
+        if re.search(NEGATION_RE, clause, re.IGNORECASE):
+            canon = {"value": 0.0, "currency": "TRY"}
+        else:
+            # AÇIK PARA BİRİMİ ŞART. `normalize_money` para birimi işareti
+            # olmasa da varsayılan "TRY" döndürür; bu, ücret tetikleyicisinin
+            # yakınındaki HER çıplak sayıyı tutar sanmaya yol açıyordu.
+            # Gerçek vaka: ürün adı "2B Finansmanı" olan sayfada "2" sayısı
+            # 2,00 TL tahsis ücreti olarak okunuyordu (849 belgelik korpusta
+            # değişmez denetimi yakaladı).
+            if not re.search(r"(tl|₺|try|türk\s*liras[ıi]|lira)",
+                             clause, re.IGNORECASE):
+                continue
+            canon = N.normalize_money(clause)
+            if canon is None:
+                continue        # tetikleyici var ama ne tutar ne negasyon
 
-    if re.search(NEGATION_RE, clause, re.IGNORECASE):
-        canon = {"value": 0.0, "currency": "TRY"}
-    else:
-        canon = N.normalize_money(clause)
-        if canon is None:
-            # Tetikleyici var ama ne tutar ne negasyon → bilgi belirsiz.
-            return None
-
-    # raw_value BİTİŞİK bir dilim olmalı, yoksa span doğrulaması kırılır
-    # (önceden `m.group(0) + clause.rstrip()` birleştirmesi kullanılıyordu).
-    s, e = m.start(), m.end() + len(clause)
-    raw = text[s:e]
-    return _field("tahsis_ucreti", raw, canon, _window(text, m.start(), m.end()),
-                  span_start=s, span_end=e, trigger_distance=0)
+        # raw_value BİTİŞİK dilim olmalı, yoksa span doğrulaması kırılır.
+        s, e = m.start(), m.end() + len(clause)
+        alan = _field("tahsis_ucreti", text[s:e], canon,
+                      _window(text, m.start(), m.end()),
+                      span_start=s, span_end=e, trigger_distance=0)
+        if canon.get("value", 0) > 0:
+            return alan                 # pozitif ücret her sırada kazanır
+        if ilk_sifir is None:
+            ilk_sifir = alan
+    return ilk_sifir
 
 
 def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
