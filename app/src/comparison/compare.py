@@ -14,6 +14,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Optional
 
+from ..normalization.normalize import collapse_degenerate_range
+
 
 @dataclass
 class RankRow:
@@ -35,6 +37,12 @@ def _numeric_key(field_name: str, value: Any) -> tuple[Optional[float], bool, Op
     """
     if value is None:
         return None, False, "değer yok"
+    # Dejenere aralığı ({"min": X, "max": X}) düz sayıya indirge. Aynı savunma
+    # normalizasyon katmanında da var; burada TEKRARLANIYOR çünkü LLM katmanı
+    # kanonik değeri doğrudan üretebiliyor ve normalize_rate'ten geçmeyebilir.
+    # Atlanırsa tamamen kıyaslanabilir bir değer "aralık" sanılıp sıralamadan
+    # sessizce düşer -> §5.7 "En Düşük Kâr Payı" yanlış banka verir.
+    value = collapse_degenerate_range(value)
     # aralık: {"min":, "max":}
     if isinstance(value, dict) and "min" in value and "max" in value:
         return float(value["min"]), False, "aralık — doğrudan kıyaslanamaz"
@@ -74,7 +82,9 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
         built.append(RankRow(
             bank=r.get("bank"),
             bank_name=r.get("bank_name"),
-            value=r.get("canonical_value"),
+            # Gösterilen değer de tekilleştirilir: arayüzde `{min:1.89,
+            # max:1.89}` yerine `1.89` görünsün.
+            value=collapse_degenerate_range(r.get("canonical_value")),
             sort_key=sk,
             comparable=comparable,
             note=note,

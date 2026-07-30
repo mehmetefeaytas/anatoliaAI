@@ -32,7 +32,11 @@ from eval.properties import (
     check_span_integrity,
     run,
 )
-from src.normalization.normalize import normalize_term_months
+from src.comparison.compare import best, rank
+from src.normalization.normalize import (
+    collapse_degenerate_range,
+    normalize_term_months,
+)
 from src.preprocessing.clean import normalize_text
 
 # Gerçekçi kampanya metinleri — 8 kampanya türünü ve zor vakaları kapsar.
@@ -116,6 +120,54 @@ class TestSafDegismezler(unittest.TestCase):
         for text in KORPUS.values():
             once = normalize_text(text)
             self.assertEqual(normalize_text(once), once)
+
+
+class TestDejenereAralik(unittest.TestCase):
+    """Kanonik biçim değişmezi: sınırları eşit olan aralık, aralık DEĞİLDİR.
+
+    Neden önemli: `comparison/compare.py` min/max içeren her değeri
+    "aralık — doğrudan kıyaslanamaz" diye işaretleyip sıralamanın dışına
+    atar. Dejenere bir aralık ({"min": X, "max": X}) aslında tamamen
+    kıyaslanabilir bir sayıdır; tekilleştirilmezse karşılaştırma tablosundan
+    SESSİZCE DÜŞER ve §5.7 "En Düşük Kâr Payı" YANLIŞ BANKAYI gösterir.
+
+    Kural katmanının regex'lerinden nadiren çıkar; LLM katmanı üretir.
+    Colab'da qwen3:32b ölçümü: "kâr payı oranı %1,89" -> {"min":1.89,"max":1.89}
+    (değer doğru, gösterim yanlış).
+    """
+
+    def test_dejenere_aralik_sayiya_indirgenir(self):
+        self.assertEqual(collapse_degenerate_range({"min": 1.89, "max": 1.89}),
+                         1.89)
+        self.assertEqual(collapse_degenerate_range({"min": 0, "max": 0}), 0)
+
+    def test_gercek_aralik_korunur(self):
+        aralik = {"min": 1.99, "max": 2.49}
+        self.assertEqual(collapse_degenerate_range(aralik), aralik)
+
+    def test_diger_tipler_bozulmaz(self):
+        for v in [2.05, None, {"value": 500, "currency": "TRY"},
+                  {"has_fee": False, "amount": 0.0}, "2026-12-31"]:
+            self.assertEqual(collapse_degenerate_range(v), v)
+
+    def test_siralamada_dogru_banka_secilir(self):
+        # REGRESYON: A dejenere aralık yüzünden dışarıda kalırsa
+        # "en düşük kâr payı" yanlışlıkla B (2.45) görünür.
+        rows = [
+            {"bank": "A", "bank_name": "A", "source_span": None,
+             "canonical_value": {"min": 1.89, "max": 1.89}},
+            {"bank": "B", "bank_name": "B", "source_span": None,
+             "canonical_value": 2.45},
+            {"bank": "C", "bank_name": "C", "source_span": None,
+             "canonical_value": {"min": 1.99, "max": 2.49}},
+        ]
+        siralama = rank(rows, "kar_payi_orani")
+        a = next(r for r in siralama if r.bank == "A")
+        c = next(r for r in siralama if r.bank == "C")
+        self.assertTrue(a.comparable, "dejenere aralık kıyaslanamaz sayıldı")
+        self.assertEqual(a.value, 1.89, "gösterilen değer tekilleştirilmedi")
+        self.assertFalse(c.comparable, "gerçek aralık kıyaslanabilir sayıldı")
+        self.assertEqual(best(rows, "kar_payi_orani").bank, "A")
 
 
 class TestDenetleyiciCalisiyorMu(unittest.TestCase):

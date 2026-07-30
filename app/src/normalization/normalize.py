@@ -90,10 +90,32 @@ def normalize_rate(text: str) -> Optional[Union[float, dict]]:
         lo = parse_tr_number(nums[0])
         hi = parse_tr_number(nums[1])
         if lo is not None and hi is not None:
-            return {"min": min(lo, hi), "max": max(lo, hi)}
+            return collapse_degenerate_range({"min": min(lo, hi),
+                                              "max": max(lo, hi)})
     if nums:
         return parse_tr_number(nums[0])
     return None
+
+
+def collapse_degenerate_range(value):
+    """`{"min": X, "max": X}` -> `X`. Sınırları eşit olan aralık, aralık değildir.
+
+    Neden gerekli: `comparison/compare.py` min/max içeren HER değeri
+    "aralık — doğrudan kıyaslanamaz" diye işaretleyip sıralamanın dışına
+    atar. Dolayısıyla dejenere bir aralık, aslında tamamen kıyaslanabilir
+    bir sayı olduğu hâlde karşılaştırma tablosundan SESSİZCE DÜŞER ve
+    §5.7 "En Düşük Kâr Payı" kriterinde gerçek en iyi banka kaçırılır.
+
+    Bu, kural katmanının regex'lerinden nadiren çıkar ama LLM katmanı üretir:
+    Colab'da qwen3:32b, "kâr payı oranı %1,89" için `{"min":1.89,"max":1.89}`
+    döndürdü — değer doğru, gösterim yanlış. Kanonik biçim bunu tekilleştirmeli
+    ki aşağı akıştaki her tüketici aynı şeyi görsün.
+    """
+    if (isinstance(value, dict)
+            and set(value) >= {"min", "max"}
+            and value["min"] == value["max"]):
+        return value["min"]
+    return value
 
 
 # --------------------------------------------------------------------------- #
