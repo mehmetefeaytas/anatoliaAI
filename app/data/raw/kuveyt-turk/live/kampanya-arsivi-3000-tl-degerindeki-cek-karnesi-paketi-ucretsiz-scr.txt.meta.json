@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/3000-tl-degerindeki-cek-karnesi-paketi-ucretsiz-scr",
+  "scraped_at": "2026-07-30T18:32:26+00:00",
+  "content_hash": "bb2d0e7bfd4c198e6f514499364517fccd81f7d44be7ef3df3257cc2c3f61213",
+  "collection_method": "live",
+  "title": "3.000 TL Değerindeki Çek Karnesi Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130242,
+  "text_chars": 1399
+}

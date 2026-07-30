@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-kiralamasina-ozel-ekstra-3000-mil",
+  "scraped_at": "2026-07-30T18:32:50+00:00",
+  "content_hash": "56613d8cf415a91ddc0a1dca000945710e44a483271dd1bf46491d9dbbb06b05",
+  "collection_method": "live",
+  "title": "Araç Kiralamasına Özel Ekstra 3000 Mil! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129723,
+  "text_chars": 1080
+}

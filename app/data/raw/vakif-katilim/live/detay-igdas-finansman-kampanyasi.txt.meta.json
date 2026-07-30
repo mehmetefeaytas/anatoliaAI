@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/igdas-finansman-kampanyasi",
+  "scraped_at": "2026-07-30T18:41:10+00:00",
+  "content_hash": "0ba82742fd2e79e148615f1c388c5ab96a0f9bc7c0dfe992e156060695ba1ea3",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 144505,
+  "text_chars": 4462
+}

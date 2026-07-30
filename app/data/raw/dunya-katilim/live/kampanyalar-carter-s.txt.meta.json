@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/carter-s",
+  "scraped_at": "2026-07-30T18:45:53+00:00",
+  "content_hash": "4def61d26c7f088c3d60030a29d8ff58a72fd63d6ba4c2060bca1c46804421e8",
+  "collection_method": "live",
+  "title": "Carter&#x27;s | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504913,
+  "text_chars": 9485
+}

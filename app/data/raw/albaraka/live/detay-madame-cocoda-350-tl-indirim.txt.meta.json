@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/madame-cocoda-350-tl-indirim",
+  "scraped_at": "2026-07-30T18:34:49+00:00",
+  "content_hash": "2d661ffe624ae205cc5bd5bfb193135ebeeacb4c2421d4bd9c5bde465450fb7a",
+  "collection_method": "live",
+  "title": "Madame Coco'da 350 TL İndirim! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179084,
+  "text_chars": 1192
+}

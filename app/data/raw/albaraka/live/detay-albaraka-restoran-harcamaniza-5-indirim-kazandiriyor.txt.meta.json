@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-restoran-harcamaniza-5-indirim-kazandiriyor",
+  "scraped_at": "2026-07-30T18:34:03+00:00",
+  "content_hash": "bf4626b283e33c7fee4ebfb8108e06da030f101e186b0429a497a20f86850d28",
+  "collection_method": "live",
+  "title": "Albaraka Restoran Harcamanıza %10 İndirim Kazandırıyor! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180520,
+  "text_chars": 2150
+}

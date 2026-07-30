@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/market-alisverislerinize-1500-tl-parafpara-hediye",
+  "scraped_at": "2026-07-30T18:43:00+00:00",
+  "content_hash": "b7b7a2ecc827a16568a2fdc3829f53011ee0e220446a88cce49de48523f8622e",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168805,
+  "text_chars": 3358
+}

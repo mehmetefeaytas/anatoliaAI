@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/pazarama-paraf",
+  "scraped_at": "2026-07-30T18:47:11+00:00",
+  "content_hash": "45b451f972b3571d083e0f2feaeeee6511b80389bbf4d99a259b5ceb55114d1d",
+  "collection_method": "live",
+  "title": "Pazarama Paraf | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505825,
+  "text_chars": 10221
+}

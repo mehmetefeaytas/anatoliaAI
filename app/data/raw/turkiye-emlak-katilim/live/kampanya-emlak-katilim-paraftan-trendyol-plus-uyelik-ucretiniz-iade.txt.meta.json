@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-katilim-paraftan-trendyol-plus-uyelik-ucretiniz-iade",
+  "scraped_at": "2026-07-30T18:42:39+00:00",
+  "content_hash": "54fc4498457a0dd600658ea5dc08ff14ad933ff9f072efe551e1e82c9affade4",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167798,
+  "text_chars": 2741
+}

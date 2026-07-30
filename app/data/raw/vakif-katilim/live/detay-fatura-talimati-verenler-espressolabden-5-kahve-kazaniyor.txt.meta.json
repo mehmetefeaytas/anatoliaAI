@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/fatura-talimati-verenler-espressolabden-5-kahve-kazaniyor",
+  "scraped_at": "2026-07-30T18:40:43+00:00",
+  "content_hash": "8f7d7e8684e573ec1d56a257a31265d5bfa5b2ed9002f5e9386caa10c9024bdc",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140695,
+  "text_chars": 2785
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/babalar-gunune-ozel-vkart-hatemoglu-indirimi",
+  "scraped_at": "2026-07-30T18:40:13+00:00",
+  "content_hash": "d0313e00cea89bf2fb5729f94e2d9186383f92a0570dab4aa434f732e1b67e77",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139145,
+  "text_chars": 1628
+}

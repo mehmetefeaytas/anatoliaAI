@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/ziraat-katilim-bankkart-kurban-bayrami-kampanyasi",
+  "scraped_at": "2026-07-30T18:38:51+00:00",
+  "content_hash": "8ad91b434a4da5e52e700fc4952485af57cda5143716525a52181c02def7a8d8",
+  "collection_method": "live",
+  "title": "Ziraat Katılım Bankkart Kurban Bayramı Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 453460,
+  "text_chars": 1385
+}

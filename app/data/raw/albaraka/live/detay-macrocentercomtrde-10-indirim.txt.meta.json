@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/macrocentercomtrde-10-indirim",
+  "scraped_at": "2026-07-30T18:34:46+00:00",
+  "content_hash": "d24bceedf1226e133a5e27ce1e7349cf412147a07efe5ea502cfcc2e378322b5",
+  "collection_method": "live",
+  "title": "Macrocenter.com.tr'de %10 İndirim! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179800,
+  "text_chars": 1811
+}

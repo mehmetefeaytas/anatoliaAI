@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-konut-asansor-emlak-katilim-is-birligi",
+  "scraped_at": "2026-07-30T18:42:42+00:00",
+  "content_hash": "9f759c23d72f4c366f542a161b878d07858ff0b72b0ca70ad8dc4443b2970718",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164270,
+  "text_chars": 381
+}

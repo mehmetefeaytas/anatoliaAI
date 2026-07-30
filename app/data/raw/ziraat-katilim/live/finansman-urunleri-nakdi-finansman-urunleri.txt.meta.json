@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/nakdi-finansman-urunleri",
+  "scraped_at": "2026-07-30T18:39:42+00:00",
+  "content_hash": "05138547bf3201315ba565a67ef499288945686f35b28b0f412929360676bb69",
+  "collection_method": "live",
+  "title": "Nakdi Finansman Ürünleri | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 458401,
+  "text_chars": 805
+}

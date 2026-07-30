@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-200-tl-marti-kuponu",
+  "scraped_at": "2026-07-30T18:41:25+00:00",
+  "content_hash": "65842e2b61c0ea7c3c708f349f5dca2f2db50a6c7d59a9269770830415e4a585",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140343,
+  "text_chars": 2371
+}

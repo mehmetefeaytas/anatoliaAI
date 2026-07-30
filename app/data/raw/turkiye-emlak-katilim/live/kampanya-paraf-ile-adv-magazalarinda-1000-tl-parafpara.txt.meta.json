@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-adv-magazalarinda-1000-tl-parafpara",
+  "scraped_at": "2026-07-30T18:43:24+00:00",
+  "content_hash": "dabde5e5bd474bff05cc0396a747c69808784ece52470ce220b88e18edc59296",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168282,
+  "text_chars": 3019
+}

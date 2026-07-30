@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/ihtiyac-finansmani/Sayfalar/ihtiyac-finansmani.aspx",
+  "scraped_at": "2026-07-30T18:36:17+00:00",
+  "content_hash": "bac0abeaa82770ba03f8dab950cf57076199b16467eb6f6edf1dafda7293e698",
+  "collection_method": "live",
+  "title": "İhtiyaç Finansmanı: Bireysel Finansman - Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 124945,
+  "text_chars": 12120
+}

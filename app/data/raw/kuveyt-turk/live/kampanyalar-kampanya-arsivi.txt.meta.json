@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi",
+  "scraped_at": "2026-07-30T18:31:44+00:00",
+  "content_hash": "69aa3cb5e2f99f3344f8bc7505749155000f1393f431201d338b7a9a0aef2eb2",
+  "collection_method": "live",
+  "title": "Kampanya Arşivi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 149159,
+  "text_chars": 2238
+}

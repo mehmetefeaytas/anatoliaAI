@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/cocugunuzun-gelecegini-guvence-altina-almak-sizden-karne-hediyesi-bizden",
+  "scraped_at": "2026-07-30T18:33:32+00:00",
+  "content_hash": "9ced7da57c80ed8602bdf4d2bb98c796de8e60e181d8977ecd4e864722d3d485",
+  "collection_method": "live",
+  "title": "Çocuğunuzun Geleceğini Güvence Altına Almak Sizden, Karne Hediyesi Bizden! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132225,
+  "text_chars": 2069
+}

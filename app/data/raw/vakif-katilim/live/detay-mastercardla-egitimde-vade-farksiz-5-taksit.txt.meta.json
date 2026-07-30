@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercardla-egitimde-vade-farksiz-5-taksit",
+  "scraped_at": "2026-07-30T18:41:34+00:00",
+  "content_hash": "b6bd9584466be20fc9be5846d3f797772ad00466dd37f7819e79e96859dfb53d",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139673,
+  "text_chars": 1765
+}

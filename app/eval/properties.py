@@ -85,7 +85,10 @@ def _case_insensitive(value: Any) -> Any:
     pozitifini üretir.
     """
     if isinstance(value, str):
-        return tr_fold_ascii(value)
+        # Sondaki noktalama BİLGİ DEĞİLDİR. Değişmez "aynı bilgi yakalandı mı"
+        # diye sorar; "...saklı tutar" ile "...saklı tutar." aynı koşuldur.
+        # Bu olmadan test, cümle sonu noktalamasını içerik farkı sanar.
+        return tr_fold_ascii(value).rstrip(" .,;:!?")
     if isinstance(value, list):
         return [_case_insensitive(v) for v in value]
     if isinstance(value, dict):
@@ -168,9 +171,20 @@ def check_irrelevant_insertion(text: str, doc_id: str = "?") -> list[Violation]:
     base = _values(text)
     out = []
     for i, extra in enumerate(NEUTRAL_SENTENCES):
-        got = _values(text.rstrip() + " " + extra)
+        # AYRI bir cümle eklendiğinden emin ol. Kaynak metin noktalama ile
+        # bitmiyorsa (banka sayfalarında sık: menü/başlık yığınları) düz
+        # birleştirme, eklenen cümleyi son cümleye YAPIŞTIRIR. O zaman test
+        # "alakasız cümle ekleme"yi değil "cümle birleştirme"yi ölçer —
+        # ölçmek istediği şey bu değil.
+        govde = text.rstrip()
+        if govde and govde[-1] not in ".!?":
+            govde += "."
+        got = _values(govde + " " + extra)
         for name, val in base.items():
-            if name in got and got[name] != val:
+            # P2 ile AYNI karşılaştırma kullanılır: serbest metin alanlarında
+            # yazım biçimi ve sondaki noktalama bilgi değildir.
+            if (name in got
+                    and _case_insensitive(got[name]) != _case_insensitive(val)):
                 out.append(Violation(
                     f"P3_alakasiz_ekleme_{i}", doc_id, name,
                     "nötr cümle eklenince değer değişti",

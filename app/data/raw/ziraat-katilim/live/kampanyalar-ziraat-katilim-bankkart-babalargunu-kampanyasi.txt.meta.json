@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/ziraat-katilim-bankkart-babalargunu-kampanyasi",
+  "scraped_at": "2026-07-30T18:38:57+00:00",
+  "content_hash": "03a5eb80fdfb7ecaf86583bd542956c978e948f509fc3ec6012338e1f820777e",
+  "collection_method": "live",
+  "title": "Ziraat Katılım Bankkart Babalar Günü Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 453879,
+  "text_chars": 1508
+}

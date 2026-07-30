@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar/dijital-uyeliklerde-geri-odeme-firsati",
+  "scraped_at": "2026-07-30T18:45:12+00:00",
+  "content_hash": "3b2ef9c58379ca484a90a5935a6003ddc424528f60591150f8348452b372c756",
+  "collection_method": "browser",
+  "title": "Biz Kart Dijital Üyelikler | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 297380,
+  "text_chars": 2783
+}

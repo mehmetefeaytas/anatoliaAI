@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/trendyol",
+  "scraped_at": "2026-07-30T18:47:25+00:00",
+  "content_hash": "eab40c1504dcddb06b8c79fb22bda7afec997f7d383eb8c35483e25d62b35541",
+  "collection_method": "live",
+  "title": "Trendyol | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 506432,
+  "text_chars": 10831
+}

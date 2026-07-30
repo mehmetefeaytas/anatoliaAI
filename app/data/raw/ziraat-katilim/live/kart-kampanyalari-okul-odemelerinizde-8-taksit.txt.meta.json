@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kart-kampanyalari/okul-odemelerinizde-8-taksit",
+  "scraped_at": "2026-07-30T18:38:33+00:00",
+  "content_hash": "b311da0afb43bb02161d2be447d538a15226026dd0143d4b279e7e0e30bcaab1",
+  "collection_method": "live",
+  "title": "Okul Ödemelerinizde +8 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 449931,
+  "text_chars": 969
+}

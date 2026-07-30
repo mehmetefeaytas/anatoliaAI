@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/tahsile-cek",
+  "scraped_at": "2026-07-30T18:47:17+00:00",
+  "content_hash": "6f6b48c5ad3967e9bd444c71e324bebf83183f633579c9f40670c7b96859469b",
+  "collection_method": "live",
+  "title": "Tahsile &#xC7;ek | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505138,
+  "text_chars": 9908
+}

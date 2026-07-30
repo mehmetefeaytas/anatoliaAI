@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar/xiaomi-urunlerinde-finansman-avantaji",
+  "scraped_at": "2026-07-30T18:45:31+00:00",
+  "content_hash": "2a8f6177719dec2bb196e38820121ec0ec6f3ee6ca3557706457a872055618e3",
+  "collection_method": "browser",
+  "title": "Xiaomi Ürünlerinde Finansman Avantajı | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 288294,
+  "text_chars": 711
+}

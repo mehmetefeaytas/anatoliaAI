@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/monster",
+  "scraped_at": "2026-07-30T18:46:59+00:00",
+  "content_hash": "cfdb8743f0a776cb6faa7cd45c240771175c100453abddc05a09c96ecd6962f5",
+  "collection_method": "live",
+  "title": "Monster | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 507445,
+  "text_chars": 11696
+}

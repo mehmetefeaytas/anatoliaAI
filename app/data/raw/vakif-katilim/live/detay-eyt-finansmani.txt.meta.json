@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/eyt-finansmani",
+  "scraped_at": "2026-07-30T18:40:40+00:00",
+  "content_hash": "099d9ddc8e9175fcafe5a7a2c9ed4d2e24deaea8a147fb10dfbef3efc51a4dab",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 138669,
+  "text_chars": 1218
+}

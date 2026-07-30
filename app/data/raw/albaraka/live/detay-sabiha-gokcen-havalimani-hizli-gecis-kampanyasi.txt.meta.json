@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/sabiha-gokcen-havalimani-hizli-gecis-kampanyasi",
+  "scraped_at": "2026-07-30T18:35:01+00:00",
+  "content_hash": "0d43d1baf0043d4cd730776b3cb8f8847d610f3f7e92d861f301ff6f2f6f5832",
+  "collection_method": "live",
+  "title": "Sabiha Gökçen Havalimanı - Hızlı Geçiş Kampanyası | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179763,
+  "text_chars": 1591
+}

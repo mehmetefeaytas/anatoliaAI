@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/igdas-fatura-odemelerinize-vade-farksiz-3-taksit",
+  "scraped_at": "2026-07-30T18:41:07+00:00",
+  "content_hash": "798b407463e7fc68bca5c76e63bc6c302b7ed37d8ae42fafa37034f172cae783",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139298,
+  "text_chars": 1715
+}

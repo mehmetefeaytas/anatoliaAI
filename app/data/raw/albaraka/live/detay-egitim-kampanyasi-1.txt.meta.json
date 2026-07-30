@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/egitim-kampanyasi-1",
+  "scraped_at": "2026-07-30T18:34:37+00:00",
+  "content_hash": "61e0964dbb58d60265e98abe8d546e450d2219bffa013312fd72154896a64623",
+  "collection_method": "live",
+  "title": "Eğitim Harcamalarınıza Vade Farksız 6 Taksit Kampanyası | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182629,
+  "text_chars": 2531
+}

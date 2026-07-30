@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-ds-damatta-2000-tl-parafpara",
+  "scraped_at": "2026-07-30T18:43:48+00:00",
+  "content_hash": "0b2591efa33f6c79d4457531fcb77e4568f660d7171bd008bffd5d8e0542e056",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168276,
+  "text_chars": 2994
+}

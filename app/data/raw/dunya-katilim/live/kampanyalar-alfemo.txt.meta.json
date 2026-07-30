@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/alfemo",
+  "scraped_at": "2026-07-30T18:45:43+00:00",
+  "content_hash": "4382bec45932aea75181b1fbab3f0f62ad9fdd4a0fddfba51b4e6d7ede7ace6f",
+  "collection_method": "live",
+  "title": "Alfemo | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504975,
+  "text_chars": 9512
+}

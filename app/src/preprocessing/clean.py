@@ -121,8 +121,21 @@ def split_sentences(text: str) -> list[str]:
     text = normalize_whitespace(text)
     if not text:
         return []
-    # cümle sonu adayları: . ! ? sonrası boşluk + büyük harf/rakam
-    candidates = re.split(r"(?<=[.!?])\s+(?=[A-ZÇĞİÖŞÜ0-9])", text)
+    # Cümle sonu adayları: . ! ? + boşluk + harf/rakam.
+    #
+    # KÜÇÜK HARF DE KABUL EDİLİR. Önceden yalnız büyük harf/rakam aranıyordu;
+    # bu, küçük harfle başlayan cümleleri kaçırıyordu ve 291 belgelik gerçek
+    # korpusta değişmez denetimiyle yakalandı:
+    #   "...belirtilmesi gerekmektedir. www.cartersoshkosh.com.tr web
+    #    sitesinden yapılan alışverişlerde geçerlidir."
+    # 'www' küçük harf olduğu için bölünmüyor, iki cümle tek koşul olarak
+    # çıkıyordu. Aynı sorun 'c.Performans' gibi liste imlerinde de var.
+    #
+    # Aşırı bölme riski yok: aşağıdaki kısaltma birleştirme mantığı
+    # (_ABBREV) yanlış bölmeleri geri alıyor. Ondalık sayılar da güvende,
+    # çünkü bölme için aradaki BOŞLUK (\s+) şart — "1.500,00"da boşluk yok.
+    candidates = re.split(
+        r"(?<=[.!?])\s+(?=[A-Za-zÇĞİÖŞÜçğıöşü0-9])", text)
     out: list[str] = []
     for c in candidates:
         c = c.strip()

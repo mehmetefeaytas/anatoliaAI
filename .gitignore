@@ -16,3 +16,6 @@ venv/
 
 # ortam
 .env
+
+# Playwright MCP gecici dosyalari (kesif oturumlarindan)
+.playwright-mcp/

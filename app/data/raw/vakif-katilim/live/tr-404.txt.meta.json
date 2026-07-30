@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/404",
+  "scraped_at": "2026-07-30T18:41:13+00:00",
+  "content_hash": "3627153c1b6a34726df97665b3013902e2e477b9c53d752f921906ae149da306",
+  "collection_method": "live",
+  "title": "404 | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 126761,
+  "text_chars": 247
+}

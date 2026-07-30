@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/touristica",
+  "scraped_at": "2026-07-30T18:47:23+00:00",
+  "content_hash": "242291228df93fc5a1957de15bbf95ad250afb7d7a257d5cb6c82965765b3ec6",
+  "collection_method": "live",
+  "title": "Touristica | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505192,
+  "text_chars": 9700
+}

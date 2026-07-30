@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-dysonda-9-aya-varan-taksit",
+  "scraped_at": "2026-07-30T18:43:54+00:00",
+  "content_hash": "ea59a256acddb1e04b24f353b9bcd9e7d234990a8ce40e35ec0e8a0ea8922d5d",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166433,
+  "text_chars": 1988
+}

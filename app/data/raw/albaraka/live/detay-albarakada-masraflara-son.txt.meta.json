@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albarakada-masraflara-son",
+  "scraped_at": "2026-07-30T18:34:13+00:00",
+  "content_hash": "b41ab88073406b8f137d60781dd56dc343929e0c27416c486f33f8bcb989c4bd",
+  "collection_method": "live",
+  "title": "Albaraka'da Masraflara Son! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182923,
+  "text_chars": 2364
+}

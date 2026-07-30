@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/dijitalden-musteri-ol-hisse-senedi-islemlerinde-75-komisyon-indirimi-kazan",
+  "scraped_at": "2026-07-30T18:40:22+00:00",
+  "content_hash": "4c22d67ff7e1f35f4c559dedba1277bad5a4b8fc2f3162f409a29d5b7160ff4b",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139243,
+  "text_chars": 1334
+}

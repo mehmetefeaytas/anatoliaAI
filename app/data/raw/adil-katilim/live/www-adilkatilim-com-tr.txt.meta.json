@@ -1,0 +1,11 @@
+{
+  "bank_slug": "adil-katilim",
+  "source_url": "https://www.adilkatilim.com.tr/",
+  "scraped_at": "2026-07-30T18:47:46+00:00",
+  "content_hash": "1511fa7a458fabfbdce38d2fe5a693c56709a56247be37f3a1f5755804e00e32",
+  "collection_method": "browser",
+  "title": "Anasayfa | Adil Katılım",
+  "http_status": 200,
+  "raw_bytes": 1039363,
+  "text_chars": 3080
+}

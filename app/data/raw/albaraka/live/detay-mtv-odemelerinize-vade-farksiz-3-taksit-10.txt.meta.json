@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/mtv-odemelerinize-vade-farksiz-3-taksit-10",
+  "scraped_at": "2026-07-30T18:34:52+00:00",
+  "content_hash": "dfe9b2634038edc7e57123d690eb7f8e5b05e96c4ffecb3839b95ae40d0d3a6d",
+  "collection_method": "live",
+  "title": "MTV Ödemelerinize Vade Farksız 3 Taksit! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180892,
+  "text_chars": 1276
+}

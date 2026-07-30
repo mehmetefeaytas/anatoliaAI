@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/nakit-yonetimi/Sayfalar/tedarikci-finansmani.aspx",
+  "scraped_at": "2026-07-30T18:36:38+00:00",
+  "content_hash": "1ed99843967e6858c21d5ba246ee5067fdbfa42f2825107c9c4948607b0606cd",
+  "collection_method": "live",
+  "title": "Tedarikçi Finansmanı | Nakit Yönetimi | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 107989,
+  "text_chars": 8081
+}

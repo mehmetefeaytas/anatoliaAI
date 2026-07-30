@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/dyson",
+  "scraped_at": "2026-07-30T18:46:11+00:00",
+  "content_hash": "53aa4c238f5fd53a3afc4052c876d2375ab029032fb832ec4105d6f856a6d175",
+  "collection_method": "live",
+  "title": "Dyson | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 506040,
+  "text_chars": 10542
+}

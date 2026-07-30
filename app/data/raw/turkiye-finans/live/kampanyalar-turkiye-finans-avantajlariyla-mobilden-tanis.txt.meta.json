@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/turkiye-finans-avantajlariyla-mobilden-tanis.aspx",
+  "scraped_at": "2026-07-30T18:37:29+00:00",
+  "content_hash": "c2cc7c95edd9af64013e1ce2b4d137a56a334387460cb77e84b1bfefea9ef003",
+  "collection_method": "live",
+  "title": "Türkiye Finans Avantajlarıyla Mobilden Tanışın | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 109094,
+  "text_chars": 16448
+}

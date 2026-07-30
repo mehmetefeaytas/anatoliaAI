@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avansasta-1500-tlye-varan-indirim-ve-vade-farksiz-5-aya-varan-taksit-firsati",
+  "scraped_at": "2026-07-30T18:32:59+00:00",
+  "content_hash": "8ddf19c1db22a0cba2ec46e5b7e3de9ab31cd1296498fc557462fcc825af5ce4",
+  "collection_method": "live",
+  "title": "Avansas'ta 1.500 TL'ye Varan İndirim ve Vade Farksız 5 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131841,
+  "text_chars": 1430
+}

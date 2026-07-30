@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/akaryakit-harcamalariniza-1000-tl-indirim",
+  "scraped_at": "2026-07-30T18:33:45+00:00",
+  "content_hash": "0b3ae1c160288df6fe9aefd8c3d1f50ff698bc4be843101360c66212efb43f39",
+  "collection_method": "live",
+  "title": "Akaryakıt Harcamalarınıza 1000 TL İndirim | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179254,
+  "text_chars": 1497
+}

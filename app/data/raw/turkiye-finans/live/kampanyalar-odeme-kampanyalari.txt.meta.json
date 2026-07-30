@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/odeme-kampanyalari.aspx",
+  "scraped_at": "2026-07-30T18:36:47+00:00",
+  "content_hash": "a753d8c9358ea3f8b6c02ffbbda85e229b7f4839f3f0b85616ca2a09dcc114a0",
+  "collection_method": "live",
+  "title": "Maaş Ödemesi Kampanyaları | Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 96747,
+  "text_chars": 5962
+}

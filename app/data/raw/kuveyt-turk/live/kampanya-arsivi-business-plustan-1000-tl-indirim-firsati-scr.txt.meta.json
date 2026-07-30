@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plustan-1000-tl-indirim-firsati-scr",
+  "scraped_at": "2026-07-30T18:33:29+00:00",
+  "content_hash": "1faf4449091efda225c66a2d23bf46edb70f83fb8d937284b126c4abc821341d",
+  "collection_method": "live",
+  "title": "Business Plus’tan 1000 TL indirim fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129987,
+  "text_chars": 701
+}

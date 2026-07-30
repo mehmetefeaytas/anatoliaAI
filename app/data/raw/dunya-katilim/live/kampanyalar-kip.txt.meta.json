@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/kip",
+  "scraped_at": "2026-07-30T18:46:43+00:00",
+  "content_hash": "03451182bbc8df54ff8733152eb9a401e39eed5b67bc4a015c6244f5abe19a60",
+  "collection_method": "live",
+  "title": "kip | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504779,
+  "text_chars": 9431
+}

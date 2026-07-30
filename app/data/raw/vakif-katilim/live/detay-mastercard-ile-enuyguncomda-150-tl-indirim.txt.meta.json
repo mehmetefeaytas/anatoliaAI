@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-ile-enuyguncomda-150-tl-indirim",
+  "scraped_at": "2026-07-30T18:41:16+00:00",
+  "content_hash": "e5969b021a5aa3dbcea97576d70eb972d5098118ac44180cefcd1115f074db6a",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141298,
+  "text_chars": 3249
+}

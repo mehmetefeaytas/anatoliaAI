@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/50000-tlye-kadar-ertesi-gun-199-ya-da-25-gun-blokeli-0-pos",
+  "scraped_at": "2026-07-30T18:32:29+00:00",
+  "content_hash": "a72ecdaa6ddc628f9b73d621af510ff831062016fa9fc625039556bfacffe60d",
+  "collection_method": "live",
+  "title": "50.000 TL’ye Kadar Ertesi Gün %1,99 ya da 25 Gün Blokeli %0 POS | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130251,
+  "text_chars": 1311
+}

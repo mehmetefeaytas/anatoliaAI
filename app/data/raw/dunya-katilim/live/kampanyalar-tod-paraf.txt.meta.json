@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/tod-paraf",
+  "scraped_at": "2026-07-30T18:47:19+00:00",
+  "content_hash": "fafa063d9b31e5abe529e40e8ed8822034b1c4b5774011d601521cb52ec07fed",
+  "collection_method": "live",
+  "title": "TOD Paraf | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505943,
+  "text_chars": 10274
+}

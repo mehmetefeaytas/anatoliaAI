@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/yolcu-360-yurt-disi-ucak-bileti",
+  "scraped_at": "2026-07-30T18:35:25+00:00",
+  "content_hash": "7a78943c0d7c6b84ff16116647142169ead06ffb02a2a52ae5aeeb696aa3ad09",
+  "collection_method": "live",
+  "title": "Yolcu 360 – Yurt Dışı Uçak Bileti | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180438,
+  "text_chars": 2348
+}

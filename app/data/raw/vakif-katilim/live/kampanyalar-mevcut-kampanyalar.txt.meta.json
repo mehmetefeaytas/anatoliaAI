@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/mevcut-kampanyalar",
+  "scraped_at": "2026-07-30T18:39:58+00:00",
+  "content_hash": "438228878631e26038f1827505d5bb50960dc5ff21a5842754c69e316267cdcc",
+  "collection_method": "live",
+  "title": "Mevcut Kampanyalar | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 134039,
+  "text_chars": 292
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emekli-musterilerimize-ozel-ayricaliklar",
+  "scraped_at": "2026-07-30T18:42:30+00:00",
+  "content_hash": "f3178fb479a927e1ec02d04a034c17cad504175b410ec023b63f1136ead3977c",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165726,
+  "text_chars": 1497
+}

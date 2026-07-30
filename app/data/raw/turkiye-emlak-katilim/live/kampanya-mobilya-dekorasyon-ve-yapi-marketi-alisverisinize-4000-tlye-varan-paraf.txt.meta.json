@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/mobilya-dekorasyon-ve-yapi-marketi-alisverisinize-4000-tlye-varan-parafpara",
+  "scraped_at": "2026-07-30T18:43:12+00:00",
+  "content_hash": "fef5185d865ae5c1029aab073ad1e14ccec7d2ab0623d2bb7466da090e538a9d",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168042,
+  "text_chars": 3364
+}

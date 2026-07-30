@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/tuzel-onbarding-avantaj-paketi.aspx",
+  "scraped_at": "2026-07-30T18:37:50+00:00",
+  "content_hash": "b06be799ccc36d0b9e024ac4a45ee5baf95c37b599f7ad76adb30cb6249280c0",
+  "collection_method": "live",
+  "title": "Mobil’den Müşteri Olan KOBİ’lerimize Avantaj Paketi | Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 100529,
+  "text_chars": 10213
+}

@@ -8,25 +8,54 @@ alanlar + campaign_paths nested listesi). Üretimde pyyaml kullanılır.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+import re
+from dataclasses import dataclass, field, fields
 from pathlib import Path
 from typing import Optional
 
 
 @dataclass
 class BankConfig:
+    """Tek bir bankanın toplama tarifi.
+
+    `scrape_mode` artık gerçekten dispatch edilir (collector/fetcher):
+    static → requests+bs4, js → Playwright, manual → yalnız data/raw fixture.
+    """
+
     slug: str
     name: str
     website_url: str
     scrape_mode: str = "static"
     campaign_paths: list[str] = field(default_factory=list)
     bddk_active: bool = True
+    # Keşif (iki aşamalı gezinme) ayarları — bkz. scraping/discover.py
+    sitemap_urls: list[str] = field(default_factory=list)
+    detail_patterns: list[str] = field(default_factory=list)
+    exclude_patterns: list[str] = field(default_factory=list)
+    # Bankanın kampanyalarını AYRI alan adında yayımladığı durumlar
+    # (ör. TOM Bank → tombankhadi.com). Keşifte bu alanlar da "aynı site" sayılır.
+    extra_hosts: list[str] = field(default_factory=list)
+    max_docs: int = 40
+    notes: str = ""
+
+
+# banks.yaml'de tanınan liste alanları (mini-parser için)
+_LIST_KEYS = ("campaign_paths", "sitemap_urls", "detail_patterns", "exclude_patterns",
+              "extra_hosts")
+# BankConfig'de karşılığı olmayan anahtarlar sessizce yok sayılır (ileri uyumluluk)
+_KNOWN_KEYS = {f.name for f in fields(BankConfig)}
 
 
 def load_banks(path: str | Path) -> list[BankConfig]:
     text = Path(path).read_text(encoding="utf-8")
     data = _parse(text)
-    return [BankConfig(**b) for b in data.get("banks", [])]
+    out: list[BankConfig] = []
+    for raw in data.get("banks", []) or []:
+        clean = {k: v for k, v in raw.items() if k in _KNOWN_KEYS}
+        if "max_docs" in clean:
+            clean["max_docs"] = int(clean["max_docs"])
+        out.append(BankConfig(**clean))
+    return out
 
 
 def _parse(text: str) -> dict:
@@ -41,20 +70,28 @@ def _coerce(v: str):
     v = v.strip()
     if v.lower() in ("true", "false"):
         return v.lower() == "true"
+    # tırnaklı değerler (regex desenleri '\.pdf$' gibi) tırnaksızlaştırılır
+    if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
+        return v[1:-1]
+    if re.fullmatch(r"-?\d+", v):
+        return int(v)
     return v
 
 
 def _mini_parse(text: str) -> dict:
     """banks.yaml'in bilinen yapısı için minimal ayrıştırıcı.
 
-    Desteklenen: 'banks:' altında '- key: val' blokları ve 'campaign_paths:'
-    nested '- item' listeleri. Yorumlar (#) ve boş satırlar atlanır.
+    Desteklenen: 'banks:' altında '- key: val' blokları ve _LIST_KEYS içindeki
+    her anahtar için nested '- item' listeleri. Yorumlar (#) ve boş satırlar atlanır.
+
+    NOT: liste öğesi ':' içerebilir (URL'ler), bu yüzden liste-öğesi tespiti
+    aktif liste anahtarına göre yapılır, ':' varlığına göre değil.
     """
     banks: list[dict] = []
     cur: Optional[dict] = None
-    in_paths = False
+    list_key: Optional[str] = None
     for raw in text.splitlines():
-        line = raw.split("#", 1)[0].rstrip()
+        line = raw.split("#", 1)[0].rstrip() if not _in_quotes_hash(raw) else raw.rstrip()
         if not line.strip():
             continue
         stripped = line.strip()
@@ -62,27 +99,35 @@ def _mini_parse(text: str) -> dict:
 
         if stripped == "banks:":
             continue
-        # yeni banka bloğu başlangıcı: "- slug: ..."
-        if stripped.startswith("- ") and ":" in stripped and indent <= 2:
+        # yeni banka bloğu başlangıcı: "- slug: ..." (en dış girinti)
+        if stripped.startswith("- ") and indent <= 2 and ":" in stripped \
+                and list_key is None:
             cur = {}
             banks.append(cur)
-            in_paths = False
             k, _, v = stripped[2:].partition(":")
             cur[k.strip()] = _coerce(v)
             continue
-        # campaign_paths listesi öğesi: "- /path"
-        if stripped.startswith("- ") and ":" not in stripped:
-            if cur is not None and in_paths:
-                cur.setdefault("campaign_paths", []).append(_coerce(stripped[2:]))
+        # aktif bir liste anahtarı varsa "- item" o listeye girer
+        if stripped.startswith("- ") and list_key is not None and cur is not None:
+            cur.setdefault(list_key, []).append(_coerce(stripped[2:]))
             continue
         # key: value (banka alanı)
         if ":" in stripped and cur is not None:
             k, _, v = stripped.partition(":")
             k = k.strip()
-            if k == "campaign_paths":
-                in_paths = True
-                cur["campaign_paths"] = []
+            if k in _LIST_KEYS and not v.strip():
+                list_key = k
+                cur[k] = []
             else:
-                in_paths = False
+                list_key = None
                 cur[k] = _coerce(v)
     return {"banks": banks}
+
+
+def _in_quotes_hash(raw: str) -> bool:
+    """'#' karakteri tırnak içindeyse yorum başlangıcı sayılmaz."""
+    stripped = raw.strip()
+    if "#" not in stripped:
+        return False
+    before = stripped.split("#", 1)[0]
+    return before.count("'") % 2 == 1 or before.count('"') % 2 == 1

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mtv-odemeleri-vade-farksiz-3-taksit",
+  "scraped_at": "2026-07-30T18:41:55+00:00",
+  "content_hash": "5f0f5c90d9547542755d7de0582f66ffd38b156afdbdaf6939f0852360fa79c4",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139007,
+  "text_chars": 1588
+}

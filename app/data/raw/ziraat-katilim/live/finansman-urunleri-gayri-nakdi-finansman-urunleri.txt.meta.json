@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/gayri-nakdi-finansman-urunleri",
+  "scraped_at": "2026-07-30T18:39:45+00:00",
+  "content_hash": "58ac8b60c30dfca4666a4f362b00cc067b2ef5fc1b44db51e3efc56b80736dda",
+  "collection_method": "live",
+  "title": "Gayri Nakdi Finansman Ürünleri | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 459058,
+  "text_chars": 1297
+}

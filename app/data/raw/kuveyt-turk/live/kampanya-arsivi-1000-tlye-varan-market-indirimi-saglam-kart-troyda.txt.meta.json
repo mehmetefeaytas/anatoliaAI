@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1000-tlye-varan-market-indirimi-saglam-kart-troyda",
+  "scraped_at": "2026-07-30T18:32:21+00:00",
+  "content_hash": "011821b5a2072357692765a007bed025b46d19edd243288acd0f5a0d55408ff7",
+  "collection_method": "live",
+  "title": "1.000 TL'ye Varan Market İndirimi Sağlam Kart Troy'da! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131365,
+  "text_chars": 1226
+}

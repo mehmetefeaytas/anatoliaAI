@@ -26,7 +26,9 @@ class TestConfig(unittest.TestCase):
 
     def test_campaign_paths_parsed(self):
         banks = {b.slug: b for b in load_banks(CONFIG)}
-        self.assertEqual(banks["kuveyt-turk"].campaign_paths, ["/tr/kampanyalar"])
+        # 2026-07-30: eski /tr/kampanyalar yolu 404 dönüyordu, /kampanyalar ile
+        # düzeltildi (bkz. data/raw/_collection_report.md).
+        self.assertEqual(banks["kuveyt-turk"].campaign_paths, ["/kampanyalar"])
         self.assertTrue(banks["kuveyt-turk"].bddk_active)
 
 

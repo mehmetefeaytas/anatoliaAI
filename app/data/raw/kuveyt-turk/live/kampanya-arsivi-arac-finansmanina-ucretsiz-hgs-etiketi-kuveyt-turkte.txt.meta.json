@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmanina-ucretsiz-hgs-etiketi-kuveyt-turkte",
+  "scraped_at": "2026-07-30T18:32:47+00:00",
+  "content_hash": "7b91a2e669a00ecb05ec55a1f6d955c0bc13a4662935db03f5f45e9170d9ded8",
+  "collection_method": "live",
+  "title": "Araç Finansmanına Ücretsiz HGS Etiketi Kuveyt Türk'te! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129293,
+  "text_chars": 750
+}

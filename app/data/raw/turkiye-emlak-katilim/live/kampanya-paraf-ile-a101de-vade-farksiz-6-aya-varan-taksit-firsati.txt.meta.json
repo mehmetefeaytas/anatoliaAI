@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-a101de-vade-farksiz-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-07-30T18:43:21+00:00",
+  "content_hash": "da4bff973ef24cbb47ddf1bd92269ba4a82805d0a73ac55ab519f4147122df58",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166104,
+  "text_chars": 1588
+}

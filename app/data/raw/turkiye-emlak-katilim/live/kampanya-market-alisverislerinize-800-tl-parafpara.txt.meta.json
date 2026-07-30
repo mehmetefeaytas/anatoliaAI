@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/market-alisverislerinize-800-tl-parafpara",
+  "scraped_at": "2026-07-30T18:43:06+00:00",
+  "content_hash": "0f051c133144aaf8c191313bf602977f4ebbf246e972d7a4b7495f68f28c98a3",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168625,
+  "text_chars": 3249
+}

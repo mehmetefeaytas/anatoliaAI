@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/default.aspx",
+  "scraped_at": "2026-07-30T18:36:14+00:00",
+  "content_hash": "400fb77018d638aec4da4711cd8e045aff1d01c2f7653edcb06ed50f77978fd4",
+  "collection_method": "live",
+  "title": "Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 107485,
+  "text_chars": 6506
+}

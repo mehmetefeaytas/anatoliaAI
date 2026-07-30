@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/dijital-musterilere-ozel-pratik-finansman-kart",
+  "scraped_at": "2026-07-30T18:34:28+00:00",
+  "content_hash": "78db2ea7490a2452ac02b3c16a8dc1f62280d4600777b85bd02956c78c5b8c4e",
+  "collection_method": "live",
+  "title": "Dijital Müşterilere Özel Pratik Finansman Kart | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 191348,
+  "text_chars": 8888
+}

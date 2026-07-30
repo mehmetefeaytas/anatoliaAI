@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-karttan-vade-farksiz-3-taksit-imkani",
+  "scraped_at": "2026-07-30T18:33:23+00:00",
+  "content_hash": "0f291bbb2665c02d1ef3c4f3e780047fbc50ef21a440662880041f26a2812de8",
+  "collection_method": "live",
+  "title": "Business Plus Kart’tan Vade Farksız 3 Taksit İmkânı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130851,
+  "text_chars": 1930
+}

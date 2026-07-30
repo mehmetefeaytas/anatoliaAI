@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/bu-yol-indirime-gider",
+  "scraped_at": "2026-07-30T18:40:16+00:00",
+  "content_hash": "6e7befd3922014f15e54ed019b9f9ba670a243a8dc799c51e791250ebc91f8d3",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140098,
+  "text_chars": 2525
+}

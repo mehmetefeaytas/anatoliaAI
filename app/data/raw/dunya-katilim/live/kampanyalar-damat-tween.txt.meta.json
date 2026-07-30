@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/damat-tween",
+  "scraped_at": "2026-07-30T18:45:58+00:00",
+  "content_hash": "bc96aea1c8344d77b22494a974874b1f8790d5a9b1f71f23cec8461852686da5",
+  "collection_method": "live",
+  "title": "damat tween | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504842,
+  "text_chars": 9430
+}

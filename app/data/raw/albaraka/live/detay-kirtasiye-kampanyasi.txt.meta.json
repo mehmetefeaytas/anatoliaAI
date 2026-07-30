@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/kirtasiye-kampanyasi",
+  "scraped_at": "2026-07-30T18:34:43+00:00",
+  "content_hash": "5281f6b12581d71dd3785a52c295f867b3512f867e827724c54d7dd6a4922dcd",
+  "collection_method": "live",
+  "title": "Kırtasiye Kampanyası | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181980,
+  "text_chars": 2102
+}

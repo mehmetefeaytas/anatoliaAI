@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-n11-alisverisinize-300-tl-indirim_1",
+  "scraped_at": "2026-07-30T18:41:31+00:00",
+  "content_hash": "97fabf99aaf722a2645daef37beab37f2a10d50912de8b8871cc34d0a98d885d",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140024,
+  "text_chars": 2322
+}

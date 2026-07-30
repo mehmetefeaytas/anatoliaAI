@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/trend-4-gb-internet-kampanyasi",
+  "scraped_at": "2026-07-30T18:35:13+00:00",
+  "content_hash": "c2e33ad01b45efc3df2db3c0cbcfeaf4d3e132cbba462ee3e9fb42fab31dc63f",
+  "collection_method": "live",
+  "title": "Trend 4 GB İnternet Kampanyası | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182551,
+  "text_chars": 2706
+}

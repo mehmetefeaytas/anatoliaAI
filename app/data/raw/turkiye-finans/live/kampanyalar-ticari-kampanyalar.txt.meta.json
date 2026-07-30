@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/ticari-kampanyalar.aspx",
+  "scraped_at": "2026-07-30T18:37:02+00:00",
+  "content_hash": "5dc47cedeeba1db048f3bd8f27638acef9f8b674445696b3e53fe38bfbf54472",
+  "collection_method": "live",
+  "title": "Ticari Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 96611,
+  "text_chars": 5985
+}

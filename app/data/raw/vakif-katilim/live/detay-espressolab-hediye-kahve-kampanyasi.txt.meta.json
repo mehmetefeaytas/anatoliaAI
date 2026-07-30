@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/espressolab-hediye-kahve-kampanyasi",
+  "scraped_at": "2026-07-30T18:40:37+00:00",
+  "content_hash": "04fc41cc95b6ef39d055f3362fcc92a605d948010cae887a7d16f4958db3794e",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141263,
+  "text_chars": 3227
+}

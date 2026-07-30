@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/eflatunlulara-tum-banka-atmleri-ucretsiz",
+  "scraped_at": "2026-07-30T18:34:34+00:00",
+  "content_hash": "b0b7ff83af942623de15bcf8354a9b948a285362d649925e19cac441673fa1b0",
+  "collection_method": "live",
+  "title": "Eflatun’lulara Tüm Banka ATM’leri Ücretsiz | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179953,
+  "text_chars": 978
+}

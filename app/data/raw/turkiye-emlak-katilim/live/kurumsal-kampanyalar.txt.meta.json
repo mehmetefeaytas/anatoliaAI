@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/kampanyalar",
+  "scraped_at": "2026-07-30T18:42:09+00:00",
+  "content_hash": "c54ad4715bb26d4c14f46ced667f8652b10f33dd4cf637eb46fa8806878a5b5e",
+  "collection_method": "live",
+  "title": "Kampanyalar | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 157175,
+  "text_chars": 300
+}

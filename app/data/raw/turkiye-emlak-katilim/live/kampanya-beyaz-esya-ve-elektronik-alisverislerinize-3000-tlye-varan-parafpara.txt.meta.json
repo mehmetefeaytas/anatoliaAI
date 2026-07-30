@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara",
+  "scraped_at": "2026-07-30T18:42:21+00:00",
+  "content_hash": "51f2f9cb8a496e82e3f703642b84e136a0fad9ce14038e59f00d67ee4d7ca6d3",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167926,
+  "text_chars": 3251
+}

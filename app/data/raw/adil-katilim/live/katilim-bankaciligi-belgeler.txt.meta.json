@@ -1,0 +1,11 @@
+{
+  "bank_slug": "adil-katilim",
+  "source_url": "https://www.adilkatilim.com.tr/katilim-bankaciligi/belgeler",
+  "scraped_at": "2026-07-30T18:48:00+00:00",
+  "content_hash": "d9e78dbc6a6c92000cebb61f8141312808bde4dd9dd21ada4d11c80bcc007fbe",
+  "collection_method": "browser",
+  "title": "Belgeler | Adil Katılım",
+  "http_status": 200,
+  "raw_bytes": 913118,
+  "text_chars": 572
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari",
+  "scraped_at": "2026-07-30T18:32:02+00:00",
+  "content_hash": "0ed254d07d16ee346d20c90884e28499c84632ec610f5b2a9e51987f79d776fc",
+  "collection_method": "live",
+  "title": "Müşteri Ol Kampanyaları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 146768,
+  "text_chars": 2035
+}

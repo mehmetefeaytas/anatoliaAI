@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/koton",
+  "scraped_at": "2026-07-30T18:46:49+00:00",
+  "content_hash": "27b3954866d0679e3b5d45d4bb32fcf298399b405dfefa210b7146c900eb8e11",
+  "collection_method": "live",
+  "title": "Koton | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505262,
+  "text_chars": 9706
+}

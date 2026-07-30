@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar/hayat-finans-ile-gastroclub-ayricaliklari",
+  "scraped_at": "2026-07-30T18:45:22+00:00",
+  "content_hash": "106e211e739eb48d509d8714299a719e146aba72b73769a601176b0125d996d5",
+  "collection_method": "browser",
+  "title": "Harcadıkça Kazan,Cebin Hep Dolu Kalsın | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 300716,
+  "text_chars": 2771
+}

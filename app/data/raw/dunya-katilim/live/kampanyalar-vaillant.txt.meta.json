@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/vaillant",
+  "scraped_at": "2026-07-30T18:47:31+00:00",
+  "content_hash": "3152bed51ddaa175ee7610470e0754c695fa56bff1d3ffd4a5130c2cff1ce33e",
+  "collection_method": "live",
+  "title": "Vaillant | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505089,
+  "text_chars": 9689
+}

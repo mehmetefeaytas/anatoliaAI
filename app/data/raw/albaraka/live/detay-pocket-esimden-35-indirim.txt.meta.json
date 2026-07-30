@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/pocket-esimden-35-indirim",
+  "scraped_at": "2026-07-30T18:34:55+00:00",
+  "content_hash": "be5ad78f3d0013fffd51253fa9adadd88dd83461428cbf02690b4021d0c1fac1",
+  "collection_method": "live",
+  "title": "Pocket eSIM’den %35 İndirim! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180034,
+  "text_chars": 1876
+}

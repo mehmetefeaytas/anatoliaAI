@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/konaklama-harcamaniza-10-indirim",
+  "scraped_at": "2026-07-30T18:35:43+00:00",
+  "content_hash": "aec2041ef7b6fe5cf4a64b4eafbc673e9bb696aea1bfd3a83bfe10eece137dd8",
+  "collection_method": "live",
+  "title": "Konaklama Harcamanıza %10 İndirim! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180986,
+  "text_chars": 2366
+}

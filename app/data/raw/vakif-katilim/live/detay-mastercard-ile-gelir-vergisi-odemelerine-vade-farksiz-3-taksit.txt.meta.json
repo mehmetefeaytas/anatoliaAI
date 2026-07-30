@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-ile-gelir-vergisi-odemelerine-vade-farksiz-3-taksit",
+  "scraped_at": "2026-07-30T18:41:19+00:00",
+  "content_hash": "6f3f4c8d909086113484d5246d7e49297f8e29d110818a42221e3748263ef48d",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139767,
+  "text_chars": 1889
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-sadakat-programi",
+  "scraped_at": "2026-07-30T18:34:10+00:00",
+  "content_hash": "e4085e0569f80f0a10acdd4692a0e470f6fb1f28205d1fdbfb7ec89bac7e5ebc",
+  "collection_method": "live",
+  "title": "Albaraka Sadakat Programı | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 183199,
+  "text_chars": 3173
+}

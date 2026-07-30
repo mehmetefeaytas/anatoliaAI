@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar/arkadasini-getir-avantajli-hesap-ac-nakit-odul-kazan",
+  "scraped_at": "2026-07-30T18:44:58+00:00",
+  "content_hash": "991efbef1b6f7251040afcb34274a3a127aa9d49115f32847739a8ea06dbb93e",
+  "collection_method": "browser",
+  "title": "Arkadaşını Davet Et, Avantajlı Hesapla Kazanmaya Başla! | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 292776,
+  "text_chars": 3655
+}

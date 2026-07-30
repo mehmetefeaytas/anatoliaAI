@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/gencler-troy-kredi-karti-ile-geziyor",
+  "scraped_at": "2026-07-30T18:40:49+00:00",
+  "content_hash": "5aa47427a11b3af0a50cccafbf9389b54d5c9d4d792d805688fed38bc072a0e9",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139521,
+  "text_chars": 1982
+}

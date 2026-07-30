@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/kampanyalar.html",
+  "scraped_at": "2026-07-30T18:44:11+00:00",
+  "content_hash": "85ea9cf4d42b49c61dea6fbeb02c035ba872690f51ed793694d4986cdc32eb49",
+  "collection_method": "browser",
+  "title": "Kampanyalar | TOM Bank",
+  "http_status": 200,
+  "raw_bytes": 32647,
+  "text_chars": 9215
+}

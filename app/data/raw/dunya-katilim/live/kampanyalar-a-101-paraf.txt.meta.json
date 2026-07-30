@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/a-101-paraf",
+  "scraped_at": "2026-07-30T18:45:37+00:00",
+  "content_hash": "74534533fee259ec7c5d09057b97dd106784e9595a19fcdb0b07746e7640edca",
+  "collection_method": "live",
+  "title": "A-101 Paraf | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505583,
+  "text_chars": 10040
+}

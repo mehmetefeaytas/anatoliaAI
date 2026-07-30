@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/biz-bize-ile-yurt-disi-seyahatlerinizde-ayricaliklar-sizinle-scr",
+  "scraped_at": "2026-07-30T18:33:14+00:00",
+  "content_hash": "79de9b002b2da7b16c148f7affbf3a93f755fc4c02e71b0b8449b59f0d83ca76",
+  "collection_method": "live",
+  "title": "Biz Bize ile Yurt Dışı Seyahatlerinizde Ayrıcalıklar Sizinle! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135265,
+  "text_chars": 5049
+}

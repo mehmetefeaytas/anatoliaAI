@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/doga-dostu-arac-finansmani",
+  "scraped_at": "2026-07-30T18:40:25+00:00",
+  "content_hash": "fd3e3a6d95ed5038270c98aaf3fca410e5d89a35b36259f65b67548a8220b1a0",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141509,
+  "text_chars": 2217
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/getirde-600-tl-hediye-kampanyasi",
+  "scraped_at": "2026-07-30T18:40:58+00:00",
+  "content_hash": "be7e4dd0ed61c97d03280bb168af4c607a1a3b207dab7941a274de2eb64ff994",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139998,
+  "text_chars": 2307
+}

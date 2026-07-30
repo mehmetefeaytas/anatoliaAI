@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/Biten-Kampanyalar.aspx",
+  "scraped_at": "2026-07-30T18:37:08+00:00",
+  "content_hash": "3dc5b3c92b3e6a551fcd9544a9e81f21d35cfc0d029d44fe3955bde7073af402",
+  "collection_method": "live",
+  "title": "Biten Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 110101,
+  "text_chars": 8063
+}

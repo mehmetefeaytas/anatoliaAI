@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/yeni-yatirim-hesabiniza-sifir-komisyon.aspx",
+  "scraped_at": "2026-07-30T18:37:47+00:00",
+  "content_hash": "dcf68d35301142951fd06fd7669c8e1fcc241cb2f5f86f1b8b18d390423f2bd1",
+  "collection_method": "live",
+  "title": "Yeni Yatırım Hesabınıza Sıfır Komisyon Oranı | Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 100156,
+  "text_chars": 10220
+}

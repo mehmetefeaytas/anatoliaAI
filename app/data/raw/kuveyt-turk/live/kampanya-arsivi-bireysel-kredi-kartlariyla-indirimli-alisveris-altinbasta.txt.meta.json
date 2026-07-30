@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bireysel-kredi-kartlariyla-indirimli-alisveris-altinbasta",
+  "scraped_at": "2026-07-30T18:33:09+00:00",
+  "content_hash": "6771d0810d602d4e625093cf0971c1c2e7339105259b3f6a5008fdec48e1fe06",
+  "collection_method": "live",
+  "title": "Bireysel Kredi Kartlarıyla İndirimli Alışveriş Altınbaş’ta | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130565,
+  "text_chars": 1577
+}

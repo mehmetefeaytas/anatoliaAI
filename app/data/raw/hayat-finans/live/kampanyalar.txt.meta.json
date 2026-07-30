@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar",
+  "scraped_at": "2026-07-30T18:44:55+00:00",
+  "content_hash": "437ae34b94659121077d59c9b81b1ce1bc58f7e352c2722305ccf16a957982f7",
+  "collection_method": "browser",
+  "title": "En Güncel Banka Kampanyaları | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 323976,
+  "text_chars": 623
+}

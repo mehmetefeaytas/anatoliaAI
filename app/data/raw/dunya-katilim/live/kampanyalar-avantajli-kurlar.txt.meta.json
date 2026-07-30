@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/avantajli-kurlar",
+  "scraped_at": "2026-07-30T18:45:49+00:00",
+  "content_hash": "8a7c9185f614ff5d2c5e0c63b4a5e87996ee83264bf9434fc79bf91b49ec0cdc",
+  "collection_method": "live",
+  "title": "Avantajl&#x131; Kurlar | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505455,
+  "text_chars": 9805
+}

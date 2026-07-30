@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/finansman-kampanyalari.aspx",
+  "scraped_at": "2026-07-30T18:36:59+00:00",
+  "content_hash": "0b2078bc3ae961cb12dbc21beccbf92d37c225b644578a8f1b3f2dbddd29284c",
+  "collection_method": "live",
+  "title": "Finansman Kampanyaları | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 99478,
+  "text_chars": 6171
+}

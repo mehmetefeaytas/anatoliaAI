@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/finansman_is_birlikleri",
+  "scraped_at": "2026-07-30T18:39:48+00:00",
+  "content_hash": "e018614b4e19d8f9a718dd48e1c7b7bc989e5810041bfa190f8154846a53f36d",
+  "collection_method": "live",
+  "title": "Finansman İş Birlikleri | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 458971,
+  "text_chars": 974
+}

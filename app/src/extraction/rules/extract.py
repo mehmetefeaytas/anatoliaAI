@@ -494,10 +494,38 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
         r"için\s*geçerli|olmas[ıi]\s*gerek)",
         re.IGNORECASE,
     )
+    # BOILERPLATE FİLTRESİ — gerçek veride bulundu (291 belgelik korpus,
+    # değişmez denetimi `kampanya_kosullari`nı tek suçlu olarak işaretledi).
+    #
+    # Tetikleyici sözcükler ("zorunlu", "gerekli", "sadece", "yalnızca")
+    # çerez politikası, KVKK aydınlatma metni ve gizlilik bildirimlerinde de
+    # geçiyor. Filtresiz hâlde belge başına ~8,7 "koşul" çıkıyordu ve büyük
+    # kısmı şuna benzer hukuki metindi:
+    #   "bu çerezler zorunlu çerezler dışında kalan işlevsellikleri sağlama
+    #    amacıyla kullanılmaktadır"
+    # Bu bir kampanya koşulu DEĞİLDİR; gold sete ve ürüne çöp akıtır.
+    boilerplate = re.compile(
+        r"(çerez|cookie|kvkk|kişisel\s*veri|aydınlatma\s*metni|"
+        r"gizlilik\s*(politika|bildirim)|açık\s*rıza|veri\s*sorumlusu|"
+        r"telif|tüm\s*hakları|sosyal\s*medya\s*hesap|bilgi\s*toplumu|"
+        r"çağrı\s*merkezi|müşteri\s*hizmetleri|şubelerimiz)",
+        re.IGNORECASE,
+    )
+
     sentences = split_sentences(text)
-    picked = [s.strip() for s in sentences if triggers.search(s)]
+    picked = [
+        s.strip() for s in sentences
+        if triggers.search(s)
+        and not boilerplate.search(s)
+        # Menü/footer yığınları tek "cümle" olarak gelir; gerçek bir koşul
+        # cümlesi makul uzunluktadır.
+        and 20 <= len(s.strip()) <= 400
+    ]
     if not picked:
         return None
+    # Üst sınır: bir kampanyanın onlarca koşulu olmaz. Fazlası, filtrenin
+    # kaçırdığı gövde metnidir.
+    picked = picked[:8]
 
     # span: ilk koşul cümlesinin metindeki yeri
     first = picked[0]

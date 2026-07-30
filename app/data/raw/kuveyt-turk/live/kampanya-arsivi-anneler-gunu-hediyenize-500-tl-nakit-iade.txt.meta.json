@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/anneler-gunu-hediyenize-500-tl-nakit-iade",
+  "scraped_at": "2026-07-30T18:32:38+00:00",
+  "content_hash": "b59ede9d84214b336331f7da8c1e0225987e05492502b66d991651c9c3d164b1",
+  "collection_method": "live",
+  "title": "Anneler Günü Hediyenize 500 TL Nakit İade! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129972,
+  "text_chars": 1127
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/urunlerimiz.html",
+  "scraped_at": "2026-07-30T18:44:14+00:00",
+  "content_hash": "505e72f3e810761daf42aa7e94184e7d5da48baa4b2ede0ce3a8f4653c7c444b",
+  "collection_method": "browser",
+  "title": "Ürünlerimiz | TOM Bank",
+  "http_status": 200,
+  "raw_bytes": 29309,
+  "text_chars": 7067
+}

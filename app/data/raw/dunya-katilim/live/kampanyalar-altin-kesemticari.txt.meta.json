@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/altin-kesemTicari",
+  "scraped_at": "2026-07-30T18:45:46+00:00",
+  "content_hash": "901f10dce171320a0a76748206bb350fcde1143a176dd6b6eeebc7704f479bd5",
+  "collection_method": "live",
+  "title": "Alt&#x131;n Kesem | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 506603,
+  "text_chars": 10945
+}

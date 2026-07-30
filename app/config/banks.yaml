@@ -3,7 +3,17 @@
 #         ../../entities/katilim-bankalari.md, CLAUDE.md §13
 # Yeni banka eklemek = tek blok (yenilikçilik: config-driven onboarding).
 # BDDK Liste 77 doğrulanmalı: https://www.bddk.org.tr/Kurulus/Liste/77
+#
 # scrape_mode: static (requests+bs4) | js (playwright) | manual (data/raw fixture)
+#   -> src/scraping/fetcher.py FetcherBundle.for_mode() burada dispatch eder.
+# campaign_paths : iki aşamalı gezinmenin BAŞLANGIÇ (liste) sayfaları
+# sitemap_urls   : keşif için sitemap(.xml); sitemapindex özyinelemeli çözülür
+# detail_patterns: keşfedilen URL'lerden kampanya detayını süzen regex'ler
+# exclude_patterns: banka özelinde ek eleme (varsayılanlar discover.py'de)
+# max_docs       : banka başına toplanacak azami belge
+#
+# 2026-07-30 doğrulaması: eski yollar (/kampanyalar) 8/10 bankada 404 dönüyordu;
+# gerçek yollar sitemap + liste sayfası taraması ile düzeltildi.
 
 banks:
   - slug: kuveyt-turk
@@ -11,58 +21,155 @@ banks:
     website_url: https://www.kuveytturk.com.tr
     scrape_mode: static
     campaign_paths:
-      - /tr/kampanyalar
+      - /kampanyalar
+    sitemap_urls:
+      - https://www.kuveytturk.com.tr/sitemap.xml
+    detail_patterns:
+      - /kampanyalar/
+      - kampanyasi
+      - firsati
+      - avantaji
+    max_docs: 40
+
   - slug: albaraka
     name: Albaraka Türk
     website_url: https://www.albaraka.com.tr
     scrape_mode: static
     campaign_paths:
-      - /kampanyalar
+      - /tr/kampanyalar
+    sitemap_urls:
+      - https://www.albaraka.com.tr/sitemap.xml
+    detail_patterns:
+      - /tr/kampanyalar/
+    max_docs: 40
+
   - slug: turkiye-finans
     name: Türkiye Finans
     website_url: https://www.turkiyefinans.com.tr
     scrape_mode: static
     campaign_paths:
-      - /tr-tr/kampanyalar
+      - /tr-tr/kampanyalar/Sayfalar/default.aspx
+      - /tr-tr/kampanyalar/Sayfalar/finansman-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/kart-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/dijital-bankacilik-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/birikim-fon-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/odeme-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/yatirim-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/ticari-kampanyalar.aspx
+      - /tr-tr/kampanyalar/Sayfalar/sigorta-kampanyalari.aspx
+      - /tr-tr/kampanyalar/Sayfalar/diger-kampanyalar.aspx
+    detail_patterns:
+      - /tr-tr/kampanyalar/Sayfalar/
+      - finansmani.aspx
+    max_docs: 40
+
   - slug: ziraat-katilim
     name: Ziraat Katılım
     website_url: https://www.ziraatkatilim.com.tr
     scrape_mode: static
     campaign_paths:
-      - /kampanyalar
+      - /bireysel/kampanyalar
+    sitemap_urls:
+      - https://www.ziraatkatilim.com.tr/sitemap.xml?page=1
+      - https://www.ziraatkatilim.com.tr/sitemap.xml?page=2
+      - https://www.ziraatkatilim.com.tr/sitemap.xml?page=3
+      - https://www.ziraatkatilim.com.tr/sitemap.xml?page=4
+    detail_patterns:
+      - /kampanyalar/
+      - /kart-kampanyalari/
+      - /finansman-urunleri/
+    max_docs: 40
+
   - slug: vakif-katilim
     name: Vakıf Katılım
     website_url: https://www.vakifkatilim.com.tr
     scrape_mode: static
     campaign_paths:
-      - /kampanyalar
+      - /tr/kendim-icin/kampanyalar/mevcut-kampanyalar
+    sitemap_urls:
+      - https://www.vakifkatilim.com.tr/sitemap-tr.xml
+    detail_patterns:
+      - /kampanyalar/detay/
+      - /kampanyalar/mevcut-kampanyalar
+    max_docs: 40
+
   - slug: turkiye-emlak-katilim
     name: Türkiye Emlak Katılım
     website_url: https://www.emlakkatilim.com.tr
     scrape_mode: static
     campaign_paths:
+      - /tr/bireysel/kampanyalar
+      - /tr/kurumsal/kampanyalar
+    sitemap_urls:
+      - https://www.emlakkatilim.com.tr/XML/www.emlakkatilim.com.tr_tr_sitemap.xml
+    detail_patterns:
       - /kampanyalar
+      - /finansmanlar/
+    max_docs: 40
+
+  # T.O.M. Katılım Bankası — 2026-07-30 doğrulaması:
+  #  * www.tomkatilim.com.tr DNS'te YOK; gerçek kurumsal alan www.tombank.com.tr
+  #  * Kurumsal sitede yalnızca 2 sayfa var; kampanya KATALOĞU ayrı alan adında:
+  #    tombankhadi.com (hadiyanindakibanka.com oraya yönleniyor) → extra_hosts
   - slug: tom-katilim
     name: T.O.M. Katılım
-    website_url: https://www.tomkatilim.com.tr
+    website_url: https://www.tombank.com.tr
     scrape_mode: js
     campaign_paths:
-      - /kampanyalar
+      - /kampanyalar.html
+      - /urunlerimiz.html
+      - https://tombankhadi.com/hadi-kazan/kampanyalar
+    extra_hosts:
+      - tombankhadi.com
+    detail_patterns:
+      - /kampanyalar/
+      - /cok-kazananlar-kulubu-kampanya/
+      - kampanyalar.html
+      - urunlerimiz.html
+    max_docs: 40
+
   - slug: hayat-finans
     name: Hayat Finans
-    website_url: https://www.hayatfinans.com.tr
+    website_url: https://hayatfinans.com.tr
     scrape_mode: js
     campaign_paths:
       - /kampanyalar
+    sitemap_urls:
+      - https://www.hayatfinans.com.tr/sitemap.xml
+    detail_patterns:
+      - /kampanyalar
+      - /finansmanlar/
+    max_docs: 40
+
   - slug: dunya-katilim
     name: Dünya Katılım
-    website_url: https://www.dunyakatilim.com.tr
+    website_url: https://dunyakatilim.com.tr
     scrape_mode: static
     campaign_paths:
       - /kampanyalar
+    sitemap_urls:
+      - https://dunyakatilim.com.tr/sitemap.xml
+    detail_patterns:
+      - /kampanyalar/
+      - /finansmanlar/
+    max_docs: 40
+
+  # Adil Katılım — Nuxt/Vue tek-sayfa uygulaması: HTML kaynağında içerik yok,
+  # sitemap de yok; yalnızca tarayıcı ile toplanabilir.
+  # 2026-07-30 doğrulaması: sitede KAMPANYA KATALOĞU YOK. Tarayıcıyla gezilen
+  # tüm bağlantılar kurumsal sayfalar (hakkımızda, KVKK, yatırımcı ilişkileri).
+  # Banka henüz ürün/kampanya yayımlamıyor → düşük belge sayısı beklenen durumdur.
   - slug: adil-katilim
     name: Adil Katılım
     website_url: https://www.adilkatilim.com.tr
-    scrape_mode: static
+    scrape_mode: js
     campaign_paths:
-      - /kampanyalar
+      - /
+      - /katilim-bankaciligi
+      - /hakkimizda
+    detail_patterns:
+      - katilim-bankaciligi
+      - adilkatilim.com.tr/$
+      - kampanya
+      - finansman
+    max_docs: 40

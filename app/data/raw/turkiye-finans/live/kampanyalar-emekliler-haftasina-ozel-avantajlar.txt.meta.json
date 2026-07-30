@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/emekliler-haftasina-ozel-avantajlar.aspx",
+  "scraped_at": "2026-07-30T18:37:56+00:00",
+  "content_hash": "5fa59cce218ce415e1a3b19d082d7678ea6927e3ec4a29d06e66cee6094344b6",
+  "collection_method": "live",
+  "title": "Emekliler Haftasına Özel Avantajlar Türkiye Finans'ta! | Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 101833,
+  "text_chars": 10979
+}

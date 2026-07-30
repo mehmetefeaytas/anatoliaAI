@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/genclere-ozel-hediye-kahve",
+  "scraped_at": "2026-07-30T18:40:52+00:00",
+  "content_hash": "935d81be31f1026030dadbb4d6e5a4f1a4e7abde25eaaf4d3ca405977f57e826",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140523,
+  "text_chars": 2616
+}

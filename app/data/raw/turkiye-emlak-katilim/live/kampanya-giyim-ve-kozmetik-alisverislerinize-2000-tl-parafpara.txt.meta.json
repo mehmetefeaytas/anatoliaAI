@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/giyim-ve-kozmetik-alisverislerinize-2000-tl-parafpara",
+  "scraped_at": "2026-07-30T18:42:51+00:00",
+  "content_hash": "1ece37546ce57bafe1cc88c1e457240a280c7b1e5f5ad6b54af908c16fb84662",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 169073,
+  "text_chars": 3415
+}

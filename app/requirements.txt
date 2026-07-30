@@ -7,9 +7,13 @@
 pydantic>=2.6            # LLM guided_json şemaları (MIT)
 
 # --- scraping ---
-requests>=2.31           # Apache-2.0
-beautifulsoup4>=4.12     # MIT
-playwright>=1.42         # Apache-2.0 (JS ağırlıklı sayfalar)
+requests>=2.31           # Apache-2.0 (scrape_mode: static)
+beautifulsoup4>=4.12     # MIT (bağlantı çıkarımı + metin ayıklama)
+playwright>=1.42         # Apache-2.0 (scrape_mode: js — Nuxt/SPA bankalar)
+pyyaml>=6.0              # MIT (config/banks.yaml; yoksa config._mini_parse'a düşer)
+# NOT: playwright ayrıca tarayıcı ikilisi ister: `playwright install chromium`.
+# Kurulu değilse fetcher.BrowserFetcher zarifçe atlar, sistem çökmez.
+# robots.txt uyumu (CLAUDE.md §14) src/scraping/robots.py'de, saf stdlib ile.
 
 # OPSİYONEL — lisansı doğrulanana kadar teslim imajına ALINMAZ.
 # Bu satır önceden "GPLv3+" diye işaretliydi; GPLv3, Apache-2.0 ile birlikte

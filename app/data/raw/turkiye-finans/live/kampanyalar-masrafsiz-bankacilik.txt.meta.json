@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/masrafsiz-bankacilik.aspx",
+  "scraped_at": "2026-07-30T18:37:32+00:00",
+  "content_hash": "7a202b99004cd5d2020b61fb8146e11b0fc61fed89da20ee2e2197b8a365ef45",
+  "collection_method": "live",
+  "title": "Masrafsız Bankacılık | Kampanyalar | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 114661,
+  "text_chars": 12834
+}

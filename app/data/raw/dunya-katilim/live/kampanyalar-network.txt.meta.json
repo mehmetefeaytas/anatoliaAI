@@ -1,0 +1,11 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/network",
+  "scraped_at": "2026-07-30T18:47:05+00:00",
+  "content_hash": "e15c1209d0de44f10651952e34be1bcf4875ffa11bb7e6fa441ce562dac001b5",
+  "collection_method": "live",
+  "title": "Network | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504746,
+  "text_chars": 9442
+}

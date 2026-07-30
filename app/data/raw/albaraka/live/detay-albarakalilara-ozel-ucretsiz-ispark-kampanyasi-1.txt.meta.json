@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albarakalilara-ozel-ucretsiz-ispark-kampanyasi-1",
+  "scraped_at": "2026-07-30T18:34:19+00:00",
+  "content_hash": "12a88529f4792753d2831b7f0be758bf98ce7f7cb4ba98403b210acd3133ca9b",
+  "collection_method": "live",
+  "title": "Ücretsiz İSPARK Otopark Kampanyası | Albarakalılara Özel | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 185076,
+  "text_chars": 4526
+}

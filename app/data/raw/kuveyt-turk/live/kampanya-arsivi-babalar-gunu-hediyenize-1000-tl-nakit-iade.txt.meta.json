@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/babalar-gunu-hediyenize-1000-tl-nakit-iade",
+  "scraped_at": "2026-07-30T18:33:05+00:00",
+  "content_hash": "f785ac490ad2fbf451e86bb3a805004ff99c9282304f0976411a5e6ab887b546",
+  "collection_method": "live",
+  "title": "Babalar Günü Hediyenize 1.000 TL Nakit İade! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131416,
+  "text_chars": 1168
+}
