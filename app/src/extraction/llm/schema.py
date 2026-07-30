@@ -146,10 +146,26 @@ FIELD_VALUE_SCHEMA: dict[str, dict] = {
     # SYSTEM_PROMPT'ta dayatılır, doğrulama normalizasyon katmanında yapılır.
     "kampanya_suresi": {"type": "string"},
     # Listeler.
-    "kampanya_kosullari": {"type": "array", "items": {"type": "string"}},
+    #
+    # maxItems ZORUNLU — kısıtlı decoding'de sınırsız dizi DEJENERASYONA yol
+    # açar. Colab'da qwen3:32b ile ÖLÇÜLDÜ: `maxItems` yokken gramer sonsuz
+    # tekrara izin verdiği için model
+    #     "hedef_kitle": ["belirli_segment", "belirli_segment", ... ]
+    # üretip token limitine kadar döndü ve JSON kesildi. Kısıtlı decoding
+    # BİÇİMİ garanti eder, İÇERİĞİ değil — sınırı şema koymak zorunda.
+    #
+    # uniqueItems da eklendi: aynı segment iki kez anlamsız. (Bazı gramer
+    # derleyicileri uniqueItems'ı yok sayar; bu yüzden maxItems asıl korumadır.)
+    "kampanya_kosullari": {
+        "type": "array",
+        "items": {"type": "string"},
+        "maxItems": 12,
+    },
     "hedef_kitle": {
         "type": "array",
         "items": {"type": "string", "enum": HEDEF_KITLE_LABELS},
+        "maxItems": len(HEDEF_KITLE_LABELS),   # 4 segment var, fazlası tekrardır
+        "uniqueItems": True,
     },
 }
 

@@ -66,7 +66,17 @@ FEE_STATUS = {
 
 AUDIENCE = {
     "anyOf": [
-        {"type": "array", "items": {"type": "string", "enum": SEGMENTS}},
+        {
+            "type": "array",
+            "items": {"type": "string", "enum": SEGMENTS},
+            # maxItems ZORUNLU: sinirsiz dizi kisitli decoding'de DEJENERASYONA
+            # yol acar. Olculdu (qwen3:32b): sinir yokken model
+            #   ["belirli_segment", "belirli_segment", ...] diye token limitine
+            # kadar tekrarlayip JSON'u kesti. Kisitli decoding BICIMI garanti
+            # eder, ICERIGI degil -- siniri sema koymak zorunda.
+            "maxItems": len(SEGMENTS),
+            "uniqueItems": True,
+        },
         {"type": "null"},
     ]
 }
@@ -112,15 +122,23 @@ KURALLAR:
 - TR sayı biçimi: 1.500,00 = bin beş yüz. Nokta binlik, virgül ondalıktır.
 - "X aya kadar vade" bir VADEDİR; oran aralığının üst sınırı DEĞİLDİR.
 
-ÇELİŞKİ KURALI (çok önemli):
-Metin kendi içinde çelişiyorsa çelişkiyi KENDİN ÇÖZME, İKİSİNİ DE KAYDET.
+ÇELİŞKİ KURALI — YALNIZCA metin masraf/ücretten BAHSEDİYORSA uygulanır:
+Metin hem "masrafsız" iddia edip hem ücret belirtiyorsa çelişkiyi KENDİN
+ÇÖZME, ikisini de kaydet.
 - masraf_durumu alanına metnin İDDİASINI yaz.
 - tahsis_ucreti alanına gerçekte belirtilen TUTARI yaz.
 Örnek: "Bu kampanya masrafsızdır. Ancak tahsis ücreti 500 TL alınır."
   dogru  -> masraf_durumu: {"has_fee": false, "amount": 0}, tahsis_ucreti: 500
   yanlis -> masraf_durumu: {"has_fee": true, "amount": 500}
-Çelişkiyi kendin çözersen yanıltıcı pazarlama iddiası KAYBOLUR; oysa
-kullanıcının tam da bunu görmesi gerekir."""
+Çelişkiyi kendin çözersen yanıltıcı pazarlama iddiası KAYBOLUR.
+
+DİKKAT — bu kural masraf/ücret HİÇ GEÇMİYORSA UYGULANMAZ:
+Metinde masraf, ücret, tahsis, komisyon sözcüklerinin HİÇBİRİ yoksa
+masraf_durumu **null** olmalıdır. "has_fee: false" yazmak bir İDDİADIR ve
+metinde böyle bir iddia yoksa UYDURMA olur.
+  "Şubelerimiz hafta içi hizmet vermektedir." -> masraf_durumu: null
+
+Aynısı TÜM alanlar için geçerlidir: bilgi yoksa null. Varsayılan değer yazma."""
 
 TESTS = [
     (
