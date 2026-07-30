@@ -557,6 +557,10 @@ def values_equal(a: Any, b: Any, tolerance: float = 1e-6) -> bool:
     `eval/run_eval.py._equal` ile aynı semantik; burada iç içe yapılara
     (para sözlüğü, aralık) da iner. Anlaşmazlık tespiti ve IAA bunu kullanır.
     """
+    # bool ÖNCE elenir: Python'da True == 1 doğrudur ve `masraf_durumu`nun
+    # {"has_fee": true} ile {"has_fee": 1} hâlini eşit sayardık.
+    if isinstance(a, bool) or isinstance(b, bool):
+        return a is b
     if _is_number(a) and _is_number(b):
         return abs(float(a) - float(b)) < tolerance
     if isinstance(a, dict) and isinstance(b, dict):

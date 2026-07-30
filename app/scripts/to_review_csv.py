@@ -242,41 +242,37 @@ def partition(doc_ids: list[str], calibration: int, duplicate: int, seed: int
     return calib, dup, main
 
 
-def balance_main(main: list[str], annotators: list[str], calib_count: int,
-                 dup_count: int) -> dict[str, list[str]]:
-    """Ana kümeyi, herkesin TOPLAM yükü eşitlenecek şekilde paylaştırır.
+def balance_main(main: list[str], annotators: list[str], row_counts: dict[str, int],
+                 fixed_load: list[int]) -> dict[str, list[str]]:
+    """Ana kümeyi, herkesin TOPLAM SATIR yükü eşitlenecek şekilde paylaştırır.
 
-    Çift anotasyon yükü ilk iki kişiye (A ve B) düşer; onlara ana kümeden daha
-    az belge verilmezse Cuma günü A ve B geride kalır ve tur yarım biter.
+    Belge sayısına göre bölmek yanıltıcıdır: kalibrasyon ve çift-anotasyon
+    belgelerinde 12/12 alan karara bağlandığı için belge başına ~13 satır çıkar,
+    ana kümede ise ~5. Belge sayısı eşitlenirse A ve B'nin gerçek yükü diğerlerinin
+    iki katı olur ve Cuma turu yarım kalır. Zamanın gerçek vekili SATIRdır.
+
+    Yöntem: en büyük belgeden başlayarak, o an en az yüklü kişiye ata (LPT).
+
+    Args:
+        row_counts: belge -> üreteceği satır sayısı.
+        fixed_load: her anotatörün kalibrasyon + çift anotasyondan gelen sabit
+            satır yükü (sırası `annotators` ile aynı).
     """
     count = len(annotators)
     if count == 0:
         return {}
 
-    # Kişi başına toplam belge hedefi.
-    total_units = calib_count * count + dup_count * 2 + len(main)
-    target = total_units / count
+    assignment: dict[str, list[str]] = {name: [] for name in annotators}
+    totals = list(fixed_load)
 
-    load = [calib_count + (dup_count if i < 2 else 0) for i in range(count)]
-    capacity = [max(0.0, target - value) for value in load]
-    capacity_sum = sum(capacity)
+    # Büyük belgeleri önce yerleştirmek (LPT), sondaki dengesizliği küçültür.
+    for doc_id in sorted(main, key=lambda d: (-row_counts.get(d, 0), d)):
+        target = min(range(count), key=lambda i: (totals[i], i))
+        assignment[annotators[target]].append(doc_id)
+        totals[target] += row_counts.get(doc_id, 0)
 
-    if capacity_sum <= 0:
-        quotas = [len(main) // count] * count
-    else:
-        quotas = [int(len(main) * value / capacity_sum) for value in capacity]
-
-    # Tam sayıya yuvarlamadan kalan belgeler en boş kişiye eklenir.
-    remainder = len(main) - sum(quotas)
-    order = sorted(range(count), key=lambda i: -capacity[i])
-    for k in range(remainder):
-        quotas[order[k % count]] += 1
-
-    assignment: dict[str, list[str]] = {}
-    cursor = 0
-    for i, name in enumerate(annotators):
-        assignment[name] = main[cursor:cursor + quotas[i]]
-        cursor += quotas[i]
+    for name in assignment:
+        assignment[name].sort()
     return assignment
 
 
@@ -314,6 +310,14 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
 
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
+
+    # ESKİ TURDAN KALAN CSV'LER SİLİNİR. Aksi halde farklı parametrelerle
+    # (ör. başka bir --duplicate-subset) üretilmiş dosyalar klasörde kalır;
+    # `build_gold --csv-dir` bunları `round*.csv` kalıbıyla toplayıp aynı
+    # belgeyi iki kez sayar ve olmayan "çelişki"ler üretir.
+    for stale in out.glob("round*.csv"):
+        stale.unlink()
+
     written: dict[str, int] = {}
 
     # 1) Kalibrasyon turu — HERKES aynı belgeleri anote eder (Fleiss kappa).
@@ -329,8 +333,18 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
         written["round1_A.csv"] = write_csv(dup_rows, out / "round1_A.csv")
         written["round1_B.csv"] = write_csv(dup_rows, out / "round1_B.csv")
 
-    # 3) Ana küme — dengeli paylaştırma, kişi başına bir dosya.
-    assignment = balance_main(main, annotators, len(calib), len(dup))
+    # 3) Ana küme — SATIR yüküne göre dengeli paylaştırma, kişi başına bir dosya.
+    row_counts = {
+        doc_id: len(rows_for_doc(docs[doc_id], doc_id in absent_set, low, high))
+        for doc_id in doc_ids
+    }
+    calib_rows_total = sum(row_counts[d] for d in calib)
+    dup_rows_total = sum(row_counts[d] for d in dup)
+    fixed_load = [
+        calib_rows_total + (dup_rows_total if i < 2 and dup else 0)
+        for i in range(len(annotators))
+    ]
+    assignment = balance_main(main, annotators, row_counts, fixed_load)
     for name, ids in assignment.items():
         if ids:
             written[f"round1_main_{name}.csv"] = write_csv(
@@ -342,6 +356,14 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
     for doc_id, doc in docs.items():
         (docs_dir / f"{doc_id}.txt").write_text(doc.get("text", ""), encoding="utf-8")
 
+    # Kişi başına gerçek satır yükü — Cuma planının tek anlamlı sayısı.
+    row_load = {
+        name: (calib_rows_total
+               + (dup_rows_total if i < 2 and dup else 0)
+               + sum(row_counts[d] for d in assignment.get(name, [])))
+        for i, name in enumerate(annotators)
+    }
+
     plan = {
         "seed": seed,
         "annotators": annotators,
@@ -349,6 +371,7 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
         "duplicate": dup,
         "assignment": {name: ids for name, ids in assignment.items()},
         "absent_docs": sorted(absent_set),
+        "row_load": row_load,
         "files": written,
     }
     (out / "_plan.json").write_text(
@@ -375,8 +398,8 @@ def _write_assignment_md(path: Path, plan: dict, written: dict[str, int],
         "",
         "## Kim neyi açacak",
         "",
-        "| Anotatör | 1. Kalibrasyon | 2. Çift anotasyon | 3. Ana küme |",
-        "|---|---|---|---|",
+        "| Anotatör | 1. Kalibrasyon | 2. Çift anotasyon | 3. Ana küme | Toplam satır |",
+        "|---|---|---|---|---:|",
     ]
     for i, name in enumerate(annotators):
         calib_file = f"`round0_kalibrasyon_{name}.csv`" if plan["calibration"] else "—"
@@ -389,7 +412,8 @@ def _write_assignment_md(path: Path, plan: dict, written: dict[str, int],
         main_ids = plan["assignment"].get(name) or []
         main_file = (f"`round1_main_{name}.csv` ({len(main_ids)} belge)"
                      if main_ids else "—")
-        lines.append(f"| {name} | {calib_file} | {dup_file} | {main_file} |")
+        load = plan.get("row_load", {}).get(name, 0)
+        lines.append(f"| {name} | {calib_file} | {dup_file} | {main_file} | {load} |")
 
     lines += [
         "",

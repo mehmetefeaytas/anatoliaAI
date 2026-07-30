@@ -19,3 +19,8 @@ venv/
 
 # Playwright MCP gecici dosyalari (kesif oturumlarindan)
 .playwright-mcp/
+
+# Ön-anotasyon ara ciktisi (2 MB, data/raw + scripts/preannotate.py'den
+# yeniden uretilebilir). Anotatorlerin ihtiyaci olan sey CSV ve
+# review/belgeler/ altindaki metinler; bu ara JSON degil.
+app/data/gold/preannotations.json

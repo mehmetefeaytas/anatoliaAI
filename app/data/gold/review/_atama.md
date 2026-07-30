@@ -10,12 +10,12 @@
 
 ## Kim neyi açacak
 
-| Anotatör | 1. Kalibrasyon | 2. Çift anotasyon | 3. Ana küme |
-|---|---|---|---|
-| A | `round0_kalibrasyon_A.csv` | `round1_A.csv` | `round1_main_A.csv` (20 belge) |
-| B | `round0_kalibrasyon_B.csv` | `round1_B.csv` | `round1_main_B.csv` (20 belge) |
-| C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (70 belge) |
-| D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (70 belge) |
+| Anotatör | 1. Kalibrasyon | 2. Çift anotasyon | 3. Ana küme | Toplam satır |
+|---|---|---|---|---:|
+| A | `round0_kalibrasyon_A.csv` | `round1_A.csv` | — | 910 |
+| B | `round0_kalibrasyon_B.csv` | `round1_B.csv` | — | 910 |
+| C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (90 belge) | 821 |
+| D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (90 belge) | 820 |
 
 ## Sıra ÖNEMLİ
 
@@ -33,10 +33,8 @@
 | `round0_kalibrasyon_D.csv` | 260 |
 | `round1_A.csv` | 650 |
 | `round1_B.csv` | 650 |
-| `round1_main_A.csv` | 107 |
-| `round1_main_B.csv` | 159 |
-| `round1_main_C.csv` | 435 |
-| `round1_main_D.csv` | 420 |
+| `round1_main_C.csv` | 561 |
+| `round1_main_D.csv` | 560 |
 
 Belge tam metinleri: `belgeler/<doc_id>.txt`
 
