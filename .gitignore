@@ -24,3 +24,7 @@ venv/
 # yeniden uretilebilir). Anotatorlerin ihtiyaci olan sey CSV ve
 # review/belgeler/ altindaki metinler; bu ara JSON degil.
 app/data/gold/preannotations.json
+
+# Vitrin dokumanlari: `vitrin` dalinda tutulur, yayin zamani main'e
+# birlestirilir. main'e kazara girmesinler diye burada yok sayilir.
+app/docs/invariants.md
