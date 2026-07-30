@@ -252,7 +252,59 @@ def _sagam_json(raw: str) -> dict:
             depth -= 1
             if depth == 0:
                 return json.loads(s[start:i + 1])
-    raise ValueError(f"dengeli JSON kapanmamis (kesik?). Ham cikti:\n{raw[:400]}")
+    # Kesik yanıt — ONARMAYI dene.
+    #
+    # Neden gerekli: `maxItems` şemaya konsa bile Ollama'nın altındaki
+    # llama.cpp, JSON Schema'yı GBNF gramerine çevirirken bazı sürümlerde
+    # maxItems/minItems kısıtlarını YOK SAYAR. O zaman gramer sonsuz tekrara
+    # izin verir, model token limitine kadar aynı elemanı basar ve JSON
+    # kapanmadan kesilir. Şemaya güvenmek yeterli değil; ayrıştırıcı da
+    # dayanıklı olmalı.
+    return _onar_kesik(s, raw)
+
+
+def _onar_kesik(s: str, raw: str) -> dict:
+    """Kapanmamış JSON'u kapatıp kurtarmayı dener; diziyi tekilleştirir."""
+    # Yarım kalan son elemanı at (son virgülden sonrası tamamlanmamıştır)
+    kesit = s[:s.rfind(",")] if "," in s else s
+
+    # Açık kalan parantezleri say (string içi yok sayılır) ve kapat
+    depth_obj = depth_arr = 0
+    in_str = esc = False
+    for ch in kesit:
+        if esc:
+            esc = False
+            continue
+        if ch == "\\":
+            esc = True
+            continue
+        if ch == '"':
+            in_str = not in_str
+            continue
+        if in_str:
+            continue
+        depth_obj += (ch == "{") - (ch == "}")
+        depth_arr += (ch == "[") - (ch == "]")
+
+    if in_str:
+        kesit += '"'
+    kesit += "]" * max(0, depth_arr) + "}" * max(0, depth_obj)
+
+    try:
+        obj = json.loads(kesit)
+    except json.JSONDecodeError:
+        raise ValueError(
+            f"dengeli JSON kapanmamis ve onarilamadi. Ham cikti:\n{raw[:400]}"
+        ) from None
+
+    # Dejenerasyon izi: tekrar eden elemanları tekilleştir ve uyar
+    for k, v in list(obj.items()):
+        if isinstance(v, list) and len(v) > len(set(map(str, v))):
+            tekil = list(dict.fromkeys(v))
+            print(f"    [ONARILDI] '{k}' dizisinde dejenerasyon: "
+                  f"{len(v)} eleman -> {len(tekil)} (tekrar temizlendi)")
+            obj[k] = tekil
+    return obj
 
 
 def _saglik_kontrolu() -> Optional[str]:
