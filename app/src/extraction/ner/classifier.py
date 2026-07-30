@@ -16,7 +16,7 @@ from typing import Optional, Protocol
 
 from ...preprocessing.clean import tr_fold_ascii
 from ...schemas import CAMPAIGN_TYPES
-from ..rules.synonyms import FOLDED_TYPE_HINTS
+from ..rules.synonyms import FOLDED_TYPE_HINTS, matches
 
 
 class Classifier(Protocol):
@@ -42,8 +42,12 @@ class RuleHintClassifier:
         low = tr_fold_ascii(text)
         scores: dict[str, int] = {}
         for label in self._ORDER:
+            # SÖZCÜK SINIRLI eşleşme (bkz. synonyms.keyword_pattern). Düz
+            # alt-dize araması 'ev' anahtarını 'devam'/'seviye' içinde
+            # buluyordu ve gerçek korpusun %48'ini sahte Konut Finansmanı
+            # yapıyordu.
             hits = sum(1 for kw in FOLDED_TYPE_HINTS.get(label, frozenset())
-                       if kw in low)
+                       if matches(kw, low))
             if hits:
                 scores[label] = hits
         if not scores:

@@ -9,6 +9,8 @@ Bu yüzden aşağıdaki listelerde 'taşıt'/'tasit' gibi varyantlar bulunması
 zararsızdır — katlama sonrası set'e indirgenip tek kez sayılırlar.
 """
 
+import re
+
 from ...normalization.normalize import NEGATION_RE as _NEGATION_RE
 from ...preprocessing.clean import tr_fold_ascii
 
@@ -60,6 +62,36 @@ TYPE_HINTS: dict[str, list[str]] = {
 # ihraç edilir ki çıkarım ve normalizasyon katmanları AYNI deseni kullansın
 # (iki ayrı kopya kaçınılmaz olarak birbirinden ayrışırdı).
 NEGATION_RE = _NEGATION_RE
+
+
+def keyword_pattern(keyword: str) -> str:
+    """Anahtar kelimeyi SÖZCÜK SINIRLI bir desene çevirir.
+
+    Neden gerekli: eşleşme eskiden düz alt-dize (`kw in text`) ile yapılıyordu.
+    291 belgelik gerçek korpusta ölçüldü ve sınıflandırmayı çökertiyordu:
+
+        'ev'  (Konut Finansmanı anahtarı) -> 'devam', 'seviye', 'evet',
+              'evrak' içinde eşleşiyor
+        'fon' (Yatırım Ürünü anahtarı)    -> 'fonksiyon' içinde eşleşiyor
+
+    Sonuç: "Modanisa'da %15 indirim" (giyim kampanyası) ve "hisse senedi
+    işlemleri" gibi belgeler **Konut Finansmanı** olarak sınıflanıyordu.
+    Korpusun %48'i sahte Konut Finansmanı çıkmıştı.
+
+    Kural:
+      - Kısa anahtarlar (<= 4 karakter) İKİ TARAFTAN sınırlı eşleşir
+        ('ev' yalnız "ev" sözcüğüne uyar, "devam"a uymaz).
+      - Uzun anahtarlar SOL sınırlı eşleşir, ek almaya izin verilir
+        ('konut' -> "konutunuz", "konuttan" da eşleşir; Türkçe sondan
+        eklemeli bir dildir, bu davranış istenir).
+    """
+    esc = re.escape(keyword)
+    return rf"\b{esc}\b" if len(keyword) <= 4 else rf"\b{esc}"
+
+
+def matches(keyword: str, folded_text: str) -> bool:
+    """Katlanmış metinde anahtar kelimeyi sözcük sınırlı arar."""
+    return re.search(keyword_pattern(keyword), folded_text) is not None
 
 
 def _fold_all(mapping: dict[str, list[str]]) -> dict[str, frozenset[str]]:

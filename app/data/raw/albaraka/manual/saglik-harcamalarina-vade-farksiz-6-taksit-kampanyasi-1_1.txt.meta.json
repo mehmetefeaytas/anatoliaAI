@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/saglik-harcamalarina-vade-farksiz-6-taksit-kampanyasi-1_1",
+  "scraped_at": "2026-07-30T19:07:00+00:00",
+  "content_hash": "a72e74adf44bc3c356b8e6307b6cb78480009daab6aac8b884913746e4694aa8",
+  "collection_method": "browser_manual",
+  "title": "Sağlık Harcamalarına Vade Farksız 6 Taksit Kampanyası | Albaraka Türk",
+  "http_status": 200,
+  "text_chars": 2942,
+  "note": "duz HTTP istemcisinde baglanti kesildi; Playwright ile alindi"
+}
