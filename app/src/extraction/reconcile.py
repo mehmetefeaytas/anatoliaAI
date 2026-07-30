@@ -6,6 +6,23 @@
 
 Kural: kural çıktısı varsa onu tercih et → boşlukları LLM ile doldur → her alana
 confidence + source_span. Alan hiçbir katmanda yoksa üretilmez (null + uydurma yok).
+
+## Doğrulama modu (`verify_low_conf`) — neden eklendi
+
+Varsayılan akışta LLM'e YALNIZCA kuralların bulamadığı alanlar sorulur. Bunun
+sessiz bir sonucu var: **kural katmanı yanlış bir değer üretirse LLM onu asla
+düzeltemez**, çünkü o alan hiç sorulmaz. Regex'in emin olmadığı yerde
+(tetikleyici uzak, birden çok aday, değer makul aralığın dışında —
+`rules/confidence.py`) hata olasılığı en yüksektir ve tam orada ikinci bir göz
+yoktur.
+
+`verify_low_conf > 0` verildiğinde, güveni eşiğin ALTINDA kalan kural alanları
+da LLM'e sorulur ve yalnız o alanlar için katman önceliği gevşetilir: kazanan
+güvene göre seçilir. Diğer alanlarda kural mutlak üstünlüğünü korur.
+
+Varsayılan **0.0**'dır — yani davranış birebir eskisi gibi kalır. Bu bir
+deney anahtarıdır: ablasyonda "doğrulamalı hibrit" ayrı bir satır olarak
+ölçülür, kanıtlanmadan varsayılan yapılmaz.
 """
 
 from __future__ import annotations
@@ -21,12 +38,18 @@ from .rules.extract import extract_all as rule_extract
 _PRIORITY = {Extractor.RULE: 3, Extractor.NER: 2, Extractor.LLM: 1}
 
 
-def reconcile(text: str, llm: Optional[LLMExtractor] = None) -> list[ExtractedField]:
+def reconcile(text: str, llm: Optional[LLMExtractor] = None,
+              verify_low_conf: float = 0.0) -> list[ExtractedField]:
     """Kural + (varsa) LLM çıktısını birleştirir.
 
     1) Kuralları çalıştır (birincil).
-    2) Eksik alanları belirle, LLM'e yalnız onları sor.
-    3) Aynı alan birden çok katmanda varsa öncelik + güvene göre seç.
+    2) Eksik alanları belirle; `verify_low_conf > 0` ise güveni eşiğin altındaki
+       kural alanlarını da listeye ekle. LLM'e yalnız bu alanları sor.
+    3) Aynı alan birden çok katmanda varsa öncelik + güvene göre seç. Doğrulama
+       için sorulan alanlarda öncelik GEVŞER (bkz. modül başlığı).
+
+    Args:
+        verify_low_conf: [0, 1]. 0.0 = kapalı (varsayılan, eski davranış).
     """
     llm = llm or NullLLMExtractor()
 
@@ -36,19 +59,34 @@ def reconcile(text: str, llm: Optional[LLMExtractor] = None) -> list[ExtractedFi
             by_field[f.field_name] = f
 
     missing = [name for name in EXTRACTION_FIELDS if name not in by_field]
-    if missing and llm.available:
-        for f in llm.extract(text, missing):
+
+    # Doğrulama modu: düşük güvenli KURAL alanları da sorguya dahil edilir.
+    verify: set[str] = set()
+    if verify_low_conf > 0:
+        verify = {name for name, f in by_field.items()
+                  if f.extractor is Extractor.RULE and f.confidence < verify_low_conf}
+
+    ask = missing + sorted(verify)
+    if ask and llm.available:
+        for f in llm.extract(text, ask):
             if not f.is_present:
                 continue
             cur = by_field.get(f.field_name)
-            if cur is None or _wins(f, cur):
+            if cur is None or _wins(f, cur, relaxed=f.field_name in verify):
                 by_field[f.field_name] = f
 
     return list(by_field.values())
 
 
-def _wins(new: ExtractedField, cur: ExtractedField) -> bool:
-    """Yeni alan mevcut olanı geçer mi? Önce katman önceliği, sonra güven."""
+def _wins(new: ExtractedField, cur: ExtractedField, relaxed: bool = False) -> bool:
+    """Yeni alan mevcut olanı geçer mi?
+
+    Normalde önce katman önceliği, sonra güven. `relaxed=True` (doğrulama modu)
+    ise öncelik atlanır ve yalnız güven karşılaştırılır — bu, LLM'in düşük
+    güvenli bir kural değerini düzeltebilmesinin tek yoludur.
+    """
+    if relaxed:
+        return new.confidence > cur.confidence
     pn, pc = _PRIORITY[new.extractor], _PRIORITY[cur.extractor]
     if pn != pc:
         return pn > pc
@@ -57,9 +95,10 @@ def _wins(new: ExtractedField, cur: ExtractedField) -> bool:
 
 def build_campaign(text: str, bank_slug: str, source_url: Optional[str] = None,
                    llm: Optional[LLMExtractor] = None,
-                   campaign_type: Optional[str] = None) -> Campaign:
+                   campaign_type: Optional[str] = None,
+                   verify_low_conf: float = 0.0) -> Campaign:
     """Metinden tam Campaign nesnesi üretir (çıkarım + uzlaştırma)."""
-    fields = reconcile(text, llm=llm)
+    fields = reconcile(text, llm=llm, verify_low_conf=verify_low_conf)
     return Campaign(
         bank_slug=bank_slug,
         raw_text=text,

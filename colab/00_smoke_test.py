@@ -20,6 +20,7 @@ Neyi ölçüyor:
 import json
 import os
 import urllib.request
+from typing import Optional
 
 MODEL = os.environ.get("SMOKE_MODEL", "qwen3:32b")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
@@ -155,6 +156,12 @@ def sor(metin: str) -> dict:
             "num_predict": 512,
         },
     }
+    # qwen3'te DÜŞÜNME MODU varsayılan AÇIK: model yanıttan önce
+    # <think>...</think> bloğu üretir ve ham içerik geçerli JSON olmaz.
+    # Ollama 0.9+ bunu kapatmayı destekler; desteklemeyen sürümlerde
+    # aşağıdaki sağlam ayrıştırıcı bloğu zaten soyar.
+    payload["think"] = False
+
     req = urllib.request.Request(
         f"{OLLAMA_URL}/api/chat",
         data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
@@ -162,14 +169,132 @@ def sor(metin: str) -> dict:
     )
     with urllib.request.urlopen(req, timeout=300) as resp:
         body = json.loads(resp.read().decode("utf-8"))
-    return json.loads(body["message"]["content"])
+    return _sagam_json(body["message"]["content"])
 
 
-def main() -> None:
+def _sagam_json(raw: str) -> dict:
+    """Ham LLM çıktısından JSON nesnesini söker.
+
+    Düz `json.loads` yetmez: model <think> bloğu, markdown çiti ya da
+    açıklama metni ekleyebilir. Bu, app/src/extraction/llm/parse.py'deki
+    ayrıştırıcının küçültülmüş halidir (colab/ bağımsız çalışsın diye
+    kopyalandı; asıl sürüm 18 patolojiye karşı test edilmiştir).
+    """
+    if raw is None:
+        raise ValueError("bos yanit")
+    s = raw.strip()
+
+    # <think>...</think> bloğunu at
+    if "</think>" in s:
+        s = s.split("</think>", 1)[1].strip()
+
+    # ```json ... ``` çitini soy
+    if s.startswith("```"):
+        s = s.split("\n", 1)[1] if "\n" in s else s[3:]
+        if "```" in s:
+            s = s.rsplit("```", 1)[0]
+        s = s.strip()
+
+    try:
+        return json.loads(s)
+    except json.JSONDecodeError:
+        pass
+
+    # Süslü parantez SAYARAK ilk dengeli nesneyi bul (string içi yok sayılır)
+    start = s.find("{")
+    if start < 0:
+        raise ValueError(f"yanitta JSON nesnesi yok. Ham cikti:\n{raw[:400]}")
+    depth, in_str, esc = 0, False, False
+    for i in range(start, len(s)):
+        ch = s[i]
+        if esc:
+            esc = False
+            continue
+        if ch == "\\":
+            esc = True
+            continue
+        if ch == '"':
+            in_str = not in_str
+            continue
+        if in_str:
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return json.loads(s[start:i + 1])
+    raise ValueError(f"dengeli JSON kapanmamis (kesik?). Ham cikti:\n{raw[:400]}")
+
+
+def _saglik_kontrolu() -> Optional[str]:
+    """Ollama ayakta mı? Değilse anlaşılır bir hata mesajı döndürür.
+
+    Bu kontrol olmadan tüm testler 'Connection refused' alır ve — daha
+    kötüsü — halüsinasyon testi YANLIŞLIKLA GEÇER: yanıt gelmediği için
+    "hiçbir alan uydurulmamış" görünür. Yani bağlantı hatası BAŞARI diye
+    raporlanırdı. Sessizce yanlış "başarı" bu projedeki en tehlikeli hata
+    sınıfıdır; test aracının kendisi de ondan muaf değil.
+    """
+    try:
+        with urllib.request.urlopen(f"{OLLAMA_URL}/api/tags", timeout=5) as r:
+            json.loads(r.read())
+        return None
+    except Exception as exc:
+        return (
+            f"Ollama'ya ulasilamiyor ({OLLAMA_URL}): {type(exc).__name__}\n\n"
+            "  Muhtemel sebep: setup betigi `python setup.py` ile alt surec\n"
+            "  olarak kosuldu; script bitince `ollama serve` de oldu.\n\n"
+            "  Cozum — kurulum hucresini soyle calistirin:\n"
+            "      !wget -qO setup.py https://raw.githubusercontent.com/"
+            "mehmetefeaytas/anatoliaAI/main/colab/01_setup.py\n"
+            "      %run setup.py\n"
+            "  (satir baslarinda BOSLUK olmamali)\n\n"
+            "  Ya da bu betik kendisi baslatsin:\n"
+            "      %env SMOKE_AUTOSTART=1"
+        )
+
+
+def _ollama_baslat() -> bool:
+    """SMOKE_AUTOSTART=1 ise Ollama'yı bu süreçten bağımsız başlatır."""
+    import shutil
+    import subprocess
+    import time
+
+    exe = shutil.which("ollama") or "/usr/local/bin/ollama"
+    if not os.path.exists(exe):
+        print("ollama bulunamadi — once 01_setup.py calistirin.")
+        return False
+    env = dict(os.environ, OLLAMA_HOST="127.0.0.1:11434",
+               OLLAMA_KEEP_ALIVE="-1")
+    # start_new_session: sunucu bu surecin olumunden SAG KURTULSUN
+    subprocess.Popen([exe, "serve"], env=env, start_new_session=True,
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    for _ in range(30):
+        time.sleep(1)
+        if _saglik_kontrolu() is None:
+            print("Ollama baslatildi.\n")
+            return True
+    return False
+
+
+def main() -> int:
     print(f"model = {MODEL}")
     print(f"url   = {OLLAMA_URL}\n")
 
-    sonuclar = {}
+    hata = _saglik_kontrolu()
+    if hata and os.environ.get("SMOKE_AUTOSTART") == "1":
+        _ollama_baslat()
+        hata = _saglik_kontrolu()
+    if hata:
+        print("=" * 62)
+        print("KOSULAMADI — LLM servisi ayakta degil")
+        print("=" * 62)
+        print(hata)
+        return 2
+
+    sonuclar: dict[str, dict] = {}
+    hatalar: dict[str, str] = {}
     for etiket, metin in TESTS:
         print(f"--- [{etiket}] {metin[:64]}...")
         try:
@@ -177,48 +302,59 @@ def main() -> None:
             sonuclar[etiket] = out
             print(json.dumps(out, ensure_ascii=False, indent=2))
         except Exception as exc:
-            print(f"HATA: {type(exc).__name__}: {exc}")
+            hatalar[etiket] = f"{type(exc).__name__}: {exc}"
+            print(f"HATA: {hatalar[etiket]}")
         print()
 
-    # Otomatik değerlendirme — elle bakmaya gerek kalmasın
     print("=" * 62)
     print("OTOMATIK KONTROL")
     print("=" * 62)
 
+    def yaz(etiket: str, no: str, kosul: bool, detay: str) -> bool:
+        """Yanıt HİÇ gelmediyse GECTI yazma — HATA yaz.
+
+        Yanıtsız bir testi 'geçti' saymak, bağlantı hatasını başarı diye
+        raporlamak demektir.
+        """
+        if etiket in hatalar:
+            print(f"[HATA ] {no} -> yanit alinamadi: {hatalar[etiket]}")
+            return False
+        print(f"[{'GECTI' if kosul else 'KALDI'}] {no} -> {detay}")
+        return kosul
+
     a = sonuclar.get("aralik-tuzagi") or {}
-    ok1 = a.get("kar_payi_orani") == 1.89
-    print(f"[{'GECTI' if ok1 else 'KALDI'}] 1) oran 1.89, aralik degil "
-          f"-> {a.get('kar_payi_orani')!r}")
+    yaz("aralik-tuzagi", "1) oran 1.89, aralik degil",
+        a.get("kar_payi_orani") == 1.89, repr(a.get("kar_payi_orani")))
 
     b = sonuclar.get("gercek-aralik+negasyon") or {}
     kp = b.get("kar_payi_orani")
-    ok2 = isinstance(kp, dict) and kp.get("min") == 1.99
-    ok2b = (b.get("masraf_durumu") or {}).get("has_fee") is False
-    print(f"[{'GECTI' if ok2 else 'KALDI'}] 2a) gercek aralik -> {kp!r}")
-    print(f"[{'GECTI' if ok2b else 'KALDI'}] 2b) fiil negasyonu "
-          f"-> {b.get('masraf_durumu')!r}")
+    yaz("gercek-aralik+negasyon", "2a) gercek aralik",
+        isinstance(kp, dict) and kp.get("min") == 1.99, repr(kp))
+    yaz("gercek-aralik+negasyon", "2b) fiil negasyonu",
+        (b.get("masraf_durumu") or {}).get("has_fee") is False,
+        repr(b.get("masraf_durumu")))
 
     c = sonuclar.get("celiski") or {}
-    ok3 = (
+    yaz("celiski", "3) celiski sinyali",
         (c.get("masraf_durumu") or {}).get("has_fee") is False
-        and (c.get("tahsis_ucreti") or 0) > 0
-    )
-    print(f"[{'GECTI' if ok3 else 'KALDI'}] 3) celiski sinyali -> "
-          f"masraf={c.get('masraf_durumu')!r} "
-          f"tahsis={c.get('tahsis_ucreti')!r}")
+        and (c.get("tahsis_ucreti") or 0) > 0,
+        f"masraf={c.get('masraf_durumu')!r} tahsis={c.get('tahsis_ucreti')!r}")
+
+    print()
+    if "halusinasyon-testi" in hatalar:
+        print("!!! HALUSINASYON TESTI KOSULAMADI — yanit gelmedi.")
+        print("    Bu bir GECIS DEGILDIR. Sonuc bilinmiyor.")
+        return 1
 
     d = sonuclar.get("halusinasyon-testi") or {}
     uydurma = [k for k in FIELDS if d.get(k) is not None]
-    ok4 = not uydurma
-    print(f"[{'GECTI' if ok4 else 'KALDI'}] 4) HALUSINASYON: notr metinde "
-          f"uydurulan alan -> {uydurma or 'YOK'}")
-
-    print()
-    if ok4:
-        print("EN KRITIK TEST GECTI: model bilmedigini biliyor.")
-    else:
-        print("!!! DIKKAT: model notr metinde deger UYDURDU.")
-        print("    250 belgeye gecmeden once prompt sikilmalidir.")
+    if not uydurma:
+        print("[GECTI] 4) HALUSINASYON: notr metinde uydurulan alan YOK")
+        print("        Model bilmedigini biliyor.")
+        return 0
+    print(f"[KALDI] 4) HALUSINASYON: uydurulan alan -> {uydurma}")
+    print("        250 belgeye gecmeden once prompt sikilmalidir.")
+    return 1
 
 
 if __name__ == "__main__":
