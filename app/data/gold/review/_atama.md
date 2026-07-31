@@ -2,7 +2,7 @@
 
 > `scripts/to_review_csv.py` üretti. Elle düzenlemeyin — yeniden koşuda üzerine yazılır.
 
-- Toplam belge: **250**
+- Toplam belge: **243**
 - Kalibrasyon (herkes aynı): **20** belge
 - Çift anotasyon (A + B): **50** belge
 - Tam kapsama (12/12 alan karara bağlı): **100** belge
@@ -14,8 +14,8 @@
 |---|---|---|---|---:|
 | A | `round0_kalibrasyon_A.csv` | `round1_A.csv` | — | 910 |
 | B | `round0_kalibrasyon_B.csv` | `round1_B.csv` | — | 910 |
-| C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (90 belge) | 821 |
-| D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (90 belge) | 820 |
+| C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (87 belge) | 815 |
+| D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (86 belge) | 814 |
 
 ## Sıra ÖNEMLİ
 
@@ -33,8 +33,8 @@
 | `round0_kalibrasyon_D.csv` | 260 |
 | `round1_A.csv` | 650 |
 | `round1_B.csv` | 650 |
-| `round1_main_C.csv` | 561 |
-| `round1_main_D.csv` | 560 |
+| `round1_main_C.csv` | 555 |
+| `round1_main_D.csv` | 554 |
 
 Belge tam metinleri: `belgeler/<doc_id>.txt`
 

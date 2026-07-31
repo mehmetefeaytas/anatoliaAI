@@ -130,31 +130,105 @@ def read_raw_docs(raw_dir: str | Path, min_chars: int = DEFAULT_MIN_CHARS
     return docs
 
 
-def sample_docs(docs: list[RawDoc], limit: Optional[int], seed: int) -> list[RawDoc]:
-    """Bankalar arası dengeli, deterministik örnekleme.
+# §5.7'nin karşılaştırma kriterlerini besleyen, korpusta SEYREK alanlar.
+# 849 belgede: kar_payi_orani 54 · tahsis_ucreti 28 · vade_ay 337.
+NADIR_ALANLAR = ("kar_payi_orani", "tahsis_ucreti")
+ORTA_ALANLAR = ("vade_ay", "finansman_tutari")
 
-    Düz rastgele seçim, 40 belgeli bankayı 6 belgeli bankaya ezdirir ve gold
-    tek bankanın diline aşırı uyar. Banka bazında karıştırıp sırayla (round-robin)
-    toplamak her bankadan orantılı temsil sağlar; `seed` ile tekrar üretilebilir.
+
+def _katman(doc: RawDoc) -> int:
+    """Belgeyi değerine göre katmana ayırır (0 = en değerli).
+
+    Katman 0: kâr payı oranı veya tahsis ücreti içerir. Bunlar korpusun
+              yalnızca %6'sında var ve şartnamenin manşet karşılaştırmasını
+              (§5.7 "En Düşük Kâr Payı") besleyen tek kaynak.
+    Katman 1: vade veya finansman tutarı içerir.
+    Katman 2: kalanlar (indirim/puan/ödül kampanyaları, kurumsal sayfalar).
+    """
+    from src.extraction.rules.extract import extract_all
+
+    adlar = {f.field_name for f in extract_all(doc.text)}
+    if adlar & set(NADIR_ALANLAR):
+        return 0
+    if adlar & set(ORTA_ALANLAR):
+        return 1
+    return 2
+
+
+def sample_docs(docs: list[RawDoc], limit: Optional[int], seed: int) -> list[RawDoc]:
+    """KATMANLI + bankalar arası dengeli, deterministik örnekleme.
+
+    İki sorunu birden çözer:
+
+    1. **Düz rastgele seçim seyrek alanları kaçırır.** 849 belgenin yalnızca
+       54'ünde kâr payı oranı var. Rastgele 250 seçilirse yaklaşık 16'sı
+       gelir ve dört kişinin Cuma günkü emeği ağırlıkla alışveriş indirimi
+       anote etmeye gider — oysa %30'luk "Model Başarısı" kalemi §5.7'nin
+       karşılaştırma kriterlerine dayanıyor.
+       Çözüm: kâr payı / tahsis ücreti içeren belgeler ÖNCE alınır.
+
+    2. **Düz rastgele seçim büyük bankayı küçüğe ezdirir.** Her katmanın
+       içinde banka bazında round-robin yapılır, böylece gold tek bankanın
+       diline aşırı uymaz.
+
+    `seed` ile tekrar üretilebilir.
     """
     if limit is None or limit >= len(docs):
         return sorted(docs, key=lambda d: d.doc_id)
 
     rng = random.Random(seed)
-    by_bank: dict[str, list[RawDoc]] = {}
+    havuz: dict[int, list[RawDoc]] = {0: [], 1: [], 2: []}
     for doc in docs:
-        by_bank.setdefault(doc.bank_slug, []).append(doc)
-    for bucket in by_bank.values():
+        havuz[_katman(doc)].append(doc)
+
+    # KATMAN 2 İÇİN KOTA. Yalnız katman 0+1 alınırsa korpus tamamen
+    # finansman olur ve 8 sınıflı sınıflandırıcıyı değerlendirecek Kart /
+    # Alışveriş Puanı / Yeni Müşteri örneği KALMAZ. Şartname üç ürün
+    # kategorisini de (finansman, kart, yatırım) istiyor, bu yüzden
+    # kalanın ~%25'i katman 2'ye ayrılır ve KAMPANYA TÜRÜNE göre dengelenir.
+    kota2 = max(0, int(round((limit - len(havuz[0])) * 0.25)))
+
+    picked: list[RawDoc] = []
+    picked += _round_robin(havuz[0], limit - len(picked), rng,
+                           anahtar=lambda d: d.bank_slug)
+    picked += _round_robin(havuz[1], limit - len(picked) - kota2, rng,
+                           anahtar=lambda d: d.bank_slug)
+    # Katman 2 kampanya TÜRÜNE göre dengelenir (bankaya göre değil):
+    # buradaki amaç sınıf çeşitliliği.
+    picked += _round_robin(havuz[2], limit - len(picked), rng,
+                           anahtar=_kampanya_turu)
+    return sorted(picked, key=lambda d: d.doc_id)
+
+
+def _kampanya_turu(doc: RawDoc) -> str:
+    from src.extraction.ner.classifier import RuleHintClassifier
+
+    return RuleHintClassifier().classify(doc.text)[0] or "(sinifsiz)"
+
+
+def _round_robin(docs: list[RawDoc], n: int, rng, anahtar) -> list[RawDoc]:
+    """`anahtar` fonksiyonuna göre gruplayıp sırayla n belge toplar.
+
+    Round-robin, büyük grubun küçüğü ezmesini engeller: bankaya göre
+    çağrılırsa 90 belgeli banka 6 belgeliyi bastırmaz, kampanya türüne göre
+    çağrılırsa baskın tür diğer sınıfları silmez.
+    """
+    if n <= 0 or not docs:
+        return []
+    gruplar: dict[str, list[RawDoc]] = {}
+    for d in docs:
+        gruplar.setdefault(anahtar(d), []).append(d)
+    for bucket in gruplar.values():
         bucket.sort(key=lambda d: d.doc_id)
         rng.shuffle(bucket)
 
-    picked: list[RawDoc] = []
-    banks = sorted(by_bank)
-    while len(picked) < limit and any(by_bank[b] for b in banks):
-        for bank in banks:
-            if by_bank[bank] and len(picked) < limit:
-                picked.append(by_bank[bank].pop())
-    return sorted(picked, key=lambda d: d.doc_id)
+    out: list[RawDoc] = []
+    adlar = sorted(gruplar)
+    while len(out) < n and any(gruplar[a] for a in adlar):
+        for ad in adlar:
+            if gruplar[ad] and len(out) < n:
+                out.append(gruplar[ad].pop())
+    return out
 
 
 # --------------------------------------------------------------------------- #
