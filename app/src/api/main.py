@@ -158,6 +158,13 @@ class ApiRepository(Repository):
         self.conn = sqlite3.connect(path, check_same_thread=False)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(_SQLITE_SCHEMA)
+        # Göç ZORUNLU. Bu sınıf `Repository.__init__`'i çağırmıyor (bağlantıyı
+        # `check_same_thread=False` ile kendi açması gerekiyor), dolayısıyla
+        # `_migrate()` de atlanıyordu. Diskteki ESKİ bir demo DB'si açıldığında
+        # `CREATE TABLE IF NOT EXISTS` hiçbir şey yapmaz ve
+        # `span_start`/`span_end`/`confidence_source` sütunları eksik kalır —
+        # sonra her sorgu `no such column` ile düşerdi.
+        self._migrate()
         self.conn.commit()
         self.lock = threading.RLock()
 
@@ -332,15 +339,26 @@ def build_app():
                 d["canonical_value"] = None
         return rows
 
-    def _campaign_contradictions(campaign_id: int, text: str,
-                                 bank_slug: str) -> list[dict]:
+    def _campaign_contradictions(campaign_id: int, text: str, bank_slug: str,
+                                 scraped_at: Optional[str] = None) -> list[dict]:
+        """Bir kampanyanın iç çelişkileri.
+
+        `scraped_at` verilirse zaman bağımlı kural da koşar: *"kampanya
+        süresi dolmuş ama sayfa hâlâ yayında ve bunu söylemiyor"*. Korpusta
+        doğrulanmış 6 çelişkinin **5'i** bu kuraldan geliyor; `as_of`
+        geçilmediği için bu uç noktada tamamen kapalıydı.
+
+        Duvar saati değil `scraped_at` kullanılır: iddia "biz topladığımızda
+        süresi çoktan dolmuştu" biçiminde olmalı. Böylece sonuç zamanla
+        sessizce değişmez ve demo yeniden-üretilebilir kalır (CLAUDE.md §11).
+        """
         cached = _contra_cache.get(campaign_id)
         if cached is not None:
             return cached
         try:
             c = build_campaign(text, bank_slug=bank_slug)
             out = [{"kind": k.kind, "detail": k.detail, "fields": k.fields}
-                   for k in detect_contradictions(c)]
+                   for k in detect_contradictions(c, as_of=scraped_at)]
         except Exception:  # pragma: no cover - çıkarım hatası UI'yı düşürmesin
             out = []
         _contra_cache[campaign_id] = out
@@ -427,8 +445,8 @@ def build_app():
             "text": text,
             "text_length": len(text),
             "fields": fields_out,
-            "contradictions": _campaign_contradictions(campaign_id, text,
-                                                       camp["bank"]),
+            "contradictions": _campaign_contradictions(
+                campaign_id, text, camp["bank"], camp.get("scraped_at")),
         }
 
     @app.get("/compare")
@@ -525,7 +543,8 @@ def build_app():
                 "sort_key": x.sort_key,
                 "rank": row_rank,
                 "contradiction_count": len(_campaign_contradictions(
-                    src["campaign_id"], text, src["bank"])),
+                    src["campaign_id"], text, src["bank"],
+                    src.get("scraped_at"))),
             })
         return out
 
@@ -638,7 +657,8 @@ def build_app():
         out = []
         for camp in repo.all_campaigns():
             text = camp.get("raw_text", "") or ""
-            for k in _campaign_contradictions(camp["id"], text, camp["bank"]):
+            for k in _campaign_contradictions(camp["id"], text, camp["bank"],
+                                              camp.get("scraped_at")):
                 out.append({
                     "bank": camp["bank"],
                     "bank_name": camp.get("bank_name"),

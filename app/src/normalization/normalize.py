@@ -11,6 +11,7 @@ döndürür — ASLA değer uydurmaz (halüsinasyon yasağı).
 from __future__ import annotations
 
 import re
+from datetime import date as _date
 from typing import Optional, Union
 
 from ..preprocessing.clean import tr_fold, tr_fold_ascii
@@ -231,9 +232,32 @@ def normalize_date(text: str) -> Optional[str]:
 
 
 def _iso(y: int, mo: int, d: int) -> Optional[str]:
-    if 1 <= mo <= 12 and 1 <= d <= 31:
-        return f"{y:04d}-{mo:02d}-{d:02d}"
-    return None
+    """Takvimde GERÇEKTEN var olan bir tarihse ISO dizesi, değilse None.
+
+    Eskiden yalnız `1 <= d <= 31` bakılıyordu; ay uzunluğu ve artık yıl
+    denetlenmiyordu. Sonuç, sözdizimsel olarak geçerli görünen ama takvimde
+    var olmayan ISO tarihleriydi:
+
+        "31.06.2026" -> "2026-06-31"   (Haziran 30 gün)
+        "30.02.2026" -> "2026-02-30"   (Şubat asla 30 değil)
+        "29.02.2025" -> "2025-02-29"   (2025 artık yıl değil)
+
+    Bu sessizdi: hiçbir şey çökmüyordu, dize ISO gibi görünüyordu. Ama
+    tarih ARİTMETİĞİ yapan her şey bozulur — özellikle `contradiction`
+    modülünün "kampanya süresi dolmuş ama hâlâ yayında" kuralı, ki tam da
+    bu tarihleri karşılaştırıyor.
+
+    `datetime.date` ay uzunluğunu ve artık yılı zaten doğru bilir; kendi
+    takvim mantığımızı yazmak yerine ona soruyoruz.
+
+    Geçersiz tarihte **None** döner (tahmin edilmez): banka "31 Haziran"
+    yazdıysa 30 Haziran mı 1 Temmuz mu kastettiğini bilemeyiz ve
+    CLAUDE.md §19 gereği uydurmayız.
+    """
+    try:
+        return _date(y, mo, d).isoformat()
+    except ValueError:
+        return None
 
 
 # --------------------------------------------------------------------------- #

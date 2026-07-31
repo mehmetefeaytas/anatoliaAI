@@ -118,7 +118,7 @@ class Repository:
         """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için)."""
         rows = self.conn.execute(
             "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
-            "c.campaign_type, c.source_url, f.canonical_value, f.raw_value, "
+            "c.campaign_type, c.source_url, c.scraped_at, f.canonical_value, f.raw_value, "
             "f.confidence, f.source_span, f.extractor, "
             "f.span_start, f.span_end, f.confidence_source "
             "FROM extracted_fields f "
@@ -206,7 +206,8 @@ class Repository:
     def all_campaigns(self) -> list[dict]:
         rows = self.conn.execute(
             "SELECT c.id, b.slug AS bank, b.name AS bank_name, c.campaign_type, "
-            "c.raw_text, c.source_url FROM campaigns c JOIN banks b ON b.id=c.bank_id"
+            "c.raw_text, c.source_url, c.scraped_at "
+            "FROM campaigns c JOIN banks b ON b.id=c.bank_id"
         ).fetchall()
         return [dict(r) for r in rows]
 
