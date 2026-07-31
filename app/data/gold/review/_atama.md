@@ -14,8 +14,8 @@
 |---|---|---|---|---:|
 | A | `round0_kalibrasyon_A.csv` | `round1_A.csv` | — | 910 |
 | B | `round0_kalibrasyon_B.csv` | `round1_B.csv` | — | 910 |
-| C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (87 belge) | 815 |
-| D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (86 belge) | 814 |
+| C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (86 belge) | 801 |
+| D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (87 belge) | 801 |
 
 ## Sıra ÖNEMLİ
 
@@ -33,8 +33,8 @@
 | `round0_kalibrasyon_D.csv` | 260 |
 | `round1_A.csv` | 650 |
 | `round1_B.csv` | 650 |
-| `round1_main_C.csv` | 555 |
-| `round1_main_D.csv` | 554 |
+| `round1_main_C.csv` | 541 |
+| `round1_main_D.csv` | 541 |
 
 Belge tam metinleri: `belgeler/<doc_id>.txt`
 

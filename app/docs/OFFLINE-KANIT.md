@@ -304,10 +304,12 @@ docker buildx imagetools inspect pgvector/pgvector:pg16 | grep Digest
 `Qwen3-8B-Base → Qwen3-8B → Trendyol-LLM-8B-T1`. Zincirde Llama/Gemma **yok**,
 ticari-olmayan kısıt **yok** → §5.10 uyumlu.
 
-> ⚠️ `docs/model-license-audit.md` (2026-07-27 tarihli, **başka bir kalemin
-> sahipliğinde**) bu modeli hâlâ `⛔ BLOKE` olarak listeliyor. Belge ile bu
-> doğrulama **çelişiyor**; ilgili kalem tarafından güncellenmesi gerekiyor. Bu
-> belge o dosyayı düzenlemedi, yalnızca çelişkiyi kayda geçiriyor.
+> ℹ️ Bu bölüm yazılırken `docs/model-license-audit.md` hâlâ 2026-07-27 tarihli
+> sürümdeydi ve modeli `⛔ BLOKE` listeliyordu; burada bir çelişki kayda
+> geçirilmişti. **Çelişki aynı gün kapatıldı** (commit `009c89e`): denetim
+> belgesi 2026-07-31'de güncellendi, model `✅` oldu ve zincir kanıtı
+> (`license: Apache-2.0`, *"free for commercial and research use"*,
+> `base_model: Qwen/Qwen3-8B`) belgeye alıntılandı. İki belge artık uyumlu.
 
 ---
 
