@@ -31,11 +31,22 @@ CREATE TABLE IF NOT EXISTS campaigns (
 CREATE TABLE IF NOT EXISTS extracted_fields (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     campaign_id INTEGER, field_name TEXT NOT NULL, raw_value TEXT,
-    canonical_value TEXT, confidence REAL, source_span TEXT, extractor TEXT
+    canonical_value TEXT, confidence REAL, source_span TEXT, extractor TEXT,
+    span_start INTEGER, span_end INTEGER, confidence_source TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_fields_campaign ON extracted_fields(campaign_id);
 CREATE INDEX IF NOT EXISTS idx_fields_name ON extracted_fields(field_name);
 """
+
+# Şemaya sonradan eklenen sütunlar. Diskteki eski bir demo DB'si açıldığında
+# CREATE TABLE IF NOT EXISTS hiçbir şey yapmaz ve sütunlar eksik kalır; bu
+# liste onları tamamlar. (sqlite ADD COLUMN idempotent değil, bu yüzden
+# PRAGMA ile kontrol ediyoruz.)
+_SONRADAN_EKLENEN = (
+    ("extracted_fields", "span_start", "INTEGER"),
+    ("extracted_fields", "span_end", "INTEGER"),
+    ("extracted_fields", "confidence_source", "TEXT"),
+)
 
 
 class Repository:
@@ -45,7 +56,17 @@ class Repository:
         self.conn = sqlite3.connect(path)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(_SQLITE_SCHEMA)
+        self._migrate()
         self.conn.commit()
+
+    def _migrate(self) -> None:
+        """Eski bir DB dosyasına sonradan eklenen sütunları tamamlar."""
+        for tablo, sutun, tip in _SONRADAN_EKLENEN:
+            mevcut = {r["name"] for r in
+                      self.conn.execute(f"PRAGMA table_info({tablo})")}
+            if sutun not in mevcut:
+                self.conn.execute(
+                    f"ALTER TABLE {tablo} ADD COLUMN {sutun} {tip}")
 
     # --- bankalar ---
     def upsert_bank(self, name: str, slug: str, website_url: Optional[str] = None,
@@ -70,13 +91,20 @@ class Repository:
             (bank_id, c.raw_text, clean_text, c.source_url, scraped_at, c.campaign_type))
         cid = cur.lastrowid
         for f in c.fields:
+            # span_start/end ve confidence_source burada YAZILMAZSA, projenin
+            # en özgün iddiası (her değer bir karakter aralığına bağlı) veri
+            # tabanı sınırında kaybolur ve arayüz offset'i tahmin etmek
+            # zorunda kalır. Bu sütunlar 31 Tem'de tam bu sebeple eklendi.
             self.conn.execute(
                 "INSERT INTO extracted_fields(campaign_id, field_name, raw_value, "
-                "canonical_value, confidence, source_span, extractor) "
-                "VALUES (?,?,?,?,?,?,?)",
+                "canonical_value, confidence, source_span, extractor, "
+                "span_start, span_end, confidence_source) "
+                "VALUES (?,?,?,?,?,?,?,?,?,?)",
                 (cid, f.field_name, f.raw_value,
                  json.dumps(f.canonical_value, ensure_ascii=False),
-                 f.confidence, f.source_span, f.extractor.value))
+                 f.confidence, f.source_span, f.extractor.value,
+                 f.span_start, f.span_end,
+                 getattr(f, "confidence_source", None)))
         self.conn.commit()
         return cid
 
@@ -90,7 +118,9 @@ class Repository:
         """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için)."""
         rows = self.conn.execute(
             "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
-            "c.campaign_type, f.canonical_value, f.confidence, f.source_span "
+            "c.campaign_type, c.source_url, f.canonical_value, f.raw_value, "
+            "f.confidence, f.source_span, f.extractor, "
+            "f.span_start, f.span_end, f.confidence_source "
             "FROM extracted_fields f "
             "JOIN campaigns c ON c.id=f.campaign_id "
             "JOIN banks b ON b.id=c.bank_id "
@@ -101,6 +131,42 @@ class Repository:
             d["canonical_value"] = json.loads(d["canonical_value"])
             out.append(d)
         return out
+
+    def campaign_text(self, campaign_id: int) -> Optional[dict]:
+        """Bir kampanyanın metnini ve alanlarını offset'leriyle döndürür.
+
+        Kaynak-span vurgulaması bunu kullanır: `clean_text` span offset'lerinin
+        ölçüldüğü metindir, `raw_text` değil. İkisini karıştırmak offset'leri
+        kaydırır — bu yüzden hangisinin kullanıldığı yanıtta açıkça belirtilir.
+        """
+        row = self.conn.execute(
+            "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
+            "c.campaign_type, b.slug AS bank, b.name AS bank_name "
+            "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=?",
+            (campaign_id,)).fetchone()
+        if row is None:
+            return None
+        d = dict(row)
+        d["span_reference"] = "clean_text" if d.get("clean_text") else "raw_text"
+        d["text"] = d.get("clean_text") or d.get("raw_text") or ""
+        alanlar = self.conn.execute(
+            "SELECT field_name, raw_value, canonical_value, confidence, "
+            "source_span, extractor, span_start, span_end, confidence_source "
+            "FROM extracted_fields WHERE campaign_id=? ORDER BY field_name",
+            (campaign_id,)).fetchall()
+        d["fields"] = []
+        for a in alanlar:
+            alan = dict(a)
+            alan["canonical_value"] = json.loads(alan["canonical_value"])
+            # Offset'i metinle karşılaştır — saklanan değer bozuksa arayüz
+            # yanlış yeri vurgulamaktansa vurgulamamalı.
+            s, e = alan.get("span_start"), alan.get("span_end")
+            alan["span_verified"] = bool(
+                s is not None and e is not None
+                and 0 <= s <= e <= len(d["text"])
+                and d["text"][s:e] == (alan.get("raw_value") or ""))
+            d["fields"].append(alan)
+        return d
 
     def all_campaigns(self) -> list[dict]:
         rows = self.conn.execute(

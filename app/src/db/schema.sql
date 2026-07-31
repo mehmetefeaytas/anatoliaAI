@@ -30,7 +30,18 @@ CREATE TABLE IF NOT EXISTS extracted_fields (
     canonical_value TEXT,          -- JSON metni (oran=float, para=obj, aralık=obj)
     confidence      REAL,
     source_span     TEXT,
-    extractor       TEXT CHECK (extractor IN ('rule','ner','llm'))
+    extractor       TEXT CHECK (extractor IN ('rule','ner','llm')),
+    -- Kaynak izlenebilirliği: clean_text içindeki karakter aralığı.
+    -- Bu iki sütun olmadan arayüz "bu değer metnin neresinden geldi"
+    -- sorusunu cevaplayamaz; halüsinasyon yapmadığımızı ispatlayamayız.
+    -- ExtractedField.verify_span() bunu clean_text ile karşılaştırıp
+    -- kendi kendini denetler (src/schemas.py).
+    span_start      INTEGER,
+    span_end        INTEGER,
+    -- Güvenin NEREDEN geldiği: 'constant' | 'evidence' | 'logprob' | ...
+    -- Kalibrasyon (ECE) bu ayrım olmadan yapılamaz: sabit 0.95 ile kanıt
+    -- tabanlı skoru aynı kovaya koymak güvenilirlik diyagramını bozar.
+    confidence_source TEXT
 );
 
 CREATE TABLE IF NOT EXISTS embeddings (
