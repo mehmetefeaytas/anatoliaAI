@@ -168,6 +168,41 @@ class Repository:
             d["fields"].append(alan)
         return d
 
+    # --- özet / kapsam ölçümü ---
+    def counts(self) -> dict[str, int]:
+        """Banka / kampanya / alan sayıları (doldurma betiğinin özet raporu için)."""
+        def one(sql: str) -> int:
+            return int(self.conn.execute(sql).fetchone()[0])
+
+        return {
+            "banks": one("SELECT COUNT(*) FROM banks"),
+            "banks_with_campaigns":
+                one("SELECT COUNT(DISTINCT bank_id) FROM campaigns"),
+            "campaigns": one("SELECT COUNT(*) FROM campaigns"),
+            "fields": one("SELECT COUNT(*) FROM extracted_fields"),
+            "campaigns_with_fields":
+                one("SELECT COUNT(DISTINCT campaign_id) FROM extracted_fields"),
+        }
+
+    def field_coverage(self) -> dict[str, int]:
+        """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı.
+
+        Satır değil kampanya sayılır: aynı kampanyada bir alan (şu an olmasa da)
+        birden çok kez yazılabilirse "kapsam" yüzdesi 100'ü aşardı.
+        """
+        rows = self.conn.execute(
+            "SELECT field_name, COUNT(DISTINCT campaign_id) AS n "
+            "FROM extracted_fields GROUP BY field_name ORDER BY n DESC").fetchall()
+        return {r["field_name"]: int(r["n"]) for r in rows}
+
+    def campaigns_per_bank(self) -> dict[str, int]:
+        """Banka slug → kampanya sayısı (belge çıkmayan banka 0 ile görünür)."""
+        rows = self.conn.execute(
+            "SELECT b.slug AS slug, COUNT(c.id) AS n FROM banks b "
+            "LEFT JOIN campaigns c ON c.bank_id=b.id "
+            "GROUP BY b.slug ORDER BY n DESC, b.slug").fetchall()
+        return {r["slug"]: int(r["n"]) for r in rows}
+
     def all_campaigns(self) -> list[dict]:
         rows = self.conn.execute(
             "SELECT c.id, b.slug AS bank, b.name AS bank_name, c.campaign_type, "
