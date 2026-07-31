@@ -34,6 +34,29 @@ hangi bankanın hangi belgesinin bozuk olduğunu söyleyen açık bir hata.
 karakter offset'lerini KAYDIRIR, yani `span_start`/`span_end` doğrulaması
 bozulabilir. Bu yüzden varsayılan değildir.
 
+## Okumalar işlemi AÇIK BIRAKMAZ (`_read` bağlam yöneticisi)
+
+Bağlantı `autocommit=False` ile açılır — `insert_campaign()` kampanyayı ve
+alanlarını TEK işlemde yazabilmek için buna muhtaç. Bunun bedeli şudur: psycopg
+ilk sorguda örtük bir işlem başlatır ve `commit()`/`rollback()` gelene kadar
+kapatmaz. Salt-okunur metotlar (`query_fields`, `campaign_text`, `counts`, ...)
+commit etmediği için bağlantı her okumadan sonra **`idle in transaction`**
+kalıyordu.
+
+Bu, uzun ömürlü bir API sunucusunda gerçek bir arızadır ve 31 Tem 2026'da
+ÖLÇÜLDÜ: `tests/test_api_backend.py` Postgres'e bağlı bir uygulama kurup
+`/banks` çağırdıktan sonra şema temizliği (`DROP TABLE`) **sonsuza kadar
+bloklandı** — `pg_stat_activity` beklenen tabloyu gösterdi:
+
+    pid 255 | idle in transaction | ClientRead | SELECT b.slug AS bank, ...
+    pid 256 | active | Lock/relation | DROP TABLE IF EXISTS embeddings, ...
+
+Açık kalan işlem ACCESS SHARE kilitlerini tutar; DDL ve `VACUUM` bloklanır,
+tablolar şişer. Çözüm: her salt-okunur sorgu `_read()` ile koşar ve sonunda
+`rollback()` yapar (okuma işleminde geri alınacak bir şey yoktur; amaç işlemi
+KAPATMAK). `autocommit=True`'ya geçmek yanlış çözüm olurdu: `insert_campaign()`
+kampanya + alan yazımının atomikliğini kaybederdi.
+
 ## Bilinen ve KASITLI davranış farkı: `scraped_at`
 
 SQLite yolu provenance damgasını (`utc_now_iso()` → '2026-07-31T09:00:00+00:00')
@@ -48,6 +71,8 @@ from __future__ import annotations
 
 import json
 import logging
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Optional
 
@@ -134,6 +159,20 @@ class PostgresRepository:
         if ensure_schema:
             self.ensure_schema(schema_path or SCHEMA_PATH)
 
+    @contextmanager
+    def _read(self) -> Iterator[Any]:
+        """Salt-okunur sorgu için cursor — çıkışta işlemi KAPATIR.
+
+        `rollback()` bir okumada hiçbir şeyi geri almaz; tek işi psycopg'nin
+        örtük olarak başlattığı işlemi bitirip kilitleri bırakmaktır. Bkz. modül
+        başlığı "Okumalar işlemi AÇIK BIRAKMAZ" (ölçülmüş `DROP TABLE` kilidi).
+        """
+        try:
+            with self.conn.cursor() as cur:
+                yield cur
+        finally:
+            self.conn.rollback()
+
     def _text(self, value: Optional[str], alan: str,
               baglam: str) -> Optional[str]:
         """Metni NUL baytına karşı denetler (bkz. modül başlığı)."""
@@ -185,6 +224,10 @@ class PostgresRepository:
             cur.execute("SELECT id FROM banks WHERE slug=%s", (slug,))
             row = cur.fetchone()
             if row:
+                # Banka zaten var: hiçbir şey yazılmadı ama SELECT bir işlem
+                # başlattı. Kapatmadan dönmek bağlantıyı `idle in transaction`
+                # bırakırdı (bkz. `_read` ve modül başlığı).
+                self.conn.rollback()
                 return int(row["id"])
             cur.execute(
                 "INSERT INTO banks(name, slug, website_url, bddk_active) "
@@ -193,6 +236,21 @@ class PostgresRepository:
             new_id = int(cur.fetchone()["id"])
         self.conn.commit()
         return new_id
+
+    def all_banks(self) -> list[dict]:
+        """Banka kataloğu: slug, ad, site, BDDK durumu (`GET /banks`).
+
+        `bddk_active` açıkça `bool()`'a çevrilir — SQLite yolu aynı alanı
+        INTEGER (0/1) saklar ve orada da bool'a çevrilir; parite bu iki
+        dönüşümle sağlanır (`1` vs `true` farkı JSON'a sızmaz).
+        """
+        with self._read() as cur:
+            cur.execute("SELECT slug, name, website_url, bddk_active FROM banks "
+                        "ORDER BY slug")
+            rows = cur.fetchall()
+        return [{"slug": r["slug"], "name": r["name"],
+                 "website_url": r["website_url"],
+                 "bddk_active": bool(r["bddk_active"])} for r in rows]
 
     # --- kampanya + alanlar ---
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
@@ -232,7 +290,7 @@ class PostgresRepository:
         return cid
 
     def field_value(self, campaign_id: int, field_name: str) -> Any:
-        with self.conn.cursor() as cur:
+        with self._read() as cur:
             cur.execute(
                 "SELECT canonical_value FROM extracted_fields "
                 "WHERE campaign_id=%s AND field_name=%s LIMIT 1",
@@ -242,7 +300,7 @@ class PostgresRepository:
 
     def query_fields(self, field_name: str) -> list[dict]:
         """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için)."""
-        with self.conn.cursor() as cur:
+        with self._read() as cur:
             cur.execute(
                 "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
                 "c.campaign_type, c.source_url, "
@@ -265,11 +323,14 @@ class PostgresRepository:
         """Bir kampanyanın metnini ve alanlarını offset'leriyle döndürür.
 
         SQLite yoluyla birebir aynı sözlüğü üretir; ortak mantık
-        `base.finalize_campaign_text()`.
+        `base.finalize_campaign_text()`. `scraped_at` burada da ISO-8601 UTC
+        metnine çevrilir (`_SCRAPED_AT_ISO`) — çelişki tespitinin `as_of`
+        girdisi iki backend'de aynı biçimde gelmek zorunda.
         """
-        with self.conn.cursor() as cur:
+        with self._read() as cur:
             cur.execute(
                 "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
+                f"{_SCRAPED_AT_ISO} AS scraped_at, "
                 "c.campaign_type, b.slug AS bank, b.name AS bank_name "
                 "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=%s",
                 (campaign_id,))
@@ -288,7 +349,7 @@ class PostgresRepository:
     def counts(self) -> dict[str, int]:
         """Banka / kampanya / alan sayıları."""
         def one(sql: str) -> int:
-            with self.conn.cursor() as cur:
+            with self._read() as cur:
                 cur.execute(sql)
                 return int(next(iter(cur.fetchone().values())))
 
@@ -304,7 +365,7 @@ class PostgresRepository:
 
     def field_coverage(self) -> dict[str, int]:
         """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı (satır değil)."""
-        with self.conn.cursor() as cur:
+        with self._read() as cur:
             cur.execute(
                 "SELECT field_name, COUNT(DISTINCT campaign_id) AS n "
                 "FROM extracted_fields GROUP BY field_name "
@@ -314,7 +375,7 @@ class PostgresRepository:
 
     def campaigns_per_bank(self) -> dict[str, int]:
         """Banka slug → kampanya sayısı (belge çıkmayan banka 0 ile görünür)."""
-        with self.conn.cursor() as cur:
+        with self._read() as cur:
             cur.execute(
                 "SELECT b.slug AS slug, COUNT(c.id) AS n FROM banks b "
                 "LEFT JOIN campaigns c ON c.bank_id=b.id "
@@ -323,7 +384,7 @@ class PostgresRepository:
         return {r["slug"]: int(r["n"]) for r in rows}
 
     def all_campaigns(self) -> list[dict]:
-        with self.conn.cursor() as cur:
+        with self._read() as cur:
             cur.execute(
                 "SELECT c.id, b.slug AS bank, b.name AS bank_name, "
                 "c.campaign_type, c.raw_text, c.source_url, "

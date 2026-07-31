@@ -33,6 +33,23 @@
 #   docker compose --profile postgres up -d postgres
 #   docker compose --profile postgres run --rm db-check
 #
+# Bu profil AYRICA ikinci bir API konteyneri (`api-postgres`, 8010) açar.
+# Neden ayrı servis: Compose aynı servisin ortam değişkenini profile göre
+# değiştiremez. İki uç yan yana koştuğu için "API veri tabanından bağımsız"
+# iddiası ÖLÇÜLEBİLİR hale gelir:
+#
+#   curl -s localhost:8000/health   ->  {"backend":"sqlite",...}
+#   curl -s localhost:8010/health   ->  {"backend":"postgres",...}
+#   diff <(curl -s localhost:8000/banks) <(curl -s localhost:8010/banks)
+#
+# DİKKAT — korpus asimetrisi: `api` önceden doldurulmuş `data/demo.db`'den
+# 849 belge okur. `api-postgres` BOŞ bir Postgres bulursa fixture'lardan
+# tohumlar, yani **3 belge** görür (`repo.counts()["campaigns"] == 0` koşulu).
+# `data/demo.db` bir SQLite dosyasıdır; Postgres yolu onu okuyamaz. 849 belgeyi
+# Postgres'e taşıyan bir betik repoda YOK — bu iş elle yapıldı
+# (docs/veri-katmani.md §5.2). Sayıların farklı olması bir hata değil, kapsam
+# farkıdır; ama sessiz kalmasın diye burada yazılıdır.
+#
 # Gömme üretimi (bge-m3 ağırlığı GEREKİR, ince API imajında yoktur —
 # geliştirme ortamında koşturun):
 #
@@ -152,10 +169,16 @@ services:
       # belgelik korpusu ATAR ve fixture'lara düşer; jüri demoda ikinci kez
       # yeniden başlatırsa farklı bir sistem görürdü.
       DATABASE_PATH: data/demo.db
-      # DATABASE_URL: Postgres yolunu açar (boşsa SQLite). Şu an BİLEREK boş —
-      # `src/api/main.py` henüz `create_repository()` fabrikasını kullanmıyor
-      # (bkz. docs/veri-katmani.md "API bağlanma noktası"). Burada dolu bir
-      # değer bırakmak, kodun okumadığı bir ayarı ilan etmek olurdu.
+      # DATABASE_URL Postgres yolunu açar (boşsa SQLite). `src/api/main.py`
+      # ARTIK `create_repository()` fabrikasını kullanıyor, yani bu değişken
+      # gerçekten OKUNUYOR — 31 Tem 2026'ya kadar okunmuyordu ve bu yüzden
+      # burada ilan edilmiyordu.
+      #
+      # Varsayılan BOŞ: jüri demosu bir veritabanı sunucusu beklemeden açılmalı.
+      # `${DATABASE_URL:-}` biçimi kabuktan/`.env`'den geçirmeye izin verir ama
+      # varsayılanı değiştirmez. Postgres'e bağlı API için `--profile postgres`
+      # ile gelen `api-postgres` servisine bakın.
+      DATABASE_URL: ${DATABASE_URL:-}
       BANKS_CONFIG: config/banks.yaml
       RAW_DIR: data/raw
       LLM_BACKEND: ""                    # "vllm"/"ollama" ile aktifleştir
@@ -166,9 +189,39 @@ services:
       RAG_RETRIEVER: keyword
     ports:
       - "8000:8000"
-    # `depends_on: postgres` KALDIRILDI: API Postgres'e bağlanmıyor, beklemesi
-    # için de bir sebep yok. Bekletmek, kullanılmayan bir bağımlılığı
-    # kullanılıyormuş gibi gösteriyordu.
+    # `depends_on: postgres` YOK ve OLMAMALI: varsayılan profilde `api` SQLite
+    # ile koşar, Postgres hiç ayağa kalkmaz. Bekletmek, kullanılmayan bir
+    # bağımlılığı kullanılıyormuş gibi gösterirdi. Postgres'i BEKLEYEN uygulama
+    # ayrı bir servistir (`api-postgres`) ve orada `depends_on` gerçekten yük
+    # taşır.
+
+  api-postgres:
+    # AYNI imaj, AYNI kod — yalnız `DATABASE_URL` dolu.
+    #
+    #   docker compose --profile postgres up -d postgres api-postgres
+    #   curl -s localhost:8010/health   -> {"backend":"postgres",...}
+    #
+    # Varsayılan profilde AYAĞA KALKMAZ (`profiles`), yani jüri demosu
+    # etkilenmez. Port 8010 bilinçli: 8000 varsayılan `api`'nin, 8001 vLLM'in.
+    build: { context: ., dockerfile: Dockerfile.api }
+    profiles: ["postgres"]
+    environment:
+      # Tek fark bu satır. `postgres` servis adı Compose ağında çözülür.
+      DATABASE_URL: postgresql://anatolia:anatolia@postgres:5432/anatolia
+      # DATABASE_PATH bilerek YOK: `DATABASE_URL` dolu olduğunda
+      # `create_repository()` SQLite yolunu hiç değerlendirmez. Buraya bir
+      # değer yazmak, okunmayan bir ayarı ilan etmek olurdu.
+      BANKS_CONFIG: config/banks.yaml
+      RAW_DIR: data/raw
+      LLM_BACKEND: ""
+      VLLM_URL: http://vllm:8000
+      OLLAMA_URL: http://ollama:11434
+      RAG_RETRIEVER: keyword
+    ports:
+      - "8010:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   web:
     build: { context: ./web, dockerfile: Dockerfile }

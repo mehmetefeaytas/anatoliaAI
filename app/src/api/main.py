@@ -15,54 +15,64 @@ Uçlar:
   POST /extract         {"text": "...", "bank": "..."}   (tek metin canlı çıkarım)
   GET  /contradictions
 
-Veri kaynağı: önceden doldurulmuş DB (demo stratejisi). Uygulama açılışında
-fixture'lardan in-memory DB kurulur; DATABASE_PATH verilirse kalıcı SQLite.
+## Veri kaynağı: HAM SQL DEĞİL, depo sözleşmesi (`src/db/base.py`)
+
+Bu modül `src/db/factory.create_repository()` ile depo açar:
+
+    DATABASE_URL dolu -> PostgresRepository   (üretim / pgvector yolu)
+    DATABASE_URL boş  -> Repository(DATABASE_PATH)  (offline demo / test yolu)
+
+**31 Tem 2026'ya kadar API bunu yapmıyordu.** `Repository(DATABASE_PATH)`
+doğrudan kuruluyordu, yani `DATABASE_URL` verilse bile okunmuyordu: mimari
+diyagramda Postgres vardı, çalışan sistemde yoktu. Bağlamanın önündeki gerçek
+engel "tek satır" değildi — bu dosya `repo.rows(<ham SQL>)` kaçış kapısını
+**beş yerde** kullanıyordu ve o SQL'ler `?` yer tutucusu taşıyordu (SQLite
+lehçesi). `psycopg` `%s` bekler; Postgres'te her uç `ProgrammingError` ile
+düşerdi. Beş çağrının hepsi sözleşme metotlarına çevrildi (`campaign_text`,
+`query_fields`, `all_banks`, `all_campaigns`) ve `rows()` kaçış kapısı
+KALDIRILDI. Kural: bu dosyada SQL yazılmaz; eksik bir sorgu varsa
+`RepositoryProtocol`'e metot eklenir ve İKİ backend'de de uygulanır.
 
 ## Kaynak-span (offset) — birincil yol DB, yedek yol yeniden hesaplama
 
 `ExtractedField` hem `source_span` (±40 karakterlik pencere metni) hem
-`span_start`/`span_end` (kesin karakter offset'i) taşır (`src/schemas.py`).
+`span_start`/`span_end` (kesin karakter offset'i) taşır (`src/schemas.py`) ve
+31 Tem 2026 itibarıyla ikisi de veri tabanında SAKLANIYOR
+(`extracted_fields.span_start` / `span_end` / `confidence_source`).
 
-**31 Tem 2026 itibarıyla offsetler veri tabanında SAKLANIYOR**
-(`extracted_fields.span_start` / `span_end` / `confidence_source`;
-bkz. `src/db/schema.sql` ve `repository.campaign_text()`). Öncesinde bu
-sütunlar yoktu ve offsetler DB sınırında sessizce düşüyordu — projenin
-"her değer bir karakter aralığına bağlı" iddiası kalıcılık katmanında
-kayboluyordu.
+Bu modül eskiden saklanan offset'i HİÇ OKUMUYORDU: `span_info()`'nun yedek
+yolunu (`locate_span`) her alan için tek yol olarak koşturuyordu. Ölçüm
+(`data/demo.db`, 849 belge / 2204 alan): saklanan offsetlerin **2204'ü de
+doğrulanıyor**, yeniden hesaplama bunların **73'ünde farklı bir yer**
+gösteriyordu — çünkü `str.find` aynı ham değerin ilk geçtiği yeri bulur,
+çıkarımın geldiği yeri değil. Yani arayüz alanların ~%3'ünde YANLIŞ yeri
+boyuyordu. Artık saklanan offset birincil, yeniden hesaplama yedektir
+(`span_info()`); yedek yol eski kayıtlar ve offset üretmeyen katmanlar için
+durur:
 
-Aşağıdaki yeniden hesaplama artık **yedek yoldur**: saklanan offset yoksa
-(eski kayıt, ya da offset üretmeyen bir çıkarım katmanı) devreye girer ve
-saklanan iki alandan **deterministik** biçimde geri kazanır:
-
-  `source_span` = `raw_text[a:b].strip()`  → yani raw_text'in bitişik bir alt
-  dizesidir, `str.find` ile güvenilir biçimde bulunur. `raw_value` de bu
-  pencerenin içinde aranır. Sonuç her zaman `raw_text[start:end] == hedef`
+  `source_span` metnin bitişik bir alt dizesidir, `str.find` ile bulunur;
+  `raw_value` pencere içinde aranır. Sonuç her zaman `text[start:end] == hedef`
   eşitliğiyle **doğrulanır** (`span_verified`), pencere metni iki kez geçiyorsa
   `span_ambiguous` ile işaretlenir. Bulunamazsa offset `null` döner —
   uydurma yok (CLAUDE.md §21).
 
-Bu yöntem katmandan bağımsızdır (kural/ner/llm hepsi için çalışır) ve yeniden
-çıkarım maliyeti yoktur.
-
-`confidence_source` ise saklanan veriden türetilemez (DB'de sütunu yok, kanıt
-sinyali de yok). Bu yüzden kampanya başına **bir kez** kural katmanı yeniden
-koşturulup (`_rule_conf_sources`) alan adı + ham değer eşleşmesi üzerinden
-okunur; eşleşmezse `null` döner. `POST /extract` canlı çıkarım yaptığı için bu
-alanı doğrudan gerçek değeriyle verir.
+`confidence_source` da artık DB'den okunur. Eskiden "DB'de sütunu yok"
+gerekçesiyle kampanya başına kural katmanı YENİDEN KOŞTURULUYOR ve alan adı +
+ham değer eşleşmesiyle geri kazanılıyordu; sütun 31 Tem'de eklendi ve
+`data/demo.db`'de 2204/2204 alan dolu. Yeniden çıkarım hem gereksiz maliyetti
+hem de eşleşmeyen alanlarda sessizce `null` veriyordu. `POST /extract` canlı
+çıkarım yaptığı için bu alanı zaten doğrudan gerçek değeriyle verir.
 """
 
 from __future__ import annotations
 
-import json
 import os
-import sqlite3
-import threading
 from typing import Any, Optional
 
 from ..chatbot.bot import Chatbot
 from ..comparison.compare import _HIGHER_IS_BETTER, _LOWER_IS_BETTER, RankRow, rank
 from ..comparison.contradiction import detect as detect_contradictions
-from ..db.repository import _SQLITE_SCHEMA, Repository
+from ..db.factory import create_repository
 from ..extraction.llm.extractor import default_extractor
 from ..extraction.llm.schema import EXTRACTION_FIELDS
 from ..extraction.ner.classifier import default_classifier
@@ -72,6 +82,8 @@ from ..preprocessing.clean import normalize_text
 
 CONFIG = os.environ.get("BANKS_CONFIG", "config/banks.yaml")
 RAW_DIR = os.environ.get("RAW_DIR", "data/raw")
+# SQLite yolu için dosya (yalnızca DATABASE_URL boşken kullanılır — seçimi
+# `src/db/factory.create_repository()` yapar).
 DB_PATH = os.environ.get("DATABASE_PATH", ":memory:")
 
 # Karşılaştırılabilir alanlar — arayüzdeki alan çipleri bu listeden üretilir.
@@ -133,47 +145,6 @@ except ModuleNotFoundError:  # pragma: no cover
 _ROW_TOKEN_SEP = "\x00"
 
 
-class ApiRepository(Repository):
-    """`Repository` + thread güvenliği. **Bu bir hata düzeltmesidir.**
-
-    `sqlite3.connect()` varsayılan olarak bağlantıyı **oluşturan thread'e
-    kilitler** (`check_same_thread=True`). FastAPI ise `def` (async olmayan)
-    uçları bir threadpool worker'ında koşturur. Bağlantı uygulama kurulumunda
-    (ana thread) açıldığı için DB'ye dokunan HER uç — `/banks`, `/campaigns`,
-    `/compare`, `/chat` — istek anında şu hatayla düşüyordu:
-
-        sqlite3.ProgrammingError: SQLite objects created in a thread can only
-        be used in that same thread.
-
-    Dashboard'un boş tablo göstermesinin sebebi buydu; arayüz `catch` ile
-    sessizce boş listeye düşüyordu.
-
-    Neden alt sınıf: `src/db/repository.py` bu değişikliğin sahiplik alanı
-    dışında. `:memory:` DB'de bağlantıyı sonradan yeniden açmak veriyi
-    kaybettireceği için bağlantı burada baştan `check_same_thread=False` ile
-    açılır ve tüm erişim `self.lock` ile serileştirilir.
-    """
-
-    def __init__(self, path: str = ":memory:"):
-        self.conn = sqlite3.connect(path, check_same_thread=False)
-        self.conn.row_factory = sqlite3.Row
-        self.conn.executescript(_SQLITE_SCHEMA)
-        # Göç ZORUNLU. Bu sınıf `Repository.__init__`'i çağırmıyor (bağlantıyı
-        # `check_same_thread=False` ile kendi açması gerekiyor), dolayısıyla
-        # `_migrate()` de atlanıyordu. Diskteki ESKİ bir demo DB'si açıldığında
-        # `CREATE TABLE IF NOT EXISTS` hiçbir şey yapmaz ve
-        # `span_start`/`span_end`/`confidence_source` sütunları eksik kalır —
-        # sonra her sorgu `no such column` ile düşerdi.
-        self._migrate()
-        self.conn.commit()
-        self.lock = threading.RLock()
-
-    def rows(self, sql: str, params: tuple = ()) -> list[dict]:
-        """Kilit altında SELECT → dict listesi."""
-        with self.lock:
-            return [dict(r) for r in self.conn.execute(sql, params).fetchall()]
-
-
 # --------------------------------------------------------------------------- #
 # Kaynak-span geri kazanımı (saf string, yeniden çıkarım yok)
 # --------------------------------------------------------------------------- #
@@ -221,6 +192,33 @@ def locate_span(text: str, source_span: Optional[str],
     return out
 
 
+def span_info(text: str, source_span: Optional[str], raw_value: Optional[str],
+              span_start: Optional[int] = None,
+              span_end: Optional[int] = None) -> dict[str, Any]:
+    """Bir alanın metindeki yeri: **saklanan offset birincil**, yeniden hesaplama yedek.
+
+    `span_start`/`span_end` DB'den gelir (`extracted_fields`). Kabul edilmesi
+    için `text[span_start:span_end] == raw_value` eşitliğini geçmesi gerekir —
+    saklanan offset körü körüne güvenilmez; bozuk bir kayıt arayüzde yanlış yeri
+    boyamaktansa yedek yola düşmelidir.
+
+    `window_start` / `window_end` / `span_ambiguous` her durumda `locate_span()`
+    üzerinden hesaplanır: bunlar `source_span` PENCERESİNİN metindeki yeriyle
+    ilgilidir, DB'de saklanmazlar ve arayüz bağlam göstermek için kullanır.
+
+    Ölçülmüş fark (`data/demo.db`, 2204 alan): saklanan offsetlerin tamamı
+    doğrulanıyor, yeniden hesaplama 73'ünde farklı (ve yanlış) yer gösteriyor —
+    `str.find` ham değerin İLK geçtiği yeri bulur, çıkarımın geldiği yeri değil.
+    """
+    out = locate_span(text, source_span, raw_value)
+    if (span_start is not None and span_end is not None
+            and 0 <= span_start <= span_end <= len(text)
+            and text[span_start:span_end] == (raw_value or "")):
+        out.update(span_start=span_start, span_end=span_end,
+                   span_scope="value", span_verified=True)
+    return out
+
+
 def scoring_direction(field: str) -> tuple[str, str]:
     """Alanın sıralama yönü ve insan-okur açıklaması.
 
@@ -251,7 +249,11 @@ def build_app():
     app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"],
                        allow_headers=["*"])
 
-    repo = ApiRepository(DB_PATH)
+    # Depo seçimi TEK YERDE: DATABASE_URL varsa Postgres, yoksa SQLite.
+    # `thread_safe=True` iki backend için de zorunlu — FastAPI `def` uçlarını
+    # threadpool'da koşturur ve ne `sqlite3` ne `psycopg` bağlantısı bu kullanım
+    # için güvenlidir (gerekçe: `src/db/base.ThreadSafeRepository`).
+    repo = create_repository(database_path=DB_PATH, thread_safe=True)
     # Demo verisini doldur (CLAUDE.md §11 — önceden doldurulmuş DB).
     #
     # KOŞULLU olmak ZORUNDA. Eskiden koşulsuz koşuyordu; in-memory DB'de bu
@@ -261,6 +263,10 @@ def build_app():
     # çift kayıtlar sessizce birikir ve karşılaştırma tablosunda aynı banka
     # birden çok kez görünürdü.
     #
+    # `counts()` sözleşme metodudur, bu yüzden koruma Postgres yolunda da
+    # AYNEN çalışır — ve orada daha da kritiktir: kalıcı bir hacim (`pgdata`)
+    # her `docker compose up`'ta aynı veriyi taşır.
+    #
     # `scripts/build_demo_db.py` ile üretilmiş dolu bir DB verildiğinde
     # tohumlama tamamen atlanır ve 849 belgelik gerçek korpus korunur.
     if repo.counts().get("campaigns", 0) == 0:
@@ -269,75 +275,39 @@ def build_app():
     bot = Chatbot(repo, llm=llm)
     clf = default_classifier()
 
-    # Tembel önbellekler — her ikisi de kampanya başına BİR kez kural katmanını
-    # yeniden koşturur; istek başına değil (aksi halde /compare her satır için
-    # tam çıkarım yapardı).
-    # kampanya_id → {alan_adı: (raw_value, confidence_source)}
-    _conf_src_cache: dict[int, dict[str, tuple[Optional[str], str]]] = {}
-    # kampanya_id → çelişki listesi
+    # Tembel önbellekler — kampanya başına BİR kez; istek başına değil.
+    # kampanya_id → `repo.campaign_text()` sonucu (metin + alanlar + offsetler)
+    _view_cache: dict[int, Optional[dict]] = {}
+    # kampanya_id → çelişki listesi (kural katmanı kampanya başına bir kez koşar)
     _contra_cache: dict[int, list[dict]] = {}
 
     # ----------------------------------------------------------------- #
     # Dahili yardımcılar
     # ----------------------------------------------------------------- #
-    def _campaign_row(campaign_id: int) -> Optional[dict]:
-        found = repo.rows(
-            "SELECT c.id, b.slug AS bank, b.name AS bank_name, c.campaign_type, "
-            "c.raw_text, c.clean_text, c.source_url, c.scraped_at "
-            "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=?",
-            (campaign_id,))
-        return found[0] if found else None
+    def _campaign_view(campaign_id: int) -> Optional[dict]:
+        """Kampanyanın metni + alanları (offset'leriyle) — önbellekli.
 
-    def _rule_conf_sources(campaign_id: int,
-                           text: str) -> dict[str, tuple[Optional[str], str]]:
-        """Kural katmanını bir kez koşturup `confidence_source`'ları çıkarır.
-
-        DB'de `confidence_source` sütunu yok (bkz. modül başlığı). Yeniden
-        çıkarım kampanya başına ÖNBELLEKLENİR; LLM çağrılmaz (deterministik ve
-        offline: `build_campaign(llm=None)` → NullLLMExtractor).
+        Tek kaynak `repo.campaign_text()`: `/campaigns/{id}/text` ve `/compare`
+        AYNI metni ("span_reference": clean_text varsa o, yoksa raw_text)
+        kullanmak zorunda. Ayrışsalardı `/compare`'in verdiği offset'ler
+        arayüzün `/campaigns/{id}/text`'ten aldığı metinde başka bir yeri
+        gösterirdi.
         """
-        cached = _conf_src_cache.get(campaign_id)
-        if cached is not None:
-            return cached
-        try:
-            c = build_campaign(text, bank_slug="_reindex")
-            out = {f.field_name: (f.raw_value, f.confidence_source) for f in c.fields}
-        except Exception:  # pragma: no cover - çıkarım hatası UI'yı düşürmesin
-            out = {}
-        _conf_src_cache[campaign_id] = out
-        return out
-
-    def _conf_source_for(campaign_id: int, text: str, field_name: str,
-                         raw_value: Optional[str]) -> Optional[str]:
-        """Saklanan alanın güven-kaynağı; yeniden çıkarımla eşleşmezse None."""
-        idx = _rule_conf_sources(campaign_id, text)
-        hit = idx.get(field_name)
-        if hit is None:
-            return None
-        rv, csource = hit
-        return csource if rv == raw_value else None
+        if campaign_id in _view_cache:
+            return _view_cache[campaign_id]
+        view = repo.campaign_text(campaign_id)
+        _view_cache[campaign_id] = view
+        return view
 
     def _field_rows(field: str) -> list[dict]:
         """Bir alanın tüm banka satırları — kaynak, güven ve katman bilgisiyle.
 
-        `repository.query_fields()` `extractor` ve `raw_value` sütunlarını
-        SELECT etmiyor; karşılaştırma tablosunda "hangi katman üretti" sütunu
-        için ikisi de gerekli. repository/ bu ajanın sahiplik alanı dışında
-        olduğundan sorgu burada açıkça yazılır.
+        `repo.query_fields()` `raw_value`, `extractor`, `confidence_source` ve
+        saklanan span offset'lerini zaten döndürür; `canonical_value` da çözülmüş
+        gelir. Eskiden burada ham SQL vardı — `?` yer tutucusuyla, yani Postgres
+        yolunda çalışması imkânsızdı.
         """
-        rows = repo.rows(
-            "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
-            "c.campaign_type, c.source_url, c.raw_text, "
-            "f.raw_value, f.canonical_value, f.confidence, f.source_span, "
-            "f.extractor FROM extracted_fields f "
-            "JOIN campaigns c ON c.id=f.campaign_id "
-            "JOIN banks b ON b.id=c.bank_id WHERE f.field_name=?", (field,))
-        for d in rows:
-            try:
-                d["canonical_value"] = json.loads(d["canonical_value"])
-            except (TypeError, ValueError):
-                d["canonical_value"] = None
-        return rows
+        return repo.query_fields(field)
 
     def _campaign_contradictions(campaign_id: int, text: str, bank_slug: str,
                                  scraped_at: Optional[str] = None) -> list[dict]:
@@ -369,18 +339,22 @@ def build_app():
     # ----------------------------------------------------------------- #
     @app.get("/health")
     def health():
-        return {"status": "ok", "llm": llm.available}
+        """Sağlık + **hangi veri tabanına bağlıyız**.
+
+        `backend` alanı bilinçli olarak açığa çıkarılır: `DATABASE_URL`
+        verildiği hâlde sistemin SQLite'ta koşuyor olması (ya da tersi) tam
+        olarak bu projede avlanan hata sınıfıdır ve dışarıdan görünmeden
+        anlaşılamaz.
+        """
+        return {"status": "ok", "llm": llm.available, "backend": repo.backend}
 
     @app.get("/banks")
     def banks():
-        return repo.rows("SELECT slug, name, website_url, bddk_active FROM banks")
+        return repo.all_banks()
 
     @app.get("/campaigns")
     def campaigns():
-        return repo.rows(
-            "SELECT c.id, b.slug AS bank, b.name AS bank_name, c.campaign_type, "
-            "c.raw_text, c.source_url, c.scraped_at FROM campaigns c "
-            "JOIN banks b ON b.id=c.bank_id ORDER BY c.id")
+        return repo.all_campaigns()
 
     @app.get("/fields")
     def fields():
@@ -403,36 +377,30 @@ def build_app():
 
         Kaynak-span vurgulaması (CLAUDE.md §18 hedef #1) ve Jüri Audit Paneli
         bu uca dayanır: metin + offsetler + güven + katman + çelişki tek yerde.
+
+        `span_reference` alanı offsetlerin HANGİ metinde ölçüldüğünü söyler
+        (`clean_text` varsa o, yoksa `raw_text`); `text` de o metindir. İkisini
+        karıştırmak offsetleri kaydırır, bu yüzden sözleşmede açıkça durur.
         """
-        camp = _campaign_row(campaign_id)
+        camp = _campaign_view(campaign_id)
         if camp is None:
             raise HTTPException(status_code=404,
                                 detail=f"Kampanya bulunamadı: {campaign_id}")
-        text = camp.get("raw_text") or ""
-
-        rows = repo.rows(
-            "SELECT field_name, raw_value, canonical_value, confidence, "
-            "source_span, extractor FROM extracted_fields WHERE campaign_id=? "
-            "ORDER BY id", (campaign_id,))
+        text = camp.get("text") or ""
 
         fields_out = []
-        for d in rows:
-            try:
-                canonical = json.loads(d["canonical_value"])
-            except (TypeError, ValueError):
-                canonical = None
-            loc = locate_span(text, d["source_span"], d["raw_value"])
+        for d in camp.get("fields", []):
             fields_out.append({
                 "field": d["field_name"],
                 "label": FIELD_LABELS.get(d["field_name"], d["field_name"]),
                 "raw_value": d["raw_value"],
-                "canonical_value": canonical,
+                "canonical_value": d["canonical_value"],
                 "confidence": d["confidence"],
-                "confidence_source": _conf_source_for(
-                    campaign_id, text, d["field_name"], d["raw_value"]),
+                "confidence_source": d.get("confidence_source"),
                 "extractor": d["extractor"],
                 "source_span": d["source_span"],
-                **loc,
+                **span_info(text, d["source_span"], d["raw_value"],
+                            d.get("span_start"), d.get("span_end")),
             })
 
         return {
@@ -441,9 +409,10 @@ def build_app():
             "bank_name": camp["bank_name"],
             "campaign_type": camp["campaign_type"],
             "source_url": camp["source_url"],
-            "scraped_at": camp["scraped_at"],
+            "scraped_at": camp.get("scraped_at"),
             "text": text,
             "text_length": len(text),
+            "span_reference": camp.get("span_reference"),
             "fields": fields_out,
             "contradictions": _campaign_contradictions(
                 campaign_id, text, camp["bank"], camp.get("scraped_at")),
@@ -514,8 +483,14 @@ def build_app():
         position = 0
         for x in ranked:
             src = by_token[x.bank]
-            text = src.get("raw_text") or ""
-            loc = locate_span(text, src["source_span"], src["raw_value"])
+            # Metin `_campaign_view()`'dan gelir — `/campaigns/{id}/text` ile
+            # AYNI metin. `query_fields()` bilerek `raw_text` döndürmez: aynı
+            # belgenin tam metnini her alan satırında tekrarlamak, chatbot'un
+            # text-to-SQL yolunu da (aynı metodu kullanır) gereksiz şişirirdi.
+            view = _campaign_view(src["campaign_id"]) or {}
+            text = view.get("text") or ""
+            loc = span_info(text, src["source_span"], src["raw_value"],
+                            src.get("span_start"), src.get("span_end"))
             if x.comparable and x.sort_key is not None:
                 position += 1
                 row_rank: Optional[int] = position
@@ -535,13 +510,19 @@ def build_app():
                 "source_url": src["source_url"],
                 "raw_value": src["raw_value"],
                 "confidence": src["confidence"],
-                "confidence_source": _conf_source_for(
-                    src["campaign_id"], text, field, src["raw_value"]),
+                "confidence_source": src.get("confidence_source"),
                 "extractor": src["extractor"],
                 **loc,
                 # --- şeffaf skorlama ---
                 "sort_key": x.sort_key,
                 "rank": row_rank,
+                # `scraped_at` artık GERÇEKTEN dolu geliyor. Eski ham SQL onu
+                # SELECT etmiyordu, yani `as_of` her zaman None kalıyor ve
+                # zaman bağımlı çelişki kuralı ("süresi dolmuş ama sayfa
+                # yayında") bu uçta TAMAMEN KAPALIYDI: aynı kampanya
+                # `/contradictions`'ta çelişkili, `/compare`'de temiz
+                # görünüyordu. `query_fields()` alanı döndürdüğü için iki uç
+                # artık aynı cevabı veriyor.
                 "contradiction_count": len(_campaign_contradictions(
                     src["campaign_id"], text, src["bank"],
                     src.get("scraped_at"))),

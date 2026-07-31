@@ -79,8 +79,19 @@ class Repository:
 
     backend: str = "sqlite"
 
-    def __init__(self, path: str = ":memory:"):
-        self.conn = sqlite3.connect(path)
+    def __init__(self, path: str = ":memory:", *,
+                 check_same_thread: bool = True):
+        """`check_same_thread=False` yalnızca çok thread'li sunucu için.
+
+        `sqlite3` varsayılan olarak bağlantıyı onu OLUŞTURAN thread'e kilitler.
+        FastAPI `def` uçlarını bir threadpool'da koşturduğu için API yolunda bu
+        kilit her isteği `ProgrammingError` ile düşürüyordu. Bayrak tek başına
+        YETMEZ: bağlantı paylaşımı ancak erişim serileştirilirse güvenlidir —
+        `base.ThreadSafeRepository` bunu yapar ve `factory.create_repository(
+        thread_safe=True)` ikisini birlikte kurar. Bu yüzden varsayılan
+        DEĞİŞMEDİ; tek başına açmak sessiz bir yarış koşulu davetidir.
+        """
+        self.conn = sqlite3.connect(path, check_same_thread=check_same_thread)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(_SQLITE_SCHEMA)
         self._migrate()
@@ -107,6 +118,20 @@ class Repository:
             (name, slug, website_url, 1 if bddk_active else 0))
         self.conn.commit()
         return cur.lastrowid
+
+    def all_banks(self) -> list[dict]:
+        """Banka kataloğu: slug, ad, site, BDDK durumu (`GET /banks`).
+
+        `bddk_active` **bool'a çevrilir**: SQLite bu sütunu INTEGER (0/1),
+        PostgreSQL BOOLEAN olarak saklar. Ham değeri döndürmek iki backend'in
+        aynı soruya farklı JSON vermesi demek olurdu (`1` vs `true`).
+        """
+        rows = self.conn.execute(
+            "SELECT slug, name, website_url, bddk_active FROM banks "
+            "ORDER BY slug").fetchall()
+        return [{"slug": r["slug"], "name": r["name"],
+                 "website_url": r["website_url"],
+                 "bddk_active": bool(r["bddk_active"])} for r in rows]
 
     # --- kampanya + alanlar ---
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
@@ -151,7 +176,11 @@ class Repository:
             "FROM extracted_fields f "
             "JOIN campaigns c ON c.id=f.campaign_id "
             "JOIN banks b ON b.id=c.bank_id "
-            "WHERE f.field_name=?", (field_name,)).fetchall()
+            # `ORDER BY f.id` parite için ŞART: Postgres yolunda vardı, burada
+            # yoktu. Sırasız SELECT'in dönüş sırası garantili değildir ve bu
+            # metot `/compare` tablosunu besliyor — eşit değerli satırların
+            # sırası backend'e göre değişebilirdi.
+            "WHERE f.field_name=? ORDER BY f.id", (field_name,)).fetchall()
         out = []
         for r in rows:
             d = dict(r)
@@ -168,10 +197,14 @@ class Repository:
 
         Doğrulama/JSON çözme mantığı `base.finalize_campaign_text()`
         içindedir; Postgres yolu birebir aynı fonksiyonu kullanır.
+
+        `scraped_at` de döner: çelişki tespitinin zaman bağımlı kuralı
+        ("kampanya süresi dolmuş ama sayfa hâlâ yayında") `as_of` olarak duvar
+        saatini DEĞİL toplama anını kullanır; API bu alanı buradan okur.
         """
         row = self.conn.execute(
             "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
-            "c.campaign_type, b.slug AS bank, b.name AS bank_name "
+            "c.scraped_at, c.campaign_type, b.slug AS bank, b.name AS bank_name "
             "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=?",
             (campaign_id,)).fetchone()
         if row is None:
@@ -207,7 +240,10 @@ class Repository:
         """
         rows = self.conn.execute(
             "SELECT field_name, COUNT(DISTINCT campaign_id) AS n "
-            "FROM extracted_fields GROUP BY field_name ORDER BY n DESC").fetchall()
+            # İkincil `field_name` sıralaması Postgres yolundaki ile aynı olmalı;
+            # yoksa eşit sayıdaki alanlar iki backend'de farklı sırada raporlanır.
+            "FROM extracted_fields GROUP BY field_name "
+            "ORDER BY n DESC, field_name").fetchall()
         return {r["field_name"]: int(r["n"]) for r in rows}
 
     def campaigns_per_bank(self) -> dict[str, int]:
@@ -219,10 +255,17 @@ class Repository:
         return {r["slug"]: int(r["n"]) for r in rows}
 
     def all_campaigns(self) -> list[dict]:
+        """Tüm kampanyalar, `id` sırasında.
+
+        `ORDER BY c.id` EKSİKTİ; Postgres yolunda vardı. Sırasız SELECT'in
+        dönüş sırası garantili değildir, yani iki backend aynı korpusta farklı
+        sıralı liste verebilirdi — `GET /campaigns` de bu metoda dayandığı için
+        arayüzdeki kampanya sırası backend'e göre değişirdi.
+        """
         rows = self.conn.execute(
             "SELECT c.id, b.slug AS bank, b.name AS bank_name, c.campaign_type, "
             "c.raw_text, c.source_url, c.scraped_at "
-            "FROM campaigns c JOIN banks b ON b.id=c.bank_id"
+            "FROM campaigns c JOIN banks b ON b.id=c.bank_id ORDER BY c.id"
         ).fetchall()
         return [dict(r) for r in rows]
 

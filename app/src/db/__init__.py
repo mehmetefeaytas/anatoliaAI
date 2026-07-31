@@ -9,13 +9,14 @@ Detay: docs/veri-katmani.md
 offline ortamda `import src.db` çökmemeli.
 """
 
-from .base import RepositoryProtocol, finalize_campaign_text
+from .base import RepositoryProtocol, ThreadSafeRepository, finalize_campaign_text
 from .factory import create_repository, resolve_database_url
 from .repository import Repository
 
 __all__ = [
     "Repository",
     "RepositoryProtocol",
+    "ThreadSafeRepository",
     "create_repository",
     "finalize_campaign_text",
     "resolve_database_url",
