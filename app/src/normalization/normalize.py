@@ -266,14 +266,53 @@ _FOLDED_FEE_HINTS = frozenset(
     tr_fold_ascii(t) for t in ("masraf", "ücret", "ucret", "tahsis")
 )
 
+# ÜCRET ALINDIĞININ OLUMLU KANITI.
+#
+# Yalnızca "ücret" kelimesinin geçmesi, o kampanyada ücret ALINDIĞI anlamına
+# GELMEZ. Korpus ölçümü (849 belge, 31 Tem 2026): `masraf_durumu`nun 370
+# çıkarımından 158'i çıplak isimden tetikleniyordu ve hepsi `has_fee=True`
+# üretiyordu:
+#
+#   "Uçak bileti ÜCRETİ dışında yapılan ödemeler kampanya kapsamı dışındadır"
+#       -> kapsam dışını anlatıyor, ücret almıyor            (107 vaka)
+#   "kredi ve TAHSİS politikaları çerçevesinde"
+#       -> yönetişim ifadesi                                  (39 vaka)
+#   "MASRAFLARI görüntüleyin ve onay verin"
+#       -> arayüz adımı                                       (12 vaka)
+#
+# Etkisi tek alanla sınırlı değildi: `contradiction.detect()` bunları
+# "masrafsız dedi ama ücret alıyor" diye HAYALET ÇELİŞKİ üretiyor,
+# karşılaştırma da bankayı haksız yere pahalı gösteriyordu.
+#
+# Bu, daha önce bir kez düzeltilen işaret-ters hatasının ('ÜCRETSİZ' ->
+# has_fee=True) aynı sınıfı: kelimenin varlığını kanıt sanmak.
+_CHARGE_VERB_RE = (
+    r"(?:al[ıi]n[ıi]r|al[ıi]nacak|al[ıi]nmaktad[ıi]r|al[ıi]nmakta|"
+    r"tahsil\s+edil(?!me)|tabidir|tabi\s+olacak|tabi\s+tutul|"
+    r"yans[ıi]t[ıi]l[ıi]r|yans[ıi]t[ıi]lacak|uygulan[ıi]r|uygulanacak|"
+    r"ödenir|odenir|ücretlidir|ucretlidir|masrafl[ıi]d[ıi]r|"
+    r"talep\s+edil(?!me))"
+)
+
+# Oran biçimi de ücretin olumlu kanıtıdır: "tahsis ücreti %0,5".
+_RATE_EVIDENCE_RE = r"(?:%\s*\d|\d[\d.,]*\s*%)"
+
 
 def normalize_fee_status(text: str) -> Optional[dict]:
     """Masraf durumunu yorumlar. NEGASYON kritik: 'masrafsız' = masraf 0,
     "bilgi yok" DEĞİL.
 
-        "masrafsız"        -> {"has_fee": False, "amount": 0.0}
-        "tahsis ücreti 500 TL" -> {"has_fee": True, "amount": 500.0}
-        (masraf hiç geçmiyorsa)  -> None  (bilgi yok; uydurma)
+        "masrafsız"              -> {"has_fee": False, "amount": 0.0}
+        "ücret alınmaz"          -> {"has_fee": False, "amount": 0.0}
+        "tahsis ücreti 500 TL"   -> {"has_fee": True,  "amount": 500.0}
+        "tahsis ücreti %0,5"     -> {"has_fee": True,  "amount": None}
+        "ücret alınır"           -> {"has_fee": True,  "amount": None}
+        "Ücret Tarifesi"         -> None   (çıplak isim: KANIT DEĞİL)
+        (masraf hiç geçmiyorsa)  -> None   (bilgi yok; uydurma)
+
+    `has_fee=True` için TUTAR, ORAN ya da açık bir tahsil fiili gerekir.
+    Üçü de yoksa `None` döner: kelimenin geçmesi ücret alındığının kanıtı
+    değildir ve CLAUDE.md §19 uyarınca bilgi yoksa uydurulmaz.
     """
     if text is None:
         return None
@@ -287,5 +326,12 @@ def normalize_fee_status(text: str) -> Optional[dict]:
         money = normalize_money(text)
         if money:
             return {"has_fee": True, "amount": money["value"]}
-        return {"has_fee": True, "amount": None}
+        # Tutar yok — oran ya da tahsil fiili olumlu kanıt sayılır.
+        if re.search(_RATE_EVIDENCE_RE, text):
+            return {"has_fee": True, "amount": None}
+        if re.search(_CHARGE_VERB_RE, low):
+            return {"has_fee": True, "amount": None}
+        # Çıplak isim bahsi ("Ücret Tarifesi", "tahsis politikaları").
+        # Ücret olduğunu da olmadığını da söylemiyor → bilgi yok.
+        return None
     return None

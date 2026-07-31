@@ -189,6 +189,36 @@ def extract_taksit(text: str) -> Optional[ExtractedField]:
     )
 
 
+# Oran tablosu sütun başlıkları. Bir ücret tetikleyicisinden sonra bunlardan
+# biri geliyorsa, ardından gelen sayı BAŞKA BİR SÜTUNA aittir.
+#
+# Korpus ölçümü (849 belge, 31 Tem 2026) üç makul olmayan "masraf" tutarı
+# gösterdi — 100.000 TL, 30.000 TL, 28.076,27 TL — ve üçü de tablo başlık
+# satırından geliyordu:
+#
+#   "... Kâr Oranı | Tahsis Ücreti | Yıllık Maliyet Oranı | 100.000 TL ..."
+#
+# İleri pencere "Tahsis Ücreti"nden sonraki ilk sayıyı alıyordu, ama o sayı
+# finansman tutarı sütununun değeri. Bu, cümle sınırını aşıp tarihten hayali
+# 31 TL üreten hatanın tablo versiyonu: pencere bir SINIRDA kesilmeli.
+_COLUMN_HEADERS_RE = re.compile(
+    r"(y[ıi]ll[ıi]k\s+maliyet|maliyet\s+oran|finansman\s+tutar|"
+    r"taksit\s+tutar|kâr\s+oran|kar\s+oran|kâr\s+pay|kar\s+pay|"
+    r"toplam\s+geri\s+ödeme|toplam\s+geri\s+odeme|ödeme\s+plan|odeme\s+plan)",
+    re.IGNORECASE)
+
+
+def _truncate_at_next_column(window: str) -> str:
+    """Pencereyi bir sonraki tablo sütunu başlığında keser.
+
+    Kesme noktası başlığın BAŞLANGICI: "Tahsis Ücreti Yıllık Maliyet Oranı
+    100.000 TL" -> "Tahsis Ücreti ". Böylece komşu sütunun sayısı bu alana
+    yazılmaz. Başlık yoksa pencere olduğu gibi döner.
+    """
+    m = _COLUMN_HEADERS_RE.search(window)
+    return window[:m.start()] if m else window
+
+
 def extract_masraf(text: str) -> Optional[ExtractedField]:
     """Masraf durumu — negasyon farkında ('masrafsız' = 0, bilgi yok değil).
 
@@ -216,6 +246,7 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
         # olarak okunuyordu. Nokta binlik ayırıcı da olduğu için lookaround şart.
         fwd = text[m.start(): min(len(text), m.end() + 40)]
         fwd = re.split(r"(?<!\d)[.;](?!\d)|\n", fwd, maxsplit=1)[0]
+        fwd = _truncate_at_next_column(fwd)
         canon = N.normalize_fee_status(fwd)
         if canon is None:
             continue
