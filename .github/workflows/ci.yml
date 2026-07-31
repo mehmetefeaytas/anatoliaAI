@@ -63,16 +63,21 @@ jobs:
         run: python -c "from src.api.main import app; print('API import OK')"
 
   lint:
-    # BLOKLAMAYAN — gerekce: 31 Tem 2026 itibariyla ruff 378 bulgu veriyor
-    # (318'i otomatik duzeltilebilir, cogu gereksiz `noqa` direktifi).
-    # Bu borc Dalga 1 birlesmesinden sonra tek seferde temizlenip bu is
-    # `continue-on-error` olmadan kapiya cevrilecek.
-    # Simdi bloklayici yapmak CI'i surekli kirmizi tutar ve sinyali oldurur;
-    # `--exit-zero` ile gizlemek ise sahte yesil olur. Ikisini de yapmiyoruz:
-    # is gorunur sekilde basarisiz olur ama birlesmeyi engellemez.
-    name: ruff (bilgilendirici — henuz kapi degil)
+    # ARTIK KAPI (31 Tem 2026 aksami).
+    #
+    # Sabah bu is `continue-on-error: true` idi: ruff yapilandirmasizdi ve
+    # varsayilan kural kumesiyle 479 bulgu veriyordu. Dagilim sorunun kod
+    # olmadigini gosterdi — 247'si `Optional[X]` -> `X | None` kozmetigi.
+    #
+    # `app/pyproject.toml`'da kural kumesi ACIKCA secildi (defekt yakalayanlar
+    # acik, uslup tercihi olanlar gerekcesiyle kapali) ve kalan gercek bulgular
+    # duzeltildi; ikisi olcum katmaninda sessiz `zip` kirpmasiydi. Repo simdi
+    # SIFIR bulgu veriyor, dolayisiyla is bloklayici olabilir.
+    #
+    # Bir linter ancak sifir bulguda anlamlidir: kalici bir bulgu listesi
+    # varsa yeni bulgu gurultude kaybolur.
+    name: ruff
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -80,7 +85,8 @@ jobs:
           python-version: "3.11"
       - run: pip install ruff
       - name: ruff check
-        run: ruff check src eval tests scripts --statistics
+        # Yapilandirma ve kapsam app/pyproject.toml'dan okunur.
+        run: ruff check .
 
   web:
     name: Frontend derlemesi

@@ -95,10 +95,25 @@ def normalize_whitespace(text: str) -> str:
     return re.sub(r"\s+", " ", text or "").strip()
 
 
+# C0 denetim karakterleri (NUL dahil), sekme/satirsonu HARIC.
+#
+# `normalize_whitespace`'in `\s+` deseni bunlari YAKALAMAZ - `\x00` regex'te
+# bosluk sayilmaz. Bu yuzden NUL baytlari tum hatti gecip veri tabanina kadar
+# gidiyordu. Korpusta bir belgede olculdu: bir KVKK aydinlatma PDF'i metin
+# olarak kaydedilmis ve 177.768 baytin 352'si NUL.
+#
+# Kritik olan tasinabilirlik: SQLite NUL'u sessizce yutuyor, PostgreSQL ise
+# `text` sutununda kabul etmiyor ve baglantiyi hata ile dusuruyor. Yani ayni
+# korpus SQLite'ta calisip Postgres'te patliyordu. Duzeltme en yakin ortak
+# katmanda yapiliyor; boylece cikarim, DB ve eval ayni temiz metni goruyor.
+_CONTROL_CHARS_RE = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
+
+
 def normalize_text(text: str) -> str:
     """Çıkarım öncesi standart temizleme.
 
     - HTML temizliği
+    - C0 denetim karakterleri (NUL dahil) atılır
     - görünmez/zero-width karakter temizliği
     - tutarlı yüzde/para işaretleri (ör. NBSP → boşluk)
     - boşluk normalizasyonu
@@ -107,6 +122,7 @@ def normalize_text(text: str) -> str:
     if not text:
         return ""
     text = strip_html(text)
+    text = _CONTROL_CHARS_RE.sub("", text)
     text = text.replace(" ", " ").replace("\u200b", "")
     text = text.replace("’", "'").replace("“", '"').replace("”", '"')
     return normalize_whitespace(text)
