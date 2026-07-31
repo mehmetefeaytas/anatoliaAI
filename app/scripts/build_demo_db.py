@@ -123,14 +123,28 @@ class _Progress:
 def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
           raw_dir: str = DEFAULT_RAW, force: bool = False,
           quiet: bool = False,
-          stream: Any = None) -> tuple[Optional[dict], int]:
+          stream: Any = None,
+          database_url: Optional[str] = None) -> tuple[Optional[dict], int]:
     """DB'yi kurar ve (rapor, çıkış kodu) döndürür.
 
-    `force=True` ise var olan dosya **silinir** — üzerine yazmak değil. Aynı
-    dosyaya ikinci kez INSERT etmek kampanyaları çiftlerdi (şema UNIQUE
+    `database_url` verilirse hedef **PostgreSQL**, verilmezse `out_path`
+    yolundaki SQLite dosyası. İkisi de aynı `run_pipeline` + aynı depo
+    sözleşmesini kullanır; fark yalnızca hedeftir.
+
+    `force=True` SQLite'ta var olan dosyayı **siler** — üzerine yazmak değil.
+    Aynı dosyaya ikinci kez INSERT etmek kampanyaları çiftlerdi (şema UNIQUE
     kısıtı taşımıyor), yani "yeniden kur" sessizce iki katına çıkarırdı.
+
+    **Postgres'te `--force` TABLO SİLMEZ.** Bilinçli bir karar: yanlış bir
+    `DATABASE_URL` ile koşulduğunda geri dönüşü olmayan hasar verecek bir
+    komut bu betiğe konmadı. Hedef boş değilse betik durur ve ne yapılacağını
+    söyler; temizleme işi operatörün açık kararıdır.
     """
     stream = stream if stream is not None else sys.stderr
+
+    if database_url:
+        return _build_postgres(database_url, config, raw_dir, force, quiet, stream)
+
     out = Path(out_path)
 
     if out.exists():
@@ -164,23 +178,68 @@ def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
     return report, 0
 
 
-def _report(repo: Repository, result: PipelineResult, out: Path,
+def _build_postgres(database_url: str, config: str, raw_dir: str, force: bool,
+                    quiet: bool, stream: Any) -> tuple[Optional[dict], int]:
+    """Korpusu PostgreSQL'e yazar.
+
+    Neden gerekli: `data/demo.db` bir SQLite DOSYASI; Postgres yolu onu
+    okuyamaz. Bu betik olmadan `--profile postgres` altında API yalnızca
+    3 fixture belgesi görüyordu ve "849 belge Postgres'te" iddiası
+    gösterilemiyordu.
+    """
+    from src.db.factory import create_repository
+
+    repo = create_repository(database_url=database_url)
+    try:
+        mevcut = repo.counts().get("campaigns", 0)
+        if mevcut and not force:
+            print(f"HATA: hedef veri tabanı boş değil ({mevcut} kampanya).\n"
+                  f"      Aynı korpusu ikinci kez yazmak kayıtları çiftler "
+                  f"(şemada UNIQUE kısıtı yok).\n"
+                  f"      Bu betik tablo SİLMEZ — yanlış DATABASE_URL ile "
+                  f"koşulduğunda geri dönüşü olmayan hasar verirdi.\n"
+                  f"      Temizlemek operatörün açık kararı: veri tabanını "
+                  f"düşürüp yeniden kurun, sonra bu betiği tekrar koşturun.",
+                  file=stream)
+            return None, 1
+        if mevcut and force:
+            print(f"HATA: --force Postgres hedefinde TABLO SİLMEZ "
+                  f"({mevcut} kampanya mevcut). Yukarıdaki gerekçeye bakın.",
+                  file=stream)
+            return None, 1
+
+        t0 = time.perf_counter()
+        print(f"Korpus okunuyor: {raw_dir}  (mod={MODE_CORPUS}, yalnız .txt)\n"
+              f"Hedef: PostgreSQL", file=stream)
+        result = run_pipeline(repo, config, raw_dir=raw_dir, mode=MODE_CORPUS,
+                             on_progress=_Progress(stream, enabled=not quiet))
+        if result.documents_loaded == 0:
+            print(f"HATA: {raw_dir} altında hiç .txt belge bulunamadı. "
+                  f"Boş bir DB üretip 'kuruldu' demek sessiz bir yalan olurdu; "
+                  f"--raw-dir yolunu kontrol edin.", file=stream)
+            return None, 2
+        return _report(repo, result, None, time.perf_counter() - t0), 0
+    finally:
+        repo.close()
+
+
+def _report(repo: Any, result: PipelineResult, out: Optional[Path],
             elapsed: float) -> dict:
     """Özet raporu — ölçülen sayılar, tahmin yok."""
     counts = repo.counts()
     coverage = repo.field_coverage()
     per_bank = repo.campaigns_per_bank()
-    by_extractor = {
-        r["extractor"]: int(r["n"]) for r in repo.conn.execute(
-            "SELECT extractor, COUNT(*) AS n FROM extracted_fields "
-            "GROUP BY extractor ORDER BY n DESC")
-    }
+    # Ham SQL DEĞİL: sözleşme metodu. `repo.conn.execute(...)` yalnızca
+    # SQLite'ta çalışırdı ve Postgres hedefinde bu rapor patlardı — API
+    # katmanında düzeltilen hatanın aynısı.
+    by_extractor = repo.fields_by_extractor()
     by_kind: dict[str, int] = {}
     for c in result.contradictions:
         by_kind[c["kind"]] = by_kind.get(c["kind"], 0) + 1
     return {
-        "db_path": str(out),
-        "db_bytes": out.stat().st_size,
+        # Postgres hedefinde dosya yok; "0 bayt" yazmak yanıltıcı olurdu.
+        "db_path": str(out) if out is not None else "postgresql",
+        "db_bytes": out.stat().st_size if out is not None else None,
         "elapsed_s": round(elapsed, 2),
         "mode": result.mode,
         "documents_loaded": result.documents_loaded,
@@ -203,8 +262,10 @@ def format_report(rep: dict) -> str:
         "=" * 66,
         "DEMO VERİ TABANI ÖZETİ",
         "=" * 66,
-        (f"  dosya            : {rep['db_path']}  "
-         f"({rep['db_bytes'] / 1_048_576:.2f} MB)"),
+        # Postgres hedefinde dosya yok; "0.00 MB" yazmak yanıltıcı olurdu.
+        (f"  hedef            : {rep['db_path']}"
+         + (f"  ({rep['db_bytes'] / 1_048_576:.2f} MB)"
+            if rep.get("db_bytes") is not None else "  (sunucu — dosya yok)")),
         f"  kurulum süresi   : {rep['elapsed_s']} s   (mod={rep['mode']})",
         f"  belge → kampanya : {rep['documents_loaded']} → {c['campaigns']}",
         (f"  banka            : {c['banks_with_campaigns']}/{c['banks']} "
@@ -241,6 +302,10 @@ def _main(argv: Optional[list[str]] = None) -> int:
                     help=f"banks.yaml yolu (varsayılan: {DEFAULT_CONFIG})")
     ap.add_argument("--raw-dir", default=DEFAULT_RAW,
                     help=f"korpus kökü (varsayılan: {DEFAULT_RAW})")
+    ap.add_argument("--database-url", default=None,
+                    help="PostgreSQL hedefi (verilirse --out yok sayılır). "
+                         "Boşsa DATABASE_URL ortam değişkenine bakılmaz — "
+                         "hedef açıkça verilmeli ki kaza olmasın.")
     ap.add_argument("--force", action="store_true",
                     help="var olan DB dosyasını SİL ve yeniden kur")
     ap.add_argument("--quiet", action="store_true",
@@ -256,7 +321,8 @@ def _main(argv: Optional[list[str]] = None) -> int:
 
     rep, code = build(_resolve(args.out), config=_resolve(args.config),
                       raw_dir=_resolve(args.raw_dir), force=args.force,
-                      quiet=args.quiet)
+                      quiet=args.quiet,
+                          database_url=args.database_url)
     if rep is None:
         return code
     print(format_report(rep))

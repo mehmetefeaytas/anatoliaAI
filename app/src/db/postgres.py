@@ -373,6 +373,15 @@ class PostgresRepository:
             rows = cur.fetchall()
         return {r["field_name"]: int(r["n"]) for r in rows}
 
+    def fields_by_extractor(self) -> dict[str, int]:
+        """Katman adı (rule/ner/llm) → alan sayısı. SQLite ile aynı sıralama."""
+        with self._read() as cur:
+            cur.execute(
+                "SELECT extractor, COUNT(*) AS n FROM extracted_fields "
+                "GROUP BY extractor ORDER BY n DESC, extractor")
+            rows = cur.fetchall()
+        return {r["extractor"]: int(r["n"]) for r in rows}
+
     def campaigns_per_bank(self) -> dict[str, int]:
         """Banka slug → kampanya sayısı (belge çıkmayan banka 0 ile görünür)."""
         with self._read() as cur:

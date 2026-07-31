@@ -213,26 +213,56 @@ atlanıyordu) + 26 (psycopg/Postgres yok).
 
 ---
 
-## 7. Açık uç: API bağlanma noktası
+## 7. API bağlanma noktası — KAPATILDI (31 Tem 2026 akşamı)
 
-`src/api/main.py` hâlâ `Repository(DATABASE_PATH)` kuruyor; `create_repository()`
-fabrikasını **kullanmıyor**. Yani bugün `DATABASE_URL` verilse bile API onu
-okumaz. Bu yüzden `docker-compose.yml`'de `api` servisine `DATABASE_URL`
-**bilerek yazılmadı** — kodun okumadığı bir ayarı ilan etmek, tam da bu belgenin
-§1'de anlattığı hatanın tekrarı olurdu.
+Bu bölüm daha önce "`src/api/main.py` hâlâ `Repository(DATABASE_PATH)` kuruyor,
+`create_repository()` kullanmıyor" diyordu ve bağlamanın **tek satır** olduğunu
+tahmin ediyordu. Tahmin **yanlıştı**; iş yapıldı ve gerçek engel şuydu:
 
-Bağlamak için gereken değişiklik `src/api/main.py` içinde tek satırdır
-(`ApiRepository`'nin `Repository` alt sınıfı olmasıyla birlikte ele alınmalı):
+`main.py` `repo.rows(<ham SQL>)` kaçış kapısını **beş yerde** kullanıyordu ve o
+SQL'ler `?` yer tutucusu taşıyordu (SQLite lehçesi). `psycopg` `%s` bekler —
+Postgres'te her uç `ProgrammingError` ile düşerdi. Yani "tek satır" değişiklik
+API'yi sessizce bozardı.
 
-```python
-# şu an:
-repo = ApiRepository(DB_PATH)
-# hedef:
-repo = create_repository()          # DATABASE_URL varsa Postgres
+Yapılan:
+
+- Beş ham SQL çağrısı sözleşme metotlarına çevrildi (`campaign_text`,
+  `query_fields`, `all_banks`, `all_campaigns`) ve **`rows()` kaçış kapısı
+  KALDIRILDI**. `main.py` artık SQL yazmıyor ve `sqlite3`'ü import etmiyor.
+- Protokole eklendi (üç uygulamada da): `all_banks()`, `fields_by_extractor()`,
+  ve `campaign_text()` artık `scraped_at` döndürüyor.
+- Thread güvenliği ortaklaştırıldı: `base.ThreadSafeRepository` (RLock, **açık**
+  delegasyon — `__getattr__` sihri yok, yoksa yeni bir metot kilitsiz sızardı).
+  Postgres'te de aynı kilit gerekiyor: psycopg `threadsafety=2` bağlantı
+  paylaşımına izin verir ama **işlem sınırı bağlantı başınadır** — iki thread
+  aynı bağlantıda çalışırsa birinin `commit()`'i diğerinin yarım işini
+  kalıcılaştırır.
+
+### Kural (bundan sonra bağlayıcı)
+
+**Depo dışında SQL yazılmaz.** Eksik bir sorgu varsa `RepositoryProtocol`'e
+metot eklenir ve **iki backend'de de** uygulanır. Bu kural yalnızca API için
+değil: `scripts/build_demo_db.py`'nin özet raporu da `repo.conn.execute(...)`
+kullanıyordu ve Postgres hedefinde patlıyordu; `fields_by_extractor()`
+sözleşme metoduna çevrildi.
+
+### Korpusu Postgres'e yazmak
+
+`data/demo.db` bir SQLite **dosyası**; Postgres yolu onu okuyamaz. Bu yüzden
+`build_demo_db.py` artık `--database-url` kabul ediyor:
+
+```bash
+python -m scripts.build_demo_db \
+    --database-url postgresql://anatolia:anatolia@postgres:5432/anatolia
 ```
 
-`ApiRepository` SQLite'a özgü yardımcılar (`rows()`, `_SQLITE_SCHEMA`, `?`
-yer tutucuları) taşıdığı için bu, API sahibinin yapması gereken ayrı bir iştir.
+Ölçüldü (gerçek pgvector/pg16 konteyneri, teslim imajının içinden):
+**849 kampanya · 2204 alan · 10/10 banka** — SQLite ile birebir aynı.
+
+**`--force` Postgres hedefinde TABLO SİLMEZ.** Bilinçli karar: yanlış bir
+`DATABASE_URL` ile koşulduğunda geri dönüşü olmayan hasar verecek bir komut bu
+betiğe konmadı. Hedef boş değilse betik durur (çıkış 1) ve ne yapılacağını
+söyler; temizleme operatörün açık kararıdır.
 
 ---
 

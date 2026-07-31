@@ -66,6 +66,8 @@ class RepositoryProtocol(Protocol):
 
     def campaigns_per_bank(self) -> dict[str, int]: ...
 
+    def fields_by_extractor(self) -> dict[str, int]: ...
+
     def all_campaigns(self) -> list[dict]: ...
 
     def close(self) -> None: ...
@@ -197,6 +199,10 @@ class ThreadSafeRepository:
     def field_coverage(self) -> dict[str, int]:
         with self.lock:
             return self._inner.field_coverage()
+
+    def fields_by_extractor(self) -> dict[str, int]:
+        with self.lock:
+            return self._inner.fields_by_extractor()
 
     def campaigns_per_bank(self) -> dict[str, int]:
         with self.lock:

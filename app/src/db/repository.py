@@ -246,6 +246,19 @@ class Repository:
             "ORDER BY n DESC, field_name").fetchall()
         return {r["field_name"]: int(r["n"]) for r in rows}
 
+    def fields_by_extractor(self) -> dict[str, int]:
+        """Katman adı (rule/ner/llm) → o katmanın ürettiği alan SAYISI.
+
+        Ablasyonun ve raporların "hangi katman ne kadar iş yaptı" sorusu.
+        Depo dışında ham SQL yazılmaması kuralı gereği burada duruyor
+        (bkz. src/api/main.py başlığı: beş ham SQL çağrısı Postgres'te
+        `?` yer tutucusu nedeniyle patlıyordu).
+        """
+        rows = self.conn.execute(
+            "SELECT extractor, COUNT(*) AS n FROM extracted_fields "
+            "GROUP BY extractor ORDER BY n DESC, extractor").fetchall()
+        return {r["extractor"]: int(r["n"]) for r in rows}
+
     def campaigns_per_bank(self) -> dict[str, int]:
         """Banka slug → kampanya sayısı (belge çıkmayan banka 0 ile görünür)."""
         rows = self.conn.execute(
