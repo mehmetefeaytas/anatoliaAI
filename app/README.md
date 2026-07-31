@@ -1,5 +1,10 @@
 # Anatolia AI — Katılım Bankacılığı Kampanya Bilgi Çıkarımı
 
+[![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Testler](https://img.shields.io/badge/testler-345%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-849%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
+
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
 (Bilişim Vadisi). Türkiye'deki katılım bankalarının kampanya/ürün metinlerinden
 finansal bilgileri otomatik çıkaran, normalize eden, sınıflandıran ve
@@ -70,10 +75,35 @@ cd web && npm run dev
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** 54 birim/entegrasyon testi, tamamı offline yeşil (`python3 -m unittest discover -s tests`).
+**Test:** 16 dosyada **345** birim/entegrasyon testi, tamamı offline yeşil
+(`python3 -m unittest discover -s tests`).
 
-### Sonraki adımlar (gerçek veri/donanım gerektirir)
-- Gerçek banka HTML'lerini `data/raw/<slug>/` altına çek (canlı scraping veya manuel).
-- 150–300 kampanyalık çift-anotasyonlu gold set + zor-vaka alt kümesi (kappa).
-- vLLM'de Trendyol-LLM-8B-T1 (AWQ) ayağa kaldır → `LLM_BACKEND=vllm` ile hibridi aç.
-- BERTurk 8-sınıf sınıflandırıcıyı fine-tune et → `BERTURK_MODEL_DIR`.
+## Ölçüm Durumu
+
+Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buraya yazılmaz.
+
+| Kalem | Durum |
+|---|---|
+| Korpus | **849 gerçek belge**, 8 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`) |
+| Değişmez (invariant) denetimi | ✅ **849 belgede 0 ihlal** — etiketsiz veride otomatik hata avı (`python3 -m eval.properties`) |
+| Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
+| İnsan-etiketli gold set | 🔄 250 belge seçildi ve anotasyona hazır; anotasyon sürüyor |
+| Alan bazında P/R/F1 + %95 güven aralığı | ⏳ gold set tamamlanınca — **beklenen: 5 Ağustos 2026** |
+| Kalibrasyon (ECE + reliability diagram) | ⏳ aynı tarih |
+| Ablasyon (kural / LLM / hibrit + McNemar) | ⏳ aynı tarih |
+
+Neden şimdi sayı yok: kural tabanlı çıkarıcı gold sete **bakılmadan** yazıldı,
+bu yüzden 250 kayıt gerçek bir **held-out** test setidir. Bu bilimsel avantajı
+korumak için gold set dondurulmadan metrik yayımlamıyoruz.
+
+### Sonraki adımlar
+- **Anotasyon** — 250 belge, çift-anote 50'lik alt kümede Cohen κ / Krippendorff α.
+- **Split protokolü** — dev (~100, tüm model seçimi) / **TEST (~150, dondurulur, sha256'lanır)**.
+- **vLLM'de Trendyol-LLM-8B-T1 (AWQ)** → `LLM_BACKEND=vllm` ile hibridi aç.
+  Lisans zinciri doğrulandı: Apache-2.0, `Qwen3-8B-Base → Qwen3-8B → Trendyol-8B`
+  (bkz. [`docs/model-license-audit.md`](docs/model-license-audit.md)).
+- **Ablasyon kolları** — izole ortamlarda: kural-only · Qwen3-8B hibrit ·
+  Trendyol-8B hibrit · GLiNER geri-çağırma ağı · NuExtract-2.0-8B ·
+  BERTurk 8-sınıf fine-tune. Hepsi yalnız dev split'te seçilir; başarısız kollar
+  **negatif sonuç olarak raporlanır**.
+- **On-prem kanıtı** — `--network none` transkripti + negatif kontrol + gecikme/kaynak tabloları.

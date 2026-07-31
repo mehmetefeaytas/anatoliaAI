@@ -1,0 +1,98 @@
+# Anatolia AI — sürekli entegrasyon
+# TEKNOFEST 2026 TYDA 2. Senaryo · Şartname §9 (haftalık yükleme) ve §5.9 (offline)
+#
+# Tasarım ilkesi: BU DOSYADA SAHTE YEŞİL OLMAZ.
+# Yalnızca gerçekten geçtiği doğrulanmış adımlar kapı (blocking) olarak konur.
+# Henüz temizlenmemiş kalemler ayrı, bloklamayan işte ve GEREKÇESİYLE durur.
+#
+# Çekirdek testler ve değerlendirme katmanı SAF STDLIB ile çalışır — bu, on-prem
+# iddiasının bir parçasıdır. Bu yüzden `test` işi hiçbir paket kurmaz; kurmak
+# zorunda kalırsak bu bir mimari gerileme demektir ve CI bunu görünür kılar.
+#
+# Güvenlik notu: bu workflow hiçbir yerde `github.event.*` gibi denetlenmeyen
+# girdiyi `run:` içine geçirmez — komut enjeksiyonu yüzeyi yoktur.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["hafta-*", "teslim-*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: app
+
+jobs:
+  test:
+    name: Testler + değişmez denetimi (bağımlılıksız)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # CLAUDE.md §7 asgari sürüm olarak Python 3.11 ilan ediyor.
+      # Geliştirme makinesi 3.14 kullanıyor; asgari sürümü CI doğrular.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Ucuncu parti bagimlilik kurulmadigini dogrula
+        run: |
+          echo "Kurulu ucuncu parti paketler (bos olmali):"
+          pip list --format=freeze | grep -v -E "^(pip|setuptools|wheel)==" || true
+
+      # 16 dosyada 345 test. Yerelde 0,078 sn — saf stdlib oldugu icin.
+      - name: Birim ve entegrasyon testleri
+        run: python -m unittest discover -s tests
+
+      # Etiketsiz korpusta otomatik hata avi. Ihlal varsa cikis != 0.
+      # Bu adim projenin en ozgun teknik iddiasi; kapi olarak durmasi gerekiyor.
+      - name: Degismez (invariant) denetimi
+        run: python -m eval.properties --raw-dir data/raw
+
+      - name: Degerlendirme hatti duman testi
+        run: python -m eval.run_eval --gold data/gold/gold.sample.json
+
+      - name: API import guvenligi
+        run: python -c "from src.api.main import app; print('API import OK')"
+
+  lint:
+    # BLOKLAMAYAN — gerekce: 31 Tem 2026 itibariyla ruff 378 bulgu veriyor
+    # (318'i otomatik duzeltilebilir, cogu gereksiz `noqa` direktifi).
+    # Bu borc Dalga 1 birlesmesinden sonra tek seferde temizlenip bu is
+    # `continue-on-error` olmadan kapiya cevrilecek.
+    # Simdi bloklayici yapmak CI'i surekli kirmizi tutar ve sinyali oldurur;
+    # `--exit-zero` ile gizlemek ise sahte yesil olur. Ikisini de yapmiyoruz:
+    # is gorunur sekilde basarisiz olur ama birlesmeyi engellemez.
+    name: ruff (bilgilendirici — henuz kapi degil)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff
+      - name: ruff check
+        run: ruff check src eval tests scripts --statistics
+
+  web:
+    name: Frontend derlemesi
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Bagimliliklari kur
+        working-directory: app/web
+        run: npm install
+      - name: Derle
+        working-directory: app/web
+        run: npm run build
