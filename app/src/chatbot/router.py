@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 from ..preprocessing.clean import tr_fold_ascii
+from .safety import INTEREST_FIELD_HINT, detect_banks, mentions_interest_term
 
 # Soru içindeki ifade → alan adı
 _FIELD_KEYWORDS = {
@@ -55,7 +56,8 @@ class Route:
     handler: str                 # 'structured' | 'rag'
     field: Optional[str]         # ilgili alan (structured ise)
     intent: Optional[str]        # 'lowest' | 'highest' | 'list' | 'filter'
-    filters: dict                # ör. {"vade_ay_min": 36, "campaign_type": "Konut Finansmanı"}
+    filters: dict                # ör. {"vade_ay_min": 36, "campaign_type": "Konut
+                                 #      Finansmanı", "banks": ["kuveyt-turk"]}
 
 
 def route(question: str) -> Route:
@@ -64,6 +66,14 @@ def route(question: str) -> Route:
     field = _detect_field(q)
     intent = _detect_intent(q)
     filters = _detect_filters(q)
+
+    # Terminoloji kapısı (girdi tarafı): kullanıcı konvansiyonel terimi
+    # kullandıysa ("faiz en düşük hangi bankada?") soru REDDEDİLMEZ, doğru
+    # alana (kâr payı oranı) yönlendirilir. Kendi alan sözlüğü zaten "oran"ı
+    # yakalıyor; bu yedek, oran kelimesi hiç geçmeyen soruları kurtarır.
+    # Sözcük sınırlı ve 'faizsiz' muaf — bkz. safety.mentions_interest_term.
+    if field is None and mentions_interest_term(question):
+        field = INTEREST_FIELD_HINT
 
     # sayısal/karşılaştırmalı sinyal varsa yapısal sorgu
     if field and (intent or filters):
@@ -104,4 +114,11 @@ def _detect_filters(q: str) -> dict:
         if kw in q:
             filters["campaign_type"] = label
             break
+    # banka filtresi — "Ziraat Katılım'ın konut kâr payı oranı nedir?" sorusu
+    # BAŞKA bankaların satırlarıyla cevaplanmamalı. Banka verimizde yoksa
+    # sonuç boş kalır ve çekimserlik kapısı (KAPI 5) devreye girer.
+    # q zaten katlanmış; tr_fold_ascii idempotenttir, tekrar katlamak zararsız.
+    banks = detect_banks(q)
+    if banks:
+        filters["banks"] = banks
     return filters

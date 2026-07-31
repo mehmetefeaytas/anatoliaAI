@@ -53,6 +53,12 @@ def _apply_filters(repo: Repository, rows: list[dict], filters: dict) -> list[di
     if not filters:
         return rows
     out = rows
+    # banka filtresi — sorulan banka verimizde yoksa sonuç BOŞ kalır ve
+    # chatbot çekimserlik kapısından dürüst "verimde yok" yanıtı üretir.
+    # Başka bankaların satırlarını cevap gibi sunmak sessiz halüsinasyondur.
+    banks = filters.get("banks")
+    if banks:
+        out = [r for r in out if r.get("bank") in banks]
     # kampanya türü filtresi
     ctype = filters.get("campaign_type")
     if ctype:

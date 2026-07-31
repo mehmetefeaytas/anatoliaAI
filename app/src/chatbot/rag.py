@@ -19,6 +19,23 @@ from dataclasses import dataclass
 from typing import Optional
 
 from ..db.repository import Repository
+from ..preprocessing.clean import tr_fold
+
+# En az kaç ANLAMLI sözcük örtüşmesi bir pasajı "kanıt" saymaya yeter.
+# 1 örtüşme yetersizdir: "Helal gıda alışverişinde puan veren kampanya var mı?"
+# sorusu yalnızca 'kampanya' üzerinden konut finansmanı metnini getiriyordu ve
+# alakasız pasajı "ilgili kampanya" diye sunuyordu — sessiz halüsinasyon.
+# Eşiğin altındaysa hiç pasaj döndürülmez; çekimserlik kapısı (safety KAPI 5)
+# dürüstçe "verimde yok" der.
+MIN_OVERLAP = 2
+
+# Soru kalıbı sözcükleri: örtüşme sayımında sinyal değil gürültüdür.
+_STOPWORDS = frozenset("""
+bir bu şu o ve ile için mi mı mu mü var yok ne nedir nelerdir hangi hangisi
+kaç daha en de da den dan te ta ten tan olan olarak göre gibi ama veya her
+tüm ben sen siz bana beni bize nasıl niye neden misin misiniz mısın mısınız
+kadar sonra önce çok az ki ise ancak yani hem ya
+""".split())
 
 
 @dataclass
@@ -28,14 +45,23 @@ class RagAnswer:
 
 
 def _tokenize(text: str) -> list[str]:
-    return re.findall(r"[a-zçğıöşü0-9]+", (text or "").lower())
+    """TR-doğru katlama + durak sözcük ayıklaması.
+
+    `str.lower()` KULLANILMAZ: Türkçede hatalıdır ('TAŞIT'.lower() -> 'taşit',
+    'İ'.lower() -> 'i' + U+0307 birleşen nokta). Bu retriever'da eskiden
+    `.lower()` vardı ve ALL-CAPS banka başlıklarını sessizce kaçırıyordu
+    (bkz. preprocessing/clean.tr_fold docstring'i).
+    """
+    toks = re.findall(r"[a-zçğıöşü0-9]+", tr_fold(text or ""))
+    return [t for t in toks if t not in _STOPWORDS]
 
 
 class KeywordRetriever:
     """Basit kelime-örtüşme (Jaccard-benzeri) retriever — offline."""
 
-    def __init__(self, repo: Repository):
+    def __init__(self, repo: Repository, min_overlap: int = MIN_OVERLAP):
         self.repo = repo
+        self.min_overlap = min_overlap
         self._docs = repo.all_campaigns()
 
     def retrieve(self, query: str, k: int = 3) -> list[dict]:
@@ -46,7 +72,7 @@ class KeywordRetriever:
             if not dtok:
                 continue
             overlap = len(qtok & dtok)
-            if overlap == 0:
+            if overlap < self.min_overlap:
                 continue
             score = overlap / (len(qtok) ** 0.5 + 1)
             scored.append({
