@@ -1,11 +1,19 @@
-"""Veri erişim katmanı — SQLite fallback (offline test) + Postgres hedefi.
+"""Veri erişim katmanı — SQLite uygulaması (offline / test yolu).
 
 İlgili: ../../decisions/demo-onceden-doldurulmus-db.md (önceden doldurulmuş DB)
-        CLAUDE.md §9
+        CLAUDE.md §9, docs/veri-katmani.md (backend seçimi)
+        base.py (ortak sözleşme), postgres.py (üretim yolu), factory.py (seçim)
 
-Varsayılan: SQLite (stdlib, sıfır kurulum) — pipeline ve chatbot offline koşar.
-Üretim: PostgreSQL+pgvector (DATABASE_URL ile, psycopg). Bu modül canonical_value'yu
-JSON metni olarak saklar; karşılaştırma/chatbot bunu çözer.
+Bu backend BİLİNÇLİ bir tasarım kararıdır, eksiklik değil: stdlib `sqlite3` ile
+sıfır kurulum gerektirir, böylece çekirdek testler ve eval katmanı hiçbir üçüncü
+parti bağımlılık olmadan koşar (on-prem iddiasının parçası) ve jüri
+`docker compose up` dediğinde sistem bir veritabanı sunucusu beklemeden açılır.
+
+Üretim/vektör yolu `postgres.PostgresRepository`'dir; seçim `DATABASE_URL`
+ortam değişkeniyle `factory.create_repository()` üzerinden yapılır.
+
+Bu modül canonical_value'yu JSON metni olarak saklar; karşılaştırma/chatbot
+bunu çözer.
 """
 
 from __future__ import annotations
@@ -15,6 +23,7 @@ import sqlite3
 from typing import Any, Optional
 
 from ..schemas import Campaign
+from .base import finalize_campaign_text
 
 # SQLite uyumlu şema (Postgres schema.sql'in alt kümesi)
 _SQLITE_SCHEMA = """
@@ -34,8 +43,21 @@ CREATE TABLE IF NOT EXISTS extracted_fields (
     canonical_value TEXT, confidence REAL, source_span TEXT, extractor TEXT,
     span_start INTEGER, span_end INTEGER, confidence_source TEXT
 );
+-- RAG vektör deposu — Postgres'teki `vector(1024)` sütununun SQLite karşılığı.
+-- SQLite'ta vektör tipi yoktur; vektör float32 dizisi olarak BLOB'a yazılır ve
+-- `rag.store.SqliteVectorStore` kosinüs benzerliğini TAM TARAMA ile hesaplar.
+-- Bu, pgvector'ün yerine geçmez (indekssiz, O(n)); demo korpusu ölçeğinde
+-- (~850 belge) çalışır ve VectorRetriever'ın mantığını Postgres olmadan
+-- test edilebilir kılar. Ölçek yolu pgvector'dür.
+CREATE TABLE IF NOT EXISTS embeddings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    campaign_id INTEGER, chunk_index INTEGER NOT NULL DEFAULT 0,
+    chunk_text TEXT, vector BLOB, model TEXT,
+    UNIQUE (campaign_id, chunk_index)
+);
 CREATE INDEX IF NOT EXISTS idx_fields_campaign ON extracted_fields(campaign_id);
 CREATE INDEX IF NOT EXISTS idx_fields_name ON extracted_fields(field_name);
+CREATE INDEX IF NOT EXISTS idx_embeddings_campaign ON embeddings(campaign_id);
 """
 
 # Şemaya sonradan eklenen sütunlar. Diskteki eski bir demo DB'si açıldığında
@@ -50,7 +72,12 @@ _SONRADAN_EKLENEN = (
 
 
 class Repository:
-    """SQLite tabanlı depo. path=':memory:' ile testlerde kullanılır."""
+    """SQLite tabanlı depo. path=':memory:' ile testlerde kullanılır.
+
+    `base.RepositoryProtocol` sözleşmesini uygular.
+    """
+
+    backend: str = "sqlite"
 
     def __init__(self, path: str = ":memory:"):
         self.conn = sqlite3.connect(path)
@@ -138,6 +165,9 @@ class Repository:
         Kaynak-span vurgulaması bunu kullanır: `clean_text` span offset'lerinin
         ölçüldüğü metindir, `raw_text` değil. İkisini karıştırmak offset'leri
         kaydırır — bu yüzden hangisinin kullanıldığı yanıtta açıkça belirtilir.
+
+        Doğrulama/JSON çözme mantığı `base.finalize_campaign_text()`
+        içindedir; Postgres yolu birebir aynı fonksiyonu kullanır.
         """
         row = self.conn.execute(
             "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
@@ -146,27 +176,12 @@ class Repository:
             (campaign_id,)).fetchone()
         if row is None:
             return None
-        d = dict(row)
-        d["span_reference"] = "clean_text" if d.get("clean_text") else "raw_text"
-        d["text"] = d.get("clean_text") or d.get("raw_text") or ""
         alanlar = self.conn.execute(
             "SELECT field_name, raw_value, canonical_value, confidence, "
             "source_span, extractor, span_start, span_end, confidence_source "
             "FROM extracted_fields WHERE campaign_id=? ORDER BY field_name",
             (campaign_id,)).fetchall()
-        d["fields"] = []
-        for a in alanlar:
-            alan = dict(a)
-            alan["canonical_value"] = json.loads(alan["canonical_value"])
-            # Offset'i metinle karşılaştır — saklanan değer bozuksa arayüz
-            # yanlış yeri vurgulamaktansa vurgulamamalı.
-            s, e = alan.get("span_start"), alan.get("span_end")
-            alan["span_verified"] = bool(
-                s is not None and e is not None
-                and 0 <= s <= e <= len(d["text"])
-                and d["text"][s:e] == (alan.get("raw_value") or ""))
-            d["fields"].append(alan)
-        return d
+        return finalize_campaign_text(dict(row), [dict(a) for a in alanlar])
 
     # --- özet / kapsam ölçümü ---
     def counts(self) -> dict[str, int]:

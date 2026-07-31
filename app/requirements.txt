@@ -24,14 +24,22 @@ pyyaml>=6.0              # MIT (config/banks.yaml; yoksa config._mini_parse'a d�
 # trafilatura>=1.8
 
 # --- TR morfoloji ---
-# KULLANILMIYOR — kod tabanında sıfır referans. Şartname §9 "bağımlılıkların
-# eksiksiz listesi" istiyor; kullanılmayanı ilan etmek listeyi yanıltıcı yapar.
+# KALDIRILDI (31 Tem 2026). Kod tabanında sıfır referansı vardı ve ihtiyaç da
+# yok: Türkçe gereksinimlerini `preprocessing.clean.tr_fold` (TR-doğru
+# katlama — `str.lower()` Türkçede hatalıdır) ve
+# `extraction/rules/synonyms.py` (eşanlamlı sözlüğü) saf stdlib ile
+# karşılıyor. Şartname §9 "bağımlılıkların eksiksiz listesi" istiyor;
+# kullanılmayanı ilan etmek listeyi yanıltıcı yapar.
 # zeyrek>=0.1.3          # MIT (saf Python; Zemberek alternatifi)
 
 # --- NLP / model (tamamlayıcı) ---
 # KULLANILMIYOR — 3 katmanlı mimarinin "tamamlayıcı NER" katmanı henüz yok.
 # gliner>=0.2            # Apache-2.0 (tamamlayıcı NER)
 transformers>=4.40       # Apache-2.0 (BERTurk sınıflandırıcı)
+# KULLANILIYOR (31 Tem 2026'dan beri): src/rag/embedding.BgeM3Embedder.
+# bge-m3 ağırlıkları MIT (docs/model-license-audit.md §4 ✅).
+# Ağırlık yoksa kod AÇIK hata verir ve sistem KeywordRetriever ile çalışır —
+# sessizce boş sonuç dönmez.
 sentence-transformers>=2.7  # Apache-2.0 (bge-m3 embeddings)
 
 # --- API / DB ---
@@ -39,8 +47,16 @@ sentence-transformers>=2.7  # Apache-2.0 (bge-m3 embeddings)
 # kurar (ince imaj). Bu dosya geliştirme ortamının tam listesidir.
 fastapi>=0.110           # MIT
 uvicorn>=0.29            # BSD
+# KULLANILIYOR (31 Tem 2026'dan beri): src/db/postgres.PostgresRepository +
+# src/rag/store.PgVectorStore. DATABASE_URL boşsa hiç import edilmez.
 psycopg[binary]>=3.1     # LGPL (dinamik bağlı istemci)
-pgvector>=0.2            # PostgreSQL lisansı
+# `pgvector` PYTHON PAKETİ KALDIRILDI (31 Tem 2026). pgvector'ün kendisi
+# sunucu tarafı bir PostgreSQL EKLENTİSİDİR ve kullanılmaya devam ediyor
+# (pgvector/pgvector:pg16 imajı + `CREATE EXTENSION vector` + `<=>` operatörü).
+# Python istemci paketi yalnızca tip adaptasyonu sağlıyordu; `src/rag/store.py`
+# vektörü pgvector'ün belgelenmiş metin biçimiyle ('[0.1,...]') gönderip
+# sunucuda `CAST(... AS vector)` yapıyor. Aynı iş, bir bağımlılık eksiğiyle.
+# pgvector>=0.2          # PostgreSQL lisansı
 
 # --- geliştirme ---
 ruff>=0.4                # MIT

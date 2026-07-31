@@ -1,7 +1,44 @@
 # Anatolia AI — tek komutla offline, API anahtarsız ayağa kalkar.
 # İlgili: ../decisions/on-premise-calistirilabilir-mimari.md, CLAUDE.md §7, §20
 #         docs/OFFLINE-KANIT.md (ölçülmüş `--network none` kanıtı + digest tablosu)
-# Kullanım:  docker-compose up
+#         docs/veri-katmani.md (backend seçimi: SQLite mi Postgres mi)
+#
+# ## PROFİLLER — hangisi ne zaman
+#
+#   docker compose up                      # VARSAYILAN: api + web, SQLite/offline
+#   docker compose --profile postgres up   # + PostgreSQL 16 + pgvector
+#   docker compose --profile gpu up        # + vLLM (GPU gerekir)
+#   docker compose --profile ollama up     # + Ollama (CPU yedeği)
+#
+# ### Varsayılan (SQLite) — jüri demosu bunu görmeli
+#
+# Hiçbir profil verilmezse Postgres AYAĞA KALKMAZ ve API önceden doldurulmuş
+# SQLite dosyasından okur (CLAUDE.md §11). Bir veritabanı sunucusunun hazır
+# olmasını beklemeden açılır; 4 dakikalık sunumda beklenecek tek bir servis
+# bile fazladır.
+#
+# 31 Tem 2026'ya kadar bu dosya ÇELİŞKİLİYDİ: `postgres` servisi koşulsuz
+# ayağa kalkıyor, `api` ona `depends_on` ile bağlanıyor, ama aynı `api`
+# `DATABASE_PATH=":memory:"` ile çalışıyordu — yani Postgres bekleniyor ama
+# HİÇ KULLANILMIYORDU. Jüriye "mimarimiz Postgres üzerine kurulu" demek ile
+# çalışan sistemde Postgres'e tek bir sorgu bile gitmemesi arasındaki fark
+# tam olarak bu satırlardaydı.
+#
+# ### `--profile postgres` — pgvector yolu
+#
+# PostgreSQL + pgvector ayağa kalkar; `schema.sql` initdb ile uygulanır
+# (`vector` eklentisi, `embeddings` tablosu, IVFFlat dizini dâhil).
+# Doğrulama (gerçekten koşar, ölçülmüş bir kanıttır):
+#
+#   docker compose --profile postgres up -d postgres
+#   docker compose --profile postgres run --rm db-check
+#
+# Gömme üretimi (bge-m3 ağırlığı GEREKİR, ince API imajında yoktur —
+# geliştirme ortamında koşturun):
+#
+#   DATABASE_URL=postgresql://anatolia:anatolia@localhost:5432/anatolia \
+#     python3 -m src.rag.build_embeddings
+#
 # LLM: vllm (GPU) birincil; gpu yoksa ollama profili (`--profile ollama`).
 #
 # ## NEDEN DIGEST PIN (`@sha256:...`)
@@ -23,14 +60,20 @@
 
 services:
   postgres:
-    # PostgreSQL + pgvector (açık kaynak, PostgreSQL lisansı)
+    # PostgreSQL + pgvector (açık kaynak, PostgreSQL lisansı).
+    # `profiles` ile OPT-IN: varsayılan demo yolu SQLite'tır (yukarı bkz.).
     image: pgvector/pgvector:pg16@sha256:a36250871de0833b8757561c72f2477ef1ddd1101afa4e617fb552e0de514c6b
+    profiles: ["postgres"]
     environment:
       POSTGRES_USER: anatolia
       POSTGRES_PASSWORD: anatolia
       POSTGRES_DB: anatolia
     volumes:
       - pgdata:/var/lib/postgresql/data
+      # initdb yalnızca BOŞ veri dizininde çalışır. Şema değişirse ya
+      # `docker compose down -v` ile hacim silinmeli ya da kod tarafındaki
+      # idempotent `PostgresRepository.ensure_schema()` çağrısına güvenilmeli
+      # (o da aynı dosyayı uygular — tek doğruluk kaynağı src/db/schema.sql).
       - ./src/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
     ports:
       - "5432:5432"
@@ -39,6 +82,26 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  db-check:
+    # Postgres/pgvector yolunun ÇALIŞTIĞINI kanıtlayan tek seferlik koşu.
+    #
+    #   docker compose --profile postgres run --rm db-check
+    #
+    # `tests/` ve `psycopg[binary]` teslim API imajında zaten var
+    # (bkz. Dockerfile.api, requirements-api.txt), o yüzden ek imaj gerekmez.
+    # Testler iki backend'in AYNI cevabı verdiğini (parite) ve `embeddings`
+    # tablosunun gerçekten yazılıp `<=>` ile sorgulandığını doğrular.
+    # Ön koşul yoksa testler ATLANIR — "geçti" demez.
+    build: { context: ., dockerfile: Dockerfile.api }
+    profiles: ["postgres"]
+    environment:
+      # Üretim `DATABASE_URL`'i DEĞİL ayrı bir değişken: test şemayı temizler.
+      ANATOLIA_TEST_DATABASE_URL: postgresql://anatolia:anatolia@postgres:5432/anatolia
+    command: ["python", "-m", "unittest", "tests.test_pgvector_repository", "-v"]
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   vllm:
     # Apache-2.0, OpenAI-uyumlu sunucu.
@@ -79,17 +142,33 @@ services:
   api:
     build: { context: ., dockerfile: Dockerfile.api }
     environment:
-      DATABASE_PATH: ":memory:"          # demo: önceden doldurulmuş in-memory
+      # OFFLINE DEMO YOLU (varsayılan): önceden doldurulmuş SQLite dosyası.
+      # `scripts/build_demo_db.py` ile üretilen data/demo.db imaja kopyalanır
+      # (Dockerfile.api: `COPY data/ ./data/`). Dosya yoksa API açılışta
+      # fixture'lardan tohumlar (`repo.counts()["campaigns"] == 0` koşulu),
+      # yani sistem yine çalışır — sadece korpus küçük olur.
+      #
+      # Neden ":memory:" değil: bellek içi DB her yeniden başlatmada 849
+      # belgelik korpusu ATAR ve fixture'lara düşer; jüri demoda ikinci kez
+      # yeniden başlatırsa farklı bir sistem görürdü.
+      DATABASE_PATH: data/demo.db
+      # DATABASE_URL: Postgres yolunu açar (boşsa SQLite). Şu an BİLEREK boş —
+      # `src/api/main.py` henüz `create_repository()` fabrikasını kullanmıyor
+      # (bkz. docs/veri-katmani.md "API bağlanma noktası"). Burada dolu bir
+      # değer bırakmak, kodun okumadığı bir ayarı ilan etmek olurdu.
       BANKS_CONFIG: config/banks.yaml
       RAW_DIR: data/raw
       LLM_BACKEND: ""                    # "vllm"/"ollama" ile aktifleştir
       VLLM_URL: http://vllm:8000
       OLLAMA_URL: http://ollama:11434
+      # RAG retriever seçimi: keyword (varsayılan, üretim yolu) | auto | vector
+      # bkz. src/chatbot/rag.build_retriever
+      RAG_RETRIEVER: keyword
     ports:
       - "8000:8000"
-    depends_on:
-      postgres:
-        condition: service_healthy
+    # `depends_on: postgres` KALDIRILDI: API Postgres'e bağlanmıyor, beklemesi
+    # için de bir sebep yok. Bekletmek, kullanılmayan bir bağımlılığı
+    # kullanılıyormuş gibi gösteriyordu.
 
   web:
     build: { context: ./web, dockerfile: Dockerfile }

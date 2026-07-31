@@ -39,6 +39,22 @@ pydantic>=2.6            # MIT
 # Ölçülmüş kanıt: docs/OFFLINE-KANIT.md "bs4 sapması".
 beautifulsoup4>=4.12     # MIT
 
-# PostgreSQL backend (DATABASE_URL verilmişse); yoksa SQLite fallback devrede
+# PostgreSQL backend (DATABASE_URL verilmişse); yoksa SQLite fallback devrede.
+# GERÇEKTEN KULLANILIYOR: src/db/postgres.PostgresRepository (31 Tem 2026).
+# İnce imajda kalma gerekçesi: `docker compose --profile postgres run --rm
+# db-check` bu imajın İÇİNDE tests/test_pgvector_repository.py'yi koşturur;
+# psycopg olmadan o testler "atlandı" derdi ve pgvector yolunun çalıştığına
+# dair konteyner içi kanıt üretilemezdi. Paket saf istemcidir.
 psycopg[binary]>=3.1     # LGPL — yalnızca istemci kütüphanesi, dinamik bağlı
-pgvector>=0.2            # PostgreSQL lisansı
+
+# `pgvector` PYTHON PAKETİ KALDIRILDI (31 Tem 2026) — kod onu kullanmıyor.
+# Sunucu tarafı pgvector EKLENTİSİ kullanılmaya devam ediyor; vektörler
+# pgvector'ün belgelenmiş metin biçimiyle gönderilip `CAST(... AS vector)`
+# ile dönüştürülüyor (src/rag/store.py). Gerekçe: requirements.txt aynı not.
+# pgvector>=0.2          # PostgreSQL lisansı
+
+# sentence-transformers BİLEREK YOK: torch + ağırlıklar ince imajı GB'lara
+# çıkarır. Gömme üretimi (`python -m src.rag.build_embeddings`) geliştirme
+# ortamında ya da ayrı bir model imajında koşar. Bu imajın içinde
+# çalıştırılırsa betik "KOŞULMADI" raporlar ve çıkış kodu 3 döner — sessizce
+# boş tablo üretip "tamamlandı" DEMEZ.
