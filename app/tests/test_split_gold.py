@@ -27,7 +27,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.split_gold import (  # noqa: E402
+from scripts.split_gold import (
     ERISIM_KAYDI_ADI,
     MANIFEST_ADI,
     NADIR_ALANLAR,

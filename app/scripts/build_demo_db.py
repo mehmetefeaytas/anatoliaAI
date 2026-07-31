@@ -79,8 +79,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.db.repository import Repository  # noqa: E402
-from src.pipeline import MODE_CORPUS, PipelineResult, run_pipeline  # noqa: E402
+from src.db.repository import Repository
+from src.pipeline import MODE_CORPUS, PipelineResult, run_pipeline
 
 DEFAULT_OUT = "data/demo.db"
 DEFAULT_CONFIG = "config/banks.yaml"

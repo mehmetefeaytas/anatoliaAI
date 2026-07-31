@@ -56,11 +56,11 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from scripts.gold_schema import (  # noqa: E402
+from scripts.gold_schema import (
     CAMPAIGN_TYPE_KEY,
     format_gold_value,
 )
-from src.extraction.llm.schema import EXTRACTION_FIELDS  # noqa: E402
+from src.extraction.llm.schema import EXTRACTION_FIELDS
 
 # Görev tanımındaki sütun kümesi — SIRA DEĞİŞTİRİLMEZ (build_gold başlıkla okur).
 COLUMNS = [

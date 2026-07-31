@@ -44,7 +44,7 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from scripts.gold_schema import (  # noqa: E402
+from scripts.gold_schema import (
     CAMPAIGN_TYPE_KEY,
     EXTRACTION_FIELDS,
     GoldRecord,
@@ -55,7 +55,7 @@ from scripts.gold_schema import (  # noqa: E402
     values_equal,
     write_gold,
 )
-from scripts.to_review_csv import CSV_DELIMITER, CSV_ENCODING  # noqa: E402
+from scripts.to_review_csv import CSV_DELIMITER, CSV_ENCODING
 
 DEFAULT_OUT = "data/gold/gold.v1.json"
 DEFAULT_REPORT = "data/gold/build_report.md"

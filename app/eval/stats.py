@@ -366,7 +366,7 @@ def mcnemar_from_pairs(a_correct: Sequence[bool], b_correct: Sequence[bool],
             f"{len(b_correct)}")
 
     b = c = agree_ok = agree_bad = 0
-    for x, y in zip(a_correct, b_correct):
+    for x, y in zip(a_correct, b_correct, strict=False):
         if x and y:
             agree_ok += 1
         elif x and not y:

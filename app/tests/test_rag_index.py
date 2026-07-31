@@ -15,12 +15,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.chatbot import rag  # noqa: E402
-from src.chatbot.bot import Chatbot  # noqa: E402
-from src.chatbot.structured import _apply_filters  # noqa: E402
-from src.db.repository import Repository  # noqa: E402
-from src.extraction.reconcile import build_campaign  # noqa: E402
-
+from src.chatbot import rag
+from src.chatbot.bot import Chatbot
+from src.chatbot.structured import _apply_filters
+from src.db.repository import Repository
+from src.extraction.reconcile import build_campaign
 
 # Farklı uzunlukta, farklı bankalardan, eşit-skor üretebilecek tekrarlı
 # metinler içeren korpus — tie-break sırasını da sınamak için.

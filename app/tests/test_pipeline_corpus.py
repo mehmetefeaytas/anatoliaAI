@@ -15,14 +15,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.db.repository import Repository  # noqa: E402
-from src.pipeline import (  # noqa: E402
+from src.db.repository import Repository
+from src.pipeline import (
     MODE_CORPUS,
     MODE_FIXTURE,
     collect_corpus,
     run_pipeline,
 )
-from src.scraping.config import load_banks  # noqa: E402
+from src.scraping.config import load_banks
 
 CONFIG = str(ROOT / "config" / "banks.yaml")
 RAW = str(ROOT / "data" / "raw")

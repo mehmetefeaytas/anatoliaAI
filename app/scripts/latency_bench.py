@@ -56,9 +56,10 @@ import resource
 import statistics
 import sys
 import time
-from dataclasses import asdict, dataclass, field as dc_field
+from dataclasses import asdict, dataclass
+from dataclasses import field as dc_field
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable
 
 # Betik `python scripts/latency_bench.py` olarak da çağrılabilsin diye repo
 # kökünü sys.path'e ekliyoruz (modül olarak çağrıldığında zararsız).
@@ -66,17 +67,17 @@ _ROOT = Path(__file__).resolve().parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from src.chatbot.bot import Chatbot                          # noqa: E402
-from src.comparison.contradiction import detect as detect_contradictions  # noqa: E402
-from src.db.repository import Repository                     # noqa: E402
-from src.extraction.llm.extractor import default_extractor   # noqa: E402
-from src.extraction.ner.classifier import default_classifier  # noqa: E402
-from src.extraction.reconcile import build_campaign          # noqa: E402
-from src.extraction.rules.extract import extract_all         # noqa: E402
-from src.pipeline import build_demo_repo                     # noqa: E402
-from src.preprocessing.clean import normalize_text           # noqa: E402
-from src.scraping.collector import collect_from_fixtures     # noqa: E402
-from src.scraping.config import load_banks                   # noqa: E402
+from src.chatbot.bot import Chatbot
+from src.comparison.contradiction import detect as detect_contradictions
+from src.db.repository import Repository
+from src.extraction.llm.extractor import default_extractor
+from src.extraction.ner.classifier import default_classifier
+from src.extraction.reconcile import build_campaign
+from src.extraction.rules.extract import extract_all
+from src.pipeline import build_demo_repo
+from src.preprocessing.clean import normalize_text
+from src.scraping.collector import collect_from_fixtures
+from src.scraping.config import load_banks
 
 # Chatbot yolunda kullanılan sorular — router'ın HER İKİ kolunu da vurur
 # (yapısal sorgu + RAG). Tek kolu ölçmek p99'u yanıltıcı yapar.
@@ -213,8 +214,11 @@ def run_bench(banks_yaml: str, raw_dir: str, iterations: int,
     # `src/api/main.py` demo modunda tam olarak bunu cagirir (CLAUDE.md §11).
     # build_demo_repo `recursive` desteklemez; her zaman kok korpusu okur.
     t0 = time.perf_counter_ns()
-    repo = build_demo_repo(banks_yaml, raw_dir)
+    demo_repo = build_demo_repo(banks_yaml, raw_dir)
     demo_cold_ms = (time.perf_counter_ns() - t0) / 1_000_000
+    # Yalnız süreyi ölçmek için kuruldu; bağlantı açık bırakılırsa aşağıdaki
+    # ölçümler boyunca sızar ve tepe RSS rakamını şişirir.
+    demo_repo.close()
     print(f"Demo soguk baslatma : {demo_cold_ms:.1f} ms (build_demo_repo, kok korpus)")
 
     # --- soguk baslatma 2: secili korpusun tam alimi (ingest) ------------- #

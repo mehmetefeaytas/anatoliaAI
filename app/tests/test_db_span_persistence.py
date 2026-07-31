@@ -22,10 +22,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.db.repository import Repository  # noqa: E402
-from src.extraction.rules.extract import extract_all  # noqa: E402
-from src.preprocessing.clean import normalize_text  # noqa: E402
-from src.schemas import Campaign, ExtractedField, Extractor  # noqa: E402
+from src.db.repository import Repository
+from src.extraction.rules.extract import extract_all
+from src.preprocessing.clean import normalize_text
+from src.schemas import Campaign, ExtractedField, Extractor
 
 ORNEK = (
     "Kuveyt Türk Konut Finansmanı kampanyası. Kâr payı oranı %1,89'dan "

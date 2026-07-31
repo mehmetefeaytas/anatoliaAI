@@ -19,7 +19,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.comparison.contradiction import (  # noqa: E402
+from src.comparison.contradiction import (
     MAX_SCOPE_CHARS,
     detect,
     detect_across,
@@ -27,8 +27,8 @@ from src.comparison.contradiction import (  # noqa: E402
     group_by_product,
     product_key,
 )
-from src.extraction.rules.extract import extract_all  # noqa: E402
-from src.schemas import Campaign, ExtractedField, Extractor  # noqa: E402
+from src.extraction.rules.extract import extract_all
+from src.schemas import Campaign, ExtractedField, Extractor
 
 RAW_DIR = Path(__file__).resolve().parents[1] / "data" / "raw"
 

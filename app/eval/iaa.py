@@ -55,7 +55,7 @@ def cohen_kappa(a: Sequence[Label], b: Sequence[Label]) -> float:
     if len(a) != len(b):
         raise ValueError(f"dizi uzunlukları farklı: {len(a)} != {len(b)}")
 
-    pairs = [(x, y) for x, y in zip(a, b) if x is not None and y is not None]
+    pairs = [(x, y) for x, y in zip(a, b, strict=False) if x is not None and y is not None]
     total = len(pairs)
     if total == 0:
         return NAN

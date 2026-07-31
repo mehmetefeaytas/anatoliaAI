@@ -6,10 +6,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.db.repository import Repository  # noqa: E402
-from src.extraction.reconcile import build_campaign  # noqa: E402
-from src.chatbot.router import route  # noqa: E402
-from src.chatbot.bot import Chatbot  # noqa: E402
+from src.chatbot.bot import Chatbot
+from src.chatbot.router import route
+from src.db.repository import Repository
+from src.extraction.reconcile import build_campaign
 
 
 def seed(repo):

@@ -12,15 +12,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.scraping import discover as disc  # noqa: E402
-from src.scraping.collector import (METHOD_BROWSER, METHOD_LIVE,  # noqa: E402
-                                    METHOD_MANUAL, RawDoc, collect_from_fixtures,
-                                    collect_live, content_hash, ensure_manual_dirs,
-                                    save_docs, url_to_slug, utc_now_iso)
-from src.scraping.config import BankConfig, load_banks  # noqa: E402
-from src.scraping.fetcher import FetchResult, FetcherBundle, RateLimiter  # noqa: E402
-from src.scraping.robots import (RobotsCache, RobotsPolicy,  # noqa: E402
-                                 parse_robots)
+from src.scraping import discover as disc
+from src.scraping.collector import (
+    METHOD_BROWSER,
+    METHOD_LIVE,
+    METHOD_MANUAL,
+    RawDoc,
+    collect_from_fixtures,
+    collect_live,
+    content_hash,
+    ensure_manual_dirs,
+    save_docs,
+    url_to_slug,
+    utc_now_iso,
+)
+from src.scraping.config import BankConfig, load_banks
+from src.scraping.fetcher import FetcherBundle, FetchResult, RateLimiter
+from src.scraping.robots import RobotsCache, RobotsPolicy, parse_robots
 
 CONFIG = str(ROOT / "config" / "banks.yaml")
 

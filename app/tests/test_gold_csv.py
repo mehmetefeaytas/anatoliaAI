@@ -16,9 +16,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.build_gold import build, infer_annotator, read_review_csv  # noqa: E402
-from scripts.gold_schema import CAMPAIGN_TYPE_KEY  # noqa: E402
-from scripts.to_review_csv import (  # noqa: E402
+from scripts.build_gold import build, infer_annotator, read_review_csv
+from scripts.gold_schema import CAMPAIGN_TYPE_KEY
+from scripts.to_review_csv import (
     COLUMNS,
     CSV_DELIMITER,
     CSV_ENCODING,
@@ -30,7 +30,7 @@ from scripts.to_review_csv import (  # noqa: E402
     sort_rows,
     write_csv,
 )
-from src.extraction.llm.schema import EXTRACTION_FIELDS  # noqa: E402
+from src.extraction.llm.schema import EXTRACTION_FIELDS
 
 TEXT = ("Konut finansmanında kâr payı oranı %1,89, 120 aya kadar vade. "
         "Tahsis ücreti 500 TL. Kampanya 31.12.2026 tarihine kadar geçerlidir.")
@@ -168,7 +168,7 @@ class TestCsvRoundTrip(unittest.TestCase):
             write_csv(rows, path)
             back = read_review_csv(path)
             self.assertEqual(len(back), len(rows))
-            for original, restored in zip(rows, back):
+            for original, restored in zip(rows, back, strict=False):
                 for column in COLUMNS:
                     self.assertEqual(restored[column], original[column])
 

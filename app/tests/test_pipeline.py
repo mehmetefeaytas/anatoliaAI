@@ -6,9 +6,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.preprocessing import clean  # noqa: E402
-from src.extraction.reconcile import build_campaign, reconcile  # noqa: E402
-from src.extraction.ner.classifier import RuleHintClassifier  # noqa: E402
+from src.extraction.ner.classifier import RuleHintClassifier
+from src.extraction.reconcile import build_campaign, reconcile
+from src.preprocessing import clean
 
 
 class TestPreprocessing(unittest.TestCase):

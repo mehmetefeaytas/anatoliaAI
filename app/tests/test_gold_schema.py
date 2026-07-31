@@ -11,7 +11,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.gold_schema import (  # noqa: E402
+from scripts.gold_schema import (
     ALL_HARD_TAGS,
     GoldRecord,
     GoldValidationError,
@@ -25,7 +25,7 @@ from scripts.gold_schema import (  # noqa: E402
     values_equal,
     write_gold,
 )
-from src.extraction.llm.schema import EXTRACTION_FIELDS  # noqa: E402
+from src.extraction.llm.schema import EXTRACTION_FIELDS
 
 _ROOT = Path(__file__).resolve().parents[1]
 SAMPLE = _ROOT / "data" / "gold" / "gold.sample.json"

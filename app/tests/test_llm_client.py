@@ -24,22 +24,33 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.llm.clients import (  # noqa: E402
-    STRUCTURED_MODES, LLMHTTPError, LLMTransportError, OllamaClient, VLLMClient,
+from src.extraction.llm.clients import (
+    STRUCTURED_MODES,
+    LLMHTTPError,
+    LLMTransportError,
+    OllamaClient,
+    VLLMClient,
 )
-from src.extraction.llm.confidence import (  # noqa: E402
-    SOURCE_LOGPROB, SOURCE_SELF_REPORTED, field_confidences, find_value_span,
+from src.extraction.llm.confidence import (
+    SOURCE_LOGPROB,
+    SOURCE_SELF_REPORTED,
+    field_confidences,
+    find_value_span,
     token_offsets,
 )
-from src.extraction.llm.extractor import (  # noqa: E402
-    LLMExtractionError, LLMExtractor, NullLLMExtractor, default_extractor,
+from src.extraction.llm.extractor import (
+    LLMExtractionError,
+    LLMExtractor,
+    NullLLMExtractor,
+    default_extractor,
 )
-from src.extraction.llm.parse import parse_llm_json  # noqa: E402
-from src.extraction.llm.schema import (  # noqa: E402
-    EXTRACTION_FIELDS, guided_json_schema,
+from src.extraction.llm.parse import parse_llm_json
+from src.extraction.llm.schema import (
+    EXTRACTION_FIELDS,
+    guided_json_schema,
 )
-from src.extraction.reconcile import reconcile  # noqa: E402
-from src.schemas import Extractor  # noqa: E402
+from src.extraction.reconcile import reconcile
+from src.schemas import Extractor
 
 # Hata yolları BİLEREK loglanır; test çıktısını kirletmesin diye susturulur.
 # Loglamanın gerçekten olduğu `test_hata_loglanir` içinde ayrıca doğrulanır.

@@ -1,0 +1,74 @@
+[tool.ruff]
+# Anatolia AI — linter yapılandırması
+#
+# ## Neden bu dosya var
+#
+# 31 Tem 2026'ya kadar ruff yapılandırmasızdı ve varsayılan kural kümesiyle
+# **479 bulgu** veriyordu. Dağılıma bakınca bunun teknik borç DEĞİL,
+# yapılandırılmamış bir linter olduğu görüldü:
+#
+#     247  UP045  Optional[X] -> X | None      (kozmetik yükseltme)
+#     114  RUF100 kullanılmayan noqa            (temizlik)
+#      20  ISC004 dizi içi dize birleştirme     (biçim tercihi)
+#      17  BLE001 geniş except                  (çoğu gerekçeli)
+#
+# 247 anotasyonu kitlesel yeniden yazmak sıfır işlevsel değer üretir, devasa
+# bir diff yaratır ve gerçek hataları gürültüde boğar. Bunun yerine kural
+# kümesi **açıkça seçildi**: DEFEKT yakalayanlar açık, ÜSLUP tercihi olanlar
+# kapalı. Böylece CI'daki lint işi `continue-on-error` olmaktan çıkıp gerçek
+# bir kapıya dönüşebiliyor — bir linter ancak sıfır bulguda anlamlıdır.
+
+line-length = 88
+target-version = "py311"        # CLAUDE.md §7 asgari sürüm
+# Defterler Colab'da elle koşulan araştırma artefaktı; teslim edilen sistemin
+# parçası değil ve farklı üslup kuralları geçerli.
+extend-exclude = [".venv", "data", "web", "models", "notebooks"]
+
+[tool.ruff.lint]
+# SEÇİLENLER — hepsi gerçek defekt sınıfı
+select = [
+    "F",      # pyflakes: kullanılmayan import/değişken, tanımsız ad, f-string hatası
+    "E9",     # sözdizimi ve girinti hataları (E501 satır uzunluğu HARİÇ — aşağıya bak)
+    "I",      # isort: import sırası — kararlı, otomatik, çakışma azaltır
+    "B",      # bugbear: değişebilir varsayılan argüman, döngüde kapanış, vb.
+    "PLE",    # pylint yalnız HATA sınıfı (PLR/PLW refaktör önerisi değil)
+    "RUF100", # kullanılmayan noqa — ölü bastırma, gerçek bulguyu gizler
+    "T20",    # üretim kodunda print() — kütüphane katmanı sessiz olmalı
+]
+
+ignore = [
+    # E501 (satır uzunluğu) kapalı: Türkçe docstring'ler bu projede birinci
+    # sınıf dokümantasyon ve bazı gerekçe paragrafları 88 sütunu aşıyor.
+    # Kodun kendisi zaten dar; biçimlendirmeyi mekanik kurala bırakmıyoruz.
+    "E501",
+]
+
+# KAPALI BIRAKILANLAR ve gerekçeleri:
+#   UP    (pyupgrade)  — 247 bulgunun kaynağı. `Optional[X]` bu kod tabanında
+#                        tutarlı biçimde kullanılıyor; değiştirmek üslup
+#                        tercihi, hata düzeltmesi değil.
+#   S     (bandit)     — `try/except/pass` bulgularının hepsi gerekçeli
+#                        temizlik yolları (`_close_quiet`, `finally: page.close()`,
+#                        networkidle'a ulaşmayan sayfalar). Kural açılınca
+#                        meşru kodu susturmak için noqa yağmuru gerekirdi.
+#   PLR   (refaktör)   — "çok fazla dal/argüman" gibi öneriler; çıkarım
+#                        kuralları doğası gereği dallı.
+#   ISC, SIM, FURB     — biçim/kısaltma tercihleri.
+
+[tool.ruff.lint.per-file-ignores]
+# `print()` bir KÜTÜPHANE katmanında kod kokusudur (çağıran çıktıyı
+# yönetemez), ama bir CLI GİRİŞ NOKTASINDA doğru araçtır. Ayrım dosya
+# rolüne göre yapılıyor; blanket olarak `src/*` muaf tutulmuyor ki
+# kütüphane modüllerine print sızarsa yakalansın.
+"tests/*" = ["T20", "E402"]
+"scripts/*" = ["T20"]
+"eval/*" = ["T20"]
+"src/scraping/run.py" = ["T20"]
+"src/scraping/harvest.py" = ["T20"]
+"src/scraping/harvest_products.py" = ["T20"]
+"src/extraction/run.py" = ["T20"]
+"src/comparison/scan.py" = ["T20"]
+"src/chatbot/run_safety_eval.py" = ["T20"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["src", "eval", "scripts"]

@@ -19,9 +19,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from scripts.build_demo_db import build, format_report  # noqa: E402
-from src.db.repository import Repository  # noqa: E402
-from src.schemas import Campaign, ExtractedField, Extractor  # noqa: E402
+from scripts.build_demo_db import build, format_report
+from src.db.repository import Repository
+from src.schemas import Campaign, ExtractedField, Extractor
 
 
 def _yaz(kok: Path, rel: str, icerik: str) -> None:

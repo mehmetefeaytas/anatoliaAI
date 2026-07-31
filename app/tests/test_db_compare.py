@@ -6,11 +6,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.db.repository import Repository  # noqa: E402
-from src.extraction.reconcile import build_campaign  # noqa: E402
-from src.comparison.compare import rank, best  # noqa: E402
-from src.comparison.contradiction import detect  # noqa: E402
-from src.schemas import Campaign, ExtractedField, Extractor  # noqa: E402
+from src.comparison.compare import best, rank
+from src.comparison.contradiction import detect
+from src.db.repository import Repository
+from src.extraction.reconcile import build_campaign
+from src.schemas import Campaign, ExtractedField, Extractor
 
 
 class TestRepository(unittest.TestCase):

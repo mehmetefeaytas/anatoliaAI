@@ -317,7 +317,7 @@ def _list_equal(pred: Any, gold: Any, *, unordered: bool, fold: bool) -> Match:
         return Match(False, f"liste kümesi farklı (eksik={missing}, fazla={extra})")
     if len(p) != len(g):
         return Match(False, f"liste uzunluğu farklı: {len(p)} != {len(g)}")
-    for i, (x, y) in enumerate(zip(p, g)):
+    for i, (x, y) in enumerate(zip(p, g, strict=False)):
         if x != y:
             return Match(False, f"liste[{i}] farklı: {x!r} != {y!r}")
     return _OK

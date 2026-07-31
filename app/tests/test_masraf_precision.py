@@ -28,11 +28,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.rules.extract import (  # noqa: E402
+from src.extraction.rules.extract import (
     _truncate_at_next_column,
     extract_masraf,
 )
-from src.normalization.normalize import normalize_fee_status  # noqa: E402
+from src.normalization.normalize import normalize_fee_status
 
 
 class TestCiplakIsimKanitDegil(unittest.TestCase):

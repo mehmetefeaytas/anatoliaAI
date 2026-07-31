@@ -28,14 +28,14 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.ner.classifier import RuleHintClassifier  # noqa: E402
-from src.extraction.rules.extract import extract_all  # noqa: E402
-from src.extraction.rules.synonyms import (  # noqa: E402
+from src.extraction.ner.classifier import RuleHintClassifier
+from src.extraction.rules.extract import extract_all
+from src.extraction.rules.synonyms import (
     TERMINOLOGY_5_5,
     qualitative_rate_claim,
     terminology_hits,
 )
-from src.preprocessing.clean import normalize_text, tr_fold_ascii  # noqa: E402
+from src.preprocessing.clean import normalize_text, tr_fold_ascii
 
 
 def _kat(metin: str) -> str:

@@ -11,7 +11,6 @@ motoruna güvenle eşler. Sonuç her zaman kaynağa (source_span) dayalıdır.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Optional
 
 from ..comparison.compare import RankRow, rank
 from ..db.repository import Repository

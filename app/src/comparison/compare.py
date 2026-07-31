@@ -19,7 +19,8 @@ sıralamada aralığın alt sınırı (en iyi senaryo) kullanılır ve flag veri
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from typing import Any, Iterable, Optional
 
 from ..normalization.normalize import collapse_degenerate_range

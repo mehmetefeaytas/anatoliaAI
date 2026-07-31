@@ -21,9 +21,16 @@ import sys
 from pathlib import Path
 from typing import Any, Optional
 
-from .collector import (METHOD_MANUAL, MANUAL_SUBDIR, collect_from_fixtures,
-                        collect_live, ensure_manual_dirs, save_docs, utc_now_iso)
-from .config import BankConfig, load_banks
+from .collector import (
+    MANUAL_SUBDIR,
+    METHOD_MANUAL,
+    collect_from_fixtures,
+    collect_live,
+    ensure_manual_dirs,
+    save_docs,
+    utc_now_iso,
+)
+from .config import load_banks
 from .fetcher import BrowserFetcher, FetcherBundle, RateLimiter, StaticFetcher
 from .robots import DEFAULT_USER_AGENT, RobotsCache
 

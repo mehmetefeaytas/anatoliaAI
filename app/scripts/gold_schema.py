@@ -32,7 +32,8 @@ import hashlib
 import json
 import re
 import sys
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from pathlib import Path
 from typing import Any, Optional
 
@@ -40,12 +41,12 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from src.extraction.llm.schema import (  # noqa: E402
+from src.extraction.llm.schema import (
     EXTRACTION_FIELDS,
     HEDEF_KITLE_LABELS,
 )
-from src.normalization import normalize as N  # noqa: E402
-from src.schemas import CAMPAIGN_TYPES  # noqa: E402
+from src.normalization import normalize as N
+from src.schemas import CAMPAIGN_TYPES
 
 GOLD_SCHEMA_VERSION = "1.0"
 
@@ -570,7 +571,7 @@ def values_equal(a: Any, b: Any, tolerance: float = 1e-6) -> bool:
     if isinstance(a, list) and isinstance(b, list):
         if len(a) != len(b):
             return False
-        return all(values_equal(x, y, tolerance) for x, y in zip(a, b))
+        return all(values_equal(x, y, tolerance) for x, y in zip(a, b, strict=False))
     return a == b
 
 

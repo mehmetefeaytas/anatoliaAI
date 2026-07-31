@@ -107,7 +107,7 @@ def normalize_text(text: str) -> str:
     if not text:
         return ""
     text = strip_html(text)
-    text = text.replace(" ", " ").replace("​", "")
+    text = text.replace(" ", " ").replace("\u200b", "")
     text = text.replace("’", "'").replace("“", '"').replace("”", '"')
     return normalize_whitespace(text)
 

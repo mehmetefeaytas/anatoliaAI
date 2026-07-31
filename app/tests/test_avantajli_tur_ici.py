@@ -30,7 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.comparison.compare import (  # noqa: E402
+from src.comparison.compare import (
     BILINMEYEN_TUR,
     MIN_GROUP_SIZE,
     best_advantageous_by_type,

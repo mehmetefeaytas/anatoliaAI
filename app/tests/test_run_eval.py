@@ -189,7 +189,7 @@ class TestAbsentFields(unittest.TestCase):
             for i in range(2)
         ]
         preds = [{}, {"odul_miktari": 5}]
-        docs = [score_document(r, p, strict_match) for r, p in zip(records, preds)]
+        docs = [score_document(r, p, strict_match) for r, p in zip(records, preds, strict=False)]
         m = micro(aggregate(docs))
         self.assertEqual(m.absent_decisions, 4)
         self.assertEqual(m.fp_hallucinated, 1)

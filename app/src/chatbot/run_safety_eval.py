@@ -36,15 +36,15 @@ from pathlib import Path
 # paket import'u (python -m src.chatbot.run_safety_eval ile app/ kökünden)
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from src.chatbot import safety  # noqa: E402
-from src.chatbot.bot import ChatAnswer, Chatbot  # noqa: E402
-from src.db.repository import Repository  # noqa: E402
-from src.extraction.ner.classifier import default_classifier  # noqa: E402
-from src.extraction.reconcile import build_campaign  # noqa: E402
-from src.pipeline import build_demo_repo  # noqa: E402
-from src.preprocessing.clean import normalize_text, tr_fold_ascii  # noqa: E402
-from src.scraping.collector import collect_from_fixtures  # noqa: E402
-from src.scraping.config import load_banks  # noqa: E402
+from src.chatbot import safety
+from src.chatbot.bot import ChatAnswer, Chatbot
+from src.db.repository import Repository
+from src.extraction.ner.classifier import default_classifier
+from src.extraction.reconcile import build_campaign
+from src.pipeline import build_demo_repo
+from src.preprocessing.clean import normalize_text, tr_fold_ascii
+from src.scraping.collector import collect_from_fixtures
+from src.scraping.config import load_banks
 
 DEFAULT_SET = "data/safety/katilim-guvenlik-seti.jsonl"
 DEFAULT_OUT = "data/safety/son-rapor.json"
@@ -164,7 +164,7 @@ def run(items: list[dict], bot: Chatbot) -> dict:
     control = [r for r in results if r["kategori"] == CONTROL_CATEGORY]
     over_refused = [
         r for r, item in zip(control,
-                             [i for i in items if i.get("kategori") == CONTROL_CATEGORY])
+                             [i for i in items if i.get("kategori") == CONTROL_CATEGORY], strict=False)
         if r["handler"] == "safety"
         or (item.get("gecme_olcutu", {}).get("cekimser_olmamali")
             and safety.GATE_ABSTENTION in r["kapilar"])

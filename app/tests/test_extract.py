@@ -9,7 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.rules.extract import extract_all  # noqa: E402
+from src.extraction.rules.extract import extract_all
 
 
 def fields(text):

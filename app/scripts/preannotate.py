@@ -43,17 +43,17 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from scripts.gold_schema import (  # noqa: E402
+from scripts.gold_schema import (
     CAMPAIGN_TYPE_KEY,
     GOLD_SCHEMA_VERSION,
     values_equal,
 )
-from src.extraction.llm.extractor import default_extractor  # noqa: E402
-from src.extraction.llm.schema import EXTRACTION_FIELDS  # noqa: E402
-from src.extraction.ner.classifier import default_classifier  # noqa: E402
-from src.extraction.rules.extract import extract_all as rule_extract  # noqa: E402
-from src.preprocessing.clean import normalize_text  # noqa: E402
-from src.schemas import ExtractedField  # noqa: E402
+from src.extraction.llm.extractor import default_extractor
+from src.extraction.llm.schema import EXTRACTION_FIELDS
+from src.extraction.ner.classifier import default_classifier
+from src.extraction.rules.extract import extract_all as rule_extract
+from src.preprocessing.clean import normalize_text
+from src.schemas import ExtractedField
 
 DEFAULT_RAW_DIR = "data/raw"
 DEFAULT_OUT = "data/gold/preannotations.json"

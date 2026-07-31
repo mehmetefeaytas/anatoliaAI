@@ -38,15 +38,14 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from eval.iaa import (  # noqa: E402
+from eval.iaa import (
     cohen_kappa,
     fleiss_kappa_from_labels,
     interpret_kappa,
     krippendorff_alpha,
 )
-from scripts.build_gold import infer_annotator, read_review_csv  # noqa: E402
-from scripts.gold_schema import (  # noqa: E402
-    CAMPAIGN_TYPE_KEY,
+from scripts.build_gold import infer_annotator, read_review_csv
+from scripts.gold_schema import (
     NUMERIC_FIELDS,
     parse_gold_value,
 )
@@ -152,7 +151,7 @@ def compute(csv_paths: list[str]) -> dict[str, Any]:
 
     # Sayısal alanlar -> ratio ölçeği.
     ratio_units: list[list[Optional[float]]] = []
-    for key, unit in zip(keys, value_units):
+    for key, unit in zip(keys, value_units, strict=False):
         field = key[1]
         if field not in NUMERIC_FIELDS:
             continue
@@ -170,15 +169,15 @@ def compute(csv_paths: list[str]) -> dict[str, Any]:
 
     # Uyuşmazlık listesi: kararlar ya da değerler ayrışan satırlar.
     disagreements = []
-    for key, v_unit, val_unit in zip(keys, verdict_units, value_units):
+    for key, v_unit, val_unit in zip(keys, verdict_units, value_units, strict=False):
         present_v = [x for x in v_unit if x is not None]
         present_val = [x for x in val_unit if x is not None]
         if len(set(present_v)) > 1 or len(set(present_val)) > 1:
             disagreements.append({
                 "doc_id": key[0],
                 "field": key[1],
-                "verdicts": dict(zip(annotators, v_unit)),
-                "values": dict(zip(annotators, val_unit)),
+                "verdicts": dict(zip(annotators, v_unit, strict=False)),
+                "values": dict(zip(annotators, val_unit, strict=False)),
             })
 
     return {

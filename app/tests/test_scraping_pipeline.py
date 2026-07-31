@@ -7,10 +7,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from src.scraping.config import load_banks  # noqa: E402
-from src.scraping.collector import collect  # noqa: E402
-from src.db.repository import Repository  # noqa: E402
-from src.pipeline import run_pipeline, build_demo_repo, make_chatbot  # noqa: E402
+from src.db.repository import Repository
+from src.pipeline import build_demo_repo, make_chatbot, run_pipeline
+from src.scraping.collector import collect
+from src.scraping.config import load_banks
 
 CONFIG = str(ROOT / "config" / "banks.yaml")
 RAW = str(ROOT / "data" / "raw")

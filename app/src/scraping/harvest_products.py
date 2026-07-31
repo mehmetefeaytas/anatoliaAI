@@ -30,7 +30,6 @@ from pathlib import Path
 from typing import Any, Optional
 
 from .collector import (
-    METHOD_MANUAL,
     PRODUCTS_SUBDIR,
     collect_live,
     save_docs,

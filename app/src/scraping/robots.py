@@ -187,7 +187,7 @@ def _default_fetcher(timeout: float) -> Fetcher:
 
         try:
             req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=timeout) as resp:  # noqa: S310
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
                 body = resp.read().decode("utf-8", errors="replace")
                 return resp.status, body
         except urllib.error.HTTPError as exc:

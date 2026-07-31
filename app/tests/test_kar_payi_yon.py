@@ -30,8 +30,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.rules.extract import extract_kar_payi  # noqa: E402
-from src.preprocessing.clean import normalize_text  # noqa: E402
+from src.extraction.rules.extract import extract_kar_payi
+from src.preprocessing.clean import normalize_text
 
 
 def _ext(metin: str):

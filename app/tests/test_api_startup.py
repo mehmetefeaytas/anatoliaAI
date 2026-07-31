@@ -28,7 +28,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.db.repository import Repository  # noqa: E402
+from src.db.repository import Repository
 
 # Çekirdek paket SIFIR üçüncü parti bağımlılıkla koşar — bu, on-prem
 # iddiasının bir parçası ve CI'daki `test` işi bilinçli olarak hiçbir şey
