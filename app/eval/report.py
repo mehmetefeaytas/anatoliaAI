@@ -36,10 +36,11 @@ import json
 import platform
 import subprocess
 import sys
-from dataclasses import dataclass, field as dc_field
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 DEFAULT_OUT_DIR = "eval/reports"
 
@@ -53,7 +54,7 @@ def timestamp() -> str:
     return datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
 
 
-def git_sha(repo_root: Optional[Path] = None) -> Optional[str]:
+def git_sha(repo_root: Path | None = None) -> str | None:
     """`git rev-parse HEAD`. Git yoksa / repo değilse `None` (hata değil).
 
     Ağ çağrısı yok; yalnız yerel git. Başarısızlık sessizce yutulmaz: dönen
@@ -70,7 +71,7 @@ def git_sha(repo_root: Optional[Path] = None) -> Optional[str]:
     return sha or None
 
 
-def git_dirty(repo_root: Optional[Path] = None) -> Optional[bool]:
+def git_dirty(repo_root: Path | None = None) -> bool | None:
     """Çalışma ağacında commit'lenmemiş değişiklik var mı?
 
     `True` ise raporlanan sayı bir commit'e karşılık GELMEZ; sha tek başına
@@ -86,7 +87,7 @@ def git_dirty(repo_root: Optional[Path] = None) -> Optional[bool]:
     return bool(out.stdout.strip())
 
 
-def sha256_file(path: str | Path) -> Optional[str]:
+def sha256_file(path: str | Path) -> str | None:
     """Dosyanın sha256'sı — "eval hangi gold sürümüyle koştu" sorusunun cevabı."""
     p = Path(path)
     try:
@@ -101,19 +102,19 @@ class EnvInfo:
 
     config: str
     gold_path: str
-    gold_sha256: Optional[str]
+    gold_sha256: str | None
     gold_records: int
     matchers: list[str]
     seed: int
     split: str
-    git_sha: Optional[str] = None
-    git_dirty: Optional[bool] = None
+    git_sha: str | None = None
+    git_dirty: bool | None = None
     python_version: str = dc_field(default_factory=lambda: sys.version.split()[0])
     platform: str = dc_field(default_factory=platform.platform)
     created_utc: str = dc_field(
         default_factory=lambda: datetime.now(timezone.utc).isoformat())
     dependencies: str = "yalnız Python stdlib (numpy/scipy/sklearn YOK)"
-    llm: Optional[dict] = None
+    llm: dict | None = None
     extra: dict[str, Any] = dc_field(default_factory=dict)
 
     def as_dict(self) -> dict:
@@ -141,8 +142,8 @@ class EnvInfo:
 
 def build_env(config: str, gold_path: str, gold_records: int,
               matchers: list[str], seed: int, split: str,
-              llm: Optional[dict] = None,
-              extra: Optional[dict] = None) -> EnvInfo:
+              llm: dict | None = None,
+              extra: dict | None = None) -> EnvInfo:
     """Künyeyi ortamdan toplar (git sha, gold sha256, Python, platform)."""
     return EnvInfo(
         config=config,
@@ -163,7 +164,7 @@ def build_env(config: str, gold_path: str, gold_records: int,
 # Yazma
 # --------------------------------------------------------------------------- #
 def make_run_dir(out_dir: str | Path = DEFAULT_OUT_DIR,
-                 stamp: Optional[str] = None) -> Path:
+                 stamp: str | None = None) -> Path:
     """`<out_dir>/<timestamp>/` dizinini oluşturur ve döndürür."""
     run_dir = Path(out_dir) / (stamp or timestamp())
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -182,7 +183,7 @@ def write_text(path: Path, text: str) -> Path:
     return path
 
 
-def write_csv(path: Path, rows: list[dict], columns: Optional[list[str]] = None
+def write_csv(path: Path, rows: list[dict], columns: list[str] | None = None
               ) -> Path:
     """Sözlük listesini CSV'ye yazar (ayırıcı `;`, bkz. `CSV_DELIMITER`)."""
     cols = columns or (list(rows[0]) if rows else [])
@@ -210,8 +211,8 @@ class WrittenReport:
 
 def write_report(run_dir: Path, *, metrics: dict, env: EnvInfo,
                  markdown: str, per_field_rows: list[dict],
-                 per_field_columns: Optional[list[str]] = None,
-                 extra_json: Optional[dict[str, Any]] = None) -> WrittenReport:
+                 per_field_columns: list[str] | None = None,
+                 extra_json: dict[str, Any] | None = None) -> WrittenReport:
     """Dört (veya daha fazla) çıktıyı tek çağrıda yazar."""
     files = [
         write_json(run_dir / "metrics.json", metrics),

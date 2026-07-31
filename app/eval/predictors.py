@@ -35,20 +35,21 @@ sanır. `unavailable_reason` neden atlandığını Türkçe söyler.
 from __future__ import annotations
 
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.llm.extractor import (  # noqa: E402
+from src.extraction.llm.extractor import (
     LLMExtractor,
     NullLLMExtractor,
     default_extractor,
 )
-from src.extraction.reconcile import reconcile  # noqa: E402
-from src.extraction.rules.extract import extract_all  # noqa: E402
-from src.schemas import ExtractedField  # noqa: E402
+from src.extraction.reconcile import reconcile
+from src.extraction.rules.extract import extract_all
+from src.schemas import ExtractedField
 
 # Konfig adları — CLI `--config` ile birebir aynı.
 CONFIG_KURAL = "kural"
@@ -131,8 +132,8 @@ class Predictor:
     description: str
     fn: Callable[[str], list[ExtractedField]]
     available: bool = True
-    unavailable_reason: Optional[str] = None
-    llm_summary: Optional[dict] = None
+    unavailable_reason: str | None = None
+    llm_summary: dict | None = None
 
     def fields(self, text: str) -> list[ExtractedField]:
         """Ham alan listesi (span/güven bilgisi korunur)."""
@@ -153,7 +154,7 @@ def _rule_only(text: str) -> list[ExtractedField]:
     return list(extract_all(text))
 
 
-def build_predictor(config: str, llm: Optional[LLMExtractor] = None, *,
+def build_predictor(config: str, llm: LLMExtractor | None = None, *,
                     verify_threshold: float = DEFAULT_VERIFY_THRESHOLD) -> Predictor:
     """Konfig adından `Predictor` üretir — TEK giriş noktası.
 
@@ -192,9 +193,9 @@ def build_predictor(config: str, llm: Optional[LLMExtractor] = None, *,
     if config == CONFIG_LLM:
         fn: Callable[[str], list[ExtractedField]] = lambda t: list(active.extract(t))
     elif config == CONFIG_HIBRIT:
-        fn = lambda t: list(reconcile(t, llm=active))                      # noqa: E731
+        fn = lambda t: list(reconcile(t, llm=active))
     else:  # CONFIG_HIBRIT_VERIFY
-        fn = lambda t: list(reconcile(t, llm=active,                       # noqa: E731
+        fn = lambda t: list(reconcile(t, llm=active,
                                       verify_low_conf=verify_threshold))
 
     desc = CONFIG_DESCRIPTIONS[config]
@@ -203,7 +204,7 @@ def build_predictor(config: str, llm: Optional[LLMExtractor] = None, *,
     return Predictor(config, desc, fn, llm_summary=summary)
 
 
-def build_all(configs: list[str], llm: Optional[LLMExtractor] = None, *,
+def build_all(configs: list[str], llm: LLMExtractor | None = None, *,
               verify_threshold: float = DEFAULT_VERIFY_THRESHOLD
               ) -> list[Predictor]:
     """Birden çok konfigi TEK LLM örneğiyle kurar.

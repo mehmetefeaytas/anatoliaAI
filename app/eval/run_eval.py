@@ -50,28 +50,30 @@ from __future__ import annotations
 
 import argparse
 import sys
-from dataclasses import dataclass, field as dc_field
+from collections.abc import Callable, Iterable, Sequence
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from pathlib import Path
-from typing import Any, Callable, Iterable, Optional, Sequence
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from eval import report as report_mod  # noqa: E402
-from eval.matchers import get_matcher, resolve_matchers  # noqa: E402
-from eval.predictors import (  # noqa: E402
+from eval import report as report_mod
+from eval.matchers import get_matcher, resolve_matchers
+from eval.predictors import (
     CONFIG_NAMES,
     DEFAULT_VERIFY_THRESHOLD,
     Predictor,
     build_predictor,
 )
-from eval.stats import DEFAULT_RESAMPLES, DEFAULT_SEED, bootstrap_ci  # noqa: E402
-from scripts.gold_schema import (  # noqa: E402
+from eval.stats import DEFAULT_RESAMPLES, DEFAULT_SEED, bootstrap_ci
+from scripts.gold_schema import (
     ALL_HARD_TAGS,
     GoldRecord,
     load_gold,
     validate_gold,
 )
-from src.extraction.llm.schema import EXTRACTION_FIELDS  # noqa: E402
+from src.extraction.llm.schema import EXTRACTION_FIELDS
 
 SPLITS = ("all", "hard", "easy")
 
@@ -101,7 +103,7 @@ class Counts:
     skipped: int = 0          # gold karar vermemiş (metrik dışı)
     unclear: int = 0          # anotatör "belirsiz" dedi (metrik dışı)
 
-    def add(self, other: "Counts") -> None:
+    def add(self, other: Counts) -> None:
         self.tp += other.tp
         self.fp += other.fp
         self.fn += other.fn
@@ -133,7 +135,7 @@ class Counts:
         """Gold'da "YOK" denen karar sayısı (halüsinasyon oranının paydası)."""
         return self.tn + self.fp_hallucinated
 
-    def hallucination_rate(self) -> Optional[float]:
+    def hallucination_rate(self) -> float | None:
         """Gold "YOK" dediği hâlde değer uydurma oranı.
 
         `None` döner: gold'da hiç `absent_fields` kararı yoksa bu oran
@@ -405,8 +407,8 @@ def evaluate(records: Sequence[GoldRecord], predictor: Predictor,
 def format_table(title: str, table: dict[str, Counts]) -> str:
     """Konsol tablosu — alan satırları + MİKRO + MAKRO."""
     lines = [f"=== {title} ===",
-             f"{'alan':<22}{'P':>7}{'R':>7}{'F1':>7}{'TP':>5}{'FP':>5}"
-             f"{'FN':>5}{'TN':>5}{'UYD':>5}{'ATL':>5}"]
+             (f"{'alan':<22}{'P':>7}{'R':>7}{'F1':>7}{'TP':>5}{'FP':>5}"
+              f"{'FN':>5}{'TN':>5}{'UYD':>5}{'ATL':>5}")]
     for name, c in sorted(table.items()):
         lines.append(
             f"{name:<22}{c.precision():>7.3f}{c.recall():>7.3f}{c.f1():>7.3f}"
@@ -422,7 +424,7 @@ def format_table(title: str, table: dict[str, Counts]) -> str:
     return "\n".join(lines)
 
 
-def _rate_str(rate: Optional[float]) -> str:
+def _rate_str(rate: float | None) -> str:
     return "ölçülemedi (gold'da absent kararı yok)" if rate is None else f"{rate:.3f}"
 
 
@@ -506,20 +508,20 @@ def markdown_report(results: list[MatcherResult], predictor: Predictor,
     out += [
         "## Metrik tanımları", "",
         "- **TP**: gold'da değer var, tahmin eşleşti.",
-        "- **FP**: tahmin var ama yanlış (`fp_wrong`) ya da gold \"YOK\" diyor "
-        "(`fp_hallucinated`).",
+        ("- **FP**: tahmin var ama yanlış (`fp_wrong`) ya da gold \"YOK\" diyor "
+         "(`fp_hallucinated`)."),
         "- **FN**: gold'da değer var, tahmin yok ya da yanlış.",
         "- **TN**: gold \"YOK\" diyor, model de üretmedi (doğru çekimserlik).",
-        "- **ATL (atlanan)**: gold bu alan hakkında KARAR VERMEMİŞ — metriğe "
-        "girmez. Bilmediğimizi lehimize saymıyoruz.",
-        "- **halüsinasyon oranı** = `fp_hallucinated / (tn + fp_hallucinated)`; "
-        "gold'da hiç `absent_fields` kararı yoksa TANIMSIZDIR (0,0 yazmak yalan "
-        "olurdu).",
-        "- **makro-F1**: alanların F1 ortalaması (yalnız gold desteği olan "
-        "alanlar). Mikro seyrek alanları gizler, makro gizlemez.",
-        "- **%95 GA**: belge düzeyinde küme bootstrap. Aynı belgeden çıkan 12 "
-        "alan bağımsız değildir; alan düzeyinde örneklemek GA'yı yapay olarak "
-        "daraltır (bkz. `eval/stats.py`).",
+        ("- **ATL (atlanan)**: gold bu alan hakkında KARAR VERMEMİŞ — metriğe "
+         "girmez. Bilmediğimizi lehimize saymıyoruz."),
+        ("- **halüsinasyon oranı** = `fp_hallucinated / (tn + fp_hallucinated)`; "
+         "gold'da hiç `absent_fields` kararı yoksa TANIMSIZDIR (0,0 yazmak yalan "
+         "olurdu)."),
+        ("- **makro-F1**: alanların F1 ortalaması (yalnız gold desteği olan "
+         "alanlar). Mikro seyrek alanları gizler, makro gizlemez."),
+        ("- **%95 GA**: belge düzeyinde küme bootstrap. Aynı belgeden çıkan 12 "
+         "alan bağımsız değildir; alan düzeyinde örneklemek GA'yı yapay olarak "
+         "daraltır (bkz. `eval/stats.py`)."),
         "",
     ]
 
@@ -599,7 +601,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return ap
 
 
-def main(argv: Optional[list[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     """Çıkış kodu: 0 başarılı, 2 kullanım/veri hatası, 3 konfig ölçülemedi."""
     args = build_arg_parser().parse_args(argv)
 

@@ -28,9 +28,11 @@ kullanılır.
 from __future__ import annotations
 
 import sys
-from dataclasses import dataclass, field as dc_field
+from collections.abc import Callable
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -46,7 +48,7 @@ class Violation:
 
     prop: str                 # hangi değişmez
     doc_id: str
-    field_name: Optional[str]
+    field_name: str | None
     detail: str
     before: Any = None
     after: Any = None
@@ -307,27 +309,39 @@ HTML_SUFFIXES = (".html", ".htm")
 def load_corpus(raw_dir: str, include_html: bool = False) -> dict[str, str]:
     """`data/raw/` altındaki belgeleri okur (etiket gerekmez).
 
-    ## Varsayılan neden yalnız `.txt` — ÇİFT SAYIM hatası
+    ## Varsayılan neden yalnız `.txt`
 
-    `data/raw/` her belgeyi İKİ biçimde tutar: ham `.html` ve temizlenmiş
-    `.txt` (provenance için, CLAUDE.md §14). Eski süzgeç ikisini de alıyordu ve
-    849 benzersiz belge **1696 belge** olarak raporlanıyordu — sayı olduğundan
-    iki kat büyük görünüyordu.
+    **1. Çift sayım (asıl hata).** `data/raw/` her belgeyi İKİ biçimde tutar:
+    ham `.html` ve temizlenmiş `.txt` (provenance, CLAUDE.md §14). Eski süzgeç
+    ikisini de alıyordu ve **849 benzersiz belge 1696 belge olarak**
+    raporlanıyordu. "1696 belgede 0 ihlal" cümlesi olduğundan iki kat büyük
+    görünüyordu — çökmeyen, sessizce yanlış rapor eden bir hata.
 
-    Daha kötüsü: ham HTML `normalize_text`'ten geçince markup çorbası olur ve
-    çıkarıcı orada neredeyse hiçbir alan bulamaz. Alan bulunmayan belgede
-    değişmez denetimi hiçbir şey test etmez ve **otomatik geçer**. Yani ihlal
-    oranımız ~847 boş kayıtla seyreltiliyordu; istatistik kendi lehimize
-    bozuluyordu. Bu, projedeki diğer hatalarla aynı sınıftır: çökmez, sessizce
-    yanlış rapor eder.
+    **2. `.txt` üretimde görülen girdidir.** Çıkarıcı ham HTML üzerinde
+    çalışmaz; boru hattı `clean → preprocess → extract` sırasını izler.
+    HTML üzerinde ölçülen bir değişmez, hiç sevk etmediğimiz bir kod yolunu
+    ölçer.
 
-    `.txt` doğru varsayılandır çünkü çıkarıcının ÜRETİMDE gördüğü girdi odur.
+    ### Ölçüm notu (varsayımı doğrulamak için koşuldu)
+
+    Bu değişikliğin ilk gerekçesi "ham HTML'de çıkarıcı alan bulamaz, o yüzden
+    847 boş kayıt ihlal oranını seyreltir" idi. **Ölçünce yanlış çıktı** ve
+    burada kayda geçirilir:
+
+        .txt   849 belge, 732'sinde alan var (%86,2), toplam 2333 alan
+        .html  847 belge, 846'sında alan var (%99,9), toplam 3786 alan
+
+    Yani HTML kayıtları boş değil, tersine `.txt`'ten **%62 daha fazla** alan
+    üretiyor. Bu, seyreltme argümanını çürütür ama varsayılanı değiştirmez:
+    (1) numaralı çift sayım hatası kendi başına yeterlidir. Fazladan çıkan
+    alanların markup gürültüsünden mi geldiği AYRI bir sorudur ve bu modülün
+    kapsamı dışındadır — `--include-html` ile incelenebilir.
 
     Args:
         raw_dir: belgelerin kök dizini.
         include_html: `True` ise ham `.html`/`.htm` de okunur. Rapor bunları
-            AYRI satır olarak göstermelidir; tek sayıya karıştırmak yukarıdaki
-            hatayı geri getirir.
+            AYRI satır olarak göstermelidir; tek sayıya karıştırmak çift sayım
+            hatasını geri getirir.
     """
     from src.preprocessing.clean import normalize_text
 

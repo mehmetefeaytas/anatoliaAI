@@ -41,18 +41,30 @@ from __future__ import annotations
 
 import math
 import random
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from typing import Callable, Optional, Sequence, TypeVar
+from typing import TypeVar
 
 DEFAULT_SEED = 42
 DEFAULT_RESAMPLES = 1000
 DEFAULT_CONFIDENCE = 0.95
 
-# McNemar'da tam binom ile χ² yaklaşımı arasındaki sınır. b+c < 25 iken χ²
-# yaklaşımı güvenilmezdir (klasik eşik; Wikipedia "McNemar's test" ve
-# Agresti, *Categorical Data Analysis*, bu değeri kullanır). Küçük örneklemde
-# yaklaşım kullanmak p-değerini olduğundan küçük gösterir — yani gerçekte
-# olmayan bir üstünlüğü "istatistiksel olarak anlamlı" ilan ederiz.
+# McNemar'da tam binom ile χ² yaklaşımı arasındaki sınır (klasik eşik;
+# Wikipedia "McNemar's test" ve Agresti, *Categorical Data Analysis*).
+#
+# Gerekçe: χ², KESİKLİ binom dağılımına yapılan SÜREKLİ bir yaklaşımdır ve
+# b+c küçükken bu yaklaşımın hatası göreli olarak büyür. Hata tek yönlü
+# DEĞİLDİR — süreklilik düzeltmesiyle genelde konservatif (p olduğundan
+# büyük) çıkar ama bazı (b, c) çiftlerinde ters döner:
+#
+#     b=8,  c=0 -> tam 0,0078  χ² 0,0133   (%70 göreli hata, konservatif)
+#     b=3,  c=1 -> tam 0,6250  χ² 0,6171   (anti-konservatif)
+#
+# Yani "yaklaşım hep lehimize/aleyhimize" diyemeyiz; diyebileceğimiz şey,
+# küçük örneklemde p-değerinin GÜVENİLMEZ olduğudur. Tam binom testi ise
+# kesikli dağılımın kendisidir ve her b, c için geçerlidir. Bizim gold
+# setimizde (250 belge hedefi) alan başına uyumsuz çift sayısı tek haneli
+# kalabilir; bu eşik teorik bir süs değil.
 EXACT_THRESHOLD = 25
 
 T = TypeVar("T")
@@ -254,7 +266,7 @@ class McNemarResult:
     method: str
     n_agree_correct: int = 0
     n_agree_wrong: int = 0
-    statistic: Optional[float] = None
+    statistic: float | None = None
     alpha: float = 0.05
 
     @property
@@ -270,7 +282,7 @@ class McNemarResult:
         return self.p_value < self.alpha
 
     @property
-    def winner(self) -> Optional[str]:
+    def winner(self) -> str | None:
         """Anlamlı fark varsa kazanan taraf ("A" | "B"), yoksa `None`."""
         if not self.significant or self.b == self.c:
             return None
@@ -305,10 +317,12 @@ def mcnemar(b: int, c: int, *, n_agree_correct: int = 0, n_agree_wrong: int = 0,
       * aksi halde → **süreklilik düzeltmeli χ² yaklaşımı**
         `χ² = (|b − c| − 1)² / (b + c)`, 1 serbestlik derecesi.
 
-    Neden eşik: küçük örneklemde χ² yaklaşımı p-değerini olduğundan küçük
-    gösterir; yani gerçekte olmayan bir üstünlüğü "anlamlı" ilan eder. Bizim
-    gold setimiz (250 belge hedefi) uyumsuz çift sayısının tek haneli
-    kalabileceği alanlara sahip — bu eşik teorik bir süs değil.
+    Neden eşik: χ², kesikli binom dağılımına yapılan sürekli bir yaklaşımdır
+    ve `b + c` küçükken hatası göreli olarak büyür (ör. b=8, c=0: tam test
+    0,0078 verirken χ² 0,0133 verir — %70 göreli hata). Hatanın YÖNÜ tek
+    düze değildir, o yüzden "yaklaşım hep lehimize çalışır" gibi bir şey
+    iddia edilmez; iddia edilen, küçük örneklemde p-değerinin güvenilmez
+    olduğudur. Ayrıntı: `EXACT_THRESHOLD` yorumu.
 
     Args:
         b: A doğru & B yanlış çift sayısı.

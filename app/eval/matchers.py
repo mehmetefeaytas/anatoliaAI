@@ -47,13 +47,14 @@ birebir eşleşmek zorundadır, çünkü bunlar büyüklük değil KATEGORİdir:
 from __future__ import annotations
 
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.gold_schema import (  # noqa: E402
+from scripts.gold_schema import (
     DATE_FIELDS,
     FEE_FIELDS,
     LABEL_LIST_FIELDS,
@@ -62,7 +63,7 @@ from scripts.gold_schema import (  # noqa: E402
     RATE_FIELDS,
     TEXT_LIST_FIELDS,
 )
-from src.preprocessing.clean import tr_fold_ascii  # noqa: E402
+from src.preprocessing.clean import tr_fold_ascii
 
 # Katı modda bile float gösterim gürültüsü hata sayılmaz: 1.89 ile
 # 1.8900000000000001 aynı ondalık sayının iki gösterimidir.
@@ -362,5 +363,5 @@ def resolve_matchers(spec: str) -> list[str]:
     return [spec]
 
 
-def describe(name: str) -> Optional[str]:
+def describe(name: str) -> str | None:
     return MATCHER_DESCRIPTIONS.get(name)

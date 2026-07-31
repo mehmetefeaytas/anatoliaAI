@@ -47,13 +47,12 @@ import argparse
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from eval import report as report_mod  # noqa: E402
-from eval.matchers import get_matcher, resolve_matchers  # noqa: E402
-from eval.predictors import (  # noqa: E402
+from eval import report as report_mod
+from eval.matchers import get_matcher, resolve_matchers
+from eval.predictors import (
     CONFIG_HIBRIT,
     CONFIG_HIBRIT_VERIFY,
     CONFIG_KURAL,
@@ -63,7 +62,7 @@ from eval.predictors import (  # noqa: E402
     Predictor,
     build_all,
 )
-from eval.run_eval import (  # noqa: E402
+from eval.run_eval import (
     DocScore,
     aggregate,
     macro_f1,
@@ -71,7 +70,7 @@ from eval.run_eval import (  # noqa: E402
     micro_f1_of,
     score_all,
 )
-from eval.stats import (  # noqa: E402
+from eval.stats import (
     DEFAULT_RESAMPLES,
     DEFAULT_SEED,
     McNemarResult,
@@ -79,7 +78,7 @@ from eval.stats import (  # noqa: E402
     bootstrap_diff_ci,
     mcnemar_from_pairs,
 )
-from scripts.gold_schema import GoldRecord, load_gold, validate_gold  # noqa: E402
+from scripts.gold_schema import GoldRecord, load_gold, validate_gold
 
 # Ablasyonun varsayılan kolları. `hibrit-verify` de dâhildir: `reconcile.py`
 # docstring'i bu kolun "ablasyonda ayrı satır olarak ölçüldüğünü" söylüyordu
@@ -95,7 +94,7 @@ class ArmResult:
     description: str
     docs: list[DocScore]
     available: bool = True
-    unavailable_reason: Optional[str] = None
+    unavailable_reason: str | None = None
     ci_micro: object = None
 
     @property
@@ -244,8 +243,8 @@ def run_ablation(records: list[GoldRecord], predictors: list[Predictor],
 def format_arms(arms: list[ArmResult], matcher_name: str) -> str:
     """Ablasyon tablosu (konsol)."""
     lines = [f"=== ABLASYON — eşleştirici '{matcher_name}' ===",
-             f"{'konfig':<16}{'F1(tüm)':>9}{'makro':>8}{'F1(zor)':>9}"
-             f"{'TP':>6}{'FP':>6}{'FN':>6}{'UYD':>6}  mikro-F1 %95 GA"]
+             (f"{'konfig':<16}{'F1(tüm)':>9}{'makro':>8}{'F1(zor)':>9}"
+              f"{'TP':>6}{'FP':>6}{'FN':>6}{'UYD':>6}  mikro-F1 %95 GA")]
     for arm in arms:
         if not arm.available:
             lines.append(f"{arm.config:<16}{'ÖLÇÜLMEDİ':>9}   (bkz. NOTLAR)")
@@ -266,8 +265,8 @@ def format_comparisons(comparisons: list[Comparison]) -> str:
         return ("\n=== İSTATİSTİKSEL KARŞILAŞTIRMA ===\n"
                 "Karşılaştırılacak en az iki ÖLÇÜLEBİLEN kol yok.")
     lines = ["\n=== İSTATİSTİKSEL KARŞILAŞTIRMA (McNemar, eşleşmiş çiftler) ===",
-             "b = ilk kol doğru & ikinci yanlış; c = tersi. Uyumlu çiftler teste "
-             "girmez.",
+             ("b = ilk kol doğru & ikinci yanlış; c = tersi. Uyumlu çiftler "
+              "teste girmez."),
              "Yöntem: b+c < 25 ise TAM BİNOM, değilse süreklilik düzeltmeli χ².",
              ""]
     for comparison in comparisons:
@@ -307,13 +306,14 @@ def markdown_report(arms: list[ArmResult], comparisons: list[Comparison],
          "mikro-F1 %95 GA", "halüsinasyon"], rows), ""]
 
     out += ["## İstatistiksel karşılaştırma (McNemar)", "",
-            "Eşleşmiş çift = **(belge, alan) kararı**. Test yalnız UYUMSUZ "
-            "çiftlere bakar; iki kol aynı kararı verdiğinde ayırt edici bilgi "
-            "yoktur.", "",
-            "Yöntem seçimi: `b + c < 25` ise **tam binom testi**, değilse "
-            "**süreklilik düzeltmeli χ²**. Küçük örneklemde χ² p-değerini "
-            "olduğundan küçük gösterir, yani olmayan bir üstünlüğü \"anlamlı\" "
-            "ilan eder.", ""]
+            ("Eşleşmiş çift = **(belge, alan) kararı**. Test yalnız UYUMSUZ "
+             "çiftlere bakar; iki kol aynı kararı verdiğinde ayırt edici bilgi "
+             "yoktur."), "",
+            ("Yöntem seçimi: `b + c < 25` ise **tam binom testi**, değilse "
+             "**süreklilik düzeltmeli χ²**. χ², kesikli binom dağılımına "
+             "yapılan sürekli bir yaklaşımdır ve `b + c` küçükken hatası "
+             "göreli olarak büyür (ör. b=8, c=0: tam test 0,0078, χ² 0,0133). "
+             "Hangi yöntemin kullanıldığı her satırda yazar."), ""]
     if comparisons:
         out += [report_mod.md_table(
             ["A", "B", "alt küme", "b", "c", "p", "yöntem", "sonuç",
@@ -380,7 +380,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     return ap
 
 
-def main(argv: Optional[list[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     """Çıkış kodu: 0 başarılı, 2 kullanım/veri hatası."""
     args = build_arg_parser().parse_args(argv)
 
