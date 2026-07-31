@@ -441,6 +441,93 @@ def best_advantageous(rows: Iterable[dict],
     return None
 
 
+# Bir türde bu sayıdan az kampanya varsa sıralama yapılmaz.
+# Sıralama tabanlı normalizasyon 2 öğede dejenere olur (biri 1.0, biri 0.0)
+# ve "en avantajlı" iddiası anlamsızlaşır — 2 kampanyadan birinin en iyi
+# olduğunu söylemek bilgi taşımaz. Grup gizlenmez, sebebiyle raporlanır.
+MIN_GROUP_SIZE = 3
+
+BILINMEYEN_TUR = "Sınıflandırılamadı"
+
+
+def rank_advantageous_by_type(
+    rows: Iterable[dict],
+    weights: Optional[dict[str, float]] = None,
+    min_coverage: float = MIN_COVERAGE,
+    min_group_size: int = MIN_GROUP_SIZE,
+) -> dict[str, dict[str, Any]]:
+    """§5.7 "En Avantajlı Kampanya" — **kampanya türü İÇİNDE** sıralama.
+
+    ## Neden tür içinde
+
+    Şartnamenin kendi çalışılmış örneği (s.12–13) **aynı ürünü** karşılaştırıyor:
+    A Bankası, B Bankası ve C Bankası'nın **konut finansmanı** kampanyaları,
+    tek tabloda, banka başına bir satır. Türler arası karşılaştırma istenmiyor.
+
+    Bunun ölçülmüş gerekçesi de var. 849 belgelik korpusta 495 skorlanabilir
+    kampanya var ama alanlar türlere göre keskin ayrışıyor::
+
+        Kart               114 kampanya —   3'ünde kâr payı var
+        İhtiyaç Finansmanı 104 kampanya —   5'inde
+        Alışveriş Puanı     13 kampanya —   0'ında
+        Konut Finansmanı    72 kampanya —  11'inde
+
+    Toplamda kampanyaların yalnızca **%9,5'inde** kâr payı oranı var. Türler
+    arası tek listede kâr payına ne ağırlık verilirse verilsin, kampanyaların
+    %90'ı için o ağırlık yeniden dağıtılır ve karşılaştırma bulanıklaşır.
+
+    Daha temel sorun: bir **kredi kartı kampanyası** ile bir **konut
+    finansmanı** birbirinin alternatifi değildir. "Hangisi daha avantajlı"
+    sorusu bu ikisi arasında iyi tanımlı değildir. `CLAUDE.md` §17 zaten
+    "yalnızca aynı birime normalize alanlar kıyaslanır" diyor; bu, o kuralın
+    ürün ailesi düzeyine uygulanmış hâli.
+
+    ## Normalizasyon nerede yapılıyor
+
+    Sıralama tabanlı normalizasyon **grup içinde** koşar: her tür kendi
+    popülasyonuna göre 0..1'e indirgenir. Bu kritiktir — konut finansmanı
+    kampanyaları kart kampanyalarına göre normalize edilseydi, oranı olmayan
+    114 kart kampanyası dağılımı bozardı.
+
+    Dönüş: ``{tür: {"ranked": [...], "count": n, "note": str|None}}``.
+    Küçük gruplar `ranked=[]` ve bir `note` ile döner — **gizlenmez**.
+    """
+    from collections import defaultdict
+
+    gruplar: dict[str, list[dict]] = defaultdict(list)
+    for r in rows:
+        gruplar[(r.get("campaign_type") or BILINMEYEN_TUR)].append(r)
+
+    out: dict[str, dict[str, Any]] = {}
+    for tur, grup in sorted(gruplar.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+        if len(grup) < min_group_size:
+            out[tur] = {
+                "ranked": [], "count": len(grup),
+                "note": (f"{len(grup)} kampanya — sıralama için en az "
+                         f"{min_group_size} gerekiyor; bu türde 'en avantajlı' "
+                         f"iddiası bilgi taşımaz."),
+            }
+            continue
+        out[tur] = {
+            "ranked": rank_advantageous(grup, weights=weights,
+                                        min_coverage=min_coverage),
+            "count": len(grup),
+            "note": None,
+        }
+    return out
+
+
+def best_advantageous_by_type(
+    rows: Iterable[dict],
+    weights: Optional[dict[str, float]] = None,
+) -> dict[str, Optional[CompositeScore]]:
+    """Her kampanya türünün en avantajlısı; kıyaslanabilir yoksa None."""
+    out: dict[str, Optional[CompositeScore]] = {}
+    for tur, bilgi in rank_advantageous_by_type(rows, weights=weights).items():
+        out[tur] = next((c for c in bilgi["ranked"] if c.comparable), None)
+    return out
+
+
 def weight_manifest(weights: Optional[dict[str, float]] = None) -> list[dict[str, Any]]:
     """Ağırlıkları gerekçeleriyle döndürür — API/dashboard bunu gösterir.
 
