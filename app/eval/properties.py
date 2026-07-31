@@ -234,12 +234,32 @@ ALL_CHECKS: list[Callable[[str, str], list[Violation]]] = [
 
 @dataclass
 class PropertyReport:
+    """Denetim sonucu.
+
+    `documents_with_fields` NEDEN gerekli: "N belgede 0 ihlal" cümlesi tek
+    başına yetersizdir. Çıkarıcının hiçbir alan bulamadığı bir belgede değişmez
+    denetimi HİÇBİR ŞEY test etmez ve otomatik geçer — karşılaştırılacak değer
+    yoktur. Boş belgeler sayıya karışırsa "0 ihlal" ifadesi bedava geçişlerle
+    seyreltilir ve istatistiği kendi lehimize bozar. Gerçek kapsam:
+    "N belge, bunların M'sinde en az bir alan çıktı, K ihlal".
+    """
+
     documents: int = 0
+    documents_with_fields: int = 0
     violations: list[Violation] = dc_field(default_factory=list)
+
+    @property
+    def documents_without_fields(self) -> int:
+        return self.documents - self.documents_with_fields
 
     @property
     def passed(self) -> bool:
         return not self.violations
+
+    @property
+    def coverage(self) -> float:
+        """Alan çıkan belge oranı — denetimin GERÇEKTEN test ettiği pay."""
+        return self.documents_with_fields / self.documents if self.documents else 0.0
 
     def by_prop(self) -> dict[str, int]:
         out: dict[str, int] = {}
@@ -248,10 +268,13 @@ class PropertyReport:
         return out
 
     def summary(self) -> str:
+        head = (f"{self.documents} belge "
+                f"({self.documents_with_fields} tanesinde en az bir alan çıktı; "
+                f"{self.documents_without_fields} boş belgede denetim hiçbir şey "
+                f"test etmiyor — kapsam {self.coverage:.1%})")
         if self.passed:
-            return (f"{self.documents} belge — tüm değişmezler GEÇTİ "
-                    f"(0 ihlal)")
-        lines = [f"{self.documents} belge — {len(self.violations)} İHLAL:"]
+            return f"{head} — tüm değişmezler GEÇTİ (0 ihlal)"
+        lines = [f"{head} — {len(self.violations)} İHLAL:"]
         for prop, n in sorted(self.by_prop().items(), key=lambda x: -x[1]):
             lines.append(f"  {n:4}  {prop}")
         return "\n".join(lines)
@@ -267,19 +290,52 @@ def run(texts: dict[str, str]) -> PropertyReport:
     for doc_id, text in texts.items():
         if not (text or "").strip():
             continue
+        # Alan çıkmayan belgede denetim bedava geçer; bunu SAYALIM ki
+        # "0 ihlal" ifadesinin gerçek kapsamı görünsün (bkz. PropertyReport).
+        if _values(text):
+            rep.documents_with_fields += 1
         for check in ALL_CHECKS:
             rep.violations.extend(check(text, doc_id))
     return rep
 
 
-def load_corpus(raw_dir: str) -> dict[str, str]:
-    """`data/raw/` altındaki tüm belgeleri okur (etiket gerekmez)."""
+# Varsayılan: YALNIZ `.txt`. Gerekçe `load_corpus` docstring'inde.
+TEXT_SUFFIXES = (".txt",)
+HTML_SUFFIXES = (".html", ".htm")
+
+
+def load_corpus(raw_dir: str, include_html: bool = False) -> dict[str, str]:
+    """`data/raw/` altındaki belgeleri okur (etiket gerekmez).
+
+    ## Varsayılan neden yalnız `.txt` — ÇİFT SAYIM hatası
+
+    `data/raw/` her belgeyi İKİ biçimde tutar: ham `.html` ve temizlenmiş
+    `.txt` (provenance için, CLAUDE.md §14). Eski süzgeç ikisini de alıyordu ve
+    849 benzersiz belge **1696 belge** olarak raporlanıyordu — sayı olduğundan
+    iki kat büyük görünüyordu.
+
+    Daha kötüsü: ham HTML `normalize_text`'ten geçince markup çorbası olur ve
+    çıkarıcı orada neredeyse hiçbir alan bulamaz. Alan bulunmayan belgede
+    değişmez denetimi hiçbir şey test etmez ve **otomatik geçer**. Yani ihlal
+    oranımız ~847 boş kayıtla seyreltiliyordu; istatistik kendi lehimize
+    bozuluyordu. Bu, projedeki diğer hatalarla aynı sınıftır: çökmez, sessizce
+    yanlış rapor eder.
+
+    `.txt` doğru varsayılandır çünkü çıkarıcının ÜRETİMDE gördüğü girdi odur.
+
+    Args:
+        raw_dir: belgelerin kök dizini.
+        include_html: `True` ise ham `.html`/`.htm` de okunur. Rapor bunları
+            AYRI satır olarak göstermelidir; tek sayıya karıştırmak yukarıdaki
+            hatayı geri getirir.
+    """
     from src.preprocessing.clean import normalize_text
 
+    suffixes = TEXT_SUFFIXES + (HTML_SUFFIXES if include_html else ())
     out: dict[str, str] = {}
     root = Path(raw_dir)
     for p in sorted(root.rglob("*")):
-        if p.is_file() and p.suffix.lower() in (".txt", ".html", ".htm"):
+        if p.is_file() and p.suffix.lower() in suffixes:
             try:
                 out[str(p.relative_to(root))] = normalize_text(
                     p.read_text(encoding="utf-8", errors="replace"))
@@ -289,6 +345,14 @@ def load_corpus(raw_dir: str) -> dict[str, str]:
 
 
 def _main() -> int:
+    """CLI. Çıkış kodu: 0 temiz, 1 ihlal var, 2 KORPUS OKUNAMADI.
+
+    Çıkış kodu 2 neden eklendi: eski kod belge bulamayınca `UYARI` basıp
+    **0 döndürüyordu**. Yanlış `--raw-dir` yazılmış bir CI adımı böylece
+    YEŞİL veriyordu — hiçbir şey denetlenmeden "geçti" raporlanıyordu. Bu tam
+    olarak bu modülün avlamak için var olduğu hata sınıfıdır (sessizce yanlış
+    rapor); kendi kapımızın ona düşmesi kabul edilemez.
+    """
     import argparse
     import json
 
@@ -297,17 +361,33 @@ def _main() -> int:
     )
     ap.add_argument("--raw-dir", default="data/raw",
                     help="belgelerin bulunduğu dizin (varsayılan: data/raw)")
+    ap.add_argument("--include-html", action="store_true",
+                    help="ham .html/.htm dosyalarını da dahil et. VARSAYILAN "
+                         "KAPALI: data/raw her belgeyi hem .html hem .txt olarak "
+                         "tutar, ikisini birden saymak belge sayısını iki katına "
+                         "çıkarır ve alan çıkmayan HTML kayıtları ihlal oranını "
+                         "seyreltir (bkz. load_corpus).")
     ap.add_argument("--out", default=None,
                     help="ihlalleri JSONL olarak yaz (ör. eval/reports/violations.jsonl)")
     args = ap.parse_args()
 
-    texts = load_corpus(args.raw_dir)
+    texts = load_corpus(args.raw_dir, include_html=args.include_html)
     if not texts:
-        print(f"UYARI: {args.raw_dir} altında belge bulunamadı.")
-        return 0
+        kinds = ", ".join(TEXT_SUFFIXES + (HTML_SUFFIXES if args.include_html
+                                           else ()))
+        print(f"HATA: {args.raw_dir} altında hiç belge bulunamadı "
+              f"(aranan uzantılar: {kinds}).\n"
+              f"Denetim hiçbir şey koşturmadı; bunu 'geçti' saymak sessiz bir "
+              f"yalan olurdu. --raw-dir yolunu kontrol edin.", file=sys.stderr)
+        return 2
 
     rep = run(texts)
     print(rep.summary())
+    if args.include_html:
+        html = sum(1 for k in texts if Path(k).suffix.lower() in HTML_SUFFIXES)
+        print(f"  (bunların {html} tanesi ham HTML — --include-html verildi; "
+              f"temizlenmiş metinle AYNI belgelerin ikinci kopyasıdır, tek "
+              f"sayıya karıştırmayın)")
 
     if rep.violations:
         print("\nİlk ihlaller:")

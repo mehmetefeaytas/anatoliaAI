@@ -23,6 +23,34 @@ güvene göre seçilir. Diğer alanlarda kural mutlak üstünlüğünü korur.
 Varsayılan **0.0**'dır — yani davranış birebir eskisi gibi kalır. Bu bir
 deney anahtarıdır: ablasyonda "doğrulamalı hibrit" ayrı bir satır olarak
 ölçülür, kanıtlanmadan varsayılan yapılmaz.
+
+### KARAR (2026-07-31): özellik KORUNDU, iddia GERÇEK yapıldı
+
+Yukarıdaki "ablasyonda ayrı satır olarak ölçülür" cümlesi bir süre **yalandı**:
+`eval/ablation.py` `reconcile()`'ı varsayılan `verify_low_conf=0.0` ile
+çağırıyordu ve hiçbir çağıran bu anahtarı açmıyordu. Yani ölçülmeyen bir
+özelliğin ölçüldüğü iddia ediliyordu — ölü kod artı yanlış belge.
+
+İki seçenek vardı: özelliği KALDIRMAK ya da iddiayı GERÇEK yapmak. **İkincisi
+seçildi**, üç gerekçeyle:
+
+1. Kapattığı hata sınıfı gerçek ve artık ölçülebilir: kural katmanı YANLIŞ bir
+   değer ürettiğinde varsayılan akışta o alan LLM'e hiç sorulmaz, dolayısıyla
+   hata asla düzeltilemez. `eval/run_eval.py` bu hatayı artık `fp_wrong` olarak
+   ayrı sayıyor — yani kolun kazanç payı doğrudan gözlemlenebilir hâle geldi.
+   Kaldırsaydık, ölçme imkânı doğduğu anda özelliği atmış olurduk.
+2. Kaldırmak `_wins(relaxed=...)` mantığını ve mevcut testlerini
+   (`tests/test_llm_client.py`) de silmek demekti; kanıt üretmeden özellik
+   silmek, kanıt üretmeden özellik eklemek kadar keyfîdir.
+3. Maliyeti sıfıra yakın: varsayılan 0.0 olduğu için ÜRETİM yolu değişmez.
+
+Uygulama: `eval/predictors.py` içinde `hibrit-verify` konfigi (eşik
+`DEFAULT_VERIFY_THRESHOLD = 0.75`) ve `eval/ablation.py` `DEFAULT_ARMS`
+listesinde dördüncü kol. LLM açıkken (`LLM_BACKEND=vllm|ollama`) ablasyon bu
+kolu `hibrit` ile McNemar testiyle karşılaştırır; LLM kapalıyken kol
+"ÖLÇÜLMEDİ" yazılır ve sahte satır üretilmez.
+
+Eşik, ablasyonda kanıtlanmadan varsayılan hâline GETİRİLMEYECEKTİR.
 """
 
 from __future__ import annotations
