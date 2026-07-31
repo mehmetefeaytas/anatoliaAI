@@ -18,14 +18,21 @@ Uçlar:
 Veri kaynağı: önceden doldurulmuş DB (demo stratejisi). Uygulama açılışında
 fixture'lardan in-memory DB kurulur; DATABASE_PATH verilirse kalıcı SQLite.
 
-## Kaynak-span (offset) neden burada YENİDEN hesaplanıyor
+## Kaynak-span (offset) — birincil yol DB, yedek yol yeniden hesaplama
 
 `ExtractedField` hem `source_span` (±40 karakterlik pencere metni) hem
-`span_start`/`span_end` (kesin karakter offset'i) taşır (`src/schemas.py:30-36`).
-Ancak `extracted_fields` tablosunda offset sütunu YOKTUR
-(`src/db/schema.sql:25-34`, `src/db/repository.py:31-35`) — offsetler DB'ye
-yazılırken düşüyor. Şema bu ajanın sahiplik alanı dışında olduğu için offsetler
-API katmanında, saklanan iki alandan **deterministik** biçimde geri kazanılır:
+`span_start`/`span_end` (kesin karakter offset'i) taşır (`src/schemas.py`).
+
+**31 Tem 2026 itibarıyla offsetler veri tabanında SAKLANIYOR**
+(`extracted_fields.span_start` / `span_end` / `confidence_source`;
+bkz. `src/db/schema.sql` ve `repository.campaign_text()`). Öncesinde bu
+sütunlar yoktu ve offsetler DB sınırında sessizce düşüyordu — projenin
+"her değer bir karakter aralığına bağlı" iddiası kalıcılık katmanında
+kayboluyordu.
+
+Aşağıdaki yeniden hesaplama artık **yedek yoldur**: saklanan offset yoksa
+(eski kayıt, ya da offset üretmeyen bir çıkarım katmanı) devreye girer ve
+saklanan iki alandan **deterministik** biçimde geri kazanır:
 
   `source_span` = `raw_text[a:b].strip()`  → yani raw_text'in bitişik bir alt
   dizesidir, `str.find` ile güvenilir biçimde bulunur. `raw_value` de bu
@@ -238,8 +245,19 @@ def build_app():
                        allow_headers=["*"])
 
     repo = ApiRepository(DB_PATH)
-    # demo verisini doldur (önceden doldurulmuş DB stratejisi)
-    run_pipeline(repo, CONFIG, raw_dir=RAW_DIR, mode="fixture")
+    # Demo verisini doldur (CLAUDE.md §11 — önceden doldurulmuş DB).
+    #
+    # KOŞULLU olmak ZORUNDA. Eskiden koşulsuz koşuyordu; in-memory DB'de bu
+    # zararsızdı (her açılış sıfırdan başlar) ama `DATABASE_PATH` bir DOSYAYI
+    # gösterdiğinde her yeniden başlatma 3 kampanya daha ekliyordu:
+    # 849 -> 852 -> 855 -> ... sonsuza dek. Şemada UNIQUE kısıtı yok, yani
+    # çift kayıtlar sessizce birikir ve karşılaştırma tablosunda aynı banka
+    # birden çok kez görünürdü.
+    #
+    # `scripts/build_demo_db.py` ile üretilmiş dolu bir DB verildiğinde
+    # tohumlama tamamen atlanır ve 849 belgelik gerçek korpus korunur.
+    if repo.counts().get("campaigns", 0) == 0:
+        run_pipeline(repo, CONFIG, raw_dir=RAW_DIR, mode="fixture")
     llm = default_extractor()
     bot = Chatbot(repo, llm=llm)
     clf = default_classifier()
