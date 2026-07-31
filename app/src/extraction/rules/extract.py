@@ -75,22 +75,102 @@ def _field(
 # --------------------------------------------------------------------------- #
 # Tekil alan çıkarıcılar
 # --------------------------------------------------------------------------- #
+# ORAN ANAHTAR KELİMEDEN ÖNCE GELDİĞİNDE.
+#
+# Şartname §5.2'nin manşet örneği birebir şu: **"%2,05 kâr payı oranı"** —
+# yani sayı önce, anahtar kelime sonra. Şartnamenin A Bankası senaryosu da
+# aynı yapıda: "özel %1,89 kâr payı oranı ile 120 aya kadar konut finansmanı".
+#
+# İleri yönlü desen bu biçimi iki türlü ıskalıyordu:
+#   "%2,05 kâr payı oranı"                  -> hiçbir şey bulunmuyordu
+#   "%1,89 kâr payı oranı ile 120 aya kadar" -> **120.0** döndürüyordu,
+#                                               yani VADEYİ oran sanıyordu
+# İkincisi sessizce yanlış değer üreten sınıftan ve en ağırlıklı alanda
+# (kar_payi_orani, Model Başarısı %30) oluyordu.
+#
+# Geri yönlü arama SIKI tutulur, iki şartla:
+#   1. `%` işareti ZORUNLU — çıplak sayı ("120 ay kâr payı") oran sayılmaz.
+#   2. Boşluk en fazla 3 karakter — araya kelime giremez. Aksi halde
+#      "%15 indirim ve kâr payı oranı %1,89" cümlesinde indirim oranı
+#      kâr payı diye okunurdu.
+# Bir sayıyı ORAN OLMAKTAN çıkaran birim sözcükleri — Türkçe ekleriyle.
+#
+# Türkçe sondan eklemeli: "36 ay", "36 aya kadar", "36 aylık", "36 ayda".
+# Ek desteği olmadan `ay\b` yalnız çıplak "ay"ı yakalar; korpusta gerçek
+# vakalar "aya kadar vade" ve "aylık periyotlarda" biçimindeydi ve
+# 36 ile 1 sayıları kâr payı ORANI diye okunuyordu.
+# `extract_vade` aynı ek listesini kullanıyor; tek yerde tutmak ikisinin
+# birbirinden ayrışmasını engeller.
+_BIRIM_SONEKLI = (
+    r"(?:ay|y[ıi]l|sene|taksit|adet|tl|₺)"
+    r"(?:a|e|da|de|ta|te|dan|den|tan|ten|[ıi]|l[ıi]k|lar|ler)?\b"
+)
+
+# "kâr payı PAYLAŞIM oranı" — bambaşka bir kavram.
+# Katılma hesaplarında banka ile müşteri kârı bölüşür: "%55'e %45".
+# Bu bir finansman maliyeti değil, bir bölüşüm oranıdır; `kar_payi_orani`
+# alanına yazılırsa karşılaştırma tablosunda o bankayı %55 "oranla" en
+# pahalı gösterir. Korpusta 3 belgede bu şekilde okunuyordu.
+_PAYLASIM_ORANI_RE = re.compile(
+    r"(?:kâr|kar)\s*pay[ıi]\s*payla[şs][ıi]m\s*oran[ıi]", re.IGNORECASE)
+
+_KAR_PAYI_ONCE_RE = re.compile(
+    r"(%\s*\d[\d.,]*)\s{0,3}(?:kâr|kar)\s*pay[ıi](?:\s*oran[ıi])?",
+    re.IGNORECASE,
+)
+
+
 def extract_kar_payi(text: str) -> Optional[ExtractedField]:
-    """Kâr payı oranı: '... kâr payı oranı %1,99 ...' veya aralık."""
+    """Kâr payı oranı: '... kâr payı oranı %1,99 ...' veya '%1,99 kâr payı'.
+
+    İki yön de denenir. ÖNCE geri yönlü bakılır: `%` ile işaretlenmiş ve
+    anahtar kelimeye bitişik bir sayı, anahtar kelimeden sonra gelen
+    işaretsiz bir sayıdan daha güçlü kanıttır. Bu sıra olmadan
+    "%1,89 kâr payı oranı ile 120 aya kadar" ifadesi 120 döndürüyordu.
+    """
+    if _PAYLASIM_ORANI_RE.search(text):
+        # "kâr payı PAYLAŞIM oranı %55'e %45" — bu, banka ile müşteri
+        # arasındaki kâr BÖLÜŞÜMÜ, finansman kâr payı oranı DEĞİL. İkisini
+        # aynı alana yazmak karşılaştırmayı bozar: %55 bir "oran" olarak
+        # tabloya girip o bankayı en pahalı gösterirdi.
+        return None
+    onceki = _KAR_PAYI_ONCE_RE.search(text)
+    if onceki:
+        raw = onceki.group(1)
+        s, e = onceki.span(1)
+        return _field(
+            "kar_payi_orani", raw, N.normalize_rate(raw),
+            _window(text, onceki.start(), onceki.end()),
+            span_start=s, span_end=e,
+            trigger_distance=0,          # bitişik: en güçlü kanıt
+            candidate_count=len(_KAR_PAYI_ONCE_RE.findall(text)),
+        )
+    return _extract_kar_payi_ileri(text)
+
+
+def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
+    """Kâr payı oranı, değer anahtar kelimeden SONRA geldiğinde."""
     # Aralık ikinci operandı bir BİRİM sözcüğü ile devam ediyorsa aralık DEĞİLDİR:
     #   "kâr payı oranı %1,89 ile 120 aya kadar vade"
     # buradaki "ile" bağlaçtır, aralık ayırıcı değil. Negatif ileri-bakış olmadan
     # sistem bunu {min: 1.89, max: 120.0} diye okuyup karşılaştırma tablosuna
     # bir VADEYİ oran üst sınırı olarak yazıyordu.
+    #
+    # Aynı birim kontrolü TEK DEĞER için de gerekli. Eskiden yalnız aralığın
+    # ikinci operandına uygulanıyordu; tek değer korumasızdı ve korpusta
+    # şu iki vakayı üretiyordu:
+    #   "...36 ay vadeli faizsiz finansman..."          -> 36.0 (VADE)
+    #   "...kâr payı ödemelerini ... 1 aylık, 3 aylık"  -> 1.0  (PERİYOT)
+    # İkisi de oran değil. `(?![\d.,])` burada da şart: onsuz regex geri
+    # izleyip "36"dan yalnız "3"ü alarak birim kontrolünü atlatır.
     pat = re.compile(
         r"(kâr|kar)\s*pay[ıi]\s*(oran[ıi])?[^%\d]{0,15}"
-        r"(%?\s*\d[\d.,]*\s*%?"
+        r"(%?\s*\d[\d.,]*(?![\d.,])\s*%?"
         r"(?:\s*(?:-|–|ile|ila)\s*%?\s*"
-        # (?![\d.,]) sayının TAMAMININ tüketilmesini zorlar. Bu olmadan regex
-        # geri izleyip "36"dan yalnız "3"ü alarak birim kontrolünü atlatıyordu.
         r"\d[\d.,]*(?![\d.,])\s*%?"
-        r"(?!\s*(?:ay|y[ıi]l|sene|taksit|tl|₺|adet))"
-        r")?)",
+        rf"(?!\s*{_BIRIM_SONEKLI})"
+        r")?)"
+        rf"(?!\s*{_BIRIM_SONEKLI})",
         re.IGNORECASE,
     )
     m = pat.search(text)

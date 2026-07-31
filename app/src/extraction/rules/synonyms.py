@@ -10,6 +10,7 @@ zararsızdır — katlama sonrası set'e indirgenip tek kez sayılırlar.
 """
 
 import re
+from typing import Optional
 
 from ...normalization.normalize import NEGATION_RE as _NEGATION_RE
 from ...preprocessing.clean import tr_fold_ascii
@@ -51,9 +52,121 @@ TYPE_HINTS: dict[str, list[str]] = {
     "Kart": ["kredi kartı", "kart", "bonus", "kartınız"],
     "Alışveriş Puanı": ["puan", "alışveriş puanı", "alisveris puani", "chip-para"],
     "Yeni Müşteri": ["yeni müşteri", "yeni musteri", "ilk kez", "hoş geldin"],
-    "Yatırım Ürünü": ["yatırım", "yatirim", "katılma hesabı", "altın hesabı", "fon"],
+    # "katılım fonu" şartname §5.5'te açıkça tanımlanan beş kavramdan biri:
+    # "kâr-zarar paylaşımına dayanan hesap türü". Bir yatırım ürünüdür.
+    "Yatırım Ürünü": ["yatırım", "yatirim", "katılma hesabı", "katılım fonu",
+                      "katilim fonu", "altın hesabı", "fon"],
     "Finansman": ["finansman", "kredi"],  # en genel; en sona düşer
 }
+
+
+# --------------------------------------------------------------------------- #
+# Şartname §5.5 — katılım bankacılığı terminolojisi
+# --------------------------------------------------------------------------- #
+# Şartname beş kavramı isim isim sayıyor ve modelin bunları "doğru şekilde
+# yorumlaması" bekleniyor. Beşinin de kural katmanında karşılığı olmalı:
+# ikisi (finansman maliyeti, katılım fonu) 31 Tem'e kadar YALNIZCA LLM
+# prompt'unda (`llm/schema.py`) tanımlıydı — yani LLM kapalıyken, ki
+# offline varsayılanımız bu, sistem o kavramları hiç bilmiyordu.
+#
+# Buradaki eşleme *ayırt etme* içindir, değer çıkarma değil. Özellikle
+# "finansman maliyeti" ile "kâr payı oranı" KARIŞTIRILMAMALI: ilki toplam
+# geri ödeme yükü (TL), ikincisi oran (%). İkisini aynı alana yazmak
+# karşılaştırmayı sessizce bozar.
+TERMINOLOGY_5_5: dict[str, dict[str, str]] = {
+    "kar_payi_orani": {
+        "tanim": "Faiz yerine kullanılan, finansman işlemine konu mal veya "
+                 "hizmet üzerinden oluşan kâr payı oranı.",
+        "birim": "oran (%)",
+    },
+    "finansman_maliyeti": {
+        "tanim": "Kullandırılan finansman kapsamında oluşan toplam geri ödeme "
+                 "tutarı ve müşterinin katlandığı toplam maliyet.",
+        "birim": "para (TL)",
+        "karistirma": "kar_payi_orani ile aynı şey DEĞİL — biri tutar, biri oran.",
+    },
+    "katilim_fonu": {
+        "tanim": "Katılım bankacılığı prensiplerine uygun değerlendirilen, fon "
+                 "sahipleri ile banka arasında kâr-zarar paylaşımına dayanan "
+                 "hesap türü.",
+        "birim": "hesap türü",
+    },
+    "masrafsiz_finansman": {
+        "tanim": "Tahsis ücreti, dosya masrafı veya benzeri ek maliyetlerin "
+                 "uygulanmadığı finansman türü.",
+        "birim": "masraf_durumu -> has_fee=False",
+    },
+    "avantajli_finansman": {
+        "tanim": "Standart finansman koşullarına göre daha uygun maliyet, kâr "
+                 "payı oranı veya ek fayda sunan kampanyalı finansman ürünü.",
+        "birim": "nitel iddia — sayısal değeri YOKTUR",
+    },
+}
+
+TERMINOLOGY_TRIGGERS: dict[str, list[str]] = {
+    "finansman_maliyeti": ["finansman maliyeti", "toplam geri ödeme",
+                           "toplam geri odeme", "toplam maliyet",
+                           "yıllık maliyet oranı", "yillik maliyet orani"],
+    "katilim_fonu": ["katılım fonu", "katilim fonu", "katılma hesabı",
+                     "katilma hesabi", "kâr-zarar paylaşımı",
+                     "kar-zarar paylasimi"],
+}
+
+
+# --------------------------------------------------------------------------- #
+# Şartname §5.2 — sayısal olmayan oran iddiaları
+# --------------------------------------------------------------------------- #
+# Şartname modelin şu dört ifade biçimini yorumlamasını istiyor:
+#
+#     "%2,05 kâr payı oranı"      -> sayısal, kar_payi_orani = 2.05
+#     "avantajlı kâr payı fırsatı" -> NİTEL
+#     "özel oranlı finansman"      -> NİTEL
+#     "düşük maliyetli finansman"  -> NİTEL
+#
+# Son üçünde SAYI YOKTUR. Bunlardan bir oran üretmek halüsinasyondur ve
+# CLAUDE.md §19'un ("bilgi yoksa null") doğrudan ihlalidir. Doğru davranış:
+# iddiayı TANIMAK, ama `kar_payi_orani`'na yazmamak.
+#
+# Bunun pratik değeri şudur: "avantajlı kâr payı" diyen ama oran vermeyen bir
+# kampanya, oran veren bir kampanyayla KIYASLANAMAZ. Adil kıyas garantisi
+# (CLAUDE.md §17) bunu "doğrudan kıyaslanamaz" diye işaretlemeli — sessizce
+# sıralama dışı bırakmak yerine, iddiayı gösterip kıyaslanamadığını söylemeli.
+QUALITATIVE_RATE_CLAIMS: list[str] = [
+    "avantajlı kâr payı", "avantajli kar payi",
+    "avantajlı oran", "avantajli oran",
+    "özel oranlı", "ozel oranli", "özel oran", "ozel oran",
+    "düşük maliyetli", "dusuk maliyetli",
+    "uygun maliyetli", "cazip oran", "avantajlı finansman",
+    "avantajli finansman", "avantajlı fiyat", "avantajli fiyat",
+]
+
+FOLDED_QUALITATIVE_CLAIMS: frozenset[str] = frozenset(
+    tr_fold_ascii(t) for t in QUALITATIVE_RATE_CLAIMS)
+
+
+def qualitative_rate_claim(folded_text: str) -> Optional[str]:
+    """Sayısal olmayan bir oran/maliyet avantajı iddiası varsa onu döndürür.
+
+    ASLA sayısal değer üretmez — §5.2'nin nitel ifadelerinden oran çıkarmak
+    halüsinasyon olur. Yalnızca iddianın VARLIĞINI bildirir; çağıran taraf
+    bunu kampanya koşulu olarak kaydeder ve karşılaştırmada
+    "doğrudan kıyaslanamaz" işaretler.
+    """
+    for iddia in sorted(FOLDED_QUALITATIVE_CLAIMS, key=len, reverse=True):
+        if matches(iddia, folded_text):
+            return iddia
+    return None
+
+
+def terminology_hits(folded_text: str) -> dict[str, str]:
+    """§5.5 kavramlarından metinde geçenleri döndürür: {kavram: eşleşen ifade}."""
+    out: dict[str, str] = {}
+    for kavram, ifadeler in TERMINOLOGY_TRIGGERS.items():
+        for ifade in ifadeler:
+            if matches(tr_fold_ascii(ifade), folded_text):
+                out[kavram] = ifade
+                break
+    return out
 
 
 # Negasyon: "tahsis ücreti ALINMAZ" gibi ifadeler ücretin YOK olduğunu değil,
