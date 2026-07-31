@@ -188,13 +188,27 @@ işaret dönmesi dahil).
 | En Yüksek Ödül Miktarı | `compare.rank()` · `_HIGHER_IS_BETTER` | ✅ |
 | En Uzun Vade Seçeneği | aynı | ✅ |
 | En Düşük Masraf | `_LOWER_IS_BETTER` | ✅ |
-| **En Avantajlı Kampanya** | — | ❌ **EKSİK** |
+| **En Avantajlı Kampanya** | `compare.rank_advantageous_by_type()` — **tür içinde** bileşik | ✅ |
 
-> ❌ **Açık eksik.** Beşinci ölçüt doğası gereği **çok alanlı/bileşik**;
-> `rank()` yalnızca tek alan üzerinden sıralıyor. Bileşik skor
-> **uydurulmadı** — gerekçelendirilemeyen bir ağırlık koymak, ölçütü hiç
-> yapmamaktan daha kötü olurdu (`CLAUDE.md` §17: uydurma sıralama yapma).
-> Şeffaf ve gerekçeli bir ağırlıklandırma tasarlanıyor.
+**Neden tür içinde.** Şartnamenin kendi çalışılmış örneği (s.12–13) **aynı
+ürünü** karşılaştırıyor: A, B ve C Bankası'nın *konut finansmanı*
+kampanyaları, tek tabloda, banka başına bir satır.
+
+Ölçüm de bunu gerektiriyordu: 495 skorlanabilir kampanyanın yalnızca
+**%9,5'inde** kâr payı oranı var (Kart 114 kampanyanın 3'ü, Alışveriş Puanı
+13'ün 0'ı). Türler arası tek listede kâr payına hangi ağırlık verilirse
+verilsin %90 için yeniden dağıtılır. Dahası bir kredi kartı kampanyası ile
+bir konut finansmanı birbirinin alternatifi değildir.
+
+**Yöntem:** sıralama tabanlı normalizasyon (min-max değil — çıkarım kaynaklı
+uç değerler sıralamayı yok ediyordu), **grup içinde** koşar. Ağırlıklar
+`DEFAULT_WEIGHTS`, her biri `WEIGHT_RATIONALE`'de tek cümle gerekçeli ve
+`weight_manifest()` ile API'den okunabilir. 3'ten az kampanyası olan tür
+sıralanmaz ama **gizlenmez** — sayı ve sebep raporlanır.
+
+**Adil kıyas:** eksik alan sıfır puan **değildir**; skor yalnız kapsanan
+ölçütler üzerinden ortalanır, `coverage` ayrı raporlanır, `<0.5` ise
+`comparable=False` + listenin sonu.
 
 **Adil kıyas garantisi:** Yalnızca aynı birime normalize edilmiş alanlar
 kıyaslanır. Koşullar farklıysa `comparable=False` + gerekçe notu döner;
