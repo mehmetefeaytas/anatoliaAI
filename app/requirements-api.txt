@@ -5,14 +5,39 @@
 # çıkarır. Çekirdek (kurallar + normalizasyon + karşılaştırma + eval) saf
 # stdlib ile çalıştığı için API konteyneri çok ince kalabilir.
 #
-# Model katmanı (BERTurk, embedding) ayrı bir imaj/volume ile gelir —
-# bkz. docs/OFFLINE-KANIT.md ve scripts/fetch_models.sh.
+# Model katmanı (BERTurk, embedding, LLM ağırlıkları) ayrı bir imaj/volume ile
+# gelir; ağırlıkların önceden indirilme prosedürü ve bütünlük (SHA-256) tablosu
+# docs/OFFLINE-KANIT.md "Ağırlık bütünlüğü" bölümündedir.
+#
+# NOT: bu satır önceden var olmayan bir `scripts/fetch_models.sh` dosyasına atıf
+# yapıyordu. Kanıt zincirinin asılsız atıf içermemesi gerekir; prosedür artık
+# OFFLINE-KANIT.md'de yazılı ve orada "koşturulmadı" olarak işaretli.
+#
+# GPL NOTU: `trafilatura` (GPLv3+ riski, bkz. docs/model-license-audit.md §2)
+# bu dosyada BİLEREK yok. Teslim imajında gerçekten bulunmadığının ölçülmüş
+# kanıtı: docs/OFFLINE-KANIT.md "trafilatura kanıtı" (scripts/offline_proof.sh
+# adım 12-13).
 #
 # KISIT: yalnızca açık kaynak (Apache/MIT/BSD); ücretli API/servis YOK.
 
 fastapi>=0.110           # MIT
 uvicorn>=0.29            # BSD
 pydantic>=2.6            # MIT
+
+# beautifulsoup4 — İNCE İMAJ İSTİSNASI, gerekçe önemli:
+#
+# `src/scraping/collector._extract_main_text` bs4 yoksa SESSİZCE
+# `normalize_text(html)`'e düşüyor (`except ModuleNotFoundError`). Bu dosyada bs4
+# olmadığı için teslim konteyneri, geliştirme ortamından FARKLI metin üretiyordu:
+# 2026-07-31 ölçümü, 1696 belgelik korpusta belge başına ortalama 4317 karakter
+# (bs4 var) yerine 6232 karakter (bs4 yok) — yani menü/altbilgi gürültüsü
+# temizlenmeden çıkarım katmanına giriyordu. Testler yeşil kaldığı için hata
+# görünmüyordu; tam olarak "sessiz bozulma" sınıfı.
+#
+# On-prem kanıtının anlamı, teslim edilen imajın test edilen sistemle AYNI
+# davranmasıdır; o yüzden bs4 ince imaja dahil edildi (saf Python, ~0.5 MB).
+# Ölçülmüş kanıt: docs/OFFLINE-KANIT.md "bs4 sapması".
+beautifulsoup4>=4.12     # MIT
 
 # PostgreSQL backend (DATABASE_URL verilmişse); yoksa SQLite fallback devrede
 psycopg[binary]>=3.1     # LGPL — yalnızca istemci kütüphanesi, dinamik bağlı

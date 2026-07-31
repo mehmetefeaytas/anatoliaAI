@@ -1,0 +1,67 @@
+{
+  "environment": {
+    "python": "3.11.15",
+    "platform": "Linux-6.12.76-linuxkit-aarch64-with-glibc2.41",
+    "machine": "aarch64",
+    "cpu_count": 10,
+    "llm_backend": "(bos -> NullLLMExtractor)",
+    "llm_extractor": "NullLLMExtractor",
+    "classifier": "RuleHintClassifier",
+    "in_container": true,
+    "peak_rss_mb": 100.4
+  },
+  "cold_start": {
+    "demo_build_demo_repo_ms": 5.7,
+    "full_corpus_ingest_s": 4.83,
+    "docs": 1696,
+    "docs_per_minute": 21087.0
+  },
+  "corpus": {
+    "recursive": true,
+    "documents": 1696,
+    "total_chars": 7327700,
+    "avg_chars": 4320,
+    "iterations": 3
+  },
+  "paths": [
+    {
+      "name": "rule",
+      "label": "(a) kural-only cikarim — extract_all()",
+      "n": 5088,
+      "p50_ms": 1.0259,
+      "p95_ms": 4.7982,
+      "p99_ms": 6.3012,
+      "min_ms": 0.0764,
+      "max_ms": 37.6268,
+      "mean_ms": 1.7868,
+      "stdev_ms": 2.4432,
+      "note": "saf regex/kural katmani; belge basina"
+    },
+    {
+      "name": "hybrid",
+      "label": "(b) hibrit boru hatti — build_campaign()",
+      "n": 5088,
+      "p50_ms": 1.5002,
+      "p95_ms": 6.9209,
+      "p99_ms": 8.856,
+      "min_ms": 0.124,
+      "max_ms": 75.3233,
+      "mean_ms": 2.5891,
+      "stdev_ms": 3.7625,
+      "note": "kural + siniflandirici + uzlastirma + normalizasyon. GERCEK LLM cikarimi DAHIL DEGIL (NullLLMExtractor aktif)"
+    },
+    {
+      "name": "chatbot",
+      "label": "(c) chatbot yaniti — Chatbot.ask()",
+      "n": 504,
+      "p50_ms": 12.4766,
+      "p95_ms": 325.016,
+      "p99_ms": 351.3623,
+      "min_ms": 0.5876,
+      "max_ms": 368.5261,
+      "mean_ms": 155.1138,
+      "stdev_ms": 152.315,
+      "note": "router + yapisal sorgu / RAG, 1696 kampanyalik onceden doldurulmus DB, 8 soruluk havuz. GERCEK LLM cikarimi DAHIL DEGIL (NullLLMExtractor aktif)"
+    }
+  ]
+}

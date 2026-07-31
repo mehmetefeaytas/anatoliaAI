@@ -1,0 +1,29 @@
+# Derleme bağlamını (build context) küçültür.
+#
+# Neden var: bağlam bu dosya olmadan ~657 MB (.venv 193 MB + web/node_modules
+# 250 MB) ve her `docker build` bunu daemon'a kopyalıyor. Offline kanıt koşusu
+# tekrar tekrar derleme yapıyor; bu dosya olmadan koşu dakikalar sürüyor ve
+# "tek komutla ayağa kalkar" iddiası pratikte zayıflıyor.
+#
+# UYARI: data/raw BİLEREK dışlanmıyor — `--network none` içinde koşan
+# `eval.properties` ve `latency_bench` 1696 belgelik gerçek korpusu okur.
+# Korpusu dışlamak kanıt koşusunu imkânsız kılar.
+
+.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.ruff_cache/
+
+# Frontend ayrı imajda derlenir (web/Dockerfile); API bağlamında gereksiz.
+web/
+
+notebooks/
+.git/
+.gitignore
+.DS_Store
+**/.DS_Store
+
+# Kanıt çıktıları — imaja girmemeli, aksi halde her koşu imaj digest'ini değiştirir.
+docs/offline-proof/

@@ -1,5 +1,11 @@
 # FastAPI backend — offline çalışır, ağ erişimi olmadan test edilebilir.
-FROM python:3.11-slim
+#
+# Taban imaj DIGEST'e sabitlenmiştir. `python:3.11-slim` hareketli bir etikettir:
+# aynı Dockerfile bugün ve üç ay sonra farklı bir taban imajla derlenir, bu da
+# "tekrar üretilebilir offline paket" iddiasını teknik olarak geçersiz kılar.
+# Digest 2026-07-31'de `docker buildx imagetools inspect python:3.11-slim` ile
+# çözüldü. Güncellemek için: bkz. docs/OFFLINE-KANIT.md "Digest pin tablosu".
+FROM python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
 
 WORKDIR /app
 
@@ -26,6 +32,10 @@ COPY data/ ./data/
 # (bkz. docs/OFFLINE-KANIT.md). Bunlar olmadan kanıt koşusu imkânsızdı.
 COPY eval/ ./eval/
 COPY tests/ ./tests/
+# scripts/ imaja DAHİL: gecikme ölçümü (`python -m scripts.latency_bench`) de
+# `--network none` içinde koşar. Ölçümü konteyner DIŞINDA yapmak "on-prem
+# konteynerde şu kadar sürüyor" iddiasını kanıtsız bırakırdı.
+COPY scripts/ ./scripts/
 
 EXPOSE 8000
 CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000"]

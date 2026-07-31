@@ -1,0 +1,975 @@
+==============================================================================
+ ANATOLIA AI — OFFLINE KANIT KOSUSU
+==============================================================================
+tarih        : 2026-07-31T10:35:40Z (UTC)
+calisma dizini: /Users/mehmetefeaytas/anatoliaaI/app
+imaj         : anatolia-api:offline-proof
+transkript   : docs/offline-proof/transcript-20260731-133540.log
+host         : Darwin Mehmet-MacBook-Air.local 25.5.0 Darwin Kernel Version 25.5.0: Tue Jun  9 22:28:17 PDT 2026; root:xnu-12377.121.10~1/RELEASE_ARM64_T8142 arm64
+git commit   : 009c89e
+git durum    : 23 degisik dosya
+
+docker       : Docker version 29.5.3, build d1c06ef6b4
+daemon       : 29.6.1 (linux/aarch64)
+gold dosyasi : data/gold/gold.sample.json
+
+------------------------------------------------------------------------------
+ADIM 1: Imaj derleme (docker build -f Dockerfile.api)
+beklenti : cikis kodu 0
+komut    : docker build --progress=plain -f Dockerfile.api -t anatolia-api:offline-proof .
+------------------------------------------------------------------------------
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.api
+#1 transferring dockerfile: 1.91kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#2 DONE 120.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 937B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 215.71MB 1.7s done
+#4 DONE 1.7s
+
+#5 [ 1/10] FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#5 resolve docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#5 resolve docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93 62.6s done
+#5 DONE 62.6s
+
+#5 [ 1/10] FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#5 CACHED
+
+#6 [ 2/10] WORKDIR /app
+#6 DONE 0.0s
+
+#7 [ 3/10] COPY requirements-api.txt .
+#7 DONE 0.0s
+
+#8 [ 4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#8 1.359 Collecting fastapi>=0.110 (from -r requirements-api.txt (line 23))
+#8 1.469   Downloading fastapi-0.141.1-py3-none-any.whl.metadata (27 kB)
+#8 1.507 Collecting uvicorn>=0.29 (from -r requirements-api.txt (line 24))
+#8 1.525   Downloading uvicorn-0.52.0-py3-none-any.whl.metadata (6.6 kB)
+#8 1.624 Collecting pydantic>=2.6 (from -r requirements-api.txt (line 25))
+#8 1.643   Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+#8 1.731      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 1.2 MB/s eta 0:00:00
+#8 1.761 Collecting psycopg>=3.1 (from psycopg[binary]>=3.1->-r requirements-api.txt (line 28))
+#8 1.781   Downloading psycopg-3.3.4-py3-none-any.whl.metadata (4.3 kB)
+#8 1.803 Collecting pgvector>=0.2 (from -r requirements-api.txt (line 29))
+#8 1.822   Downloading pgvector-0.5.0-py3-none-any.whl.metadata (19 kB)
+#8 1.863 Collecting starlette>=0.46.0 (from fastapi>=0.110->-r requirements-api.txt (line 23))
+#8 1.882   Downloading starlette-1.3.1-py3-none-any.whl.metadata (6.4 kB)
+#8 1.910 Collecting typing-extensions>=4.8.0 (from fastapi>=0.110->-r requirements-api.txt (line 23))
+#8 1.929   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#8 1.950 Collecting typing-inspection>=0.4.2 (from fastapi>=0.110->-r requirements-api.txt (line 23))
+#8 1.969   Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+#8 1.990 Collecting annotated-doc>=0.0.2 (from fastapi>=0.110->-r requirements-api.txt (line 23))
+#8 2.009   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#8 2.041 Collecting click>=7.0 (from uvicorn>=0.29->-r requirements-api.txt (line 24))
+#8 2.059   Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+#8 2.083 Collecting h11>=0.8 (from uvicorn>=0.29->-r requirements-api.txt (line 24))
+#8 2.103   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#8 2.132 Collecting annotated-types>=0.6.0 (from pydantic>=2.6->-r requirements-api.txt (line 25))
+#8 2.151   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#8 2.656 Collecting pydantic-core==2.46.4 (from pydantic>=2.6->-r requirements-api.txt (line 25))
+#8 2.674   Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (6.6 kB)
+#8 3.175 Collecting psycopg-binary==3.3.4 (from psycopg[binary]>=3.1->-r requirements-api.txt (line 28))
+#8 3.315   Downloading psycopg_binary-3.3.4-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
+#8 3.348 Collecting anyio<5,>=3.6.2 (from starlette>=0.46.0->fastapi>=0.110->-r requirements-api.txt (line 23))
+#8 3.365   Downloading anyio-4.14.2-py3-none-any.whl.metadata (4.6 kB)
+#8 3.397 Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette>=0.46.0->fastapi>=0.110->-r requirements-api.txt (line 23))
+#8 3.413   Downloading idna-3.18-py3-none-any.whl.metadata (6.1 kB)
+#8 3.436 Downloading fastapi-0.141.1-py3-none-any.whl (131 kB)
+#8 3.444    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.0/132.0 kB 19.3 MB/s eta 0:00:00
+#8 3.464 Downloading uvicorn-0.52.0-py3-none-any.whl (79 kB)
+#8 3.469    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.1/79.1 kB 16.2 MB/s eta 0:00:00
+#8 3.490 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+#8 3.673    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 2.6 MB/s eta 0:00:00
+#8 3.872 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (2.0 MB)
+#8 4.073    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 10.1 MB/s eta 0:00:00
+#8 4.093 Downloading psycopg-3.3.4-py3-none-any.whl (213 kB)
+#8 4.109    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 213.0/213.0 kB 16.3 MB/s eta 0:00:00
+#8 4.350 Downloading pgvector-0.5.0-py3-none-any.whl (30 kB)
+#8 4.380 Downloading psycopg_binary-3.3.4-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (6.8 MB)
+#8 5.035    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 10.4 MB/s eta 0:00:00
+#8 5.056 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#8 5.076 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#8 5.099 Downloading click-8.4.2-py3-none-any.whl (119 kB)
+#8 5.104    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.2/119.2 kB 40.7 MB/s eta 0:00:00
+#8 5.124 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#8 5.147 Downloading starlette-1.3.1-py3-none-any.whl (73 kB)
+#8 5.151    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.6/73.6 kB 195.1 MB/s eta 0:00:00
+#8 5.172 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#8 5.175    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 188.9 MB/s eta 0:00:00
+#8 5.195 Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+#8 5.414 Downloading anyio-4.14.2-py3-none-any.whl (125 kB)
+#8 5.428    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.8/125.8 kB 9.7 MB/s eta 0:00:00
+#8 5.447 Downloading idna-3.18-py3-none-any.whl (65 kB)
+#8 5.451    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 65.5/65.5 kB 28.8 MB/s eta 0:00:00
+#8 5.513 Installing collected packages: typing-extensions, psycopg-binary, pgvector, idna, h11, click, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, psycopg, anyio, starlette, pydantic, fastapi
+#8 5.990 Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.14.2 click-8.4.2 fastapi-0.141.1 h11-0.16.0 idna-3.18 pgvector-0.5.0 psycopg-3.3.4 psycopg-binary-3.3.4 pydantic-2.13.4 pydantic-core-2.46.4 starlette-1.3.1 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.52.0
+#8 5.990 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#8 6.092 
+#8 6.092 [notice] A new release of pip is available: 24.0 -> 26.2
+#8 6.092 [notice] To update, run: pip install --upgrade pip
+#8 DONE 6.3s
+
+#9 [ 5/10] COPY src/ ./src/
+#9 DONE 0.0s
+
+#10 [ 6/10] COPY config/ ./config/
+#10 DONE 0.0s
+
+#11 [ 7/10] COPY data/ ./data/
+#11 DONE 0.3s
+
+#12 [ 8/10] COPY eval/ ./eval/
+#12 DONE 0.0s
+
+#13 [ 9/10] COPY tests/ ./tests/
+#13 DONE 0.0s
+
+#14 [10/10] COPY scripts/ ./scripts/
+#14 DONE 0.0s
+
+#15 exporting to image
+#15 exporting layers
+#15 exporting layers 2.2s done
+#15 exporting manifest sha256:5afdcb7cf75f2204c266d6324d356fe1fa2cb91ed09fbac723974976c69d100e done
+#15 exporting config sha256:564ba7ab84d9e4150be2300218ea963f4b7ab44e39e07751d7ec04a212fc14ab done
+#15 exporting attestation manifest sha256:7f4e0b52e9b464e83169aa885ef7038d75adefdab94708074a97c61c6e72ec35 done
+#15 exporting manifest list sha256:a23450c4e4eb2f27e945fca2b9699d1b0f00d7fb8dd2ccfd63fb70c2e8108385 done
+#15 naming to docker.io/library/anatolia-api:offline-proof done
+#15 unpacking to docker.io/library/anatolia-api:offline-proof
+#15 unpacking to docker.io/library/anatolia-api:offline-proof 0.6s done
+#15 DONE 2.9s
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=192641 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 2: Prob dogrulama: ag ACIK iken prob ULASMALI (metaKontrol)
+beklenti : cikis kodu 0
+komut    : docker run --rm anatolia-api:offline-proof python -c 
+import socket, sys, urllib.request
+
+blocked, reached = [], []
+
+def probe(name, fn):
+    try:
+        fn()
+    except Exception as exc:
+        blocked.append(name)
+        print("  [ENGELLENDI] %-24s -> %s: %s" % (name, type(exc).__name__, str(exc)[:110]))
+    else:
+        reached.append(name)
+        print("  [ULASILDI]   %-24s -> AG ERISIMI VAR" % name)
+
+probe("DNS huggingface.co",   lambda: socket.getaddrinfo("huggingface.co", 443))
+probe("TCP 1.1.1.1:443",      lambda: socket.create_connection(("1.1.1.1", 443), timeout=5).close())
+probe("HTTPS huggingface.co", lambda: urllib.request.urlopen("https://huggingface.co", timeout=5).close())
+probe("HTTPS pypi.org",       lambda: urllib.request.urlopen("https://pypi.org/simple/", timeout=5).close())
+
+print()
+print("engellenen: %d/4   ulasilan: %d/4" % (len(blocked), len(reached)))
+sys.exit(0 if reached else 3)
+
+------------------------------------------------------------------------------
+  [ULASILDI]   DNS huggingface.co       -> AG ERISIMI VAR
+  [ULASILDI]   TCP 1.1.1.1:443          -> AG ERISIMI VAR
+  [ENGELLENDI] HTTPS huggingface.co     -> URLError: <urlopen error timed out>
+  [ULASILDI]   HTTPS pypi.org           -> AG ERISIMI VAR
+
+engellenen: 1/4   ulasilan: 3/4
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=17220 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 3: NEGATIF KONTROL: --network none icinde ag ERISILEMEZ olmali
+beklenti : cikis kodu 0 DEGIL (negatif kontrol)
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -c 
+import socket, sys, urllib.request
+
+blocked, reached = [], []
+
+def probe(name, fn):
+    try:
+        fn()
+    except Exception as exc:
+        blocked.append(name)
+        print("  [ENGELLENDI] %-24s -> %s: %s" % (name, type(exc).__name__, str(exc)[:110]))
+    else:
+        reached.append(name)
+        print("  [ULASILDI]   %-24s -> AG ERISIMI VAR" % name)
+
+probe("DNS huggingface.co",   lambda: socket.getaddrinfo("huggingface.co", 443))
+probe("TCP 1.1.1.1:443",      lambda: socket.create_connection(("1.1.1.1", 443), timeout=5).close())
+probe("HTTPS huggingface.co", lambda: urllib.request.urlopen("https://huggingface.co", timeout=5).close())
+probe("HTTPS pypi.org",       lambda: urllib.request.urlopen("https://pypi.org/simple/", timeout=5).close())
+
+print()
+print("engellenen: %d/4   ulasilan: %d/4" % (len(blocked), len(reached)))
+sys.exit(0 if reached else 3)
+
+------------------------------------------------------------------------------
+  [ENGELLENDI] DNS huggingface.co       -> gaierror: [Errno -3] Temporary failure in name resolution
+  [ENGELLENDI] TCP 1.1.1.1:443          -> OSError: [Errno 101] Network is unreachable
+  [ENGELLENDI] HTTPS huggingface.co     -> URLError: <urlopen error [Errno -3] Temporary failure in name resolution>
+  [ENGELLENDI] HTTPS pypi.org           -> URLError: <urlopen error [Errno -3] Temporary failure in name resolution>
+
+engellenen: 4/4   ulasilan: 0/4
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=3  sure=405 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+NOT: imajda 'curl' YOK (python:3.11-slim taban imaji curl icermez).
+     Bu yuzden 'curl -sS --max-time 5 https://huggingface.co' adimi
+     KOSTURULMADI. Kosturulsa 'command not found' da 0-disi donerdi ve
+     ag izolasyonunun kaniti SANILIRDI — bu tam olarak kacinilan hata.
+     Ayni is adim 3'teki stdlib probu ile, bagimliliksiz yapiliyor.
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+ADIM 4: Test paketi (345 test) — --network none
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -m unittest discover -s tests -v
+------------------------------------------------------------------------------
+test_highest_term (test_chatbot.TestChatbotEndToEnd.test_highest_term) ... ok
+test_lowest_rate (test_chatbot.TestChatbotEndToEnd.test_lowest_rate) ... ok
+test_rag_fallback (test_chatbot.TestChatbotEndToEnd.test_rag_fallback) ... ok
+test_descriptive_is_rag (test_chatbot.TestRouter.test_descriptive_is_rag) ... ok
+test_filter_is_structured (test_chatbot.TestRouter.test_filter_is_structured) ... ok
+test_superlative_is_structured (test_chatbot.TestRouter.test_superlative_is_structured) ... ok
+test_birim_sozcugu_araligi_iptal_eder (test_confidence_span.TestAralikYanlisPozitifi.test_birim_sozcugu_araligi_iptal_eder) ... ok
+test_gercek_araliklar_korunur (test_confidence_span.TestAralikYanlisPozitifi.test_gercek_araliklar_korunur) ... ok
+test_aralik_nokta_degerden_daha_az_kesin (test_confidence_span.TestGuvenSkoru.test_aralik_nokta_degerden_daha_az_kesin) ... ok
+test_belirsizlik_guveni_dusurur (test_confidence_span.TestGuvenSkoru.test_belirsizlik_guveni_dusurur) ... ok
+test_confidence_source_isaretlenir (test_confidence_span.TestGuvenSkoru.test_confidence_source_isaretlenir) ... ok
+test_makul_disi_deger_guveni_dusurur (test_confidence_span.TestGuvenSkoru.test_makul_disi_deger_guveni_dusurur) ... ok
+test_normalize_edilemeyen_deger_sifir_guven (test_confidence_span.TestGuvenSkoru.test_normalize_edilemeyen_deger_sifir_guven) ... ok
+test_sabit_degil (test_confidence_span.TestGuvenSkoru.test_sabit_degil) ... ok
+test_skor_sinirlar_icinde (test_confidence_span.TestGuvenSkoru.test_skor_sinirlar_icinde) ... ok
+test_aralik_tanimsiz_alanda_karar_yok (test_confidence_span.TestMakulluk.test_aralik_tanimsiz_alanda_karar_yok) ... ok
+test_aralikta_max_disarideysa_makul_degil (test_confidence_span.TestMakulluk.test_aralikta_max_disarideysa_makul_degil) ... ok
+test_gecerli_aralik_makul (test_confidence_span.TestMakulluk.test_gecerli_aralik_makul) ... ok
+test_offset_yoksa_verify_false (test_confidence_span.TestSpanOffsetleri.test_offset_yoksa_verify_false) ... ok
+test_offsetler_dogru_degeri_isaret_eder (test_confidence_span.TestSpanOffsetleri.test_offsetler_dogru_degeri_isaret_eder) ... ok
+test_tum_alanlarin_offsetleri_dogrulanir (test_confidence_span.TestSpanOffsetleri.test_tum_alanlarin_offsetleri_dogrulanir) ... ok
+test_verify_span_yanlis_offseti_reddeder (test_confidence_span.TestSpanOffsetleri.test_verify_span_yanlis_offseti_reddeder) ... ok
+test_celiski_all_caps (test_contradiction.TestCelisikiTespiti.test_celiski_all_caps) ... ok
+test_celiski_detayinda_tutar_gecer (test_contradiction.TestCelisikiTespiti.test_celiski_detayinda_tutar_gecer) ... ok
+test_celiski_normal_sirada (test_contradiction.TestCelisikiTespiti.test_celiski_normal_sirada) ... ok
+test_celiski_ters_sirada (test_contradiction.TestCelisikiTespiti.test_celiski_ters_sirada) ... ok
+test_sadece_ucret_varsa_celiski_yok (test_contradiction.TestCelisikiTespiti.test_sadece_ucret_varsa_celiski_yok) ... ok
+test_tutarli_metinde_celiski_yok (test_contradiction.TestCelisikiTespiti.test_tutarli_metinde_celiski_yok) ... ok
+test_iddia_yoksa_gercek_ucret_raporlanir (test_contradiction.TestMasrafIddiasi.test_iddia_yoksa_gercek_ucret_raporlanir) ... ok
+test_masrafsiz_iddiasi_sirasi_ne_olursa_olsun_kazanir (test_contradiction.TestMasrafIddiasi.test_masrafsiz_iddiasi_sirasi_ne_olursa_olsun_kazanir) ... ok
+test_binlik_ayirici_noktasi_cumle_sonu_sanilmaz (test_contradiction.TestTahsisUcreti.test_binlik_ayirici_noktasi_cumle_sonu_sanilmaz) ... ok
+test_hic_gecmiyorsa_uydurmaz (test_contradiction.TestTahsisUcreti.test_hic_gecmiyorsa_uydurmaz) ... ok
+test_masraf_durumundan_bagimsiz_uretilir (test_contradiction.TestTahsisUcreti.test_masraf_durumundan_bagimsiz_uretilir) ... ok
+test_negasyon_sifir_demektir_bilgi_yok_degil (test_contradiction.TestTahsisUcreti.test_negasyon_sifir_demektir_bilgi_yok_degil) ... ok
+test_pozitif_tutar (test_contradiction.TestTahsisUcreti.test_pozitif_tutar) ... ok
+test_longest_term_wins (test_db_compare.TestComparison.test_longest_term_wins) ... ok
+test_lowest_rate_wins (test_db_compare.TestComparison.test_lowest_rate_wins) ... ok
+test_range_marked_incomparable (test_db_compare.TestComparison.test_range_marked_incomparable) ... ok
+test_masrafsiz_but_fee (test_db_compare.TestContradiction.test_masrafsiz_but_fee) ... ok
+test_no_contradiction (test_db_compare.TestContradiction.test_no_contradiction) ... ok
+test_insert_and_query (test_db_compare.TestRepository.test_insert_and_query) ... ok
+test_masrafsiz_negation (test_extract.TestRuleExtraction.test_masrafsiz_negation) ... ok
+test_no_hallucination (test_extract.TestRuleExtraction.test_no_hallucination) ... ok
+test_rate_range (test_extract.TestRuleExtraction.test_rate_range) ... ok
+test_realistic_konut (test_extract.TestRuleExtraction.test_realistic_konut) ... ok
+test_source_span_present (test_extract.TestRuleExtraction.test_source_span_present) ... ok
+test_names_from_filenames (test_gold_csv.TestAnnotatorInference.test_names_from_filenames) ... ok
+test_absent_on_produced_value_is_recorded (test_gold_csv.TestBuildGold.test_absent_on_produced_value_is_recorded)
+EN KRİTİK VAKA: model uydurdu -> onaylanmış halüsinasyon (FP). ... ok
+test_blank_verdict_accepts_model_value (test_gold_csv.TestBuildGold.test_blank_verdict_accepts_model_value)
+Boş hücre = "model doğru" -> değer `fields`'a girer. ... ok
+test_blank_verdict_on_empty_row_becomes_absent (test_gold_csv.TestBuildGold.test_blank_verdict_on_empty_row_becomes_absent)
+Model bir şey bulamadı + anotatör onayladı = "kontrol ettim, YOK". ... ok
+test_campaign_type_absent_excludes_document (test_gold_csv.TestBuildGold.test_campaign_type_absent_excludes_document)
+Menü/kurumsal sayfa gold'u kirletmesin diye ucuz bir kaçış yolu. ... ok
+test_campaign_type_fix (test_gold_csv.TestBuildGold.test_campaign_type_fix) ... ok
+test_fix_parses_turkish_input (test_gold_csv.TestBuildGold.test_fix_parses_turkish_input) ... ok
+test_fix_without_verdict_still_applies (test_gold_csv.TestBuildGold.test_fix_without_verdict_still_applies)
+Anotatör düzeltmeyi yazıp verdict'i atlarsa veri kaybedilmemeli. ... ok
+test_full_coverage_reached (test_gold_csv.TestBuildGold.test_full_coverage_reached)
+13 satırın tamamı karara bağlanınca 12/12 kapsama olmalı. ... ok
+test_hashtags_become_hard_tags (test_gold_csv.TestBuildGold.test_hashtags_become_hard_tags) ... ok
+test_note_is_preserved (test_gold_csv.TestBuildGold.test_note_is_preserved) ... ok
+test_provenance_carried_over (test_gold_csv.TestBuildGold.test_provenance_carried_over) ... ok
+test_unclear_is_excluded_from_metrics (test_gold_csv.TestBuildGold.test_unclear_is_excluded_from_metrics) ... ok
+test_file_has_utf8_bom_for_turkish_excel (test_gold_csv.TestCsvRoundTrip.test_file_has_utf8_bom_for_turkish_excel) ... ok
+test_semicolon_delimiter (test_gold_csv.TestCsvRoundTrip.test_semicolon_delimiter) ... ok
+test_turkish_characters_survive (test_gold_csv.TestCsvRoundTrip.test_turkish_characters_survive) ... ok
+test_write_then_read_preserves_cells (test_gold_csv.TestCsvRoundTrip.test_write_then_read_preserves_cells) ... ok
+test_agreement_applies_value (test_gold_csv.TestDoubleAnnotation.test_agreement_applies_value) ... ok
+test_both_annotators_recorded (test_gold_csv.TestDoubleAnnotation.test_both_annotators_recorded) ... ok
+test_equivalent_formats_count_as_agreement (test_gold_csv.TestDoubleAnnotation.test_equivalent_formats_count_as_agreement)
+Biri `36 ay`, diğeri `3 yıl` yazmışsa bu ÇELİŞKİ DEĞİLDİR. ... ok
+test_present_versus_absent_conflict (test_gold_csv.TestDoubleAnnotation.test_present_versus_absent_conflict)
+Biri "değer var" diyor, diğeri "yok" diyor -> hakemlik. ... ok
+test_value_conflict_becomes_unclear (test_gold_csv.TestDoubleAnnotation.test_value_conflict_becomes_unclear)
+Çelişki gizlenmez, otomatik de çözülmez — insana kalır. ... ok
+test_bad_value_reports_file_line_and_fix (test_gold_csv.TestErrorReporting.test_bad_value_reports_file_line_and_fix)
+Hata mesajı NEREDE ve NASIL düzeltileceğini söylemeli. ... ok
+test_fix_without_value_is_an_error (test_gold_csv.TestErrorReporting.test_fix_without_value_is_an_error) ... ok
+test_unknown_verdict_is_an_error (test_gold_csv.TestErrorReporting.test_unknown_verdict_is_an_error) ... ok
+test_wrong_header_raises_actionable_error (test_gold_csv.TestErrorReporting.test_wrong_header_raises_actionable_error) ... ok
+test_absent_docs_limit_is_respected (test_gold_csv.TestGenerateEndToEnd.test_absent_docs_limit_is_respected) ... ok
+test_duplicate_files_are_identical (test_gold_csv.TestGenerateEndToEnd.test_duplicate_files_are_identical)
+A ve B AYNI satırları görmeli; yoksa kappa anlamsızdır. ... ok
+test_generates_expected_files (test_gold_csv.TestGenerateEndToEnd.test_generates_expected_files) ... ok
+test_stale_csvs_from_previous_run_are_removed (test_gold_csv.TestGenerateEndToEnd.test_stale_csvs_from_previous_run_are_removed)
+Eski turdan kalan CSV, `--csv-dir` ile toplanıp belgeyi iki kez saydırır. ... ok
+test_balance_equalises_row_load_not_doc_count (test_gold_csv.TestPartitionAndBalance.test_balance_equalises_row_load_not_doc_count)
+A ve B'nin çift anotasyon yükü ana kümeden düşülmeli. ... ok
+test_every_main_doc_assigned_exactly_once (test_gold_csv.TestPartitionAndBalance.test_every_main_doc_assigned_exactly_once) ... ok
+test_partition_is_deterministic (test_gold_csv.TestPartitionAndBalance.test_partition_is_deterministic) ... ok
+test_partitions_are_disjoint_and_complete (test_gold_csv.TestPartitionAndBalance.test_partitions_are_disjoint_and_complete) ... ok
+test_all_twelve_fields_plus_type_when_absent_included (test_gold_csv.TestRowGeneration.test_all_twelve_fields_plus_type_when_absent_included)
+12 alan + campaign_type = 13 satır; eksiksiz kapsama böyle sağlanır. ... ok
+test_annotator_columns_start_empty (test_gold_csv.TestRowGeneration.test_annotator_columns_start_empty) ... ok
+test_columns_match_contract (test_gold_csv.TestRowGeneration.test_columns_match_contract) ... ok
+test_disagreement_flag_surfaces (test_gold_csv.TestRowGeneration.test_disagreement_flag_surfaces) ... ok
+test_missing_field_rows_have_empty_model_value (test_gold_csv.TestRowGeneration.test_missing_field_rows_have_empty_model_value)
+Boş `model_value` = "model bir şey bulamadı"; boş bırakılırsa absent olur. ... ok
+test_only_found_fields_when_absent_excluded (test_gold_csv.TestRowGeneration.test_only_found_fields_when_absent_excluded) ... ok
+test_bad_offsets_fall_back_to_search (test_gold_csv.TestSnippet.test_bad_offsets_fall_back_to_search)
+Offset bozuksa yanlış yeri boyamaktansa ham değeri metinde ara. ... ok
+test_missing_payload_gives_document_context (test_gold_csv.TestSnippet.test_missing_payload_gives_document_context) ... ok
+test_snippet_has_surrounding_context (test_gold_csv.TestSnippet.test_snippet_has_surrounding_context) ... ok
+test_snippet_is_single_line (test_gold_csv.TestSnippet.test_snippet_is_single_line)
+CSV hücresine satır sonu sızarsa dosya Excel'de bozulur. ... ok
+test_value_is_bracketed (test_gold_csv.TestSnippet.test_value_is_bracketed)
+Anotatörün gözü değeri aramasın diye değer köşeli parantezle işaretli. ... ok
+test_disagreement_rows_come_first (test_gold_csv.TestSorting.test_disagreement_rows_come_first) ... ok
+test_empty_rows_come_last (test_gold_csv.TestSorting.test_empty_rows_come_last)
+Kova 4 en sonda: zaman biterse en ucuz kayıp orada. ... ok
+test_high_confidence_after_low (test_gold_csv.TestSorting.test_high_confidence_after_low) ... ok
+test_date_must_be_iso (test_gold_schema.TestCanonicalValidation.test_date_must_be_iso) ... ok
+test_degenerate_range_rejected (test_gold_schema.TestCanonicalValidation.test_degenerate_range_rejected)
+min == max olan aralık, aralık değildir; kıyaslamadan sessizce düşer. ... ok
+test_duplicate_segment_rejected (test_gold_schema.TestCanonicalValidation.test_duplicate_segment_rejected) ... ok
+test_fee_free_must_have_zero_amount (test_gold_schema.TestCanonicalValidation.test_fee_free_must_have_zero_amount)
+'masrafsız' ise amount 0 olmalı — bu bilgi eksikliği DEĞİL. ... ok
+test_foreign_currency_rejected (test_gold_schema.TestCanonicalValidation.test_foreign_currency_rejected) ... ok
+test_inverted_range_rejected (test_gold_schema.TestCanonicalValidation.test_inverted_range_rejected) ... ok
+test_money_requires_currency (test_gold_schema.TestCanonicalValidation.test_money_requires_currency) ... ok
+test_none_value_directed_to_absent_fields (test_gold_schema.TestCanonicalValidation.test_none_value_directed_to_absent_fields) ... ok
+test_points_kind_must_be_rate_or_points (test_gold_schema.TestCanonicalValidation.test_points_kind_must_be_rate_or_points) ... ok
+test_points_requires_kind (test_gold_schema.TestCanonicalValidation.test_points_requires_kind) ... ok
+test_rate_as_string_rejected (test_gold_schema.TestCanonicalValidation.test_rate_as_string_rejected) ... ok
+test_term_float_rejected (test_gold_schema.TestCanonicalValidation.test_term_float_rejected) ... ok
+test_term_must_be_int_not_string (test_gold_schema.TestCanonicalValidation.test_term_must_be_int_not_string) ... ok
+test_unknown_campaign_type_lists_the_eight (test_gold_schema.TestCanonicalValidation.test_unknown_campaign_type_lists_the_eight) ... ok
+test_unknown_field_lists_valid_fields (test_gold_schema.TestCanonicalValidation.test_unknown_field_lists_valid_fields) ... ok
+test_unknown_segment_label_rejected (test_gold_schema.TestCanonicalValidation.test_unknown_segment_label_rejected) ... ok
+test_valid_values (test_gold_schema.TestCanonicalValidation.test_valid_values) ... ok
+test_duplicates_collapsed (test_gold_schema.TestHardTagExtraction.test_duplicates_collapsed) ... ok
+test_empty_note (test_gold_schema.TestHardTagExtraction.test_empty_note) ... ok
+test_hashtags_become_tags (test_gold_schema.TestHardTagExtraction.test_hashtags_become_tags) ... ok
+test_multiple_tags (test_gold_schema.TestHardTagExtraction.test_multiple_tags) ... ok
+test_unknown_hashtag_ignored (test_gold_schema.TestHardTagExtraction.test_unknown_hashtag_ignored) ... ok
+test_hard_bool_becomes_legacy_tag (test_gold_schema.TestLegacyCompatibility.test_hard_bool_becomes_legacy_tag)
+`hard: true` hangi KATEGORİ olduğunu söylemiyor -> `legacy`. ... ok
+test_hard_false_gives_no_tags (test_gold_schema.TestLegacyCompatibility.test_hard_false_gives_no_tags) ... ok
+test_legacy_absent_fields_default_empty (test_gold_schema.TestLegacyCompatibility.test_legacy_absent_fields_default_empty)
+v0'da absent_fields yoktu; boş liste olmalı, None değil. ... ok
+test_legacy_records_get_stable_ids (test_gold_schema.TestLegacyCompatibility.test_legacy_records_get_stable_ids)
+id yoksa metinden türetilir; iki yükleme aynı id'yi vermeli. ... ok
+test_sample_file_loads (test_gold_schema.TestLegacyCompatibility.test_sample_file_loads) ... ok
+test_to_dict_keeps_hard_key_for_existing_evaluator (test_gold_schema.TestLegacyCompatibility.test_to_dict_keeps_hard_key_for_existing_evaluator)
+Mevcut değerlendirme harness'i (dokunulmadı) `item.get("hard")` okuyor. ... ok
+test_v1_record_round_trips (test_gold_schema.TestLegacyCompatibility.test_v1_record_round_trips) ... ok
+test_campaign_type_case_insensitive (test_gold_schema.TestParseGoldValue.test_campaign_type_case_insensitive) ... ok
+test_date_variants (test_gold_schema.TestParseGoldValue.test_date_variants) ... ok
+test_degenerate_range_collapses (test_gold_schema.TestParseGoldValue.test_degenerate_range_collapses) ... ok
+test_empty_value_gives_actionable_error (test_gold_schema.TestParseGoldValue.test_empty_value_gives_actionable_error) ... ok
+test_excel_locale_damage_survives (test_gold_schema.TestParseGoldValue.test_excel_locale_damage_survives)
+TR Excel `1.89`u kaydederken `1,89` yapar; okuma bozulmamalı. ... ok
+test_invalid_segment_rejected (test_gold_schema.TestParseGoldValue.test_invalid_segment_rejected) ... ok
+test_list_pipe_separator (test_gold_schema.TestParseGoldValue.test_list_pipe_separator)
+CSV ayırıcısı ';' olduğu için liste ayırıcısı '|'. ... ok
+test_negation_becomes_zero_fee (test_gold_schema.TestParseGoldValue.test_negation_becomes_zero_fee)
+'masrafsız' -> masraf SIFIR; bilgi yok değil. ... ok
+test_points_shortcut (test_gold_schema.TestParseGoldValue.test_points_shortcut) ... ok
+test_rate_range (test_gold_schema.TestParseGoldValue.test_rate_range) ... ok
+test_round_trip_format_then_parse (test_gold_schema.TestParseGoldValue.test_round_trip_format_then_parse)
+format -> parse aynı değeri vermeli (CSV gidiş-dönüş garantisi). ... ok
+test_term_from_years (test_gold_schema.TestParseGoldValue.test_term_from_years) ... ok
+test_turkish_money_thousands_separator (test_gold_schema.TestParseGoldValue.test_turkish_money_thousands_separator) ... ok
+test_turkish_rate (test_gold_schema.TestParseGoldValue.test_turkish_rate) ... ok
+test_unparseable_value_names_the_field (test_gold_schema.TestParseGoldValue.test_unparseable_value_names_the_field) ... ok
+test_all_known_hard_tags_accepted (test_gold_schema.TestRecordInvariants.test_all_known_hard_tags_accepted) ... ok
+test_coverage_counts_decided_fields (test_gold_schema.TestRecordInvariants.test_coverage_counts_decided_fields) ... ok
+test_duplicate_ids_rejected (test_gold_schema.TestRecordInvariants.test_duplicate_ids_rejected) ... ok
+test_empty_text_rejected (test_gold_schema.TestRecordInvariants.test_empty_text_rejected) ... ok
+test_field_cannot_be_both_present_and_absent (test_gold_schema.TestRecordInvariants.test_field_cannot_be_both_present_and_absent)
+Çekirdek değişmez: bir alan ya vardır ya yoktur. ... ok
+test_full_coverage_is_twelve (test_gold_schema.TestRecordInvariants.test_full_coverage_is_twelve) ... ok
+test_unknown_hard_tag_rejected (test_gold_schema.TestRecordInvariants.test_unknown_hard_tag_rejected) ... ok
+test_bool_is_not_number (test_gold_schema.TestValuesEqual.test_bool_is_not_number) ... ok
+test_float_tolerance (test_gold_schema.TestValuesEqual.test_float_tolerance) ... ok
+test_int_float_equivalence (test_gold_schema.TestValuesEqual.test_int_float_equivalence) ... ok
+test_list_order_matters (test_gold_schema.TestValuesEqual.test_list_order_matters) ... ok
+test_nested_dict (test_gold_schema.TestValuesEqual.test_nested_dict) ... ok
+test_reload_preserves_content (test_gold_schema.TestWriteGold.test_reload_preserves_content) ... ok
+test_writes_json_and_sha256 (test_gold_schema.TestWriteGold.test_writes_json_and_sha256) ... ok
+test_length_mismatch_raises (test_iaa.TestCohenKappa.test_length_mismatch_raises) ... ok
+test_missing_values_are_dropped_pairwise (test_iaa.TestCohenKappa.test_missing_values_are_dropped_pairwise)
+Biri bakmamışsa (None) o çift uyuma girmez. ... ok
+test_no_shared_rows_is_nan (test_iaa.TestCohenKappa.test_no_shared_rows_is_nan) ... ok
+test_perfect_agreement (test_iaa.TestCohenKappa.test_perfect_agreement) ... ok
+test_same_percentage_different_marginals (test_iaa.TestCohenKappa.test_same_percentage_different_marginals)
+45/15/25/15 -> kappa = 0.1304. ... ok
+test_simple_example (test_iaa.TestCohenKappa.test_simple_example)
+20/5/10/15 -> kappa = 0.40. ... ok
+test_single_category_is_total_agreement (test_iaa.TestCohenKappa.test_single_category_is_total_agreement)
+Herkes tek kategoriye yığılmışsa p_e = 1 ve 0/0 belirsizliği doğar. ... ok
+test_skewed_marginals (test_iaa.TestCohenKappa.test_skewed_marginals)
+25/35/5/35 -> kappa = 0.2593. ... ok
+test_from_labels_matches_matrix (test_iaa.TestFleissKappa.test_from_labels_matches_matrix) ... ok
+test_intermediate_quantities (test_iaa.TestFleissKappa.test_intermediate_quantities)
+P̄ ve P̄e ara değerleri de yayımlanan sayılarla tutuyor mu. ... ok
+test_perfect_agreement (test_iaa.TestFleissKappa.test_perfect_agreement) ... ok
+test_ragged_matrix_raises (test_iaa.TestFleissKappa.test_ragged_matrix_raises) ... ok
+test_units_with_single_rater_are_ignored (test_iaa.TestFleissKappa.test_units_with_single_rater_are_ignored)
+Tek anotatörlü birim uyum taşımaz; elenmezse kappa bozulur. ... ok
+test_variable_rater_count_per_unit (test_iaa.TestFleissKappa.test_variable_rater_count_per_unit)
+Biri bir belgeyi bitirmezse tur çöpe gitmemeli — n_i satır bazlı. ... ok
+test_worked_example (test_iaa.TestFleissKappa.test_worked_example)
+Yayımlanmış sonuç: P̄=0.378, P̄e=0.213, kappa=0.210. ... ok
+test_all_values_identical_is_one_not_nan (test_iaa.TestKrippendorffAlpha.test_all_values_identical_is_one_not_nan)
+Beklenen uyuşmazlık 0 -> 0/0 yerine tam uyum döner. ... ok
+test_empty_input_is_nan (test_iaa.TestKrippendorffAlpha.test_empty_input_is_nan) ... ok
+test_interval (test_iaa.TestKrippendorffAlpha.test_interval)
+Aynı tablo, interval ölçek -> 1 - (12/26)/(1586/650) = 0.81084. ... ok
+test_nominal (test_iaa.TestKrippendorffAlpha.test_nominal)
+Elle türetim -> alpha_nominal = 1 - (6/26)/(486/650) = 0.69136. ... ok
+test_perfect_agreement (test_iaa.TestKrippendorffAlpha.test_perfect_agreement) ... ok
+test_ratio_scale_forgives_near_misses (test_iaa.TestKrippendorffAlpha.test_ratio_scale_forgives_near_misses)
+`%1,89` vs `%1,90` tam uyuşmazlık SAYILMAMALI. ... ok
+test_ratio_still_punishes_real_disagreement (test_iaa.TestKrippendorffAlpha.test_ratio_still_punishes_real_disagreement)
+Ölçek hatası (120 ay vs 12 ay) yakalanmaya devam etmeli. ... ok
+test_single_valued_units_are_dropped (test_iaa.TestKrippendorffAlpha.test_single_valued_units_are_dropped)
+Tek anotatörlü birim eklenmesi sonucu değiştirmemeli. ... ok
+test_unknown_level_raises (test_iaa.TestKrippendorffAlpha.test_unknown_level_raises) ... ok
+test_accept (test_iaa.TestThresholdPolicy.test_accept) ... ok
+test_adjudication_required (test_iaa.TestThresholdPolicy.test_adjudication_required) ... ok
+test_marginal (test_iaa.TestThresholdPolicy.test_marginal) ... ok
+test_nan_is_reported_not_silently_passed (test_iaa.TestThresholdPolicy.test_nan_is_reported_not_silently_passed) ... ok
+test_adet_bicimi (test_kampanya_alanlari.TestAlisverisPuani.test_adet_bicimi) ... ok
+test_oran_bicimi (test_kampanya_alanlari.TestAlisverisPuani.test_oran_bicimi) ... ok
+test_oran_ve_adet_karistirilmaz (test_kampanya_alanlari.TestAlisverisPuani.test_oran_ve_adet_karistirilmaz) ... ok
+test_puan_yoksa_uydurmaz (test_kampanya_alanlari.TestAlisverisPuani.test_puan_yoksa_uydurmaz) ... ok
+test_cok_etiketli (test_kampanya_alanlari.TestHedefKitle.test_cok_etiketli) ... ok
+test_negasyon_etiket_uretmez (test_kampanya_alanlari.TestHedefKitle.test_negasyon_etiket_uretmez) ... ok
+test_sinyal_yoksa_varsayilan_yapmaz (test_kampanya_alanlari.TestHedefKitle.test_sinyal_yoksa_varsayilan_yapmaz) ... ok
+test_tekil_segmentler (test_kampanya_alanlari.TestHedefKitle.test_tekil_segmentler) ... ok
+test_indirim_yoksa_uydurmaz (test_kampanya_alanlari.TestIndirimOrani.test_indirim_yoksa_uydurmaz) ... ok
+test_puan_iadesi_indirim_degildir (test_kampanya_alanlari.TestIndirimOrani.test_puan_iadesi_indirim_degildir) ... ok
+test_temel_bicimler (test_kampanya_alanlari.TestIndirimOrani.test_temel_bicimler) ... ok
+test_kosul_cumleleri_toplanir (test_kampanya_alanlari.TestKampanyaKosullari.test_kosul_cumleleri_toplanir) ... ok
+test_kosul_yoksa_none (test_kampanya_alanlari.TestKampanyaKosullari.test_kosul_yoksa_none) ... ok
+test_kosul_odul_ayrimi (test_kampanya_alanlari.TestOdulMiktari.test_kosul_odul_ayrimi) ... ok
+test_odul_yoksa_uydurmaz (test_kampanya_alanlari.TestOdulMiktari.test_odul_yoksa_uydurmaz) ... ok
+test_temel_bicimler (test_kampanya_alanlari.TestOdulMiktari.test_temel_bicimler) ... ok
+test_fiil_negasyonu_hayali_ucret_uretmez (test_kampanya_alanlari.TestUctanUcaKapsam.test_fiil_negasyonu_hayali_ucret_uretmez) ... ok
+test_finansman_alanlari_uydurulmaz (test_kampanya_alanlari.TestUctanUcaKapsam.test_finansman_alanlari_uydurulmaz) ... ok
+test_kampanya_alanlari_cikar (test_kampanya_alanlari.TestUctanUcaKapsam.test_kampanya_alanlari_cikar) ... ok
+test_tum_spanlar_dogrulanir (test_kampanya_alanlari.TestUctanUcaKapsam.test_tum_spanlar_dogrulanir) ... ok
+test_logprob_ortalamasi_olasiliga_cevrilir (test_llm_client.TestConfidence.test_logprob_ortalamasi_olasiliga_cevrilir) ... ok
+test_logprob_yoksa_bos_sozluk (test_llm_client.TestConfidence.test_logprob_yoksa_bos_sozluk) ... ok
+test_null_alanda_value_araligi_yok (test_llm_client.TestConfidence.test_null_alanda_value_araligi_yok) ... ok
+test_token_offsetleri_metni_yeniden_kurar (test_llm_client.TestConfidence.test_token_offsetleri_metni_yeniden_kurar) ... ok
+test_value_araligi_bulunur (test_llm_client.TestConfidence.test_value_araligi_bulunur) ... ok
+test_default_extractor_backend_yoksa_null (test_llm_client.TestExtractor.test_default_extractor_backend_yoksa_null) ... ok
+test_default_extractor_strict_bilinmeyen_backend_yukseltir (test_llm_client.TestExtractor.test_default_extractor_strict_bilinmeyen_backend_yukseltir) ... ok
+test_hata_loglanir (test_llm_client.TestExtractor.test_hata_loglanir)
+Sessiz yutma yok: hata + ham çıktı loga düşer. ... ok
+test_http_hatasi_sayaci_ve_sessiz_dusme (test_llm_client.TestExtractor.test_http_hatasi_sayaci_ve_sessiz_dusme)
+Hoşgörülü mod: boş liste döner AMA hata kayıt altında. ... ok
+test_logprob_varsa_guven_kaynagi_logprob (test_llm_client.TestExtractor.test_logprob_varsa_guven_kaynagi_logprob) ... ok
+test_logprob_yoksa_kendi_bildirdigi_guven (test_llm_client.TestExtractor.test_logprob_yoksa_kendi_bildirdigi_guven) ... ok
+test_null_alan_uretilmez (test_llm_client.TestExtractor.test_null_alan_uretilmez)
+Halüsinasyon yasağı: value=null olan alan ExtractedField'a dönmez. ... ok
+test_null_extractor_calisir (test_llm_client.TestExtractor.test_null_extractor_calisir) ... ok
+test_onarim_da_basarisizsa_hata_dondurulur (test_llm_client.TestExtractor.test_onarim_da_basarisizsa_hata_dondurulur) ... ok
+test_onarim_denemesi_bir_kez (test_llm_client.TestExtractor.test_onarim_denemesi_bir_kez)
+İlk yanıt bozuk, ikinci sağlam -> retries=1 ve sonuç BAŞARILI. ... ok
+test_sema_ihlali_sayilir_ve_atilir (test_llm_client.TestExtractor.test_sema_ihlali_sayilir_ve_atilir) ... ok
+test_source_span_offseti_dogrulanabilir (test_llm_client.TestExtractor.test_source_span_offseti_dogrulanabilir) ... ok
+test_strict_mod_argumanla_da_acilir (test_llm_client.TestExtractor.test_strict_mod_argumanla_da_acilir) ... ok
+test_strict_mod_exception_yukseltir (test_llm_client.TestExtractor.test_strict_mod_exception_yukseltir)
+LLM_STRICT=1 -> sahte 'hibrit=kural-only' satırı imkânsız. ... ok
+test_summary_raporlanabilir (test_llm_client.TestExtractor.test_summary_raporlanabilir) ... ok
+test_uydurulmus_span_offset_uretmez (test_llm_client.TestExtractor.test_uydurulmus_span_offset_uretmez)
+Model kendi cümlesini yazdıysa yanlış yeri vurgulamaktansa hiç vurgulama. ... ok
+test_guided_json_a_dusulur (test_llm_client.TestNegotiation.test_guided_json_a_dusulur)
+Eski vLLM: yalnız `guided_json` tanınır. ... ok
+test_hicbir_mod_kabul_edilmezse_http_hatasi (test_llm_client.TestNegotiation.test_hicbir_mod_kabul_edilmezse_http_hatasi) ... ok
+test_json_schema_strict_bayragi (test_llm_client.TestNegotiation.test_json_schema_strict_bayragi) ... ok
+test_json_schema_tercih_edilir (test_llm_client.TestNegotiation.test_json_schema_tercih_edilir)
+Her mod desteklense bile OpenAI standardı (en dayanıklı) seçilir. ... ok
+test_logprob_ve_thinking_kapali_istenir (test_llm_client.TestNegotiation.test_logprob_ve_thinking_kapali_istenir) ... ok
+test_pazarlik_cachelenir (test_llm_client.TestNegotiation.test_pazarlik_cachelenir)
+Pazarlık bir kez yapılır; sonraki çağrılar yeniden denemez. ... ok
+test_prompt_only_son_care (test_llm_client.TestNegotiation.test_prompt_only_son_care)
+Hiçbir kısıt biçimi yoksa şema prompt'a gömülür. ... ok
+test_servis_kapaliysa_hemen_yukselir (test_llm_client.TestNegotiation.test_servis_kapaliysa_hemen_yukselir)
+Taşıma hatasında 4 mod boşuna denenmez; durum netçe bildirilir. ... ok
+test_structured_outputs_a_dusulur (test_llm_client.TestNegotiation.test_structured_outputs_a_dusulur) ... ok
+test_keep_alive_ve_num_ctx_gonderilir (test_llm_client.TestOllama.test_keep_alive_ve_num_ctx_gonderilir) ... ok
+test_bos_ve_json_suz_yanit (test_llm_client.TestParse.test_bos_ve_json_suz_yanit) ... ok
+test_cift_json_ilki_alinir (test_llm_client.TestParse.test_cift_json_ilki_alinir)
+Regex ile birleşip patlayan klasik vaka: iki nesne peş peşe. ... ok
+test_ic_ice_nesne_dogru_kapanir (test_llm_client.TestParse.test_ic_ice_nesne_dogru_kapanir) ... ok
+test_kapanmamis_think_bloguyla_kesik_yanit (test_llm_client.TestParse.test_kapanmamis_think_bloguyla_kesik_yanit) ... ok
+test_kesik_json (test_llm_client.TestParse.test_kesik_json) ... ok
+test_liste_donerse_ilk_eleman (test_llm_client.TestParse.test_liste_donerse_ilk_eleman) ... ok
+test_markdown_citli_json (test_llm_client.TestParse.test_markdown_citli_json) ... ok
+test_sondaki_virgul_temizlenir (test_llm_client.TestParse.test_sondaki_virgul_temizlenir) ... ok
+test_string_icindeki_susluler_sayilmaz (test_llm_client.TestParse.test_string_icindeki_susluler_sayilmaz) ... ok
+test_tek_tirnak_donusumu (test_llm_client.TestParse.test_tek_tirnak_donusumu) ... ok
+test_think_onekli (test_llm_client.TestParse.test_think_onekli) ... ok
+test_dogrulama_kapaliyken_llm_kurali_ezemez (test_llm_client.TestReconcileVerify.test_dogrulama_kapaliyken_llm_kurali_ezemez) ... ok
+test_dogrulama_modunda_llm_kurali_duzeltebilir (test_llm_client.TestReconcileVerify.test_dogrulama_modunda_llm_kurali_duzeltebilir) ... ok
+test_dusuk_guvenli_kural_alanlari_da_sorulur (test_llm_client.TestReconcileVerify.test_dusuk_guvenli_kural_alanlari_da_sorulur) ... ok
+test_varsayilan_davranis_degismedi (test_llm_client.TestReconcileVerify.test_varsayilan_davranis_degismedi)
+verify_low_conf=0.0 -> yalnız EKSİK alanlar sorulur (eski davranış). ... ok
+test_alan_tipleri_kanonik_bicimi_dayatir (test_llm_client.TestSchema.test_alan_tipleri_kanonik_bicimi_dayatir) ... ok
+test_alt_kume_semasi_daralir (test_llm_client.TestSchema.test_alt_kume_semasi_daralir) ... ok
+test_type_union_kullanilmaz (test_llm_client.TestSchema.test_type_union_kullanilmaz)
+xgrammar uyumu: hiçbir yerde {"type": [...]} olmamalı. ... ok
+test_ust_seviye_required_tum_alanlar (test_llm_client.TestSchema.test_ust_seviye_required_tum_alanlar) ... ok
+test_dotted (test_normalize.TestDate.test_dotted) ... ok
+test_iso_passthrough (test_normalize.TestDate.test_iso_passthrough) ... ok
+test_slash (test_normalize.TestDate.test_slash) ... ok
+test_tr_month (test_normalize.TestDate.test_tr_month) ... ok
+test_absent_is_none (test_normalize.TestFeeNegation.test_absent_is_none) ... ok
+test_free (test_normalize.TestFeeNegation.test_free) ... ok
+test_has_fee_with_amount (test_normalize.TestFeeNegation.test_has_fee_with_amount) ... ok
+test_symbol_thousands (test_normalize.TestMoney.test_symbol_thousands) ... ok
+test_tl (test_normalize.TestMoney.test_tl) ... ok
+test_words (test_normalize.TestMoney.test_words) ... ok
+test_range_preserved (test_normalize.TestRate.test_range_preserved) ... ok
+test_simple (test_normalize.TestRate.test_simple) ... ok
+test_trailing_percent (test_normalize.TestRate.test_trailing_percent) ... ok
+test_fractional_year (test_normalize.TestTerm.test_fractional_year) ... ok
+test_months (test_normalize.TestTerm.test_months) ... ok
+test_years (test_normalize.TestTerm.test_years) ... ok
+test_decimal_comma (test_normalize.TestTrNumber.test_decimal_comma) ... ok
+test_decimal_dot (test_normalize.TestTrNumber.test_decimal_dot) ... ok
+test_none_on_garbage (test_normalize.TestTrNumber.test_none_on_garbage) ... ok
+test_plain (test_normalize.TestTrNumber.test_plain) ... ok
+test_thousands_and_decimal (test_normalize.TestTrNumber.test_thousands_and_decimal) ... ok
+test_thousands_dot (test_normalize.TestTrNumber.test_thousands_dot) ... ok
+test_konut (test_pipeline.TestClassifier.test_konut) ... ok
+test_no_hint_returns_none (test_pipeline.TestClassifier.test_no_hint_returns_none) ... ok
+test_tasit (test_pipeline.TestClassifier.test_tasit) ... ok
+test_abbrev_no_oversplit (test_pipeline.TestPreprocessing.test_abbrev_no_oversplit) ... ok
+test_sentence_split_keeps_decimal (test_pipeline.TestPreprocessing.test_sentence_split_keeps_decimal) ... ok
+test_slug (test_pipeline.TestPreprocessing.test_slug) ... ok
+test_strip_html (test_pipeline.TestPreprocessing.test_strip_html) ... ok
+test_build_campaign (test_pipeline.TestReconcileOffline.test_build_campaign) ... ok
+test_rule_only_offline (test_pipeline.TestReconcileOffline.test_rule_only_offline) ... ok
+test_alakasiz_ekleme (test_properties.TestDegismezlerKorpusta.test_alakasiz_ekleme) ... ok
+test_cumle_sirasi (test_properties.TestDegismezlerKorpusta.test_cumle_sirasi) ... ok
+test_ortografik_degismezlik (test_properties.TestDegismezlerKorpusta.test_ortografik_degismezlik) ... ok
+test_span_butunlugu (test_properties.TestDegismezlerKorpusta.test_span_butunlugu) ... ok
+test_tum_degismezler_gecer (test_properties.TestDegismezlerKorpusta.test_tum_degismezler_gecer) ... ok
+test_dejenere_aralik_sayiya_indirgenir (test_properties.TestDejenereAralik.test_dejenere_aralik_sayiya_indirgenir) ... ok
+test_diger_tipler_bozulmaz (test_properties.TestDejenereAralik.test_diger_tipler_bozulmaz) ... ok
+test_gercek_aralik_korunur (test_properties.TestDejenereAralik.test_gercek_aralik_korunur) ... ok
+test_siralamada_dogru_banka_secilir (test_properties.TestDejenereAralik.test_siralamada_dogru_banka_secilir) ... ok
+test_bozuk_tr_katlama_ihlal_uretir (test_properties.TestDenetleyiciCalisiyorMu.test_bozuk_tr_katlama_ihlal_uretir) ... ok
+test_birim_denkligi (test_properties.TestSafDegismezler.test_birim_denkligi) ... ok
+test_normalize_text_idempotent (test_properties.TestSafDegismezler.test_normalize_text_idempotent) ... ok
+test_fixture_collection (test_scraping_pipeline.TestCollector.test_fixture_collection) ... ok
+test_campaign_paths_parsed (test_scraping_pipeline.TestConfig.test_campaign_paths_parsed) ... ok
+test_loads_ten_banks (test_scraping_pipeline.TestConfig.test_loads_ten_banks) ... ok
+test_demo_repo_and_chatbot (test_scraping_pipeline.TestPipeline.test_demo_repo_and_chatbot) ... ok
+test_end_to_end (test_scraping_pipeline.TestPipeline.test_end_to_end) ... ok
+test_tasit_classified (test_scraping_pipeline.TestPipeline.test_tasit_classified) ... ok
+test_every_bank_has_a_discovery_entry_point (test_scraping_provenance.TestBanksConfigIntegrity.test_every_bank_has_a_discovery_entry_point) ... ok
+test_js_banks_are_declared (test_scraping_provenance.TestBanksConfigIntegrity.test_js_banks_are_declared) ... ok
+test_default_excludes_drop_pdf_and_english (test_scraping_provenance.TestDiscovery.test_default_excludes_drop_pdf_and_english) ... ok
+test_max_docs_crops (test_scraping_provenance.TestDiscovery.test_max_docs_crops) ... ok
+test_normalize_and_same_site (test_scraping_provenance.TestDiscovery.test_normalize_and_same_site) ... ok
+test_rank_prefers_campaign_urls (test_scraping_provenance.TestDiscovery.test_rank_prefers_campaign_urls) ... ok
+test_sitemap_index_is_resolved_recursively (test_scraping_provenance.TestDiscovery.test_sitemap_index_is_resolved_recursively) ... ok
+test_two_stage_crawl_from_listing (test_scraping_provenance.TestDiscovery.test_two_stage_crawl_from_listing) ... ok
+test_duplicate_content_is_deduped_by_hash (test_scraping_provenance.TestProvenance.test_duplicate_content_is_deduped_by_hash) ... ok
+test_fixture_scan_is_shallow_by_default (test_scraping_provenance.TestProvenance.test_fixture_scan_is_shallow_by_default)
+Varsayılan (recursive=False) demo fixture'larını korur — live/ sızmaz. ... ok
+test_live_docs_carry_full_provenance (test_scraping_provenance.TestProvenance.test_live_docs_carry_full_provenance) ... ok
+test_manual_dir_scaffolding_and_method_tagging (test_scraping_provenance.TestProvenance.test_manual_dir_scaffolding_and_method_tagging) ... ok
+test_robots_disallow_is_respected_and_reported (test_scraping_provenance.TestProvenance.test_robots_disallow_is_respected_and_reported) ... ok
+test_save_docs_writes_sidecar_meta (test_scraping_provenance.TestProvenance.test_save_docs_writes_sidecar_meta) ... ok
+test_url_to_slug_strips_extensions_and_tr_chars (test_scraping_provenance.TestProvenance.test_url_to_slug_strips_extensions_and_tr_chars) ... ok
+test_first_call_does_not_block (test_scraping_provenance.TestRateLimiter.test_first_call_does_not_block) ... ok
+test_per_domain_default_is_three_seconds (test_scraping_provenance.TestRateLimiter.test_per_domain_default_is_three_seconds) ... ok
+test_cache_fetches_origin_once (test_scraping_provenance.TestRobotsParse.test_cache_fetches_origin_once) ... ok
+test_default_is_compliant_ignore_flag_overrides (test_scraping_provenance.TestRobotsParse.test_default_is_compliant_ignore_flag_overrides) ... ok
+test_empty_disallow_is_not_a_rule (test_scraping_provenance.TestRobotsParse.test_empty_disallow_is_not_a_rule) ... ok
+test_longest_match_wins_allow_over_disallow (test_scraping_provenance.TestRobotsParse.test_longest_match_wins_allow_over_disallow) ... ok
+test_missing_robots_defaults_to_allow (test_scraping_provenance.TestRobotsParse.test_missing_robots_defaults_to_allow) ... ok
+test_named_agent_group_wins (test_scraping_provenance.TestRobotsParse.test_named_agent_group_wins) ... ok
+test_policy_allow_and_disallow (test_scraping_provenance.TestRobotsParse.test_policy_allow_and_disallow) ... ok
+test_selects_wildcard_group (test_scraping_provenance.TestRobotsParse.test_selects_wildcard_group) ... ok
+test_bundle_routes_js_to_browser (test_scraping_provenance.TestScrapeModeDispatch.test_bundle_routes_js_to_browser) ... ok
+test_js_bank_uses_browser_fetcher (test_scraping_provenance.TestScrapeModeDispatch.test_js_bank_uses_browser_fetcher) ... ok
+test_unavailable_browser_is_skipped_gracefully (test_scraping_provenance.TestScrapeModeDispatch.test_unavailable_browser_is_skipped_gracefully) ... ok
+test_bos_gold_hata_verir (test_split_gold.TestBolme.test_bos_gold_hata_verir) ... ok
+test_boyutlar_hedef_orana_oturur (test_split_gold.TestBolme.test_boyutlar_hedef_orana_oturur) ... ok
+test_deterministik (test_split_gold.TestBolme.test_deterministik)
+Aynı gold + aynı seed = birebir aynı bölme. ... ok
+test_farkli_seed_farkli_bolme (test_split_gold.TestBolme.test_farkli_seed_farkli_bolme)
+Seed gerçekten etkili olmalı — aksi halde katmanlama sahte. ... ok
+test_gecersiz_oran_hata_verir (test_split_gold.TestBolme.test_gecersiz_oran_hata_verir) ... ok
+test_her_zor_vaka_kategorisi_iki_bolmede_de_var (test_split_gold.TestBolme.test_her_zor_vaka_kategorisi_iki_bolmede_de_var)
+En kritik değişmez: bir kategori tek tarafa düşerse o kategoride ... ok
+test_kayit_kaybi_veya_cogalmasi_yok (test_split_gold.TestBolme.test_kayit_kaybi_veya_cogalmasi_yok)
+Her kayıt tam olarak bir bölmede olmalı — ne kayıp ne kopya. ... ok
+test_kucuk_gold_ile_de_calisir (test_split_gold.TestBolme.test_kucuk_gold_ile_de_calisir)
+3 kayıtlık `gold.sample.json` ile de çökmemeli. ... ok
+test_nadir_alanlar_tek_tarafa_yigilmaz (test_split_gold.TestBolme.test_nadir_alanlar_tek_tarafa_yigilmaz) ... ok
+test_tum_bankalar_test_bolmesinde_temsil_edilir (test_split_gold.TestBolme.test_tum_bankalar_test_bolmesinde_temsil_edilir) ... ok
+test_bolme_uretilir_ve_sha256_yazilir (test_split_gold.TestDondurmaProtokolu.test_bolme_uretilir_ve_sha256_yazilir) ... ok
+test_bos_gerekce_reddedilir (test_split_gold.TestDondurmaProtokolu.test_bos_gerekce_reddedilir)
+Gerekçesiz erişim kaydı denetim izini işe yaramaz kılar. ... ok
+test_dogrulama_bozulmamis_bolmede_gecer (test_split_gold.TestDondurmaProtokolu.test_dogrulama_bozulmamis_bolmede_gecer) ... ok
+test_erisim_kaydi_birikimli (test_split_gold.TestDondurmaProtokolu.test_erisim_kaydi_birikimli) ... ok
+test_force_ile_uzerine_yazilabilir (test_split_gold.TestDondurmaProtokolu.test_force_ile_uzerine_yazilabilir) ... ok
+test_gold_dosyasi_yoksa_hata (test_split_gold.TestDondurmaProtokolu.test_gold_dosyasi_yoksa_hata) ... ok
+test_kayip_bolme_yakalanir (test_split_gold.TestDondurmaProtokolu.test_kayip_bolme_yakalanir) ... ok
+test_kurcalama_yakalanir (test_split_gold.TestDondurmaProtokolu.test_kurcalama_yakalanir) ... ok
+test_manifest_sha256_gercek_dosyayla_uyusur (test_split_gold.TestDondurmaProtokolu.test_manifest_sha256_gercek_dosyayla_uyusur) ... ok
+test_manifest_yoksa_dogrulama_hata_verir (test_split_gold.TestDondurmaProtokolu.test_manifest_yoksa_dogrulama_hata_verir)
+Bölme üretilmemişken --verify sessizce geçmemeli. ... ok
+test_sozluk_bicimindeki_gold_okunur (test_split_gold.TestDondurmaProtokolu.test_sozluk_bicimindeki_gold_okunur)
+`build_gold.py` ileride {records: [...]} yazarsa da çalışmalı. ... ok
+test_tanimsiz_bicim_acik_hata_verir (test_split_gold.TestDondurmaProtokolu.test_tanimsiz_bicim_acik_hata_verir)
+Tanınmayan gold biçimi sessizce boş bölme üretmemeli. ... ok
+test_uzerine_yazma_engellenir (test_split_gold.TestDondurmaProtokolu.test_uzerine_yazma_engellenir)
+Sızıntının en olası yolu: 'bir daha bölelim' deyip test setini ... ok
+test_masraf_gecmiyorsa_none (test_turkish_fold.TestNormalizasyonAllCaps.test_masraf_gecmiyorsa_none) ... ok
+test_para_all_caps (test_turkish_fold.TestNormalizasyonAllCaps.test_para_all_caps) ... ok
+test_pozitif_ucret_hala_dogru (test_turkish_fold.TestNormalizasyonAllCaps.test_pozitif_ucret_hala_dogru) ... ok
+test_tahsis_ucreti_yok_all_caps (test_turkish_fold.TestNormalizasyonAllCaps.test_tahsis_ucreti_yok_all_caps) ... ok
+test_tarih_all_caps (test_turkish_fold.TestNormalizasyonAllCaps.test_tarih_all_caps) ... ok
+test_ucretsiz_all_caps_masrafsiz_demektir (test_turkish_fold.TestNormalizasyonAllCaps.test_ucretsiz_all_caps_masrafsiz_demektir) ... ok
+test_vade_all_caps (test_turkish_fold.TestNormalizasyonAllCaps.test_vade_all_caps) ... ok
+test_ayni_soru_uc_bicimde_ayni_yonlendirme (test_turkish_fold.TestRouterAllCaps.test_ayni_soru_uc_bicimde_ayni_yonlendirme) ... ok
+test_kampanya_turu_filtresi_all_caps (test_turkish_fold.TestRouterAllCaps.test_kampanya_turu_filtresi_all_caps) ... ok
+test_diger_siniflar_all_caps (test_turkish_fold.TestSiniflandirmaAllCaps.test_diger_siniflar_all_caps) ... ok
+test_ipucu_yoksa_uydurmaz (test_turkish_fold.TestSiniflandirmaAllCaps.test_ipucu_yoksa_uydurmaz) ... ok
+test_uc_yazim_bicimi_ayni_sinifi_verir (test_turkish_fold.TestSiniflandirmaAllCaps.test_uc_yazim_bicimi_ayni_sinifi_verir) ... ok
+test_varyant_mukerrer_sayilmaz (test_turkish_fold.TestSiniflandirmaAllCaps.test_varyant_mukerrer_sayilmaz) ... ok
+test_ascii_katlama_varyantlari_birlestirir (test_turkish_fold.TestTrFold.test_ascii_katlama_varyantlari_birlestirir) ... ok
+test_bos_girdi (test_turkish_fold.TestTrFold.test_bos_girdi) ... ok
+test_problem_harfleri (test_turkish_fold.TestTrFold.test_problem_harfleri) ... ok
+test_stdlib_lower_bozuk_oldugu_icin_farkli (test_turkish_fold.TestTrFold.test_stdlib_lower_bozuk_oldugu_icin_farkli) ... ok
+test_uzunluk_korunur_offset_guvenli (test_turkish_fold.TestTrFold.test_uzunluk_korunur_offset_guvenli) ... ok
+
+----------------------------------------------------------------------
+Ran 368 tests in 0.145s
+
+OK
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=517 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 5: Degismez denetimi (eval.properties) — --network none
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -m eval.properties --raw-dir data/raw
+------------------------------------------------------------------------------
+1696 belge — tüm değişmezler GEÇTİ (0 ihlal)
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=45954 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 6: Degerlendirme (eval.run_eval) — --network none
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -m eval.run_eval --gold data/gold/gold.sample.json
+------------------------------------------------------------------------------
+
+konfig : kural — yalnız kural katmanı (regex + normalizasyon), LLM kapalı
+gold   : data/gold/gold.sample.json (3 kayıt, alt küme 'all' -> 3 belge)
+
+=== KURAL / strict — TÜM VAKALAR ===
+alan                        P      R     F1   TP   FP   FN   TN  UYD  ATL
+alisveris_puani         0.000  0.000  0.000    0    0    0    0    0    3
+finansman_tutari        0.000  0.000  0.000    0    0    0    0    0    3
+hedef_kitle             0.000  0.000  0.000    0    0    0    0    0    3
+indirim_orani           0.000  0.000  0.000    0    0    0    0    0    3
+kampanya_kosullari      0.000  0.000  0.000    0    0    0    0    0    3
+kampanya_suresi         1.000  1.000  1.000    1    0    0    0    0    2
+kar_payi_orani          1.000  1.000  1.000    2    0    0    0    0    1
+masraf_durumu           1.000  1.000  1.000    2    0    0    0    0    1
+odul_miktari            0.000  0.000  0.000    0    0    0    0    0    3
+tahsis_ucreti           1.000  1.000  1.000    1    0    0    0    0    2
+taksit_sayisi           0.000  0.000  0.000    0    0    0    0    0    3
+vade_ay                 1.000  1.000  1.000    3    0    0    0    0    0
+-------------------------------------------------------------------------
+MİKRO                   1.000  1.000  1.000    9    0    0    0    0   27
+MAKRO (F1 ort.)                       1.000
+
+halüsinasyon oranı (gold 'YOK' derken üretilen değer): ölçülemedi (gold'da absent kararı yok)  [0/0]
+metrik dışı bırakılan (gold karar vermemiş) alan-kararı: 27  — bilinmeyen lehimize sayılmadı
+
+mikro-F1 %95 GA: 1.000 [1.000–1.000]  (belge düzeyi bootstrap, n=3 belge, 1000 örnek, seed=42)
+makro-F1 %95 GA: 1.000 [1.000–1.000]
+
+=== KURAL / strict — ZOR VAKALAR (2 belge) ===
+alan                        P      R     F1   TP   FP   FN   TN  UYD  ATL
+alisveris_puani         0.000  0.000  0.000    0    0    0    0    0    2
+finansman_tutari        0.000  0.000  0.000    0    0    0    0    0    2
+hedef_kitle             0.000  0.000  0.000    0    0    0    0    0    2
+indirim_orani           0.000  0.000  0.000    0    0    0    0    0    2
+kampanya_kosullari      0.000  0.000  0.000    0    0    0    0    0    2
+kampanya_suresi         0.000  0.000  0.000    0    0    0    0    0    2
+kar_payi_orani          1.000  1.000  1.000    1    0    0    0    0    1
+masraf_durumu           1.000  1.000  1.000    1    0    0    0    0    1
+odul_miktari            0.000  0.000  0.000    0    0    0    0    0    2
+tahsis_ucreti           0.000  0.000  0.000    0    0    0    0    0    2
+taksit_sayisi           0.000  0.000  0.000    0    0    0    0    0    2
+vade_ay                 1.000  1.000  1.000    2    0    0    0    0    0
+-------------------------------------------------------------------------
+MİKRO                   1.000  1.000  1.000    4    0    0    0    0   20
+MAKRO (F1 ort.)                       1.000
+
+=== ZOR-VAKA ETİKETİ KIRILIMI (etiketler ÖRTÜŞÜR) ===
+etiket              mikro-F1  makro-F1    TP    FP    FN
+legacy                 1.000     1.000     4     0     0
+
+=== KURAL / tolerant — TÜM VAKALAR ===
+alan                        P      R     F1   TP   FP   FN   TN  UYD  ATL
+alisveris_puani         0.000  0.000  0.000    0    0    0    0    0    3
+finansman_tutari        0.000  0.000  0.000    0    0    0    0    0    3
+hedef_kitle             0.000  0.000  0.000    0    0    0    0    0    3
+indirim_orani           0.000  0.000  0.000    0    0    0    0    0    3
+kampanya_kosullari      0.000  0.000  0.000    0    0    0    0    0    3
+kampanya_suresi         1.000  1.000  1.000    1    0    0    0    0    2
+kar_payi_orani          1.000  1.000  1.000    2    0    0    0    0    1
+masraf_durumu           1.000  1.000  1.000    2    0    0    0    0    1
+odul_miktari            0.000  0.000  0.000    0    0    0    0    0    3
+tahsis_ucreti           1.000  1.000  1.000    1    0    0    0    0    2
+taksit_sayisi           0.000  0.000  0.000    0    0    0    0    0    3
+vade_ay                 1.000  1.000  1.000    3    0    0    0    0    0
+-------------------------------------------------------------------------
+MİKRO                   1.000  1.000  1.000    9    0    0    0    0   27
+MAKRO (F1 ort.)                       1.000
+
+halüsinasyon oranı (gold 'YOK' derken üretilen değer): ölçülemedi (gold'da absent kararı yok)  [0/0]
+metrik dışı bırakılan (gold karar vermemiş) alan-kararı: 27  — bilinmeyen lehimize sayılmadı
+
+mikro-F1 %95 GA: 1.000 [1.000–1.000]  (belge düzeyi bootstrap, n=3 belge, 1000 örnek, seed=42)
+makro-F1 %95 GA: 1.000 [1.000–1.000]
+
+=== KURAL / tolerant — ZOR VAKALAR (2 belge) ===
+alan                        P      R     F1   TP   FP   FN   TN  UYD  ATL
+alisveris_puani         0.000  0.000  0.000    0    0    0    0    0    2
+finansman_tutari        0.000  0.000  0.000    0    0    0    0    0    2
+hedef_kitle             0.000  0.000  0.000    0    0    0    0    0    2
+indirim_orani           0.000  0.000  0.000    0    0    0    0    0    2
+kampanya_kosullari      0.000  0.000  0.000    0    0    0    0    0    2
+kampanya_suresi         0.000  0.000  0.000    0    0    0    0    0    2
+kar_payi_orani          1.000  1.000  1.000    1    0    0    0    0    1
+masraf_durumu           1.000  1.000  1.000    1    0    0    0    0    1
+odul_miktari            0.000  0.000  0.000    0    0    0    0    0    2
+tahsis_ucreti           0.000  0.000  0.000    0    0    0    0    0    2
+taksit_sayisi           0.000  0.000  0.000    0    0    0    0    0    2
+vade_ay                 1.000  1.000  1.000    2    0    0    0    0    0
+-------------------------------------------------------------------------
+MİKRO                   1.000  1.000  1.000    4    0    0    0    0   20
+MAKRO (F1 ort.)                       1.000
+
+=== ZOR-VAKA ETİKETİ KIRILIMI (etiketler ÖRTÜŞÜR) ===
+etiket              mikro-F1  makro-F1    TP    FP    FN
+legacy                 1.000     1.000     4     0     0
+
+Rapor yazıldı: eval/reports/20260731-103958
+  - metrics.json
+  - env.json
+  - report.md
+  - per_field.csv
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=320 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 7: Ablasyon (eval.ablation) — --network none
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -m eval.ablation --gold data/gold/gold.sample.json
+------------------------------------------------------------------------------
+
+gold: data/gold/gold.sample.json (3 kayıt, 2 zor)
+
+=== ABLASYON — eşleştirici 'strict' ===
+konfig            F1(tüm)   makro  F1(zor)    TP    FP    FN   UYD  mikro-F1 %95 GA
+kural               1.000   1.000    1.000     9     0     0     0  1.000 [1.000–1.000]
+llm             ÖLÇÜLMEDİ   (bkz. NOTLAR)
+hibrit          ÖLÇÜLMEDİ   (bkz. NOTLAR)
+hibrit-verify   ÖLÇÜLMEDİ   (bkz. NOTLAR)
+
+=== İSTATİSTİKSEL KARŞILAŞTIRMA ===
+Karşılaştırılacak en az iki ÖLÇÜLEBİLEN kol yok.
+
+NOTLAR (sessiz sınırlama yok):
+  - `llm` ÖLÇÜLMEDİ: LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1).
+  - `hibrit` ÖLÇÜLMEDİ: LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1).
+  - `hibrit-verify` ÖLÇÜLMEDİ: LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1).
+
+Rapor yazıldı: eval/reports/20260731-103959
+  - metrics.json
+  - env.json
+  - report.md
+  - per_field.csv
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=242 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 8: Gecikme olcumu (scripts.latency_bench) — --network none
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -m scripts.latency_bench --recursive --iterations 3 --json /out/latency-20260731-133540.json
+------------------------------------------------------------------------------
+LLM_BACKEND         : (bos -> NullLLMExtractor)
+LLM cikarici        : NullLLMExtractor
+Siniflandirici      : RuleHintClassifier
+Python / platform   : 3.11.15 / Linux-6.12.76-linuxkit-aarch64-with-glibc2.41
+CPU sayisi          : 10
+Korpus modu         : recursive (live/ + manual/)
+
+Korpus              : 1696 belge, 10569592 karakter (ortalama 6232)
+Demo soguk baslatma : 5.7 ms (build_demo_repo, kok korpus)
+Tam korpus alimi    : 6.76 s -> 15051.1 belge/dakika
+
+==============================================================================
+GECIKME (ms) — her yol ayri
+==============================================================================
+yol                                    n      p50      p95      p99      max
+------------------------------------------------------------------------------
+(a) kural-only cikarim — extract_   5088    2.116    7.077   10.668   42.899
+(b) hibrit boru hatti — build_cam   5088    2.958    9.404   11.927  113.719
+(c) chatbot yaniti — Chatbot.ask(    504   16.113  624.567  847.178 1269.618
+------------------------------------------------------------------------------
+  * rule: saf regex/kural katmani; belge basina
+  * hybrid: kural + siniflandirici + uzlastirma + normalizasyon. GERCEK LLM cikarimi DAHIL DEGIL (NullLLMExtractor aktif)
+  * chatbot: router + yapisal sorgu / RAG, 1696 kampanyalik onceden doldurulmus DB, 8 soruluk havuz. GERCEK LLM cikarimi DAHIL DEGIL (NullLLMExtractor aktif)
+
+Korpus              : 1696 belge, ortalama 6232 karakter, 3 tur (recursive=True)
+Demo soguk baslatma : 5.7 ms
+Verim               : 15051.1 belge/dakika (1696 belge / 6.76 s)
+Tepe RSS (bu surec) : 113.9 MB
+Konteyner icinde mi : True
+==============================================================================
+JSON yazildi        : /out/latency-20260731-133540.json
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=170955 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 9: Offline ortam degiskenleri (HF_HUB_OFFLINE vb.)
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof sh -c env | grep -E "OFFLINE|TELEMETRY|UPDATE_CHECK" | sort
+------------------------------------------------------------------------------
+ANATOLIA_OFFLINE=1
+HF_HUB_DISABLE_TELEMETRY=1
+HF_HUB_DISABLE_UPDATE_CHECK=1
+HF_HUB_OFFLINE=1
+TRANSFORMERS_OFFLINE=1
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=203 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 10: Teslim imaji paket dokumu (pip list)
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof sh -c pip list --format=freeze 2>/dev/null | sort
+------------------------------------------------------------------------------
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anyio==4.14.2
+click==8.4.2
+fastapi==0.141.1
+h11==0.16.0
+idna==3.18
+packaging==26.2
+pgvector==0.5.0
+pip==24.0
+psycopg-binary==3.3.4
+psycopg==3.3.4
+pydantic==2.13.4
+pydantic_core==2.46.4
+setuptools==79.0.1
+starlette==1.3.1
+typing-inspection==0.4.2
+typing_extensions==4.16.0
+uvicorn==0.52.0
+wheel==0.46.3
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=378 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 11: trafilatura teslim imajinda YOK (grep bos donmeli)
+beklenti : cikis kodu 0 DEGIL (negatif kontrol)
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof sh -c pip list --format=freeze 2>/dev/null | grep -i trafilatura
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=1  sure=332 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 12: trafilatura import EDILEMEZ (ikinci, bagimsiz kanit)
+beklenti : cikis kodu 0
+komut    : docker run --rm --network none -v /Users/mehmetefeaytas/anatoliaaI/app/docs/offline-proof:/out -e LLM_BACKEND= -e PYTHONDONTWRITEBYTECODE=1 anatolia-api:offline-proof python -c import importlib.util as u, sys; s = u.find_spec("trafilatura"); print("trafilatura find_spec:", s); sys.exit(0 if s is None else 1)
+------------------------------------------------------------------------------
+trafilatura find_spec: None
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=161 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 13: Imaj kunyesi (boyut / ID / taban)
+beklenti : cikis kodu 0
+komut    : docker image inspect anatolia-api:offline-proof --format ID={{.Id}}
+Boyut={{.Size}} bayt
+Mimari={{.Os}}/{{.Architecture}}
+Olusturma={{.Created}}
+------------------------------------------------------------------------------
+ID=sha256:a23450c4e4eb2f27e945fca2b9699d1b0f00d7fb8dd2ccfd63fb70c2e8108385
+Boyut=100802593 bayt
+Mimari=linux/arm64
+Olusturma=2026-07-31T10:38:51.340600917Z
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=57 ms  -> BEKLENDIGI GIBI
+
+==============================================================================
+ OZET
+==============================================================================
+#   adim                                                 kod    sure(ms) sonuc
+------------------------------------------------------------------------------
+1   Imaj derleme (docker build -f Dockerfile.api)        0      192641   BEKLENDIGI GIBI
+2   Prob dogrulama: ag ACIK iken prob ULASMALI (metaKont 0      17220    BEKLENDIGI GIBI
+3   NEGATIF KONTROL: --network none icinde ag ERISILEMEZ 3      405      BEKLENDIGI GIBI
+4   Test paketi (345 test) — --network none            0      517      BEKLENDIGI GIBI
+5   Degismez denetimi (eval.properties) — --network none 0      45954    BEKLENDIGI GIBI
+6   Degerlendirme (eval.run_eval) — --network none     0      320      BEKLENDIGI GIBI
+7   Ablasyon (eval.ablation) — --network none          0      242      BEKLENDIGI GIBI
+8   Gecikme olcumu (scripts.latency_bench) — --network n 0      170955   BEKLENDIGI GIBI
+9   Offline ortam degiskenleri (HF_HUB_OFFLINE vb.)      0      203      BEKLENDIGI GIBI
+10  Teslim imaji paket dokumu (pip list)                 0      378      BEKLENDIGI GIBI
+11  trafilatura teslim imajinda YOK (grep bos donmeli)   1      332      BEKLENDIGI GIBI
+12  trafilatura import EDILEMEZ (ikinci, bagimsiz kanit) 0      161      BEKLENDIGI GIBI
+13  Imaj kunyesi (boyut / ID / taban)                    0      57       BEKLENDIGI GIBI
+------------------------------------------------------------------------------
+adim sayisi        : 13
+beklenmedik sonuc  : 0
+transkript         : docs/offline-proof/transcript-20260731-133540.log
+gecikme JSON       : docs/offline-proof/latency-20260731-133540.json
+
+SONUC: TUM ADIMLAR BEKLENDIGI GIBI.
+       - pozitif: 345 test + eval + ablasyon + gecikme olcumu
+         '--network none' icinde kostu.
+       - negatif: ayni izolasyonda dis dunyaya ULASILAMADI,
+         ve ayni prob ag acikken ULASTI (yani prob calisiyor).

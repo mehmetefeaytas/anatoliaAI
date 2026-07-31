@@ -1,11 +1,30 @@
 # Anatolia AI — tek komutla offline, API anahtarsız ayağa kalkar.
 # İlgili: ../decisions/on-premise-calistirilabilir-mimari.md, CLAUDE.md §7, §20
+#         docs/OFFLINE-KANIT.md (ölçülmüş `--network none` kanıtı + digest tablosu)
 # Kullanım:  docker-compose up
 # LLM: vllm (GPU) birincil; gpu yoksa ollama profili (`--profile ollama`).
+#
+# ## NEDEN DIGEST PIN (`@sha256:...`)
+#
+# Bu dosya daha önce üç imajı da hareketli etiketle (`:pg16`, `:latest`)
+# çekiyordu. "Offline VE tekrar üretilebilir" iddiası hareketli etiketle
+# **teknik olarak yanlıştır**: aynı `docker-compose.yml` üç ay sonra farklı
+# imajlar çeker, jürinin gördüğü sistem bizim test ettiğimiz sistem olmaz.
+# Etiket okunabilirlik için bırakıldı; bağlayıcı olan digest'tir.
+#
+# Digest'ler 2026-07-31'de `docker buildx imagetools inspect <imaj>` ile
+# çözüldü (çözüm çıktısı docs/OFFLINE-KANIT.md "Digest pin tablosu"nda arşivli).
+# Yenilemek için:
+#
+#   docker buildx imagetools inspect pgvector/pgvector:pg16 | grep Digest
+#
+# Digest yenilenirse OFFLINE-KANIT.md tablosu da güncellenmeli; aksi halde
+# belge ile dosya çelişir.
 
 services:
   postgres:
-    image: pgvector/pgvector:pg16        # PostgreSQL + pgvector (açık kaynak)
+    # PostgreSQL + pgvector (açık kaynak, PostgreSQL lisansı)
+    image: pgvector/pgvector:pg16@sha256:a36250871de0833b8757561c72f2477ef1ddd1101afa4e617fb552e0de514c6b
     environment:
       POSTGRES_USER: anatolia
       POSTGRES_PASSWORD: anatolia
@@ -22,13 +41,22 @@ services:
       retries: 10
 
   vllm:
-    image: vllm/vllm-openai:latest       # Apache-2.0, OpenAI-uyumlu
+    # Apache-2.0, OpenAI-uyumlu sunucu.
+    image: vllm/vllm-openai:latest@sha256:ffb2d59b1c059a5bd8d781320c9f5189de8293693b7d95da54befddaa54abf52
+    # Model KORUNUYOR: lisans zinciri 2026-07-31'de doğrulandı —
+    # license: Apache-2.0; zincir Qwen3-8B-Base -> Qwen3-8B -> Trendyol-LLM-8B-T1.
+    # Zincirde Llama/Gemma YOK, ticari-olmayan kısıt YOK => §5.10 uyumlu.
     command: >
       --model Trendyol/Trendyol-LLM-8B-T1
       --quantization awq --max-model-len 8192
     environment:
       HF_HUB_OFFLINE: "1"                # offline: önceden indirilmiş ağırlık
     volumes:
+      # ÖN KOŞUL: `./models` ağırlıklarla ÖNCEDEN doldurulmuş olmalı. HF_HUB_OFFLINE=1
+      # ile vLLM indirmeye çalışmaz; klasör boşsa servis başlamaz (sessizce
+      # internete çıkmaz — istenen davranış bu). İndirme prosedürü:
+      # docs/OFFLINE-KANIT.md "Ağırlık bütünlüğü". Bu dizin repoda YOK (ağırlıklar
+      # git'e girmez) ve `docker compose up` onu boş oluşturur.
       - ./models:/root/.cache/huggingface
     ports:
       - "8001:8000"
@@ -40,7 +68,8 @@ services:
             - capabilities: ["gpu"]
 
   ollama:
-    image: ollama/ollama:latest          # MIT, demo yedeği (CPU/GPU)
+    # MIT, demo yedeği (CPU/GPU)
+    image: ollama/ollama:latest@sha256:4dea9fb511947e24a84237bb636b0203abcb2ff0d3fbc7b4ff865deb91362131
     volumes:
       - ollama:/root/.ollama
     ports:
