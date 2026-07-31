@@ -43,6 +43,34 @@ class Chatbot:
         # ablasyon/ölçüm içindir (kapıların gerçekten fark yarattığını
         # göstermek); üretimde kapatılmaz.
         self.safety_enabled = safety_enabled
+        # RAG dizini bot ömrü boyunca BİR kez kurulur. Eskiden `rag.answer`
+        # her soruda yeni bir retriever yaratıyordu; 1696 belgelik korpusta
+        # bu soru başına ~300 ms'ydi ve chatbot p99'unu tek başına üretiyordu.
+        self._retriever: Optional[rag.KeywordRetriever] = None
+        # Depo kurulum anında zaten doluysa dizini HEMEN kur: maliyet açılışta
+        # ödenir, jüri önündeki ilk soruda değil (CLAUDE.md §11 — önceden
+        # doldurulmuş DB). Depo boşsa (önce bot, sonra seed eden testler)
+        # dizin ilk RAG sorusunda tembel kurulur.
+        self._ensure_retriever(require_data=True)
+
+    def _ensure_retriever(self, require_data: bool = False
+                          ) -> Optional[rag.KeywordRetriever]:
+        """RAG retriever'ını (ters dizin) döner; gerekiyorsa kurar.
+
+        `require_data=True` iken boş depo için dizin kurulmaz ve None dönülür —
+        böylece sonradan doldurulan depolarda bayat (stale) dizin kalmaz.
+        """
+        if self._retriever is None:
+            candidate = rag.KeywordRetriever(self.repo)
+            if require_data and candidate.document_count == 0:
+                return None
+            self._retriever = candidate
+        return self._retriever
+
+    def reindex(self) -> None:
+        """Depo kurulumdan sonra değiştiyse RAG dizinini yeniden kur."""
+        self._retriever = None
+        self._ensure_retriever(require_data=True)
 
     def ask(self, question: str) -> ChatAnswer:
         if not self.safety_enabled:
@@ -85,7 +113,8 @@ class Chatbot:
             has_rate = (r.field == "kar_payi_orani"
                         or safety.contains_rate(ans.text))
             return "structured", r.field, ans.text, sources, has_rate
-        ans = rag.answer(self.repo, question, llm=self.llm)
+        ans = rag.answer(self.repo, question, llm=self.llm,
+                         retriever=self._ensure_retriever())
         return "rag", r.field, ans.text, ans.passages, safety.contains_rate(ans.text)
 
     def _answer_unguarded(self, question: str) -> ChatAnswer:

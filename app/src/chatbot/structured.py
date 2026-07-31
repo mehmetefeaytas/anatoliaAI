@@ -63,15 +63,22 @@ def _apply_filters(repo: Repository, rows: list[dict], filters: dict) -> list[di
     ctype = filters.get("campaign_type")
     if ctype:
         out = [r for r in out if (r.get("campaign_type") == ctype)]
-    # vade_ay_min: ilgili kampanyanın vade alanına bak
+    # vade_ay_min: ilgili kampanyanın vade alanına bak.
+    # Eskiden satır başına bir `repo.field_value()` sorgusu atılıyordu (N+1).
+    # 1696 kampanyalık korpusta "36 ay ve üzeri vade veren konut finansmanları"
+    # sorusu tek başına ~23 ms sürüyordu — chatbot'un ikinci en yavaş yolu.
+    # Tek `query_fields("vade_ay")` çağrısı aynı veriyi bir sorguda getirir.
     vmin = filters.get("vade_ay_min")
     if vmin is not None:
-        keep = []
-        for r in out:
-            v = repo.field_value(r["campaign_id"], "vade_ay")
-            if isinstance(v, (int, float)) and v >= vmin:
-                keep.append(r)
-        out = keep
+        # `field_value()` fetchone() ile İLK satırı döndürüyordu; aynı
+        # kampanyada birden fazla vade_ay satırı olursa (beklenmez ama şema
+        # engellemiyor) setdefault ile yine ilkini alıyoruz.
+        vade_by_campaign: dict[int, object] = {}
+        for row in repo.query_fields("vade_ay"):
+            vade_by_campaign.setdefault(row["campaign_id"], row["canonical_value"])
+        out = [r for r in out
+               if isinstance(vade_by_campaign.get(r["campaign_id"]), (int, float))
+               and vade_by_campaign[r["campaign_id"]] >= vmin]
     return out
 
 
