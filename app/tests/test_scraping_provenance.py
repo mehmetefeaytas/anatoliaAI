@@ -298,6 +298,43 @@ class TestProvenance(unittest.TestCase):
                             robots=RobotsCache(fetcher=lambda u: (404, None)))
         self.assertEqual(len(docs), 1)
 
+    def test_dedup_html_gurultusune_ragmen_calisir(self):
+        """Tekilleştirme TEMİZ METİN üzerinden yapılmalı, ham HTML üzerinden değil.
+
+        Gerçek hata (2026-08-03): sayfadaki analitik kimlikleri / oturum simgeleri
+        her istekte değişiyor, bu yüzden AYNI sayfanın iki kopyası farklı
+        `content_hash` alıyor ve tekilleştirme kaçırıyordu. 1491 belgelik korpusta
+        98 mükerrer metin grubu / 215 dosya (~%14) birikti; TOGG çelişkisi de
+        2 gerçek bulgu yerine 4 raporlanıyordu.
+
+        Aşağıdaki iki sayfanın GÖVDE METNİ aynı, yalnızca izleme kimlikleri farklı.
+        """
+        bank = BankConfig(slug="b", name="B", website_url="https://b.test",
+                          campaign_paths=["/kampanyalar"],
+                          detail_patterns=["/kampanyalar/"])
+        body = ("<main><h1>Konut Finansmanı</h1><p>"
+                + "Kâr payı oranı %2,05, vade 120 ay, tahsis ücreti yoktur. " * 8
+                + "</p></main>")
+        pages = {
+            "https://b.test/kampanyalar":
+                '<a href="/kampanyalar/a">a</a><a href="/kampanyalar/b">b</a>',
+            # Aynı gövde; farklı analitik/oturum artığı → farklı ham HTML hash'i
+            "https://b.test/kampanyalar/a":
+                f"<html><head><title>T</title></head><body>{body}"
+                f"<script>var sid='sess-11111111';</script></body></html>",
+            "https://b.test/kampanyalar/b":
+                f"<html><head><title>T</title></head><body>{body}"
+                f"<script>var sid='sess-99999999';</script></body></html>",
+        }
+        diag: dict = {}
+        docs = collect_live(bank, bundle=FetcherBundle(static=FakeFetcher(pages)),
+                            robots=RobotsCache(fetcher=lambda u: (404, None)),
+                            report=diag)
+        self.assertEqual(len(docs), 1,
+                         "HTML gürültüsü tekilleştirmeyi kaçırmamalı")
+        self.assertTrue(any("mukerrer" in n for n in diag.get("notes", [])),
+                        "atlanan mükerrer belge rapora not edilmeli")
+
     def test_robots_disallow_is_respected_and_reported(self):
         bank = BankConfig(slug="b", name="B", website_url="https://b.test",
                           campaign_paths=["/kampanyalar"],

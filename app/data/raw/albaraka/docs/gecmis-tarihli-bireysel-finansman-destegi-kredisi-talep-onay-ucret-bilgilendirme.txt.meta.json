@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/bireysel-finansman-destegi-kredisi-talep-onay-ucret-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-03T18:03:24+00:00",
+  "content_hash": "39e8ee1bb56e2e6aaab225d3cfc4e61cddf276ffe5aacf675d8c3fe95d584a80",
+  "collection_method": "pdf",
+  "title": "bireysel finansman destegi kredisi talep onay ucret bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 92479,
+  "text_chars": 5850,
+  "pdf_pages": 3
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/kazandiran-ceyrek-hesap-sozlesmesi.pdf",
+  "scraped_at": "2026-08-03T17:11:39+00:00",
+  "content_hash": "d7d080e86ef55036a1dd42f546bbb165fd0b30a2711d62fd722be7b34b61529e",
+  "collection_method": "pdf",
+  "title": "kazandiran ceyrek hesap sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 209576,
+  "text_chars": 2039,
+  "pdf_pages": 1
+}

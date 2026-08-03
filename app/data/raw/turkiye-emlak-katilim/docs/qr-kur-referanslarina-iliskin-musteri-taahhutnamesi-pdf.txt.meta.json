@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/kur-referanslarina-iliskin-musteri-taahhutnamesi.pdf",
+  "scraped_at": "2026-08-03T17:11:48+00:00",
+  "content_hash": "9f015aa0d6df012ba4860b4214cd0497ce42d0017664293fd66121df231b3f39",
+  "collection_method": "pdf",
+  "title": "kur referanslarina iliskin musteri taahhutnamesi",
+  "http_status": 200,
+  "raw_bytes": 190715,
+  "text_chars": 4855,
+  "pdf_pages": 2
+}

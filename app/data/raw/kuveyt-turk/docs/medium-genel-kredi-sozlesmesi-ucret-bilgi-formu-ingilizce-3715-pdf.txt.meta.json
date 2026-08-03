@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/genel-kredi-sozlesmesi-ucret-bilgi-formu-ingilizce-3715.pdf",
+  "scraped_at": "2026-08-03T18:01:21+00:00",
+  "content_hash": "68c78b7a22171c22ef20136983c8a87580bb77b15c5aa24c1f85807dce31804d",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi ucret bilgi formu ingilizce 3715",
+  "http_status": 200,
+  "raw_bytes": 226001,
+  "text_chars": 17831,
+  "pdf_pages": 13
+}
