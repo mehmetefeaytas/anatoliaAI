@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/vadeli-islemler-cerceve-sozlesmesinde-genel-islem-kosullari-kullanilmasini-kabul-beyani.pdf",
+  "scraped_at": "2026-08-03T17:12:12+00:00",
+  "content_hash": "caeaca4cd528875777c0475c85cc84bf2422fe151b86322d86a3d80490dc852a",
+  "collection_method": "pdf",
+  "title": "vadeli islemler cerceve sozlesmesinde genel islem kosullari kullanilmasini kabul beyani",
+  "http_status": 200,
+  "raw_bytes": 177845,
+  "text_chars": 1510,
+  "pdf_pages": 1
+}

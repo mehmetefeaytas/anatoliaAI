@@ -11,6 +11,12 @@ requests>=2.31           # Apache-2.0 (scrape_mode: static)
 beautifulsoup4>=4.12     # MIT (bağlantı çıkarımı + metin ayıklama)
 playwright>=1.42         # Apache-2.0 (scrape_mode: js — Nuxt/SPA bankalar)
 pyyaml>=6.0              # MIT (config/banks.yaml; yoksa config._mini_parse'a düşer)
+pypdf>=4.0               # BSD-3-Clause — PDF ücret tarifeleri + ürün bilgi formları
+# NEDEN: ücret/komisyon tarifeleri ve "Ürün Bilgi Formu" belgeleri HTML tablo
+# DEĞİL PDF olarak yayımlanıyor (2026-08-03 tarayıcı doğrulaması: Emlak, Dünya,
+# Türkiye Finans). Kesin tahsis ücreti/masraf oranı orada → §18-2 çelişki tespiti.
+# PyMuPDF (fitz) KULLANILMAZ: AGPL, Apache-2.0 teslimle uyumsuz (§5.10 lisans riski).
+# Kurulu değilse src/scraping/pdf.py boş metin + açık gerekçe döner, hat çökmez.
 # NOT: playwright ayrıca tarayıcı ikilisi ister: `playwright install chromium`.
 # Kurulu değilse fetcher.BrowserFetcher zarifçe atlar, sistem çökmez.
 # robots.txt uyumu (CLAUDE.md §14) src/scraping/robots.py'de, saf stdlib ile.

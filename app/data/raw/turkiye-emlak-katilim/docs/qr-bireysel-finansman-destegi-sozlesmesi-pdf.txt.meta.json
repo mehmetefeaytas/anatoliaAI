@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/bireysel-finansman-destegi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-03T17:11:12+00:00",
+  "content_hash": "b3d1530d01532fceb54303ee11ff809efbed3f50110f4e2c61afe10c05efd155",
+  "collection_method": "pdf",
+  "title": "bireysel finansman destegi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 400040,
+  "text_chars": 47317,
+  "pdf_pages": 20
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/bayide-finansman-ots---aracilik-ve-garantorluk-sozlesmesi-kredi-(-komisyonsuz).pdf",
+  "scraped_at": "2026-08-03T18:03:40+00:00",
+  "content_hash": "821281523887be12934370c0e66d08f7bda537fea982fac20db61ded6e0f055f",
+  "collection_method": "pdf",
+  "title": "bayide finansman ots aracilik ve garantorluk sozlesmesi kredi ( komisyonsuz)",
+  "http_status": 200,
+  "raw_bytes": 694186,
+  "text_chars": 110301,
+  "pdf_pages": 48
+}

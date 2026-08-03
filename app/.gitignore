@@ -5,9 +5,30 @@ __pycache__/
 venv/
 *.egg-info/
 
-# DB / veri (ham HTML cache hariç fixtures korunur)
+# DB
 *.db
 *.sqlite
+
+# Ham HTML cache — DEPOYA KONMAZ (2026-08-03 kararı)
+#
+# Genişletilmiş hasat sonrası `data/raw` 417 MB'a çıktı; bunun 366 MB'ı
+# `.html` cache'i (1570 dosya). Her yeniden hasat bu dosyaların YENİ bir
+# sürümünü git geçmişine eklerdi → depo hızla kullanılamaz hâle gelir
+# (klonlama süresi, GitHub sınırları, şartname §9 "çalışan repo" gerekliliği).
+#
+# NE KAYBEDİLİYOR: CLAUDE.md §14'ün ham-HTML provenance cache'i. Metin çıkarımı
+# iyileştiğinde yeniden-çıkarım için HTML gerekir; artık yeniden HASAT gerekir.
+# Bu kabul edilebilir çünkü hasat betiklenmiş ve tekrarlanabilir
+# (`src/scraping/harvest*.py`).
+#
+# NE KORUNUYOR: veri setinin kendisi ve provenance zinciri —
+#   `.txt`          çıkarılmış metin (1684 dosya, 12 MB)
+#   `.txt.meta.json` source_url + scraped_at + content_hash + campaign_status
+#   `.pdf`          ücret tarifesi/bilgi formu asılları (112 dosya, 32 MB) —
+#                   tablo yapısı metne tam çevrilemediği için asıl tutulur
+#   `rates/*.jsonl` yapılandırılmış oran kayıtları
+data/raw/**/*.html
+data/raw/**/*.htm
 
 # modeller (offline; repo'ya konmaz)
 models/

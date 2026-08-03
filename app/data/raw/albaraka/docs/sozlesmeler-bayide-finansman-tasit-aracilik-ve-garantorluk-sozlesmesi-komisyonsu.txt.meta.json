@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/bayide-finansman-tasit--aracilik-ve-garantorluk-sozlesmesi-(komisyonsuz).pdf",
+  "scraped_at": "2026-08-03T18:03:43+00:00",
+  "content_hash": "166a99684067d83bef33de6070d931cc482ad570226466749c343156d4b13b18",
+  "collection_method": "pdf",
+  "title": "bayide finansman tasit aracilik ve garantorluk sozlesmesi (komisyonsuz)",
+  "http_status": 200,
+  "raw_bytes": 683393,
+  "text_chars": 108096,
+  "pdf_pages": 46
+}

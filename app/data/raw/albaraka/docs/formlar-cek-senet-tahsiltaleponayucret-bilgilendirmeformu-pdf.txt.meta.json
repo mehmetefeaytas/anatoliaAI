@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/cek_senet_tahsiltaleponayucret_bilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-03T18:03:09+00:00",
+  "content_hash": "5a0be928b8c4260841b4eff9b8b03633c71c69fe1dbd6eedb8a9e3b2047e92dd",
+  "collection_method": "pdf",
+  "title": "cek senet tahsiltaleponayucret bilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 462263,
+  "text_chars": 3535,
+  "pdf_pages": 2
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/ucret-komisyon-tarifesi.pdf",
+  "scraped_at": "2026-08-03T18:03:18+00:00",
+  "content_hash": "2d438144aea62e06fae16a47c1e9c6a8eb275c76afff2e76ceaece663ade32fa",
+  "collection_method": "pdf",
+  "title": "ucret komisyon tarifesi",
+  "http_status": 200,
+  "raw_bytes": 315716,
+  "text_chars": 2459,
+  "pdf_pages": 1
+}

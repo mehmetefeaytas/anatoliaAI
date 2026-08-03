@@ -1,0 +1,12 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/content/files/uploads/2519/dk-ticarimstr-ucrt-200526.pdf",
+  "scraped_at": "2026-08-03T17:12:35+00:00",
+  "content_hash": "4fb3eb406f6bb03076a9a9c8ac9c5317dd371a4e13f20494d87f9dfa3258cb9a",
+  "collection_method": "pdf",
+  "title": "dk ticarimstr ucrt 200526",
+  "http_status": 200,
+  "raw_bytes": 1755264,
+  "text_chars": 14927,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bireysel-finansman-talebi-onay-ve-bilgilendirme-fo-4012.pdf",
+  "scraped_at": "2026-08-03T18:02:54+00:00",
+  "content_hash": "42c266a31fa74d18710ce6615fbe4ff7540d0d0d4322c7f618dd63e38037a4d3",
+  "collection_method": "pdf",
+  "title": "bireysel finansman talebi onay ve bilgilendirme fo 4012",
+  "http_status": 200,
+  "raw_bytes": 140411,
+  "text_chars": 13334,
+  "pdf_pages": 6
+}

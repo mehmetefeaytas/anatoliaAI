@@ -1,0 +1,31 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "record_count": 50,
+  "collected_at": "2026-08-03T19:16:44+00:00",
+  "collection_method": "rate-round",
+  "requests": 68,
+  "grid": {
+    "financing_amounts": [
+      100000,
+      500000,
+      1000000
+    ],
+    "financing_terms": [
+      12,
+      36,
+      60,
+      120
+    ],
+    "deposit_amounts": [
+      50000,
+      250000
+    ],
+    "deposit_term_days": [
+      32,
+      92,
+      182,
+      365
+    ],
+    "max_requests": 120
+  }
+}

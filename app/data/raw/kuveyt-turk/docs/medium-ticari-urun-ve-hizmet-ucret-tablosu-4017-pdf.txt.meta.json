@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ticari-urun-ve-hizmet-ucret-tablosu-4017.pdf",
+  "scraped_at": "2026-08-03T18:02:21+00:00",
+  "content_hash": "5a7d6a935a768b3b04bcaaeacc84ef86d9ddf719e45c2ce3e02655e4c87acd75",
+  "collection_method": "pdf",
+  "title": "ticari urun ve hizmet ucret tablosu 4017",
+  "http_status": 200,
+  "raw_bytes": 356709,
+  "text_chars": 19619,
+  "pdf_pages": 1
+}

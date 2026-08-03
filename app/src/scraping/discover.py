@@ -48,6 +48,20 @@ PRODUCT_EXCLUDE_PATTERNS = (
     r"/kvkk", r"/cerez", r"/site-haritasi", r"/subelerimiz", r"/iletisim",
 )
 
+# SÜRESİ DOLMUŞ kampanya yolları (arşiv / "biten kampanyalar").
+# ÇİFT GÖREVLİ:
+#  1. `discover_archive` için include deseni,
+#  2. `discover` (aktif kampanya turu) için EXCLUDE deseni.
+# (2) olmadan arşiv sayfaları `live/` altına düşer ve süresi dolmuş kampanya
+# AKTİF sanılır — karşılaştırma motorunu sessizce yanıltır (CLAUDE.md §17).
+DEFAULT_ARCHIVE_PATTERNS = (
+    r"kampanya-arsivi", r"kampanya-arşivi", r"biten-kampanya", r"gecmis-kampanya",
+    r"sona-eren", r"arsiv-kampanya",
+)
+
+# Belge (PDF) desenleri — ücret tarifeleri + ürün bilgi formları.
+DEFAULT_DOCUMENT_PATTERNS = (r"\.pdf(\?|$)",)
+
 # Asla kampanya belgesi olmayan yollar.
 DEFAULT_EXCLUDE_PATTERNS = (
     r"/en/", r"/ar/", r"/english", r"\.pdf$", r"\.jpg$", r"\.png$", r"\.svg$",
@@ -164,10 +178,54 @@ def discover(bank, fetch, *, max_docs: int = 40,
     exclude = list(exclude_patterns if exclude_patterns is not None
                    else DEFAULT_EXCLUDE_PATTERNS)
     exclude += list(getattr(bank, "exclude_patterns", None) or [])
+    # Arşiv sayfaları AKTİF kampanya turuna girmez — ayrı turda toplanır
+    # (`discover_archive`) ve `archive/` altına, expired etiketiyle yazılır.
+    exclude += list(getattr(bank, "archive_patterns", None) or DEFAULT_ARCHIVE_PATTERNS)
     return _discover(bank, fetch, max_docs=max_docs,
                      paths=list(bank.campaign_paths),
                      sitemaps=list(getattr(bank, "sitemap_urls", None) or []),
                      include=include, exclude=exclude, ranker=rank)
+
+
+def discover_archive(bank, fetch, *, max_docs: int = 60) -> DiscoveryResult:
+    """SÜRESİ DOLMUŞ kampanya URL'lerini keşfeder (3. tur).
+
+    Kaynak: `archive_paths` liste sayfaları + bankanın sitemap'i (arşiv sayfaları
+    çoğu bankada sitemap'te de yer alır). Süzgeç `archive_patterns`.
+
+    Bu tur boş dönerse bu bir hata DEĞİLDİR: her banka arşiv yayımlamıyor
+    (2026-08-03 doğrulaması: yalnızca Kuveyt Türk ve Türkiye Finans yayımlıyor).
+    """
+    paths = list(getattr(bank, "archive_paths", None) or [])
+    if not paths:
+        return DiscoveryResult(notes=[f"{bank.slug}: archive_paths tanimli degil — tur atlandi"])
+    include = list(getattr(bank, "archive_patterns", None) or DEFAULT_ARCHIVE_PATTERNS)
+    exclude = list(DEFAULT_EXCLUDE_PATTERNS)
+    exclude += list(getattr(bank, "exclude_patterns", None) or [])
+    return _discover(bank, fetch, max_docs=max_docs, paths=paths,
+                     sitemaps=list(getattr(bank, "sitemap_urls", None) or []),
+                     include=include, exclude=exclude, ranker=rank)
+
+
+def discover_documents(bank, fetch, *, max_docs: int = 40) -> DiscoveryResult:
+    """PDF belge URL'lerini keşfeder (4. tur — ücret tarifesi / bilgi formu).
+
+    Varsayılan exclude listesi `\\.pdf$` içerir (kampanya turu PDF istemez);
+    burada o kural BİLİNÇLİ olarak devre dışıdır — aradığımız şey tam olarak PDF.
+
+    PDF'ler ayrı alan adında olabilir (ör. asset.emlakkatilim.com.tr); bu yüzden
+    `document_hosts` izinli taban listesine eklenir.
+    """
+    paths = list(getattr(bank, "document_paths", None) or [])
+    if not paths:
+        return DiscoveryResult(notes=[f"{bank.slug}: document_paths tanimli degil — tur atlandi"])
+    include = list(getattr(bank, "document_patterns", None) or DEFAULT_DOCUMENT_PATTERNS)
+    # PDF dışı ikili/gürültü yolları elenir; `.pdf` KURALI EKLENMEZ.
+    exclude = [p for p in DEFAULT_EXCLUDE_PATTERNS if "pdf" not in p]
+    exclude += list(getattr(bank, "exclude_patterns", None) or [])
+    return _discover(bank, fetch, max_docs=max_docs, paths=paths, sitemaps=[],
+                     include=include, exclude=exclude, ranker=rank_documents,
+                     extra_allowed_hosts=list(getattr(bank, "document_hosts", None) or []))
 
 
 def discover_products(bank, fetch, *, max_docs: int = 80,
@@ -202,14 +260,17 @@ def discover_products(bank, fetch, *, max_docs: int = 80,
 
 
 def _discover(bank, fetch, *, max_docs: int, paths: list[str], sitemaps: list[str],
-              include: list[str], exclude: list[str], ranker) -> DiscoveryResult:
-    """Kampanya ve ürün keşfinin ortak çekirdeği (tek gezinme mantığı)."""
+              include: list[str], exclude: list[str], ranker,
+              extra_allowed_hosts: Optional[list[str]] = None) -> DiscoveryResult:
+    """Kampanya, ürün, arşiv ve belge keşfinin ortak çekirdeği (tek gezinme mantığı)."""
     base = bank.website_url.rstrip("/")
     # Banka kampanyalarını ayrı alan adında yayımlıyorsa (ör. TOM Bank →
-    # tombankhadi.com) o alan da "aynı site" sayılır.
+    # tombankhadi.com) o alan da "aynı site" sayılır. `extra_allowed_hosts`
+    # tura özgüdür (ör. yalnızca PDF barındıran asset alanı).
     allowed_bases = [base] + [
         h if h.startswith("http") else f"https://{h}"
-        for h in (getattr(bank, "extra_hosts", None) or [])
+        for h in list(getattr(bank, "extra_hosts", None) or [])
+        + list(extra_allowed_hosts or [])
     ]
     result = DiscoveryResult()
     seen: set[str] = set()
@@ -304,6 +365,29 @@ def rank_products(urls: Iterable[str]) -> list[str]:
                 break
         # Derin sayfalar gerçek ürün, sığ sayfalar kategori indeksidir; ancak
         # kategori sayfaları da ürün listesi taşır, bu yüzden sığdan derine.
+        return (bucket, url.count("/"), url)
+
+    return sorted(urls, key=key)
+
+
+# Belge (PDF) kırpmasında önceliklendirme: ücret/komisyon tarifesi en değerli —
+# kesin tahsis ücreti ve masraf oranları orada. Sözleşme/form ikinci sırada.
+_DOCUMENT_PRIORITY = (
+    (r"ucret|ücret|komisyon|tarife|masraf", 0),
+    (r"bilgi-formu|bilgilendirme|urun-bilgi", 1),
+    (r"sozlesme|sözleşme|form", 2),
+)
+
+
+def rank_documents(urls: Iterable[str]) -> list[str]:
+    """PDF adaylarını bilgi değerine göre sıralar (kararlı/deterministik)."""
+
+    def key(url: str) -> tuple[int, int, str]:
+        bucket = len(_DOCUMENT_PRIORITY)
+        for pattern, score in _DOCUMENT_PRIORITY:
+            if re.search(pattern, url, re.I):
+                bucket = score
+                break
         return (bucket, url.count("/"), url)
 
     return sorted(urls, key=key)

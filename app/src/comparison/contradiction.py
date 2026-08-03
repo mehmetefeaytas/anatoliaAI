@@ -331,9 +331,197 @@ def detect(campaign: Campaign, as_of: Optional[str] = None) -> list[Contradictio
     out: list[Contradiction] = []
     out.extend(_rule_fee_claim_vs_fee(campaign))
     out.extend(_rule_conflicting_end_dates(campaign))
+    out.extend(_rule_conflicting_amount_bands(campaign))
     if as_of:
         out.extend(_rule_expired_but_published(campaign, as_of))
     return out
+
+
+# --------------------------------------------------------------------------- #
+# Tutar bandı çelişkisi — tablo ile SSS'nin aynı sayfada ayrışması
+# --------------------------------------------------------------------------- #
+
+# "5.000.001 - 6.500.000 TL ... %30" ve "Değeri 5.000.001 ila 6.500.000 TL ...
+# maksimum %30" biçimlerini yakalar. Ayıraç: '-', '–', 'ila', 'ile', '—'.
+# Alt sınır KÜÇÜK olabilir ("0 - 2.500.000 TL %70" cetvelin ilk satırıdır);
+# bu yüzden ilk grup `\d+` kabul eder. Yanlış ayrıştırma riski üst sınır ve
+# `TL` + `%` çapalarıyla sınırlanır — üst sınır hâlâ biçimli/büyük sayı olmalı.
+_BAND_RANGE = re.compile(
+    r"(\d{1,3}(?:\.\d{3})+|\d+)\s*(?:-|–|—|ila|ile)\s*"
+    r"(\d{1,3}(?:\.\d{3})+|\d{4,})\s*TL[^%\n]{0,60}?%\s*(\d{1,3}(?:[.,]\d{1,2})?)",
+    re.IGNORECASE)
+
+# "7.500.001 TL ve üzeri ... %0" — üst sınırı olmayan son bant.
+_BAND_OPEN = re.compile(
+    r"(\d{1,3}(?:\.\d{3})+|\d{4,})\s*TL\s*(?:ve\s*)?(?:üzeri|uzeri|üstü|ustu|"
+    r"ve\s*yukarisi)[^%\n]{0,60}?%\s*(\d{1,3}(?:[.,]\d{1,2})?)",
+    re.IGNORECASE)
+
+# İki bandın "aynı" sayılması için alt/üst sınır toleransı (TL).
+# 1 TL: "6.500.000" ile "6.500.001" komşu bantların sınırıdır, aynı sayılmaz;
+# ama yuvarlama farkı da üretmez.
+_BAND_TOLERANCE = 1.0
+
+# CETVEL EŞİĞİ — belgede en az bu kadar KAPALI aralık (alt–üst) olmalı.
+#
+# Ölçümle belirlendi (2026-08-03, korpus taraması):
+#
+#   belge                                    kapalı  açık   ne
+#   arac-finansmanlari-togg-finansmani.txt        6     2   gerçek oran cetveli
+#   isim-icin-kart-kampanyalari.txt               0     7   kampanya liste sayfası
+#   kampanyalar-isim-icin.txt                     0     6   kampanya liste sayfası
+#
+# Gerekçe: bir oran CETVELİ tutar eksenini kapalı aralıklara böler
+# ("5.000.001 - 6.500.000 TL → %30"). Buna karşılık bağımsız kampanyaların
+# harcama eşikleri her zaman AÇIK UÇLUDUR ("2.000 TL ve üzeri harcamanıza %5").
+# Cetvel yoksa "iki cetvel çelişiyor" iddiası anlamsızdır — o yüzden kural
+# kapalı aralık görmediği belgede hiç konuşmaz.
+#
+# Bu eşik `_looks_like_listing`'in YERİNE değil YANINA konuldu: o koruma
+# geçerlilik penceresi sayısına bakar ve sayfa içeriği değiştiğinde kırılgandır
+# (Ağustos hasadında aynı iki liste sayfası için False dönmeye başladı ve
+# 6 hayalet bulgu geri geldi).
+MIN_CLOSED_BANDS = 2
+
+
+@dataclass(frozen=True)
+class _Band:
+    """Bir tutar bandı iddiası: [low, high] aralığı → oran."""
+
+    low: float
+    high: float
+    rate: float
+    span: tuple[int, int]  # metindeki konum (kanıt alıntısı için)
+
+
+def _parse_bands(text: str) -> list[_Band]:
+    """Metinden (tutar bandı → oran) iddialarını çıkarır."""
+    from ..normalization.normalize import parse_tr_number
+
+    out: list[_Band] = []
+    for m in _BAND_RANGE.finditer(text):
+        low = parse_tr_number(m.group(1))
+        high = parse_tr_number(m.group(2))
+        rate = parse_tr_number(m.group(3))
+        if low is None or high is None or rate is None or low >= high:
+            continue
+        out.append(_Band(low, high, rate, m.span()))
+    for m in _BAND_OPEN.finditer(text):
+        low = parse_tr_number(m.group(1))
+        rate = parse_tr_number(m.group(2))
+        if low is None or rate is None:
+            continue
+        out.append(_Band(low, float("inf"), rate, m.span()))
+    return out
+
+
+def _bands_identical(a: _Band, b: _Band) -> bool:
+    if a.high == float("inf") or b.high == float("inf"):
+        return (a.high == b.high) and abs(a.low - b.low) <= _BAND_TOLERANCE
+    return (abs(a.low - b.low) <= _BAND_TOLERANCE
+            and abs(a.high - b.high) <= _BAND_TOLERANCE)
+
+
+def _bands_overlap(a: _Band, b: _Band) -> bool:
+    return a.low < b.high and b.low < a.high
+
+
+def _rule_conflicting_amount_bands(campaign: Campaign) -> list[Contradiction]:
+    """AYNI oran için ÇAKIŞAN ama AYNI OLMAYAN tutar bantları.
+
+    Gerçek vaka (2026-08-03, doğrulanmış): Kuveyt Türk TOGG Finansmanı sayfasında
+    sayfa gövdesindeki tablo ile aynı sayfanın SSS bölümü ayrışıyor —
+
+        tablo : 6.500.001 – 7.500.000 TL → %20 ;  7.500.001 TL ve üzeri → %0
+        SSS   : 6.000.001 – 7.000.000 TL → %20 ;  7.000.001 TL ve üzeri → %0
+
+    Kaynak: data/raw/kuveyt-turk/products/arac-finansmanlari-togg-finansmani.txt
+
+    ## Neden "çakışan ama aynı olmayan"
+
+    Meşru bir oran cetveli aynı oranı FARKLI ve AYRIK bantlara verebilir
+    (ör. iki ürünün ikisinde de %50). Bu çelişki değildir. Çelişki, iki iddianın
+    bantları ÇAKIŞTIĞI halde SINIRLARININ farklı olmasıdır: aynı tutar iki farklı
+    cetvele göre iki farklı sonuç üretir. Bu yüzden kural ayrık bantlarda sessiz,
+    çakışan-ama-farklı bantlarda tetikler — hayalet bulgu üretmez (§17 adil kıyas).
+    """
+    # LİSTELEME SAYFASI KORUMASI — ölçümle zorunlu oldu.
+    # Bu koruma olmadan korpusta 15 bulgu çıkıyor; 13'ü HAYALET: Kuveyt Türk'ün
+    # kampanya liste sayfaları ("1.000 TL ve üzeri %5", "2.000 TL ve üzeri %5")
+    # birbirinden BAĞIMSIZ kampanyaların eşiklerini aynı sayfada topluyor —
+    # bunlar çelişki değil, farklı kampanyalardır. Koruma sonrası kalan 2 bulgu
+    # tek ürün sayfasındaki gerçek tablo↔SSS ayrışmasıdır (TOGG).
+    # `MAX_SCOPE_CHARS` mesafe koruması BURADA KULLANILAMAZ: TOGG'da tablo ile
+    # SSS binlerce karakter uzakta ve o bulgu GERÇEK.
+    if _looks_like_listing(campaign.raw_text):
+        return []
+    bands = _parse_bands(campaign.raw_text)
+    if len(bands) < 2:
+        return []
+    # CETVEL KORUMASI: kapalı aralık yoksa belge oran cetveli değil, bağımsız
+    # harcama eşikleri listesidir (gerekçe: MIN_CLOSED_BANDS yorumu).
+    if sum(1 for b in bands if b.high != float("inf")) < MIN_CLOSED_BANDS:
+        return []
+    out: list[Contradiction] = []
+    seen_pairs: set[tuple[float, float, float, float, float]] = set()
+    by_rate: dict[float, list[_Band]] = {}
+    for b in bands:
+        by_rate.setdefault(b.rate, []).append(b)
+
+    for rate, group in sorted(by_rate.items()):
+        for i, a in enumerate(group):
+            for b in group[i + 1:]:
+                if _bands_identical(a, b) or not _bands_overlap(a, b):
+                    continue
+                # Aynı bant çifti sayfada birden çok kez yazılmış olabilir;
+                # çelişki bir kez raporlanır (aynı bulgu 4 kez listelenmesin).
+                pair = (rate, *sorted((a.low, b.low)), *sorted((a.high, b.high)))
+                if pair in seen_pairs:
+                    continue
+                seen_pairs.add(pair)
+                out.append(Contradiction(
+                    kind="celisen_tutar_bandi",
+                    detail=(
+                        f"Aynı sayfada %{_num(rate)} oranı için çakışan ama aynı "
+                        f"olmayan iki tutar bandı yayımlanmış: "
+                        f"{_band_text(a)} ve {_band_text(b)}."),
+                    fields=["finansman_tutari", "kar_payi_orani"],
+                    evidence=[_span_evidence(campaign, a.span, a),
+                              _span_evidence(campaign, b.span, b)],
+                ))
+    return out
+
+
+def _num(value: float) -> str:
+    """Oranı gereksiz '.0' olmadan yazar (%20 değil %20.0)."""
+    return str(int(value)) if float(value).is_integer() else str(value)
+
+
+def _band_text(b: _Band) -> str:
+    if b.high == float("inf"):
+        return f"{_tr_amount(b.low)} TL ve üzeri"
+    return f"{_tr_amount(b.low)}–{_tr_amount(b.high)} TL"
+
+
+def _tr_amount(value: float) -> str:
+    """Tutarı TR binlik ayıracıyla yazar (1500000 → 1.500.000)."""
+    return f"{int(value):,}".replace(",", ".")
+
+
+def _span_evidence(campaign: Campaign, span: tuple[int, int], band: "_Band") -> Evidence:
+    """Metin konumundan kanıt alıntısı üretir (jüri "nereden biliyorsun" der)."""
+    start, end = span
+    quote = re.sub(r"\s+", " ", campaign.raw_text[start:end]).strip()
+    return Evidence(
+        bank_slug=campaign.bank_slug,
+        source_url=campaign.source_url,
+        field_name="finansman_tutari",
+        value={"low": band.low, "high": band.high, "rate": band.rate},
+        raw_value=quote,
+        source_span=quote,
+        span_start=start,
+        span_end=end,
+    )
 
 
 def _rule_fee_claim_vs_fee(campaign: Campaign) -> list[Contradiction]:

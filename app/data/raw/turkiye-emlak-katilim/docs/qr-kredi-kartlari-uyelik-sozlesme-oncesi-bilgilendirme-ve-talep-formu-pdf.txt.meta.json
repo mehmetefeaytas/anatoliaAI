@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/kredi-kartlari-uyelik-sozlesme-oncesi-bilgilendirme-ve-talep-formu.pdf",
+  "scraped_at": "2026-08-03T17:10:36+00:00",
+  "content_hash": "6967843d49e44130c2f846a4c05783606b5ee9b1deb636b6a3bfd53da7bd0e8c",
+  "collection_method": "pdf",
+  "title": "kredi kartlari uyelik sozlesme oncesi bilgilendirme ve talep formu",
+  "http_status": 200,
+  "raw_bytes": 188321,
+  "text_chars": 13807,
+  "pdf_pages": 7
+}

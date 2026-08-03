@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/konut-finansmani-talep-onay-ucret-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-03T18:03:27+00:00",
+  "content_hash": "45319e20ad4a91044fa48276fc4b2cb8326ae6d0be32ad0e0566456b80283870",
+  "collection_method": "pdf",
+  "title": "konut finansmani talep onay ucret bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 97077,
+  "text_chars": 6279,
+  "pdf_pages": 3
+}

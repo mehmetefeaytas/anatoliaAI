@@ -1,0 +1,442 @@
+[
+ {
+  "url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-restoran-harcamaniza-5-indirim-kazandiriyor",
+  "bank_slug": "albaraka",
+  "bucket": "live",
+  "decision": "kaldirilmis",
+  "http_status": 404,
+  "detail": "HTTP 404 — sayfa kaldırılmış",
+  "meta_path": "albaraka/live/detay-albaraka-restoran-harcamaniza-5-indirim-kazandiriyor.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-restoran-harcamaniza-5-indirimm-kazandiriyor",
+  "bank_slug": "albaraka",
+  "bucket": "live",
+  "decision": "kesif_acigi",
+  "http_status": 200,
+  "detail": "sayfa hâlâ yayında ve bitmiş görünmüyor — keşif bu turda kaçırdı",
+  "meta_path": "albaraka/live/detay-albaraka-restoran-harcamaniza-5-indirimm-kazandiriyor.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1-aylik-tod-taraftar-paketi-ucretsiz",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-1-aylik-tod-taraftar-paketi-ucretsiz.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10-yilini-dolduran-milesandsmiles-kredi-karti-sahibi-musterilerimize-1000-mil-hediye-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-10-yilini-dolduran-milesandsmiles-kredi-karti-sahibi-musterileri.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10-yilini-dolduran-saglam-kart-sahibi-musterilerimize-500-tl-indirim-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-10-yilini-dolduran-saglam-kart-sahibi-musterilerimize-500-tl-ind.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1000-tl-hediyesiyle-saglam-tohum-kart-hizmetinizde",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-1000-tl-hediyesiyle-saglam-tohum-kart-hizmetinizde.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1000-tlye-varan-market-indirimi-saglam-kart-troyda",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-1000-tlye-varan-market-indirimi-saglam-kart-troyda.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10000-tl-degerindeki-cek-karnesi-ve-cek-tahsil-paketi-ucretsiz-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-10000-tl-degerindeki-cek-karnesi-ve-cek-tahsil-paketi-ucretsiz-s.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/3000-tl-degerindeki-cek-karnesi-paketi-ucretsiz-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-3000-tl-degerindeki-cek-karnesi-paketi-ucretsiz-scr.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/50000-tlye-kadar-ertesi-gun-199-ya-da-25-gun-blokeli-0-pos",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-50000-tlye-kadar-ertesi-gun-199-ya-da-25-gun-blokeli-0-pos.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/akaryakit-istasyonlari-kuveyt-turk-ile-gelecege-hazir",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-akaryakit-istasyonlari-kuveyt-turk-ile-gelecege-hazir.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/anneler-gunu-hediyenize-500-tl-nakit-iade",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-anneler-gunu-hediyenize-500-tl-nakit-iade.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-tl-indirim-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-t-2.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-tl-indirim-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-t.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmanina-ucretsiz-hgs-etiketi-kuveyt-turkte",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-arac-finansmanina-ucretsiz-hgs-etiketi-kuveyt-turkte.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-kiralamasina-ozel-ekstra-3000-mil",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-arac-kiralamasina-ozel-ekstra-3000-mil.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avalli-islemlerde-uygun-oran-kuveyt-turkte-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-avalli-islemlerde-uygun-oran-kuveyt-turkte-scr.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avansasta-1500-tl-indirim-ve-vade-farksiz-5-aya-varan-taksit-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-avansasta-1500-tl-indirim-ve-vade-farksiz-5-aya-varan-taksit-fir.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avansasta-1500-tlye-varan-indirim-ve-vade-farksiz-5-aya-varan-taksit-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-avansasta-1500-tlye-varan-indirim-ve-vade-farksiz-5-aya-varan-ta.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avvada-500-tl-indirim-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-avvada-500-tl-indirim-firsati.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/babalar-gunu-hediyenize-1000-tl-nakit-iade",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-babalar-gunu-hediyenize-1000-tl-nakit-iade.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bireysel-kredi-kartlariyla-indirimli-alisveris-altinbasta",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-bireysel-kredi-kartlariyla-indirimli-alisveris-altinbasta.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bisiklet-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-orani-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-bisiklet-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-o.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/biz-bize-ile-yurt-disi-seyahatlerinizde-ayricaliklar-sizinle-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-biz-bize-ile-yurt-disi-seyahatlerinizde-ayricaliklar-sizinle-scr.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-ile-akaryakitta-indirim-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-business-plus-ile-akaryakitta-indirim-firsati.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-karta-ozel-yapi-malzemeleri-ve-mobilya",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-business-plus-karta-ozel-yapi-malzemeleri-ve-mobilya.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-karttan-vade-farksiz-3-taksit-imkani",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-business-plus-karttan-vade-farksiz-3-taksit-imkani.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-ve-milesandsmiles-business-ramazan-kampanyasi",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-business-plus-ve-milesandsmiles-business-ramazan-kampanyasi.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plustan-1000-tl-indirim-firsati-scr",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-business-plustan-1000-tl-indirim-firsati-scr.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/cocugunuzun-gelecegini-guvence-altina-almak-sizden-karne-hediyesi-bizden",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-cocugunuzun-gelecegini-guvence-altina-almak-sizden-karne-hediyes.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dbs-fatura-odemelerinizde-100000-mil-firsati",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-dbs-fatura-odemelerinizde-100000-mil-firsati.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dbs-firmalarina-akaryakit-indirimi",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanya-arsivi-dbs-firmalarina-akaryakit-indirimi.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi?root=kendim-icin",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanyalar-kampanya-arsivi-2.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi",
+  "bank_slug": "kuveyt-turk",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "kuveyt-turk/live/kampanyalar-kampanya-arsivi.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/Biten-Kampanyalar.aspx",
+  "bank_slug": "turkiye-finans",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda archive kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "turkiye-finans/live/kampanyalar-biten-kampanyalar.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/emekliler-haftasina-ozel-avantajlar.aspx",
+  "bank_slug": "turkiye-finans",
+  "bucket": "live",
+  "decision": "suresi_dolmus",
+  "http_status": 200,
+  "detail": "sayfa yayında ama kendini 'süresi dolmuş' olarak işaretliyor",
+  "meta_path": "turkiye-finans/live/kampanyalar-emekliler-haftasina-ozel-avantajlar.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/gunluk-hesap-vade-kampanyasi.aspx",
+  "bank_slug": "turkiye-finans",
+  "bucket": "live",
+  "decision": "suresi_dolmus",
+  "http_status": 200,
+  "detail": "sayfa yayında ama kendini 'süresi dolmuş' olarak işaretliyor",
+  "meta_path": "turkiye-finans/live/kampanyalar-gunluk-hesap-vade-kampanyasi.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/katilim-hesabi-kampanyasi.aspx",
+  "bank_slug": "turkiye-finans",
+  "bucket": "live",
+  "decision": "suresi_dolmus",
+  "http_status": 200,
+  "detail": "sayfa yayında ama kendini 'süresi dolmuş' olarak işaretliyor",
+  "meta_path": "turkiye-finans/live/kampanyalar-katilim-hesabi-kampanyasi.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-ile-enuyguncomda-150-tl-indirim",
+  "bank_slug": "vakif-katilim",
+  "bucket": "live",
+  "decision": "suresi_dolmus",
+  "http_status": 200,
+  "detail": "sayfa yayında ama kendini 'süresi dolmuş' olarak işaretliyor",
+  "meta_path": "vakif-katilim/live/detay-mastercard-ile-enuyguncomda-150-tl-indirim.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-200-tl-marti-kuponu",
+  "bank_slug": "vakif-katilim",
+  "bucket": "live",
+  "decision": "kesif_acigi",
+  "http_status": 200,
+  "detail": "sayfa hâlâ yayında ve bitmiş görünmüyor — keşif bu turda kaçırdı",
+  "meta_path": "vakif-katilim/live/detay-mastercard-kredi-kartinizla-200-tl-marti-kuponu.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-n11-alisverisinize-300-tl-indirim_1",
+  "bank_slug": "vakif-katilim",
+  "bucket": "live",
+  "decision": "kesif_acigi",
+  "http_status": 200,
+  "detail": "sayfa hâlâ yayında ve bitmiş görünmüyor — keşif bu turda kaçırdı",
+  "meta_path": "vakif-katilim/live/detay-mastercard-kredi-kartinizla-n11-alisverisinize-300-tl-indirim-1.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercardla-egitimde-vade-farksiz-5-taksit",
+  "bank_slug": "vakif-katilim",
+  "bucket": "live",
+  "decision": "suresi_dolmus",
+  "http_status": 200,
+  "detail": "sayfa yayında ama kendini 'süresi dolmuş' olarak işaretliyor",
+  "meta_path": "vakif-katilim/live/detay-mastercardla-egitimde-vade-farksiz-5-taksit.txt.meta.json",
+  "moved": []
+ },
+ {
+  "url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/surdurulebilirlik-temali-ticari-urunler/ges-cati-ges-ges-yatirim-ve-isletme-finansmani",
+  "bank_slug": "ziraat-katilim",
+  "bucket": "live",
+  "decision": "gecersiz_kilindi",
+  "http_status": null,
+  "detail": "aynı URL yeni turda products kümesinde TAZE hâliyle toplandı; bu live/ kopyası mükerrer",
+  "meta_path": "ziraat-katilim/live/surdurulebilirlik-temali-ticari-urunler-ges-cati-ges-ges-yatirim-ve-isletme-fina.txt.meta.json",
+  "moved": []
+ }
+]

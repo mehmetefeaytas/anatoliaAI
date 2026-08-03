@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/genel-kredi-sozlesmesi-ucret-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-03T18:03:12+00:00",
+  "content_hash": "6178e248cd5d529ebcf33b3c8197446712eeadacd31d1071db1b3cd4193748de",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi ucret bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 802964,
+  "text_chars": 12647,
+  "pdf_pages": 10
+}

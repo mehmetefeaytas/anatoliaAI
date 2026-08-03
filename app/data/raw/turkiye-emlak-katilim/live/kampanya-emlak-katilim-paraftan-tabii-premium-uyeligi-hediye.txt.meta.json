@@ -1,11 +1,11 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-katilim-paraftan-tabii-premium-uyeligi-hediye",
-  "scraped_at": "2026-07-30T18:42:36+00:00",
-  "content_hash": "698df9855c85ca3a0e32f72aeaf7321c80eebc78a73994e3b7c6e7ffdbb9f8dd",
+  "scraped_at": "2026-08-03T16:56:33+00:00",
+  "content_hash": "8378b3d691f57655ebd5bf6d790df548f77ae5dae8d79d0d73565fd33b64652e",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 167796,
-  "text_chars": 2683
+  "raw_bytes": 163786,
+  "text_chars": 287
 }
