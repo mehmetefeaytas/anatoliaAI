@@ -124,21 +124,49 @@ class TestPaylasimOraniAyriKavram(unittest.TestCase):
         self.assertEqual(_ext("konut finansmanı kâr payı oranı %1,89"), 1.89)
 
 
-class TestBilinenSinir(unittest.TestCase):
-    """Dürüst eksik kaydı — düzeltilmemiş vaka teste bağlanır.
+class TestYabanciKavram(unittest.TestCase):
+    """Değeri BAŞKA bir kavramın adı takip ediyorsa o değer kâr payı DEĞİLDİR.
 
-    "Vakıf Katılım'ın kâr payı hem de %25'e kadar devlet desteğiyle"
-    cümlesinde %25 devlet desteğidir, kâr payı oranı değil. Araya giren
-    "hem de " ifadesi 15 karakterlik pencereye sığdığı için ayırt
-    edilemiyor. Genel bir "araya kelime girmesin" kuralı, meşru
-    "kâr payı oranı olarak %1,89" gibi ifadeleri de elerdi.
+    Bu sınıf daha önce `TestBilinenSinir` adıyla eksiği KAYIT ALTINA alıyordu
+    ("devlet desteği hâlâ kapılabiliyor"). 2026-08-03'te düzeltildi, test ters
+    çevrildi.
+
+    Neden değere özgü koruma: aynı belgede hem gerçek kâr payı oranı hem yabancı
+    bir oran bulunabilir. Belge düzeyinde reddetmek (`kâr payı paylaşım oranı`
+    korumasında olduğu gibi) burada gerçek oranı da düşürürdü.
+
+    Ölçüm (1684 belgelik korpus): `kar_payi_orani` üreten 64 belgenin 7'si
+    (%11) yabancı kavram ataması yapıyordu; düzeltmeden sonra 57 belge ve 0
+    yabancı atama — kaybedilen 7 kayıt tam olarak hatalı olanlardı.
     """
 
-    def test_devlet_destegi_hala_kapılabiliyor(self) -> None:
+    def test_devlet_destegi_oran_sayilmaz(self) -> None:
         metin = ("Vakıf Katılım'ın kâr payı hem de %25'e kadar devlet "
                  "desteğiyle birikim fırsatı")
-        # Bugünkü davranışı KAYIT ALTINA alır; düzeltilirse test güncellenir.
-        self.assertEqual(_ext(metin), 25.0)
+        self.assertIsNone(
+            _ext(metin),
+            "%25 devlet desteği oranıdır; kâr payı oranı olarak okunursa "
+            "karşılaştırma tablosunda o bankayı yanlış konumlandırır")
+
+    def test_devlet_katkisi_oran_sayilmaz(self) -> None:
+        metin = ("Emlak Katılım'da birikimini yap; hem kâr payı hem de "
+                 "%20'ye kadar devlet katkısıyla konut sahibi ol")
+        self.assertIsNone(_ext(metin))
+
+    def test_puanlik_kisim_oran_sayilmaz(self) -> None:
+        """'kâr payının 10 puanlık kısmı KOSGEB tarafından' — 10 oran değildir."""
+        metin = ("İşletmenin bankamızdan kullanacağı finansmanın kâr payının "
+                 "10 puanlık kısmı KOSGEB tarafından karşılanır")
+        self.assertIsNone(_ext(metin))
+
+    def test_ayni_belgede_gercek_oran_yine_bulunur(self) -> None:
+        """Yabancı kavram önce geçse bile gerçek oran atlanmamalı."""
+        metin = ("Hem kâr payı hem de %20'ye kadar devlet katkısı var. "
+                 "Konut finansmanı kâr payı oranı %1,89'dur.")
+        self.assertEqual(_ext(metin), 1.89)
+
+    def test_normal_oran_etkilenmez(self) -> None:
+        self.assertEqual(_ext("kâr payı oranı %2,05 ile 36 ay vade"), 2.05)
 
 
 if __name__ == "__main__":
