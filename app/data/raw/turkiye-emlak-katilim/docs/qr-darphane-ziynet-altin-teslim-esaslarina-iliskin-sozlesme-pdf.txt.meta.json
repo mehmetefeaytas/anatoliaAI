@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/darphane-ziynet-altin-teslim-esaslarina-iliskin-sozlesme.pdf",
+  "scraped_at": "2026-08-03T17:11:24+00:00",
+  "content_hash": "2bc73048ab9bec6dd999aaf1198b136bd9091cb8aad6119effe61e8b6e59c3db",
+  "collection_method": "pdf",
+  "title": "darphane ziynet altin teslim esaslarina iliskin sozlesme",
+  "http_status": 200,
+  "raw_bytes": 168760,
+  "text_chars": 6522,
+  "pdf_pages": 3
+}

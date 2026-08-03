@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/2026-mayis-menkul-kiymet-urun-ve-hizmet-ucretleri-3920.pdf",
+  "scraped_at": "2026-08-03T18:01:08+00:00",
+  "content_hash": "d95210d4a34f1710878d83d8a1a8be65853b0dc92cc12720be4c7eece1027601",
+  "collection_method": "pdf",
+  "title": "2026 mayis menkul kiymet urun ve hizmet ucretleri 3920",
+  "http_status": 200,
+  "raw_bytes": 180526,
+  "text_chars": 985,
+  "pdf_pages": 1
+}

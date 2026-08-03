@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/aracfinansmanitalep,onayveucretbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-03T18:03:21+00:00",
+  "content_hash": "377c615aadc48103dba6ab9c9418d79d9b599e59bae496b21a0098f21a72e6ba",
+  "collection_method": "pdf",
+  "title": "aracfinansmanitalep,onayveucretbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 92058,
+  "text_chars": 5728,
+  "pdf_pages": 3
+}

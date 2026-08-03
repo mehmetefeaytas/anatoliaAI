@@ -23,7 +23,11 @@ DEFAULT_DELAY_S = 3.0
 
 @dataclass
 class FetchResult:
-    """Tek bir çekim denemesinin sonucu (başarı ya da hata)."""
+    """Tek bir çekim denemesinin sonucu (başarı ya da hata).
+
+    `content` / `content_type` yalnızca ikili (binary) çekimde dolar —
+    PDF ücret tarifeleri için (`StaticFetcher.fetch_bytes`).
+    """
 
     url: str
     status: Optional[int] = None
@@ -31,10 +35,17 @@ class FetchResult:
     error: Optional[str] = None
     method: str = "live"
     final_url: Optional[str] = None
+    content: Optional[bytes] = field(default=None, repr=False)
+    content_type: Optional[str] = None
 
     @property
     def ok(self) -> bool:
         return self.status == 200 and bool(self.html)
+
+    @property
+    def ok_bytes(self) -> bool:
+        """İkili içerik başarıyla alındı mı? (`ok` metin yolu içindir.)"""
+        return self.status == 200 and bool(self.content)
 
 
 class RateLimiter:
@@ -97,6 +108,39 @@ class StaticFetcher:
             return FetchResult(url, status=resp.status_code, html=resp.text,
                                method=self.method, final_url=resp.url)
         except Exception as exc:  # ağ hatası pipeline'ı durdurmaz
+            return FetchResult(url, error=f"{type(exc).__name__}: {exc}"[:200],
+                               method=self.method)
+
+    def fetch_bytes(self, url: str, *, max_bytes: int = 40 * 1024 * 1024) -> FetchResult:
+        """İkili içerik çeker (PDF ücret tarifeleri / ürün bilgi formları).
+
+        `max_bytes` koruması: bir bankanın 100 MB'lık taranmış PDF'i belleği
+        şişirmesin. Aşılırsa içerik ATILIR ve hata döner — sessizce kırpılmaz,
+        çünkü yarım PDF ayrıştırıldığında sessiz veri kaybı olur.
+        """
+        if not self.available:
+            return FetchResult(url, error="requests kurulu degil", method=self.method)
+        self.limiter.wait(url)
+        try:
+            resp = self._session.get(url, timeout=self.timeout, allow_redirects=True,  # type: ignore[union-attr]
+                                     stream=True)
+            chunks: list[bytes] = []
+            total = 0
+            for chunk in resp.iter_content(chunk_size=65536):
+                if not chunk:
+                    continue
+                total += len(chunk)
+                if total > max_bytes:
+                    resp.close()
+                    return FetchResult(
+                        url, status=resp.status_code, method=self.method,
+                        error=f"belge {max_bytes} bayt sinirini asti ({total}+)")
+                chunks.append(chunk)
+            resp.close()
+            return FetchResult(url, status=resp.status_code, method=self.method,
+                               final_url=resp.url, content=b"".join(chunks),
+                               content_type=(resp.headers.get("Content-Type") or "").lower())
+        except Exception as exc:
             return FetchResult(url, error=f"{type(exc).__name__}: {exc}"[:200],
                                method=self.method)
 

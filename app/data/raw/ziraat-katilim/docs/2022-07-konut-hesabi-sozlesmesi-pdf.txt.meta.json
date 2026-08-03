@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2022-07/Konut-Hesabi_Sozlesmesi_.pdf",
+  "scraped_at": "2026-08-03T17:10:07+00:00",
+  "content_hash": "4f2182833cf88d2aa1ed0d6f29c2d3c3b073e2b6cf3a2d9c297c600c5fc71ecc",
+  "collection_method": "pdf",
+  "title": "Konut Hesabi Sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 261708,
+  "text_chars": 11499,
+  "pdf_pages": 4
+}

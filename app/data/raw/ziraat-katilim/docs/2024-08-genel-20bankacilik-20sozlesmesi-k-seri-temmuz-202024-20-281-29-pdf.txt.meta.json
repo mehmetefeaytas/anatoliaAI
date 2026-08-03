@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2024-08/GENEL%20BANKACILIK%20SOZLESMESI_K_Seri_TEMMUZ%202024%20%281%29.pdf",
+  "scraped_at": "2026-08-03T17:09:29+00:00",
+  "content_hash": "8a8ac321ef5187c7d68ac25ccc576503f3d7c33b063766056c8a472e037c2592",
+  "collection_method": "pdf",
+  "title": "GENEL BANKACILIK SOZLESMESI K Seri TEMMUZ 2024 (1)",
+  "http_status": 200,
+  "raw_bytes": 403219,
+  "text_chars": 155009,
+  "pdf_pages": 28
+}

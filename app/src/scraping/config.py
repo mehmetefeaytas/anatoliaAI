@@ -41,6 +41,23 @@ class BankConfig:
     product_patterns: list[str] = field(default_factory=list)
     product_exclude_patterns: list[str] = field(default_factory=list)
     max_product_docs: int = 80
+    # ARŞİV keşfi — SÜRESİ DOLMUŞ kampanyalar (3. toplama turu).
+    # Bankalar biten kampanyaları ayrı sayfada tutuyor (Kuveyt Türk
+    # /kampanyalar/kampanya-arsivi, Türkiye Finans biten-kampanyalar.aspx).
+    # Bunlar `suresi_dolmus_kampanya` kuralı ve zaman-koşullu çelişki tespiti için
+    # ELLE İŞARETLEMEYE GEREK OLMAYAN doğrulama verisidir (CLAUDE.md §6, §18-2).
+    archive_paths: list[str] = field(default_factory=list)
+    archive_patterns: list[str] = field(default_factory=list)
+    max_archive_docs: int = 60
+    # BELGE (PDF) keşfi — ücret tarifeleri + ürün bilgi formları (4. toplama turu).
+    # Ücret/komisyon tarifeleri HTML tablo DEĞİL PDF olarak yayımlanıyor; kesin
+    # tahsis ücreti / masraf oranları oradadır (2026-08-03 tarayıcı doğrulaması).
+    document_paths: list[str] = field(default_factory=list)
+    document_patterns: list[str] = field(default_factory=list)
+    # PDF'lerin durduğu ek alan adları (ör. asset.emlakkatilim.com.tr).
+    # `extra_hosts`ten AYRI: o kampanya kataloğu için, bu yalnızca belge indirme.
+    document_hosts: list[str] = field(default_factory=list)
+    max_document_docs: int = 40
     # Bankanın kampanyalarını AYRI alan adında yayımladığı durumlar
     # (ör. TOM Bank → tombankhadi.com). Keşifte bu alanlar da "aynı site" sayılır.
     extra_hosts: list[str] = field(default_factory=list)
@@ -51,9 +68,11 @@ class BankConfig:
 # banks.yaml'de tanınan liste alanları (mini-parser için)
 _LIST_KEYS = ("campaign_paths", "sitemap_urls", "detail_patterns", "exclude_patterns",
               "extra_hosts", "product_paths", "product_sitemap_urls",
-              "product_patterns", "product_exclude_patterns")
+              "product_patterns", "product_exclude_patterns",
+              "archive_paths", "archive_patterns",
+              "document_paths", "document_patterns", "document_hosts")
 # int'e çevrilmesi gereken alanlar (mini-parser YAML tip çıkarımı yapmaz)
-_INT_KEYS = ("max_docs", "max_product_docs")
+_INT_KEYS = ("max_docs", "max_product_docs", "max_archive_docs", "max_document_docs")
 # BankConfig'de karşılığı olmayan anahtarlar sessizce yok sayılır (ileri uyumluluk)
 _KNOWN_KEYS = {f.name for f in fields(BankConfig)}
 

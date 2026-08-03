@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/ceyiz-hesabi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-03T17:11:21+00:00",
+  "content_hash": "1d6108af286cb7d06a4c68d444b33f10b7ffcb4f0cd77904f1479194f333a6b5",
+  "collection_method": "pdf",
+  "title": "ceyiz hesabi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 260795,
+  "text_chars": 8039,
+  "pdf_pages": 3
+}

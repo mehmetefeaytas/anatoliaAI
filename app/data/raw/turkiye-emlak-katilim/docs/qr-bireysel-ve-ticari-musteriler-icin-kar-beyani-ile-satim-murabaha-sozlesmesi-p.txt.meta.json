@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/bireysel-ve-ticari-musteriler-icin-kar-beyani-ile-satim-murabaha-sozlesmesi.pdf",
+  "scraped_at": "2026-08-03T17:11:15+00:00",
+  "content_hash": "716c7ed6deb07abd35c4fe85e215445b746c6a39894c9eacecb6cfffa32c7524",
+  "collection_method": "pdf",
+  "title": "bireysel ve ticari musteriler icin kar beyani ile satim murabaha sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 275030,
+  "text_chars": 29916,
+  "pdf_pages": 12
+}

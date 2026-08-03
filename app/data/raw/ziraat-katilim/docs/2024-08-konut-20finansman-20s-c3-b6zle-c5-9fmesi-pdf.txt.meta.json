@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2024-08/Konut%20Finansman%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-03T17:10:05+00:00",
+  "content_hash": "7a1a3b2c80b1b696f9d2cca922b79ff27110158bbf5ab42a7e6bf570ba0594b0",
+  "collection_method": "pdf",
+  "title": "Konut Finansman Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 512011,
+  "text_chars": 29498,
+  "pdf_pages": 16
+}

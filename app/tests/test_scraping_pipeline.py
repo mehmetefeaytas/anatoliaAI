@@ -26,10 +26,41 @@ class TestConfig(unittest.TestCase):
 
     def test_campaign_paths_parsed(self):
         banks = {b.slug: b for b in load_banks(CONFIG)}
+        kt = banks["kuveyt-turk"]
         # 2026-07-30: eski /tr/kampanyalar yolu 404 dönüyordu, /kampanyalar ile
-        # düzeltildi (bkz. data/raw/_collection_report.md).
-        self.assertEqual(banks["kuveyt-turk"].campaign_paths, ["/kampanyalar"])
-        self.assertTrue(banks["kuveyt-turk"].bddk_active)
+        # düzeltildi (bkz. data/raw/_collection_report.md). Liste tam eşitlikle
+        # DEĞİL içerikle doğrulanır — kapsam genişledikçe (2026-08-03'te kategori
+        # yolları eklendi) testin kırılmaması için.
+        self.assertIn("/kampanyalar", kt.campaign_paths)
+        self.assertNotIn("/tr/kampanyalar", kt.campaign_paths)
+        self.assertTrue(kt.bddk_active)
+
+    def test_ziraat_kart_kampanyalari_yolu_var(self):
+        """2026-08-03: /bireysel/kampanyalar boş; gerçek katalog /kart-kampanyalari.
+
+        Bu yol olmadan Ziraat'ten yalnızca 5 kampanya toplanabiliyordu
+        (bkz. docs/rapor/banka-siteleri-veri-kaynagi-haritasi.md §5).
+        """
+        banks = {b.slug: b for b in load_banks(CONFIG)}
+        paths = banks["ziraat-katilim"].campaign_paths
+        self.assertIn("/kart-kampanyalari", paths)
+        # Sektör kategorileri de giriş noktası (191 kampanya bağlantısı oradan)
+        self.assertIn("/kampanyalar/market-ve-gida", paths)
+
+    def test_yeni_tur_alanlari_ayristiriliyor(self):
+        """archive_paths / document_paths / document_hosts okunabiliyor mu?"""
+        banks = {b.slug: b for b in load_banks(CONFIG)}
+        # Arşiv (süresi dolmuş kampanya) yayımlayan iki banka
+        self.assertIn("/kampanyalar/kampanya-arsivi",
+                      banks["kuveyt-turk"].archive_paths)
+        self.assertTrue(banks["turkiye-finans"].archive_paths)
+        # PDF ücret tarifeleri
+        self.assertTrue(banks["turkiye-emlak-katilim"].document_paths)
+        # Emlak'ın PDF'leri AYRI alan adında duruyor
+        self.assertIn("asset.emlakkatilim.com.tr",
+                      banks["turkiye-emlak-katilim"].document_hosts)
+        # Arşiv yayımlamayan bankada liste boş olmalı (tur sessizce atlanır)
+        self.assertEqual(banks["dunya-katilim"].archive_paths, [])
 
 
 class TestCollector(unittest.TestCase):

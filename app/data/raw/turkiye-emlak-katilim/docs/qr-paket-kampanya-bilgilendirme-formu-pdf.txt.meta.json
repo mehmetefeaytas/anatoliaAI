@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/paket-kampanya-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-03T17:10:39+00:00",
+  "content_hash": "1944965d42db345e57b28c4af9fdca541a9e4f265239e0bc54e67194da7388d9",
+  "collection_method": "pdf",
+  "title": "paket kampanya bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 143672,
+  "text_chars": 4866,
+  "pdf_pages": 2
+}

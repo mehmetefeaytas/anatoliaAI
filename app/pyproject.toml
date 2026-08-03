@@ -63,9 +63,16 @@ ignore = [
 "tests/*" = ["T20", "E402"]
 "scripts/*" = ["T20"]
 "eval/*" = ["T20"]
+# Rapor üretim betikleri (grafik SVG'leri, ekran görüntüleri, PDF) elle
+# koşulan CLI araçlarıdır; ilerleme çıktısı basmaları beklenen davranıştır.
+"docs/rapor/*" = ["T20"]
 "src/scraping/run.py" = ["T20"]
 "src/scraping/harvest.py" = ["T20"]
 "src/scraping/harvest_products.py" = ["T20"]
+"src/scraping/harvest_extra.py" = ["T20"]
+"src/scraping/snapshot.py" = ["T20"]
+"src/scraping/reconcile_stale.py" = ["T20"]
+"src/scraping/harvest_rates.py" = ["T20"]
 "src/extraction/run.py" = ["T20"]
 "src/comparison/scan.py" = ["T20"]
 "src/chatbot/run_safety_eval.py" = ["T20"]

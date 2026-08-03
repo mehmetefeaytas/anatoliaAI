@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/kiralik-kasa-telep-onay-ucret-bilgilendirme-formu-tr.pdf",
+  "scraped_at": "2026-08-03T18:03:15+00:00",
+  "content_hash": "e95f9db24c888f3d96b499ed36fb61f37ee71338d4308575e9415d332f8ee636",
+  "collection_method": "pdf",
+  "title": "kiralik kasa telep onay ucret bilgilendirme formu tr",
+  "http_status": 200,
+  "raw_bytes": 177282,
+  "text_chars": 18309,
+  "pdf_pages": 2
+}
