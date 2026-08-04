@@ -7,5 +7,7 @@
   "title": "Paratik Banka Kartı | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 106618,
-  "text_chars": 9038
+  "text_chars": 9038,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

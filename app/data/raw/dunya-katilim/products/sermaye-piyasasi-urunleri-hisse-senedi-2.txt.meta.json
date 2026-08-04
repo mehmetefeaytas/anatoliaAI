@@ -7,5 +7,7 @@
   "title": "Hisse Senedi | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 507110,
-  "text_chars": 11669
+  "text_chars": 11669,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

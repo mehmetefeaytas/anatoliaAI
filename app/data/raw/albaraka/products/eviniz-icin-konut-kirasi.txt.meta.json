@@ -7,5 +7,7 @@
   "title": "Konut Kirası - Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 182195,
-  "text_chars": 793
+  "text_chars": 793,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

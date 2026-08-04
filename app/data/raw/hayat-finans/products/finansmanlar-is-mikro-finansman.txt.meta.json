@@ -7,5 +7,7 @@
   "title": "Mikro Finansman | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 291169,
-  "text_chars": 877
+  "text_chars": 877,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

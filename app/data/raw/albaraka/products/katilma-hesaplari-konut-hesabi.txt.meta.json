@@ -7,5 +7,7 @@
   "title": "Konut Hesabı - Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 220984,
-  "text_chars": 10527
+  "text_chars": 10527,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

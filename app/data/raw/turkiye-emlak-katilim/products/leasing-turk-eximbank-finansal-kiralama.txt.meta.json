@@ -7,5 +7,7 @@
   "title": "T&#252;rk Eximbank Finansal Kiralama | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 168543,
-  "text_chars": 3346
+  "text_chars": 3346,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

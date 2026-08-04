@@ -7,5 +7,7 @@
   "title": "Pazarama Tatil&#039;de Seçili Otellerde %5 İndirim | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 489207,
-  "text_chars": 2156
+  "text_chars": 2156,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

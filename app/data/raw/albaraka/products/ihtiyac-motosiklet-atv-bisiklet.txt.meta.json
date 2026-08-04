@@ -7,5 +7,7 @@
   "title": "Motosiklet Finansmanı | 36 Ay Vadeli Ödeme",
   "http_status": 200,
   "raw_bytes": 235934,
-  "text_chars": 5678
+  "text_chars": 5678,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -7,5 +7,7 @@
   "title": "Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 230936,
-  "text_chars": 3681
+  "text_chars": 3681,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

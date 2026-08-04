@@ -7,5 +7,7 @@
   "title": "Diğer Finansmanlar - Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 181725,
-  "text_chars": 1488
+  "text_chars": 1488,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -7,5 +7,7 @@
   "title": "Vaade Dayalı Döviz Alım Satım - Forward İşlemleri | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 476233,
-  "text_chars": 1001
+  "text_chars": 1001,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

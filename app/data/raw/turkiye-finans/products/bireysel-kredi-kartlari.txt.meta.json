@@ -7,5 +7,7 @@
   "title": "Kredi Kartları | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 190832,
-  "text_chars": 25440
+  "text_chars": 25440,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

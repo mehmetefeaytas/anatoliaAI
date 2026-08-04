@@ -7,5 +7,7 @@
   "title": "Nakdi Finansman | Ticari | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 99300,
-  "text_chars": 7118
+  "text_chars": 7118,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

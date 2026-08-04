@@ -7,5 +7,7 @@
   "title": "Sağlık Harcamalarına Vade Farksız 6 Taksit Kampanyası | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 183553,
-  "text_chars": 3010
+  "text_chars": 3010,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

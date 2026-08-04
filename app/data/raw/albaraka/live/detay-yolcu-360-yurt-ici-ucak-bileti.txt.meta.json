@@ -7,5 +7,7 @@
   "title": "Yolcu 360 – Yurt İçi Uçak Bileti | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 180697,
-  "text_chars": 2344
+  "text_chars": 2344,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

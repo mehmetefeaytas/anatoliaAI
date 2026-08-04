@@ -7,5 +7,7 @@
   "title": "Teknosa Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 131995,
-  "text_chars": 2675
+  "text_chars": 2675,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

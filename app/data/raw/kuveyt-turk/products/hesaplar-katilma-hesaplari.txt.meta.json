@@ -7,5 +7,7 @@
   "title": "Katılma Hesapları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 140792,
-  "text_chars": 1459
+  "text_chars": 1459,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

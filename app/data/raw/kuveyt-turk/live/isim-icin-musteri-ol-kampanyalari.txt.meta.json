@@ -7,5 +7,7 @@
   "title": "Müşteri Ol Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 144852,
-  "text_chars": 1798
+  "text_chars": 1798,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }
