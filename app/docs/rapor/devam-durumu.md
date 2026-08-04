@@ -30,16 +30,33 @@ Teslime kalan: **22 gün** (son tarih 26 Ağustos 2026).
 geçmişinden `.txt` + `.meta.json` **birlikte** geri alındı (`3fb361d`), yoksa
 `content_hash` tutarsız kalırdı.
 
-**(b) Kalan kabukların çoğu kurtarılabilir DEĞİL.** 101 kabuk şüphelisi
-(vakif-katilim 21 + 41 + paraf 39) Playwright ile yeniden hasat edildi. Ölçülen
-sonuç:
+**(b) "Kabuk krizi"nin çoğu benim sezgiselimin YANLIŞ POZİTİFİYDİ.** 101 aday
+deponun kendi Playwright fetcher'ı ile yeniden hasat edildi. Ölçülen sonuç:
 
-- Bir kısmı **yanlış pozitifti** — zaten gerçek kampanya metni taşıyorlardı
-  (ör. `kampanya-arsivi-kampusten-ucuran-firsat`, 1182 krkt, tam koşul metniyle).
-- Geri kalanında tarayıcı metni statik çekimle **bayt-aynı** çıktı (33/41 ve
-  38/39). Akordeon/sekme tıklaması da içerik üretmedi.
-- Sebep: bu sayfaların gövdesi **canlı sitede de yok**. Süresi dolan kampanya
-  sayfaları başlık + kırıntı yolu olarak yayında kalıyor.
+| Bulgu | Adet |
+|---|---:|
+| Aday | 101 |
+| Tarayıcı metni statikle **bayt-aynı** | 98 |
+| **Sezgiselin yanlış pozitifi** (zaten tam içerikli, dokunulmadı) | 87 |
+| Gerçekten gövdesiz, `kabuk` işaretlendi (8'i yeni) | 14 |
+| Kurtarılan | **0** |
+
+Kalan 14: turkiye-emlak-katilim 6, vakif-katilim 8, kuveyt-turk **0**.
+
+- **Sezgiselim hatalıydı.** `"ana sayfa"` / `"müşteri ol"` sözcüklerini çerez
+  bandı göstergesi saymıştım; oysa bu üç bankanın **her** sayfasındaki kırıntı
+  yolu sözcükleri. Kuveyt Türk'ün 21/21'i yanlış pozitif çıktı (ör. 1182
+  karakterlik tam kampanya metni).
+- **Fetcher'da kusur yok.** Bu sitelerin gövdesi sunucuda render ediliyor;
+  statik çekim zaten her şeyi alıyordu. MCP tarayıcısına bile gerek kalmadı.
+- Kalan 14'te içerik **canlı sitede de yok** — `innerText` ile doğrulandı:
+  yalnızca menü + başlık + kırıntı yolu. Akordeon/sekme tıklaması her sayfada
+  aynı +358 karakterlik altbilgiyi getirdi. Değer uydurulmadı.
+
+> **En kritik yakalanan tuzak:** `/kampanyalar/kampanya?slug=` adresi kampanya
+> **listesine** yönleniyor ve 4166 karakter döndürüyor — yani "içerik
+> kurtarıldı" gibi görünüyor. Koruma kapıları olmadan yeniden hasat **korpusu
+> zehirlerdi**: her kabuk sayfaya, ait olmadığı liste metni yazılırdı.
 
 **Sonuç ve karar:** bu bir çıkarım hatası değil, kaynağın kendi durumu.
 `scrape_mode: static` **kasıtlı olarak korunuyor** — `js`'e çevirmek hasadı ~10x
