@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/tasit-kredileri/togg-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:27:20+00:00",
+  "content_hash": "4738424563c5c23f7702a46186a7e2381d30132ae269c57a4ec1d5482d48c47f",
+  "collection_method": "live",
+  "title": "TOGG Taşıt Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 398216,
+  "text_chars": 1188
+}

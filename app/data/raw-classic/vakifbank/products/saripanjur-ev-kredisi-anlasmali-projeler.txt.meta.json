@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/anlasmali-projeler",
+  "scraped_at": "2026-08-04T14:25:53+00:00",
+  "content_hash": "ec45cf93f4b2d096e59163ea152d60a27aa27de29fee47385d493a72a56cfbe2",
+  "collection_method": "live",
+  "title": "Anlaşmalı Projeler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 218197,
+  "text_chars": 3954
+}

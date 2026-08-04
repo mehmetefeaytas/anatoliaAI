@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/bireysel-bankacilik/krediler/tasit-kredisi/",
+  "scraped_at": "2026-08-04T14:29:41+00:00",
+  "content_hash": "f1a5a2c3a58ccd315cdb2ac9c7cb3c621b16937628fec36a3c19704dc29774b7",
+  "collection_method": "browser",
+  "title": "Taşıt Kredisi Hesaplama - Araç Kredisi Başvurusu | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 972266,
+  "text_chars": 45599
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/ev-kredisi",
+  "scraped_at": "2026-08-04T14:31:39+00:00",
+  "content_hash": "78f1346ae7b3c511768726725b708b8e065790fd0d2c707bdfee96673d567c66",
+  "collection_method": "live",
+  "title": "Ev Kredisi Hesaplama | Konut Kredisi Faiz Oranları 2026",
+  "http_status": 200,
+  "raw_bytes": 327064,
+  "text_chars": 14394
+}

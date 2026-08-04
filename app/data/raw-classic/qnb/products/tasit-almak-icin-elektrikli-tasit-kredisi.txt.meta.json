@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kendim-icin/krediler/tasit-almak-icin/elektrikli-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:32:21+00:00",
+  "content_hash": "b11b6ef74f1929b9198996eabf1439bf8854305a0ca0e73207a9da4d855caecb",
+  "collection_method": "browser",
+  "title": "Elektrikli Araç Kredisi: Avantajlı Faiz | QNB",
+  "http_status": 200,
+  "raw_bytes": 88401,
+  "text_chars": 5610
+}

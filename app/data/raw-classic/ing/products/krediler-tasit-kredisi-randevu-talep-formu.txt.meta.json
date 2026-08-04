@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/krediler/tasit-kredisi-randevu-talep-formu",
+  "scraped_at": "2026-08-04T14:34:10+00:00",
+  "content_hash": "d63d104d830b69fc195c3fa2ff4213bc2c1143ccb5f699e8aacd41022de07340",
+  "collection_method": "browser",
+  "title": "Taşıt Kredisi Randevu Talep Formu | ING",
+  "http_status": 200,
+  "raw_bytes": 80516,
+  "text_chars": 2302
+}

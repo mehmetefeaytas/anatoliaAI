@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/mevduat-yatirim/mevduat/birikim-hesaplari/devlet-katkili-konut-hesabi",
+  "scraped_at": "2026-08-04T14:28:57+00:00",
+  "content_hash": "20eeca7609a876e4c97f2d7dc20221aea460efe98e79eb0f45f8717cbf1eda35",
+  "collection_method": "live",
+  "title": "Devlet Katkılı Konut Hesabı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 258113,
+  "text_chars": 5532
+}

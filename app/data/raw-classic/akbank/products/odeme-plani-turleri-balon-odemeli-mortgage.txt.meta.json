@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/odeme-plani-turleri/balon-odemeli-mortgage",
+  "scraped_at": "2026-08-04T14:27:54+00:00",
+  "content_hash": "1f9fbfeed9f8eb10df18f21b47a5e2ecd8ed0cfcf3043f8e6211a544344228c8",
+  "collection_method": "live",
+  "title": "Balon Ödemeli Mortgage | Akbank",
+  "http_status": 200,
+  "raw_bytes": 266158,
+  "text_chars": 4372
+}

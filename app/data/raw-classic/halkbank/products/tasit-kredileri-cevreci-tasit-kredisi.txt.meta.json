@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/tasit-kredileri/cevreci-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:27:18+00:00",
+  "content_hash": "e073d90acc92639be75cdfd3cbeea6a42cdc9bda5a04d63d1c9e740f6228dd01",
+  "collection_method": "live",
+  "title": "Çevreci Taşıt Kredisi",
+  "http_status": 200,
+  "raw_bytes": 405073,
+  "text_chars": 4111
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/kentsel-donusum-kredisi",
+  "scraped_at": "2026-08-04T14:25:44+00:00",
+  "content_hash": "47fedb01f48abd8f8384f7fc21757cf05919c574bea3f27a804a32e273f43976",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm Kredisi | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 179564,
+  "text_chars": 5709
+}

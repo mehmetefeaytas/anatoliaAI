@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/konut-tamamlama",
+  "scraped_at": "2026-08-04T14:26:56+00:00",
+  "content_hash": "85436fff6af4b2bee17afe37aa02ea43cd1b9f6f081f05452f65ad55cf3d7456",
+  "collection_method": "live",
+  "title": "Konut Tamamlama Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 403056,
+  "text_chars": 2279
+}

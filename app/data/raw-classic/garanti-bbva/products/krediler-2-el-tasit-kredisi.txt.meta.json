@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/2-el-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:30:34+00:00",
+  "content_hash": "ba4e46205f832e76853482cbd29ba27daf5c0e70d794643ecebb925446fc34c8",
+  "collection_method": "live",
+  "title": "2. El Taşıt Kredisi Hesaplama | 2. El Araç Kredisi Hesaplama | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 214667,
+  "text_chars": 16834
+}

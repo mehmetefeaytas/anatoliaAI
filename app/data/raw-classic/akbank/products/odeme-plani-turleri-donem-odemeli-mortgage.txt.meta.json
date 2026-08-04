@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/odeme-plani-turleri/donem-odemeli-mortgage",
+  "scraped_at": "2026-08-04T14:28:00+00:00",
+  "content_hash": "362a328fa79479bde1e19a800924c14ca8b9b994b18baf2d847949f9f620e4be",
+  "collection_method": "live",
+  "title": "Dönem Ödemeli Mortgage | Akbank",
+  "http_status": 200,
+  "raw_bytes": 264321,
+  "text_chars": 3887
+}

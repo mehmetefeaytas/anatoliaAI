@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/isim-icin/krediler/tasit-kredisi-basvuru",
+  "scraped_at": "2026-08-04T14:30:32+00:00",
+  "content_hash": "6718b0cd7bdf3faadd75b29d1b16768c5fb712fe482f3f93cc4c4ae506739b9c",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi Başvurusu | İşim İçin | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 144358,
+  "text_chars": 6168
+}

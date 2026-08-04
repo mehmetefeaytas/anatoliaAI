@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/sorularla-ev-kredisi",
+  "scraped_at": "2026-08-04T14:26:02+00:00",
+  "content_hash": "4d086d441715a3973e3a81b883f97decf5c749436d9232337178a7f2076f781c",
+  "collection_method": "live",
+  "title": "SarıPanjur Kredisi Nedir? - Sık Sorulanlar -VakıfBank | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 188387,
+  "text_chars": 5928
+}

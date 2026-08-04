@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/aninda-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:31:42+00:00",
+  "content_hash": "ce16dbbe9e1f998a4cff759f4d459b0dae48fa11512b6cf188c85dddf309637f",
+  "collection_method": "live",
+  "title": "Anında Taşıt Kredisi | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 201260,
+  "text_chars": 5509
+}

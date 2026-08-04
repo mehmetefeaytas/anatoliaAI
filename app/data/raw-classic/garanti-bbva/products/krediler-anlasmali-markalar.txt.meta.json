@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/anlasmali-markalar?utm_source=tasit-kredisi-ust-kampanya",
+  "scraped_at": "2026-08-04T14:31:13+00:00",
+  "content_hash": "96d7480622293eb3b4b81033d0f2ac449b914791c7135595208d59ec8c470961",
+  "collection_method": "live",
+  "title": "Anlaşmalı Markalar | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 197365,
+  "text_chars": 8758
+}

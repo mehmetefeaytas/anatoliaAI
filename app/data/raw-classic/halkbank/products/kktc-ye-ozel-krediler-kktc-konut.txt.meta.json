@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/kktc-ye-ozel-krediler/kktc-konut",
+  "scraped_at": "2026-08-04T14:26:24+00:00",
+  "content_hash": "add2b10378d8368ed493d47c8a80bfbbf5ac24ab58614b209ef6b2288024efe1",
+  "collection_method": "live",
+  "title": "KKTC Konut | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 402668,
+  "text_chars": 2175
+}

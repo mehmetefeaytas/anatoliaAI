@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri/2-el-tasit-alirken-dikkat-etmeniz-gerekenler",
+  "scraped_at": "2026-08-04T14:28:48+00:00",
+  "content_hash": "6bc43a791ff49deac01e18c921073dcd14c49dcb124deb48d69ff2281b6eaf5c",
+  "collection_method": "live",
+  "title": "2. el taşıt alırken dikkat etmeniz gerekenler | Akbank",
+  "http_status": 200,
+  "raw_bytes": 256216,
+  "text_chars": 3666
+}

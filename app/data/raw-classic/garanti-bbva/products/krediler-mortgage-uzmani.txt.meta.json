@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/mortgage-uzmani",
+  "scraped_at": "2026-08-04T14:30:55+00:00",
+  "content_hash": "4f13886d379b6a074da7c72a59923cd4b5c58c9b37d625c22bbe60bb57283234",
+  "collection_method": "live",
+  "title": "Mortgage Uzmanı | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 205027,
+  "text_chars": 12401
+}

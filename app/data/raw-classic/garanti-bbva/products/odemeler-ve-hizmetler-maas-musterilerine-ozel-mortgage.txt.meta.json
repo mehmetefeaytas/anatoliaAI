@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/odemeler-ve-hizmetler/maas-musterilerine-ozel-mortgage",
+  "scraped_at": "2026-08-04T14:31:07+00:00",
+  "content_hash": "e92fd7fd5e4c17e3a6bc284141bd01731486bf047d7844c4d9e3f2752ac2bfe8",
+  "collection_method": "live",
+  "title": "Mortgage | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 190089,
+  "text_chars": 8185
+}

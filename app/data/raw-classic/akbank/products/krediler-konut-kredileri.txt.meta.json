@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri",
+  "scraped_at": "2026-08-04T14:27:48+00:00",
+  "content_hash": "2241e1b6c653f9a72970aeb8400794a4428f49cf8a26110bf2b0bf335ff86e46",
+  "collection_method": "live",
+  "title": "Konut Kredileri | Akbank",
+  "http_status": 200,
+  "raw_bytes": 270392,
+  "text_chars": 2958
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/tasit-kredisi",
+  "scraped_at": "2026-08-04T14:31:01+00:00",
+  "content_hash": "b1ea6c2a0bab8d90718c3d544be9f37971fdb872fa52b3e69d7978701c5d0a6b",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi Hesaplama | Araç Kredisi Hesaplama | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 227892,
+  "text_chars": 20389
+}

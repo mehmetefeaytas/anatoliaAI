@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/tasit-kredisi",
+  "scraped_at": "2026-08-04T14:31:36+00:00",
+  "content_hash": "716db33de6fcbf22ce3a9df062396f3737b6c3e2cbfb8212b38bfbacde5e11e6",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi Başvurusu ve Faiz Oranı Hesaplama | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 302731,
+  "text_chars": 13225
+}

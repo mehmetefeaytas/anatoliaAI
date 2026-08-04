@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/yesil-konut-kredisi",
+  "scraped_at": "2026-08-04T14:25:47+00:00",
+  "content_hash": "32dd2118e300e9931cbc500792462cd2963d83d25e3b3f0fdddbcb20cb5690c7",
+  "collection_method": "live",
+  "title": "Yeşil Konut Kredisi | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 193917,
+  "text_chars": 9130
+}

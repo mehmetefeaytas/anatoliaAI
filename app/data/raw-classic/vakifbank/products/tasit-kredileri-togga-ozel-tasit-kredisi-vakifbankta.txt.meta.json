@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/tasit-kredileri/togga-ozel-tasit-kredisi-vakifbankta",
+  "scraped_at": "2026-08-04T14:26:08+00:00",
+  "content_hash": "6eebaf496e980dfb158ec9b943a4a0ba0dfa1aa55f73aad1ff1f6cb07e4c4cf9",
+  "collection_method": "live",
+  "title": "TOGG'a Özel Taşıt Kredisi VakıfBank'ta | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 171697,
+  "text_chars": 1071
+}

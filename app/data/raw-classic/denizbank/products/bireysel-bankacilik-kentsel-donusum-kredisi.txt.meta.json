@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/krediler/bireysel-bankacilik/kentsel-donusum-kredisi",
+  "scraped_at": "2026-08-04T14:33:16+00:00",
+  "content_hash": "3f53cf5e924a376795378dfa78f290a9fc878f0e072fdac6e6557d68d8fe42a8",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm Kredisi Faiz Oranları ve Başvurusu | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 343169,
+  "text_chars": 68576
+}

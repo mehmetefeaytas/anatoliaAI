@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/odeme-plani-turleri/sabit-faizli-mortgage",
+  "scraped_at": "2026-08-04T14:27:51+00:00",
+  "content_hash": "1b2eb2c41d032fe31c3722ed1d3e3d6126372db20708e5292bdf707cf7bd2b6d",
+  "collection_method": "live",
+  "title": "Sabit Faizli Mortgage | Akbank",
+  "http_status": 200,
+  "raw_bytes": 266025,
+  "text_chars": 4465
+}

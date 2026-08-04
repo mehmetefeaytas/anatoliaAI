@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/elektrikli-hibrit-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:30:37+00:00",
+  "content_hash": "4f36e118ef57fcd292dd2c9ffb3aacdae90e3bfcb223f36b2c285e076fbd6fd5",
+  "collection_method": "live",
+  "title": "Elektrikli ve Hibrit Taşıt Kredisi",
+  "http_status": 200,
+  "raw_bytes": 203121,
+  "text_chars": 11493
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/kredi-basvuru-adimlari",
+  "scraped_at": "2026-08-04T14:25:56+00:00",
+  "content_hash": "fc9e4dfe034650a1f446b2363fd50af67b40b108c7475ba5846440b6e60cb24d",
+  "collection_method": "live",
+  "title": "Kredi Başvuru Adımları | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 171550,
+  "text_chars": 1105
+}

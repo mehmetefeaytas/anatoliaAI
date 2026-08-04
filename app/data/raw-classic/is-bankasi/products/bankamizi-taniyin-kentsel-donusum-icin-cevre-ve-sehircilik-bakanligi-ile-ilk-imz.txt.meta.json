@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/bankamizi-taniyin/kentsel-donusum-icin-cevre-ve-sehircilik-bakanligi-ile-ilk-imzayi-is-bankasi-atti",
+  "scraped_at": "2026-08-04T14:31:45+00:00",
+  "content_hash": "c54653751602757ee41dec28161a8e086b63a55cbdba43c9975ab3248a10b552",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm için Çevre ve Şehircilik Bakanlığı ile ilk imzayı İş Bankası attı | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 187888,
+  "text_chars": 4712
+}

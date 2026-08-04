@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri/togg-dijital-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:28:51+00:00",
+  "content_hash": "6c66241d8bed77940e9a1879f3f3b1afc322836c8531b0b85ccf3dda203b9edd",
+  "collection_method": "live",
+  "title": "Togg Dijital Taşıt Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 262589,
+  "text_chars": 4625
+}

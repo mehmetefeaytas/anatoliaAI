@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/toki-islemleri",
+  "scraped_at": "2026-08-04T14:27:05+00:00",
+  "content_hash": "700ec3c979840c82ccdc0bcf02b5202a182870dbd26d67e9de2a8482cbe0e64d",
+  "collection_method": "live",
+  "title": "TOKİ İşlemleri | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 477485,
+  "text_chars": 11401
+}

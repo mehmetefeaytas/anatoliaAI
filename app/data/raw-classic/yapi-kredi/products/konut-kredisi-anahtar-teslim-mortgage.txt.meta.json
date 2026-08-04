@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kredi/konut-kredisi/anahtar-teslim-mortgage",
+  "scraped_at": "2026-08-04T14:29:31+00:00",
+  "content_hash": "034a256f48a8a19b5500eb22180ee9ef917d54cd4c75398933ea62d4b4fa39fd",
+  "collection_method": "browser",
+  "title": "Anahtar Teslim Mortgage | Ev Kredisi - Konut Kredi Faizleri | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 937974,
+  "text_chars": 28809
+}

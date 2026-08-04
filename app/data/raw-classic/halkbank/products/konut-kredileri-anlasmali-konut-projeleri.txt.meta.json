@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/anlasmali-konut-projeleri",
+  "scraped_at": "2026-08-04T14:27:03+00:00",
+  "content_hash": "8fcdc6748b7c64d4f6bf260d5a4df472e6b35e6148f6df0e26478026206e71ab",
+  "collection_method": "live",
+  "title": "Anlaşmalı Konut Projeleri",
+  "http_status": 200,
+  "raw_bytes": 418274,
+  "text_chars": 7270
+}

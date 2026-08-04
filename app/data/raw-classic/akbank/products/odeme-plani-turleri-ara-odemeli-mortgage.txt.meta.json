@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/odeme-plani-turleri/ara-odemeli-mortgage",
+  "scraped_at": "2026-08-04T14:28:03+00:00",
+  "content_hash": "cfa15329cc6526716fe29c29c40bb70b38f9aeb9b3c6d3be7c81e7281cbaa0cb",
+  "collection_method": "live",
+  "title": "Ara Ödemeli Mortgage | Akbank",
+  "http_status": 200,
+  "raw_bytes": 264499,
+  "text_chars": 4104
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri/ikinci-el-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:28:42+00:00",
+  "content_hash": "d79db833089c196f3c74eadc237ff91e4388439757e8c8d0134901d017336b94",
+  "collection_method": "live",
+  "title": "İkinci El Taşıt Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 274973,
+  "text_chars": 6084
+}

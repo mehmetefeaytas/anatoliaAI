@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/tasit-kredileri/yesil-isik-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:27:15+00:00",
+  "content_hash": "9729196ba599104ff6f1aec6dabfbd19efb8ecae193342e10a3032a3da4ad89f",
+  "collection_method": "live",
+  "title": "Yeşil Işık Taşıt Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 407827,
+  "text_chars": 3535
+}

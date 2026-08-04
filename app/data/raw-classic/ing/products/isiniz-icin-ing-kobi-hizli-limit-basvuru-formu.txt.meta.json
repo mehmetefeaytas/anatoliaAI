@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/isiniz-icin/ing-kobi-hizli-limit-basvuru-formu",
+  "scraped_at": "2026-08-04T14:34:13+00:00",
+  "content_hash": "3d82acdd1c6aee81215caa93f285f3301d5721186a2fe3a69b334f6bc01f9ae6",
+  "collection_method": "browser",
+  "title": "KOBİ Hızlı Limit Başvuru Formu | ING",
+  "http_status": 200,
+  "raw_bytes": 152587,
+  "text_chars": 2294
+}
