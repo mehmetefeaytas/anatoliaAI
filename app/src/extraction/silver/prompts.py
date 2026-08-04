@@ -22,11 +22,41 @@ koşarsa koşsun (harici asistan bugün, yerel Qwen/Trendyol yarın).
 Ayrıca ikisi de "emin değilsen null" diyor — CLAUDE.md §19 halüsinasyon
 yasağının etiketleme tarafındaki karşılığı. Boş etiket bir kayıptır; yanlış
 etiket eğitim setine giren bir zehirdir.
+
+## Kırpma penceresi neden 6000 değil (2026-08-04 ölçümü)
+
+İlk sürüm metni 6000 karaktere kırpıyordu; gerekçesi "kampanya sayfalarının
+ana konusu başta geçer, kuyrukta çerez/KVKK gürültüsü birikir" idi. Bu varsayım
+KAMPANYA sayfaları için doğru, **ÜRÜN sayfaları için yanlış**: ürün sayfalarında
+başta dev bir gezinme (navigation) bloğu duruyor, gövde ortada.
+
+`data/raw-classic/*/products/` altındaki 106 ürün belgesi üzerinde ölçüldü —
+sınıfı gerekçelendiren alıntının belge içindeki konumu:
+
+    Yapı Kredi (10 belge)  : ~17.500-18.400 karakter
+    Garanti BBVA (10 belge): ~6.000-6.200 karakter
+    kalan 76 belge         : < 6.000 karakter
+
+Yani etiketlenebilir 96 belgenin **20'sinde (%21)** gövde 6000 penceresinin
+tamamen dışındaydı; o pencereyle etiketleyici de denetleyici de yalnız menü
+metni görüyordu. Daha kötüsü sessiz bir başarısızlıktı: `consensus.decide`
+kanıtı TAM metinde arıyor, denetleyici ise kırpılmış metinde — alıntı mekanik
+kapıdan geçip denetleyici tarafından "belgede yok" diye reddediliyordu
+(`R_EVIDENCE_WEAK` → kuyruk). Kayıp tam olarak hasadın hedefi olan
+Konut/Taşıt belgelerinde yoğunlaşıyordu.
+
+Pencere ölçülen en uzak konuma (18.321) pay bırakılarak 24000'e çıkarıldı.
+Kırpma tamamen kaldırılmadı: `data/raw-classic` içinde 70 KB'lik belgeler var
+ve sınırsız prompt, kırpma bilgisinin (`note`) anlamını da yok eder.
 """
 
 from __future__ import annotations
 
 from ...schemas import CAMPAIGN_TYPES
+
+# Bkz. modül docstring'i "Kırpma penceresi neden 6000 değil". Ölçüm:
+# ürün sayfalarında gerekçe alıntısı en uzak 18.321. karakterde çıktı.
+MAX_PROMPT_CHARS = 24000
 
 _TYPES = "\n".join(f"- {t}" for t in CAMPAIGN_TYPES)
 
@@ -95,11 +125,12 @@ Kendi etiketin önerilenden farklıysa bunu gizlemeye çalışma — ayrışma b
 ve o belge insan hakemliğine gider."""
 
 
-def labeler_user_prompt(doc_id: str, text: str, max_chars: int = 6000) -> str:
+def labeler_user_prompt(doc_id: str, text: str,
+                        max_chars: int = MAX_PROMPT_CHARS) -> str:
     """Etiketleyiciye gidecek kullanıcı mesajı.
 
-    Metin kırpılır: kampanya sayfalarının ana konusu başta geçer, kuyrukta
-    çerez/KVKK gürültüsü birikir. Kırpma noktası `note` olarak belirtilir ki
+    Metin kırpılır, ama pencere ürün sayfalarının gövde konumuna göre ölçülerek
+    seçildi (bkz. modül docstring'i). Kırpma noktası `note` olarak belirtilir ki
     model eksik metinle çalıştığını bilsin.
     """
     body = text[:max_chars]
@@ -108,7 +139,8 @@ def labeler_user_prompt(doc_id: str, text: str, max_chars: int = 6000) -> str:
 
 
 def verifier_user_prompt(doc_id: str, text: str, proposed_label: str,
-                         evidence: str, max_chars: int = 6000) -> str:
+                         evidence: str,
+                         max_chars: int = MAX_PROMPT_CHARS) -> str:
     body = text[:max_chars]
     kirpildi = " (metin kırpıldı)" if len(text) > max_chars else ""
     return (
