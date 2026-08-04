@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-ipekyolda-4-taksit-firsati",
+  "scraped_at": "2026-08-03T16:58:22+00:00",
+  "content_hash": "8334b4727aa34a659b54447ad59ce98ab210b0f713e4f168b67007af08953124",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164960,
+  "text_chars": 924,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

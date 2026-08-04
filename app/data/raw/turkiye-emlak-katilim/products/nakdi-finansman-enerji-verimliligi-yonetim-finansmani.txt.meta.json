@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/enerji-verimliligi-yonetim-finansmani",
-  "scraped_at": "2026-07-30T20:23:36+00:00",
-  "content_hash": "8bbcef6a757572ac55ae8e6f4231dbe52944e4fc50d6f9a7f95f472174975e0f",
+  "scraped_at": "2026-08-03T17:40:25+00:00",
+  "content_hash": "41756c69c19b21ee738d915e8d834a15568dc207ddf3977fcb96987d67e07bbb",
   "collection_method": "live",
   "title": "Enerji Verimliliği Y&#246;netim Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 164197,
-  "text_chars": 1137
+  "text_chars": 1137,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

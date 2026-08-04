@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-ten-pazarci-esnafa-pos-cebinde",
+  "scraped_at": "2026-08-03T17:58:11+00:00",
+  "content_hash": "865789bce9bc2d19c355f6527b34ee10351c16610f76b287cfc74c005d43dc3d",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ ten Pazarcı Esnafa: Pos Cebinde! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133168,
+  "text_chars": 2269,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/easycepte-vade-farksiz-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:33:29+00:00",
+  "content_hash": "7f029dd8fd033a09b11004e3260016e4542e69dde0aa09f27b036743edf27bdc",
+  "collection_method": "live",
+  "title": "EasyCep‘te Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130281,
+  "text_chars": 995,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

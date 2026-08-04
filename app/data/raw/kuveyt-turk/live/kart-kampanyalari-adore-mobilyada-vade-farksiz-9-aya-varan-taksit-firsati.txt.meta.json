@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/adore-mobilyada-vade-farksiz-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:33:10+00:00",
+  "content_hash": "f9cb69d280fff66beb5ba9c0585a28bbe11fdd5273e50f1dddd069cbaddf7ab1",
+  "collection_method": "live",
+  "title": "Adore Mobilya’da Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130375,
+  "text_chars": 1030,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

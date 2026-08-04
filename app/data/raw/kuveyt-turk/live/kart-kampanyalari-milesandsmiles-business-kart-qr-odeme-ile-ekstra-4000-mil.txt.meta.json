@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/milesandsmiles-business-kart-qr-odeme-ile-ekstra-4000-mil",
+  "scraped_at": "2026-08-03T16:29:40+00:00",
+  "content_hash": "73b6ee5e1b25348152aea50bae7bc7870b2f6267aa320f6ae3721d916a106df6",
+  "collection_method": "live",
+  "title": "Miles&Smiles Business Kart QR Ödeme ile Ekstra 4.000 Mil! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131348,
+  "text_chars": 1311,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

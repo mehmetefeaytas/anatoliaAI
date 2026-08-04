@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/kafe-ve-restoran-harcamalariniza-toplam-450-tl-bankkart-lira-0?IsArchived=true",
+  "scraped_at": "2026-08-03T16:45:38+00:00",
+  "content_hash": "3d70bf968c0c5087b89b2ff3a968e2b62a677057d9a580757357550dc4b7b47d",
+  "collection_method": "live",
+  "title": "Kafe ve Restoran Harcamalarınıza Toplam 450 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488642,
+  "text_chars": 2768,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

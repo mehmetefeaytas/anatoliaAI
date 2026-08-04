@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/surdurulebilirlik-temali-bireysel-urunler/yesil-tasit-finansmani",
-  "scraped_at": "2026-07-30T20:15:48+00:00",
-  "content_hash": "3e64610e1933d3cf008851c70712180404baf72ce4d85adb4457390470517d55",
+  "scraped_at": "2026-08-03T17:31:38+00:00",
+  "content_hash": "58eba7b3783d6da9eb3b5a999ccb610db88869f10c7aeed1bca2b7d8b8b42400",
   "collection_method": "live",
   "title": "Yeşil Taşıt Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 470245,
-  "text_chars": 707
+  "raw_bytes": 486912,
+  "text_chars": 707,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

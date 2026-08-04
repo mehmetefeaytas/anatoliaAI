@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/optik-alisverisinize-500-tl-bankkart-lira-1?IsArchived=true",
+  "scraped_at": "2026-08-03T16:47:33+00:00",
+  "content_hash": "607b3328491fdbf8f8bc202997f946152d8c4c18a72420322c6d1f0cc795066f",
+  "collection_method": "live",
+  "title": "Optik Alışverişinize 500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486420,
+  "text_chars": 2583,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

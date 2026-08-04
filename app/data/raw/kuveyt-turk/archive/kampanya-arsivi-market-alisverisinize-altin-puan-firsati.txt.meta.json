@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/market-alisverisinize-altin-puan-firsati",
+  "scraped_at": "2026-08-03T18:00:11+00:00",
+  "content_hash": "c52b56ab4c60625c8a914e4b413a91d5332074831f6891ca10f05add3f2162d6",
+  "collection_method": "live",
+  "title": "Market Alışverişinize Altın Puan Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130853,
+  "text_chars": 1420,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

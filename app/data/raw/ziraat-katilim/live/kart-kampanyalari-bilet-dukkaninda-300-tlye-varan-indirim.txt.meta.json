@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/bilet-dukkaninda-300-tlye-varan-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:53+00:00",
+  "content_hash": "b628f1233963b83ca11bb0ec09cc7e0652479fcb6a41d0aea2c83f0ef76280a0",
+  "collection_method": "live",
+  "title": "Bilet Dükkanı&#039;nda 300 TL&#039;ye Varan İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489431,
+  "text_chars": 2316,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

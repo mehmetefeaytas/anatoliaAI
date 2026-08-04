@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kredi-karti-google-playde-kazandiriyor",
+  "scraped_at": "2026-08-03T16:54:52+00:00",
+  "content_hash": "a4e15837b16a6b6b6fe19953ce1a9c895aec97fd076de46afec113a31e3144c5",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139186,
+  "text_chars": 1686,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

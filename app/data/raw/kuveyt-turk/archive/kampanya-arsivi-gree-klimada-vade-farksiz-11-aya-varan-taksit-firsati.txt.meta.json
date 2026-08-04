@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/gree-klimada-vade-farksiz-11-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:54:49+00:00",
+  "content_hash": "542a432a5e6a4d3a220ed2cc3deaaa9fd945ee927265bea11c8a9d4976ff4fcb",
+  "collection_method": "live",
+  "title": "Gree Klima’da Vade Farksız 11 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131263,
+  "text_chars": 999,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

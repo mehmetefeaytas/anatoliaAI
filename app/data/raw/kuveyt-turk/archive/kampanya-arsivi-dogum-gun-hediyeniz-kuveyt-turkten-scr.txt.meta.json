@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dogum-gun-hediyeniz-kuveyt-turkten-scr",
+  "scraped_at": "2026-08-03T17:53:07+00:00",
+  "content_hash": "8b514f16cbde5311b2853e692a9342cd2d46d127433e2b26d731496733fad011",
+  "collection_method": "live",
+  "title": "Doğum Günü Hediyeniz Kuveyt Türk'ten! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130466,
+  "text_chars": 1371,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/saglam-business-karttan-dev-kampanya-3-ay-erteleme-ve-349-oranla-9-taksit-imkani",
+  "scraped_at": "2026-08-03T16:29:19+00:00",
+  "content_hash": "87d7c4d7d6c4f4d8e845e26e83766eed2c83be7fd8b4a886e58e4c9b40bfc974",
+  "collection_method": "live",
+  "title": "Sağlam Business Kart’tan Dev Kampanya 3 Ay Erteleme ve %3,49 Oranla 9 Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134845,
+  "text_chars": 4598,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

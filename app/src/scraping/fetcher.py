@@ -23,7 +23,11 @@ DEFAULT_DELAY_S = 3.0
 
 @dataclass
 class FetchResult:
-    """Tek bir çekim denemesinin sonucu (başarı ya da hata)."""
+    """Tek bir çekim denemesinin sonucu (başarı ya da hata).
+
+    `content` / `content_type` yalnızca ikili (binary) çekimde dolar —
+    PDF ücret tarifeleri için (`StaticFetcher.fetch_bytes`).
+    """
 
     url: str
     status: Optional[int] = None
@@ -31,10 +35,17 @@ class FetchResult:
     error: Optional[str] = None
     method: str = "live"
     final_url: Optional[str] = None
+    content: Optional[bytes] = field(default=None, repr=False)
+    content_type: Optional[str] = None
 
     @property
     def ok(self) -> bool:
         return self.status == 200 and bool(self.html)
+
+    @property
+    def ok_bytes(self) -> bool:
+        """İkili içerik başarıyla alındı mı? (`ok` metin yolu içindir.)"""
+        return self.status == 200 and bool(self.content)
 
 
 class RateLimiter:
@@ -97,6 +108,39 @@ class StaticFetcher:
             return FetchResult(url, status=resp.status_code, html=resp.text,
                                method=self.method, final_url=resp.url)
         except Exception as exc:  # ağ hatası pipeline'ı durdurmaz
+            return FetchResult(url, error=f"{type(exc).__name__}: {exc}"[:200],
+                               method=self.method)
+
+    def fetch_bytes(self, url: str, *, max_bytes: int = 40 * 1024 * 1024) -> FetchResult:
+        """İkili içerik çeker (PDF ücret tarifeleri / ürün bilgi formları).
+
+        `max_bytes` koruması: bir bankanın 100 MB'lık taranmış PDF'i belleği
+        şişirmesin. Aşılırsa içerik ATILIR ve hata döner — sessizce kırpılmaz,
+        çünkü yarım PDF ayrıştırıldığında sessiz veri kaybı olur.
+        """
+        if not self.available:
+            return FetchResult(url, error="requests kurulu degil", method=self.method)
+        self.limiter.wait(url)
+        try:
+            resp = self._session.get(url, timeout=self.timeout, allow_redirects=True,  # type: ignore[union-attr]
+                                     stream=True)
+            chunks: list[bytes] = []
+            total = 0
+            for chunk in resp.iter_content(chunk_size=65536):
+                if not chunk:
+                    continue
+                total += len(chunk)
+                if total > max_bytes:
+                    resp.close()
+                    return FetchResult(
+                        url, status=resp.status_code, method=self.method,
+                        error=f"belge {max_bytes} bayt sinirini asti ({total}+)")
+                chunks.append(chunk)
+            resp.close()
+            return FetchResult(url, status=resp.status_code, method=self.method,
+                               final_url=resp.url, content=b"".join(chunks),
+                               content_type=(resp.headers.get("Content-Type") or "").lower())
+        except Exception as exc:
             return FetchResult(url, error=f"{type(exc).__name__}: {exc}"[:200],
                                method=self.method)
 
@@ -177,6 +221,96 @@ class BrowserFetcher:
         except Exception as exc:
             return FetchResult(url, error=f"{type(exc).__name__}: {exc}"[:200],
                                method=self.method)
+        finally:
+            if page is not None:
+                try:
+                    page.close()
+                except Exception:
+                    pass
+
+    # Sayfalama denetimlerini bulan JS. Site başına özel kod YAZILMAZ; tek
+    # genel mekanizma üç yaygın biçimi kapsar:
+    #   1. numaralı bağlantı/düğme (1 2 3 ...)
+    #   2. "ileri / sonraki / ›" düğmesi
+    #   3. slick/swiper karusel noktaları (li.slick-active kardeşleri)
+    # Albaraka arşivinde ölçüldü (2026-08-04): slick karuseli, URL DEĞİŞMİYOR.
+    # URL değişmediği için adresi numaralandırmak işe yaramaz — tıklamak şart.
+    _PAGER_JS = """
+    () => {
+      const out = [];
+      const seen = new Set();
+      const push = (el) => {
+        if (!el || seen.has(el)) return;
+        seen.add(el); out.push(el);
+      };
+      document.querySelectorAll(
+        'a,button,li[role="presentation"],li.slick-slide,.slick-dots li,'
+        + '.swiper-pagination-bullet,[class*="pag"] a,[class*="pag"] button'
+      ).forEach(el => {
+        const t = (el.textContent || '').trim();
+        const al = (el.getAttribute('aria-label') || '').trim();
+        const cls = (el.className || '').toString();
+        if (/^\\d{1,3}$/.test(t)) push(el);
+        else if (/^(›|»|>|ileri|sonraki|next|daha fazla|devam)$/i.test(t)) push(el);
+        else if (/next|ileri|sonraki|page ?\\d/i.test(al)) push(el);
+        else if (/slick-dots|swiper-pagination-bullet/.test(cls)) push(el);
+      });
+      window.__pagerEls = out;
+      return out.length;
+    }
+    """
+
+    def fetch_all_pages(self, url: str, max_pages: int = 12) -> list[str]:
+        """Sayfalanmış bir listeleme sayfasının TÜM sayfalarının HTML'i.
+
+        Neden gerekli: bu sayfalarda sayfa değiştiğinde **URL değişmiyor**
+        (Albaraka arşivi slick karuseli, 2026-08-04). Dolayısıyla adres
+        numaralandırmak ya da site haritası okumak 2. sayfayı asla getirmez;
+        hasat sessizce yalnızca 1. sayfayı toplar.
+
+        Dönen liste her zaman en az bir öğe içerir (ilk sayfa) — sayfalama
+        yoksa da çağıran tarafın kodu değişmez.
+        """
+        reason = self._ensure()
+        if reason:
+            return []
+        self.limiter.wait(url)
+        page = None
+        pages: list[str] = []
+        try:
+            page = self._context.new_page()  # type: ignore[union-attr]
+            page.goto(url, timeout=self.timeout_ms, wait_until="domcontentloaded")
+            try:
+                page.wait_for_load_state("networkidle", timeout=8000)
+            except Exception:
+                pass
+            pages.append(page.content())
+            try:
+                count = int(page.evaluate(self._PAGER_JS) or 0)
+            except Exception:
+                return pages
+            # Aynı düğmeye tekrar basmamak için indeksle ilerlenir; her tıklamadan
+            # sonra DOM yenilendiği için eleman referansları JS tarafında tutulur.
+            for i in range(1, min(count, max_pages)):
+                try:
+                    page.evaluate(
+                        "(i) => { const e = (window.__pagerEls||[])[i];"
+                        " if (e) e.click(); }", i)
+                    try:
+                        page.wait_for_load_state("networkidle", timeout=5000)
+                    except Exception:
+                        pass
+                    page.wait_for_timeout(400)
+                    html = page.content()
+                    if html and html not in pages:
+                        pages.append(html)
+                    # Tıklama DOM'u yenilediyse eleman listesi tazelenir.
+                    page.evaluate(self._PAGER_JS)
+                except Exception:
+                    break  # sayfalama beklenmedik davrandı: elde olanla devam
+            return pages
+        except Exception:
+            return pages
         finally:
             if page is not None:
                 try:

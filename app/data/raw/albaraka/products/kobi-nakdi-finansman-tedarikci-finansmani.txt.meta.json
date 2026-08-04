@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/tedarikci-finansmani",
-  "scraped_at": "2026-07-30T20:10:38+00:00",
-  "content_hash": "299fcf0aa713c37d2b4bfd6faa10721ca2212996a52141516f241fe1f806d391",
+  "scraped_at": "2026-08-03T17:25:26+00:00",
+  "content_hash": "9f0d5ec775da8ea1e4bfd3e4d74f057e16fc2eab65d8a44c021bf58a04be87b8",
   "collection_method": "live",
   "title": "Tedarikçi Finansmanı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181567,
-  "text_chars": 750
+  "raw_bytes": 181833,
+  "text_chars": 750,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/biriktiren-hac-umre-hesabi",
-  "scraped_at": "2026-07-30T20:08:37+00:00",
-  "content_hash": "e8c55f710abf469cab5ebbcb779e91d52f9806b0dd5dbb88008b6edd45c46c41",
+  "scraped_at": "2026-08-03T17:23:26+00:00",
+  "content_hash": "b29b1ac0e96463e25bc5dbd78f787b056c4f6ca47025859e9abfbef11aed453f",
   "collection_method": "live",
   "title": "Biriktiren Hac Umre Hesabı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182011,
-  "text_chars": 1241
+  "raw_bytes": 182277,
+  "text_chars": 1241,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

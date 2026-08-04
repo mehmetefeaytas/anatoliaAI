@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/sigorta-ve-emeklilik/sigorta/isletmem-icin/leasing-all-risk-sigortasi",
+  "scraped_at": "2026-08-03T17:36:45+00:00",
+  "content_hash": "b643065fe824c5716e07d7153d99d21541e30ed57c03cbc3f4befb2ad8ff5c3e",
+  "collection_method": "live",
+  "title": "Leasing Sigortası | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 148775,
+  "text_chars": 2655,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

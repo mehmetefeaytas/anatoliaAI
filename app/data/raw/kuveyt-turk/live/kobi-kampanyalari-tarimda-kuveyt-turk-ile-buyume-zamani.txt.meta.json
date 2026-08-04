@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kobi-kampanyalari/tarimda-kuveyt-turk-ile-buyume-zamani",
+  "scraped_at": "2026-08-03T16:29:49+00:00",
+  "content_hash": "ee186b3c120362d68de5e384f324b2160aea0b89efdd16ab619750d4acfdde02",
+  "collection_method": "live",
+  "title": "Tarımda Kuveyt Türk ile Büyüme Zamanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131145,
+  "text_chars": 1355,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

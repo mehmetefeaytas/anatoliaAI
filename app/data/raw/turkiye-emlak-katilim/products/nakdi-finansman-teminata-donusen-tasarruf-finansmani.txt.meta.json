@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/teminata-donusen-tasarruf-finansmani",
-  "scraped_at": "2026-07-30T20:24:06+00:00",
-  "content_hash": "344ae888d6d1b49862168962a0ad1164a5717644f6351a0add607511e6973f8d",
+  "scraped_at": "2026-08-03T17:40:55+00:00",
+  "content_hash": "d9e23152330043a328d7d42b219861c881c90f453c1eb89231827fcc0a243da7",
   "collection_method": "live",
   "title": "Teminata D&#246;n&#252;şen Tasarruf Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 164331,
-  "text_chars": 1261
+  "text_chars": 1261,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

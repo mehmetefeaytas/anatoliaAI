@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-incehesapcomda-pesin-fiyatina-3-taksit-firsati",
+  "scraped_at": "2026-08-03T16:58:19+00:00",
+  "content_hash": "158a9a9505571b930aabdc719c44dc5f013f1a911420e1d28286c8533eb9a60b",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167437,
+  "text_chars": 2951,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

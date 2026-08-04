@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/kuyum-optik-ve-saat",
+  "scraped_at": "2026-08-03T16:40:50+00:00",
+  "content_hash": "f4bfc1f7a7a417cc323d6cf046e5145c46643559ea1e49d3ce979cf98fd096fb",
+  "collection_method": "live",
+  "title": "Kuyum, Optik ve Saat | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490272,
+  "text_chars": 1342,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

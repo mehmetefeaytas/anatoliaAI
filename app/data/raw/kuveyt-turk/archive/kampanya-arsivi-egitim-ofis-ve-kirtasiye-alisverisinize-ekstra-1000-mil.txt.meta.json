@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/egitim-ofis-ve-kirtasiye-alisverisinize-ekstra-1000-mil",
+  "scraped_at": "2026-08-03T17:53:40+00:00",
+  "content_hash": "93cf0e975599ff9c6502a6de2f5b1b2b05c10d5cab7571cbc964e336424a3a57",
+  "collection_method": "live",
+  "title": "Eğitim, Ofis ve Kırtasiye Alışverişinize Ekstra 1000 Mil! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134916,
+  "text_chars": 1563,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

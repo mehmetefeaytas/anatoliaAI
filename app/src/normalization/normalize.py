@@ -52,10 +52,17 @@ def parse_tr_number(text: str) -> Optional[float]:
         # virgül ondalık
         s = s.replace(",", ".")
     elif has_dot:
+        parts = s.split(".")
+        # ÇOK gruplu binlik: "2.500.001", "5.000.000" → tüm noktalar binlik
+        # ayıracıdır (bir sayıda iki ondalık nokta olamaz). Bu dal olmadan
+        # `float("2.500.001")` patlıyor ve fonksiyon None dönüyordu; yani
+        # 1.000.000 ve üzeri TÜM TR-biçimli tutarlar normalize EDİLEMİYORDU
+        # (2026-08-03'te Kuveyt Türk TOGG tutar bantlarında yakalandı).
+        if len(parts) > 2 and all(len(p) == 3 for p in parts[1:]):
+            s = s.replace(".", "")
         # Tek nokta: ondalık mı binlik mi? Nokta sonrası 3 hane → binlik (1.500),
         # 1-2 hane → ondalık (2.05).
-        parts = s.split(".")
-        if len(parts) == 2 and len(parts[1]) == 3:
+        elif len(parts) == 2 and len(parts[1]) == 3:
             s = s.replace(".", "")  # binlik
         # aksi halde ondalık nokta olarak bırak
         else:

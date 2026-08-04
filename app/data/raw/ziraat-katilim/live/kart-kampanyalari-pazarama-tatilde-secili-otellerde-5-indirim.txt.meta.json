@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/pazarama-tatilde-secili-otellerde-5-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:47:51+00:00",
+  "content_hash": "e26b2c6efa640e9147899fc97bb1fb640303214c7c669134752a0330d4714371",
+  "collection_method": "live",
+  "title": "Pazarama Tatil&#039;de Seçili Otellerde %5 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489207,
+  "text_chars": 2156,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

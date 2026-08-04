@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari",
-  "scraped_at": "2026-07-30T20:06:47+00:00",
-  "content_hash": "92968a43e4f82aece5c972dd4f2feef4cede1e9312cd28dc0ad60398c8246e28",
+  "scraped_at": "2026-08-03T17:21:35+00:00",
+  "content_hash": "44bb6833807c78fdc326368cfc03a9e71af76ee67b1313a4aca6bcee338a3c06",
   "collection_method": "live",
   "title": "Bireysel Kredi Kartlarından Size En Uygun Olanı Seçin - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 205393,
-  "text_chars": 2564
+  "raw_bytes": 205659,
+  "text_chars": 2564,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

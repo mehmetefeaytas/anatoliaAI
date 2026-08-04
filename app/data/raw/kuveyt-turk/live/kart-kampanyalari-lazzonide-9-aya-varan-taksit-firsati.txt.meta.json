@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/lazzonide-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:49+00:00",
+  "content_hash": "d973ee1bf6d32e78e9d7f7a9d44ca522dbc884909db8157bf7df1a63e9bafed3",
+  "collection_method": "live",
+  "title": "Lazzoni’de 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130193,
+  "text_chars": 975,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

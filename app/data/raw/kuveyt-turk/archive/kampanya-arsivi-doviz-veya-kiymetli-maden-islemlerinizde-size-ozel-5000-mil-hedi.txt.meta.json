@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/doviz-veya-kiymetli-maden-islemlerinizde-size-ozel-5000-mil-hediye-scr",
+  "scraped_at": "2026-08-03T17:53:13+00:00",
+  "content_hash": "80f44f07b308b9f82963e955f649623bb3b702c79548e7253b129fe40145f5b6",
+  "collection_method": "live",
+  "title": "Döviz Veya Kıymetli Maden İşlemlerinizde Size Özel 5.000 Mil Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131615,
+  "text_chars": 2013,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

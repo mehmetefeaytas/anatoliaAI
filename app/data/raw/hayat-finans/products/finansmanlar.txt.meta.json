@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar",
-  "scraped_at": "2026-07-30T20:25:27+00:00",
-  "content_hash": "1bef5a4267106eb4f435c6419a326e2fc339126a5015c775d9ddf062895c027c",
+  "scraped_at": "2026-08-03T17:43:19+00:00",
+  "content_hash": "d513519f9ca65769351f493204f7f1c3a68420685b08fc5f9e406f09e21dc349",
   "collection_method": "browser",
   "title": "Bireysel Finansman | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 281003,
-  "text_chars": 219
+  "text_chars": 219,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

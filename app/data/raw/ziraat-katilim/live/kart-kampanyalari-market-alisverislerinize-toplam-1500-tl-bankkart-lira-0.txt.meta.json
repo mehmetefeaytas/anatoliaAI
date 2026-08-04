@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/market-alisverislerinize-toplam-1500-tl-bankkart-lira-0",
+  "scraped_at": "2026-08-03T16:46:36+00:00",
+  "content_hash": "34903d41efef58d408dc61cf49564d9add6acf98209727f85629fcb0c35ac374",
+  "collection_method": "live",
+  "title": "Market Alışverişlerinize Toplam 1.500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 506107,
+  "text_chars": 2573,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

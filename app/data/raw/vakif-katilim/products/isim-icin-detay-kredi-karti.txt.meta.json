@@ -1,11 +1,14 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/isim-icin-detay/kredi-karti",
-  "scraped_at": "2026-07-30T20:18:10+00:00",
-  "content_hash": "7db5474578122b240ca29be811d996fec2af8fa656f0879cc4e974b0c832a9da",
+  "scraped_at": "2026-08-03T17:33:56+00:00",
+  "content_hash": "6c5782cea8b1d0e8e83b56b046aa22ea41113b62cc46bf241ad86448207c1cd2",
   "collection_method": "live",
   "title": "Yardım Merkezi | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 127849,
-  "text_chars": 201
+  "text_chars": 201,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

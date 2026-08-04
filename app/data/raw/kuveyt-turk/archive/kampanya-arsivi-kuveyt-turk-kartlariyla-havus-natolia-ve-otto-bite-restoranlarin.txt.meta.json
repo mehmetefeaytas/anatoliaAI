@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-kartlariyla-havus-natolia-ve-otto-bite-restoranlarinda-25e-varan-indirim-firsati",
+  "scraped_at": "2026-08-03T17:57:50+00:00",
+  "content_hash": "41ca1d4d20dbb4ab06cb6b1e7c804eb19a905be34cc1c6af571dc60417a8e05d",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Kartlarıyla Havuş, Natolia ve Otto Bite Restoranlarında %25'e Varan İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131926,
+  "text_chars": 1245,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

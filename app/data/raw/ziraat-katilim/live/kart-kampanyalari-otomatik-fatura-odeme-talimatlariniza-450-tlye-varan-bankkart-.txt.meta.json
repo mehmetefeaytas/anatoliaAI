@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/otomatik-fatura-odeme-talimatlariniza-450-tlye-varan-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:47:42+00:00",
+  "content_hash": "9aacfa73becde92f155c9de34625b8df8283383b3cbc1aec03988b68698a2266",
+  "collection_method": "live",
+  "title": "Otomatik Fatura Ödeme Talimatlarınıza 450 TL&#039;ye varan Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 492112,
+  "text_chars": 4213,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

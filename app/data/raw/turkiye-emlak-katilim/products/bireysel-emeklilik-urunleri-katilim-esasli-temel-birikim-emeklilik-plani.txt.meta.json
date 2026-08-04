@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/sigorta-ve-emeklilik/bireysel-emeklilik-urunleri/katilim-esasli-temel-birikim-emeklilik-plani",
+  "scraped_at": "2026-08-03T17:42:23+00:00",
+  "content_hash": "752fbc30b725e21e1c384e8149af7fbddcdc14ce2e9de215b7ceab041b4f7881",
+  "collection_method": "live",
+  "title": "Katılım Esaslı Temel Birikim Emeklilik Planı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 163969,
+  "text_chars": 883,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/hakkimizda/kuveyt-turk-hakkinda/bizden-haberler/kuveyt-turkten-genclere-biletcom-kampanyasi",
+  "scraped_at": "2026-08-03T16:34:44+00:00",
+  "content_hash": "97761440ae62c41345c53b3d5fcef69c365c95c64c45f918eb8bb63f6157ecc5",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten Gençlere Bilet.com Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 128226,
+  "text_chars": 1866,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

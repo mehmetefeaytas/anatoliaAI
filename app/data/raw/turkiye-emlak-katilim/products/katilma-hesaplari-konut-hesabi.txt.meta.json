@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/konut-hesabi",
-  "scraped_at": "2026-07-30T20:22:26+00:00",
-  "content_hash": "7d7f913a220f9a845697989094742b0064412a4f28051178afce9bbd0dcdf5f9",
+  "scraped_at": "2026-08-03T17:39:17+00:00",
+  "content_hash": "41ef871a550d1326b3f3da3cdf7a72094424552d483b624f31c93a15e290f0e9",
   "collection_method": "live",
   "title": "Konut Hesabı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135437,
-  "text_chars": 4292
+  "raw_bytes": 169515,
+  "text_chars": 4292,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

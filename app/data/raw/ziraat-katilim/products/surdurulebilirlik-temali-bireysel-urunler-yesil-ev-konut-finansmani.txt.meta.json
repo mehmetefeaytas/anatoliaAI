@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/surdurulebilirlik-temali-bireysel-urunler/yesil-ev-konut-finansmani",
-  "scraped_at": "2026-07-30T20:15:45+00:00",
-  "content_hash": "4cbc2dfc510e81fbc4380c3b4758b1f8c2e8d3a4b86cf51e8bf60a58ad3917d4",
+  "scraped_at": "2026-08-03T17:31:35+00:00",
+  "content_hash": "bc9f540ec97eff4851ca3247a7d64957d8181699eb875854d411590e8e9cb0e0",
   "collection_method": "live",
   "title": "Yeşil Ev Konut Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 470247,
-  "text_chars": 672
+  "raw_bytes": 486914,
+  "text_chars": 672,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

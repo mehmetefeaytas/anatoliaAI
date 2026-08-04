@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/modanisada-15-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:47:05+00:00",
+  "content_hash": "eca2ae304c1b2f6e8f1d17d8e641472abb4407374cc2f497873495f5e102a15a",
+  "collection_method": "live",
+  "title": "Modanisa&#039;da %15 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488315,
+  "text_chars": 2096,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

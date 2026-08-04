@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hepsiburada-ile-vade-farksiz-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:55:08+00:00",
+  "content_hash": "f9cb52ca3c2ef60c11dc58c1e2d407dc64114d749183affa35ff5206b51108d2",
+  "collection_method": "live",
+  "title": "Hepsiburada ile Vade Farksız 6 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132418,
+  "text_chars": 1997,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

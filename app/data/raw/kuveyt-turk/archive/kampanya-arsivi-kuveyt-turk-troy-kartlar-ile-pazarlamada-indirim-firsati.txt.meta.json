@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-troy-kartlar-ile-pazarlamada-indirim-firsati",
+  "scraped_at": "2026-08-03T17:58:14+00:00",
+  "content_hash": "7aafe3b9ad6b30d41afe971115397fcf7270d6bb3ec272496d4006cec7dd42b9",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Troy Kartlar ile Pazarama’da İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130832,
+  "text_chars": 1724,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/dis-ticaret/dis-ticaret-finansmanlari/ihracat-finansmani",
-  "scraped_at": "2026-07-30T20:09:53+00:00",
-  "content_hash": "840961ed8a11c236d385d0cc8cf87cf987730eac7e7cc6259caec89cbf55150d",
+  "scraped_at": "2026-08-03T17:24:41+00:00",
+  "content_hash": "37e0b7c4dbe32b1b133dfd304abd54346d7735917c6db89ba095b86247dd2c68",
   "collection_method": "live",
   "title": "İhracat Finansmanı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 189120,
-  "text_chars": 1305
+  "raw_bytes": 189386,
+  "text_chars": 1305,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

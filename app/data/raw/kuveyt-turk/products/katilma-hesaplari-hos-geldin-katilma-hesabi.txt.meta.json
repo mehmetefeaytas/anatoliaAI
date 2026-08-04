@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/hos-geldin-katilma-hesabi",
+  "scraped_at": "2026-08-03T17:20:37+00:00",
+  "content_hash": "991278c977ac6a6874425d816d50db86490bd5724be69fcb39009e4b64a9693a",
+  "collection_method": "live",
+  "title": "Hoş Geldin Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133857,
+  "text_chars": 4851,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/gurgenclerde-mil-ve-taksit-avantaji",
+  "scraped_at": "2026-08-03T17:54:55+00:00",
+  "content_hash": "e4beacca24310dbec05d622c6b2ddb15b76ab59648e25e278f250a03c7e2d097",
+  "collection_method": "live",
+  "title": "Gürgençler'de Mil ve Taksit Avantajı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130603,
+  "text_chars": 1553,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

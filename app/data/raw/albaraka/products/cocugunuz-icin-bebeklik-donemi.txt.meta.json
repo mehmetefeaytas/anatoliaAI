@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/cocugunuz-icin/bebeklik-donemi",
+  "scraped_at": "2026-08-03T17:25:38+00:00",
+  "content_hash": "1b867d7f86e0f2d8e26ad968b3cd3f4b7850da60ab31879a18ef4b71d83bd6cf",
+  "collection_method": "live",
+  "title": "Bebeklik Dönemi - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181505,
+  "text_chars": 567,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

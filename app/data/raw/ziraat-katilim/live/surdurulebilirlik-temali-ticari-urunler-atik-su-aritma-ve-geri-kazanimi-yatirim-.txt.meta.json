@@ -1,11 +1,14 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/surdurulebilirlik-temali-ticari-urunler/atik-su-aritma-ve-geri-kazanimi-yatirim-ve-isletme-finansmani",
-  "scraped_at": "2026-07-30T18:39:13+00:00",
-  "content_hash": "25f79e9557a09cc7e72536cb2ad18a2a1f5223bdd54a1ea5d7565dc0552c0495",
+  "scraped_at": "2026-08-03T16:51:18+00:00",
+  "content_hash": "c4d0b45f59b8c9b9eb3313e59ef16beae5716263246b5b5d06d8aa89e6e303f1",
   "collection_method": "live",
   "title": "Atık Su Arıtma ve Geri Kazanımı Yatırım ve İşletme Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 457529,
-  "text_chars": 1171
+  "raw_bytes": 474196,
+  "text_chars": 1171,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

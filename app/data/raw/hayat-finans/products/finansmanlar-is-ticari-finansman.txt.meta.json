@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar-is/ticari-finansman",
-  "scraped_at": "2026-07-30T20:27:06+00:00",
-  "content_hash": "18588efe438e3e2257619dcdb24d90004a1859a101886062c059d11d95e23986",
+  "scraped_at": "2026-08-03T17:44:55+00:00",
+  "content_hash": "0f8d7f2691093472abf5cadd7d99482eeb31b4c5a7c726047686d05daf488f41",
   "collection_method": "browser",
   "title": "Ticari Finansman| Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 292066,
-  "text_chars": 982
+  "raw_bytes": 292067,
+  "text_chars": 982,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

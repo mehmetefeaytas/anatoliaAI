@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-alisveris-finansmani-ile-trendyolda-vade-farksiz-kasim-ruzgari",
+  "scraped_at": "2026-08-03T17:57:20+00:00",
+  "content_hash": "f10b20adeafc40c75dd221ddf2688a99a6382d084337b472db35dc164ff2bfd5",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Alışveriş Finansmanı ile Trendyol’da Vade Farksız Kasım Rüzgarı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130919,
+  "text_chars": 1537,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

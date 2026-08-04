@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-schaferde-pesin-fiyatina-9-taksit",
+  "scraped_at": "2026-08-03T16:58:52+00:00",
+  "content_hash": "e07ccd7f919aa3c50c4618945e6a24696603fdbd9fa712d8a83a7cbd31f7a12c",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165152,
+  "text_chars": 942,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

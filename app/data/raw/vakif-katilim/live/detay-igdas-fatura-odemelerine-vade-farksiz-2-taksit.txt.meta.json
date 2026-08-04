@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/igdas-fatura-odemelerine-vade-farksiz-2-taksit",
-  "scraped_at": "2026-07-30T18:41:04+00:00",
-  "content_hash": "3e919ed466bbc2f77ec2fff83b97e9ce9e80573acff0eed4f8258295bad4aad9",
+  "scraped_at": "2026-08-03T16:54:40+00:00",
+  "content_hash": "44666387b1d80ab712c5930e29b622c79bb1103f0409f865fdf5e81a1a1be3fe",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139430,
-  "text_chars": 1748
+  "raw_bytes": 139226,
+  "text_chars": 1726,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

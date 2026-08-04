@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/harici-garanti-kontrgaranti",
-  "scraped_at": "2026-07-30T20:19:13+00:00",
-  "content_hash": "865ecbb84c45bab267c98a566fe0ae7e8b153c5688a16840ef2dde47d11da511",
+  "scraped_at": "2026-08-03T17:35:00+00:00",
+  "content_hash": "250c63e513455d96dc99d9ef1a5b0f58fee3f645babc2028da4affed45e96f07",
   "collection_method": "live",
   "title": "Harici Garanti | Kontrgaranti | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 135007,
-  "text_chars": 2169
+  "text_chars": 2169,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

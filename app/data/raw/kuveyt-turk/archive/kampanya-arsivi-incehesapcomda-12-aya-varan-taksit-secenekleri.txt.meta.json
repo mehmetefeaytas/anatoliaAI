@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/incehesapcomda-12-aya-varan-taksit-secenekleri",
+  "scraped_at": "2026-08-03T17:56:08+00:00",
+  "content_hash": "fc21261983880f9999eb7b531e17c4516106b98257e175de7b49e9e5542a5ab1",
+  "collection_method": "live",
+  "title": "incehesap.com’da 12 Aya Varan Taksit Seçenekleri | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129408,
+  "text_chars": 569,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

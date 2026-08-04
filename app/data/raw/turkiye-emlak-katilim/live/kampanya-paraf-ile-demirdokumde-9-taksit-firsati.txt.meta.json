@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-demirdokumde-9-taksit-firsati",
-  "scraped_at": "2026-07-30T18:43:42+00:00",
-  "content_hash": "5124735783547bcb2a0cb871a47c19ebacefe9a789cf8324cec8aeca04083c28",
+  "scraped_at": "2026-08-03T16:57:49+00:00",
+  "content_hash": "dd2076a7f14e2c6e2b1d56b83aaf58993434c1ca1259d05e0af48764e34a0fdb",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 165497,
-  "text_chars": 1134
+  "raw_bytes": 165266,
+  "text_chars": 1131,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

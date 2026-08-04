@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/yardimci-sayfalar/hesaplama-araclari/kar-payi-hesaplama",
-  "scraped_at": "2026-07-30T20:16:19+00:00",
-  "content_hash": "a0ce696ba1a7cafa5e79071b62e7cbb4ed812a87fa2b15aeaf67be91eec4e99a",
+  "scraped_at": "2026-08-03T17:32:08+00:00",
+  "content_hash": "54574a0ff8dfb8cc0f772319b03c91ba8ba4b4caa90b0411d416628a0d5cd1d4",
   "collection_method": "live",
   "title": "Kar Payı Hesaplama | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 136512,
-  "text_chars": 255
+  "raw_bytes": 136817,
+  "text_chars": 255,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

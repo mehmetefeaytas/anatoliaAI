@@ -12,6 +12,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.scraping import collector
 from src.scraping import discover as disc
 from src.scraping.collector import (
     METHOD_BROWSER,
@@ -245,6 +246,20 @@ class TestDiscovery(unittest.TestCase):
         self.assertTrue(disc.same_site("https://www.b.test/x", "https://b.test"))
         self.assertFalse(disc.same_site("https://c.test/x", "https://b.test"))
 
+    def test_varsayilan_port_ayni_site_sayilir(self):
+        """Site haritası varsayılan portu AÇIKÇA yazabilir.
+
+        Ziraat Bankası'nın site haritası `https://www.ziraatbank.com.tr:443/tr/...`
+        biçiminde URL veriyor. `netloc` karşılaştırması portu içerdiği için bu
+        URL'ler "site dışı" sayılıp **500'ünün tamamı** sessizce atılıyordu;
+        banka 1 belgeyle dönüyordu (2026-08-04'te ölçüldü). Sessiz kayıp,
+        gürültülü hatadan tehlikelidir: hasat "başarılı" görünüyordu.
+        """
+        self.assertTrue(disc.same_site("https://www.b.test:443/x", "https://b.test"))
+        self.assertTrue(disc.same_site("http://b.test:80/x", "https://www.b.test"))
+        # Gerçek başka bir alan hâlâ dışlanmalı — düzeltme kapıyı açmamalı.
+        self.assertFalse(disc.same_site("https://c.test:443/x", "https://b.test"))
+
     def test_rank_prefers_campaign_urls(self):
         ranked = disc.rank(["https://b.test/blog/yazi",
                             "https://b.test/kampanyalar/konut",
@@ -297,6 +312,43 @@ class TestProvenance(unittest.TestCase):
         docs = collect_live(bank, bundle=FetcherBundle(static=FakeFetcher(pages)),
                             robots=RobotsCache(fetcher=lambda u: (404, None)))
         self.assertEqual(len(docs), 1)
+
+    def test_dedup_html_gurultusune_ragmen_calisir(self):
+        """Tekilleştirme TEMİZ METİN üzerinden yapılmalı, ham HTML üzerinden değil.
+
+        Gerçek hata (2026-08-03): sayfadaki analitik kimlikleri / oturum simgeleri
+        her istekte değişiyor, bu yüzden AYNI sayfanın iki kopyası farklı
+        `content_hash` alıyor ve tekilleştirme kaçırıyordu. 1491 belgelik korpusta
+        98 mükerrer metin grubu / 215 dosya (~%14) birikti; TOGG çelişkisi de
+        2 gerçek bulgu yerine 4 raporlanıyordu.
+
+        Aşağıdaki iki sayfanın GÖVDE METNİ aynı, yalnızca izleme kimlikleri farklı.
+        """
+        bank = BankConfig(slug="b", name="B", website_url="https://b.test",
+                          campaign_paths=["/kampanyalar"],
+                          detail_patterns=["/kampanyalar/"])
+        body = ("<main><h1>Konut Finansmanı</h1><p>"
+                + "Kâr payı oranı %2,05, vade 120 ay, tahsis ücreti yoktur. " * 8
+                + "</p></main>")
+        pages = {
+            "https://b.test/kampanyalar":
+                '<a href="/kampanyalar/a">a</a><a href="/kampanyalar/b">b</a>',
+            # Aynı gövde; farklı analitik/oturum artığı → farklı ham HTML hash'i
+            "https://b.test/kampanyalar/a":
+                f"<html><head><title>T</title></head><body>{body}"
+                f"<script>var sid='sess-11111111';</script></body></html>",
+            "https://b.test/kampanyalar/b":
+                f"<html><head><title>T</title></head><body>{body}"
+                f"<script>var sid='sess-99999999';</script></body></html>",
+        }
+        diag: dict = {}
+        docs = collect_live(bank, bundle=FetcherBundle(static=FakeFetcher(pages)),
+                            robots=RobotsCache(fetcher=lambda u: (404, None)),
+                            report=diag)
+        self.assertEqual(len(docs), 1,
+                         "HTML gürültüsü tekilleştirmeyi kaçırmamalı")
+        self.assertTrue(any("mukerrer" in n for n in diag.get("notes", [])),
+                        "atlanan mükerrer belge rapora not edilmeli")
 
     def test_robots_disallow_is_respected_and_reported(self):
         bank = BankConfig(slug="b", name="B", website_url="https://b.test",
@@ -396,3 +448,99 @@ class TestBanksConfigIntegrity(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFormIcerikliSayfaMetinCikarimi(unittest.TestCase):
+    """`<form>` sarmalı sayfalarda içerik atılmamalı.
+
+    ## Neden bu sınıf var
+
+    `_extract_main_text` agresif geçişte `<form>` atıyor (ASP.NET WebForms
+    sayfaları tüm gövdeyi form içine sarar). Koruma yalnızca sonuç
+    `MIN_TEXT_CHARS`(200) altında kalırsa devreye giriyordu.
+
+    2026-08-04 ölçümü: Ziraat Bankası ürün sayfalarında `<main>`/`<article>`
+    YOK ve içerik `<form>` içinde. Agresif geçiş **1503 karakter** döndürüyordu
+    — çerez bandı + promo bloğu, yani saf çerçeve. 1503 > 200 olduğu için
+    koruma hiç ateşlenmedi; belge "başarıyla" yazıldı. Dahası her sayfa AYNI
+    1503 karakteri ürettiğinden metin tekilleştirmesi 45 sayfayı 2 belgeye
+    indirdi ve hasat `0 başarısız URL` diyerek başarılı göründü.
+
+    Temkinli geçiş aynı sayfada 4277 karakter ve gerçek ürün bilgisini verdi
+    (oran 2,8x) → `FORM_CONTENT_RATIO = 2.0`.
+    """
+
+    def _sayfa(self, cerceve: str, form_icerik: str) -> str:
+        return (f"<html><body><header>{cerceve}</header>"
+                f"<form runat='server'>{form_icerik}</form>"
+                f"<footer>alt bilgi</footer></body></html>")
+
+    def test_form_icerigi_cerceveden_buyukse_korunur(self):
+        cerceve = "Cerez politikamizi inceleyebilirsiniz. " * 8   # ~300 krk
+        icerik = "Tuketici Kredisi 36 aya kadar vade uygun faiz orani. " * 30
+        metin = collector._extract_main_text(self._sayfa(cerceve, icerik))
+        self.assertIn("36 aya kadar", metin,
+                      "form içindeki ÜRÜN bilgisi atıldı — sessiz içerik kaybı")
+
+    def test_mutlak_esik_asilsa_bile_oran_korumasi_calisir(self):
+        """EN KRİTİK: çerçeve 200 karakterden UZUN olsa da koruma çalışmalı."""
+        cerceve = "x " * 400                                      # 800 krk > 200
+        icerik = "y " * 1200                                      # oran ~2.9x
+        metin = collector._extract_main_text(self._sayfa(cerceve, icerik))
+        self.assertGreater(len(metin), 1000,
+                           "1503 karakterlik çerçeve 'başarılı' sayıldı (eski hata)")
+
+    def test_form_sadece_basvuru_kutusuysa_cerceve_bozulmaz(self):
+        """Form küçükse (gerçek başvuru kutusu) agresif sonuç korunur."""
+        icerik_govde = "<main>" + ("Gercek urun metni burada. " * 60) + "</main>"
+        html = (f"<html><body><nav>menu</nav>{icerik_govde}"
+                f"<form>Ad Soyad TC Kimlik</form></body></html>")
+        metin = collector._extract_main_text(html)
+        self.assertIn("Gercek urun metni", metin)
+        self.assertNotIn("TC Kimlik", metin, "başvuru formu içeriğe karıştı")
+
+    def test_formsuz_sayfa_ikinci_gecis_denemez(self):
+        html = "<html><body><nav>menu</nav><main>" + ("icerik " * 80) + "</main></body></html>"
+        metin = collector._extract_main_text(html)
+        self.assertIn("icerik", metin)
+        self.assertNotIn("menu", metin)
+
+
+class TestBosSonucSayfasiReddi(unittest.TestCase):
+    """"İçerik yok" diyen kabuklar korpusa girmemeli.
+
+    2026-08-04 ölçümü: İş Bankası'nın yanlış giriş noktasından gelen 30 belge
+    (257'nin %12'si) "Kampanya bulunamadı." diyen 202-262 karakterlik boş
+    kabuklardı. Mevcut 200 karakter eşiğinin hemen ÜSTÜNDE oldukları için
+    geçiyorlardı ve hasat `0 başarısız URL` diyerek başarılı görünüyordu.
+
+    Eşiği yükseltmek çözüm DEĞİL: geçerli ama kısa bir VakıfBank ürün listesi
+    294 karakter. Bu yüzden işaretçi + kısalık birlikte aranıyor.
+    """
+
+    def test_bos_kampanya_kabugu_reddedilir(self):
+        metin = ("Ana Sayfa > Kampanyalar > Taşıt Kredisi Kampanyaları > 0 km "
+                 "Ticari Taşıt Kredisi Kampanyası. Kampanya bulunamadı. "
+                 "Güncel kampanyalara buradan ulaşabilirsiniz.")
+        self.assertTrue(collector._is_empty_result_page(metin))
+
+    def test_kisa_ama_gecerli_urun_listesi_korunur(self):
+        """294 karakterlik gerçek VakıfBank sayfası — düşürülmemeli."""
+        metin = ("Proje ve Yatırım Kredileri Proje Finansmanı Kredileri Proje ve "
+                 "yatırımların finansmanına yönelik olarak uygun alternatifler "
+                 "VakıfBank'ta. Detaylı Bilgi IPARD Hibe Destekli Yatırım Kredisi "
+                 "IPARD kapsamındaki yatırımlarınıza ilişkin IPARD Hibe Destekli "
+                 "Yatırım Kredisi VakıfBank'ta. Detaylı Bilgi")
+        self.assertFalse(collector._is_empty_result_page(metin))
+
+    def test_uzun_sayfada_gecen_bulunamadi_belgeyi_dusurmez(self):
+        """SSS'de 'bulunamadı' geçen UZUN sayfa geçerli içeriktir."""
+        metin = ("Tüketici Kredisi 36 aya kadar vade uygun faiz oranı. " * 30 +
+                 " Aradığınız kayıt bulunamadı ise şubelerimize başvurun.")
+        self.assertGreater(len(metin), collector.EMPTY_RESULT_MAX_CHARS)
+        self.assertFalse(collector._is_empty_result_page(metin))
+
+    def test_kabul_esigi_cikarim_esiginden_ayri(self):
+        """Tek sabite bağlamak, birini değiştirince diğerini sessizce bozar."""
+        self.assertIsNot(collector.MIN_DOC_CHARS, None)
+        self.assertIn("MIN_DOC_CHARS", dir(collector))

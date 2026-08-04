@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/diger-ihtiyaclariniz-icin",
-  "scraped_at": "2026-07-30T20:07:41+00:00",
-  "content_hash": "654a778cade1c10fc9387d9a4570087a1a4c890e009b59dab5c3ccd9afbae77d",
+  "scraped_at": "2026-08-03T17:22:29+00:00",
+  "content_hash": "e21a6c653935bb88714b79f50e3ae1d6f649c735d990d38b4332f89538c5336b",
   "collection_method": "live",
   "title": "Diğer İhtiyaçlarınız için Finansmanınız Hazır - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 185402,
-  "text_chars": 753
+  "raw_bytes": 185668,
+  "text_chars": 753,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

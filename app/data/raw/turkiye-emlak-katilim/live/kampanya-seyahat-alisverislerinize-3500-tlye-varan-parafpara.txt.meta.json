@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/seyahat-alisverislerinize-3500-tlye-varan-parafpara",
+  "scraped_at": "2026-08-03T16:59:37+00:00",
+  "content_hash": "d72b0acf19e1b2566f5db7bfde2e14d88d7c891d6d6a9e63519f47efb009e950",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168445,
+  "text_chars": 3073,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

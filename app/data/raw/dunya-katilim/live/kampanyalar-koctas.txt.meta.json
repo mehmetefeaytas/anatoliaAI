@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/koctas",
-  "scraped_at": "2026-07-30T18:46:46+00:00",
-  "content_hash": "f265eb7f8319bf9b27730f93918006e64358d1dfd65a9aa9d0d106cfe4eaed28",
+  "scraped_at": "2026-08-03T17:03:29+00:00",
+  "content_hash": "94db50674439492173cb28f3d74700e234dcce355616277d61778bf61cad45de",
   "collection_method": "live",
   "title": "Ko&#xE7;ta&#x15F; | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504815,
-  "text_chars": 9445
+  "raw_bytes": 504812,
+  "text_chars": 9442,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

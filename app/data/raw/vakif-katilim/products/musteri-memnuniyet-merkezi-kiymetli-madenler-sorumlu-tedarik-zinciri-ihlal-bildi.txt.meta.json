@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/diger/musteri-memnuniyet-merkezi/kiymetli-madenler-sorumlu-tedarik-zinciri-ihlal-bildirim-hatti",
+  "scraped_at": "2026-08-03T17:37:03+00:00",
+  "content_hash": "116485e4e8a0af343a9cb6487f8662b2bb6e913eb6b98b91964387e2c7982c2f",
+  "collection_method": "live",
+  "title": "Kıymetli Madenler Sorumlu Tedarik Zinciri İhlal Bildirimi | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 132190,
+  "text_chars": 2681,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

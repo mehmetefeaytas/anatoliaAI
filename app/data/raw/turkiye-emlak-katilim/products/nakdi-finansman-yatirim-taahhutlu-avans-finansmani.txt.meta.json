@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/yatirim-taahhutlu-avans-finansmani",
-  "scraped_at": "2026-07-30T20:24:15+00:00",
-  "content_hash": "941a696861efe7352e1b982396ebf8221cb3a214b9bb1fa108629ddc541535fd",
+  "scraped_at": "2026-08-03T17:41:05+00:00",
+  "content_hash": "5d4e8dca60991fc9c89534d9a5e5b40b404e5ed90805fd351a85e08a47beaa00",
   "collection_method": "live",
   "title": "Yatırım Taahh&#252;tl&#252; Avans Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 167102,
-  "text_chars": 1977
+  "text_chars": 1977,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

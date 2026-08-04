@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/odeme-hizmetleri-ve-nakit-yonetimi/odeme-hizmetleri/doviz-transferi-swift",
+  "scraped_at": "2026-08-03T17:42:17+00:00",
+  "content_hash": "912273d414b5cb8df575e8c1b3bf17c01aedb9628a1650f12a6daaef82929d27",
+  "collection_method": "live",
+  "title": "D&#246;viz Transferi (SWIFT) | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164954,
+  "text_chars": 859,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

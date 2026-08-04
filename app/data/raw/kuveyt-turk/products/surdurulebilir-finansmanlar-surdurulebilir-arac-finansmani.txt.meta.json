@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/surdurulebilir-finansmanlar/surdurulebilir-arac-finansmani",
+  "scraped_at": "2026-08-03T17:20:13+00:00",
+  "content_hash": "30a9e20ea0092d7224f8bcf5e9fd047ed1383f77ee613b65f50cc39c332b45ad",
+  "collection_method": "live",
+  "title": "Sürdürülebilir Araç Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 147274,
+  "text_chars": 2914,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

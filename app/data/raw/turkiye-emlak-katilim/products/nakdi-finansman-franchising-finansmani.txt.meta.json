@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/franchising-finansmani",
-  "scraped_at": "2026-07-30T20:23:39+00:00",
-  "content_hash": "baf1f7032896e742e2a99169eb720925eaa2f2b0352cb9f77fa5bb980f37c9f0",
+  "scraped_at": "2026-08-03T17:40:28+00:00",
+  "content_hash": "53a171a70a9f64580142f22994f35708e8291f737922b4e84d0700436a680b27",
   "collection_method": "live",
   "title": "Franchising Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166590,
-  "text_chars": 2581
+  "text_chars": 2581,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

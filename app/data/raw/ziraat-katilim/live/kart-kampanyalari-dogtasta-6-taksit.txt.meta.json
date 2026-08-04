@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/dogtasta-6-taksit",
+  "scraped_at": "2026-08-03T16:43:26+00:00",
+  "content_hash": "3a769a30c76a6b8433d5a2a7e54a3777928eb0d3177ce03db9c81a32927e8fa1",
+  "collection_method": "live",
+  "title": "Doğtaş’ta 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488327,
+  "text_chars": 1947,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

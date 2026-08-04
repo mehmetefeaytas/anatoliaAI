@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/elektronik-ve-beyaz-esya-alisverislerinize-3000-tl-bankkart-lira-0?IsArchived=true",
+  "scraped_at": "2026-08-03T16:44:02+00:00",
+  "content_hash": "28505565f1f4ccbdb366feef06a66a4aa44c633575cf0335698d6f35e763a38f",
+  "collection_method": "live",
+  "title": "Elektronik ve Beyaz Eşya Alışverişlerinize 3.000 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490266,
+  "text_chars": 3036,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

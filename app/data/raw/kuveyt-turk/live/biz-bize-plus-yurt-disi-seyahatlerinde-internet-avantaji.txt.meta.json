@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/yurt-disi-seyahatlerinde-internet-avantaji",
+  "scraped_at": "2026-08-03T16:28:22+00:00",
+  "content_hash": "493976b54be599550bfb464c805937054c245fbb2162753def97162bd4b29651",
+  "collection_method": "live",
+  "title": "Yurt Dışı Seyahatlerinde İnternet Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131302,
+  "text_chars": 2903,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

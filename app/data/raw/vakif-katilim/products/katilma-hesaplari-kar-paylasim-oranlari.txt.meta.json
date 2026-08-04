@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/kar-paylasim-oranlari",
-  "scraped_at": "2026-07-30T20:16:34+00:00",
-  "content_hash": "62828730e54966043596e1e103d3db7a309ac4dd3ae168cc2c3c6a43d318c817",
+  "scraped_at": "2026-08-03T17:32:23+00:00",
+  "content_hash": "5a56a6e28232c151a503f3e48a8cbb3e91caa28c0369b77fec69487f488c60b9",
   "collection_method": "live",
   "title": "Kar Paylaşım Oranları | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 145560,
-  "text_chars": 1657
+  "text_chars": 1657,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/konut-finansmanlari/is-yeri-finansmani",
-  "scraped_at": "2026-07-30T20:06:09+00:00",
-  "content_hash": "d9cb1766a9abfb197b837f157f63c71bfcd1ba62055729ddb94a430bf7e0f787",
+  "scraped_at": "2026-08-03T17:19:58+00:00",
+  "content_hash": "f3f8f0b03131776c4db48a58bfaa33f7ee33c3008f72efff409b3d736c4c46e9",
   "collection_method": "live",
   "title": "İş Yeri Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 146525,
-  "text_chars": 2956
+  "raw_bytes": 146763,
+  "text_chars": 2956,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

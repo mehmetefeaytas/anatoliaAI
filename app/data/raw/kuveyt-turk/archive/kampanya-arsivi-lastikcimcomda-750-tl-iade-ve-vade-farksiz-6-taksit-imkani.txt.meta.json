@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/lastikcimcomda-750-tl-iade-ve-vade-farksiz-6-taksit-imkani",
+  "scraped_at": "2026-08-03T17:59:59+00:00",
+  "content_hash": "fd3c733bf1badc9c005a6fa8d3de072f7cc6891582b57a7a623798e446300482",
+  "collection_method": "live",
+  "title": "Lastikcim.com'da 750 TL İade ve Vade Farksız 6 Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130519,
+  "text_chars": 1222,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

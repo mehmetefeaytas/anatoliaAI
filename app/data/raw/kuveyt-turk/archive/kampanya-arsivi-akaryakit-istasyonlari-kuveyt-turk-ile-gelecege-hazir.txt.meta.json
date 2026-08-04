@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/akaryakit-istasyonlari-kuveyt-turk-ile-gelecege-hazir",
+  "scraped_at": "2026-08-03T17:51:41+00:00",
+  "content_hash": "cfdb5018eec3ba52c6f2982683c2c9712acb1203c72edb429c092d63abc84d98",
+  "collection_method": "live",
+  "title": "Akaryakıt İstasyonları Kuveyt Türk ile Geleceğe Hazır! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130793,
+  "text_chars": 1065,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

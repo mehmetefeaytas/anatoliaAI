@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/ipekyol",
-  "scraped_at": "2026-07-30T18:46:34+00:00",
-  "content_hash": "2c8e892f68062ac583fd534394f9f9cd90a5c8a38539255af268ba330955fef2",
+  "scraped_at": "2026-08-03T17:03:17+00:00",
+  "content_hash": "7b6f3a9152eba8e588d2dc0f30f25b59e6e513f944b6de50dd56ee83f804950a",
   "collection_method": "live",
   "title": "&#x130;pekyol | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504828,
-  "text_chars": 9462
+  "raw_bytes": 504825,
+  "text_chars": 9459,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/imzada-vade-farksiz-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:46+00:00",
+  "content_hash": "227ee33cd511d332a692a86e6c9d387b391abf19363a8e5161409330b89f0c5d",
+  "collection_method": "live",
+  "title": "İmza’da Vade Farksız 6 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130265,
+  "text_chars": 1001,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

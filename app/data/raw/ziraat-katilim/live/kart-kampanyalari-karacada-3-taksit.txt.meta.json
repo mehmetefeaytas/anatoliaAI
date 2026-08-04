@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/karacada-3-taksit",
+  "scraped_at": "2026-08-03T16:45:50+00:00",
+  "content_hash": "cf69addc5560ef3ff08a0c1939bf9e84068bb1474b8f565e3fad631657030f4e",
+  "collection_method": "live",
+  "title": "Karaca&#039;da 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486306,
+  "text_chars": 1707,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

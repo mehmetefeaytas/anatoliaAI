@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr",
+  "scraped_at": "2026-08-03T16:56:14+00:00",
+  "content_hash": "050cb787d2ea5f384a88425f4aa06c6112d8e6f1f077c1431127c1f02eb59b85",
+  "collection_method": "live",
+  "title": "T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 217694,
+  "text_chars": 2051,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

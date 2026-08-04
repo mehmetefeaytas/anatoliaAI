@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/hesaplama-araclari/kar-payi-hesaplama",
-  "scraped_at": "2026-07-30T20:06:20+00:00",
-  "content_hash": "082c87941de15019cb579c16e1119dda0174bd9718edf47acf56213eef3b9fb1",
+  "scraped_at": "2026-08-03T17:21:08+00:00",
+  "content_hash": "7da2bc04675393865352cee6802a4da69f25185e68e185f31c46c3f38e912eec",
   "collection_method": "live",
   "title": "Kar Payı Hesaplama | Getiri Hesaplama Aracı | 2026",
   "http_status": 200,
-  "raw_bytes": 209339,
-  "text_chars": 3923
+  "raw_bytes": 209605,
+  "text_chars": 3923,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

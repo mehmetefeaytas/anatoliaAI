@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ajette-6-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:41:53+00:00",
+  "content_hash": "6b821602984fc979f10fcb1615250e4c98790b89c2886bc479dde260ab99cc49",
+  "collection_method": "live",
+  "title": "AJET&#039;te 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489529,
+  "text_chars": 2790,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

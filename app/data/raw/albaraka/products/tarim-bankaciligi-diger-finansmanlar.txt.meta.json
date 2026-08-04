@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/tarim-bankaciligi/diger-finansmanlar",
-  "scraped_at": "2026-07-30T20:07:16+00:00",
-  "content_hash": "c0ba9652d3ea8635ab28af4fc627dbbfe1b89b00679eb9b6005b1512afa9721d",
+  "scraped_at": "2026-08-03T17:22:04+00:00",
+  "content_hash": "8389d19a9b650c759f56c8bf19fe540705267469adb427021a2f73981580b002",
   "collection_method": "live",
   "title": "Diğer Finansmanlar - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181459,
-  "text_chars": 1488
+  "raw_bytes": 181725,
+  "text_chars": 1488,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

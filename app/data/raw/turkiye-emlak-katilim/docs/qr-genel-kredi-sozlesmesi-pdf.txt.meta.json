@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/genel-kredi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-03T17:11:32+00:00",
+  "content_hash": "da14a45c106f847e65d4cc6e0c72e8d0a5ea70df616a9656553da51277c45cec",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 1100345,
+  "text_chars": 178825,
+  "pdf_pages": 66
+}

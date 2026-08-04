@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/istikbalde-7-taksit",
+  "scraped_at": "2026-08-03T16:45:32+00:00",
+  "content_hash": "302de6b503c22910d01dca6817587e0927ee4047273518c467a225144b0d66b5",
+  "collection_method": "live",
+  "title": "İstikbal’de 7 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488249,
+  "text_chars": 1962,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

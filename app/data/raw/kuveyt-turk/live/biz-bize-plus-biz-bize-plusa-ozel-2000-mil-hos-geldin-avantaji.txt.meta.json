@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/biz-bize-plusa-ozel-2000-mil-hos-geldin-avantaji",
+  "scraped_at": "2026-08-03T16:28:07+00:00",
+  "content_hash": "c048fbe7a42131889729611706f96d6a572895df71e277d839ef00ccd334ace8",
+  "collection_method": "live",
+  "title": "Biz Bize Plus’a Özel 2.000 Mil Hoş Geldin Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131528,
+  "text_chars": 3055,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

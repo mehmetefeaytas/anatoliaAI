@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/cicek-gibi-kampanya-vakif-katilimda",
-  "scraped_at": "2026-07-30T18:40:19+00:00",
-  "content_hash": "e9323875e0efa1007dfcffca0baf824385caef107dcc6434ad24891e66ad6d36",
+  "scraped_at": "2026-08-03T16:52:34+00:00",
+  "content_hash": "46acdebb155283a1f32b68318fb7071a2c6b72d500eefce138a5589d0c9dff20",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139250,
-  "text_chars": 1508
+  "raw_bytes": 139046,
+  "text_chars": 1486,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

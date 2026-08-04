@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/vestelde-9-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:45+00:00",
+  "content_hash": "cc0bf507f2aef571b0aa5512a70174fc372d9efb89ee0e65831a0cf41b281445",
+  "collection_method": "live",
+  "title": "Vestel&#039;de 9 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488969,
+  "text_chars": 2541,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

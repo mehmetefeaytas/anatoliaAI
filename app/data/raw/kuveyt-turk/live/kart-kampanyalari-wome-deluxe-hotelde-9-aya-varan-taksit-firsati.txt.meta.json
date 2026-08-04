@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/wome-deluxe-hotelde-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:19+00:00",
+  "content_hash": "a2b5b91634da26ab929f1e14a1406a36959088658d6dcbf995884d35ca7f5a1f",
+  "collection_method": "live",
+  "title": "Wome Deluxe Hotel’de 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130021,
+  "text_chars": 1019,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

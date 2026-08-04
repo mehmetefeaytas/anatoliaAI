@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/anneler-gunu-hediyesi-vakif-katilimda",
-  "scraped_at": "2026-07-30T18:40:10+00:00",
-  "content_hash": "929f90b7a40d9c380a79e82e1eb43beb14755abcb920dee96776847e67b9c4b5",
+  "scraped_at": "2026-08-03T16:55:07+00:00",
+  "content_hash": "5ff22072482607c7d12360fe389d746d5ea27f29389211eaf4b4238bb1bc5818",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139209,
-  "text_chars": 1464
+  "raw_bytes": 139005,
+  "text_chars": 1442,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/tarim-bankaciligi/mustahsil-makbuzuna-dayali-isletme-finansmani",
-  "scraped_at": "2026-07-30T20:22:06+00:00",
-  "content_hash": "b8aeb46f6ca74e747302c023cc94229718ffe87582340d2a060e178ff3d198aa",
+  "scraped_at": "2026-08-03T17:38:55+00:00",
+  "content_hash": "4feaa165aa999f5066a3d62793ac5e6becb22ab3879aa2be7b8fe19f6efebe0f",
   "collection_method": "live",
   "title": "M&#252;stahsil Makbuzuna Dayalı İşletme Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165682,
-  "text_chars": 1410
+  "text_chars": 1410,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

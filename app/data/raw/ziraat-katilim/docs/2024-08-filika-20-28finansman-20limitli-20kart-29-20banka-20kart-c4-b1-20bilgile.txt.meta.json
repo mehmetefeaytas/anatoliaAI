@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2024-08/Filika%20%28Finansman%20Limitli%20Kart%29%20Banka%20Kart%C4%B1%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-03T17:09:58+00:00",
+  "content_hash": "a68a067aaa54fe68636c9701e102032f13ffc1b0b09be5b31b595e8ee21f80d9",
+  "collection_method": "pdf",
+  "title": "Filika (Finansman Limitli Kart) Banka Kartı Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 142177,
+  "text_chars": 4242,
+  "pdf_pages": 4
+}

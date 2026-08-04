@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/diger-dis-ticaret-islemleri/dovizli-cek-islemleri",
+  "scraped_at": "2026-08-03T17:43:05+00:00",
+  "content_hash": "2da26a7f920c24140ddbc1b4337878d730f1ee818e37f733c3218f11e918a96d",
+  "collection_method": "live",
+  "title": "D&#246;vizli &#199;ek İşlemleri | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164413,
+  "text_chars": 559,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

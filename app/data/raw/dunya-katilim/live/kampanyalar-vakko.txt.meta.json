@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/vakko",
-  "scraped_at": "2026-07-30T18:47:34+00:00",
-  "content_hash": "d7975e9439f2cb46500468f5553fd1b62e251675275e185079251f6f9e823820",
+  "scraped_at": "2026-08-03T17:04:14+00:00",
+  "content_hash": "ebb6c3c1e47bcb83f8d2c50f72a3ad8aaeaff86c2b1da766f04805c268e349fa",
   "collection_method": "live",
   "title": "Vakko | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504737,
-  "text_chars": 9432
+  "raw_bytes": 504734,
+  "text_chars": 9429,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

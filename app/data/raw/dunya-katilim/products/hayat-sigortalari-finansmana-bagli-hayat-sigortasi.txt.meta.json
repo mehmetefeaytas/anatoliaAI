@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/sigortalar/hayat-sigortalari/finansmana-bagli-hayat-sigortasi",
-  "scraped_at": "2026-07-30T20:29:43+00:00",
-  "content_hash": "a4c9ae505d2e3b16ff086aa0c85d602df9639c7193fa0621f660344317e789fb",
+  "scraped_at": "2026-08-03T17:47:35+00:00",
+  "content_hash": "4ff08c8f9334a44fa19259da1f10867e461bb42e02abf1e02bedb73aeb6c53fe",
   "collection_method": "live",
   "title": "Finansmana Ba&#x11F;l&#x131; Hayat Sigortas&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499990,
-  "text_chars": 9966
+  "text_chars": 9966,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

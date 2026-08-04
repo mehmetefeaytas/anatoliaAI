@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari",
-  "scraped_at": "2026-07-30T20:17:46+00:00",
-  "content_hash": "b77e4c6db98dc15bc871744d537bb1d51214fead400022b97c0066168c1d80a7",
+  "scraped_at": "2026-08-03T17:33:35+00:00",
+  "content_hash": "f18dfc973597786dd8431230bc5a02e0abdff31258914702d15e05b0f256fb19",
   "collection_method": "live",
   "title": "Katılma Hesapları | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 152409,
-  "text_chars": 2262
+  "text_chars": 2262,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/size-ozel-banka-karti-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:30+00:00",
+  "content_hash": "b3a682736b1ad49a924c46486b6b232b2f778b0c851efaf94ef46e4c2d49b0ae",
+  "collection_method": "live",
+  "title": "Size Özel! Banka Kartı Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489198,
+  "text_chars": 2209,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

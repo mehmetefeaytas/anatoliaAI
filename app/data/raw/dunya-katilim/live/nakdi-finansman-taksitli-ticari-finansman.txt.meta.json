@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/nakdi-finansman/taksitli-ticari-finansman",
+  "scraped_at": "2026-08-03T17:02:17+00:00",
+  "content_hash": "99019432aeda301ded987020d3c0ae0f4cda25398fc4f23496194acf4fc34248",
+  "collection_method": "live",
+  "title": "Taksitli Ticari Finansman | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 499356,
+  "text_chars": 9398,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

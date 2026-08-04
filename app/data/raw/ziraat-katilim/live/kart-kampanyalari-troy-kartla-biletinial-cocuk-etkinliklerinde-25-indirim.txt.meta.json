@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kartla-biletinial-cocuk-etkinliklerinde-25-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:57+00:00",
+  "content_hash": "bdd8d91eb1f591a9a37bc015d8884b72971c0a3de85bdd89736a3d156d5a7463",
+  "collection_method": "live",
+  "title": "TROY Kart&#039;la Biletinial Çocuk Etkinliklerinde %25 indirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 492265,
+  "text_chars": 4141,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

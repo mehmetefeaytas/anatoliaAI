@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/banka-karti-ve-kredi-karti-talep-ve-bilgilendirme--3598.pdf",
+  "scraped_at": "2026-08-03T18:02:36+00:00",
+  "content_hash": "630793ebb6ea626c938a06f0efd6f9b54ef45c80dd447bac56dba108c9366774",
+  "collection_method": "pdf",
+  "title": "banka karti ve kredi karti talep ve bilgilendirme 3598",
+  "http_status": 200,
+  "raw_bytes": 134363,
+  "text_chars": 13948,
+  "pdf_pages": 5
+}

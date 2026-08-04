@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/divanevde-8-taksit",
+  "scraped_at": "2026-08-03T16:43:23+00:00",
+  "content_hash": "595c2515bb1e2fa67d68f310881fe523c8885482888adeddd2a0561fd2d3f4bd",
+  "collection_method": "live",
+  "title": "Divanev’de 8 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488498,
+  "text_chars": 2111,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/emlak-vergisi-odemelerinizde-4-taksit-firsati",
+  "scraped_at": "2026-08-03T17:53:58+00:00",
+  "content_hash": "0795e91e81f7a99ee70c2bccef054f0f3041f51aa8b3031c13d724a297f299f4",
+  "collection_method": "live",
+  "title": "Emlak Vergisi Ödemelerinizde 4 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131535,
+  "text_chars": 1304,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

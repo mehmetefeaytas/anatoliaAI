@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/fix-vadeli-hesap",
-  "scraped_at": "2026-07-30T20:08:46+00:00",
-  "content_hash": "fd7f05f2057b2055db80e51517dc495a92da2f4fab35d0accf5b5e3f59f78e5f",
+  "scraped_at": "2026-08-03T17:23:35+00:00",
+  "content_hash": "97b93b4340d245cc6e6dc5d7ef2cfc4d4f1bfdb0bc07941eb912bb338932dff6",
   "collection_method": "live",
   "title": "Fix Vadeli Hesap - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 183301,
-  "text_chars": 1957
+  "raw_bytes": 183567,
+  "text_chars": 1957,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

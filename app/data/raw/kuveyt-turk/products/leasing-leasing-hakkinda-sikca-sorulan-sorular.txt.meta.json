@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/leasing-hakkinda-sikca-sorulan-sorular",
-  "scraped_at": "2026-07-30T20:02:42+00:00",
-  "content_hash": "ca5ca57e7805ece2ea2333b62bb395f2e982ce0b4d7e35a2867406701b9b9520",
+  "scraped_at": "2026-08-03T17:16:33+00:00",
+  "content_hash": "3cff132a413d529b73755578aa1d7fd8ef8cbc69c5591c4b784aca18fe9c7b42",
   "collection_method": "live",
   "title": "Leasing Hakkında Sıkça Sorulan Sorular | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135625,
-  "text_chars": 6395
+  "raw_bytes": 135863,
+  "text_chars": 6395,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/gayri-nakdi-finansman/akreditifler",
-  "scraped_at": "2026-07-30T20:03:54+00:00",
-  "content_hash": "99a9ea788147e02c87a37db06d3327f84d2d3cec8793912ba6e6599481423e45",
+  "scraped_at": "2026-08-03T17:17:45+00:00",
+  "content_hash": "738e4415d2b85aa920b7ff91da2989805550c6eaeca7e79c12bb555bddc71d33",
   "collection_method": "live",
   "title": "Akreditifler | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135059,
-  "text_chars": 5323
+  "raw_bytes": 135343,
+  "text_chars": 5323,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

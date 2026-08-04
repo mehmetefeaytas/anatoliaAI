@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/referans-mektuplari",
-  "scraped_at": "2026-07-30T20:19:19+00:00",
-  "content_hash": "8d1fe3d1aaa2197dfbb5f8655350d4d6fa9671cf95866606f2b7074667f3cf74",
+  "scraped_at": "2026-08-03T17:35:06+00:00",
+  "content_hash": "2643a3423f671e10dd30361f38f7c07b5003e48884599ccd80b4985467a32c98",
   "collection_method": "live",
   "title": "Referans Mektupları | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 136105,
-  "text_chars": 1269
+  "text_chars": 1269,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

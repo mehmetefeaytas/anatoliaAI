@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/krediler",
-  "scraped_at": "2026-07-30T20:25:47+00:00",
-  "content_hash": "ee04c2cc9bb309de06ddc64354d1dc370d4ed463c6fca90521312de682e5f017",
+  "scraped_at": "2026-08-03T17:43:37+00:00",
+  "content_hash": "f56de0558ce2204f3b18372ee2d9050a561f5d741355feddaeb39bf3e8f31e61",
   "collection_method": "browser",
   "title": "Krediler | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 283514,
-  "text_chars": 301
+  "text_chars": 301,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

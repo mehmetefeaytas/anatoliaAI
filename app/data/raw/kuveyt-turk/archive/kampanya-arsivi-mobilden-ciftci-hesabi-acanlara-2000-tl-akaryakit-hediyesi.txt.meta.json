@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/mobilden-ciftci-hesabi-acanlara-2000-tl-akaryakit-hediyesi",
+  "scraped_at": "2026-08-03T18:00:29+00:00",
+  "content_hash": "6006228089606499861c29af04e0b30879a1f169f65ea841d4cb8645a9a3c781",
+  "collection_method": "live",
+  "title": "Mobilden Çiftçi Hesabı Açanlara 2.000 TL Akaryakıt Hediyesi! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132738,
+  "text_chars": 2025,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

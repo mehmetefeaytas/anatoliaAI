@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/oxxoda-2-taksit",
+  "scraped_at": "2026-08-03T16:47:45+00:00",
+  "content_hash": "0053e4d3e58db9ec82b38b74e6275fa521f948caed289a1c4a763bbcbf7d988e",
+  "collection_method": "live",
+  "title": "Oxxo’da 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488017,
+  "text_chars": 1898,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

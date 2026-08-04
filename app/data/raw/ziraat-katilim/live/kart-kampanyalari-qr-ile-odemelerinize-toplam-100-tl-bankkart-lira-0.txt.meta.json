@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/qr-ile-odemelerinize-toplam-100-tl-bankkart-lira-0?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:00+00:00",
+  "content_hash": "2a1dd25336a2d2ea610f20f1fc821ce7f0fd34c87cad6f066c64f9cb35753338",
+  "collection_method": "live",
+  "title": "QR ile Ödemelerinize Toplam 100 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490424,
+  "text_chars": 3040,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

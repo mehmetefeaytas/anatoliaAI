@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim/doviz-kiymetli-maden-alim-satim-yatirim-ve-birikim",
-  "scraped_at": "2026-07-30T20:26:17+00:00",
-  "content_hash": "b1315778aeffaf3b642e69a23e275e4d2be75fd2d6faebe5c65a634044da7197",
+  "scraped_at": "2026-08-03T17:44:04+00:00",
+  "content_hash": "901f80054022bfe720466084f80481a219fc0416265e5f44e05b3b617caa4fee",
   "collection_method": "browser",
   "title": "Döviz Alım Satım | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 314718,
-  "text_chars": 4274
+  "raw_bytes": 314737,
+  "text_chars": 4274,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

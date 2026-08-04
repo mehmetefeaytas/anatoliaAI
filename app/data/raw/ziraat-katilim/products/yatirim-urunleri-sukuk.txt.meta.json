@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri/sukuk",
-  "scraped_at": "2026-07-30T20:14:24+00:00",
-  "content_hash": "449416f8bee1da3aeebff2bfe6b65719a15c1d568e0f3d3659d1bc062eb4ad95",
+  "scraped_at": "2026-08-03T17:30:14+00:00",
+  "content_hash": "85af01b8a852d7e170411db8ea9d259c9c4d9e447aa6e508033c6c2485e6cb32",
   "collection_method": "live",
   "title": "Kira Sertifikaları (Sukuk) | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 464564,
-  "text_chars": 3774
+  "raw_bytes": 481024,
+  "text_chars": 3774,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

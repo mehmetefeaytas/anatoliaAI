@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/ceyiz-hesabi",
+  "scraped_at": "2026-08-03T17:20:25+00:00",
+  "content_hash": "a8cc81ab7e93542a6dc6f5141bfa63fc9f50424cfb200c5a338a0fda8ba8aba8",
+  "collection_method": "live",
+  "title": "Çeyiz Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 148871,
+  "text_chars": 9025,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-ve-togg-is-birligi",
+  "scraped_at": "2026-08-03T17:58:20+00:00",
+  "content_hash": "c2396c8da4cb6b3cc802ca93c5b619dfd19cf40d18e3b5f094dddaeefe67442c",
+  "collection_method": "live",
+  "title": "Kuveyt Türk ve TOGG İş Birliği | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135579,
+  "text_chars": 2637,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

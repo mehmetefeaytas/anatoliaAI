@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/konut-gayrimenkul-finansmani",
-  "scraped_at": "2026-07-30T18:39:33+00:00",
-  "content_hash": "60217cbfb4e8f23e58c69e559ce2d0b7ab288b2c3dd5617780d1c5e2e00b3679",
+  "scraped_at": "2026-08-03T16:50:21+00:00",
+  "content_hash": "c5bfd0fd23070a117442ca4777a164d1f13e4e401cdde986773ed20e809193e7",
   "collection_method": "live",
   "title": "Konut-Gayrimenkul Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 472681,
-  "text_chars": 1078
+  "raw_bytes": 489348,
+  "text_chars": 1078,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

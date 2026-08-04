@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dis-ticarette-kazandiran-paketleri-kesfedin-scr",
+  "scraped_at": "2026-08-03T17:53:01+00:00",
+  "content_hash": "d44af35e7e6061bd3afb51779a7df6a4df61a010fba114ee5073f5670d1e3f07",
+  "collection_method": "live",
+  "title": "Dış Ticarette Kazandıran Paketleri Keşfedin! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 137003,
+  "text_chars": 3425,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

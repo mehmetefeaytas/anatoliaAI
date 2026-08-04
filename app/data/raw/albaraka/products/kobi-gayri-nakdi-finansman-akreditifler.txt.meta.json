@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-gayri-nakdi-finansman/akreditifler",
-  "scraped_at": "2026-07-30T20:10:05+00:00",
-  "content_hash": "6e6a6c1391483450f213161ac2be743a9b09725f5fb08864004198411d4f2d89",
+  "scraped_at": "2026-08-03T17:24:53+00:00",
+  "content_hash": "47c692edb7631a36b389de9dbab8d31132fde52eedd2b2a4e8e3d12040cc3c7b",
   "collection_method": "live",
   "title": "Akreditifler - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181483,
-  "text_chars": 1016
+  "raw_bytes": 181749,
+  "text_chars": 1016,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

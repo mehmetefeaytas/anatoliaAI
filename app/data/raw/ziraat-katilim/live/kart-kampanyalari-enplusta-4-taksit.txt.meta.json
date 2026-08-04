@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/enplusta-4-taksit",
+  "scraped_at": "2026-08-03T16:44:11+00:00",
+  "content_hash": "82aa8991c772dd4b81b766c171f111c289e465d1c4b98c7d930b33c1f30b2896",
+  "collection_method": "live",
+  "title": "Enplus’ta 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486372,
+  "text_chars": 1719,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

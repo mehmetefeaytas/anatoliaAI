@@ -1,11 +1,14 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/gayri-nakdi-finansman-urunleri/referans-mektuplari",
-  "scraped_at": "2026-07-30T20:13:42+00:00",
-  "content_hash": "54e68f75e77d412d04a5d474a9a8b7e89485b07a071746660d159478bc1c7db0",
+  "scraped_at": "2026-08-03T17:29:31+00:00",
+  "content_hash": "1a2c40e1988b2553f71eec865e999c5762616cb93aa42835619b81531e820f55",
   "collection_method": "live",
   "title": "Referans Mektupları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 458650,
-  "text_chars": 1193
+  "raw_bytes": 475340,
+  "text_chars": 1193,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/sms-li-finansman",
-  "scraped_at": "2026-07-30T20:08:07+00:00",
-  "content_hash": "d0caa324f62a66904b01212bb250732a9acdb9ecb3ab6a7d2e2f6d19f2abaa37",
+  "scraped_at": "2026-08-03T17:22:56+00:00",
+  "content_hash": "996ca8c9d626e93a12f33f4abc45ddb31ef160d5712ec2c5de81ec6486ed41cf",
   "collection_method": "live",
   "title": "SMS’ li Finansman | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180357,
-  "text_chars": 911
+  "raw_bytes": 180623,
+  "text_chars": 911,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

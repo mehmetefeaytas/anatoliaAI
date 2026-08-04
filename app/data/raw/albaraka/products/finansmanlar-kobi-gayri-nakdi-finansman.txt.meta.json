@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-gayri-nakdi-finansman",
-  "scraped_at": "2026-07-30T20:07:08+00:00",
-  "content_hash": "0b8e196d11c5e7fd93287760851d36ceb465f807dd51c09d9784905fe5e9d1b4",
+  "scraped_at": "2026-08-03T17:21:56+00:00",
+  "content_hash": "8dc131c6ca6c51fe1e52cbe3718b1764756f5e924b96dd924d222a5b24630d8f",
   "collection_method": "live",
   "title": "Kobi Gayri Nakdi Finansman - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 189075,
-  "text_chars": 1116
+  "raw_bytes": 189341,
+  "text_chars": 1116,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

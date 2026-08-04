@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/e-ihracatiniza-guc-veren-finansman",
+  "scraped_at": "2026-08-03T17:53:28+00:00",
+  "content_hash": "2338fa1011644a81ca6c180d42abd6d10b100f1f7699897be37c228d9d1f26ee",
+  "collection_method": "live",
+  "title": "E-İhracatınıza Güç Veren Finansman! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131794,
+  "text_chars": 1583,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/divarese",
-  "scraped_at": "2026-07-30T18:46:07+00:00",
-  "content_hash": "5501b0bae1d19511b16ab4a765007478d48a0989a8f127374e012853c6d51639",
+  "scraped_at": "2026-08-03T17:02:50+00:00",
+  "content_hash": "886f783d705f6e457556e372425403dd87b6380c5763bc5b108fa5901040d94c",
   "collection_method": "live",
   "title": "Divarese | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504805,
-  "text_chars": 9451
+  "raw_bytes": 504802,
+  "text_chars": 9448,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

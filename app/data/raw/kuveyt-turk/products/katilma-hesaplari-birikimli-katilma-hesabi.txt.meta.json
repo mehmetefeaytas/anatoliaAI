@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/birikimli-katilma-hesabi",
+  "scraped_at": "2026-08-03T17:20:22+00:00",
+  "content_hash": "fafde26b14082286bf9bf537620cedbd82e95afed7458366b9696634de32374f",
+  "collection_method": "live",
+  "title": "Birikimli Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 136498,
+  "text_chars": 4760,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/dijital-bankacilik/musteri-iletisim-merkezi/isitme-engelli-kayip-calinti-kart-bildirimi",
+  "scraped_at": "2026-08-03T17:45:08+00:00",
+  "content_hash": "e856ce18a12576df72286fa4d3c6b55aea1b21ed8998a7f6d6b5e1fa7c1c155e",
+  "collection_method": "live",
+  "title": "&#x130;&#x15F;itme Engelli Kay&#x131;p &#xC7;al&#x131;nt&#x131; Kart Bildirimi | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504598,
+  "text_chars": 322,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
+}

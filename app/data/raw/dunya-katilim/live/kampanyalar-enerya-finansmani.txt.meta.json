@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/enerya-finansmani",
-  "scraped_at": "2026-07-30T18:46:13+00:00",
-  "content_hash": "bee6701f50e9dd0f22f5f11bdd12ae2d8326622ae8699e1cec8da55df67d78a3",
+  "scraped_at": "2026-08-03T17:02:56+00:00",
+  "content_hash": "a97fdb1f0a4e879e9a21d9eee8806a7cc0e15992b7f6493f3bc034e0ddee4741",
   "collection_method": "live",
   "title": "Enerya Finansman&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 506406,
-  "text_chars": 10452
+  "text_chars": 10452,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

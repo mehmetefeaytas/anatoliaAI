@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/huaweide-vade-farksiz-3-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:55:41+00:00",
+  "content_hash": "dcc7022c4205c94bc50aaebcb48e27b1b5de88d8c254245fbcc4e5a08ecc3ced",
+  "collection_method": "live",
+  "title": "Huawei’de Vade Farksız 3 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129885,
+  "text_chars": 960,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

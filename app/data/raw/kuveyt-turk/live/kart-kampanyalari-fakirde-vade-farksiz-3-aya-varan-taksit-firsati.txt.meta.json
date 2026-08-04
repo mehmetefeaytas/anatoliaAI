@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/fakirde-vade-farksiz-3-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:43+00:00",
+  "content_hash": "6d84920e631520b900c536beb352e6441df3efa5ce89f8e754ebc459ce4d82ac",
+  "collection_method": "live",
+  "title": "Fakir’de Vade Farksız 3 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 128948,
+  "text_chars": 964,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

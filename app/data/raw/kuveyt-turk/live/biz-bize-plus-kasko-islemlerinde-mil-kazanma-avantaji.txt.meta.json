@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/kasko-islemlerinde-mil-kazanma-avantaji",
+  "scraped_at": "2026-08-03T16:28:25+00:00",
+  "content_hash": "78c309a88c976724c76ac40972a7311a69073aaeb3cb6d6a9e90cba0a632654f",
+  "collection_method": "live",
+  "title": "Kasko İşlemlerinde Mil Kazanma Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133978,
+  "text_chars": 3543,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/yolcu360ta-arac-kiralamada-indirim-firsati",
+  "scraped_at": "2026-08-03T16:31:28+00:00",
+  "content_hash": "dd1363011e313b6840f419efeca8b3f6d93d44e082a0496e6f24e115841feb73",
+  "collection_method": "live",
+  "title": "Yolcu360'ta Araç Kiralamada İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130931,
+  "text_chars": 1498,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

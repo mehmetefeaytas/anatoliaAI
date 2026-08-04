@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/ihtiyac-kart-tatilde-de-yaninizda",
+  "scraped_at": "2026-08-03T17:55:59+00:00",
+  "content_hash": "2c64ed6f4296afb59e3487d65a32495be8da631d0559186a5d45467889cfca9c",
+  "collection_method": "live",
+  "title": "İhtiyaç Kart Tatilde de Yanınızda! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130018,
+  "text_chars": 786,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

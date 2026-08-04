@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/starwood-yapi-markette-vade-farksiz-3-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:40+00:00",
+  "content_hash": "e13b9b20dad2e19378c2389ea0cce1730aace9e70989a68c38974a155618ee49",
+  "collection_method": "live",
+  "title": "Starwood Yapı Market’te Vade Farksız 3 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130494,
+  "text_chars": 1058,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

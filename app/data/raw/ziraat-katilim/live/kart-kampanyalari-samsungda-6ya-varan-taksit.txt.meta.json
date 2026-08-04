@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/samsungda-6ya-varan-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:21+00:00",
+  "content_hash": "8c689af35c866014eb6d5a298fb5bac81dcdc3932419bd3c04af513b6513b514",
+  "collection_method": "live",
+  "title": "Samsung&#039;da 6&#039;ya varan Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 484554,
+  "text_chars": 1449,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

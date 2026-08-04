@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/diger-kampanyalar",
+  "scraped_at": "2026-08-03T16:40:29+00:00",
+  "content_hash": "91c5ee178e27239c0ccd1631d1fc4a035101b246615b4b4d38e389df240325ad",
+  "collection_method": "live",
+  "title": "Diğer Kampanyalar | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 572842,
+  "text_chars": 8067,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

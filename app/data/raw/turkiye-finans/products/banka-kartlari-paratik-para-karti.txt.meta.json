@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr:443/tr-tr/bireysel/banka-kartlari/Sayfalar/paratik-para-karti.aspx",
-  "scraped_at": "2026-07-30T20:11:35+00:00",
-  "content_hash": "abd7b332e978c8bbf725963b61e5678470b4c47557c6169388ef246856ec28bb",
+  "scraped_at": "2026-08-03T17:27:24+00:00",
+  "content_hash": "840b27f973109b46db78aa85acddf7fd11708f5d19a5f44953c7310f28a6ca5f",
   "collection_method": "live",
   "title": "Paratik Banka Kartı | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 106618,
-  "text_chars": 9038
+  "text_chars": 9038,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

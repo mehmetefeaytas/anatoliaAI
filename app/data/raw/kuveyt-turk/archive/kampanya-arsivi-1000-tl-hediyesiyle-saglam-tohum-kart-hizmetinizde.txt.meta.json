@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1000-tl-hediyesiyle-saglam-tohum-kart-hizmetinizde",
+  "scraped_at": "2026-08-03T17:51:16+00:00",
+  "content_hash": "f4f4068e91d9ababac5d101665871d613851636dc5e221e8b4750b393e85a638",
+  "collection_method": "live",
+  "title": "1000 TL Hediyesiyle Sağlam Tohum Kart Hizmetinizde! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129999,
+  "text_chars": 864,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

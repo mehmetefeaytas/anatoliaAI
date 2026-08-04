@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/hazine-ve-yatirim-urunleri/doviz-alim-satim",
+  "scraped_at": "2026-08-03T17:42:26+00:00",
+  "content_hash": "d3d803dfb57d3a388ac720dfce7d2607d525695768af2b483f4adcb13629badb",
+  "collection_method": "live",
+  "title": "D&#246;viz Alım Satım | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 156276,
+  "text_chars": 812,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kartla-idefixte-3000-tlye-varan-indirim",
+  "scraped_at": "2026-08-03T16:49:06+00:00",
+  "content_hash": "8e8311b47a0cefcdea2bdf48f8de9dc255c0283263738059ac8b98d84f50a573",
+  "collection_method": "live",
+  "title": "TROY Kartla İdefix’te 3.000 TL’ye Varan İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490504,
+  "text_chars": 4335,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

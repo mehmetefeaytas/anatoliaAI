@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmani",
+  "scraped_at": "2026-08-03T17:04:41+00:00",
+  "content_hash": "2a32b6690f9d87df0c2f7d960c97c4cb95c941f5776fd8321d50c31a2c39f6e0",
+  "collection_method": "live",
+  "title": "&#x130;htiya&#xE7; Finansman&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 527181,
+  "text_chars": 14770,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

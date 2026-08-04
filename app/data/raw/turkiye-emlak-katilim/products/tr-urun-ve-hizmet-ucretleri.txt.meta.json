@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/urun-ve-hizmet-ucretleri",
-  "scraped_at": "2026-07-30T20:20:47+00:00",
-  "content_hash": "0a52e2b143673fac8923dc840d64a61a9f98122a69e73b9db945d39fe3b66b31",
+  "scraped_at": "2026-08-03T17:37:37+00:00",
+  "content_hash": "3c87d6749e26f2b3c8e1a8ca62d0104f3b6e747f71d306be32dcda017a74f545",
   "collection_method": "live",
   "title": "&#220;r&#252;n ve Hizmet &#220;cretleri | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 175661,
-  "text_chars": 664
+  "text_chars": 664,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

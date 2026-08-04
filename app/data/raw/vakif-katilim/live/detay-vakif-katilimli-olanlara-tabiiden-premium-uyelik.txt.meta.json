@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vakif-katilimli-olanlara-tabiiden-premium-uyelik",
+  "scraped_at": "2026-08-03T16:55:46+00:00",
+  "content_hash": "094a780d4e07b9751130c2996eef503b68a5659162654355ad278707c3c076f1",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140907,
+  "text_chars": 3011,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

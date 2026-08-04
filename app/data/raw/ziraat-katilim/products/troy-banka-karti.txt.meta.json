@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/troy-banka-karti",
-  "scraped_at": "2026-07-30T20:15:04+00:00",
-  "content_hash": "ae0546680efa7f8eb3863675e88bfa23378c6b8ed97106bfcbdbf0138b57d1f5",
+  "scraped_at": "2026-08-03T17:30:52+00:00",
+  "content_hash": "d1eaec2869eeb59bb3f6f2fde20cf1fd29837b49b010ebd72125a6fe4ec7a8cf",
   "collection_method": "live",
   "title": "TROY Banka Kartı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 469431,
-  "text_chars": 3449
+  "raw_bytes": 486039,
+  "text_chars": 3449,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

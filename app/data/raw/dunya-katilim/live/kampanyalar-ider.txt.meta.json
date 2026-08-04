@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/ider",
-  "scraped_at": "2026-07-30T18:46:29+00:00",
-  "content_hash": "2ed1f29c9a653c5a16db92f02ce8ce6afe872889735a0858123ad7a224a18741",
+  "scraped_at": "2026-08-03T17:03:11+00:00",
+  "content_hash": "cd90d5ee7d2f90e335353d217741d1bfb66c99f719af910943fb4a5eb6be8297",
   "collection_method": "live",
   "title": "Ider | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 505237,
-  "text_chars": 9823
+  "raw_bytes": 505234,
+  "text_chars": 9820,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

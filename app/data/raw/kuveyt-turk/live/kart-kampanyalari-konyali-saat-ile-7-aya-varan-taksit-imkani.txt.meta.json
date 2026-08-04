@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/konyali-saat-ile-7-aya-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:10+00:00",
+  "content_hash": "fb53ce362c643e38e1fd6dcad47bea3aad378c9d316d9df45d599b882b9161ec",
+  "collection_method": "live",
+  "title": "Konyalı Saat ile 7 Aya Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131189,
+  "text_chars": 1113,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/diger-urun-ve-hizmetlerimiz/proje-finansmani",
-  "scraped_at": "2026-07-30T20:02:18+00:00",
-  "content_hash": "6172a6c18d68dbf4efa7a69a616159f5b16f8a769b748b784f95bbce88650eff",
+  "scraped_at": "2026-08-03T17:16:09+00:00",
+  "content_hash": "d81974eb5bd6824d6c765604a571de0d9ee9cfa377e70a23425b6342db07b678",
   "collection_method": "live",
   "title": "Proje Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 129530,
-  "text_chars": 1282
+  "raw_bytes": 129768,
+  "text_chars": 1282,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

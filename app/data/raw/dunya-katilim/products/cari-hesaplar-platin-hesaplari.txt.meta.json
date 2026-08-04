@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar/platin-hesaplari",
-  "scraped_at": "2026-07-30T20:29:04+00:00",
-  "content_hash": "f5cab38454d24b98be893352e8626117b0585e9744d2b708b74cdca0f41b1899",
+  "scraped_at": "2026-08-03T17:46:56+00:00",
+  "content_hash": "52591bf75163589ea6f19955eb58563652c5a015b0c9aa0efca3b5264bcc3417",
   "collection_method": "live",
   "title": "Platin Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499557,
-  "text_chars": 9884
+  "text_chars": 9884,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

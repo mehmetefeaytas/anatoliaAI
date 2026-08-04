@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ayakkabi-dunyasinda-2-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:26+00:00",
+  "content_hash": "22859131e319077f6c7f3df09c58265ee51fa9bc22362cfa0724f03976a9a0cd",
+  "collection_method": "live",
+  "title": "Ayakkabı Dünyası’nda 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488232,
+  "text_chars": 1947,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

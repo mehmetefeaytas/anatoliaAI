@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/togg-finansmani",
+  "scraped_at": "2026-08-03T17:20:16+00:00",
+  "content_hash": "dcc6819d636b0553a62db7168529eba5d147e8abe0ad2198fc38f425664cff15",
+  "collection_method": "live",
+  "title": "TOGG Finansmanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 149357,
+  "text_chars": 3507,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

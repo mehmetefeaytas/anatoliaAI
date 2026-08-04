@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/dry-centerda-kuru-temizleme-20-indirimli",
-  "scraped_at": "2026-07-30T18:40:28+00:00",
-  "content_hash": "96653dc5f2abfa2ca440f6915fe238810da881b7875395e8ace13d42846b023a",
+  "scraped_at": "2026-08-03T16:54:34+00:00",
+  "content_hash": "f886536fd3921a9990fe2c0bad94ff4c95c0816267666f744e7c405a5dd91685",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139024,
-  "text_chars": 1546
+  "raw_bytes": 138820,
+  "text_chars": 1524,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

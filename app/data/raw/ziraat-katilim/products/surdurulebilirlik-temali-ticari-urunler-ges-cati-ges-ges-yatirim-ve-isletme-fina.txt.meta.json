@@ -1,11 +1,14 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/surdurulebilirlik-temali-ticari-urunler/ges-cati-ges-ges-yatirim-ve-isletme-finansmani",
-  "scraped_at": "2026-07-30T20:15:24+00:00",
-  "content_hash": "702d1c121385919b1d169fbe9568b397132582cb5b9135398b4bf4c83d212705",
+  "scraped_at": "2026-08-03T17:31:14+00:00",
+  "content_hash": "2bc80a56b801b0ca42945db339d9baabab8bc4296328b060278019781e9a74da",
   "collection_method": "live",
   "title": "GES / Çatı GES / GES Yatırım ve İşletme Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 457858,
-  "text_chars": 885
+  "raw_bytes": 474548,
+  "text_chars": 885,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

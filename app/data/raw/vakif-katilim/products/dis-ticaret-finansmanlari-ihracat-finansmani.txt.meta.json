@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/dis-ticaret/dis-ticaret-finansmanlari/ihracat-finansmani",
-  "scraped_at": "2026-07-30T20:18:46+00:00",
-  "content_hash": "aefbd74b4b9da947cbdb9c43239262a3c64568f3347c737381c2e750891add92",
+  "scraped_at": "2026-08-03T17:34:33+00:00",
+  "content_hash": "45a52254da0e36a53a9f02ad7e54a40fa28a50f9146d2953f10d12642b8b4d73",
   "collection_method": "live",
   "title": "İhracat Finansmanları | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 137020,
-  "text_chars": 3696
+  "text_chars": 3696,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

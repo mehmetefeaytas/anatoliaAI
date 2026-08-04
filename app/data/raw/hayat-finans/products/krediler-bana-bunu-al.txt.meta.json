@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/krediler/bana-bunu-al",
-  "scraped_at": "2026-07-30T20:26:04+00:00",
-  "content_hash": "9ea65dcef2e1bfa4c8421bfff2c9b5688d515d98e578f707a3f82082936545b4",
+  "scraped_at": "2026-08-03T17:43:52+00:00",
+  "content_hash": "ecd6adffdea3a34c7cfe530ba2b029a5ddf6af55835b014d39bf66dd921670a1",
   "collection_method": "browser",
   "title": "Bana Bunu Al Alışveriş Kredisi | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 321413,
-  "text_chars": 5657
+  "text_chars": 5657,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

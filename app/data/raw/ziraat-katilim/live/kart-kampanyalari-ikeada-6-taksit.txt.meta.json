@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ikeada-6-taksit",
+  "scraped_at": "2026-08-03T16:45:08+00:00",
+  "content_hash": "2d8fa4aa58731908287a6045aa0fda0bf2789cdc5bd1a3294c99e411f04d8df7",
+  "collection_method": "live",
+  "title": "IKEA&#039;da 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488088,
+  "text_chars": 1874,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

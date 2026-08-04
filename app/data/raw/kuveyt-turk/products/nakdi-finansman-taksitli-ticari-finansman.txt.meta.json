@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/nakdi-finansman/taksitli-ticari-finansman",
-  "scraped_at": "2026-07-30T20:04:21+00:00",
-  "content_hash": "134786a0319934a1cd32dd5e844fbb0d9c07a96288792676a8fcc95169b56a4a",
+  "scraped_at": "2026-08-03T17:18:10+00:00",
+  "content_hash": "d680444819ed425784c6672cf49c98f31bbc307b9b08425cb6349c7d40d08e70",
   "collection_method": "live",
   "title": "Taksitli Ticari Finansman | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 131420,
-  "text_chars": 2566
+  "raw_bytes": 131681,
+  "text_chars": 2566,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

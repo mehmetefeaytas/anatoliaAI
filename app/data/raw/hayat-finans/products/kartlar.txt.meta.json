@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar",
-  "scraped_at": "2026-07-30T20:25:41+00:00",
-  "content_hash": "c591c0ae1f37bbc4296c1d7a5b8485125c97976aed8f3621b5ee2c35d4bfe809",
+  "scraped_at": "2026-08-03T17:43:30+00:00",
+  "content_hash": "8d2860c06b17911122d603ada0fefb32734ac769b84953bbdb8ffa14b73250c1",
   "collection_method": "browser",
   "title": "Kartlar | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 285407,
-  "text_chars": 522
+  "text_chars": 522,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

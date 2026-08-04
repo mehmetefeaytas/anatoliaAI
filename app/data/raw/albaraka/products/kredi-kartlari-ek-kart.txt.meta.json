@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/ek-kart",
-  "scraped_at": "2026-07-30T20:09:11+00:00",
-  "content_hash": "400d933b9ad435f0880d4c3090859f6e6fecffaf60cead557f4d04654a29f7c4",
+  "scraped_at": "2026-08-03T17:23:59+00:00",
+  "content_hash": "93dd6f4dd9ce47516d5e90e591e90c9015b36c8a0de20f4b22348e35a39ea2f9",
   "collection_method": "live",
   "title": "Ek Kart - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 186337,
-  "text_chars": 3384
+  "raw_bytes": 186603,
+  "text_chars": 3384,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

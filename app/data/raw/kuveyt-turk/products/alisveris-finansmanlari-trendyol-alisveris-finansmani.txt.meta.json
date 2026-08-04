@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/trendyol-alisveris-finansmani",
-  "scraped_at": "2026-07-30T20:05:09+00:00",
-  "content_hash": "1a6b3c965b5dd5e6a410d26d0181969dee28a0ce5d4747021e93a09346ebc3bb",
+  "scraped_at": "2026-08-03T17:18:57+00:00",
+  "content_hash": "ea11b3cf1eb3050f66786cf226771f84d1f326ff28053cc88d20ad22b62fe2e0",
   "collection_method": "live",
   "title": "Trendyol Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132513,
-  "text_chars": 2933
+  "raw_bytes": 132751,
+  "text_chars": 2933,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

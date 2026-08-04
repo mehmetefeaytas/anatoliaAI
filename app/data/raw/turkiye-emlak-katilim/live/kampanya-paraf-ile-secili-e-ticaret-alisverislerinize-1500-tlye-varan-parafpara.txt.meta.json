@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-secili-e-ticaret-alisverislerinize-1500-tlye-varan-parafpara",
+  "scraped_at": "2026-08-03T16:58:55+00:00",
+  "content_hash": "45803286230e48b1e493e66376e3f33b537a7d3b641c5995e59179ec2dd3113b",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168867,
+  "text_chars": 3380,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

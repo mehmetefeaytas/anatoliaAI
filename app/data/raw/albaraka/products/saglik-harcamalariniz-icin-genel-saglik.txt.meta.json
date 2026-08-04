@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/saglik-harcamalariniz-icin/genel-saglik",
+  "scraped_at": "2026-08-03T17:26:30+00:00",
+  "content_hash": "33843e0b1703b8f708aa658c9565de7a9a67bff19e2ec4ac5f515e3e1f3f0ea0",
+  "collection_method": "live",
+  "title": "Genel Sağlık - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181903,
+  "text_chars": 685,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

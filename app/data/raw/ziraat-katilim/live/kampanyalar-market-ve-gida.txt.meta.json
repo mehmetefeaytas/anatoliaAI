@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/market-ve-gida",
+  "scraped_at": "2026-08-03T16:40:53+00:00",
+  "content_hash": "868d5f5df1da6415c5b76181ac8d8a78b21cce42ddab8f544c900a510e71e395",
+  "collection_method": "live",
+  "title": "Market ve Gıda | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 503529,
+  "text_chars": 2442,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

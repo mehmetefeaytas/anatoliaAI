@@ -1,0 +1,14 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-pttavmcomda-pesin-fiyatina-2-taksit",
+  "scraped_at": "2026-08-03T16:58:46+00:00",
+  "content_hash": "356ddae5bd65124c223e9e1027c9095b1067cdf123cbf2a861037d4b7373167b",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 163768,
+  "text_chars": 287,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

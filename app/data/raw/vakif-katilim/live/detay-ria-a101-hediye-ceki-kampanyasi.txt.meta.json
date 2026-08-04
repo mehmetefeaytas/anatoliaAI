@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/ria-a101-hediye-ceki-kampanyasi",
+  "scraped_at": "2026-08-03T16:52:01+00:00",
+  "content_hash": "9111ca22057479b86cccf6ad0e563d37726908ac7f0415da76eb4cb5591524c5",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140077,
+  "text_chars": 2258,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

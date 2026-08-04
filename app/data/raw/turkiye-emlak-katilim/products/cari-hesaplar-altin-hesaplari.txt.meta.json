@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/altin-hesaplari",
-  "scraped_at": "2026-07-30T20:25:03+00:00",
-  "content_hash": "b8a6a251bd80d9e044a549ccaf0e4521d4a9e80e306cba446ee5bf0044f63139",
+  "scraped_at": "2026-08-03T17:41:53+00:00",
+  "content_hash": "1b6143b164dd7a0b6909d713360c179827441e1fb1e9d9fdc5d60120efeca6d5",
   "collection_method": "live",
   "title": "Altın Hesapları | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166204,
-  "text_chars": 1992
+  "text_chars": 1992,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

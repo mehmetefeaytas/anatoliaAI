@@ -1,0 +1,31 @@
+{
+  "bank_slug": "albaraka",
+  "record_count": 16,
+  "collected_at": "2026-08-03T19:13:19+00:00",
+  "collection_method": "rate-round",
+  "requests": 1,
+  "grid": {
+    "financing_amounts": [
+      100000,
+      500000,
+      1000000
+    ],
+    "financing_terms": [
+      12,
+      36,
+      60,
+      120
+    ],
+    "deposit_amounts": [
+      50000,
+      250000
+    ],
+    "deposit_term_days": [
+      32,
+      92,
+      182,
+      365
+    ],
+    "max_requests": 120
+  }
+}

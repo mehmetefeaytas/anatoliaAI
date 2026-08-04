@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/hobi-ve-oyuncak",
+  "scraped_at": "2026-08-03T16:40:47+00:00",
+  "content_hash": "28ab984fc0450a36077a201694f07459c7e129808672025936092ad23ebacc1d",
+  "collection_method": "live",
+  "title": "Hobi ve Oyuncak | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 479741,
+  "text_chars": 488,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
+}

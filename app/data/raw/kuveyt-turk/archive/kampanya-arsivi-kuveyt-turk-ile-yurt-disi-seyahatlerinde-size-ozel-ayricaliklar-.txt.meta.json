@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-ile-yurt-disi-seyahatlerinde-size-ozel-ayricaliklar-scr",
+  "scraped_at": "2026-08-03T17:57:35+00:00",
+  "content_hash": "991fda3cfde40174127d4ebe90134ade49acba2b79e055e1ce76fc2950ac83f6",
+  "collection_method": "live",
+  "title": "Kuveyt Türk ile Yurt Dışı Seyahatlerinde Size Özel Ayrıcalıklar! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133312,
+  "text_chars": 3085,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

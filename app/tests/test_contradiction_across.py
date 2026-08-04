@@ -381,12 +381,47 @@ class TestCaprazBitisTarihi(unittest.TestCase):
 # 5) Gerçek korpus regresyonu — hayalet alarmı
 # --------------------------------------------------------------------------- #
 
+# Hayalet alarmı tavanları — TÜR BAZINDA, belge sayısına göre değil.
+#
+# ## Neden mutlak toplam tavanı BIRAKILDI
+#
+# Eski hâl `len(self.found) <= 12` idi. Korpus 849 → 1500+ belgeye çıktığında
+# (2026-08-03 genişletilmiş hasat: kampanya 289→687, + arşiv + PDF turları) bu
+# tavan GERÇEK bulgular yüzünden kırıldı: ay dönümünde bankalar Temmuz'da bitmiş
+# kampanyaları sitede bırakıyor ve `suresi_dolmus_kampanya` haklı olarak artıyor.
+# Büyüyen korpusta sabit toplam tavanı, koruma değil gürültü üretir.
+#
+# ## Neden tür bazında tavan İŞE YARAR
+#
+# Hayalet patlamaları TEK BİR kuralda olur, çünkü düşen koruma o kuralın
+# korumasıdır. Ölçülmüş örnek: `celisen_tutar_bandi` liste-sayfası koruması
+# düştüğünde 2 → 15 oldu (13'ü hayalet). Tür bazında dar tavan bunu yakalar;
+# toplam tavanı yakalamazdı.
+#
+# Tavanlar ölçülen değerin ~2 katı: gerçek veri dalgalanmasına yer bırakır,
+# koruma düşmesini yakalar.
+GHOST_CEILINGS = {
+    # Zamana bağlı: ay dönümünde doğal olarak artar (bitmiş kampanya yayında kalır).
+    "suresi_dolmus_kampanya": 40,
+    # Belge içi çelişen bitiş tarihi — nadir, sıkı kalıp.
+    "celisen_kampanya_bitisi": 8,
+    # Tablo↔SSS tutar bandı ayrışması. DAR tutuldu: ölçülen 2, koruma düşerse 15+
+    # olur (liste sayfaları). Bu satır asıl hayalet dedektörüdür.
+    "celisen_tutar_bandi": 5,
+    # Belgeler arası kurallar — korpusta henüz doğrulanmış bulgu yok.
+    "capraz_kar_payi_uyusmazligi": 5,
+    "capraz_kampanya_bitisi": 5,
+    "masrafsiz_ama_ucret": 10,
+    "masrafsiz_ama_tutar": 10,
+}
+
+
 @unittest.skipUnless(RAW_DIR.is_dir(), "data/raw yok")
 class TestKorpusRegresyonu(unittest.TestCase):
-    """849 gerçek belgede tespit hem BULMALI hem ABARTMAMALI.
+    """Gerçek korpusta tespit hem BULMALI hem ABARTMAMALI.
 
-    Ölçüm (2026-07-30 snapshot): 6 çelişki — 5 "süresi dolmuş kampanya",
-    1 "belge içi çelişen bitiş tarihi". Altısı da elle doğrulandı.
+    Ölçüm (2026-07-30 snapshot, 849 belge): 6 çelişki — 5 "süresi dolmuş
+    kampanya", 1 "belge içi çelişen bitiş tarihi". Altısı da elle doğrulandı.
     """
 
     @classmethod
@@ -403,11 +438,18 @@ class TestKorpusRegresyonu(unittest.TestCase):
                        "suresi_dolmus_kampanya"), kinds)
 
     def test_hayalet_alarmi(self):
-        # Korpusta 849 belge var; çelişki sayısı bir anda patlıyorsa bir koruma
-        # düşmüş demektir. Ölçülen değer 6; tavan bilerek dar tutuldu.
-        self.assertLessEqual(len(self.found), 12,
-                             f"Beklenmedik çelişki artışı: "
-                             f"{self.stats['tur_dagilimi']}")
+        """Tür bazında tavan: bir korumanın düşmesi tek türde patlama yapar."""
+        dagilim = self.stats["tur_dagilimi"]
+        for kind, count in sorted(dagilim.items()):
+            ceiling = GHOST_CEILINGS.get(kind)
+            self.assertIsNotNone(
+                ceiling,
+                f"'{kind}' için tavan tanımlı değil — yeni kural eklendiyse "
+                f"GHOST_CEILINGS'e ölçülmüş bir tavan ekleyin (dağılım: {dagilim})")
+            self.assertLessEqual(
+                count, ceiling,
+                f"'{kind}' beklenmedik biçimde arttı ({count} > {ceiling}) — "
+                f"bir koruma düşmüş olabilir. Tam dağılım: {dagilim}")
 
     def test_her_celiskinin_kaniti_var(self):
         for rel, con in self.found:

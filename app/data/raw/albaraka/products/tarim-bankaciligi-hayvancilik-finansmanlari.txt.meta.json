@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/tarim-bankaciligi/hayvancilik-finansmanlari",
-  "scraped_at": "2026-07-30T20:07:19+00:00",
-  "content_hash": "3addbff641ad90a9ba8fe5fc546a4e931a1f05f5ab9da51f4064f30e3065ff56",
+  "scraped_at": "2026-08-03T17:22:08+00:00",
+  "content_hash": "24fd5756a76308d8d9e7ba5632c8362dde885dad8e645854a066b4099eda7dce",
   "collection_method": "live",
   "title": "Hayvancılık ile Uğraşan Üreticiyseniz Finansmanınız Hazır - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182275,
-  "text_chars": 1794
+  "raw_bytes": 182541,
+  "text_chars": 1794,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

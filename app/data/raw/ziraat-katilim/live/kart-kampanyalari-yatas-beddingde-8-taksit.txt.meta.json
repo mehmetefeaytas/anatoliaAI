@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/yatas-beddingde-8-taksit",
+  "scraped_at": "2026-08-03T16:49:54+00:00",
+  "content_hash": "5e88776180e53bfb83905e0ac6192bbd2c475392c61ff7e62faa5d89034aeda9",
+  "collection_method": "live",
+  "title": "Yataş Bedding&#039;de 8 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488777,
+  "text_chars": 2161,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/surdurulebilirlik-temali-bireysel-urunler",
-  "scraped_at": "2026-07-30T18:39:00+00:00",
-  "content_hash": "0e88e4da0afc7a641a1f7ffd404dc1ec199dab7ce6522ec0f37b1202e9b6e222",
+  "scraped_at": "2026-08-03T16:50:24+00:00",
+  "content_hash": "f3887ea67b0f5545556b2a972f532565687694dfa0a6d313097e12bbd4239482",
   "collection_method": "live",
   "title": "Sürdürülebilirlik Temalı Bireysel Ürünler | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 472665,
-  "text_chars": 1137
+  "raw_bytes": 489332,
+  "text_chars": 1137,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

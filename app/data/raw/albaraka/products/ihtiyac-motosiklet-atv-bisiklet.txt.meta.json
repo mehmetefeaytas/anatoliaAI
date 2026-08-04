@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/motosiklet-atv-bisiklet",
-  "scraped_at": "2026-07-30T20:07:59+00:00",
-  "content_hash": "ed4d50ec9529018451e46a0786dcd4d759cbcbe274a5ea3dac526609f3be022c",
+  "scraped_at": "2026-08-03T17:22:47+00:00",
+  "content_hash": "5e940354fa5c2b636652c1e673b630f74fb62d591b02b31981881788e6aee6a5",
   "collection_method": "live",
   "title": "Motosiklet Finansmanı | 36 Ay Vadeli Ödeme",
   "http_status": 200,
-  "raw_bytes": 235670,
-  "text_chars": 5680
+  "raw_bytes": 235934,
+  "text_chars": 5678,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

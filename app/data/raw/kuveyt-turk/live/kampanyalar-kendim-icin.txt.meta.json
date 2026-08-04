@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin",
-  "scraped_at": "2026-07-30T18:31:50+00:00",
-  "content_hash": "5a3db3db5c94d619d62bd477f06f2a82449848aecdbccdde5ebfd9f1cf2ebd7b",
+  "scraped_at": "2026-08-03T16:30:40+00:00",
+  "content_hash": "157a718f762b95fd5997dd07832b5fcfdc9016c2d7225a9fd8a79af02d1227e5",
   "collection_method": "live",
   "title": "Kendim İçin | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 150231,
-  "text_chars": 2292
+  "raw_bytes": 150598,
+  "text_chars": 2330,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

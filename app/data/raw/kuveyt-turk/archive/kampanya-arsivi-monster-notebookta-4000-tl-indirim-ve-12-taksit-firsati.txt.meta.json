@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/monster-notebookta-4000-tl-indirim-ve-12-taksit-firsati",
+  "scraped_at": "2026-08-03T18:00:50+00:00",
+  "content_hash": "640a1f54669a7cdc34ccb59e391457b9ab060a4c848f0092cef9488bcb2c4b76",
+  "collection_method": "live",
+  "title": "Monster Notebook'ta 4.000 TL İndirim ve 12 Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132151,
+  "text_chars": 2213,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

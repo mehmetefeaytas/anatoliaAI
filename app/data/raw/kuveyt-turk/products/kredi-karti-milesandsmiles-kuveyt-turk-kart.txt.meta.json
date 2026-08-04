@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/kartlar/kredi-karti/milesandsmiles-kuveyt-turk-kart",
+  "scraped_at": "2026-08-03T17:20:55+00:00",
+  "content_hash": "6f967fc9db0c51c00f41be1ec4e0aeae8873ac4b7128d31f6f9be7a35251652e",
+  "collection_method": "live",
+  "title": "Miles&Smiles Kuveyt Türk Kart | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 140262,
+  "text_chars": 5701,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

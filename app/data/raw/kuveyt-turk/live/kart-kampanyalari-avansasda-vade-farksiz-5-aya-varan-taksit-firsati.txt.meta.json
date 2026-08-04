@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/avansasda-vade-farksiz-5-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:46+00:00",
+  "content_hash": "2849fc916fa32e3233b0825874ce131601a1fa6910036b3aacc5bbd0ecedda03",
+  "collection_method": "live",
+  "title": "Avansas’da Vade Farksız 5 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130281,
+  "text_chars": 987,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

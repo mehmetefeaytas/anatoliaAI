@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/ihtiyac-finansmani/aninda-finansman",
-  "scraped_at": "2026-07-30T18:38:54+00:00",
-  "content_hash": "0674e621512edc09f40a8a97eecf906efd19d39f0ffa418a1b06b454f42723f1",
+  "scraped_at": "2026-08-03T16:50:45+00:00",
+  "content_hash": "e53420729f1cad20b3b70244a78af0b365312f1ea4c827e3e85be28d2622687a",
   "collection_method": "live",
   "title": "Anında Finansman | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 474167,
-  "text_chars": 4055
+  "raw_bytes": 490804,
+  "text_chars": 4055,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

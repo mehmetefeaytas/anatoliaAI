@@ -48,12 +48,63 @@ pip install -r requirements.txt   # geliştirme ortamı
 
 ## Komutlar
 ```bash
-python -m src.scraping.run --config config/banks.yaml   # scraping
+python -m src.scraping.run --config config/banks.yaml   # scraping (demo/fixture)
 python -m src.extraction.run --input data/processed/sample.txt
 python -m eval.run_eval --gold data/gold/               # değerlendirme + ablasyon
 pytest
 cd web && npm run dev
 ```
+
+### Gerçek veri toplama — dört tur
+
+Turlar ayrıdır çünkü her biri farklı bir bilgi türünü taşır ve farklı klasöre
+yazılır (`data/raw/<banka>/<küme>/`):
+
+```bash
+# 1) Aktif kampanyalar            -> live/
+python -m src.scraping.harvest          --config config/banks.yaml
+# 2) Ürün sayfaları (oran/vade)   -> products/
+python -m src.scraping.harvest_products --config config/banks.yaml
+# 3) Süresi dolmuş kampanyalar    -> archive/  (campaign_status: expired)
+# 4) PDF ücret tarifesi + formlar -> docs/
+python -m src.scraping.harvest_extra    --round all
+```
+
+`archive/` turu, `suresi_dolmus_kampanya` kuralı için **elle işaretlenmemiş**
+doğrulama verisi üretir. `docs/` turu, kâr payı/tahsis ücreti gibi kesin sayıların
+durduğu PDF tarifelerini alır (`pypdf`, BSD-3).
+
+### Turlar arası fark (aylık kampanya yenilenmesi)
+
+Bankalar kampanyaları aylık yeniler; iki tur arasındaki fark sona ermiş / yeni /
+güncellenmiş kampanyaları kanıtla ortaya çıkarır.
+
+```bash
+# Önceki turun manifesti — metinler çalışma kopyasında EZİLDİĞİ için git'ten okunur
+python -m src.scraping.snapshot build --from-git HEAD \
+    --out data/snapshots/<eski-tarih>.json --label <eski-tarih>
+# Yeni tur (yalnızca bu andan sonra toplananlar; bayat dosyaları dışlar)
+python -m src.scraping.snapshot build --since <ISO-an> \
+    --out data/snapshots/<yeni-tarih>.json --label <yeni-tarih>
+python -m src.scraping.snapshot diff --before ... --after ... --out fark.md
+```
+
+Karşılaştırma **temiz metin** hash'i üzerinden yapılır; ham HTML hash'i analitik
+ve oturum gürültüsüyle her istekte değişir ve yalancı "değişti" üretir.
+
+### Bayat dosya mutabakatı
+
+Yeniden hasat eski dosyaları silmez, üzerine yazar; sitede olmayan kampanya
+`live/` altında kalıp **aktif sanılır**. Mutabakat her kayıp URL'i yeniden çeker
+ve karara bağlar (404 → arşive, 200+"süresi dolmuştur" → arşive, 200+normal →
+`live/` kalır ve **keşif açığı** olarak raporlanır).
+
+```bash
+python -m src.scraping.reconcile_stale --before ... --after ...   # KURU KOŞU
+python -m src.scraping.reconcile_stale --before ... --after ... --apply
+```
+
+Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşınır.
 
 ## Mimari katmanlar (tamamı offline çalışır + test edilir)
 

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/hakkimizda/kuveyt-turk-hakkinda/bizden-haberler/kuveyt-turkten-1-milyar-tl-limitli-yeni-makine-finansmani-kampanyasi",
+  "scraped_at": "2026-08-03T16:34:41+00:00",
+  "content_hash": "e35411619eb022f4b43ab2d4c75ea47588cfba296744c254d05c1463820f7ae3",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten 1 milyar TL limitli yeni makine finansmanı kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129256,
+  "text_chars": 3391,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

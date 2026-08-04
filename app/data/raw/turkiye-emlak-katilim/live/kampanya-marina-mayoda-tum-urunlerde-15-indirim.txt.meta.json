@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/marina-mayoda-tum-urunlerde-15-indirim",
-  "scraped_at": "2026-07-30T18:42:57+00:00",
-  "content_hash": "fa43ff8c1b6897faae6ee753653a9130636369ce4d771be68add8c61bb11a2f5",
+  "scraped_at": "2026-08-03T16:56:55+00:00",
+  "content_hash": "44f14a53f14f57aa74282a8810ccbede3b573280fe9e7b7f2fcfa9a080bb2b58",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165693,
-  "text_chars": 1270
+  "text_chars": 1270,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

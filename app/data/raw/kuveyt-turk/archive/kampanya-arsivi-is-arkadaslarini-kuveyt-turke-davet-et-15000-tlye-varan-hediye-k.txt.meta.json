@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/is-arkadaslarini-kuveyt-turke-davet-et-15000-tlye-varan-hediye-kazan-scr",
+  "scraped_at": "2026-08-03T17:56:11+00:00",
+  "content_hash": "bbd87c9bf7f3ff22ff410615aaadf6b9c8a4f99e1db8c3a911669feb50b6f110",
+  "collection_method": "live",
+  "title": "İş Arkadaşlarını Kuveyt Türk'e Davet Et, 15.000 TL'ye Varan Hediye Kazan! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 137384,
+  "text_chars": 5749,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

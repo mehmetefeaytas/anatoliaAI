@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/columbiada-vade-farksiz-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:34+00:00",
+  "content_hash": "131cdf10e1e670197e916f391bfba4da41de142426acc16c2b7d3e51d7748b77",
+  "collection_method": "live",
+  "title": "Columbia’da Vade Farksız 6 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130368,
+  "text_chars": 1059,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

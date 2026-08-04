@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/yatirim/hazine-urunleri",
+  "scraped_at": "2026-08-03T17:37:09+00:00",
+  "content_hash": "deff0c6e0dbd93a0ff4b948d640e3d04887496896d9973cbfd313e116a99da35",
+  "collection_method": "live",
+  "title": "Hazine &#220;r&#252;nleri | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 137512,
+  "text_chars": 1044,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

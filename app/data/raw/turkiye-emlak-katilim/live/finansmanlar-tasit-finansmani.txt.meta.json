@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/tasit-finansmani",
+  "scraped_at": "2026-08-03T17:00:19+00:00",
+  "content_hash": "8863cee18d999f87c1664146507aa1f2730808502c941df1cadb0cd048f105ac",
+  "collection_method": "live",
+  "title": "Taşıt Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167946,
+  "text_chars": 3007,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

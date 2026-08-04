@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/akaryakitta-200-tlye-varan-altin-puan-firsati",
+  "scraped_at": "2026-08-03T17:51:43+00:00",
+  "content_hash": "5c9db50d25074be6c676c903eb0c9938bdc49447a1481e0f9498e630662465e9",
+  "collection_method": "live",
+  "title": "Akaryakıtta 200 TL'ye Varan Altın Puan Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130369,
+  "text_chars": 1331,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-kartinizi-alin-5000-mil-kazanma-firsatini-kacirmayin-scr",
+  "scraped_at": "2026-08-03T17:59:41+00:00",
+  "content_hash": "b611c384dd620f947f466d798b616872d70faacce4138fdd9ca74f7e992f4344",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten Kartınızı Alın, 5.000 Mil Kazanma Fırsatını Kaçırmayın! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130664,
+  "text_chars": 1322,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

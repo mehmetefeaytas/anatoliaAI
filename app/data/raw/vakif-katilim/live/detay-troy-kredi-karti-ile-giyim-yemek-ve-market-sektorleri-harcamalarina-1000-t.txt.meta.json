@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kredi-karti-ile-giyim-yemek-ve-market-sektorleri-harcamalarina-1000-tlye-varan-iade",
+  "scraped_at": "2026-08-03T16:53:07+00:00",
+  "content_hash": "2b8e894d7b005dde904c338277c32f50c17c22ea55337ed755a7c05394d03e8c",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139371,
+  "text_chars": 1694,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

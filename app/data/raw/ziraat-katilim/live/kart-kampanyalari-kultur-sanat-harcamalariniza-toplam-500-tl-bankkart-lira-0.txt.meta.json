@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/kultur-sanat-harcamalariniza-toplam-500-tl-bankkart-lira-0?IsArchived=true",
+  "scraped_at": "2026-08-03T16:46:05+00:00",
+  "content_hash": "e96502f87dd6dd0921b0d73fdda7d67e9454b339e92e1af9aaba5605227dfc2d",
+  "collection_method": "live",
+  "title": "Kültür Sanat Harcamalarınıza Toplam 500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489533,
+  "text_chars": 2272,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/yatirim-kampanyalari.aspx",
-  "scraped_at": "2026-07-30T18:36:50+00:00",
-  "content_hash": "e762001d1230a9f2aa2f7f77446dbd12ae9f49ebd31ba5409e0200891834a4fb",
+  "scraped_at": "2026-08-03T16:38:26+00:00",
+  "content_hash": "097308fc8a5674c792621180c9e3861be192d041b867c238fd751b3996407f49",
   "collection_method": "live",
   "title": "Yatırım Kampanyaları | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 97117,
-  "text_chars": 6004
+  "raw_bytes": 97008,
+  "text_chars": 6004,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

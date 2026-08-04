@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/elektrikli-arac-sarj-unitesi-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-orani-firsati",
+  "scraped_at": "2026-08-03T17:53:46+00:00",
+  "content_hash": "dad7c144aa6c0f42f132ff4c6c39a21c258a113e35925652cd8b32806a50b0fa",
+  "collection_method": "live",
+  "title": "Elektrikli Araç Şarj Ünitesi Finansmanı’nda Enerji Tasarrufu Haftasına Özel %4.19 Kar Oranı Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131347,
+  "text_chars": 1615,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

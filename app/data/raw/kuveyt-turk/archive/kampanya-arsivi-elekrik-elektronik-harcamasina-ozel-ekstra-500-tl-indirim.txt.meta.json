@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/elekrik-elektronik-harcamasina-ozel-ekstra-500-tl-indirim",
+  "scraped_at": "2026-08-03T17:53:43+00:00",
+  "content_hash": "3459f56c9098516ef0b0675a7fb13781c978142a752513db74225a0adc22f2a5",
+  "collection_method": "live",
+  "title": "Elektrik-Elektronik Harcamasına Özel Ekstra 500 TL İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130104,
+  "text_chars": 1112,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

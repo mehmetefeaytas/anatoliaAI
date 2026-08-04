@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/musteri/togg-dijital-finansman",
-  "scraped_at": "2026-07-30T20:16:52+00:00",
-  "content_hash": "f733ec9401db465548d2d3a87af82a4bfb45ad08c76b5472fbdada26cb3e7f73",
+  "scraped_at": "2026-08-03T17:32:41+00:00",
+  "content_hash": "2bf5e8631ba9afa034c8739d1dc7c511025ea95b94c03e8bd659347741aefda8",
   "collection_method": "live",
   "title": "M&#252;şteri | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 160270,
-  "text_chars": 12029
+  "raw_bytes": 161432,
+  "text_chars": 12029,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

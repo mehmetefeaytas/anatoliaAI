@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-gayri-nakdi-finansman/teminat-mektuplari",
-  "scraped_at": "2026-07-30T20:10:17+00:00",
-  "content_hash": "c51c7d42abf3af67c89119a9d4036c0752862e5ed05fff538612ac2b6fb93c9a",
+  "scraped_at": "2026-08-03T17:25:06+00:00",
+  "content_hash": "076943b95655c601a51fb443e6b1df2faabc0fc2b8aefb8c312a4c173c6d249a",
   "collection_method": "live",
   "title": "Teminat Mektupları - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181564,
-  "text_chars": 974
+  "raw_bytes": 181830,
+  "text_chars": 974,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

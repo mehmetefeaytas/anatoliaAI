@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/dijital-katilma-hesabina-ozel-paylasim-oranlari-10",
-  "scraped_at": "2026-07-30T18:34:25+00:00",
-  "content_hash": "12d3fcd0e0333c25a7c3c5a670c98a640e82f66196536a5c4b38f1a3d6c00ab7",
+  "scraped_at": "2026-08-03T16:35:57+00:00",
+  "content_hash": "4d6dbdd7a420e946a483eac51f4419638d63124c5bf51876cb377b640203b806",
   "collection_method": "live",
   "title": "Dijital Katılma Hesabı’na Özel Paylaşım Oranları! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181608,
-  "text_chars": 1523
+  "raw_bytes": 181874,
+  "text_chars": 1523,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

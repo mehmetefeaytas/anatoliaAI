@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/kart-basvuru",
-  "scraped_at": "2026-07-30T20:09:13+00:00",
-  "content_hash": "12ceb06f2360acd377550a029de113245af48aaaecf2d2fc620adfd3de13165a",
+  "scraped_at": "2026-08-03T17:24:02+00:00",
+  "content_hash": "5f509e9f41403aa589e24bb71d7d14c37bb3f0998250c317cab3950dd23e3925",
   "collection_method": "live",
   "title": "Kredi Kartı Başvurusu | Hızlı Başvur - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 217626,
-  "text_chars": 3936
+  "raw_bytes": 217892,
+  "text_chars": 3936,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

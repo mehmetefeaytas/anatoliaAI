@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/bellonada-5-taksit",
+  "scraped_at": "2026-08-03T16:42:47+00:00",
+  "content_hash": "deb1e15f90eb8ebff55d0f5e6174ec4c6e56850200ff29cc5a36eccc92665d43",
+  "collection_method": "live",
+  "title": "Bellona&#039;da 5 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488056,
+  "text_chars": 1946,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

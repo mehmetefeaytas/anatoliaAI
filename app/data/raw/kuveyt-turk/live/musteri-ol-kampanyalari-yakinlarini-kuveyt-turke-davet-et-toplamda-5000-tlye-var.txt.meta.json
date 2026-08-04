@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/yakinlarini-kuveyt-turke-davet-et-toplamda-5000-tlye-varan-hediye-kazan",
+  "scraped_at": "2026-08-03T16:34:05+00:00",
+  "content_hash": "124cb01d88e03dc9ca94bda1daac3e1f35f0b68aac147edba820fa3553349181",
+  "collection_method": "live",
+  "title": "Yakınlarını Kuveyt Türk'e Davet Et Toplamda 5.000 TL'ye Varan Hediye Kazan! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135399,
+  "text_chars": 4356,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

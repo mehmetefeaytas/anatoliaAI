@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/hakkimizda/kuveyt-turk-hakkinda/bizden-haberler/kuveyt-turkten-yerli-uretim-arac-finansmani-kampanyasi",
+  "scraped_at": "2026-08-03T16:34:35+00:00",
+  "content_hash": "706f0599c6ee3c22c9be3a591b64af3ed5aaa2bb1b3bef2fddab5a18ca257ea5",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten Yerli Üretim Araç Finansmanı Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 126752,
+  "text_chars": 1237,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

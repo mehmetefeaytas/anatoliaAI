@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/temel-bankacilik-hizmetleri-ucret-degisikliklerine-3551.pdf",
+  "scraped_at": "2026-08-03T18:02:18+00:00",
+  "content_hash": "a0e031f1746f3f71347cb5e5a07fbc25d1735c4d2b3043b3a3ea0c499a8e9b31",
+  "collection_method": "pdf",
+  "title": "temel bankacilik hizmetleri ucret degisikliklerine 3551",
+  "http_status": 200,
+  "raw_bytes": 225865,
+  "text_chars": 5325,
+  "pdf_pages": 2
+}

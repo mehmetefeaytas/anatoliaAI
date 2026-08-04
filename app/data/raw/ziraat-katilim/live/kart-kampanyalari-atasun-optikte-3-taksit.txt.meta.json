@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/atasun-optikte-3-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:20+00:00",
+  "content_hash": "6061b8c6cf63b4d53ad8f11b0386623b4053d6cef91876136bcbebba947dc7ff",
+  "collection_method": "live",
+  "title": "Atasun Optik’te 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 485088,
+  "text_chars": 1773,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

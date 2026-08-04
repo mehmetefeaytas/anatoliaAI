@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/diger-urun-ve-hizmetlerimiz/dijital-kasif/dijital-kasif-hesaplari",
+  "scraped_at": "2026-08-03T17:20:28+00:00",
+  "content_hash": "16ee579a67a4703078c35e2d2bfaf0b9110864ad12d0696a67c2543a49cfc7de",
+  "collection_method": "live",
+  "title": "Dijital Kâşif Hesapları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133850,
+  "text_chars": 3094,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/limasollu-naci-yayinlarinda-tum-indirimlere-ek-10-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:46:20+00:00",
+  "content_hash": "ef056fbe78c3fa6c1782f2cc445dcdd9502b37847c3d8fc5f61e343615171a90",
+  "collection_method": "live",
+  "title": "Limasollu Naci Yayınları&#039;nda Tüm İndirimlere Ek %10 İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 483702,
+  "text_chars": 1588,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

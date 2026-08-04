@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/lastikcimcomda-36-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:59:56+00:00",
+  "content_hash": "666fbcb5a4bc53ff6411526757ab674bccf03e35a8102017bdc3be49dd59c877",
+  "collection_method": "live",
+  "title": "Lastikcim.com'da 36 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130244,
+  "text_chars": 1172,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

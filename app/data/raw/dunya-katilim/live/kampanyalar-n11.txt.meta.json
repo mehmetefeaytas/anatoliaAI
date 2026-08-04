@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/n11",
-  "scraped_at": "2026-07-30T18:47:01+00:00",
-  "content_hash": "e84d4601a2f23c6cfb9d7b29717c119122b81164f1a85f41fdba1fe55335c064",
+  "scraped_at": "2026-08-03T17:03:41+00:00",
+  "content_hash": "fc0fc96c13485074648d5ca679622034acd5934ec8bd3418c35ad12cda4c40e0",
   "collection_method": "live",
   "title": "n11 | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 505224,
-  "text_chars": 9849
+  "raw_bytes": 505221,
+  "text_chars": 9846,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

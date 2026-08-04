@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-eczacilara-ilac-gibi-destek",
+  "scraped_at": "2026-08-03T17:59:11+00:00",
+  "content_hash": "7923f9736b5d53ced032ac2fdce608447280ad6e7e502dac3c8f0c4d7daf0e44",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten Eczacılara İlaç Gibi Destek! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131403,
+  "text_chars": 1974,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

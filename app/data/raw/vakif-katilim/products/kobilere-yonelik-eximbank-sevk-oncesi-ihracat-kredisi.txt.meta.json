@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/sektorel-paketler/kobilere-yonelik/eximbank-sevk-oncesi-ihracat-kredisi",
-  "scraped_at": "2026-07-30T20:20:14+00:00",
-  "content_hash": "c357c32c3939ef7e6c278fdd167245d025b28082ca4c6727ec4aa047ad44a36b",
+  "scraped_at": "2026-08-03T17:36:00+00:00",
+  "content_hash": "c74dccb5b1100293575a34d4677d6b772684dccb0ace68ef66c6b5cc77ec477e",
   "collection_method": "live",
   "title": "Eximbank Sevk &#214;ncesi İhracat Kredisi | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 135914,
-  "text_chars": 2220
+  "text_chars": 2220,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

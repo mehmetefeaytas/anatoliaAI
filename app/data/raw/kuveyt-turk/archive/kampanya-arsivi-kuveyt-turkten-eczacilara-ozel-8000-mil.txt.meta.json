@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-eczacilara-ozel-8000-mil",
+  "scraped_at": "2026-08-03T17:59:17+00:00",
+  "content_hash": "1062cfdfafc11761cd6d9b93938cf9bd2bc10ffe3df79f01394e38920e048e6c",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten Eczacılara Özel 8.000 Mil! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130638,
+  "text_chars": 1553,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

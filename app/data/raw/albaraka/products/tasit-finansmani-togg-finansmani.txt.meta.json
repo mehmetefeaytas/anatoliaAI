@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/tasit-finansmani/togg-finansmani",
-  "scraped_at": "2026-07-30T20:08:31+00:00",
-  "content_hash": "29d263856a4a13950263a12a1f997b7a4eeaf792543ba5d2182e25424efc3efb",
+  "scraped_at": "2026-08-03T17:23:20+00:00",
+  "content_hash": "010b16d6618206ccd0b99e48e4a2f953328a0abee9581a0bba69d7a0fb55d2e2",
   "collection_method": "live",
   "title": "Togg Finansmanı | Togg Araç Finansman Desteği Nasıl Alınır? | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 186935,
-  "text_chars": 2528
+  "raw_bytes": 187201,
+  "text_chars": 2528,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

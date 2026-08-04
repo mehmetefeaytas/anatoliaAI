@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/sermaye-piyasasi-urunleri/elektronik-urun-senedi-elus",
+  "scraped_at": "2026-08-03T17:42:44+00:00",
+  "content_hash": "38186136967c366b653ff5aec97a8ffb8cb5e4fe1ce32c417edc10e28afeff29",
+  "collection_method": "live",
+  "title": "Elektronik &#220;r&#252;n Senedi (EL&#220;S | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166974,
+  "text_chars": 3168,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

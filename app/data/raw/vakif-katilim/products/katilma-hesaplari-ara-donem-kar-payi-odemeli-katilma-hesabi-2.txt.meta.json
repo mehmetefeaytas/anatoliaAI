@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/ara-donem-kar-payi-odemeli-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:16:31+00:00",
-  "content_hash": "e218539e044d9d8cc4ab06d7acd10f3b885b0c1bcf7516b4ceff29c768bb7cac",
+  "scraped_at": "2026-08-03T17:32:20+00:00",
+  "content_hash": "b722ebc6a0dfa45e7a4a05e55fb7939161263fdf46dd33794da66f5126be5198",
   "collection_method": "live",
   "title": "Ara D&#246;nem Kar Payı &#214;demeli Katılma Hesabı | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 147881,
-  "text_chars": 3072
+  "text_chars": 3072,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

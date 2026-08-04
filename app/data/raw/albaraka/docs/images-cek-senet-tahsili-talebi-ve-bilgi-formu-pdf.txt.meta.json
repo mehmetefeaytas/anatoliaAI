@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/images/cek-senet-tahsili-talebi-ve-bilgi-formu.pdf",
+  "scraped_at": "2026-08-03T18:03:48+00:00",
+  "content_hash": "0dcc68ba2de460135ecc73716cfd7dd391a2ec9917cb48d55f4e4b83e7162921",
+  "collection_method": "pdf",
+  "title": "cek senet tahsili talebi ve bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 212734,
+  "text_chars": 3377,
+  "pdf_pages": 2
+}

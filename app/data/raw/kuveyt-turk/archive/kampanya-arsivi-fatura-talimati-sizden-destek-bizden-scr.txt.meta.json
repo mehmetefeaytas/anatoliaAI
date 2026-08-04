@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/fatura-talimati-sizden-destek-bizden-scr",
+  "scraped_at": "2026-08-03T17:54:31+00:00",
+  "content_hash": "d68b485066da9504732ceeb3c80166a8ccc8f25bb82084e730a8aea74f9c3f0b",
+  "collection_method": "live",
+  "title": "Fatura Talimatı Sizden, Destek Bizden | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130609,
+  "text_chars": 1559,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

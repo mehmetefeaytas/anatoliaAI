@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/surdurulebilir-finansmanlar",
-  "scraped_at": "2026-07-30T20:03:24+00:00",
-  "content_hash": "8263aabd69f84a76ef1c9ea5f316f8ccf8932465706e16593b0f1ac90190bee4",
+  "scraped_at": "2026-08-03T17:17:15+00:00",
+  "content_hash": "b54169d5d0428e191798c50d8b4938912ac98e4247d0387328c9e3af396521c4",
   "collection_method": "live",
   "title": "Sürdürülebilir Finansmanlar | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 134927,
-  "text_chars": 909
+  "raw_bytes": 135165,
+  "text_chars": 909,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

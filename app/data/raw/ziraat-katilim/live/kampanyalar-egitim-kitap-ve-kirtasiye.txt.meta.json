@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/egitim-kitap-ve-kirtasiye",
+  "scraped_at": "2026-08-03T16:40:35+00:00",
+  "content_hash": "0afc55b64a8a5038649c9ee0c286b7a985b7ea6e6e538dc20c136083234e506e",
+  "collection_method": "live",
+  "title": "Eğitim, Kitap ve Kırtasiye | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488641,
+  "text_chars": 1297,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

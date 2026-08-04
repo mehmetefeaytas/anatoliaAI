@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/eflatun-kredi-kart-ile-kozmetik-harcamalarina-200-tlye-varan-worldpuan",
-  "scraped_at": "2026-07-30T18:34:31+00:00",
-  "content_hash": "deeb318e3f98cac0f2061e63d6e32fae5a66d10f9bf72e98d5a034e8e868f23e",
+  "scraped_at": "2026-08-03T16:36:03+00:00",
+  "content_hash": "c5db3dcd104af6934405165df2963ccce58d25f64839fcaadb0154204c35cfde",
   "collection_method": "live",
   "title": "Eflatun Kredi Kart ile Kozmetik Harcamalarına 200 TL'ye varan Worldpuan! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181118,
-  "text_chars": 1536
+  "raw_bytes": 181384,
+  "text_chars": 1536,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/turk-eximbank-alacak-sigortasi-teminatli-finansman",
-  "scraped_at": "2026-07-30T20:24:09+00:00",
-  "content_hash": "74011d6f53935e178f860c88acfb539574e239cf4aa1fc6d738aac815e3bffc3",
+  "scraped_at": "2026-08-03T17:40:59+00:00",
+  "content_hash": "579904aa44a8b4f30d34ed94f2bfdcfca34eef28510b344cd7efebd150b3c1e8",
   "collection_method": "live",
   "title": "T&#252;rk Eximbank Alacak Sigortası Teminatlı Finansman | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165088,
-  "text_chars": 1481
+  "text_chars": 1481,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,15 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1-aylik-tod-taraftar-paketi-ucretsiz",
+  "scraped_at": "2026-08-03T17:51:07+00:00",
+  "content_hash": "ff6ebadc0329773063eb25a8f8092195b89fd896d1eea6a9e3f9d40c62076acb",
+  "collection_method": "live",
+  "title": "1 Aylık TOD Taraftar Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132356,
+  "text_chars": 1867,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

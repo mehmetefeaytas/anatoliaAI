@@ -5,9 +5,64 @@ __pycache__/
 venv/
 *.egg-info/
 
-# DB / veri (ham HTML cache hariç fixtures korunur)
+# DB
 *.db
 *.sqlite
+
+# Ham HTML cache — DEPOYA KONMAZ (2026-08-03 kararı)
+#
+# Genişletilmiş hasat sonrası `data/raw` 417 MB'a çıktı; bunun 366 MB'ı
+# `.html` cache'i (1570 dosya). Her yeniden hasat bu dosyaların YENİ bir
+# sürümünü git geçmişine eklerdi → depo hızla kullanılamaz hâle gelir
+# (klonlama süresi, GitHub sınırları, şartname §9 "çalışan repo" gerekliliği).
+#
+# NE KAYBEDİLİYOR: CLAUDE.md §14'ün ham-HTML provenance cache'i. Metin çıkarımı
+# iyileştiğinde yeniden-çıkarım için HTML gerekir; artık yeniden HASAT gerekir.
+# Bu kabul edilebilir çünkü hasat betiklenmiş ve tekrarlanabilir
+# (`src/scraping/harvest*.py`).
+#
+# NE KORUNUYOR: veri setinin kendisi ve provenance zinciri —
+#   `.txt`          çıkarılmış metin (1684 dosya, 12 MB)
+#   `.txt.meta.json` source_url + scraped_at + content_hash + campaign_status
+#   `.pdf`          ücret tarifesi/bilgi formu asılları (112 dosya, 32 MB) —
+#                   tablo yapısı metne tam çevrilemediği için asıl tutulur
+#   `rates/*.jsonl` yapılandırılmış oran kayıtları
+data/raw/**/*.html
+data/raw/**/*.htm
+# ...AMA banka kokundeki TEST FIXTURE'lari haric.
+# `data/raw/<slug>/*.html` fixture yoludur (src/pipeline.py: fixture modu `.html`
+# de okur); `data/raw/<slug>/<kova>/*.html` ise hasat cache'i. Bu ayrimi gozetmeyen
+# ilk kural `data/raw/albaraka/konut.html`'i depodan cikardi ve temiz bir klonda
+# 4 test kirmizi oluyordu (FIXTURE_DOCS=3 iken 2 belge yukleniyordu). Yerelde
+# gecmesinin tek sebebi dosyanin diskte TAKIPSIZ durmasiydi.
+!data/raw/*/*.html
+!data/raw/*/*.htm
+
+# Klasik banka (kapsam dışı) ham HTML — aynı gerekçe, aynı karar.
+# `data/raw-classic` 161 MB'a çıktı; 572 `.html` dosyası bunun neredeyse
+# tamamı. Bu küme yarışma veri seti DEĞİL (şartname §5.1 katılım bankalarını
+# ister); sınıflandırıcı eğitimi ve terminoloji ayrımı testi için tutuluyor.
+# `.txt` + `.meta.json` korunur, hasat betiklenmiş ve tekrarlanabilir.
+data/raw-classic/**/*.html
+data/raw-classic/**/*.htm
+
+# Anotasyon çalışma dosyaları — kanonik artefakt CSV'dir.
+# Anotatör Numbers/Excel'de çalışıp CSV olarak dışa aktarıyor; ikili çalışma
+# dosyasını depoya koymak diff'i imkânsız kılar ve iki doğruluk kaynağı yaratır.
+*.numbers
+*.xlsx
+data/gold/review/*.yedek*
+
+# Gümüş hattın TÜRETİLMİŞ çıktıları — `scripts/build_silver.py` yeniden üretir.
+# `trainable.jsonl` (10 MB) ayrıca BİLİNEN KUSURLU: `split_trainable`'ın n-gram
+# kalıp ayıklaması bazı belgelerde gerçek kampanya gövdesini yiyor (ölçülen
+# örnek: 12 belge). Kusur giderilmeden bu dosya depoya konmaz.
+# KORUNAN: proposals*/verdicts*/silver/rejected/queue + prompt şablonları —
+# etiketin nasıl üretildiği yeniden üretilebilir olmalı, yoksa veri setinin
+# kökeni savunulamaz (şartname §8).
+data/silver/trainable.jsonl
+data/silver/batch.jsonl
+data/silver/excluded.jsonl
 
 # modeller (offline; repo'ya konmaz)
 models/
@@ -22,3 +77,6 @@ web/out/
 
 # OS
 .DS_Store
+
+# Yedek dosyalari (betiklerin aldigi guvenlik kopyalari)
+*.bak

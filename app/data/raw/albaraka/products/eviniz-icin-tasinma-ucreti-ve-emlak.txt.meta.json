@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/tasinma-ucreti-ve-emlak",
+  "scraped_at": "2026-08-03T17:26:15+00:00",
+  "content_hash": "1d7ecc6ee07a3daadf43097b7d9ae33e5c71f6e3ddea5282330c892f0908d027",
+  "collection_method": "live",
+  "title": "Taşınma Ücreti ve Emlak - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182209,
+  "text_chars": 650,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

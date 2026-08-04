@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/tasit-finansmani/tasit-kiralama-finansmani",
-  "scraped_at": "2026-07-30T20:08:29+00:00",
-  "content_hash": "bf2e5dda90d4a28a9650670c3a33cca9b32304e4b720e2c01ff99d23dac8a208",
+  "scraped_at": "2026-08-03T17:23:17+00:00",
+  "content_hash": "bf5704026057da799607b46bb611c5b93eacbd098045c1f6051850117674c6ca",
   "collection_method": "live",
   "title": "Taşıt Kiralama Finansmanı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182108,
-  "text_chars": 1222
+  "raw_bytes": 182374,
+  "text_chars": 1222,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

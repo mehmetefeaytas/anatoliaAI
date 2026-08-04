@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kobilere-ozel-teminat-mektubu-kampanyasi-scr",
+  "scraped_at": "2026-08-03T17:57:05+00:00",
+  "content_hash": "4eb6a7f53bdab4a8fdca0d781a79c8edd4669f01e59c9b105a5fc088372e2575",
+  "collection_method": "live",
+  "title": "KOBİ’lere Özel Teminat Mektubu Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130819,
+  "text_chars": 1621,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

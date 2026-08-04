@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-ile-15-b-fit-indirimi",
+  "scraped_at": "2026-08-03T16:55:40+00:00",
+  "content_hash": "ba639487695fd3229b7e9a8c98f0e38c57b83da7b3ea59cae759e489fc970b89",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 138925,
+  "text_chars": 1680,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

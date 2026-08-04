@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kartlar/banka-karti",
-  "scraped_at": "2026-07-30T20:15:06+00:00",
-  "content_hash": "986dc4f2fb174c5986ae1e19b2dc8d129b028cf9bc498d4184f0b7423e966f34",
+  "scraped_at": "2026-08-03T17:30:55+00:00",
+  "content_hash": "daaef2b100200b42bc2096f202ccb5ad569dcb821603c0419ff68d82aea3237d",
   "collection_method": "live",
   "title": "Banka Kartı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 471103,
-  "text_chars": 3867
+  "raw_bytes": 487688,
+  "text_chars": 3867,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

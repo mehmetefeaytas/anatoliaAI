@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-kipte-5-taksit",
+  "scraped_at": "2026-08-03T16:58:28+00:00",
+  "content_hash": "c0f5c365bf2729e6da62d6965c5518b388fbff2621f608ad12e91de84bea7002",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164926,
+  "text_chars": 959,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

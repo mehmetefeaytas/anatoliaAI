@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-tv-premium-yillik-paketinde-50-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:30+00:00",
+  "content_hash": "36a18a9bdc6b6c10bc14a4bc1235c4d6adc82cbebc137a9a3ac31cfce4881850",
+  "collection_method": "live",
+  "title": "TROY &amp; TV+ Premium Yıllık Paketinde %50 İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 492911,
+  "text_chars": 4828,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

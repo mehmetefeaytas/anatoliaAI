@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/gelir-vergisi-odemelerinizde-4-taksit-firsati",
+  "scraped_at": "2026-08-03T17:54:43+00:00",
+  "content_hash": "94b930e70120cdf7497db871413bcf23d3cf092deaa2afbbdb90c7725307601e",
+  "collection_method": "live",
+  "title": "Gelir Vergisi Ödemelerinizde 4 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131852,
+  "text_chars": 1523,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

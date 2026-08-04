@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-ile-english-time-15-indirimli",
+  "scraped_at": "2026-08-03T16:55:16+00:00",
+  "content_hash": "44ed9a7b88b669e584adb91ed10bbe65070d4fb0dc91357ee3edab2edb468a09",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139490,
+  "text_chars": 2103,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

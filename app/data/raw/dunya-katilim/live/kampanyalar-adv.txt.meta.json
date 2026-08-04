@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/adv",
-  "scraped_at": "2026-07-30T18:45:40+00:00",
-  "content_hash": "82527ef8d73352cff316c1721d51a48645f31552f0965c0d75f2ecaf429fdfdf",
+  "scraped_at": "2026-08-03T17:02:23+00:00",
+  "content_hash": "3c76ed2da0ecbc7fd4b90acb3edbfb53aa9a521ff30185ece09d01f77019ee25",
   "collection_method": "live",
   "title": "ADV | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504784,
-  "text_chars": 9443
+  "raw_bytes": 504781,
+  "text_chars": 9440,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

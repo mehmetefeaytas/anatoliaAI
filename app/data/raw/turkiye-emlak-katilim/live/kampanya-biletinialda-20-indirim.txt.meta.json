@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/biletinialda-20-indirim",
-  "scraped_at": "2026-07-30T18:42:24+00:00",
-  "content_hash": "33149b683823ab898d002ac07e7c60b2a2b75820ad9d233bf8f5c94d3be98022",
+  "scraped_at": "2026-08-03T16:56:21+00:00",
+  "content_hash": "104c235839da4d8fd2a3a7709658ac8b958f0e692c89651cdafac024596afd6b",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166895,
-  "text_chars": 2047
+  "text_chars": 2047,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

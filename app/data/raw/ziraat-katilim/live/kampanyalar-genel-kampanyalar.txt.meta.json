@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/genel-kampanyalar",
+  "scraped_at": "2026-08-03T16:40:41+00:00",
+  "content_hash": "d34155ed480d48e5eae813cf4ef81110b4767a9f00b6ac9c21dbf02a9c68ace1",
+  "collection_method": "live",
+  "title": "Genel Kampanyalar | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 479787,
+  "text_chars": 540,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
+}

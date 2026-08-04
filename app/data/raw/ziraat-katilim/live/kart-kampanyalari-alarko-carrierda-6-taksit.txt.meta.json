@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/alarko-carrierda-6-taksit",
+  "scraped_at": "2026-08-03T16:42:08+00:00",
+  "content_hash": "a25ef34dc0ea8e8ee95bbbde54c4f414c57964dc845e90a22129a69b2e8a700e",
+  "collection_method": "live",
+  "title": "Alarko Carrier’da 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 485014,
+  "text_chars": 1759,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

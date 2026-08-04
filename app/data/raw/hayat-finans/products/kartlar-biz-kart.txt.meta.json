@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar/biz-kart",
-  "scraped_at": "2026-07-30T20:26:09+00:00",
-  "content_hash": "66dcace65f7f81ac88f8e5854983236a5468ed6589bcec86cbc8b42e3573b75f",
+  "scraped_at": "2026-08-03T17:43:59+00:00",
+  "content_hash": "d699e48ee92d55f974fb27a43b44996606a86bb80ab54f11c3373aaa46aa0ed6",
   "collection_method": "browser",
   "title": "Biz Kart ile Sevdiklerinizin Harcamalarını Yönetin | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 331759,
-  "text_chars": 3866
+  "text_chars": 3866,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

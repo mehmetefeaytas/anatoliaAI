@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dysonda-vade-farksiz-6-taksit-imkani",
+  "scraped_at": "2026-08-03T17:53:19+00:00",
+  "content_hash": "dd344d15a25f2c96a72ed55f6427d7587e2107bf0a3894715de26e9ee1da723d",
+  "collection_method": "live",
+  "title": "Dyson'da Vade Farksız 6 Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129614,
+  "text_chars": 780,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

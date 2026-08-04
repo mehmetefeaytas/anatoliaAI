@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/biz-bize-plusa-ozel-beste-ek-katki-avantaji",
+  "scraped_at": "2026-08-03T16:28:16+00:00",
+  "content_hash": "0b07f787c669c9cd41a3457ff323d019ee0ad36395f16702bf12ce3c90ef5c24",
+  "collection_method": "live",
+  "title": "Biz Bize Plus’a Özel BES’te Ek Katkı Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131335,
+  "text_chars": 2889,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

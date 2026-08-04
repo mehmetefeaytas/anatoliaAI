@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/desa-grupta-vade-farksiz-2-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:32+00:00",
+  "content_hash": "f43296d1c2721156407e390c9dc16f47ac9f5b7db5b95079f4793653d305c9c3",
+  "collection_method": "live",
+  "title": "Desa Grup’ta Vade Farksız 2 Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129076,
+  "text_chars": 983,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

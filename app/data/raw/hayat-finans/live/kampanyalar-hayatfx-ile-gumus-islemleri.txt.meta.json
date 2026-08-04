@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar/hayatfx-ile-gumus-islemleri",
-  "scraped_at": "2026-07-30T18:45:27+00:00",
-  "content_hash": "5c1c260dbb8b58bef4f2f280db73c66b8cd5582161c51bbac3ea6737d8ac86ab",
+  "scraped_at": "2026-08-03T17:01:52+00:00",
+  "content_hash": "da769b6f0b2ccf1902bc01440d2421e2a4cc4d0c55c7c67d6bcb20fefe4e7b23",
   "collection_method": "browser",
   "title": "Gümüş İşlemleri Hayat FX'te | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 285652,
-  "text_chars": 1487
+  "raw_bytes": 285634,
+  "text_chars": 1487,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

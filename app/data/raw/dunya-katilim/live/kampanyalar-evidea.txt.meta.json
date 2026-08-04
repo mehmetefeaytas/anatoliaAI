@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/evidea",
-  "scraped_at": "2026-07-30T18:46:16+00:00",
-  "content_hash": "53e06696b955036993b6c18c2400d7254b7f10abbf1acdbc4553dd9132dfa471",
+  "scraped_at": "2026-08-03T17:02:59+00:00",
+  "content_hash": "efea91cbe42d68148c4f854053e5a40a796949b90de50955c013c58786de9dea",
   "collection_method": "live",
   "title": "evidea | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504960,
-  "text_chars": 9598
+  "raw_bytes": 504957,
+  "text_chars": 9595,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

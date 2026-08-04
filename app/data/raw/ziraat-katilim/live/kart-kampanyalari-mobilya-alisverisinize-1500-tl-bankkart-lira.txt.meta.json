@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/mobilya-alisverisinize-1500-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:46:59+00:00",
+  "content_hash": "2464beaf0547a2c5f759f3970317c260aa01978edbce228fd3b8adb390ad2310",
+  "collection_method": "live",
+  "title": "Mobilya Alışverişinize 1.500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489951,
+  "text_chars": 3054,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

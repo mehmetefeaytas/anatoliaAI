@@ -1,11 +1,13 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-bakiye-kazan",
-  "scraped_at": "2026-07-30T18:44:22+00:00",
-  "content_hash": "add0fe2ceed7eee4679e119a63687bd6a77d1b10f10192838d8007185034ad0d",
+  "scraped_at": "2026-08-03T17:00:47+00:00",
+  "content_hash": "17601661ebd55e931a1486b603bba5fc43e685eee00c33c089f86ed68a3d3342",
   "collection_method": "browser",
   "title": "Kredi Kartı limitini artır, harcamalarından toplam 2000 TL’ye kadar A101 hediye bakiye kazan! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 100038,
-  "text_chars": 2010
+  "raw_bytes": 100037,
+  "text_chars": 2009,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/gonlune-gore-konut-finansmani",
+  "scraped_at": "2026-08-03T17:00:01+00:00",
+  "content_hash": "95d0afec7a95762cda8e48f9775f6604a98ca493fa03275e76407c6b4b0b1a5c",
+  "collection_method": "live",
+  "title": "G&#246;nl&#252;ne G&#246;re Konut Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 174003,
+  "text_chars": 2839,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

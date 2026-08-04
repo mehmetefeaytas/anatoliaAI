@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/altinyildizda-vade-farksiz-2-taksit-firsati",
+  "scraped_at": "2026-08-03T16:33:17+00:00",
+  "content_hash": "cb6f09c72db7dd198cbcd474c7869cf296800028f64669a54614f4a6dff9d4dc",
+  "collection_method": "live",
+  "title": "Altınyıldız’da Vade Farksız 2 Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130294,
+  "text_chars": 1013,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

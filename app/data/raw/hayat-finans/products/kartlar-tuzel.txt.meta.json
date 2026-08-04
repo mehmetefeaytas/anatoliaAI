@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar-tuzel",
-  "scraped_at": "2026-07-30T20:25:44+00:00",
-  "content_hash": "11bea753dff3d560534ea504dc179fa8ae52c8a59e887d34c2466f00735ab317",
+  "scraped_at": "2026-08-03T17:43:33+00:00",
+  "content_hash": "a806dc47adb9abc95337e825d9c55ed9b7dd1832911dca6fcbace51917518dc5",
   "collection_method": "browser",
   "title": "Tüzel Kartlar | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 282837,
-  "text_chars": 412
+  "text_chars": 412,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

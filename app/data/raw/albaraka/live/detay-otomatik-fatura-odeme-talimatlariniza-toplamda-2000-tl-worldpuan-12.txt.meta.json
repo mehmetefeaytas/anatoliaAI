@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/otomatik-fatura-odeme-talimatlariniza-toplamda-2000-tl-worldpuan-12",
+  "scraped_at": "2026-08-03T16:37:15+00:00",
+  "content_hash": "81a177226ffcc76b7f4a3f9285a63e3152ac7796b957cdd85641c9be01c0a91e",
+  "collection_method": "live",
+  "title": "Otomatik Fatura Ödeme Talimatlarınıza Toplamda 2.000 TL Worldpuan! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182947,
+  "text_chars": 2596,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

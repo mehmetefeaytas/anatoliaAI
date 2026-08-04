@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/ihtiyac-finansmani",
-  "scraped_at": "2026-07-30T18:39:39+00:00",
-  "content_hash": "748500f33587ed4f95b62c634b749e1cb31edf82103c6f61b823bf146eb7c2f7",
+  "scraped_at": "2026-08-03T16:50:18+00:00",
+  "content_hash": "4c1fe19d21924c957423233b52381b2e3b9750039ad8a8d7700fb31af81095ab",
   "collection_method": "live",
   "title": "İhtiyaç Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 478185,
-  "text_chars": 1863
+  "raw_bytes": 494852,
+  "text_chars": 1863,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

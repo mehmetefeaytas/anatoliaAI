@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/sermaye-piyasasi-urunleri/kira-sertifikasi-sukuk",
+  "scraped_at": "2026-08-03T17:42:47+00:00",
+  "content_hash": "4ce7f157666238d43d831852b1d4738080fc5856246fc64c2ae2368f12694311",
+  "collection_method": "live",
+  "title": "Kira Sertifikası (Sukuk) | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167707,
+  "text_chars": 2907,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

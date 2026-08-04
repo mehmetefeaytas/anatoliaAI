@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/odeme-hizmetleri-ve-nakit-yonetimi/odeme-hizmetleri/tapu-guvenilir-hesap",
+  "scraped_at": "2026-08-03T17:42:20+00:00",
+  "content_hash": "af78d7b64d54827b52506c7e77ad884e46f272de66e75f4f0552fd319f5a8010",
+  "collection_method": "live",
+  "title": "Tapu G&#252;venilir Hesap | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167202,
+  "text_chars": 2716,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

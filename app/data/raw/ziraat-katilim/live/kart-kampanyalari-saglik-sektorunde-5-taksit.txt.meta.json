@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/saglik-sektorunde-5-taksit",
+  "scraped_at": "2026-08-03T16:48:15+00:00",
+  "content_hash": "f0e2b9de34f0fba4364be75c492eb4fef2dc41ddf7995f3c690449257397d36f",
+  "collection_method": "live",
+  "title": "Sağlık Sektöründe +5 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489330,
+  "text_chars": 2544,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

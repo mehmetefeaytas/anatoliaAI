@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/kuveyt-turk-mobilden-musterimiz-olun-ozel-kur-firsatini-kacirmayin",
+  "scraped_at": "2026-08-03T16:33:44+00:00",
+  "content_hash": "78ca00ed3cd74a7c427abe124c558325da2e857d2a7b3d716e0d32880aa6c24f",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Mobil’den Müşterimiz Olun Özel Kur Fırsatını Kaçırmayın! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 139024,
+  "text_chars": 1401,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

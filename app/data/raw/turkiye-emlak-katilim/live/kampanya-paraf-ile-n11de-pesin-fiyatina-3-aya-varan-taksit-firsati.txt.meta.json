@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-n11de-pesin-fiyatina-3-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:58:37+00:00",
+  "content_hash": "47e7d782de8641d7e97cd2a7dbb2ea625d703036303176bb3a2a6e3d122e02b5",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165535,
+  "text_chars": 1348,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/gurgencler",
-  "scraped_at": "2026-07-30T18:46:22+00:00",
-  "content_hash": "44f9f132bf5eb1ac0c5a1afcc2006d45d1d9542c249b55b4100db93538a0ce2b",
+  "scraped_at": "2026-08-03T17:03:05+00:00",
+  "content_hash": "8e421b48db37a6046d63695a49501c3c5761dc61608074c225197aa26629c097",
   "collection_method": "live",
   "title": "G&#xFC;rgen&#xE7;ler | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507179,
-  "text_chars": 11440
+  "raw_bytes": 507176,
+  "text_chars": 11437,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

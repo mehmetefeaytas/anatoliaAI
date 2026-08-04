@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-vivensede-5-taksit-firsati",
+  "scraped_at": "2026-08-03T16:59:19+00:00",
+  "content_hash": "f269e25dddd5b8623b039cfee6815b4aabad1eab297d27aa34dfaa1138efd183",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165103,
+  "text_chars": 942,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

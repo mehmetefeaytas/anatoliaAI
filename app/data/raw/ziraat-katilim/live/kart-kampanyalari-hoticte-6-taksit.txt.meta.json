@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/hoticte-6-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:45:02+00:00",
+  "content_hash": "f67f6b07bd881e34be154da4554e7648a2d3991e7e24c82c2f570f3e20b74b23",
+  "collection_method": "live",
+  "title": "Hotiç’te 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487938,
+  "text_chars": 1893,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

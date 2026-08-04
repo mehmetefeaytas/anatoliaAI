@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/gayrinakdi-finansman/teminat-mektuplari",
-  "scraped_at": "2026-07-30T20:23:18+00:00",
-  "content_hash": "0bae92f5863b816087140427b36c21682f8dfde49a7bb789d7f75efa19cdf1c0",
+  "scraped_at": "2026-08-03T17:40:07+00:00",
+  "content_hash": "73e457296719af33a4b371ce7f5913c6547174d086d949f36612ccc7cc2d4a41",
   "collection_method": "live",
   "title": "Teminat Mektupları | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 156576,
-  "text_chars": 1319
+  "text_chars": 1319,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

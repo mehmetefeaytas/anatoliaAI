@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/kigilida-vade-farksiz-4-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:07+00:00",
+  "content_hash": "f9e4553143190958a75347455dbd8fbbb07def40db7c5b91e43d4ea39cf20130",
+  "collection_method": "live",
+  "title": "Kiğılı’da Vade Farksız 4 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130304,
+  "text_chars": 1016,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

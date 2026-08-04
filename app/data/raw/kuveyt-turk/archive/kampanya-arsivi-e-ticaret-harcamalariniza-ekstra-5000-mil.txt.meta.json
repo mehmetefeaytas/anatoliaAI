@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/e-ticaret-harcamalariniza-ekstra-5000-mil",
+  "scraped_at": "2026-08-03T17:53:34+00:00",
+  "content_hash": "5518d51296b4ca4a55ef6d53d01a1958ece3d8d1831808021cf520d9ebc5e49f",
+  "collection_method": "live",
+  "title": "E-Ticaret Harcamalarınıza Ekstra 5000 Mil! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132048,
+  "text_chars": 1489,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

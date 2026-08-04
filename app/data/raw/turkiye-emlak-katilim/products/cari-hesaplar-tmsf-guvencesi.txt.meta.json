@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/tmsf-guvencesi",
+  "scraped_at": "2026-08-03T17:42:14+00:00",
+  "content_hash": "dc4071d1afbc865b83289b2b2c0ff71403456efa835214dfe8ee1e98e242beb0",
+  "collection_method": "live",
+  "title": "TMSF G&#252;vencesi | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168203,
+  "text_chars": 3555,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

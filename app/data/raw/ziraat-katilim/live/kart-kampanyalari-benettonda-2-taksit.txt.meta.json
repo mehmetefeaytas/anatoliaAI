@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/benettonda-2-taksit",
+  "scraped_at": "2026-08-03T16:42:50+00:00",
+  "content_hash": "105c9b9e2f79f9e5b4d5287f2fb8b6a9cbc8eeae418097cdbe5e2efcd5ab801c",
+  "collection_method": "live",
+  "title": "Benetton&#039;da 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487965,
+  "text_chars": 1896,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

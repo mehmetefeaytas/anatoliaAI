@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/online-dil-okulunda-50-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:47:24+00:00",
+  "content_hash": "ebcee90caf6a6332d18b0191558a5a6f51b5b4b74a40797506e9f33dd6b79a33",
+  "collection_method": "live",
+  "title": "Online Dil Okulu&#039;nda %50 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 484183,
+  "text_chars": 2200,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

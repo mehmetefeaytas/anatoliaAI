@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/aile-karta-ozel-2000-tlye-varan-bankkart-lira-1",
+  "scraped_at": "2026-08-03T16:41:47+00:00",
+  "content_hash": "d96cd884d95148e68bfe545655a5305f171025fb97a03e285a132bd09d5478ba",
+  "collection_method": "live",
+  "title": "Aile Kart&#039;a Özel 2.000 TL&#039;ye varan Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 510141,
+  "text_chars": 3007,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

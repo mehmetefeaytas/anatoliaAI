@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/Sayfalar/default.aspx",
-  "scraped_at": "2026-07-30T20:11:41+00:00",
-  "content_hash": "91733a3301baa9715a8eebf6bb9a936185ba3fbc905cb767cf1ca20a0572bce8",
+  "scraped_at": "2026-08-03T17:27:30+00:00",
+  "content_hash": "50fb7dff2271e3983f0f95c31b7afa2cefd9a6ec2fadc78eaeecb745aa902cdd",
   "collection_method": "live",
   "title": "Sözleşmeler ve Formlar | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 391700,
-  "text_chars": 11981
+  "text_chars": 11981,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

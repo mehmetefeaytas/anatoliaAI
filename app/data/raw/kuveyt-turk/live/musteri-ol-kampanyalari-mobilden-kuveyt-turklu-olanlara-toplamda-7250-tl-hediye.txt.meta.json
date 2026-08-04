@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/mobilden-kuveyt-turklu-olanlara-toplamda-7250-tl-hediye",
+  "scraped_at": "2026-08-03T16:34:02+00:00",
+  "content_hash": "639ac3531f171cdf9291b3db7eceb9651b3618cc4351ea853d0dc8c626b2dfba",
+  "collection_method": "live",
+  "title": "Mobilden Kuveyt Türklü Olanlara Toplamda 7.250 TL Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 138892,
+  "text_chars": 2095,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar/hayatfinansla-islem-yaptikca-kazan",
-  "scraped_at": "2026-07-30T18:45:25+00:00",
-  "content_hash": "24214f4778c80300cb325af6f327fa6d2cb7ea7292920e4f2c0c21614021dd20",
+  "scraped_at": "2026-08-03T17:01:50+00:00",
+  "content_hash": "9ec72c509df5a346a94f0e083422ebc32fb4453f57efcdc0e4c01802c8684a6e",
   "collection_method": "browser",
   "title": "Hayat Finans’la İşlem Yaptıkça Kazan| Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 312712,
-  "text_chars": 8029
+  "raw_bytes": 312714,
+  "text_chars": 8029,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/yapi-sektoru-ve-iklimlendirme",
+  "scraped_at": "2026-08-03T16:41:02+00:00",
+  "content_hash": "814806cffbb70a06887a3d92c437c227730b4a6f74645bb11b6b9a3748350f29",
+  "collection_method": "live",
+  "title": "Yapı Sektörü ve İklimlendirme | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490124,
+  "text_chars": 1305,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

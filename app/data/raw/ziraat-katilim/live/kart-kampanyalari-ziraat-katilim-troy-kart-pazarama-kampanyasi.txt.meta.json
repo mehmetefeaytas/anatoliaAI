@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ziraat-katilim-troy-kart-pazarama-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:50:12+00:00",
+  "content_hash": "a3d64888e70428f9015ad7b01fd0b61a272201e210c6a53152107721fa7ff88d",
+  "collection_method": "live",
+  "title": "Ziraat Katılım TROY Kart &amp; Pazarama Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490771,
+  "text_chars": 3222,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/gayri-nakdi-finansman/referans-mektuplari",
-  "scraped_at": "2026-07-30T20:04:05+00:00",
-  "content_hash": "5a6cb91f9593fffc8812ec9e2a8297c90b841262647b5b2527666014076bedbe",
+  "scraped_at": "2026-08-03T17:17:54+00:00",
+  "content_hash": "0a047855b0c8548c2cac687afc95da4f5ef79c1564fbdae423c2bb54bbe3c4b3",
   "collection_method": "live",
   "title": "Referans Mektupları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 129977,
-  "text_chars": 1330
+  "raw_bytes": 130215,
+  "text_chars": 1330,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

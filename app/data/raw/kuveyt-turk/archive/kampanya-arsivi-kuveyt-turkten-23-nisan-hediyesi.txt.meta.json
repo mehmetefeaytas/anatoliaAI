@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-23-nisan-hediyesi",
+  "scraped_at": "2026-08-03T17:58:56+00:00",
+  "content_hash": "8d233b1ede63b57f5c8ecade67a7a2e1bf9d016961765d96da8252d47c8977a7",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten 23 Nisan Hediyesi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131247,
+  "text_chars": 2278,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

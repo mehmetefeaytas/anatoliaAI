@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-tuketici-urun-ve-hizmet-ucret-tablosu-4015.pdf",
+  "scraped_at": "2026-08-03T18:01:11+00:00",
+  "content_hash": "88c6d3d81bd44e2326dc67b9b52d1f4cbc1ee13f41943d55538bc28fdb68a707",
+  "collection_method": "pdf",
+  "title": "finansal tuketici urun ve hizmet ucret tablosu 4015",
+  "http_status": 200,
+  "raw_bytes": 327138,
+  "text_chars": 13682,
+  "pdf_pages": 1
+}

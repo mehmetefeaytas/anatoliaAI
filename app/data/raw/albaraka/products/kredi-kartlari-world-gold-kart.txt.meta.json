@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/world-gold-kart",
-  "scraped_at": "2026-07-30T20:09:29+00:00",
-  "content_hash": "e529254ba3b084717e3acf6f6f2de4c383cd3e6479a7bffe8f74d667b6521abc",
+  "scraped_at": "2026-08-03T17:24:17+00:00",
+  "content_hash": "60c3071c84898be6e316f114ed85cf531d06c6dbd0f279078f8e77335c21808d",
   "collection_method": "live",
   "title": "World Gold Kart - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 187260,
-  "text_chars": 3479
+  "raw_bytes": 187526,
+  "text_chars": 3479,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

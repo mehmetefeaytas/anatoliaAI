@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/kampus/kampusten-avantajli-kur-firsati",
+  "scraped_at": "2026-08-03T16:28:52+00:00",
+  "content_hash": "8835e6925d7b028f5848948ac78bf1f02aad4a2373a315a9331f7914bcc5cc7e",
+  "collection_method": "live",
+  "title": "Kampüs'ten Avantajlı Kur Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132176,
+  "text_chars": 2021,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

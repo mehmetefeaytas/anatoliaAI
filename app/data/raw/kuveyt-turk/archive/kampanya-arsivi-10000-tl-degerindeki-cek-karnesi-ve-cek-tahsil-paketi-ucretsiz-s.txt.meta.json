@@ -1,0 +1,15 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10000-tl-degerindeki-cek-karnesi-ve-cek-tahsil-paketi-ucretsiz-scr",
+  "scraped_at": "2026-08-03T17:51:22+00:00",
+  "content_hash": "399a9ab019db7a3a1bb03ae54c2b27291eea1aed9665bf9ec67b52cd6ee5a695",
+  "collection_method": "live",
+  "title": "10.000 TL Değerindeki Çek Karnesi Ve Çek Tahsil Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130634,
+  "text_chars": 1276,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

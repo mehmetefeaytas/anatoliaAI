@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/yolcu360ta-yurt-disi-arac-kiralamalarinizda-15-indirim",
+  "scraped_at": "2026-08-03T16:50:00+00:00",
+  "content_hash": "064ef70b5aca6d88ff91b4a19652f9507edc7e3b2349f556493fa5b196bfa133",
+  "collection_method": "live",
+  "title": "Yolcu360&#039;ta Yurt Dışı Araç Kiralamalarınızda %15 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490867,
+  "text_chars": 3433,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

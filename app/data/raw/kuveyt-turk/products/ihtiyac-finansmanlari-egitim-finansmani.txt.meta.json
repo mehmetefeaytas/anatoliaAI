@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/egitim-finansmani",
-  "scraped_at": "2026-07-30T20:05:33+00:00",
-  "content_hash": "651c7ae6f9a8712eaee2725b46ed8bddde89cc48a74061808143f819b9ce5832",
+  "scraped_at": "2026-08-03T17:19:21+00:00",
+  "content_hash": "5fb409bb5393053865e386b4ef950aad00c75821a7897d0375ab6e5bb1967759",
   "collection_method": "live",
   "title": "Eğitim Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 148476,
-  "text_chars": 4227
+  "raw_bytes": 148714,
+  "text_chars": 4227,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

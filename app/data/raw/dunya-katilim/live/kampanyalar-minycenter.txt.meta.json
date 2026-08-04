@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/minycenter",
-  "scraped_at": "2026-07-30T18:46:55+00:00",
-  "content_hash": "a55e566d03ac66b81ffb4bc21690f9306f8dcb97158418bd4ce34907eadb588c",
+  "scraped_at": "2026-08-03T17:03:35+00:00",
+  "content_hash": "f5a48f30dfcd2b67488536a840abe9c386a32e874472d257d3c1e45426d26d8c",
   "collection_method": "live",
   "title": "Minycenter | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 504923,
-  "text_chars": 9483
+  "text_chars": 9483,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

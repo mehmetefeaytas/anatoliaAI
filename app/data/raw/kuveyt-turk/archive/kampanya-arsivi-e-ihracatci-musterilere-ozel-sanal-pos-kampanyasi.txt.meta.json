@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/e-ihracatci-musterilere-ozel-sanal-pos-kampanyasi",
+  "scraped_at": "2026-08-03T17:53:22+00:00",
+  "content_hash": "2e0c5de3744640021ecc1682520115c64726458447aa2afdb88ec17eed79d4cd",
+  "collection_method": "live",
+  "title": "E-İhracatçı Müşterilere Özel Sanal Pos Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133110,
+  "text_chars": 1796,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

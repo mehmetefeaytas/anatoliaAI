@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/chakrada-6-taksit-0",
+  "scraped_at": "2026-08-03T16:42:59+00:00",
+  "content_hash": "be75383b3dc6704003c02d765428ee8e828fe4d0277a195fbc997517db9df84c",
+  "collection_method": "live",
+  "title": "Chakra&#039;da 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488043,
+  "text_chars": 1698,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

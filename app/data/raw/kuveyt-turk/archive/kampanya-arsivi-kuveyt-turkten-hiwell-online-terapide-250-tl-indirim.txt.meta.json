@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-hiwell-online-terapide-250-tl-indirim",
+  "scraped_at": "2026-08-03T17:59:32+00:00",
+  "content_hash": "870c396a1f30744543f313f5c379df370f41769362e6a5376191ad853d7ee383",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten Hiwell Online Terapide 250 TL İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130199,
+  "text_chars": 985,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/yakinini-davet-et-kampanyasi",
-  "scraped_at": "2026-07-30T18:35:22+00:00",
-  "content_hash": "68ce5ce8bf904ee8a63448f67d4b5a59b5cc014c6651be3b0bffcc5853aca429",
+  "scraped_at": "2026-08-03T16:36:54+00:00",
+  "content_hash": "a10b8d3ee33b097710e914039d56eb660e46e34241763188645bafb9edac60d2",
   "collection_method": "live",
   "title": "Yakınını Davet Et Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182789,
-  "text_chars": 2864
+  "raw_bytes": 183055,
+  "text_chars": 2864,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

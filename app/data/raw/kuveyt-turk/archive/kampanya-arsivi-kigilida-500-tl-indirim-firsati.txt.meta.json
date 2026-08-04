@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kigilida-500-tl-indirim-firsati",
+  "scraped_at": "2026-08-03T17:56:59+00:00",
+  "content_hash": "a27b5faf753d21321b429d0419ca4da66328d3db33563f0095606b7444a23766",
+  "collection_method": "live",
+  "title": "Kiğılı'da 500 TL İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130023,
+  "text_chars": 1184,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/odemeler-ve-hizmetler/hizmetler/doviz-transferi-swift",
-  "scraped_at": "2026-07-30T20:29:37+00:00",
-  "content_hash": "bcd0db457e667528d238adea25c32860fabc87c32aefeb2e03dc14a6c76c2000",
+  "scraped_at": "2026-08-03T17:47:29+00:00",
+  "content_hash": "4f935e531ee32dbd2aa094013a5e0c6ca8d1450a788a6d940c2dfcaa1047cab0",
   "collection_method": "live",
   "title": "D&#xF6;viz Transferi (SWIFT) | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499084,
-  "text_chars": 9571
+  "text_chars": 9571,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

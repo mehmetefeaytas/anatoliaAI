@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-kampuslulere-ido-biletleri-sadece-20-tl",
+  "scraped_at": "2026-08-03T17:57:47+00:00",
+  "content_hash": "5a7e0fbdb61260ad18aac49d892dccf54b1dfcb4ebc0559599e99e477d77dba6",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Kampüslülere İDO Biletleri Sadece 20 TL! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131430,
+  "text_chars": 2004,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

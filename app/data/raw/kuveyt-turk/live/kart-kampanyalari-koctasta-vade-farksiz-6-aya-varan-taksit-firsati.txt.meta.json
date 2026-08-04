@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/koctasta-vade-farksiz-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:13+00:00",
+  "content_hash": "2c3229a6c6cffc671b25dcceafab40c9b73459276b84823906548da3886521b5",
+  "collection_method": "live",
+  "title": "Koçtaş’ta Vade Farksız 6 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129059,
+  "text_chars": 1003,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

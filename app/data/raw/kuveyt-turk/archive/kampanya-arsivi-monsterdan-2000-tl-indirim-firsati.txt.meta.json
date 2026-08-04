@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/monsterdan-2000-tl-indirim-firsati",
+  "scraped_at": "2026-08-03T18:00:53+00:00",
+  "content_hash": "6f2573f032f0d80f3339fb6a46a15dbbccc96473a36dcfe242abbf05104f078f",
+  "collection_method": "live",
+  "title": "Monster'dan 2000 TL İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130926,
+  "text_chars": 1328,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

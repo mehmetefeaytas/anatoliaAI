@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/fiziki-altin",
-  "scraped_at": "2026-07-30T18:46:19+00:00",
-  "content_hash": "1edb29863880af19b80cb945cef55f434d8744bc20157af71e7386e086324c1a",
+  "scraped_at": "2026-08-03T17:03:02+00:00",
+  "content_hash": "ecaeda5971874b540591f46c46145f458ec734c111105a0d10f84578cd13fc08",
   "collection_method": "live",
   "title": "Fiziki Alt&#x131;n | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 510556,
-  "text_chars": 12692
+  "text_chars": 12692,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/machkada-4-taksit",
+  "scraped_at": "2026-08-03T16:46:26+00:00",
+  "content_hash": "1daff8f277636a3ea42719bf470fcd0474a1932be0f0ad31f8c06f6929c356e4",
+  "collection_method": "live",
+  "title": "Machka’da 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488067,
+  "text_chars": 1921,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

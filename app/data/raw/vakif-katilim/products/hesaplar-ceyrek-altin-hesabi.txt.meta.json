@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/ceyrek-altin-hesabi",
+  "scraped_at": "2026-08-03T17:37:24+00:00",
+  "content_hash": "2dc089fb997b90373e9109acf4043655b2cc2a33630eddfe5c88ac17749d274b",
+  "collection_method": "live",
+  "title": "&#199;eyrek Altın Hesabı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 136048,
+  "text_chars": 2692,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

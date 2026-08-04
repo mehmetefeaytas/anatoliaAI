@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ilk-ek-kredi-kartiniza-1000-tl-bankkart-lira-1",
+  "scraped_at": "2026-08-03T16:45:24+00:00",
+  "content_hash": "34dc969fe67cfd5de1901c4e7ded1caba1aa8f355bae1ae1449df9ff9634b23d",
+  "collection_method": "live",
+  "title": "İlk Ek Kredi Kartınıza 1.000 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 510576,
+  "text_chars": 3177,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

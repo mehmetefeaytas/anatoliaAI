@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/sigorta-kampanyalari.aspx",
-  "scraped_at": "2026-07-30T18:36:56+00:00",
-  "content_hash": "eb550c952e2a537bc946a4a4046883b6193fe9471858c6548568f7cf45f4b262",
+  "scraped_at": "2026-08-03T16:38:32+00:00",
+  "content_hash": "c873e4d78f62d203b31da04f3430403c9a066a7311a61dde9de6d6a048344e59",
   "collection_method": "live",
   "title": "Sigorta Kampanyaları | Kampanyalar | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 95877,
-  "text_chars": 6000
+  "text_chars": 6000,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

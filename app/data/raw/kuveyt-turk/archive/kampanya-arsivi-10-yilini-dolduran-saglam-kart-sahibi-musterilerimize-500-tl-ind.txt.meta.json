@@ -1,0 +1,15 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10-yilini-dolduran-saglam-kart-sahibi-musterilerimize-500-tl-indirim-scr",
+  "scraped_at": "2026-08-03T17:51:13+00:00",
+  "content_hash": "3f41a2d39b21965beac97ce1d2cbcf36a0c97ac507ecf4039051a428c6904217",
+  "collection_method": "live",
+  "title": "10. Yılını Dolduran Sağlam Kart Sahibi Müşterilerimize 500 TL İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130071,
+  "text_chars": 799,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

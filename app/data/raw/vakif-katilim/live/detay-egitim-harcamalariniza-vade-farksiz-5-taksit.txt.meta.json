@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/egitim-harcamalariniza-vade-farksiz-5-taksit",
-  "scraped_at": "2026-07-30T18:40:31+00:00",
-  "content_hash": "68ce19febb1cf0a29f93633852212819b9fa6dd6be4e76f24d69dbe4378d11fc",
+  "scraped_at": "2026-08-03T16:55:37+00:00",
+  "content_hash": "f6ac44845ba193b30d3b9912a66580eacdf819d2d598c77fe4a037b5f159ce8d",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139338,
-  "text_chars": 1646
+  "raw_bytes": 139134,
+  "text_chars": 1624,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

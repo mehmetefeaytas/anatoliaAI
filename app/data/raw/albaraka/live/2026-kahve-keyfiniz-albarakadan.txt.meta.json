@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/kahve-keyfiniz-albarakadan",
-  "scraped_at": "2026-07-30T18:35:40+00:00",
-  "content_hash": "c2ed2c7d367560faae570aeade7ac2f9fa289c980c5baade80c86ebb89ecf53a",
+  "scraped_at": "2026-08-03T16:35:14+00:00",
+  "content_hash": "c23988028d73cc8da2e7de0e81e4305bdb3fa2f030ad3c5891608049f774e74b",
   "collection_method": "live",
   "title": "Kahve Keyfiniz Albaraka’dan! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179588,
-  "text_chars": 1292
+  "raw_bytes": 179854,
+  "text_chars": 1292,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

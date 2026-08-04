@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/yurt-disi-cikis-harcinda-iade-avantaji",
+  "scraped_at": "2026-08-03T16:28:13+00:00",
+  "content_hash": "5f6f15e7aaa196715dccabd1b40307cb54353a84ed4587db0a17d951e6626e1e",
+  "collection_method": "live",
+  "title": "Yurt Dışı Çıkış Harcında İade Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131117,
+  "text_chars": 2692,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

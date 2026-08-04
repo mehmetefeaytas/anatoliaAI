@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/jumboda-5-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:45:35+00:00",
+  "content_hash": "1250ae4852429463a0733ea4ba44b4e761d089da81455a58235d977068f31122",
+  "collection_method": "live",
+  "title": "Jumbo’da 5 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488090,
+  "text_chars": 1928,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

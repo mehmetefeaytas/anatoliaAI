@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/arac-finansmani",
-  "scraped_at": "2026-07-30T20:05:15+00:00",
-  "content_hash": "f66d596736f3dcdfba0cecfcf3a64562ea3ed8c9fa074d594d72e5b283be8b09",
+  "scraped_at": "2026-08-03T17:19:04+00:00",
+  "content_hash": "1565ccc44708cf194a50f9084b3a82eaab9f07579c6eb26f41404141756b5386",
   "collection_method": "live",
   "title": "Araç Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 154717,
-  "text_chars": 5739
+  "raw_bytes": 154955,
+  "text_chars": 5739,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

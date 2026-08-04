@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/kampus/egitim-harcamalarinda-saglam-avantaj-5-taksit-firsati",
+  "scraped_at": "2026-08-03T16:28:49+00:00",
+  "content_hash": "c4bcb36b3e3633d22a7ee06b52b7b12c17c1a414743ae97e7eb23630958d36c4",
+  "collection_method": "live",
+  "title": "Eğitim Harcamalarında Sağlam Avantaj: 5 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132378,
+  "text_chars": 2342,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

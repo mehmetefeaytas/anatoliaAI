@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mobilden-vakif-katilimli-olanlara-modanisada-200-tl-hediye",
-  "scraped_at": "2026-07-30T18:41:46+00:00",
-  "content_hash": "7d7ca2d4568a580e876fcf67235f50c2d71160de663a5277ca9408c21c21b675",
+  "scraped_at": "2026-08-03T16:53:10+00:00",
+  "content_hash": "8e1a7b369b33264b5c5aaa2a7d3894d4a10a31741984aad86a7d57559b4d13db",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139245,
-  "text_chars": 1418
+  "raw_bytes": 139041,
+  "text_chars": 1396,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

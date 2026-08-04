@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/weltewde-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:10+00:00",
+  "content_hash": "8e64bec755625b568251eca05ffd01adea2ad71152577e67f41f93ff10b4db65",
+  "collection_method": "live",
+  "title": "Weltew’de 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130108,
+  "text_chars": 984,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

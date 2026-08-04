@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2023-06/Ticari%20Elektronik%20%C4%B0leti%20G%C3%B6nderim%20Metni.pdf",
+  "scraped_at": "2026-08-03T17:09:43+00:00",
+  "content_hash": "6224f7a16667e675ec9d56fdd898f7b82ef3beb54db86ed409d0ff6c77e2f78b",
+  "collection_method": "pdf",
+  "title": "Ticari Elektronik İleti Gönderim Metni",
+  "http_status": 200,
+  "raw_bytes": 308614,
+  "text_chars": 461,
+  "pdf_pages": 1
+}

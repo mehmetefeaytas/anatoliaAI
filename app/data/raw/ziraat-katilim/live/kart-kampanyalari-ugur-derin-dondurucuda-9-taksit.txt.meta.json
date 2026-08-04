@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ugur-derin-dondurucuda-9-taksit",
+  "scraped_at": "2026-08-03T16:49:39+00:00",
+  "content_hash": "b33008026e149ff8ac254e970520e7972ffa40d44685a76bb9257cda23792204",
+  "collection_method": "live",
+  "title": "Uğur Derin Dondurucu’da 9 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486649,
+  "text_chars": 1881,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

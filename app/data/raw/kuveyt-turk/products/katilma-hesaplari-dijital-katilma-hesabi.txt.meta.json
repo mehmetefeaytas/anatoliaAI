@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/dijital-katilma-hesabi",
+  "scraped_at": "2026-08-03T17:20:31+00:00",
+  "content_hash": "aeb8c8b0ee4c0ec43770f4c4f7249ac79a2701679728f6abb994c9092ddcb28c",
+  "collection_method": "live",
+  "title": "Dijital Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 153172,
+  "text_chars": 4455,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

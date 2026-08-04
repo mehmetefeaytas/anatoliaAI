@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/arsa-finansmani.aspx",
-  "scraped_at": "2026-07-30T20:11:02+00:00",
-  "content_hash": "641fbb302a8c406367dda0b1b59078ae4081326d4bbf27d1bcf25737e61167a9",
+  "scraped_at": "2026-08-03T17:26:51+00:00",
+  "content_hash": "ba83214dedb9d2052e069e839cf199b00e57b926604aed5310d50033b9c3a218",
   "collection_method": "live",
   "title": "Arsa Finansmanı - Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 106481,
-  "text_chars": 9899
+  "text_chars": 9899,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/gayri-nakdi-finansman/dogrudan-borclandirma-sistemi",
-  "scraped_at": "2026-07-30T20:03:57+00:00",
-  "content_hash": "6874e583ec5eb92ff70e2bdfb84a12fc5d21bec9c0bce40e816efda18c572c78",
+  "scraped_at": "2026-08-03T17:17:48+00:00",
+  "content_hash": "325d2ee75f48e3e0680ae50378e8382fee1764366cb1ed558297a3e3b36b02a1",
   "collection_method": "live",
   "title": "Doğrudan Borçlandırma Sistemi | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132993,
-  "text_chars": 3745
+  "raw_bytes": 133231,
+  "text_chars": 3745,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/mondihomeda-5-taksit",
+  "scraped_at": "2026-08-03T16:47:08+00:00",
+  "content_hash": "2d6bc1e189e05908f874567ad43ec450687928693c3d007ee960831bc46e5ce4",
+  "collection_method": "live",
+  "title": "Mondihome&#039;da 5 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488208,
+  "text_chars": 1952,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

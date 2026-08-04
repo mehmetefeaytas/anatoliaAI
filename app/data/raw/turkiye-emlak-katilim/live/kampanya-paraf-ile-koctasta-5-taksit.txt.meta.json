@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-koctasta-5-taksit",
+  "scraped_at": "2026-08-03T16:58:31+00:00",
+  "content_hash": "728b98b48d29219c84669ca4b8c4a76853393e67e18c42d915f5594fdad67e4a",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165214,
+  "text_chars": 1017,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

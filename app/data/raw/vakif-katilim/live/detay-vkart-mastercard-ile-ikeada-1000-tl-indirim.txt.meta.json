@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-mastercard-ile-ikeada-1000-tl-indirim",
+  "scraped_at": "2026-08-03T16:52:07+00:00",
+  "content_hash": "013af0d5273040887650d21dd952f7a4537bd8b1aa227c603fa7a617f6f4cf1e",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139585,
+  "text_chars": 2199,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

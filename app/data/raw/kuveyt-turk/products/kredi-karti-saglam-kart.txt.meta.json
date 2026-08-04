@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/kartlar/kredi-karti/saglam-kart",
+  "scraped_at": "2026-08-03T17:20:58+00:00",
+  "content_hash": "ac2149e5d8cee3f407667c92b0a86efe7fd819087f1a7155700d5cb0b5dc199c",
+  "collection_method": "live",
+  "title": "Sağlam Kart | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 150639,
+  "text_chars": 12379,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

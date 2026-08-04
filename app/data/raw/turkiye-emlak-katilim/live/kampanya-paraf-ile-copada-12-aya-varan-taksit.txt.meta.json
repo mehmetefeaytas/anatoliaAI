@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-copada-12-aya-varan-taksit",
+  "scraped_at": "2026-08-03T16:57:34+00:00",
+  "content_hash": "2c82485237399c8b011b7ac4778a4678c10c4b401f109ea37a5dd4b76e8ff98a",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165469,
+  "text_chars": 1207,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

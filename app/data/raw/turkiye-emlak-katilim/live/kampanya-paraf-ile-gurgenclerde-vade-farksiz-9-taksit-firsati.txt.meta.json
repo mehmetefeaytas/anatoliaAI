@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-gurgenclerde-vade-farksiz-9-taksit-firsati",
-  "scraped_at": "2026-07-30T18:44:00+00:00",
-  "content_hash": "a71f477d57aaa386583ef979a427ca120996c3d2bcafe99a9d18247a5550503d",
+  "scraped_at": "2026-08-03T16:58:10+00:00",
+  "content_hash": "91e9aaf65839b12a035dd25cc855f63801a848da5911d2bd9b20098c3f164dd2",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 167275,
-  "text_chars": 2980
+  "raw_bytes": 167400,
+  "text_chars": 3094,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

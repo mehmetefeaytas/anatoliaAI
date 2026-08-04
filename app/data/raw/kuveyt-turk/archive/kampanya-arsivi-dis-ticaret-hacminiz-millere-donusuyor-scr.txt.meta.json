@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dis-ticaret-hacminiz-millere-donusuyor-scr",
+  "scraped_at": "2026-08-03T17:52:58+00:00",
+  "content_hash": "a31b752a83090bc48bbf4ffce21e47e260ee28164604071fc4aad44e448e2355",
+  "collection_method": "live",
+  "title": "Dış Ticaret Hacminiz Millere Dönüşüyor! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131441,
+  "text_chars": 2080,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

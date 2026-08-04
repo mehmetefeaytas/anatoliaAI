@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/evlenecek-olan-veya-yeni-evli-ciftlere-kuveyt-turkten-mujde-evlilik-paketi",
+  "scraped_at": "2026-08-03T16:33:53+00:00",
+  "content_hash": "49de8ce5b0da9ae03946af7ac37883f55f18c58a310c0c5bc55f8c38cc0bac8c",
+  "collection_method": "live",
+  "title": "Evlenecek Olan veya Yeni Evli Çiftlere Kuveyt Türk’ten Müjde Evlilik Paketi! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 157019,
+  "text_chars": 19099,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

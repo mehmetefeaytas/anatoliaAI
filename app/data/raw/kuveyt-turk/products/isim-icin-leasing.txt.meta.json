@@ -1,11 +1,14 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing",
-  "scraped_at": "2026-07-30T20:02:06+00:00",
-  "content_hash": "46e3acdeb95c50dd79a52ac2eb7bec76821c1b8d955cdb0ebb53f23b8c741cba",
+  "scraped_at": "2026-08-03T17:15:57+00:00",
+  "content_hash": "f91bd37c063952fe55b4add6fdcae56ae4440ef9508de546a31d06390c3a0dd1",
   "collection_method": "live",
   "title": "Leasing | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 136288,
-  "text_chars": 1269
+  "raw_bytes": 136526,
+  "text_chars": 1269,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

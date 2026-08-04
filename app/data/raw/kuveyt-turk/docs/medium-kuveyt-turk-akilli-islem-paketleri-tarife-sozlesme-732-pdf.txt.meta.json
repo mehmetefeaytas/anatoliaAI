@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kuveyt-turk-akilli-islem-paketleri-tarife-sozlesme-732.pdf",
+  "scraped_at": "2026-08-03T18:01:41+00:00",
+  "content_hash": "0d1286d9a07c9545e44f7ad8fbb9f446629b1204b712fd0c1c4c9a51f309cc2f",
+  "collection_method": "pdf",
+  "title": "kuveyt turk akilli islem paketleri tarife sozlesme 732",
+  "http_status": 200,
+  "raw_bytes": 131757,
+  "text_chars": 7233,
+  "pdf_pages": 2
+}

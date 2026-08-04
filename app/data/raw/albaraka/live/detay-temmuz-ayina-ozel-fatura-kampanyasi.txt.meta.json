@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/temmuz-ayina-ozel-fatura-kampanyasi",
-  "scraped_at": "2026-07-30T18:35:10+00:00",
-  "content_hash": "14e6d5802952dc42483cb20d715bef738d9a50e590d30d60b6ae10830c449465",
+  "scraped_at": "2026-08-03T16:36:42+00:00",
+  "content_hash": "2e6bf467b6406430a017e5e6cc8b01c66423d36cf935d3406b43ed1ed371821d",
   "collection_method": "live",
   "title": "Temmuz Ayına Özel Fatura Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182180,
-  "text_chars": 2264
+  "raw_bytes": 182504,
+  "text_chars": 2264,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

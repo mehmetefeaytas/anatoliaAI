@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/yenilio",
+  "scraped_at": "2026-08-03T17:04:26+00:00",
+  "content_hash": "91a393b239d662d6ba108a7e2148f507acd31358875fb0fc4e59ece691bf59d0",
+  "collection_method": "live",
+  "title": "Yenilio | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 505383,
+  "text_chars": 9892,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

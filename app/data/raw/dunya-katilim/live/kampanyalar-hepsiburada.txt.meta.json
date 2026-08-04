@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/hepsiburada",
-  "scraped_at": "2026-07-30T18:46:25+00:00",
-  "content_hash": "918e132a113760aed1a5cd76639a7cdf2bbd4ea37270b88c79d5312156689f1d",
+  "scraped_at": "2026-08-03T17:03:08+00:00",
+  "content_hash": "5b1c2c0eeb57b944e4ecb554ca9db0c1ca3946c36fd88924bda1cad6e1d118d6",
   "collection_method": "live",
   "title": "Hepsiburada | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 506962,
-  "text_chars": 11210
+  "raw_bytes": 506959,
+  "text_chars": 11207,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

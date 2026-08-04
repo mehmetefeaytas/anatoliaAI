@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/metatechtrde-pesin-fiyatina-9-aya-varan-taksit-ve-6000-tlye-varan-parafpara",
-  "scraped_at": "2026-07-30T18:43:09+00:00",
-  "content_hash": "1e0dcb96f2e1cb568891c7bbb05d1a81d7f6786b4547068259cd6468a3cfbf8c",
+  "scraped_at": "2026-08-03T16:57:06+00:00",
+  "content_hash": "8df211b83f7eb0c3cbace6a81c9fa24ba68f3a19b50cd50528a36d93d2163690",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 169180,
-  "text_chars": 3582
+  "raw_bytes": 167180,
+  "text_chars": 2690,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/katilma-hesaplari/Sayfalar/e-katilma-hesabi.aspx",
-  "scraped_at": "2026-07-30T20:11:50+00:00",
-  "content_hash": "c11336832f6f3ffbecd7a8ca659d79f949debfe44eddfb92106f3098bc10af74",
+  "scraped_at": "2026-08-03T17:27:39+00:00",
+  "content_hash": "2d36f71da9e9949a92207fb3c058b5c4a82cfc48d5903d72aeb4250e93991290",
   "collection_method": "live",
   "title": "Mobilden Vadeli Hesap Aç: e-Katılma Hesabı | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 116018,
-  "text_chars": 10307
+  "text_chars": 10307,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

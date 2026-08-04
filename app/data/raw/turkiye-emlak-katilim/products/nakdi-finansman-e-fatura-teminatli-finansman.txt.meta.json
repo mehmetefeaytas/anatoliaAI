@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/e-fatura-teminatli-finansman",
-  "scraped_at": "2026-07-30T20:23:33+00:00",
-  "content_hash": "f4f8612eeb217abdfd3dbbcd1e955dab8ca336236e6c4eb2e82000be633af19b",
+  "scraped_at": "2026-08-03T17:40:22+00:00",
+  "content_hash": "d23281d3177311f0ff25212d92daec6d98865f7aadca957d2f64f5927e82ab5b",
   "collection_method": "live",
   "title": "E-Fatura Teminatlı Finansman | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166500,
-  "text_chars": 1839
+  "text_chars": 1839,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

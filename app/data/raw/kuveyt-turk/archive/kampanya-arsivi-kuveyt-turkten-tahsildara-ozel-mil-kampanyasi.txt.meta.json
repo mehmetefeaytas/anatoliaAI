@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-tahsildara-ozel-mil-kampanyasi",
+  "scraped_at": "2026-08-03T17:59:50+00:00",
+  "content_hash": "d35e83d5ad87e2fb0eb72ebb595408aac9dbec6ca58ad0354b743eab57f45fc5",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten Tahsildar'a Özel Mil Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130011,
+  "text_chars": 994,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

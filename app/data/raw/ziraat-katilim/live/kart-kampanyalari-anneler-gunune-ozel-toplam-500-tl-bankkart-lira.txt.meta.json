@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/anneler-gunune-ozel-toplam-500-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:17+00:00",
+  "content_hash": "290a5ff7d7f5907ffbdd3906896c6f82005853066640476bdf43e1ba07ec1057",
+  "collection_method": "live",
+  "title": "Anneler Günü&#039;ne Özel Toplam 500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490128,
+  "text_chars": 2847,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

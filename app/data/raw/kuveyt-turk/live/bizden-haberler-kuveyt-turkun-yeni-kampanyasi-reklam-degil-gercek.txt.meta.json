@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/hakkimizda/kuveyt-turk-hakkinda/bizden-haberler/kuveyt-turkun-yeni-kampanyasi-reklam-degil-gercek",
+  "scraped_at": "2026-08-03T16:34:29+00:00",
+  "content_hash": "206b56a8d7e7a4cb314cc6ea3549202a18ac09c98d6244fe85bb477ab8e2aa20",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ün yeni kampanyası reklam değil, gerçek! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 127487,
+  "text_chars": 1801,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

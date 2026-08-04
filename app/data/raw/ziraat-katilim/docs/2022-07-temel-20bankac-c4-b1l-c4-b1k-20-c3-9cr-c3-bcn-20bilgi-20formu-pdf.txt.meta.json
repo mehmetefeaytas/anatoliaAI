@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2022-07/Temel%20Bankac%C4%B1l%C4%B1k%20%C3%9Cr%C3%BCn%20Bilgi%20Formu.pdf",
+  "scraped_at": "2026-08-03T17:09:34+00:00",
+  "content_hash": "d2d389dea57c27bd66cafb4da904d0e1e5e8ab91042fd289512840b8c0ed4cc2",
+  "collection_method": "pdf",
+  "title": "Temel Bankacılık Ürün Bilgi Formu",
+  "http_status": 200,
+  "raw_bytes": 146439,
+  "text_chars": 2307,
+  "pdf_pages": 1
+}

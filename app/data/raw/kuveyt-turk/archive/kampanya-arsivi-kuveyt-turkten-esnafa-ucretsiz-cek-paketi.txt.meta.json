@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-esnafa-ucretsiz-cek-paketi",
+  "scraped_at": "2026-08-03T17:59:20+00:00",
+  "content_hash": "b899aeb0891c42c9ee3f545915660a06f0dfd02b0c73371ee6f9cc7c75ae35be",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten Esnafa Ücretsiz Çek Paketi! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132477,
+  "text_chars": 2931,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

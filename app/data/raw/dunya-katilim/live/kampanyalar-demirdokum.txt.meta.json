@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/demirdokum",
-  "scraped_at": "2026-07-30T18:46:05+00:00",
-  "content_hash": "821cf23888e463f704d54296abf7ecdb4cee95060e05bc82c5e5d49be31ae1fe",
+  "scraped_at": "2026-08-03T17:02:47+00:00",
+  "content_hash": "28bd836fc86a09de72e9176eae7d4778a806f94f793aba902542bb7aea749a22",
   "collection_method": "live",
   "title": "Demird&#xF6;k&#xFC;m | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 505230,
-  "text_chars": 9702
+  "raw_bytes": 505227,
+  "text_chars": 9699,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

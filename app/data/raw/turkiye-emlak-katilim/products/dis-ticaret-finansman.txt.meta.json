@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/finansman",
-  "scraped_at": "2026-07-30T20:21:45+00:00",
-  "content_hash": "c5ff64577f746b39e5a060b8330fafb81316c5db6187281a2d352aa79606d104",
+  "scraped_at": "2026-08-03T17:38:34+00:00",
+  "content_hash": "b1c3f5ee779c80ee638a75a44e28d1afdf424629e6df4cd89fe8f5ab811d677d",
   "collection_method": "live",
   "title": "Finansman | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 157769,
-  "text_chars": 521
+  "text_chars": 521,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

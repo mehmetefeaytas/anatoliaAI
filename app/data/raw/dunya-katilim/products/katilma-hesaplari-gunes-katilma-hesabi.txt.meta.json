@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/katilma-hesaplari/gunes-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:29:10+00:00",
-  "content_hash": "1cbc0b369e8cab68daebffe6d4c3a38aecc68d95dd4d4167c0db65e37956ddc2",
+  "scraped_at": "2026-08-03T17:47:02+00:00",
+  "content_hash": "c684d0cc3aad1c712fb1db7640ec492e04fdda0d8610a5e9911254c1d9e5c493",
   "collection_method": "live",
   "title": "G&#xFC;ne&#x15F; Kat&#x131;lma Hesab&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 514806,
-  "text_chars": 10634
+  "text_chars": 10634,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

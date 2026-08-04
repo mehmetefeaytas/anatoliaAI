@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/faik-sonmezde-3-taksit",
+  "scraped_at": "2026-08-03T16:44:23+00:00",
+  "content_hash": "771944d8f4e93216ff79242fa159bb4d7562155a4a34a0a30103e9515ee6f2e4",
+  "collection_method": "live",
+  "title": "Faik Sönmez’de 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488207,
+  "text_chars": 1934,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

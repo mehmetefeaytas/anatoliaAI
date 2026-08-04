@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/kadin-girisimci-destek-finansmani",
-  "scraped_at": "2026-07-30T20:23:51+00:00",
-  "content_hash": "b68c74be2251d90f4959278628dc19752e0787d5f425431168644c39a1088bd8",
+  "scraped_at": "2026-08-03T17:40:40+00:00",
+  "content_hash": "962639c1bd7e7d06f2e3441edde67f803f095baf192aff4bb709361fa3b41af4",
   "collection_method": "live",
   "title": "Kadın Girişimci Destek Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 164375,
-  "text_chars": 1404
+  "text_chars": 1404,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

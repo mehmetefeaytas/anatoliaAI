@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-daikinde-pesin-fiyatina-12-taksit-ve-3000-tl-parafpara",
+  "scraped_at": "2026-08-03T16:57:37+00:00",
+  "content_hash": "d92c360ccd5e6be874dda5d896e1e2f1718efc41aac93584b3f80fee7f78b095",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167295,
+  "text_chars": 2450,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

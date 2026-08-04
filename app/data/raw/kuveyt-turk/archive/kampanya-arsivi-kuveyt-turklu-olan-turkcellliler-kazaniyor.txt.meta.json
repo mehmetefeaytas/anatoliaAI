@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turklu-olan-turkcellliler-kazaniyor",
+  "scraped_at": "2026-08-03T17:58:35+00:00",
+  "content_hash": "fff564ab0d2eb8199be79754bb4b9d5c2660864b0b6f1004a8122851550eb848",
+  "collection_method": "live",
+  "title": "Kuveyt Türklü Olan Turkcell’liler Kazanıyor | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130157,
+  "text_chars": 1102,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

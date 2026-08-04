@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/mielede-6-taksit",
+  "scraped_at": "2026-08-03T16:46:47+00:00",
+  "content_hash": "856cab68db89186fb68386476ab47470c8048b6b8aa54d2d401f6d1433df17ee",
+  "collection_method": "live",
+  "title": "Miele&#039;de 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486589,
+  "text_chars": 1762,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

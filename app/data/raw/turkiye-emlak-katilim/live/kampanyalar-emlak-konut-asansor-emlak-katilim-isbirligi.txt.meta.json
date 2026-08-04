@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/kampanyalar/emlak-konut-asansor-emlak-katilim-isbirligi",
-  "scraped_at": "2026-07-30T18:42:15+00:00",
-  "content_hash": "bf830ac5f23a11b7ba6035972b805ebb5057872805edb3d61c2aff91c65e782d",
+  "scraped_at": "2026-08-03T16:56:09+00:00",
+  "content_hash": "e21b2927e8f34a24143a9a9c8218e8f69b9acd9a093401d7f6a33a9d0744a375",
   "collection_method": "live",
   "title": "Emlak Konut Asans&#246;r – Emlak Katılım İşbirliği | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 163707,
-  "text_chars": 670
+  "text_chars": 670,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

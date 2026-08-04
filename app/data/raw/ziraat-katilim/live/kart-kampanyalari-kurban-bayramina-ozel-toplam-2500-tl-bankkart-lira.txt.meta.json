@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/kurban-bayramina-ozel-toplam-2500-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:46:17+00:00",
+  "content_hash": "cecb47418888ee23c7a24bf06caf7b4ad5156579e64b1b6956c7352fbe1215eb",
+  "collection_method": "live",
+  "title": "Kurban Bayramı’na Özel Toplam 2.500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490547,
+  "text_chars": 2893,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/incir-katilma-hesabi",
+  "scraped_at": "2026-08-03T17:20:40+00:00",
+  "content_hash": "f0445d41cc7432392894400b5a67fc367db9b179c5a53a8f16cd6963fe63a6ad",
+  "collection_method": "live",
+  "title": "İncir Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134133,
+  "text_chars": 3185,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

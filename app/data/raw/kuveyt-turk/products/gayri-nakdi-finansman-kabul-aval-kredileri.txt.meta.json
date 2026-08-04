@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/gayri-nakdi-finansman/kabul-aval-kredileri",
-  "scraped_at": "2026-07-30T20:04:00+00:00",
-  "content_hash": "9617a8a457476bcd5b7eb0dcfcd7dd0600dc8910225dd2740a4be13a6ea6ad3d",
+  "scraped_at": "2026-08-03T17:17:51+00:00",
+  "content_hash": "f95bf4d22aff098a4ef9465e5d229e337f315d9f2529587150ef071034144c67",
   "collection_method": "live",
   "title": "Kabul-Aval Kredileri | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 130788,
-  "text_chars": 2082
+  "raw_bytes": 131026,
+  "text_chars": 2082,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

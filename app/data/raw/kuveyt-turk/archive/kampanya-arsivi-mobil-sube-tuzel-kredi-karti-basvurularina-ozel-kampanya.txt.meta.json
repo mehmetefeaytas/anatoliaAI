@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/mobil-sube-tuzel-kredi-karti-basvurularina-ozel-kampanya",
+  "scraped_at": "2026-08-03T18:00:26+00:00",
+  "content_hash": "8c6d4c7a695740aed7312a721ecb06140fcdd28c2b281a84970cffda0bc4ef8d",
+  "collection_method": "live",
+  "title": "Mobil Şube Tüzel Kredi Kartı Başvurularına Özel Kampanya! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130270,
+  "text_chars": 1070,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

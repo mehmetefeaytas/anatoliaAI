@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/yatirim",
+  "scraped_at": "2026-08-03T17:36:57+00:00",
+  "content_hash": "b8975e9bc66a9034d83a207b64e540a635e197cadaf56fa9bd22e58981b68631",
+  "collection_method": "live",
+  "title": "Yatırım | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 143349,
+  "text_chars": 1789,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/yeni-saglam-kart-troylulara-ozel-vade-farksiz-5-aya-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:33:32+00:00",
+  "content_hash": "3711f02a92ac81053a335add5d6d28d8ea45993d75f65304521f93755a99f781",
+  "collection_method": "live",
+  "title": "Yeni Sağlam Kart Troy'lulara Özel Vade Farksız 5 Aya Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133115,
+  "text_chars": 2726,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/saatandsaat-alisverislerinizde-5e-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:04+00:00",
+  "content_hash": "ff935f008cad571bc734f0c5d729b53d0573426d215a947624ef20484033ebc9",
+  "collection_method": "live",
+  "title": "Saat&Saat Alışverişlerinizde 5'e Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131037,
+  "text_chars": 1089,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

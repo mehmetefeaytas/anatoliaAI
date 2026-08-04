@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/tarim-finansmanlari",
-  "scraped_at": "2026-07-30T20:17:10+00:00",
-  "content_hash": "0e1ad7a23fd3a1c9aace44b5f5707df375845e06d8e4152a2e1c8530afce7354",
+  "scraped_at": "2026-08-03T17:32:59+00:00",
+  "content_hash": "3fa73cebcbbb5d21af85a522357c2ca5e7049724b0bac2dfa32f895525d9677b",
   "collection_method": "live",
   "title": "Tarım Finansmanları | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 132897,
-  "text_chars": 794
+  "text_chars": 794,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

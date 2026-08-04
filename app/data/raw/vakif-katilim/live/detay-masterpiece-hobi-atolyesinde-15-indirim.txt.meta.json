@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/masterpiece-hobi-atolyesinde-15-indirim",
-  "scraped_at": "2026-07-30T18:41:40+00:00",
-  "content_hash": "fe772e98edb600fddd9431b0300022f7f572a5cf841e43a5ecaaf26434ff2861",
+  "scraped_at": "2026-08-03T16:54:49+00:00",
+  "content_hash": "6db8f894dd607eabc0f6dce74ede01e75d7e565477665b96a33aa8957dd3170e",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139111,
-  "text_chars": 1605
+  "raw_bytes": 138907,
+  "text_chars": 1583,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-ile-sarj-et-yola-devam-et",
+  "scraped_at": "2026-08-03T16:53:01+00:00",
+  "content_hash": "fbc0bbd0bb7036159bc4ef1910f140fb9185ae4f4b86ae2dce651a28adc4c256",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 138960,
+  "text_chars": 1638,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

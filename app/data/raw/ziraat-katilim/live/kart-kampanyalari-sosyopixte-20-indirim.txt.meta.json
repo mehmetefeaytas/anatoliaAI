@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/sosyopixte-20-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:33+00:00",
+  "content_hash": "4eccb3caee2ebf1e46d59613327920786edbcaa6d6cfaed9972afbedb486d475",
+  "collection_method": "live",
+  "title": "Sosyopix&#039;te %20 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 481489,
+  "text_chars": 1364,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

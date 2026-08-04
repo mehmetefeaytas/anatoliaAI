@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/yeni-kuveyt-turk-mobil-musterilerine-10000-mile-varan-firsat",
+  "scraped_at": "2026-08-03T16:33:59+00:00",
+  "content_hash": "110e6812cdf7e9c0181cd192365b64ae052c81becf765bcf4f6810f1fcebd5e3",
+  "collection_method": "live",
+  "title": "Yeni Kuveyt Türk Mobil Müşterilerine 10.000 Mil'e Varan Fırsat! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 139020,
+  "text_chars": 1582,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

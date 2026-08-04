@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar",
-  "scraped_at": "2026-07-30T20:17:07+00:00",
-  "content_hash": "890739b6f538d797c7a18b2fd28d664e2ec5daa519ce38ccdced90da55b9b772",
+  "scraped_at": "2026-08-03T17:32:56+00:00",
+  "content_hash": "ab9a73a53e28b85da79d0f270a32c88afd1769b78e4b1d16d60b6cf48ab362d6",
   "collection_method": "live",
   "title": "Nakdi Finansmanlar | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 155577,
-  "text_chars": 2317
+  "text_chars": 2317,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

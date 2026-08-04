@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kobilerimize-ozel-e-fatura-indirimi",
+  "scraped_at": "2026-08-03T17:57:08+00:00",
+  "content_hash": "5118c5fe20fef9f1733fabeaf4082807a702a2be17bebf639875e0450726c9d1",
+  "collection_method": "live",
+  "title": "KOBİ’lerimize Özel E-Fatura İndirimi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130477,
+  "text_chars": 1368,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

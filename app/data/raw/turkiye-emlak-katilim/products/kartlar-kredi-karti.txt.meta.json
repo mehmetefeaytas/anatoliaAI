@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kartlar/kredi-karti",
-  "scraped_at": "2026-07-30T20:21:42+00:00",
-  "content_hash": "3d221720ac8f2defa8f5c92da235e6653208b68e9f3271a136180fc1d71ccf46",
+  "scraped_at": "2026-08-03T17:38:31+00:00",
+  "content_hash": "0e0c6b3be0e24cea19afdae05ad49a8dc51b320b135a0eefc9f5e0c54cd98ec4",
   "collection_method": "live",
   "title": "Kredi Kartı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 183393,
-  "text_chars": 7409
+  "text_chars": 7409,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

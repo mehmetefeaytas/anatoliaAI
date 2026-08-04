@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2024-11/Bilgilendirme_Metni.pdf",
+  "scraped_at": "2026-08-03T17:09:40+00:00",
+  "content_hash": "5c4c0fb9e64781eef48d9d75117a0dc05cc5a12e6ecb11d3377629798eb582d7",
+  "collection_method": "pdf",
+  "title": "Bilgilendirme Metni",
+  "http_status": 200,
+  "raw_bytes": 306125,
+  "text_chars": 10045,
+  "pdf_pages": 4
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turklulere-ozel-35-indirim-arzumda",
+  "scraped_at": "2026-08-03T17:58:38+00:00",
+  "content_hash": "7c3e22df3e59b5e62271bda92d02b66006aca204ec7bb54549b0f5357c659578",
+  "collection_method": "live",
+  "title": "Kuveyt Türklülere Özel %35 İndirim Arzum’da! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129846,
+  "text_chars": 943,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

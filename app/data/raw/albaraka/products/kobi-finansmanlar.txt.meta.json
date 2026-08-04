@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar",
-  "scraped_at": "2026-07-30T20:06:29+00:00",
-  "content_hash": "415d46362b7df4113bd5598c824505224fe28839bb4eaff245c19aab4e7b663f",
+  "scraped_at": "2026-08-03T17:21:17+00:00",
+  "content_hash": "1c834c6e3de27c53e09926be615a0e9e1e7a23ffbda96788c320f704a1962352",
   "collection_method": "live",
   "title": "Kobi Finansal Desteğiniz Albaraka'da! - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 188085,
-  "text_chars": 1146
+  "raw_bytes": 188351,
+  "text_chars": 1146,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

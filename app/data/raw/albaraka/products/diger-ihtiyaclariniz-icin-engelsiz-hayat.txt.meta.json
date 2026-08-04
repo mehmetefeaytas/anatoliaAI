@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/diger-ihtiyaclariniz-icin/engelsiz-hayat",
+  "scraped_at": "2026-08-03T17:25:47+00:00",
+  "content_hash": "73dd859fe322b351f99289fd6a319fbe43fe27e9e3ea4dd6f4067b6919c05c77",
+  "collection_method": "live",
+  "title": "Engelsiz Hayat - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181624,
+  "text_chars": 565,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

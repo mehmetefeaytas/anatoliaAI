@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/saatleri-indirime-ayarladik",
+  "scraped_at": "2026-08-03T16:52:46+00:00",
+  "content_hash": "cf0775ed7307f3b278df420ce50075163218eb3d92ff676d7756859f3b0c4099",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 138995,
+  "text_chars": 1662,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

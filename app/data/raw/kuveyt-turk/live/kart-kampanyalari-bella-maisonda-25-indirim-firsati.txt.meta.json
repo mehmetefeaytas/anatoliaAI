@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/bella-maisonda-25-indirim-firsati",
+  "scraped_at": "2026-08-03T16:33:13+00:00",
+  "content_hash": "578789c2182ce41aa526c884cbdcc3403e66c86678ffac17e7edd119a8ec5a33",
+  "collection_method": "live",
+  "title": "Bella Maison'da %25 İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130676,
+  "text_chars": 1348,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

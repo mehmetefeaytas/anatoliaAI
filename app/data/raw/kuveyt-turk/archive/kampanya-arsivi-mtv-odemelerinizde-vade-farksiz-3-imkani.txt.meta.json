@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/mtv-odemelerinizde-vade-farksiz-3-imkani",
+  "scraped_at": "2026-08-03T18:00:56+00:00",
+  "content_hash": "c867e0f5d2073c269a7d332816c727646a2c949bfc6418bdbd40bf921aa3a304",
+  "collection_method": "live",
+  "title": "MTV Ödemelerinizde Vade Farksız 3 Taksit! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130682,
+  "text_chars": 1036,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

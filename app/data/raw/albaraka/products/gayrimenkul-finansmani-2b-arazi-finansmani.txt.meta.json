@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/gayrimenkul-finansmani/2b-arazi-finansmani",
-  "scraped_at": "2026-07-30T20:07:29+00:00",
-  "content_hash": "b340a7f118caa084bffc48498b5d4402d1ea6bfa8b579330651cd54dc565d351",
+  "scraped_at": "2026-08-03T17:22:17+00:00",
+  "content_hash": "7007767c71cede8402797ef8186dbeb1b46b1d69f7da7ae0321d489ef23dcc62",
   "collection_method": "live",
   "title": "2B Arazi Finansmanı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 188962,
-  "text_chars": 3038
+  "raw_bytes": 189228,
+  "text_chars": 3038,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

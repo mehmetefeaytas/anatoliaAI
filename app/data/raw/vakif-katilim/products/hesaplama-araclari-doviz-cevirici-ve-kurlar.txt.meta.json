@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/yardimci-sayfalar/hesaplama-araclari/doviz-cevirici-ve-kurlar",
+  "scraped_at": "2026-08-03T17:37:33+00:00",
+  "content_hash": "8ab5095351446696511dfb0898b42f0780ddfb357eb097f493c890fd6db5a1e9",
+  "collection_method": "live",
+  "title": "D&#246;viz &#199;evirici ve Kurlar | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 155083,
+  "text_chars": 1040,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

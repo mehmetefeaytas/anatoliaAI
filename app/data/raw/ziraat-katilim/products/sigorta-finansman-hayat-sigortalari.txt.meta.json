@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/sigorta/finansman-hayat-sigortalari",
-  "scraped_at": "2026-07-30T20:14:12+00:00",
-  "content_hash": "1e50754872a33cda532cf70b7bb5c1336ad77e0290c0421811aaa298d6dff35e",
+  "scraped_at": "2026-08-03T17:30:02+00:00",
+  "content_hash": "5ed5d2747eda16e66285e83cad72ca32764ca9db20e2c8fc1bcb1e9f3ee97793",
   "collection_method": "live",
   "title": "Finansman Hayat Sigortaları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 458463,
-  "text_chars": 766
+  "raw_bytes": 475130,
+  "text_chars": 766,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

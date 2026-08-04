@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/dijital-motosiklet-finansmani",
-  "scraped_at": "2026-07-30T20:05:21+00:00",
-  "content_hash": "6ec68d13b04e4f9a488bb35127b41fb037d3a169eda2fbfcbf3f0ca19db2058a",
+  "scraped_at": "2026-08-03T17:19:09+00:00",
+  "content_hash": "a107514978a12060bc3ff7345e792f71f748a1e539c7005318147f3169b73797",
   "collection_method": "live",
   "title": "Dijital Motosiklet Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 154199,
-  "text_chars": 7280
+  "raw_bytes": 154437,
+  "text_chars": 7280,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari/kuveyt-turk-veteriner-klinik-musterilerine-ozel-fugevet-dijital-yonetim-cozumlerinden-30-indirim",
+  "scraped_at": "2026-08-03T16:30:13+00:00",
+  "content_hash": "cfabe13159c9abc3f352ab52be136715899af9cbd0d82e72af7f575f2d8a1fac",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Veteriner Klinik Müşterilerine Özel Fugevet Dijital Yönetim Çözümlerinden %30 İndirim | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131539,
+  "text_chars": 1104,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

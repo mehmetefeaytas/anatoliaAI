@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/kigilida-2-taksit",
+  "scraped_at": "2026-08-03T16:45:56+00:00",
+  "content_hash": "38402f8c1d0d97e12566482141ca683fa4258feb856c6cbb471bb50c832d7388",
+  "collection_method": "live",
+  "title": "Kiğılı’da 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488068,
+  "text_chars": 1898,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

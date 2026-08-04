@@ -1,0 +1,15 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dbs-fatura-odemelerinizde-100000-mil-firsati",
+  "scraped_at": "2026-08-03T17:52:49+00:00",
+  "content_hash": "b4bc1a675a85291d4fba94f8c0893120cfb28cf730ab4824fa46a5bf7e6c36b6",
+  "collection_method": "live",
+  "title": "DBS Fatura Ödemelerinizde 100.000 Mil Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131166,
+  "text_chars": 1396,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

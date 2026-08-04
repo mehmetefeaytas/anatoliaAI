@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/finansman/ithalatin-finansmani-pesin-vesaik-mukabili-mal-mukabili-akreditif",
-  "scraped_at": "2026-07-30T20:23:00+00:00",
-  "content_hash": "b296b9c239faa171a0d425bcc0c99609290eb55b1c879233697dd247239f2ed8",
+  "scraped_at": "2026-08-03T17:39:50+00:00",
+  "content_hash": "ddf7f9e28e9bc178591d40341adb058c2586c44bad6cdc6b615bbf68fdf5c3d7",
   "collection_method": "live",
   "title": "İthalatın Finansmanı (Peşin, Vesaik Mukabili, Mal Mukabili, Akreditif) | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 156225,
-  "text_chars": 590
+  "text_chars": 590,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

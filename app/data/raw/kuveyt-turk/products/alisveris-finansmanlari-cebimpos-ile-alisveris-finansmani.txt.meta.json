@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/cebimpos-ile-alisveris-finansmani",
-  "scraped_at": "2026-07-30T20:04:54+00:00",
-  "content_hash": "d684aeaa12f7471c90c81952b0e4ab74f546b176a5fb51a27600d785c0b4c292",
+  "scraped_at": "2026-08-03T17:18:42+00:00",
+  "content_hash": "8cd6ed22b03fb1b21430f612861595c88ecabfb2788a3f23e1083f56b8c14fb2",
   "collection_method": "live",
   "title": "CebimPOS ile Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132234,
-  "text_chars": 2865
+  "raw_bytes": 132472,
+  "text_chars": 2865,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

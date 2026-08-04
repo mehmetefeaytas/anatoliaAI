@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/odemeler/ithalat-pesin-vesaik-mukabili-mal-mukabili-akreditif",
-  "scraped_at": "2026-07-30T20:23:06+00:00",
-  "content_hash": "8582ff56c775e0e61eb8c9165937ad4f8dd7aadcc7b3b4ab2521891b93a8396e",
+  "scraped_at": "2026-08-03T17:39:56+00:00",
+  "content_hash": "c3e0e9ce0af8b004f27f6ef51446d31fe9b022ff55c82c4d8e07e523821c5d6b",
   "collection_method": "live",
   "title": "İthalat (Peşin, Vesaik Mukabili, Mal Mukabili, Akreditif) | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 157994,
-  "text_chars": 2244
+  "text_chars": 2244,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

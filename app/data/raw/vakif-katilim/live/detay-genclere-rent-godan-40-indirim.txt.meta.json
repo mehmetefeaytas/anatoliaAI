@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/genclere-rent-godan-40-indirim",
-  "scraped_at": "2026-07-30T18:40:55+00:00",
-  "content_hash": "18ca9a4f5b61da0749a725a46a6ed8e34ef0441b05645d074e2c20afbfeffc31",
+  "scraped_at": "2026-08-03T16:55:13+00:00",
+  "content_hash": "b85309c3dc5bfd8da21970431329cc173ce4fec53e35d2a4fd1bb3cd35b8e4e0",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139677,
-  "text_chars": 2125
+  "raw_bytes": 139473,
+  "text_chars": 2103,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/gayri-nakdi-finansman",
+  "scraped_at": "2026-08-03T17:02:02+00:00",
+  "content_hash": "538fa6d230711cc999c5f995139c02d95b5dfd020a0bef107f9d6cfdbc9c7f96",
+  "collection_method": "live",
+  "title": "Gayri Nakdi Finansman | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 498444,
+  "text_chars": 9165,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

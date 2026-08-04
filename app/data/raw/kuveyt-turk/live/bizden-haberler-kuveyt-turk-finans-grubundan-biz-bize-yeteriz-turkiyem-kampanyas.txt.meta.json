@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/hakkimizda/kuveyt-turk-hakkinda/bizden-haberler/kuveyt-turk-finans-grubundan-biz-bize-yeteriz-turkiyem-kampanyasina-20-milyon-tl-bagis",
+  "scraped_at": "2026-08-03T16:34:38+00:00",
+  "content_hash": "5874b4d458aaeb9feae3235c2cce226fe0f9bd4400b5fee5e047ca12dd515a17",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Finans Grubu’ndan ‘Biz Bize Yeteriz Türkiyem’ kampanyasına 20 milyon TL bağış | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 126846,
+  "text_chars": 1167,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

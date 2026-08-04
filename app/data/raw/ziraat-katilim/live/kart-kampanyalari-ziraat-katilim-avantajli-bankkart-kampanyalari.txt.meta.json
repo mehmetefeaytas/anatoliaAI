@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ziraat-katilim-avantajli-bankkart-kampanyalari",
+  "scraped_at": "2026-08-03T16:50:06+00:00",
+  "content_hash": "01d28cf02d0054da68d8f09961f876ebc4b7720222bb64712c8443fae1691ff8",
+  "collection_method": "live",
+  "title": "Ziraat Katılım Avantajlı Bankkart Kampanyaları | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490676,
+  "text_chars": 991,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

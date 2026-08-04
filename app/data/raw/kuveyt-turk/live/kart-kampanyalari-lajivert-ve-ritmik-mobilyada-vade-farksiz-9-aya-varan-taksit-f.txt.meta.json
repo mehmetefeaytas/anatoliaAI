@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/lajivert-ve-ritmik-mobilyada-vade-farksiz-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:22+00:00",
+  "content_hash": "41fab04cfe0275bf541f42f0fdfbb578f43fe9c9e103f0838d2555aa0ff23c86",
+  "collection_method": "live",
+  "title": "Lajivert ve Ritmik Mobilya’da Vade Farksız 9 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130546,
+  "text_chars": 1081,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

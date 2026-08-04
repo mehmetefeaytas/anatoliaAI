@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/samsoniteta-2-taksit",
+  "scraped_at": "2026-08-03T16:48:18+00:00",
+  "content_hash": "cfde9c42acc62812a7d60c9d522942d18b82bf523b52b40fbb7d6e9f92e2ff7f",
+  "collection_method": "live",
+  "title": "Samsonite’ta 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487933,
+  "text_chars": 1892,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

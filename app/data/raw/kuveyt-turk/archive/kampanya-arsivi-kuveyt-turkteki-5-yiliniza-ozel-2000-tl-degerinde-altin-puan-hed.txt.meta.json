@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkteki-5-yiliniza-ozel-2000-tl-degerinde-altin-puan-hediye-scr",
+  "scraped_at": "2026-08-03T17:58:50+00:00",
+  "content_hash": "936a239da132b397922115c2c2c6915d8401492507f65808c0dfdbc9040b1a75",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'teki 5. Yılınıza Özel 2.000 TL Değerinde Altın Puan Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130502,
+  "text_chars": 1231,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

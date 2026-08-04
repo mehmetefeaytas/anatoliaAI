@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/gurgenclerde-9-aya-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:32:05+00:00",
+  "content_hash": "9b29f8ff563653043a7767fdaf42b35100612f35e676770e8f21961b423c8f72",
+  "collection_method": "live",
+  "title": "Gürgençler'de 9 Aya Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129507,
+  "text_chars": 1416,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

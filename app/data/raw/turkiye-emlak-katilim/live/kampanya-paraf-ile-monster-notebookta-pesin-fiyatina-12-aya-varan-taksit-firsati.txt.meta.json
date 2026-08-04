@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-monster-notebookta-pesin-fiyatina-12-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:58:34+00:00",
+  "content_hash": "54aa40808278692daeac3613ad935e07f93a0d791a12f03ecf6204426a250c32",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167599,
+  "text_chars": 3193,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

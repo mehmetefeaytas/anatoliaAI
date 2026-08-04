@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/e-ticaret-pazaryeri-saticilarina-ozel-vade-farksiz-3-taksit",
+  "scraped_at": "2026-08-03T16:29:43+00:00",
+  "content_hash": "142e2915453185e115254ba6ba492c62495c9bccbf05ed4c149913a83e8d54da",
+  "collection_method": "live",
+  "title": "E-Ticaret Pazaryeri Satıcılarına Özel Vade Farksız 3 Taksit! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134214,
+  "text_chars": 3836,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

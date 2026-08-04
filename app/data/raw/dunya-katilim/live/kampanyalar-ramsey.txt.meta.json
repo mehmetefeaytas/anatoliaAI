@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/ramsey",
-  "scraped_at": "2026-07-30T18:47:13+00:00",
-  "content_hash": "d6735cb321a75d486f98e56cafcd886733c7c1dcef2c3fd99bb2d60b88327a49",
+  "scraped_at": "2026-08-03T17:03:53+00:00",
+  "content_hash": "652bc6abbecb64e46bf0bb10a629f209faa78ac200badbb60f450677242519e8",
   "collection_method": "live",
   "title": "Ramsey | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504831,
-  "text_chars": 9439
+  "raw_bytes": 504828,
+  "text_chars": 9436,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

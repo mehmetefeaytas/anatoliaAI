@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/dis-ticaret-finansmanlari/ithalat-finansmani",
-  "scraped_at": "2026-07-30T18:38:45+00:00",
-  "content_hash": "3e210fdc242df0713f599e37790c57914f618871cd0c3d98712f750e6381a2c0",
+  "scraped_at": "2026-08-03T16:51:09+00:00",
+  "content_hash": "c4e3ec170e42d98808b62bed317bd20fae930b11792db3bb034cd8bd3c660d3a",
   "collection_method": "live",
   "title": "İthalat Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 457296,
-  "text_chars": 866
+  "raw_bytes": 473963,
+  "text_chars": 866,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-turizm-sektorune-kfk-destekli-finansman",
+  "scraped_at": "2026-08-03T17:59:53+00:00",
+  "content_hash": "0bcbf336b8ebbfee467e7fd19ad4df3d5db1494621adbf2a2d62854b3cbc627d",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten Turizm Sektörüne KFK Destekli Finansman! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132400,
+  "text_chars": 1786,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

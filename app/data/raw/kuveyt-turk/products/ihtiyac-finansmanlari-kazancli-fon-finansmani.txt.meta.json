@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/kazancli-fon-finansmani",
-  "scraped_at": "2026-07-30T20:05:45+00:00",
-  "content_hash": "d9603e6b2222f52d32e3166d24d695cc108d3e3cff6494f3b538b5fd159f835e",
+  "scraped_at": "2026-08-03T17:19:34+00:00",
+  "content_hash": "f55b97500d4e5171cccabafba927cb4d16b6d16a944f67538b93310593630bdb",
   "collection_method": "live",
   "title": "Kazançlı Fon Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132883,
-  "text_chars": 3223
+  "raw_bytes": 133121,
+  "text_chars": 3223,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

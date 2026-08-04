@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/lc-waikiki-alisveris-finansmani",
-  "scraped_at": "2026-07-30T20:05:00+00:00",
-  "content_hash": "c8376321a6905e770b9574dccceadee3185ab5883edbcdc400bc6dcc5801ea0e",
+  "scraped_at": "2026-08-03T17:18:48+00:00",
+  "content_hash": "8032e10a8c6c84d9c45b21006f2781bc1411cedfa2b86d3ecb6fd91768060d2f",
   "collection_method": "live",
   "title": "LC Waikiki Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132217,
-  "text_chars": 2664
+  "raw_bytes": 132455,
+  "text_chars": 2664,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

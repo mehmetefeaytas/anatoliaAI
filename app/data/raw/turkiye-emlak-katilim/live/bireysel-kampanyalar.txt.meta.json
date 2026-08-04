@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar",
-  "scraped_at": "2026-07-30T18:42:06+00:00",
-  "content_hash": "dbd82cd2fd1194d9f581ce19aa925e067fa3a39b7139230c553242d5b857756c",
+  "scraped_at": "2026-08-03T16:56:00+00:00",
+  "content_hash": "33c096060a45e5ee8a764c2b6996651c6c958b21f5d85f42af2ca5e6d3b95c0e",
   "collection_method": "live",
   "title": "Kampanyalar | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 230143,
-  "text_chars": 4374
+  "raw_bytes": 223180,
+  "text_chars": 3877,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

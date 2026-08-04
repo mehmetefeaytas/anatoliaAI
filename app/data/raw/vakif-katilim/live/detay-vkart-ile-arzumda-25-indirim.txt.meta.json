@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-ile-arzumda-25-indirim",
+  "scraped_at": "2026-08-03T16:52:43+00:00",
+  "content_hash": "a5aef2b21d8545e33bcd656bee13d540db9cc342db8837aa9fc3ea2dd260e7ce",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139229,
+  "text_chars": 1906,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

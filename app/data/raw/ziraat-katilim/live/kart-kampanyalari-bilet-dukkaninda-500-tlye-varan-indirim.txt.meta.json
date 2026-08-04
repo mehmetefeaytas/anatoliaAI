@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/bilet-dukkaninda-500-tlye-varan-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:56+00:00",
+  "content_hash": "71ef1af557a9aa9da4635309d69c3c9dc9f64be66a0221d4b31c1c7e495061be",
+  "collection_method": "live",
+  "title": "Bilet Dükkanı&#039;nda 500 TL&#039;ye varan İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489439,
+  "text_chars": 2297,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

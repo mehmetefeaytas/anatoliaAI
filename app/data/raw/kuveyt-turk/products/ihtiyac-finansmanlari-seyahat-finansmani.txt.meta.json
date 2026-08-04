@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/seyahat-finansmani",
-  "scraped_at": "2026-07-30T20:05:51+00:00",
-  "content_hash": "049921289ba44b0032b4df4169476cf175af6ca8105fa6ad93ddd55cd94f4b3d",
+  "scraped_at": "2026-08-03T17:19:40+00:00",
+  "content_hash": "afe149274240a457314b8b52158e13a373fa5c22c71eb48122db292dcdd98501",
   "collection_method": "live",
   "title": "Seyahat Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 148009,
-  "text_chars": 3850
+  "raw_bytes": 148247,
+  "text_chars": 3850,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

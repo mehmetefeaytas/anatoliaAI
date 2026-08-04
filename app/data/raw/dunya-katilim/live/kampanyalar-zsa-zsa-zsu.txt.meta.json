@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/zsa-zsa-zsu",
+  "scraped_at": "2026-08-03T17:04:29+00:00",
+  "content_hash": "d9dbad0143812a89a2e8f79e32bcaa773c358bdf62a9e00b614a7cb31e3dfa1c",
+  "collection_method": "live",
+  "title": "Zsa Zsa Zsu | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504980,
+  "text_chars": 9495,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

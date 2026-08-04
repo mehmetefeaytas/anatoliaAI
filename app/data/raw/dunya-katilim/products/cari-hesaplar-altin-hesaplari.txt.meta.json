@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar/altin-hesaplari",
-  "scraped_at": "2026-07-30T20:28:52+00:00",
-  "content_hash": "f1544d337a46f5970fd5851cf1356f65d42cc2736ba0f4de3cfedffa483dcd0a",
+  "scraped_at": "2026-08-03T17:46:44+00:00",
+  "content_hash": "3830170116f4303a234583da1caf9088f9f240e404dcc2907320db4470d14ce5",
   "collection_method": "live",
   "title": "Alt&#x131;n Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 500082,
-  "text_chars": 9463
+  "text_chars": 9463,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

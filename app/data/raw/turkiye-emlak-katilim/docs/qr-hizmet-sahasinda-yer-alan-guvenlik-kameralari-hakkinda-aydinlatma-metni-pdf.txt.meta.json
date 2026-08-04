@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/hizmet-sahasinda-yer-alan-guvenlik-kameralari-hakkinda-aydinlatma-metni.pdf",
+  "scraped_at": "2026-08-03T17:11:33+00:00",
+  "content_hash": "228f22f6b7777568df5d8b819a9d6d8266b50c10a1b91055f978a8690b78e335",
+  "collection_method": "pdf",
+  "title": "hizmet sahasinda yer alan guvenlik kameralari hakkinda aydinlatma metni",
+  "http_status": 200,
+  "raw_bytes": 166009,
+  "text_chars": 1956,
+  "pdf_pages": 2
+}

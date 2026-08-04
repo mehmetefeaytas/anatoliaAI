@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/konut-finansmani",
-  "scraped_at": "2026-07-30T20:18:37+00:00",
-  "content_hash": "1cc8a568ca982a771ec45adfb543645955a102f54607a971b9ebe6aa9a7b2bce",
+  "scraped_at": "2026-08-03T17:34:23+00:00",
+  "content_hash": "e734d597f7c773cf02f1e0ef358878a1f1e505b2118e3e450e143699d1fba6b4",
   "collection_method": "live",
   "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 134289,
-  "text_chars": 1585
+  "text_chars": 1585,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

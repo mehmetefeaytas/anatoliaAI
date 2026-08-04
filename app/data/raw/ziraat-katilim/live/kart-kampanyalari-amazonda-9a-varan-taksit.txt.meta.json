@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/amazonda-9a-varan-taksit",
+  "scraped_at": "2026-08-03T16:42:14+00:00",
+  "content_hash": "ee009437c6671ab53de2b9a98949c0e8005a730c0e0f7fb5c49f99714f66a651",
+  "collection_method": "live",
+  "title": "Amazon&#039;da 9&#039;a varan Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487315,
+  "text_chars": 2212,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

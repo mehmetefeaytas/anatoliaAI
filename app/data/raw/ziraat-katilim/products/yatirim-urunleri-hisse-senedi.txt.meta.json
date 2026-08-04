@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/yatirim-urunleri/hisse-senedi",
-  "scraped_at": "2026-07-30T20:16:07+00:00",
-  "content_hash": "d0692ce0367a7b415abcd72de8e730b0236dae81eee236562663cfbfb645026f",
+  "scraped_at": "2026-08-03T17:31:56+00:00",
+  "content_hash": "f9e7771420aff21ffca68a10a8711d0889be62fc52fd6b870e6c009d4e196601",
   "collection_method": "live",
   "title": "Hisse Senedi | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 467086,
-  "text_chars": 2824
+  "raw_bytes": 483774,
+  "text_chars": 2824,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

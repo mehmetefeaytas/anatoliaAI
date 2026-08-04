@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi?root=isim-icin",
+  "scraped_at": "2026-08-03T17:51:01+00:00",
+  "content_hash": "6bc6293ab134cf1e1f1e0ae497ea82248dc0c1d1b3bb4496ee3c9c6d71eaeba9",
+  "collection_method": "live",
+  "title": "Kampanya Arşivi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 149006,
+  "text_chars": 1997,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

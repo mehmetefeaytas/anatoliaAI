@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/yuki-motorda-vade-farksiz-12-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:30:52+00:00",
+  "content_hash": "bb33e162253a202497aac1154cc54c8742a2b0f3670197000ea176c36a872a97",
+  "collection_method": "live",
+  "title": "Yuki Motor’da Vade Farksız 12 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130319,
+  "text_chars": 1008,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

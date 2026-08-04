@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/ucak-bileti-harcamalariniza-2000-tl-parafpara",
+  "scraped_at": "2026-08-03T16:59:43+00:00",
+  "content_hash": "57235d0c43ecced0b89f60477017e82caaf97cae035b45a7c33316fd9cc06b8f",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168443,
+  "text_chars": 3135,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

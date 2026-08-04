@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/pos-kampanyalari",
-  "scraped_at": "2026-07-30T18:32:05+00:00",
-  "content_hash": "e08d2b4b1033aa299ffb2cce008b17c678bf9ca233a8045e11b715945dadd8cb",
+  "scraped_at": "2026-08-03T16:30:28+00:00",
+  "content_hash": "537e12e4198f62a6af55565dd45669ec7ae18c83109f47f61efe54dd2ecb1757",
   "collection_method": "live",
   "title": "POS Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135161,
-  "text_chars": 745
+  "raw_bytes": 135426,
+  "text_chars": 745,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

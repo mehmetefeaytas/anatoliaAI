@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ramseyde-4-taksit",
+  "scraped_at": "2026-08-03T16:48:12+00:00",
+  "content_hash": "ef66f182e88ffe9f92ded8496faa2feabd1914b78bdee6ed38a805c0944f9e9c",
+  "collection_method": "live",
+  "title": "Ramsey’de 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488113,
+  "text_chars": 2002,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

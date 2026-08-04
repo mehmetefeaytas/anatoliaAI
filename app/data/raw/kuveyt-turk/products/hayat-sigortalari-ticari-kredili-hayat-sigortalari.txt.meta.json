@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/sigorta-ve-emeklilik/hayat-sigortalari/ticari-kredili-hayat-sigortalari",
-  "scraped_at": "2026-07-30T20:04:33+00:00",
-  "content_hash": "a7b85e2d327d2a421b20364c6615d4cf13bd2b27bcd94bc1e5ca98c535ab8c6d",
+  "scraped_at": "2026-08-03T17:18:21+00:00",
+  "content_hash": "cd486cb70efe0ccb680aef418a563a974d880857cf9ac0434b43a1728d51787d",
   "collection_method": "live",
   "title": "Ticari Kredili Hayat Sigortaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 129331,
-  "text_chars": 1418
+  "raw_bytes": 129699,
+  "text_chars": 1419,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

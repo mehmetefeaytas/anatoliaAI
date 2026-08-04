@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/hesaplar/avantajli-gunluk-hesap",
-  "scraped_at": "2026-07-30T20:25:57+00:00",
-  "content_hash": "2eb8b00f0671f79b7ff75b337ece9f9e83dcc798fa67621b3b7fb4e326410e3c",
+  "scraped_at": "2026-08-03T17:43:46+00:00",
+  "content_hash": "b857bd26128a50a4c63407205f437d18443e69eeee9322f09cc2b7ebb5e3e051",
   "collection_method": "browser",
   "title": "1 Günlük Avantajlı Hesap | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 331624,
-  "text_chars": 6321
+  "text_chars": 6321,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

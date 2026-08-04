@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/korayspor-ile-vade-farksiz-4e-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:07+00:00",
+  "content_hash": "db3116c63c4a1a0117dde3ffd6303f2048decf08d0598c27af5dd55604d39b79",
+  "collection_method": "live",
+  "title": "Korayspor ile Vade Farksız 4'e Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129100,
+  "text_chars": 1048,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

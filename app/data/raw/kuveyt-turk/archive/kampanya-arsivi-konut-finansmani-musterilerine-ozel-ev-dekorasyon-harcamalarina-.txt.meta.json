@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/konut-finansmani-musterilerine-ozel-ev-dekorasyon-harcamalarina-250-tl-indirim2-scr",
+  "scraped_at": "2026-08-03T17:57:14+00:00",
+  "content_hash": "30ae0bcaf5e0c3da8a8e0af55eb9afd1512d19fbd4d426dcb05e55f4e62f0859",
+  "collection_method": "live",
+  "title": "Konut Finansmanı Müşterilerine Özel Ev-Dekorasyon Harcamalarına 250 TL İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132172,
+  "text_chars": 2024,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

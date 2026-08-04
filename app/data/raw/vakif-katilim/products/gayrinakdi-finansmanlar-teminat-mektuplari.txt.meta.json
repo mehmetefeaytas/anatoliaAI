@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/teminat-mektuplari",
-  "scraped_at": "2026-07-30T20:19:22+00:00",
-  "content_hash": "2cc536d9f2e017e4d6e26b6d8ebd5c4e8d12dcfc5c36508bce27c9f28b17b5bb",
+  "scraped_at": "2026-08-03T17:35:09+00:00",
+  "content_hash": "37e7eecf428439519cba2128aebe83d98fad23248ebcea7a9098ff308c15ac6a",
   "collection_method": "live",
   "title": "Teminat Mektupları | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 143787,
-  "text_chars": 3601
+  "text_chars": 3601,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

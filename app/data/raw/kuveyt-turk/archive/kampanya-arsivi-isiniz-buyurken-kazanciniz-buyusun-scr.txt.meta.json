@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/isiniz-buyurken-kazanciniz-buyusun-scr",
+  "scraped_at": "2026-08-03T17:56:14+00:00",
+  "content_hash": "cf7186904f80af3d7fd00ceefaab588f4c4fbe86e47bb3d86c3e3a96def2b2e7",
+  "collection_method": "live",
+  "title": "İşiniz Büyürken Kazancınız da Büyüsün | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131434,
+  "text_chars": 2159,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

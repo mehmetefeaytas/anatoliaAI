@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/cilek-mobilyada-9-taksit",
+  "scraped_at": "2026-08-03T16:43:05+00:00",
+  "content_hash": "ef2db0cbe8cb435132e2ec71b3b792b7ed044951a481a86b739c90ecc64e6aff",
+  "collection_method": "live",
+  "title": "Çilek Mobilya&#039;da 9 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488457,
+  "text_chars": 1970,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

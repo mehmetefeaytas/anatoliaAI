@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/teknosa-alisveris-finansmani",
-  "scraped_at": "2026-07-30T20:05:06+00:00",
-  "content_hash": "e877249371605986f14877955db24b6c9286d79f62fd52c7e6915ee33de6fd2f",
+  "scraped_at": "2026-08-03T17:18:54+00:00",
+  "content_hash": "c6e53f334fa0c60760f40b3825538458a0631921ed0ea785181d927208f30ac1",
   "collection_method": "live",
   "title": "Teknosa Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 131757,
-  "text_chars": 2675
+  "raw_bytes": 131995,
+  "text_chars": 2675,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

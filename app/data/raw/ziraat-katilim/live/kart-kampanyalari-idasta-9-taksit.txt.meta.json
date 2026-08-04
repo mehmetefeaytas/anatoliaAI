@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/idasta-9-taksit",
+  "scraped_at": "2026-08-03T16:45:05+00:00",
+  "content_hash": "5c63ce4736968572006fff2819298d5f8d5729fb8da2c5b20678f598575a776d",
+  "collection_method": "live",
+  "title": "İdaş’ta 9 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488040,
+  "text_chars": 1940,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

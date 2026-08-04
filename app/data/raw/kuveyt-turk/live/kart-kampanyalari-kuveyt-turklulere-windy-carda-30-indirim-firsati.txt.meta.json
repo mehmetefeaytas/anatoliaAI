@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/kuveyt-turklulere-windy-carda-30-indirim-firsati",
+  "scraped_at": "2026-08-03T16:32:37+00:00",
+  "content_hash": "3996da2154a8f6e1fd8a6bf07f0ab9ba705e9865d544ea2e6bfd62a2459b0d2b",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'lülere Windy Car'da %30 İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131440,
+  "text_chars": 1712,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

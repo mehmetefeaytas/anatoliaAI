@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize-plus/biz-bize-plus-musterilerine-ozel-kopru-gecis-avantaji-her-ay-5-gecis-hediye",
+  "scraped_at": "2026-08-03T16:28:10+00:00",
+  "content_hash": "944d83c7ffd5660bbc93ef74c1dbb899229c58128f6df3d2ddc3b2d871aa4420",
+  "collection_method": "live",
+  "title": "Biz Bize Plus Müşterilerine Özel Köprü Geçiş Avantajı: Her Ay 5 Geçiş Hediye | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133754,
+  "text_chars": 3004,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

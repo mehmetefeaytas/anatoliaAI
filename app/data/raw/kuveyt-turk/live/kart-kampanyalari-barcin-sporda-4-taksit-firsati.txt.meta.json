@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/barcin-sporda-4-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:55+00:00",
+  "content_hash": "85673195ca580fb0b659242a9a10f8739e88262423e70b20adb9c0705761f905",
+  "collection_method": "live",
+  "title": "Barçın Spor’da 4 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130047,
+  "text_chars": 951,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

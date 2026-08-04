@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/modanisa-alisverislerinizde-6-taksit-firsati",
+  "scraped_at": "2026-08-03T18:00:38+00:00",
+  "content_hash": "a6dc642b1b618369a50b04a62f6956f0031810d675a21abdc1fa01d5332584d8",
+  "collection_method": "live",
+  "title": "Modanisa Alışverişlerinizde 6 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129938,
+  "text_chars": 1037,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

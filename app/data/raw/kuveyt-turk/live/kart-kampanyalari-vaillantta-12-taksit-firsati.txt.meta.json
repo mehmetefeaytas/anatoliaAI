@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/vaillantta-12-taksit-firsati",
+  "scraped_at": "2026-08-03T16:30:55+00:00",
+  "content_hash": "253b36a9234b0394c347001657601095eb24951dc43ef9826872b830fc12ad34",
+  "collection_method": "live",
+  "title": "Vaillant’ta 12 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130027,
+  "text_chars": 947,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

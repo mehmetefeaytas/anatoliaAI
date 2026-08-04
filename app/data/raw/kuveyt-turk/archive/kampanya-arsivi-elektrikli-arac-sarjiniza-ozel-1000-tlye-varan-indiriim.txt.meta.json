@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/elektrikli-arac-sarjiniza-ozel-1000-tlye-varan-indiriim",
+  "scraped_at": "2026-08-03T17:53:49+00:00",
+  "content_hash": "b339ca826d2bf43be2800dfb66880c4eac479600f81baa0444e3303ba9a6c749",
+  "collection_method": "live",
+  "title": "Elektrikli Araç Şarjınıza Özel 1.000 TL'ye Varan İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131619,
+  "text_chars": 1202,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

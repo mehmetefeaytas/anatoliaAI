@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/konut-finansmanlari/gurbetten-silaya-gayrimenkul-finansmani",
-  "scraped_at": "2026-07-30T20:06:03+00:00",
-  "content_hash": "34c856939db6b05248dd1d3381fe96ba518edca6e2b019c643fac8cedbbacd1c",
+  "scraped_at": "2026-08-03T17:19:52+00:00",
+  "content_hash": "1372088efe5e6b2d7f484eae1c644dd2f69f042e6702a8fb7430773f4982b4b9",
   "collection_method": "live",
   "title": "Gurbetten Sılaya Gayrimenkul Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 150135,
-  "text_chars": 4722
+  "raw_bytes": 150373,
+  "text_chars": 4722,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

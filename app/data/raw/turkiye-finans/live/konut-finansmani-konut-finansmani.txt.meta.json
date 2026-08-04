@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/konut-finansmani/Sayfalar/konut-finansmani.aspx",
-  "scraped_at": "2026-07-30T18:36:23+00:00",
-  "content_hash": "9e15c4b6ec952f7fb0a9518b381ed8509f69d90c82bfdc90e4fd50cc32a8eb22",
+  "scraped_at": "2026-08-03T16:38:00+00:00",
+  "content_hash": "8832805a3781504451d469c9180480f1d13d1f915376be89d76ec35bf9130e94",
   "collection_method": "live",
   "title": "Konut Finansmanı - Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 153697,
-  "text_chars": 15682
+  "text_chars": 15682,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

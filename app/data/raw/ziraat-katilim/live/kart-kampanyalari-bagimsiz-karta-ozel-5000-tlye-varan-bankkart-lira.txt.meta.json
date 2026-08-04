@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/bagimsiz-karta-ozel-5000-tlye-varan-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:41+00:00",
+  "content_hash": "5666ef146418c5bbc1ae7b45b941b434c277f8a24ca3ebe6b31a8894e57b311e",
+  "collection_method": "live",
+  "title": "Bağımsız Kart&#039;a Özel 5.000 TL&#039;ye varan Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490593,
+  "text_chars": 2923,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

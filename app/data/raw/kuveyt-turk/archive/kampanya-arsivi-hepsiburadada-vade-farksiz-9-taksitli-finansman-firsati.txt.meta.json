@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hepsiburadada-vade-farksiz-9-taksitli-finansman-firsati",
+  "scraped_at": "2026-08-03T17:55:22+00:00",
+  "content_hash": "ccdb7a8938aeaa5e69ba3244d413bf17c925be99d62755fbd85e7bd80f09b139",
+  "collection_method": "live",
+  "title": "Hepsiburada'da Vade Farksız 9 Taksitli Finansman Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131046,
+  "text_chars": 1721,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

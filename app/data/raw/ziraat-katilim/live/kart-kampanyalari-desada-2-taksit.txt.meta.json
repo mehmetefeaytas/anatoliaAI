@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/desada-2-taksit",
+  "scraped_at": "2026-08-03T16:43:20+00:00",
+  "content_hash": "cd30cfd3066a75047d70b6c2fbf94a42a874240d4344021a6bdfbafcea9faf78",
+  "collection_method": "live",
+  "title": "Desa’da 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487889,
+  "text_chars": 1884,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

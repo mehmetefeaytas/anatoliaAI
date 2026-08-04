@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/politikalarimiz/kiymetli-madenler-sorumlu-tedarik-zinciri-uyum-risk-yonetimi-izleme-ve-kontrol-politikasi",
-  "scraped_at": "2026-07-30T20:30:10+00:00",
-  "content_hash": "c4a272a99606054da6168cb96b26197564110cb4ed1b2e13518528d2e68ae6be",
+  "scraped_at": "2026-08-03T17:48:02+00:00",
+  "content_hash": "0476f36e3cc3031c13e2488a03e571541b217051f618040d3955e6b64da54615",
   "collection_method": "live",
   "title": "K&#x131;ymetli Madenler Sorumlu Tedarik Zinciri Uyum, Risk Y&#xF6;netimi, &#x130;zleme ve Kontrol Politikas&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 517208,
-  "text_chars": 9473
+  "text_chars": 9473,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

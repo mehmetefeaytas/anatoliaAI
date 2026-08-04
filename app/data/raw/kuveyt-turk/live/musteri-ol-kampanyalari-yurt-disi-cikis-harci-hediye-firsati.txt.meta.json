@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/yurt-disi-cikis-harci-hediye-firsati",
+  "scraped_at": "2026-08-03T16:33:47+00:00",
+  "content_hash": "0bf804a5cf72154797055e1cb1c6f8072a47196fd2883ce7d0725401c0e83098",
+  "collection_method": "live",
+  "title": "Yurt Dışı Çıkış Harcı Hediye Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 137895,
+  "text_chars": 1234,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

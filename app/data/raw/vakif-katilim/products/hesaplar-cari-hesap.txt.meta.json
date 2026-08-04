@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/cari-hesap",
+  "scraped_at": "2026-08-03T17:37:21+00:00",
+  "content_hash": "05ddaaeafa75e30f2dc93386293f56a3724bbda76c2773a6c15fa6db69c8810c",
+  "collection_method": "live",
+  "title": "Cari Hesap | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 162628,
+  "text_chars": 5811,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

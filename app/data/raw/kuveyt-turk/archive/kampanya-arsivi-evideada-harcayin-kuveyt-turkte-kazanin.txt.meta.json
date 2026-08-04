@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/evideada-harcayin-kuveyt-turkte-kazanin",
+  "scraped_at": "2026-08-03T17:54:22+00:00",
+  "content_hash": "fb086f0b19fa52f7aff52300a0f4c477d103bdf37cbb6e387241d974f29a3f61",
+  "collection_method": "live",
+  "title": "Evidea’da Harcayın Kuveyt Türk’te Kazanın! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129568,
+  "text_chars": 737,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

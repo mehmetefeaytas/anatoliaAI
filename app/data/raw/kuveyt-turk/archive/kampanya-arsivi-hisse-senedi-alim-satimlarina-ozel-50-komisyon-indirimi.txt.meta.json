@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hisse-senedi-alim-satimlarina-ozel-50-komisyon-indirimi",
+  "scraped_at": "2026-08-03T17:55:32+00:00",
+  "content_hash": "b0df8f845899b250f82ee5f6b80aed4719cfa7f9c326bcb81c77d3f17b328eb9",
+  "collection_method": "live",
+  "title": "Hisse Senedi Alım Satımlarına Özel %50 Komisyon İndirimi! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130778,
+  "text_chars": 1620,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

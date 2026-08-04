@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/ceyiz-hesabi",
-  "scraped_at": "2026-07-30T20:20:26+00:00",
-  "content_hash": "8a4d659dd4b9d1254f37fec1368d3b3a3c57b37c0e4b933286811432b1cb3b9c",
+  "scraped_at": "2026-08-03T17:36:12+00:00",
+  "content_hash": "dfc0c156fe2c1f1536d80b7e05453f0f2084031301969a1bd2f87ee654a190a9",
   "collection_method": "live",
   "title": "&#199;eyiz Hesabı | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 157936,
-  "text_chars": 4053
+  "text_chars": 4053,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

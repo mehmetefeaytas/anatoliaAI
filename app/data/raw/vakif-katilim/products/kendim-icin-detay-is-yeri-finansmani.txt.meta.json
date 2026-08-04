@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/is-yeri-finansmani",
-  "scraped_at": "2026-07-30T20:18:28+00:00",
-  "content_hash": "32287f6f297a738ae1d16547ce19402a7f5abd5667db7127db2982c262292ddb",
+  "scraped_at": "2026-08-03T17:34:14+00:00",
+  "content_hash": "6d790243a246ce6b5a792347726601bf52d763875aa4d5cb2cae981e0d944135",
   "collection_method": "live",
   "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 129516,
-  "text_chars": 537
+  "text_chars": 537,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/yedek-hesap.aspx",
-  "scraped_at": "2026-07-30T20:11:08+00:00",
-  "content_hash": "e48cf7d32d108a395a0e2dd92accd5aad5a298bc2c5756bc61fed0146424ccf0",
+  "scraped_at": "2026-08-03T17:26:57+00:00",
+  "content_hash": "e15ff8add4aa58f1987d8d0fddfe102a9d968c7e488401f7535c7ab372fb72bb",
   "collection_method": "live",
   "title": "Yedek Hesap | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 104529,
-  "text_chars": 9188
+  "text_chars": 9188,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

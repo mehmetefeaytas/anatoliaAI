@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/vatanda-3-taksit",
+  "scraped_at": "2026-08-03T16:49:42+00:00",
+  "content_hash": "cc6aa88e96bf02c5e969d88e517d07854986bb66025c264a959e4210ed5c538c",
+  "collection_method": "live",
+  "title": "Vatan’da 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 482886,
+  "text_chars": 1540,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

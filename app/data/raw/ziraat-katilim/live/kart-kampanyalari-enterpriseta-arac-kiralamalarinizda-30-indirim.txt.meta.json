@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/enterpriseta-arac-kiralamalarinizda-30-indirim",
+  "scraped_at": "2026-08-03T16:44:14+00:00",
+  "content_hash": "105e2cf8168ff4bed0b49243ba10fcb1dbfcade0db0c52efc72a6431b2431984",
+  "collection_method": "live",
+  "title": "Enterprise&#039;ta Araç Kiralamalarınızda %30 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489770,
+  "text_chars": 2566,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

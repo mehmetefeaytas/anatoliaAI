@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.hizlifinansman.com.tr:443/Sayfalar/default.aspx",
-  "scraped_at": "2026-07-30T20:10:53+00:00",
-  "content_hash": "280bd9e0e489afc8fa421e4b23fa6c3f7b70ff7112cea80d70e18472cb1c6098",
+  "scraped_at": "2026-08-03T17:26:42+00:00",
+  "content_hash": "29bb178f9e0f7d1f11926fab9f98d44ee6bfc1a1cae71de883598ead51d3517a",
   "collection_method": "live",
   "title": "Ana Sayfa - Hızlı Finansman - Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 64425,
-  "text_chars": 1613
+  "text_chars": 1613,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

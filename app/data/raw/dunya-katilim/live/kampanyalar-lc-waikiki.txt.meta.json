@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/lc-waikiki",
-  "scraped_at": "2026-07-30T18:46:52+00:00",
-  "content_hash": "6765966139b851cd53617ccf3c13cd6965bc221e45f6799d01c7263310a5b036",
+  "scraped_at": "2026-08-03T17:04:53+00:00",
+  "content_hash": "67f9962ba06592de0189222e604ca72334fa22c41612842f387170b87ef9db35",
   "collection_method": "live",
   "title": "LC Waikiki | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 507524,
-  "text_chars": 11181
+  "text_chars": 11181,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

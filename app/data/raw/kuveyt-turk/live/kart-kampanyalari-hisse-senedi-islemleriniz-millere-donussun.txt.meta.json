@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/hisse-senedi-islemleriniz-millere-donussun",
+  "scraped_at": "2026-08-03T16:32:31+00:00",
+  "content_hash": "6fc74db04fba2b4ce31dddb8b8a055d6bb34ae400d5d19945aebe22fb68085ec",
+  "collection_method": "live",
+  "title": "Hisse Senedi İşlemleriniz Mil'lere Dönüşsün | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133704,
+  "text_chars": 3111,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

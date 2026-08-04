@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/bayide-finansman-ihtiyac---aracilik-ve-garantorluk-sozlesmesi-kredi-(komisyonsuz).pdf",
+  "scraped_at": "2026-08-03T18:03:34+00:00",
+  "content_hash": "2e3d6f57711efa590db48059bfac4025103dabd9546438a1c21fc2ebfe07c5c4",
+  "collection_method": "pdf",
+  "title": "bayide finansman ihtiyac aracilik ve garantorluk sozlesmesi kredi (komisyonsuz)",
+  "http_status": 200,
+  "raw_bytes": 674749,
+  "text_chars": 110027,
+  "pdf_pages": 41
+}

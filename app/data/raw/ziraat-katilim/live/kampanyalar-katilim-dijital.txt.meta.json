@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/katilim-dijital",
-  "scraped_at": "2026-07-30T18:38:28+00:00",
-  "content_hash": "f22de41b88d9a7346a26e2f0e420c5970bc8539b6443e25ecd913f1e2e7d55d3",
+  "scraped_at": "2026-08-03T16:41:08+00:00",
+  "content_hash": "22aebd2b7a003d475d8a31520d4ef7e74c2265d284add1ae6b65954702c5ca32",
   "collection_method": "live",
   "title": "Katılım Dijital | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 450002,
-  "text_chars": 900
+  "raw_bytes": 466664,
+  "text_chars": 900,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/alfemoda-5-taksit",
+  "scraped_at": "2026-08-03T16:42:11+00:00",
+  "content_hash": "bcc4b511bc6f79141fe459a6e0b60cc17249ef6b42c9f621360c78838a74c94e",
+  "collection_method": "live",
+  "title": "Alfemo&#039;da 5 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487837,
+  "text_chars": 1671,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

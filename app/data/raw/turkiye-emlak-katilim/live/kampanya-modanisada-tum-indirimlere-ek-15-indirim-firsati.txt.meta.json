@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/modanisada-tum-indirimlere-ek-15-indirim-firsati",
-  "scraped_at": "2026-07-30T18:43:15+00:00",
-  "content_hash": "f1d43ac575896356a8ef62c82249b345f72d21d605253e41ae0e537ee2a71ac3",
+  "scraped_at": "2026-08-03T16:57:13+00:00",
+  "content_hash": "64045dca42060bcdcd71d6c3c54c656032f34919d46720c71df27e87951ee7dd",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166549,
-  "text_chars": 1779
+  "text_chars": 1779,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

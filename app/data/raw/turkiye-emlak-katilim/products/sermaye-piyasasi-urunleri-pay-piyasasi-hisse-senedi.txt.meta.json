@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/sermaye-piyasasi-urunleri/pay-piyasasi-hisse-senedi",
+  "scraped_at": "2026-08-03T17:42:53+00:00",
+  "content_hash": "e1ef45361b232d34c3ed3851a95681efc5fe3064c189e4c5953669f091c14b15",
+  "collection_method": "live",
+  "title": "Pay Piyasası (Hisse Senedi) | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168824,
+  "text_chars": 4685,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

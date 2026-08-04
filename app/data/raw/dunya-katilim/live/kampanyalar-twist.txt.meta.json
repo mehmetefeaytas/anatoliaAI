@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/twist",
-  "scraped_at": "2026-07-30T18:47:28+00:00",
-  "content_hash": "1e5e9f8cba416aa151413b68eafc111b68ab1d15ed0db52f95170ca935d25676",
+  "scraped_at": "2026-08-03T17:04:08+00:00",
+  "content_hash": "d5c73a5413c804fc0a69c50172ee14f36f9f059d7ad0403fb18bc643b95cf92b",
   "collection_method": "live",
   "title": "Twist | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504744,
-  "text_chars": 9439
+  "raw_bytes": 504741,
+  "text_chars": 9436,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

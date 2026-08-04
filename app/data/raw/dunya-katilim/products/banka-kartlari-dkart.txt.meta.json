@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar/banka-kartlari/dkart",
-  "scraped_at": "2026-07-30T20:29:22+00:00",
-  "content_hash": "bab75265acfbc340706dc5c3428448fa33a18f6339707b04c2b3206cf1bd78de",
+  "scraped_at": "2026-08-03T17:47:14+00:00",
+  "content_hash": "e2fcfac8fd8202d144381ceb674a39b9454dcac8ca4f3a09249077fdc7e30bcf",
   "collection_method": "live",
   "title": "DKART | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 505385,
-  "text_chars": 11840
+  "text_chars": 11840,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

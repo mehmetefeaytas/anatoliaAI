@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/dis-ticaret-finansmanlari",
-  "scraped_at": "2026-07-30T18:39:51+00:00",
-  "content_hash": "9022b82f7eb8a52e4369678e881fd7a7c3cb741752b8b4f64201973ec3909f17",
+  "scraped_at": "2026-08-03T16:50:30+00:00",
+  "content_hash": "21d2918db148a3cbac079495c5e3efce1317e5e2f8468ac8531833ecf2ab257a",
   "collection_method": "live",
   "title": "Dış Ticaret Finansmanları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 457365,
-  "text_chars": 846
+  "raw_bytes": 474002,
+  "text_chars": 846,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/cati-ges-finansmani",
-  "scraped_at": "2026-07-30T20:02:24+00:00",
-  "content_hash": "698b81a905e30b55254d1ebbe85aec795b1330d531b654b1ec9fb60a5dacfab7",
+  "scraped_at": "2026-08-03T17:16:15+00:00",
+  "content_hash": "0d20e40d6d3f8ee48e2208d8be366d017e2a96c30303882ac318fa1562f97c40",
   "collection_method": "live",
   "title": "Çatı GES Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 130828,
-  "text_chars": 2199
+  "raw_bytes": 131066,
+  "text_chars": 2199,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

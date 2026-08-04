@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/incehesap",
-  "scraped_at": "2026-07-30T18:46:32+00:00",
-  "content_hash": "3b257991fab822226b0ec152b6adb7df1e0f7848963faef41195fd0398b7b19f",
+  "scraped_at": "2026-08-03T17:03:14+00:00",
+  "content_hash": "3bf63b516bc785c67fc89fe4f54e9eb1ebfc4efa6f1ef52180ab71eb87e62522",
   "collection_method": "live",
   "title": "&#x130;ncehesap | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507052,
-  "text_chars": 11337
+  "raw_bytes": 507049,
+  "text_chars": 11334,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

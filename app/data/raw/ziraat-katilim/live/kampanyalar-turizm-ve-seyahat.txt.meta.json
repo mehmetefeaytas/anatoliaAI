@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/turizm-ve-seyahat",
+  "scraped_at": "2026-08-03T16:40:59+00:00",
+  "content_hash": "0856470c68e6b5d73e475b0b0307cba9604495b16746f37656bab79e2ce23e79",
+  "collection_method": "live",
+  "title": "Turizm ve Seyahat | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 509756,
+  "text_chars": 2976,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

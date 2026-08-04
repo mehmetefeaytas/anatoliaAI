@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kobi/sigorta-ve-emeklilik/varliklariniz-icin/leasing-all-risk-sigortasi",
+  "scraped_at": "2026-08-03T17:25:35+00:00",
+  "content_hash": "26518161a8ef974ce59d69cdea8e4a87c812375b2c01da2a39082786d192f16a",
+  "collection_method": "live",
+  "title": "Leasing All Risk Sigortası - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182652,
+  "text_chars": 862,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

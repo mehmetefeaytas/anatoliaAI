@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri",
-  "scraped_at": "2026-07-30T20:02:03+00:00",
-  "content_hash": "52cad5c61e60ca91ea9e51c0f305a75b6365f5703c7918160bb8deb5831ed884",
+  "scraped_at": "2026-08-03T17:15:54+00:00",
+  "content_hash": "ec263fefb2a04f0f74cc4767589d4307168a1ae209b3583f5469894adbc72b9a",
   "collection_method": "live",
   "title": "Finansman Ürünleri | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135696,
-  "text_chars": 1045
+  "raw_bytes": 135934,
+  "text_chars": 1045,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

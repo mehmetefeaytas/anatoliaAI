@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/yatirim",
+  "scraped_at": "2026-08-03T17:36:51+00:00",
+  "content_hash": "6f3e9be860a4c92e1f1f94549dbc8123360e8554fa128f085ecca034307e64cd",
+  "collection_method": "live",
+  "title": "Yatırım | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 143105,
+  "text_chars": 1737,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

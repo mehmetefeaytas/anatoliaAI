@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/yolunuz-acik-sigortaniz-taksitli-olsun",
+  "scraped_at": "2026-08-03T16:55:28+00:00",
+  "content_hash": "10e736083f9663c010af753cea4de195e10e714544917d09c0592c97c8fa12b7",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139262,
+  "text_chars": 1517,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

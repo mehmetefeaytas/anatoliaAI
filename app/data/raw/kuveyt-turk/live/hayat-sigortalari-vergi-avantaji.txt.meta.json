@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/isim-icin/sigorta-ve-emeklilik/hayat-sigortalari/vergi-avantaji",
+  "scraped_at": "2026-08-03T16:28:55+00:00",
+  "content_hash": "886fc6af9578cc3bddacfe9af5d4db06640c9986343d5b15b8bc5e2d565e7f90",
+  "collection_method": "live",
+  "title": "Vergi Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 128862,
+  "text_chars": 935,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/arac-finansmani",
+  "scraped_at": "2026-08-03T17:04:35+00:00",
+  "content_hash": "c675baf2456b1804122891ce07b3dea1c77e6ad1cfd08aba2bf2112d0b416ebc",
+  "collection_method": "live",
+  "title": "Ara&#xE7; Finansman&#x131; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 523701,
+  "text_chars": 12793,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

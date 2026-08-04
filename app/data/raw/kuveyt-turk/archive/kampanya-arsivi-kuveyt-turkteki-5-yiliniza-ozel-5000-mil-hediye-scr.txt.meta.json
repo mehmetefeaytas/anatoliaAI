@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkteki-5-yiliniza-ozel-5000-mil-hediye-scr",
+  "scraped_at": "2026-08-03T17:58:53+00:00",
+  "content_hash": "1719d26ca35687757843d5c632f5ee777ba00b6848455ed47f30c386b3a6aaf4",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'teki 5. Yılınıza Özel 5.000 Mil Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130328,
+  "text_chars": 1245,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

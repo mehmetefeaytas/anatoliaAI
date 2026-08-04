@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-e-ticaret-saticilarina-taksitlendirme-firsati",
+  "scraped_at": "2026-08-03T17:59:08+00:00",
+  "content_hash": "df37967064d418a4f6371ca97e84a4d678237ad60594c735b3b3bbddf84b9d16",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten E-ticaret Satıcılarına Taksitlendirme Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130954,
+  "text_chars": 1692,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

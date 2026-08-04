@@ -7,5 +7,7 @@
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 167351,
-  "text_chars": 2510
+  "text_chars": 2510,
+  "recovered_from": "eb67e65",
+  "recovery_note": "2026-08-03 yeniden hasadi bu sayfada kabuk dondurdu (306 krkt); metin ve provenance Temmuz surumunden birlikte geri alindi"
 }

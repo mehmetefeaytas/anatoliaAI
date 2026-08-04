@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mobilya-ve-dekorasyon-alisverislerinize-500-tl-iade",
-  "scraped_at": "2026-07-30T18:41:49+00:00",
-  "content_hash": "32ab331796213f51c345259f40698b6d9cffd54337c0ff918ca2899ecf538f27",
+  "scraped_at": "2026-08-03T16:53:34+00:00",
+  "content_hash": "009faaca14cdadfe9d09e4422a44c3c370159623db1011e941e705d78e75b7db",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139626,
-  "text_chars": 2023
+  "raw_bytes": 139422,
+  "text_chars": 2001,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

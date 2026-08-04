@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/gayrimenkul-finansmani/arsa-finansmani",
-  "scraped_at": "2026-07-30T20:07:32+00:00",
-  "content_hash": "10e252986fe91f3e39edee2b6b520f160a4bd63759ae4351b123fdc53fdac40e",
+  "scraped_at": "2026-08-03T17:22:20+00:00",
+  "content_hash": "a5faaa61bcbfa35b6d2c82cc8de671879294088545aa7baa9e2cdfbcfcc3b23f",
   "collection_method": "live",
   "title": "Arsa Finansmanı ve Hesaplama Oranları | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 252885,
-  "text_chars": 8056
+  "raw_bytes": 253151,
+  "text_chars": 8056,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

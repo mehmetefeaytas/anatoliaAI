@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/yakininizi-davet-edin.aspx",
-  "scraped_at": "2026-07-30T18:37:35+00:00",
-  "content_hash": "e4109d78ea28a83063162cdf05bd07d0478d3021f8c1045fed747c81d094e847",
+  "scraped_at": "2026-08-03T16:39:08+00:00",
+  "content_hash": "8dbe794045aabe4b6612db1936fc7dd54007f9a3615245ea9659138cb6a71813",
   "collection_method": "live",
   "title": "Yakınını Mobil Şubeye Davet Et Bonus Kazan - Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 103993,
-  "text_chars": 10766
+  "raw_bytes": 104008,
+  "text_chars": 10770,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

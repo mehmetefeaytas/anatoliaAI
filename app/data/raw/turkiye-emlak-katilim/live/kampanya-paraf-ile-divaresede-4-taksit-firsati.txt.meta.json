@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-divaresede-4-taksit-firsati",
-  "scraped_at": "2026-07-30T18:43:45+00:00",
-  "content_hash": "b590b034e45d65e3a92bc974f0277508ed6d330211e1bb6df11920ee0cc06afa",
+  "scraped_at": "2026-08-03T16:57:52+00:00",
+  "content_hash": "2d391bd4bea6d43c19557469068eee6d3b7df79475cc5bd23a5dbcd96136d8e0",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 165196,
-  "text_chars": 994
+  "raw_bytes": 164928,
+  "text_chars": 913,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

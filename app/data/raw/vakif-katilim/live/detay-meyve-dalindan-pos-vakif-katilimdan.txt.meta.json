@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/meyve-dalindan-pos-vakif-katilimdan",
-  "scraped_at": "2026-07-30T18:41:43+00:00",
-  "content_hash": "ab53312e83dcb9cf71f1811415bdc495185d6377ae131b59570343bb244766c6",
+  "scraped_at": "2026-08-03T16:53:13+00:00",
+  "content_hash": "e363354cd949ba7be30b8a0f84b16149f3323ae39169e4dd21c2093cf6b5d559",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138767,
-  "text_chars": 1205
+  "raw_bytes": 138563,
+  "text_chars": 1183,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

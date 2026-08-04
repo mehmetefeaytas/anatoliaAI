@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kampusten-ucuran-firsat",
+  "scraped_at": "2026-08-03T17:56:47+00:00",
+  "content_hash": "db151bd3aa4ddf4b02a4e06b316af8aa63fada02185dd630f5a88e18094603de",
+  "collection_method": "live",
+  "title": "Kampüs'ten Uçuran Fırsat! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130080,
+  "text_chars": 1182,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

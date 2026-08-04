@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kartla-lc-waikikide-300-tl-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:09+00:00",
+  "content_hash": "44cff3f34f8f4f9f23af3e52a13fbf9edd5ed8e054475b3d9fddfca0f55d762d",
+  "collection_method": "live",
+  "title": "TROY Kartla LC Waikiki’de 300 TL İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 492659,
+  "text_chars": 4371,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

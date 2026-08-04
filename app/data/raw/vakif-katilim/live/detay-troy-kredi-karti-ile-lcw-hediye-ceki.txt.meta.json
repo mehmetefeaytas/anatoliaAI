@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kredi-karti-ile-lcw-hediye-ceki",
+  "scraped_at": "2026-08-03T16:54:19+00:00",
+  "content_hash": "3e830eea8f5ac6505d8938a47e7ddf3e0bcb32a46da988c942a91088d444d576",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140784,
+  "text_chars": 3193,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

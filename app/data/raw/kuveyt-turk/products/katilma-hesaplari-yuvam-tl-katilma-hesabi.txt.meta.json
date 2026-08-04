@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/yuvam-tl-katilma-hesabi",
+  "scraped_at": "2026-08-03T17:20:52+00:00",
+  "content_hash": "ae37cbdffb8c8afd33eefe325c3d962dbbe0161d495bede227207766708aebf0",
+  "collection_method": "live",
+  "title": "Yuvam TL Katılma Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 152962,
+  "text_chars": 7927,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

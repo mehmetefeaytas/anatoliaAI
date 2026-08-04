@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/donusum-destekli-kur-korumali-tl-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:08:44+00:00",
-  "content_hash": "b2c3db4f10d22aa71e230a292fee23386eda6725c6f3691d4a11121b4a2e846a",
+  "scraped_at": "2026-08-03T17:23:32+00:00",
+  "content_hash": "92e1c11081c5c0e19e7a71db01c58a898c1fce358cb0b072b40e7c97997163f4",
   "collection_method": "live",
   "title": "Dönüşüm Destekli Kur Korumalı TL Katılma Hesabı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 186519,
-  "text_chars": 3516
+  "raw_bytes": 186785,
+  "text_chars": 3516,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/ihtiyac-finansmani",
-  "scraped_at": "2026-07-30T20:18:25+00:00",
-  "content_hash": "8c4688e65adc67459514bbf57d55f84561d705ca8a65df492b37a0902777e1a6",
+  "scraped_at": "2026-08-03T17:34:11+00:00",
+  "content_hash": "fa1948804838b70882512522c495f89afadc1d433ebeaa1a4043bf491496fdf5",
   "collection_method": "live",
   "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 135166,
-  "text_chars": 1923
+  "text_chars": 1923,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

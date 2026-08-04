@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/itopya",
-  "scraped_at": "2026-07-30T18:46:37+00:00",
-  "content_hash": "c7ab9c3284a157bab0a7e394043d1edd6d2c83a07cf62c2661aed5551cefbb1b",
+  "scraped_at": "2026-08-03T17:03:20+00:00",
+  "content_hash": "2837deb4c3e7e4e10c042b89eab1cec4bc8d562f54035ec5a1a360184846339b",
   "collection_method": "live",
   "title": "Itopya | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507224,
-  "text_chars": 11626
+  "raw_bytes": 507221,
+  "text_chars": 11623,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

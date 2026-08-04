@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/seckin-firsatlar",
-  "scraped_at": "2026-07-30T18:35:07+00:00",
-  "content_hash": "5925064a8c945e6eb432955767f4b5c5cecbd4f540eca8230331230a2f890c69",
+  "scraped_at": "2026-08-03T16:36:39+00:00",
+  "content_hash": "d502ef89dbb65d4e4dce8a4ac9a3e44c4a5f5f2c3855a8d915537d0d22404e25",
   "collection_method": "live",
   "title": "Albaraka Mobil'de Şimdi \"Seçkin Fırsatlar\" Zamanı! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181677,
-  "text_chars": 1803
+  "raw_bytes": 181943,
+  "text_chars": 1803,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

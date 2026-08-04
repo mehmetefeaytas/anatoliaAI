@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hepsiburada-alisveris-finansmaninda-enerji-tasarrufu-haftasina-ozel-399-kar-orani-firsati",
+  "scraped_at": "2026-08-03T17:54:58+00:00",
+  "content_hash": "6f0e576b36f33d1b13e8c2e3ed04c90f256c85a9e99e7087f32d5e101c8c36f7",
+  "collection_method": "live",
+  "title": "Hepsiburada Alışveriş Finansmanı'nda Enerji Tasarrufu Haftasına Özel %3.99 Kar Oranı Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131312,
+  "text_chars": 1712,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

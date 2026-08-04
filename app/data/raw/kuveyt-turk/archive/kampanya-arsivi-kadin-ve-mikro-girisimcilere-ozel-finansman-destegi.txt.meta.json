@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kadin-ve-mikro-girisimcilere-ozel-finansman-destegi",
+  "scraped_at": "2026-08-03T17:56:41+00:00",
+  "content_hash": "06d62042bd6066c40da4685c82e19917e077aea366a5d05a3af99038b061fb81",
+  "collection_method": "live",
+  "title": "Kadın ve Mikro Girişimcilere Özel Finansman Desteği! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132901,
+  "text_chars": 2685,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

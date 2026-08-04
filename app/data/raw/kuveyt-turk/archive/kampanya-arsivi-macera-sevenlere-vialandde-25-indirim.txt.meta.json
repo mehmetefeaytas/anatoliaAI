@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/macera-sevenlere-vialandde-25-indirim",
+  "scraped_at": "2026-08-03T18:00:08+00:00",
+  "content_hash": "60d9dded26199d2c2b422df3aa77bbd0f07255e84bcec7fe7c39c24d6ad68e29",
+  "collection_method": "live",
+  "title": "Macera Sevenlere Vialand'de %25 İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130018,
+  "text_chars": 1084,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

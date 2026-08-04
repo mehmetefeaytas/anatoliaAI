@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-evideada-4-taksit-firsati",
-  "scraped_at": "2026-07-30T18:43:57+00:00",
-  "content_hash": "cc91375bf909ab9f35fe60d4044b6696f84b48792e6339bd5786d6e28408cac7",
+  "scraped_at": "2026-08-03T16:58:07+00:00",
+  "content_hash": "3fa2bcf0084141a0989d56f3998feb459c7031d13d01921aeadc0201e2efb2cc",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 165175,
-  "text_chars": 1172
+  "raw_bytes": 165191,
+  "text_chars": 1175,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

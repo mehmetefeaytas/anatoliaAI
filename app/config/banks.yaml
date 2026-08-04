@@ -11,9 +11,34 @@
 # detail_patterns: keşfedilen URL'lerden kampanya detayını süzen regex'ler
 # exclude_patterns: banka özelinde ek eleme (varsayılanlar discover.py'de)
 # max_docs       : banka başına toplanacak azami belge
+# archive_paths  : SÜRESİ DOLMUŞ kampanya listeleri (arşiv / "biten kampanyalar").
+#                  Ayrı tur olarak toplanır → data/raw/<slug>/archive/, provenance'ta
+#                  campaign_status=expired. `suresi_dolmus_kampanya` kuralı ve
+#                  zaman-koşullu çelişki tespiti için GERÇEK etiket kaynağıdır.
+# document_paths : ücret tarifesi / sözleşme-form sayfaları (PDF bağlantısı taşır)
+# document_hosts : PDF'lerin durduğu ek alan adları (ör. asset.emlakkatilim.com.tr)
 #
 # 2026-07-30 doğrulaması: eski yollar (/kampanyalar) 8/10 bankada 404 dönüyordu;
 # gerçek yollar sitemap + liste sayfası taraması ile düzeltildi.
+#
+# 2026-08-03 tarayıcı keşfi (docs/rapor/banka-siteleri-veri-kaynagi-haritasi.md):
+#  * max_docs=40 kırpması gerçek kaybettiriyordu (kuveyt-turk: 475 aday → 39 belge)
+#    → banka başına aday sayısına göre yükseltildi.
+#  * Ziraat'in kampanya kataloğu /bireysel/kampanyalar'da DEĞİL: o sayfa boş
+#    (7 bağlantı, hiçbiri detay değil). Gerçek katalog /kart-kampanyalari
+#    (191 bağlantı) + 15 sektör kategorisi. Bu yüzden yalnızca 5 kampanya
+#    toplanabilmişti.
+#  * Ücret tarifeleri HTML tablo değil PDF; bazıları ayrı alan adında.
+#
+# 2026-08-04 URL doğrulaması (curl, HTTP 200 — tahmin DEĞİL):
+#  * 20 URL denetlendi; 8'i gerçekten yeni, 12'si zaten dosyada mevcuttu ve
+#    tekrar EKLENMEDİ (çift toplama = karşılaştırmada yapay tekrar).
+#  * Yeni alan adları: saglamkart.kuveytturk.com.tr (ALT ALAN → `same_site()`
+#    zaten tolere ediyor, `extra_hosts` gereksiz) ve hayatpay.com.tr (AYRI
+#    KAYITLI ALAN → `extra_hosts` ZORUNLU, aksi halde tümüyle atlanır).
+#  * Albaraka'nın `?slug=gecmis-kampanyalar` sayfası `archive_paths`a yazıldı;
+#    `campaign_paths`a konsa süresi dolmuş kampanyalar aktif sanılırdı.
+#  * Yol eklenen 3 bankada max_docs orantılı yükseltildi (aşağıda gerekçeli).
 
 banks:
   - slug: kuveyt-turk
@@ -22,6 +47,40 @@ banks:
     scrape_mode: static
     campaign_paths:
       - /kampanyalar
+      - /kampanyalar/kendim-icin
+      - /kampanyalar/isim-icin
+      # 2026-08-04'te HTTP 200 doğrulandı (curl). Üçü de YENİ giriş noktası:
+      #  * saglamkart.kuveytturk.com.tr KART ALT ALANI: Sağlam Kart kampanya
+      #    kataloğu ana alanın /kampanyalar ağacında YOK, ayrı alt alanda
+      #    yayımlanıyor. `extra_hosts`a EKLENMEDİ ÇÜNKÜ gerek yok: discover.py
+      #    `_host()` "www." ekini atıyor (base → kuveytturk.com.tr), `same_site()`
+      #    ise `a.endswith("." + b)` ile alt alanları zaten "aynı site" sayıyor
+      #    → saglamkart.kuveytturk.com.tr toleranse ediliyor (ölçüldü: True).
+      #    hayatpay.com.tr gibi AYRI kayıtlı alanlar için durum farklı, oraya bak.
+      #  * /ozel-bankacilik/... özel bankacılık müşterilerine özel kampanyalar;
+      #    kitlesel /kampanyalar listesinde görünmüyor (ayrı hedef kitle).
+      #  * /isim-icin KOBİ/ticari segment merkezi — /kampanyalar/isim-icin'den
+      #    FARKLI sayfa: kampanya listesi değil segment menüsü, ticari
+      #    kampanyalara bağlantı taşıyor.
+      # Üçü de `detail_patterns` ("/kampanyalar/") ile eşleşmediği için BELGE
+      # olarak değil, yalnızca bağlantı toplanacak GEZİNME BAŞLANGICI olarak
+      # sayılır — istenen davranış bu (liste sayfası içerik değil).
+      - https://saglamkart.kuveytturk.com.tr/kampanyalar
+      - /ozel-bankacilik/ayricaliklar/kampanyalar
+      - /isim-icin
+    # Arşiv listeleme sayfası her kampanyanın BİTİŞ TARİHİNİ ayrı düğümde veriyor
+    # (ör. 31.07.2026) → başlık + bitiş tarihi + özet üçlüsü hazır etiket.
+    archive_paths:
+      - /kampanyalar/kampanya-arsivi
+      - /kampanyalar/kampanya-arsivi?root=kendim-icin
+      - /kampanyalar/kampanya-arsivi?root=isim-icin
+    # 2026-08-03: /hesaplama-araclari'nda PDF yok; gerçek yollar site
+    # haritasından doğrulandı.
+    document_paths:
+      - /urun-hizmet-ucretleri
+      - /sozlesmeler
+    # Arşivde 318 aday bulundu; 60 tavanı gerçek veri kaybettiriyordu.
+    max_archive_docs: 200
     sitemap_urls:
       - https://www.kuveytturk.com.tr/sitemap.xml
     detail_patterns:
@@ -29,7 +88,11 @@ banks:
       - kampanyasi
       - firsati
       - avantaji
-    max_docs: 40
+    # 2026-08-04: giriş noktası sayısı 3 → 6'ya çıktı (kart alt alanı + özel
+    # bankacılık + ticari segment). Tavan sabit kalsa yeni alanların belgeleri
+    # kırpılıp atılırdı; aday havuzunun büyük kısmı hâlâ sitemap'ten geldiği için
+    # 2 kat değil ~%25 artış yeterli: 260 → 320.
+    max_docs: 320
 
   - slug: albaraka
     name: Albaraka Türk
@@ -37,16 +100,54 @@ banks:
     scrape_mode: static
     campaign_paths:
       - /tr/kampanyalar
+      # 2026-08-04'te HTTP 200 doğrulandı (curl). Dördü de SEGMENT MERKEZİ:
+      # /tr/kampanyalar yalnızca bireysel kitleye açık kampanyaları listeliyor;
+      # KOBİ, ticari-kurumsal ve dijital bankacılık kampanyaları kendi segment
+      # sayfalarından bağlanıyor, ana listede görünmüyor. /tr/bireysel/
+      # finansmanlar/ihtiyac ise ihtiyaç finansmanı kampanyalarının bağlandığı
+      # ürün merkezi (CLAUDE.md §6: oran/vade bilgisi ürün sayfasında durur).
+      # Bu dördü `detail_patterns` ("/tr/kampanyalar/") ile eşleşmediği için
+      # BELGE olarak sayılmaz, yalnızca bağlantı hasadı için giriş noktasıdır.
+      - /tr/kobi
+      - /tr/ticari-ve-kurumsal
+      - /tr/dijital-bankacilik
+      - /tr/bireysel/finansmanlar/ihtiyac
+    # 2026-08-04'te HTTP 200 doğrulandı (curl). `campaign_paths`a DEĞİL buraya
+    # yazıldı: bu sayfa SÜRESİ DOLMUŞ kampanyaların listesi. campaign_paths'a
+    # konsa `live/` altına düşer ve karşılaştırma motoru bitmiş kampanyayı AKTİF
+    # sanardı (CLAUDE.md §17 adil-kıyas ihlali). archive_paths ise `archive/`
+    # alt dizinine yazıp provenance'a campaign_status=expired koyar; bu
+    # `suresi_dolmus_kampanya` kuralının GERÇEK etiket kaynağıdır.
+    # Not: `?slug=gecmis-kampanyalar` sorgusu discover.py normalize_url()
+    # tarafından korunuyor ve DEFAULT_ARCHIVE_PATTERNS'teki "gecmis-kampanya"
+    # deseniyle eşleşiyor → ayrı `archive_patterns` tanımlamaya gerek yok.
+    # max_archive_docs varsayılan 60'ta bırakıldı: Kuveyt Türk'te olduğu gibi
+    # ölçülmüş bir aday sayısı yok, tahminle tavan yükseltmiyoruz.
+    archive_paths:
+      - /tr/kampanyalar?slug=gecmis-kampanyalar
+    # 2026-08-03: tahmin edilen yollar 404 döndü; gerçekleri ana sayfadan alındı.
+    document_paths:
+      - /tr/urun-ve-hizmet-ucretleri
+      - /tr/hakkimizda/iletisim/sozlesme-ve-formlar
     sitemap_urls:
       - https://www.albaraka.com.tr/sitemap.xml
     detail_patterns:
       - /tr/kampanyalar/
-    max_docs: 40
+    # 2026-08-04: giriş noktası 1 → 5 oldu. 5 kat artırmıyoruz çünkü yalnızca
+    # `/tr/kampanyalar/` desenine uyan bağlantılar belge sayılıyor; segment
+    # sayfalarının kendisi sayılmıyor. Gerçekçi beklenti ~2 kat: 60 → 120.
+    max_docs: 120
 
   - slug: turkiye-finans
     name: Türkiye Finans
     website_url: https://www.turkiyefinans.com.tr
     scrape_mode: static
+    # 2026-08-04 doğrulaması: /tr-tr/kampanyalar/sayfalar/default.aspx HTTP 200
+    # döndü, ancak bu aşağıdaki ilk satırın YALNIZCA KÜÇÜK HARFLİ biçimi.
+    # SharePoint yollarında büyük/küçük harf farkı aynı sayfayı verir; ayrı satır
+    # olarak eklenirse discover.py `seen` kümesi iki farklı dizge görüp AYNI
+    # sayfayı İKİ KEZ toplar (çift kayıt → karşılaştırmada yapay tekrar).
+    # Bu yüzden tekrar eklenmedi.
     campaign_paths:
       - /tr-tr/kampanyalar/Sayfalar/default.aspx
       - /tr-tr/kampanyalar/Sayfalar/finansman-kampanyalari.aspx
@@ -58,17 +159,53 @@ banks:
       - /tr-tr/kampanyalar/Sayfalar/ticari-kampanyalar.aspx
       - /tr-tr/kampanyalar/Sayfalar/sigorta-kampanyalari.aspx
       - /tr-tr/kampanyalar/Sayfalar/diger-kampanyalar.aspx
+    # Türkiye Finans süresi dolmuş kampanyaları AYRI sayfada yayımlıyor.
+    archive_paths:
+      - /tr-tr/kampanyalar/Sayfalar/biten-kampanyalar.aspx
+    document_paths:
+      - /tr-tr/bireysel/Sayfalar/urun-hizmet-ucretleri.aspx
+      - /tr-tr/sozlesmeler-ve-formlar/Sayfalar/sozlesmeler-ve-formlar.aspx
+      - /tr-tr/bireysel/sozlesmeler-ve-formlar/Sayfalar/default.aspx
     detail_patterns:
       - /tr-tr/kampanyalar/Sayfalar/
       - finansmani.aspx
-    max_docs: 40
+    max_docs: 80
 
+  # Ziraat Katılım — 2026-08-03 tarayıcı doğrulaması:
+  #  * /bireysel/kampanyalar sayfası PRATİKTE BOŞ (7 bağlantı, hiçbiri kampanya
+  #    detayı değil) → 30 Tem turunda yalnızca 5 kampanya toplanabildi.
+  #  * Gerçek katalog /kart-kampanyalari (191 kampanya bağlantısı) ve altındaki
+  #    15 sektör kategorisi. robots.txt bu yolları engellemiyor (standart Drupal).
+  #  * HTTP 493: sitemap'te kalmış ölü bağlantılar. Gerçek tarayıcıyla da
+  #    açılmıyor (net::ERR_HTTP_RESPONSE_CODE_FAILURE) → bot engeli DEĞİL.
   - slug: ziraat-katilim
     name: Ziraat Katılım
     website_url: https://www.ziraatkatilim.com.tr
     scrape_mode: static
+    # 2026-08-04: /bireysel/kampanyalar yeniden doğrulandı (HTTP 200) — zaten
+    # mevcut, tekrar eklenmedi. HTTP 200 dönmesi sayfanın DOLU olduğunu
+    # göstermiyor; yukarıdaki 2026-08-03 notu geçerli (7 bağlantı, hiçbiri detay
+    # değil) — gerçek katalog /kart-kampanyalari'dır.
     campaign_paths:
       - /bireysel/kampanyalar
+      - /kart-kampanyalari
+      - /kampanyalar/genel-kampanyalar
+      - /kampanyalar/market-ve-gida
+      - /kampanyalar/akaryakit
+      - /kampanyalar/e-ticaret
+      - /kampanyalar/elektronik-ve-telekomunikasyon
+      - /kampanyalar/beyaz-esya-ve-ev-aletleri
+      - /kampanyalar/giyim-ve-aksesuar
+      - /kampanyalar/mobilya-ve-dekorasyon
+      - /kampanyalar/yapi-sektoru-ve-iklimlendirme
+      - /kampanyalar/kuyum-optik-ve-saat
+      - /kampanyalar/egitim-kitap-ve-kirtasiye
+      - /kampanyalar/turizm-ve-seyahat
+      - /kampanyalar/hobi-ve-oyuncak
+      - /kampanyalar/diger-kampanyalar
+    document_paths:
+      - /urun-ve-hizmet-ucretleri
+      - /sozlesmeler-ve-formlar
     sitemap_urls:
       - https://www.ziraatkatilim.com.tr/sitemap.xml?page=1
       - https://www.ziraatkatilim.com.tr/sitemap.xml?page=2
@@ -78,34 +215,48 @@ banks:
       - /kampanyalar/
       - /kart-kampanyalari/
       - /finansman-urunleri/
-    max_docs: 40
+    max_docs: 220
 
   - slug: vakif-katilim
     name: Vakıf Katılım
     website_url: https://www.vakifkatilim.com.tr
     scrape_mode: static
+    # 2026-08-04: /tr/kendim-icin/kampanyalar/mevcut-kampanyalar yeniden
+    # doğrulandı (HTTP 200) — zaten mevcut, tekrar eklenmedi.
     campaign_paths:
       - /tr/kendim-icin/kampanyalar/mevcut-kampanyalar
+      - /tr/isim-icin/kampanyalar/mevcut-kampanyalar
+    document_paths:
+      - /tr/diger/sozlesmeler-ve-formlar
+      - /tr/kendim-icin/hesaplar/katilma-hesaplari/kar-paylasim-oranlari
     sitemap_urls:
       - https://www.vakifkatilim.com.tr/sitemap-tr.xml
     detail_patterns:
       - /kampanyalar/detay/
       - /kampanyalar/mevcut-kampanyalar
-    max_docs: 40
+    max_docs: 110
 
   - slug: turkiye-emlak-katilim
     name: Türkiye Emlak Katılım
     website_url: https://www.emlakkatilim.com.tr
     scrape_mode: static
+    # 2026-08-04: /tr/bireysel/kampanyalar yeniden doğrulandı (HTTP 200) —
+    # zaten mevcut, tekrar eklenmedi.
     campaign_paths:
       - /tr/bireysel/kampanyalar
       - /tr/kurumsal/kampanyalar
+    # Ücret tarifeleri AYRI alan adında PDF olarak duruyor (2026-08-03 doğrulaması).
+    document_paths:
+      - /tr/urun-ve-hizmet-ucretleri
+      - /tr/sozlesmeler-ve-formlar
+    document_hosts:
+      - asset.emlakkatilim.com.tr
     sitemap_urls:
       - https://www.emlakkatilim.com.tr/XML/www.emlakkatilim.com.tr_tr_sitemap.xml
     detail_patterns:
       - /kampanyalar
       - /finansmanlar/
-    max_docs: 40
+    max_docs: 90
 
   # T.O.M. Katılım Bankası — 2026-07-30 doğrulaması:
   #  * www.tomkatilim.com.tr DNS'te YOK; gerçek kurumsal alan www.tombank.com.tr
@@ -115,6 +266,10 @@ banks:
     name: T.O.M. Katılım
     website_url: https://www.tombank.com.tr
     scrape_mode: js
+    # 2026-08-04: hem /kampanyalar.html hem tombankhadi.com/hadi-kazan/kampanyalar
+    # yeniden doğrulandı (HTTP 200) — ikisi de zaten mevcut, tekrar eklenmedi.
+    # tombankhadi.com AYRI kayıtlı alan olduğu için `same_site()` onu "site dışı"
+    # sayardı; aşağıdaki `extra_hosts` girdisi bu yüzden zorunlu ve yerinde.
     campaign_paths:
       - /kampanyalar.html
       - /urunlerimiz.html
@@ -126,33 +281,57 @@ banks:
       - /cok-kazananlar-kulubu-kampanya/
       - kampanyalar.html
       - urunlerimiz.html
-    max_docs: 40
+    max_docs: 60
 
   - slug: hayat-finans
     name: Hayat Finans
     website_url: https://hayatfinans.com.tr
     scrape_mode: js
+    # 2026-08-04'te ikisi de HTTP 200 doğrulandı (curl).
+    #  * /kampanyalar zaten mevcuttu — tekrar eklenmedi.
+    #  * hayatpay.com.tr ALT MARKA (ödeme/cüzdan tarafı) kampanyalarını KENDİ
+    #    alan adında yayımlıyor; hayatfinans.com.tr sitemap'inde yer almıyor.
     campaign_paths:
       - /kampanyalar
+      - https://hayatpay.com.tr/kampanya
+    # hayatpay.com.tr AYRI KAYITLI ALAN (alt alan değil): `same_site()` testi
+    # hayatpay.com.tr ↔ hayatfinans.com.tr için False döner (ölçüldü), yani
+    # `extra_hosts`a yazılmasa keşif katmanı bu alanı "site dışı" sayıp
+    # kampanya sayfasını ve ondan çıkan TÜM bağlantıları atardı.
+    # Kuveyt Türk'ün saglamkart.* durumundan farkı budur: orası ALT ALAN olduğu
+    # için `a.endswith("." + b)` kuralıyla zaten tolere ediliyor.
+    extra_hosts:
+      - hayatpay.com.tr
+    document_paths:
+      - /urun-ve-hizmet-ucretleri
+      - /sozlesme-ve-formlar
     sitemap_urls:
       - https://www.hayatfinans.com.tr/sitemap.xml
     detail_patterns:
       - /kampanyalar
       - /finansmanlar/
-    max_docs: 40
+    # 2026-08-04: ikinci bir kampanya kataloğu (hayatpay) eklendi; 40 tavanı iki
+    # alanın belgelerini tek havuzda paylaştırıp ana bankanınkileri kırpardı.
+    # Giriş noktası 1 → 2, tavan da 2 kat: 40 → 80.
+    max_docs: 80
 
   - slug: dunya-katilim
     name: Dünya Katılım
     website_url: https://dunyakatilim.com.tr
     scrape_mode: static
+    # 2026-08-04: /kampanyalar yeniden doğrulandı (HTTP 200) — zaten mevcut,
+    # tekrar eklenmedi.
     campaign_paths:
       - /kampanyalar
+    document_paths:
+      - /urun-hizmet-ve-ucretleri
+      - /sozlesme-ve-formlar
     sitemap_urls:
       - https://dunyakatilim.com.tr/sitemap.xml
     detail_patterns:
       - /kampanyalar/
       - /finansmanlar/
-    max_docs: 40
+    max_docs: 60
 
   # Adil Katılım — Nuxt/Vue tek-sayfa uygulaması: HTML kaynağında içerik yok,
   # sitemap de yok; yalnızca tarayıcı ile toplanabilir.
@@ -163,6 +342,9 @@ banks:
     name: Adil Katılım
     website_url: https://www.adilkatilim.com.tr
     scrape_mode: js
+    # 2026-08-04: https://www.adilkatilim.com.tr (ana sayfa) HTTP 200 doğrulandı.
+    # Bu, aşağıdaki "/" girdisinin ta kendisi (website_url + "/") — ayrı satır
+    # olarak eklenmedi, aksi halde ana sayfa iki kez toplanırdı.
     campaign_paths:
       - /
       - /katilim-bankaciligi

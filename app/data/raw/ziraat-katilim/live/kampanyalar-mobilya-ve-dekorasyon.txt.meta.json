@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/mobilya-ve-dekorasyon",
+  "scraped_at": "2026-08-03T16:40:56+00:00",
+  "content_hash": "c2923d689978750deb2759710a828cf1104935fb60a850113e92c5e58e32ef5a",
+  "collection_method": "live",
+  "title": "Mobilya ve Dekorasyon | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 521625,
+  "text_chars": 3441,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

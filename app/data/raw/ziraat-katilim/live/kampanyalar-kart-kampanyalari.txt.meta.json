@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/kart-kampanyalari",
-  "scraped_at": "2026-07-30T18:38:30+00:00",
-  "content_hash": "24a55d0f40dd7e2af5ca6197cca22e1d080e7ab61fd3d6e1c7314d4552d5b410",
+  "scraped_at": "2026-08-03T16:41:05+00:00",
+  "content_hash": "def9425974fad6b4ff8f9065863f6df270e438de652c520fbed0dc0ac2011e62",
   "collection_method": "live",
   "title": "Kart Kampanyaları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 450004,
-  "text_chars": 890
+  "raw_bytes": 466666,
+  "text_chars": 890,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

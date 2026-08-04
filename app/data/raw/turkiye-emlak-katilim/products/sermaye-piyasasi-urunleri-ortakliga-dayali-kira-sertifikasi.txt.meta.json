@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/sermaye-piyasasi-urunleri/ortakliga-dayali-kira-sertifikasi",
+  "scraped_at": "2026-08-03T17:42:50+00:00",
+  "content_hash": "b8a59a6b30db49781163a4bb64931f4fbade731e9a5abc14796a6633008c4405",
+  "collection_method": "live",
+  "title": "Ortaklığa Dayalı Kira Sertifikası | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 169241,
+  "text_chars": 4202,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

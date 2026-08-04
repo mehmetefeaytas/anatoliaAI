@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-and-avek-is-birligi",
+  "scraped_at": "2026-08-03T17:57:23+00:00",
+  "content_hash": "6b2422561e6978a9702089933358faa40fa5042b63066280b5439cf1c08f3ed7",
+  "collection_method": "live",
+  "title": "Kuveyt Türk & Avek İş birliği | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132166,
+  "text_chars": 1964,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

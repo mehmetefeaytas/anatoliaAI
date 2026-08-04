@@ -1,11 +1,13 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/vergi-kampanyasi",
-  "scraped_at": "2026-07-30T18:44:24+00:00",
-  "content_hash": "82ad7a11f58bad9ed7a331a1c883ceb6760c54525a3c1441f158746e6e26b263",
+  "scraped_at": "2026-08-03T17:00:51+00:00",
+  "content_hash": "550ca3fc2981234b3955dbc1e7502927524234a04a34f77d99cf24c21c74939e",
   "collection_method": "browser",
   "title": "Hadi Black Kredi Kartı ile MTV Ödemelerinde Vade Farksız 3 taksit fırsatını kaçırma! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 99983,
-  "text_chars": 2505
+  "raw_bytes": 99982,
+  "text_chars": 2504,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/diger-dis-ticaret-islemleri/doviz-transferi-swift",
+  "scraped_at": "2026-08-03T17:43:02+00:00",
+  "content_hash": "2b8cc733aa1c7da9243b5e4cd1c582c2343dec2211fdf4d1a3704309d95cb437",
+  "collection_method": "live",
+  "title": "D&#246;viz Transferi (SWIFT) | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165203,
+  "text_chars": 876,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kobi-kampanyalari/kuveyt-turkten-e-ticaret-yapan-kobilere-75e-varan-kargo-indirimi",
+  "scraped_at": "2026-08-03T16:30:01+00:00",
+  "content_hash": "90d78c78d5e64185131d08640e99e17ca899a93e1ee421b596b7b298eb5d279c",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten E-Ticaret Yapan KOBİ'lere %75’e Varan Kargo İndirimi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132311,
+  "text_chars": 2301,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

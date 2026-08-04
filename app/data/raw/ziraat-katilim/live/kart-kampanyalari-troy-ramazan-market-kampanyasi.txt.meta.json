@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-ramazan-market-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:21+00:00",
+  "content_hash": "a43d637850672a2a309c639c8c2dd1c996b86e4f99e056f65309a20a343644e2",
+  "collection_method": "live",
+  "title": "TROY Ramazan Market Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490405,
+  "text_chars": 3408,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

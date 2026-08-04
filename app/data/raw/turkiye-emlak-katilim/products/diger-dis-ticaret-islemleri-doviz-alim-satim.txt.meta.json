@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/diger-dis-ticaret-islemleri/doviz-alim-satim",
+  "scraped_at": "2026-08-03T17:42:59+00:00",
+  "content_hash": "12180253938c0b658491d2a73b0c4c137c55e14b5919058f629b32205c6cb901",
+  "collection_method": "live",
+  "title": "D&#246;viz Alım-Satım | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165109,
+  "text_chars": 855,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/gayrimenkul-sertifikasi-finansmani",
+  "scraped_at": "2026-08-03T16:59:58+00:00",
+  "content_hash": "0bff5ae7e10c337739f790d75bf071a2a7264251d6fe0c239efe3d84b4c1b443",
+  "collection_method": "live",
+  "title": "Gayrimenkul Sertifikası Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165899,
+  "text_chars": 2915,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

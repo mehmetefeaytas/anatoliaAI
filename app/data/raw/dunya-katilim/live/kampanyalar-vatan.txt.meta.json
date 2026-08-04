@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/vatan",
+  "scraped_at": "2026-08-03T17:04:17+00:00",
+  "content_hash": "b343f0f3793a5d06cb977886b309633dfe6a0079c834ed7980951249fa50f2df",
+  "collection_method": "live",
+  "title": "Vatan | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 507398,
+  "text_chars": 11703,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize/ozel-kur-avantajii",
+  "scraped_at": "2026-08-03T16:28:40+00:00",
+  "content_hash": "093346db5bc192750019b0fcbf62debe4107f7354845dcb08156f4bc73284ccd",
+  "collection_method": "live",
+  "title": "Özel Kur Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130040,
+  "text_chars": 2439,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

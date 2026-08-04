@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/the-house-cafelerde-tatli-ikrami",
+  "scraped_at": "2026-08-03T16:35:20+00:00",
+  "content_hash": "b625c74bdb9c0afb6ba4e43a0027be435fe3c169e7af2812c939974401cc63bb",
+  "collection_method": "live",
+  "title": "The House Cafe'lerde Tatlı İkramı! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179198,
+  "text_chars": 753,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

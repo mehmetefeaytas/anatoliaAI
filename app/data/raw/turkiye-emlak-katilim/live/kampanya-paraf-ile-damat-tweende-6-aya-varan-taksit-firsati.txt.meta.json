@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-damat-tweende-6-aya-varan-taksit-firsati",
-  "scraped_at": "2026-07-30T18:43:39+00:00",
-  "content_hash": "7fb1273ee012551ec7a55bcdf0187d6e979901fc79f457e0625a5079624079d5",
+  "scraped_at": "2026-08-03T16:57:46+00:00",
+  "content_hash": "7ad56bec28e29c5c3f0892a1c8f4358f59b93e12530a191a1c270f96c58bc24d",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165370,
-  "text_chars": 1070
+  "text_chars": 1070,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/gumus-ve-platin-hesabi",
+  "scraped_at": "2026-08-03T17:42:08+00:00",
+  "content_hash": "3808a869bfd83b80f6b3ddfc290d33556cf39e3238a7ce55bc244fd4eedd109f",
+  "collection_method": "live",
+  "title": "G&#252;m&#252;ş ve Platin Hesabı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164908,
+  "text_chars": 839,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/hesaplama-araclari/kar-payi-hesaplama",
-  "scraped_at": "2026-07-30T20:01:42+00:00",
-  "content_hash": "de3fd1a55a4563858ebf95825637a980c7ec6691166e265ce37a27b75ee8505f",
+  "scraped_at": "2026-08-03T17:15:33+00:00",
+  "content_hash": "ab8a94364db73456ddc9ae26296609ce2cb2c8796feee5164b3dd0bd98c22e52",
   "collection_method": "live",
   "title": "Kar Payı Hesaplama | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 138677,
-  "text_chars": 380
+  "raw_bytes": 138915,
+  "text_chars": 380,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

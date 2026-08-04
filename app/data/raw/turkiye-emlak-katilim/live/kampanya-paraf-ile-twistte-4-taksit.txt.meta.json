@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-twistte-4-taksit",
+  "scraped_at": "2026-08-03T16:59:07+00:00",
+  "content_hash": "f0dd0dbec2962cdec9dad9ff4c9059b6849bb8ef2286a8ead7709caf758f1319",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 164870,
+  "text_chars": 885,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

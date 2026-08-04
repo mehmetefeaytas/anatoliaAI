@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/yatirim-urunleri/spot-doviz",
-  "scraped_at": "2026-07-30T20:14:09+00:00",
-  "content_hash": "f398665e308c4d061c34bcae6b131d643a1f082ada5c70c0a76dbc3525da78ff",
+  "scraped_at": "2026-08-03T17:29:59+00:00",
+  "content_hash": "1457cc0aab08c7ac39fef4ae6e13708add5c32a650f8de6993c5a6c3b8bad13a",
   "collection_method": "live",
   "title": "Spot Döviz | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 454827,
-  "text_chars": 266
+  "raw_bytes": 471494,
+  "text_chars": 266,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

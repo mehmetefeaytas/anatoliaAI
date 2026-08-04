@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/kentsel-donusum-finansmani",
-  "scraped_at": "2026-07-30T20:17:34+00:00",
-  "content_hash": "0f0ae9ba6640d1e67ec599a71e74d7cca763e053c0e6f0babfbbf21226c65e2d",
+  "scraped_at": "2026-08-03T17:33:23+00:00",
+  "content_hash": "ac3ec46ce80e8de7554634829ee893d5497fcc422061d19c9be71fb2ccc9fc7f",
   "collection_method": "live",
   "title": "Kentsel D&#246;n&#252;ş&#252;m Finansmanı | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 134878,
-  "text_chars": 2509
+  "text_chars": 2509,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

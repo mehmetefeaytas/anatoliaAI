@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/konut-finansmani-musterilerine-bella-maisonda-2500-tl-ve-uzeri-alisverislerde-500-tl-indirim-scr",
+  "scraped_at": "2026-08-03T17:57:11+00:00",
+  "content_hash": "e2ea4d562d1dfbb54358b9d04ebe384c99230565ae89681319c2b6ed09d02b75",
+  "collection_method": "live",
+  "title": "Konut Finansmanı Müşterilerine Bella Maison’da 2.500 TL ve Üzeri Alışverişlerde 500 TL İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131038,
+  "text_chars": 1407,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

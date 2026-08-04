@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/monster-notebookta-pesin-fiyatina-12-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:47:12+00:00",
+  "content_hash": "46134108cfa9efb6c7330f82a83fea25d0dd127c90f17809e5603ea43918a64a",
+  "collection_method": "live",
+  "title": "Monster Notebook&#039;ta Peşin Fiyatına 12 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 485007,
+  "text_chars": 1581,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

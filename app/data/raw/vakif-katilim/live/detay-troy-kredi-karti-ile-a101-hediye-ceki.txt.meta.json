@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kredi-karti-ile-a101-hediye-ceki",
+  "scraped_at": "2026-08-03T16:54:16+00:00",
+  "content_hash": "febf8ab07c55877380f5e449b6004bdd97de30406cbdf35eafdf53e835b1ad03",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140049,
+  "text_chars": 2575,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

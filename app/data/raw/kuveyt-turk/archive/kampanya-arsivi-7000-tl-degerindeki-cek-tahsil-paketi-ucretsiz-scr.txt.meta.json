@@ -1,0 +1,15 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr",
+  "scraped_at": "2026-08-03T17:51:31+00:00",
+  "content_hash": "3aa6c6e0a4d750e0506ec89110790cb5047f961db0e66d9f022c04afbc14c191",
+  "collection_method": "live",
+  "title": "7.000 TL Değerindeki Çek Tahsil Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130378,
+  "text_chars": 1375,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

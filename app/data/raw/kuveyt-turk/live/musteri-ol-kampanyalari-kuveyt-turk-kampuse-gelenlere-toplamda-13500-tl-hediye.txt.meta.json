@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/kuveyt-turk-kampuse-gelenlere-toplamda-13500-tl-hediye",
+  "scraped_at": "2026-08-03T16:34:08+00:00",
+  "content_hash": "5426194ee574b93da462aa22b08ed42b21101e8ef9ce3cfb7737ec7cdd6fdadc",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Kampüs’e Gelenlere Toplamda 13.500 TL Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 138020,
+  "text_chars": 1547,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

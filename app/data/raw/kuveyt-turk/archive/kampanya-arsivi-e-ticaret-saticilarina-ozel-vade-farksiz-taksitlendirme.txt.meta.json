@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/e-ticaret-saticilarina-ozel-vade-farksiz-taksitlendirme",
+  "scraped_at": "2026-08-03T17:53:37+00:00",
+  "content_hash": "3dfc74e16b648175973b76abde8b9ae82bf40cb158b701baffed0ef4d550bc4c",
+  "collection_method": "live",
+  "title": "E-Ticaret Satıcılarına Özel Vade Farksız Taksitlendirme | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131201,
+  "text_chars": 2015,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

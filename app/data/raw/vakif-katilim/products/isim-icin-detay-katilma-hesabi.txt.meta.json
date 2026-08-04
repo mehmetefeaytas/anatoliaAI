@@ -1,11 +1,14 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/isim-icin-detay/katilma-hesabi",
-  "scraped_at": "2026-07-30T20:18:04+00:00",
-  "content_hash": "75a8d68b55cb313c59e03233ed842d9611f20975aa33b64b4e2bdb1272b24424",
+  "scraped_at": "2026-08-03T17:33:50+00:00",
+  "content_hash": "184e2bd868caa5a84030e3e08aa54feaad2c66bcaf735f0422df26970df1ec61",
   "collection_method": "live",
   "title": "Yardım Merkezi | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 127858,
-  "text_chars": 201
+  "text_chars": 201,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

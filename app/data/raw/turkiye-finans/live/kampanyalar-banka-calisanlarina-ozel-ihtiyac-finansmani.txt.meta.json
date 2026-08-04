@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/banka-calisanlarina-ozel-ihtiyac-finansmani.aspx",
-  "scraped_at": "2026-07-30T18:37:14+00:00",
-  "content_hash": "888b2f96a635be022ef380c07c1cf346d808b594c89a3e9fde6ce6b62306089a",
+  "scraped_at": "2026-08-03T16:38:47+00:00",
+  "content_hash": "0e30174ee4797a1b60f424eb4ab5521d1dd7509500987fa3ec316fcbfe058811",
   "collection_method": "live",
   "title": "Banka Çalışanlarına Özel İhtiyaç Finansmanı* | Kampanyalar | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 102106,
-  "text_chars": 10741
+  "text_chars": 10741,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/hesaplama-araclari/finansman-hesaplama",
-  "scraped_at": "2026-07-30T20:01:57+00:00",
-  "content_hash": "800e182aa0283120ccba07e1aa037d0753dfa58963c01996190d41c2f7a8c611",
+  "scraped_at": "2026-08-03T17:15:48+00:00",
+  "content_hash": "d92d298cfc158f251205caf391bbdfcf17969829a66121dbc0fb3c65e3ecdf1b",
   "collection_method": "live",
   "title": "Finansman Hesaplama | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 141650,
-  "text_chars": 858
+  "raw_bytes": 141888,
+  "text_chars": 858,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

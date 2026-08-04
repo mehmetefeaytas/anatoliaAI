@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/tasit-finansmani/dijital-arac-finansmani",
-  "scraped_at": "2026-07-30T20:08:22+00:00",
-  "content_hash": "76587b7ec4c7f912c18dfca87a2944730dd984492deb583cfdc79a7666298cde",
+  "scraped_at": "2026-08-03T17:23:11+00:00",
+  "content_hash": "fc2a426cfe12560a0ce9cdb77bca0d0a7bf035fb6cccee940c249b3244b23bee",
   "collection_method": "live",
   "title": "Dijital Araç Finansmanı | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 187252,
-  "text_chars": 4077
+  "raw_bytes": 187518,
+  "text_chars": 4077,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/temel-bankacilik-hizmetleri-talep-ve-bilgilendirme-formu-ticariturkce.pdf",
+  "scraped_at": "2026-08-03T17:10:45+00:00",
+  "content_hash": "3b71de87cf824b2839d087f262aaa76aa116d3f134a067a5bcdaa147f9eb6db8",
+  "collection_method": "pdf",
+  "title": "temel bankacilik hizmetleri talep ve bilgilendirme formu ticariturkce",
+  "http_status": 200,
+  "raw_bytes": 468514,
+  "text_chars": 21093,
+  "pdf_pages": 18
+}

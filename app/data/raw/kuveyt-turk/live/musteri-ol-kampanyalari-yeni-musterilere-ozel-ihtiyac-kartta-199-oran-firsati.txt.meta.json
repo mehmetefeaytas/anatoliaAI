@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/yeni-musterilere-ozel-ihtiyac-kartta-199-oran-firsati",
+  "scraped_at": "2026-08-03T16:34:11+00:00",
+  "content_hash": "09cfd231580022623ec418e22b8d8bedccf2a2a8c59a5bcdf6552b2d233f1db0",
+  "collection_method": "live",
+  "title": "Yeni Müşterilere Özel İhtiyaç Kart'ta %1,99 Oran Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 137799,
+  "text_chars": 1617,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

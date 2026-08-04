@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/arzumda-25-indirim",
-  "scraped_at": "2026-07-30T18:34:22+00:00",
-  "content_hash": "24f999add7921c869735a6171bc73943a6e2ea919fa277459be99e60ec32dc94",
+  "scraped_at": "2026-08-03T16:35:53+00:00",
+  "content_hash": "35b7b02bb728ff45e672050992f1f4d0530c0e506af4e556b1bb3af245ecd5c6",
   "collection_method": "live",
   "title": "Arzum’da %25 İndirim! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 178812,
-  "text_chars": 1034
+  "raw_bytes": 179078,
+  "text_chars": 1034,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

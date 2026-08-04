@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avalli-islemlerde-uygun-oran-kuveyt-turkte-scr",
+  "scraped_at": "2026-08-03T17:52:01+00:00",
+  "content_hash": "1999cb5a0c441ee5e3fbc618c2aac0c4c606d59b1f7658256469138247133e3e",
+  "collection_method": "live",
+  "title": "Avalli İşlemlerde Uygun Oran Kuveyt Türk’te | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130318,
+  "text_chars": 963,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

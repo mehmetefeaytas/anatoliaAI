@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/secili-okullarda-pesin-odemelerinize-6-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:27+00:00",
+  "content_hash": "af6305bf97b07f8880019d27dd41811b8ee2dbdd2f4bebae286d5f259efbad63",
+  "collection_method": "live",
+  "title": "Seçili Okullarda Peşin Ödemelerinize 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 483314,
+  "text_chars": 1255,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

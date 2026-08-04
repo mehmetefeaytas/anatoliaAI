@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/ihracatta-yuzunuzu-guldurecek-uygun-oranli-ihracat-tesvikli-tl-finansmani-kuveyt-turkte2",
+  "scraped_at": "2026-08-03T17:55:53+00:00",
+  "content_hash": "514ff3012c2fada1a40547b9a39e285e36312a2ba6e8fc3e8830ca56d07159fc",
+  "collection_method": "live",
+  "title": "İhracatta Yüzünüzü Güldürecek Uygun Oranlı İhracat Teşvikli TL Finansmanı Kuveyt Türk'te | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130991,
+  "text_chars": 1441,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

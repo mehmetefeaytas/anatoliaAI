@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/hafta-ici-her-gun-ilk-ulasimin-troy-kartla-ucretsiz?IsArchived=true",
+  "scraped_at": "2026-08-03T16:44:41+00:00",
+  "content_hash": "bcbb7671ab7dfec9f835ed8ca1915af52c6fc64bcb1fd6cffd4dffe2902fce97",
+  "collection_method": "live",
+  "title": "Hafta İçi Her Gün İlk Ulaşımın TROY Kartla Ücretsiz! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490395,
+  "text_chars": 2731,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

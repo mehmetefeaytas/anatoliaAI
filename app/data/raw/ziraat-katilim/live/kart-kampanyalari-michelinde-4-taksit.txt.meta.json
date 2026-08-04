@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/michelinde-4-taksit",
+  "scraped_at": "2026-08-03T16:46:44+00:00",
+  "content_hash": "cfb7f17a7a237a45c014b012e092104097a0f192a3309802bd9ea2823f4cd1d8",
+  "collection_method": "live",
+  "title": "Michelin’de 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488803,
+  "text_chars": 2060,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

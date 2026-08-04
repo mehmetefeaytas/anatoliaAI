@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/egitim-ve-saglik-harcamalarinizda-5-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:52+00:00",
+  "content_hash": "811f89fed9230d628070e3349948e73e1cd9a96cf0b39b35e78650bcb9b74421",
+  "collection_method": "live",
+  "title": "Eğitim ve Sağlık Harcamalarınızda 5 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131748,
+  "text_chars": 1898,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

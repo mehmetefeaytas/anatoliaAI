@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kartlar/kredi-karti/troy-dijital-kredi-karti",
+  "scraped_at": "2026-08-03T17:36:30+00:00",
+  "content_hash": "e33d5834f67e6003d92e32b262ece332289e9ec9aba41e9e09c11440b6b04f85",
+  "collection_method": "live",
+  "title": "Troy Dijital Kredi Kartı | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 145233,
+  "text_chars": 3875,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

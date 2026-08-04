@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troyda-5-taksit",
+  "scraped_at": "2026-08-03T16:49:33+00:00",
+  "content_hash": "090079af3c7244bf5639507531c68d7b7bc22b4fe1b3c54112163fa9c0ae094b",
+  "collection_method": "live",
+  "title": "Troy&#039;da 5 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 482898,
+  "text_chars": 1538,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

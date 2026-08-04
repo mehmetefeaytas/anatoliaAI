@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/agustos-ayina-ozel-fatura-kampanyasi",
+  "scraped_at": "2026-08-03T16:37:12+00:00",
+  "content_hash": "3cf6e9e0b27e1f1dca7955b64515eace924be160bbb2e3b35a2a610e2b98c54b",
+  "collection_method": "live",
+  "title": "Ağustos Ayına Özel Fatura Kampanyası | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182461,
+  "text_chars": 2265,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-mobilden-bes-yapanlara-750-tl-katki-payi-hediye",
+  "scraped_at": "2026-08-03T17:57:56+00:00",
+  "content_hash": "813ed31f004ac24d815d71ca53d980ac6fc255313d105c553180cf0ae22f157b",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Mobil’den BES Yapanlara, 750 TL Katkı Payı Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132654,
+  "text_chars": 3156,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ticari-kartla-masterkobide-ozel-ayricaliklar-ve-indirimler",
+  "scraped_at": "2026-08-03T16:48:39+00:00",
+  "content_hash": "62ffaa0902d4c90a4709b4210e1f8dadcea189dcb0fe223ff4bdb32d958410be",
+  "collection_method": "live",
+  "title": "Ticari Kartla MasterKOBİ&#039;de Özel Ayrıcalıklar ve İndirimler! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489504,
+  "text_chars": 2450,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

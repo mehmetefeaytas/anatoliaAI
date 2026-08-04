@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/monster-notebook-ile-12ye-varan-taksit-ve-2000-tl-indirim-imkani",
+  "scraped_at": "2026-08-03T18:00:47+00:00",
+  "content_hash": "86e68db852d5045b976b78b48b7efdc2177f4101351f1f776fd53dfba77c7b55",
+  "collection_method": "live",
+  "title": "Monster Notebook ile 12'ye Varan Taksit ve 2000 TL İndirim İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130630,
+  "text_chars": 1660,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

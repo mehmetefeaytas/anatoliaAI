@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/hac-ve-umre-finansmani",
-  "scraped_at": "2026-07-30T18:41:01+00:00",
-  "content_hash": "e8ef2c5c3b8cd65a03518f0dfd2eeda8e687884b7c3a65860a256eb570539b93",
+  "scraped_at": "2026-08-03T16:52:10+00:00",
+  "content_hash": "7941554fbbc0604674fb7c206039c2d506fb68e6588a6056a163f600112fc944",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138754,
-  "text_chars": 1223
+  "raw_bytes": 138550,
+  "text_chars": 1201,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

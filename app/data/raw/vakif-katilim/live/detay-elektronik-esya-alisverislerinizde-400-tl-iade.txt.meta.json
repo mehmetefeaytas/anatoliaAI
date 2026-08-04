@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/elektronik-esya-alisverislerinizde-400-tl-iade",
-  "scraped_at": "2026-07-30T18:40:34+00:00",
-  "content_hash": "8aeae548a5d33f6dded60e49ff8c07455d54be3e58d859c0cab1de51c3458cf7",
+  "scraped_at": "2026-08-03T16:53:31+00:00",
+  "content_hash": "7a3012791d27afff8d00c3bd0778dc3fd7c4f037518b676b912573d9024bd205",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139611,
-  "text_chars": 2019
+  "raw_bytes": 139407,
+  "text_chars": 1997,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

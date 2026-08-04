@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/hesaplar/katilma-hesaplari/guvenceli-birikim-hesabi",
+  "scraped_at": "2026-08-03T17:20:34+00:00",
+  "content_hash": "d84ec0e69f674424245db93b459620fae46409cec1af88cfd647be39fb47a563",
+  "collection_method": "live",
+  "title": "Güvenceli Birikim Hesabı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 137200,
+  "text_chars": 5657,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

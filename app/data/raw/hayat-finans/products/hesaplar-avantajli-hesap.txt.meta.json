@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/hesaplar/avantajli-hesap",
-  "scraped_at": "2026-07-30T20:26:01+00:00",
-  "content_hash": "9b15f0b0e7f1a953d9218ffe0c97595f95823eaf52998b72d6a5cc800414c0e0",
+  "scraped_at": "2026-08-03T17:43:49+00:00",
+  "content_hash": "e3d955947a4f8925ead784b7ef29b9fd35d8ecc737164c90d3f8a777189b0283",
   "collection_method": "browser",
   "title": "Yüksek Kâr Paylı Avantajlı Katılma Hesabı | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 590218,
-  "text_chars": 10444
+  "text_chars": 10444,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

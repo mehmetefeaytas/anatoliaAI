@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-damat-tweende-2000-tl-parafpara",
+  "scraped_at": "2026-08-03T16:57:40+00:00",
+  "content_hash": "7441f144910053ee96e1d852e4b31d45b4ff395d7f8da835dd7ce06506e2c438",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168415,
+  "text_chars": 3077,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

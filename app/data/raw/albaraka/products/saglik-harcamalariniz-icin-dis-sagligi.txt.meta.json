@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/saglik-harcamalariniz-icin/dis-sagligi",
+  "scraped_at": "2026-08-03T17:26:27+00:00",
+  "content_hash": "27c37602e6f1cdb2463bdfe4ce028558d4648afd460bafd7d698a76de9f48ade",
+  "collection_method": "live",
+  "title": "Diş Sağlığı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181676,
+  "text_chars": 540,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

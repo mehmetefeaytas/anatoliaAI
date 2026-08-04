@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/formlar/uye-syer-pos-urun-ucretler-ve-calisma-kosullari-blglendrme-formu.pdf",
+  "scraped_at": "2026-08-03T17:10:30+00:00",
+  "content_hash": "15326dd93f480d0e93b8bc75ef860005f93e1927cf0174a3004ba028bfc955dd",
+  "collection_method": "pdf",
+  "title": "uye syer pos urun ucretler ve calisma kosullari blglendrme formu",
+  "http_status": 200,
+  "raw_bytes": 143922,
+  "text_chars": 5477,
+  "pdf_pages": 3
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/leasing-finansal-kiralama",
-  "scraped_at": "2026-07-30T20:07:14+00:00",
-  "content_hash": "c4477a149c09057abc5edb897f546010514468e6f7468638ce8529b6dcdc6507",
+  "scraped_at": "2026-08-03T17:22:02+00:00",
+  "content_hash": "0104f50ccf568d98c96693c68f26629b67283acb07cd805de2be9548ce139007",
   "collection_method": "live",
   "title": "Leasing - Finansal Kiralama - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182028,
-  "text_chars": 1996
+  "raw_bytes": 182294,
+  "text_chars": 1996,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

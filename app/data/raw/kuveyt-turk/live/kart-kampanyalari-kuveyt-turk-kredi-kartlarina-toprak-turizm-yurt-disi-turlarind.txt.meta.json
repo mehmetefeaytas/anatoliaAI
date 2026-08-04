@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/kuveyt-turk-kredi-kartlarina-toprak-turizm-yurt-disi-turlarinda-10-umre-turlarinda-7-indirim",
+  "scraped_at": "2026-08-03T16:33:23+00:00",
+  "content_hash": "fa059ae7f2da83194ddb409abf09fe62605e57a4ee70c9b45b66dd8a3e65c6ed",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Kredi Kartlarına Toprak Turizm Yurt Dışı Turlarında %10, Umre Turlarında %7 İndirim | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132487,
+  "text_chars": 2066,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

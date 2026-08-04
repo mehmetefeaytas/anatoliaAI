@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/kisa-sureli-ihtiyaclariniz-icin/kira-odeyen-hesap",
+  "scraped_at": "2026-08-03T17:26:24+00:00",
+  "content_hash": "85be0d547d7f634e402b7a6341f321e88759d2921e76b732bf703405da5fbfeb",
+  "collection_method": "live",
+  "title": "Kira Ödeyen Hesap - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182719,
+  "text_chars": 1320,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

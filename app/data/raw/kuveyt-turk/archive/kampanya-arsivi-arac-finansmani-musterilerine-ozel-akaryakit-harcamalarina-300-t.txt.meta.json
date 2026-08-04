@@ -1,0 +1,15 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-tl-indirim-firsati",
+  "scraped_at": "2026-08-03T17:51:49+00:00",
+  "content_hash": "8bee1e285ac6c9ac28efe136a0daa50223b517dce87e44d24d7963a50e12a804",
+  "collection_method": "live",
+  "title": "Araç Finansmanı Müşterilerine Özel Akaryakıt Harcamalarına 300 TL'ye Varan İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131145,
+  "text_chars": 1171,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
+}

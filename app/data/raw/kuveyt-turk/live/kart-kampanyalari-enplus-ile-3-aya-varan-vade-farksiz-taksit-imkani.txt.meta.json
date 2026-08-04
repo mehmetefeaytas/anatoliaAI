@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/enplus-ile-3-aya-varan-vade-farksiz-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:01+00:00",
+  "content_hash": "33e1b140ea0e267b0dcd9fabc7007054f89e7f06348b8f7df513f7ec9bf30b2f",
+  "collection_method": "live",
+  "title": "Enplus ile 3 Aya Varan Vade Farksız Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129025,
+  "text_chars": 1027,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

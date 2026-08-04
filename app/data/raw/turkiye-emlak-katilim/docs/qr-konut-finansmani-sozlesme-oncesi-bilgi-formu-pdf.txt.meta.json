@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/konut-finansmani-sozlesme-oncesi-bilgi-formu.pdf",
+  "scraped_at": "2026-08-03T17:10:33+00:00",
+  "content_hash": "1dc78a481a54e30ca6091abea45bd8e88b7671997858a02cec807cf82b372ed6",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesme oncesi bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 310303,
+  "text_chars": 15085,
+  "pdf_pages": 7
+}

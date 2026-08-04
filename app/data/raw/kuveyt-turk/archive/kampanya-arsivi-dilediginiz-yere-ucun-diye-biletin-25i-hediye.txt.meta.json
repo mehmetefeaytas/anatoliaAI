@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dilediginiz-yere-ucun-diye-biletin-25i-hediye",
+  "scraped_at": "2026-08-03T17:52:55+00:00",
+  "content_hash": "6bf0317a5ba836b9afb3d228741d905d6abfa926ee1f81a7282ca776e7d8325f",
+  "collection_method": "live",
+  "title": "Dilediğiniz Yere Uçun Diye Biletin %25’i Hediye | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130954,
+  "text_chars": 1849,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

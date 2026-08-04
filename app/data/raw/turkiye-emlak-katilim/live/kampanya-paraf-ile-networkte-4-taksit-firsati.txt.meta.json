@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-networkte-4-taksit-firsati",
+  "scraped_at": "2026-08-03T16:58:40+00:00",
+  "content_hash": "14f398fe1fa50c756c26798ffb04db20e9d3411bac93bdc98db23eb5d463b005",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165015,
+  "text_chars": 991,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

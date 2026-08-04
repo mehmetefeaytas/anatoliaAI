@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hisse-senedi-alin-2500-mil-kazanin-scr",
+  "scraped_at": "2026-08-03T17:55:35+00:00",
+  "content_hash": "f694d468e8550de240fe76d768d7fb3aaf490d50b97b181e305f082956fbef02",
+  "collection_method": "live",
+  "title": "Hisse Senedi Alın, 2.500 Mil Kazanın! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132167,
+  "text_chars": 1801,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

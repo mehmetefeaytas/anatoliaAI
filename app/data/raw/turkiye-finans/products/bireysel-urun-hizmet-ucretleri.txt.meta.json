@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/urun-hizmet-ucretleri.aspx",
-  "scraped_at": "2026-07-30T20:10:47+00:00",
-  "content_hash": "92b40f556abce7740e3e0694145096fc025ed87e83518f4747cd123a1a5134c2",
+  "scraped_at": "2026-08-03T17:26:36+00:00",
+  "content_hash": "7ab60d718e21eb5b9157cebe1d469c931d477fff4315bb349f507428ae203e59",
   "collection_method": "live",
   "title": "Ürün ve Hizmet Ücretleri | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 347474,
-  "text_chars": 67306
+  "text_chars": 67306,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

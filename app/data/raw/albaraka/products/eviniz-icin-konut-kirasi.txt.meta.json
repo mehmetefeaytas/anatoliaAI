@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/konut-kirasi",
+  "scraped_at": "2026-08-03T17:26:05+00:00",
+  "content_hash": "7ab916884f30c4cf830bc544514cac9a0ad4e1c0b0f49a8315f9d39f5a5131d9",
+  "collection_method": "live",
+  "title": "Konut Kirası - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182195,
+  "text_chars": 793,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

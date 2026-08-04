@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-pazaramada-pesin-fiyatina-6-taksit",
+  "scraped_at": "2026-08-03T16:58:43+00:00",
+  "content_hash": "c4826de5381c453f30eeaba1ad928a9780ecb6040c6f5d043eebe35c625b4f6e",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166163,
+  "text_chars": 1670,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

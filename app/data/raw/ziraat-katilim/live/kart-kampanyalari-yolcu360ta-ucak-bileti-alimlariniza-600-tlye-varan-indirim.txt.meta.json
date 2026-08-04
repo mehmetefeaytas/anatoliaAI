@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/yolcu360ta-ucak-bileti-alimlariniza-600-tlye-varan-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:57+00:00",
+  "content_hash": "bf7183777761a10b41718f25fe046f4ab70fc42f1df859d269231f4c9906f6d6",
+  "collection_method": "live",
+  "title": "Yolcu360&#039;ta Uçak Bileti Alımlarınıza 600 TL&#039;ye Varan İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490383,
+  "text_chars": 2926,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

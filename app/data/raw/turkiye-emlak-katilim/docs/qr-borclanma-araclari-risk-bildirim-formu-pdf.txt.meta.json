@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/borclanma-araclari-risk-bildirim-formu.pdf",
+  "scraped_at": "2026-08-03T17:11:18+00:00",
+  "content_hash": "c0b7967e0e87a43558814c4011cfae54da9baa96fb5e9fc7d2e1d6b7857a067b",
+  "collection_method": "pdf",
+  "title": "borclanma araclari risk bildirim formu",
+  "http_status": 200,
+  "raw_bytes": 215771,
+  "text_chars": 14614,
+  "pdf_pages": 4
+}

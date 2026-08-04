@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/ticari-bankacilik-urun-ve-hizmet-ucretleri.pdf",
+  "scraped_at": "2026-08-03T17:10:24+00:00",
+  "content_hash": "e0dddada7a3ae49ad5712cbf989ea8f0a2c8034a824a39094607c0d0fcc60192",
+  "collection_method": "pdf",
+  "title": "ticari bankacilik urun ve hizmet ucretleri",
+  "http_status": 200,
+  "raw_bytes": 211582,
+  "text_chars": 13778,
+  "pdf_pages": 4
+}

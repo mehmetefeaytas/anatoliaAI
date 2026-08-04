@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/3-ay-ertelemeli-motosiklet-kampanyasi",
-  "scraped_at": "2026-07-30T18:40:01+00:00",
-  "content_hash": "403b2176167f80423a486dfc92b5ff55b7c373c8a6a91420dd3fd2172ec4d7db",
+  "scraped_at": "2026-08-03T16:52:55+00:00",
+  "content_hash": "1167297488c384a61aa63970f8fa7fb414a433e46ff2f14908f46743301459c4",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139000,
-  "text_chars": 1270
+  "raw_bytes": 138796,
+  "text_chars": 1248,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

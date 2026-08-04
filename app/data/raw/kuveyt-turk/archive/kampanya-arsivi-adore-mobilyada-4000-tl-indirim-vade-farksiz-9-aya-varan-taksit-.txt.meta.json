@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/adore-mobilyada-4000-tl-indirim-vade-farksiz-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:51:37+00:00",
+  "content_hash": "24eb1e1be3836c8d1d20121ee967cfa19ae37b69586665acde49646f8fd8415d",
+  "collection_method": "live",
+  "title": "Adore Mobilya'da 4.000 TL İndirim ve Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132210,
+  "text_chars": 1654,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

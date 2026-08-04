@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/esnafa-ozel-avantajli-arac-finansmani",
+  "scraped_at": "2026-08-03T17:54:19+00:00",
+  "content_hash": "ecfcd030c378e0ec461753aea80233c9f5130b19fa238f0299b4e1d2c014de9f",
+  "collection_method": "live",
+  "title": "Esnafa Özel Avantajlı Araç Finansmanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132115,
+  "text_chars": 1395,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

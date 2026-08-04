@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/tatiliniz-icin/devre-mulk",
+  "scraped_at": "2026-08-03T17:26:33+00:00",
+  "content_hash": "cd045953cf1e05157cf972f035f3163bf3321888d9350c1e2cf8717785d0fb02",
+  "collection_method": "live",
+  "title": "Devre Mülk - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181504,
+  "text_chars": 625,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

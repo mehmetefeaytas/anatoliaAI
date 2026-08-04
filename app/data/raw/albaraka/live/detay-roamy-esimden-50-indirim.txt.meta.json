@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/roamy-esimden-50-indirim",
-  "scraped_at": "2026-07-30T18:34:57+00:00",
-  "content_hash": "c67d318ad401f579f048947af82f24a8bb9b31e6010c8a6e218a61fce803ab25",
+  "scraped_at": "2026-08-03T16:36:29+00:00",
+  "content_hash": "cf5c2537346360252ebdb7c8a2aa5e1711b02adaa2956ab22662a6e56bae8829",
   "collection_method": "live",
   "title": "Roamy eSIM’den %50 İndirim! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179553,
-  "text_chars": 1645
+  "raw_bytes": 179819,
+  "text_chars": 1645,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

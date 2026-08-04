@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/pos-kampanyalari/kuveyt-turkten-yeni-musterilere-ozel-pos-kampanyasi",
+  "scraped_at": "2026-08-03T16:30:31+00:00",
+  "content_hash": "dd00e1f3408593769e2b35aed2be5ddbef9c0e62f4e520e31fd921f35936b98a",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten Yeni Müşterilere Özel POS Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131825,
+  "text_chars": 1954,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

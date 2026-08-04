@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/dogtas-grubunda-5-aya-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:58+00:00",
+  "content_hash": "069fa4edbc1a4efe8895636e54a2be4f8be7795363c08a8ff2f18eb76e4f1777",
+  "collection_method": "live",
+  "title": "Doğtaş Grubu'nda 5 Aya Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130251,
+  "text_chars": 1032,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

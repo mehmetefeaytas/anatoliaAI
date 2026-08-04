@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/sigorta-ve-emeklilik/kurumsal-sigorta-urunleri/uzun-sureli-leasing",
-  "scraped_at": "2026-07-30T20:24:27+00:00",
-  "content_hash": "ed8eab79571b5b7d1e9e2959068ed3d1a67648efd26df1de643a48d6b998f6c1",
+  "scraped_at": "2026-08-03T17:41:17+00:00",
+  "content_hash": "b20a9e927d7b54e09d7717946c827f8c6990756cda244c4662030b6e50be9837",
   "collection_method": "live",
   "title": "Uzun S&#252;reli Leasing | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 163877,
-  "text_chars": 894
+  "text_chars": 894,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

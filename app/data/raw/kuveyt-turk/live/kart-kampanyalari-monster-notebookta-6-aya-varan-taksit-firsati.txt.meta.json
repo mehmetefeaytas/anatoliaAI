@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/monster-notebookta-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:33:25+00:00",
+  "content_hash": "3a5172508f5781ae9ab1d7e263e0f1889b6dfd15bc593990e67a4cbf681a5f11",
+  "collection_method": "live",
+  "title": "Monster Notebook'ta 6 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130454,
+  "text_chars": 1070,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

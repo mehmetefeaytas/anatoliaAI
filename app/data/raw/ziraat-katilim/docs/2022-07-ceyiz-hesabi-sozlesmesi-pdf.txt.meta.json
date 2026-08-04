@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2022-07/ceyiz-Hesabi_sozlesmesi_.pdf",
+  "scraped_at": "2026-08-03T17:09:52+00:00",
+  "content_hash": "698a4f172e6d4057e7f63d5dc613579d84c149598258e44c3c088fe873c09bff",
+  "collection_method": "pdf",
+  "title": "ceyiz Hesabi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 249613,
+  "text_chars": 8353,
+  "pdf_pages": 3
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/beyaz-esya-ve-ev-aletleri",
+  "scraped_at": "2026-08-03T16:40:26+00:00",
+  "content_hash": "b3047d6e7eea4d9ba9d1b16bea05b0e080cdfaa062b1043dea4a12a365a70d14",
+  "collection_method": "live",
+  "title": "Beyaz Eşya ve Ev Aletleri | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 496803,
+  "text_chars": 1946,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

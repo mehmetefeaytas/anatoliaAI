@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/hizli-cicekte-tum-indirimlere-ek-20-indirim-firsati",
-  "scraped_at": "2026-07-30T18:42:54+00:00",
-  "content_hash": "d2c1980dd540a21610b9c3d1f4e931010ee3f56b6ac801e5b85b381e94e74aa0",
+  "scraped_at": "2026-08-03T16:56:52+00:00",
+  "content_hash": "8077192ad56f6abe1037bedf37730020eff6fc3375c16c6a860a62cf59f1a6d3",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165895,
-  "text_chars": 1244
+  "text_chars": 1244,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

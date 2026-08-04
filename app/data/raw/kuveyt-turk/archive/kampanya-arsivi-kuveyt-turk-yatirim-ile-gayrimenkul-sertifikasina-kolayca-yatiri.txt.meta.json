@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-yatirim-ile-gayrimenkul-sertifikasina-kolayca-yatirim-yapin",
+  "scraped_at": "2026-08-03T17:58:23+00:00",
+  "content_hash": "cca15521247b738e2cbfad944ac9265d75bf27c7d25d1521ff6a050b6add46bf",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Yatırım İle Gayrimenkul Sertifikasına Kolayca Yatırım Yapın! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 139090,
+  "text_chars": 7573,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

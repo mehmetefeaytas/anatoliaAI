@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/fiziki-altin-donusumlu-kur-korumali-tl-katilma-hesabi-fatsi",
-  "scraped_at": "2026-07-30T20:08:49+00:00",
-  "content_hash": "808890b59ee0e209284816b21d328732aac35b4fa3f39f70ac72d6b6cddd70fe",
+  "scraped_at": "2026-08-03T17:23:38+00:00",
+  "content_hash": "6c581a6dd474cf65325bde6c866a4b437ccff17e89154556a0c864f504f5852d",
   "collection_method": "live",
   "title": "FATSİ Hesabı | Altınla Kur Korumalı TL Katılım | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 188089,
-  "text_chars": 3787
+  "raw_bytes": 188355,
+  "text_chars": 3787,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

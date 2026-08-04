@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/mitsubishi-electricte-3-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:46:50+00:00",
+  "content_hash": "a676b9c68311190500d3705783adb67b0b5c70bea65c1218745e35a68a8e66f1",
+  "collection_method": "live",
+  "title": "Mitsubishi Electric’te 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486869,
+  "text_chars": 1945,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

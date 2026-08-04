@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albarakadan-ucuran-kampanya",
-  "scraped_at": "2026-07-30T18:34:15+00:00",
-  "content_hash": "7cde0d2f1624a679ebbaa3bc621077ac30921cfd944685933e7af586c453619a",
+  "scraped_at": "2026-08-03T16:35:47+00:00",
+  "content_hash": "cc59c5e1ccaaa8e1f1d4c7a249a7fddd1cb93358ae6dd720b43de17d856db1fd",
   "collection_method": "live",
-  "title": "Albaraka’dan Uçuran Kampanya! | Albaraka Türk",
+  "title": "Havalara Uçuran Kampanya! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181213,
-  "text_chars": 2303
+  "raw_bytes": 180776,
+  "text_chars": 2298,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

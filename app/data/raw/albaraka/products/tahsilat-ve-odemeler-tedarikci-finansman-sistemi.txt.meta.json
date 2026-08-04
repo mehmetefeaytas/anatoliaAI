@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/nakit-yonetimi/tahsilat-ve-odemeler/tedarikci-finansman-sistemi",
-  "scraped_at": "2026-07-30T20:10:41+00:00",
-  "content_hash": "09347bc4243452cc6ed2cce6b2b3415808ba1e7d7f3feae0ebe20161167b48e1",
+  "scraped_at": "2026-08-03T17:25:29+00:00",
+  "content_hash": "3c1faafcb9ee62fbf70212d0750aac4dbdeb1deaff0bb8d25cfbf0dc00f6a1ff",
   "collection_method": "live",
   "title": "Tedarikçi Finansman Sistemi - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182957,
-  "text_chars": 1207
+  "raw_bytes": 183223,
+  "text_chars": 1207,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/yatirim/sermaye-piyasasi-urunleri",
+  "scraped_at": "2026-08-03T17:37:12+00:00",
+  "content_hash": "9ee90437a4e819397519d70c0e58727842b66e239462aa322e0f3178638bc1e3",
+  "collection_method": "live",
+  "title": "Sermaye Piyasası &#220;r&#252;nleri | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 133629,
+  "text_chars": 711,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

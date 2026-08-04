@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/mavide-4-taksit",
+  "scraped_at": "2026-08-03T16:46:41+00:00",
+  "content_hash": "c63f59fd4802a39b6a1a54dfde3722a7efdee12d8bdb8c7a0707039480a4bc02",
+  "collection_method": "live",
+  "title": "Mavi&#039;de 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487847,
+  "text_chars": 1728,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

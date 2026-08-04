@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/yardimci-sayfalar/hesaplama-araclari",
+  "scraped_at": "2026-08-03T17:37:00+00:00",
+  "content_hash": "029b5f77af9fb0b25cd581272e6e7df9a6cfa3f19048551636b93f16936cf4c3",
+  "collection_method": "live",
+  "title": "Hesaplama Ara&#231;ları | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 135110,
+  "text_chars": 388,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

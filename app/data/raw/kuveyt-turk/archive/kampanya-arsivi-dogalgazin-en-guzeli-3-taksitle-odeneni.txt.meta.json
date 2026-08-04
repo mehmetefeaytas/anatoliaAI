@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dogalgazin-en-guzeli-3-taksitle-odeneni",
+  "scraped_at": "2026-08-03T17:53:04+00:00",
+  "content_hash": "2c086af2c335c3052e0e4d32e3fe4b369aae803d383b6b50034de66bcbb9080c",
+  "collection_method": "live",
+  "title": "Doğalgazın En Güzeli 3 Taksitle Ödeneni! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130329,
+  "text_chars": 1357,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

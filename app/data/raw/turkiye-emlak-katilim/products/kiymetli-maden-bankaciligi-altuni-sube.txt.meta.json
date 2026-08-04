@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/kiymetli-maden-bankaciligi/altuni-sube",
+  "scraped_at": "2026-08-03T17:42:38+00:00",
+  "content_hash": "35cbdea340e119b39ea1c769ff247c19187cb8e9e55f2ebe0b6a928489098284",
+  "collection_method": "live",
+  "title": "Altuni Şube | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166236,
+  "text_chars": 2461,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-ramseyde-5-taksit-firsati",
+  "scraped_at": "2026-08-03T16:58:49+00:00",
+  "content_hash": "00cfc27094a99c22eb3608452d8d76467374babecc47e661b8c154187c33143f",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165006,
+  "text_chars": 987,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

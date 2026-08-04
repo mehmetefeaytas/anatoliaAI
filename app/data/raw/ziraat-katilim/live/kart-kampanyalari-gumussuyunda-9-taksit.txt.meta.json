@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/gumussuyunda-9-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:44:38+00:00",
+  "content_hash": "67dd3f82c2d073b054aebbebe02fab27ff748a83f58be4917b295e9e02f9f8c6",
+  "collection_method": "live",
+  "title": "Gümüşsuyu’nda 9 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488330,
+  "text_chars": 1967,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

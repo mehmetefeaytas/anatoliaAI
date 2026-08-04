@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kobi-kampanyalari/arac-finansmani-onaylanan-kobilere-hgs-kampanyasi",
+  "scraped_at": "2026-08-03T16:29:55+00:00",
+  "content_hash": "d0d13cd3db7dd18b61ac47d481d73a5961ddac8da2d40d9aca1616563bcbea54",
+  "collection_method": "live",
+  "title": "Araç Finansmanı Onaylanan KOBİ’lere HGS Kampanyası | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131105,
+  "text_chars": 1476,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/altin-bankaciligi/altin-hesaplari/altina-altin-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:04:39+00:00",
-  "content_hash": "037fd4ed8b2d0bd2d487cde0c23e797207f241db438d8eb0a9abe3183109ed90",
+  "scraped_at": "2026-08-03T17:18:28+00:00",
+  "content_hash": "2fb491128e74d121f7caf0d76968677b6c99da2318b743cc1b8837f7627b747e",
   "collection_method": "live",
   "title": "Altına Altın Katılma Hesabı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 146341,
-  "text_chars": 3260
+  "raw_bytes": 146579,
+  "text_chars": 3260,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

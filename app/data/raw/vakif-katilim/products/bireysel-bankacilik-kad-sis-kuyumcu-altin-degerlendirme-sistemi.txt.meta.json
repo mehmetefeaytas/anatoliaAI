@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/bireysel-bankacilik/kad-sis-kuyumcu-altin-degerlendirme-sistemi",
+  "scraped_at": "2026-08-03T17:37:15+00:00",
+  "content_hash": "3aec7c6dc9c874c6cb0340562640d25b9aff2bafbf119b3bc588e80d33adb122",
+  "collection_method": "live",
+  "title": "KAD-SİS | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 131425,
+  "text_chars": 430,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

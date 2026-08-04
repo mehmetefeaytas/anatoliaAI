@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/politikalarimiz/yatirim-hizmet-ve-faaliyetleri",
-  "scraped_at": "2026-07-30T20:30:13+00:00",
-  "content_hash": "056c9c8a1bd1570a6748fa332da4a30bb7947efe301fc1172d56d49b693d1bdc",
+  "scraped_at": "2026-08-03T17:48:05+00:00",
+  "content_hash": "8867f2612f6a8ed5c5c3de98a80eee3e86720bbdbc53a68c3680d70d01882495",
   "collection_method": "live",
   "title": "Yat&#x131;r&#x131;m Hizmet ve Faaliyetleri | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 504605,
-  "text_chars": 10226
+  "text_chars": 10226,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

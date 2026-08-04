@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/istanbul-havalimani-hizli-gecis-kampanyasi",
-  "scraped_at": "2026-07-30T18:34:40+00:00",
-  "content_hash": "8806784116110aac2dd09413c4c645a780eb435260c9e6c23d5a79976063cb53",
+  "scraped_at": "2026-08-03T16:36:11+00:00",
+  "content_hash": "653c2ee0a9b0f13c8d4e1f888db3c5d7a1027ea7ecb9a68cf3043f7af5d6b567",
   "collection_method": "live",
   "title": "İstanbul Havalimanı - Hızlı Geçiş Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179677,
-  "text_chars": 1559
+  "raw_bytes": 179943,
+  "text_chars": 1559,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

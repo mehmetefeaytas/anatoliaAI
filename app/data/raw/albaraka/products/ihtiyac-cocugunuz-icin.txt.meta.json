@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/cocugunuz-icin",
-  "scraped_at": "2026-07-30T20:07:38+00:00",
-  "content_hash": "f8cf5d5b024a13220c83cd52dc06edd65e844b638bcf0ee57ddd4388bb7b279f",
+  "scraped_at": "2026-08-03T17:22:26+00:00",
+  "content_hash": "597a69435a1f774806b6c59cdedf1a76d7be78840853d7d18148f87d47750e4c",
   "collection_method": "live",
   "title": "Çocuğunuzun Her Türlü İhtiyacı İçin Finansmanınız Yanınızda!- Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 183057,
-  "text_chars": 474
+  "raw_bytes": 183323,
+  "text_chars": 474,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

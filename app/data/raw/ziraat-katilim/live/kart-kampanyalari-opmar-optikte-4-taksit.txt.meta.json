@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/opmar-optikte-4-taksit",
+  "scraped_at": "2026-08-03T16:47:27+00:00",
+  "content_hash": "647c8707df8b88f273b8cd91a0fe118624d19390a0425274fb8e6a498509e340",
+  "collection_method": "live",
+  "title": "Opmar Optik’te 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 483425,
+  "text_chars": 1627,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

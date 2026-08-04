@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/dis-ticaret/dis-ticaret-finansmanlari/harici-garantiler",
-  "scraped_at": "2026-07-30T20:09:50+00:00",
-  "content_hash": "587b3e6213f147457e1d025c5156654518b18057d78c1deee1904588433028b9",
+  "scraped_at": "2026-08-03T17:24:38+00:00",
+  "content_hash": "b3a2fd1ff8baad69ec3814c0087d88a231d1d64b56f47bdd1abcfc2dc853c811",
   "collection_method": "live",
   "title": "Yurt Dışı İşlerinizi Büyütmek İçin Finansman Desteğiniz Sizinle - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181486,
-  "text_chars": 905
+  "raw_bytes": 181752,
+  "text_chars": 905,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

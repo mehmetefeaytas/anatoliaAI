@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/odemeler-ve-hizmetler/odemeler/tasarruf-finansman-sirketleri-tahsilat-sistemi",
+  "scraped_at": "2026-08-03T17:36:39+00:00",
+  "content_hash": "cda546ae6a75f19f9e9b385e64a1ef785e002d5cb0eba3e3131e8e877cd75333",
+  "collection_method": "live",
+  "title": "Tasarruf Finansman Şirketleri Tahsilat Sistemi | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 131330,
+  "text_chars": 1087,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

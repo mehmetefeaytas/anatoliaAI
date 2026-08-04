@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/saglam-tohum-kart-qr-odeme-ile-2000-tl-ye-varan-indirim-firsati",
+  "scraped_at": "2026-08-03T16:29:31+00:00",
+  "content_hash": "a341c0ecc824b6dc17a5b20d2c69f645a836d0baf7c3a74a02b975985b391aa2",
+  "collection_method": "live",
+  "title": "Sağlam Tohum Kart QR Ödeme ile 2.000 TL' ye Varan İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131320,
+  "text_chars": 1188,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

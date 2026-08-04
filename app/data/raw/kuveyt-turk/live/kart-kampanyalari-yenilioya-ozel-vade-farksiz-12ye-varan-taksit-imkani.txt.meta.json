@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/yenilioya-ozel-vade-farksiz-12ye-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:13+00:00",
+  "content_hash": "bd7012cc0cc8741ad3c0e846bf3c27db49c9d3a87cb7546695276d04ec5a634d",
+  "collection_method": "live",
+  "title": "Yenilio'ya Özel Vade Farksız 12'ye Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129241,
+  "text_chars": 1103,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari/mobilden-kuveyt-turklu-olan-esnaf-ve-ciftcilere-22000-tlye-varan-hediye",
+  "scraped_at": "2026-08-03T16:30:16+00:00",
+  "content_hash": "61d3cc862032d7c53cda538ae63d3407b1c9582ce9d0d99b26bd9b8411099c25",
+  "collection_method": "live",
+  "title": "Mobilden Kuveyt Türklü Olan Esnaf ve Çiftçilere 22.000 TL'ye Varan Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135705,
+  "text_chars": 3943,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

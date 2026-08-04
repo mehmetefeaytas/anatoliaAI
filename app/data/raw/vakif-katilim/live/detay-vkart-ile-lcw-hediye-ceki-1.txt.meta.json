@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-ile-lcw-hediye-ceki_1",
+  "scraped_at": "2026-08-03T16:54:22+00:00",
+  "content_hash": "09bc0e2c036bb108933d8c5ab6a673dc8ef58100d81b220921bc351aaa130a18",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140780,
+  "text_chars": 3233,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

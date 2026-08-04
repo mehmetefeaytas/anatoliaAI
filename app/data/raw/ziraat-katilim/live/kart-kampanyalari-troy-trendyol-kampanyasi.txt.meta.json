@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-trendyol-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:24+00:00",
+  "content_hash": "a8fee60163db467443c21db42b5fb2154534437abaf740cef1a740eea6b08941",
+  "collection_method": "live",
+  "title": "TROY &amp; Trendyol Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 491410,
+  "text_chars": 3495,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

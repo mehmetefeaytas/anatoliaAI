@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar",
-  "scraped_at": "2026-07-30T20:02:09+00:00",
-  "content_hash": "ec4869f7594b53ee0db45c6755f086da7c2e3fe2a8d34a2514646cbc0ce65db3",
+  "scraped_at": "2026-08-03T17:16:00+00:00",
+  "content_hash": "46c398cb8991ff1f00fb4449e32dc57d2cf569940bcbe802bbe482ba345ed240",
   "collection_method": "live",
   "title": "Finansmanlar | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 140158,
-  "text_chars": 1642
+  "raw_bytes": 140396,
+  "text_chars": 1642,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

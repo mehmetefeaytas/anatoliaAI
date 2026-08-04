@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/imannoorda-12-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:45:29+00:00",
+  "content_hash": "6f4d2b5e7cc33f02e86d47d31492859206537a551199099e27bc49819de5fecc",
+  "collection_method": "live",
+  "title": "Imannoor&#039;da 12 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488261,
+  "text_chars": 1956,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

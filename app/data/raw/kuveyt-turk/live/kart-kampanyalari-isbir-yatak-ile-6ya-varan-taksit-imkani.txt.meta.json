@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/isbir-yatak-ile-6ya-varan-taksit-imkani",
+  "scraped_at": "2026-08-03T16:31:16+00:00",
+  "content_hash": "69b87e622783c2b9881779f591af732b9d1565a7536cd87123079180bd741c23",
+  "collection_method": "live",
+  "title": "İşbir Yatak ile 6’ya Varan Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130403,
+  "text_chars": 1181,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

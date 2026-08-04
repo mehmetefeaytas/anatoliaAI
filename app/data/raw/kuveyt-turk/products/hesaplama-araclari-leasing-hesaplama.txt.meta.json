@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/hesaplama-araclari/leasing-hesaplama",
-  "scraped_at": "2026-07-30T20:02:00+00:00",
-  "content_hash": "30ee805a6810d471e907ecdfa848deeb58932dcdfca271afc35058974be176b6",
+  "scraped_at": "2026-08-03T17:15:51+00:00",
+  "content_hash": "a66e7e1f741f4d929381e1301c98cd8c2e443a89913956392dd77c51ad9e5a45",
   "collection_method": "live",
   "title": "Leasing Hesaplama | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135850,
-  "text_chars": 347
+  "raw_bytes": 136088,
+  "text_chars": 347,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

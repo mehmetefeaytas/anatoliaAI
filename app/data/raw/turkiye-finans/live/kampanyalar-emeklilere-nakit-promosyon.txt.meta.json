@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/emeklilere-nakit-promosyon.aspx",
-  "scraped_at": "2026-07-30T18:37:44+00:00",
-  "content_hash": "130a9477c3181efb9075230845a6d23a06d2fd35d77b7b5b4e172b5c44f215ee",
+  "scraped_at": "2026-08-03T16:39:11+00:00",
+  "content_hash": "75be1d5b5de793281b89944085515bcf2e761b07aacc55abfbece2830b82958f",
   "collection_method": "live",
   "title": "Emeklinin Bankası: Emekli Promosyon Fırsatı - Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 113073,
-  "text_chars": 15338
+  "text_chars": 15338,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/casper-com-tr-de-pesin-fiyatina-6-taksit-firsati",
-  "scraped_at": "2026-07-30T18:45:55+00:00",
-  "content_hash": "30f3631bf89089f7a3acb35912d7a84e8c7b13c6832e58a843d9883fd02aec3b",
+  "scraped_at": "2026-08-03T17:02:38+00:00",
+  "content_hash": "0e3d50fc36484b3405d954e0f218a14572dbab658598e3482937c6f5ad8dffb5",
   "collection_method": "live",
   "title": "Casper.com.tr&#x27;de Pe&#x15F;in Fiyat&#x131;na 6 Taksit F&#x131;rsat&#x131;! | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507574,
-  "text_chars": 11513
+  "raw_bytes": 507571,
+  "text_chars": 11510,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

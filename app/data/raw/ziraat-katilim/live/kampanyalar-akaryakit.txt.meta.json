@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/akaryakit",
+  "scraped_at": "2026-08-03T16:40:23+00:00",
+  "content_hash": "ce712b973650d75436c4d2a8c58ae6152e5850aee8294dbd398ffe05aa1b19ec",
+  "collection_method": "live",
+  "title": "Akaryakıt | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 497062,
+  "text_chars": 1836,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

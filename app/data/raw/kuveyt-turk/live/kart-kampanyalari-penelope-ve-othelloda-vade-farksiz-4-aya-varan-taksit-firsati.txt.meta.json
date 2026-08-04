@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/penelope-ve-othelloda-vade-farksiz-4-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:22+00:00",
+  "content_hash": "6c2af61c44378cae399cbc0a3e21ea9a7a2840e97e3b09abcfaa24d7a2da0330",
+  "collection_method": "live",
+  "title": "Penelope ve Othello’da Vade Farksız 4 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129185,
+  "text_chars": 1044,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

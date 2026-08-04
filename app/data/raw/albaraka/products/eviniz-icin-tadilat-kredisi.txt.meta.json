@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/tadilat-kredisi",
+  "scraped_at": "2026-08-03T17:26:11+00:00",
+  "content_hash": "fb4409f300eec293df2e73e06fff43adc7e3ecb608d098620df5f4da9b854f8a",
+  "collection_method": "live",
+  "title": "Tadilat Finansmanı - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 186279,
+  "text_chars": 2220,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

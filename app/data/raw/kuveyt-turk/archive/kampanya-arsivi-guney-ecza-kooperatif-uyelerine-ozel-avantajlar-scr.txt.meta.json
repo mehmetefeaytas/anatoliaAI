@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/guney-ecza-kooperatif-uyelerine-ozel-avantajlar-scr",
+  "scraped_at": "2026-08-03T17:54:52+00:00",
+  "content_hash": "b2dff974cfe0f7ef0a1e18c0326682331416a756ce28d8af107945dada16d127",
+  "collection_method": "live",
+  "title": "Güney Ecza Kooperatif Üyelerine Özel Avantajlar! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131139,
+  "text_chars": 1706,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

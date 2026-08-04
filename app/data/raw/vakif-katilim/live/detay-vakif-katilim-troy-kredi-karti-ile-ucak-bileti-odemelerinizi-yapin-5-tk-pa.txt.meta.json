@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vakif-katilim-troy-kredi-karti-ile-ucak-bileti-odemelerinizi-yapin-5-tk-para-kazanin",
+  "scraped_at": "2026-08-03T16:51:49+00:00",
+  "content_hash": "4388dfe04d092aa8a7094ed5063e59e6b9ab00caacc8881c1a29614a2e24122f",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141178,
+  "text_chars": 3156,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

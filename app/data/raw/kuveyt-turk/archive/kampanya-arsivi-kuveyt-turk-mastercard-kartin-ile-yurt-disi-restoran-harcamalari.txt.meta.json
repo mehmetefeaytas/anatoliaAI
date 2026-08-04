@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-mastercard-kartin-ile-yurt-disi-restoran-harcamalarinda-15-indirim",
+  "scraped_at": "2026-08-03T17:57:53+00:00",
+  "content_hash": "06ee53131791a2d83f3e5ee841440a69f3877fea074f391406165e1d819d7a70",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Mastercard Kartın İle Yurt Dışı Restoran Harcamalarında %15 İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 134367,
+  "text_chars": 3319,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

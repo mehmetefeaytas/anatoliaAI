@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/modanisada-15-indirim",
-  "scraped_at": "2026-07-30T18:41:52+00:00",
-  "content_hash": "7e17cbdc80dc635658f90353fa07dde349faf7ce017412c3ec7db6280c2d9aa7",
+  "scraped_at": "2026-08-03T16:55:10+00:00",
+  "content_hash": "18e958cfd0275714f08565a646a50d7da27ff3f7beefeaa0066b6c057534121c",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139492,
-  "text_chars": 1894
+  "raw_bytes": 139374,
+  "text_chars": 1900,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

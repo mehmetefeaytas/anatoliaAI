@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari",
-  "scraped_at": "2026-07-30T20:03:12+00:00",
-  "content_hash": "f75892a1c868fb9cb2ccc80e9905cc2b6cb885e7809eb4ceaf0468f8de91c6f6",
+  "scraped_at": "2026-08-03T17:17:03+00:00",
+  "content_hash": "4e0f0329520a0d9d0323e2b916cdf34abdc787fe490565d5be3ff217ea5d4044",
   "collection_method": "live",
   "title": "Alışveriş Finansmanları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 137481,
-  "text_chars": 1311
+  "raw_bytes": 137719,
+  "text_chars": 1311,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/ozel-bankacilik/ayricaliklar/kampanyalar/kasko-odemelerinizde-mil-firsati",
+  "scraped_at": "2026-08-03T16:34:50+00:00",
+  "content_hash": "4c49305921b586357b7b34e988c8d3bfe1fd8209b58faa8bdfb8055d3d6c4d9f",
+  "collection_method": "live",
+  "title": "Kasko Ödemelerinizde Mil Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 128042,
+  "text_chars": 1278,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

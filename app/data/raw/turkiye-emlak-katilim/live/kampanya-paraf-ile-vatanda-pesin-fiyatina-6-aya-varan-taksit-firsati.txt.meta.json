@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-vatanda-pesin-fiyatina-6-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:59:13+00:00",
+  "content_hash": "88a3255492360de33ed004c39561923178031d91711bba3a93341e965b466ee6",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167513,
+  "text_chars": 3164,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/almila-mobilyada-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:58+00:00",
+  "content_hash": "4dd30f307a801bba1a5e720c81d9fbb38da134c6b22408dcbaa4ee2da7b8e927",
+  "collection_method": "live",
+  "title": "Almila Mobilya’da 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130221,
+  "text_chars": 1015,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

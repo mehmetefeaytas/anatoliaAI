@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkandvavacars-is-birligi",
+  "scraped_at": "2026-08-03T17:58:26+00:00",
+  "content_hash": "30d00181797b4dd431b354fc782c6f4345d444f5337a8c783b5b09ba4da88d8c",
+  "collection_method": "live",
+  "title": "Kuveyt Türk&VavaCars İş Birliği | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131463,
+  "text_chars": 1656,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

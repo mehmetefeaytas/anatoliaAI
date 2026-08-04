@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/egitim-harcamalariniza-5-taksit-imkani",
+  "scraped_at": "2026-08-03T16:32:49+00:00",
+  "content_hash": "6ad77d3e5cdace16f993457b6f6b86ecfd0761494e2c2a425c3c172ba78b43b9",
+  "collection_method": "live",
+  "title": "Eğitim Harcamalarınıza 5 Taksit İmkanı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131531,
+  "text_chars": 1640,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

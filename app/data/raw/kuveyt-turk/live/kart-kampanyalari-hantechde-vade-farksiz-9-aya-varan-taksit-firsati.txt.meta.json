@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/hantechde-vade-farksiz-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:33:04+00:00",
+  "content_hash": "08025d9175f9f46833fe36ce24ef637f9c508213819ae549f9f133647cee190b",
+  "collection_method": "live",
+  "title": "Hantech’de Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130331,
+  "text_chars": 1019,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

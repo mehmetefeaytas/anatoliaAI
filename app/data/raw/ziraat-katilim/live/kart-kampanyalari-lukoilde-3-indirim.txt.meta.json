@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/lukoilde-3-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:46:23+00:00",
+  "content_hash": "0b1793225079f1187cdb6a367659bd5301cf4c7268e7e7deea383152b467dc75",
+  "collection_method": "live",
+  "title": "Lukoil&#039;de %3 İndirim | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 485033,
+  "text_chars": 1603,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

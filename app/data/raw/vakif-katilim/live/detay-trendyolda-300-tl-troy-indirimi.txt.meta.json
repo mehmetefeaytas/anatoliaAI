@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/trendyolda-300-tl-troy-indirimi",
+  "scraped_at": "2026-08-03T16:55:04+00:00",
+  "content_hash": "a3f7a4464ce460481ddf9aefe38b5fa99917fe0fa9d3fec9b01c0745feb89ea8",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139564,
+  "text_chars": 2151,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

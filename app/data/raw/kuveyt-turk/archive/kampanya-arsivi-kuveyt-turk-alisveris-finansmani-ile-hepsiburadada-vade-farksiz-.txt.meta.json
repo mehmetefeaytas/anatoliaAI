@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-alisveris-finansmani-ile-hepsiburadada-vade-farksiz-kasim-ruzgari",
+  "scraped_at": "2026-08-03T17:57:17+00:00",
+  "content_hash": "568c86b9234542b21699858eee40a784d76163d487cfeef8339bc524424fbe21",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Alışveriş Finansmanı ile Hepsiburada’da Vade Farksız Kasım Rüzgarı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130704,
+  "text_chars": 1435,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

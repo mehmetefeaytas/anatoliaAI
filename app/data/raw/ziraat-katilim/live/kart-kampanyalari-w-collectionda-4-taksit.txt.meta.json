@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/w-collectionda-4-taksit",
+  "scraped_at": "2026-08-03T16:49:48+00:00",
+  "content_hash": "d3f472036905ae6b5ee85930ae308063fa97087dd3178a50ba0d1e023a4d8c8f",
+  "collection_method": "live",
+  "title": "W Collection&#039;da 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487584,
+  "text_chars": 1446,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

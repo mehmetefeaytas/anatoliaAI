@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/tiktakta-600-tl-indirim",
+  "scraped_at": "2026-08-03T16:54:10+00:00",
+  "content_hash": "603ca51411d008ab5495e07924c641ef310a94f51814888e99827e93745c0edc",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139254,
+  "text_chars": 1862,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

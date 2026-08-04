@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/musteri-ol-kampanyalari/hepsiburadada-yeni-musteriye-ozel-vade-farksiz-50000-tl-firsati",
+  "scraped_at": "2026-08-03T16:33:50+00:00",
+  "content_hash": "b31ae0b6c25b8fe87d69a8c8cb4a9a7fee5a44d2236a8094bce112878743186b",
+  "collection_method": "live",
+  "title": "Hepsiburada’da Yeni Müşteriye Özel Vade Farksız 50.000 TL Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 139201,
+  "text_chars": 1544,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

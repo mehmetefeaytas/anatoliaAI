@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/mtv-odemenizi-emlak-katilim-mobilden-yapin-500-tlye-varan-nakit-iade-kazanin",
-  "scraped_at": "2026-07-30T18:43:18+00:00",
-  "content_hash": "ba7691877c65159ddca9efff3398f72f1049595890719b156f4e4aecbc609a22",
+  "scraped_at": "2026-08-03T16:57:16+00:00",
+  "content_hash": "a315b3f0ebfc5821f9625a2f8e631fd0081ac7e3ac788f2b57b98896bb6d9646",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166204,
-  "text_chars": 1498
+  "text_chars": 1498,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

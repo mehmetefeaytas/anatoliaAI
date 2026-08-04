@@ -1,11 +1,13 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/giyim-alisverislerinde-kampanya",
-  "scraped_at": "2026-07-30T18:44:40+00:00",
-  "content_hash": "3ac9935692507299cb83791334412d29ed3339381daaf62ffdd336e238af6970",
+  "scraped_at": "2026-08-03T17:01:06+00:00",
+  "content_hash": "5c59a6be703aadf2ce3aa0f07ce31a718674ae01e2016911d278cc9dd8c574d1",
   "collection_method": "browser",
   "title": "Giyim Alışverişlerinde Vade Farksız 3 Taksit! Çok Kazananlar Kulübü’ne özel vade farksız 6 Taksit! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 102417,
-  "text_chars": 4500
+  "raw_bytes": 102464,
+  "text_chars": 4569,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

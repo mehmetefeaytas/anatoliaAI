@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/mobilden-kuveyt-turklu-olan-tum-ciftcilere-1000-tl-akaryakit-bizden",
+  "scraped_at": "2026-08-03T18:00:32+00:00",
+  "content_hash": "9e6da6ef207fa1ab5fc0ec283f145e8045517971e2a8e82e92097349d4382d46",
+  "collection_method": "live",
+  "title": "Mobilden Kuveyt Türklü Olan Tüm Çiftçilere 1000 TL Akaryakıt Bizden! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131198,
+  "text_chars": 1418,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

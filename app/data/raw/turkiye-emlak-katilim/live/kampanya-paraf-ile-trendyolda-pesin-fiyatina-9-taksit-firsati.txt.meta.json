@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-trendyolda-pesin-fiyatina-9-taksit-firsati",
+  "scraped_at": "2026-08-03T16:59:04+00:00",
+  "content_hash": "3a16dae62a2f452b528ca923726166c4f3ada2e5e4e8198bfe6a1c69a7711444",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166925,
+  "text_chars": 2304,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/Sayfalar/dijital-taksitli-ticari-finansman-destegi.aspx",
-  "scraped_at": "2026-07-30T20:12:11+00:00",
-  "content_hash": "1d6d7518f169d99d6cf3ebd61715180d088a92422fb2c5c9250dd7cdf122ddae",
+  "scraped_at": "2026-08-03T17:28:00+00:00",
+  "content_hash": "9345079163fee55727b51ac2dd6484e75859d4d0db5d4798693feb274f1c4047",
   "collection_method": "live",
   "title": "Dijital Taksitli Ticari Finansman Desteği | KOBİ | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 103084,
-  "text_chars": 11997
+  "text_chars": 11997,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/ihtiyac-finansmani/Sayfalar/hazir-limit.aspx",
-  "scraped_at": "2026-07-30T20:11:11+00:00",
-  "content_hash": "0ce78609aa2a4089e6c0a0a0d6ed1207d83f22a67d2249837ab02493b455a7c6",
+  "scraped_at": "2026-08-03T17:27:00+00:00",
+  "content_hash": "a10ef2343029f334104db624b998b6e2af48490024aaa4b7bad654857f713caa",
   "collection_method": "live",
   "title": "Hazır Limit | İhtiyaç Finansmanı | Bireysel | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 102751,
-  "text_chars": 8863
+  "text_chars": 8863,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

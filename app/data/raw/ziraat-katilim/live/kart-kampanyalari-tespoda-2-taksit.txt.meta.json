@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/tespoda-2-taksit",
+  "scraped_at": "2026-08-03T16:48:36+00:00",
+  "content_hash": "2100992a2a5d48013b9bddd84a4a0ed478dc3385c95cc5bc2c9ea1ec874f66d7",
+  "collection_method": "live",
+  "title": "Tespo’da 2 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 485149,
+  "text_chars": 1791,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/firma-anlasmali-maas-musterileri-icin-avantaj-paketi-scr",
+  "scraped_at": "2026-08-03T17:54:34+00:00",
+  "content_hash": "66980918be53f77270e1db474026cd0156c0295243de834911436571fc099ee4",
+  "collection_method": "live",
+  "title": "Firma Anlaşmalı Maaş Müşterileri İçin Avantaj Paketi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132519,
+  "text_chars": 2229,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

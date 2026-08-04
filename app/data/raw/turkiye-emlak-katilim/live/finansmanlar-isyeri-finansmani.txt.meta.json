@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/isyeri-finansmani",
+  "scraped_at": "2026-08-03T17:00:07+00:00",
+  "content_hash": "16fd91be64ff15a750be86a1a25019101863195f4e4f72e73f1fce4cc8c4da30",
+  "collection_method": "live",
+  "title": "İşyeri Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165174,
+  "text_chars": 1217,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/davetetkazan",
-  "scraped_at": "2026-07-30T18:46:01+00:00",
-  "content_hash": "a70c69aeaa9a429fdf349fe5d1add15a1cea1c93db1a3f9cce67b9d881b20e51",
+  "scraped_at": "2026-08-03T17:02:44+00:00",
+  "content_hash": "8903fb9ccfe48c90bb3307a5d2398913a7341975a9a1f8db6fd88c2e8ce0384a",
   "collection_method": "live",
   "title": "Davet Et Kazan | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 511062,
-  "text_chars": 13796
+  "text_chars": 13796,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

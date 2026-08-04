@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/demirdokumde-12-taksit-firsati",
+  "scraped_at": "2026-08-03T16:33:35+00:00",
+  "content_hash": "2a7d036d0f938226335e9918bcfbad2d341099c4f7b4b6c949d868dc4f311f21",
+  "collection_method": "live",
+  "title": "Demirdöküm’de 12 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129993,
+  "text_chars": 950,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

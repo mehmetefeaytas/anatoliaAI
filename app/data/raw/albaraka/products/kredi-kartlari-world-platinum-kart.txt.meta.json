@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/world-platinum-kart",
-  "scraped_at": "2026-07-30T20:09:35+00:00",
-  "content_hash": "b8ac7a159ac7a2d97aa09b01da9c09a44a2bb121b36566e53ff9dfa2a6bf5639",
+  "scraped_at": "2026-08-03T17:24:23+00:00",
+  "content_hash": "be4c4dc257660989e33790fd8aa901dd744fd844bf5136089dbb1845833baad2",
   "collection_method": "live",
   "title": "World Platinum Kart - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 187738,
-  "text_chars": 4051
+  "raw_bytes": 188004,
+  "text_chars": 4051,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/giyim-ve-aksesuar-harcamalariniza-ramazan-ayina-ozel-3000-tl-altin-puan-firsati",
+  "scraped_at": "2026-08-03T17:54:46+00:00",
+  "content_hash": "15a444b72aacc62bcd72bc70d456c49487a5362a056ccc5eb2c055c3aac1bb14",
+  "collection_method": "live",
+  "title": "Giyim ve Aksesuar Harcamalarınıza Ramazan Ayına Özel 3.000 TL Altın Puan Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132147,
+  "text_chars": 1360,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

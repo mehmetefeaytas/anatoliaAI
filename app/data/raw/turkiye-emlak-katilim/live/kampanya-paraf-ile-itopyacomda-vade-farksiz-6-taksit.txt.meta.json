@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-itopyacomda-vade-farksiz-6-taksit",
+  "scraped_at": "2026-08-03T16:58:25+00:00",
+  "content_hash": "b6e13677ffb54a9393fc87b14b656936fc1f5d50a04891256cf3a415659e3bb9",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167623,
+  "text_chars": 3310,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

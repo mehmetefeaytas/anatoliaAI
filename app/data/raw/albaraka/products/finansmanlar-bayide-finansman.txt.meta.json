@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/bayide-finansman",
-  "scraped_at": "2026-07-30T20:06:32+00:00",
-  "content_hash": "aa7b8a5d6d175e074c062087c277494964436a3668f1a35c9e9c27ec10765a7e",
+  "scraped_at": "2026-08-03T17:21:20+00:00",
+  "content_hash": "c028f23b4927f70208ce6430d6cf1b57e08da0ad4026db65223dfbbfe66b64ac",
   "collection_method": "live",
   "title": "Bayide Finansman ile Satış Hacminize Katkıda Bulunun - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182292,
-  "text_chars": 2002
+  "raw_bytes": 182558,
+  "text_chars": 2002,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

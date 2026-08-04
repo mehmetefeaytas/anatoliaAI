@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/konut-hesabi",
-  "scraped_at": "2026-07-30T20:08:59+00:00",
-  "content_hash": "3e86364eda3210979fdcb1718404215edfb61db41d2cf3ed04262a0a30be8676",
+  "scraped_at": "2026-08-03T17:23:47+00:00",
+  "content_hash": "372105b368839c301c1a08a0a50e4b077a7b992338c4f1a3a7b29f7bc8f4b0da",
   "collection_method": "live",
   "title": "Konut Hesabı - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 220718,
-  "text_chars": 10527
+  "raw_bytes": 220984,
+  "text_chars": 10527,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/ihracat-bedeliniz-kt-bank-ag-ile-geliyor",
+  "scraped_at": "2026-08-03T17:55:47+00:00",
+  "content_hash": "20f558daa37b4924a74d1e61daa85be3a67fc32ce187d03090991eaf4d238be1",
+  "collection_method": "live",
+  "title": "İhracat Bedeliniz KT BANK AG ile Geliyor! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129609,
+  "text_chars": 711,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

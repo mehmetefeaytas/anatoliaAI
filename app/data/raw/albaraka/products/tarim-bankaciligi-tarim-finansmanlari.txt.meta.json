@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/tarim-bankaciligi/tarim-finansmanlari",
-  "scraped_at": "2026-07-30T20:07:22+00:00",
-  "content_hash": "b2f7c4e2858ceadbec17b2b63d13b41823e511e8549a2546b7552216408e04b7",
+  "scraped_at": "2026-08-03T17:22:11+00:00",
+  "content_hash": "817166d3e841d5de48966b63482b2fc55d9a35b0c30e16c6a30f1342bc7cee52",
   "collection_method": "live",
   "title": "Tarım Finansmanları - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181760,
-  "text_chars": 1637
+  "raw_bytes": 182026,
+  "text_chars": 1637,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

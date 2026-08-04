@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dufy-magazalarina-ozel-ek-10-indirim-firsati",
+  "scraped_at": "2026-08-03T17:53:16+00:00",
+  "content_hash": "d176f971be59a83f3ccf663d2e534120a78e9d92f8dfa39779bf62c7b3655c25",
+  "collection_method": "live",
+  "title": "Dufy Mağazalarına Özel Ek %10 İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130043,
+  "text_chars": 1023,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

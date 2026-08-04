@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/konut-finansmani/konut-finansmani",
-  "scraped_at": "2026-07-30T20:08:17+00:00",
-  "content_hash": "c00ab94dcc8882fefcc1d896db943fe4adecab479b459434a9d90e138091d9d8",
+  "scraped_at": "2026-08-03T17:23:05+00:00",
+  "content_hash": "ed5a0f5e0da0b59bbcc683abded8bd949bbd9f20ce83a9b272e6bda6d997e999",
   "collection_method": "live",
   "title": "Konut Finansmanı | Düşük Oran ve Esnek Ödeme Planı",
   "http_status": 200,
-  "raw_bytes": 254318,
-  "text_chars": 11531
+  "raw_bytes": 254584,
+  "text_chars": 11531,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

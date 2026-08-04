@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman",
-  "scraped_at": "2026-07-30T20:07:11+00:00",
-  "content_hash": "5bfbad42ac5c9f5826bf45ca21f1b4a1d8f56154f00c9c68ec3b41e6466db28e",
+  "scraped_at": "2026-08-03T17:21:59+00:00",
+  "content_hash": "eb83d5f2006814e3d25a1c9e4c07b4a1e0f3fd7292bcf8c5f7d74e199cbf8ffb",
   "collection_method": "live",
   "title": "Kobi Nakdi Finansman - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 196012,
-  "text_chars": 1735
+  "raw_bytes": 196278,
+  "text_chars": 1735,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

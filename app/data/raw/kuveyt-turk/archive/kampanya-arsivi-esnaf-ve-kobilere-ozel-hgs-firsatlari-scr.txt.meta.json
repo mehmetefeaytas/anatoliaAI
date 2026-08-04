@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/esnaf-ve-kobilere-ozel-hgs-firsatlari-scr",
+  "scraped_at": "2026-08-03T17:54:10+00:00",
+  "content_hash": "606f68dd3ef5006981889c768694d8d7a6aac28edbf45b6129246dfa67a015f4",
+  "collection_method": "live",
+  "title": "Esnaf ve KOBİ'lere Özel HGS Fırsatları | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132267,
+  "text_chars": 1761,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

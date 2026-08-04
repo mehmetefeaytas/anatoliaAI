@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/kredi-notu-ogrenme",
-  "scraped_at": "2026-07-30T20:06:40+00:00",
-  "content_hash": "95e540b98df15c688e0bda3935aed94d413eeb6caf881e29d119b39e201385f4",
+  "scraped_at": "2026-08-03T17:21:29+00:00",
+  "content_hash": "e9f7b2acd15e173cf0ace619f14ae23dec24a4d2922c9ecc82258bdc132660ac",
   "collection_method": "live",
   "title": "Kredi Notu Öğrenme | Kredi Notu Kaç Olmalı?",
   "http_status": 200,
-  "raw_bytes": 191712,
-  "text_chars": 5983
+  "raw_bytes": 191978,
+  "text_chars": 5983,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

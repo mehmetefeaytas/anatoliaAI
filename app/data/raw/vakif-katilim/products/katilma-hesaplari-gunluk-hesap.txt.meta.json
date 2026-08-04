@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/hesaplar/katilma-hesaplari/gunluk-hesap",
+  "scraped_at": "2026-08-03T17:36:15+00:00",
+  "content_hash": "d771db81c71ec1afadf2093f23c33a9c311a4e40349d6900a3701a7e6698c880",
+  "collection_method": "live",
+  "title": "G&#252;nl&#252;k Hesap | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 143708,
+  "text_chars": 4922,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

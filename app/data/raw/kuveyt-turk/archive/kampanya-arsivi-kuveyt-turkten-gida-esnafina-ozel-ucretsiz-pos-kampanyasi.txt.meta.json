@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-gida-esnafina-ozel-ucretsiz-pos-kampanyasi",
+  "scraped_at": "2026-08-03T17:59:26+00:00",
+  "content_hash": "4d455eebb14750e5897f4a00132262530ac998354dcd787d040ab9829f0faf5a",
+  "collection_method": "live",
+  "title": "Kuveyt Türk'ten Gıda Esnafına Özel Ücretsiz POS Kampanyası! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135248,
+  "text_chars": 3881,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

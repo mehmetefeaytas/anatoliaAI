@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/ithalatta-mil-avantaji-kuveyt-turkte-scr",
+  "scraped_at": "2026-08-03T17:56:26+00:00",
+  "content_hash": "4b2d7411cdd0be44cf4a751ec538735d2e02ca2338c01fa2fe16c880bee08a40",
+  "collection_method": "live",
+  "title": "İthalatta Mil Avantajı Kuveyt Türk’te! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132423,
+  "text_chars": 2089,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

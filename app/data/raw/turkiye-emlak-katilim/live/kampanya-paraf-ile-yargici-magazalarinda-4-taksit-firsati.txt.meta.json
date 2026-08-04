@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-yargici-magazalarinda-4-taksit-firsati",
+  "scraped_at": "2026-08-03T16:59:22+00:00",
+  "content_hash": "0ba0ebab593dbecac378fcf50cc7a46385cd128f1fb762f4e6341ff233a0ea9b",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165119,
+  "text_chars": 1033,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

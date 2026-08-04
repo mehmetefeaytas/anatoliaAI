@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-katilim-debit-kart-ile-ilk-harcamanizin-yarisi-nakit-iade",
-  "scraped_at": "2026-07-30T18:42:33+00:00",
-  "content_hash": "1aa3c82342a89236e616dd3cee6b87900b1cd94ece7414b34589c60f18bec625",
+  "scraped_at": "2026-08-03T16:56:30+00:00",
+  "content_hash": "ef565b5f572bae92675e124d76740c2d9b9e39871053e758145cc0a187063eb3",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 167325,
-  "text_chars": 2418
+  "raw_bytes": 165766,
+  "text_chars": 2418,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

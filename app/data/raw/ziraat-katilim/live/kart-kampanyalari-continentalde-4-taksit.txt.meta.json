@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/continentalde-4-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:43:08+00:00",
+  "content_hash": "4954146324da2174b65e93999e1c234075be755238b57cb0f504469e192379ff",
+  "collection_method": "live",
+  "title": "Continental’de 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488877,
+  "text_chars": 2087,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

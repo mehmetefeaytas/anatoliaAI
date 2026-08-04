@@ -119,6 +119,35 @@ _KAR_PAYI_ONCE_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Değerden SONRA gelip onu kâr payı oranı OLMAKTAN çıkaran ifadeler.
+#
+# `_PAYLASIM_ORANI_RE` belge düzeyinde çalışır; bu ise DEĞERE ÖZGÜdür — çünkü
+# aynı belgede hem gerçek kâr payı oranı hem yabancı bir oran bulunabilir
+# ("kâr payı oranı %1,89, devlet katkısı %20"). O yüzden yalnız İLGİLİ eşleşme
+# reddedilir, belge tamamen atılmaz.
+#
+# Ölçüm (2026-08-03, 1684 belgelik korpus): `kar_payi_orani` üreten 64 belgenin
+# 7'sinde (%11) değer YABANCI bir kavrama aitti:
+#   6 belge: "hem kâr payı hem de %20'ye kadar DEVLET KATKISIYLA konut sahibi"
+#            -> %20 devlet katkı oranıdır, finansman kâr payı oranı değil.
+#   1 belge: "finansmanın kâr payının 10 PUANLIK kısmı KOSGEB tarafından"
+#            -> 10, oranın kendisi değil devlet desteğiyle karşılanan PUAN payı.
+# İkisi de karşılaştırma tablosuna girdiğinde o bankayı yanlış konumlandırır.
+_YABANCI_KAVRAM_RE = re.compile(
+    r"\s*(?:['’]?\s*(?:ye|ya|e|a)?\s*kadar\s*)?"
+    r"(?:devlet\s*(?:katk|destek|deste[ğg])|puanl[ıi]k)",
+    re.IGNORECASE,
+)
+# Değerin sağında bu kadar karakter içinde yabancı kavram aranır. 30 karakter
+# "'ye kadar devlet katkısıyla" ifadesini kapsar, sonraki cümleye taşmaz.
+_YABANCI_KAVRAM_PENCERE = 30
+
+
+def _yabanci_kavram_takip_ediyor(text: str, value_end: int) -> bool:
+    """Değerden hemen sonra BAŞKA bir kavramın adı geliyor mu?"""
+    return bool(_YABANCI_KAVRAM_RE.match(
+        text[value_end:value_end + _YABANCI_KAVRAM_PENCERE]))
+
 
 def extract_kar_payi(text: str) -> Optional[ExtractedField]:
     """Kâr payı oranı: '... kâr payı oranı %1,99 ...' veya '%1,99 kâr payı'.
@@ -134,10 +163,13 @@ def extract_kar_payi(text: str) -> Optional[ExtractedField]:
         # aynı alana yazmak karşılaştırmayı bozar: %55 bir "oran" olarak
         # tabloya girip o bankayı en pahalı gösterirdi.
         return None
-    onceki = _KAR_PAYI_ONCE_RE.search(text)
-    if onceki:
-        raw = onceki.group(1)
+    # Yabancı kavram takip eden eşleşmeler ATLANIR, ilk eşleşmede durulmaz:
+    # aynı belgede gerçek kâr payı oranı daha sonra gelebilir.
+    for onceki in _KAR_PAYI_ONCE_RE.finditer(text):
         s, e = onceki.span(1)
+        if _yabanci_kavram_takip_ediyor(text, onceki.end()):
+            continue
+        raw = onceki.group(1)
         return _field(
             "kar_payi_orani", raw, N.normalize_rate(raw),
             _window(text, onceki.start(), onceki.end()),
@@ -173,19 +205,22 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
         rf"(?!\s*{_BIRIM_SONEKLI})",
         re.IGNORECASE,
     )
-    m = pat.search(text)
-    if not m:
-        return None
-    raw = m.group(3)
-    s, e = m.span(3)
-    canon = N.normalize_rate(raw)
-    return _field(
-        "kar_payi_orani", raw, canon, _window(text, m.start(), m.end()),
-        span_start=s, span_end=e,
-        # "kâr payı oranı" bitişi ile değerin başı arası
-        trigger_distance=s - m.end(1),
-        candidate_count=len(pat.findall(text)),
-    )
+    for m in pat.finditer(text):
+        s, e = m.span(3)
+        # Değeri yabancı bir kavram takip ediyorsa bu eşleşme reddedilir ve
+        # aramaya devam edilir (gerekçe: `_YABANCI_KAVRAM_RE`).
+        if _yabanci_kavram_takip_ediyor(text, e):
+            continue
+        raw = m.group(3)
+        canon = N.normalize_rate(raw)
+        return _field(
+            "kar_payi_orani", raw, canon, _window(text, m.start(), m.end()),
+            span_start=s, span_end=e,
+            # "kâr payı oranı" bitişi ile değerin başı arası
+            trigger_distance=s - m.end(1),
+            candidate_count=len(pat.findall(text)),
+        )
+    return None
 
 
 def extract_vade(text: str) -> Optional[ExtractedField]:

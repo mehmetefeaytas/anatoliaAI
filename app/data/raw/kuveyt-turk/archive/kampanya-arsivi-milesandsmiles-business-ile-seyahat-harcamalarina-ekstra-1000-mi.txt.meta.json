@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/milesandsmiles-business-ile-seyahat-harcamalarina-ekstra-1000-mil",
+  "scraped_at": "2026-08-03T18:00:20+00:00",
+  "content_hash": "45b2b410a687b2148a4c34e7fd8b75f80a7881cf56e0100ab6a33a0001197a3b",
+  "collection_method": "live",
+  "title": "Miles&Smiles Business ile Seyahat Harcamalarına Ekstra 1000 Mil! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131538,
+  "text_chars": 1583,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

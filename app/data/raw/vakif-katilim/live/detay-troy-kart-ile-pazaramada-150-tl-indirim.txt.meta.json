@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kart-ile-pazaramada-150-tl-indirim",
+  "scraped_at": "2026-08-03T16:51:40+00:00",
+  "content_hash": "a8a000f83e7e35d4365b6f35bb53b613cd4cda1539e8c4f4be7df634ae7d7d1a",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139227,
+  "text_chars": 1907,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

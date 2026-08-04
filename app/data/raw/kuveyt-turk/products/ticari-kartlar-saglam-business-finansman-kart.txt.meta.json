@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/kartlar-ve-pos/ticari-kartlar/saglam-business-finansman-kart",
-  "scraped_at": "2026-07-30T20:04:27+00:00",
-  "content_hash": "9c6f9df25d86b85384cc6e1ace048a2d1de2fe4db92137245da76071a04d8987",
+  "scraped_at": "2026-08-03T17:18:15+00:00",
+  "content_hash": "5e603b8a65ce62142db99e1d1cb353e660f0d534b259db59026d6b6f4c72ea59",
   "collection_method": "live",
   "title": "Sağlam Business Finansman Kart | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 145183,
-  "text_chars": 5725
+  "raw_bytes": 145421,
+  "text_chars": 5725,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

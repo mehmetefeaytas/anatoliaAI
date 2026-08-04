@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/akaryakit-harcamalariniza-400-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:42:05+00:00",
+  "content_hash": "5c5c9ec05ea451807e6294c68952f167093075672a705d30ce04f69df6de0c48",
+  "collection_method": "live",
+  "title": "Akaryakıt Harcamalarınıza 400 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486558,
+  "text_chars": 2396,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/kartlar/kredi-karti",
-  "scraped_at": "2026-07-30T20:03:30+00:00",
-  "content_hash": "2ad62cc86032408b0ec73c20c9faf99d46c6256df7fec5277571f67387a73b91",
+  "scraped_at": "2026-08-03T17:17:21+00:00",
+  "content_hash": "10409da3f92f97262894ae2e818ea1c129b341bfc308a655d8e5fa1242033e4b",
   "collection_method": "live",
   "title": "Kredi Kartları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 131150,
-  "text_chars": 604
+  "raw_bytes": 131388,
+  "text_chars": 604,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

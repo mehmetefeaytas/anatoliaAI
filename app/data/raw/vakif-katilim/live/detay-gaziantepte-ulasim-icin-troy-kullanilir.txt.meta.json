@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/gaziantepte-ulasim-icin-troy-kullanilir",
-  "scraped_at": "2026-07-30T18:40:46+00:00",
-  "content_hash": "98ff2e1f6f107d14b15273028f320118e9938834eca495a02899c209cca36f73",
+  "scraped_at": "2026-08-03T16:55:01+00:00",
+  "content_hash": "a404f04caac7ca05c4c476e2fb7fc1bfb681ae9d1a58e47bb9004bffa833f6cc",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139567,
-  "text_chars": 1990
+  "raw_bytes": 139363,
+  "text_chars": 1968,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/sermaye-piyasasi-urunleri/yatirim-fonu",
+  "scraped_at": "2026-08-03T17:42:56+00:00",
+  "content_hash": "7ceec059d9a7bbf555c95a294ff17d07fb27d7a274b0faf924383abe2cd9c29b",
+  "collection_method": "live",
+  "title": "Yatırım Fonu | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165516,
+  "text_chars": 1114,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

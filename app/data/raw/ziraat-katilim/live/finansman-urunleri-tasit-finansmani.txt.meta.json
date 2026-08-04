@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/tasit-finansmani",
-  "scraped_at": "2026-07-30T18:39:36+00:00",
-  "content_hash": "10a72a3968d8d5fc262e0a57590c828e615e5b7a31f0c131229b82bc21b068bc",
+  "scraped_at": "2026-08-03T16:50:28+00:00",
+  "content_hash": "97ddae53b1fcde499fcc4eb90ba2648619ff5896a1e04cafde370010b2eb640a",
   "collection_method": "live",
   "title": "Taşıt Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 469170,
-  "text_chars": 302
+  "raw_bytes": 485788,
+  "text_chars": 302,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

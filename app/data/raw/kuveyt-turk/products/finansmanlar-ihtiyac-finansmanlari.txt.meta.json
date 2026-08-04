@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari",
-  "scraped_at": "2026-07-30T20:03:18+00:00",
-  "content_hash": "fdde9806f0fbe9c2938b3ea07f5430cd150e7c8d6bdd582cc5c1ba87f4aecf8f",
+  "scraped_at": "2026-08-03T17:17:09+00:00",
+  "content_hash": "02d80f2d3708bcbbe53065fa843676e0e1734ddb9327064485f111517089736d",
   "collection_method": "live",
   "title": "İhtiyaç Finansmanları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 138772,
-  "text_chars": 1379
+  "raw_bytes": 139010,
+  "text_chars": 1379,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

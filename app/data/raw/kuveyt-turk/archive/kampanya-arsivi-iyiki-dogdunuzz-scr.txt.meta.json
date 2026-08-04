@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/iyiki-dogdunuzz-scr",
+  "scraped_at": "2026-08-03T17:56:38+00:00",
+  "content_hash": "6868452163175dcedfcc9819532d4c75682a7ad07f87f3d82343c02a955fe4d2",
+  "collection_method": "live",
+  "title": "İyi Ki Doğdunuz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129338,
+  "text_chars": 741,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

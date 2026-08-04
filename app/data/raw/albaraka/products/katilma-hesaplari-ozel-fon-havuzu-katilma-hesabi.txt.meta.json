@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/ozel-fon-havuzu-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:09:01+00:00",
-  "content_hash": "f8c835ee3c7dbca2ab7ad826899d732fcd3c2232112a82b6a58d936af086316a",
+  "scraped_at": "2026-08-03T17:23:50+00:00",
+  "content_hash": "b13b7577076ddebeab3dcd9f016720a897283fd856d8dab3b4293296a8552a2a",
   "collection_method": "live",
   "title": "Özel Fon Havuzu Katılma Hesabı | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 188335,
-  "text_chars": 4836
+  "raw_bytes": 188601,
+  "text_chars": 4836,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

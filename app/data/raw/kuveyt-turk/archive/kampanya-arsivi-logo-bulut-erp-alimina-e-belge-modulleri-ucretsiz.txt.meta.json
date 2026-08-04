@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/logo-bulut-erp-alimina-e-belge-modulleri-ucretsiz",
+  "scraped_at": "2026-08-03T18:00:05+00:00",
+  "content_hash": "ebc25ca1a4661b9ca472c547fea859456fed6b9ec28408c67df6e4886bd5ea5c",
+  "collection_method": "live",
+  "title": "Logo Bulut ERP Alımına e-Belge Modülleri Ücretsiz! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130667,
+  "text_chars": 1530,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

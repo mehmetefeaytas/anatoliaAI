@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/isletmelere-ozel-finansman",
+  "scraped_at": "2026-08-03T17:56:20+00:00",
+  "content_hash": "b9c03184b35c0b06a2f375eb3ee2fc0d0f6fd521c049fd6c45af027967ecabdb",
+  "collection_method": "live",
+  "title": "İşletmelere Özel Finansman | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130250,
+  "text_chars": 824,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

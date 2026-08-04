@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/kobi-nakdi-finansman/pratik-kobi-kart",
-  "scraped_at": "2026-07-30T20:10:32+00:00",
-  "content_hash": "cc1a813bd5bb32c052bac28712a813008af81ad10386875e4515165074ee1727",
+  "scraped_at": "2026-08-03T17:25:20+00:00",
+  "content_hash": "18ad54087754da040a2f934f5c7085e1b03319fc7b7e1d6fbb70a3b619805613",
   "collection_method": "live",
   "title": "Pratik KOBİ Kart | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180673,
-  "text_chars": 975
+  "raw_bytes": 180939,
+  "text_chars": 975,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/vade-farksiz-kampanyasi",
-  "scraped_at": "2026-07-30T18:35:19+00:00",
-  "content_hash": "3e608ac1d0f129214451740a03b561f63f551f1313db90304c6c60b65b05a46d",
+  "scraped_at": "2026-08-03T16:36:51+00:00",
+  "content_hash": "0bbefddf5b65727a4cdbdd5f26c44e97fc010ab3d5cf44609409cd035723f549",
   "collection_method": "live",
   "title": "Vade Farksız 140.000 TL’ye Varan Destek! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 184787,
-  "text_chars": 3689
+  "raw_bytes": 185053,
+  "text_chars": 3689,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/brandys-magazalarinda-vade-farksiz-3-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:19+00:00",
+  "content_hash": "171a1aa47552513c62e8dca57195dc6411d7d0c0322220c9c9ad4c51e3fb2e60",
+  "collection_method": "live",
+  "title": "Brandy’s Mağazalarında Vade Farksız 3 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130452,
+  "text_chars": 1030,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

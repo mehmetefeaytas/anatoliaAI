@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/3-ay-ertelemeli-tasit-finansmani",
-  "scraped_at": "2026-07-30T18:40:04+00:00",
-  "content_hash": "fd33935b3417e0cc292c277053d06e45123908725de560360e653a2370125a5b",
+  "scraped_at": "2026-08-03T16:53:28+00:00",
+  "content_hash": "5da40cfa310473b14774833d44d7c13afd4a949213268265f6f164570e92ac79",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139511,
-  "text_chars": 1677
+  "raw_bytes": 139307,
+  "text_chars": 1655,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/enerya-ihtiyac-finansmani",
-  "scraped_at": "2026-07-30T20:28:40+00:00",
-  "content_hash": "06bdab315ee983db859dcde243bfff34e4a4005b4d60a7a62b4ecfa4df3d6807",
+  "scraped_at": "2026-08-03T17:46:32+00:00",
+  "content_hash": "1a4d6a436802901c834cb4129e77786db6e283b6373e8fe36bce767052672bf4",
   "collection_method": "live",
   "title": "Enerya &#x130;htiya&#xE7; Finansman&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 501216,
-  "text_chars": 10542
+  "text_chars": 10542,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

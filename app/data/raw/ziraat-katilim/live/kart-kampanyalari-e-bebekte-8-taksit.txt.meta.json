@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/e-bebekte-8-taksit",
+  "scraped_at": "2026-08-03T16:43:32+00:00",
+  "content_hash": "a36f0217b56e366e39e7b9b303f014e99a1b646e08a622a8c89d1d20c34d6cf5",
+  "collection_method": "live",
+  "title": "E-bebek&#039;te 8 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488386,
+  "text_chars": 2097,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

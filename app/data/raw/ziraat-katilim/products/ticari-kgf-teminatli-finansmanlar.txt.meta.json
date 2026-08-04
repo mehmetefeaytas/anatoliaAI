@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/kgf-teminatli-finansmanlar",
-  "scraped_at": "2026-07-30T20:13:09+00:00",
-  "content_hash": "aa5a1bdcbea3e61bc31e90ccd4127df016dcf02474c4b24f05c595d791868fd2",
+  "scraped_at": "2026-08-03T17:28:58+00:00",
+  "content_hash": "bc9d2d247610bd9e1464c8cebc6509766d98ded48db457b0609ce3abd80203e7",
   "collection_method": "live",
   "title": "KGF Teminatlı Finansmanlar | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 457209,
-  "text_chars": 958
+  "raw_bytes": 473899,
+  "text_chars": 958,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

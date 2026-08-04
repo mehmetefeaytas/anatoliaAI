@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/dis-ticaret/dis-ticaret-finansmanlari",
-  "scraped_at": "2026-07-30T20:06:59+00:00",
-  "content_hash": "10ad1dd737dfbe1c72faa83b290f1fb651f5f4d6d5f52c99c6fc3f7def2ad2f0",
+  "scraped_at": "2026-08-03T17:21:47+00:00",
+  "content_hash": "5bcd67644cb98235f9dd48fff9e39c825bdb0dca92476998574d35413cbf782e",
   "collection_method": "live",
   "title": "Dış Ticaret Finansmanları - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 187567,
-  "text_chars": 914
+  "raw_bytes": 187833,
+  "text_chars": 914,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

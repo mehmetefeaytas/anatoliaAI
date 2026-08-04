@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/dis-ticaret/finansman/ihracatin-finansmani-ihracat-taahhutlu-islemler",
-  "scraped_at": "2026-07-30T20:22:57+00:00",
-  "content_hash": "bb2bba37994d7533993e72b036be3dbecaf1607895d1c36ce5611285c77d0ddc",
+  "scraped_at": "2026-08-03T17:39:47+00:00",
+  "content_hash": "746ab67af7444382e98c241521217a4935851980b06ae409424ae9fb63b183aa",
   "collection_method": "live",
   "title": "İhracatın Finansmanı (İhracat Taahh&#252;tl&#252; İşlemler) | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 159434,
-  "text_chars": 2731
+  "text_chars": 2731,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

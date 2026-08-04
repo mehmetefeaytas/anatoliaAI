@@ -1,11 +1,13 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/krediler/hayat-finans-egitim-finansmani-sistemi",
-  "scraped_at": "2026-07-30T20:26:25+00:00",
-  "content_hash": "2dcf3a3500673fb9e3626b292572dd7bc0dfcd880a7c146147179c3bf563531a",
+  "scraped_at": "2026-08-03T17:44:13+00:00",
+  "content_hash": "83d65cda6d0c78f5ff290cab7c9b34ba3dd562a3911d3e0b07e54fdff1aeb655",
   "collection_method": "browser",
   "title": "Eğitim Finansmanı Sistemi | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 296138,
-  "text_chars": 1046
+  "text_chars": 1046,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

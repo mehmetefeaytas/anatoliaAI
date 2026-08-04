@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/leasing/sat-geri-kirala",
-  "scraped_at": "2026-07-30T20:21:57+00:00",
-  "content_hash": "2acc0e7389ac1eab0759c2342f2803c76c3a35cef5d13e99d85596b38af4e4e9",
+  "scraped_at": "2026-08-03T17:38:46+00:00",
+  "content_hash": "0b1304fd0ef1a2401eaf969d8150639bc7d1df18fb9286e758d5b17d9442f511",
   "collection_method": "live",
   "title": "Sat-Geri Kirala | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165325,
-  "text_chars": 1903
+  "text_chars": 1903,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

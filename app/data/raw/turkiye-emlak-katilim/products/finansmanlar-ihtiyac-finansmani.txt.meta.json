@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/ihtiyac-finansmani",
-  "scraped_at": "2026-07-30T20:21:17+00:00",
-  "content_hash": "29c26bbd736729ce4af435060f765caad2d70e51624049f87f442bd004fc8a64",
+  "scraped_at": "2026-08-03T17:38:07+00:00",
+  "content_hash": "9b2e71b5ef14cb94550ab9cf8b0f0ee0e8dbbfdba63e41cf3a43dc0ed1d90ffe",
   "collection_method": "live",
   "title": "İhtiya&#231; Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 140256,
-  "text_chars": 8252
+  "raw_bytes": 174429,
+  "text_chars": 8252,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-bireysel-kart-sahiplerine-ozel-10-indirim-vavaserviste",
+  "scraped_at": "2026-08-03T17:57:26+00:00",
+  "content_hash": "d84f190e8e1231cf140460f8ad28c2f46fbe99816035906fc45ab1e992a1be7d",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Bireysel Kart Sahiplerine Özel %10 İndirim VavaServis’te | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130770,
+  "text_chars": 1563,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

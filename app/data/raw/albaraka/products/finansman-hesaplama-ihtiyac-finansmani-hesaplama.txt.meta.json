@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/hesaplama-araclari/finansman-hesaplama/ihtiyac-finansmani-hesaplama",
-  "scraped_at": "2026-07-30T20:06:50+00:00",
-  "content_hash": "8454200593ea3be03feae620a38d6c13e16e7638cc49e5385f6a4415099e2cb2",
+  "scraped_at": "2026-08-03T17:21:38+00:00",
+  "content_hash": "7ba8284caea301f17369bdc05d2adb18fc3a2c8c7bacbe16fd69c0c85b21b87e",
   "collection_method": "live",
   "title": "İhtiyaç Finansmanı Hesaplama | 2026 İhtiyaç Finansman Oranları",
   "http_status": 200,
-  "raw_bytes": 223349,
-  "text_chars": 3969
+  "raw_bytes": 223613,
+  "text_chars": 3967,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

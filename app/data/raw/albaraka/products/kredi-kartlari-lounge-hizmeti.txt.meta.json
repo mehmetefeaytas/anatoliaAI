@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/kartlar/kredi-kartlari/lounge-hizmeti",
-  "scraped_at": "2026-07-30T20:09:16+00:00",
-  "content_hash": "b89914b1ba21b604e4fdef21b78dade1fe6790576139cc52a4015146dcc3c5b5",
+  "scraped_at": "2026-08-03T17:24:05+00:00",
+  "content_hash": "e7854c2f0f881eb472afe58305bbcdec61298355481bb388ef07cb98e15a97ae",
   "collection_method": "live",
   "title": "Lounge Hizmeti | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181747,
-  "text_chars": 1824
+  "raw_bytes": 182013,
+  "text_chars": 1824,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

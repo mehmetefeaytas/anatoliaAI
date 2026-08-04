@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kart-google-play-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:48+00:00",
+  "content_hash": "6ff028cb9383ba44cf618282356147761ace31f68f1cdc4334eec5996adcd4d6",
+  "collection_method": "live",
+  "title": "TROY Kart &amp; Google Play Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489819,
+  "text_chars": 2579,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

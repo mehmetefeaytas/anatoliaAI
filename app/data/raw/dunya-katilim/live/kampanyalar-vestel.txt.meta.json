@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/vestel",
+  "scraped_at": "2026-08-03T17:04:20+00:00",
+  "content_hash": "effbadcf716f94ac33731c2ee77de2dd8db0794eb865e5ca5ba8a1ea2773ecbf",
+  "collection_method": "live",
+  "title": "Vestel | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 506051,
+  "text_chars": 10581,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

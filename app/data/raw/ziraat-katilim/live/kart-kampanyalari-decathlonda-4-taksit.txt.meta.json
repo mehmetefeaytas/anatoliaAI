@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/decathlonda-4-taksit",
+  "scraped_at": "2026-08-03T16:43:17+00:00",
+  "content_hash": "facaf8102599335e7bf051b8d4055d2462e00ac6001652385e0cdc014b090feb",
+  "collection_method": "live",
+  "title": "Decathlon&#039;da 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487906,
+  "text_chars": 1890,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/pratik-finansman-kart",
-  "scraped_at": "2026-07-30T20:08:02+00:00",
-  "content_hash": "7672092f8e46dcc45f0b02e6f6621f11ce288dca1f3b75047b0a6d72ec5edeb9",
+  "scraped_at": "2026-08-03T17:22:50+00:00",
+  "content_hash": "4fc331aa310941c7fd8c69636c1b6889e6fe33b8b4ab242af3d8ce0aecfced84",
   "collection_method": "live",
   "title": "Pratik Finansman Kart | Teknoloji, Sağlık ve Alışveriş Harcamaları",
   "http_status": 200,
-  "raw_bytes": 245280,
-  "text_chars": 9731
+  "raw_bytes": 245735,
+  "text_chars": 9733,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

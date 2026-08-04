@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/yoyoda-40-gastroclub-indirim",
+  "scraped_at": "2026-08-03T16:35:26+00:00",
+  "content_hash": "d94e7a929cb47363c272a7e972683aa0eb87c6a0699681368b91cdfde29e9602",
+  "collection_method": "live",
+  "title": "Yoyo'da %40 GastroClub İndirim! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 179594,
+  "text_chars": 1072,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

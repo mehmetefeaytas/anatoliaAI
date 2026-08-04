@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/dysonda-pesin-fiyatina-6-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:43:29+00:00",
+  "content_hash": "40b45e981a30378f487672459e15dda9ef6ebac749dbccf23b071de00210785f",
+  "collection_method": "live",
+  "title": "Dyson&#039;da Peşin Fiyatına 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487938,
+  "text_chars": 1599,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-adv-magazalarinda-6-taksit",
-  "scraped_at": "2026-07-30T18:43:27+00:00",
-  "content_hash": "4420f7ac85bec780b4e7c3376268214d3c268c817ed56065fca11f98456dc795",
+  "scraped_at": "2026-08-03T16:57:24+00:00",
+  "content_hash": "5bedbb4b4a95c4b5402f7a4febba969576672e57226ec6695c53c75b8f76b2c4",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165172,
-  "text_chars": 962
+  "text_chars": 962,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

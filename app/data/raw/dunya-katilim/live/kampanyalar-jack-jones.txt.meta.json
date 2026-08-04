@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/jack-jones",
-  "scraped_at": "2026-07-30T18:46:40+00:00",
-  "content_hash": "f5e9b17789c47a2b64a9e9f42ce1eb55daa9525023eaee7e3cdcb8d93dd19d39",
+  "scraped_at": "2026-08-03T17:03:23+00:00",
+  "content_hash": "dd0ed19d65516520ba7adfd46a5f776aaaad8944c1b58fdb00340040d33866ce",
   "collection_method": "live",
   "title": "Jack Jones | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 505265,
-  "text_chars": 9676
+  "text_chars": 9676,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

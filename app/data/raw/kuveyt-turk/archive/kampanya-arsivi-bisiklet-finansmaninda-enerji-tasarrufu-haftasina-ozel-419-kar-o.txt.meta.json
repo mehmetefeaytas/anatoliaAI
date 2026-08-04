@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bisiklet-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-orani-firsati",
+  "scraped_at": "2026-08-03T17:52:19+00:00",
+  "content_hash": "e1a61d54e6c71f4884466f504da406d759826553e9059985838eb6cba2a92ad9",
+  "collection_method": "live",
+  "title": "Bisiklet Finansmanı’nda Enerji Tasarrufu Haftasına Özel %4.19 Kar Oranı Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131076,
+  "text_chars": 1517,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

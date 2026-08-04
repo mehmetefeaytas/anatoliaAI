@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/kisa-sureli-ihtiyaclariniz-icin/fatura-odeyen-hesap",
+  "scraped_at": "2026-08-03T17:26:21+00:00",
+  "content_hash": "43b0412520eba30cff95a23bc25f9d21ab7f46e519c63b3e749c0903bd857ed1",
+  "collection_method": "live",
+  "title": "Fatura Ödeyen Hesap - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 183048,
+  "text_chars": 1430,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

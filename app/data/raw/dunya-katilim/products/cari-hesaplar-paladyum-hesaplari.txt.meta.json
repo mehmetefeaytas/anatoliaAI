@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar/paladyum-hesaplari",
-  "scraped_at": "2026-07-30T20:29:01+00:00",
-  "content_hash": "75dd076cec22563c3b8ba4ba2001684d9cf9e5acdb1c6a058185307e847c7688",
+  "scraped_at": "2026-08-03T17:46:53+00:00",
+  "content_hash": "5e5a4cea267ac1516a21d0b407c1eac21c16fe90f2de0f9675b1b9dc7317a05c",
   "collection_method": "live",
   "title": "Paladyum Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499588,
-  "text_chars": 9898
+  "text_chars": 9898,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

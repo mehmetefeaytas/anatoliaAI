@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/nakdi-finansman",
-  "scraped_at": "2026-07-30T20:27:30+00:00",
-  "content_hash": "88f29e97137049780665044091f41224aa0bcff4f395030e2599bc769b1180b8",
+  "scraped_at": "2026-08-03T17:45:23+00:00",
+  "content_hash": "ec94bf150ab3c4ba3e7b6c93472668bb52f5f1eafe0c6649f3ce4cd5f674ee1c",
   "collection_method": "live",
   "title": "Nakdi Finansman | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 498290,
-  "text_chars": 9070
+  "text_chars": 9070,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/hizli-cicek-25-indirim-kampanyasi",
-  "scraped_at": "2026-07-30T18:35:37+00:00",
-  "content_hash": "2b38d910eb3137d87aa9651ea4ddaa9107daa6ad3853ffa441e227c4ecb9fc22",
+  "scraped_at": "2026-08-03T16:35:11+00:00",
+  "content_hash": "4f9f04f100c52f8a3e98e9b8238240c13227427bac1f58feb69f1dc94b91b9ee",
   "collection_method": "live",
   "title": "Hızlı Çiçek %25 İndirim Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179381,
-  "text_chars": 1000
+  "raw_bytes": 179647,
+  "text_chars": 1000,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

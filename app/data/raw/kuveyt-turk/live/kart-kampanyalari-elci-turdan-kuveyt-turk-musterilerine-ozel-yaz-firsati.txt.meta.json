@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/elci-turdan-kuveyt-turk-musterilerine-ozel-yaz-firsati",
+  "scraped_at": "2026-08-03T16:33:07+00:00",
+  "content_hash": "dec32f833d654efb4a212b9a47e148d81c6dd15c4830bb50fe9145e18cd1144a",
+  "collection_method": "live",
+  "title": "Elçi Tur’dan Kuveyt Türk Müşterilerine Özel Yaz Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131651,
+  "text_chars": 1465,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

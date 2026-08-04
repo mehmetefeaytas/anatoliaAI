@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/tasit-finansmani/tasit-finansmani",
-  "scraped_at": "2026-07-30T20:08:26+00:00",
-  "content_hash": "c702bdce5e7f4b4f915b5557b708b1415fa3f466a855ed4b109ab32a1046d536",
+  "scraped_at": "2026-08-03T17:23:14+00:00",
+  "content_hash": "9fc2ca77f67cdfaa114276e00c4ce6022aee6ac9ca762bf05671a0fe24e7ce2a",
   "collection_method": "live",
   "title": "Taşıt Finansmanı | Düşük Oranlı 0 ve 2. El Araç Finansmanı",
   "http_status": 200,
-  "raw_bytes": 236495,
-  "text_chars": 8221
+  "raw_bytes": 236766,
+  "text_chars": 8226,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

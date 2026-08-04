@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/elektrikli-ve-hibrit-araclar-icin-enerji-tasarrufu-haftasina-ozel-368-kar-orani-firsati",
+  "scraped_at": "2026-08-03T17:53:52+00:00",
+  "content_hash": "6d739734659731ba40d0a7d7e6f38e564b5da402848627eb067e169e45d2554c",
+  "collection_method": "live",
+  "title": "Elektrikli ve Hibrit Araçlar için Enerji Tasarrufu Haftasına Özel %3.68 Kar Oranı Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130786,
+  "text_chars": 1318,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

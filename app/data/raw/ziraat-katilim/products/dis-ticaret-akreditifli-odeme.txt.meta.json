@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/dis-ticaret/akreditifli-odeme",
-  "scraped_at": "2026-07-30T20:13:45+00:00",
-  "content_hash": "e6cbc7c3ebc2adb943b7aff77bf0b7a5b1d9f60ca97063cb1ad4054453f60583",
+  "scraped_at": "2026-08-03T17:29:34+00:00",
+  "content_hash": "a78089cda949d2b13e948e761728472babef814dbfa4091046c15e760f3427db",
   "collection_method": "live",
   "title": "Akreditifli Ödeme | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 457497,
-  "text_chars": 1456
+  "raw_bytes": 474134,
+  "text_chars": 1456,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

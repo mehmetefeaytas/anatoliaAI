@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/kar-paylasim-oranlari",
-  "scraped_at": "2026-07-30T20:16:25+00:00",
-  "content_hash": "b300315a7b6345ae1d6dacf84139101ba62235419bb178df623cd715205c71f6",
+  "scraped_at": "2026-08-03T17:32:14+00:00",
+  "content_hash": "25609904ab3dd87d16a2821fed6ff14530266929a9a2393754650046cca00fe7",
   "collection_method": "live",
   "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 131602,
-  "text_chars": 829
+  "text_chars": 829,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

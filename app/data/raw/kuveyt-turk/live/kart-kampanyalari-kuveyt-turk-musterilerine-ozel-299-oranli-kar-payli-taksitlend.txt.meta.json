@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/kuveyt-turk-musterilerine-ozel-299-oranli-kar-payli-taksitlendirme-firsati",
+  "scraped_at": "2026-08-03T16:32:44+00:00",
+  "content_hash": "d059bcdb72aa6cc7795cb5892f53804726c341c7686d50346103560a0d5ef8a8",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Müşterilerine Özel %2,99 Oranlı Kar Paylı Taksitlendirme Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133538,
+  "text_chars": 3184,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

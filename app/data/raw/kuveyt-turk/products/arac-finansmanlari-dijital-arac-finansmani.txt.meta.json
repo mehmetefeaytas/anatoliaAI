@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/dijital-arac-finansmani",
-  "scraped_at": "2026-07-30T20:05:18+00:00",
-  "content_hash": "acd203035a03a7a4df5ca2cfbc4954ee0ce86e7a176308664b68c7f5b9f824d7",
+  "scraped_at": "2026-08-03T17:19:06+00:00",
+  "content_hash": "2bf66c8eded7aca7f7bd9750aea28c725af9eee625ce9063d36ca8622c97579b",
   "collection_method": "live",
   "title": "Dijital Araç Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 158094,
-  "text_chars": 8108
+  "raw_bytes": 158332,
+  "text_chars": 8108,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

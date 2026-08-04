@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/ozel-bankacilik",
-  "scraped_at": "2026-07-30T20:03:33+00:00",
-  "content_hash": "af77d3a0d57ac4ac7345742c553013be17390ffef99562a48e9f3ee3c0afe5d6",
+  "scraped_at": "2026-08-03T17:17:24+00:00",
+  "content_hash": "87c5eebbff9d57d5b9b0c99508d1ec31b9fe6283e9a0f433c4ef8e24c729e3c5",
   "collection_method": "live",
   "title": "Özel Bankacılık | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 148737,
-  "text_chars": 1376
+  "raw_bytes": 148944,
+  "text_chars": 1322,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

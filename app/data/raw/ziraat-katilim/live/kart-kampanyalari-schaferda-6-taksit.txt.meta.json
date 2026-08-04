@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/schaferda-6-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:24+00:00",
+  "content_hash": "ad7b03a2b6ccac61a3a5f55da8cfd6e2f8cc30f9db8c750f2c089053faa97a6a",
+  "collection_method": "live",
+  "title": "Schafer&#039;da 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488742,
+  "text_chars": 2002,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

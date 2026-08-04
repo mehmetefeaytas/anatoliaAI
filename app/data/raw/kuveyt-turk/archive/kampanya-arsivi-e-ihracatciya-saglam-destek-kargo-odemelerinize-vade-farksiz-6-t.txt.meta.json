@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/e-ihracatciya-saglam-destek-kargo-odemelerinize-vade-farksiz-6-taksit",
+  "scraped_at": "2026-08-03T17:53:25+00:00",
+  "content_hash": "ed4447234994a02c4de3c14bb8f0c2a3f1131000ebb9e0549e8994b67e32648c",
+  "collection_method": "live",
+  "title": "E-İhracatçıya Sağlam Destek: Kargo Ödemelerinize Vade Farksız 6 Taksit! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132288,
+  "text_chars": 1684,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

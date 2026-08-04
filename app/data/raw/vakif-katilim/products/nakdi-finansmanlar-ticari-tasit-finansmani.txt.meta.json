@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/ticari-tasit-finansmani",
-  "scraped_at": "2026-07-30T20:19:58+00:00",
-  "content_hash": "7a3f9f8700fc35b0d06cb2eb46ce70bdc8b4b589f983c7e2f4cd29decd2cd8db",
+  "scraped_at": "2026-08-03T17:35:45+00:00",
+  "content_hash": "323b7b5cdf3f2f930f833045bab1c22a022f41990cf95aaf95e2a73d3009cec8",
   "collection_method": "live",
   "title": "Ticari Taşıt Finansmanı | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 139385,
-  "text_chars": 2011
+  "text_chars": 2011,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

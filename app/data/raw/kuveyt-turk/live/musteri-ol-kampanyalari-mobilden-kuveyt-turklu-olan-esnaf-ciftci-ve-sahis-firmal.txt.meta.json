@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari/mobilden-kuveyt-turklu-olan-esnaf-ciftci-ve-sahis-firmalarina-ozel-1000-tl-hediye",
+  "scraped_at": "2026-08-03T16:30:19+00:00",
+  "content_hash": "d6b9e42580f8641f138670e21558c083c34f8e04a929eae4e14a23d8eb138ee3",
+  "collection_method": "live",
+  "title": "Mobilden Kuveyt Türklü olan Esnaf, Çiftçi ve Şahıs Firmalarına Özel 1000 TL Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130547,
+  "text_chars": 1359,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/musteri/alisveris-finansmani-bilgilendirme-sayfasi",
-  "scraped_at": "2026-07-30T20:16:49+00:00",
-  "content_hash": "08219020fc6d349ed1a8a0b0f896cabc9946b8868bf8f3a74bd5eccedddf277a",
+  "scraped_at": "2026-08-03T17:32:38+00:00",
+  "content_hash": "3b15544e48127b6d3b5e6d015906b8de7fb160876f633b69c7fa0639d99c6401",
   "collection_method": "live",
   "title": "M&#252;şteri | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 147900,
-  "text_chars": 2112
+  "raw_bytes": 149062,
+  "text_chars": 2112,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

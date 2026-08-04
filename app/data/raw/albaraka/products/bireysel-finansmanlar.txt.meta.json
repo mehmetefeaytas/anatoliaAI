@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar",
-  "scraped_at": "2026-07-30T20:06:26+00:00",
-  "content_hash": "5422a90dd59ddeabf3b8c655064b68b10a22250199ce3dc19dce4c8f1522557c",
+  "scraped_at": "2026-08-03T17:21:14+00:00",
+  "content_hash": "fbbea3d772bafcad5a8372152cc795b6a1894ea1dbc065c4b9f8afc78218f536",
   "collection_method": "live",
   "title": "Finansmanlar | Albaraka Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 194142,
-  "text_chars": 1414
+  "raw_bytes": 194408,
+  "text_chars": 1414,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

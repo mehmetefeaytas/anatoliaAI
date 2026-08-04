@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/finansman-kampanyalari/diyanet-umre-finansmani-ile-vade-farksiz-3-taksit-imkani",
+  "scraped_at": "2026-08-03T16:34:23+00:00",
+  "content_hash": "51b7bc99fee5406124fc50cb83f041b3adcc3f28b9f0ede58882d39f45c38864",
+  "collection_method": "live",
+  "title": "Diyanet Umre Finansmanı ile Vade Farksız 3 Taksit İmkanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131090,
+  "text_chars": 1547,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

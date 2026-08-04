@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/hazine-ve-yatirim-urunleri/emlakfx",
+  "scraped_at": "2026-08-03T17:42:29+00:00",
+  "content_hash": "a93e9f6ee7a7546ce8f25557fa35be924f32e79a0f6e9bbc64ceb0bd69fe4bef",
+  "collection_method": "live",
+  "title": "EmlakFX | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 175121,
+  "text_chars": 6026,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

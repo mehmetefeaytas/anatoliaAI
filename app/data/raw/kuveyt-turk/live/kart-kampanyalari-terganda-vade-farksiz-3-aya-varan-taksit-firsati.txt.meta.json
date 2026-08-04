@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/terganda-vade-farksiz-3-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:31:37+00:00",
+  "content_hash": "9558a4cbc1e69c2fb117ab139765a90c55cfe3e312845bce06088c4a1275af78",
+  "collection_method": "live",
+  "title": "Tergan’da Vade Farksız 3 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130295,
+  "text_chars": 1000,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

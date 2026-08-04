@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-vaillantta-9-aya-varan-taksit",
+  "scraped_at": "2026-08-03T16:59:10+00:00",
+  "content_hash": "dc9098676a79fbd8a578b02ddcc2fb5b4a2c6da9b20bcba2a9f677fb56ada2a7",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165225,
+  "text_chars": 1135,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

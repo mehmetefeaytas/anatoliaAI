@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/fakircomtrde-36-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:54:25+00:00",
+  "content_hash": "fc5e2f836ee10430b12d6d280d50a996eec6d69f7a636adad66caba24f27a97b",
+  "collection_method": "live",
+  "title": "fakir.com.tr'de 36 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130305,
+  "text_chars": 1230,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

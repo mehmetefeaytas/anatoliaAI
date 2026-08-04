@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/bina-tamamlama",
+  "scraped_at": "2026-08-03T17:25:54+00:00",
+  "content_hash": "c98de0025f303cc4d7db26d31eaa4662a255f631d6577bc14e7c8e6cf56c1319",
+  "collection_method": "live",
+  "title": "Bina Tamamlama - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182281,
+  "text_chars": 656,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

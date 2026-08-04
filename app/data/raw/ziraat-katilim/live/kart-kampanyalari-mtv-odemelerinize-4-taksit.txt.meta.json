@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/mtv-odemelerinize-4-taksit",
+  "scraped_at": "2026-08-03T16:47:15+00:00",
+  "content_hash": "c6f62802aedb650eb6b69dd104bcd4546c300dd84272c29fca0771c1adb5de73",
+  "collection_method": "live",
+  "title": "MTV Ödemelerinize 4 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489616,
+  "text_chars": 1850,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

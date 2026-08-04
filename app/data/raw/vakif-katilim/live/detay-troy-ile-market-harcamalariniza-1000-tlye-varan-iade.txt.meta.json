@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-ile-market-harcamalariniza-1000-tlye-varan-iade",
+  "scraped_at": "2026-08-03T16:53:22+00:00",
+  "content_hash": "6c987fd4ae73a1095016a9b3dc8ce4ba1dbdc2e1bad1fb38a3d28fbc788fa570",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139058,
+  "text_chars": 1626,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

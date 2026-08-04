@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/kart-kampanyalari.aspx",
-  "scraped_at": "2026-07-30T18:36:44+00:00",
-  "content_hash": "0ef1238d78f98443b7461970ae7ff7a83fc88ef5d186ff3484b994a966f0bb8f",
+  "scraped_at": "2026-08-03T16:38:20+00:00",
+  "content_hash": "2df1929f3c7bc641342017879e110d9f58631daf5d5a797d0951d39c3d012066",
   "collection_method": "live",
   "title": "Kredi Kartı Kampanyaları | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 100330,
-  "text_chars": 5987
+  "text_chars": 5987,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

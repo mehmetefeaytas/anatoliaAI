@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-ile-gelir-vergisi-odemelerine-vade-farksiz-3-taksit",
+  "scraped_at": "2026-08-03T16:53:43+00:00",
+  "content_hash": "b4e713ffca06016b65671ead3547a65278a6e440d6c97960e06ada788c85acf9",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 138999,
+  "text_chars": 1634,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

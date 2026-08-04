@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/fatura-2300tl-bonus.aspx",
-  "scraped_at": "2026-07-30T18:37:26+00:00",
-  "content_hash": "eba17ec29cd1f2371ec2e7630c740e9ded280fcc679619d4649b53b5d9608882",
+  "scraped_at": "2026-08-03T16:38:59+00:00",
+  "content_hash": "ce534968f502c52c2742e2c3215a3e9244b08a12191dbeb6537a6608092b35a1",
   "collection_method": "live",
   "title": "Faturaları Unutun, 4.000 TL'ye Varan Bonus Kazanın! | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 104372,
-  "text_chars": 12523
+  "raw_bytes": 104370,
+  "text_chars": 12529,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

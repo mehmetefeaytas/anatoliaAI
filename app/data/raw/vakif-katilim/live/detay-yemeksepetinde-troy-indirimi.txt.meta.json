@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/yemeksepetinde-troy-indirimi",
+  "scraped_at": "2026-08-03T16:54:37+00:00",
+  "content_hash": "ad836721929065c211b9a495fe5fcf2364142305bd89845f34208eaf273158bd",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139814,
+  "text_chars": 2433,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

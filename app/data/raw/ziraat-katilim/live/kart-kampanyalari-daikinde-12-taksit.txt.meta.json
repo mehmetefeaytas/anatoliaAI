@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/daikinde-12-taksit?IsArchived=true",
+  "scraped_at": "2026-08-03T16:43:14+00:00",
+  "content_hash": "99585c78bdc18f59e1de9bb2ae4b95a37db4d43698d3630bebb09004418d321e",
+  "collection_method": "live",
+  "title": "Daikin’de 12 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486586,
+  "text_chars": 1897,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

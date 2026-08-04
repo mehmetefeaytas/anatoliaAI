@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/tamamla-kazan",
+  "scraped_at": "2026-08-03T16:52:37+00:00",
+  "content_hash": "0bd8e765f915da9bb9a89b5a8f5e3fb447215f13d31794c61f0f958104952822",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 140029,
+  "text_chars": 2253,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

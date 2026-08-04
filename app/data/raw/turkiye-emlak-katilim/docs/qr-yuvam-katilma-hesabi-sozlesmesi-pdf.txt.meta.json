@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/yuvam-katilma-hesabi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-03T17:12:18+00:00",
+  "content_hash": "4b6870394007c2f3fb0328887588bf34f2cc24326851281af7c6321b3c4e4d13",
+  "collection_method": "pdf",
+  "title": "yuvam katilma hesabi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 205886,
+  "text_chars": 4865,
+  "pdf_pages": 2
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/ziynet-altin-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:22:42+00:00",
-  "content_hash": "d1680fa5b3e940d734194957cbb3f3545438842aaf0cd4395df731ee788b73d3",
+  "scraped_at": "2026-08-03T17:39:32+00:00",
+  "content_hash": "ccf5669eccf1a093a90e9e3961480f0d616b019766213d9b36f8ae241e21d499",
   "collection_method": "live",
   "title": "Ziynet Altın Katılma Hesabı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 168631,
-  "text_chars": 2164
+  "text_chars": 2164,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

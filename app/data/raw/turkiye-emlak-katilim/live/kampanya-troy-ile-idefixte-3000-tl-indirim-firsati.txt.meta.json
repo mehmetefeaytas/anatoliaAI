@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/troy-ile-idefixte-3000-tl-indirim-firsati",
+  "scraped_at": "2026-08-03T16:59:40+00:00",
+  "content_hash": "a8f0164fc757542a1aa24301a55744d8d70128febd1a175b3846dd14b60a8e1a",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 168716,
+  "text_chars": 3527,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

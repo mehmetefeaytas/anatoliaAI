@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/finansman-urunleri",
-  "scraped_at": "2026-07-30T20:14:30+00:00",
-  "content_hash": "e98ad12650d8432be290f1f8b896aff797b77b29bd93f892f0907ad0278be69a",
+  "scraped_at": "2026-08-03T17:30:20+00:00",
+  "content_hash": "4c989aee5592b76d6c077e191db18ad5a048eca7447f4542b0887ff70c2b37e6",
   "collection_method": "live",
   "title": "Finansman Ürünleri | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 460460,
-  "text_chars": 1408
+  "raw_bytes": 477127,
+  "text_chars": 1408,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

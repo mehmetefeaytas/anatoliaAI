@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ilk-bankkart-kredi-kartiniza-5000-tl-bankkart-lira-0?IsArchived=true",
+  "scraped_at": "2026-08-03T16:45:11+00:00",
+  "content_hash": "6c6dd2a2870ab60ec4a96d3c7b01d563b5e7f9e9beb598dc7486c22abe267bbe",
+  "collection_method": "live",
+  "title": "İlk Bankkart Kredi Kartınıza 5.000 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 491493,
+  "text_chars": 3494,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

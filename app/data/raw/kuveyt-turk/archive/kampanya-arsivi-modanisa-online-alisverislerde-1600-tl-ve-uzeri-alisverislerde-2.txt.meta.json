@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/modanisa-online-alisverislerde-1600-tl-ve-uzeri-alisverislerde-250-tl-indirim",
+  "scraped_at": "2026-08-03T18:00:41+00:00",
+  "content_hash": "d79538395e22f78f7d0292225c6b67ef18fc7477fdea364aec22cab9c89ae5c9",
+  "collection_method": "live",
+  "title": "Modanisa Online Alışverişlerde 1.600 TL ve Üzeri Alışverişlerde 250 TL İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132012,
+  "text_chars": 1329,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

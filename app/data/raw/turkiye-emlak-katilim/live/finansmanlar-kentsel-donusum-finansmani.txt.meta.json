@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/kentsel-donusum-finansmani",
+  "scraped_at": "2026-08-03T17:00:09+00:00",
+  "content_hash": "7563764949204914a151fe05e4fad8164e97fbf1574cb75ff460ac0b99ef32aa",
+  "collection_method": "live",
+  "title": "Kentsel D&#246;n&#252;ş&#252;m Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135918,
+  "text_chars": 4605,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

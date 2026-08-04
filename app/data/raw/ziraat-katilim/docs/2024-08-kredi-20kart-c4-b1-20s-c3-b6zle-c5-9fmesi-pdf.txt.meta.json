@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2024-08/Kredi%20Kart%C4%B1%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-03T17:10:13+00:00",
+  "content_hash": "349b66d686ac692756dfdfd303e8e0eca0ac7b620098ac89fdc4f5cbf735542d",
+  "collection_method": "pdf",
+  "title": "Kredi Kartı Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 338049,
+  "text_chars": 48635,
+  "pdf_pages": 20
+}

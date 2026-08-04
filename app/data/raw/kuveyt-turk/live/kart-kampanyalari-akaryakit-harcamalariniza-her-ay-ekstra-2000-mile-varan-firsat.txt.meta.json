@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/akaryakit-harcamalariniza-her-ay-ekstra-2000-mile-varan-firsat",
+  "scraped_at": "2026-08-03T16:29:34+00:00",
+  "content_hash": "53fbfd1e87d3d89b6a279fa83dfa85b39a6db3733e82b3d2b0f0efd0e4b6e080",
+  "collection_method": "live",
+  "title": "Akaryakıt Harcamalarınıza Her Ay Ekstra 2.000 Mil'e Varan Fırsat! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132294,
+  "text_chars": 1393,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

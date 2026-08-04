@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/ilk-taksitli-isleminize-saglam-destek-scr",
+  "scraped_at": "2026-08-03T17:56:05+00:00",
+  "content_hash": "e0e2e40281c51805cd05799cd3e4b50dc9675c12bcfe7ea7496abcd985d73df3",
+  "collection_method": "live",
+  "title": "İlk Taksitli İşleminize Sağlam Destek! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130868,
+  "text_chars": 1854,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

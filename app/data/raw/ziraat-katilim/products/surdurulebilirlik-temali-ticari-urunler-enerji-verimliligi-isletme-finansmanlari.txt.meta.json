@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/surdurulebilirlik-temali-ticari-urunler/enerji-verimliligi-isletme-finansmanlari",
-  "scraped_at": "2026-07-30T20:15:30+00:00",
-  "content_hash": "c5ebf3211713c80946f10f29e6f9fd8a510b618f11acf18c4765b9736a923f5b",
+  "scraped_at": "2026-08-03T17:31:20+00:00",
+  "content_hash": "87f1f2ffc72ff2f5bf68d2d3813ecd2f302261a1a1f432ea67403acef687d8df",
   "collection_method": "live",
   "title": "Enerji Verimliliği İşletme Finansmanları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 455173,
-  "text_chars": 719
+  "raw_bytes": 471810,
+  "text_chars": 719,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

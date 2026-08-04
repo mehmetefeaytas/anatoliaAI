@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/deneme-finansman-sayfasi",
-  "scraped_at": "2026-07-30T20:21:06+00:00",
-  "content_hash": "1e2a728f7dce2f6cb42224354f60a7c1690d879d322c99fdc8d22cf66694186f",
+  "scraped_at": "2026-08-03T17:37:55+00:00",
+  "content_hash": "02f275b5e1ba7260e3392dde1edec5b645d2ec9b671f157d012663f31a3d7ea9",
   "collection_method": "live",
   "title": "Deneme Finansman Sayfası | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 172776,
-  "text_chars": 3907
+  "raw_bytes": 175045,
+  "text_chars": 5621,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

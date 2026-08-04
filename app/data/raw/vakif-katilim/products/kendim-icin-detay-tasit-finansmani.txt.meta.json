@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/tasit-finansmani",
-  "scraped_at": "2026-07-30T20:18:43+00:00",
-  "content_hash": "2928fb1b7a007891f31405351882fab3a970139b7394fbbb0ee1a5d310407deb",
+  "scraped_at": "2026-08-03T17:34:29+00:00",
+  "content_hash": "2043417063ec7227665ca13f7a675ec8958d08f70393d3c4a319982e9ca078ed",
   "collection_method": "live",
   "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 133383,
-  "text_chars": 1291
+  "text_chars": 1291,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/giyim-ve-ayakkabi-alisverisinizde-toplam-1000-tl-bankkart-lira-2",
+  "scraped_at": "2026-08-03T16:44:32+00:00",
+  "content_hash": "8ee75700b3af2738e1409a065d9aecab3aeaa4730da882e00fda2cbe867830ab",
+  "collection_method": "live",
+  "title": "Giyim ve Ayakkabı Alışverişinizde Toplam 1.000 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 509228,
+  "text_chars": 2700,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

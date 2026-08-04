@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/trendlilere-tum-banka-atmleri-ucretsiz",
-  "scraped_at": "2026-07-30T18:35:16+00:00",
-  "content_hash": "c206d6ebe28cd806745edb02539c0b42d88dffaea457bf53639a40b1c421b4ea",
+  "scraped_at": "2026-08-03T16:36:48+00:00",
+  "content_hash": "ecdadd32d284fa2e6f29b162503b830d52c15d5fc4730b5f5ad89758e08faf1c",
   "collection_method": "live",
   "title": "Trend’lilere Tüm Banka ATM’leri Ücretsiz | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180346,
-  "text_chars": 898
+  "raw_bytes": 180670,
+  "text_chars": 898,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

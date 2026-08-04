@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/esya-dekorasyon",
+  "scraped_at": "2026-08-03T17:26:02+00:00",
+  "content_hash": "b57095e5a5ced0ce14e12e88228072b3d1d114644d6184ad9962deab7e909d9b",
+  "collection_method": "live",
+  "title": "Eşya Dekorasyon - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182374,
+  "text_chars": 673,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

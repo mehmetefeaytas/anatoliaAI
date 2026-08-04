@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/bauhausta-3-taksit",
+  "scraped_at": "2026-08-03T16:42:44+00:00",
+  "content_hash": "941669c27cb2db751c5ff3962373065800af8c23236965915fccc62029b724e0",
+  "collection_method": "live",
+  "title": "BAUHAUS’ta 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 485022,
+  "text_chars": 1745,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

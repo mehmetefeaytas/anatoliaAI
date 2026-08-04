@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari/mobilden-kuveyt-turklu-olan-tuzel-firmalara-22000-tlye-varan-hediye",
+  "scraped_at": "2026-08-03T16:30:22+00:00",
+  "content_hash": "d9e723bb6ea298fff72ab60c6afcffefc474abb8ce494db84f62edb670b353f8",
+  "collection_method": "live",
+  "title": "Mobilden Kuveyt Türklü Olan Tüzel Firmalara 22.000 TL'ye Varan Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 135437,
+  "text_chars": 3856,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

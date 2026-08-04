@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/civilde-vade-farksiz-4-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:28+00:00",
+  "content_hash": "617affb1442cdfa1ac79cbde7c575400cdede3f88f797194dc60e67931073b4e",
+  "collection_method": "live",
+  "title": "Civil’de Vade Farksız 4 Aya Varan Taksit Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130288,
+  "text_chars": 1019,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

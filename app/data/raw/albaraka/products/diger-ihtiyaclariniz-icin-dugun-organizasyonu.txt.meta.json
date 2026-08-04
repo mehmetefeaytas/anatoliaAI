@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/diger-ihtiyaclariniz-icin/dugun-organizasyonu",
+  "scraped_at": "2026-08-03T17:25:44+00:00",
+  "content_hash": "d074277d8815f997eabcfcfcb636b50152a4d327411447889278acebfcc2fea9",
+  "collection_method": "live",
+  "title": "Düğün Organizasyonu - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181972,
+  "text_chars": 607,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

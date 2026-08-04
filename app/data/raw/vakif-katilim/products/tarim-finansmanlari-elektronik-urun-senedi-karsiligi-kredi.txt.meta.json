@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/tarim-finansmanlari/elektronik-urun-senedi-karsiligi-kredi",
-  "scraped_at": "2026-07-30T20:20:01+00:00",
-  "content_hash": "9a4ec9a65f87f7723223bce08edca7f7e9bacaf77c505969d62be6cf3f46b673",
+  "scraped_at": "2026-08-03T17:35:48+00:00",
+  "content_hash": "370b54e1eceac5c7a282cd1206a16ca36a9cded1ee495892af1959bc8be0265c",
   "collection_method": "live",
   "title": "Elektronik &#220;r&#252;n Senedi Karşılığı Kredi | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 131667,
-  "text_chars": 434
+  "text_chars": 434,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

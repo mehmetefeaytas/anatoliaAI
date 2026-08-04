@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vakif-katilim-aile-yili-paketi",
+  "scraped_at": "2026-08-03T16:52:58+00:00",
+  "content_hash": "39c18b473d0093ec2ca54a85b6953ecaa120f0a667bcd335daf686e87662a94a",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139908,
+  "text_chars": 2167,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

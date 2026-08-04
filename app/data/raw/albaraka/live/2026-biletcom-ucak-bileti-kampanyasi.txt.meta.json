@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/biletcom-ucak-bileti-kampanyasi",
-  "scraped_at": "2026-07-30T18:35:34+00:00",
-  "content_hash": "05c2d78d84a53f5626cc68777212ecc82f97c4e7c7ea8594164be83d202fdae6",
+  "scraped_at": "2026-08-03T16:35:08+00:00",
+  "content_hash": "ae074445ac642fec6c048c23fddff0a24e1ae1ef64135172ac10eb69b4f47fff",
   "collection_method": "live",
   "title": "bilet.com Uçak Bileti Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180590,
-  "text_chars": 2082
+  "raw_bytes": 180856,
+  "text_chars": 2082,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

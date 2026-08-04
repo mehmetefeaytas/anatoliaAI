@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hepsiburada-kasim-indirimlerinde-199-oranli-kuveyt-turk-alisveris-finansmani-firsati",
+  "scraped_at": "2026-08-03T17:55:16+00:00",
+  "content_hash": "a3292da238ed85ebc867356b0501f2d7ad678813154cf7463d5ecc80cc4c4d1a",
+  "collection_method": "live",
+  "title": "Hepsiburada Kasım İndirimlerinde %1.99 Oranlı Kuveyt Türk Alışveriş Finansmanı Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131029,
+  "text_chars": 1641,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/konut-finansmanlari/2b-finansmani",
-  "scraped_at": "2026-07-30T20:05:57+00:00",
-  "content_hash": "85e4a8fbc5407b6db70f691644a3832a8b60cac8d4e603f429b8d2617fed8c11",
+  "scraped_at": "2026-08-03T17:19:46+00:00",
+  "content_hash": "0737e1620285f7827b4a5ec34fac918fda0758be73c3e15a088885f684f57a7e",
   "collection_method": "live",
   "title": "2B Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 145966,
-  "text_chars": 2629
+  "raw_bytes": 146204,
+  "text_chars": 2629,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari/esnaf-ciftci-ve-tuzel-sirketlerin-faturasi-bizden",
+  "scraped_at": "2026-08-03T16:30:07+00:00",
+  "content_hash": "c838638090139a2e8751c3c6f5e8d0755368d2f945a5c8fbf3b9ea63adaeb2ef",
+  "collection_method": "live",
+  "title": "Esnaf, Çiftçi ve Tüzel Şirketlerin Faturası Bizden! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130241,
+  "text_chars": 1481,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-size-ozel-ucretsiz-dis-ticaret-paketi-scr",
+  "scraped_at": "2026-08-03T17:59:47+00:00",
+  "content_hash": "d3c7b14c56a8ddd95edccc04a1aec611ab63c47f29c1be1e8d17c06b2514eaac",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten Size Özel Ücretsiz Dış Ticaret Paketi | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 133515,
+  "text_chars": 2446,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

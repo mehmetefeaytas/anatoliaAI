@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/yatirim-ve-hazine-urunleri",
-  "scraped_at": "2026-07-30T20:14:03+00:00",
-  "content_hash": "1712e18c39fccbdd6a2557f5be117b3a9850f9c0fef0ba1174f13be48c8d1f8c",
+  "scraped_at": "2026-08-03T17:29:52+00:00",
+  "content_hash": "67740dcad5dee3ff4dfb59892757b3414b182fdbcb31d6fa47ee6e4ca18002ea",
   "collection_method": "live",
   "title": "Yatırım ve Hazine Ürünleri | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 459142,
-  "text_chars": 899
+  "raw_bytes": 475809,
+  "text_chars": 899,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

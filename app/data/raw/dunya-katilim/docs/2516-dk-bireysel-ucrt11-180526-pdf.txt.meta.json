@@ -1,0 +1,12 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/content/files/uploads/2516/dk-bireysel-ucrt11-180526.pdf",
+  "scraped_at": "2026-08-03T17:12:32+00:00",
+  "content_hash": "2a1415593afb15933f47ab8d235c58e25f541e85c6f640fe995e365bdb2cfc22",
+  "collection_method": "pdf",
+  "title": "dk bireysel ucrt11 180526",
+  "http_status": 200,
+  "raw_bytes": 1355384,
+  "text_chars": 10328,
+  "pdf_pages": 3
+}

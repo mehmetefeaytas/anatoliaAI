@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/daikinde-2000-tl-indirim-ve-vade-farksiz-8-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:52:46+00:00",
+  "content_hash": "127c357d0d8660dda87b074cea0c1a2f3a8c1a14bc86d071652359bba07f5416",
+  "collection_method": "live",
+  "title": "Daikin'de 2.000 TL İndirim ve Vade Farksız 8 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132328,
+  "text_chars": 1680,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

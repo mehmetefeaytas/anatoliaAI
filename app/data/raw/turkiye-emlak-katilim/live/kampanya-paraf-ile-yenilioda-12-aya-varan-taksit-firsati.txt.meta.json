@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-yenilioda-12-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:59:28+00:00",
+  "content_hash": "cc5751aafebe589637d6b8271963a918a743c69d518dac266075847e3b319811",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165118,
+  "text_chars": 1048,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

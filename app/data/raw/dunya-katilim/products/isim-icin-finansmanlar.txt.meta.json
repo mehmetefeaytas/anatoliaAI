@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar",
-  "scraped_at": "2026-07-30T20:27:18+00:00",
-  "content_hash": "0cc38d09a2ed44cef0bdc9402ba68ed8ef592c0419beedb686b4a4e58cf040ff",
+  "scraped_at": "2026-08-03T17:45:10+00:00",
+  "content_hash": "81bdfd543a99869e99675d55678d02d9b7e64a8e9b849a3f80606fb4fe1cea01",
   "collection_method": "live",
   "title": "Finansmanlar | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 503479,
-  "text_chars": 9592
+  "text_chars": 9592,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

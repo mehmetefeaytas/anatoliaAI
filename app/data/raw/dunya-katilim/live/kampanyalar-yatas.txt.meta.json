@@ -1,0 +1,13 @@
+{
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/yatas",
+  "scraped_at": "2026-08-03T17:04:23+00:00",
+  "content_hash": "6556655e315253c1644dafd3476b90b98049bec4fb0e8a07591e5904477cffa2",
+  "collection_method": "live",
+  "title": "Yata&#x15F; | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504884,
+  "text_chars": 9587,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

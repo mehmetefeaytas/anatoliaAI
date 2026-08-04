@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/ozel-bankacilik/ayricaliklar/kampanyalar/world-elite-kart-ile-havus-natolia-ve-otto-bite-restoranlarinda-25-indirim-firsati",
+  "scraped_at": "2026-08-03T16:34:53+00:00",
+  "content_hash": "2e0091e432670133c0a38c33f366b5d1332e9edadaa1a891558b5b27d3971669",
+  "collection_method": "live",
+  "title": "World Elite Kart ile Havuş, Natolia ve Otto Bite Restoranlarında %25 İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 127989,
+  "text_chars": 1050,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

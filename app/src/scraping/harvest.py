@@ -40,15 +40,27 @@ REPORT_NAME = "_collection_report.md"
 def harvest(config_path: str, raw_dir: str, *, only: Optional[set[str]] = None,
             max_docs: Optional[int] = None, delay_s: float = 3.0,
             ignore_robots: bool = False,
-            user_agent: str = DEFAULT_USER_AGENT) -> dict[str, Any]:
-    """Tüm bankaları gezer, belgeleri diske yazar, rapor sözlüğü döner."""
+            user_agent: str = DEFAULT_USER_AGENT,
+            timeout_s: float = 25.0) -> dict[str, Any]:
+    """Tüm bankaları gezer, belgeleri diske yazar, rapor sözlüğü döner.
+
+    `timeout_s`: istek başına zaman aşımı. Varsayılan 25 sn bazı alan adları
+    için YETMİYOR — ölçüm (2026-08-04): vakifkart.com.tr HTTP 200 dönüyor ama
+    yanıt süresi **29-31 saniye**. Varsayılanla o alan sessizce zaman aşımına
+    düşüp hiç belge üretmiyordu. Yükseltmek bir bayrağa bağlandı, varsayılan
+    değiştirilmedi: uzun zaman aşımını her bankaya dayatmak yavaş/ölü
+    sayfalarda hasadı gereksiz uzatır.
+    """
     banks = load_banks(config_path)
     ensure_manual_dirs(banks, raw_dir)
     targets = [b for b in banks if not only or b.slug in only]
 
     limiter = RateLimiter(delay_s)
-    bundle = FetcherBundle(static=StaticFetcher(user_agent=user_agent, limiter=limiter),
-                           browser=BrowserFetcher(user_agent=user_agent, limiter=limiter))
+    bundle = FetcherBundle(
+        static=StaticFetcher(user_agent=user_agent, limiter=limiter,
+                             timeout=timeout_s),
+        browser=BrowserFetcher(user_agent=user_agent, limiter=limiter,
+                               timeout_ms=int(timeout_s * 1000)))
     robots = RobotsCache(user_agent=user_agent, ignore=ignore_robots)
 
     summary: dict[str, Any] = {
@@ -171,6 +183,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--banks", default="", help="virgülle ayrılmış slug filtresi")
     ap.add_argument("--max-docs", type=int, default=None,
                     help="banka başına azami belge (banks.yaml'i ezer)")
+    ap.add_argument("--timeout", type=float, default=25.0,
+                    help="istek basina zaman asimi (sn). vakifkart.com.tr 29-31 sn "
+                         "yanit veriyor; o alan icin --timeout 45 gerekir.")
     ap.add_argument("--delay", type=float, default=3.0,
                     help="domain başına saniye (CLAUDE.md §14: 2–5)")
     ap.add_argument("--ignore-robots", action="store_true",
@@ -181,6 +196,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     only = {s.strip() for s in args.banks.split(",") if s.strip()}
     summary = harvest(args.config, args.raw_dir, only=only or None,
                       max_docs=args.max_docs, delay_s=args.delay,
+                      timeout_s=args.timeout,
                       ignore_robots=args.ignore_robots)
 
     report_path = Path(args.raw_dir) / REPORT_NAME

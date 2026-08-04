@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/dogalgaz-donusum",
+  "scraped_at": "2026-08-03T17:26:00+00:00",
+  "content_hash": "4edaa6fb7778527f0a153fe95a0bcf5eaa66d14a5f062b14eb48b595ebc2ca5f",
+  "collection_method": "live",
+  "title": "Doğalgaz Dönüşüm - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182724,
+  "text_chars": 910,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

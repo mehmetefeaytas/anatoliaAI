@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/e-ticaret-alisverislerinize-toplam-500-tl-bankkart-lira-2",
+  "scraped_at": "2026-08-03T16:43:41+00:00",
+  "content_hash": "37f3eab0faa5ee523d16ed71c3720647194c0f0b3b207bc5574e832580f85748",
+  "collection_method": "live",
+  "title": "E-Ticaret Alışverişlerinize Toplam 500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 508294,
+  "text_chars": 2785,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

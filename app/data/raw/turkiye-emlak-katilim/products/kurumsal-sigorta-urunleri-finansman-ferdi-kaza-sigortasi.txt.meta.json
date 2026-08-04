@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/sigorta-ve-emeklilik/kurumsal-sigorta-urunleri/finansman-ferdi-kaza-sigortasi",
-  "scraped_at": "2026-07-30T20:24:21+00:00",
-  "content_hash": "d3650786fd359fa74593b8172d8932e04fe654c938ace832cc3ddaf4c2b98a80",
+  "scraped_at": "2026-08-03T17:41:11+00:00",
+  "content_hash": "c50b44a70743bca87104cfcfb20a3101daee7789f1d247d8beac6db018da5998",
   "collection_method": "live",
   "title": "Finansman Ferdi Kaza Sigortası | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 168388,
-  "text_chars": 2552
+  "text_chars": 2552,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

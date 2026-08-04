@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/hepsiburada-alisveris-finansmani",
-  "scraped_at": "2026-07-30T20:04:57+00:00",
-  "content_hash": "ce9df8eceb190d70de077349c67d6d794a835c4beb47a9a7fb2ca76de2ffac16",
+  "scraped_at": "2026-08-03T17:18:46+00:00",
+  "content_hash": "23e7f964374557829fa3280de7aef7025e0f40b68b118a82f6d35507f22c51c6",
   "collection_method": "live",
   "title": "Hepsiburada Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132171,
-  "text_chars": 2847
+  "raw_bytes": 132409,
+  "text_chars": 2847,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

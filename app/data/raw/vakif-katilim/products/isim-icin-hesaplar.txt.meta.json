@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/hesaplar",
+  "scraped_at": "2026-08-03T17:36:48+00:00",
+  "content_hash": "5c3e1ced7de3709fb8f950f2dede50b084fe88a73a8cc612bf8c84eee16fc44c",
+  "collection_method": "live",
+  "title": "Hesaplar | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 135342,
+  "text_chars": 944,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

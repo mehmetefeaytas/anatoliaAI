@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/hesaplar/ozel-cari-hesaplar",
+  "scraped_at": "2026-08-03T17:37:06+00:00",
+  "content_hash": "6b9fdca16a573cac4cff5322a0e4aabcf80315570937d67edfb0d7690a837595",
+  "collection_method": "live",
+  "title": "&#214;zel Cari Hesaplar | Kurumsal | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 149408,
+  "text_chars": 4159,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

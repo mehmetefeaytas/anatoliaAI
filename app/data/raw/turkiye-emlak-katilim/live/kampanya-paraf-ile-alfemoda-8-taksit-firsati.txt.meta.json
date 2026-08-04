@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-alfemoda-8-taksit-firsati",
-  "scraped_at": "2026-07-30T18:43:30+00:00",
-  "content_hash": "9b65b1c95a401e697f0f1314c385f56dca53cb861738a51adfc2000c261c1f9f",
+  "scraped_at": "2026-08-03T16:57:27+00:00",
+  "content_hash": "e80130fbdd4802e6dd65335dee90e45e93ae8a3baccd57b2af47c8f0b5290ed6",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 165224,
-  "text_chars": 1023
+  "raw_bytes": 165050,
+  "text_chars": 1023,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

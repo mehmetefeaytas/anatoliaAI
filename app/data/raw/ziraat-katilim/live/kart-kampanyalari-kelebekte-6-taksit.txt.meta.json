@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/kelebekte-6-taksit",
+  "scraped_at": "2026-08-03T16:45:53+00:00",
+  "content_hash": "75de1c824da6596062514d66e7fb4b40c48e9703cffe3bbfb709d742d8675ae6",
+  "collection_method": "live",
+  "title": "Kelebek’te 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488224,
+  "text_chars": 1980,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

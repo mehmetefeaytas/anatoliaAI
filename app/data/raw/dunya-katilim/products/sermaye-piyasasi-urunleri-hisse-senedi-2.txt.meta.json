@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/yatirim-urunleri/sermaye-piyasasi-urunleri/hisse-senedi",
-  "scraped_at": "2026-07-30T20:29:58+00:00",
-  "content_hash": "ee70838b747620ec60cdd3c96c82e69a4e920d6e1522e528a8b7f5f6ff457f9d",
+  "scraped_at": "2026-08-03T17:47:50+00:00",
+  "content_hash": "871f18cef997ef23b07b3bb35b375f6178c14eedd714e58980a9ee42661acba6",
   "collection_method": "live",
   "title": "Hisse Senedi | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 507110,
-  "text_chars": 11669
+  "text_chars": 11669,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

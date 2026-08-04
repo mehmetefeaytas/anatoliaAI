@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-ve-tesk-esnafin-yaninda",
+  "scraped_at": "2026-08-03T17:58:17+00:00",
+  "content_hash": "7d2da922ee20189d0713b71b6dcfe1828550d6bb42cda91977c03382dcb2a1a0",
+  "collection_method": "live",
+  "title": "Kuveyt Türk ve TESK Esnafın Yanında! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132763,
+  "text_chars": 2518,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

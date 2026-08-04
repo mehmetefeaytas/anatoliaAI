@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-inci-bes-yaptiran-musterilerimize-inci-bros-hediye",
+  "scraped_at": "2026-08-03T17:59:35+00:00",
+  "content_hash": "a79976c07b8dc673f950bfa549a473cbb15ab3ef0a7a8aead30a26cb23c3c4b2",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten İnci BES Yaptıran Müşterilerimize İnci Broş Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132461,
+  "text_chars": 2495,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

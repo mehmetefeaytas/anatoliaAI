@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/750-tlye-varan-altin-puan-dokunusu",
+  "scraped_at": "2026-08-03T17:51:34+00:00",
+  "content_hash": "35df01c151db24bb3f64389a2a53d22de01c9b9a2c84ae46a30aca95412b461f",
+  "collection_method": "live",
+  "title": "750 TL'ye Varan Altın Puan Dokunuşu! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130309,
+  "text_chars": 1326,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

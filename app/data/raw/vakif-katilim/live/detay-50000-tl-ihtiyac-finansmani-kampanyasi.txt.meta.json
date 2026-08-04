@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/50000-tl-ihtiyac-finansmani-kampanyasi",
-  "scraped_at": "2026-07-30T18:40:07+00:00",
-  "content_hash": "ab979991ca3099a54f2dd6499795ccde069ae7759ddb936bb1e61483de4673fe",
+  "scraped_at": "2026-08-03T16:52:04+00:00",
+  "content_hash": "1cc73d696c2e994057f271f75bbd4dce707da159dfd63c9e10fb0366866f9310",
   "collection_method": "live",
   "title": "Detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139630,
-  "text_chars": 1910
+  "raw_bytes": 139426,
+  "text_chars": 1888,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

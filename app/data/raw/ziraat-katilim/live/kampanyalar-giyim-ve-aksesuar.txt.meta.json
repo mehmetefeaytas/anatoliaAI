@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/giyim-ve-aksesuar",
+  "scraped_at": "2026-08-03T16:40:44+00:00",
+  "content_hash": "77c80d881215d38d5c2566728af9420719dd044b9d1d096d4c21d33d11ea1ed7",
+  "collection_method": "live",
+  "title": "Giyim ve Aksesuar | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 531943,
+  "text_chars": 4132,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

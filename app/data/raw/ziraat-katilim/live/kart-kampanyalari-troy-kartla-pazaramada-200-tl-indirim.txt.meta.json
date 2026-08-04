@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kartla-pazaramada-200-tl-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:12+00:00",
+  "content_hash": "5813eafc6023ee2ee4497bca01518b1fd387439546e0c154ccefcc96e21035b1",
+  "collection_method": "live",
+  "title": "TROY Kartla Pazarama’da 200 TL İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 493541,
+  "text_chars": 5076,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

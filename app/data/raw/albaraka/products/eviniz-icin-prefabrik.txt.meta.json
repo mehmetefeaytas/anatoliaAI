@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/prefabrik",
+  "scraped_at": "2026-08-03T17:26:08+00:00",
+  "content_hash": "1fba1b1be4145293937d858422c68c58c27ddc244e3cbd2c103c93a9bdcf6f02",
+  "collection_method": "live",
+  "title": "Prefabrik - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182151,
+  "text_chars": 515,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

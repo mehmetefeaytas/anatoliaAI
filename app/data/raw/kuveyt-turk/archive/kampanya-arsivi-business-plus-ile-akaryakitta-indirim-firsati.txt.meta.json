@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-ile-akaryakitta-indirim-firsati",
+  "scraped_at": "2026-08-03T17:52:25+00:00",
+  "content_hash": "a87729c6e90f9a6e0e9de3c201a10f216e081b7827b37a909e77f4ae340e607c",
+  "collection_method": "live",
+  "title": "Business Plus ile Akaryakıtta İndirim Fırsatı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130443,
+  "text_chars": 1075,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

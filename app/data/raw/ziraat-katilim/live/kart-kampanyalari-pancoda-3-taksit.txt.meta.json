@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/pancoda-3-taksit",
+  "scraped_at": "2026-08-03T16:47:48+00:00",
+  "content_hash": "61c413986cf1e41e62767323e1390d3377bacce53f879cc586bf31b7c6ad0aea",
+  "collection_method": "live",
+  "title": "Panço’da 3 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487973,
+  "text_chars": 1910,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

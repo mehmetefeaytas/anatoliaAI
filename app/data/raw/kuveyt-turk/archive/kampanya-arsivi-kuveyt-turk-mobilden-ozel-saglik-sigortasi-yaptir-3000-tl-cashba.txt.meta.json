@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-mobilden-ozel-saglik-sigortasi-yaptir-3000-tl-cashback-kazan",
+  "scraped_at": "2026-08-03T17:58:02+00:00",
+  "content_hash": "b7282c1ebf66b1353e7fb55d442ef9988391a13c76053e6a0a9674ef89713324",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Mobil’den Özel Sağlık Sigortası Yaptır, 3.000 TL Cashback Kazan! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132907,
+  "text_chars": 1801,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

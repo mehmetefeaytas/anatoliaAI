@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kart-yemeksepeti-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:51+00:00",
+  "content_hash": "bfb4863a3c54367026d215463cd544dfcfc94ad3b50e8926b35fed493e052ad0",
+  "collection_method": "live",
+  "title": "TROY Kart &amp; Yemeksepeti Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489714,
+  "text_chars": 3982,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

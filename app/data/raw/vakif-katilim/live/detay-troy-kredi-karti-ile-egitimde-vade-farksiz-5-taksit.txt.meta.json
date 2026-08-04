@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kredi-karti-ile-egitimde-vade-farksiz-5-taksit",
+  "scraped_at": "2026-08-03T16:54:55+00:00",
+  "content_hash": "296cb56cf357cb291e8947c5d9a4cf71a1f46de5ebda3f29ba175688f8a3cbc4",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139253,
+  "text_chars": 1712,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vkart-ile-biletcom-etkinlik-biletleri-indirimli",
+  "scraped_at": "2026-08-03T16:52:52+00:00",
+  "content_hash": "8691d3cec0023700a28592cf1fefec8b176fd0f7d3063b2521527d26104482b8",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139199,
+  "text_chars": 1840,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

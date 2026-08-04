@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/fatura-talimati-sizden-1000-tl-bizden-scr",
+  "scraped_at": "2026-08-03T17:54:28+00:00",
+  "content_hash": "2dd35b6b5002454abb4731df59b7ff3be43e554b00eee4e5fa123644e1c18a0c",
+  "collection_method": "live",
+  "title": "Fatura Talimatı Sizden, 1.000 TL Bizden! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131772,
+  "text_chars": 1571,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

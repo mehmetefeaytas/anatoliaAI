@@ -1,11 +1,14 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar/konut-finansmanlari",
-  "scraped_at": "2026-07-30T20:28:43+00:00",
-  "content_hash": "d12e81dd9d51b6621b13c8470221c75bc27a760a93204216c6d01ca7fcaaa94a",
+  "scraped_at": "2026-08-03T17:46:35+00:00",
+  "content_hash": "0c7cfe51f35701d72b83365dc1f6fc87cea365bc7a0831667aa4ade9c239166e",
   "collection_method": "live",
   "title": "Konut Finansmanlar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 497266,
-  "text_chars": 9087
+  "text_chars": 9087,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

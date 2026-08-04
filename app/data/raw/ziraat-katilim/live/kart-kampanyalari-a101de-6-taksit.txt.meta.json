@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/a101de-6-taksit",
+  "scraped_at": "2026-08-03T16:41:38+00:00",
+  "content_hash": "c7ecc40b7418f78d5ba1ef5a23ca57118e92780ec3011dabb41a66ff7c7eadee",
+  "collection_method": "live",
+  "title": "A101&#039;de 6 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488276,
+  "text_chars": 1857,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

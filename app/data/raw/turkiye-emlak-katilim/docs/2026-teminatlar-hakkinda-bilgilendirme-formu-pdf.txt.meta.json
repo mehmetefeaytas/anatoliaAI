@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/formlar/2026/teminatlar-hakkinda-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-03T17:10:54+00:00",
+  "content_hash": "9fa940058bbf2c83c079de47b656897dab621b87e124fbaffd2ec44368459faa",
+  "collection_method": "pdf",
+  "title": "teminatlar hakkinda bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 345429,
+  "text_chars": 8413,
+  "pdf_pages": 3
+}

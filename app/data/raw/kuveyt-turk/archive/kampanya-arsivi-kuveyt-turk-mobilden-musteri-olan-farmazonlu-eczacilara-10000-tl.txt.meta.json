@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-mobilden-musteri-olan-farmazonlu-eczacilara-10000-tl-hediye",
+  "scraped_at": "2026-08-03T17:57:59+00:00",
+  "content_hash": "cad5f0dee19e7f50c246699c460c624d847fe4642a6ebeddc8a7238469ab86a8",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Mobil'den Müşteri Olan Farmazonlu Eczacılara 10.000 TL Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132608,
+  "text_chars": 2518,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

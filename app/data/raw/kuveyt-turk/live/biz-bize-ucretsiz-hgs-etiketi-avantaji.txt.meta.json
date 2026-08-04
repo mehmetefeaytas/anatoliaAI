@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/biz-bize-bankacilik/biz-bize/ucretsiz-hgs-etiketi-avantaji",
+  "scraped_at": "2026-08-03T16:28:34+00:00",
+  "content_hash": "ea464fbbf9a9491d478528b33d66b5607d12fb52c3ae587d9adea5d105af3935",
+  "collection_method": "live",
+  "title": "Ücretsiz HGS Etiketi Avantajı | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129684,
+  "text_chars": 2097,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

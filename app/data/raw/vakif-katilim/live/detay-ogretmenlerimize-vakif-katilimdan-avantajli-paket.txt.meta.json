@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/ogretmenlerimize-vakif-katilimdan-avantajli-paket",
+  "scraped_at": "2026-08-03T16:51:43+00:00",
+  "content_hash": "0a2fcf85491814f82126887b984a760b997db2fdf6e41a300837672140bc6bd6",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141687,
+  "text_chars": 3760,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

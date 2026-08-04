@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/kisa-sureli-ihtiyaclariniz-icin/aidat-odeyen-hesap",
+  "scraped_at": "2026-08-03T17:26:17+00:00",
+  "content_hash": "3d16f739dfbdb7de373e36243f086d4acaff67b4508395d6fe5e6d05d8216b89",
+  "collection_method": "live",
+  "title": "Aidat Ödeyen Hesap - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181760,
+  "text_chars": 628,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

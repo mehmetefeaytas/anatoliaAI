@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-zsa-zsa-zsu-magazalarinda-pesin-fiyatina-6-taksit",
+  "scraped_at": "2026-08-03T16:59:31+00:00",
+  "content_hash": "2f1fabea337e7a27024d797a21b1dcac31d46caaedee6441bb1b492a29fb3f27",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165081,
+  "text_chars": 954,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

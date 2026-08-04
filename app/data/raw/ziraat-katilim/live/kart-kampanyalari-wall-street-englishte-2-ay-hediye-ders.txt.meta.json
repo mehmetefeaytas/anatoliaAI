@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/wall-street-englishte-2-ay-hediye-ders?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:51+00:00",
+  "content_hash": "d3943b3a16bf3eb114da56d02c636f4f5e2c8162f92b0e49bffc63d8dba95290",
+  "collection_method": "live",
+  "title": "Wall Street English&#039;te 2 Ay Hediye Ders | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 482845,
+  "text_chars": 1136,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

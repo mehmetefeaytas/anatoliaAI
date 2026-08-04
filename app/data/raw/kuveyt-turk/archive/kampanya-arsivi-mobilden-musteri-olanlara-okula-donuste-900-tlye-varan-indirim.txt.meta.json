@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/mobilden-musteri-olanlara-okula-donuste-900-tlye-varan-indirim",
+  "scraped_at": "2026-08-03T18:00:35+00:00",
+  "content_hash": "92dfbe158981c4c1fbc09ebca7e5b4aa56bd0a9f0989e376b8ca2759ae3266df",
+  "collection_method": "live",
+  "title": "Mobilden Müşteri Olanlara Okula Dönüşte 900 TL'ye Varan İndirim | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130792,
+  "text_chars": 1395,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

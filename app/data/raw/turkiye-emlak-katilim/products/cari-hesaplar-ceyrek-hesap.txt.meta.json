@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/ceyrek-hesap",
-  "scraped_at": "2026-07-30T20:25:10+00:00",
-  "content_hash": "a78e95cd45d42dc11df8224f7bad0d459f4a02bb25ad613c9857bb43bc512016",
+  "scraped_at": "2026-08-03T17:41:59+00:00",
+  "content_hash": "7b1149468a97b9560fb2fdca426484defda4625c25a8831a33ab0b183d6fa03b",
   "collection_method": "live",
   "title": "&#199;eyrek Hesap | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 172516,
-  "text_chars": 6488
+  "text_chars": 6488,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

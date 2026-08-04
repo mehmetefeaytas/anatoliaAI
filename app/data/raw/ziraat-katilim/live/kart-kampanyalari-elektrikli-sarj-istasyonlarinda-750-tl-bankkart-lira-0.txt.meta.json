@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/elektrikli-sarj-istasyonlarinda-750-tl-bankkart-lira-0?IsArchived=true",
+  "scraped_at": "2026-08-03T16:43:56+00:00",
+  "content_hash": "4de98666b47462bf3cb6ee07d778f3dacb5bfd11050d8d4626a69f0e6f848ed3",
+  "collection_method": "live",
+  "title": "Elektrikli Şarj İstasyonlarında 750 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486505,
+  "text_chars": 2314,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

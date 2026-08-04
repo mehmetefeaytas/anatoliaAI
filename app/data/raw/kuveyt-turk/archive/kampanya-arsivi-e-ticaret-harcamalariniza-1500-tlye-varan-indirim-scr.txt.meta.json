@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/e-ticaret-harcamalariniza-1500-tlye-varan-indirim-scr",
+  "scraped_at": "2026-08-03T17:53:31+00:00",
+  "content_hash": "9699bfd0b543678d6f92009166e978c930d2af35ac550efb5502f49ff08a031e",
+  "collection_method": "live",
+  "title": "E-ticaret Harcamalarınıza 1.500 TL’ye Varan İndirim! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129932,
+  "text_chars": 866,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

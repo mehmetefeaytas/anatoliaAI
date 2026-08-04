@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hepsiburada-alisverislerinizde-12-taksit-firsati",
+  "scraped_at": "2026-08-03T17:55:01+00:00",
+  "content_hash": "3306626ebe8e2e71f41aa2d3327318eb536e756835dd1e20c0b4ff3943925114",
+  "collection_method": "live",
+  "title": "Hepsiburada Alışverişlerinizde 12 Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130916,
+  "text_chars": 1793,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/modalifeta-9-taksit",
+  "scraped_at": "2026-08-03T16:47:02+00:00",
+  "content_hash": "49ea2c6d08f4afc23e7e182a6a7f06580b10d6390e3f7b77435209daf7ce3b03",
+  "collection_method": "live",
+  "title": "ModaLife&#039;ta 9 Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 487730,
+  "text_chars": 1655,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

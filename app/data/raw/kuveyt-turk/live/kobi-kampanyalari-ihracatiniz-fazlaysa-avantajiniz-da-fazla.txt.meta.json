@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kobi-kampanyalari/ihracatiniz-fazlaysa-avantajiniz-da-fazla",
+  "scraped_at": "2026-08-03T16:29:52+00:00",
+  "content_hash": "98bd66fe10aa828b01312183483573454e602faa2986b3f6ca9622a4669a41b6",
+  "collection_method": "live",
+  "title": "İhracatınız Fazlaysa Avantajınız da Fazla! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 141327,
+  "text_chars": 6166,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

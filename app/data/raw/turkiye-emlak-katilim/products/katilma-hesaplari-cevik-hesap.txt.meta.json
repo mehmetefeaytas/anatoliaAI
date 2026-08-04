@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/katilma-hesaplari/cevik-hesap",
-  "scraped_at": "2026-07-30T20:22:15+00:00",
-  "content_hash": "6bb3a7c068e6da7e204b9b2407b4e25a9bb44f21bfd448d534330b9a66bd0086",
+  "scraped_at": "2026-08-03T17:39:04+00:00",
+  "content_hash": "6aad366234f4f0b1eb636adb310af789d750e841ff3254e49aa5ba54da33a153",
   "collection_method": "live",
   "title": "&#199;evik Hesap | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 164816,
-  "text_chars": 1672
+  "text_chars": 1672,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/bes-ile-yarininiza-deger-katin.aspx",
-  "scraped_at": "2026-07-30T18:37:53+00:00",
-  "content_hash": "37c30c4f43606765ab71f4d3812c06aa9f4158814789ea94d6a2c1846b0fd7b1",
+  "scraped_at": "2026-08-03T16:39:20+00:00",
+  "content_hash": "4aaf2c393a119d37c8348f0fe6af16a39b504428f83fec5ae3f328520ef55ce0",
   "collection_method": "live",
   "title": "BES ile Hem Yarınınıza Değer Katın, Hem de 650 TL Bonus Kazanın! | Kampanyalar | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 99152,
-  "text_chars": 9492
+  "text_chars": 9492,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

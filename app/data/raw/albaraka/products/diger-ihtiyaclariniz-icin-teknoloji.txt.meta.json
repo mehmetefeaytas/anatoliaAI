@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/diger-ihtiyaclariniz-icin/teknoloji",
+  "scraped_at": "2026-08-03T17:25:50+00:00",
+  "content_hash": "a2bf136c7eb3736c9247fa213696e97a74c40428d560198740c861949748e9e9",
+  "collection_method": "live",
+  "title": "Teknoloji - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181383,
+  "text_chars": 375,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

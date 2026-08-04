@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/hava-yolu-bilet-aliminiza-1500-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:44:59+00:00",
+  "content_hash": "c5cfded87240b7023d70d96f093be07f15a3bce5b0f153f573f58cbbd88ba0d0",
+  "collection_method": "live",
+  "title": "Hava Yolu Bilet Alımınıza 1.500 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490697,
+  "text_chars": 3147,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

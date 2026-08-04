@@ -1,11 +1,14 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/dis-ticaret-finansmanlari/vadeli-ihracat-finansmani",
-  "scraped_at": "2026-07-30T18:38:39+00:00",
-  "content_hash": "5e773e1cf70428c48b254e5ded42296393819a60298eef497b3adf8e9cbcaf3f",
+  "scraped_at": "2026-08-03T16:51:12+00:00",
+  "content_hash": "79614c2b6d68d2eea3a7dc00139a3024fb5dc0b29834db22b5dbc700db24fdef",
   "collection_method": "live",
   "title": "Vadeli İhracat Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 458569,
-  "text_chars": 1188
+  "raw_bytes": 475259,
+  "text_chars": 1188,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

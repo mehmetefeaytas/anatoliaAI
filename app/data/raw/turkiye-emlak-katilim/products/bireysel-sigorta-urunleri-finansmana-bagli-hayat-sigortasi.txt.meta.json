@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/sigorta-ve-emeklilik/bireysel-sigorta-urunleri/finansmana-bagli-hayat-sigortasi",
-  "scraped_at": "2026-07-30T20:22:51+00:00",
-  "content_hash": "d4dc1a2a49cbff342ad8e0d6c48ac214e1655f0f321aca7dd78628a5d44af585",
+  "scraped_at": "2026-08-03T17:39:40+00:00",
+  "content_hash": "a3ee56307428328a0f5782d90c8074110b8800c892b2d2162535a8b5003f9c5b",
   "collection_method": "live",
   "title": "Finansmana Bağlı Hayat Sigortası | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 166729,
-  "text_chars": 2378
+  "text_chars": 2378,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

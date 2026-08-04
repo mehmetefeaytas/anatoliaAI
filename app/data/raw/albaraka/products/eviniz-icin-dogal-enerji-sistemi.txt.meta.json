@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin/dogal-enerji-sistemi",
+  "scraped_at": "2026-08-03T17:25:57+00:00",
+  "content_hash": "e3f36240dedfd873cd733dbc2a58c26c6b9f5f9c579cc2c302c52ccf70918f4c",
+  "collection_method": "live",
+  "title": "Doğal Enerji Sistemi - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 182060,
+  "text_chars": 490,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

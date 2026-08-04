@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/her-fatura-talimatina-50-toplamda-200-tl-hediye",
+  "scraped_at": "2026-08-03T17:55:29+00:00",
+  "content_hash": "17dab8d2f667c5fdd0162aa33196f48439c3f780d3d70862baa4371870d87042",
+  "collection_method": "live",
+  "title": "Her Fatura Talimatına 50, Toplamda 200 TL Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129978,
+  "text_chars": 959,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

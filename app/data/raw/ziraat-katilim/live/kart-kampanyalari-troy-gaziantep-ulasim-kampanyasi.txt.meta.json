@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-gaziantep-ulasim-kampanyasi?IsArchived=true",
+  "scraped_at": "2026-08-03T16:48:45+00:00",
+  "content_hash": "60247c5afd28c2d4ef61edc47bc2b9424b60b4574c5cc84fefe8f41a61c6e824",
+  "collection_method": "live",
+  "title": "TROY Gaziantep Ulaşım Kampanyası | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489283,
+  "text_chars": 2429,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

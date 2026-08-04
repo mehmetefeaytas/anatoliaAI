@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/hesaplama-araclari/finansman-hesaplama/konut-finansmani-hesaplama",
-  "scraped_at": "2026-07-30T20:06:53+00:00",
-  "content_hash": "8025451aab0ba5cd1968e97b1960fdea9033fdcd9143ec64762e29122c7c8c61",
+  "scraped_at": "2026-08-03T17:21:40+00:00",
+  "content_hash": "282f4bec32af824280a78a8a63881fd6129c16d8133d8e13ca2c9aad85bee8e3",
   "collection_method": "live",
   "title": "Konut Finansmanı Hesaplama | Ev Finansmanı Oranları 2026",
   "http_status": 200,
-  "raw_bytes": 213226,
-  "text_chars": 3469
+  "raw_bytes": 145041,
+  "text_chars": 3469,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

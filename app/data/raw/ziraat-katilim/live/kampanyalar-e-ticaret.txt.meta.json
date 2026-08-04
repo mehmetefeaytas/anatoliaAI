@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/e-ticaret",
+  "scraped_at": "2026-08-03T16:40:32+00:00",
+  "content_hash": "8ed80a0704328a53a4d3e1d042b4220fc39256b7479659dfe23f01404856b5a4",
+  "collection_method": "live",
+  "title": "E-Ticaret | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 505244,
+  "text_chars": 2454,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

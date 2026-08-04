@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kasko-sizden-depoyu-doldurmak-bizden-scr",
+  "scraped_at": "2026-08-03T17:56:56+00:00",
+  "content_hash": "a515636cecbf0a92987e2b1df4c4e6ad9f21a49fa96b3838131affff0f20583a",
+  "collection_method": "live",
+  "title": "Kasko Sizden Depoyu Doldurmak Bizden | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131372,
+  "text_chars": 2175,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

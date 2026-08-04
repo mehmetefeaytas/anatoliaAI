@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/alisveris-finansmanlari/vivense-alisveris-finansmani",
-  "scraped_at": "2026-07-30T20:05:12+00:00",
-  "content_hash": "e050f9b68fd661252554f15315b83a32e154eecdfd80de46c892d2a9079a716a",
+  "scraped_at": "2026-08-03T17:19:00+00:00",
+  "content_hash": "563e7be5ef8760022029d864caf37afb8e3b9c185645b48287e10a99146c30c6",
   "collection_method": "live",
   "title": "Vivense Alışveriş Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 131488,
-  "text_chars": 2399
+  "raw_bytes": 131726,
+  "text_chars": 2399,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

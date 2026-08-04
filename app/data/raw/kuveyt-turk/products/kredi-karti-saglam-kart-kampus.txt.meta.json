@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kendim-icin/kartlar/kredi-karti/saglam-kart-kampus",
+  "scraped_at": "2026-08-03T17:21:01+00:00",
+  "content_hash": "ac1c0f728d88c154dba1906f394e6ee5b2e4e181b8a30a74c95485d952a42e31",
+  "collection_method": "live",
+  "title": "Sağlam Kart Kampüs | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 143617,
+  "text_chars": 7683,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

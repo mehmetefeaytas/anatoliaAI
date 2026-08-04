@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/bireysel-bankacilik/vakif-katilim-ile-altin-gunler",
+  "scraped_at": "2026-08-03T17:37:18+00:00",
+  "content_hash": "4a0a710ab9db03cd1d4f690dd63fe300979aeb5f56eb9a027954c55eaf5d3d17",
+  "collection_method": "live",
+  "title": "Altın G&#252;nler | Bireysel | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 144299,
+  "text_chars": 3084,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

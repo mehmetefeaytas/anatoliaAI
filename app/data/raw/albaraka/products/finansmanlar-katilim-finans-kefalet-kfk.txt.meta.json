@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kobi/finansmanlar/katilim-finans-kefalet-kfk",
-  "scraped_at": "2026-07-30T20:07:05+00:00",
-  "content_hash": "85a331af90c3611d5762c642409a6664c60c567ee313242e66d357f18a3ffae1",
+  "scraped_at": "2026-08-03T17:21:53+00:00",
+  "content_hash": "886aee0bbc22d075a836bf02bca9c3edd49ad547d276165e7c4683c618d83822",
   "collection_method": "live",
   "title": "Katılım Finans Kefalet (KFK) - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181381,
-  "text_chars": 1562
+  "raw_bytes": 181647,
+  "text_chars": 1562,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

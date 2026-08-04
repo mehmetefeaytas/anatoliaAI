@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/motosiklet-finansmani",
-  "scraped_at": "2026-07-30T20:05:24+00:00",
-  "content_hash": "0d8c4d599109e8cae579905190b9dba0e31ee37635ee30e701907ab606f6974b",
+  "scraped_at": "2026-08-03T17:19:12+00:00",
+  "content_hash": "3c51e99ce3991677098f5f5e99a8a0cb39a98868c3509c81c67fb6f8b9c7f46c",
   "collection_method": "live",
   "title": "Motosiklet Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 150580,
-  "text_chars": 4158
+  "raw_bytes": 150818,
+  "text_chars": 4158,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/finansman-urunleri/nakdi-finansman/online-finansman",
-  "scraped_at": "2026-07-30T20:04:15+00:00",
-  "content_hash": "3e107e71b1883dc9ab47ef57586fcbd8098c0ecfb00ae90b870efc1647cba176",
+  "scraped_at": "2026-08-03T17:18:03+00:00",
+  "content_hash": "874df49e05a79e21a044d2174e9dd6fd042f0d4d3abf651b649f9f5b1cc1b678",
   "collection_method": "live",
   "title": "Online Finansman | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132620,
-  "text_chars": 2604
+  "raw_bytes": 132952,
+  "text_chars": 2604,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

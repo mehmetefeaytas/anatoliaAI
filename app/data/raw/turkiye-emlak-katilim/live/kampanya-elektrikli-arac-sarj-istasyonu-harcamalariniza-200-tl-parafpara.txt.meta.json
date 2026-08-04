@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/elektrikli-arac-sarj-istasyonu-harcamalariniza-200-tl-parafpara",
-  "scraped_at": "2026-07-30T18:42:27+00:00",
-  "content_hash": "3d510bde460ee5d1fbbf7403b2ab70236f648261d8400c824ee1b8dd59ce15ad",
+  "scraped_at": "2026-08-03T16:56:24+00:00",
+  "content_hash": "3d63039fcd2f41048f260923e0dd812c859feccadecf7c2c5eee5beca439b0b1",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 168459,
-  "text_chars": 2993
+  "raw_bytes": 168463,
+  "text_chars": 2962,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

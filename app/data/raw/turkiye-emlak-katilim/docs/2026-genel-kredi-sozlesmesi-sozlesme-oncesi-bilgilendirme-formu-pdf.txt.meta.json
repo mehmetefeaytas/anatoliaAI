@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/sozlesme/2026/genel-kredi-sozlesmesi-sozlesme-oncesi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-03T17:10:57+00:00",
+  "content_hash": "d3e9437b6f92e22b8d947b8bfddb3aa695fa16a5c74ffa4de5543450338443bb",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi sozlesme oncesi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 196639,
+  "text_chars": 11139,
+  "pdf_pages": 4
+}

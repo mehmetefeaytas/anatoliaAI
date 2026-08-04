@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/paraf",
-  "scraped_at": "2026-07-30T18:47:07+00:00",
-  "content_hash": "b2743dce1aa5025e8d42b5d0ec4e4156e2723b42e3a1d8f3ae50508c4b0499e9",
+  "scraped_at": "2026-08-03T17:03:47+00:00",
+  "content_hash": "fbd2dadd395555de6ffa3e6ecebeb22757aec55532af3e8bf8eb4f9c840a2a69",
   "collection_method": "live",
   "title": "Paraf | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 505518,
-  "text_chars": 9923
+  "text_chars": 9923,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/puffyde-6ya-varan-taksit",
+  "scraped_at": "2026-08-03T16:47:57+00:00",
+  "content_hash": "36b23f4e49de3d054a0393466bac7ae69ebe539723427470704ab483aa980fcd",
+  "collection_method": "live",
+  "title": "Puffy&#039;de 6&#039;ya varan Taksit | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 488388,
+  "text_chars": 1984,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

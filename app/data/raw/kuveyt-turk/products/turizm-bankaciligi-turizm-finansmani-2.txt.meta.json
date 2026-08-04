@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/isim-icin/diger-urun-ve-hizmetlerimiz/turizm-bankaciligi/turizm-finansmani",
-  "scraped_at": "2026-07-30T20:03:51+00:00",
-  "content_hash": "0492b939ea0d59418079985166b2a46d654fb551e9b2ec7f1c9742ceaa254ed0",
+  "scraped_at": "2026-08-03T17:17:42+00:00",
+  "content_hash": "b5206860498eef10d3e3e9b6d48c3dea5fbacbfe78ef89b6182420479f8dba83",
   "collection_method": "live",
   "title": "Turizm Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 130165,
-  "text_chars": 2218
+  "raw_bytes": 130403,
+  "text_chars": 2218,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

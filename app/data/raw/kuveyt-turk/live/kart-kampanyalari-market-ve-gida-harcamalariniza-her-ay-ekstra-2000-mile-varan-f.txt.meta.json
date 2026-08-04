@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/market-ve-gida-harcamalariniza-her-ay-ekstra-2000-mile-varan-firsat",
+  "scraped_at": "2026-08-03T16:29:16+00:00",
+  "content_hash": "fa1927ad6f82947eb32614d2bf8bad0febb7b04c9ba5f8c9272cdeb604eed0b6",
+  "collection_method": "live",
+  "title": "Market ve Gıda Harcamalarınıza Her Ay Ekstra 2.000 Mil'e Varan Fırsat! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132794,
+  "text_chars": 1691,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

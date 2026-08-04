@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/ramseyde-vade-farksiz-4-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T16:32:01+00:00",
+  "content_hash": "600da5d1fa8676eb1492adebd452e986a4ac59997c1f52381a3d5c508636bf33",
+  "collection_method": "live",
+  "title": "Ramsey’de Vade Farksız 4 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 128943,
+  "text_chars": 965,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

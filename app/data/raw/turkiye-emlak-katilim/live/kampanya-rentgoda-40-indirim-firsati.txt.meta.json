@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/rentgoda-40-indirim-firsati",
+  "scraped_at": "2026-08-03T16:59:34+00:00",
+  "content_hash": "5bd8824b70d12e8c5b4dfe9254d4148075225a2f0d3509f8bce2cf4523ce3516",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 166390,
+  "text_chars": 1790,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

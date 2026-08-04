@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-kredi-karti-ile-50si-bizden",
+  "scraped_at": "2026-08-03T16:54:04+00:00",
+  "content_hash": "ffdff6f8989f67ffcdf9c3fd21cfa9b75ec989df13d68e37327b342f45925b64",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139569,
+  "text_chars": 2081,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/finansmanlar/nakdi-finansman/turk-eximbank-katilim-bankalari-araciligiyla-ihracat-destek-finansmani",
-  "scraped_at": "2026-07-30T20:24:12+00:00",
-  "content_hash": "19e5d577bb3991ab99bfebccc1f0bc15351f823d6d4f8c8ed160e26693e5c457",
+  "scraped_at": "2026-08-03T17:41:01+00:00",
+  "content_hash": "919ddced9f2a7ba37b15c5f77af59cb3e23b11053565cf7c02126a5265d61643",
   "collection_method": "live",
   "title": "T&#252;rk Eximbank Katılım Bankaları Aracılığıyla İhracat Destek Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165974,
-  "text_chars": 1957
+  "text_chars": 1957,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

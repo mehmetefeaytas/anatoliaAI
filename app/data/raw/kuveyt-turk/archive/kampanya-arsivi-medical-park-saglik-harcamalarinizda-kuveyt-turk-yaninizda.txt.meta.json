@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/medical-park-saglik-harcamalarinizda-kuveyt-turk-yaninizda",
+  "scraped_at": "2026-08-03T18:00:14+00:00",
+  "content_hash": "94994c5f6b4e68c11a3edbfe0a9a475b977f09ef9774d53246f83b8877a46b30",
+  "collection_method": "live",
+  "title": "Medical Park Sağlık Harcamalarınızda Kuveyt Türk Yanınızda! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130565,
+  "text_chars": 1196,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

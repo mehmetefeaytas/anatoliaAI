@@ -1,11 +1,13 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/nakdi-finansman/isletme-finansmani",
-  "scraped_at": "2026-07-30T20:27:34+00:00",
-  "content_hash": "6208b5efe322f160f809f8e385a2d8a6743831ce9f9f3f408746c164cbc68688",
+  "scraped_at": "2026-08-03T17:45:26+00:00",
+  "content_hash": "7b5e686266e44fb5697d998ded57a9c3321a4540624ff683cfc92f460a97c727",
   "collection_method": "live",
   "title": "&#x130;&#x15F;letme Finansman&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 498849,
-  "text_chars": 9379
+  "text_chars": 9379,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

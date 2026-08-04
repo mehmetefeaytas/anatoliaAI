@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/konut-finansmani",
-  "scraped_at": "2026-07-30T20:21:27+00:00",
-  "content_hash": "53f1810020a61a6f8e5dc2349b1dcc21381b62415210e745a87e143d125948fc",
+  "scraped_at": "2026-08-03T17:38:16+00:00",
+  "content_hash": "a4471882b7d7f6f165719b62bb15df2c4b16bf02ceaadd4288a7c62b815febf5",
   "collection_method": "live",
   "title": "Konut Finansmanı | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 171221,
-  "text_chars": 4729
+  "text_chars": 4729,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

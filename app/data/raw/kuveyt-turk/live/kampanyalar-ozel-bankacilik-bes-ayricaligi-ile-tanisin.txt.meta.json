@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/ozel-bankacilik/ayricaliklar/kampanyalar/ozel-bankacilik-bes-ayricaligi-ile-tanisin",
+  "scraped_at": "2026-08-03T16:34:47+00:00",
+  "content_hash": "d4aa433af6ecc99c98716c9ddd0c0f90d739368c45c93894aa551b5126465d44",
+  "collection_method": "live",
+  "title": "Özel Bankacılık BES Ayrıcalığı ile Tanışın! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 128226,
+  "text_chars": 1351,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

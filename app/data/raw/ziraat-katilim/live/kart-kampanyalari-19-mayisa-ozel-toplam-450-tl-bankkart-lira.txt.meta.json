@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/19-mayisa-ozel-toplam-450-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:41:32+00:00",
+  "content_hash": "edb80ce1033008b73a366ea467046562d72fff3d2cd2b1875bc45e7e1b09b172",
+  "collection_method": "live",
+  "title": "19 Mayıs’a Özel Toplam 450 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 490074,
+  "text_chars": 2774,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

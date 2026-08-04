@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/kart-kampanyalari/kuveyt-turk-mobilden-pratik-bes-planiniza-2000-tl-hediye",
+  "scraped_at": "2026-08-03T16:32:40+00:00",
+  "content_hash": "3aa21abe212c2c2b5b655dbf6350b05af90f5e2f1cb215060a995d3af6ce6ba4",
+  "collection_method": "live",
+  "title": "Kuveyt Türk Mobil'den Pratik BES planınıza 2000 TL Hediye! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 137323,
+  "text_chars": 1274,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

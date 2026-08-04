@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/soik-finansman-destegi",
-  "scraped_at": "2026-07-30T20:19:52+00:00",
-  "content_hash": "7129c6186e70621782689553e0863374af81319d4264a29976816ee5daf4843b",
+  "scraped_at": "2026-08-03T17:35:39+00:00",
+  "content_hash": "3513ac6b8aad07640cd0dfcc2fb367a364b1b834ae9524ef90c8024f9526b2ba",
   "collection_method": "live",
   "title": "S&#214;İK Finansmanı | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 140914,
-  "text_chars": 3771
+  "text_chars": 3771,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/ara-donem-kar-payi-odemeli-katilma-hesabi",
-  "scraped_at": "2026-07-30T20:16:22+00:00",
-  "content_hash": "f1bf0127acd42e592178c0012c8552516b4e9ba2537cb271e898930e25204da7",
+  "scraped_at": "2026-08-03T17:32:11+00:00",
+  "content_hash": "804fc397d93a170992fb206f10718a63a7ba8e8710fd03b877a72f1d3ac8609a",
   "collection_method": "live",
   "title": "Yardım Merkezi | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 130560,
-  "text_chars": 894
+  "text_chars": 894,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

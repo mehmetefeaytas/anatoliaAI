@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/uberde-ilk-yolculukta-80-indirim",
+  "scraped_at": "2026-08-03T16:35:23+00:00",
+  "content_hash": "2cce661ad665e7f7e381bb2aac52cd38658feba0996f5ad1ceab747832bf5948",
+  "collection_method": "live",
+  "title": "Uber'de İlk Yolculukta %80 İndirim! | Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180909,
+  "text_chars": 2215,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

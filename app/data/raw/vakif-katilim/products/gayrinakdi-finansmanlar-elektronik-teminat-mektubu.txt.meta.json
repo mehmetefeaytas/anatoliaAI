@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/gayrinakdi-finansmanlar/elektronik-teminat-mektubu",
-  "scraped_at": "2026-07-30T20:19:07+00:00",
-  "content_hash": "cb93d8714a42bc04bf80879cd367355401ca2c7baf10f523ccbb1a44b821fd47",
+  "scraped_at": "2026-08-03T17:34:54+00:00",
+  "content_hash": "105597d7d2d853b72d9234e42f62a9b8956692de771de9c23f5a60b37e2a5e14",
   "collection_method": "live",
   "title": "Elektronik Teminat Mektubu | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 138612,
-  "text_chars": 3542
+  "text_chars": 3542,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

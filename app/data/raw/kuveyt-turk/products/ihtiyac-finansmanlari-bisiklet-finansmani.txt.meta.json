@@ -1,11 +1,13 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari/bisiklet-finansmani",
-  "scraped_at": "2026-07-30T20:05:30+00:00",
-  "content_hash": "b67a0e0c5778a7f3bb950c3e21fb628260f97e0ee4c419762b7894f4025ec286",
+  "scraped_at": "2026-08-03T17:19:19+00:00",
+  "content_hash": "ec05b01a55f0d50d416c596ae30012d980b94ac3b83af4a78f2a4c633bf8467c",
   "collection_method": "live",
   "title": "Bisiklet Finansmanı | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 146119,
-  "text_chars": 2861
+  "raw_bytes": 146357,
+  "text_chars": 2861,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

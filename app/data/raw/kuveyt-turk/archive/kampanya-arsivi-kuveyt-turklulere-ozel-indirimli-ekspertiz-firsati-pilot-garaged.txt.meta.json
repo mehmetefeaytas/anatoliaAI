@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turklulere-ozel-indirimli-ekspertiz-firsati-pilot-garageda",
+  "scraped_at": "2026-08-03T17:58:44+00:00",
+  "content_hash": "c1e9af174a9ad2c633fe9225f6b652b587464269b63816d4958635fa038d410c",
+  "collection_method": "live",
+  "title": "Kuveyt Türklülere Özel İndirimli Ekspertiz Fırsatı Pilot Garage’da! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 129895,
+  "text_chars": 766,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

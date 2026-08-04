@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/yatirim-urunleri/hazine-ve-yatirim-urunleri/kiymetli-maden-alim-satim",
+  "scraped_at": "2026-08-03T17:42:32+00:00",
+  "content_hash": "b4c47c3038cd296de1a5c026795e835098e45280bd50bba625a90faa3b05fdb7",
+  "collection_method": "live",
+  "title": "Kıymetli Maden Alım Satım | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 165890,
+  "text_chars": 1779,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

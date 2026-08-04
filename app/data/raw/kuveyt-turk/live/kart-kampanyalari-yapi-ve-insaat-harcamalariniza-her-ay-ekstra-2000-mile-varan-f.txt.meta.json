@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/yapi-ve-insaat-harcamalariniza-her-ay-ekstra-2000-mile-varan-firsat",
+  "scraped_at": "2026-08-03T16:29:13+00:00",
+  "content_hash": "ba683f9f2dea9f40f155dcaa4cf9a7432f8684f9f41d4ac0489e042d8c44d26e",
+  "collection_method": "live",
+  "title": "Yapı ve İnşaat Harcamalarınıza Her Ay Ekstra 2.000 Mil'e Varan Fırsat! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132634,
+  "text_chars": 1531,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

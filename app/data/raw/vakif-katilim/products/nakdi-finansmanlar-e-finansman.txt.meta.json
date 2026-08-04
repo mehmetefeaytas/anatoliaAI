@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar/nakdi-finansmanlar/e-finansman",
-  "scraped_at": "2026-07-30T20:19:34+00:00",
-  "content_hash": "aa66eeeb80d14fc94f786b366700b0d95fc68adfc6714d8485d0f25d52c0f63d",
+  "scraped_at": "2026-08-03T17:35:21+00:00",
+  "content_hash": "949245ad880efea7c24cd0d1a35352bff2536e322bc25ad7d97c906d9240b68a",
   "collection_method": "live",
   "title": "E-Finansman | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 133245,
-  "text_chars": 2191
+  "text_chars": 2191,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

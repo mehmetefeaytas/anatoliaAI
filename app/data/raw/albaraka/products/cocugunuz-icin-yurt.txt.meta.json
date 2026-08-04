@@ -1,0 +1,13 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/cocugunuz-icin/yurt",
+  "scraped_at": "2026-08-03T17:25:41+00:00",
+  "content_hash": "4a69368245c464126969543ab81c0b09deb5988166fe5089118242080932be26",
+  "collection_method": "live",
+  "title": "Yurt - Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 181114,
+  "text_chars": 396,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

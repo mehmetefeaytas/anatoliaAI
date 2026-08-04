@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-caspercomtrde-pesin-fiyatina-6-taksit-firsati",
-  "scraped_at": "2026-07-30T18:43:33+00:00",
-  "content_hash": "93393643e84099b0e5a07b711b9664cbf601cc3f0f12fa96014498002623d90a",
+  "scraped_at": "2026-08-03T16:57:31+00:00",
+  "content_hash": "645ed29023b2fecec339f8e18124e71989feed613f20779b9b5706abb8b0a263",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 167245,
-  "text_chars": 2962
+  "raw_bytes": 167247,
+  "text_chars": 2963,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

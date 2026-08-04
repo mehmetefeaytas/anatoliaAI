@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/vclub-dunyasi-artik-vakif-katilim-mobilde",
+  "scraped_at": "2026-08-03T16:55:49+00:00",
+  "content_hash": "47f3aedbd2eb737e9a58c51809cee9fadef36cdce2974fc41ac1cfb15c6edfc6",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 141657,
+  "text_chars": 3397,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

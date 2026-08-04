@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/gayrimenkul-finansmani/is-yeri-finansman",
-  "scraped_at": "2026-07-30T20:07:34+00:00",
-  "content_hash": "7179fec212a96f71719bc7f26c48859dcc6c49916f0080f4c86881c5c6b17d8d",
+  "scraped_at": "2026-08-03T17:22:22+00:00",
+  "content_hash": "0f265b239831d010e030f327aeed6845434bec0a1092e468b71ebd51b459b8d5",
   "collection_method": "live",
   "title": "İş Yeri Finansmanı | Albaraka Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 181951,
-  "text_chars": 1348
+  "raw_bytes": 182217,
+  "text_chars": 1348,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

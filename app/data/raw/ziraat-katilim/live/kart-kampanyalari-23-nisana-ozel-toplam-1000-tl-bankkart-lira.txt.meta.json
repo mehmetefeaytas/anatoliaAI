@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/23-nisana-ozel-toplam-1000-tl-bankkart-lira?IsArchived=true",
+  "scraped_at": "2026-08-03T16:41:35+00:00",
+  "content_hash": "eb0b4691220aa491a6c723b544aa9535dead4c34feaf3a7b11bb32597fc86dc4",
+  "collection_method": "live",
+  "title": "23 Nisan&#039;a Özel Toplam 1.000 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 489681,
+  "text_chars": 2600,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

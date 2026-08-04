@@ -1,0 +1,13 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar/cari-hesaplar/havuz-hesap",
+  "scraped_at": "2026-08-03T17:42:10+00:00",
+  "content_hash": "63f7edf9bae93d3e85309e69f31fa467d03564e2a57f604a4d7689d467194031",
+  "collection_method": "live",
+  "title": "Havuz Hesap | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 130273,
+  "text_chars": 1408,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

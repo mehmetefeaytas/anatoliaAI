@@ -1,11 +1,13 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar",
-  "scraped_at": "2026-07-30T20:13:21+00:00",
-  "content_hash": "6efccab3b39d6a9e5463283236624d3d600550ec30f05092739813dc1b984680",
+  "scraped_at": "2026-08-03T17:29:10+00:00",
+  "content_hash": "709582c5d6f0c76b407d1e085603e7377e9604a4e7e8041ee6099ff8d14f826e",
   "collection_method": "live",
   "title": "Hesaplar | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 461883,
-  "text_chars": 1678
+  "raw_bytes": 478550,
+  "text_chars": 1678,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

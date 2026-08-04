@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/troy-ile-haftaya-kazancli-baslayin",
+  "scraped_at": "2026-08-03T16:51:58+00:00",
+  "content_hash": "c9365b32cf6186bfe03ce8ea19c57400bbb8d6fdf334067b2ae7ceabeec74ffd",
+  "collection_method": "live",
+  "title": "Detay | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 139397,
+  "text_chars": 2031,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

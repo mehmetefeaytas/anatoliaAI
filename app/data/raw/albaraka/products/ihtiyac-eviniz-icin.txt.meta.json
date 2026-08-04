@@ -1,11 +1,13 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/eviniz-icin",
-  "scraped_at": "2026-07-30T20:07:47+00:00",
-  "content_hash": "12991524e8820bbe7c2748e6812ef503f5950210c5ecfc461cd840c716b78392",
+  "scraped_at": "2026-08-03T17:22:35+00:00",
+  "content_hash": "1bd7299c960c8c233fc30e9135e128f8b8b4b9306b05c52776d013e48b94c55f",
   "collection_method": "live",
   "title": "Evinizin İhtiyaçları İçin Avantajlı Finansmanları Kaçırmayın - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 196504,
-  "text_chars": 1873
+  "raw_bytes": 196770,
+  "text_chars": 1873,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

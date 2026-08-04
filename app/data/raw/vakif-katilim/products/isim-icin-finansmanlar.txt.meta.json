@@ -1,11 +1,13 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/finansmanlar",
-  "scraped_at": "2026-07-30T20:16:40+00:00",
-  "content_hash": "fbd9cae495c9cff09965e54743333c3412a5801143e2e48d12968f25c2b2b1fe",
+  "scraped_at": "2026-08-03T17:32:29+00:00",
+  "content_hash": "69b184af88db4affca14a88d422c1571ce8f1e02bba8959f9a4df1db0b0788d1",
   "collection_method": "live",
   "title": "Finansmanlar | Kurumsal | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 140886,
-  "text_chars": 1174
+  "text_chars": 1174,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

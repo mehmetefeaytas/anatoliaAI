@@ -1,0 +1,14 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/hepsiburadada-250-tl-indirim-ve-vade-farksiz-9-aya-varan-taksit-firsati",
+  "scraped_at": "2026-08-03T17:55:20+00:00",
+  "content_hash": "c9a1c878e16bf0ec8d01d2f1058978b85f7c6d9b2ab6c53c7c22bc1b3b188dd5",
+  "collection_method": "live",
+  "title": "Hepsiburada'da 250 TL İndirim ve Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131711,
+  "text_chars": 2282,
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/troy-kartla-drda-1000-tlye-varan-indirim?IsArchived=true",
+  "scraped_at": "2026-08-03T16:49:00+00:00",
+  "content_hash": "093c13340994118b539464e5b43db159b9861a43965a404e7f401cfdea88577b",
+  "collection_method": "live",
+  "title": "TROY Kartla D&amp;R&#039;da 1.000 TL’ye Varan İndirim! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 492685,
+  "text_chars": 3956,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}

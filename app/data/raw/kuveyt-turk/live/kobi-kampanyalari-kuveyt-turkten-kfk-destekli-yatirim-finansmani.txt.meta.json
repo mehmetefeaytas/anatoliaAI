@@ -1,0 +1,13 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kobi-kampanyalari/kuveyt-turkten-kfk-destekli-yatirim-finansmani",
+  "scraped_at": "2026-08-03T16:29:58+00:00",
+  "content_hash": "e2239c51675145d516d0920a25c634cf757a0ec456ad1650f5ae683a45f2ddb0",
+  "collection_method": "live",
+  "title": "Kuveyt Türk’ten KFK Destekli Yatırım Finansmanı! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 131331,
+  "text_chars": 1909,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
+}
