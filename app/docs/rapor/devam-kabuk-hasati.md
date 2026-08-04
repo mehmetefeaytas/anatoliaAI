@@ -158,3 +158,15 @@ değiştirme — anotasyon CSV'lerindeki `doc_id` bu adlara bağlı.
   turkiye-emlak-katilim bloklarına "js denendi, ölçüldü, kazanç yok" notu.
 - `app/src/scraping/fetcher.py` — **DEĞİŞTİRİLMEDİ** (kusur bulunmadı).
 - **Hiçbir `.txt` gövdesi değiştirilmedi** (kurtarılan belge olmadığı için).
+
+## 6. Commit izi (dikkat)
+
+Bu görevin 16 dosyası kendi commit'ini alamadı: eşzamanlı çalışan başka bir
+ajan `git add -A` / `git commit -a` ile hazırlanmış indeksi süpürüp
+**`b50745a` ("Devam durumu notu: internet kesintisi öncesi dondurulan hâl")**
+içine dahil etti. Dosyalar bütün ve doğru — `git show b50745a --name-only`
+ile doğrulandı — ama ölçümü anlatan commit mesajı o commit'te yok; ölçüm
+gerekçesi bu belgede ve `.meta.json` `recollection_result` alanlarında durur.
+
+Ders: paylaşılan ağaçta `git add -A` kullanılmamalı (bu görev yalnız kendi
+yollarını `git add <yol>` ile ekledi).
