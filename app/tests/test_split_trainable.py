@@ -57,11 +57,15 @@ from scripts.split_trainable import (
     R_MUKERRER,
     R_URUN_DEGIL,
     R_UYGUN,
+    SIGNAL_MIN_FRACTION,
     Doc,
+    _tokens,
+    boilerplate_sets,
     boilerplate_shingles,
     build_report,
     classify,
     core_text,
+    has_financial_signal,
     is_listing_url,
     iter_docs,
     main,
@@ -225,6 +229,51 @@ DENIZBANK_KAMPANYALARI: tuple[str, ...] = (
     "yararlanabilir.",
 )
 
+# data/raw/ziraat-katilim/live/kart-kampanyalari-*-bankkart-lira*.txt
+# DÖRT GERÇEK kardeş kampanya (birebir kesitler). Aynı kampanyanın farklı
+# dönem/sektör varyantları: gövde cümleleri AYNEN tekrar ediyor, yalnız tutar,
+# oran, sektör ve tarih değişiyor. ÖLÇÜLMÜŞ KUSUR bu ailede: `df >= 3` kuralı
+# gövdeyi çerçeve sayıyordu ve `...-400-tl-bankkart-lira` belgesinin çekirdeği
+# 329 sözcükten 8 sözcüğe düşüyordu (kampanya bilgisi sıfır).
+ZIRAAT_KARDESLER: tuple[str, ...] = (
+    "Akaryakıt Harcamalarınıza 400 TL Bankkart Lira! Tüm Kampanyalar 2 Kuyum, "
+    "Optik ve Saat 3 Market ve Gıda 4 E-Ticaret Arşiv Akaryakıt "
+    "Harcamalarınıza 400 TL Bankkart Lira! Kampanya Koşulları Ziraat Katılım "
+    "Bankkart kredi kartınız ile anlaşmalı akaryakıt istasyonlarında 8 Mayıs "
+    "2026 - 8 Haziran 2026 tarihleri arasında farklı günlerde ve tek seferde "
+    "yapacağınız 1.250 TL ve üzeri dördüncü akaryakıt ya da otogaz "
+    "harcamanıza 400 TL Bankkart Lira kazanabilirsiniz. Bankkart Lira "
+    "kazanabilmek için alışveriş yapmadan önce Ziraat Katılım Mobil, Web "
+    "Sitesi ve İnternet Şube üzerinden kampanyaya katılmanız gerekmektedir.",
+    "Akaryakıt Harcamalarınıza 400 TL Bankkart Lira! Tüm Kampanyalar 2 Kuyum, "
+    "Optik ve Saat 3 Market ve Gıda 4 E-Ticaret Arşiv Akaryakıt "
+    "Harcamalarınıza 400 TL Bankkart Lira! Kampanya Koşulları Ziraat Katılım "
+    "Bankkart kredi kartınız ile anlaşmalı akaryakıt istasyonlarında 9 "
+    "Haziran 2026 - 9 Temmuz 2026 tarihleri arasında farklı günlerde ve tek "
+    "seferde yapacağınız 1.250 TL ve üzeri dördüncü akaryakıt ya da otogaz "
+    "harcamanıza 400 TL Bankkart Lira kazanabilirsiniz. Bankkart Lira "
+    "kazanabilmek için alışveriş yapmadan önce Ziraat Katılım Mobil, Web "
+    "Sitesi ve İnternet Şube üzerinden kampanyaya katılmanız gerekmektedir.",
+    "Elektrikli Araç Şarj İstasyonlarında 750 TL Bankkart Lira! Tüm "
+    "Kampanyalar 2 Kuyum, Optik ve Saat 3 Market ve Gıda 4 E-Ticaret Arşiv "
+    "Elektrikli Araç Şarj İstasyonlarında 750 TL Bankkart Lira! Kampanya "
+    "Koşulları Ziraat Katılım Bankkart kredi kartınız ile Bankkart anlaşmalı "
+    "Elektrikli Araç Şarj İstasyonları üye işyerlerinde 9 Haziran 2026 - 9 "
+    "Temmuz 2026 tarihleri arasında tek seferde yapacağınız her ödemenizde "
+    "%20, toplam 750 TL Bankkart Lira kazanabilirsiniz. Bankkart Lira "
+    "kazanabilmek için alışveriş yapmadan önce Ziraat Katılım Mobil, Web "
+    "Sitesi ve İnternet Şube üzerinden kampanyaya katılmanız gerekmektedir.",
+    "Market ve Gıda Harcamalarınıza 300 TL Bankkart Lira! Tüm Kampanyalar 2 "
+    "Kuyum, Optik ve Saat 3 Market ve Gıda 4 E-Ticaret Arşiv Market ve Gıda "
+    "Harcamalarınıza 300 TL Bankkart Lira! Kampanya Koşulları Ziraat Katılım "
+    "Bankkart kredi kartınız ile anlaşmalı market ve gıda işyerlerinde 9 "
+    "Haziran 2026 - 9 Temmuz 2026 tarihleri arasında farklı günlerde ve tek "
+    "seferde yapacağınız 750,00 TL ve üzeri üçüncü market harcamanıza 300 TL "
+    "Bankkart Lira kazanabilirsiniz. Bankkart Lira kazanabilmek için alışveriş "
+    "yapmadan önce Ziraat Katılım Mobil, Web Sitesi ve İnternet Şube "
+    "üzerinden kampanyaya katılmanız gerekmektedir.",
+)
+
 # data/raw/dunya-katilim/live/finansmanlar-ihtiyac-finansmani.txt (SSS bölümü)
 # GERÇEK bir ürün sayfasının içinde "nelere dikkat" ifadesi geçiyor; blog
 # kuralı gövdede arasa bu ürün sayfası elenirdi.
@@ -247,7 +296,7 @@ def _doc(text: str, *, doc_id: str = "banka--belge", bank: str = "banka",
     # Sözcük sayımı araçla AYNI tokenleştiriciden geçmeli; `str.split()`
     # noktalamayı sözcüğe yapıştırır ve sayı kayar.
     doc.core_text = core_text(text, set())
-    doc.total_tokens = len(doc.core_text.split())
+    doc.total_tokens = len(_tokens(doc.core_text))
     doc.core_tokens = doc.total_tokens
     return doc
 
@@ -568,16 +617,17 @@ class TestCekirdekAyiklama(unittest.TestCase):
     """`core_text` mekaniği."""
 
     def test_cercevesiz_belge_sozcuklerini_korur(self) -> None:
-        """Çerçeve kümesi boşken tüm sözcükler çekirdekte kalır.
+        """Çerçeve kümesi boşken belge olduğu gibi kalır.
 
-        `core_text` sözcük düzeyinde çalışır ve noktalama/kesme işaretlerini
-        ayırır (`VakıfBank'ta` -> `VakıfBank ta`), bu yüzden karşılaştırma
-        sözcük dizisi üzerinden yapılıyor.
+        `core_text` tutulan sözcükleri HAM metindeki karakter aralıklarından
+        geri yazar, yani noktalama korunur (`VakıfBank'ta.` bölünmez). Tek
+        fark, sondaki noktalama işaretinin son sözcüğün dışında kalması.
         """
         core = core_text(VAKIFBANK_294, set())
         self.assertIn("IPARD Hibe Destekli Yatırım Kredisi", core)
         self.assertIn("Proje ve Yatırım Kredileri", core)
-        self.assertEqual(len(core.split()), 37)
+        self.assertIn("VakıfBank'ta", core)
+        self.assertEqual(len(_tokens(core)), 37)
 
     def test_cerceve_ngrami_tum_pencereyi_siler(self) -> None:
         """Kapsama: n-gramın ilk sözcüğü değil, tüm pencere atılır."""
@@ -591,6 +641,163 @@ class TestCekirdekAyiklama(unittest.TestCase):
     def test_kisa_belgede_cerceve_ayiklanmaz(self) -> None:
         """Sözcük sayısı n-gram boyundan azsa hiçbir şey atılmaz."""
         self.assertEqual(core_text("bir iki üç", {"bir iki üç"}), "bir iki üç")
+
+
+class TestFinansalSinyalKorumasi(unittest.TestCase):
+    """Kalıp ayıklaması GERÇEK kampanya gövdesini yememeli.
+
+    ## Neden bu sınıf var
+
+    ÖLÇÜLMÜŞ KUSUR (2026-08-04): `df >= BOILERPLATE_MIN_DOCS` kuralı tek
+    başına, aynı kampanyanın 3-6 varyantını yayınlayan bankalarda gövdeyi
+    çerçeve sayıyordu. Ölçüt "ham metinde belge-özgü finansal sinyal var ama
+    çekirdekte hiç sinyal yok" olarak tanımlandığında etkilenen belge sayısı
+    `data/raw`da 244/1684, `data/raw-classic`ta 26/618 idi. Düzeltmeden sonra
+    1 ve 0.
+
+    En sert vaka `yapi-kredi--detay-250393-2`: 4035 sözcüklük belgenin
+    çekirdeği 26 sözcüğe düşmüştü. Bu sınıf davranışı kurgu belgelerle
+    çitliyor ki korpus değiştiğinde testler kırılmasın.
+    """
+
+    # Kurgu korpusun boyu KASITLI: `SIGNAL_MIN_FRACTION` bir ORAN olduğu için
+    # `BOILERPLATE_MIN_DOCS` tabanının üstüne çıkması gerekir. 4 kardeş + 16
+    # dolgu = 20 belgede sinyal eşiği ceil(0,25 x 20) = 5 olur; kardeşlerin
+    # ortak gövdesi 4 belgede geçtiği için korunur, menü 20/20 ile çerçeve
+    # kalır. Gerçek korpusta ziraat-katilim 291 belge, yani eşik 73.
+    def _kardesler(self) -> list[Doc]:
+        docs = [_row(f"ziraat-katilim--k{i}", f"{QNB_MENU} {text}",
+                     f"https://www.ziraatkatilim.com.tr/kart-kampanyalari/k{i}")
+                for i, text in enumerate(ZIRAAT_KARDESLER)]
+        docs += [
+            _row(f"ziraat-katilim--dolgu{i}",
+                 f"{QNB_MENU} Dolgu kampanyası {i} yalnız bu belgede geçen "
+                 f"özgün gövde metni {i} ile birlikte gelir ve başka hiçbir "
+                 f"belgede tekrar etmez {i}.",
+                 f"https://www.ziraatkatilim.com.tr/kart-kampanyalari/d{i}")
+            for i in range(16)
+        ]
+        return docs
+
+    def test_kardes_kampanyalarin_tutari_cekirdekte_kalir(self) -> None:
+        """Dört kardeş kampanyanın hepsi kendi tutarını ve koşulunu korur.
+
+        Gövde cümlesi ("...tek seferde yapacağınız ... TL ve üzeri ...
+        harcamanıza ... TL Bankkart Lira kazanabilirsiniz.") dört belgede de
+        geçiyor, yani `df >= 3` kuralına takılıyor. Finansal sinyal koruması
+        olmasa dördünün de çekirdeği kampanya bilgisinden arınırdı.
+        """
+        docs = self._kardesler()
+        split_corpus(docs)
+        beklenen = ("400 TL", "400 TL", "750 TL", "300 TL")
+        for doc, tutar in zip(docs[:4], beklenen, strict=True):
+            self.assertEqual(doc.decision, R_UYGUN, doc.detail)
+            self.assertIn(tutar, doc.core_text, doc.doc_id)
+            self.assertTrue(has_financial_signal(doc.core_text), doc.doc_id)
+
+    def test_oran_ve_tr_sayi_bicimi_cekirdekte_korunur(self) -> None:
+        """`%20` ve `1.250 TL` çekirdekte AYNEN kalır (CLAUDE.md §10).
+
+        Eski `core_text` sözcükleri `\\w+` ile toplayıp boşlukla
+        birleştiriyordu: `%20` -> `20`, `1.250 TL` -> `1 250 TL`. Oran işareti
+        ve TR binlik ayıracı çekirdekte hiç görünmüyordu.
+        """
+        docs = self._kardesler()
+        split_corpus(docs)
+        self.assertIn("%20", docs[2].core_text)
+        self.assertIn("1.250 TL", docs[0].core_text)
+        self.assertIn("750,00 TL", docs[3].core_text)
+
+    def test_koruma_komsu_cerceve_penceresine_baskindir(self) -> None:
+        """Korunan pencere, komşu çerçeve penceresi tarafından ezilmemeli.
+
+        ÖLÇÜM: koruma "baskın değil" (yalnız çerçeve kümesinden çıkarma)
+        biçiminde kurulduğunda gerçek Ziraat Katılım belgesinin çekirdeği 8
+        sözcükte kalıyordu; baskın kurulduğunda 108 sözcük. Sebep, kapsama
+        mantığının agresif olması: sinyalli cümlenin sözcükleri, bir sözcük
+        kayık komşu pencereler tarafından da kapsanıyor.
+        """
+        docs = self._kardesler()
+        split_corpus(docs)
+        for doc in docs[:4]:
+            self.assertGreaterEqual(doc.core_tokens, 40, doc.doc_id)
+        # Menü hepsinden ayıklanmış olmalı — koruma kromu kurtarmıyor.
+        for doc in docs:
+            self.assertNotIn("Hemen Başvur QNB Mobil", doc.core_text)
+
+    def test_site_kromundaki_finansal_ifade_hala_ayiklanir(self) -> None:
+        """Koruma çerçeve ayıklamasını işlevsiz bırakmamalı.
+
+        QNB menüsü "25.000 TL'ye varan Faizsiz Taksitli Nakit Avans!" ifadesini
+        taşıyor — yani finansal sinyalli bir KROM parçası. Menü belgelerin
+        %100'ünde geçtiği için `SIGNAL_MIN_FRACTION` eşiğinin üstünde kalır ve
+        çerçeve sayılmaya devam eder.
+        """
+        docs = [
+            _row("qnb--zara", f"{QNB_MENU} ZARA'da peşin fiyatına 6 taksit! "
+                              f"31 Ocak 2027'ye kadar geçerlidir.",
+                 "https://www.qnbcard.com.tr/kampanyalar/zara"),
+            _row("qnb--koton", f"{QNB_MENU} Koton'da peşin fiyatına 6 taksit! "
+                               f"31 Aralık 2026'ya kadar geçerlidir.",
+                 "https://www.qnbcard.com.tr/kampanyalar/koton"),
+            _row("qnb--lcw", f"{QNB_MENU} LC Waikiki'de peşin fiyatına 6 "
+                             f"taksit! 30 Kasım 2026'ya kadar geçerlidir.",
+                 "https://www.qnbcard.com.tr/kampanyalar/lcw"),
+        ]
+        split_corpus(docs)
+        for doc in docs:
+            self.assertNotIn("Taksitli Nakit Avans", doc.core_text)
+            self.assertNotIn("25.000 TL", doc.core_text)
+        self.assertIn("ZARA", docs[0].core_text)
+        self.assertIn("Koton", docs[1].core_text)
+        self.assertIn("Waikiki", docs[2].core_text)
+
+    def test_esik_altindaki_sinyalli_gram_korunan_kumeye_girer(self) -> None:
+        """`boilerplate_sets` sinyalli gramı çerçeveye değil korumaya koyar."""
+        texts = [d.text for d in self._kardesler()]
+        boiler, protected = boilerplate_sets(texts)
+        self.assertTrue(protected)
+        self.assertTrue(boiler)
+        self.assertEqual(boiler & protected, set())
+        self.assertTrue(any("tl" in gram.split() for gram in protected))
+
+    def test_iki_belgeden_ne_cerceve_ne_koruma_cikar(self) -> None:
+        """`BOILERPLATE_MIN_DOCS` altında iki küme de boş döner."""
+        self.assertEqual(boilerplate_sets(list(ZIRAAT_KARDESLER[:2])),
+                         (set(), set()))
+
+    def test_kucuk_bankada_koruma_taban_esige_duser(self) -> None:
+        """`SIGNAL_MIN_FRACTION` bir ORAN; `BOILERPLATE_MIN_DOCS` tabanı ezmez.
+
+        4 belgeli bir bankada ceil(0,25 x 4) = 1 eder, ama 1 veya 2 belgede
+        tekrar eden metni çerçeve saymak `BOILERPLATE_MIN_DOCS` gerekçesine
+        aykırı. Eşik bu yüzden `max(min_docs, ceil(oran x n))`; küçük
+        bankalarda koruma etkisizdir ve DAVRANIŞ ESKİSİYLE AYNI kalır.
+        """
+        _, protected = boilerplate_sets(list(ZIRAAT_KARDESLER))
+        self.assertEqual(protected, set())
+
+    def test_sinyal_esigi_krom_orani_altinda_kalir(self) -> None:
+        """`SIGNAL_MIN_FRACTION` ölçülen krom bandının (%50-100) altında olmalı.
+
+        Ölçüm (2026-08-04): site kromu bankanın belgelerinin %50-100'ünde
+        geçiyor (Akbank menüsü 63/64, QNB menüsü 80/80, Yapı Kredi çerez bandı
+        106/106); kampanya şablonu ise %10'un altında. Eşik bu iki bandın
+        arasında olmalı — 0,5'e çıkarılırsa krom sızıntısı ölçülen taramada
+        61'den 148 belgeye çıkıyor.
+        """
+        self.assertGreater(SIGNAL_MIN_FRACTION, 0.10)
+        self.assertLessEqual(SIGNAL_MIN_FRACTION, 0.25)
+
+    def test_finansal_sinyal_tanimi(self) -> None:
+        """Sinyal kümesi CLAUDE.md §9'un sayısal kanonik alanlarını kapsar."""
+        for metin in ("aylık kâr payı oranı %2,05", "% 0 faiz", "2,05% getiri",
+                      "1.500,00 TL finansman", "500₺ iade", "12 taksit",
+                      "36 ay vade", "VADELİ mevduat", "TAKSİTLİ nakit avans"):
+            self.assertTrue(has_financial_signal(metin), metin)
+        for metin in ("Ana Sayfa Şube ve ATM'ler İletişim",
+                      "Kişisel Verilerin Korunması Kanunu", "Kart Sözlüğü"):
+            self.assertFalse(has_financial_signal(metin), metin)
 
 
 class TestSessizKayipYok(unittest.TestCase):

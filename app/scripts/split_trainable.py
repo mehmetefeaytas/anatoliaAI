@@ -51,6 +51,44 @@ pozitif makinesi olmaktan çıkarır:
 `trainable.jsonl` hem `text` (tam metin) hem `core_text` (çerçeve ayıklanmış)
 alanını yazar; aşağı akış hangisini kullanacağına kendisi karar verir.
 
+## Kalıp ayıklamanın ölçülmüş kusuru ve düzeltmesi (2026-08-04)
+
+Yalnız "n-gram 3 belgede tekrar ediyorsa çerçevedir" kuralı GERÇEK kampanya
+gövdesini de yiyordu. Kök neden eşiğin sayısı değil, **kampanya şablonu**:
+bir banka aynı kampanyayı 3-6 varyantla yayınlıyor (aynı metin, farklı marka /
+tutar / tarih), dolayısıyla gövde cümleleri de "3 belgede tekrar eden" hâle
+geliyor ve menüyle aynı kefeye düşüyor. Ölçüm (`data/raw`, 1684 belge):
+atılan sözcüklerin **%25,4'ü** belge frekansı bankanın belgelerinin %10'unun
+ALTINDA olan n-gramlardan geliyordu — yani site kromundan değil, şablon
+kardeşlerinden. Site kromu ölçülen dağılımda %50-100 bandında toplanıyor
+(Akbank menüsü 63/64, Yapı Kredi çerez bandı 106/106, QNB menüsü 80/80).
+
+İki düzeltme uygulandı:
+
+1. **Finansal sinyal koruması** (`SIGNAL_MIN_FRACTION`): oran / tutar /
+   taksit / vade taşıyan bir n-gram, ancak bankanın belgelerinin en az
+   %25'inde geçiyorsa çerçeve sayılır. Bu dört sinyal keyfî değil; CLAUDE.md
+   §9'un sayısal kanonik alanları (`kar_payi_orani`, `finansman_tutari`,
+   `vade_ay`, `taksit_sayisi`) tam olarak bunlar.
+2. **Koruma baskındır** (`core_text`): korunan bir pencerenin kapsadığı
+   sözcük, komşu bir çerçeve penceresi de onu kapsıyor olsa bile çekirdekte
+   kalır. Ölçüm: `ziraat-katilim--kart-kampanyalari-akaryakit-...-400-tl-...`
+   belgesinde koruma baskın DEĞİLKEN çekirdek 8 sözcük (kampanya yok),
+   baskınken 108 sözcük (tutar + marka + koşul yerinde).
+
+Ölçülen sonuç (ölçüt ve sayılar için `data/silver/split_report.md`):
+`data/raw`da içerik kaybeden belge 244 → 1, `data/raw-classic`ta 26 → 0.
+Çerçeve ayıklaması buna karşılık çok az zayıfladı: atılan sözcük oranı
+`data/raw`da %49,0 → %43,3, `data/raw-classic`ta %71,9 → %69,4; çerçeve
+sızıntısı (çerez/KVKK ifadesi çekirdeğe kaçan belge) `data/raw-classic`ta
+11 → 11 (değişmedi), `data/raw`da 61 → 70.
+
+`core_text` ayrıca artık **noktalamayı koruyor**. Eskiden sözcükler
+`\\w+` ile toplanıp boşlukla birleştiriliyordu; bu `%2,05`i `2 05`e,
+`1.500,00 TL`yi `1 500 00 TL`ye çeviriyordu — yani çekirdekte oran işareti
+ve TR sayı biçimi (CLAUDE.md §10) hiç görünmüyordu. Sözcükler artık ham
+metindeki karakter aralıklarıyla geri yazılıyor.
+
 ## Kullanım
 
     .venv/bin/python -m scripts.split_trainable \\
@@ -73,6 +111,7 @@ import argparse
 import collections
 import hashlib
 import json
+import math
 import os
 import re
 import sys
@@ -137,6 +176,62 @@ SHINGLE_SIZE = 8
 #   - Ziraat'in 5 üyeli Bankkart ailesi (Jest / Gold / Platinum / Emekli /
 #     Prestij) eşik 3'te çerçeveye gömülmüyor, ürün sayfası olarak kalıyor.
 BOILERPLATE_MIN_DOCS = 3
+
+# Finansal sinyal taşıyan bir n-gramın çerçeve sayılabilmesi için gereken
+# belge oranı (aynı banka içinde). `BOILERPLATE_MIN_DOCS` bu gramlar için
+# YETMEZ; eşik `max(BOILERPLATE_MIN_DOCS, ceil(oran * belge_sayısı))` olur.
+#
+# NEDEN GEREKLİ: `BOILERPLATE_MIN_DOCS` tek başına kampanya ŞABLONUNU çerçeve
+# sanıyor. Bankalar aynı kampanyayı 3-6 varyantla yayınlıyor (Ziraat
+# Katılım'ın "Akaryakıt Harcamalarınıza 400 TL Bankkart Lira" kampanyasının 5
+# kardeşi, DenizBank'ın yem bayisi kampanyaları, QNB'nin marka ailesi
+# kampanyaları) ve gövde cümleleri 3 belgede tekrar ettiği için eleniyordu.
+#
+# ÖLÇÜM (2026-08-04, `data/raw` 1684 + `data/raw-classic` 618 belge): atılan
+# sözcüklerin %25,4'ü (data/raw) belge frekansı %10'un ALTINDAKİ gramlardan
+# geliyordu; site kromu ise %50-100 bandında toplanıyor (Akbank menüsü 63/64,
+# QNB menüsü 80/80, Yapı Kredi çerez bandı 106/106).
+#
+# 0,25 SEÇİLDİ, eşik taramasıyla:
+#   oran   içerik kaybeden belge (raw / classic)   çerçeve sızıntısı (raw)
+#   yok        244 / 26                                61
+#   0,25         1 /  0                                70
+#   0,50         1 /  0                               148
+#   1,00         0 /  0                               148
+# 0,50 ve üstünde sızıntı iki katına çıkıyor (kromun sinyalli parçaları —
+# "Taksitli Nakit Avans", "Vadeli Mevduat" — çekirdeğe kaçıyor) ama kayıp
+# daha azalmıyor. 0,25 kaybı pratikte kapatan en KOYU eşiktir.
+SIGNAL_MIN_FRACTION = 0.25
+
+# Finansal sinyal — `SIGNAL_MIN_FRACTION` korumasının tetikleyicisi.
+#
+# Bu dört sinyal keyfî değil: CLAUDE.md §9'un SAYISAL kanonik alanlarıyla
+# birebir örtüşüyor (`kar_payi_orani`, `finansman_tutari`, `vade_ay`,
+# `taksit_sayisi`). Çıkarımın hedefi olan bilgi buysa, kalıp ayıklaması onu
+# atma iznine sahip olmamalı.
+#
+# NEDEN HAM (noktalamalı) PENCEREDE ARANIR: n-gramların kendisi `\w+`
+# sözcüklerinden kuruludur, yani gram metninde `%` ve `,` yoktur — `%2,05`
+# gram uzayında `2 05` görünür ve oran sinyali TANIM GEREĞİ bulunamaz.
+# Bu yüzden sinyal, gramın ham metindeki karakter aralığında aranır.
+_SIGNAL_RE = re.compile(
+    r"%\s?\d"                              # %2,05 · % 0
+    r"|\d[\d.,]*\s?%"                      # 2,05%
+    r"|\d[\d.,]*\s?(?:tl\b|try\b|₺|turk lirasi)"  # 1.500,00 TL · 500₺
+    r"|taksit"                             # taksit sayısı / taksitli
+    r"|vade"                               # vade / vadeli / vadesiz
+)
+
+# Sinyal testi sırasında pencerenin iki yanına eklenen bağlam sözcüğü sayısı.
+#
+# NEDEN GEREKLİ (ölçülmüş): 8-gram penceresi sayıyı biriminden ayırabiliyor.
+# `...dördüncü akaryakıt harcamanıza 400 TL Bankkart Lira kazanabilirsiniz...`
+# metninde `TL` ile başlayan pencerenin kendi içinde rakam yoktur, dolayısıyla
+# sinyalsiz görünür ve çerçeve sayılırdı: çekirdekte `400` kalıp `TL` silinerek
+# tutar yarılıyordu. ±2 sözcük bağlam bu yarılmayı kapatıyor; korumanın
+# kapsamını genişletmez, çünkü eşiğin (`SIGNAL_MIN_FRACTION`) üstündeki krom
+# gramları yine çerçeve sayılır.
+SIGNAL_CONTEXT_WORDS = 2
 
 # Çekirdek bu sözcük sayısının ALTINDAYSA belge çerçeveden ibarettir.
 #
@@ -370,42 +465,140 @@ def iter_docs(docs_dir: str) -> list[Doc]:
     return out
 
 
-def boilerplate_shingles(texts: list[str], min_docs: int = BOILERPLATE_MIN_DOCS,
-                         size: int = SHINGLE_SIZE) -> set[str]:
-    """Aynı bankanın belgelerinde `min_docs` veya daha fazlasında geçen n-gramlar.
+def has_financial_signal(text: str) -> bool:
+    """Metin oran / tutar / taksit / vade sinyali taşıyor mu? (bkz. `_SIGNAL_RE`)"""
+    return bool(_SIGNAL_RE.search(tr_fold_ascii(text)))
 
-    Belge sayısı `min_docs`ın altındaysa BOŞ küme döner: 2 belgeden çerçeve
-    çıkarmaya kalkmak, iki belgenin ortak olan gerçek içeriğini de siler.
+
+def _shingle_index(texts: list[str], size: int = SHINGLE_SIZE,
+                   ) -> tuple[collections.Counter[str], set[str]]:
+    """(n-gram -> kaç BELGEDE geçtiği, finansal sinyal taşıyan n-gramlar).
+
+    Sinyal testi n-gramın HAM metindeki karakter aralığında (artı
+    `SIGNAL_CONTEXT_WORDS` bağlam sözcüğü) yapılır; gram metninde noktalama
+    olmadığı için oran işareti orada aranamaz (bkz. `_SIGNAL_RE` gerekçesi).
+    """
+    df: collections.Counter[str] = collections.Counter()
+    signal: set[str] = set()
+    pad = SIGNAL_CONTEXT_WORDS
+    for text in texts:
+        spans = [m.span() for m in _WORD_RE.finditer(text)]
+        folded = [tr_fold(text[a:b]) for a, b in spans]
+        last = len(spans) - 1
+        seen: set[str] = set()
+        for i in range(max(0, len(folded) - size + 1)):
+            gram = " ".join(folded[i:i + size])
+            if gram in seen:
+                continue
+            seen.add(gram)
+            if gram in signal:
+                continue
+            lo = spans[max(0, i - pad)][0]
+            hi = spans[min(last, i + size - 1 + pad)][1]
+            if has_financial_signal(text[lo:hi]):
+                signal.add(gram)
+        df.update(seen)
+    return df, signal
+
+
+def boilerplate_sets(texts: list[str], min_docs: int = BOILERPLATE_MIN_DOCS,
+                     size: int = SHINGLE_SIZE,
+                     signal_min_fraction: float = SIGNAL_MIN_FRACTION,
+                     ) -> tuple[set[str], set[str]]:
+    """(çerçeve n-gramları, KORUNAN sinyalli n-gramlar).
+
+    Çerçeve eşiği `min_docs`, finansal sinyal taşıyan gramlar için
+    `max(min_docs, ceil(signal_min_fraction * belge_sayısı))`. Eşiğin altında
+    kalan sinyalli gramlar KORUNAN kümeye girer: `core_text` bunların
+    kapsadığı sözcükleri, komşu bir çerçeve penceresi de kapsıyor olsa bile
+    atmaz (bkz. `SIGNAL_MIN_FRACTION`).
+
+    Belge sayısı `min_docs`ın altındaysa iki küme de BOŞ döner: 2 belgeden
+    çerçeve çıkarmaya kalkmak, iki belgenin ortak olan gerçek içeriğini siler.
     """
     if len(texts) < min_docs:
-        return set()
-    df: collections.Counter[str] = collections.Counter()
-    for text in texts:
-        words = [tr_fold(w) for w in _tokens(text)]
-        seen = {" ".join(words[i:i + size])
-                for i in range(max(0, len(words) - size + 1))}
-        df.update(seen)
-    return {gram for gram, n in df.items() if n >= min_docs}
+        return set(), set()
+    df, signal = _shingle_index(texts, size)
+    signal_min = max(min_docs, math.ceil(signal_min_fraction * len(texts)))
+    boiler: set[str] = set()
+    protected: set[str] = set()
+    for gram, n in df.items():
+        if n < min_docs:
+            continue
+        if gram in signal and n < signal_min:
+            protected.add(gram)
+        else:
+            boiler.add(gram)
+    return boiler, protected
 
 
-def core_text(text: str, boiler: set[str], size: int = SHINGLE_SIZE) -> str:
+def boilerplate_shingles(texts: list[str], min_docs: int = BOILERPLATE_MIN_DOCS,
+                         size: int = SHINGLE_SIZE) -> set[str]:
+    """Yalnız çerçeve kümesi — `boilerplate_sets`in ilk bileşeni."""
+    return boilerplate_sets(texts, min_docs, size)[0]
+
+
+def core_text(text: str, boiler: set[str], protected: set[str] | None = None,
+              size: int = SHINGLE_SIZE) -> str:
     """Çerçeve n-gramlarının kapsadığı sözcükleri atıp kalan metni döndürür.
 
     Bir sözcük, çerçeve sayılan HERHANGİ bir n-gramın içinde geçiyorsa atılır.
     Kapsama (pencere içindeki tüm sözcükleri işaretlemek) şart: yalnız
     n-gramın ilk sözcüğünü atmak menüyü paramparça bırakır ve geriye
     okunamayan sözcük çöplüğü kalır.
+
+    KORUMA BASKINDIR: `protected` içindeki bir pencerenin kapsadığı sözcük,
+    komşu bir çerçeve penceresi de onu kapsıyor olsa bile kalır. Kapsama
+    mantığı kasten agresif olduğu için korumanın da kapsama düzeyinde
+    olması gerekir; aksi hâlde menü penceresi finansal cümleyi yine yiyor
+    (ölçüm: `SIGNAL_MIN_FRACTION` yorumundaki 8 vs 108 sözcük).
+
+    Kalan sözcükler HAM metindeki karakter aralıklarından geri yazılır, yani
+    `%2,05` ve `1.500,00 TL` biçimi korunur (CLAUDE.md §10).
     """
-    words = _tokens(text)
-    if not boiler or len(words) < size:
-        return " ".join(words)
-    folded = [tr_fold(w) for w in words]
-    is_boiler = [False] * len(words)
-    for i in range(len(words) - size + 1):
-        if " ".join(folded[i:i + size]) in boiler:
-            for j in range(i, i + size):
-                is_boiler[j] = True
-    return " ".join(w for w, b in zip(words, is_boiler, strict=True) if not b)
+    spans = [m.span() for m in _WORD_RE.finditer(text)]
+    keep = [True] * len(spans)
+    if boiler and len(spans) >= size:
+        folded = [tr_fold(text[a:b]) for a, b in spans]
+        guard = [False] * len(spans)
+        for i in range(len(spans) - size + 1):
+            gram = " ".join(folded[i:i + size])
+            if protected and gram in protected:
+                for j in range(i, i + size):
+                    guard[j] = True
+            elif gram in boiler:
+                for j in range(i, i + size):
+                    keep[j] = False
+        keep = [k or g for k, g in zip(keep, guard, strict=True)]
+    return _join_spans(text, spans, keep)
+
+
+def _join_spans(text: str, spans: list[tuple[int, int]],
+                keep: list[bool]) -> str:
+    """Tutulan sözcükleri ham metinden geri yazar (aradaki noktalama korunur).
+
+    Ardışık iki sözcük tutulduysa aralarındaki ham ayırıcı (kesme işareti,
+    virgül, yüzde işareti...) korunur; araya çerçeve girdiyse tek boşluk
+    konur. Beyaz boşluk her hâlde tek boşluğa indirilir.
+    """
+    out: list[str] = []
+    prev: Optional[int] = None
+    for i, (a, b) in enumerate(spans):
+        if not keep[i]:
+            continue
+        if prev == i - 1 and prev is not None:
+            out.append(re.sub(r"\s+", " ", text[spans[prev][1]:a]))
+        else:
+            # Yeni parça başlıyor: sözcüğün hemen solundaki işaret (ör. `%`)
+            # sözcüğe aittir, korunur.
+            if prev is not None:
+                out.append(" ")
+            lead = re.search(r"[%₺#]\s?$", text[max(0, a - 2):a])
+            if lead:
+                out.append(lead.group(0))
+        out.append(text[a:b])
+        prev = i
+    return "".join(out).strip()
 
 
 def _url_segments(url: Optional[str]) -> list[str]:
@@ -536,10 +729,10 @@ def split_corpus(docs: list[Doc]) -> list[Doc]:
         by_bank[doc.bank].append(doc)
 
     for bank_docs in by_bank.values():
-        boiler = boilerplate_shingles([d.text for d in bank_docs])
+        boiler, protected = boilerplate_sets([d.text for d in bank_docs])
         for doc in bank_docs:
             doc.total_tokens = len(_tokens(doc.text))
-            doc.core_text = core_text(doc.text, boiler)
+            doc.core_text = core_text(doc.text, boiler, protected)
             doc.core_tokens = len(_tokens(doc.core_text))
 
     seen: dict[str, str] = {}
@@ -640,6 +833,9 @@ def build_report(docs: list[Doc], docs_dir: str) -> str:
     out += ["", "## Eşikler", "",
             f"- `SHINGLE_SIZE` = {SHINGLE_SIZE} sözcük",
             f"- `BOILERPLATE_MIN_DOCS` = {BOILERPLATE_MIN_DOCS} belge",
+            f"- `SIGNAL_MIN_FRACTION` = {SIGNAL_MIN_FRACTION} "
+            "(finansal sinyalli n-gram bu orandan az belgede geçiyorsa "
+            "çerçeve SAYILMAZ)",
             f"- `MIN_CORE_TOKENS` = {MIN_CORE_TOKENS} sözcük",
             f"- `MIN_DOC_CHARS` = {MIN_DOC_CHARS} karakter",
             f"- `EMPTY_RESULT_MAX_CHARS` = {EMPTY_RESULT_MAX_CHARS} karakter",
