@@ -29,6 +29,14 @@ venv/
 #   `rates/*.jsonl` yapılandırılmış oran kayıtları
 data/raw/**/*.html
 data/raw/**/*.htm
+# ...AMA banka kokundeki TEST FIXTURE'lari haric.
+# `data/raw/<slug>/*.html` fixture yoludur (src/pipeline.py: fixture modu `.html`
+# de okur); `data/raw/<slug>/<kova>/*.html` ise hasat cache'i. Bu ayrimi gozetmeyen
+# ilk kural `data/raw/albaraka/konut.html`'i depodan cikardi ve temiz bir klonda
+# 4 test kirmizi oluyordu (FIXTURE_DOCS=3 iken 2 belge yukleniyordu). Yerelde
+# gecmesinin tek sebebi dosyanin diskte TAKIPSIZ durmasiydi.
+!data/raw/*/*.html
+!data/raw/*/*.htm
 
 # Klasik banka (kapsam dışı) ham HTML — aynı gerekçe, aynı karar.
 # `data/raw-classic` 161 MB'a çıktı; 572 `.html` dosyası bunun neredeyse
