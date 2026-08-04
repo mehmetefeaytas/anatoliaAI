@@ -180,6 +180,51 @@ class TestSchemaViolatingValues(unittest.TestCase):
         self.assertEqual(kayit["fields"]["vade_ay"]["value"], 120)
 
 
+class TestSpanVerified(unittest.TestCase):
+    """`span_verified` TAM belge metnine karşı doğrulanmalı.
+
+    Eskiden `f.verify_span(f.source_span)` çağrılıyordu, yani ±40 karakterlik
+    pencere DİZESİ. `span_start`/`span_end` tam metne göre offset olduğu için
+    doğrulama anlamsızdı: ölçüm, alanların %94,7'sinde `false` — DOĞRU
+    değerlerde bile. Doğru çağrıyla 196/196 alan doğrulanıyor.
+
+    %95 `false` üreten bir "doğrulandı" alanı yokluğundan kötüdür: sinyal gibi
+    görünür, gürültüdür. Doğru çağrı biçimi zaten `src/api/main.py`'de vardı.
+    """
+
+    def _kayit(self, raw: str, govde: str):
+        # span'i gerçek metne oturt — çıkarıcıyı taklit ediyoruz.
+        start = govde.index(raw)
+        alan = ExtractedField(
+            field_name="vade_ay", raw_value=raw, canonical_value=120,
+            confidence=0.9, source_span=govde[max(0, start - 40): start + len(raw) + 40],
+            confidence_source="rule_heuristic",
+            span_start=start, span_end=start + len(raw))
+        doc = RawDoc(doc_id="banka--doc-1", bank_slug="banka", text=govde)
+        with mock.patch("scripts.preannotate.rule_extract", return_value=[alan]):
+            return annotate_doc(doc, _KapaliLLM(), _SabitSiniflandirici())
+
+    def test_gecerli_span_dogrulanir(self) -> None:
+        govde = GOVDE if "120 ay" in GOVDE else GOVDE + " Vade 120 ay boyunca geçerlidir."
+        kayit = self._kayit("120 ay", govde)
+        self.assertTrue(kayit["fields"]["vade_ay"]["span_verified"],
+                        "tam metne oturan span 'false' işaretlendi — "
+                        "doğrulama yine pencere dizesine karşı yapılıyor")
+
+    def test_yanlis_offset_dogrulanmaz(self) -> None:
+        """Bayrak her zaman True dönen bir sabit olmamalı; yanlışı da yakalasın."""
+        govde = GOVDE + " Vade 120 ay boyunca geçerlidir."
+        start = govde.index("120 ay")
+        alan = ExtractedField(
+            field_name="vade_ay", raw_value="120 ay", canonical_value=120,
+            confidence=0.9, source_span="120 ay", confidence_source="rule_heuristic",
+            span_start=start + 5, span_end=start + 11)   # kaydırılmış offset
+        doc = RawDoc(doc_id="banka--doc-2", bank_slug="banka", text=govde)
+        with mock.patch("scripts.preannotate.rule_extract", return_value=[alan]):
+            kayit = annotate_doc(doc, _KapaliLLM(), _SabitSiniflandirici())
+        self.assertFalse(kayit["fields"]["vade_ay"]["span_verified"])
+
+
 class TestReadPinnedIds(unittest.TestCase):
     def test_reads_doc_ids_from_review_csv(self):
         with tempfile.TemporaryDirectory() as tmp:
