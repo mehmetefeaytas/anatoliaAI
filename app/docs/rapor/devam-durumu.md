@@ -18,7 +18,7 @@ Teslime kalan: **22 gün** (son tarih 26 Ağustos 2026).
 | ...600 karakterden kısa | 52 | aynı |
 | ...1024 karakterden kısa | 226 | aynı |
 | ...`content_status: kabuk` işaretli | 74 | aynı |
-| `data/raw-classic` `.txt` belge | 652 | `find data/raw-classic -name '*.txt' \| wc -l` |
+| `data/raw-classic` `.txt` belge | 724 | `find data/raw-classic -name '*.txt' \| wc -l` |
 | Gümüş etiket (`silver.jsonl`) | 416 | `wc -l data/silver/silver.jsonl` |
 
 ### Kabuk belge dosyası — KAPANDI, ama kurtarmayla değil teşhisle
@@ -100,10 +100,33 @@ BERTurk ince ayarı (Faz 3) bu iki sınıf 20'ye ulaşmadan **yapılmayacak**;
 8 sınıfın ikisi eğitilemezken makro-F1 yanıltıcı olur. Ulaşılamazsa ince ayar
 atlanır ve gerekçe rapora yazılır — bu bir başarısızlık değil, ölçülmüş bir kısıt.
 
-> **DİKKAT — ağ bağımlılığı zinciri.** Konut/Taşıt sayısını artırmak iki adım
-> ister: (a) belge **hasadı** (ağ), (b) o belgelerin **etiketlenmesi** (üç oylu
-> LLM uzlaşması → yine ağ, etiketleyici repo dışında). Yani B agent'ı belge
-> indirse bile sayı ağ dönene kadar artmaz. Bu yüzden dondurma anında 13/9 sabit.
+### Neden 13/9 hâlâ sabit — engel AĞ DEĞİL, BAĞIMSIZLIK
+
+Belge tarafı ilerledi: `data/raw-classic` altına **106 yeni ürün belgesi** girdi
+(10 banka, medyan 5509 karakter, 724 tekil `doc_id`, çakışma 0). Ama
+`data/silver/` **hiç dokunulmadı**, çünkü belgeler etiketlenmedi.
+
+İlk yazdığım gerekçe ("etiketleme ağ istiyor") **yanlıştı.** Etiketleyici repo
+dışında ama JSONL sözleşmesiyle çalışıyor; bir oturum o rolü oynayabilir.
+Gerçek engel bütünlük:
+
+> Tek oturum hem **etiketleyici** hem **denetleyici** olursa üç oylu uzlaşma
+> iki bağımsız oydan tek oya iner. `consensus.py` bu kipi adıyla anıyor:
+> **"lastik damga"**. `VerifyVerdict.own_label`'ın ayrı bir alan olmasının tek
+> sebebi bu kipi yakalamak.
+
+Yani sahte bağımsız denetleyici üretmek 20 hedefini tutturur ama veri setinin
+**kökenini savunulamaz** kılar (şartname §8). **İnternet gelse bile bu çözülmez
+— ayrı bir oturum/model gerekiyor.** Etiketleme turu bu yüzden bilinçli olarak
+yapılmadı.
+
+**Projeksiyon (sonuç değil):** kural katmanı — deterministik, offline — 106 yeni
+belgede **51 Konut / 36 Taşıt adayı** görüyor. Sınıf kurallarına göre düşecekler
+(BES/hesap, sözlük, SSS, basın duyurusu, ticari) `devam-konut-tasit-hasati.md`
+içinde tek tek sayıldı; düşüşlerden sonra ikisi de 20'yi rahatça geçiyor.
+Gerçek sayı `merge` koşulunca `silver_report.json`'da çıkacak.
+
+Hedefe henüz ulaşılmadı: **Konut 7, Taşıt 11 belge eksik** (etiketli sayıda).
 
 ---
 
@@ -126,7 +149,10 @@ hiçbirinde kullanılmadı — eşzamanlı yazan agent'ların yarım işini süp
 2. ~~Kabuk belgeleri yeniden hasat et~~ — **YAPMA, kapandı.** Yukarıdaki (b)
    maddesi: 101 şüpheli denetlendi, kurtarılabilir değil. Tekrar denemek boşa
    ~10x yavaş bir hasat turu demek.
-3. Konut 13→20, Taşıt 9→20 hasadı, **ardından etiketleme koşusu** (üç oylu).
+3. Konut/Taşıt: **hasat kısmı bitti** (106 belge geldi). Kalan iş etiketleme ve
+   bu ağ işi değil — **ayrı bir oturum/model** açıp üç oylu turu koştur, aynı
+   oturumda etiketleyici+denetleyici olma (lastik damga). Sonra `merge` koş ve
+   gerçek sayıyı `silver_report.json`'dan oku.
 4. `vakifkart.com.tr` + Kuveyt Türk / Türkiye Finans / Vakıf Katılım kart markası
    alanlarını bul (kuyruk maddesi 4). **Hiç başlanmadı** — ağ kesildiği için
    tarayıcı işi başlatılmadı.
@@ -213,6 +239,21 @@ haritası, iç araç promptu).
    zaman 0 sonuç verir. Karakter say (`-size -600c` veya Python).
 6. **unittest `OK` satırını grep'lemek.** ANSI renk kodu başa geldiği için
    `^OK` tutmaz. **Çıkış koduna bak.**
+7. **`content_hash`'i metni utf-8'e yeniden kodlayıp doğrulamak.** Meta'daki
+   hash **orijinal yanıt baytları** üzerinde; Türk banka siteleri iso-8859-9
+   servis ediyor. Bu yanlış denetim 85 belgeyi "bozuk" gösterdi. Yakalanma
+   yöntemi öğretici: aynı denetim **commit'li** `live/` belgelerine kontrol
+   grubu olarak uygulandı ve orada da %73 "bozuk" çıktı — yani hata denetimde.
+   Bayt alanında 724/724 temiz. *Şüpheli bir ölçüm gördüğünde önce ölçümden
+   şüphelen; bilinen-iyi bir küme üzerinde kontrol koş.*
+8. **`grep -c '<etiket>' silver.jsonl` ile sınıf saymak.** `reason` alanı da
+   sınıf adını içeriyor; grep 13 yerine 75 verir. JSONL'de sayım JSON
+   ayrıştırıp `label` alanından yapılır.
+9. **Paylaşımlı indeks.** `git add -A` yasağı yetmez: `git add <tek-dosya> &&
+   git commit` de indeksin TAMAMINI alır ve eşzamanlı bir agent'ın hazırladığı
+   dosyaları süpürür (bu oturumda `b50745a`'da oldu — 16 dosya yanlış commit'e
+   girdi, kayıp yok ama gerekçe mesajı yanlış commit'te kaldı).
+   **Çözüm: `git commit --only <yollar>`.**
 
 ## 8. Doğrulama komutları
 
