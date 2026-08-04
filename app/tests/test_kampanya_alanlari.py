@@ -128,6 +128,23 @@ class TestAlisverisPuaniKromHalusinasyonu(unittest.TestCase):
         self.assertIsNotNone(f)
         self.assertEqual(f.canonical_value, {"kind": "points", "value": 1500.0})
 
+    def test_madde_numarasi_odul_sayilmaz(self) -> None:
+        """Sözleşme madde numarası ödül değildir.
+
+        Ölçülen yanlış pozitif: "24. Puan Uygulaması 24.1. Banka Kartı..."
+        Eski desen sonu serbest bıraktığı için "24." yutuluyor ve madde
+        numarası 24 puanlık ödül sanılıyordu.
+        """
+        metin = ("Kart hamili vadesi dolmuş olsa dahi mesuldür. "
+                 "24. Puan Uygulaması 24.1. Banka Kartı ile yapılan işlemler")
+        self.assertIsNone(extract_alisveris_puani(metin))
+
+    def test_binlik_ayirac_bozulmaz(self) -> None:
+        """Madde-numarası çiti binlik ayıraçlı tutarı bozmamalı."""
+        f = extract_alisveris_puani("Harcamalarınıza 3.000 TL ParafPara!")
+        self.assertIsNotNone(f)
+        self.assertEqual(f.canonical_value["value"], 3000.0)
+
     def test_gercek_puan_odulu_hala_bulunur(self) -> None:
         f = extract_alisveris_puani("Alışverişlerinizde 1.000 chip-para kazanın")
         self.assertIsNotNone(f)
