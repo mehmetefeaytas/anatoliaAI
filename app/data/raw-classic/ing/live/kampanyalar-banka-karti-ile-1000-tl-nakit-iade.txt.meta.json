@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/banka-karti-ile-1000-tl-nakit-iade",
-  "scraped_at": "2026-08-04T11:34:37+00:00",
-  "content_hash": "25d3c5f080573ffccfaface9728f1d4851c40d9ca3249c5e1efe72a48b321d71",
+  "scraped_at": "2026-08-04T13:32:06+00:00",
+  "content_hash": "ee91b7ad979290f522a53871ba5af43faf12634853f86c69c72c031bba2ccb92",
   "collection_method": "browser",
   "title": "Alışverişleriniz size geri kazandırsın. | ING",
   "http_status": 200,
-  "raw_bytes": 55982,
+  "raw_bytes": 56079,
   "text_chars": 2573
 }

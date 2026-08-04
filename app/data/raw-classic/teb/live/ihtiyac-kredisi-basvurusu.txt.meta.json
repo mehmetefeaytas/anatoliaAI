@@ -1,11 +1,11 @@
 {
   "bank_slug": "teb",
   "source_url": "https://www.teb.com.tr/ihtiyac-kredisi-basvurusu/",
-  "scraped_at": "2026-08-04T11:07:01+00:00",
-  "content_hash": "b87fbbe33e822ca5989880405ff230fbd930a3144c0ad6ff7a27c021628b8b68",
+  "scraped_at": "2026-08-04T13:33:11+00:00",
+  "content_hash": "7941cc8dccb36f6a96ef2e5c7b5273cf173f1544c801a67624a384f7464227d9",
   "collection_method": "live",
   "title": "İhtiyaç Kredisi Başvuru | Türk Ekonomi Bankası",
   "http_status": 200,
-  "raw_bytes": 345837,
+  "raw_bytes": 344973,
   "text_chars": 6571
 }

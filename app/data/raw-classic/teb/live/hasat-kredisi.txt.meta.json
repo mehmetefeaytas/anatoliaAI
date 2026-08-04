@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/hasat-kredisi/",
+  "scraped_at": "2026-08-04T13:33:05+00:00",
+  "content_hash": "487ba3857636afa5dcf3270e5841622b2f198e6224bc873ba73d08eb98e7e14c",
+  "collection_method": "live",
+  "title": "Hasat Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173528,
+  "text_chars": 5361
+}

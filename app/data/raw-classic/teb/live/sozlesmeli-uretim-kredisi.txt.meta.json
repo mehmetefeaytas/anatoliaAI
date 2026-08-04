@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/sozlesmeli-uretim-kredisi/",
+  "scraped_at": "2026-08-04T13:34:06+00:00",
+  "content_hash": "49eabcacfd4a743f7fac238013d2f71de2027c7d8a17237e9ecd8e6ec3a4cc8a",
+  "collection_method": "live",
+  "title": "Sözleşmeli Üretim Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173569,
+  "text_chars": 5225
+}

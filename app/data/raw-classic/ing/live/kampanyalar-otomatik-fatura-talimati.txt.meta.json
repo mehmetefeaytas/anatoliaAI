@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/otomatik-fatura-talimati",
-  "scraped_at": "2026-08-04T11:33:27+00:00",
-  "content_hash": "976d68f8ebddc1b675f2b5a2d35ca503fa02e6a0bf9c77a707a4a815971c354f",
+  "scraped_at": "2026-08-04T13:30:53+00:00",
+  "content_hash": "d71729b271b80c26090887e69b1bc46212c573ef636bece9eac9d723128ea096",
   "collection_method": "browser",
   "title": "OTF ile 1.500 TL'ye varan bonus | ING",
   "http_status": 200,
-  "raw_bytes": 127802,
+  "raw_bytes": 127731,
   "text_chars": 2288
 }

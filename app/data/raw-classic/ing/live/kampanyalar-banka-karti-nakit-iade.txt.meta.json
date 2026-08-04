@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/banka-karti-nakit-iade",
-  "scraped_at": "2026-08-04T11:34:47+00:00",
-  "content_hash": "ca7ac74b49c092978842e8fd983fd44524cc4e7c2e5d3068210292a881ced679",
+  "scraped_at": "2026-08-04T13:32:16+00:00",
+  "content_hash": "a5ef912a9b6e4c06d49c7374c616036111ff7950d911b40c247168828c1ab1eb",
   "collection_method": "browser",
   "title": "ING",
   "http_status": 200,

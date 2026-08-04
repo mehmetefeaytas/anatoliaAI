@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar",
-  "scraped_at": "2026-08-04T11:33:12+00:00",
-  "content_hash": "06348c991e09e98be3ea904212a988ae72c895a378823db29ac582ff5633496e",
+  "scraped_at": "2026-08-04T13:30:32+00:00",
+  "content_hash": "fee2340a5aa813ab659755766e52467d833382a91a2757668b1a91b0d6605d4e",
   "collection_method": "browser",
   "title": "Kart Kampanyaları &amp; Dijital Bankacılık Kampanyaları | ING",
   "http_status": 200,
-  "raw_bytes": 63468,
+  "raw_bytes": 63371,
   "text_chars": 2774
 }

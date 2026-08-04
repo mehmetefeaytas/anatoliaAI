@@ -1,11 +1,11 @@
 {
   "bank_slug": "teb",
-  "source_url": "https://www.teb.com.tr/kredi-karti-basvurusu/?kartTipi=B",
-  "scraped_at": "2026-08-04T11:06:52+00:00",
-  "content_hash": "50c6fa15ed0693d2861faa4416a01a509cf32f9a5a61c5acff2bf70dc8f7e516",
+  "source_url": "https://www.teb.com.tr/kredi-karti-basvurusu/",
+  "scraped_at": "2026-08-04T13:33:36+00:00",
+  "content_hash": "7b889304cd1c856287825a9c43e6147b21b655facbc2a382d4ef82614f394b2b",
   "collection_method": "live",
   "title": "TEB Kredi Kartı Başvurusu | Türk Ekonomi Bankası",
   "http_status": 200,
-  "raw_bytes": 371793,
+  "raw_bytes": 371670,
   "text_chars": 7041
 }

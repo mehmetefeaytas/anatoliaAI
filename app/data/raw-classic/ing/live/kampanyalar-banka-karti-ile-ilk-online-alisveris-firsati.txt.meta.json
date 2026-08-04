@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/banka-karti-ile-ilk-online-alisveris-firsati",
-  "scraped_at": "2026-08-04T11:34:43+00:00",
-  "content_hash": "e21dad272fd1eed1753d1955664e05ed28010e61c97141ad2dd958d92d5b4a1d",
+  "scraped_at": "2026-08-04T13:32:12+00:00",
+  "content_hash": "4f47cd169eae1cf75389bad6069b651b6787861bf65e662b71e518bd88cddf11",
   "collection_method": "browser",
   "title": "ING",
   "http_status": 200,
-  "raw_bytes": 55328,
+  "raw_bytes": 55287,
   "text_chars": 2067
 }

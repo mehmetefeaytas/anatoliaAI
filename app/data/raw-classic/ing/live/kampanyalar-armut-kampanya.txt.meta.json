@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/armut-kampanya",
-  "scraped_at": "2026-08-04T11:34:20+00:00",
-  "content_hash": "d23934d3b1e5fdefd96a34fd0ddd9a1721f5338c7aa9be4e3a792dedab5f6084",
+  "scraped_at": "2026-08-04T13:31:50+00:00",
+  "content_hash": "26be47daf8d6634ff4c27ca774e6ad843a9deb90e2ec660b2a58bfdba32ff466",
   "collection_method": "browser",
   "title": "Armut ile ev temizliği rezervasyonlarında 80 TL indirim fırsatı. | ING",
   "http_status": 200,
-  "raw_bytes": 55977,
+  "raw_bytes": 56003,
   "text_chars": 2380
 }

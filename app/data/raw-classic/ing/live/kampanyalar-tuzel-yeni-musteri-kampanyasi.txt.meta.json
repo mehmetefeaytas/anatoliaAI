@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/tuzel-yeni-musteri-kampanyasi",
-  "scraped_at": "2026-08-04T11:33:40+00:00",
-  "content_hash": "ec628ed2179e79a67e349bd0abac5e6a95bcabc47bc4868a3339a46a7735ae58",
+  "scraped_at": "2026-08-04T13:31:06+00:00",
+  "content_hash": "57ceab3face46ff9b84f969d5950ffd6ce89179543226a79eb155c3d59ad51fe",
   "collection_method": "browser",
   "title": "İlk kez şirket hesabı açan müşterilere 5.000 TL kazanma fırsatı. | ING",
   "http_status": 200,
-  "raw_bytes": 174638,
+  "raw_bytes": 174356,
   "text_chars": 10431
 }

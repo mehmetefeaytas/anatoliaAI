@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/anneler-gunu-bonus-firsati",
-  "scraped_at": "2026-08-04T11:34:16+00:00",
-  "content_hash": "a49431b0708caeda4e4169bd0639cbc5955882f03a0d03b820af0b7d821b3d57",
+  "scraped_at": "2026-08-04T13:31:41+00:00",
+  "content_hash": "b9ed2cce761d63d6d7b6df0022657fc4e4de7cb82d7746765539d66bb51c46d9",
   "collection_method": "browser",
   "title": "ING",
   "http_status": 200,

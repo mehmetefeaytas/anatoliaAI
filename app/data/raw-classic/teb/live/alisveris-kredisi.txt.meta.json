@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/alisveris-kredisi/",
+  "scraped_at": "2026-08-04T13:32:41+00:00",
+  "content_hash": "72393af9b3390438ed8821fa5a80f2b5a0f9f16b3a4ba030966129087fd5c84d",
+  "collection_method": "live",
+  "title": "Alışveriş Kredisi",
+  "http_status": 200,
+  "raw_bytes": 175529,
+  "text_chars": 7239
+}

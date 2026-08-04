@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/tasinma-kredisi/",
+  "scraped_at": "2026-08-04T13:34:18+00:00",
+  "content_hash": "3c8b98e72a49946ccb249e1880696f3c48d647ee229b75efb2bbbc3c19542992",
+  "collection_method": "live",
+  "title": "Taşınma Krediniz TEB'de! Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 177415,
+  "text_chars": 8278
+}
