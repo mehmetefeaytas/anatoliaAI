@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/500-tl-bonus-firsati",
-  "scraped_at": "2026-08-04T11:33:57+00:00",
-  "content_hash": "5e2ba9090fdd3ad940c0d360b000029437c3783d9449e99e1e0b78b566291c3b",
+  "scraped_at": "2026-08-04T13:31:22+00:00",
+  "content_hash": "13524164dc7fe741a1089990230a5da3443a9e7a66358a85bac0e4d3459f6bcb",
   "collection_method": "browser",
   "title": "Bonus Fırsatını Kaçırmayın | ING",
   "http_status": 200,
-  "raw_bytes": 55387,
+  "raw_bytes": 55429,
   "text_chars": 2258
 }

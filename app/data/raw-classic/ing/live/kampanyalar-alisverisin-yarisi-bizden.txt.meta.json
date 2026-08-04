@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/alisverisin-yarisi-bizden",
-  "scraped_at": "2026-08-04T11:34:10+00:00",
-  "content_hash": "21734ba9fe959bc3222e0fcb4a65f795f06b5440b7762d1bda29019efbba1bf8",
+  "scraped_at": "2026-08-04T13:31:34+00:00",
+  "content_hash": "d0d002fccb047a9a64f54e9633ba095e9ed1b29d0e5362d63aadfff30cffa09b",
   "collection_method": "browser",
   "title": "Alışverişin yarısı bizden | ING",
   "http_status": 200,
-  "raw_bytes": 55924,
+  "raw_bytes": 55995,
   "text_chars": 2276
 }

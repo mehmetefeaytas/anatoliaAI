@@ -1,11 +1,11 @@
 {
   "bank_slug": "teb",
   "source_url": "https://www.teb.com.tr/sizin-icin/kampanyalar/",
-  "scraped_at": "2026-08-04T11:07:46+00:00",
-  "content_hash": "13852f6132f42b4bda21f2bd25a4eb11aac9d6d326abc79a8bee02bd8ef649de",
+  "scraped_at": "2026-08-04T13:32:38+00:00",
+  "content_hash": "befe44d054f64a49c7df82e3769bd4f3a80fafe552eadac9a928ecb246f35c35",
   "collection_method": "live",
   "title": "Türk Ekonomi Bankası",
   "http_status": 200,
-  "raw_bytes": 275135,
-  "text_chars": 8499
+  "raw_bytes": 277876,
+  "text_chars": 8614
 }

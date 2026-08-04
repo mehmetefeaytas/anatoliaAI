@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/avantajli-ihtiyac-kredisi",
-  "scraped_at": "2026-08-04T11:34:26+00:00",
-  "content_hash": "6bff5c8cbd9be83d411c110a82cab967f2a46e65d8e88042c5fe797b5f5b8f3b",
+  "scraped_at": "2026-08-04T13:31:55+00:00",
+  "content_hash": "ed5f26ca96da1637277db430531f89b55f49a11796b1b4cc3116c44000001e44",
   "collection_method": "browser",
   "title": "Avantajlı İhtiyaç Kredisi Kampanyası | ING",
   "http_status": 200,
-  "raw_bytes": 60504,
+  "raw_bytes": 60463,
   "text_chars": 3043
 }

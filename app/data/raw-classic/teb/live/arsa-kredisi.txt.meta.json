@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/arsa-kredisi/",
+  "scraped_at": "2026-08-04T13:32:44+00:00",
+  "content_hash": "4d8fc3fe960e1acbcd91114916057b97f3ab91d0eff04aa780b8c95bcb941322",
+  "collection_method": "live",
+  "title": "Arsa Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 177770,
+  "text_chars": 6008
+}

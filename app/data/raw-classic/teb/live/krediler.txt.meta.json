@@ -1,11 +1,11 @@
 {
   "bank_slug": "teb",
   "source_url": "https://www.teb.com.tr/krediler/",
-  "scraped_at": "2026-08-04T11:07:10+00:00",
-  "content_hash": "22d94addc752f8007d1acabed17897d1c76b448589e42ddbe8095b13ef98bcfe",
+  "scraped_at": "2026-08-04T13:33:48+00:00",
+  "content_hash": "a1170c0ccc0cd90dc64a94918044ed36b479640233cc864b16b5d750ddba4eba",
   "collection_method": "live",
   "title": "Kredi Çeşitleri | Türk Ekonomi Bankası",
   "http_status": 200,
-  "raw_bytes": 210549,
+  "raw_bytes": 210547,
   "text_chars": 11532
 }

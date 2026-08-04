@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/3000-tl-bonus-firsati",
-  "scraped_at": "2026-08-04T11:33:51+00:00",
-  "content_hash": "e20ebae6ced30f597b52116c3a024eaeec2ecf84103a06f241ae115677a3c0c2",
+  "scraped_at": "2026-08-04T13:31:16+00:00",
+  "content_hash": "38cc25241dfcb36358cf626f26e561b5d64c37fd5026174bc918723279270a1a",
   "collection_method": "browser",
   "title": "ING",
   "http_status": 200,

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/kredili-mevduat-hesabi-/",
+  "scraped_at": "2026-08-04T13:33:54+00:00",
+  "content_hash": "dae9214565ae9f63363140e56f72ee0f5870fb1ad187792f3039fc0a5ec87880",
+  "collection_method": "live",
+  "title": "Kredili Mevduat Hesabı Seçenekleri | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 174971,
+  "text_chars": 4863
+}

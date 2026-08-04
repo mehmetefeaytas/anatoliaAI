@@ -69,3 +69,6 @@ web/out/
 
 # OS
 .DS_Store
+
+# Yedek dosyalari (betiklerin aldigi guvenlik kopyalari)
+*.bak

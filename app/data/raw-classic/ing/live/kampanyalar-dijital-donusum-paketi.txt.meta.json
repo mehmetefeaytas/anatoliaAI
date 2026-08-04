@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/dijital-donusum-paketi",
-  "scraped_at": "2026-08-04T11:33:18+00:00",
-  "content_hash": "83f3a495b97b934b3bbb7b15f9133d116d49497bc276ba370461fc92d4d4b2de",
+  "scraped_at": "2026-08-04T13:30:42+00:00",
+  "content_hash": "d83ba88cd5bed6fec3167e2979439b251fca6c29848e40f45a58186fd07bb6c1",
   "collection_method": "browser",
   "title": "ING",
   "http_status": 200,

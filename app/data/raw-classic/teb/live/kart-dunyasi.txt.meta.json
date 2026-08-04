@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/kart-dunyasi/",
+  "scraped_at": "2026-08-04T13:33:18+00:00",
+  "content_hash": "c3b16dbb3f78e03d05dae34b74fc22a9c672dc38ae51aff50b6e6774f739b589",
+  "collection_method": "live",
+  "title": "TEB Kart Dünyası | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 227152,
+  "text_chars": 15459
+}

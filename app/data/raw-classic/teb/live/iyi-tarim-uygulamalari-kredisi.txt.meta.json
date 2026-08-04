@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/iyi-tarim-uygulamalari-kredisi/",
+  "scraped_at": "2026-08-04T13:33:14+00:00",
+  "content_hash": "7da7de1718816d20740ca2e66a0e88da28421a0b47414e5ac891e599029acc71",
+  "collection_method": "live",
+  "title": "Bireysel İyi Tarım Uygulamaları Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173576,
+  "text_chars": 5235
+}

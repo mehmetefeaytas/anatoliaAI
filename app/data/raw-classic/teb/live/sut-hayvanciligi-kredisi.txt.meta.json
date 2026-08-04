@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/sut-hayvanciligi-kredisi/",
+  "scraped_at": "2026-08-04T13:34:12+00:00",
+  "content_hash": "4e9d09220f3fb4a74706bee30c654fa85f731706392fa21014b616ee6b533c67",
+  "collection_method": "live",
+  "title": "Süt Hayvancılığı Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173607,
+  "text_chars": 5195
+}

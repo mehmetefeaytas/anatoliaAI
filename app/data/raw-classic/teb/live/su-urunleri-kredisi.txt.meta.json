@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/su-urunleri-kredisi/",
+  "scraped_at": "2026-08-04T13:34:09+00:00",
+  "content_hash": "91c8e3022dab96ed62c362efe8000d34a640046fbf5eb141a85213f0226dca9c",
+  "collection_method": "live",
+  "title": "Su Ürünleri Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173315,
+  "text_chars": 5182
+}
