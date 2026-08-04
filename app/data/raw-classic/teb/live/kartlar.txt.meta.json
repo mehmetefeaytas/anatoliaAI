@@ -1,11 +1,11 @@
 {
   "bank_slug": "teb",
   "source_url": "https://www.teb.com.tr/kartlar/",
-  "scraped_at": "2026-08-04T11:07:34+00:00",
-  "content_hash": "a48524aa315e4b566d175b9e5314cebce9a5739bac57443c252acc1350445f67",
+  "scraped_at": "2026-08-04T13:33:20+00:00",
+  "content_hash": "7ce4439137ef247654507ec68c0d47704ac53ab8b9ad7174f45208fd695c57d1",
   "collection_method": "live",
   "title": "Kredi Kartları | Türk Ekonomi Bankası",
   "http_status": 200,
-  "raw_bytes": 186250,
+  "raw_bytes": 185668,
   "text_chars": 7299
 }

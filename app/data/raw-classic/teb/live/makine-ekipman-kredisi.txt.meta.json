@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/makine-ekipman-kredisi/",
+  "scraped_at": "2026-08-04T13:34:00+00:00",
+  "content_hash": "7231074ee9fbc4f82dd6ce459b203c2f8b3a428d9e50f9a1023c18c14b6a5ec5",
+  "collection_method": "live",
+  "title": "Makine & Ekipman Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173182,
+  "text_chars": 5065
+}

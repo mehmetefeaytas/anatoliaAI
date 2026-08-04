@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/diger-banka-hesaplarim-kartlarim/",
+  "scraped_at": "2026-08-04T13:33:02+00:00",
+  "content_hash": "9b9c912e2538540cacecf51606f503db28f6a41dca156783e4c6fb6f149dd9bd",
+  "collection_method": "live",
+  "title": "Açık Bankacılık | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 177284,
+  "text_chars": 8558
+}

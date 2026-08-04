@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/bes-teminatli-kredi/",
+  "scraped_at": "2026-08-04T13:32:50+00:00",
+  "content_hash": "2d6a0b28c65ce1a003022a06ffb8062bf02fce9baec6d73a9190e99b5be7575a",
+  "collection_method": "live",
+  "title": "BES Teminatlı İhtiyaç Kredisi",
+  "http_status": 200,
+  "raw_bytes": 174434,
+  "text_chars": 6350
+}

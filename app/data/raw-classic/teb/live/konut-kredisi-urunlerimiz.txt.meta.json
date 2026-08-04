@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/konut-kredisi-urunlerimiz/",
+  "scraped_at": "2026-08-04T13:33:29+00:00",
+  "content_hash": "75901e5d53bd2e140801532bd6cd56196d7a6fd0d4af9b379bfa90827778bbe3",
+  "collection_method": "live",
+  "title": "Konut Kredisi Ürünleri | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 195257,
+  "text_chars": 14032
+}

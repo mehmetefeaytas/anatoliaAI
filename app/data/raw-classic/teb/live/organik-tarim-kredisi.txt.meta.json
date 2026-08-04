@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/organik-tarim-kredisi/",
+  "scraped_at": "2026-08-04T13:34:03+00:00",
+  "content_hash": "2ad9724446e36b4c0af84b06da3cebb3a666e0c6daadaa62d854f3a720663b49",
+  "collection_method": "live",
+  "title": "Organik Tarım Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173475,
+  "text_chars": 5274
+}

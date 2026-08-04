@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/tarimsal-gelir-kredisi/",
+  "scraped_at": "2026-08-04T13:34:15+00:00",
+  "content_hash": "ede0662f8d69a13d747a96c83cdedae0791e661509f15a90f11e0c7b93394b0e",
+  "collection_method": "live",
+  "title": "Bireysel Tarımsal Gelir Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173365,
+  "text_chars": 5194
+}

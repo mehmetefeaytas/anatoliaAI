@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/bireysel-finansman-kredisi/",
+  "scraped_at": "2026-08-04T13:32:56+00:00",
+  "content_hash": "7f8e51ee80591e19985318bc4c215969749665e93376cc83192ffba6c51894e6",
+  "collection_method": "live",
+  "title": "Bireysel Finansman Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 178140,
+  "text_chars": 6045
+}

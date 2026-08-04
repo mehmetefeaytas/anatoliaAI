@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/4000-tl-bonus-firsati",
-  "scraped_at": "2026-08-04T11:33:54+00:00",
-  "content_hash": "d1c231d11bf5da4175e9fc081a06b34cff7d19585c3a7df7b0ace0ecf9d1d1de",
+  "scraped_at": "2026-08-04T13:31:19+00:00",
+  "content_hash": "4ff779550e7c2cf625c4992f7545da2680e54415792fbc40eaf29933fb8f4188",
   "collection_method": "browser",
   "title": "ING",
   "http_status": 200,
-  "raw_bytes": 55770,
+  "raw_bytes": 55908,
   "text_chars": 2641
 }

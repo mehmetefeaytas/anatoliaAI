@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/5000-tl-nakit-promosyon-eski-kampanya",
-  "scraped_at": "2026-08-04T11:34:01+00:00",
-  "content_hash": "15e32ac911263e9edfe639a0193ac45eb2440e7af0a220052fa126fb8e21b4b5",
+  "scraped_at": "2026-08-04T13:31:26+00:00",
+  "content_hash": "88a42b35511c9eb0556710608af57bd160bc259d176cc1ce808997687d31c0f6",
   "collection_method": "browser",
   "title": "Yeni ING’li olmak şimdi daha kazançlı. | ING",
   "http_status": 200,

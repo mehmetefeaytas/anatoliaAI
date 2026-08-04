@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/kazan-kazandir",
-  "scraped_at": "2026-08-04T11:33:21+00:00",
-  "content_hash": "9fcaae6b3b160d4fb00b8b03905a981a40f44dccdc13476b751c7bfb102cf9b7",
+  "scraped_at": "2026-08-04T13:30:47+00:00",
+  "content_hash": "606e63c80d3620602df6c098f63f4aafe322bfc2b4b0535bc3dea0b1856ee47f",
   "collection_method": "browser",
   "title": "Kazan Kazandır Kampanyası | ING",
   "http_status": 200,
-  "raw_bytes": 200157,
+  "raw_bytes": 200295,
   "text_chars": 11212
 }

@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/750-tl-bonus-firsati",
-  "scraped_at": "2026-08-04T11:34:04+00:00",
-  "content_hash": "21c53b17d2333af87d361e251def9232d7a6ccd54b0d4c5006d88586ba650a19",
+  "scraped_at": "2026-08-04T13:31:30+00:00",
+  "content_hash": "29e1ad3135bf99cb77526a1f7d3b46009d7eaea75ae0e0b811dec0b1a85638c5",
   "collection_method": "browser",
   "title": "Bonus Fırsatını Kaçırmayın | ING",
   "http_status": 200,

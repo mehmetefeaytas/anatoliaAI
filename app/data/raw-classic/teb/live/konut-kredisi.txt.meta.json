@@ -1,11 +1,11 @@
 {
   "bank_slug": "teb",
   "source_url": "https://www.teb.com.tr/konut-kredisi/",
-  "scraped_at": "2026-08-04T11:07:16+00:00",
-  "content_hash": "d8951096f614bbc5ac323c27071e9abdca9fabe6bf0d4b57d2dd05f6a7d2d37a",
+  "scraped_at": "2026-08-04T13:33:23+00:00",
+  "content_hash": "f3030ff5a1be6a9118f7bcb2aafd3dd68cd07d506029d7e385de95266e83ed2a",
   "collection_method": "live",
   "title": "Konut Kredisi Başvurusu | Türk Ekonomi Bankası",
   "http_status": 200,
-  "raw_bytes": 175388,
+  "raw_bytes": 175387,
   "text_chars": 5025
 }

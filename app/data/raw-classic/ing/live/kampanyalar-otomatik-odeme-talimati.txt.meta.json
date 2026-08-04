@@ -1,8 +1,8 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/otomatik-odeme-talimati",
-  "scraped_at": "2026-08-04T11:33:30+00:00",
-  "content_hash": "f2c7058a5c4390a708d52f37da67958b611b25a02a3223750452f7c41d46ec19",
+  "scraped_at": "2026-08-04T13:30:55+00:00",
+  "content_hash": "aa8d3642adb466e652d74ecbd5579843485ecba53c866b01bde965aff4f60bd3",
   "collection_method": "browser",
   "title": "İşletmelere Özel OFT ile 2.500 TL Nakit İade | ING",
   "http_status": 200,

@@ -1,11 +1,11 @@
 {
   "bank_slug": "ing",
   "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/bayram-firsatlari",
-  "scraped_at": "2026-08-04T11:34:53+00:00",
-  "content_hash": "8a9c508dab830b859ae00a8db1c7868ffd9a3fb22bf1a6ac4e7321ce2931fe7b",
+  "scraped_at": "2026-08-04T13:32:22+00:00",
+  "content_hash": "af9c3c24a544b7aefe9b52759ca57dd43aaebe5167239f009c2cc7669da6d567",
   "collection_method": "browser",
   "title": "Aidatsız kredi kartı ING'de. | ING",
   "http_status": 200,
-  "raw_bytes": 67674,
+  "raw_bytes": 67633,
   "text_chars": 10258
 }

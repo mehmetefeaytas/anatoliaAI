@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/besicilik-kredisi/",
+  "scraped_at": "2026-08-04T13:32:53+00:00",
+  "content_hash": "fcf269bcadadd0e027df5c6c7ade29a4206f224ddc163d1dcc01269f3131da0a",
+  "collection_method": "live",
+  "title": "Besicilik - Hayvancılık Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 173456,
+  "text_chars": 5187
+}
