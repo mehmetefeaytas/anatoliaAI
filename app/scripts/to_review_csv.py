@@ -25,6 +25,11 @@ hata için harcanır.
 
 Zaman biterse kesilen yer kova 3-4'ün kuyruğudur; oradaki kayıp en ucuzudur.
 
+Şemaya uymayan çıkarımlar (`invalid_fields`, bkz. preannotate.py) kova 2'ye
+düşer: `model_value` hücresi boş bırakılır — dolu olsa boş verdict "onay"
+sayılır ve şema dışı değer gold'a girer — ama snippet'te modelin reddedilen
+önerisi ve span'i gösterilir, anotatör doğru değeri yazabilsin.
+
 ## Kova 4 ve `absent_fields`
 
 Modelin hiçbir şey üretmediği alan için satır olmazsa anotatör "kontrol ettim,
@@ -165,18 +170,36 @@ def rows_for_doc(doc: dict, include_absent: bool, low: float = LOW_CONF,
     rows.append(_row(doc_id, bank, CAMPAIGN_TYPE_KEY,
                      type_payload if has_type else None, text, low, high))
 
+    # Şemaya uymadığı için değer sayılmayan çıkarımlar (bkz. preannotate.py).
+    # Bu satır `include_absent` kapalıyken de yazılır: model o alanda BİR ŞEY
+    # bulmuş, yalnızca biçimi tutmuyor — düzeltilecek yeri bilen tek satır bu.
+    invalid: dict[str, Any] = doc.get("invalid_fields") or {}
+
     for name in EXTRACTION_FIELDS:
         payload = fields.get(name)
-        if payload is None and not include_absent:
+        rejected = invalid.get(name)
+        if payload is None and rejected is None and not include_absent:
             continue
-        rows.append(_row(doc_id, bank, name, payload, text, low, high))
+        rows.append(_row(doc_id, bank, name, payload, text, low, high, rejected))
 
     return rows
 
 
 def _row(doc_id: str, bank: str, field: str, payload: Optional[dict],
-         text: str, low: float, high: float) -> dict:
+         text: str, low: float, high: float,
+         rejected: Optional[dict] = None) -> dict:
     bucket = _bucket(payload, low, high)
+    snippet = build_snippet(text, payload)
+    if payload is None and rejected is not None:
+        # Değer hücresi BİLEREK boş: dolu olsa boş verdict onay sayılır ve
+        # şema dışı değer gold'a girer. Reddedilen öneri snippet'te, kanıtla
+        # birlikte gösterilir.
+        bucket = 2
+        snippet = (f"[MODEL ŞEMA DIŞI DEĞER ÜRETTİ: "
+                   f"{format_gold_value(field, rejected.get('value'))} — "
+                   f"{rejected.get('schema_error', '')} Doğru değer metinde "
+                   f"varsa verdict=fix ile yazın.] "
+                   + build_snippet(text, rejected))
     if payload is None:
         model_value, conf, source, disagreement = "", "", "", ""
     else:
@@ -196,7 +219,7 @@ def _row(doc_id: str, bank: str, field: str, payload: Optional[dict],
         "model_conf": conf,
         "confidence_source": source,
         "disagreement": disagreement,
-        "snippet": build_snippet(text, payload),
+        "snippet": snippet,
         "gold_value": "",
         "verdict": "",
         "note": "",
@@ -206,6 +229,56 @@ def _row(doc_id: str, bank: str, field: str, payload: Optional[dict],
 def sort_rows(rows: list[dict]) -> list[dict]:
     """Kova -> belge -> alan sırası. Kova birinci: zaman biterse ucuz olan kesilir."""
     return sorted(rows, key=lambda r: (r["_bucket"], r["doc_id"], r["_field_order"]))
+
+
+def read_doc_ids(path: str | Path) -> set[str]:
+    """İnceleme CSV'sinin (ya da satır başına bir kimlik içeren düz metnin)
+    `doc_id` kümesini döndürür."""
+    target = Path(path)
+    if not target.is_file():
+        raise FileNotFoundError(f"belge kimliği dosyası yok: {target}")
+    lines = target.read_text(encoding=CSV_ENCODING).split("\n")
+    if lines and CSV_DELIMITER not in lines[0]:
+        lines = lines[1:]                      # elektronik tablo sekme adı
+    reader = csv.DictReader(lines, delimiter=CSV_DELIMITER)
+    if reader.fieldnames and "doc_id" in reader.fieldnames:
+        return {(row.get("doc_id") or "").strip() for row in reader} - {""}
+    return {line.strip() for line in lines if line.strip()}
+
+
+def has_annotations(path: str | Path) -> bool:
+    """Dosyada İNSAN EMEĞİ var mı? (`gold_value` veya `verdict` dolu bir satır)
+
+    Bu üreteç `round*.csv` kalıbıyla eski turun dosyalarını siler ve üzerine
+    yazar. Kalıp, tamamlanmış bir anotasyon dosyasını da kapsar — sıfırdan
+    üretim, geri alınamaz biçimde 79 satırlık insan kararını silebilir.
+    Bayat dosyayı temizleme ihtiyacı gerçek (bkz. `generate`), ama karar
+    içeren dosya için asla geçerli değil: dosyanın kendisi tek kaynaktır.
+
+    Okunamayan dosya "anotasyonlu" sayılır — silme kararında şüphe, korumadan
+    yana kullanılır.
+    """
+    target = Path(path)
+    if not target.is_file():
+        return False
+    try:
+        lines = target.read_text(encoding=CSV_ENCODING).split("\n")
+    except OSError:
+        return True
+
+    # Elektronik tablo, CSV'nin başına sekme adını yazabiliyor; o satır kalırsa
+    # başlık görünmez olur (bkz. lint_review_csv.read_rows — kalibrasyon A'da
+    # oldu). Böyle bir dosya DOLU olduğu hâlde boş okunur; silinmesi kabul
+    # edilemez, bu yüzden ilk satır atlanıp bir daha denenir.
+    if lines and CSV_DELIMITER not in lines[0]:
+        lines = lines[1:]
+
+    reader = csv.DictReader(lines, delimiter=CSV_DELIMITER)
+    if not reader.fieldnames or "doc_id" not in reader.fieldnames:
+        return False   # inceleme CSV'si değil (bayat artık / başka dosya)
+    return any((row.get("gold_value") or "").strip()
+               or (row.get("verdict") or "").strip()
+               for row in reader)
 
 
 def write_csv(rows: list[dict], path: str | Path) -> int:
@@ -226,15 +299,29 @@ def write_csv(rows: list[dict], path: str | Path) -> int:
 # --------------------------------------------------------------------------- #
 # Belge paylaştırma
 # --------------------------------------------------------------------------- #
-def partition(doc_ids: list[str], calibration: int, duplicate: int, seed: int
+def partition(doc_ids: list[str], calibration: int, duplicate: int, seed: int,
+              pinned_calibration: Optional[set[str]] = None
               ) -> tuple[list[str], list[str], list[str]]:
     """Belgeleri (kalibrasyon, çift-anotasyon, ana) olarak deterministik böler.
 
     Üçü AYRIK kümedir: aynı belge iki kez anote edilip iki kez saydırılmaz.
+
+    `pinned_calibration` verilirse kalibrasyon kümesi RASTGELE seçilmez, o küme
+    olur. Gerekçe: kalibrasyon turunun tek çıktısı Fleiss kappa'dır ve kappa
+    ancak DÖRT anotatör AYNI belgeleri gördüğünde hesaplanır. A'nın dosyası
+    tamamlanmış, korpus ise büyümüş durumdaysa yeni bir kalibrasyon kümesi
+    çekmek A'nın emeğini ölçüm dışına atar.
     """
     rng = random.Random(seed)
-    shuffled = sorted(doc_ids)
+    pinned = sorted(set(pinned_calibration or ()) & set(doc_ids))
+    shuffled = sorted(set(doc_ids) - set(pinned))
     rng.shuffle(shuffled)
+
+    if pinned:
+        calib = pinned
+        dup = sorted(shuffled[:duplicate])
+        main = sorted(shuffled[duplicate:])
+        return calib, dup, main
 
     calib = sorted(shuffled[:calibration])
     dup = sorted(shuffled[calibration:calibration + duplicate])
@@ -281,13 +368,28 @@ def balance_main(main: list[str], annotators: list[str], row_counts: dict[str, i
 # --------------------------------------------------------------------------- #
 def generate(pre_path: str, out_dir: str, annotators: list[str],
              calibration: int, duplicate: int, absent_docs: int, seed: int,
-             low: float = LOW_CONF, high: float = HIGH_CONF) -> dict[str, Any]:
-    """Tüm CSV'leri, belge metinlerini ve atama planını üretir."""
+             low: float = LOW_CONF, high: float = HIGH_CONF,
+             pinned_calibration: Optional[set[str]] = None) -> dict[str, Any]:
+    """Tüm CSV'leri, belge metinlerini ve atama planını üretir.
+
+    Anotasyon içeren CSV'ler ne silinir ne üzerine yazılır (bkz.
+    `has_annotations`); korunanlar plandaki `protected` alanında listelenir.
+    """
     data = json.loads(Path(pre_path).read_text(encoding="utf-8"))
     docs = {d["id"]: d for d in data["docs"]}
     doc_ids = list(docs)
+    # Kimlik çakışması SESSİZ veri kaybıdır: sözlüğe çevirme sırasında kayıt
+    # düşer, plan "250 belge" derken `_atama.md` 243 yazar ve `belgeler/`
+    # altındaki tam metin çakışan iki belgeden hangisi olduğu belirsiz kalır.
+    if len(doc_ids) != len(data["docs"]):
+        yinelenen = len(data["docs"]) - len(doc_ids)
+        raise ValueError(
+            f"{pre_path}: {yinelenen} belge kimliği çakışıyor. "
+            f"Ön-anotasyonu güncel scripts/preannotate.py ile yeniden üretin "
+            f"(tekil doc_id garantisi orada).")
 
-    calib, dup, main = partition(doc_ids, calibration, duplicate, seed)
+    calib, dup, main = partition(doc_ids, calibration, duplicate, seed,
+                                 pinned_calibration=pinned_calibration)
 
     # Kova 4 (recall kontrolü) hangi belgelerde açılacak — deterministik seçim.
     rng = random.Random(seed + 1)
@@ -315,23 +417,37 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
     # (ör. başka bir --duplicate-subset) üretilmiş dosyalar klasörde kalır;
     # `build_gold --csv-dir` bunları `round*.csv` kalıbıyla toplayıp aynı
     # belgeyi iki kez sayar ve olmayan "çelişki"ler üretir.
-    for stale in out.glob("round*.csv"):
+    #
+    # ANOTASYONLU DOSYA İSTİSNA. Kalıp tamamlanmış dosyayı da kapsıyor; silmek
+    # geri dönüşü olmayan tek gerçek gold kaynağını yok eder. Korunan dosya
+    # planda `protected` altında raporlanır — sessiz atlama da kabul değil,
+    # çünkü içeriği yeni örneklemle uyumsuz olabilir.
+    protected: dict[str, int] = {}
+    for stale in sorted(out.glob("round*.csv")):
+        if has_annotations(stale):
+            protected[stale.name] = _row_count(stale)
+            continue
         stale.unlink()
 
     written: dict[str, int] = {}
+
+    def emit(rows: list[dict], filename: str) -> None:
+        """Dosyayı yazar; anotasyonluysa DOKUNMAZ."""
+        if filename in protected:
+            return
+        written[filename] = write_csv(rows, out / filename)
 
     # 1) Kalibrasyon turu — HERKES aynı belgeleri anote eder (Fleiss kappa).
     if calib:
         calib_rows = build(calib)
         for name in annotators:
-            written[f"round0_kalibrasyon_{name}.csv"] = write_csv(
-                calib_rows, out / f"round0_kalibrasyon_{name}.csv")
+            emit(calib_rows, f"round0_kalibrasyon_{name}.csv")
 
     # 2) Çift anotasyon alt kümesi — A ve B aynı belgeleri (Cohen kappa).
     if dup and len(annotators) >= 2:
         dup_rows = build(dup)
-        written["round1_A.csv"] = write_csv(dup_rows, out / "round1_A.csv")
-        written["round1_B.csv"] = write_csv(dup_rows, out / "round1_B.csv")
+        emit(dup_rows, "round1_A.csv")
+        emit(dup_rows, "round1_B.csv")
 
     # 3) Ana küme — SATIR yüküne göre dengeli paylaştırma, kişi başına bir dosya.
     row_counts = {
@@ -347,8 +463,24 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
     assignment = balance_main(main, annotators, row_counts, fixed_load)
     for name, ids in assignment.items():
         if ids:
-            written[f"round1_main_{name}.csv"] = write_csv(
-                build(ids), out / f"round1_main_{name}.csv")
+            emit(build(ids), f"round1_main_{name}.csv")
+
+    # 3b) KORUNAN DOSYADA BAYAT ONAY AVI. Korunan dosya eski turun model
+    # değerlerini gösteriyor, `build_gold` ise model değerini GÜNCEL
+    # ön-anotasyondan okuyor (build_gold.py:195). Anotatör bir satırı boş
+    # bırakmışsa bu "gördüğüm değeri onaylıyorum" demektir — değer o zamandan
+    # beri değiştiyse onay artık BAŞKA bir değere veriliyor ve kimse fark
+    # etmiyor. Bu satırlar tek tek raporlanır.
+    fresh_values = {
+        (row["doc_id"], row["field"]): row["model_value"]
+        for doc_id in doc_ids
+        for row in rows_for_doc(docs[doc_id], doc_id in absent_set, low, high)
+    }
+    protected_stale = {}
+    for name in protected:
+        bayat = _stale_rows(out / name, fresh_values)
+        if bayat["riskli"] or bayat["bilgi"]:
+            protected_stale[name] = bayat
 
     # 4) Belge metinleri — anotatör kova 4'te tam metni okumak zorunda.
     docs_dir = out / "belgeler"
@@ -357,8 +489,16 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
         (docs_dir / f"{doc_id}.txt").write_text(doc.get("text", ""), encoding="utf-8")
 
     # Kişi başına gerçek satır yükü — Cuma planının tek anlamlı sayısı.
+    # Korunan (önceki turdan gelen) dosyada satır sayısı yeniden üretilenden
+    # birkaç satır farklı olabilir; yükü DOSYADAN okumak tahminden doğrudur.
+    def _kalibrasyon_yuku(name: str) -> int:
+        dosya = f"round0_kalibrasyon_{name}.csv"
+        if dosya in protected:
+            return protected[dosya]
+        return calib_rows_total if calib else 0
+
     row_load = {
-        name: (calib_rows_total
+        name: (_kalibrasyon_yuku(name)
                + (dup_rows_total if i < 2 and dup else 0)
                + sum(row_counts[d] for d in assignment.get(name, [])))
         for i, name in enumerate(annotators)
@@ -367,17 +507,56 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
     plan = {
         "seed": seed,
         "annotators": annotators,
+        "preannotations": str(pre_path),
+        "doc_total": len(docs),
         "calibration": calib,
         "duplicate": dup,
         "assignment": {name: ids for name, ids in assignment.items()},
         "absent_docs": sorted(absent_set),
         "row_load": row_load,
         "files": written,
+        # Anotasyon içerdiği için yeniden ÜRETİLMEYEN dosyalar.
+        "protected": protected,
+        # Korunan dosyada model değeri değişmiş satırlar (bkz. 3b).
+        "protected_stale": protected_stale,
     }
     (out / "_plan.json").write_text(
         json.dumps(plan, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     _write_assignment_md(out / "_atama.md", plan, written, len(docs))
     return plan
+
+
+def _stale_rows(path: Path, fresh_values: dict[tuple[str, str], str]
+                ) -> dict[str, list[str]]:
+    """Korunan dosyada model değeri DEĞİŞEN satırları iki kovaya ayırır.
+
+    `riskli`: anotatör boş bırakmış (örtük onay) — onay artık görülmemiş bir
+        değere veriliyor, satır YENİDEN karara bağlanmalı.
+    `bilgi` : anotatör açık karar yazmış — kararı korunur, yalnız kayıt için.
+    """
+    out: dict[str, list[str]] = {"riskli": [], "bilgi": []}
+    with path.open(encoding=CSV_ENCODING, newline="") as handle:
+        for row in csv.DictReader(handle, delimiter=CSV_DELIMITER):
+            key = ((row.get("doc_id") or "").strip(), (row.get("field") or "").strip())
+            if key not in fresh_values:
+                continue
+            eski = (row.get("model_value") or "").strip()
+            yeni = (fresh_values[key] or "").strip()
+            if eski == yeni:
+                continue
+            karar_var = bool((row.get("verdict") or "").strip()
+                             or (row.get("gold_value") or "").strip())
+            kova = "bilgi" if karar_var else "riskli"
+            out[kova].append(f"{key[0]} · {key[1]}: {eski or '(boş)'} -> "
+                             f"{yeni or '(boş)'}")
+    return out
+
+
+def _row_count(path: Path) -> int:
+    """CSV'nin veri satırı sayısı (başlık hariç)."""
+    with path.open(encoding=CSV_ENCODING, newline="") as handle:
+        rows = [r for r in csv.reader(handle, delimiter=CSV_DELIMITER) if r]
+    return max(0, len(rows) - 1)
 
 
 def _write_assignment_md(path: Path, plan: dict, written: dict[str, int],
@@ -395,14 +574,19 @@ def _write_assignment_md(path: Path, plan: dict, written: dict[str, int],
         f"- Çift anotasyon (A + B): **{len(plan['duplicate'])}** belge",
         f"- Tam kapsama (12/12 alan karara bağlı): **{len(plan['absent_docs'])}** belge",
         f"- Rastgelelik tohumu (seed): `{plan['seed']}`",
+        f"- Ön-anotasyon kaynağı: `{plan.get('preannotations', '?')}`",
         "",
         "## Kim neyi açacak",
         "",
         "| Anotatör | 1. Kalibrasyon | 2. Çift anotasyon | 3. Ana küme | Toplam satır |",
         "|---|---|---|---|---:|",
     ]
+    protected = plan.get("protected") or {}
     for i, name in enumerate(annotators):
-        calib_file = f"`round0_kalibrasyon_{name}.csv`" if plan["calibration"] else "—"
+        calib_name = f"round0_kalibrasyon_{name}.csv"
+        calib_file = f"`{calib_name}`" if plan["calibration"] else "—"
+        if calib_name in protected:
+            calib_file += " ✔ dolu"
         if i == 0 and plan["duplicate"]:
             dup_file = "`round1_A.csv`"
         elif i == 1 and plan["duplicate"]:
@@ -428,11 +612,74 @@ def _write_assignment_md(path: Path, plan: dict, written: dict[str, int],
         "",
         "## Üretilen dosyalar",
         "",
-        "| Dosya | Satır |",
-        "|---|---:|",
+        "| Dosya | Satır | Durum |",
+        "|---|---:|---|",
     ]
     for name in sorted(written):
-        lines.append(f"| `{name}` | {written[name]} |")
+        lines.append(f"| `{name}` | {written[name]} | bu turda üretildi |")
+    for name in sorted(protected):
+        lines.append(f"| `{name}` | {protected[name]} | **korundu** — "
+                     f"anotasyon içeriyor, üzerine yazılmadı |")
+    if protected:
+        lines += [
+            "",
+            "> Korunan dosyalar önceki turda doldurulmuş; üreteç onlara "
+            "dokunmaz (`scripts/to_review_csv.has_annotations`). Kalibrasyon "
+            "kümesi de bu dosyaya SABİTLENİR, yoksa dört anotatör farklı "
+            "belgelere bakar ve Fleiss kappa hesaplanamaz.",
+        ]
+
+    stale = plan.get("protected_stale") or {}
+    if stale:
+        lines += [
+            "",
+            "## Korunan dosyada YENİDEN bakılacak satırlar",
+            "",
+            "Ön-anotasyon tazelendi; aşağıdaki satırlarda modelin değeri "
+            "değişti. `build_gold` model değerini GÜNCEL ön-anotasyondan okur, "
+            "bu yüzden boş bırakılmış (= onaylanmış) bir satır artık "
+            "anotatörün görmediği bir değeri onaylar.",
+            "",
+        ]
+        for name in sorted(stale):
+            riskli = stale[name]["riskli"]
+            bilgi = stale[name]["bilgi"]
+            lines.append(f"### `{name}`")
+            lines.append("")
+            if riskli:
+                lines.append(f"**Yeniden karara bağlanmalı ({len(riskli)} satır)** "
+                             f"— boş bırakılmış, model değeri değişmiş:")
+                lines += [f"- `{item}`" for item in riskli]
+            else:
+                lines.append("Yeniden karara bağlanacak satır yok.")
+            if bilgi:
+                lines += [
+                    "",
+                    f"Kararı yazılmış, etkilenmeyen satır: {len(bilgi)} "
+                    f"(anotatörün kararı korunur).",
+                ]
+            lines.append("")
+    # `build_gold --pre` VARSAYILANI ESKİ DOSYADIR. Bu CSV'ler hangi
+    # ön-anotasyondan üretildiyse gold da onunla derlenmeli; yoksa model
+    # değerleri başka bir örneklemden okunur ve buradaki belgelerin çoğu
+    # "bilinmeyen doc_id" diye ATLANIR.
+    pre = plan.get("preannotations")
+    if pre:
+        lines += [
+            "",
+            "## Doldurulduktan sonra",
+            "",
+            "```bash",
+            "python -m scripts.lint_review_csv 'data/gold/review/round*.csv'",
+            f"python -m scripts.build_gold --pre {pre} \\",
+            "    --csv-dir data/gold/review",
+            "```",
+            "",
+            f"`--pre` MUTLAKA `{pre}` olmalı — CSV'ler bu dosyadan üretildi, "
+            "varsayılan başka bir ön-anotasyonu gösteriyor ve belgelerin çoğu "
+            "\"bilinmeyen doc_id\" diye atlanır.",
+        ]
+
     lines += [
         "",
         "Belge tam metinleri: `belgeler/<doc_id>.txt`",
@@ -460,18 +707,38 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--low", type=float, default=LOW_CONF)
     parser.add_argument("--high", type=float, default=HIGH_CONF)
+    parser.add_argument("--calibration-from", metavar="CSV",
+                       help="kalibrasyon kümesini bu (anote edilmiş) CSV'nin "
+                            "belgelerinden al — dört anotatör aynı belgeleri "
+                            "görsün ki Fleiss kappa hesaplanabilsin")
     args = parser.parse_args(argv)
+
+    pinned: Optional[set[str]] = None
+    if args.calibration_from:
+        pinned = read_doc_ids(args.calibration_from)
 
     annotators = [a.strip() for a in args.annotators.split(",") if a.strip()]
     plan = generate(args.pre, args.out_dir, annotators, args.calibration,
                     args.duplicate_subset, args.absent_docs, args.seed,
-                    args.low, args.high)
+                    args.low, args.high, pinned_calibration=pinned)
 
     total_rows = sum(plan["files"].values())
     print(f"CSV'ler yazıldı: {args.out_dir}")
     for name in sorted(plan["files"]):
         print(f"  {name:<34} {plan['files'][name]:>6} satır")
-    print(f"  {'TOPLAM':<34} {total_rows:>6} satır")
+    print(f"  {'TOPLAM':<34} {total_rows:>6} satır (bu turda üretilen)")
+    for name in sorted(plan.get("protected") or {}):
+        print(f"  KORUNDU: {name} ({plan['protected'][name]} satır) — "
+              f"anotasyon içeriyor, üzerine yazılmadı")
+    for name, bayat in sorted((plan.get("protected_stale") or {}).items()):
+        print(f"  DİKKAT: {name} içinde {len(bayat['riskli'])} satır yeniden "
+              f"karara bağlanmalı (model değeri değişti, satır boş bırakılmış); "
+              f"{len(bayat['bilgi'])} satırda karar yazılı — ayrıntı _atama.md")
+    if pinned:
+        eksik = sorted(pinned - set(plan["calibration"]))
+        if eksik:
+            print(f"  UYARI: sabitlenen {len(eksik)} belge ön-anotasyonda yok "
+                  f"-> {eksik[:3]}")
     print(f"atama planı: {Path(args.out_dir) / '_atama.md'}")
     return 0
 
