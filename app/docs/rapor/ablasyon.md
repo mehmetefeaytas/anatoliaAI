@@ -42,6 +42,20 @@ tek fark `hibrit-verify` 0,562 → 0,575 (yani tolerant eşleştirme, doğrulama
 kolunun bozduğu tek kararı bağışlıyor). Tam tablo:
 `eval/reports/20260804-215208/report.md`.
 
+> **Künyedeki `git_dirty` hakkında — sayıdan şüphe edilmesin.** `215206`
+> (strict) `git_dirty: False`, `215208` (tolerant) ise `git_dirty: True`
+> gösteriyor. İkisi **1,4 saniye arayla, aynı sabitlenmiş ağaçta** koştu ve kod
+> aynıydı; ikinci koşumun kirli görünmesinin sebebi **birinci koşumun kendi
+> rapor dosyalarını o ağaca yazması.** Yani bayrak kendi kendini tetikledi,
+> ölçüm kirlenmedi. (Ölçüm hijyeni açısından doğru düzeltme raporları çalışma
+> ağacının dışına yazmak; ayrı iş olarak not edildi.)
+>
+> Ayrıca `git_dirty: True` taşıyan ve **commit'lenmeyen** bir üçüncü koşum vardı
+> (`20260804-211513`, sha `1a9c00d`): o gerçekten kirliydi — paralel ajanlar
+> koşum sırasında `src/extraction/rules/` altını değiştirdi ve `kural` satırı
+> aynı oturumda 0,578 ile 0,612 arasında oynadı. Yanıltıcı olacağı için depoya
+> alınmadı; tablo yalnız sabitlenmiş ağaçtaki koşuma dayanıyor.
+
 ### Güven aralıkları geniş — nokta tahminine güvenilmemeli
 
 GA genişlikleri 0,23–0,25 bandında. n = 20 belgede bu **kaçınılmazdır** ve
@@ -291,6 +305,68 @@ sunumda canlı LLM = donma riski"* kararını doğruluyor. Tek belgelik "canlı
 
 ---
 
+## 7b. `hibrit-verify` neden YAPISAL olarak ölü — güven skoru kalibre değil
+
+Yukarıda `hibrit-verify` kolunun kazanç sağlamadığı ölçüldü. Sebebi "eşik iyi
+seçilmedi" değil; o koldan kazanç çıkması **mümkün değil.**
+
+`reconcile.py`'nin tek kaçış kapısı `verify_low_conf`: kural katmanının
+**güveni eşiğin altındaki** alanları LLM'e yeniden sormak. Yani bu kapı, kural
+katmanının hatalarının düşük güvenli olduğunu varsayar. Ölçüm bunu çürütüyor.
+
+Krom kaynaklı `alisveris_puani` halüsinasyonlarının güven dağılımı
+(`data/gold/preannotations.json`, gezinme bağlantısı `"(Kredi Puanı) Nedir?"`
+kaynaklı kayıtlar):
+
+| Kayıt | Güven | Kaynak |
+|---|---|---|
+| **41 / 41** | **0,95** | `rule_heuristic` |
+
+Yani **saf halüsinasyonların hepsi ölçeğin en üstünde.** Üstelik 0,95 doğru
+alanların da en sık değeri:
+
+| Güven | Alan sayısı |
+|---|---:|
+| **0,95** | **612** |
+| 0,85 | 133 |
+| 0,72 | 53 |
+| 0,55 | 36 |
+| 0,45 | 31 |
+
+Sonuç zinciri:
+
+1. Halüsinasyonlar 0,95 taşıyor → eşik 0,95'in altında olduğu sürece onlara
+   **hiç dokunamaz**.
+2. 0,95 aynı zamanda doğru alanların modu (612 kayıt) → eşiği 0,95'in üstüne
+   çıkarmak **doğru alanların çoğunu** LLM'e yeniden sordurur, yani asıl
+   kaybettiren kola (FP ekleme) tam gaz basar.
+3. Arada ayırt edici bir eşik **yok**. `hibrit-verify` iki uçta da kaybeder.
+
+Bu, ablasyon tablosundaki `hibrit-verify` satırının neden `hibrit`'ten de kötü
+olduğunu (0,562 vs 0,575, `kar_payi_orani` 0,667 → 0,364) eşik ayarıyla
+açıklanamayacağını gösteriyor.
+
+**Asıl kusur güven skorunun kalibre olmaması.** `CLAUDE.md` §18 "alan bazlı
+güven skoru + kaynak vurgulama"yı üç yenilikçilik hedefinden **birincisi**
+olarak sayıyor; hem doğru değere hem site kromundan gelen saf uydurmaya 0,95
+veren bir skor açıklanabilirlik sağlamaz, yanlış güven telkin eder.
+
+**Doğru müdahale katmanı:** güven, değerin **kanıt kalitesini** yansıtmalı —
+span sayfa kromunda mı, tetikleyici sözcük ne kadar uzakta, aynı belgede kaç
+rakip aday var. Bu sinyaller `rules/confidence.py`'de kısmen var
+(`trigger_distance`, `candidate_count`) ama krom/gezinme bağlamı yok. Krom
+kaynaklı halüsinasyonlar bu turda **çıkarıcı katmanında** düzeltildi (`caa260e`,
+`d2cc832`) — doğru katman orasıydı; ama kalibrasyon sorunu genel olarak duruyor
+ve halüsinasyon oranını 0,102'nin altına indirmenin yolu burası.
+
+> **Ölçümün kendi sınırı:** bu 41 kayıt `preannotations.json`'dan (v1, 31
+> Temmuz) geliyor ve krom kusuru o zamandan beri düzeltildi. Yani bugün aynı
+> halüsinasyonlar üretilmiyor. Buradaki iddia "bu 41 hata hâlâ var" değil,
+> **"güven skoru bu hataları ayırt edemiyordu ve kalibrasyonu bunu yapacak
+> şekilde değişmedi"**.
+
+---
+
 ## 8. Bu tablodan çıkan kararlar
 
 1. **Teslim edilen varsayılan `hibrit` olmamalı.** `eval/predictors.py`
@@ -298,7 +374,12 @@ sunumda canlı LLM = donma riski"* kararını doğruluyor. Tek belgelik "canlı
    Bu bir **karar gerektiren çelişkidir** (bu belge kararı vermiyor, kolu
    ölçüyor).
 2. **`hibrit-verify` varsayılan yapılmamalı** — `reconcile.py`'nin koyduğu
-   koşul karşılanmadı (kazanç yok, `kar_payi_orani`'nda zarar var).
+   koşul karşılanmadı (kazanç yok, `kar_payi_orani`'nda zarar var). §7b: bu kol
+   eşik ayarıyla kurtarılamaz, çünkü halüsinasyonlar da doğru alanlar da 0,95
+   güven taşıyor; arada ayırt edici eşik yok.
+2b. **Güven skoru kalibre edilmeli** ve bu, halüsinasyon oranını düşürmenin
+   asıl yolu (§7b). Kalibre olmayan güven aynı zamanda §18'in 1 numaralı
+   yenilikçilik hedefini içi boş bırakıyor.
 3. **LLM katmanının asıl sorunu çekimserlik (abstention) eksikliği.** Kayıp
    geri çağırmadan değil, gold'un `absent` dediği alanlara değer
    üretmesinden geliyor. Doğru müdahale prompt/şema düzeyinde
