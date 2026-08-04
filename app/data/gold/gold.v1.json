@@ -1,0 +1,990 @@
+[
+  {
+    "id": "albaraka--detay-vade-farksiz-kampanyasi",
+    "bank_slug": "albaraka",
+    "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/vade-farksiz-kampanyasi",
+    "content_hash": "3e608ac1d0f129214451740a03b561f63f551f1313db90304c6c60b65b05a46d",
+    "text": "Albaraka Mobil Mobil Bankacılık Aç Vade Farksız 140.000 TL'ye Varan Destek! Anasayfa Kampanyalar Kampanya Başlangıç ve Bitiş 01.01.2026 - 31.12.2026 Müşteri Ol Müşteri Ol Kâr payı yok. Beklemek yok. 140.000 TL 'ye kadar vade farksız destek Albaraka'da! Şimdi Albaraka Mobil'den müşteri olanlar, %0 kâr payı ile 40.000 TL'ye kadar Pratik Finansman Kart (İhtiyaç Finansmanı) kullanabiliyor ve 100.000 TL'ye varan seçili sektörlerde vade farksız taksitli alışveriş fırsatından yararlanabiliyor. Hemen siz de şubeye gitmeden Albaraka Türk müşterisi olun; %0 kâr paylı 40.000 TL 'ye kadar, 3 aya varan ödemesiz dönem ve 4 taksitli Pratik Finansman Kart ve, 100.000 TL 'ye kadar vade farksız taksitli alışveriş fırsatını bir arada yakalayın. Toplamda 140.000 TL 'ye kadar vade farksız finansman desteği için Albaraka Türk sizleri bekliyor. *Detaylı bilgi almak için \"Pratik Finansman Kart\" sayfasını ziyaret edebilirsiniz. *Pratik Finansman Kart nakit bir finansman ürünü değildir. Pratik Finansman Kart ile banka ATM'leri üzerinden nakit çekim yapamazsınız. *Kampanya kapsamında Bankamıza iletilen Pratik Finansman Kart ve Kredi Kartı talepleri bankamız kredi ve tahsis politikaları çerçevesinde, müşterinin aylık gelir bilgileri, kredi skoru vb. kriterler göz önünde bulundurularak müşteri özelinde değerlendirilecektir. Bu doğrultuda, başvurunun olumsuz sonuçlanması durumunda kampanyadan faydalanılması mümkün olmayacaktır. Bankamız uygun görmediği başvuruları reddetme, kampanya koşullarını değiştirme, gerekli görmesi halinde ek bilgi ve belge talebinde bulunma ve kampanyayı durdurma hakkını saklı tutar. Kampanya Başlangıç ve Bitiş Tarihi Kampanya 1 Ocak 2026 – 31 Aralık 2026 tarihlerinde geçerlidir. 140.000 TL Vadesiz Finansman Kampanyası Detayları 40.000 TL'ye Kadar Vade Farksız Finansman Desteği Tutar: 40.000 TL Vade: 6 aya kadar Kar Payı: Vade Farksız Kullanım Alanları (Sektörler): Mobilya ve Beyaz Eşya, Oto Servis ve Bakım, Teknoloji Marketler, Ulaşım Bileti Alımı, Sağlık, Okul, Kırtasiye, Giyim Başvuru: Yalnızca dijitalden müşteri olanlar. Vade Farksız Pratik Finansman Kart Kampanyasından Nasıl Yararlanabilirim? Albaraka Mobil'e giriş yaptıktan sonra; Başvurular sekmesinden, \"Tüm Kampanyalar\" sayfasına giriş yapın. Kampanyalar sayfasında bulunan \"Dijital Müşterilere Özel Pratik Finansman Kart\" kampanyasından kod alın. Kampanyadan kod aldıktan sonra; İşlem>Finansman İşlemleri>Pratik Finansman Kart> \"Dijital Müşterilere Özel Pratik Finansman Kart\" adımlarını izleyerek menüden işleminizi tamamlayın. Vade farksız 40.000 TL ihtiyaç finansmanı kampanyası hakkında detaylı bilgi almak için: Dijital Müşterilere Özel Pratik Finansman Kart | Albaraka Türk Vade Farksız Taksit Kampanyası – Kredi Kartı Tutar: 100.000 TL'ye kadar Vade: Seçili sektörlerde vade farksız 6 taksit Kart: Albaraka Word Kredi Kartları Kullanım Alanları (Sektörler): Sağlık, Eğitim Kredi kartına vade farksız taksit kampanyaları hakkında detaylı bilgi almak için: Sağlık Kampanyası | Albaraka Türk \"Albaraka Mobil'den Kampanyalar sayfasından kampanyaya katılım sağlayarak, World kartlarınız ile yapacağınız 1.000 TL- 100.000 TL arası sağlık harcamalarınıza vade farksız 6 taksit fırsatını kaçırmayın!\" Eğitim Kampanyası | Albaraka Türk \"Siz de hemen Albaraka Mobil üzerinden \"Eğitim Harcamalarına Vade Farksız 6 Taksit!\" kampanyasına katılın, Albaraka World kartlarınız ile yapacağınız 30.000 TL - 500.000 TL arası Okul ödemelerinize vade farksız 6 taksit fırsatını kaçırmayın!\" Albaraka Mobil'e Özel Diğer Avantajlar Avantajlı Kampanyalar Masrafsız Banka ve Kredi Kartı Ücretsiz EFT ve Havale 8.500'den Fazla ATM'den İşlem Fırsatı Yukarıdaki QR kodunu telefonunuzdaki kamera uygulamasına okutunuz.",
+    "campaign_type": "İhtiyaç Finansmanı",
+    "fields": {
+      "kar_payi_orani": 0,
+      "finansman_tutari": {
+        "currency": "TRY",
+        "value": 40000.0
+      },
+      "vade_ay": 6,
+      "taksit_sayisi": 4,
+      "tahsis_ucreti": {
+        "value": 0.0,
+        "currency": "TRY"
+      },
+      "masraf_durumu": {
+        "has_fee": false,
+        "amount": 0.0
+      },
+      "kampanya_suresi": "2026-12-31",
+      "kampanya_kosullari": [
+        "Bankamız uygun görmediği başvuruları reddetme, kampanya koşullarını değiştirme, gerekli görmesi halinde ek bilgi ve belge talebinde bulunma ve kampanyayı durdurma hakkını saklı tutar.",
+        "140.000 TL Vadesiz Finansman Kampanyası Detayları 40.000 TL'ye Kadar Vade Farksız Finansman Desteği Tutar: 40.000 TL Vade: 6 aya kadar Kar Payı: Vade Farksız Kullanım Alanları (Sektörler): Mobilya ve Beyaz Eşya, Oto Servis ve Bakım, Teknoloji Marketler, Ulaşım Bileti Alımı, Sağlık, Okul, Kırtasiye, Giyim Başvuru: Yalnızca dijitalden müşteri olanlar."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "odul_miktari"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Model kar payı kısmı ile Finasman Desteği Tutarını karıştırmış",
+      "finansman_tutari": "Model Finasman Tutarı kısmı yerine Puan imkanını almış",
+      "tahsis_ucreti": "Tahsis ücreti yok ama bulamamış",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş puanı yok",
+      "kampanya_suresi": "Kampanya başlangıç tarihini almış ama bitiş tarihini almamış | baslangic=2026-01-01",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "albaraka--ihtiyac-saglik-harcamalariniz-icin",
+    "bank_slug": "albaraka",
+    "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac/saglik-harcamalariniz-icin",
+    "content_hash": "574bd44f4669ec6d43ecca0a6b40c512e22165fa2811674c7199e9246aac6c0e",
+    "text": "Albaraka Mobil Mobil Bankacılık Aç Sağlık Harcamalarınız İçin Anasayfa Bireysel Finansmanlar İhtiyaç Finansmanı Sağlık Harcamalarınız İçin Diş Sağlığı Genel Sağlık Diş Sağlığı Diş sağlığı ile ilgili dolgu, diş temizleme, implant vb. ihtiyaçlarınız için 36 aya varan vade seçenekleriyle kullanabileceğiniz bir ihtiyaç kredisi sizlerle! Detaylı Bilgi Genel Sağlık Yüksek risk içermeyen cerrahi operasyon, fizik tedavi, genel sağlık harcamaları başta olmak üzere muayene gibi sağlık ihtiyaçlarıınız için Genel Sağlık Kredisi alabilirsiniz. Detaylı Bilgi",
+    "campaign_type": "İhtiyaç Finansmanı",
+    "fields": {
+      "vade_ay": 36,
+      "taksit_sayisi": 36,
+      "kampanya_kosullari": [
+        "Genel Sağlık Yüksek risk içermeyen cerrahi operasyon, fizik tedavi, genel sağlık harcamaları başta olmak üzere muayene gibi sağlık ihtiyaçlarıınız için Genel Sağlık Kredisi alabilirsiniz."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "taksit_sayisi": "36 ay ödeme vadesi sunuyor",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "masraf_durumu": "Masraf yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Bilgi metinde var çıkartılamamış",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "albaraka--tasit-finansmani-togg-finansmani",
+    "bank_slug": "albaraka",
+    "source_url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/tasit-finansmani/togg-finansmani",
+    "content_hash": "29d263856a4a13950263a12a1f997b7a4eeaf792543ba5d2182e25424efc3efb",
+    "text": "Albaraka Mobil Mobil Bankacılık Aç Togg Finansmanı Anasayfa Bireysel Finansmanlar Taşıt Finansmanı Togg Finansmanı Taşıt Finansmanı Togg Finansmanı Dijital Araç Finansmanı Deniz Taşıtları Finansmanı Taşıt Kiralama Finansmanı Size En Yakın Şube Albaraka Türk Togg Finansmanı , yerli ve milli üretimi destekleyen anlayışıyla sıfır (0) km Togg sahibi olmak isteyen müşterilerine avantajlı oranlarla taşıt finansmanı imkanı sunuyor. Size En Yakın Şube Katılım bankacılığı esaslarına uygun bu avantajlı finansmanla, siz de Türkiye'nin otomobiline kolayca sahip olun! Togg Finansmanı Nedir? Togg finansmanı, Türkiye'de üretilen %100 elektrikli yerli otomobil Togg için özel olarak sunulan taşıt finansmanı ürünüdür. Albaraka Türk, bu finansmanla bireysel Togg sahibi olmak isteyenlere özel oranlı ödeme planları sunar. Albaraka Türk'te Togg Finansman Başvurusu Nasıl Yapılır? Albaraka Togg finansman başvuruları yalnızca şubelerimizden yapılmaktadır. Sizleri en yakın Albaraka Türk şubesini öğrenmek için \" Albaraka Şubeleri \" sayfasını ziyaret edebilirsiniz. Togg Araç Finansmanı Özellikleri Sadece sıfır kilometre T10X ve T10F modeli Togg araçlar için geçerlidir. Bireysel müşteriler için uygundur. Maksimum 48 aya varan vade imkânı sunar. Proforma fatura tutarına göre %70 'e varan finansman oranı uygulanır. Araç Modeli Vade (Ay) Kredi Tutarı Aylık Kar Oranı T10F V2 12 800.000 0,00% T10F V2 48 1.700.000 2,99% T10X V2 12 600.000 0,00% T10X V2 48 1.700.000 2,99% T10F V1 - T10X V1 48 1.300.000 2,99% T10X V2 4MORE - T10F V2 4MORE 12 1.500.000 0,00% T10X V2 4MORE - T10F V2 4MORE 36 1.500.000 2,99% Başvuru Nasıl Yapılır? İlgili belgelerle birlikte size en yakın Albaraka Türk şubesine başvurarak formu doldurmanız yeterlidir. Daha fazla bilgi için 0850 222 5 666 Alo Albaraka hattını arayabilirsiniz. Sıkça Sorulan Sorular Togg'un tüm araçları için finansman kullanılabilir mi? Evet. Kampanyalı Togg Finansmanı tüm Togg modelleri için geçerlidir. Togg finansmanı için online başvuru yapabilir miyim? Başvurular yalnızca Albaraka Türk şubeleri üzerinden yapılmaktadır. Size en yakın şube için \" Şube ve ATM'ler \" sayfasını ziyeret edebilirsiniz. İkinci el Togg araçlar için bu finansmandan yararlanabilir miyim? Hayır, Kampanyalı Togg Finansmanı yalnızca sıfır kilometre Togg araçlar için geçerlidir. Togg finansmanı marjı nedir? Finansman marjı, proforma fatura tutarına göre değişmekle birlikte en fazla %70'tir. Togg finansmanında en uzun vade süresi nedir? Fatura tutarına bağlı olarak en fazla 48 aya kadar vade sunulmaktadır.",
+    "campaign_type": "Taşıt Finansmanı",
+    "fields": {
+      "finansman_tutari": {
+        "value": 1700000,
+        "currency": "TRY"
+      },
+      "vade_ay": 48,
+      "taksit_sayisi": 48,
+      "kampanya_kosullari": [
+        "Togg Araç Finansmanı Özellikleri Sadece sıfır kilometre T10X ve T10F modeli Togg araçlar için geçerlidir.",
+        "Kampanyalı Togg Finansmanı tüm Togg modelleri için geçerlidir.",
+        "Başvurular yalnızca Albaraka Türk şubeleri üzerinden yapılmaktadır.",
+        "Hayır, Kampanyalı Togg Finansmanı yalnızca sıfır kilometre Togg araçlar için geçerlidir."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Tutar var ama bulunammış | kademeler: 800000/1700000/600000/1700000/1300000/1500000/1500000",
+      "vade_ay": "99 Vade metinde geçmemekte vade 48 ay olarak geçmektedir",
+      "taksit_sayisi": "48 aya kadar vade sunabiliyor metinden çıkarım yapılammış",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "masraf_durumu": "Masraf yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "dunya-katilim--katilma-hesaplari-gunes-katilma-hesabi",
+    "bank_slug": "dunya-katilim",
+    "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/katilma-hesaplari/gunes-katilma-hesabi",
+    "content_hash": "1cbc0b369e8cab68daebffe6d4c3a38aecc68d95dd4d4167c0db65e37956ddc2",
+    "text": "Anasayfa Kendim Için Içerik Hesaplar Katılma Hesapları Güneş Katılma Hesabı Güneş Katılma Hesabı Nedir ? Gündelik tasarruflarınızı değerlendirebildiğiniz günlük açılabilen katılma hesabıdır. Her gün bir adım daha ileri: Güneş Katılma Hesabı, birikimlerinizin yeni adresi ! Gündelik tasarruflarınızı değerlendirmenin kazançlı ve pratik bir yolu olan yeni hesabımız ile tanışabilirsiniz. Günlük açılabilen bu yenilikçi hesap, birikimlerinizi güvenli ve katılım esaslarına uygun bir şekilde değerlendirmenize olanak tanır. Size en yakın şubemizi ziyaret ederek uzman müşteri temsilcilerimizden destek alabilir veya dijital bankacılık kanallarımız üzerinden kolayca işlem gerçekleştirebilirsiniz. Gelişmiş bankacılık çözümlerimiz ile tasarruflarınızı daha verimli bir şekilde yönetebilir ve günlük kazanç elde etme fırsatından faydalanabilirsiniz. Finansal geleceğinizi planlarken bu yeni çözümümüzden yararlanmayı düşünebilirsiniz. 1-30 gün arası kırık vadede açılabilen günlük hesap türüdür. Sadece TL cinsinde açılabilmektedir. Katılma Hesabı açmak için hesabınızda bulunması gereken minimum bakiye 5.000 TL ‘dir. Hesabınızı 17:40 kadar açmanız durumunda vade başlanıç tarihi aynı gün başlamaktadır. 17:40 dan sonra açmanız durumunda vade başlangıç tarihi bir sonraki iş gününden başlamaktadır. Güneş Katılma Hesabı 85/15 Kar paylaşım oranından açılmaktadır. Yurt içi şubelerde, resmi kuruluşlar, kredi kuruluşları ve finansal kuruluşlara ait olanlar haricindeki TL, döviz ve kıymetli maden cinsinden mevduat ve katılım fonları her bir kredi kuruluşunda her bir kişi için, 1 Milyon 200 Bin TL'ye kadar sigorta kapsamındadır. Kâr Payı Hesaplama * Aylık katılma hesabı ortalama 31 gün vade baz alınarak hesaplanmıştır. * Vadesi bugün dolan katılma hesaplarına dağıtılan kâr payı oranı ile hesaplanmıştır. Yeni açılan ve vadesi yenilenen TL Katılma Hesapları yüksek paylaşım oranları üzerinden kar dağıtacaktır. Tüm site ziyaretçilerimizi daha iyi tanımak, sitemizdeki kullanıcı deneyimini kişiselleştirmek ve iyileştirmek için web sitemizde çerezler kullanıyoruz. Çerez ayarlarınızı yönetmek için \"Tercihler\" seçeneğine tıklayabilir, sitemizdeki çerezlerle ilgili detaylı bilgiler için Çerez Aydınlatma Metni 'ni inceleyebilirsiniz. Tercihler Reddet Kabul Et Çerez Ayarları Çerez Politikası Zorunlu Çerezler Bu çerezler, web sitemizin çalışması için gereklidir ve sistemlerimizde kapatılamaz. Bunlar genellikle tarafınızca yapılan ve hizmet talebi anlamına gelen eylemlere yanıt olarak yerleştirilir, örneğin gizlilik tercihlerinizi ayarlamak, oturum açmak ya da formları doldurmak. Tarayıcınızı bu çerezleri engelleyecek ya da bu çerezlerle ilgili olarak size uyarıda bulunacak şekilde ayarlayabilirsiniz, ancak bu durumda sitenizin bazı kısımları çalışmayabilir. Bu çerezler sizi kişisel olarak tanımlayabilecek herhangi bir bilgi saklamamaktadır. İşlevsellik Çerezleri Web sitesi deneyiminizi iyileştirmek amacıyla analitik çerezler kullanılır. Analitik çerezler, web sitesini nasıl kullandığınızı (örn; hangi sayfaları ziyaret ettiğiniz, ziyaret süresi vb.) anlamamızı sağlar. Böylelikle sunduğumuz içerikleri geliştirebilir ya da web sitesi tasarımını değiştirebiliriz. Kişiselleştirilmiş Reklam Çerezleri Bu çerezler reklam partnerlerimiz tarafından sitemiz üzerinden yerleştirilebilir. Bunlar söz konusu şirketler tarafından ilgi alanlarınızın bir profilini oluşturmak ve size diğer sitelerdeki ilgili reklamları göstermek amacıyla kullanılabilir ve paylaşılabilir. Bu işlem, tarayıcınızı ve internet cihazınızı benzersiz biçimde tanımlamaya dayalıdır. Bu çerezlere izin vermediğiniz takdirde, hedefli reklamları daha az görebileceksiniz. ÇEREZ KULLANIMINA İLİŞKİN AYDINLATMA METNİ 1. Giriş Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun (\"Kanun\") 10'uncu maddesi, Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ (\"Tebliğ\") ve Çerez Uygulamaları Hakkında Rehber (\"Rehber\") kapsamında veri sorumlusu sıfatıyla Dünya Katılım Bankası A.Ş. tarafından hazırlanmıştır. Bu Çerez Aydınlatma Metni, internet sitemiz ziyaret edildiğinde kullanılan çerezler aracılığıyla toplanan kişisel verilerin işlenmesi, çerezlerin hangi amaçlarla ve hangi tür çerezlerin kullanıldığı konusunda bilgi sağlamanması, bu çerezleri nasıl yönetebileceğiniz hakkında rehberlik edilmesi amacıyla hazırlanmıştır. 2. Çerez Nedir ve Neden Kullanılmaktadır? Çerezler, bir internet sitesini ziyaret ettiğinizde bilgisayarınıza veya diğer internet bağlantılı cihazlara (örneğin, akıllı telefonlar veya tabletler) yerleştirilebilen dosyalar veya bilgi parçalarıdır. Başka bir deyişle, çerezler internet siteleri veya mobil uygulamalar gibi çevrim içi platformları kullanırken, cihazınıza yerleştirilen küçük metin dosyalarıdır. Çerezler, kullanıcılara kişiselleştirilmiş içerik sunmanın yanı sıra, internet sitesinin daha verimli ve etkin bir şekilde çalışmasını sağlamaktadır. Sizlere daha iyi bir ziyaret deneyimi sunmak için kullanıcının kişisel tercihlerine ve ihtiyaçlarına uygun içerikleri sunmaktadır. Önemli bir nokta olarak, çerezler sadece internet geçmişinizle ilgili bilgiler içermekte ve cihazınızda depolanan dosyalara erişim sağlayamamaktadır. Ayrıca, çerezler hizmetlerimizi sizin ilgi ve ihtiyaçlarınıza uygun hale getirmek için kullanılabilmektedir. Bu sayede, gelecekte internet sitelerimizi ziyaret ettiğinizde daha hızlı ve kişiselleştirilmiş deneyimler yaşamanız sağlanmaktadır. 3. Çerez Türleri Nelerdir? Taraflarına göre çerezler: Birinci Taraf Çerezleri: Kullanıcılarca oluşturularak internet sitesine konulan ve banka kontrolünde olan çerezlerdir. Üçüncü Taraf Çerezleri: İşbirliği yaptığımız üçüncü taraf firmalar tarafından oluşturulan ve yönetilen çerezlerdir. Saklama süresine göre çerezler: Oturum Çerezleri: Kullanıcıların sadece tarayıcıları açıkken mevcut olan ve tarayıcı kapanınca silinen çerez tipidir. Kalıcı Çerezler: Kullanıcıların tarayıcısı kapandıktan sonra belirli bir sona erme tarihine kadar kalıcı olan çerez türüdür. Yeniden web sitesi ziyaret edildiğinde bu çerezler aktif olur ve aynı bilgisayardan yapılan ziyareti tespit edebilmek amacıyla kullanılmaktadır. Kullanım amaçlarına göre çerezler a.Zorunlu Çerezler Bu çerezler internet sitesinin doğru ve etkin çalışmasını sağlamak amaçlarıyla kesinlikle gerekli olan çerezlerdir. Bu çerezler kaldırılırsa veya engellenirse internet sitesi kısmen veya tamamen belli işlevlerini yitirebilmektedir. b.İşlevsel Çerezler Web sitesinde kullanılan kişiselleştirme ve tercihlerin hatırlanması amaçları ile kullanılan çerezlerdir. Bu çerezler zorunlu çerezler dışında kalan işlevsellikleri sağlama amacıyla kullanılmaktadır. c.Performans - Analitik Çerezler İnternet sitelerinde kullanıcıların davranışlarını analiz etmek amacıyla istatistiki ölçümüne imkân veren çerezlerdir. Bu çerezler, sitenin iyileştirilmesi için sıklıkla kullanılmakta olup bu duruma reklamların ilgili kişiler üzerindeki etkisinin ölçümü de dâhildir. İnternet sitesi sahipleri tarafından, ziyarete yönelik ölçüm yapmak, analiz etmek ve tahminde bulunmak ile bir internet sayfasına götüren en önemli arama motoru anahtar kelimelerini tespit etmek için kullanılabilmektedir. d.Reklam / Pazarlama Çerezleri Reklam ve pazarlama amaçlı çerezler ile internet ortamında kullanıcıların çevrim içi hareketleri takip edilerek kişisel ilgi alanları saptanıp bu ilgi alanlarına yönelik internet ortamında kullanıcılara reklam gösterilmesi her durumda aynı reklamların sürekli tekrarlanmasının engellemesi, reklamların düzgün bir şekilde gösterilmesi sağlanabilmektedir. Bu çerezlerin kullanılmasındaki amaç kullanıcıya geliştirilmiş ve kişisel bir deneyim sunulabilmesidir. 4.Sitemizde Kullanılan Çerez Türleri Aşağıda İnternet Sitesinde kullandığımız farklı türdeki çerezlere yer verilmiştir. Zorunlu Çerezler Çerez Adı Sağlayıcı Kullanım amacı Kullanım Süresi CultureInfo Banka Ziyaretçilerin internet site sayfalarını hangi dil kullandığını gösterir. Oturum süresince .AspNetCore.Session Banka Ziyaretçilere atanmış benzersiz bir kimlik numarasını gösterir Oturum süresince Performans ve Analitik Çerezleri Çerez Adı Sağlayıcı Kullanım amacı Kullanım Süresi _ga_XXXXXXXXX Google Analytics Tracking Google Analytics tarafından ziyaretçilerin İnternet Sitesini ziyaret sıklığına ve ziyaret zamanlarına ilişkin bilgi toplamak amacıyla kullanılan çerezdir. 1 yıl 5.Kişisel Veri Sahibi Olarak Haklarınız Nelerdir? Kişisel veri sahipleri Kanunun \"ilgili kişinin haklarını düzenleyen\" 11'inci maddesi kapsamında aşağıda listeli haklara sahiptir. Kişisel veri işlenip işlenmediğini öğrenme Kişisel verileri işlenmişse buna ilişkin bilgi talep etme Kişisel verilerin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme Yurt içinde veya yurt dışında kişisel verilerin aktarıldığı üçüncü kişileri bilme Kişisel verilerin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme Kanun ve ilgili diğer kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren sebeplerin ortadan kalkması hâlinde kişisel verilerin silinmesini veya yok edilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme İşlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle kişinin kendisi aleyhine bir sonucun ortaya çıkmasına itiraz etme Kişisel verilerin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması hâlinde zararın giderilmesini talep etme Yukarıda belirtilen haklarınızı kullanmak için; Kimlik tespiti yapılarak şubelerimiz aracılığıyla Kimlik doğrulaması gerçekleştirilerek Dijital Kanallarımız ya da Çağrı Merkezimiz üzerinden Yamanevler Mah. Ahmet Tevfik İleri Cad. 4B PLAZA No:26 KAT:15-16-17 Ümraniye / İSTANBUL adresine noter kanalıyla dunyakatilim@hs01.kep.tr adresine güvenli elektronik imzalı olarak Bankamız sisteminde kayıtlı bulunan elektronik posta adresinizi kullanarak taleplerinizi bankamıza iletebilirsiniz. Başvuruda; a) ad, soyadı ve başvuru yazılı ise imza b) Türkiye Cumhuriyeti vatandaşları için T.C. kimlik numarası, yabancılar için uyruğu, pasaport numarası veya varsa kimlik numarası c) tebligata esas yerleşim yeri veya iş yeri adresi ç) varsa bildirime esas elektronik posta adresi, telefon ve faks numarası d) talep konusu bulunmalıdır. Talebiniz en kısa sürede ve en geç otuz (30) gün içinde ücretsiz olarak sonuçlandırılmaktadır. Başvurunuza yönelik işlemlerin ayrı bir maliyeti gerektirmesi hâlinde, Kurul tarafından belirlenen tarifedeki ücret tarafınıza yansıtabilmektedir. Tercihlerimi Kaydet",
+    "campaign_type": "Yatırım Ürünü",
+    "fields": {
+      "kar_payi_orani": {
+        "min": 15.0,
+        "max": 85.0
+      },
+      "vade_ay": 1,
+      "masraf_durumu": {
+        "has_fee": false,
+        "amount": 0.0
+      },
+      "kampanya_kosullari": [
+        "Sadece TL cinsinde açılabilmektedir.",
+        "Katılma Hesabı açmak için hesabınızda bulunması gereken minimum bakiye 5.000 TL ‘dir."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Metinde bilgisi kesirli (85/15) şeklinde yazılmış",
+      "finansman_tutari": "Finasman tutarı yok Yatırım hesabı",
+      "vade_ay": "Vade olarak Günlük (1) değerlendirilir Çerezler kısmındaki 1 yıl yazısını 12 ay vade olarak işaretlemiş",
+      "taksit_sayisi": "Tahsis ücretine dair bir bilgi yoktur Yatırım hesabıdır",
+      "tahsis_ucreti": "Tahsis ücreti yok ama bulamamış",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok Yatırım hesabıdır",
+      "alisveris_puani": "Alışveriş puanı yok Yatırım hesabıdır",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "dunya-katilim--kendim-icin-altin-bankaciligi",
+    "bank_slug": "dunya-katilim",
+    "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi",
+    "content_hash": "648f3daeafea257760cae47d188da476adce38f7f2db015ab74320cea911ef6e",
+    "text": "Anasayfa Kendim Için Içerik Altın Bankacılığı Altın Bankacılığı Altın Hesapları Fiziki Altın Alımı Altın Hesapları Altın Cari Hesabı Altın Cari Hesabı, tasarruflarınızı altın olarak değerlendirilmesini sağlayan vadesiz bir hesap türüdür. Detaylı Bilgi Altın Katılma Hesabı Dünya Katılım ile Altınlarınız Değer Kazansın! Detaylı Bilgi ATOM Tasarruf sahiplerinin her türlü işlenmiş ziynet, hurda ve muhtelif altınlarını, hiçbir değer kaybına uğramadan ATOM Sistemi üzerinden banka hesaplarına aktarabildikleri bir süreçtir. Detaylı Bilgi Fiziki Altın Alımı Dijitalden Fiziki Altın Dünya Katılım'dan sipariş verin, altınlarınız kapınıza gelsin! Detaylı Bilgi Tüm site ziyaretçilerimizi daha iyi tanımak, sitemizdeki kullanıcı deneyimini kişiselleştirmek ve iyileştirmek için web sitemizde çerezler kullanıyoruz. Çerez ayarlarınızı yönetmek için \"Tercihler\" seçeneğine tıklayabilir, sitemizdeki çerezlerle ilgili detaylı bilgiler için Çerez Aydınlatma Metni 'ni inceleyebilirsiniz. Tercihler Reddet Kabul Et Çerez Ayarları Çerez Politikası Zorunlu Çerezler Bu çerezler, web sitemizin çalışması için gereklidir ve sistemlerimizde kapatılamaz. Bunlar genellikle tarafınızca yapılan ve hizmet talebi anlamına gelen eylemlere yanıt olarak yerleştirilir, örneğin gizlilik tercihlerinizi ayarlamak, oturum açmak ya da formları doldurmak. Tarayıcınızı bu çerezleri engelleyecek ya da bu çerezlerle ilgili olarak size uyarıda bulunacak şekilde ayarlayabilirsiniz, ancak bu durumda sitenizin bazı kısımları çalışmayabilir. Bu çerezler sizi kişisel olarak tanımlayabilecek herhangi bir bilgi saklamamaktadır. İşlevsellik Çerezleri Web sitesi deneyiminizi iyileştirmek amacıyla analitik çerezler kullanılır. Analitik çerezler, web sitesini nasıl kullandığınızı (örn; hangi sayfaları ziyaret ettiğiniz, ziyaret süresi vb.) anlamamızı sağlar. Böylelikle sunduğumuz içerikleri geliştirebilir ya da web sitesi tasarımını değiştirebiliriz. Kişiselleştirilmiş Reklam Çerezleri Bu çerezler reklam partnerlerimiz tarafından sitemiz üzerinden yerleştirilebilir. Bunlar söz konusu şirketler tarafından ilgi alanlarınızın bir profilini oluşturmak ve size diğer sitelerdeki ilgili reklamları göstermek amacıyla kullanılabilir ve paylaşılabilir. Bu işlem, tarayıcınızı ve internet cihazınızı benzersiz biçimde tanımlamaya dayalıdır. Bu çerezlere izin vermediğiniz takdirde, hedefli reklamları daha az görebileceksiniz. ÇEREZ KULLANIMINA İLİŞKİN AYDINLATMA METNİ 1. Giriş Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun (\"Kanun\") 10'uncu maddesi, Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ (\"Tebliğ\") ve Çerez Uygulamaları Hakkında Rehber (\"Rehber\") kapsamında veri sorumlusu sıfatıyla Dünya Katılım Bankası A.Ş. tarafından hazırlanmıştır. Bu Çerez Aydınlatma Metni, internet sitemiz ziyaret edildiğinde kullanılan çerezler aracılığıyla toplanan kişisel verilerin işlenmesi, çerezlerin hangi amaçlarla ve hangi tür çerezlerin kullanıldığı konusunda bilgi sağlamanması, bu çerezleri nasıl yönetebileceğiniz hakkında rehberlik edilmesi amacıyla hazırlanmıştır. 2. Çerez Nedir ve Neden Kullanılmaktadır? Çerezler, bir internet sitesini ziyaret ettiğinizde bilgisayarınıza veya diğer internet bağlantılı cihazlara (örneğin, akıllı telefonlar veya tabletler) yerleştirilebilen dosyalar veya bilgi parçalarıdır. Başka bir deyişle, çerezler internet siteleri veya mobil uygulamalar gibi çevrim içi platformları kullanırken, cihazınıza yerleştirilen küçük metin dosyalarıdır. Çerezler, kullanıcılara kişiselleştirilmiş içerik sunmanın yanı sıra, internet sitesinin daha verimli ve etkin bir şekilde çalışmasını sağlamaktadır. Sizlere daha iyi bir ziyaret deneyimi sunmak için kullanıcının kişisel tercihlerine ve ihtiyaçlarına uygun içerikleri sunmaktadır. Önemli bir nokta olarak, çerezler sadece internet geçmişinizle ilgili bilgiler içermekte ve cihazınızda depolanan dosyalara erişim sağlayamamaktadır. Ayrıca, çerezler hizmetlerimizi sizin ilgi ve ihtiyaçlarınıza uygun hale getirmek için kullanılabilmektedir. Bu sayede, gelecekte internet sitelerimizi ziyaret ettiğinizde daha hızlı ve kişiselleştirilmiş deneyimler yaşamanız sağlanmaktadır. 3. Çerez Türleri Nelerdir? Taraflarına göre çerezler: Birinci Taraf Çerezleri: Kullanıcılarca oluşturularak internet sitesine konulan ve banka kontrolünde olan çerezlerdir. Üçüncü Taraf Çerezleri: İşbirliği yaptığımız üçüncü taraf firmalar tarafından oluşturulan ve yönetilen çerezlerdir. Saklama süresine göre çerezler: Oturum Çerezleri: Kullanıcıların sadece tarayıcıları açıkken mevcut olan ve tarayıcı kapanınca silinen çerez tipidir. Kalıcı Çerezler: Kullanıcıların tarayıcısı kapandıktan sonra belirli bir sona erme tarihine kadar kalıcı olan çerez türüdür. Yeniden web sitesi ziyaret edildiğinde bu çerezler aktif olur ve aynı bilgisayardan yapılan ziyareti tespit edebilmek amacıyla kullanılmaktadır. Kullanım amaçlarına göre çerezler a.Zorunlu Çerezler Bu çerezler internet sitesinin doğru ve etkin çalışmasını sağlamak amaçlarıyla kesinlikle gerekli olan çerezlerdir. Bu çerezler kaldırılırsa veya engellenirse internet sitesi kısmen veya tamamen belli işlevlerini yitirebilmektedir. b.İşlevsel Çerezler Web sitesinde kullanılan kişiselleştirme ve tercihlerin hatırlanması amaçları ile kullanılan çerezlerdir. Bu çerezler zorunlu çerezler dışında kalan işlevsellikleri sağlama amacıyla kullanılmaktadır. c.Performans - Analitik Çerezler İnternet sitelerinde kullanıcıların davranışlarını analiz etmek amacıyla istatistiki ölçümüne imkân veren çerezlerdir. Bu çerezler, sitenin iyileştirilmesi için sıklıkla kullanılmakta olup bu duruma reklamların ilgili kişiler üzerindeki etkisinin ölçümü de dâhildir. İnternet sitesi sahipleri tarafından, ziyarete yönelik ölçüm yapmak, analiz etmek ve tahminde bulunmak ile bir internet sayfasına götüren en önemli arama motoru anahtar kelimelerini tespit etmek için kullanılabilmektedir. d.Reklam / Pazarlama Çerezleri Reklam ve pazarlama amaçlı çerezler ile internet ortamında kullanıcıların çevrim içi hareketleri takip edilerek kişisel ilgi alanları saptanıp bu ilgi alanlarına yönelik internet ortamında kullanıcılara reklam gösterilmesi her durumda aynı reklamların sürekli tekrarlanmasının engellemesi, reklamların düzgün bir şekilde gösterilmesi sağlanabilmektedir. Bu çerezlerin kullanılmasındaki amaç kullanıcıya geliştirilmiş ve kişisel bir deneyim sunulabilmesidir. 4.Sitemizde Kullanılan Çerez Türleri Aşağıda İnternet Sitesinde kullandığımız farklı türdeki çerezlere yer verilmiştir. Zorunlu Çerezler Çerez Adı Sağlayıcı Kullanım amacı Kullanım Süresi CultureInfo Banka Ziyaretçilerin internet site sayfalarını hangi dil kullandığını gösterir. Oturum süresince .AspNetCore.Session Banka Ziyaretçilere atanmış benzersiz bir kimlik numarasını gösterir Oturum süresince Performans ve Analitik Çerezleri Çerez Adı Sağlayıcı Kullanım amacı Kullanım Süresi _ga_XXXXXXXXX Google Analytics Tracking Google Analytics tarafından ziyaretçilerin İnternet Sitesini ziyaret sıklığına ve ziyaret zamanlarına ilişkin bilgi toplamak amacıyla kullanılan çerezdir. 1 yıl 5.Kişisel Veri Sahibi Olarak Haklarınız Nelerdir? Kişisel veri sahipleri Kanunun \"ilgili kişinin haklarını düzenleyen\" 11'inci maddesi kapsamında aşağıda listeli haklara sahiptir. Kişisel veri işlenip işlenmediğini öğrenme Kişisel verileri işlenmişse buna ilişkin bilgi talep etme Kişisel verilerin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme Yurt içinde veya yurt dışında kişisel verilerin aktarıldığı üçüncü kişileri bilme Kişisel verilerin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme Kanun ve ilgili diğer kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren sebeplerin ortadan kalkması hâlinde kişisel verilerin silinmesini veya yok edilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme İşlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle kişinin kendisi aleyhine bir sonucun ortaya çıkmasına itiraz etme Kişisel verilerin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması hâlinde zararın giderilmesini talep etme Yukarıda belirtilen haklarınızı kullanmak için; Kimlik tespiti yapılarak şubelerimiz aracılığıyla Kimlik doğrulaması gerçekleştirilerek Dijital Kanallarımız ya da Çağrı Merkezimiz üzerinden Yamanevler Mah. Ahmet Tevfik İleri Cad. 4B PLAZA No:26 KAT:15-16-17 Ümraniye / İSTANBUL adresine noter kanalıyla dunyakatilim@hs01.kep.tr adresine güvenli elektronik imzalı olarak Bankamız sisteminde kayıtlı bulunan elektronik posta adresinizi kullanarak taleplerinizi bankamıza iletebilirsiniz. Başvuruda; a) ad, soyadı ve başvuru yazılı ise imza b) Türkiye Cumhuriyeti vatandaşları için T.C. kimlik numarası, yabancılar için uyruğu, pasaport numarası veya varsa kimlik numarası c) tebligata esas yerleşim yeri veya iş yeri adresi ç) varsa bildirime esas elektronik posta adresi, telefon ve faks numarası d) talep konusu bulunmalıdır. Talebiniz en kısa sürede ve en geç otuz (30) gün içinde ücretsiz olarak sonuçlandırılmaktadır. Başvurunuza yönelik işlemlerin ayrı bir maliyeti gerektirmesi hâlinde, Kurul tarafından belirlenen tarifedeki ücret tarafınıza yansıtabilmektedir. Tercihlerimi Kaydet",
+    "campaign_type": "Yatırım Ürünü",
+    "fields": {
+      "masraf_durumu": {
+        "has_fee": false,
+        "amount": 0.0
+      }
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "Vade metinde yer almamaktadır, KVKK metindeki 1 yıl süresini 12 ay olarak kullanmış",
+      "taksit_sayisi": "Taksit Sayısı bilgisi yok",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Koşul Bilgisi metinde yok",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "kuveyt-turk--altin-hesaplari-altina-altin-katilma-hesabi",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/kendim-icin/altin-bankaciligi/altin-hesaplari/altina-altin-katilma-hesabi",
+    "content_hash": "037fd4ed8b2d0bd2d487cde0c23e797207f241db438d8eb0a9abe3183109ed90",
+    "text": "Ana Sayfa Kendim İçin Altın Bankacılığı Altın Hesapları Altına Altın Katılma Hesabı Altın Cari Hesabı Çeyrek Altın Hesabı Altına Altın Katılma Hesabı Ziynet Altın Katılma Hesabı Birikimli Altın Katılma Hesabı Altına Altın Katılma Hesabı Altına Altın Katılma Hesabı'nı farklı vade seçenekleriyle açıp faizsiz kazanç elde edebilirsiniz. Altına Altın Katılma Hesabı Nedir? Altından kâr payı alarak faizsiz getiri elde etme olanağını Altına Altın Katılma Hesabı ile yakalayabilirsiniz. Altına Altın Katılma Hesabı açarak hem tasarruf hem de faizsiz kazanç elde etme olanağı bulabilirsiniz. Yatırımlarınızı değerlendirirken Canlı Altın Fiyatları ile piyasayı anlık takip edebilirsiniz. Altına Altın Katılma Hesabı Nasıl Açılır? Altına Altın Hesabı açmak için Kuveyt Türklü olmanız yeterlidir. Henüz Kuveyt Türklü değilseniz Kuveyt Türk Mobil 'i indirerek hemen müşterimiz olabilirsiniz. Altına Altın Katılma Hesabı'nızı Kuveyt Türk Mobil , İnternet Şube ve tüm Kuveyt Türk şubelerinden açabilirsiniz. Altına Altın Katılma Hesabı Kar Payı Hesaplama Aracı Net Kâr Brüt Kâr Net Oran (Yıllık) Brüt Oran (Yıllık) Kur Farkı Ödemesi Yuvam Hesap İlave Getiri Milyem Farkı Peşin Ek Ödeme 0,00 TL 0,00 TL %0 %0 - - - - Hesap Aç Altına Altın Katılma Hesabı Özellikleri Hesabınıza yatırdığınız her gram altın, reel sektörde değerlendirilir. Bu süreçte elde edilen kâr, size yine altın olarak geri döner. 1 ay vadeli Altına Altın Katılma Hesabı'nı, 100 gram altın ile açabilirsiniz. 3 ay ila 1 yıl arasında istediğiniz vade seçeneği ile hesabınızın açılabilmesi için belirlenen minimum limit 50 gramdır. Bakiye aylık vade için 100, diğer vade seçeneklerinde ise 50 gramın altına düşmeyecek şekilde hesabınızdan altın çekebilir veya bozdurabilirsiniz. Minimum bakiye koşuluna uygun olarak yapılacak çekim veya bozdurma işlemi, hesabınızın vadesini bozmaz. Kalan bakiye üzerinden kâr payı almaya devam edersiniz. Vade tarihinde tahakkuk eden kâr, hesap sahibi ile kurum arasında %40'a %60 şeklinde paylaşılır. Altına Altın Katılma Hesabı'nda her vade için stopaj oranı %15'tir. Altına Altın Katılma Hesabı Açmak İçin Hangi Kanallar Kullanılabilir? Kuveyt Türk Mobil Kuveyt Türk İnternet Şube Kuveyt Türk şubeleri Altına Altın Katılma Hesabı Hakkında Sıkça Sorulan Sorular Altına Altın Hesabı'ndan fiziksel altın çekilebilir mi? Minimum bakiye limitlerine bağlı kalınması koşulu ile vade bozulmadan hesaptan fiziksel altın teslim işlemleri için Kuveyt Türk şubelerine başvurabilirsiniz. Tarafınıza yansıtılacak olan fiziki altın teslim ücretlerine ilgili tablodan erişebilirsiniz. Detaylı bilgi için Ürün ve Hizmet Ücretleri sayfamızı inceleyiniz. Şubelerimizin stok durumu değişkenlik gösterebileceğinden ötürü fiziki altın taleplerinizde detaylı bilgi için şubemiz ile iletişime geçmenizi öneririz. Altına Altın Katılma Hesabı kâr payı oranı nedir? Hesabın kâr payı oranı %40'a %60'dır. Altına Altın Katılma Hesabı hangi vadelerde açılabilir? Hesap açılışı esnasından 1-12 ay arasından dilediğiniz vade süresini tercih edebilirsiniz. Altına Altın Katılma Hesabı caiz mi? Altına altın Katılma Hesabı, faizsiz kazanç sağlamak üzere oluşturulmuş bir katılım bankacılığı ürünüdür. Hesaba yönelmenin İslami koşullara göre herhangi bir sakıncası yoktur. Uygulamayı İndir QR Kodunu Okut",
+    "campaign_type": "Yatırım Ürünü",
+    "fields": {
+      "kar_payi_orani": 40.0,
+      "vade_ay": 12,
+      "kampanya_kosullari": [
+        "3 ay ila 1 yıl arasında istediğiniz vade seçeneği ile hesabınızın açılabilmesi için belirlenen minimum limit 50 gramdır.",
+        "Minimum bakiye koşuluna uygun olarak yapılacak çekim veya bozdurma işlemi, hesabınızın vadesini bozmaz.",
+        "Minimum bakiye limitlerine bağlı kalınması koşulu ile vade bozulmadan hesaptan fiziksel altın teslim işlemleri için Kuveyt Türk şubelerine başvurabilirsiniz.",
+        "Hesaba yönelmenin İslami koşullara göre herhangi bir sakıncası yoktur."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi"
+    ],
+    "hard_tags": [
+      "kosullu_aralik"
+    ],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": true,
+    "notes": {
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "100 grama kadar 1 ay , 100 gram üstünde 3 ay ile 12 ay vade imkanı | kademeli: 100 gr'a kadar 1 ay, ustu 3-12 ay #kosullu_aralik",
+      "taksit_sayisi": "Taksit Sayısı bilgisi yok",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "kuveyt-turk--finansmanlar-ihtiyac-finansmanlari",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/ihtiyac-finansmanlari",
+    "content_hash": "fdde9806f0fbe9c2938b3ea07f5430cd150e7c8d6bdd582cc5c1ba87f4aecf8f",
+    "text": "Ana Sayfa Kendim İçin Finansmanlar İhtiyaç Finansmanları Konut Finansmanları Araç Finansmanları Alışveriş Finansmanları İhtiyaç Finansmanları Sürdürülebilir Finansmanlar İhtiyaç Finansmanları Hac-Umre Finansmanı Hac ve umre ziyaretleriniz için finansman arayışınızda cazip geri ödeme koşulları ile Kuveyt Türk her daim sizinle! Eğitim Finansmanı Alternatif finansman oranları avantajını bünyesinde barındıran Eğitim Finansmanı'na 36 aya kadar vade seçenekleri ile başvurabilirsiniz. Seyahat Finansmanı Seyahat Finansmanı aracılığıyla dünyanın dört bir yanına bütçe sıkıntısı yaşamadan seyahat edebilirsiniz. Tekne Tüketici Finansmanı 36 aya kadar vade ve uygun kar payı oranları ile tekne sahibi olmak için Kuveyt Türk Mobil'den Tekne Tüketici Finansmanı'na başvurabilirsiniz. Kira Finansmanı Kuveyt Türk Mobil üzerinden hızlıca başvuru yapabileceğiniz Kira Finansmanı aracılığıyla kiranızı toplu ödeme konforunu yaşayabilirsiniz. İhtiyaç Kart Dilediğiniz an finansman ihtiyacınızı karşılayan İhtiyaç Kart'a Kuveyt Türk Mobil ile kolayca sahip olabilirsiniz. Bisiklet Finansmanı Sürdürülebilir yaşam, Sürdürülebilir Gelecek! Elektrikli Araç Şarj Ünitesi Finansmanı Sürdürülebilir yaşam, Sürdürülebilir Gelecek! Kazançlı Fon Finansmanı İhtiyaçlarınız için harcama yaparken aynı zamanda da yatırım yapabileceğiniz Finansman: Kazançlı Fon Finansmanı! Uygulamayı İndir QR Kodunu Okut",
+    "campaign_type": "İhtiyaç Finansmanı",
+    "fields": {
+      "taksit_sayisi": 36
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "vade_ay"
+    ],
+    "notes": {
+      "kar_payi_orani": "Uygun kar payı oranı yazmaktadır ve burada sayısal değer belirtilmemiştir",
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "Birden fazla İhtiyaç Finansmanı ürünü aynı metinde geçiyor",
+      "taksit_sayisi": "Birden fazla İhtiyaç Finansmanı ürünü aynı metinde geçiyor  ve taksit yerine vade tutarı var",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Birden fazla İhtiyaç Finansmanı ürünü aynı metinde geçiyor",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "kuveyt-turk--kampanya-arsivi-business-plus-karttan-vade-farksiz-3-taksit-imkani",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-karttan-vade-farksiz-3-taksit-imkani",
+    "content_hash": "0f291bbb2665c02d1ef3c4f3e780047fbc50ef21a440662880041f26a2812de8",
+    "text": "Ana Sayfa Kampanyalar Kampanya Arşivi Business Plus Kart'tan Vade Farksız 3 Taksit İmkânı! Business Plus Kartınız ile yapacağınız alışverişinize vade farksız 3 taksit fırsatı! Kampanya Tarihleri 1.07.2023 - 31.08.2023 Kampanya Süresi Doldu! Kampanyayı Paylaş Facebook'da paylaş X'de paylaş LinkedIn'de paylaş Whatsapp'da paylaş Business Plus Kart ile her ekstre döneminizde yapacağınız 10.000₺ ile 50.000₺ arası tek çekim işlemlerinizi vade farksız olarak 3 aya kadar sonradan taksitlendirin! Kampanya her ekstre döneminde aktif olacaktır. Kampanyaya sadece Business Plus kartlarımız dahildir. Belirtilen kampanya dönemi içerisinde; Business Plus kartlar ile yapılacak 10.000₺ ile 50.000 ₺ arası tek çekim taksitsiz/ötelemesiz harcama, yasal/mevzuatsal taksit sınırları çerçevesinde 3 aya kadar vade farksız olarak sonradan taksitlendirilebilmektedir. Bir müşteri kampanya süresince en fazla 1 işlemini taksitlendirebilir. İşlemden önce kart üzerindeki taksit ve öteleme sayısının 0 olması gerekmektedir. Sonradan taksitlendirme hizmetinden ücret veya herhangi bir vade farkı alınmamaktadır. Taksitlendirmeye uygun işlemlerinizi Kuveyt Türk Mobil içerisindeki kart işlemleri – dönem içi işlemler menüsünden taksitlendir butonuyla vade farksız 2 ile 3 taksit arasında taksitlendirebilirsiniz. Dönem içi hareketleri yansımış harcamalar için sonradan taksitlendirme işlemi yapılabilmektedir. Ekstreleşmiş ya da gün sonu alınmamış (bekleyen provizyondaki) işlemler sonradan taksitlendirilememektedir. Taksitlendirilmiş bir işlem için tekrar taksitlendirme talebi alınamamaktadır. Kampanya, yasal ve mevzuatsal düzenlemeler gereği taksite uygun olmayan alışveriş yerlerinde ve harcama kategorilerinde geçerli değildir. Sonradan taksitlendirilmiş işlemin Kuveyt Türk Çağrı Merkezi üzerinden erken kapaması yapılabilmektedir. Kuveyt Türk önceden haber vermeden kampanya koşullarında değişiklik yapabilir ya da kampanyayı sonlandırabilir.",
+    "campaign_type": "Kart",
+    "fields": {
+      "vade_ay": 3,
+      "taksit_sayisi": 3,
+      "kampanya_suresi": "2023-08-31",
+      "kampanya_kosullari": [
+        "Kampanyaya sadece Business Plus kartlarımız dahildir.",
+        "İşlemden önce kart üzerindeki taksit ve öteleme sayısının 0 olması gerekmektedir.",
+        "Kuveyt Türk önceden haber vermeden kampanya koşullarında değişiklik yapabilir ya da kampanyayı sonlandırabilir."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül değil {\"currency\": \"TRY\", \"value\": 50000.0} ile {\"currency\": \"TRY\", \"value\": 10000.0} arasına 1-3 taksit seçeneği sunuyor",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya başlangıç tarihini almış ama bitiş tarihini almamış | baslangic=2023-07-01",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "kuveyt-turk--leasing-leasing-sureci-ve-hesaplama-araci",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/isim-icin/leasing/leasing-sureci-ve-hesaplama-araci",
+    "content_hash": "be7ab550d071953f5acfe4d78ff09208b9e62145db3ae3f0d217ec7189a7f339",
+    "text": "Ana Sayfa İşim İçin Leasing Leasing Süreci ve Hesaplama Aracı Leasing Nedir? Avantajları Nelerdir? Leasing Süreci ve Hesaplama Aracı Sürdürülebilir Ürünlerimiz Leasing Finansman Ürünlerimiz Leasing'e Konu Ürünler ve KDV Oranları Teşvikli İşlemler Leasing Hakkında Sıkça Sorulan Sorular Leasing Süreci ve Hesaplama Aracı Leasing avantajlarına sahip pek çok ürün için uzun vade ve uygun kar oranları sizleri bekliyor, hesaplama yapmak için hemen tıklayınız. Hesaplama Yap Hemen Başvur Leasing başvuru sürecini hızlıca tamamlama fırsatından Kuveyt Türk farkıyla yararlanın! Kimler Leasing Yapabilir? Hizmet ya da mal üretimi amacıyla faaliyette olan ve aşağıda sıralanan ticari oluşumlar, Kuveyt Türk şubeleri aracılığıyla leasing başvurusunda bulunabilir. Henüz Kuveyt Türk müşterisi değilseniz, Kuveyt Türk Mobil 'i indirerek müşterimiz olabilirsiniz. Anonim ve Limited Şirketler Şahıs Firmaları Kolektif Şirketler Serbest Meslek Sahipleri Ortak Girişimler Leasing Nasıl Yapılır? Kiralamak istediğiniz malı seçin ve bankamıza başvurun. Başvurunuzu takiben nakit akışınıza uygun ödeme planı tarafınıza sunulur. Teklifi uygun bulduğunuz takdirde proforma fatura, başvuru formu ve diğer gerekli evrakları şubemize teslim edin. Leasing başvurunuz değerlendirilir ve sonuç en kısa sürede size iletilir. Leasing sözleşmesi imzalanarak operasyon süreci başlatılır. Sözleşmeye konu mal size teslim edildikten sonra Kuveyt Türk ödemeyi satıcıya yapar. Sözleşme süresi boyunca kiralarınızı öder ve süre sonunda isterseniz malı devralırsınız. Leasing Hesaplama Aracı Leasing ile ilgili hesaplamalarınızı, aşağıda yer alan araç vasıtasıyla hızlı ve kolay yapabilirsiniz. Kira Tutarı KDV Dahil Toplam Tutar Aylık Kâr Oranı Kira Planı Kira Planı Taksit No Döviz Cinsi Vade Tarihi Kira Tutarı Ana Para Kâr Tutarı KDV Tutarı Kalan Ana Para",
+    "campaign_type": "Finansman",
+    "fields": {
+      "hedef_kitle": [
+        "belirli_segment"
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "Vade bilgisi yok",
+      "taksit_sayisi": "Taksit Sayısı bilgisi yok",
+      "tahsis_ucreti": "Tahsis ücretine dair bir bilgi yoktur",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok Bu Finasman Ürünüdür",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Kampanya koşulu değil işlem talimatıdır",
+      "hedef_kitle": "Serbest meslek sahipleri için"
+    }
+  },
+  {
+    "id": "tom-katilim--hesaplama-araclari",
+    "bank_slug": "tom-katilim",
+    "source_url": "https://www.tombank.com.tr/hesaplama-araclari.html",
+    "content_hash": "10dffa498fc4528004a804460d5479f73b88e2a4c0426a758f92b6f403dc62af",
+    "text": "Hesaplama Araçları Finansman Hesaplama TKTCDGRFNS TKTCDGRFNS TKTCDGRFNS Finansman Tutarı TL 5.000 TL 150.000 TL Vade Ay 1 Ay 36 Ay Hesapla Aylık Kâr Oranı: 3,99 % Taksit Tutarı: 1.981,98 TL Geri Ödenecek Tutar 11.891,83 TL Ödeme Planını Görüntüle Bir hata oluştu, lütfen tekrar deneyin veya ilgili sayfayı yenileyin. Taksitli alışveriş kredisinde %0.5 kredi tahsis ücreti ilk taksit tutarına, Veresiye kredide %0.5 tahsis ücreti yapılan harcama üzerine eklenir. Yapılan hesaplamalar bilgilendirme amaçlı olup, T.O.M. Katılım Bankası A.Ş.'nin kar oranlarında ve kampanya koşullarında değişiklik yapma ve/veya kampanyayı durdurma hakkı saklıdır. Ödeme Planı Taksit No Taksit Tutarı 1 1.981,98 TL 2 1.981,98 TL 3 1.981,98 TL 4 1.981,98 TL 5 1.981,98 TL 6 1.981,93 TL Kapat",
+    "campaign_type": "Finansman",
+    "fields": {
+      "finansman_tutari": {
+        "value": 150000,
+        "currency": "TRY"
+      },
+      "vade_ay": 36
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Metinde kar payı bilgisi yok ama hesaplamak için gereklilikler var | turetilebilir ama metinde yok",
+      "finansman_tutari": "Finasman tutarı bir aralıktır sadece başlangıcı almış | alt=5000",
+      "vade_ay": "1 ay ile 36 ay arasında vade seçmesine izin veriyor | aralik=1-36",
+      "taksit_sayisi": "Taksit  Sayısı yerine vade sayısı var",
+      "tahsis_ucreti": "Tahsis tutarı yok ama hesaplanabilir | turetilebilir ama metinde yok",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur ama hesaplanabilir | turetilebilir ama metinde yok",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Kampanya koşulu değil yasal bilgilendirme",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--bireysel-hesaplar",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/hesaplar",
+    "content_hash": "07d6e43d5a08e782fc403ef501be32863b94d55a796dd3a5fc554a0e85414e05",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Hesaplar Ana sayfa Bireysel Hesaplar Cari Hesaplar Bireysel müşterilerimize sunduğumuz cari hesap türlerimize bu sayfadan ulaşabilir, detaylı bilgi alabilirsiniz. Cari Hesaplar Cari hesabınızı TL, yabancı para ya da kıymetli maden cinsinden açabilir, hesabınız üzerinden tüm bankacılık işlemlerinizi gerçekleştirebilirsiniz. DETAYLI BİLGİ Altın Çocuk Hesabı Altın Çocuk Hesabı, 18 yaş altındaki çocuklar adına açılabilen, düzenli veya esnek ödemelerle altın birikimi yapılmasına olanak tanıyan, Türk Lirası cinsinde özel bir tasarruf ürünüdür. DETAYLI BİLGİ Altın Hesapları Altın hesapları, vadeli ve vadesiz olarak açılabilen, birikimlerin altın olarak değerlendirilmesini sağlayan hesap türüdür. DETAYLI BİLGİ Gümüş ve Platin Hesabı Gümüş cari hesap hizmeti ve Platin cari hesap hizmetimiz ile tasarruflarınızı gümüş ve platin olarak değerlendirebilir, gümüş alım satım ile platin alım satım işlemleri gerçekleştirebilirsiniz. DETAYLI BİLGİ Çeyrek Hesap Bankamız ve T.C. Darphane ve Damga Matbaası Genel Müdürlüğü tarafından yapılan işbirliği neticesinde \"Çeyrek Hesap\" ürünümüz ile müşterilerimiz fiziki altınlarını bankamıza teslim ederek, diledikleri zaman ise fiziki olarak talep etmelerine imkan sağlanmıştır. DETAYLI BİLGİ Havuz Hesap Bankamızda farklı cari hesapları bulunan ve bu cari hesaplara sıklıkla para akışı olan fakat onları tek hesaptan kontrol etmek isteyen müşterilerimize yönelik bir hesap türüdür. DETAYLI BİLGİ Gerçek Kişi Ticari Cari Hesap Vergiden muaf esnaf tarafından oturdukları evlerde kendi imal ettikleri (Ayrı bir iş yeri açmaksızın ve sanayi tipi veya seri üretim yapabilen makine ve alet kullanmaksızın) mallarını internet ve benzeri elektronik ortamlarda satanların bankalarda ticari bir hesap açması ve bu hesaba yatan hasılattan belirtilen oranlarda (%4 ve %2) gelir vergisi kesilmesini sağlayan cari hesap türüdür. DETAYLI BİLGİ Dijital İçerik Üreticisi Hesabı Sosyal içerik üreticiliği ile mobil cihazlar için uygulama geliştiriciliğinden sağladığınız kazançlara ilişkin vergi istisnasından yararlanmak için Emlak Katılım Bankası yanınızda! DETAYLI BİLGİ TMSF Güvencesi TMSF Güvencesi, Bankacılık Düzenleme ve Denetleme Kurumu (BDDK) tarafından faaliyet izni iptal edilen durumlarda mevduat ve katılım fonu hak sahiplerinin maruz kalacağı kayıpların kısmen ya da tamamen ödenmesinin garanti edilmesidir. DETAYLI BİLGİ Katılma Hesapları Emlak Katılım tarafından bireysel müşterilerine sunulan katılma hesabı ürünlerine bu sayfadan ulaşabilirsiniz. Katılma Hesabı Katılma Hesabı en az 1 ay vadeli olarak açılan ve kâr-zarar ortaklığı çerçevesinde vade sonunda getirinin paylaşıldığı bir hesap türüdür. DETAYLI BİLGİ Zümrüt Katılma Hesabı 3 milyon TL ve üzerinde birikimi olan ve bu birikimlerini klasik katılma hesapları havuzlarından daha yüksek kazanç sağlayan havuzlarda değerlendirmek isteyen gerçek kişi müşterilerimiz için sunulmuştur. DETAYLI BİLGİ TFŞ Değerlenen Peşinat Katılma Hesabı TFŞ Değerlenen Peşinat Katılma Hesabı, tasarruf finansman sistemine giriş yapan müşterilerimizin ellerinde bulundurdukları peşinat bedellerini tasarruf finansman şirketlerine peşin olarak yatırmak yerine, peşinatını yüksek kar paylaşım oranları ile değerlendirdiği bir katılma hesabı ürünüdür. DETAYLI BİLGİ e-Katılma Hesabı Mobil ve internet şubemiz aracılığı ile TL, USD ve EUR, XAU ve XAG cinsinden, yüksek kâr paylaşım oranlarıyla açılan katılma hesaplarıdır. DETAYLI BİLGİ Çevik Hesap Çevik Hesap, müşterilerimizin günlük ticari faaliyet ve ödemelerini gerçekleştirdikten sonra hesapta kalan bakiye üzerinden kâr payı kazanabildiği esnek katılma hesabıdır. DETAYLI BİLGİ Proje Tercihli Özel Fon Havuzu Katılma Hesabı Bankamıza Türk Lirası cinsinden yatırılan fonların, Bankamızca belirli bir projenin finansmanında kullandırılmasından doğacak kâr veya zarara katılım esasına dayanan, karşılığında hesap sahibine önceden belirlenmiş herhangi bir getiri ödenmeyen ve anaparanın aynen geri ödenmesi garanti edilmeyen kâr ve zarara katılma prensibine dayalı hesap türüdür. DETAYLI BİLGİ Üretenle Kazan Katılma Hesabı Üretenle Kazan Hesabı; üretim yapan ve üretimi destekleyen tüzel kişiliğe haiz müşterilerimizin, finansal kiralama işlemine konu olabilecek her türlü sıfır (0) taşınır ve taşınmaz mal alımının finansmanında kullanılmak üzere oluşturulan özel fon havuzu niteliğindeki aylık kira ödemeli katılma hesaplarıdır. DETAYLI BİLGİ Ziynet Altın Katılma Hesabı Ziynet Altın Katılma Hesabı ile yastık altındaki altınlarınızı güvende tutmanın yanı sıra değerlendirmenin de tam zamanı. DETAYLI BİLGİ Biriktiren Hesaplar Biriktiren Hesaplar; küçük birikimler ile uzun vadeli yatırım yapmak isteyenlere yönelik katılma hesabı türüdür. DETAYLI BİLGİ Yuvam Katılım Hesabı Yuvam Katılma hesabı, yurt dışındaki yerleşik kişilerin tasarruflarını ülkemizdeki bankalarda değerlendirmelerini sağlayan ve Merkez Bankası tarafından kur koruma güvencesinin yanı sıra ilave getiri garantisi verilen avantajlı bir Türk lirası hesap türüdür. DETAYLI BİLGİ Çeyiz Hesabı Çeyiz hesabı ile 3 yıl düzenli birikim yaparak hem Emlak Katılım'ın 95/5 kâr payı hem de %25'e kadar devlet desteğiyle hayallerinize birikim fırsatı sağlayın. DETAYLI BİLGİ Konut Hesabı Birikimlerinizi Emlak Katılım Konut Hesabı'nda değerlendirin, birikim sürenize ve tutarınıza göre %20'ye varan devlet katkısı ile ilk evinizin sahibi olun. DETAYLI BİLGİ",
+    "campaign_type": "Yatırım Ürünü",
+    "fields": {
+      "hedef_kitle": [
+        "belirli_segment"
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "kar_payi_orani",
+      "vade_ay"
+    ],
+    "notes": {
+      "kar_payi_orani": "Metinde birden fazla yatırım ürünü vardır",
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "Metinde birden fazla yatırım ürünü vardır",
+      "taksit_sayisi": "Taksit Sayısı bilgisi yok",
+      "tahsis_ucreti": "Tahsis ücreti yok",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Kampanya koşulu değil yasal bilgilendirmedir"
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--finansmanlar-ihtiyac-finansmani",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/finansmanlar/ihtiyac-finansmani",
+    "content_hash": "29c26bbd736729ce4af435060f765caad2d70e51624049f87f442bd004fc8a64",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. İhtiyaç Finansmanı Ana sayfa Bireysel Finansmanlar İhtiyaç Finansmanı × Your browser does not support the audio element. Emlak Katılım İhtiyaç Finansmanlarıyla Yanınızda İhtiyaç Finansmanı Katılım Bankacılığı esaslarına uygun olarak bireysel ihtiyaçlarınız için gereken finansman desteğini sağlar. Beyaz eşyadan mobilyaya, teknoloji ihtiyacınızdan eğitim ihtiyacınıza, hacdan umreye birçok konuda size özel çözümler getiren finansman modellerimiz hizmetinizdedir Bu kapsamda, ihtiyaç finansmanı ürünlerimiz aşağıdaki gibidir. Eğitim Tüketici Finansmanı Öğrencilerin eğitim/öğretim ihtiyaçlarına yönelik, anaokulu, özel okul, kolej, üniversite, dil eğitimi gibi hizmet ücretini eğitim kurumuna fatura karşılığında peşin ödeyerek, öğrenci velisi/vasisine aylık taksitler halinde ödeme yapmasına imkan sağlayan tüketici ihtiyaç finansmanı ürünüdür. Ev/Ofis Gereçleri Tüketici Finansmanı Bireysel müşterilerimizin, konutlarına mobilya ve aksesuar almak istemeleri durumunda, fatura karşılığında hizmet sağlayıcısına/satıcıya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Ev/Ofis Tadilat Finansmanı Bireysel müşterilerimizin, konut tadilatı kapsamında konutun 22/11/2001 tarihli ve 4721 sayılı Türk Medeni Kanununun 684 üncü maddesinde düzenlenen bütünleyici parçası niteliğini haiz olacak şekilde (evin camlarının veya kapılarının değiştirilmesi gibi) mal veya hizmet alımı amacıyla konutlarını yenilemek istemeleri durumunda, fatura karşılığında hizmet sağlayıcısına peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Hac Tüketici Finansmanı Bireysel müşterilerimizin, Diyanet İşleri Başkanlığına veya tur firmalarına hac ibadeti seyahat hizmetinden dolayı finansman kullanmak istemeleri durumunda, fatura karşılığında hizmet sağlayıcısına peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Umre Tüketici Finansmanı Bireysel müşterilerimizin, Diyanet İşleri Başkanlığına veya tur firmalarına umre ibadeti seyahat hizmetinden dolayı finansman kullanmak istemeleri durumunda, fatura karşılığında hizmet sağlayıcısına peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Sağlık Finansmanı Bireysel müşterilerimizin diş kliniği, saç ekim merkezi veya hastane gibi sağlık kuruluşlarına yapılacak ödemelerini sağlık kurumlarına fatura karşılığında peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Çevreci Finansman Bireysel müşterilerimizin, doğal enerji tüketimine destek olan güneş enerjisi, güneş panelleri, rüzgâr tribünleri, su kuyusu, hidrofor vb. sistemleri ihtiyaçları için fatura karşılığında hizmet sağlayıcıya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Doğalgaz Dönüşüm Finansmanı Bireysel müşterilerimizin, konutlarına doğalgaz sistemini kurmak istemeleri durumunda, fatura karşılığında hizmet sağlayıcısına peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Yurt Hizmeti Finansmanı Öğrencilerin yurt ihtiyaçlarına yönelik, yurt hizmet ücretini işletmeye fatura karşılığında peşin ödeyerek, öğrenci velisi/vasisine aylık taksitler halinde ödeme yapmasına imkan sağlayan tüketici ihtiyaç finansmanı ürünüdür. Beyaz Eşya Finansmanı Müşterilerimizin fatura karşılığı almak istedikleri buzdolabı, fırın, bulaşık makinesi, çamaşır makinesi, kurutma makinesi, klima, kahve makinesi, mutfak robotu gibi beyaz eşya ve küçük ev aletleri statüsünde ki ürünler için, satıcı firmaya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Teknoloji Finansmanı Müşterilerimizin fatura karşılığı almak istedikleri televizyon, kamera, fotoğraf makinesi oyun konsolu gibi ihtiyacı olan teknolojik ürünler için, satıcı firmaya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Bilgisayar Finansmanı Müşterilerimizin fatura karşılığı almak istedikleri bilgisayarlar için, satıcı firmaya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Taksit sayısı azami 12 ay olarak uygulanmaktadır. Tablet Finansmanı Müşterilerimizin fatura karşılığı almak istedikleri tabletler için, satıcı firmaya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Taksit sayısı azami 6 ay olarak uygulanmaktadır. Cep Telefonu Finansmanı Müşterilerimizin fatura karşılığı almak istedikleri cep telefonları için, satıcı firmaya peşin ödeme yapılmasını sağladığımız ve müşterimizin belirlenen vadede ödeme yapmasına olanak sağlayan tüketici ihtiyaç finansmanı ürünüdür. Fiyatı 20.000 TL'ye (yirmi bin Türk Lirasına) kadar olan cep telefonu alımı amacıyla kullandırılan kredilerin vadesi 12 ayı, fiyatı yirmi bin Türk Lirasının üzerinde olan cep telefonu alımı amacıyla kullandırılan kredilerin vadesi 3 ayı aşamaz. Yenilenmiş ürün niteliğinde olan cep telefonu tüketici finansmanından fiyatı 25.000 TL ve altında olanlar için 12 ay, fiyatı 25.000 TL üzerinde olanlar için 3 ay vade uygulanmaktadır. Bireysel Enerji Verimliliği Finansmanı Müşterilerimizin, bireysel olarak yapacakları enerji verimliliği yatırımlarının finansmanı amacıyla tasarlanmıştır. Özellikleri: Yalıtımlı pencere doğrama sistemleri, kapı ve çatı sistemleri, Dış cephe mantolama ve konutun zemin, duvar ve tavanın ısı, su, ses ve/veya yangın yalıtımı, Doğalgaz (kombi, tesisat, radyatör, ısı paylaşım sistemleri gibi doğalgaz dönüşüm sistemleri), Verimli aydınlatma sistemleri (tasarruflu veya led aydınlatma cihazları), Güneş enerjisi ile ısıtma ve sıcak su sağlayan sistemler (panel, kazan, tesisat, radyatör) güneşle enerji verimliliği sağlamak için A sınıf performansa sahip beyaz eşyalar (buzdolabı, bulaşık makinesi, çamaşır makinesi, fırın, derin dondurucu, klima, kazan, termosifon vb), Devre Mülk Finansmanı: Hayalinizdeki Devre Mülke Emlak Katılım Devre Mülk Finansmanı ile Sahip Olun! Bütçenize uygun taksit imkanlarıyla devre mülk sahibi olma fırsatı Emlak Katılım' da. Devre Mülk Finansmanı ile hayalini kurduğunuz Devre Mülk için Bankamızın avantajlı kâr oranları ile finansman kullanabilir bütçenize uygun taksit imkanları ile mülk sahibi olabilirsiniz. Kullandırılabilecek azami finansman tutarı, devre mülkün satışa esas değerine göre Bankamızca belirlenir. Proforma temini sonrası finansman kullandırım süreci başlatılır ve finansman talebinin onaylanması halinde tapuya tescil sonrası veya satış vaadi sözleşmesinin kurulmasından sonra ödeme satıcıya yapılarak süreç tamamlanır. Devre Mülk Finansmanı, gerçek kişi müşterilerimize sağlanacak bireysel bir finansman desteğidir. Kullandırılacak finansman tutarlarına göre uygulanacak vade sınırlamaları BDDK'nın güncel kararları kapsamında belirlenmektedir. Yalnızca sıfır devre mülkler için finansman sağlanmaktadır. Finansmanın kullandırılabilmesi için finansmana konu edilecek devre mülke ilişkin oluşturulan satış teklifi veya proforma faturanın temin edilmesi gerekmektedir. Onaylanan finansman bedelinin satıcıya ödenebilmesi için satış vaadi sözleşmesinin akdedilmiş olması veya tapunun alıcı adına tescil edilmiş olması gerekmektedir. Finansmana konu devre mülk tapusu veya satış vaadi sözleşmesi teminata alınmamaktadır. Örnek İhtiyaç Finansmanı Tablosu Finansman Tutarı Vade Kar Oranı Taksit Tutarı Finansman Tahsis Ücreti 30.000,00 ₺ 12 Ay 1,69% 2,841.66 ₺ 157.50 ₺ * İhtiyaç Finansmanı başvurusu için şubelerimizi ziyaret edebilirsiniz. HEMEN BAŞVUR",
+    "campaign_type": "İhtiyaç Finansmanı",
+    "fields": {
+      "kar_payi_orani": 1.69,
+      "vade_ay": 12,
+      "tahsis_ucreti": {
+        "value": 30000.0,
+        "currency": "TRY"
+      },
+      "masraf_durumu": {
+        "has_fee": true,
+        "amount": 30000.0
+      },
+      "kampanya_kosullari": [
+        "Yalnızca sıfır devre mülkler için finansman sağlanmaktadır.",
+        "Finansmanın kullandırılabilmesi için finansmana konu edilecek devre mülke ilişkin oluşturulan satış teklifi veya proforma faturanın temin edilmesi gerekmektedir.",
+        "Onaylanan finansman bedelinin satıcıya ödenebilmesi için satış vaadi sözleşmesinin akdedilmiş olması veya tapunun alıcı adına tescil edilmiş olması gerekmektedir."
+      ],
+      "hedef_kitle": [
+        "belirli_segment"
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "indirim_orani",
+      "kampanya_suresi",
+      "odul_miktari"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "finansman_tutari",
+      "taksit_sayisi"
+    ],
+    "notes": {
+      "finansman_tutari": "Metinde birden finasman ürünü vardır | birden fazla urun, ust sinir belirsiz (20000/25000/...)",
+      "taksit_sayisi": "Taksit Sayısı bilgisi var ama birden fazla kampanya karışmış ve hepsinin farklı taksit tutarı",
+      "odul_miktari": "Ödül miktarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş puanı bilgisi yok metine sayfanın yapısı karışmışsa",
+      "kampanya_suresi": "Kanum maddesi ile kampanya tarihini karıştırmıştır | kanun maddesinden uretilmis tarih = halusinasyon",
+      "hedef_kitle": "Eğitim"
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--kampanya-market-alisverislerinize-1500-tl-parafpara-hediye",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/market-alisverislerinize-1500-tl-parafpara-hediye",
+    "content_hash": "b7b7a2ecc827a16568a2fdc3829f53011ee0e220446a88cce49de48523f8622e",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Market Alışverişlerinize 1.500 TL ParafPara Hediye! Market Alışverişlerinize 1.500 TL ParafPara Hediye! Market Alışverişlerinize 1.500 TL ParafPara Hediye! Kampanyaya Nasıl Katılırım? Kampanyaya katılmak için \" GIDA \" yazıp 6026'ya SMS gönderilmesi gerekmektedir. Kampanya katılımının başarılı sayılabilmesi için banka sisteminde adınıza tanımlı telefon numarasından katılım sağlanmalıdır. Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir. Kampanya Koşulları Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir. Kampanya kapsamında yurt içinde tek seferde yapacağınız 2.500 TL ve üzeri her gıda marketi, bakkal, kasap, manav ve şarküteri alışverişinize 150 TL, toplamda 1.500 TL ParafPara verilecektir. Kampanya müşteri bazlı olup, bir müşteri kampanyaya bir kez katılabilir ve en fazla 1.500 TL ParafPara kazanabilir. Bir kart ile kampanyaya katılım yapıldığında müşterinin tüm kartları kampanyaya dahil olur. Hedefe ulaşılan harcama hangi kart ile yapılırsa ParafPara ödülü o karta yansıtılmaktadır. Aynı gün aynı iş yerinden yapılacak harcamaların ilki kampanyaya dahildir. Kampanyaya gıda marketi, bakkal, kasap, manav ve şarküteri kategorisine giren fiziki ve sanal iş yerlerinde yapılan harcamalar dahildir. Alışverişin yapıldığı iş yerinin, sistemde kayıtlı sektör bilgisinin doğru olmasının sorumluluğu iş yerine aittir. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Alışverişin iptal/iade edilmesi durumunda ParafPara yüklenmeyecektir. Finans kuruluşları ve ödeme hizmet sağlayıcıları üzerinden gerçekleşen harcama işlemleri ile dijital cüzdana yapılan yüklemeler ve dijital cüzdan kullanılarak yapılan harcamalar kampanyaya dahil değildir. ParafPara kullanılarak yapılan alışverişler kampanyaya dahil değildir. Ödül kazanımı için kampanyaya katılım sağlandıktan sonra yapılan harcamalar dikkate alınacaktır. Harcama yapıldıktan sonra kampanyaya katılım durumlarında ödül yüklemesi yapılmayacaktır. Kampanya başka kampanyalarla birleştirilmez. Aynı sektörde takip edilen kampanyalar birleştirilemez, aynı işlem birden fazla kampanyaya konu edilemez. Birden fazla kampanya koşulunun aynı anda sağlanması halinde, hak kazanılan en yüksek tutarlı ödül yüklenir. Müşterinin kampanya dönemi içerisinde gerçekleştirdiği farklı işlemler, ilgili tutar koşullarını sağlamaları halinde kendi kampanyaları kapsamında ayrıca ödüllendirilecektir. ParafPara Yüklenmesi Ne Zaman Yapılır? Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 14‘ünde, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır. Kazanılan ParafPara'lar puan kullanımına uygun tüm Paraf üye iş yerlerinde kullanılabilecektir. Kullanılmayan ParafPara'lar 15 Eylül 2026 tarihinde geri alınacaktır. Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. × Your browser does not support the audio element.",
+    "campaign_type": "Alışveriş Puanı",
+    "fields": {
+      "masraf_durumu": {
+        "has_fee": false,
+        "amount": 0.0
+      },
+      "odul_miktari": {
+        "value": 1500.0,
+        "currency": "TRY"
+      },
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 150
+      },
+      "kampanya_suresi": "2026-07-31",
+      "kampanya_kosullari": [
+        "Kampanyaya katılmak için \" GIDA \" yazıp 6026'ya SMS gönderilmesi gerekmektedir.",
+        "Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir.",
+        "Kampanya Koşulları Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir.",
+        "Birden fazla kampanya koşulunun aynı anda sağlanması halinde, hak kazanılan en yüksek tutarlı ödül yüklenir.",
+        "Müşterinin kampanya dönemi içerisinde gerçekleştirdiği farklı işlemler, ilgili tutar koşullarını sağlamaları halinde kendi kampanyaları kapsamında ayrıca ödüllendirilecektir.",
+        "Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 14‘ünde, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır.",
+        "Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. × Your browser does not support the audio element."
+      ]
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "Vade bilgisi yok",
+      "taksit_sayisi": "Taksit Sayısı bilgisi yok",
+      "tahsis_ucreti": "Tahsis tutarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş puanı ParafPara olarak geçiyor metinde",
+      "kampanya_suresi": "Kampanya bitiş tarihini almış ama başlangıç tarihini almamış | baslangic=2026-07-01; model bitis tarihini DOGRU vermisti",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--kampanya-paraf-ile-hepsiburadada-pesin-fiyatina-9-aya-varan-taksit-firsati",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-hepsiburadada-pesin-fiyatina-9-aya-varan-taksit-firsati",
+    "content_hash": "8238303f33fd3ea8badc7dd2709019dda805c446e92916a2c473c8fc52641c03",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Paraf ile Hepsiburada'da Peşin Fiyatına 9 Aya Varan Taksit Fırsatı! Paraf ile Hepsiburada'da Peşin Fiyatına 9 Aya Varan Taksit Fırsatı! 13 Temmuz 2026 tarihine kadar www.hepsiburada.com ve mobil uygulamasından tek seferde yapılacak alışverişlerde vade farksız 3-6 taksit imkanı sunulacaktır. 100 TL altındaki alışverişlerde taksitlendirme yapılmaz. 100 TL – 1.000 TL arası alışverişlerde vade farklı en fazla 12 taksit uygulanmaktadır. 1.000 TL – 6.000 TL ve arası alışverişlerde peşin fiyatına 3 taksit, 3 taksit üzerindeki taksitlerde vade farkı uygulanmaktadır. 6.000 TL ve üzeri alışverişlerde peşin fiyatına 6 taksit, 6 taksit üzerindeki taksitlerde vade farkı uygulanmaktadır. 10.000 TL ve üzeri alışverişlerde Hepsiburada Premium müşterilerine özel seçili ürünlerde peşin fiyatına 9 taksit geçerlidir. Peşin fiyatına 6 taksit kampanyası sadece seçili ürünler özelinde geçerlidir. Kampanyadan faydalanmak için ödeme esnasında ilgili taksitin seçilmesi gerekmektedir. Kampanyaya ilişkin geriye dönük yararlandırma ve değişiklik yapılmayacaktır. Kampanya Paraf POS'undan yapılan işlemlerde geçerli olacaktır. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Hepsiburada belirli kategorilerde yer alan ürünleri peşin fiyatına taksit uygulamasından hariç tutabilir. LCD Televizyonlarda vade farksız en fazla 3 taksit yapılabilmektedir. Hepsiburada satıcılı Xiaomi (Tablet hariç) markalı ürünler vade farksız taksit kampanyalarına dahil değildir. BDDK tarafından yayınlanan kredi kartları taksit sınırlaması kapsamında, satılan ürünlere göre taksit geçerli olmayabilir veya taksit sayıları değişiklik gösterebilir. Bireysel kredi kartlarıyla gerçekleştirilecek basılı ve külçe altın alımına ilişkin kuyum, telekomünikasyon, doğrudan pazarlama ile ilgili harcamalar, yurt dışında yapılan harcamalar ve yemek, gıda, alkollü içecek, akaryakıt, kozmetik, ofis malzemesi ile hediye kart, hediye çeki ve benzeri şekillerde herhangi somut bir mal veya hizmeti içermeyen ürünlerin alımlarında taksit uygulanamaz. Türkiye Emlak Katılım Bankası A.Ş. kampanya koşullarının tamamında değişiklik yapma ve/veya kampanyayı durdurma hakkını saklı tutar. × Your browser does not support the audio element.",
+    "campaign_type": "Kart",
+    "fields": {
+      "vade_ay": 9,
+      "taksit_sayisi": 6,
+      "kampanya_suresi": "2026-07-13",
+      "kampanya_kosullari": [
+        "Peşin fiyatına 6 taksit kampanyası sadece seçili ürünler özelinde geçerlidir.",
+        "Kampanyadan faydalanmak için ödeme esnasında ilgili taksitin seçilmesi gerekmektedir.",
+        "Hepsiburada belirli kategorilerde yer alan ürünleri peşin fiyatına taksit uygulamasından hariç tutabilir.",
+        "Hepsiburada satıcılı Xiaomi (Tablet hariç) markalı ürünler vade farksız taksit kampanyalarına dahil değildir.",
+        "Türkiye Emlak Katılım Bankası A.Ş. kampanya koşullarının tamamında değişiklik yapma ve/veya kampanyayı durdurma hakkını saklı tutar. × Your browser does not support the audio element."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "taksit_sayisi": "Birden fazla taksit seçeneği | aralik=3-6",
+      "tahsis_ucreti": "Tahsis tutarı yok",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül miktarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "turkiye-finans--konut-finansmani-konut-finansmani",
+    "bank_slug": "turkiye-finans",
+    "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/konut-finansmani/Sayfalar/konut-finansmani.aspx",
+    "content_hash": "2cdf55d182f9c09bfd87f3002fe771a4b0671c40624681a79c0ff56f5b574f60",
+    "text": "Navigasyonu görüntüle İçeriği görüntüle GÜNCELLE Çerez Politikası ve 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında Bankamız ile paylaşmış olduğunuz kişisel verileriniz ile ilgili detaylı bilgiye Kişisel Verilerin Korunması Hakkında Aydınlatma metninden ulaşabilirsiniz. Tüm Çerezleri Reddet Çerez Tercihlerini Yönet Tüm Çerezleri Kabul Et Ana Menüye Git İçeriğe Git Bölüm Menüsüne Git İçeriğe Git English العربية Şube ve ATM'ler Hakkımızda Ürün ve Hizmet Ücretleri Müşteri Ol İnternet Şubesi Bireysel Kurumsal Dijital Şifre Al Bireysel İhtiyaç Finansmanı Hızlı Finansman Taşıt Finansmanı Konut Finansmanı Arsa Finansmanı İş yeri Finansmanı (İş yeri Kredisi)* Yedek Hesap Hazır Limit Günlük Hesap Cari Hesaplar Katılma Hesapları Kâr Payı Oranları Kâr Paylaşım Oranları Kıymetli Maden Ürünleri Kredi Kartları Banka Kartları Yatırım Hizmetleri Bankacılık Hizmetleri Ödemeler Bireysel Emeklilik Sistemi Sigortacılık Hizmetleri Ürün & Hizmet Ücretleri Sözleşmeler ve Formlar Âlâ Bankacılık TFXTarget Bol Kepçe Hesap e-Katılma Hesabı Ayın Hayata Katılanı KOBİ KOBİ Anında Finansman Ticari Kartlar POS Hizmetleri KOBİ'ler İçin Nakit Yönetimi Çözümleri Sektör ve Ürün Paketleri KOBİ'lere Özel Destekler Sigortacılık Hizmetleri Sözleşmeler ve Formlar Dış Ticaret Finansmanı Yatırım Hizmetleri KOBİ'ler için Günlük Hesap Dijital Taksitli Ticari Finansman Desteği Ticari Ticari Katılma Hesapları Sektör ve Ürün Paketleri Nakdi Finansman Gayri Nakdi Finansman Dış Ticaret ve Finansmanı Ticari Kartlar Bankacılık Hizmetleri TFXTarget POS Hizmetleri Ödemeler Yatırım Hizmetleri Nakit Yönetimi Sigortacılık Hizmetleri Dijital Bankacılık Mobil Akıllı Asistan ARI İnternet Şubesi ATM Bankacılığı SMS Şubesi Müşteri İletişim Merkezi Engelsiz Bankacılık Güvenlik Sıkça Sorulan Sorular Güvenlik Uygulamaları Görüntülü Görüşme ile Hesap Açma Karekod Dijital Slip Ödeme İste Açık Bankacılık - BankamTek Müşteri Ol Kampanyalar Dijital Bankacılık Kampanyaları Kredi Kartı Kampanyaları Maaş Ödemesi Kampanyaları Yatırım Kampanyaları Birikim / Fon Kampanyaları Sigorta Kampanyaları Finansman Kampanyaları Ticari Kampanyalar Diğer Kampanyalar Biten Kampanyalar Blog Finansal Okuryazarlık IBAN Numarası Nedir? Karbon Ayak İzi ve Su Ayak İzi Nedir? Nasıl Azaltılır? Sigorta Nedir? Sigorta Çeşitleri Nelerdir? Sigorta Primi Nedir? 2025 Sigorta Primi Ne Kadar? NFC Teknolojisi Nedir, Nasıl Kullanılır? Rahmet, Bereket ve İbadetin Ayı Ramazan Kültürümüzde Ramazan ve Oruçla İlgili Gelenekler Toplumsal Dayanışmanın Ayı Ramazan Rayiç Bedel Nedir, Nasıl Hesaplanır? e-İmza Nedir, Nasıl Kullanılır? Yatırım Fonu Nedir, Nasıl Alınır? Daha Sürdürülebilir Bir Dünya İçin Günlük Alışkanlıklarınızı Değiştirin! Stopaj Nedir, Nasıl Hesaplanır? İş Göremezlik (Rapor) Ödemesi Nedir? Nasıl Alınır? Katılım Endeksi Nedir? EFT Nedir? Hangi Saatlerde EFT Yapılabilir? Sigorta ve Gayrimenkul: Konut Sigortaları 30 Ağustos Zafer Bayramı ve Zafer Yürüyüşü: Tarihi ve Anlamı Aşure'nin Ayı: Muharrem Ayında Paylaşmanın ve Bereketin Şöleni Döviz Kuru Nedir? Döviz Kuru Türleri Nelerdir? POS Cihazı Nedir, Nasıl Kullanılır? Hayal Ettiğiniz Yurt Dışı Tatili İçin Para Biriktirme Yolları Enflasyon Nedir? Nasıl Hesaplanır? 3D Secure Nedir, Ne İşe Yarar? Kredi Notu (Kredi Puanı) Nedir? Türkiye Finans'ın 100'ünde Gelecek Olan 5 Üyesi Cumhuriyetimizin Unutulmaz 100'leri Bankacılığın Tarihçesi ve Türkiye'de Bankacılık Türleri Dijital Dünyada Güvenlik İçin Temel İpuçları Avrupa Yeşil Mutabakatı: Sürdürülebilir Ekonomiler İçin Yol Haritası 2023'ü Geride Bırakırken DASK - Zorunlu Deprem Sigortası Nedir? Sağlık Sigortası Nedir? Neden Sağlık Sigortası Yaptırmalıyız? Katılma Hesabı Nedir, Nasıl Açılır? Sürdürülebilir Bir Geleceğin Anahtarı: Net Sıfır Hedefi Tüm Renkleri Buluşturan Güzellikleriyle Hoş Geldin Ramazan! İşsizlik Maaşı (İşsizlik Ödeneği) Nedir? İşsizlik Maaşı Hesaplama 2024 Trafik Cezası (TPC) Nedir? Trafik Cezası Sorgulama ve Ödeme 2024 Finansal Analiz: Finansal Durum Değerlendirmesi ve Veri Analizi Finansal Analiz Türleri Nelerdir? Provizyon ve Bekleyen Provizyon Nedir? Kurban Bayramı 2025: Kurban İbadetinin Manevi ve Toplumsal Boyutları Dijital Cüzdan Nedir? Nasıl Kullanılır? Yeşil Finans: Çevre ve Ekonominin Keşişim Noktası Ara Sıkça Yapılan Aramalar İhtiyaç Finansmanı Katılma Hesabı e-Katılma Hesabı Kredi Kartı Başvurusu Altın Hesap Gümüş Hesap İhtiyaç Finansmanı Hızlı Finansman Taşıt Finansmanı Konut Finansmanı Satılık Gayrimenkuller Arsa Finansmanı İş yeri Finansmanı (İş yeri Kredisi)* Yedek Hesap Hazır Limit Günlük Hesap Cari Hesaplar Katılma Hesapları Kâr Payı Oranları Kâr Paylaşım Oranları Kıymetli Maden Ürünleri Kredi Kartları Banka Kartları Yatırım Hizmetleri Bankacılık Hizmetleri Ödemeler Bireysel Emeklilik Sistemi Sigortacılık Hizmetleri Ürün & Hizmet Ücretleri Sözleşmeler ve Formlar Yürürlükte Olmayan Sözleşme ve Formlar Âlâ Bankacılık Ayın Hayata Katılanı Başvuru Merkezi Hesaplama Araçları Satılık Gayrimenkuller Konut Finansmanı (Konut Kredisi)* Ana Sayfa / Bireysel / Konut Finansmanı / Konut Finansmanı (Konut Kredisi)* Sayfayı Yazdır Facebook'da Paylaş Twitter'da Paylaş Linkedin'de Paylaş Sayfa İçeriği Avantajlı kâr payı oranları ile hayalinizdeki eve sahip olmak çok kolay! Avantajlı kâr payı oranları ile hayalinizdeki eve sahip olmak çok kolay! Türkiye Finans Konut Finansmanı (bankacılık kanununa göre konut kredisi), uygun koşullarda ev sahibi olmanız için sunulan finansman desteğidir. Satın almak istediğiniz gayrimenkul katılım bankacılığı prensiplerine uygun olarak Türkiye Finans tarafından satın alınır ve size istediğiniz vade üzerinden satılır. Konut Finansmanı (Konut Kredisi)* çözümlerimizden bütçenize göre dilediğinizi seçebilir, uygun ödeme koşulları ile zorlanmadan ev sahibi olabilirsiniz. EN YAKIN ŞUBE HESAPLAMA ARAÇLARI HEMEN BAŞVUR İlk Konut Alımlarında Ekspertiz Değerine Göre Finansman Tutarları Konut Ekspertiz Değeri (TL) Enerji Sınıfı A–B C Enerji D ve Altı DEĞER ≤ 5 MİLYON TL 90% 80% 70% 5.000.001 – 7.000.000 80% 70% 60% 7.000.001 – 10.000.000 70% 60% 50% 10.000.001 – 20.000.000 50% 40% 30% DEĞER > 20 MİLYON TL 40% 30% 20% *Ailenin (Kendi,Eşi ve Çocuğu) farklı bir konutu mevcut değilse başvurulacak maksimim finansman tutarlarıdır. Mevcut Konutu Olup İkinci Konut Alımlarında Ekspertiz Değerine Göre Finansman Tutarları Konut Ekspertiz Değeri (TL) Enerji Sınıfı A–B C Enerji D ve Altı DEĞER ≤ 5 MİLYON TL 22.50% 20% 17.50% 5.000.001 – 7.000.000 20% 17.50% 15% 7.000.001 – 10.000.000 17.50% 15% 12.50% 10.000.001 – 20.000.000 12.50% 10% 7.50% DEĞER > 20 MİLYON TL 10.00% 7.5% 5.00% *Ailenin (Kendi,Eşi ve Çocuğu) farklı bir konutu mevcutsa başvurulacak maksimim finansman tutarlarıdır. Başvuru için Gerekli Belgeler Nüfus cüzdanı veya ehliyet, Gelir belgesi/maaş bordrosu, Serbest meslek sahipleri ve işletme sahipleri için son yıla ait vergi levhası ve onaylı bilanço, gelir tabloları, mizan, imza sirküleri, kuruluş ve en son ortaklık payını gösteren Ticaret Sicil Gazetesi, Satın alınacak konuta ait kat mülkiyeti veya kat irtifakı tapusu ve yapı kullanım izin belgesi Ücretli çalışan kişiler için, maaş bordrosu antetli kağıt ile bildiriliyor ise firmanın imza sirküleri beyanı gerekmektedir. Banka gerekli gördüğü durumlarda kefil ve ek belge isteme hakkına sahiptir. Kefil için de aynı belgeler talep edilecektir. İlk Konutunu Alan / Sigortalı Konut Finansmanı (Konut Kredisi)* Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 3,96% 0,50% 16,66% 535,27% 6 3,92% 0,50% 11,21% 257,86% 12 3,77% 0,50% 7,81% 146,69% 18 3,73% 0,50% 6,60% 115,39% 24 3,69% 0,50% 5,96% 100,30% 36 3,58% 0,50% 5,24% 84,67% 48 3,54% 0,50% 4,91% 77,66% 59 3,35% 0,50% 4,53% 70,15% 72 3,09% 0,50% 4,11% 62,22% 120 2,95% 0,50% 3,76% 55,66% İlk Konutunu Alan / Sigortasız Konut Finansmanı (Konut Kredisi)* Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 4,42% 0,50% 17,19% 571,27% 6 4,38% 0,50% 11,73% 278,57% 12 4,23% 0,50% 8,33% 161,24% 18 4,19% 0,50% 7,12% 128,24% 24 4,15% 0,50% 6,48% 112,36% 36 4,04% 0,50% 5,77% 95,98% 48 4,00% 0,50% 5,43% 88,70% 59 3,81% 0,50% 5,06% 80,85% 72 3,55% 0,50% 4,65% 72,54% 120 3,41% 0,50% 4,31% 65,94% Konut Finansmanı (Konut Kredisi)* talep eden müşteri, eşi ve/veya 18 yaş altındaki çocukları herhangi bir konutta %50'den fazla pay sahibi değil ise geçerli oranlandır. Mevcut Konutu Olan / Sigortalı Konut Finansmanı (Konut Kredisi)* Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 3,96% 0,50% 17,41% 586,13% 6 3,92% 0,50% 11,91% 285,87% 12 3,77% 0,50% 8,47% 165,23% 18 3,73% 0,50% 7,24% 131,45% 24 3,69% 0,50% 6,59% 115,14% 36 3,58% 0,50% 5,86% 98,12% 48 3,54% 0,50% 5,52% 90,61% 59 3,35% 0,50% 5,12% 81,99% 72 3,09% 0,50% 4,66% 72,74% 120 2,95% 0,50% 4,29% 65,61% Mevcut Konutu Olan / Sigortasız Konut Finansmanı (Konut Kredisi)* Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 4,42% 0,50% 18,03% 630,77% 6 4,38% 0,50% 12,51% 311,53% 12 4,23% 0,50% 9,06% 183,23% 18 4,19% 0,50% 7,84% 147,35% 24 4,15% 0,50% 7,19% 130,08% 36 4,04% 0,50% 6,47% 112,14% 48 4,00% 0,50% 6,14% 104,32% 59 3,81% 0,50% 5,73% 95,26% 72 3,55% 0,50% 5,28% 85,50% 120 3,41% 0,50% 4,94% 78,32% Konut Finansmanı (Konut Kredisi)* talep eden müşteri, eşi ve/veya 18 yaş altındaki çocukları herhangi bir konutta %50'den fazla pay sahibi değil ise geçerli oranlandır. 100.000 TL. baz alınarak oluşturulan konut finansmanı örnek ödeme tablosunda yasal vergiler toplam komisyon tutarına dahildir. Maliyet tablosu hesaplamasında yer alan kar oranları; Yedek Hesap, DASK, Finansman Ferdi Kaza Sigortası, Konut Sigortası, Otomatik Fatura Ödeme Talimatı ürünlerinin tamamının finansman başvurusu ile birlikte alınması şartıyla uygulanmaktadır. Finansmanın maksimum vadesi 120 ay olup, tahsis ücreti vergiler hariç finansman tutarının binde 5'i oranındadır. Yıllık maliyete kar oranı, tahsis ücreti, ekspertiz ücreti, ipotek tesis ücreti dahil edilmiştir. Alınacak ücretler: 500 TL tahsis ücreti, 3.000 TL ipotek tesis ücreti, 16.500 TL Ekspertiz(Değerleme) ücretidir. Ekspertiz ücreti minimum maliyetler üzerinden hesaplanmış olup Ekspertiz ücreti Resmi Kurumlara ödenen harç miktarına, taşınmazın alanına, mevcut durumuna ve bulunduğu lokasyona göre değişebilmektedir.Gayrimenkulün bulunduğu lokasyona bağlı olarak ekspertiz firmasına ödenen meblağ arttığında, müşteriden tahsil edilecek ekspertiz ücreti de artacaktır. Ekspertiz maliyet tutarının 1.5 katı kadar hesabınıza bloke tesis edilmektedir. İşlem tamamlandıktan sonra oluşan gerçek maliyet tahsil edilerek, kalan bakiye için hesabınızdaki bloke çözülecektir. Konut sigortası ve DASK prim ücretleri lokasyona ve m2'ye göre, Finansman güvence sigortası ise müşterinin cinsiyeti, yaşı vb. kriterlere göre değişiklik göstermekte olup; yıllık maliyet hesaplamalarına dahil edilmemektedir. Banka finansman başvurularını serbestçe değerlendirme, kefil ve başkaca teminatlar ile ek belge isteme, uygun görmediği başvuruları onaylamama, fiyatlamada değişiklik yapma hakkına sahiptir. Yukarıda yazılı ürünlere sahip olmaksızın kullanılacak finansmana uygulanan genel ücret ve masraflara ilişkin bilgiyi Ürün ve Hizmet Ücretleri sayfamızdan ulaşabilirsiniz. Detaylı bilgi için Şubelerimizi ziyaret edebilirsiniz *Katılım bankacılığı kuruluş esas ve faaliyetleri doğrultusunda Konut Finansmanı sağlamaktadır. Ancak bankacılık kanuna göre resmi olarak Konut Kredisi olarak da nitelendirilmektedir. Sıkça Sorulan Sorular Konut bedelinin en fazla ne kadarı için finansman desteği kullanabilirim? İlk Konut Alımlarında Ekspertiz Değerine Göre Finansman Tutarları Konut Ekspertiz Değeri (TL) Enerji Sınıfı A–B C Enerji D ve Altı DEĞER ≤ 5 MİLYON TL 90% 80% 70% 5.000.001 – 7.000.000 80% 70% 60% 7.000.001 – 10.000.000 70% 60% 50% 10.000.001 – 20.000.000 50% 40% 30% DEĞER > 20 MİLYON TL 40% 30% 20% *Ailenin (Kendi,Eşi ve Çocuğu) farklı bir konutu mevcut değilse başvurulacak maksimim finansman tutarlarıdır. Mevcut Konutu Olup İkinci Konut Alımlarında Ekspertiz Değerine Göre Finansman Tutarları Konut Ekspertiz Değeri (TL) Enerji Sınıfı A–B C Enerji D ve Altı DEĞER ≤ 5 MİLYON TL 22.50% 20% 17.50% 5.000.001 – 7.000.000 20% 17.50% 15% 7.000.001 – 10.000.000 17.50% 15% 12.50% 10.000.001 – 20.000.000 12.50% 10% 7.50% DEĞER > 20 MİLYON TL 10.00% 7.5% 5.00% *Ailenin (Kendi,Eşi ve Çocuğu) farklı bir konutu mevcutsa başvurulacak maksimim finansman tutarlarıdır. Ekspertiz ücreti nedir? Konut finansmanı (Konut Kredisi)* başvurularında, konutun değerinin tespiti için, anlaşmalı firmalardan eksper talep edilir. Ekspertiz ücreti eksper tarafından verilen hizmetin bedelidir. Ekspertiz ücreti finansman desteği başvurusunda bulunan müşterilerimizden tahsil edilir. Mortgage finansmanı için en fazla kaç ay vade yapılabilir? Bankamızdaki uygulamada mortgage kredileri için uygulanan maksimum vade süresi 120 aydır. Mortgage finansmanı için gerekli belgeler nelerdir? Satın alınacak konuta ait kat mülkiyeti veya kat irtifaklı tapu Nüfus cüzdanı veya ehliyet Gelir belgesi / Maaş bordrosu İkametgah belgesi / Son 3 aya ait olmak üzere isme kayıtlı fatura İnşaatı devam eden projeler için Konut Finansmanı (Konut Kredisi)* kullanılabilir mi? İlgili proje eğer Bankamız ile anlaşmalı ise, henüz tamamlanmamış projedeki daireler için anlaşılan kâr oranları ile konut finansmanı (Konut Kredisi)* kullanılabilir. Konut Finansmanının (Konut Kredisi)* erken ödenmesi/kapanması durumundaki ücret politikası nedir? Tüketicinin Korunması Hakkında Kanun'una ve Konut Finansmanı (Konut Kredisi)* Sözleşmeleri Yönetmeliği'ne göre tüketicinin borçlandığı tutarın tamamını veya bir ya da birden fazla taksiti vadesinden önce ödemesi durumunda konut finansmanı (Konut Kredisi)* kuruluşları tarafından erken ödeme tazminatı talep edilebilir. Erken ödeme tazminatı oranı, erken ödenen tutarın kalan vadesi 36 ayı aşmayan kredilerde % 1'i, kalan vadesi 36 ayı aşan kredilerde ise % 2'si kadardır. Cayma Hakkı nedir? Ön ödemeli konut finansmanlarında tüketiciler on dört gün içerisinde, herhangi bir gerekçe göstermeksizin ve cezai şart ödemeksizin ön ödemeli konut satış sözleşmesinden cayma hakkında sahiptir. Cayma hakkının kullanıldığına dair bildirimin bu süre içinde satıcıya yöneltilmiş olması yeterlidir. Satıcı, cayma hakkı konusunda tüketicinin bilgilendirildiğini ispat etmekle yükümlüdür. Ekspertiz ve ipotek tesis ücreti ne kadardır? Konut üzerindeki ipoteği kaldırmak istediğimde (fek) ne kadar ücret ödemeliyim? Ekspertiz ve ipotek tesis ücreti, değerlemeyi yapan ekspertiz firması ile ipoteği tesis eden firmanın Bankamız'a faturalandırdığı tutar kadardır. İpotek fek masrafı alınmamaktadır. Sıkça Sorulan Sorular İşlem Yapabileceğiniz Kanallar İnternet Şubesi Şube Müşteri İletişim Merkezi Başvuru Merkezi Hesaplama Araçları Müşteri Memnuniyet Merkezi Yatırımcı İlişkileri Finans Portalı Satılık Gayrimenkuller Hesaplama Araçları Türkiye Finans Linkleri Türkiye Finans Blog Sıkça Ziyaret Edilen Sayfalar Sıkça Sorulan Sorular Hesaplama Araçları Kredi Kartları İhtiyaç Finansmanı Konut Finansmanı Taşıt Finansmanı Katılma Hesapları Öne Çıkan Kategoriler Görüntülü Görüşme ile Hesap Açma Altın Hesap Müşteri Ol TFXTarget Başvurusu Kredi Kartı Başvuru İhtiyaç Finansmanı Başvuru Gümüş Hesap Son Gezdiklerim Site Haritası Bilgi Toplumu Hizmetlerimiz Engelsiz Bankacılık Kişisel Verilerin Korunması İnsan Kaynakları İletişim Şube ve ATM'ler Sözleşmeler ve Formlar Site Haritası Bilgi Toplumu Hizmetlerimiz Engelsiz Bankacılık Kişisel Verilerin Korunması İnsan Kaynakları İletişim Şube ve ATM'ler Sözleşmeler ve Formlar © 2026 Türkiye Finans Katılım Bankası A.Ş. bir SNB kuruluşudur. Tüm Hakları Saklıdır © 2026 Türkiye Finans Katılım Bankası A.Ş. bir SNB kuruluşudur. Tüm Hakları Saklıdır 0850 222 22 44 BAŞA DÖN Başvuru Takip",
+    "campaign_type": "Konut Finansmanı",
+    "fields": {
+      "finansman_tutari": {
+        "value": 20000000,
+        "currency": "TRY"
+      },
+      "vade_ay": 120,
+      "taksit_sayisi": 120,
+      "masraf_durumu": {
+        "has_fee": true,
+        "amount": 20000
+      }
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "odul_miktari"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "kar_payi_orani",
+      "tahsis_ucreti"
+    ],
+    "notes": {
+      "finansman_tutari": "5 Milyon ile 20 Milyon arasındadır | alt=5000000",
+      "taksit_sayisi": "Vade sayısı olarak 120 ay görünmektedir",
+      "tahsis_ucreti": "Binde 5 | binde 5, tutara bagli — para semasi oran tutamiyor",
+      "masraf_durumu": "Masraflar birden fazla ve toplanmalı | kalemler: 500+3000+16500",
+      "odul_miktari": "Ödül miktarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Kampanya koşulları belgede açıkça yok",
+      "hedef_kitle": "Konut almak isteyenler"
+    }
+  },
+  {
+    "id": "turkiye-finans--tasit-finansmani-tasit-finansmani-2",
+    "bank_slug": "turkiye-finans",
+    "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/tasit-finansmani/Sayfalar/Tasit-Finansmani.aspx",
+    "content_hash": "99a146d9590e5e906fdadc8ee2aafbfb419d573862a95f01b70adf16c0061c2a",
+    "text": "Navigasyonu görüntüle İçeriği görüntüle GÜNCELLE Çerez Politikası ve 6698 sayılı Kişisel Verilerin Korunması Kanunu kapsamında Bankamız ile paylaşmış olduğunuz kişisel verileriniz ile ilgili detaylı bilgiye Kişisel Verilerin Korunması Hakkında Aydınlatma metninden ulaşabilirsiniz. Tüm Çerezleri Reddet Çerez Tercihlerini Yönet Tüm Çerezleri Kabul Et Ana Menüye Git İçeriğe Git Bölüm Menüsüne Git İçeriğe Git English العربية Şube ve ATM'ler Hakkımızda Ürün ve Hizmet Ücretleri Müşteri Ol İnternet Şubesi Bireysel Kurumsal Dijital Şifre Al Bireysel İhtiyaç Finansmanı Hızlı Finansman Taşıt Finansmanı Konut Finansmanı Arsa Finansmanı İş yeri Finansmanı (İş yeri Kredisi)* Yedek Hesap Hazır Limit Günlük Hesap Cari Hesaplar Katılma Hesapları Kâr Payı Oranları Kâr Paylaşım Oranları Kıymetli Maden Ürünleri Kredi Kartları Banka Kartları Yatırım Hizmetleri Bankacılık Hizmetleri Ödemeler Bireysel Emeklilik Sistemi Sigortacılık Hizmetleri Ürün & Hizmet Ücretleri Sözleşmeler ve Formlar Âlâ Bankacılık TFXTarget Bol Kepçe Hesap e-Katılma Hesabı Ayın Hayata Katılanı KOBİ KOBİ Anında Finansman Ticari Kartlar POS Hizmetleri KOBİ'ler İçin Nakit Yönetimi Çözümleri Sektör ve Ürün Paketleri KOBİ'lere Özel Destekler Sigortacılık Hizmetleri Sözleşmeler ve Formlar Dış Ticaret Finansmanı Yatırım Hizmetleri KOBİ'ler için Günlük Hesap Dijital Taksitli Ticari Finansman Desteği Ticari Ticari Katılma Hesapları Sektör ve Ürün Paketleri Nakdi Finansman Gayri Nakdi Finansman Dış Ticaret ve Finansmanı Ticari Kartlar Bankacılık Hizmetleri TFXTarget POS Hizmetleri Ödemeler Yatırım Hizmetleri Nakit Yönetimi Sigortacılık Hizmetleri Dijital Bankacılık Mobil Akıllı Asistan ARI İnternet Şubesi ATM Bankacılığı SMS Şubesi Müşteri İletişim Merkezi Engelsiz Bankacılık Güvenlik Sıkça Sorulan Sorular Güvenlik Uygulamaları Görüntülü Görüşme ile Hesap Açma Karekod Dijital Slip Ödeme İste Açık Bankacılık - BankamTek Müşteri Ol Kampanyalar Dijital Bankacılık Kampanyaları Kredi Kartı Kampanyaları Maaş Ödemesi Kampanyaları Yatırım Kampanyaları Birikim / Fon Kampanyaları Sigorta Kampanyaları Finansman Kampanyaları Ticari Kampanyalar Diğer Kampanyalar Biten Kampanyalar Blog Finansal Okuryazarlık IBAN Numarası Nedir? Karbon Ayak İzi ve Su Ayak İzi Nedir? Nasıl Azaltılır? Sigorta Nedir? Sigorta Çeşitleri Nelerdir? Sigorta Primi Nedir? 2025 Sigorta Primi Ne Kadar? NFC Teknolojisi Nedir, Nasıl Kullanılır? Rahmet, Bereket ve İbadetin Ayı Ramazan Kültürümüzde Ramazan ve Oruçla İlgili Gelenekler Toplumsal Dayanışmanın Ayı Ramazan Rayiç Bedel Nedir, Nasıl Hesaplanır? e-İmza Nedir, Nasıl Kullanılır? Yatırım Fonu Nedir, Nasıl Alınır? Daha Sürdürülebilir Bir Dünya İçin Günlük Alışkanlıklarınızı Değiştirin! Stopaj Nedir, Nasıl Hesaplanır? İş Göremezlik (Rapor) Ödemesi Nedir? Nasıl Alınır? Katılım Endeksi Nedir? EFT Nedir? Hangi Saatlerde EFT Yapılabilir? Sigorta ve Gayrimenkul: Konut Sigortaları 30 Ağustos Zafer Bayramı ve Zafer Yürüyüşü: Tarihi ve Anlamı Aşure'nin Ayı: Muharrem Ayında Paylaşmanın ve Bereketin Şöleni Döviz Kuru Nedir? Döviz Kuru Türleri Nelerdir? POS Cihazı Nedir, Nasıl Kullanılır? Hayal Ettiğiniz Yurt Dışı Tatili İçin Para Biriktirme Yolları Enflasyon Nedir? Nasıl Hesaplanır? 3D Secure Nedir, Ne İşe Yarar? Kredi Notu (Kredi Puanı) Nedir? Türkiye Finans'ın 100'ünde Gelecek Olan 5 Üyesi Cumhuriyetimizin Unutulmaz 100'leri Bankacılığın Tarihçesi ve Türkiye'de Bankacılık Türleri Dijital Dünyada Güvenlik İçin Temel İpuçları Avrupa Yeşil Mutabakatı: Sürdürülebilir Ekonomiler İçin Yol Haritası 2023'ü Geride Bırakırken DASK - Zorunlu Deprem Sigortası Nedir? Sağlık Sigortası Nedir? Neden Sağlık Sigortası Yaptırmalıyız? Katılma Hesabı Nedir, Nasıl Açılır? Sürdürülebilir Bir Geleceğin Anahtarı: Net Sıfır Hedefi Tüm Renkleri Buluşturan Güzellikleriyle Hoş Geldin Ramazan! İşsizlik Maaşı (İşsizlik Ödeneği) Nedir? İşsizlik Maaşı Hesaplama 2024 Trafik Cezası (TPC) Nedir? Trafik Cezası Sorgulama ve Ödeme 2024 Finansal Analiz: Finansal Durum Değerlendirmesi ve Veri Analizi Finansal Analiz Türleri Nelerdir? Provizyon ve Bekleyen Provizyon Nedir? Kurban Bayramı 2025: Kurban İbadetinin Manevi ve Toplumsal Boyutları Dijital Cüzdan Nedir? Nasıl Kullanılır? Yeşil Finans: Çevre ve Ekonominin Keşişim Noktası Ara Sıkça Yapılan Aramalar İhtiyaç Finansmanı Katılma Hesabı e-Katılma Hesabı Kredi Kartı Başvurusu Altın Hesap Gümüş Hesap İhtiyaç Finansmanı Hızlı Finansman Taşıt Finansmanı Dijital Taşıt Finansmanı Konut Finansmanı Arsa Finansmanı İş yeri Finansmanı (İş yeri Kredisi)* Yedek Hesap Hazır Limit Günlük Hesap Cari Hesaplar Katılma Hesapları Kâr Payı Oranları Kâr Paylaşım Oranları Kıymetli Maden Ürünleri Kredi Kartları Banka Kartları Yatırım Hizmetleri Bankacılık Hizmetleri Ödemeler Bireysel Emeklilik Sistemi Sigortacılık Hizmetleri Ürün & Hizmet Ücretleri Sözleşmeler ve Formlar Yürürlükte Olmayan Sözleşme ve Formlar Âlâ Bankacılık Ayın Hayata Katılanı Başvuru Merkezi Hesaplama Araçları Satılık Gayrimenkuller Taşıt Finansmanı (Taşıt Kredisi)* Ana Sayfa / Bireysel / Taşıt Finansmanı / Taşıt Finansmanı (Taşıt Kredisi)* Sayfayı Yazdır Facebook'da Paylaş Twitter'da Paylaş Linkedin'de Paylaş Sayfa İçeriği Araç / Taşıt Finansmanı (Taşıt Kredisi)* Nedir? Araç / Taşıt Finansmanı (bankacılık kanununa göre taşıt kredisi)* 0 km ya da 2. el araç alımı için katılım bankaları tarafından gerçek kişilere sağlanan finansman desteğidir. Araç / Taşıt Finansmanı (Taşıt Kredisi)* mevduat bankacılığında taşıt kredisi olarak geçmektedir. Katılım bankacılığında bahsi geçen araç finansmanı, araç kredisinden farklı olarak katılım bankacılığı prensiplerine göre tahsis edilir. Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* 0 km ve 2. el taşıt alımları için 48 aya kadar taksitlendirme yapmanızı sağlayan finansman desteğidir. Hayalinizdeki otomobilin sahibi olmak için beklemeyin. Sizin için en uygun 2. el ya da 0 km aracı seçin, Türkiye Finans'ın alternatif ödeme seçeneklerinden faydalanarak araç finansmanı kullanın. Üstelik Taşıt Finansmanı (Taşıt Kredisi)* başvurunuzu hemen yapın, ödemeye 3 ay sonra başlayın. Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* oranlarını öğrenmek ve sizin için en uygun ödeme seçeneğini belirlemek için araç / taşıt finansmanı (Taşıt Kredisi)* hesaplama tablosunu inceleyebilirsiniz. Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* Ürünleri Nelerdir? Türkiye Finans, otomobil satın almak için kullanabileceğiniz Araç / Taşıt Finansmanının (Taşıt Kredisi)* yanı sıra aşağıdaki farklı araç ihtiyaçları için de finansman desteği sağlamaktadır: Motosiklet Finansmanı (Motosiklet Kredisi) Taksitli Ticari Taşıt Finansmanı (Taksitli Ticari Taşıt Kredisi) Ticari Hat / Ticari Plaka Finansmanı (Ticari Hat / Ticari Plaka Kredisi) Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* Özellikleri ve Avantajları Türkiye Finans Araç / Taşıt Finansmanından (Taşıt Kredisi)* avantajlı kâr oranları ve uygun ödeme seçenekleri ile yararlanabilirsiniz. 0 km araçlarda fatura değeri, 2 el araçlarda kasko değeri baz alınacak şekilde; 400.000 TL'ye kadar araçlar için maksimum vade süresi 48 ay, 400.000 - 800.000 TL arası araçlar için maksimum vade süresi 36 ay, 800.000 TL - 1.200.000 TL arası araçlar için maksimum vade süresi 24 ay, 1.200.000 - 2.000.000 TL arasında araçlar için maksimum vade süresi 12 aydır. Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* Başvurusu Nasıl Yapılır? Türkiye Finans Taşıt Araç / Taşıt Finansmanı (Taşıt Kredisi)* başvurunuzu gerekli belgelerle birlikte size en yakın Türkiye Finans şubesinden yapabilirsiniz. EN YAKIN ŞUBE Şube ve atm listesi için tıklayın. HESAPLAMA ARAÇLARI İhtiyaç Finansmanı hesaplama aracına gitmek için tıklayın. HEMEN BAŞVUR Bu bağlantı yeni sekmede açılacak. Bu bağlantı yeni sekmede açılacak. Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* Hangi Teminatlarla Kullanılabilir? Araç / Taşıt Finansmanı (Taşıt Kredisi)* kullanmak için aşağıdaki teminatlardan birini kullanabilirsiniz: Alınacak aracın rehini Gayrimenkul ipoteği Nakit bloke teminatı Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* için Gerekli Belgeler Nelerdir? Kimlik Bilgisi (Gerek görülmesi durumunda gelir belgesi/maaş bordrosu talep edilebilir.) 0 kilometre araçlarda, alınacak aracın proforma faturası 2. el araçlar için alınacak aracın ruhsat fotokopisi Araç / Taşıt Finansmanı (Taşıt Kredisi)* Hesaplama Aracı Türkiye Finans Araç / Taşıt Finansmanı (Taşıt Kredisi)* ile dilediğiniz 0 araba ya da 2. el aracı alternatif ödeme seçeneklerinden faydalanarak avantajlı ve uygun koşullarla satın alabilirsiniz. Finansman Hesaplama Aracı üzerinden Taşıt Finansmanını (Taşıt Kredisi)* seçerek hesaplama işleminizi yapabilirsiniz. HESAPLAMA ARAÇLARI Dijital İhtiyaç Finansmanı hesaplama aracına gitmek için tıklayın. Sigortalı Taşıt Finansmanı (Taşıt Kredisi)* 0 km Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 3,67% 0,50% 5,07% 81,11% 6 3,67% 0,50% 4,95% 78,49% 12 3,63% 0,50% 4,81% 75,81% 18 3,56% 0,50% 4,70% 73,61% 24 3,52% 0,50% 4,64% 72,24% 36 3,48% 0,50% 4,57% 70,88% 48 3,42% 0,50% 4,48% 69,16% Sigortalı Taşıt Finansmanı (Taşıt Kredisi)* 2. El Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 3,67% 0,50% 5,07% 81,11% 6 3,67% 0,50% 4,95% 78,49% 12 3,63% 0,50% 4,81% 75,81% 18 3,56% 0,50% 4,70% 73,61% 24 3,52% 0,50% 4,64% 72,24% 36 3,48% 0,50% 4,57% 70,88% 48 3,42% 0,50% 4,48% 69,16% Sigortasız Taşıt Finansmanı (Taşıt Kredisi)* 0 km Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 4,27% 0,50% 5,86% 97,99% 6 4,27% 0,50% 5,73% 95,13% 12 4,23% 0,50% 5,60% 92,21% 18 4,16% 0,50% 5,49% 89,83% 24 4,12% 0,50% 5,42% 88,35% 36 4,08% 0,50% 5,35% 86,88% 48 4,02% 0,50% 5,26% 85,01% Sigortasız Taşıt Finansmanı (Taşıt Kredisi)* 2. El Vade Kâr Oranı Tahsis Ücreti Aylık Toplam Maliyet Yıllık Toplam Maliyet 3 4,27% 0,50% 5,86% 97,99% 6 4,27% 0,50% 5,73% 95,13% 12 4,23% 0,50% 5,60% 92,21% 18 4,16% 0,50% 5,49% 89,83% 24 4,12% 0,50% 5,42% 88,35% 36 4,08% 0,50% 5,35% 86,88% 48 4,02% 0,50% 5,26% 85,01% 40.000 TL. baz alınarak oluşturulan örnek ödeme tablosunda yasal vergiler toplam komisyon tutarına dahildir. Maliyet tablosu hesaplamasında yer alan kar oranları; Kasko, Finansman Güvence Sigortası ürünlerinin tamamının finansman başvurusu ile birlikte alınması şartıyla uygulanmaktadır. İlgili ürünlere halihazırda sahip olma veya ilgili ürünlerin finansman başvurusu ile birlikte alınmaması durumlarında kar oranları değişmektedir. 0 km araçlarda fatura değeri, 2 el araçlarda kasko değeri baz alınacak şekilde; 400.000 TL'ye kadar vade 48 ayı, 400.000-800.000 TL arası vade 36 ayı, 800.000 TL – 1.200.000 TL arası vade 24 ayı, 1.200.000-2.000.000 TL arasında bir vade ise 12 ayı geçemez. Taşıt teminatlı finansmanlarda ise maksimum vade 36 aydır . Tahsis ücreti finansman fiyatlamasının bir parçasıdır Tahsis ücreti vergiler hariç finansman tutarının binde 5'i oranındadır. Aylık ve yıllık maliyet oranlarına komisyon ve yasal vergiler dahil edilmiş olup, sigorta masrafları dahil edilmemiştir. Banka finansman başvurularını serbestçe değerlendirme, kefil ve başkaca teminatlar ile ek belge isteme, uygun görmediği başvuruları onaylamama, fiyatlamada değişiklik yapma hakkına sahiptir. Detaylı bilgi için Şubelerimizi ziyaret edebilirsiniz. *Katılım bankacılığı kuruluş esas ve faaliyetleri doğrultusunda Taşıt Finansmanı sağlamaktadır. Ancak bankacılık kanuna göre resmi olarak Taşıt Kredisi olarak da nitelendirilmektedir. Araç / Taşıt Finansmanı (Taşıt Kredisi)* Hakkında Sıkça Sorulan Sorular Araç / Taşıt Finansmanı (Taşıt Kredisi)* başvurusu için gerekli belgeler nelerdir? Taşıt kredisi başvurunuz için aşağıdaki belgeleri ibraz etmeniz gerekmektedir. Kimlik Bilgisi 0 kilometre araçlarda, alınacak aracın proforma faturası 2. el araçlar için alınacak aracın ruhsat fotokopisi Araç / Taşıt Finansmanı (Taşıt Kredisi)* taksitlerimi nasıl ödeyebilirim? Geri ödemelerinizi Türkiye Finans İnternet Şubesi, Mobil Şube, hesabınızdaki bakiyeyi kullanarak ATM'lerimizden ve Türkiye Finans şubelerinden yapabilirsiniz. Taşıt bedelinin ne kadarı için finansman kullanabilirim? Araç bedeli olarak; 0 km. taşıtlarda proforma fatura bedeli, 2. el taşıtlarda kasko değeri baz alınmaktadır. Taşıt alımlarında araç bedelinin; 400.000 TL'ye kadar olan kısmının %70'i, 400.000-800.000 TL arasında %50'si, 800.000-1.200.000 TL arasında %30'u 1.200.000-2.000.000 TL arasında %20'si 2.000.000 TL üzerinde %0'ı kadar taşıt finansmanı (Taşıt Kredisi)* kullanabilirsiniz. En fazla kaç yaşında araç için Taşıt Finansmanı (Taşıt Kredisi)* kullanabilirim? Bankamız tarafından en fazla 7 yaşa (7 yaş dâhil) kadar araçlar için araç finansmanı desteği sunulmaktadır. İşlem Yapabileceğiniz Kanallar Şube Başvuru Merkezi Hesaplama Araçları Müşteri Memnuniyet Merkezi Yatırımcı İlişkileri Finans Portalı Satılık Gayrimenkuller Hesaplama Araçları Türkiye Finans Linkleri Türkiye Finans Blog Sıkça Ziyaret Edilen Sayfalar Sıkça Sorulan Sorular Hesaplama Araçları Kredi Kartları İhtiyaç Finansmanı Konut Finansmanı Taşıt Finansmanı Katılma Hesapları Öne Çıkan Kategoriler Görüntülü Görüşme ile Hesap Açma Altın Hesap Müşteri Ol TFXTarget Başvurusu Kredi Kartı Başvuru İhtiyaç Finansmanı Başvuru Gümüş Hesap Son Gezdiklerim Site Haritası Bilgi Toplumu Hizmetlerimiz Engelsiz Bankacılık Kişisel Verilerin Korunması İnsan Kaynakları İletişim Şube ve ATM'ler Sözleşmeler ve Formlar Site Haritası Bilgi Toplumu Hizmetlerimiz Engelsiz Bankacılık Kişisel Verilerin Korunması İnsan Kaynakları İletişim Şube ve ATM'ler Sözleşmeler ve Formlar © 2026 Türkiye Finans Katılım Bankası A.Ş. bir SNB kuruluşudur. Tüm Hakları Saklıdır © 2026 Türkiye Finans Katılım Bankası A.Ş. bir SNB kuruluşudur. Tüm Hakları Saklıdır 0850 222 22 44 BAŞA DÖN Başvuru Takip",
+    "campaign_type": "Taşıt Finansmanı",
+    "fields": {
+      "finansman_tutari": {
+        "value": 2000000,
+        "currency": "TRY"
+      }
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok metine sayfanın yapısı karışmış",
+      "finansman_tutari": "Tutarlar belirli şartlarda farklı miktarlarda | alt=400000",
+      "vade_ay": "Vade bilgisi yok metine sayfanın yapısı karışmış",
+      "taksit_sayisi": "Farklı miktarlarda farklı vade tutarları vardır",
+      "tahsis_ucreti": "Vade ücreti bilgisi yok metine sayfanın yapısı karışmış",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül miktarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş puanı bilgisi yok metine sayfanın yapısı karışmış",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "kampanya_kosullari": "Kampanya koşulları bilgisi yok metine sayfanın yapısı karışmış",
+      "hedef_kitle": "Hedef kitle bilgisi yok metine sayfanın yapısı karışmış"
+    }
+  },
+  {
+    "id": "vakif-katilim--detay-dijitalden-musteri-ol-hisse-senedi-islemlerinde-75-komisyon-indirimi-kazan",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/dijitalden-musteri-ol-hisse-senedi-islemlerinde-75-komisyon-indirimi-kazan",
+    "content_hash": "4c22d67ff7e1f35f4c559dedba1277bad5a4b8fc2f3162f409a29d5b7160ff4b",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa Kendim İçin Kampanyalar Dijitalden Müşteri Ol, Hisse Senedi İşlemlerinde %75 Komisyon İndirimi Kazan! Kampanya Geçerlilik Tarihi 14 Aralık 2021 - 31 Aralık 2027 Kampanya Detayları Sadece görüntülü görüşme ile dijital müşteri ol an ve dijital kanallardan yatırım hesabı açan bireysel müşteriler kampanyadan yararlanabilir. Hisse senedi alım-satım işlemlerinde standart komisyon oranı yerine, on binde 5 komisyon oranı uygulanır. Bu oran, %75 komisyon indirimi anlamına gelir. Kampanya süresizdir ve yeni müşterilere yöneliktir. Kampanya Şartları Kampanyaya yalnızca görüntülü görüşme ile müşteri olan ve dijital kanallardan yatırım hesabı açan müşteriler katılabilir. Kampanya, bireysel müşteriler için geçerlidir. Ticari ve tüzel müşteriler kampanyaya dahil değildir. Vakıf Katılım Bankası AŞ önceden haber vermeksizin kampanyayı durdurma, sona erdirme, kampanya kapsamını ve koşullarını değiştirme hakkını saklı tutar. Tümünü Göster İlginizi Çekebilecek Kampanyalar MTV Ödemelerinde Vade Farksız 3 Taksit Detaylı Bilgi VKart'la Şarj Et, Yola Devam Et! Detaylı Bilgi TROY ile Gelir Vergisi Ödemelerine Vade Farksız 3 Taksit Detaylı Bilgi Tüm Kampanyalar Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": "Yeni Müşteri",
+    "fields": {
+      "odul_miktari": {
+        "value": 75.0,
+        "currency": "TRY"
+      },
+      "indirim_orani": 75.0,
+      "kampanya_suresi": "2021-12-31",
+      "kampanya_kosullari": [
+        "Kampanya Geçerlilik Tarihi 14 Aralık 2021 - 31 Aralık 2027 Kampanya Detayları Sadece görüntülü görüşme ile dijital müşteri ol an ve dijital kanallardan yatırım hesabı açan bireysel müşteriler kampanyadan yararlanabilir.",
+        "Kampanya Şartları Kampanyaya yalnızca görüntülü görüşme ile müşteri olan ve dijital kanallardan yatırım hesabı açan müşteriler katılabilir.",
+        "Kampanya, bireysel müşteriler için geçerlidir.",
+        "Vakıf Katılım Bankası AŞ önceden haber vermeksizin kampanyayı durdurma, sona erdirme, kampanya kapsamını ve koşullarını değiştirme hakkını saklı tutar."
+      ],
+      "hedef_kitle": [
+        "yeni_musteri"
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "tahsis_ucreti",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "taksit_sayisi"
+    ],
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "Finasman tutarı yok",
+      "vade_ay": "Vade bilgisi yok",
+      "taksit_sayisi": "Kampanya metni ile başka kampanya metni karışmış birden fazla kampanya var",
+      "tahsis_ucreti": "Tahsis tutarı yok",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Yüzde 75 komisyon tanımaktadır",
+      "alisveris_puani": "Alışveriş Puanı yok",
+      "kampanya_suresi": "Kampanya başlangıç tarihini almış ama bitiş tarihini almamış | baslangic=2021-12-14"
+    }
+  },
+  {
+    "id": "vakif-katilim--detay-espressolab-hediye-kahve-kampanyasi",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/espressolab-hediye-kahve-kampanyasi",
+    "content_hash": "04fc41cc95b6ef39d055f3362fcc92a605d948010cae887a7d16f4958db3794e",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa Kendim İçin Kampanyalar Espressolab Hediye Kahve Kampanyası Kampanya Geçerlilik Tarihi 01 Ocak 2026 - 31 Aralık 2026 Kampanya Detayları Vakıf Katılımlı Olanlara 2 Kahve Hediye! Vakıf Katılım & Espressolab iş birliği ile Vakıf Katılım Mobil Şube üzerinden müşterimiz olarak 2 kahve kazanabilirsiniz. \"KAHVE\" davet koduyla müşterimiz olduktan sonra hediye kahve kodları SMS ile iletilecektir. Vakıf Katılım müşterisi değilseniz Vakıf Katılım Mobil 'i indirerek \" Vakıf Katılımlı Ol \" adımından ya da en yakın şubeye giderek müşteri olabilirsiniz. Espressolab Ücretsiz Kahve Kodu Espressolab ücretsiz kahve kodu \"KAHVE\" şeklindedir. \"KAHVE\" koduyla uzaktan müşterimiz olan Vakıf Katılımlılar, Espressolab'den hediye kahve kazanıyor! Siz de Vakıf Katılım Mobil Şube'den şimdi müşterimiz olun ve hediye kahvenin tadını çıkarın. Espressolab Hediye Kahve Kampanya Süresi Vakıf Katılım & Espressolab iş birliği ile sunulan Espressolab hediye kahve kampanyası 01 Ocak 2026 - 31 Aralık 2026 tarihleri arasında geçerlidir. Kampanya Şartları Espressolab Hediye Kahve Kodu Nasıl Kazanılır? \"KAHVE\" davet koduyla Vakıf Katılım Mobil Şube üzerinden müşteri olanlara Espressolab mobil uygulamasında kullanabilecekleri 2 adet hediye kahve kodu iletilecektir. Vakıf Katılımlı Olanlara 2 Kahve Hediye Kampanyasından Kimler Yararlanabilir? Mobilden \"KAHVE\" davet koduyla müşteri olan herkes kampanyadan yararlanabilir. Kampanyaya Kaç Kez Katılabilirim? Kampanya müşteri bazındadır ve bir müşteri kampanyadan bir kez yararlanabilir. Espressolab Hediye Kahve Kodu Nerelerde Geçerlidir? Hediye kahve kodları Espressolab mağazalarında geçerlidir, online alışverişlerde kullanılamaz. Espressolab Mobil Uygulaması Üzerinden Espressolab Hediye Kahve Kodu Nasıl Kullanılır? Hediye kahve kodunu kazanan Vakıf Katılımlılar hediye kahvelerini Espressolab uygulamasını indirip QR Kodu Okut > Promosyon Kodu Gir > QR Kodu Baristaya Göster > Ödeme Yap adımlarıyla alabilirler. Espressolab Ücretsiz Kahve Kampanyası Hangi Kahvelerde Geçerlidir? Hediye kahve kodu sıcak ve soğuk içeceklerden; küçük boy aromasız; espresso, espresso macchiato, latte, cappuccino, filtre kahve, americano, flat white, cortado, Türk kahvesi, Karadeniz çayı ve bitki çaylarında geçerlidir. Vakıf Katılım Espressolab Hediye Kahve Kodu Kaç Kez Kullanılır? Vakıf Katılım & Espressolab iş birliği ile sunulan Espressolab hediye kahve kampanyasından her müşteri 1 kez yararlanabilir. Kampanya katılımı ilk 1.000 kişi için geçerlidir. Espressolab Hediye Kahve Kodu Geçerlilik Süresi Nedir? Kazanılan hediye kahve kodlarının kullanım süresi 1 aydır. Bu tarihten sonra kullanılmayan kodlar geçersiz olacaktır. Vakıf Katılım Bankası AŞ ve Espressolab, önceden haber vermeksizin kampanyayı durdurma, sona erdirme, kampanya kapsamını ve koşullarını değiştirme hakkını saklı tutar. Tümünü Göster İlginizi Çekebilecek Kampanyalar MTV Ödemelerinde Vade Farksız 3 Taksit Detaylı Bilgi VKart'la Şarj Et, Yola Devam Et! Detaylı Bilgi TROY ile Gelir Vergisi Ödemelerine Vade Farksız 3 Taksit Detaylı Bilgi Tüm Kampanyalar Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": "Yeni Müşteri",
+    "fields": {
+      "masraf_durumu": {
+        "has_fee": false,
+        "amount": 0.0
+      },
+      "odul_miktari": {
+        "value": 2.0,
+        "currency": "TRY"
+      },
+      "kampanya_suresi": "2026-01-31",
+      "kampanya_kosullari": [
+        "Kampanya Şartları Espressolab Hediye Kahve Kodu Nasıl Kazanılır? \"KAHVE\" davet koduyla Vakıf Katılım Mobil Şube üzerinden müşteri olanlara Espressolab mobil uygulamasında kullanabilecekleri 2 adet hediye kahve kodu iletilecektir.",
+        "Kampanya katılımı ilk 1.000 kişi için geçerlidir.",
+        "Vakıf Katılım Bankası AŞ ve Espressolab, önceden haber vermeksizin kampanyayı durdurma, sona erdirme, kampanya kapsamını ve koşullarını değiştirme hakkını saklı tutar."
+      ],
+      "hedef_kitle": [
+        "yeni_musteri"
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "indirim_orani",
+      "kar_payi_orani",
+      "tahsis_ucreti",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "taksit_sayisi"
+    ],
+    "notes": {
+      "kar_payi_orani": "Metinde herhangi bir kâr payı oranı bulunmuyor.",
+      "finansman_tutari": "Finansman ürünü veya finansman limiti yer almıyor.",
+      "vade_ay": "Finansman vadesi bulunmuyor. \"1 ay\" ifadesi yalnızca hediye kahve kodunun kullanım süresidir, finansman vadesi değildir.",
+      "taksit_sayisi": "Kampanya metni ile başka kampanya metni karışmış birden fazla kampanya var",
+      "tahsis_ucreti": "Tahsis ücretinden bahsedilmiyor.",
+      "odul_miktari": "Kampanya ödülü 2 adet ücretsiz kahvedir.",
+      "indirim_orani": "Yüzdesel bir indirim belirtilmiyor.",
+      "alisveris_puani": "Alışveriş puanı veya puan kazanımı bulunmuyor.",
+      "kampanya_suresi": "Kampanya başlangıç tarihini almış ama bitiş tarihini almamış | baslangic=2026-01-01",
+      "hedef_kitle": "Kampanyadan yalnızca mobil üzerinden \"KAHVE\" davet koduyla müşteri olan kişiler yararlanabilir."
+    }
+  },
+  {
+    "id": "vakif-katilim--finansmanlar-kentsel-donusum-finansmani",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar/kentsel-donusum-finansmani",
+    "content_hash": "0f0ae9ba6640d1e67ec599a71e74d7cca763e053c0e6f0babfbbf21226c65e2d",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa Kendim İçin Finansmanlar Kentsel Dönüşüm Finansmanı Kentsel Dönüşüm Finansmanı Çevre Şehircilik ve İklim Bakanlığı destekli katkı paylı kentsel dönüşüm finansmanları en yakın Şubemizde! Kentsel Dönüşüm Finansmanı Nedir? 6306 sayılı \"Afet Riski Altındaki Alanların Dönüştürülmesi Hakkında Kanun\" kapsamında riskli yapı veya riskli alanda bulunan binaların yenilenmesi için Bankamızca kâr payı destekli kentsel dönüşüm finansmanı kullandırılabilmektedir. Bu kapsamda Çevre, Şehircilik ve İklim Bakanlığı'nın kâr payı desteğinden faydalanabilmek için; Bakanlıkça yetkilendirilmiş değerleme firmaları aracılığıyla \"riskli yapı tespit raporu\" veya bağlı olunan Belediye aracılığı ile \"riskli alan raporu\" temin edilmesi gerekmektedir. İçeriği Nedir? Kentsel Dönüşüm Finansmanından Kimler Faydalanabilir? Konutlarını yeniden inşa etmek isteyen hak sahipleri. Riskli yapılarda en az 1 yıl oturan veya sınırlı ayni hak sahipleri. Özellikleri Hak sahiplerine kullandırılacak kâr payı destekli konut kredileri(kâr payı destekli kentsel dönüşüm finansmanında konut için azami vade 10 yıl, işyeri için 7 yıldır.) için azami vade 10 yıl, işyeri için 7 yıldır. Hak sahiplerine kullandırılacak kâr payı destekli finansman tutarı azami 1.250.000 TL'dir. Birden fazla bağımsız bölüme sahip olan hak sahipleri adına kâr payı desteği sağlanacak toplam finansman tutarı her bir bağımsız bölüm için 1.250.000 TL'yi aşmamak koşulu ile toplamda azami 3.000.000 TL olabilecektir. 6306 Sayılı Kanun kapsamında hak sahiplerince bankalardan kullanılacak finansmanlara Çevre, Şehircilik ve İklim Bakanlığı tarafından sağlanacak kâr payı desteği, finansman vade, oran ve finansman üst limitleri tabloda yer almaktadır. Krediler Oran Vade (Yıl) Azami Finansman Tutarı Devlet Katkısı Güçlendirme 0-120 ay %3.47 10 320.000 TL %0,50 Konut Yapım* 0-120 ay %3.47 10 1.250.000 TL %0,70 Konut Edinme 0-120 ay %3.47 10 1.250.000 TL %0,70 İşyeri Yapım 0-84 ay %3.47 7 800.000 TL %0,40 İşyeri Edinme 0-84 ay %3.47 7 350.000 TL %0,40 * Daha sonraki konutlar için en fazla 3 milyon TL'ye kadar %0,60 Devlet katkısı *Banka, finansman kâr oranlarında değişiklik yapabilir. Başvurunuzu en yakın Vakıf Katılım Şubesinden gerçekleştirebilirsiniz. *Kentsel Dönüşüm Finansmanı katkı payı oranları ve azami finansman tutarları Bakanlık tarafından belirlenmektedir. Tümünü Göster Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": "Finansman",
+    "fields": {
+      "finansman_tutari": {
+        "value": 3000000,
+        "currency": "TRY"
+      },
+      "vade_ay": 120,
+      "kampanya_kosullari": [
+        "Bu kapsamda Çevre, Şehircilik ve İklim Bakanlığı'nın kâr payı desteğinden faydalanabilmek için; Bakanlıkça yetkilendirilmiş değerleme firmaları aracılığıyla \"riskli yapı tespit raporu\" veya bağlı olunan Belediye aracılığı ile \"riskli alan raporu\" temin edilmesi gerekmektedir.",
+        "Riskli yapılarda en az 1 yıl oturan veya sınırlı ayni hak sahipleri.",
+        "Birden fazla bağımsız bölüme sahip olan hak sahipleri adına kâr payı desteği sağlanacak toplam finansman tutarı her bir bağımsız bölüm için 1.250.000 TL'yi aşmamak koşulu ile toplamda azami 3.000.000 TL olabilecektir."
+      ]
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Kar payı bilgisi yok",
+      "finansman_tutari": "1250000 - 3000000 tl arasında belirli şartlarda finasman desteği sunuluyor | alt=1250000",
+      "vade_ay": "Birden fazla vade seçeneği var | aralik=84-120",
+      "taksit_sayisi": "Taksit  Sayısı yerine vade sayısı var",
+      "tahsis_ucreti": "Tahsis tutarı yok",
+      "masraf_durumu": "Masraf bilgisi metinde yoktur",
+      "odul_miktari": "Ödül miktarı yok",
+      "indirim_orani": "İndirim tutarı yok",
+      "alisveris_puani": "Alışveriş puanı veya puan kazanımı bulunmuyor.",
+      "kampanya_suresi": "Kampanya süresi bilgisi yok",
+      "hedef_kitle": "Hedef kitle bilgisi yok"
+    }
+  },
+  {
+    "id": "vakif-katilim--finansmanlar-konut-finansmani-2",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/diger/yardim-merkezi/kendim-icin-detay/finansmanlar/konut-finansmani",
+    "content_hash": "d0af1d3180fed6d3202ebd77894b3eb14e039a0b01fd6d6d38f73bc3c18e7da3",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa Diğer Yardım Merkezi Kendim İçin Konut Finansmanı ile ilgili Sıkça Sorulan Sorular Finansmanlar Konut Finansmanı Taşıt Finansmanı Arsa Finansmanı İhtiyaç Finansmanı İş Yeri Finansmanı Konut Finansmanı Başvuru Sonucu Nasıl Öğrenilir? Vakıf Katılım Mobil Şube üzerinden finansman başvurularınızı 7/24 takip edebilir, süreçten haberdar olabilirsiniz Katılım Bankası Konut Finansmanı Caiz mi? Katılım finans prensiplerine göre konut finansmanı murabaha akdi kapsamında caizdir. Kullandırılmasında herhangi bir sakınca yoktur. Konut Finansmanı ile Konut Kredisi Arasındaki Fark Nedir? Konut finansmanı, faizsiz bir finansman türüdür ve katılım bankaları tarafından sunulur. Konut kredisi ise konvensiyonel bankaların faizli bir ürünüdür. Konut Finansmanı Nasıl Alınır? Herhangi bir Vakıf Katılım şubesi ne giderek ya da online başvuru formu doldurularak yapılır. Konut finansmanı başvurusu için gerekli form doldurulduktan sonra bankamız sizinle iletişime geçecektir. Ev Almak İçin Ne Kadar Konut Finansmanı Çekebilirim? Evin değerinin ne kadarına finansman çıkacağı, bankanın belirlediği limitler ve finansman koşullarına göre belirlenir. Genellikle evin değerinin bir kısmına finansman sağlanır. 2. El Konut Finansmanı Nedir? 2. El konut finansmanı, daha önce satın alınmış olan, müşterinin sahibinden ya da aracı kişiden satın aldığı konutlar için sağlanan finansmandır. Konut Finansmanı İçin Konut Yaşı Önemli Mi? Konut finansmanında konut yaşının önemi yoktur. Her yaştan konut için finansman kullandırılabilmektedir. Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": "Konut Finansmanı",
+    "fields": {},
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "annotators": [
+      "A"
+    ],
+    "adjudicated": false,
+    "hard": false,
+    "notes": {
+      "kar_payi_orani": "Metinde herhangi bir kâr payı oranı belirtilmemiştir.",
+      "finansman_tutari": "Finansman tutarı veya üst limiti verilmemiştir. \"Evin değerinin bir kısmına finansman sağlanır.\" ifadesi sayısal bir değer içermez.",
+      "vade_ay": "Vade süresi belirtilmemiştir.",
+      "taksit_sayisi": "Taksit sayısı belirtilmemiştir.",
+      "tahsis_ucreti": "Tahsis ücretine ilişkin bilgi bulunmamaktadır.",
+      "masraf_durumu": "Masraflı/masrafsız olduğuna dair herhangi bir ifade yoktur.",
+      "odul_miktari": "Herhangi bir ödül veya hediye kampanyası bulunmamaktadır.",
+      "indirim_orani": "İndirim oranı belirtilmemiştir.",
+      "alisveris_puani": "Alışveriş puanı veya puan kampanyası bulunmamaktadır.",
+      "kampanya_suresi": "Bu bir kampanya değildir; geçerlilik tarihi veya kampanya süresi yer almamaktadır.",
+      "kampanya_kosullari": "Kampanya koşulu değil bilgilendirme metni",
+      "hedef_kitle": "Sayfa konut finansmanı ürünü hakkında bilgi almak isteyen bireysel kullanıcıları hedeflemektedir; metinde özel bir kampanya hedef kitlesi tanımlanmamıştır."
+    }
+  }
+]
