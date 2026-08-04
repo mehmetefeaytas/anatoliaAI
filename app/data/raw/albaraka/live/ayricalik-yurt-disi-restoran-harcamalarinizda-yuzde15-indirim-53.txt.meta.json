@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/yurt-disi-restoran-harcamalarinizda-yuzde15-indirim-53",
+  "scraped_at": "2026-08-04T21:01:51+00:00",
+  "content_hash": "b06b365b6997b384d0a7e1971b821ca500f5d094e1a0d5c1b8f760a1d01299d7",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 36170,
+  "text_chars": 3356
+}

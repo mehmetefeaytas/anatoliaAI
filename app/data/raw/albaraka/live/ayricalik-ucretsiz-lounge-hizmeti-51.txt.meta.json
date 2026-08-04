@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/ucretsiz-lounge-hizmeti-51",
+  "scraped_at": "2026-08-04T21:01:45+00:00",
+  "content_hash": "e7e5cd66a4f1b8f236712a688f6e6661aeac90ef58367f9ff96ab8fcf2f89c44",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 34815,
+  "text_chars": 2121
+}

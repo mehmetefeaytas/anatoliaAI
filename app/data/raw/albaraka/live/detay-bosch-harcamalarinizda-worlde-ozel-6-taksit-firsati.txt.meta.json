@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/bosch-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:39+00:00",
+  "content_hash": "fcdf0825fce7628298652195ca5097ac3d1b2ca85b24f746c3f7c66957a0f351",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184594,
+  "text_chars": 1913
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/modalife-harcamalarinizda-worlde-ozel-9-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:42+00:00",
+  "content_hash": "28987b9bb9c1abe429eea1e5e1ff722b60ee38567b273e68ad643a1944a3d626",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188245,
+  "text_chars": 2110
+}

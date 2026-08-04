@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/istikbal-bellona-ve-mondihomeda-worlde-ozel-9-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:51+00:00",
+  "content_hash": "53bad9e1cee76ba485d367c05eab8943bd8c590f69cb6bcfe976030d96f35d24",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188120,
+  "text_chars": 2088
+}
