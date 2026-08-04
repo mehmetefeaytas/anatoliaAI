@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/adl-de-indirim-firsati",
+  "scraped_at": "2026-08-04T12:30:56+00:00",
+  "content_hash": "f029536cbd15c0f3ca6ab2e8ea365b889864888c649aca0e9fd909aed9a90348",
+  "collection_method": "live",
+  "title": "adL'de 750 TL İndirim! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 197896,
+  "text_chars": 4236
+}

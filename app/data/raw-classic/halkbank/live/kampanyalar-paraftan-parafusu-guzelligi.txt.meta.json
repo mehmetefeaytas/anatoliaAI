@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/paraftan-parafusu-guzelligi",
+  "scraped_at": "2026-08-04T13:16:57+00:00",
+  "content_hash": "275578c3eeb629d67950187e5807beced26c565f92d76c8c0cb22fb9b4b22e60",
+  "collection_method": "live",
+  "title": "Paraf&#39;tan ParafÜstü Güzelliği!",
+  "http_status": 200,
+  "raw_bytes": 392783,
+  "text_chars": 2711
+}

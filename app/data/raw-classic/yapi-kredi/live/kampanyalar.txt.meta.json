@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T13:18:31+00:00",
+  "content_hash": "9545620e03434fca1d2bd3c682d41eb3e0a030a3100b3a65738e2702151735e6",
+  "collection_method": "browser",
+  "title": "Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 168376,
+  "text_chars": 7624
+}

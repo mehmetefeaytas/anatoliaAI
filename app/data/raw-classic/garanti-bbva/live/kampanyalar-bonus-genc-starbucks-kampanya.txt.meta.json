@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-starbucks-kampanya",
+  "scraped_at": "2026-08-04T13:28:40+00:00",
+  "content_hash": "6cbf22b4c207a075e290782b18bd75c0fb027c0e6d5cf1d90a30558ee0aa0fdc",
+  "collection_method": "live",
+  "title": "Bonus'tan gençlere özel Starbucks'ta 300 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47096,
+  "text_chars": 2372
+}

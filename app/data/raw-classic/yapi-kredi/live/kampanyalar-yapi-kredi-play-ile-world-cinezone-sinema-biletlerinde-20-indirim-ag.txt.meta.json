@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar/yapi-kredi-play-ile-world-cinezone-sinema-biletlerinde-20-indirim-agustos-2",
+  "scraped_at": "2026-08-04T13:20:38+00:00",
+  "content_hash": "1f40bfa6bb34e4d71a6a2798bdb1bedcce1bcc8cbcb2286dda7936d3aebd2d98",
+  "collection_method": "browser",
+  "title": "Yapı Kredi Play ile World Cinezone sinema biletlerinde %20 indirim. | Yapı Kredi Play Kampanyaları - Gençlere Özel Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 129278,
+  "text_chars": 7898
+}

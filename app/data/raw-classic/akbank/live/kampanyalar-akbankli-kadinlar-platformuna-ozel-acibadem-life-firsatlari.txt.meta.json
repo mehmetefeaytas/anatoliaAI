@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-acibadem-life-firsatlari",
+  "scraped_at": "2026-08-04T11:43:23+00:00",
+  "content_hash": "570fa7a4a5d51b385617ce4f57ecf3a11d540ddbb33f9d113306e4ba38f74c29",
+  "collection_method": "live",
+  "title": "Acıbadem Life Fırsatları | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301972,
+  "text_chars": 10108
+}

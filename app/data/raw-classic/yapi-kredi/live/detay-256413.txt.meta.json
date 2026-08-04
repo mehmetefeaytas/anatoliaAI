@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256413",
+  "scraped_at": "2026-08-04T13:23:00+00:00",
+  "content_hash": "07890ba7316fab8d338b88d6faf011e6a7e555ad7a7f189d57ae60b8623d69a5",
+  "collection_method": "browser",
+  "title": "KATKIBIZDEN koduyla Yapı Kredi Mobil müşterisi olup BES hesabı açanlara özel aylık katkı payına göre 6 ayda 12.000 TL'ye varan nakit iade fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 947653,
+  "text_chars": 31806
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/mobildeniz-firsatlari",
+  "scraped_at": "2026-08-04T11:03:34+00:00",
+  "content_hash": "76e285d8d972687da5442cf31474bef6477d1a4f19ee4ceb81beba4441436fd9",
+  "collection_method": "live",
+  "title": "MobilDeniz Fırsatları | Kampanyalar | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324871,
+  "text_chars": 57188
+}

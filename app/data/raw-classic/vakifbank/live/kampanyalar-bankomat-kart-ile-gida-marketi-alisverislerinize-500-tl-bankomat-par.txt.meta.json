@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/bankomat-kart-ile-gida-marketi-alisverislerinize-500-tl-bankomat-para-40620",
+  "scraped_at": "2026-08-04T13:01:41+00:00",
+  "content_hash": "64605e513115db6305b0b0cddc172af0a660e7da57115683075bdb0b78ef266e",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 28182,
+  "text_chars": 3261
+}

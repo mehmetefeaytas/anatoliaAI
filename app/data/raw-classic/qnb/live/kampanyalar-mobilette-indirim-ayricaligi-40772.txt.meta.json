@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/mobilette-indirim-ayricaligi-40772",
+  "scraped_at": "2026-08-04T12:37:23+00:00",
+  "content_hash": "ab5823609ceb349eb140e6ca817d5c2d825204f5fad2f6746b7b2345173489ef",
+  "collection_method": "browser",
+  "title": "Mobilet'te seçili etkinliklerde %25'e varan indirim! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26722,
+  "text_chars": 1978
+}

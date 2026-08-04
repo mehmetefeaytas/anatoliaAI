@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/afililere-ozel-kampanyalar/enterprise-arac-kiralama-105403",
+  "scraped_at": "2026-08-04T11:03:40+00:00",
+  "content_hash": "c5e9e89d247824146a9642c176f8d03dcd23236d47d835da7f1a920f2d5fae61",
+  "collection_method": "live",
+  "title": "Enterprise Araç Kiralama | Afiliye Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 328303,
+  "text_chars": 58346
+}

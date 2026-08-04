@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/dijital-platform-kampanyasi",
+  "scraped_at": "2026-08-04T11:45:20+00:00",
+  "content_hash": "f9d9df4e56906c0d6418c7ab8d70a674222644ca0543eb87e5beeba9213d84cf",
+  "collection_method": "live",
+  "title": "Dijital Platform Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 302144,
+  "text_chars": 10127
+}

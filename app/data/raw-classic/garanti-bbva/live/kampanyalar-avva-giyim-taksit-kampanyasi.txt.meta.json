@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/avva-giyim-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T13:27:03+00:00",
+  "content_hash": "972a0b2de70e832f69dbd23ee8a3de3451b24c6a62fed0093754887c3960c56a",
+  "collection_method": "live",
+  "title": "AVVA'da 5 taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46059,
+  "text_chars": 1811
+}

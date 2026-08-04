@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/tuketici-kredisi",
+  "scraped_at": "2026-08-04T11:28:08+00:00",
+  "content_hash": "259931fac2a20521325bd33c419e347413fb5726fdb70dcb410a355a7fd617f4",
+  "collection_method": "browser",
+  "title": "Tüketici Kredisi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 79391,
+  "text_chars": 4277
+}

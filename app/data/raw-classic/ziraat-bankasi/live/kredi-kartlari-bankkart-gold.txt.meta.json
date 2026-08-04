@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/kredi-kartlari/bankkart-gold",
+  "scraped_at": "2026-08-04T11:28:35+00:00",
+  "content_hash": "01f6997e1f59f87075dc6f29d0f64c61ca8b6e33235b5f1a1347712eafe6818b",
+  "collection_method": "browser",
+  "title": "Bankkart Jest Gold | Kredi Kartları | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 65304,
+  "text_chars": 4546
+}

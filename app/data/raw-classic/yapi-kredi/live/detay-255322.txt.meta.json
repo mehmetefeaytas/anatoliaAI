@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/255322",
+  "scraped_at": "2026-08-04T13:22:26+00:00",
+  "content_hash": "e5e6bf2154ce46ff80c4e36810b8d8543a0fa56f041eb583f2091bdd224c8c91",
+  "collection_method": "browser",
+  "title": "Yapı Kredi'den yeni bir özellik: Başka bankaya ait kredi kartlarınızı Yapı Kredi Mobil'e ekleyip 3.000 TL'ye varan nakit kazanın! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 943578,
+  "text_chars": 30444
+}

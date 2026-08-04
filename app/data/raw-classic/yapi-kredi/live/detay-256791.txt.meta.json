@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256791",
+  "scraped_at": "2026-08-04T13:23:15+00:00",
+  "content_hash": "2a389e5935a9b931a1bfc9b60b73b308a153a7acf7b60df3fd012cc348395bbc",
+  "collection_method": "browser",
+  "title": "Siz de Tüzel Yapı Kredi müşterisi olun ve çalışanlarınızın maaşını Yapı Kredi üzerinden ödeyin ilk ay toplamda 40.000 TL'ye varan nakit iade kazanın! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 942397,
+  "text_chars": 29812
+}

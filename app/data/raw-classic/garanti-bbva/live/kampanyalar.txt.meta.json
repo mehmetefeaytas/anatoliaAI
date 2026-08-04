@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T13:25:41+00:00",
+  "content_hash": "78935abf435643e45ea93c159c59e46c1df89342e61766615ffd00e68baae594",
+  "collection_method": "live",
+  "title": "Kredi Kartı Kampanyaları | Bonus",
+  "http_status": 200,
+  "raw_bytes": 495340,
+  "text_chars": 24906
+}

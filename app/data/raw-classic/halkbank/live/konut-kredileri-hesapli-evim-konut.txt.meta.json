@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/hesapli-evim-konut",
+  "scraped_at": "2026-08-04T13:16:29+00:00",
+  "content_hash": "d011fed8b58377ad09bb9f6d7c25060771a7f1d1f97fb8ab8f08e64b36182a6a",
+  "collection_method": "live",
+  "title": "Hesaplı Evim Konut Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 407834,
+  "text_chars": 2603
+}

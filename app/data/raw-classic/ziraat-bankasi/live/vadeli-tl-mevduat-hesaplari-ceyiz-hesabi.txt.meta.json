@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/ceyiz-hesabi",
+  "scraped_at": "2026-08-04T11:30:18+00:00",
+  "content_hash": "8b1bb3faf95ce2caca24d4ca3a27e3d78644af839c3e383f71c5cb8733cafd57",
+  "collection_method": "browser",
+  "title": "Çeyiz Hesabı | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 66497,
+  "text_chars": 5054
+}

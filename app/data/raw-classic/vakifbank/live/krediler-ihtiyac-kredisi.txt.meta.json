@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/ihtiyac-kredisi",
+  "scraped_at": "2026-08-04T12:59:36+00:00",
+  "content_hash": "ecfc99f6a3c706f53fb8b6462c457a35c94590d9cad6564f539b8d224e9709d0",
+  "collection_method": "live",
+  "title": "İhtiyaç Kredisi | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 169833,
+  "text_chars": 630
+}

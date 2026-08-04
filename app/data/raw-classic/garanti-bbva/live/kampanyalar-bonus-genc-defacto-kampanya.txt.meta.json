@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-defacto-kampanya",
+  "scraped_at": "2026-08-04T13:28:19+00:00",
+  "content_hash": "a2da01789b1a7f9ffda0d7492f5fe6c347c40f881d5a60ea81da30eeb529eff8",
+  "collection_method": "live",
+  "title": "DeFacto'da giyim alışverişlerinizde geçerli 1.500 TL ve üzeri alışverişlerde 300 TL indirim!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48479,
+  "text_chars": 2499
+}

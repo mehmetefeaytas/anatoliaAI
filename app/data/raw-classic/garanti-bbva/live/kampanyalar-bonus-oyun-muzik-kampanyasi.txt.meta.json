@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-oyun-muzik-kampanyasi",
+  "scraped_at": "2026-08-04T13:29:31+00:00",
+  "content_hash": "256d2ef29b2da37683cb7c926b2975737944e53773a15d062f65ce9c9d9e3c5f",
+  "collection_method": "live",
+  "title": "Dijital oyun ve müzik platformlarında harcadığınız kadar bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47543,
+  "text_chars": 2705
+}

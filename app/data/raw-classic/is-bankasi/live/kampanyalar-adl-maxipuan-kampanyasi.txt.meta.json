@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/adl-maxipuan-kampanyasi",
+  "scraped_at": "2026-08-04T12:31:08+00:00",
+  "content_hash": "15502f05f3769f1e0ed865e6372f4c4db2476adab48f26c010141e56b2092b19",
+  "collection_method": "live",
+  "title": "Maximum'dan adL'de MaxiPuan Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 201750,
+  "text_chars": 6268
+}

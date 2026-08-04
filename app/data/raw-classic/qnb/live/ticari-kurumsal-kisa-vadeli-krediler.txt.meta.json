@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ticari-kurumsal-kisa-vadeli-krediler",
+  "scraped_at": "2026-08-04T12:40:01+00:00",
+  "content_hash": "b893f42d2531966b9220f18d970d3bd9b47108c3586df84d4aef9c71872d19c6",
+  "collection_method": "browser",
+  "title": "Kısa Vadeli Ticari Krediler | QNB",
+  "http_status": 200,
+  "raw_bytes": 74280,
+  "text_chars": 7973
+}

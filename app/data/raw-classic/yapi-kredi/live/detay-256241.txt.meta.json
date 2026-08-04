@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256241",
+  "scraped_at": "2026-08-04T13:22:50+00:00",
+  "content_hash": "59d5376888ff7b9e58e793d1dc55f59e006c1d5307524972bd20c716b42170b8",
+  "collection_method": "browser",
+  "title": "TATILEHAZIRLIK koduyla Yapı Kredi Mobil müşterisi olanlara özel kuaför ve güzellik merkezi harcamalarına özel 2.000 TL indirim fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 943472,
+  "text_chars": 30462
+}

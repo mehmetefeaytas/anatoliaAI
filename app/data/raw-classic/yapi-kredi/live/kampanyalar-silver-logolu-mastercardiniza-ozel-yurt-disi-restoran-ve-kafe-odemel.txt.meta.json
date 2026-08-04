@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar/silver-logolu-mastercardiniza-ozel-yurt-disi-restoran-ve-kafe-odemelerinde-15-indirim-2025",
+  "scraped_at": "2026-08-04T13:19:15+00:00",
+  "content_hash": "387014d9635992c440c1a5ca63a23bc523707e48e01fb95958984266017443a1",
+  "collection_method": "browser",
+  "title": "Silver logolu Mastercard’ınıza özel yurt dışı restoran ve kafe ödemelerinde %15 indirim! | Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 145402,
+  "text_chars": 10770
+}

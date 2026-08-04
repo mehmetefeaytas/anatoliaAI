@@ -1,0 +1,419 @@
+# Klasik (katılım OLMAYAN) bankalar — GÜMÜŞ EĞİTİM VERİSİ kaynağı
+#
+# İlgili: ../docs/anotasyon-hatti-plani.md
+#         ../src/extraction/silver/  ·  ../scripts/build_silver.py
+#
+# ============================ NE İÇİN VAR ============================
+# Bu dosya YARIŞMA VERİ SETİNİN PARÇASI DEĞİLDİR. Şartname §5.1 veri setinin
+# BDDK katılım bankalarının tümünü içermesini şart koşuyor — bu bir TABAN,
+# tavan değil ("tümünü içermelidir", "yalnızca onları içerebilir" değil).
+# Buradaki bankalar o tabanın dışında, ek amaçla toplanır:
+#
+#   1. 8-sınıf sınıflandırıcısı için gümüş eğitim verisi (CLAUDE.md §4:
+#      fine-tune YALNIZ bu sınıflandırma için; dengeli 150-300 örnek).
+#   2. Terminoloji ayrımı testi (aşağıya bakın) — şartname §5.5 ölçüsü.
+#   3. Negatif örnek / halüsinasyon testi: klasik banka sayfasında modelin
+#      `kar_payi_orani` ÜRETMEMESİ gerekir. İnsan etiketi gerektirmez.
+#
+# HASAT AYRI DİZİNE YAZAR: data/raw-classic/  (data/raw/ ile KARIŞMAZ)
+#   python3 -m src.scraping.harvest \
+#       --config config/banks-classic.yaml --raw-dir data/raw-classic
+#
+# Yarışma belgelerine, kalibrasyon CSV'lerine ve gold sete DOKUNULMAZ.
+# İnsan gold'u insan kalır: Cohen κ ve halüsinasyon oranı çapasını korur.
+#
+# ====================== TERMİNOLOJİ AYRIMI (asıl değer) ======================
+# Üç banka grubunun iki kolu var ve ikisi AYNI ürünü FARKLI sözlükle anlatıyor:
+#
+#   Ziraat Bankası   "konut kredisi / faiz oranı"   <-> Ziraat Katılım  "konut finansmanı / kâr payı oranı"
+#   VakıfBank        "konut kredisi / faiz oranı"   <-> Vakıf Katılım   "konut finansmanı / kâr payı oranı"
+#   Halkbank         "konut kredisi / faiz oranı"   <-> Emlak Katılım   "konut finansmanı / kâr payı oranı"
+#
+# Aynı kurumsal üslup, aynı ürün, farklı sözlük = neredeyse kusursuz
+# *minimal pair* seti. `paired_with` alanı BankConfig'de yok, bu yüzden
+# yorumda tutuluyor (mini-parser bilinmeyen anahtarı sessizce yok sayar —
+# yanlış izlenim vermemek için alan olarak yazılmadı).
+#
+# ============================ ÖLÇÜM NOTLARI ============================
+# 2026-08-04, hepsi doğrulandı (tahmin YOK):
+#  * robots.txt 9 bankada okundu; kampanya/kredi sayfalarında blok yok.
+#    Akbank /Doc*, /documents* engelliyor; İş Bankası /arama/*, /fiyatoran/*
+#    engelliyor; Ziraat tek tek duyuru sayfaları engelliyor. Hiçbiri
+#    ürün/kampanya keşfini kısıtlamıyor.
+#  * sitemap 8/9 bankada bulundu. TEB'de YOK -> yalnız campaign_paths.
+#  * Ziraat sitemap.xml bir sitemapindex (-> sitemap0.xml); discover.py
+#    özyinelemeli çözüyor.
+#  * Ziraat /tr/bireysel/krediler = 200, /tr/bireysel/kampanyalar = 404.
+#    Bu yüzden Ziraat'te kampanya yolu YAZILMADI.
+#  * Akbank sitemap'inde 1421 URL; /blog/ ve /ajournal/ ağır gürültü ->
+#    exclude_patterns'a alındı.
+#
+# max_docs: hedef ~300-400 belge / 11 banka. Sınıflandırıcı için sınıf başına
+# 20 örnek yeterli (8 sınıf = 160 taban), fazlası denge payı.
+
+banks:
+  # --- Eşleşmeli üçlü: terminoloji ayrımı testinin çekirdeği ---
+  - slug: ziraat-bankasi
+    name: T.C. Ziraat Bankası
+    website_url: https://www.ziraatbank.com.tr
+    # 2026-08-04 ÖLÇÜLDÜ: static modda 45 URL çekildi, 0 hata, ama yalnız
+    # 1 belge yazıldı. Neden: statik HTML'de ürün metni YOK — çıkarılan metin
+    # her sayfada birebir aynı 1039 baytlık çerez bandı + boilerplate oluyor
+    # ve metin tabanlı tekilleştirme hepsini tek kayda indiriyor. İçerik JS ile
+    # yükleniyor. Sessiz kayıp: hasat "0 başarısız URL" diyerek başarılı
+    # görünüyordu.
+    scrape_mode: js
+    # /tr/bireysel/kampanyalar 404 döndü (ölçüldü) -> yazılmadı.
+    #
+    # sitemap KASITLI OLARAK KAPALI: sitemap0.xml 500 URL taşıyor ama tüketici
+    # ürün detaylarını İÇERMİYOR (kurumsal/ticari/sigorta sayfaları). Açık
+    # bırakınca 87 düşük değerli aday listeye giriyor ve max_docs kırpması
+    # listeleme sayfasından çıkan 41 GERÇEK detay URL'sini taşırıyordu.
+    # Tarayıcıda doğrulanan gerçek biçim:
+    #   /tr/bireysel/krediler/genel-ihtiyaclar/tuketici-kredisi
+    campaign_paths:
+      - /tr/bireysel/krediler
+      - /tr/bireysel/krediler/genel-ihtiyaclar
+      - /tr/bireysel/mevduat
+      - /tr/bireysel
+      - /tr/kartlar
+    detail_patterns:
+      - /krediler/
+      - kredisi
+      - mevduat
+      - /kartlar/
+    exclude_patterns:
+      - /basin-
+      - /duyuru
+      - /haber
+      - /en/
+    max_docs: 60
+
+  - slug: vakifbank
+    name: VakıfBank
+    website_url: https://www.vakifbank.com.tr
+    scrape_mode: static
+    # vakifkart.com.tr AYRI ALAN ADI (VakıfBank'ın kart markası).
+    # 2026-08-04 ÖLÇÜMÜ: HTTP 200 ama yanıt süresi 29-31 SANİYE. StaticFetcher
+    # varsayılan zaman aşımı 25 sn olduğu için bu alan zaman aşımına düşer;
+    # hasat komutuna --timeout 45 verilmeden bu yollar BOŞ döner. Yolları
+    # şimdiden yazıyoruz ki zaman aşımı yükseltildiğinde tek koşuda gelsin.
+    extra_hosts:
+      - vakifkart.com.tr
+    campaign_paths:
+      - /tr/kampanyalar
+      - /tr/bireysel
+      - https://www.vakifkart.com.tr/kampanyalar
+    archive_paths:
+      - /tr/kampanya-arsivi
+    sitemap_urls:
+      - https://www.vakifbank.com.tr/XML/www.vakifbank.com.tr_sitemap-tr.xml
+    detail_patterns:
+      - kredi
+      - mevduat
+      - /kartlar/
+      - kampanya
+    exclude_patterns:
+      - /en/
+      - /basin
+      - /duyuru
+      - /insan-kaynaklari
+    max_docs: 70
+
+  - slug: halkbank
+    name: Halkbank
+    website_url: https://www.halkbank.com.tr
+    scrape_mode: static
+    # 2026-08-04, kullanıcı bildirdi + tarayıcıda doğrulandı: gerçek kampanya
+    # kataloğu /tr/bireysel/kampanyalar. Kart kampanyaları AYRI ALAN ADINDA
+    # (paraf.com.tr — Halkbank'ın kart markası): /tr/kampanyalar.html altında
+    # 27 kategori sayfası var. extra_hosts olmadan bu alan "site dışı" sayılıp
+    # tamamen atlanır (TOM Bank → tombankhadi.com ile aynı kalıp).
+    # paraf.com.tr'de robots.txt YOK (HTTP 404) → kısıt bildirilmemiş.
+    extra_hosts:
+      - paraf.com.tr
+    campaign_paths:
+      # 2026-08-04: Konut/Taşıt ÜRÜN sayfaları — sınıf dengesi için hedefli
+      # eklendi. Etiketleme ölçümü: 502 belgede Konut 13, Taşıt 9 çıktı
+      # (hedef 20/sınıf). Nedeni yapısal: klasik bankalar konut/taşıtı
+      # KAMPANYA değil ÜRÜN sayfası olarak yayımlıyor. Yollar HTTP 200
+      # doğrulandı; tahmin edilen Akbank/İş Bankası/DenizBank/VakıfBank
+      # karşılıkları 404 döndü, onlar yazılmadı.
+      - /tr/bireysel/krediler/konut-kredileri.html
+      - /tr/bireysel/kampanyalar
+      - /tr/bireysel
+      - https://www.paraf.com.tr/tr/kampanyalar.html
+      - https://www.paraf.com.tr/tr/kampanyalar/akaryakit.html
+      - https://www.paraf.com.tr/tr/kampanyalar/market.html
+      - https://www.paraf.com.tr/tr/kampanyalar/e-ticaret.html
+      - https://www.paraf.com.tr/tr/kampanyalar/beyaz-esya-ve-elektronik.html
+      - https://www.paraf.com.tr/tr/kampanyalar/giyim-kozmetik-ve-aksesuar.html
+      - https://www.paraf.com.tr/tr/kampanyalar/kafe-ve-restoran.html
+      - https://www.paraf.com.tr/tr/kampanyalar/seyahat.html
+      - https://www.paraf.com.tr/tr/kampanyalar/otomotiv.html
+      - https://www.paraf.com.tr/tr/kampanyalar/diger-firsatlar.html
+    sitemap_urls:
+      - https://www.halkbank.com.tr/tr.sitemap.xml
+    detail_patterns:
+      - kredi
+      - mevduat
+      - kart
+      - kampanya
+    exclude_patterns:
+      - /en/
+      - /basin
+      - /duyuru
+    max_docs: 45
+
+  # --- Özel bankalar: sınıf dengesi ve ifade çeşitliliği ---
+  - slug: akbank
+    name: Akbank
+    website_url: https://www.akbank.com
+    scrape_mode: static
+    campaign_paths:
+      - /Sayfalar/kampanyalar.aspx
+      - https://www.axess.com.tr/kampanyalar
+      - https://www.tosla.com/kampanyalar
+    extra_hosts:
+      - axess.com.tr
+      - tosla.com
+    sitemap_urls:
+      - https://www.akbank.com/siteassets/data/sitemap.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    # 1421 URL'lik sitemap'te blog/dergi içeriği baskın; ürün metni değil.
+    exclude_patterns:
+      - /blog/
+      - /ajournal/
+      - /Doc
+      - /documents
+    max_docs: 90
+
+  - slug: yapi-kredi
+    name: Yapı Kredi
+    website_url: https://www.yapikredi.com.tr
+    # 2026-08-04 ÖLÇÜLDÜ: static modda 1 belge / 1 başarısız URL — Ziraat ile
+    # aynı JS render kalıbı. js moduna geçince 39 belge.
+    scrape_mode: js
+    # Yapı Kredi kampanyalarını DÖRT ayrı kart markası alan adında da
+    # yayımlıyor (kullanıcı bildirdi, 2026-08-04'te hepsi HTTP 200 doğrulandı;
+    # hiçbirinde robots.txt kısıtı yok). extra_hosts olmadan bu alanlar
+    # "site dışı" sayılıp tamamen atlanır — paraf.com.tr ile aynı kalıp.
+    extra_hosts:
+      - worldcard.com.tr
+      - adioscard.com.tr
+      - yapikrediplay.com.tr
+      - crystalcard.com.tr
+    campaign_paths:
+      # 2026-08-04: Konut/Taşıt ÜRÜN sayfaları — sınıf dengesi için hedefli
+      # eklendi. Etiketleme ölçümü: 502 belgede Konut 13, Taşıt 9 çıktı
+      # (hedef 20/sınıf). Nedeni yapısal: klasik bankalar konut/taşıtı
+      # KAMPANYA değil ÜRÜN sayfası olarak yayımlıyor. Yollar HTTP 200
+      # doğrulandı; tahmin edilen Akbank/İş Bankası/DenizBank/VakıfBank
+      # karşılıkları 404 döndü, onlar yazılmadı.
+      - /bireysel-bankacilik/krediler/konut-kredisi
+      - /bireysel-bankacilik/krediler/tasit-kredisi
+      - /kampanyalar
+      - /kampanyalar/kategori/bireysel/
+      - https://www.worldcard.com.tr/kampanyalar
+      - https://www.adioscard.com.tr/kampanyalar
+      - https://www.yapikrediplay.com.tr/kampanyalar
+      - https://www.crystalcard.com.tr/kampanyalar/crystala-ozel-kampanyalar
+    sitemap_urls:
+      - https://www.yapikredi.com.tr/sitemaps.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    exclude_patterns:
+      - /blog
+      - /en/
+    max_docs: 110
+
+  - slug: garanti-bbva
+    name: Garanti BBVA
+    website_url: https://www.garantibbva.com.tr
+    scrape_mode: static
+    campaign_paths:
+      # 2026-08-04: Konut/Taşıt ÜRÜN sayfaları — sınıf dengesi için hedefli
+      # eklendi. Etiketleme ölçümü: 502 belgede Konut 13, Taşıt 9 çıktı
+      # (hedef 20/sınıf). Nedeni yapısal: klasik bankalar konut/taşıtı
+      # KAMPANYA değil ÜRÜN sayfası olarak yayımlıyor. Yollar HTTP 200
+      # doğrulandı; tahmin edilen Akbank/İş Bankası/DenizBank/VakıfBank
+      # karşılıkları 404 döndü, onlar yazılmadı.
+      - /krediler/konut-kredisi
+      - /krediler/tasit-kredisi
+      - /kampanyalar
+      - /isim-icin
+      - https://www.bonus.com.tr/kampanyalar
+      - https://www.bonus.com.tr/kampanyalar/marka/bonus
+    extra_hosts:
+      - bonus.com.tr
+    sitemap_urls:
+      - https://www.garantibbva.com.tr/sitemap/sitemap.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    exclude_patterns:
+      - /blog
+      - /en/
+      - engelsiz_ses
+      - engelsiz_isaret_dili
+    max_docs: 90
+
+  - slug: is-bankasi
+    name: Türkiye İş Bankası
+    website_url: https://www.isbank.com.tr
+    scrape_mode: static
+    # 2026-08-04, kullanıcı bildirdi + tarayıcıda doğrulandı: gerçek katalog
+    # /kampanyalar (49 kampanya bağlantısı, 15+ sektör kategorisi).
+    # ÖNCEKİ HATA: /tr/bireysel kullanılmıştı; oradan gelen sayfaların bir
+    # kısmı "Kampanya bulunamadı." diyen 200-250 baytlık BOŞ kabuklardı —
+    # yani hasat başarılı görünüp içeriksiz belge yazıyordu.
+    campaign_paths:
+      - /kampanyalar
+      - /kampanyalar/gida-market-kampanyalari
+      - /kampanyalar/giyim-aksesuar-kampanyalari
+      - /kampanyalar/seyahat-kampanyalari
+      - /kampanyalar/otomotiv-kampanyalari
+      - /kampanyalar/fatura-kampanyalari
+      - /kampanyalar/egitim-kirtasiye-kampanyalari
+      - /kampanyalar/turizm-kampanyalari
+      - /kampanyalar/emeklilere-ozel
+      - /kampanyalar/iste-maasa-ozel
+      - /kampanyalar/is-black-ayricaliklari
+      - /kampanyalar/bireysel-emeklilik
+      - /kampanyalar/diger-kampanyalar
+      - /tr/bireysel
+      - https://www.maximiles.com.tr/kampanyalar
+    extra_hosts:
+      - maximiles.com.tr
+    sitemap_urls:
+      - https://www.isbank.com.tr/sitemap/sitemap.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    # robots.txt: /arama/*, /fiyatoran/*, /_layouts/ engelli.
+    exclude_patterns:
+      - /arama/
+      - /fiyatoran/
+      - /_layouts/
+      - /en/
+      - /ru/
+    max_docs: 90
+
+  - slug: qnb
+    name: QNB
+    website_url: https://www.qnb.com.tr
+    # js ZORUNLU: arşiv sayfasında GERÇEK sayfalama var ve sayfa değişince URL
+    # DEĞİŞMİYOR. 2026-08-04 ölçümü (BrowserFetcher.fetch_all_pages ile canlı):
+    # /kampanyalar/arsivdeki-kampanyalar → 6 sayfa, her sayfada 9-10 YENİ
+    # bağlantı, toplam 55 tekil. Sayfalama olmadan yalnızca 10 kampanya
+    # görünüyordu → 5,5 kat kayıp. Sayfalama yalnızca BrowserFetcher'da
+    # çalışıyor (StaticFetcher'da fetch_all_pages yok), bu yüzden static'te
+    # bu kazanç ERİŞİLEMEZ.
+    #
+    # KARŞILAŞTIRMA: Kuveyt Türk ve Albaraka arşivlerinde de sayfalama
+    # denetimi bulunuyor ama tıklamak YENİ bağlantı getirmiyor (16/0/0/0/0 ve
+    # 53/0/0/0/0) — onlar promo karuseli, kampanya sayfalaması değil. Bu ayrım
+    # ölçülerek yapıldı, DOM'da denetim görmek tek başına kanıt değil.
+    scrape_mode: js
+    campaign_paths:
+      - /kampanyalar
+      - https://www.cardfinans.com.tr/kampanyalar
+    archive_paths:
+      - /kampanyalar/arsivdeki-kampanyalar
+    extra_hosts:
+      - cardfinans.com.tr
+    sitemap_urls:
+      - https://www.qnb.com.tr/_sitemaps/sitemap.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    exclude_patterns:
+      - /en/
+      - /blog
+    max_docs: 80
+
+  - slug: denizbank
+    name: DenizBank
+    website_url: https://www.denizbank.com
+    scrape_mode: static
+    campaign_paths:
+      - /kampanyalar
+    sitemap_urls:
+      - https://www.denizbank.com/_sitemaps/sitemap.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    exclude_patterns:
+      - /en/
+      - /blog
+    max_docs: 35
+
+  - slug: ing
+    name: ING
+    website_url: https://www.ing.com.tr
+    # 2026-08-04 ÖLÇÜLDÜ: static modda 1 belge — Ziraat/Yapı Kredi ile aynı
+    # JS render kalıbı.
+    scrape_mode: js
+    campaign_paths:
+      # 2026-08-04: Konut/Taşıt ÜRÜN sayfaları — sınıf dengesi için hedefli
+      # eklendi. Etiketleme ölçümü: 502 belgede Konut 13, Taşıt 9 çıktı
+      # (hedef 20/sınıf). Nedeni yapısal: klasik bankalar konut/taşıtı
+      # KAMPANYA değil ÜRÜN sayfası olarak yayımlıyor. Yollar HTTP 200
+      # doğrulandı; tahmin edilen Akbank/İş Bankası/DenizBank/VakıfBank
+      # karşılıkları 404 döndü, onlar yazılmadı.
+      - /tr/sizin-icin/krediler/konut-kredisi
+      - /tr/sizin-icin/krediler/tasit-kredisi
+      - /tr/bireysel
+      - /tr/sizin-icin/kampanyalar
+    sitemap_urls:
+      - https://www.ing.com.tr/sitemap_tr.xml
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    exclude_patterns:
+      - /en/
+      - /blog
+    max_docs: 35
+
+  # sitemap YOK (robots.txt'te bildirilmemiş) -> yalnız gezinme yollarıyla.
+  - slug: teb
+    name: TEB
+    website_url: https://www.teb.com.tr
+    scrape_mode: static
+    campaign_paths:
+      # 2026-08-04: Konut/Taşıt ÜRÜN sayfaları — sınıf dengesi için hedefli
+      # eklendi. Etiketleme ölçümü: 502 belgede Konut 13, Taşıt 9 çıktı
+      # (hedef 20/sınıf). Nedeni yapısal: klasik bankalar konut/taşıtı
+      # KAMPANYA değil ÜRÜN sayfası olarak yayımlıyor. Yollar HTTP 200
+      # doğrulandı; tahmin edilen Akbank/İş Bankası/DenizBank/VakıfBank
+      # karşılıkları 404 döndü, onlar yazılmadı.
+      - /konut-kredisi/
+      - /tasit-kredisi/
+      - /kampanyalar
+      - /bireysel-bankacilik
+    detail_patterns:
+      - kredi
+      - kampanya
+      - mevduat
+      - kart
+    exclude_patterns:
+      - /en/
+      - /blog
+    max_docs: 35

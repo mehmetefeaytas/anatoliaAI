@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/yeni-ciftcilerimize-25000-tl-faizsiz-nakit-denizde-140404",
+  "scraped_at": "2026-08-04T11:04:37+00:00",
+  "content_hash": "07bcb4cc148ad2b748204b3339ae4db72b947cb2f21f4bfac4b2ce3d60123708",
+  "collection_method": "live",
+  "title": "Yeni Çiftçilerimize 25.000 TL Faizsiz Nakit Deniz’de! | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 334459,
+  "text_chars": 59855
+}

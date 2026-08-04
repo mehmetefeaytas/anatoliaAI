@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/2-ay-faizsiz-25000-tl-ye-varan-nakit-avans-kampanyasi-136256",
+  "scraped_at": "2026-08-04T11:03:58+00:00",
+  "content_hash": "578015486424b06c23cf24929a65e8af412b6c9d5957b9b3c221e9db34e7c761",
+  "collection_method": "live",
+  "title": "MobilDeniz'e Özel 2 Ay Faizsiz 25.000 TL‘ye Varan Nakit Avans Kampanyası! | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 333692,
+  "text_chars": 59136
+}

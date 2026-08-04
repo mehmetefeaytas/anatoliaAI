@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/yatirimci-iliskileri/kredi-derecelendirme-notlari",
+  "scraped_at": "2026-08-04T12:40:49+00:00",
+  "content_hash": "6da9f1811fc023869e20e85c035cacfbb9e041a27ba068ebba0a4fed6b4a275b",
+  "collection_method": "browser",
+  "title": "Kredi Derecelendirme Notları | QNB",
+  "http_status": 200,
+  "raw_bytes": 63528,
+  "text_chars": 1295
+}

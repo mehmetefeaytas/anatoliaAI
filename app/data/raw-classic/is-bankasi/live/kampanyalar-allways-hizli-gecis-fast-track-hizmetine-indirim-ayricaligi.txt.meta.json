@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/allways-hizli-gecis-fast-track-hizmetine-indirim-ayricaligi",
+  "scraped_at": "2026-08-04T12:32:03+00:00",
+  "content_hash": "b49ea5e68d823ee47920461d0e9b721cee3d3a8c6968c17d3d208b1d8e8e667d",
+  "collection_method": "live",
+  "title": "Maximum Kartlarınız ile Sabiha Gökçen Havalimanı’nda ALLWAYS Hızlı Geçiş (Fast Track) Hizmetine %50 İndirim Ayrıcalığı!",
+  "http_status": 200,
+  "raw_bytes": 188492,
+  "text_chars": 2122
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/proje-ve-yatirim-kredileri",
+  "scraped_at": "2026-08-04T12:59:24+00:00",
+  "content_hash": "5940080efe388c59d884adf2241b3304b492e411ffa835432a43b9b8fdc8ee2e",
+  "collection_method": "live",
+  "title": "Proje ve Yatırım Kredileri | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 171794,
+  "text_chars": 294
+}

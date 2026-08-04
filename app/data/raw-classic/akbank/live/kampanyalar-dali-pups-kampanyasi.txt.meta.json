@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/dali-pups-kampanyasi",
+  "scraped_at": "2026-08-04T11:45:08+00:00",
+  "content_hash": "abf823934ce8af4e4f829c3687158bcfa3c2b3f278b14f4239ba484b8c299af9",
+  "collection_method": "live",
+  "title": "Dali Pups Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 298510,
+  "text_chars": 8594
+}

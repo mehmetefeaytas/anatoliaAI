@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/e-vadeli-mevduat-urunleri",
+  "scraped_at": "2026-08-04T12:38:31+00:00",
+  "content_hash": "4fffdfaa01d3e1081270ab245d4ef531b944d349fdab1bcd82064a7f2ad6e242",
+  "collection_method": "browser",
+  "title": "Anında E-Vadeli Mevduat Hesabı Açma ve Faiz | QNB",
+  "http_status": 200,
+  "raw_bytes": 80126,
+  "text_chars": 4879
+}

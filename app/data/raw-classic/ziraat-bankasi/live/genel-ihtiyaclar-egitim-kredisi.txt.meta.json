@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/egitim-kredisi",
+  "scraped_at": "2026-08-04T11:28:54+00:00",
+  "content_hash": "7605119ebe301a8d3f86c9ec36ebf88c3477132d03fa36a07bcb2fc5275f4827",
+  "collection_method": "browser",
+  "title": "Eğitim Kredisi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 62291,
+  "text_chars": 3276
+}

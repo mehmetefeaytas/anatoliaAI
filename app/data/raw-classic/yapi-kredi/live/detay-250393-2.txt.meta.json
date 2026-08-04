@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/250393",
+  "scraped_at": "2026-08-04T13:24:30+00:00",
+  "content_hash": "de7cce8361d45447d5ae759b79f631a1927ee88409e211153ae6a6162147c939",
+  "collection_method": "browser",
+  "title": "Aradığın ürünün en uygun fiyatlısını bulmak için aşağıdaki videoyu izlemeyi unutma! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 944519,
+  "text_chars": 30209
+}

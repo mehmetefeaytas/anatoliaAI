@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/bize-ulasin/bize-ulasin/kampanya",
+  "scraped_at": "2026-08-04T12:37:42+00:00",
+  "content_hash": "23ddd66b14c04f575765384b1690523989d17da0d8149720fa0bd667c5cc3485",
+  "collection_method": "browser",
+  "title": "Kampanya | QNB",
+  "http_status": 200,
+  "raw_bytes": 61357,
+  "text_chars": 559
+}

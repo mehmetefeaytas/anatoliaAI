@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/istanbulkart-yukleme",
+  "scraped_at": "2026-08-04T12:38:46+00:00",
+  "content_hash": "c533cfbfd9f499d8dcbc74872f4195cd6bd00c2264a957e5056289680b6f407e",
+  "collection_method": "browser",
+  "title": "İstanbul Kart Yükleme ve Bakiye Sorgulama | QNB",
+  "http_status": 200,
+  "raw_bytes": 87591,
+  "text_chars": 11449
+}

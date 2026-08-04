@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kampanyalar/724-kampanyalari/otomatik-fatura-odeme-talimati-parapuan-kampanyasi-18197",
+  "scraped_at": "2026-08-04T12:37:45+00:00",
+  "content_hash": "882964ec107931e93e1151b3c7678d359b814a1c1d98e2fbaf41d8209fabc2ca",
+  "collection_method": "browser",
+  "title": "Tüm Faturalarınızı QNB ile Kolayca Ödeyin",
+  "http_status": 200,
+  "raw_bytes": 65997,
+  "text_chars": 4068
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kartlar",
+  "scraped_at": "2026-08-04T12:38:02+00:00",
+  "content_hash": "f7cd867226592032caedcd52a497bc0080b14f04d9ade591ca6cd0518e8660ac",
+  "collection_method": "browser",
+  "title": "QNB Kredi Kartı Kartları",
+  "http_status": 200,
+  "raw_bytes": 54624,
+  "text_chars": 1390
+}

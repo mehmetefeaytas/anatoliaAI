@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/tarim-ciftci-isletme-kredileri",
+  "scraped_at": "2026-08-04T12:39:48+00:00",
+  "content_hash": "b71a0f1e726458c4cd890c10797be5060f65699b8dbadb514360c3b2c6906931",
+  "collection_method": "browser",
+  "title": "Çitçiler için İşletme Kredileri | QNB",
+  "http_status": 200,
+  "raw_bytes": 94645,
+  "text_chars": 13316
+}

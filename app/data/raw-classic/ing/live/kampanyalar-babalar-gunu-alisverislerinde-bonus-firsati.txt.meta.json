@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/babalar-gunu-alisverislerinde-bonus-firsati",
+  "scraped_at": "2026-08-04T11:34:31+00:00",
+  "content_hash": "a40fbaa71233d60659459a8a6c17319288e23f2e92dc936e3933cfcc798539f2",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 56235,
+  "text_chars": 2947
+}

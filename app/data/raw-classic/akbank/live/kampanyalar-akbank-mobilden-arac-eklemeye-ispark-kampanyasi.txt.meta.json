@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobilden-arac-eklemeye-ispark-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:41+00:00",
+  "content_hash": "3327b309df14777279adbd63e852eb9b211b1b16319b25e15da75f3a9933f793",
+  "collection_method": "live",
+  "title": "Akbank Mobil’den Araç Eklemeye İSPARK Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303404,
+  "text_chars": 11577
+}

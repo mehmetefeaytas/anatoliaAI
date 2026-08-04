@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-veteriner-petshop-kampanyalari",
+  "scraped_at": "2026-08-04T13:30:01+00:00",
+  "content_hash": "4d2b4a2f6932ee77d8d123c46284e1e5c49e6d86d9a3705a1025d5e39900e2a3",
+  "collection_method": "live",
+  "title": "Veteriner ve Petshop alışverişlerinize özel 200 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46398,
+  "text_chars": 2325
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/dijitalkopru/akademi/yemek-kartlarinda-qr-kod-kullanmanin-avantajlari-10587",
+  "scraped_at": "2026-08-04T12:37:58+00:00",
+  "content_hash": "0fc205357632041ed391bd84f8f81ca98cc2a9b341966b79f8aab324c1927480",
+  "collection_method": "browser",
+  "title": "Yemek Kartlarında QR Kod Kullanımı | QNB Dijital Köprü",
+  "http_status": 200,
+  "raw_bytes": 23279,
+  "text_chars": 5225
+}

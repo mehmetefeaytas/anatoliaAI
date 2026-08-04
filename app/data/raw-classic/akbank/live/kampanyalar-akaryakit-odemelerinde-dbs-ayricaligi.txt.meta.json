@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akaryakit-odemelerinde-dbs-ayricaligi",
+  "scraped_at": "2026-08-04T11:41:38+00:00",
+  "content_hash": "dc34710b4e9379c7c0b9f53e90ac2744030c31ffe3409abaa06cc1ac45eb776f",
+  "collection_method": "live",
+  "title": "Akaryakıt Ödemelerinde DBS Ayrıcalığı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303967,
+  "text_chars": 11415
+}

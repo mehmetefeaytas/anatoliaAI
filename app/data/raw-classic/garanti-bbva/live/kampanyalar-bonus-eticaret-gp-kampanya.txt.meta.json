@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-eticaret-gp-kampanya",
+  "scraped_at": "2026-08-04T13:28:10+00:00",
+  "content_hash": "78165dc5f0e4b86f6c48aee16b32440890549099ee0effccb4d222daa8584395",
+  "collection_method": "live",
+  "title": "E-ticaret alışverişlerine 1.050 TL, GarantiPay ile 1.200 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 52793,
+  "text_chars": 5043
+}

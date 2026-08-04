@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-open-english-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:22+00:00",
+  "content_hash": "dee13aab20ddd44658c4e1e0110d3883e7be9a32fd1b89ee4bc6e12b600c10b3",
+  "collection_method": "live",
+  "title": "Bonus'tan gençlere özel Open English'te 1.000 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46850,
+  "text_chars": 2333
+}

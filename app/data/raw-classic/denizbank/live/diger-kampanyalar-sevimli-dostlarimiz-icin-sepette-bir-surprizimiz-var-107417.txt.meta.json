@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/diger-kampanyalar/sevimli-dostlarimiz-icin-sepette-bir-surprizimiz-var-107417",
+  "scraped_at": "2026-08-04T11:04:46+00:00",
+  "content_hash": "dd9013b865b94d2938f567f1bff9a4bb07a2ff8c3e182ce262f46dc83112e404",
+  "collection_method": "live",
+  "title": "Sevimli Dostlarımız İçin Sepette Bir Sürprizimiz Var! | Diğer Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 330874,
+  "text_chars": 58680
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T13:18:57+00:00",
+  "content_hash": "c79e2a1c979de02d745fabfb3888d892ccedc0eafa2731f47e48124c0fbd5182",
+  "collection_method": "browser",
+  "title": "Yapı Kredi Play Kampanyaları - Gençlere Özel Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 154489,
+  "text_chars": 7325
+}

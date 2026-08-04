@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.maximiles.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T12:27:45+00:00",
+  "content_hash": "e42ad500383f8fa0a5b7a8525bde79f6a74f575a76d172dedc1a564f2ea79148",
+  "collection_method": "live",
+  "title": "Kredi Kartı Kampanyalar | Maximiles",
+  "http_status": 200,
+  "raw_bytes": 89695,
+  "text_chars": 2158
+}

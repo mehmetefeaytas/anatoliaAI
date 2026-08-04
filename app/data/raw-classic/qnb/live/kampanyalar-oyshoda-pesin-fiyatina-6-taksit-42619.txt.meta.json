@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/oyshoda-pesin-fiyatina-6-taksit-42619",
+  "scraped_at": "2026-08-04T12:37:25+00:00",
+  "content_hash": "85c2aeb3febda9b668b223e79d69791588249fa05019d9e88839a1dcc2f4360b",
+  "collection_method": "browser",
+  "title": "OYSHO’da Peşin Fiyatına 6 Taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26205,
+  "text_chars": 1785
+}

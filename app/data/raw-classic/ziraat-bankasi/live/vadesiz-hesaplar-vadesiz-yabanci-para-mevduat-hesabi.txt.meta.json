@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadesiz-hesaplar/vadesiz-yabanci-para-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:29:48+00:00",
+  "content_hash": "bb0dd0c64ae1022dd743eb41659ea29735bcd9f6f555da2d16bb2e9294570065",
+  "collection_method": "browser",
+  "title": "Vadesiz Yabancı Para Mevduat Hesabı | Vadesiz Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 64769,
+  "text_chars": 3111
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/almila-mobilyada-maxipuan-firsati",
+  "scraped_at": "2026-08-04T12:32:07+00:00",
+  "content_hash": "44cdd26410c55c4f287f931b4e27d577235f86472ab7e7770889fa5331654a2a",
+  "collection_method": "live",
+  "title": "Almila Mobilya'da 4.000 TL MaxiPuan Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 189907,
+  "text_chars": 2128
+}

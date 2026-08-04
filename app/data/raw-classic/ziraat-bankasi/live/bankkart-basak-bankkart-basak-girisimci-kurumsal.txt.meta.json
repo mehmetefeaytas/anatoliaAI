@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/bankkart-basak/bankkart-basak-girisimci-kurumsal",
+  "scraped_at": "2026-08-04T11:28:26+00:00",
+  "content_hash": "739127defc2f205595292a9d0e791fa6eca8dd76f8573a71455a7428d91953da",
+  "collection_method": "browser",
+  "title": "Bankkart Başak Ticari Kurumsal | Bankkart Başak | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63646,
+  "text_chars": 4548
+}

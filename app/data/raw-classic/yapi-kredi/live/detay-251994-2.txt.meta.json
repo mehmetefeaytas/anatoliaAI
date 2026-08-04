@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/251994",
+  "scraped_at": "2026-08-04T13:24:44+00:00",
+  "content_hash": "7aafa9f9f4dd170d84f0c76bfd60da62d50fddb4d3461aed799478b9c5ecd637",
+  "collection_method": "browser",
+  "title": "Anneler Gününe Özel Kredi | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 936574,
+  "text_chars": 29588
+}

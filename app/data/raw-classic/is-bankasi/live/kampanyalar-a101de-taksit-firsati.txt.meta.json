@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/a101de-taksit-firsati",
+  "scraped_at": "2026-08-04T12:30:34+00:00",
+  "content_hash": "6351c902dc924333b8edf7f9352ccd23f3cb5f13426ef4622561e75f44a79c25",
+  "collection_method": "live",
+  "title": "A101’de Taksit Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 187649,
+  "text_chars": 1404
+}

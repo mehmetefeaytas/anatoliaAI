@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/kartlar/kredi-kartlari",
+  "scraped_at": "2026-08-04T12:59:09+00:00",
+  "content_hash": "272fb30de12ca216a9dc22380a7c18063030049f54c9f326578f8748b7cc0005",
+  "collection_method": "live",
+  "title": "Ticari Kredi Kartları | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 180095,
+  "text_chars": 659
+}

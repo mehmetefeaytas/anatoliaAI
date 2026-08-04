@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-kobim-kazansin-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:05+00:00",
+  "content_hash": "96b0d68a383788cb8422a511b59db0f34013c5f63eb64a5f669e7d50899bb3cd",
+  "collection_method": "live",
+  "title": "KOBİM Kazansın Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 310063,
+  "text_chars": 17279
+}

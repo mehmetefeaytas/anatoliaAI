@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bankamiz/bizi-taniyin/haberler-ve-duyurular/haberler/2016/eylul/halkbanktan-sahan-gokbakarli-yeni-reklam-kampanyasi",
+  "scraped_at": "2026-08-04T13:17:36+00:00",
+  "content_hash": "d835f5d077ea7e24a9a4bb3dea35e4b3fc9946d97631923c57b79c6ac33917d0",
+  "collection_method": "live",
+  "title": "Halkbank&#39;tan Şahan Gökbakar&#39;lı yeni reklam kampanyası",
+  "http_status": 200,
+  "raw_bytes": 395590,
+  "text_chars": 4344
+}

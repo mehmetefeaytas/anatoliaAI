@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/248047",
+  "scraped_at": "2026-08-04T13:23:57+00:00",
+  "content_hash": "918983abaa6ef0f323d39f4000858df25ffa6eed6fdbbdf0058cf6f3a77a71e9",
+  "collection_method": "browser",
+  "title": "Size Özel Kapama Koşullu Kredi | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 940145,
+  "text_chars": 30044
+}

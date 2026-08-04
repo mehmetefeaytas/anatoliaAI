@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/dask-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T11:45:11+00:00",
+  "content_hash": "5c87e78be5dcf747775c2b5d2a0cf34eaa68996ba3507134c5b7337bf6010383",
+  "collection_method": "live",
+  "title": "Evini DASK ile güvence altına alanlara Akbank’tan 50%’ye varan indirim! | Akbank",
+  "http_status": 200,
+  "raw_bytes": 298617,
+  "text_chars": 8675
+}

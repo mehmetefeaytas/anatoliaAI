@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar/silver-logolu-mastercardiniza-ozel-galataportta-otopark-1-tl",
+  "scraped_at": "2026-08-04T13:19:09+00:00",
+  "content_hash": "0d613664738f3f0cf0190210de73588e5134b01069ad9df96a30986d27a71d1b",
+  "collection_method": "browser",
+  "title": "Silver logolu Mastercard’ınıza özel Galataport’ta otopark 1 TL! | Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 143564,
+  "text_chars": 9124
+}

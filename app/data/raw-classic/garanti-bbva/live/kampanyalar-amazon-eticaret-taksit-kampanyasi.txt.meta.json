@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/amazon-eticaret-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:51+00:00",
+  "content_hash": "5e431076447dfb904e1d855cafd01778a30ac5d78efae69f07785d7be231df44",
+  "collection_method": "live",
+  "title": "Amazon.com.tr'de peşin fiyatına 9 taksit fırsatı!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 51803,
+  "text_chars": 4540
+}

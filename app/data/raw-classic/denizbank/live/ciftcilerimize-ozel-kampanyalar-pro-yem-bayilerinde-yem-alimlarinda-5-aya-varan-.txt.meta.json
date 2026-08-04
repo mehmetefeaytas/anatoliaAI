@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/pro-yem-bayilerinde-yem-alimlarinda-5-aya-varan-vade-138234",
+  "scraped_at": "2026-08-04T11:04:28+00:00",
+  "content_hash": "1f9b5e7cf8b142531021b093721d0408818d8dfe2897b566e8d07d6ab667e13b",
+  "collection_method": "live",
+  "title": "Pro Yem Bayilerinde Yem Alımlarında 5 Aya Varan Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332461,
+  "text_chars": 58203
+}

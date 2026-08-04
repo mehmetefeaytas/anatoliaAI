@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/avantajli-vadeli-hesap",
+  "scraped_at": "2026-08-04T11:27:41+00:00",
+  "content_hash": "79a22edaf12a8343b445d0d4c2e2efcc16d856fb395e8c61068c545217cfc635",
+  "collection_method": "browser",
+  "title": "Avantajlı Vadeli Hesap | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 73322,
+  "text_chars": 4782
+}

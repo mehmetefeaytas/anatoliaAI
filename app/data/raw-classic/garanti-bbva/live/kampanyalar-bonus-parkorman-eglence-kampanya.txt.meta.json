@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-parkorman-eglence-kampanya",
+  "scraped_at": "2026-08-04T13:29:34+00:00",
+  "content_hash": "bff1630e2c2e41bbc8b7104de5104a1e1e29a0465d5f69746474a6f6746e0d9b",
+  "collection_method": "live",
+  "title": "Bonus Parkorman'da %10 bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47322,
+  "text_chars": 2247
+}

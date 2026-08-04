@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bathandbodyworks-bf-kozmetik-kampanya",
+  "scraped_at": "2026-08-04T13:27:09+00:00",
+  "content_hash": "b7863f3b4c6c878b5733847487dd12fc9b36ccc3990e6aa1d0d3b4f5032a516a",
+  "collection_method": "live",
+  "title": "Bath&amp;Body Works'te 3.000 TL ve üzeri alışverişe 300 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47361,
+  "text_chars": 1883
+}

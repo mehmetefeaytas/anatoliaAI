@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/ihtiyac-kredileri/kampanyali-ihtiyac-kredisi",
+  "scraped_at": "2026-08-04T13:16:35+00:00",
+  "content_hash": "f66decdf5af056af9659eb215e0ec40dc4b947b25ea6e1ee5f8616a144758b0e",
+  "collection_method": "live",
+  "title": "Kampanyalı İhtiyaç Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 407311,
+  "text_chars": 1779
+}

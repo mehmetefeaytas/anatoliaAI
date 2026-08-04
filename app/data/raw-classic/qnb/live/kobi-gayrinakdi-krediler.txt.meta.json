@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kobi-gayrinakdi-krediler",
+  "scraped_at": "2026-08-04T12:38:58+00:00",
+  "content_hash": "78ce358d4ddf1c9bdfc3e8a3f7750341f021bca8c85f122c95003e0a109b6bdc",
+  "collection_method": "browser",
+  "title": "Gayrinakdi KOBİ Destek Kredileri | QNB",
+  "http_status": 200,
+  "raw_bytes": 68667,
+  "text_chars": 2932
+}

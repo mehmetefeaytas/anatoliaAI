@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-mobil-odeme-kampanyasi",
+  "scraped_at": "2026-08-04T13:29:07+00:00",
+  "content_hash": "b39cfaabae44a40114a13b7df40545d84eb9fbcf6dfb19f13123ebc528d9e771",
+  "collection_method": "live",
+  "title": "Mobil Temassız veya QR ile ödemelerinize 600 TL'ye varan bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47796,
+  "text_chars": 3342
+}

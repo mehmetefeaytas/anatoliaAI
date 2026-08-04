@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-dyson-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:03+00:00",
+  "content_hash": "7108bdd11c41c674680ca9d7a1661946a5be801c5c0eba074a9f9db165dedaf6",
+  "collection_method": "live",
+  "title": "Müşteri Ol Dyson Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 180356,
+  "text_chars": 10550
+}

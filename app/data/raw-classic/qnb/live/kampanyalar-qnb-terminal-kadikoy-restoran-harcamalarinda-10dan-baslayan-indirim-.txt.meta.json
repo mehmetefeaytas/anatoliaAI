@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/qnb-terminal-kadikoy-restoran-harcamalarinda-10dan-baslayan-indirim-42833",
+  "scraped_at": "2026-08-04T12:37:28+00:00",
+  "content_hash": "5865617d5f1fd06673584f14eabf910e7fcb6c1d8c522be691dbb0e60b26bd8b",
+  "collection_method": "browser",
+  "title": "QNB Terminal Kadıköy Restoran Harcamalarında %10’dan Başlayan İndirim! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26523,
+  "text_chars": 2180
+}

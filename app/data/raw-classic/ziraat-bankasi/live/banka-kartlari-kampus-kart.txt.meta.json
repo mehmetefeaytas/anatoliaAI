@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/banka-kartlari/kampus-kart",
+  "scraped_at": "2026-08-04T11:28:20+00:00",
+  "content_hash": "221fdf2bad059eacd78661dc05791679e55462d9f276775b87b0c77b9c42965a",
+  "collection_method": "browser",
+  "title": "Kampüs Kart | Banka Kartları | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63045,
+  "text_chars": 5052
+}

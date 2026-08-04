@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/dijitalkopru/dijital-cozumlerimiz/qnb-esolutions",
+  "scraped_at": "2026-08-04T12:37:57+00:00",
+  "content_hash": "5adf1a001235d656d8ea34bcaa72bbe8acd79217600d63db47aa80f5090686f6",
+  "collection_method": "browser",
+  "title": "e-Dönüşüm Hizmetleri | QNB Dijital Köprü",
+  "http_status": 200,
+  "raw_bytes": 46536,
+  "text_chars": 5552
+}

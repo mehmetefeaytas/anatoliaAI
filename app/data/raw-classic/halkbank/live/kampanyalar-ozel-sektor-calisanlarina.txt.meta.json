@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/ozel-sektor-calisanlarina",
+  "scraped_at": "2026-08-04T13:16:51+00:00",
+  "content_hash": "77f4291b003e5eba38e9b9e85a428cf71804017249244f0dc25d48118544aba7",
+  "collection_method": "live",
+  "title": "Özel Sektör Çalışanlarına",
+  "http_status": 200,
+  "raw_bytes": 411938,
+  "text_chars": 3234
+}

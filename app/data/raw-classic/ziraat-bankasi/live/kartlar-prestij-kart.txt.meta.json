@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.bankkart.com.tr/kartlar/prestij-kart",
+  "scraped_at": "2026-08-04T11:28:43+00:00",
+  "content_hash": "c5db25afefb3e054cb352ff483b205a17c2fd05bcd0be79753c31f8ae21bd6a1",
+  "collection_method": "browser",
+  "title": "Bankkart Prestij | Kartlar | Bankkart",
+  "http_status": 200,
+  "raw_bytes": 165893,
+  "text_chars": 28805
+}

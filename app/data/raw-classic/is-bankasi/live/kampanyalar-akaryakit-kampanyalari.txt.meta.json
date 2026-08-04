@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akaryakit-kampanyalari",
+  "scraped_at": "2026-08-04T12:31:41+00:00",
+  "content_hash": "671dc3b1d1530fdc3141b57b921f25bb4f75945bfe2fb95fd4bea789f6b76a07",
+  "collection_method": "live",
+  "title": "Akaryakıt Kampanyaları | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 213841,
+  "text_chars": 2322
+}

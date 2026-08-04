@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.worldcard.com.tr/kampanyalar/mastercard-logolu-kartiniz-ile-apple-ve-microsoft-platformlarindan-yapacaginiz-harcamalara-temmuz",
+  "scraped_at": "2026-08-04T13:20:01+00:00",
+  "content_hash": "6caa6f4a4f6c70782f06372a44b1787337b453b277126fd527cd301e098e7287",
+  "collection_method": "browser",
+  "title": "Mastercard logolu kartınız ile Apple ve Microsoft Platformlarından yapacağınız harcamalara toplamda 300 TL’ye varan indirim! | Worldcard Kampanyaları | Avantajlı ve Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 136912,
+  "text_chars": 9777
+}

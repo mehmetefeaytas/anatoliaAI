@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/sss/kredi-kartlari",
+  "scraped_at": "2026-08-04T12:40:37+00:00",
+  "content_hash": "62471c1fb08ddc8030b2c8952189a78c81be6542c45679a9ef1fcddf22ec251b",
+  "collection_method": "browser",
+  "title": "Kredi Kartları | QNB",
+  "http_status": 200,
+  "raw_bytes": 93925,
+  "text_chars": 15025
+}

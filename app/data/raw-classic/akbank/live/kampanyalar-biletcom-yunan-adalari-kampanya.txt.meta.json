@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/biletcom-yunan-adalari-kampanya",
+  "scraped_at": "2026-08-04T11:44:50+00:00",
+  "content_hash": "83607e0bf38513cc4f8a2cc565c2ac98c2c65408d0885e2ea72fd20c912e9bd7",
+  "collection_method": "live",
+  "title": "Bilet.com Yunan Adaları Kampanya | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300607,
+  "text_chars": 9604
+}

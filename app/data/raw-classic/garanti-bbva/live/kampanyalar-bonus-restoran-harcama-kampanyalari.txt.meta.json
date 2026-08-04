@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-restoran-harcama-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:46+00:00",
+  "content_hash": "0d6d5ed54b2640ee7e6a324deeaa4b567d6163c84eb75622fdb3a818d2f23f6a",
+  "collection_method": "live",
+  "title": "Bonus kredi kartlarınızdan yapacağınız restoran harcamalarınıza 300 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47922,
+  "text_chars": 3352
+}

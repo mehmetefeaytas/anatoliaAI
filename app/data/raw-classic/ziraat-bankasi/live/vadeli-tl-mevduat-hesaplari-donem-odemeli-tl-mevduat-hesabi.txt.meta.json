@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/donem-odemeli-tl-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:30:21+00:00",
+  "content_hash": "90b02ef5152d8d81943404bfe3769ea7cc43148e0fa1408f28dc6d63af54695e",
+  "collection_method": "browser",
+  "title": "Dönem Ödemeli TL Mevduat Hesabı | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 76482,
+  "text_chars": 5022
+}

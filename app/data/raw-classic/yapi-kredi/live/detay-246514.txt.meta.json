@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/246514",
+  "scraped_at": "2026-08-04T13:20:39+00:00",
+  "content_hash": "c7b576c7befc7716521216934d1c35ecbbaee23acd5bccd2b57d5c93634f002b",
+  "collection_method": "browser",
+  "title": "Size Özel İhtiyaç Kredisi | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 939356,
+  "text_chars": 29984
+}

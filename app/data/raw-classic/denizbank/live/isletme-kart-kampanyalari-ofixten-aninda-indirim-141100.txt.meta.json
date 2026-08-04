@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/isletme-kart-kampanyalari/ofixten-aninda-indirim-141100",
+  "scraped_at": "2026-08-04T11:04:52+00:00",
+  "content_hash": "903e68485adffd9828d9d0b883c8b6a193bfd43bba3f6fcc94d604a33bda8e04",
+  "collection_method": "live",
+  "title": "Ofix’ten 500 TL Anında İndirim! | İşletme Kart Kampanyaları | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 333950,
+  "text_chars": 59491
+}

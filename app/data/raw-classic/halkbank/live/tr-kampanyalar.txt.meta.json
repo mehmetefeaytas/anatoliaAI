@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.paraf.com.tr/tr/kampanyalar.html",
+  "scraped_at": "2026-08-04T13:15:35+00:00",
+  "content_hash": "88c0cb773d8ee30ed5ff497f3de5df102aee645e82f3e3f029f55361f4edaaa3",
+  "collection_method": "live",
+  "title": "Kampanyalar | Kampanyalar | Paraf",
+  "http_status": 200,
+  "raw_bytes": 38667,
+  "text_chars": 1579
+}

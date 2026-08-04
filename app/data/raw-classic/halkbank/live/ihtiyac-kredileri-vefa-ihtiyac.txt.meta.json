@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/ihtiyac-kredileri/vefa-ihtiyac",
+  "scraped_at": "2026-08-04T13:17:12+00:00",
+  "content_hash": "f12b9f38ef48912e673c3c7e2d19c316bce3fdd624e1af1f69f211ba41b17005",
+  "collection_method": "live",
+  "title": "Vefa İhtiyaç | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 404156,
+  "text_chars": 1778
+}

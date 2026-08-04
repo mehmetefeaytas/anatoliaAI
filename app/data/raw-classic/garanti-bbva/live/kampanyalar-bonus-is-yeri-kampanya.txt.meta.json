@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-is-yeri-kampanya",
+  "scraped_at": "2026-08-04T13:28:58+00:00",
+  "content_hash": "868160e1f2481d6f749170482cda306c74e78d9ce981e2b7ea24cb712de992be",
+  "collection_method": "live",
+  "title": "Bonus iş yeri giyim sektöründe 1.000 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46438,
+  "text_chars": 2242
+}

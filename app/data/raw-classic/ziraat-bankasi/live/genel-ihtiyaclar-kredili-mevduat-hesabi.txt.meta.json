@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/kredili-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:29:03+00:00",
+  "content_hash": "962c91a2ef2f2c20ace701fa6cbec0c1aa3b0d5576d991e875ae52f79143b840",
+  "collection_method": "browser",
+  "title": "Kredili Mevduat Hesabı | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 66097,
+  "text_chars": 3196
+}

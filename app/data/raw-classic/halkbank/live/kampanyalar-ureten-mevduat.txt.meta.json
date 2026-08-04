@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/ureten-mevduat",
+  "scraped_at": "2026-08-04T13:17:09+00:00",
+  "content_hash": "caaa5f8b87464483d69257822dd383b8c1691f731c23b35596479a0e3b488a75",
+  "collection_method": "live",
+  "title": "Üreten Mevduat",
+  "http_status": 200,
+  "raw_bytes": 393108,
+  "text_chars": 1398
+}

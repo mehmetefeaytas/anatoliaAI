@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/arsivdeki-kampanyalar/mobildenizden-size-ozel-ihtiyac-kredisi-41764",
+  "scraped_at": "2026-08-04T11:03:52+00:00",
+  "content_hash": "9b51a31152fef05a6eadac2726beb8007c838c35194991b6d27dade402af5e14",
+  "collection_method": "live",
+  "title": "MobilDeniz’den, Size Özel İhtiyaç Kredisi | Kampanyalar | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 331163,
+  "text_chars": 57888
+}

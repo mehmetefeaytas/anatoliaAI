@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/bayram-alisverislerine-2000-tl-nakit-iade",
+  "scraped_at": "2026-08-04T11:34:52+00:00",
+  "content_hash": "3522f9ee4af82de83cbd4ac8f89f46247710d163aae7da0f9986206174a855db",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 56220,
+  "text_chars": 2785
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar?v=ticari",
+  "scraped_at": "2026-08-04T12:27:42+00:00",
+  "content_hash": "a2f09153e8929d7a3ec00c9b392332da974ad6e651a9ee0a1be03d8c8c18afa8",
+  "collection_method": "live",
+  "title": "Kampanyalar | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 257134,
+  "text_chars": 7986
+}

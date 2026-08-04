@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ticari-kurumsal-yatirim-ve-mevduat",
+  "scraped_at": "2026-08-04T12:40:16+00:00",
+  "content_hash": "7c2e0725ba95d0523c98891b5beef3eca09639bb1072e002689f06d54be7e298",
+  "collection_method": "browser",
+  "title": "Ticari ve Kurumsal Yatırım ve Mevduat Ürünleri | QNB",
+  "http_status": 200,
+  "raw_bytes": 69951,
+  "text_chars": 2903
+}

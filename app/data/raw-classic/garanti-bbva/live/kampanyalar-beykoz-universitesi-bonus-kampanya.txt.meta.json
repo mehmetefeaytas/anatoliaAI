@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/beykoz-universitesi-bonus-kampanya",
+  "scraped_at": "2026-08-04T13:27:22+00:00",
+  "content_hash": "c5cbdb9d9fb31892b92ede702fae48919ab8d154ba29548758b3180215f0614f",
+  "collection_method": "live",
+  "title": "Beykoz Üniversitesi kantinlerde %20 oranında bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46153,
+  "text_chars": 1980
+}

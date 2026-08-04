@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/konut-hesabi",
+  "scraped_at": "2026-08-04T11:30:30+00:00",
+  "content_hash": "7cadeba3d33d6485e1a150aaeff5ba0be2053e00417b97fe5801c9bf998ac8f4",
+  "collection_method": "browser",
+  "title": "Konut Hesabı | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 68669,
+  "text_chars": 6241
+}

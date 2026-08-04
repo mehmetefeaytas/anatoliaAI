@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/vefa-konut",
+  "scraped_at": "2026-08-04T13:17:15+00:00",
+  "content_hash": "0b7180eb9f260fc27825108b5db63273e373ae51e58c133eb1f4c0d62509ac62",
+  "collection_method": "live",
+  "title": "Vefa Konut Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 402334,
+  "text_chars": 1880
+}

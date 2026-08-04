@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/bireysel-tuketici-kredileri",
+  "scraped_at": "2026-08-04T12:38:19+00:00",
+  "content_hash": "015eb57d3ab8c359ae2d5bac275f0fbcecbd2dca3c591cabfdaa61be80c309e7",
+  "collection_method": "browser",
+  "title": "QNB Bireysel Tüketici Kredileri ve Faiz Oranları",
+  "http_status": 200,
+  "raw_bytes": 95045,
+  "text_chars": 1724
+}

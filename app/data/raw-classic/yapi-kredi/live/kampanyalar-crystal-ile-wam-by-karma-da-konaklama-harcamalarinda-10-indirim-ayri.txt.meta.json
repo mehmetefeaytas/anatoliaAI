@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar/crystal-ile-wam-by-karma-da-konaklama-harcamalarinda-10-indirim-ayricaligi-2026",
+  "scraped_at": "2026-08-04T13:19:41+00:00",
+  "content_hash": "5aa54741f3b370a25d08229ae11d50d72530619dea0c2f1fc7388e643de7e3b3",
+  "collection_method": "browser",
+  "title": "Crystal ile WAM by Karma ‘da konaklama harcamalarında %10 indirim ayrıcalığı. | Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 98065,
+  "text_chars": 7953
+}

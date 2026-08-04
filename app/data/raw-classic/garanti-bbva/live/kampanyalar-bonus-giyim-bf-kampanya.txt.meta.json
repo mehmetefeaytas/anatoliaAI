@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-giyim-bf-kampanya",
+  "scraped_at": "2026-08-04T13:28:49+00:00",
+  "content_hash": "a25f6853002ec1401c6150e4406f36d68df7f4d11969b25df803709e101450d3",
+  "collection_method": "live",
+  "title": "Giyim alışverişlerinizde 200 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46866,
+  "text_chars": 2464
+}

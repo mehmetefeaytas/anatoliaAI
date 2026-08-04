@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kentsel-donusum-konut-kredisi",
+  "scraped_at": "2026-08-04T12:38:56+00:00",
+  "content_hash": "9cd703d5b20991aca23c488a9edb6a4bc50540d4c74af69166703efeca7db985",
+  "collection_method": "browser",
+  "title": "Kentsel Dönüşüm Kredisi Faizleri ve Hesaplama | QNB",
+  "http_status": 200,
+  "raw_bytes": 94159,
+  "text_chars": 6722
+}

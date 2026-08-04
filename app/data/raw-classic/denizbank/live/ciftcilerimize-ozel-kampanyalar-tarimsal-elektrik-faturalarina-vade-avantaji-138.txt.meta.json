@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/tarimsal-elektrik-faturalarina-vade-avantaji-138224",
+  "scraped_at": "2026-08-04T11:04:32+00:00",
+  "content_hash": "1fb682ef42da24238cfcffa9da27bce5998ac099204eab5423875f6a40c4ac91",
+  "collection_method": "live",
+  "title": "Tarımsal Elektrik Faturalarına 4 Aya Varan Vade Avantajı | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332549,
+  "text_chars": 58243
+}

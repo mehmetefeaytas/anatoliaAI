@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/aegean-airlinestan-yapacaginiz-ucak-bileti-odemelerinde-indirim-firsati",
+  "scraped_at": "2026-08-04T12:31:18+00:00",
+  "content_hash": "d47d7dd3185595c69c5b82bea09d51f5e0ad4b615e26ec8af785a5f2ef1cc2f8",
+  "collection_method": "live",
+  "title": "İş Bankası Visa logolu bireysel kredi kartları ile Aegean Airlines’tan yapacağınız uçak bileti ödemelerinde %20 indirim fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 191835,
+  "text_chars": 2257
+}

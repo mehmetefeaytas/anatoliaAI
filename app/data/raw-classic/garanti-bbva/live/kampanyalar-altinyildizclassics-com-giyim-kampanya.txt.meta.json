@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/altinyildizclassics-com-giyim-kampanya",
+  "scraped_at": "2026-08-04T13:26:48+00:00",
+  "content_hash": "65d8075dc7926fccd8f9e0c3f57d817fd232d978564e6d9eff1fcbcf195c37af",
+  "collection_method": "live",
+  "title": "altinyildizclassics.com'da 500 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48315,
+  "text_chars": 1986
+}

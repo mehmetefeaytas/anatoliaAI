@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/1000-tl-bonus-firsati",
+  "scraped_at": "2026-08-04T11:33:42+00:00",
+  "content_hash": "6855330f01e254d825fbab70c3ab3ccfb55dfe70ddf95fedf58ac9880fb4371e",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 55655,
+  "text_chars": 2502
+}

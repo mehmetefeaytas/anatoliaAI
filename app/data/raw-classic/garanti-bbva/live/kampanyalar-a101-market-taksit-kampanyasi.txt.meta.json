@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/a101-market-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:24+00:00",
+  "content_hash": "d608913ca9bf91d5359f20182cac1a0b81df59d9f0b888751249079574e9353d",
+  "collection_method": "live",
+  "title": "A101'de peşin fiyatına 6 aya varan taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47122,
+  "text_chars": 2031
+}

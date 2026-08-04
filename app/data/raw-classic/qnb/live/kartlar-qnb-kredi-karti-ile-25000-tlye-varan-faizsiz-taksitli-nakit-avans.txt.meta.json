@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kartlar/qnb-kredi-karti-ile-25000-tlye-varan-faizsiz-taksitli-nakit-avans",
+  "scraped_at": "2026-08-04T12:40:24+00:00",
+  "content_hash": "74621f68f1bee21b4f08124ba0a60cee259225a9ead3b63b4cf97743fba2a67b",
+  "collection_method": "browser",
+  "title": "25.000 TL'ye varan Faizsiz Taksitli Nakit Avans!",
+  "http_status": 200,
+  "raw_bytes": 43990,
+  "text_chars": 5492
+}

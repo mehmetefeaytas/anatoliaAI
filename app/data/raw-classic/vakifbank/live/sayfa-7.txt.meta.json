@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/sayfa/7",
+  "scraped_at": "2026-08-04T13:05:21+00:00",
+  "content_hash": "fc3e88ddb307ab2b7a88573c7459c7f027f350013d4b1c8afd5f8b85466c8639",
+  "collection_method": "live",
+  "title": "Kampanyalar - Vakıfkart",
+  "http_status": 200,
+  "raw_bytes": 35801,
+  "text_chars": 2438
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/standart-konut-kredisi",
+  "scraped_at": "2026-08-04T12:39:44+00:00",
+  "content_hash": "d4202f07ba90cb49c8488319420b3c64a6f6b9d59205e5c95d71116855de31ea",
+  "collection_method": "browser",
+  "title": "Konut Kredisi Hesaplama &amp; Ev Kredisi Faiz Oranları",
+  "http_status": 200,
+  "raw_bytes": 118871,
+  "text_chars": 15140
+}

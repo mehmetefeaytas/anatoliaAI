@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/ticari/mevduat",
+  "scraped_at": "2026-08-04T11:28:05+00:00",
+  "content_hash": "399751ef3095897341829242e52e76bdf5666540824f710cf7098965844f7b07",
+  "collection_method": "browser",
+  "title": "Mevduat | Ticari | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 89456,
+  "text_chars": 3519
+}

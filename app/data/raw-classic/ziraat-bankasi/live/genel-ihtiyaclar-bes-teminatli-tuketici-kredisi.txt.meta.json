@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/bes-teminatli-tuketici-kredisi",
+  "scraped_at": "2026-08-04T11:28:45+00:00",
+  "content_hash": "cd9caab955096da92755f73276ffc8f54b1f95f4869b0ea61968d14e9e8ad626",
+  "collection_method": "browser",
+  "title": "BES Teminatlı Tüketici Kredisi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 61816,
+  "text_chars": 3014
+}

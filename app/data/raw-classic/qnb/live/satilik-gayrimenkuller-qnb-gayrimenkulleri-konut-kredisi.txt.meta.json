@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/satilik-gayrimenkuller/qnb-gayrimenkulleri-konut-kredisi",
+  "scraped_at": "2026-08-04T12:40:35+00:00",
+  "content_hash": "0a4aeb0850ed18539d1834b324b5b4270d772ebfe351adbec3048626462726aa",
+  "collection_method": "browser",
+  "title": "QNB Gayrimenkulleri Konut Kredisi | QNB",
+  "http_status": 200,
+  "raw_bytes": 92699,
+  "text_chars": 7294
+}

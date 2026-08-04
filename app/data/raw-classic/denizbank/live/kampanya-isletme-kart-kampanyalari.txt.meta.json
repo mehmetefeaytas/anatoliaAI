@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/isletme-kart-kampanyalari",
+  "scraped_at": "2026-08-04T11:03:28+00:00",
+  "content_hash": "c6fb69c1637fb6c5e9b5b4d5b8b3628eec864414b1ebc2554a4cd2460e4ec43f",
+  "collection_method": "live",
+  "title": "İşletme Kart Kampanyaları | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324884,
+  "text_chars": 57192
+}

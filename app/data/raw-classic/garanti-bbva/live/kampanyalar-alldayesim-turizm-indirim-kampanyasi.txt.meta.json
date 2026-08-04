@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/alldayesim-turizm-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:33+00:00",
+  "content_hash": "0292d7a8422ddaf8136a465b91af3932cc8ea3298841c9ea4739ffd2c3a6b16f",
+  "collection_method": "live",
+  "title": "Alldayesim.com'da %40 indirim!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48123,
+  "text_chars": 2379
+}

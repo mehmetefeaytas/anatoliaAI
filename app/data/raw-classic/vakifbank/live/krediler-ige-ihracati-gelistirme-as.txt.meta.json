@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/ige-ihracati-gelistirme-as",
+  "scraped_at": "2026-08-04T12:59:33+00:00",
+  "content_hash": "f39914505c2ef63cc8afc6b3c854f582166a0fe4467d689e914cbc45be5dc56f",
+  "collection_method": "live",
+  "title": "İGE - İhracatı Geliştirme A.Ş. | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 170180,
+  "text_chars": 1354
+}

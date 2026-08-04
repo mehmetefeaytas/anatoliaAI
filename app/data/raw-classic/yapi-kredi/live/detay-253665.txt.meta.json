@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/253665",
+  "scraped_at": "2026-08-04T13:22:07+00:00",
+  "content_hash": "c2619ba9a77dccd5acf8265a32c039e8fd861ce8aae8196e6c431850ace635f0",
+  "collection_method": "browser",
+  "title": "Yakınlarınızı davet edin, 20.000 TL'ye kadar kart borcunuz kendini ödesin! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 943077,
+  "text_chars": 30395
+}

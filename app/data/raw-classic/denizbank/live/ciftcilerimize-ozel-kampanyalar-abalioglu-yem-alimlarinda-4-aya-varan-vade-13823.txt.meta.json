@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/abalioglu-yem-alimlarinda-4-aya-varan-vade-138232",
+  "scraped_at": "2026-08-04T11:04:01+00:00",
+  "content_hash": "3d6728fdc301bb00b427a0da9c30760b140498ad5c0519da6934480e248dd4b8",
+  "collection_method": "live",
+  "title": "Abalıoğlu Yem Alımlarında 4 Aya Varan Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332375,
+  "text_chars": 58201
+}

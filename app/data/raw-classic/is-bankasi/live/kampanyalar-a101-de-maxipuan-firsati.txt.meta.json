@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/a101-de-maxipuan-firsati",
+  "scraped_at": "2026-08-04T12:30:21+00:00",
+  "content_hash": "0411140b1ac8901b8191a80df096f16fe674c6e9f200a8eacf4b392de3ebe579",
+  "collection_method": "live",
+  "title": "A101 Ekstra’da 400 TL MaxiPuan! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 190616,
+  "text_chars": 2507
+}

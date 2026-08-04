@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-kart-market-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:50+00:00",
+  "content_hash": "28c4832aa95776a5f474206dd6c4de1228c69a94946d93b3428e92e388df9e08",
+  "collection_method": "live",
+  "title": "Akbank Kart ile Market Harcamalarınıza 500 TL Chip-para! | Akbank",
+  "http_status": 200,
+  "raw_bytes": 299365,
+  "text_chars": 9734
+}

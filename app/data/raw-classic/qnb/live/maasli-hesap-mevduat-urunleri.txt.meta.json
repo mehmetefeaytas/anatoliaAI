@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/maasli-hesap-mevduat-urunleri",
+  "scraped_at": "2026-08-04T12:39:16+00:00",
+  "content_hash": "2c8f6610b1ad19eb659da4a9016b9a19a682102fcd0beb4da6e057785a0e4564",
+  "collection_method": "browser",
+  "title": "Maaşlı Hesap ile Aylık Düzenli Faiz Geliri | QNB",
+  "http_status": 200,
+  "raw_bytes": 69793,
+  "text_chars": 3440
+}

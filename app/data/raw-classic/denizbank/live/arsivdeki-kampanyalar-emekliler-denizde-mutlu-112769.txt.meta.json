@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/arsivdeki-kampanyalar/emekliler-denizde-mutlu-112769",
+  "scraped_at": "2026-08-04T11:03:46+00:00",
+  "content_hash": "b8dc03b97fa291473b5fcd50c5793d7388be7b2e0e12bcfe64a6e3226961f036",
+  "collection_method": "live",
+  "title": "Emekliler Deniz’de Mutlu! | Kampanyalar | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 330001,
+  "text_chars": 58822
+}

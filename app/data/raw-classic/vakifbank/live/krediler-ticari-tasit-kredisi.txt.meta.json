@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/ticari-tasit-kredisi",
+  "scraped_at": "2026-08-04T12:59:39+00:00",
+  "content_hash": "55f738286201ac568ca26a4fe8b1a047964281dd8f89365d3bef53487aca87b5",
+  "collection_method": "live",
+  "title": "Ticari Taşıt Kredisi | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 169932,
+  "text_chars": 672
+}

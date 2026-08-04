@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/banka-kartlari/bankkart-1",
+  "scraped_at": "2026-08-04T11:28:17+00:00",
+  "content_hash": "2775d1002d6f67876cf92c2d3908ea6bf27f483bce332b6e0549d57d76f690a8",
+  "collection_method": "browser",
+  "title": "Bankkart | Banka Kartları | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63190,
+  "text_chars": 3120
+}

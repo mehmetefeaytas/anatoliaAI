@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/arabamcom-garaj-kampanyasi",
+  "scraped_at": "2026-08-04T11:44:17+00:00",
+  "content_hash": "b827dda0ccc39abeca223dc29fce49feef0d4c29f7bbf109bf66eafd1814fd26",
+  "collection_method": "live",
+  "title": "Arabam.com Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301753,
+  "text_chars": 10141
+}

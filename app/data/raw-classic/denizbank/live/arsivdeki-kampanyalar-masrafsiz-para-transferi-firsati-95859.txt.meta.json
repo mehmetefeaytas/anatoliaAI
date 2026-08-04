@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/arsivdeki-kampanyalar/masrafsiz-para-transferi-firsati-95859",
+  "scraped_at": "2026-08-04T11:03:49+00:00",
+  "content_hash": "48204176e3c2ee3cd66b6a30bfb5946f138788c6896506a48dbb237b93a01c33",
+  "collection_method": "live",
+  "title": "Kampanyamız Sona Ermiştir ! | Kampanyalar | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 331146,
+  "text_chars": 57864
+}

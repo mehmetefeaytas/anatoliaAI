@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/maasini-halkbanktan-alanlar/kampanyali-ihtiyac-kredisi",
+  "scraped_at": "2026-08-04T13:17:21+00:00",
+  "content_hash": "76e9cb71c94a4ddc13fc315c8aaebbecc8d056b3a8141fc5de3f90e40104c0bc",
+  "collection_method": "live",
+  "title": "Kampanyalı İhtiyaç Kredisi",
+  "http_status": 200,
+  "raw_bytes": 411726,
+  "text_chars": 3230
+}

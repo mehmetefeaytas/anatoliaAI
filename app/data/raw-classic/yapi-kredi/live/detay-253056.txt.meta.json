@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/253056",
+  "scraped_at": "2026-08-04T13:21:55+00:00",
+  "content_hash": "60b85bd072eeaf2c44356fad27cb861e5601815c0d341f6538f60db2024ad249",
+  "collection_method": "browser",
+  "title": "Müşteriye Özel Kredi | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 944182,
+  "text_chars": 29602
+}

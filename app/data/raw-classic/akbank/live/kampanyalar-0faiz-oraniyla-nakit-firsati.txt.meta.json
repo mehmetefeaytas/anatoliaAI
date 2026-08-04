@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/0faiz-oraniyla-nakit-firsati",
+  "scraped_at": "2026-08-04T11:41:19+00:00",
+  "content_hash": "abab9b63e07bc048e05b0b08d6ac94f7ba6f6005613e222e34f90c916cc81101",
+  "collection_method": "live",
+  "title": "%0 faiz oranıyla 100.000 TL’ye varan nakit fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 310536,
+  "text_chars": 17657
+}

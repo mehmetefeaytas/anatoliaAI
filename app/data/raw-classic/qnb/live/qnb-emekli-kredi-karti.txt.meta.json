@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-emekli-kredi-karti",
+  "scraped_at": "2026-08-04T12:39:22+00:00",
+  "content_hash": "fa23f1875a370c64dfd39456385f2b24b37957a9a7be9b2dd43f68c980ad5821",
+  "collection_method": "browser",
+  "title": "QNB Emekli: Emekliye Özel Kredi Kartı Avantajı | QNB",
+  "http_status": 200,
+  "raw_bytes": 76804,
+  "text_chars": 2560
+}

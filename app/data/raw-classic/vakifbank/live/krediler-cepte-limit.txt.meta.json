@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/cepte-limit",
+  "scraped_at": "2026-08-04T12:58:43+00:00",
+  "content_hash": "fcace1d7ef9bb28234e6185c8f8974eb74f4e154fce5388c730391f2150e9eca",
+  "collection_method": "live",
+  "title": "Cepte Limit | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 199339,
+  "text_chars": 3140
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/evim-garantide-kampanyasi",
+  "scraped_at": "2026-08-04T13:25:51+00:00",
+  "content_hash": "ea6bb3f842d72a79200ed50c2f7c0b794900652a6896a7f874fd11cf5329330e",
+  "collection_method": "live",
+  "title": "Konut Sigortası Migros Hediye Çeki Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 198415,
+  "text_chars": 22181
+}

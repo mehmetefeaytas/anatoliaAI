@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-online-egitim-kampanyasi",
+  "scraped_at": "2026-08-04T13:29:16+00:00",
+  "content_hash": "60e9622b6747a418cb2b01d969115c75fb8d1d3b9e67f62c7c27a41b02dbe638",
+  "collection_method": "live",
+  "title": "Online eğitim ödemelerinize 300 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46585,
+  "text_chars": 2339
+}

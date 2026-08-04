@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/248208",
+  "scraped_at": "2026-08-04T13:21:00+00:00",
+  "content_hash": "28e7f49e50bb1c9b0d6dcb62ef41f2ae800c3b7e9b10c482251be37ccc98af28",
+  "collection_method": "browser",
+  "title": "Mobilden Yapı Kredili Olun | KOBİ | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 940494,
+  "text_chars": 29521
+}

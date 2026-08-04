@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/kredi-kartlari/bankkart-platinum",
+  "scraped_at": "2026-08-04T11:28:38+00:00",
+  "content_hash": "e1ece330a4acd338d6ce3fcf951a28d30871daca6a3fffe6bc5bea67bc017774",
+  "collection_method": "browser",
+  "title": "Bankkart Jest Platinum | Kredi Kartları | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 66229,
+  "text_chars": 4566
+}

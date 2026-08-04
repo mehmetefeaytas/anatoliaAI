@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-denebunu-kampanyasi",
+  "scraped_at": "2026-08-04T11:43:35+00:00",
+  "content_hash": "fdd04499b9dc959d8d65fb1c0924392aaddd901060a77588bdd4db8c43f57b9a",
+  "collection_method": "live",
+  "title": "Akbank’a özel Denebunu Sürpriz Kutu hediyesi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301582,
+  "text_chars": 10413
+}

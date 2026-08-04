@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/vadesiz-mevduat",
+  "scraped_at": "2026-08-04T12:40:22+00:00",
+  "content_hash": "32ae322e1577f317acbc5f8751ae62050069be27409a066b6af5a7431ca2ab8a",
+  "collection_method": "browser",
+  "title": "Vadesiz Mevduat Hesabı Açma ve Avantajları | QNB",
+  "http_status": 200,
+  "raw_bytes": 64279,
+  "text_chars": 2484
+}

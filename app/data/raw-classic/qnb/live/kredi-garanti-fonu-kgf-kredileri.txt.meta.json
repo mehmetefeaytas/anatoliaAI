@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kredi-garanti-fonu-kgf-kredileri",
+  "scraped_at": "2026-08-04T12:39:11+00:00",
+  "content_hash": "6329d5988749eb4fdecdd552c459825cfc62609c1f157b63f5b97d466ea3c312",
+  "collection_method": "browser",
+  "title": "KGF Kredisi Başvuru - Kredi Garanti Fonu Faiz Oranları | QNB",
+  "http_status": 200,
+  "raw_bytes": 67877,
+  "text_chars": 3379
+}

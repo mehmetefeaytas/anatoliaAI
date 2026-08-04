@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-hemsirelere-ozel-kredi-karti",
+  "scraped_at": "2026-08-04T12:39:28+00:00",
+  "content_hash": "6ef568a1db993789c0e05e2e52fb47b1d90566284e5bcb5173809cdf4a42b6c2",
+  "collection_method": "browser",
+  "title": "QNB Hemşire: Sağlıkçıya Özel Kredi Kartı | QNB",
+  "http_status": 200,
+  "raw_bytes": 76887,
+  "text_chars": 2533
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/tarim-ciftci-kredileri",
+  "scraped_at": "2026-08-04T12:39:49+00:00",
+  "content_hash": "2a2053d80b4ad8d270913393819fb0e382bb2e04f19eb139ed11dc1c81686ee9",
+  "collection_method": "browser",
+  "title": "Tarım ve Çiftçi Kredileri | QNB",
+  "http_status": 200,
+  "raw_bytes": 64138,
+  "text_chars": 3612
+}

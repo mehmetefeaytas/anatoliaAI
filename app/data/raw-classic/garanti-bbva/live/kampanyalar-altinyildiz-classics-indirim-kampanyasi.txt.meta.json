@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/altinyildiz-classics-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:42+00:00",
+  "content_hash": "f2f19a22b96f1540a27e974417e26e9271f212e13391e97f6d871c66b1dc31f8",
+  "collection_method": "live",
+  "title": "Altınyıldız Classics'te 5.000 TL ve üzeri alışverişlerde +%10 indirim!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47404,
+  "text_chars": 2280
+}

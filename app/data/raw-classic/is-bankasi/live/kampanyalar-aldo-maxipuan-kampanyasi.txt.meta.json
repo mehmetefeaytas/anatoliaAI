@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/aldo-maxipuan-kampanyasi",
+  "scraped_at": "2026-08-04T12:31:57+00:00",
+  "content_hash": "56fad4ca5dd6716b062895d9785e5c3546482a1611d532d396d434f3aa2938d3",
+  "collection_method": "live",
+  "title": "Maximum'dan Aldo'da 300 TL MaxiPuan Kampanyası! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 190937,
+  "text_chars": 2234
+}

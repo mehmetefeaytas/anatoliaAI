@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/stradivariusda-pesin-fiyatina-6-taksit-42611",
+  "scraped_at": "2026-08-04T12:37:32+00:00",
+  "content_hash": "e8bbdfd2b97075487cb2e6627dc4465880e0c55234be35b5eaf5a7263cd708d5",
+  "collection_method": "browser",
+  "title": "Stradivarius’da Peşin Fiyatına 6 Taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 34119,
+  "text_chars": 2435
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-ticari-kredi-karti-kampanyasi",
+  "scraped_at": "2026-08-04T11:43:02+00:00",
+  "content_hash": "0b9ae70e4e87b7a986299f87e1043dc375bd8d10559ceea063605d38030544ec",
+  "collection_method": "live",
+  "title": "Axess Business Kredi Kartı Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300724,
+  "text_chars": 10225
+}

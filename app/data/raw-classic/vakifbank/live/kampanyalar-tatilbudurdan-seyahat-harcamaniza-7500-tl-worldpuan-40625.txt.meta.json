@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/tatilbudurdan-seyahat-harcamaniza-7500-tl-worldpuan-40625",
+  "scraped_at": "2026-08-04T13:00:59+00:00",
+  "content_hash": "e2fc194af8478f9a3f194db530644be1b6b8da1b642b191cae3749e4db8eb122",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 32131,
+  "text_chars": 5647
+}

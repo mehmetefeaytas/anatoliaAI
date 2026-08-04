@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/254998",
+  "scraped_at": "2026-08-04T13:22:23+00:00",
+  "content_hash": "f06b09ae217f786d5c3bb492da9ecaafb3c72869365de5d89383c0d06cbb7069",
+  "collection_method": "browser",
+  "title": "Yapı Kredi Mobil’den müşteri olan Play’lilere özel 15.000 TL’ye varan fırsat! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 950063,
+  "text_chars": 32787
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/tanisma-faizli-vadeli-mevduat-hesabi",
+  "scraped_at": "2026-08-04T13:17:06+00:00",
+  "content_hash": "58b69e24173a14df499f65f952a750f3c6ffc6eb191c4748209200399deb1d4f",
+  "collection_method": "live",
+  "title": "Tanışma Faizli Vadeli Mevduat Hesabı",
+  "http_status": 200,
+  "raw_bytes": 394822,
+  "text_chars": 1787
+}

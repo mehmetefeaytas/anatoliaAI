@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/tasit-kredisi-basvurusu/",
+  "scraped_at": "2026-08-04T11:06:58+00:00",
+  "content_hash": "e2f01877f21661767ea012c7ea71fd385a4b87c7440ff9d5bedacd239dff0e4c",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 375909,
+  "text_chars": 7062
+}

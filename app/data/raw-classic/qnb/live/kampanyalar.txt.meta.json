@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T12:37:01+00:00",
+  "content_hash": "b1d3fa8b06749ff5f4abd6e1693c72b04a07560eba887e18a38bfa9d91a6bbb4",
+  "collection_method": "browser",
+  "title": "Kredi Kartı Kampanyaları | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 48557,
+  "text_chars": 1936
+}

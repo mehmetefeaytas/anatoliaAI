@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.axess.com.tr/axess/kampanya/8/393/kampanyalar",
+  "scraped_at": "2026-08-04T11:41:04+00:00",
+  "content_hash": "9ae6421beda461ce9a8ac066e7db131e884e63124e18b67a7d7739ff6ced53d5",
+  "collection_method": "live",
+  "title": "Kampanyalar | Axess",
+  "http_status": 200,
+  "raw_bytes": 56281,
+  "text_chars": 1904
+}

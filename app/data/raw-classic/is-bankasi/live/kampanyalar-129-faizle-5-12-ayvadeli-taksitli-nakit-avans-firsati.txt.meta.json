@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/129-faizle-5-12-ayvadeli-taksitli-nakit-avans-firsati",
+  "scraped_at": "2026-08-04T12:28:18+00:00",
+  "content_hash": "b9ba2967b5d681c852010927fa505b6824cd948936fcfb3500936e2ef153f53c",
+  "collection_method": "live",
+  "title": "1,29 Faizle 5-12 Ay Vadeli Taksitli Nakit Avans Fırsatı!",
+  "http_status": 200,
+  "raw_bytes": 196471,
+  "text_chars": 2273
+}

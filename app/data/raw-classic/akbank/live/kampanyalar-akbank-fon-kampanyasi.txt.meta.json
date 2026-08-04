@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-fon-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:47+00:00",
+  "content_hash": "425727ce1cf2d7786129470ce1dffaf44f7f2db94da15b4cdd0a6533a21fa15e",
+  "collection_method": "live",
+  "title": "Hediye Fon Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 400011,
+  "text_chars": 84534
+}

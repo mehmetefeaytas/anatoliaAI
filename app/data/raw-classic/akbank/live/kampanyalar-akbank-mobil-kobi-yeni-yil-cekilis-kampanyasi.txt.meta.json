@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobil-kobi-yeni-yil-cekilis-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:20+00:00",
+  "content_hash": "48a37b17f184f0bb64b8ff1eab2a4c285afed891b30036ca2678589ea2a11aee",
+  "collection_method": "live",
+  "title": "KOBİ’lerin yeni yıl hediyeleri Akbank’tan | Akbank",
+  "http_status": 200,
+  "raw_bytes": 310485,
+  "text_chars": 17091
+}
