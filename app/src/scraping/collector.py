@@ -144,6 +144,49 @@ _FORM_DROP = ("form",)
 # Anlamlı içerik eşiği: bunun altındaysa daha temkinli geçiş denenir
 MIN_TEXT_CHARS = 200
 
+# `<form>` atıldığında metnin kaç katı kaybolursa "form içerikti" sayılır.
+#
+# NEDEN MUTLAK EŞİK YETMİYOR (2026-08-04 ölçümü): Ziraat Bankası ürün
+# sayfalarında `<main>`/`<article>` YOK ve içerik `<form>` içine sarılmış.
+# Agresif geçiş 1503 karakter döndürüyordu — çerez bandı + promo bloğu, yani
+# saf çerçeve. 1503 > MIN_TEXT_CHARS olduğu için koruma HİÇ ateşlenmiyor ve
+# belge "başarıyla" yazılıyordu. Üstelik her sayfa için AYNI 1503 karakter
+# çıktığından metin tekilleştirmesi 45 sayfayı 2 belgeye indiriyordu.
+# Temkinli geçiş aynı sayfada 4277 karakter ve gerçek ürün bilgisini
+# ("36 aya kadar", "faiz oranı", hesaplama aracı) veriyor → oran 2,8x.
+#
+# Eşik 2.0 seçildi (ölçülen 2,8'in altında, normal sayfaların agresif/temkinli
+# oranı ~1,2-1,5 bandında kaldığı için güvenli). Koruma yalnızca `<form>`
+# varken çalışır: dokümante edilmiş ASP.NET WebForms başarısızlık kipine
+# bağlı kalsın, her sayfada çerçeve metnini içeri almasın.
+FORM_CONTENT_RATIO = 2.0
+
+# Belgenin KABUL eşiği — `MIN_TEXT_CHARS`'tan ayrı tutulur.
+# MIN_TEXT_CHARS hangi ÇIKARIM GEÇİŞİNİN kullanılacağına karar verir;
+# bu sabit belgenin korpusa GİRİP GİRMEYECEĞİNE karar verir. İkisi aynı
+# sayı olsa bile aynı şey değil; tek sabite bağlamak birini değiştirince
+# diğerini sessizce bozar.
+MIN_DOC_CHARS = 200
+
+# "İçerik yok" diyen sayfaların işaretçileri.
+#
+# NEDEN UZUNLUK TEK BAŞINA YETMİYOR (2026-08-04 ölçümü): İş Bankası'nın yanlış
+# giriş noktasından gelen 30 belgesi "Kampanya bulunamadı." diyen 202-262
+# karakterlik boş kabuklardı — MIN_DOC_CHARS'ın hemen ÜSTÜNDE. Eşiği yükseltmek
+# çözüm değil: geçerli ama kısa bir VakıfBank ürün listesi 294 karakter ve
+# korunmalı. Bu yüzden işaretçi + kısalık BİRLİKTE aranıyor; uzun bir SSS
+# sayfasında "bulunamadı" geçmesi belgeyi düşürmez.
+_EMPTY_RESULT_MARKERS = ("bulunamadı", "bulunamadi", "sonuç yok", "kayıt yok")
+EMPTY_RESULT_MAX_CHARS = 600
+
+
+def _is_empty_result_page(text: str) -> bool:
+    """Sayfa "içerik yok" mu diyor? (işaretçi VE kısalık birlikte)"""
+    if len(text) > EMPTY_RESULT_MAX_CHARS:
+        return False
+    low = text.casefold()
+    return any(m in low for m in _EMPTY_RESULT_MARKERS)
+
 
 def _extract_main_text(html: str) -> str:
     """Ham HTML'den temiz metin — iki geçişli.
@@ -158,6 +201,11 @@ def _extract_main_text(html: str) -> str:
     2. geçiş şart: ASP.NET WebForms siteleri (ör. Türkiye Finans) TÜM sayfayı
        `<form runat="server">` içine sarar; agresif geçiş sayfayı komple siler
        ve belge sessizce kaybolurdu.
+
+    İki tetikleyici var, çünkü tek başına mutlak eşik yetmiyor:
+      a) agresif sonuç MIN_TEXT_CHARS altındaysa (sayfa komple silinmiş),
+      b) sayfada `<form>` varken temkinli geçiş FORM_CONTENT_RATIO katı fazla
+         metin veriyorsa (form İÇERİKTİ, çerçeve değil — bkz. sabitin notu).
     """
     try:
         from bs4 import BeautifulSoup  # type: ignore
@@ -165,9 +213,16 @@ def _extract_main_text(html: str) -> str:
         return normalize_text(html)
 
     text = _soup_text(BeautifulSoup(html, "html.parser"), aggressive=True)
-    if len(text) >= MIN_TEXT_CHARS:
+    if len(text) < MIN_TEXT_CHARS:
+        return _soup_text(BeautifulSoup(html, "html.parser"), aggressive=False)
+
+    # (b) — yalnız `<form>` varsa ikinci geçişi ölçüp karşılaştır.
+    if not BeautifulSoup(html, "html.parser").find("form"):
         return text
-    return _soup_text(BeautifulSoup(html, "html.parser"), aggressive=False)
+    lenient = _soup_text(BeautifulSoup(html, "html.parser"), aggressive=False)
+    if len(lenient) >= len(text) * FORM_CONTENT_RATIO:
+        return lenient
+    return text
 
 
 def _soup_text(soup, *, aggressive: bool) -> str:
@@ -304,10 +359,31 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
             return FetchResult(url, error="robots disallow", method=fetcher.method)
         return fetcher.fetch(url)
 
+    # SAYFALAMA: yalnızca tarayıcı çekicisinde `fetch_all_pages` vardır
+    # (`StaticFetcher`'da yok — `hasattr` ile kontrol edilir). Liste sayfası
+    # slick/swiper karuseliyle sayfalandığında sayfa değişse de URL DEĞİŞMEZ
+    # (Albaraka arşivi, 2026-08-04 tarayıcıyla ölçüldü); tek yol tıklamaktır.
+    # Metot yoksa keşif eski tek-sayfa davranışını korur.
+    #
+    # robots.txt kontrolü BURADA da yapılır: `fetch_all_pages` guarded_fetch'i
+    # atlar, kontrol atlanırsa yasaklı liste sayfası gezilirdi (CLAUDE.md §14).
+    fetch_pages: Optional[Any] = None
+    if hasattr(fetcher, "fetch_all_pages"):
+        def _fetch_all_pages(url: str) -> list[str]:
+            allowed, reason = robots.allows(url)
+            if not allowed:
+                diag["blocked"].append({"url": url, "reason": "robots disallow",
+                                        "detail": reason})
+                return []
+            return fetcher.fetch_all_pages(url)
+
+        fetch_pages = _fetch_all_pages
+
     # Keşif fonksiyonu enjekte edilebilir: kampanya turu `discover`,
     # ürün turu `discover_products` kullanır. Getirme/robots/tekilleştirme
     # mantığı ikisinde de aynıdır, yalnızca URL kümesi farklıdır.
-    found = (discover_fn or discover)(bank, guarded_fetch, max_docs=max_docs)
+    found = (discover_fn or discover)(bank, guarded_fetch, max_docs=max_docs,
+                                      fetch_pages=fetch_pages)
     diag["discovered"] = len(found.urls)
     diag["from_sitemap"] = found.from_sitemap
     diag["from_listing"] = found.from_listing
@@ -328,8 +404,14 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
         html = res.html or ""
         digest = content_hash(html)
         text = _extract_main_text(html)
-        if len(text) < 200:
+        if len(text) < MIN_DOC_CHARS:
             diag["notes"].append(f"cok kisa icerik atlandi: {url} ({len(text)} krkt)")
+            continue
+        if _is_empty_result_page(text):
+            # "Kampanya bulunamadı." diyen kabuk — korpusa girerse etiketleyiciye
+            # ve eğitime gürültü olarak taşınır. Sessizce atlanmaz, rapora yazılır.
+            diag["notes"].append(
+                f"bos sonuc sayfasi atlandi: {url} ({len(text)} krkt)")
             continue
         # TEKİLLEŞTİRME TEMİZ METİN ÜZERİNDEN yapılır, ham HTML üzerinden DEĞİL.
         #
