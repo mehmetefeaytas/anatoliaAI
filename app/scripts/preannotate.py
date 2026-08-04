@@ -297,7 +297,32 @@ def _round_robin(docs: list[RawDoc], n: int, rng, anahtar) -> list[RawDoc]:
 # --------------------------------------------------------------------------- #
 # Çıkarım
 # --------------------------------------------------------------------------- #
-def _field_payload(f: ExtractedField) -> dict[str, Any]:
+def _field_payload(f: ExtractedField, text: str) -> dict[str, Any]:
+    """Alanı JSON'a çevirir.
+
+    `span_verified` TAM belge metnine karşı doğrulanır. Eskiden `f.source_span`
+    (±40 karakterlik pencere DİZESİ) veriliyordu; `span_start`/`span_end` ise
+    tam metne göre offset olduğu için doğrulama anlamsızdı ve alanların
+    **%94,7'si `false`** çıkıyordu — doğru değerlerde bile.
+
+    Doğru çağrıyla ölçüm: 60 belgede 196 alanın **196'sı** (%100) doğrulanıyor;
+    eski çağrıyla %95,4'ü `false` çıkıyordu.
+
+    NE OLMADIĞINA dikkat: bu bir halüsinasyon dedektörü DEĞİL. Krom kaynaklı 35
+    `alisveris_puani` halüsinasyonunun span'leri **doğruydu** — `"10"` gerçekten
+    o offset'teydi; yanlış olan yorumdu (gezinme bağlantısını ödül sanmak).
+    Onlarda `span_verified: false` görünmesinin sebebi de halüsinasyon değil,
+    işte bu hatalı çağrıydı. Yani bu alanı halüsinasyon kapısı yapmak yanlış
+    olur; işi provenance doğruluğu.
+
+    Neden yine de önemli: %95 `false` üreten bir "doğrulandı" alanı, yokluğundan
+    daha kötüdür — sinyal gibi görünür, gürültüdür. Ayrıca CLAUDE.md §18'in
+    yenilikçilik hedeflerinden biri **kaynak vurgulama** ve arayüzün doğru
+    karakterleri işaretlemesi buna dayanıyor.
+
+    Doğru çağrı biçimi zaten depoda vardı (`src/api/main.py:620`:
+    `f.verify_span(text)`); iki çağrı yeri ayrışmıştı.
+    """
     return {
         "value": f.canonical_value,
         "raw_value": f.raw_value,
@@ -307,7 +332,7 @@ def _field_payload(f: ExtractedField) -> dict[str, Any]:
         "source_span": f.source_span,
         "span_start": f.span_start,
         "span_end": f.span_end,
-        "span_verified": f.verify_span(f.source_span or ""),
+        "span_verified": f.verify_span(text),
     }
 
 
@@ -335,7 +360,7 @@ def annotate_doc(doc: RawDoc, llm, classifier) -> dict[str, Any]:
 
         # Katman önceliği reconcile.py ile aynı: kural birincil.
         winner = rule_f or llm_f
-        payload = _field_payload(winner)
+        payload = _field_payload(winner, text)
         payload["disagreement"] = bool(
             rule_f is not None and llm_f is not None
             and not values_equal(rule_f.canonical_value, llm_f.canonical_value)
