@@ -8,13 +8,18 @@
    sayfadaki aynı-alan bağlantıları toplanıp `detail_patterns` ile süzülür.
 
 Bağlantı çıkarımı bs4 varsa onunla, yoksa regex ile yapılır (saf stdlib fallback).
+
+**Sayfalama (pagination):** liste sayfası birden fazla sayfaya bölünmüş olabilir.
+Çağıran taraf isteğe bağlı `fetch_pages(url) -> list[str]` geçerse (tarayıcı
+çekicisinin `BrowserFetcher.fetch_all_pages` metodu) liste sayfasının TÜM
+sayfalarının HTML'i taranır. Geçilmezse tek sayfalık eski davranış korunur.
 """
 
 from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from typing import Iterable, Optional
+from typing import Callable, Iterable, Optional
 from urllib.parse import urljoin, urlsplit, urlunsplit
 
 # Kampanya/ürün sayfası olma ihtimali yüksek yol parçaları (banka özelinde
@@ -70,6 +75,10 @@ DEFAULT_EXCLUDE_PATTERNS = (
     r"/sitemap", r"/rss", r"/login", r"/giris",
 )
 
+# Liste sayfasının tüm sayfalarını döndüren çağrılabilir (opsiyonel).
+# Gerçek uygulaması: `BrowserFetcher.fetch_all_pages`.
+FetchPages = Callable[[str], list[str]]
+
 _HREF_RE = re.compile(r"""<a\b[^>]*?href\s*=\s*["']([^"'>]+)["']""", re.I)
 _LOC_RE = re.compile(r"<loc>\s*(?:<!\[CDATA\[)?\s*(.*?)\s*(?:\]\]>)?\s*</loc>", re.I | re.S)
 _SITEMAPINDEX_RE = re.compile(r"<sitemapindex", re.I)
@@ -94,10 +103,23 @@ def normalize_url(url: str) -> str:
     return urlunsplit((parts.scheme, parts.netloc, path, parts.query, ""))
 
 
+def _host(url: str) -> str:
+    """Alan adı — PORTSUZ ve www. eki atılmış.
+
+    `netloc` KULLANILMAZ: portu içerir. Ziraat Bankası'nın site haritası
+    URL'leri varsayılan portu açıkça yazıyor
+    (`https://www.ziraatbank.com.tr:443/tr/...`); `netloc` karşılaştırması
+    bunu farklı alan sayıp site haritasındaki **500 URL'nin tamamını**
+    sessizce atıyordu (2026-08-04'te ölçüldü, banka 1 belgeyle dönüyordu).
+    `hostname` portu düşürür ve zaten küçük harfe çevirir.
+    """
+    return (urlsplit(url).hostname or "").removeprefix("www.")
+
+
 def same_site(url: str, base: str) -> bool:
-    """Aynı kayıtlı alan mı? (www. / alt alan farkını tolere eder)."""
-    a = urlsplit(url).netloc.lower().removeprefix("www.")
-    b = urlsplit(base).netloc.lower().removeprefix("www.")
+    """Aynı kayıtlı alan mı? (www. / alt alan / varsayılan port farkını tolere eder)."""
+    a = _host(url)
+    b = _host(base)
     return bool(a) and (a == b or a.endswith("." + b) or b.endswith("." + a))
 
 
@@ -168,11 +190,15 @@ def collect_sitemap_urls(sitemap_urls: Iterable[str], fetch, *, max_depth: int =
 
 
 def discover(bank, fetch, *, max_docs: int = 40,
-             exclude_patterns: Optional[Iterable[str]] = None) -> DiscoveryResult:
+             exclude_patterns: Optional[Iterable[str]] = None,
+             fetch_pages: Optional[FetchPages] = None) -> DiscoveryResult:
     """Bir banka için kampanya detay URL'lerini keşfeder.
 
     Aşama 1: sitemap(ler) — `bank.sitemap_urls`.
     Aşama 2: liste sayfaları — `bank.campaign_paths` üzerinden bağlantı toplama.
+
+    `fetch_pages` verilirse Aşama 2'de liste sayfasının tüm sayfaları gezilir
+    (bkz. modül docstring'i).
     """
     include = list(getattr(bank, "detail_patterns", None) or DEFAULT_DETAIL_PATTERNS)
     exclude = list(exclude_patterns if exclude_patterns is not None
@@ -184,10 +210,12 @@ def discover(bank, fetch, *, max_docs: int = 40,
     return _discover(bank, fetch, max_docs=max_docs,
                      paths=list(bank.campaign_paths),
                      sitemaps=list(getattr(bank, "sitemap_urls", None) or []),
-                     include=include, exclude=exclude, ranker=rank)
+                     include=include, exclude=exclude, ranker=rank,
+                     fetch_pages=fetch_pages)
 
 
-def discover_archive(bank, fetch, *, max_docs: int = 60) -> DiscoveryResult:
+def discover_archive(bank, fetch, *, max_docs: int = 60,
+                     fetch_pages: Optional[FetchPages] = None) -> DiscoveryResult:
     """SÜRESİ DOLMUŞ kampanya URL'lerini keşfeder (3. tur).
 
     Kaynak: `archive_paths` liste sayfaları + bankanın sitemap'i (arşiv sayfaları
@@ -195,6 +223,11 @@ def discover_archive(bank, fetch, *, max_docs: int = 60) -> DiscoveryResult:
 
     Bu tur boş dönerse bu bir hata DEĞİLDİR: her banka arşiv yayımlamıyor
     (2026-08-03 doğrulaması: yalnızca Kuveyt Türk ve Türkiye Finans yayımlıyor).
+
+    SAYFALAMA BU TURDA KRİTİKTİR: Albaraka arşivi (`?slug=gecmis-kampanyalar`)
+    slick karuseliyle sayfalanıyor ve sayfa değişse de URL DEĞİŞMİYOR
+    (2026-08-04 tarayıcıyla ölçüldü). `fetch_pages` verilmezse yalnızca 1. sayfa
+    toplanır ve kayıp SESSİZ olur.
     """
     paths = list(getattr(bank, "archive_paths", None) or [])
     if not paths:
@@ -204,10 +237,12 @@ def discover_archive(bank, fetch, *, max_docs: int = 60) -> DiscoveryResult:
     exclude += list(getattr(bank, "exclude_patterns", None) or [])
     return _discover(bank, fetch, max_docs=max_docs, paths=paths,
                      sitemaps=list(getattr(bank, "sitemap_urls", None) or []),
-                     include=include, exclude=exclude, ranker=rank)
+                     include=include, exclude=exclude, ranker=rank,
+                     fetch_pages=fetch_pages)
 
 
-def discover_documents(bank, fetch, *, max_docs: int = 40) -> DiscoveryResult:
+def discover_documents(bank, fetch, *, max_docs: int = 40,
+                       fetch_pages: Optional[FetchPages] = None) -> DiscoveryResult:
     """PDF belge URL'lerini keşfeder (4. tur — ücret tarifesi / bilgi formu).
 
     Varsayılan exclude listesi `\\.pdf$` içerir (kampanya turu PDF istemez);
@@ -225,12 +260,13 @@ def discover_documents(bank, fetch, *, max_docs: int = 40) -> DiscoveryResult:
     exclude += list(getattr(bank, "exclude_patterns", None) or [])
     return _discover(bank, fetch, max_docs=max_docs, paths=paths, sitemaps=[],
                      include=include, exclude=exclude, ranker=rank_documents,
-                     extra_allowed_hosts=list(getattr(bank, "document_hosts", None) or []))
+                     extra_allowed_hosts=list(getattr(bank, "document_hosts", None) or []),
+                     fetch_pages=fetch_pages)
 
 
 def discover_products(bank, fetch, *, max_docs: int = 80,
-                      exclude_patterns: Optional[Iterable[str]] = None
-                      ) -> DiscoveryResult:
+                      exclude_patterns: Optional[Iterable[str]] = None,
+                      fetch_pages: Optional[FetchPages] = None) -> DiscoveryResult:
     """Bir banka için ÜRÜN sayfası URL'lerini keşfeder (kampanyadan ayrı).
 
     Kampanya keşfiyle aynı iki aşamalı mekanizmayı kullanır, yalnızca girdi
@@ -256,12 +292,55 @@ def discover_products(bank, fetch, *, max_docs: int = 80,
     return _discover(bank, fetch, max_docs=max_docs,
                      paths=paths,
                      sitemaps=sitemaps, include=include, exclude=exclude,
-                     ranker=rank_products)
+                     ranker=rank_products, fetch_pages=fetch_pages)
+
+
+def _listing_pages(list_url: str, fetch, fetch_pages: Optional[FetchPages],
+                   result: DiscoveryResult) -> list[tuple[str, str]]:
+    """Bir liste sayfasının tüm sayfalarını `(html, taban URL)` çiftleri olarak döner.
+
+    `fetch_pages` verilmişse (tarayıcı çekicisi) sayfalama gezilir. Verilmemişse
+    ya da boş dönerse tek sayfalık ESKİ davranışa düşülür — `StaticFetcher`'da
+    `fetch_all_pages` yoktur ve geriye uyumluluk korunmalıdır.
+
+    Sayfalama sonucu HER DURUMDA `result.notes`'a yazılır: kaç sayfa gezildi,
+    tek sayfa mı bulundu, yoksa sayfalama denenip başarısız mı oldu. Sessiz
+    kalırsa "1 sayfa topladım" ile "hepsini topladım" birbirinden ayırt edilemez.
+
+    Taban URL olarak `list_url` kullanılır: sayfa değiştiğinde adres değişmediği
+    için (slick karusel) zaten tek bir kanonik taban vardır.
+    """
+    if fetch_pages is not None:
+        htmls: list[str] = []
+        try:
+            htmls = [html for html in (fetch_pages(list_url) or []) if html]
+        except Exception as exc:  # sayfalama hatası keşfi durdurmaz
+            result.notes.append(
+                f"sayfalama hatasi: {list_url} ({type(exc).__name__}: {exc})"[:200])
+        if len(htmls) > 1:
+            result.notes.append(
+                f"sayfalama: {list_url} icin {len(htmls)} sayfa gezildi")
+            return [(html, list_url) for html in htmls]
+        if len(htmls) == 1:
+            result.notes.append(
+                f"sayfalama: {list_url} icin tek sayfa bulundu "
+                "(sayfalama denetimi yok)")
+            return [(htmls[0], list_url)]
+        result.notes.append(
+            f"sayfalama gezilemedi, tek sayfaya dusuldu: {list_url}")
+
+    res = fetch(list_url)
+    if not getattr(res, "ok", False):
+        result.notes.append(
+            f"liste sayfasi basarisiz: {list_url} ({res.status or res.error})")
+        return []
+    return [(res.html or "", res.final_url or list_url)]
 
 
 def _discover(bank, fetch, *, max_docs: int, paths: list[str], sitemaps: list[str],
               include: list[str], exclude: list[str], ranker,
-              extra_allowed_hosts: Optional[list[str]] = None) -> DiscoveryResult:
+              extra_allowed_hosts: Optional[list[str]] = None,
+              fetch_pages: Optional[FetchPages] = None) -> DiscoveryResult:
     """Kampanya, ürün, arşiv ve belge keşfinin ortak çekirdeği (tek gezinme mantığı)."""
     base = bank.website_url.rstrip("/")
     # Banka kampanyalarını ayrı alan adında yayımlıyorsa (ör. TOM Bank →
@@ -298,14 +377,13 @@ def _discover(bank, fetch, *, max_docs: int, paths: list[str], sitemaps: list[st
     # --- Aşama 2: liste sayfalarından iki aşamalı gezinme ---
     for path in paths:
         list_url = path if path.startswith("http") else base + path
-        res = fetch(list_url)
-        if not getattr(res, "ok", False):
-            result.notes.append(
-                f"liste sayfasi basarisiz: {list_url} ({res.status or res.error})")
+        pages = _listing_pages(list_url, fetch, fetch_pages, result)
+        if not pages:
             continue
         add(list_url, "listing")  # liste sayfasının kendisi de içerik taşıyabilir
-        for link in extract_links(res.html or "", res.final_url or list_url):
-            add(link, "listing")
+        for html, page_base in pages:
+            for link in extract_links(html, page_base):
+                add(link, "listing")
 
     if max_docs and len(result.urls) > max_docs:
         result.notes.append(

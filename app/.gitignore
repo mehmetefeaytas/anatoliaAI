@@ -30,6 +30,21 @@ venv/
 data/raw/**/*.html
 data/raw/**/*.htm
 
+# Klasik banka (kapsam dışı) ham HTML — aynı gerekçe, aynı karar.
+# `data/raw-classic` 161 MB'a çıktı; 572 `.html` dosyası bunun neredeyse
+# tamamı. Bu küme yarışma veri seti DEĞİL (şartname §5.1 katılım bankalarını
+# ister); sınıflandırıcı eğitimi ve terminoloji ayrımı testi için tutuluyor.
+# `.txt` + `.meta.json` korunur, hasat betiklenmiş ve tekrarlanabilir.
+data/raw-classic/**/*.html
+data/raw-classic/**/*.htm
+
+# Anotasyon çalışma dosyaları — kanonik artefakt CSV'dir.
+# Anotatör Numbers/Excel'de çalışıp CSV olarak dışa aktarıyor; ikili çalışma
+# dosyasını depoya koymak diff'i imkânsız kılar ve iki doğruluk kaynağı yaratır.
+*.numbers
+*.xlsx
+data/gold/review/*.yedek*
+
 # modeller (offline; repo'ya konmaz)
 models/
 
