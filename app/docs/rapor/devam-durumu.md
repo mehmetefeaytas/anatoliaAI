@@ -1,3 +1,41 @@
+# Devam Durumu
+
+> **GÜNCELLEME 2026-08-05.** İnternet döndü, dört agent koştu ve bitti. Bu
+> bölüm en güncel hâli özetliyor; altındaki kesinti öncesi kayıt tarihsel
+> referans olarak duruyor (silinmedi).
+>
+> | Ölçüm | Değer |
+> |---|---:|
+> | `data/raw` belge | **1761** (+77 kart markası) |
+> | `data/raw-classic` belge | 724 |
+> | Gümüş öneri | 608 (+106) |
+> | Etiketli Konut / Taşıt | **13 / 9** — denetleyici beklemede |
+> | Aday Konut / Taşıt | 43 / 38 (üst sınır 56 / 47) |
+> | Test | 1187, çıkış 0 |
+>
+> **Ölçülen metrikler (n=20 belge, gold sha256 `ea04e444…`):**
+>
+> | konfig | mikro-F1 | makro-F1 | halüsinasyon |
+> |---|---:|---:|---:|
+> | **kural** | **0.612** [0.483–0.716] | **0.560** | **0.102** |
+> | llm | 0.169 | 0.164 | 0.145 |
+> | hibrit | 0.575 | 0.522 | 0.163 |
+> | hibrit-verify | 0.562 | 0.507 | 0.163 |
+>
+> **HİBRİT KAYBETTİ** ve bu planın varsayımının tersi. Ayrıntı + mimari sebep:
+> `docs/rapor/ablasyon.md`. Kısaca: `reconcile` kural-birincil olduğu için
+> hibrit kural FP'lerini *asla düzeltemez, yalnız ekler* (+1 TP karşılığı
+> +11 FP). Tek kaçış kapısı (`verify_low_conf`) da yapısal olarak ölü, çünkü
+> halüsinasyonlar da doğru alanlar da 0,95 güven taşıyor.
+>
+> **KARAR BEKLEYEN (en önemli):** `eval/predictors.py` `DEFAULT_CONFIG =
+> CONFIG_HIBRIT` diyor, ölçüm `kural`ı işaret ediyor. Değiştirilmedi, çünkü
+> (a) CLAUDE.md §3 hibrit mimariyi zorunlu kılıyor, (b) `llm` satırı planlanan
+> Trendyol-8B yerine Qwen2.5-7B ile ölçüldü (M5'te CUDA yok) ve **alt sınır**.
+> Yani "hibrit kötü" değil, "bu sözleşmeyle hibrit kötü" kanıtlandı.
+
+---
+
 # Devam Durumu — internet kesintisi öncesi dondurulan hâl
 
 **Tarih:** 2026-08-04, ~17:30
