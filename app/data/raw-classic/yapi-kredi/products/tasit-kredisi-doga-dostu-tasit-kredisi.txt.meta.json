@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/bireysel-bankacilik/krediler/tasit-kredisi/doga-dostu-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:29:44+00:00",
+  "content_hash": "d2a8a9cc4ccf5510f16219948f2334774b2f073bc7a57a88350e177b2c1671c4",
+  "collection_method": "browser",
+  "title": "Doğa Dostu Taşıt Kredisi | Taşıt Kredisi | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 936578,
+  "text_chars": 29518
+}

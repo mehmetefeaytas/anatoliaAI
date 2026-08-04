@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kredi/konut-kredisi/",
+  "scraped_at": "2026-08-04T14:29:20+00:00",
+  "content_hash": "da2332d46f6da245de3e54e8675fb26f49027459548a1020dc7466feb341ddb4",
+  "collection_method": "browser",
+  "title": "Ev Kredisi - Konut Kredisi Faiz Oranları | Konut Kredi Başvurusu",
+  "http_status": 200,
+  "raw_bytes": 929016,
+  "text_chars": 53905
+}

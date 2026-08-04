@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/kentsel-donusum",
+  "scraped_at": "2026-08-04T14:30:40+00:00",
+  "content_hash": "265e180ed53d4edc4452b8c85784d848e82b83ef483cf1b6e885ef27ff5d705e",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 206854,
+  "text_chars": 16057
+}

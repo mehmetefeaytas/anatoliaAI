@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri",
+  "scraped_at": "2026-08-04T14:28:30+00:00",
+  "content_hash": "ebc54cbe98715f397eee2dd1595b94e9b9d423c75387bc597b194806961dd58a",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi Hesaplama - Araç Kredisi Hesaplama",
+  "http_status": 200,
+  "raw_bytes": 262575,
+  "text_chars": 2162
+}

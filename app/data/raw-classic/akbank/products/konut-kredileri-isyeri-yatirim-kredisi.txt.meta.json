@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/isyeri-yatirim-kredisi",
+  "scraped_at": "2026-08-04T14:28:15+00:00",
+  "content_hash": "3a5cd8d4f25525933abe0ef665b6f45a3b2b59e581f453d5cf631d2759e453f1",
+  "collection_method": "live",
+  "title": "İş Yeri Yatırım Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 263969,
+  "text_chars": 4714
+}

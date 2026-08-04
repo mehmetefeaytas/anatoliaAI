@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri/motosiklet-kredisi",
+  "scraped_at": "2026-08-04T14:28:39+00:00",
+  "content_hash": "a5d8ade4838b2392b1ebf73f2eada256fa6b10301c24b4da53d91dfbf6da9b4f",
+  "collection_method": "live",
+  "title": "Motosiklet Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 275190,
+  "text_chars": 6163
+}

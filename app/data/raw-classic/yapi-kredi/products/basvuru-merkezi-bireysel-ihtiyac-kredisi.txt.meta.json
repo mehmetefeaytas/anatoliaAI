@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/basvuru-merkezi/bireysel-ihtiyac-kredisi/",
+  "scraped_at": "2026-08-04T14:29:51+00:00",
+  "content_hash": "3874b903e83480ef11f1c73437f738c8820612078fb8cbe3fc8d123e2b5eb758",
+  "collection_method": "browser",
+  "title": "Bireysel İhtiyaç Kredisi - Başvuru ve Detaylar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 26201,
+  "text_chars": 532
+}

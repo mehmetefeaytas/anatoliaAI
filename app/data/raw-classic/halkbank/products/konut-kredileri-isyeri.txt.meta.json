@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/isyeri",
+  "scraped_at": "2026-08-04T14:26:50+00:00",
+  "content_hash": "73e4e1bfd1b421e8fbe859aeb120f76cab496f95688abcc25b7ef5f928145fbc",
+  "collection_method": "live",
+  "title": "İşyeri Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 402186,
+  "text_chars": 2015
+}

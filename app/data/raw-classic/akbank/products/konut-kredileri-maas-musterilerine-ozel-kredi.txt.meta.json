@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/maas-musterilerine-ozel-kredi",
+  "scraped_at": "2026-08-04T14:28:12+00:00",
+  "content_hash": "702c5fc2ed5cf5536a4b192623873a0a8b38cbed6fc9b053926e548bfdaff47e",
+  "collection_method": "live",
+  "title": "Maaş Müşterilerine Özel Konut Kredisi",
+  "http_status": 200,
+  "raw_bytes": 266816,
+  "text_chars": 5204
+}

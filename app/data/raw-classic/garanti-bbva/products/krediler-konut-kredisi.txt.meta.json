@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/konut-kredisi",
+  "scraped_at": "2026-08-04T14:30:43+00:00",
+  "content_hash": "56451c86654edb009389b3996ebac09244ae6cb0e4117d34d14f5cd128db1b49",
+  "collection_method": "live",
+  "title": "Ev Kredisi Hesaplama | Konut Kredisi Faiz Oranları | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 216658,
+  "text_chars": 17561
+}

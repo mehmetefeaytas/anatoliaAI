@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/ilk-evim-konut-kredisi",
+  "scraped_at": "2026-08-04T14:28:06+00:00",
+  "content_hash": "a332b282b04ef240ae7ab38354b3514074717d406207f8bb89a3ec7bc28a6ef3",
+  "collection_method": "live",
+  "title": "İlk Evim Konut Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 275114,
+  "text_chars": 5809
+}

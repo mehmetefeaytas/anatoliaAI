@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kredi/konut-kredisi/yurtdisinda-yerlesikler-icin-mortgage",
+  "scraped_at": "2026-08-04T14:29:37+00:00",
+  "content_hash": "a8af0bce92c6f161a1affcd5a012d659939036fca3969f3a168e6d528f257b6a",
+  "collection_method": "browser",
+  "title": "Yurt Dışında Yaşayanlar İçin Mortgage | Ev Kredisi - Konut Kredi Faizleri | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 934092,
+  "text_chars": 28259
+}

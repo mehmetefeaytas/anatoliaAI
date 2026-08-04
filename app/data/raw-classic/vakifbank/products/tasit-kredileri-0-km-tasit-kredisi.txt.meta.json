@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/tasit-kredileri/0-km-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:26:11+00:00",
+  "content_hash": "7af28c940f7c4e4f92a74a468930d77bbc165f15cb16434213db1ffd66db20bb",
+  "collection_method": "live",
+  "title": "0 KM Taşıt Kredisi - Uygun ve Kolay Çözümler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 178945,
+  "text_chars": 2926
+}

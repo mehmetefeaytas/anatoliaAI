@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/bankamizi-taniyin/is-bankasindan-enerji-verimliligi-saglayan-konutlara-50-milyon-euro-kredi",
+  "scraped_at": "2026-08-04T14:31:48+00:00",
+  "content_hash": "e4128ab220d44c90d6b9cdd3529468a3da99ac92efb7f1e877d98b26dfbedb7f",
+  "collection_method": "live",
+  "title": "İş Bankası’ndan enerji verimliliği sağlayan konutlara 50 milyon Euro kredi | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 185451,
+  "text_chars": 3809
+}

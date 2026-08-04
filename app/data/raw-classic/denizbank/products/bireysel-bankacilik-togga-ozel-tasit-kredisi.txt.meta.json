@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/krediler/bireysel-bankacilik/togga-ozel-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:33:07+00:00",
+  "content_hash": "30b8bd7211b42e7699707ff24a4c9bd8476473783515eb016d87b402f0964098",
+  "collection_method": "live",
+  "title": "TOGG’a Özel Taşıt Kredisi | Bireysel Bankacılığa Özel Krediler | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 323391,
+  "text_chars": 57934
+}

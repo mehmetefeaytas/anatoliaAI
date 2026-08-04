@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/teb-oto-finans-tasit-kredi/?custType=1",
+  "scraped_at": "2026-08-04T14:34:23+00:00",
+  "content_hash": "90da6491c29dc446dfd2026e001e465d4603bd770c62573622c2a982588a3a23",
+  "collection_method": "live",
+  "title": "Oto Finans Taşıt Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 93714,
+  "text_chars": 1998
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/krediler/konut-kredisi",
+  "scraped_at": "2026-08-04T14:33:54+00:00",
+  "content_hash": "a2ba1a1f841f74d5fd2f4388e10897399db8927c331c53c668ea06eeffd322f4",
+  "collection_method": "browser",
+  "title": "Konut Kredisi Hesaplama ve Ev Kredisi Faiz Oranları | ING",
+  "http_status": 200,
+  "raw_bytes": 71268,
+  "text_chars": 4922
+}

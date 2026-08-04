@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/krediler/kobi-bankaciligi/ticari-tasit",
+  "scraped_at": "2026-08-04T14:33:19+00:00",
+  "content_hash": "5ce268c6b0f5d9d04f09e224608753acb7626b45ad2413e678c3929ca71586f7",
+  "collection_method": "live",
+  "title": "Ticari Taşıt Kredisi Şartları & En Uygun Taşıt Kredisi | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 338113,
+  "text_chars": 62920
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/krediler/bireysel-bankacilik/tasit-kredisi",
+  "scraped_at": "2026-08-04T14:33:10+00:00",
+  "content_hash": "f7423011c70def2ff8ede3ec7021bc4b572fc971c9a95c1d9b2894ab13ebdf29",
+  "collection_method": "live",
+  "title": "En Uygun Taşıt Kredisi 2026 & Araç Kredisi Şartları | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 353608,
+  "text_chars": 72951
+}

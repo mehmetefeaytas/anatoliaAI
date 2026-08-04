@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/bireysel-bankacilik/krediler/tasit-kredisi/karavan-kredisi",
+  "scraped_at": "2026-08-04T14:29:46+00:00",
+  "content_hash": "9fe21fae217de3e501f4383515f4c60c8225ce024700af31c6fefb2cfd17b30b",
+  "collection_method": "browser",
+  "title": "Karavan Kredisi: Özgür Tatiller İçin Finansman Desteği | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 939525,
+  "text_chars": 29980
+}

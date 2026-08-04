@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/tasit-teminatli-kredi/",
+  "scraped_at": "2026-08-04T14:34:41+00:00",
+  "content_hash": "2bc5ec85683944f25cf3eba85611162dc2efb29439a8bc101350381e2b4aa170",
+  "collection_method": "live",
+  "title": "Taşıt Teminatlı İhtiyaç Kredisi",
+  "http_status": 200,
+  "raw_bytes": 174375,
+  "text_chars": 6214
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/kktc-ye-ozel-krediler/kktc-tasit",
+  "scraped_at": "2026-08-04T14:26:27+00:00",
+  "content_hash": "3eacf2ec96943611176f5ce8ad2b6eac9fe7e277f61552275238f3a16f06456a",
+  "collection_method": "live",
+  "title": "KKTC Taşıt | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 402951,
+  "text_chars": 2346
+}

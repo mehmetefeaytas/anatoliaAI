@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/konut-projeleri",
+  "scraped_at": "2026-08-04T14:30:49+00:00",
+  "content_hash": "7da6b4488318dfb1b6f0ce3157b37b584af8006ff04a7d96d933a1c7443cb005",
+  "collection_method": "live",
+  "title": "Konut Projeleri | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 275646,
+  "text_chars": 13729
+}

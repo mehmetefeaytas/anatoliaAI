@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/kentsel-donusum",
+  "scraped_at": "2026-08-04T14:26:59+00:00",
+  "content_hash": "f171efa57a2164035862dd7962d665815e6c9aa7b714e2e372f982808cc0ffa3",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm Kredileri | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 402263,
+  "text_chars": 1849
+}

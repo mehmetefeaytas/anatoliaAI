@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kurumsal-iletisim/tasit-kredisinde-dijital-belge-onayi",
+  "scraped_at": "2026-08-04T14:31:05+00:00",
+  "content_hash": "a3a437da5eb867903e73c959ccf699958f13ad5547c25fd69b2d0240d178bed4",
+  "collection_method": "live",
+  "title": "Taşıt Kredisinde Dijital Belge Onayı | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 179692,
+  "text_chars": 8413
+}

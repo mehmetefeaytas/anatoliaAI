@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/bankamizi-taniyin/is-bankasinin-aninda-tasit-kredisi-simdi-ikinci-el-araclar-icinde-gecerli",
+  "scraped_at": "2026-08-04T14:31:57+00:00",
+  "content_hash": "63d917049f7a55ab95805da641f4a7707186d98857a765788aeaa89d8400edce",
+  "collection_method": "live",
+  "title": "İş Bankası’nın Anında Taşıt Kredisi şimdi ikinci el araçlar için de geç | T.İş Bnakası",
+  "http_status": 200,
+  "raw_bytes": 178527,
+  "text_chars": 1188
+}

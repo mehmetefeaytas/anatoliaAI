@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/konut-finansmani-mortgage",
+  "scraped_at": "2026-08-04T14:25:49+00:00",
+  "content_hash": "7cf1db12203f3913812e238c04936ccc42ae53f978748a3e2c3441c9d6c35add",
+  "collection_method": "live",
+  "title": "Konut Finansmanı (Mortgage) | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 169350,
+  "text_chars": 1167
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/borc-transferi-kredisi",
+  "scraped_at": "2026-08-04T14:28:18+00:00",
+  "content_hash": "7f4f833d42012344d63aab1b3239687ffce900a0d302b450ef25034f43835eac",
+  "collection_method": "live",
+  "title": "Konut Finansmanı Borç Transferi Kredisi",
+  "http_status": 200,
+  "raw_bytes": 265145,
+  "text_chars": 5097
+}

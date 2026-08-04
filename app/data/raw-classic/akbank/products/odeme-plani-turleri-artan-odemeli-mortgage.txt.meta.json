@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/odeme-plani-turleri/artan-odemeli-mortgage",
+  "scraped_at": "2026-08-04T14:27:57+00:00",
+  "content_hash": "ee81eb3ba88f4532e7cad879dc4bb9c65c218dec3963b46cc644386bdfc9d4db",
+  "collection_method": "live",
+  "title": "Artan Ödemeli Mortgage | Akbank",
+  "http_status": 200,
+  "raw_bytes": 264525,
+  "text_chars": 4076
+}

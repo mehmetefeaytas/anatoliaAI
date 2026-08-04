@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/konut-kredisi-basvurusu",
+  "scraped_at": "2026-08-04T14:30:47+00:00",
+  "content_hash": "d626d23f833d7e935d85067760d42d915e35b50b758602455307e7bef593bb3a",
+  "collection_method": "live",
+  "title": "Konut Kredisi Başvurusu | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 176553,
+  "text_chars": 8603
+}
