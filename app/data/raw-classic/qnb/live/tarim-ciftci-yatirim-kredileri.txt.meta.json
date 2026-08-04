@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/tarim-ciftci-yatirim-kredileri",
+  "scraped_at": "2026-08-04T12:39:52+00:00",
+  "content_hash": "ddc91aab929ec50d9c3729900e5cb189654e3ccd931a9d05d3f85c130ee0f0bb",
+  "collection_method": "browser",
+  "title": "Çitçiler için Yatırım Kredileri | QNB",
+  "http_status": 200,
+  "raw_bytes": 91666,
+  "text_chars": 11515
+}

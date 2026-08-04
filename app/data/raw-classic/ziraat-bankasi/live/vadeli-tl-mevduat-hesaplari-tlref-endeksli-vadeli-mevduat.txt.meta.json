@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/tlref-endeksli-vadeli-mevduat",
+  "scraped_at": "2026-08-04T11:30:33+00:00",
+  "content_hash": "4ec5536c4f57010689bcd0088eb68a1deb3c3088c7205d3870f6e6066d0b3e1c",
+  "collection_method": "browser",
+  "title": "TLREF Endeksli Vadeli Mevduat | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63598,
+  "text_chars": 4286
+}

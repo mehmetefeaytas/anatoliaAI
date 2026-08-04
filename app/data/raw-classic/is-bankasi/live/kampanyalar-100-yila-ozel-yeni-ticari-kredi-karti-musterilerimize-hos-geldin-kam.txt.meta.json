@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/100-yila-ozel-yeni-ticari-kredi-karti-musterilerimize-hos-geldin-kampanyasi",
+  "scraped_at": "2026-08-04T12:27:57+00:00",
+  "content_hash": "bc31ab1eee70eb1619371576cb8c11293cc2b1062d177cb82086c8aa484ae2bb",
+  "collection_method": "live",
+  "title": "Yeni Ticari Kredi Kartı Müşterilerimize Hoşgeldin Kampanyası | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 283356,
+  "text_chars": 29558
+}

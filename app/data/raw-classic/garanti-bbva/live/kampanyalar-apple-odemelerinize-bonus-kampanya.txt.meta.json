@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/apple-odemelerinize-bonus-kampanya",
+  "scraped_at": "2026-08-04T13:26:57+00:00",
+  "content_hash": "95e3f09a8539b4f25de6f8abe18d6f3fc6fb5705fba0af0adde05cfb26c39e3f",
+  "collection_method": "live",
+  "title": "Apple ödemelerinize 500 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47276,
+  "text_chars": 2473
+}

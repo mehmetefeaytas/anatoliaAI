@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-giyim-kampanyalari",
+  "scraped_at": "2026-08-04T13:28:22+00:00",
+  "content_hash": "aec2aedace7fac129c6d739f7e4f1754e81925346f1124275b5ada91682c45ff",
+  "collection_method": "live",
+  "title": "Bonus Genç'le giyim alışverişine 500 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46694,
+  "text_chars": 2322
+}

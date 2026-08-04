@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/250218",
+  "scraped_at": "2026-08-04T13:21:22+00:00",
+  "content_hash": "9efedcdfffe170a09197dd526c1997a86b0cd0db33f931cef440990811effe2f",
+  "collection_method": "browser",
+  "title": "Test Figma | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 929729,
+  "text_chars": 27237
+}

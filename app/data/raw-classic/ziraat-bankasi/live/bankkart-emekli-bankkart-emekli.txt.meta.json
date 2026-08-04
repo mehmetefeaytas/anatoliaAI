@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/bankkart-emekli/bankkart-emekli",
+  "scraped_at": "2026-08-04T11:28:29+00:00",
+  "content_hash": "43e0d19e161ecb09fb65579a50660adc796ec597c0c066ac52c59b462fbc9cf5",
+  "collection_method": "browser",
+  "title": "Bankkart Emekli | Bankkart Emekli | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63977,
+  "text_chars": 4471
+}

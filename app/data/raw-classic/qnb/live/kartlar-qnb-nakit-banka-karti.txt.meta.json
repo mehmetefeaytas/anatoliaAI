@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kartlar/qnb-nakit-banka-karti",
+  "scraped_at": "2026-08-04T12:40:26+00:00",
+  "content_hash": "f7596c5a6b461608d20f7adc8fb29735c28ddb52a863914d289882f3f33f7282",
+  "collection_method": "browser",
+  "title": "Banka Kartı | Nakit Banka Kartı Başvurusu | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 63839,
+  "text_chars": 22847
+}

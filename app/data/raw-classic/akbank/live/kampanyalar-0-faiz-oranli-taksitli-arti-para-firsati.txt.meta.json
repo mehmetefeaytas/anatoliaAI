@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/0-faiz-oranli-taksitli-arti-para-firsati",
+  "scraped_at": "2026-08-04T11:41:07+00:00",
+  "content_hash": "331980cac004d2a6041b3604e0dcfd2f128817a3c3d123a68c9c63340c9fb0d7",
+  "collection_method": "live",
+  "title": "BES ile %0 faiz oranlı 25.000 TL Taksitli Artı Para fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 294423,
+  "text_chars": 7919
+}

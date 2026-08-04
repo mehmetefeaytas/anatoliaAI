@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/burger-king-hediye-menu",
+  "scraped_at": "2026-08-04T11:44:53+00:00",
+  "content_hash": "50f1ceca62a88a5ecbc3be25268e98676e391a2a3dcc381be96e17172c083825",
+  "collection_method": "live",
+  "title": "Mobilin Akbanklısı ile Burger King Hediye Menü Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300688,
+  "text_chars": 9305
+}

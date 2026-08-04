@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar/play-karta-ozel-200-tl-ve-uzeri-egitim-ve-kariyer-platformlari-odemelerinde-50-islem-basina-en-fazla",
+  "scraped_at": "2026-08-04T13:20:28+00:00",
+  "content_hash": "09012199550d6dea9e499c27117870785da6e28ccc6ff145f542fd36dbc5a53d",
+  "collection_method": "browser",
+  "title": "Play karta özel 200 TL ve üzeri eğitim ve kariyer platformları ödemelerinde %50, işlem başına en fazla 250 TL, toplam 250 TL indirim kazanma fırsatı! | Yapı Kredi Play Kampanyaları - Gençlere Özel Fır",
+  "http_status": 200,
+  "raw_bytes": 130518,
+  "text_chars": 8729
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/255791",
+  "scraped_at": "2026-08-04T13:22:42+00:00",
+  "content_hash": "8d0d329a2250d9cb8d6804508846d194eebee1be9fdd0d23fb82caa7d60485ad",
+  "collection_method": "browser",
+  "title": "Chippin'e yeni üye olan müşterilerimize özel Chippin’de geçerli 200 TL Puan hediye! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 942482,
+  "text_chars": 29710
+}

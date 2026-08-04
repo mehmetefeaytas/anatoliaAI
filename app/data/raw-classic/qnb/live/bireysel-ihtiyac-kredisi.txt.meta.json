@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/bireysel-ihtiyac-kredisi",
+  "scraped_at": "2026-08-04T12:38:16+00:00",
+  "content_hash": "b6802c5467124c87b9d73b2ccfdd25d686f476a265d3549681e06a2f9ec6ecf8",
+  "collection_method": "browser",
+  "title": "İhtiyaç Kredisi Hesaplama ve Faiz Oranları | QNB",
+  "http_status": 200,
+  "raw_bytes": 100573,
+  "text_chars": 11920
+}

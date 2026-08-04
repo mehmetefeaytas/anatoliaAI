@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/nakit-krediler",
+  "scraped_at": "2026-08-04T12:59:15+00:00",
+  "content_hash": "810ee70d6d0ba06e0aa5a0544859ffd9a6c59deb23eba87facfd6bd842dda394",
+  "collection_method": "live",
+  "title": "Nakit Krediler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 205032,
+  "text_chars": 2378
+}

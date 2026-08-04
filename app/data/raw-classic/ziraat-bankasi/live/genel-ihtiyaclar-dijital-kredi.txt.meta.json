@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/dijital-kredi",
+  "scraped_at": "2026-08-04T11:28:51+00:00",
+  "content_hash": "7f104986bf2fb2158b33b71911a8fa442a6f50dec02d2791b6827ab0cad5a4fb",
+  "collection_method": "browser",
+  "title": "Dijital Kredi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 61585,
+  "text_chars": 3032
+}

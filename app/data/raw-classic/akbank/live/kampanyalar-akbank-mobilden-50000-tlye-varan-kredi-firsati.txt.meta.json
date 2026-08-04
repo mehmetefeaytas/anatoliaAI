@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobilden-50000-tlye-varan-kredi-firsati",
+  "scraped_at": "2026-08-04T11:42:38+00:00",
+  "content_hash": "792a457ba9c9e383de2356d35a98c69ed6497a384c8681d3405122f747fc797a",
+  "collection_method": "live",
+  "title": "50.000 TL’ye varan 6 ay vadeli %0 faizli kredi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 310478,
+  "text_chars": 17886
+}

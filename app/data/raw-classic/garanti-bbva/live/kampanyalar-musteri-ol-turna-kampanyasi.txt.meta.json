@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-turna-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:21+00:00",
+  "content_hash": "be684e5f4aee00bc13b3c5e0b8c24762b6e76f781f304ff3e56eb60d72666328",
+  "collection_method": "live",
+  "title": "Müşteri Ol Turna Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 210859,
+  "text_chars": 33758
+}

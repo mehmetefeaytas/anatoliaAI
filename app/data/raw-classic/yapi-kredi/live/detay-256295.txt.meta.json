@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256295",
+  "scraped_at": "2026-08-04T13:22:57+00:00",
+  "content_hash": "af96de81bf9de4e23558bd96b1349d156ec856510bc3e0c98cc1aad73b9152c1",
+  "collection_method": "browser",
+  "title": "PATILIDOSTUM kodu ile Yapı Kredili olun,5 ay boyunca her ay 5000 TL ve üzeri petshop ve veteriner harcamalarınızda 500 TL nakit iade, 5 ayda toplam 2500 TL'ye varan nakit iade kazanın, masraflarınızı ",
+  "http_status": 200,
+  "raw_bytes": 944164,
+  "text_chars": 30542
+}

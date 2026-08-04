@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/252637",
+  "scraped_at": "2026-08-04T11:53:10+00:00",
+  "content_hash": "d65f5c824ed87c003ae23632841716985ddc4d574c96e344ce79a0543a0ef6ae",
+  "collection_method": "browser",
+  "title": "Setur'da %2,99 faizli World Pay Alışveriş Kredisi fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 938848,
+  "text_chars": 29198
+}

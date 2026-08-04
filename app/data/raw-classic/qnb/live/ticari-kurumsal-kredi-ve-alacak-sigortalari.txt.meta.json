@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ticari-kurumsal-kredi-ve-alacak-sigortalari",
+  "scraped_at": "2026-08-04T12:40:04+00:00",
+  "content_hash": "49d1452b1583d7183af91074ff9e981207a7a9d76256243656fc070d64afba1e",
+  "collection_method": "browser",
+  "title": "Ticari Kredi ve Alacak Sigortaları | QNB",
+  "http_status": 200,
+  "raw_bytes": 68273,
+  "text_chars": 3828
+}

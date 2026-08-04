@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar/crystal-ile-wam-by-karma-da-tekne-kullanimlarinda-10-indirim-ayricaligi",
+  "scraped_at": "2026-08-04T13:19:46+00:00",
+  "content_hash": "19c49c070dd54698c9fe57c3a9725cf3ff6fb58c44a75405c40bb3bd0cae6218",
+  "collection_method": "browser",
+  "title": "Crystal ile WAM by Karma ‘da tekne kullanımlarında %10 indirim ayrıcalığı. | Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 97998,
+  "text_chars": 7995
+}

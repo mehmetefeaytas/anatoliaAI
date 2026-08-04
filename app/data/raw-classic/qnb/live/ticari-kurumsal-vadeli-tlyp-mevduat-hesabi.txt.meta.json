@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ticari-kurumsal-vadeli-tlyp-mevduat-hesabi",
+  "scraped_at": "2026-08-04T12:40:13+00:00",
+  "content_hash": "885d9bfa2274f4a7842f60b2b0e446829bc1362fd6e5664f6eec3075c3a95ebb",
+  "collection_method": "browser",
+  "title": "Vadeli TL ve Döviz Mevduat Hesabı | QNB",
+  "http_status": 200,
+  "raw_bytes": 68496,
+  "text_chars": 2564
+}

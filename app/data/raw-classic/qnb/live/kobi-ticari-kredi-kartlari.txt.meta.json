@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kobi-ticari-kredi-kartlari",
+  "scraped_at": "2026-08-04T12:39:07+00:00",
+  "content_hash": "2e967358ee148f1c8dbd9abc11cb7a922a66a6d351871cc0cd5988f4e3d095bc",
+  "collection_method": "browser",
+  "title": "Ticari Kredi Kartı Başvurusu - Nedir / Nasıl Alınır? | QNB",
+  "http_status": 200,
+  "raw_bytes": 60023,
+  "text_chars": 531
+}

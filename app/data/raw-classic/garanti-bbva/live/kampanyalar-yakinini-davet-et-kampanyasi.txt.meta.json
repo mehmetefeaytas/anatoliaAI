@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/yakinini-davet-et-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:24+00:00",
+  "content_hash": "065f0f74fe802428c8771b180d58b2fb291af96406d34d58935ad057188159a7",
+  "collection_method": "live",
+  "title": "Yakınını Davet Et Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 306044,
+  "text_chars": 102143
+}

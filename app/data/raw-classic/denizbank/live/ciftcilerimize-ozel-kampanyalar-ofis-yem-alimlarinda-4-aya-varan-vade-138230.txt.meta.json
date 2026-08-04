@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/ofis-yem-alimlarinda-4-aya-varan-vade-138230",
+  "scraped_at": "2026-08-04T11:04:16+00:00",
+  "content_hash": "0c96839a04f3172bae26d48b3d7da6b84fcaccc6620c4ceeb9f87b915db59ab6",
+  "collection_method": "live",
+  "title": "Ofis Yem Alımlarında 4 Aya Varan Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332298,
+  "text_chars": 58185
+}

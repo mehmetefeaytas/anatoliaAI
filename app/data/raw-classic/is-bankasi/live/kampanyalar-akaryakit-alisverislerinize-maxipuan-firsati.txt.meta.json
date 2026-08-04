@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akaryakit-alisverislerinize-maxipuan-firsati",
+  "scraped_at": "2026-08-04T12:31:33+00:00",
+  "content_hash": "046fdeec2c5c0371e8d9efbda7bf9ecbc05c1ec1c93b596e38f70c000f4cf2dc",
+  "collection_method": "live",
+  "title": "Akaryakıt alışverişinize MaxiPuan Fırsatı!",
+  "http_status": 200,
+  "raw_bytes": 192092,
+  "text_chars": 2410
+}

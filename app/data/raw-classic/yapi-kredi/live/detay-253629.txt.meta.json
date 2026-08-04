@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/253629",
+  "scraped_at": "2026-08-04T13:22:04+00:00",
+  "content_hash": "613d8c1f23b5e700219bedcfa702c6210d6256d6a935086a56c08b04f76fb6b8",
+  "collection_method": "browser",
+  "title": "Gürgençler mağazalarında %0 faizli World Pay Alışveriş Kredisi fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 939180,
+  "text_chars": 28948
+}

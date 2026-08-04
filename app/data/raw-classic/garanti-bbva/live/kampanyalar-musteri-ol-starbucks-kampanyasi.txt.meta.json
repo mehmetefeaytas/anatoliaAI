@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-starbucks-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:15+00:00",
+  "content_hash": "44805812bf46b42a0c3ecf603335e9a90350791a887068b5942aa317a2fcc4c8",
+  "collection_method": "live",
+  "title": "Müşteri Ol Starbucks Yıldız Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 262055,
+  "text_chars": 71733
+}

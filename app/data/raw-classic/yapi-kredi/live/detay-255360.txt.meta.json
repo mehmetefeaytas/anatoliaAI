@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/255360",
+  "scraped_at": "2026-08-04T13:22:29+00:00",
+  "content_hash": "0dcda99955e8f3ff03485d77c51b0e3aab94308f3e9598c0dff02733f49a6065",
+  "collection_method": "browser",
+  "title": "Koçtaş’ta %2,99 Faizli World Pay Alışveriş Kredisi Fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 940203,
+  "text_chars": 29341
+}

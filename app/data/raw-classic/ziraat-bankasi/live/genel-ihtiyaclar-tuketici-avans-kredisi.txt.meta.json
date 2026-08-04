@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/tuketici-avans-kredisi",
+  "scraped_at": "2026-08-04T11:29:09+00:00",
+  "content_hash": "b4c13dedc82089622b67254b57bd7a33e54def214644bd3347e6ae5324e6f58b",
+  "collection_method": "browser",
+  "title": "Tüketici Avans Kredisi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 62001,
+  "text_chars": 3041
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-kart-mavi-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:53+00:00",
+  "content_hash": "6fbe7680ca49ea3a7a7ad02a3b34845cec60d733975703796b3b1de43a0b607c",
+  "collection_method": "live",
+  "title": "Akbank Kart’a Mavi’de 350 TL chip-para | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301212,
+  "text_chars": 12104
+}

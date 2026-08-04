@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-restoran-bf-kampanyasi",
+  "scraped_at": "2026-08-04T13:29:43+00:00",
+  "content_hash": "3e6fe2508a27ff283a578fe6d540a4c1da29975aedcdbb7baadaed577213eb51",
+  "collection_method": "live",
+  "title": "Restoran harcamalarınıza 500 TL, Mobil Temassız veya QR ile ödemeye 600 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 49209,
+  "text_chars": 3970
+}

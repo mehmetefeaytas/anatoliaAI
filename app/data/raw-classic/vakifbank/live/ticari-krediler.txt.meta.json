@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler",
+  "scraped_at": "2026-08-04T12:59:12+00:00",
+  "content_hash": "37cd44f220a93bfae5492feb11b041f63dad3ee5bbd15cc3ce237dd4435ad131",
+  "collection_method": "live",
+  "title": "Ticari Krediler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 188013,
+  "text_chars": 1655
+}

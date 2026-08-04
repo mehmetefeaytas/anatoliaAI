@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar/mastercard-logolu-kartiniz-ile-yurt-disindaki-duty-freelerde-toplamda-1500-tlye-varan-puan-temmuz",
+  "scraped_at": "2026-08-04T13:19:07+00:00",
+  "content_hash": "bd9f7808f3ea2d5e64ac242a79781774aba18d60df2d2df92527bd7c055f2d90",
+  "collection_method": "browser",
+  "title": "Mastercard logolu kartınız ile yurt Dışındaki Duty Free’lerde toplamda 1.500 TL‘ye varan puan! | Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 145692,
+  "text_chars": 10745
+}

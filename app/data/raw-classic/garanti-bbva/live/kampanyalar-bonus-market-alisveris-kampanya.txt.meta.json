@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-market-alisveris-kampanya",
+  "scraped_at": "2026-08-04T13:29:01+00:00",
+  "content_hash": "761773e10006c023c0c3347b770547c049f93d291c1e2013ed487fae5f16d09e",
+  "collection_method": "live",
+  "title": "Market alışverişinize 1.000 TL, BonusFlaş ile ödemeye 1.050 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 49293,
+  "text_chars": 4557
+}

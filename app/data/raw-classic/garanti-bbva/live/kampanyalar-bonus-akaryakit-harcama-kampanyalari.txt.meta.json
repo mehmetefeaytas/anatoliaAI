@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-akaryakit-harcama-kampanyalari",
+  "scraped_at": "2026-08-04T13:27:40+00:00",
+  "content_hash": "2607eac1578397521ca3cfdd443f6b9bdfb475e1216db514f6d61a350877f56a",
+  "collection_method": "live",
+  "title": "Akaryakıt harcamalarınıza 250 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47856,
+  "text_chars": 3334
+}

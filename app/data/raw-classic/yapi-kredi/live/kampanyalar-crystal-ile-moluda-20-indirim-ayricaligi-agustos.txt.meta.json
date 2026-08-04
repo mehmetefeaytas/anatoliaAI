@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar/crystal-ile-moluda-20-indirim-ayricaligi-agustos",
+  "scraped_at": "2026-08-04T13:19:29+00:00",
+  "content_hash": "98a54c2853983cff17a192c9d27f0d81ac0a0334db4516e529524337cd8e7ecb",
+  "collection_method": "browser",
+  "title": "Crystal ile Molu’da %20 indirim ayrıcalığı. | Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 98195,
+  "text_chars": 8178
+}

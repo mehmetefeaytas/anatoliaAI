@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.worldcard.com.tr/kampanyalar/mastercard-logolu-kartiniz-ile-yurt-disindaki-duty-freelerde-toplamda-1500-tlye-varan-puan-temmuz",
+  "scraped_at": "2026-08-04T13:20:08+00:00",
+  "content_hash": "e12f58e364b437c62e2183c1a86005dbddc90dc4766848f15a27ac74bdf0ec60",
+  "collection_method": "browser",
+  "title": "Mastercard logolu kartınız ile yurt Dışındaki Duty Free’lerde toplamda 1.500 TL‘ye varan puan! | Worldcard Kampanyaları | Avantajlı ve Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 137719,
+  "text_chars": 10542
+}

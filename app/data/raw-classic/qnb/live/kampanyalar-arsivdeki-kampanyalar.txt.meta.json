@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kampanyalar/arsivdeki-kampanyalar",
+  "scraped_at": "2026-08-04T12:37:39+00:00",
+  "content_hash": "c5cd971c7a6c881e7fb3cddc6b794245421f2c5219b717bd1ff6a8d061dbe208",
+  "collection_method": "browser",
+  "title": "Arşivdeki Kampanyalar | QNB",
+  "http_status": 200,
+  "raw_bytes": 76516,
+  "text_chars": 1074
+}

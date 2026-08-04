@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T13:18:36+00:00",
+  "content_hash": "53a139307dd6782eb8665db2bd2cd802ea7aba01f58dcb80e31f611047cf2362",
+  "collection_method": "browser",
+  "title": "Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 127781,
+  "text_chars": 7842
+}

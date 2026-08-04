@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobil-nakit-akisinla-kazan-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:23+00:00",
+  "content_hash": "b728111bea0e92cb33badb4809e754c04fd367c4ad5c3a76bcad4412f1d36d1f",
+  "collection_method": "live",
+  "title": "Nakit Akışınla Kazan | Akbank",
+  "http_status": 200,
+  "raw_bytes": 314120,
+  "text_chars": 19433
+}

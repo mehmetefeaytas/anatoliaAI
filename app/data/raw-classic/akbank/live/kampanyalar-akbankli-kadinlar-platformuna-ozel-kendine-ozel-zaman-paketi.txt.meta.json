@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-kendine-ozel-zaman-paketi",
+  "scraped_at": "2026-08-04T11:43:44+00:00",
+  "content_hash": "17dfb01149cc7d93ae5037de53e01e9bc3d55fd873264541c7f4e734d19d1577",
+  "collection_method": "live",
+  "title": "Kendine Özel Zaman Paketi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301798,
+  "text_chars": 9676
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/251155",
+  "scraped_at": "2026-08-04T13:21:28+00:00",
+  "content_hash": "643890c173bc20b9d57791e064579f6b7d48e443ac7cfde37a89b9e0d50484a7",
+  "collection_method": "browser",
+  "title": "Size özel, Troy bireysel kredi kartlarınızla yapacağınız market harcamalarınıza puan fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 940534,
+  "text_chars": 30356
+}

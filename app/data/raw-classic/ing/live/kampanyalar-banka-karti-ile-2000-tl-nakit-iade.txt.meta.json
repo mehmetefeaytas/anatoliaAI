@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/banka-karti-ile-2000-tl-nakit-iade",
+  "scraped_at": "2026-08-04T11:34:40+00:00",
+  "content_hash": "9df1214f3a958477c81e8616079ddf9d3ab0d48dfa692faf6a7d6fbe107c3c95",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 56013,
+  "text_chars": 2622
+}

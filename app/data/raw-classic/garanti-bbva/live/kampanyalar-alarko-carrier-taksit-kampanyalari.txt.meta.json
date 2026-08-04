@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/alarko-carrier-taksit-kampanyalari",
+  "scraped_at": "2026-08-04T13:26:30+00:00",
+  "content_hash": "afb618cadfbbb03d83125ddfc33765ed434c6db37e8df844601c6150d5c0019d",
+  "collection_method": "live",
+  "title": "Alarko Carrier'da peşin fiyatına 9 taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46009,
+  "text_chars": 1613
+}

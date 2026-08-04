@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/isparkta-ucretsiz-otopark",
+  "scraped_at": "2026-08-04T13:16:33+00:00",
+  "content_hash": "ac7ab14b0897ba2c034ed17d58030e022d37c2c9175d7a5b57be952215cba3a6",
+  "collection_method": "live",
+  "title": "İSPARK&#39;ta Ücretsiz Otopark",
+  "http_status": 200,
+  "raw_bytes": 394841,
+  "text_chars": 4178
+}

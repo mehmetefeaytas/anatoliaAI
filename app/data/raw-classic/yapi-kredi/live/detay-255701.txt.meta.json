@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/255701",
+  "scraped_at": "2026-08-04T13:22:32+00:00",
+  "content_hash": "0e7b7294cadbdb15563e2832430ce5e5f43481b684e578ea9c22d53119f1a920",
+  "collection_method": "browser",
+  "title": "Size özel 1 yıl kredi kartı ücret muafiyeti fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 934881,
+  "text_chars": 28412
+}

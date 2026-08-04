@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-hastane-eczane-kampanya",
+  "scraped_at": "2026-08-04T13:28:55+00:00",
+  "content_hash": "95ea3607ddb5bf277b4623bf0df3931bf71113c88f9b44147103fe23936794f0",
+  "collection_method": "live",
+  "title": "Hastane ve eczane ödemelerinize ücretsiz taksit fırsatı!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46730,
+  "text_chars": 2507
+}

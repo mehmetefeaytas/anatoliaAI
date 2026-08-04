@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/kobilere-ozel/kredi-garanti-fonu-kgf",
+  "scraped_at": "2026-08-04T12:58:56+00:00",
+  "content_hash": "b2f4bcc7a8f61a9a13fc6792654708fbb17113f592c607f23965b5fd93e1b634",
+  "collection_method": "live",
+  "title": "Kredi Garanti Fonu (KGF) | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 172996,
+  "text_chars": 1835
+}

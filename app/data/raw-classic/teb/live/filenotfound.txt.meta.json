@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/FileNotFound.aspx",
+  "scraped_at": "2026-08-04T11:06:49+00:00",
+  "content_hash": "b7109af80e1bd740bc6b385fe2ca957097f7aba394ab677b11ef3ac785a478e2",
+  "collection_method": "live",
+  "title": "Türk Ekonomi Bankasi",
+  "http_status": 200,
+  "raw_bytes": 136932,
+  "text_chars": 3628
+}

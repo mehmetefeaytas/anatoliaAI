@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.worldcard.com.tr/kampanyalar/mastercardiniza-ozel-treva-mobil-uygulamasinda-gecerli-otopark-odemelerinizde-50-indirim-ayricaligi",
+  "scraped_at": "2026-08-04T13:20:11+00:00",
+  "content_hash": "6b1ffe6de9c832f15cceac01d077db88b7948ead00288c6539f137603c524ce2",
+  "collection_method": "browser",
+  "title": "Mastercard’ınıza özel Treva mobil uygulamasında geçerli otopark ödemelerinizde %50 indirim ayrıcalığı! | Worldcard Kampanyaları | Avantajlı ve Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 135601,
+  "text_chars": 9093
+}

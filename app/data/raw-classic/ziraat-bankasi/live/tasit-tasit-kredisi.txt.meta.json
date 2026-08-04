@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/tasit/tasit-kredisi",
+  "scraped_at": "2026-08-04T11:29:30+00:00",
+  "content_hash": "271cf493d0e40718775facf75cde132333141352866ab41997cea634e87590a8",
+  "collection_method": "browser",
+  "title": "Taşıt Kredisi | Taşıt | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 79597,
+  "text_chars": 4165
+}

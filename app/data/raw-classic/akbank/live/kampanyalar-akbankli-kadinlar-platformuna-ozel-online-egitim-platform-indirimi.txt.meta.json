@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-online-egitim-platform-indirimi",
+  "scraped_at": "2026-08-04T11:43:53+00:00",
+  "content_hash": "8504b4ed8b42453ff4cf263b48391f127e29941ec9731411e711e6ccd49d7181",
+  "collection_method": "live",
+  "title": "Online Eğitim Platform İndirimi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301549,
+  "text_chars": 9475
+}

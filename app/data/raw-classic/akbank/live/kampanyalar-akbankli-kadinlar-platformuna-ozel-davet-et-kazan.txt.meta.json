@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-davet-et-kazan",
+  "scraped_at": "2026-08-04T11:43:32+00:00",
+  "content_hash": "a47b21ab0de7f3f6a993cf1827c9b6c83188957f389d8c73ddbf2108016ce176",
+  "collection_method": "live",
+  "title": "Akbanklı Kadınlara Özel Davet Et Kazan | Akbank",
+  "http_status": 200,
+  "raw_bytes": 304434,
+  "text_chars": 12186
+}

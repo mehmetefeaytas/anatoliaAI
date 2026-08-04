@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/255703",
+  "scraped_at": "2026-08-04T13:22:35+00:00",
+  "content_hash": "c286a8b5a05278f158fb2543f3b2e916c6ddf98c45e1fbdff8bcf8fd22ac2082",
+  "collection_method": "browser",
+  "title": "Size özel kart ücretiniz kadar Worldpuan kampanyası! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 938048,
+  "text_chars": 29484
+}

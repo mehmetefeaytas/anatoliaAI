@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-xtra-kredi-karti",
+  "scraped_at": "2026-08-04T12:39:40+00:00",
+  "content_hash": "7cf8fdd7269beeb7a27a333524d9d7c8125c80da5c15274fb8b2c2438d6fb796",
+  "collection_method": "browser",
+  "title": "QNB Xtra Kredi Kartı ve Ekstra Kart Avantajları",
+  "http_status": 200,
+  "raw_bytes": 76435,
+  "text_chars": 2259
+}

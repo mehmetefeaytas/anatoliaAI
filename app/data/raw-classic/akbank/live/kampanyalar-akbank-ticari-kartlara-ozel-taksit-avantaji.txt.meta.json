@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-ticari-kartlara-ozel-taksit-avantaji",
+  "scraped_at": "2026-08-04T11:42:59+00:00",
+  "content_hash": "bd6bca7cbf6f244a90fd2b225c8e23b5da72cc33d78a14306774845eadc960aa",
+  "collection_method": "live",
+  "title": "Ticari Kredi Kartı Telefon Taksit Avantajı Akbank'ta! | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300254,
+  "text_chars": 9825
+}

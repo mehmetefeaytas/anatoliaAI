@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/gayrinakdi-krediler",
+  "scraped_at": "2026-08-04T12:59:18+00:00",
+  "content_hash": "adf9cac18f90666203bfdc731c33e05e1436d7a8c86a9955f810e22474e96b20",
+  "collection_method": "live",
+  "title": "Gayrinakdi Krediler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 178533,
+  "text_chars": 630
+}

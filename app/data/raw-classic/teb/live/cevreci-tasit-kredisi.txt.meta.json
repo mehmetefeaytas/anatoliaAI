@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/cevreci-tasit-kredisi/",
+  "scraped_at": "2026-08-04T11:07:23+00:00",
+  "content_hash": "ab1ec04b654ea47acdff4e6ac8e11224c2cb15b49f3057d92e309e6ee96d4f7a",
+  "collection_method": "live",
+  "title": "Elektrikli Taşıt Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 182899,
+  "text_chars": 7599
+}

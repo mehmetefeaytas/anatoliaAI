@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-doviz-mevduat-hesaplari/birikimli-doviz-hesabi",
+  "scraped_at": "2026-08-04T11:30:03+00:00",
+  "content_hash": "acff0de189e80724ee5d81e6b1f01cd616cc47738e0a15a484f6b9df0ab95e28",
+  "collection_method": "browser",
+  "title": "Birikimli Döviz Hesabı | Vadeli Döviz Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63978,
+  "text_chars": 3709
+}

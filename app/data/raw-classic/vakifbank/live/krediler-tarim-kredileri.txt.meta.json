@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/tarim-kredileri",
+  "scraped_at": "2026-08-04T12:59:30+00:00",
+  "content_hash": "cc8776bc8ef90bd34dd51e95f9bac0630982edd0cd67254dbd7cd6516e85c61a",
+  "collection_method": "live",
+  "title": "Tarım Kredileri | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 176781,
+  "text_chars": 498
+}

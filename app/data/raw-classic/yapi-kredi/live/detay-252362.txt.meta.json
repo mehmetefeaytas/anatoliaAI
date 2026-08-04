@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/252362",
+  "scraped_at": "2026-08-04T13:21:46+00:00",
+  "content_hash": "4db88641f551cbffe9dec883d51f04a5cf1cfb6e2f043521eb4c01a3f12b1366",
+  "collection_method": "browser",
+  "title": "Özel Müşteri Kredisi | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 937656,
+  "text_chars": 29500
+}

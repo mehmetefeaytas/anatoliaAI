@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256870",
+  "scraped_at": "2026-08-04T13:23:20+00:00",
+  "content_hash": "531f442eb1f4b90b6a715c042c22d1e60a924f48b9b1db4a461cdb45c2659a0b",
+  "collection_method": "browser",
+  "title": "Size özel 1.000 TL Worldpuan! 31 Ağustos'a kadar ek kart alın, alışverişlerinizden puan kazanın. | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 792323,
+  "text_chars": 30130
+}

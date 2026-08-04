@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-doviz-mevduat-hesaplari/donem-odemeli-doviz-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:30:06+00:00",
+  "content_hash": "fe654042b29cce8dca0a21b14c55aef58e7d2729964f14bfc80e99cef9ca2726",
+  "collection_method": "browser",
+  "title": "Dönem Ödemeli Döviz Mevduat Hesabı | Vadeli Döviz Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 64037,
+  "text_chars": 3430
+}

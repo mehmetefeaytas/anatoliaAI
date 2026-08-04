@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/0-dan-baslayan-faiz-oranlari-ile-60-aya-varan-vade-firsati-105741",
+  "scraped_at": "2026-08-04T11:03:55+00:00",
+  "content_hash": "b442e472c614ed8da895931b457c304705e79c3ed9467a2b16439e8265c9aa41",
+  "collection_method": "live",
+  "title": "%0 Faizli, 60 Ay Vadeli, 4.000.000 TL’ye Kadar Kredi Fırsatı! | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332500,
+  "text_chars": 58150
+}

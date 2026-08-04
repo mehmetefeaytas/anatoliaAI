@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akzonobel-ilave-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T12:31:54+00:00",
+  "content_hash": "bb2caf7af487d941f3b7f3fa17b8433ff598540a2addad48be631e6934448492",
+  "collection_method": "live",
+  "title": "Akzonobel İlave Taksit Kampanyası | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 186709,
+  "text_chars": 743
+}

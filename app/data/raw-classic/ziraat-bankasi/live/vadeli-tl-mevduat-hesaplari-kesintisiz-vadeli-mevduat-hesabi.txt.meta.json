@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/kesintisiz-vadeli-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:30:27+00:00",
+  "content_hash": "8096373f48ebc63f537768e0170a5961f788f7d16e4f4557d8370295a6f0c303",
+  "collection_method": "browser",
+  "title": "Kesintisiz Vadeli Mevduat Hesabı | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 75995,
+  "text_chars": 5712
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/altin-hesaplari/vadesiz-altin-mevduat-hesaplari/altin-vakti",
+  "scraped_at": "2026-08-04T11:29:51+00:00",
+  "content_hash": "6108cdadfc17853d6f98dac797b5c8f9bbb69e3a321713bdfd87ca1d6bc4b60f",
+  "collection_method": "browser",
+  "title": "Altın Vakti | Kıymetli Maden Mevduat Hesapları | Kıymetli Maden Hesapları | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 64664,
+  "text_chars": 5392
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.worldcard.com.tr/kampanyalar/mastercard-logolu-kartiniz-ile-yapacaginiz-yurt-disi-online-alisverislerde-250-tl-puan",
+  "scraped_at": "2026-08-04T13:20:05+00:00",
+  "content_hash": "968098843f624ad094a0d28465aec9c3eabb6be4b10acb3d58c229c892b9846f",
+  "collection_method": "browser",
+  "title": "Mastercard logolu kartınız ile yapacağınız yurt dışı online alışverişlerde 250 TL puan! | Worldcard Kampanyaları | Avantajlı ve Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 138270,
+  "text_chars": 11030
+}

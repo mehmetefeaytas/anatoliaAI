@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/emeklilere-ozel/mutlu-emekli-kredi",
+  "scraped_at": "2026-08-04T13:16:48+00:00",
+  "content_hash": "807f78a6f8cbc2a603558db910b57169ff48f98068cc1d1b0f3456385b3eb808",
+  "collection_method": "live",
+  "title": "Mutlu Emekli Kredisi",
+  "http_status": 200,
+  "raw_bytes": 401211,
+  "text_chars": 1760
+}

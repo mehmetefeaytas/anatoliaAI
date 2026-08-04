@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/adore-oyuncakta-maxipuan",
+  "scraped_at": "2026-08-04T12:31:14+00:00",
+  "content_hash": "b51d1cb98dea82cb4dc8981f0aa8a4b7932b38edb62c1a248df1e633f696a4cc",
+  "collection_method": "live",
+  "title": "Adore Oyuncak'ta 500 TL MaxiPuan! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 190597,
+  "text_chars": 2437
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/faizsiz-masrafsiz-taksitli-nakit-avans-firsati-40512",
+  "scraped_at": "2026-08-04T13:06:51+00:00",
+  "content_hash": "64edcf3beacce1f889ae676d54fa40d7fa75e387625ecdb48faedbfe50e98de6",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 29054,
+  "text_chars": 3456
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/1-98-faizle-taksitli-nakit-avans-firsati",
+  "scraped_at": "2026-08-04T12:27:53+00:00",
+  "content_hash": "1a2ad3d404377cadd1e6b74bc3467ca47b3835f7b908708cb9e73d7c49bb5882",
+  "collection_method": "live",
+  "title": "1,98 Faizle Taksitli Nakit Avans Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 204320,
+  "text_chars": 4759
+}

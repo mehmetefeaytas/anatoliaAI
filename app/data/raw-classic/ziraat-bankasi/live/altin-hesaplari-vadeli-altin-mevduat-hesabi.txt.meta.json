@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/altin-hesaplari/vadeli-altin-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:29:39+00:00",
+  "content_hash": "5b068e95813f2ff498bdbdb8089f9710fbb01c1279d9aa380e86858c595bc68f",
+  "collection_method": "browser",
+  "title": "Vadeli Altın Mevduat Hesabı | Kıymetli Maden Hesapları | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 71567,
+  "text_chars": 4071
+}

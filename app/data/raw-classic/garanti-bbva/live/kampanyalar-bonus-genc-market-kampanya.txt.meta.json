@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-market-kampanya",
+  "scraped_at": "2026-08-04T13:28:31+00:00",
+  "content_hash": "c805f712f780f304bc0ba2679a037bf48f3e82f64610854753b09ad1dfa80060",
+  "collection_method": "live",
+  "title": "Bonus Genç'le market alışverişlerine 240 TL, Mobil Temassız veya QR ile ödemene 315 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 49132,
+  "text_chars": 3918
+}

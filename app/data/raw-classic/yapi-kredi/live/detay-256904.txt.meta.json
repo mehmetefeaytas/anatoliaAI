@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256904",
+  "scraped_at": "2026-08-04T13:23:27+00:00",
+  "content_hash": "49e84137bf91a3c9b6633f8b285f13026656c436f15e96ec6fc46d84c49a3ad9",
+  "collection_method": "browser",
+  "title": "Size özel 5.000 TL Worldpuan kampanyası! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 935903,
+  "text_chars": 29279
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/altin-hesaplari/vadesiz-altin-mevduat-hesaplari/vadesiz-gumus-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:29:57+00:00",
+  "content_hash": "461d291e038d63e6706bf3687a8cae9e3c4ebe23ea8e2c643d2f3025bac24d79",
+  "collection_method": "browser",
+  "title": "Vadesiz Gümüş Mevduat Hesabı | Kıymetli Maden Mevduat Hesapları | Kıymetli Maden Hesapları | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63130,
+  "text_chars": 3509
+}

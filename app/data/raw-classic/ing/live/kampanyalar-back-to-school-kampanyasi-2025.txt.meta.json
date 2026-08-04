@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/back-to-school-kampanyasi-2025",
+  "scraped_at": "2026-08-04T11:34:32+00:00",
+  "content_hash": "98d8c790c001d4a75822dae38e962223e2dd09ebebd62c049e1defdaae1444fa",
+  "collection_method": "browser",
+  "title": "Okula dönüş dönemi hiç bu kadar bonuslu olmamıştı. | ING",
+  "http_status": 200,
+  "raw_bytes": 56300,
+  "text_chars": 2855
+}

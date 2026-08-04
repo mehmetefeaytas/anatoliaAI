@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-alisveris-bf-kampanya",
+  "scraped_at": "2026-08-04T13:27:43+00:00",
+  "content_hash": "1fd41225a20723f1cf5695369a12369890e0d1af3aaa06da5e175fc3de9c057c",
+  "collection_method": "live",
+  "title": "Bonus ile yurt dışı alışverişinize 500 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46177,
+  "text_chars": 2139
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-troy-idefix-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:55+00:00",
+  "content_hash": "4aeffb4339be8ba2abb64ed4d00923468ef7531b1ce980dbbc72b3711ce5af87",
+  "collection_method": "live",
+  "title": "idefix'te yaz boyunca her 1.000 TL'ye 200 TL, toplamda 3.000 TL'ye varan anında indirim!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48664,
+  "text_chars": 3677
+}

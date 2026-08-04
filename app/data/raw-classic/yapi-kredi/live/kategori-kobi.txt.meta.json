@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/kategori/kobi/",
+  "scraped_at": "2026-08-04T13:20:19+00:00",
+  "content_hash": "8cbfc799ce603fc63fd2ee76730e4dc03daef93ac8d1e4baba724b7e81223da6",
+  "collection_method": "browser",
+  "title": "KOBİ | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 948229,
+  "text_chars": 28726
+}

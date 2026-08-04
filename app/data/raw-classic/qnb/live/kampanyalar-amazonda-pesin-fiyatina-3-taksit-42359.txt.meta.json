@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/amazonda-pesin-fiyatina-3-taksit-42359",
+  "scraped_at": "2026-08-04T12:37:04+00:00",
+  "content_hash": "55d66b88ab71c6bc62b4fd1c73792f0ccc3659356b0389aae8fd904ff710e8b4",
+  "collection_method": "browser",
+  "title": "Amazon'da peşin fiyatına 3 taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26857,
+  "text_chars": 2237
+}

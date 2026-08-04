@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-kobilerin-yaninda",
+  "scraped_at": "2026-08-04T11:42:02+00:00",
+  "content_hash": "c5249227e113c436efe7cbe1182d92125b96bc089a9ab1196993eb703419c0a2",
+  "collection_method": "live",
+  "title": "KOBİ Kredi Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 298523,
+  "text_chars": 8633
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/sss/krediler",
+  "scraped_at": "2026-08-04T12:40:40+00:00",
+  "content_hash": "b74871a3d0f53144994810e8808565534390c0b2478cc38c5512da6cbd9c7d18",
+  "collection_method": "browser",
+  "title": "Krediler | QNB",
+  "http_status": 200,
+  "raw_bytes": 59948,
+  "text_chars": 336
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/hepsiburadada-pesin-fiyatina-3-taksit-40307",
+  "scraped_at": "2026-08-04T12:37:10+00:00",
+  "content_hash": "f8067a1d1eab4a552837e34a90b5d247dcf1815e1fa698638934fdf957b2ede3",
+  "collection_method": "browser",
+  "title": "Hepsiburada'da peşin fiyatına 3 taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 27516,
+  "text_chars": 2845
+}

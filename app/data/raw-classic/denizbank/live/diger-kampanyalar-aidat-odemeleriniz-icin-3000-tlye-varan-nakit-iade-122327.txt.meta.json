@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/diger-kampanyalar/aidat-odemeleriniz-icin-3000-tlye-varan-nakit-iade-122327",
+  "scraped_at": "2026-08-04T11:04:40+00:00",
+  "content_hash": "38573733220d1b1e7b07fcb82e6e2cc815b36533a574fe59aabd217341f53586",
+  "collection_method": "live",
+  "title": "Site Aidatı Ödemelerinize 3.000 TL Nakit İade Fırsatı! | Diğer Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332370,
+  "text_chars": 60088
+}

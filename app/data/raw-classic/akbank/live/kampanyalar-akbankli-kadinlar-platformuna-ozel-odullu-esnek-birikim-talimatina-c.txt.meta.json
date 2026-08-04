@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-odullu-esnek-birikim-talimatina-chip-para",
+  "scraped_at": "2026-08-04T11:43:50+00:00",
+  "content_hash": "d18246fc7b0b6adbdf0e55d61c1c8e9aad63a6b4405559bdc3aa18454687c74d",
+  "collection_method": "live",
+  "title": "Ödüllü Esnek Birikim Talimatına Chip-para | Akbank",
+  "http_status": 200,
+  "raw_bytes": 302074,
+  "text_chars": 10165
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/253260",
+  "scraped_at": "2026-08-04T13:21:58+00:00",
+  "content_hash": "852194e4b0d89a09ef6160b0b4a97e518d134bb565b8a54a2d631f594a554292",
+  "collection_method": "browser",
+  "title": "Test BES | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 928606,
+  "text_chars": 27244
+}

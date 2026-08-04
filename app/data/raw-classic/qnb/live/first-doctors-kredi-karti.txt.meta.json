@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/first-doctors-kredi-karti",
+  "scraped_at": "2026-08-04T12:38:37+00:00",
+  "content_hash": "5ce34061031659f75d8ac416b26fcdaf1af2bb04d2efc6cfb8ee06fae7c43097",
+  "collection_method": "browser",
+  "title": "QNB First Doctors: Doktorlara Özel Kart | QNB",
+  "http_status": 200,
+  "raw_bytes": 62860,
+  "text_chars": 2295
+}

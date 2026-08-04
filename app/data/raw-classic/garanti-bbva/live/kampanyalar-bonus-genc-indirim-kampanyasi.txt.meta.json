@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T13:28:25+00:00",
+  "content_hash": "6a0751f71493ac9c77ca09edff88266d17be63125ca8247a22925ace3cef5c9d",
+  "collection_method": "live",
+  "title": "Bonus Genç'le, Zorlu PSM'nin düzenlediği etkinliklerde %25'e varan indirim!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48261,
+  "text_chars": 2471
+}

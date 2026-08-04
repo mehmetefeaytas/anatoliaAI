@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/petrol-ofisi-bayilerinden-akaryakit-alimlariniza-5-aya-varan-vade-avantaji-139402",
+  "scraped_at": "2026-08-04T11:04:25+00:00",
+  "content_hash": "4c58aa54405ddfdddb68373c29c7c49026c161132f50a7ca8d5de41dd23004eb",
+  "collection_method": "live",
+  "title": "Petrol Ofisi Bayileri’nden Akaryakıt alımlarınıza 5 Aya Varan Vade Avantajı | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332739,
+  "text_chars": 58191
+}

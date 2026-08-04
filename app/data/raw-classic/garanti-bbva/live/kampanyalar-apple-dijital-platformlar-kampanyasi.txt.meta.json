@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/apple-dijital-platformlar-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:54+00:00",
+  "content_hash": "b446eae76c5def5cd0f41f3986f0f846bb77378e12e995d94cbb080d494ef5b5",
+  "collection_method": "live",
+  "title": "Apple ödemelerinize 1.000 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47293,
+  "text_chars": 2480
+}

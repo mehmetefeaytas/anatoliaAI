@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bathandbodyworks-gp-kozmetik-kampanya",
+  "scraped_at": "2026-08-04T13:27:13+00:00",
+  "content_hash": "d0b076971f4fa71a962fda98247064755648d4795ca1196044184d06655b8a13",
+  "collection_method": "live",
+  "title": "www.bathandbodyworks.com.tr'de 350 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48039,
+  "text_chars": 1841
+}

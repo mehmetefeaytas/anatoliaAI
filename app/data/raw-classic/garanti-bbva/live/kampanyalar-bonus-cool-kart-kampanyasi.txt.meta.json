@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-cool-kart-kampanyasi",
+  "scraped_at": "2026-08-04T13:28:01+00:00",
+  "content_hash": "631937b4360591c9ba1b76001d49e137f207e683d101fb8ff241dbac43544244",
+  "collection_method": "live",
+  "title": "Bonus Cool ek karta başvurun, toplam 2.000 TL bonus kazanın!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47247,
+  "text_chars": 2607
+}

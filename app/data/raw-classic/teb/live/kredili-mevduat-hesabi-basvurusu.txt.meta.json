@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/kredili-mevduat-hesabi-basvurusu/",
+  "scraped_at": "2026-08-04T11:07:04+00:00",
+  "content_hash": "36525fe8aaede232e91c83f67bafcca7085d6288855c290d261b894da0f0c26c",
+  "collection_method": "live",
+  "title": "Kredili Mevduat Hesabı",
+  "http_status": 200,
+  "raw_bytes": 343116,
+  "text_chars": 7000
+}

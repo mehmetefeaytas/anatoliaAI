@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/248208",
+  "scraped_at": "2026-08-04T13:24:03+00:00",
+  "content_hash": "f543a742df5e69f040ba3db9ea31c33f3701d540ca1874407eeba5410d87c20c",
+  "collection_method": "browser",
+  "title": "Mobilden yeni müşterimiz olan firmalara özel EFT/havale, çek karnesi ve çek tahsilat işlemleri 1 yıl ücretsiz! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 942468,
+  "text_chars": 29780
+}

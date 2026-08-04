@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/e-mevduat",
+  "scraped_at": "2026-08-04T13:16:18+00:00",
+  "content_hash": "5e7a9a19a5fe5567f86c034b99e1e2da348caa01c69a505a152bf6d00d36ef88",
+  "collection_method": "live",
+  "title": "E-Mevduat",
+  "http_status": 200,
+  "raw_bytes": 408488,
+  "text_chars": 3171
+}

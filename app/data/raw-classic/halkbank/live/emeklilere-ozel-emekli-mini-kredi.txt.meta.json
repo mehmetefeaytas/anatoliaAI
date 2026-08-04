@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/emeklilere-ozel/emekli-mini-kredi",
+  "scraped_at": "2026-08-04T13:16:21+00:00",
+  "content_hash": "793c09d8f0bef3443e37ec59d88349f703c788c12c628034c33f0b57e4ff9ef3",
+  "collection_method": "live",
+  "title": "Emekli Mini Kredi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 400933,
+  "text_chars": 1729
+}

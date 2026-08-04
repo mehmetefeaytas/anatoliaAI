@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/bankomat-kart-ile-restoran-alisverislerinize-400-tl-bankomat-para-40621",
+  "scraped_at": "2026-08-04T13:01:28+00:00",
+  "content_hash": "21afb61d0692396fcfc94a08a89e7381eaf50697c36ba2136a25c62e88a5e74d",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 28192,
+  "text_chars": 3248
+}

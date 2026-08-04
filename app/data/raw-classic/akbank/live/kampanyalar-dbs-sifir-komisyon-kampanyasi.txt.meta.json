@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/dbs-sifir-komisyon-kampanyasi",
+  "scraped_at": "2026-08-04T11:45:17+00:00",
+  "content_hash": "428afc9ebaf24aa4eb93d5cac1f070d9ec1b6b12e13cdd0f4562befe931c08d2",
+  "collection_method": "live",
+  "title": "DBS Sıfır Komisyon Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301211,
+  "text_chars": 8988
+}

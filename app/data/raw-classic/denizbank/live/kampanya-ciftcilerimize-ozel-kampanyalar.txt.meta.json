@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar",
+  "scraped_at": "2026-08-04T11:03:19+00:00",
+  "content_hash": "615f1bb284b8ebf593bd17592ed309d5c5ae504e543de59de41e10737d5c1172",
+  "collection_method": "live",
+  "title": "Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324944,
+  "text_chars": 57198
+}

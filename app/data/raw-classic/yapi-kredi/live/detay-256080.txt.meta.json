@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256080",
+  "scraped_at": "2026-08-04T13:22:47+00:00",
+  "content_hash": "f898349568793596444aa7ea075ef89fc116cf6eb117c51f143927e6fd66d282",
+  "collection_method": "browser",
+  "title": "Size özel %4,25 yerine %3,69 faizli Taksitli Nakit Avans fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 933865,
+  "text_chars": 28571
+}

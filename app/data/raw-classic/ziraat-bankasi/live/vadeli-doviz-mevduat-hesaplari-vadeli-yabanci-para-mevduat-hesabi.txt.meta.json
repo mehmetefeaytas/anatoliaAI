@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-doviz-mevduat-hesaplari/vadeli-yabanci-para-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:30:09+00:00",
+  "content_hash": "c14dc5782913fab10396bd7b785118fdd016ab1c989bba1613831b6592fb8053",
+  "collection_method": "browser",
+  "title": "Vadeli Yabancı Para Mevduat Hesabı | Vadeli Döviz Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 123529,
+  "text_chars": 8549
+}

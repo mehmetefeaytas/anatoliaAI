@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T12:27:39+00:00",
+  "content_hash": "96745b6fa52e52787eeda6d120ba8dccae56aa65c1c4f778916a4cce6f078176",
+  "collection_method": "live",
+  "title": "Kampanyalar | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 257917,
+  "text_chars": 6863
+}

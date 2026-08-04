@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T13:25:41+00:00",
+  "content_hash": "9358c22c86f1cb7b6f4984f3a2a39effe6fb9319b737cd2d6c13e9db8ebbeb31",
+  "collection_method": "live",
+  "title": "Kampanyalar | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 211477,
+  "text_chars": 12265
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ipotek-teminatli-taksitli-kobi-ticari-kredi",
+  "scraped_at": "2026-08-04T12:38:43+00:00",
+  "content_hash": "8b78dfff56a1701f7170eb6f8743bac957d38b252fbff51fa28b245c58229798",
+  "collection_method": "browser",
+  "title": "İpotekli Taksitli Kredi - Teminatlı - 72 Ay Vadeli | QNB",
+  "http_status": 200,
+  "raw_bytes": 64462,
+  "text_chars": 1491
+}

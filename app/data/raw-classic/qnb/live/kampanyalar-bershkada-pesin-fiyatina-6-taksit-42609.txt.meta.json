@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/bershkada-pesin-fiyatina-6-taksit-42609",
+  "scraped_at": "2026-08-04T12:37:08+00:00",
+  "content_hash": "11bcfb749ed779de35b9166e7e1dcf0f82dc3c61dbcca57f08a25234f55fbe05",
+  "collection_method": "browser",
+  "title": "Bershka’da Peşin Fiyatına 6 Taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26233,
+  "text_chars": 1795
+}

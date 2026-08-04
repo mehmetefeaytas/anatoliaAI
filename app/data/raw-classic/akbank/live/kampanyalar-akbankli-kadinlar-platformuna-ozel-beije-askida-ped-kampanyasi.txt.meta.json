@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-beije-askida-ped-kampanyasi",
+  "scraped_at": "2026-08-04T11:43:29+00:00",
+  "content_hash": "1bebe96a5ba27bf74f27daef34d106b78ab2e899ffd9177e2ad5c471be049d27",
+  "collection_method": "live",
+  "title": "Beije Askıda Ped Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300310,
+  "text_chars": 8623
+}

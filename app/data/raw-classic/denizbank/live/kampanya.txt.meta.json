@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya",
+  "scraped_at": "2026-08-04T11:03:10+00:00",
+  "content_hash": "c7e89eeb8c75a048d23a04af5b1c55435be1300874a7b26fbe5c81aff66aa02a",
+  "collection_method": "live",
+  "title": "Kampanyalar | DenizBank | İlerisi Deniz!",
+  "http_status": 200,
+  "raw_bytes": 324609,
+  "text_chars": 57178
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/afililere-ozel-kampanyalar/avukatlara-ozel-aylik-750-tl-nakit-iade-firsati-139563",
+  "scraped_at": "2026-08-04T11:03:37+00:00",
+  "content_hash": "56782dd9aa941d7d98f55420c2dd44df366397e88127a4911311fa53483ad957",
+  "collection_method": "live",
+  "title": "Avukatlara Özel Aylık 750 TL Nakit İade! | Afiliye Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 330355,
+  "text_chars": 60244
+}

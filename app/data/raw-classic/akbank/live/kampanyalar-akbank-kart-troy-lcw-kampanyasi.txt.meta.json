@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-kart-troy-lcw-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:59+00:00",
+  "content_hash": "8c1deedf0787e47c43d1c6d273bcebc2b4acbcd69a41fe4ce46e4bcdff2ab4ef",
+  "collection_method": "live",
+  "title": "Akbank Kart TROY LC Waikiki İndirimi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301360,
+  "text_chars": 11940
+}

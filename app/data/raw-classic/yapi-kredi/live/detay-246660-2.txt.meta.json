@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/246660",
+  "scraped_at": "2026-08-04T13:23:48+00:00",
+  "content_hash": "40f8f985a07c1a2ce0c83fabdf80277c36a2eece8d659243961773fe254b9f2a",
+  "collection_method": "browser",
+  "title": "Yapı Kredi Case Videosu: Zero-Cost Upscale - The Yapı Kredi Mobile BES Revolution | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 930058,
+  "text_chars": 27430
+}

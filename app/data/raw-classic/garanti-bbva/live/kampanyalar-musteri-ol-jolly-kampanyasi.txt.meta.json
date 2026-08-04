@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-jolly-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:14+00:00",
+  "content_hash": "efc000cba01b71fe6b950994c3229668fe513b5a5387c8f9aa3ed70a959cf81f",
+  "collection_method": "live",
+  "title": "Müşteri Ol Jolly Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 260806,
+  "text_chars": 73262
+}

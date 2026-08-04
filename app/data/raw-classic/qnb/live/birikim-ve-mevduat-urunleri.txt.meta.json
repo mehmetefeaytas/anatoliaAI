@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/birikim-ve-mevduat-urunleri",
+  "scraped_at": "2026-08-04T12:38:22+00:00",
+  "content_hash": "cae2e8ac749908212f4f21fc085c27021b954e0fba941b986b2230cd3e5f2df8",
+  "collection_method": "browser",
+  "title": "QNB Bireysel Birikim ve Mevduat Ürünleri | QNB",
+  "http_status": 200,
+  "raw_bytes": 71165,
+  "text_chars": 1063
+}

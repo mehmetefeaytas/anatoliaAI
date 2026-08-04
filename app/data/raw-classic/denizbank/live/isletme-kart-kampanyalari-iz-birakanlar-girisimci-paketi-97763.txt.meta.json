@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/isletme-kart-kampanyalari/iz-birakanlar-girisimci-paketi-97763",
+  "scraped_at": "2026-08-04T11:04:50+00:00",
+  "content_hash": "4942a3172bcb57cfb8404f7e2bc52d672fa3be3d6a9a6bf33eed2679744e584d",
+  "collection_method": "live",
+  "title": "DenizBank Girişimci Paketiyle Geleceği Tasarlayan Kadınlarımızın Her Zaman Yanındayız! | İşletme Kart Kampanyaları | |",
+  "http_status": 200,
+  "raw_bytes": 335735,
+  "text_chars": 60213
+}

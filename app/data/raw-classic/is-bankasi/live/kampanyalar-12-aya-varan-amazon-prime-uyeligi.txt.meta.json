@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/12-aya-varan-amazon-prime-uyeligi",
+  "scraped_at": "2026-08-04T12:28:12+00:00",
+  "content_hash": "c392df9e3c479a32fd99aa35e059b3284230c9ac51a04a2dce9081d8cd384557",
+  "collection_method": "live",
+  "title": "12 aya varan Amazon Prime Üyeliği! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 187764,
+  "text_chars": 3250
+}

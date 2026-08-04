@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/200tl-uzeri-restoran-odemelerinizde-20-toplamda-60-maxipuan",
+  "scraped_at": "2026-08-04T12:28:54+00:00",
+  "content_hash": "5d2439a62125d4c7880f7d6a89d6b440a8ed266a13a499490beeef375a081168",
+  "collection_method": "live",
+  "title": "Restoran Ödemelerinizde Toplamda 60 MaxiPuan!",
+  "http_status": 200,
+  "raw_bytes": 188946,
+  "text_chars": 1855
+}

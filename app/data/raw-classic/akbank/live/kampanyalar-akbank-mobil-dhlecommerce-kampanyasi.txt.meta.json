@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobil-dhlecommerce-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:11+00:00",
+  "content_hash": "bb4c65c362460fb9232a1916c5704cd6e31c93c105dc38945a037f527367bda3",
+  "collection_method": "live",
+  "title": "DHL eCommerce Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300016,
+  "text_chars": 9296
+}

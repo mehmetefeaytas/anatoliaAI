@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyali-mevduat-oranlari",
+  "scraped_at": "2026-08-04T12:27:45+00:00",
+  "content_hash": "b819c83009954c267f0aaac681e54848595713b6c63970f06a7f49ed6d32f7a7",
+  "collection_method": "live",
+  "title": "Kampanyalı Mevduat Oranları | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 187438,
+  "text_chars": 1290
+}

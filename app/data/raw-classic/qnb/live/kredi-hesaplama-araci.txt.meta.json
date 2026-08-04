@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kredi-hesaplama-araci",
+  "scraped_at": "2026-08-04T12:39:14+00:00",
+  "content_hash": "22fc859b51d40dab272875623f7a57378f52716e248d3fdc3c66e9e9ac26f3e5",
+  "collection_method": "browser",
+  "title": "Kredi Hesaplama - 2026 Kredi Faiz Oranları | QNB",
+  "http_status": 200,
+  "raw_bytes": 104632,
+  "text_chars": 8661
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kart-sozlugu",
+  "scraped_at": "2026-08-04T12:38:01+00:00",
+  "content_hash": "e3901baf496f0faeee2fed0b3822383179296e3fa786a8136ef4207e2be6513a",
+  "collection_method": "browser",
+  "title": "Kartlar Hakkında Bilgiler | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 37656,
+  "text_chars": 1252
+}

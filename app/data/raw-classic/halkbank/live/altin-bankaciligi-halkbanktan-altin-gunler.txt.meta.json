@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/mevduat/altin-bankaciligi/halkbanktan-altin-gunler",
+  "scraped_at": "2026-08-04T13:16:26+00:00",
+  "content_hash": "ec93d5a59b1cd07d46c64015499bd36140c6b3cd38d53fa86bd799486aaece5e",
+  "collection_method": "live",
+  "title": "Halkbank&#39;tan Altın Günler | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 415082,
+  "text_chars": 4733
+}

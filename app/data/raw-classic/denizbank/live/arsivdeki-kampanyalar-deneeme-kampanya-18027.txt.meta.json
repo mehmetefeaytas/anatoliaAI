@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/arsivdeki-kampanyalar/deneeme-kampanya-18027",
+  "scraped_at": "2026-08-04T11:03:43+00:00",
+  "content_hash": "17f7058485aee7bb904c950af0a11e4718fc5a4e06535f76e867692cd09db830",
+  "collection_method": "live",
+  "title": "Kampanyalar | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 322633,
+  "text_chars": 56964
+}

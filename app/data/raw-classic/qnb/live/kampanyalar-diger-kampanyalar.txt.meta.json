@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kampanyalar/diger-kampanyalar",
+  "scraped_at": "2026-08-04T12:37:51+00:00",
+  "content_hash": "0832dd6f87089cf0ac12ea1cebe2eaac3e2bcb6e5bf6023b5be6acb26bc37e17",
+  "collection_method": "browser",
+  "title": "Diğer Kampanyalar | QNB",
+  "http_status": 200,
+  "raw_bytes": 63520,
+  "text_chars": 501
+}

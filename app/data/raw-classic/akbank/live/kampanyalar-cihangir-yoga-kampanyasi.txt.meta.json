@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/cihangir-yoga-kampanyasi",
+  "scraped_at": "2026-08-04T11:45:02+00:00",
+  "content_hash": "65c7afe9eb63ca722fdb303c458da029bb0d06f917a2e7b6862aea5d75898853",
+  "collection_method": "live",
+  "title": "Cihangir Yoga Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 299909,
+  "text_chars": 9030
+}

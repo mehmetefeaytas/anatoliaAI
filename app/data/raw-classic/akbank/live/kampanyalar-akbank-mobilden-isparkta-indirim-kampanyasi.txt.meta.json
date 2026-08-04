@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobilden-isparkta-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:47+00:00",
+  "content_hash": "99935b058634138dd0b7183d6a3031013c0ed3f5dab54f15fc652d4ffb654cb8",
+  "collection_method": "live",
+  "title": "İSPARK'ta %50 İndirim Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300751,
+  "text_chars": 9497
+}

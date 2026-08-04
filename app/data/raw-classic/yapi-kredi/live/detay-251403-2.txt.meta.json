@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/251403",
+  "scraped_at": "2026-08-04T13:24:38+00:00",
+  "content_hash": "4d5e4d168aff9334751214656c8286c90f1b1e303943a191896f92c0115066a8",
+  "collection_method": "browser",
+  "title": "Size Özel World Pay Alışveriş Kredisinde %0 Faiz Fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 937297,
+  "text_chars": 28680
+}

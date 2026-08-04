@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar/mastercard-logolu-kartiniz-ile-apple-ve-microsoft-platformlarindan-yapacaginiz-harcamalara-temmuz",
+  "scraped_at": "2026-08-04T13:19:00+00:00",
+  "content_hash": "3f01f65ba978cd1189bc5eea895d57ed6505d5c1123fe6ea19dd80688bbf21ac",
+  "collection_method": "browser",
+  "title": "Mastercard logolu kartınız ile Apple ve Microsoft Platformlarından yapacağınız harcamalara toplamda 300 TL’ye varan indirim! | Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 145099,
+  "text_chars": 10010
+}

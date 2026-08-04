@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/opet-bayilerinden-akaryakit-alimlariniza-5-aya-varan-vade-avantaji-139404",
+  "scraped_at": "2026-08-04T11:04:19+00:00",
+  "content_hash": "c244e82a9f238798990908e1f2a5ab13968fe5d58b469795e007a945c5654fff",
+  "collection_method": "live",
+  "title": "Opet Bayileri’nden Akaryakıt alımlarınıza 5 Aya Varan Vade Avantajı | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332632,
+  "text_chars": 58176
+}

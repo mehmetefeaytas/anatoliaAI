@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-kirtasiye-kampanyalari",
+  "scraped_at": "2026-08-04T13:28:28+00:00",
+  "content_hash": "d89a1a50c492a21a0929c3456f19151889a73570785842eca1d80c8310b27cc4",
+  "collection_method": "live",
+  "title": "Bonus Genç'le kırtasiye harcamalarına toplam 300 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46864,
+  "text_chars": 2305
+}

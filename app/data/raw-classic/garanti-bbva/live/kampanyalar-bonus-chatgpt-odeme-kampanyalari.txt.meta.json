@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-chatgpt-odeme-kampanyalari",
+  "scraped_at": "2026-08-04T13:27:58+00:00",
+  "content_hash": "154547ea39751d4077b2052d2bfcb77baf9206952d8743d50098e2d0d8f70424",
+  "collection_method": "live",
+  "title": "Yeni Bonus kredi kartıyla yapılan ChatGPT ödemelerinde 250 TL'ye varan bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47365,
+  "text_chars": 2887
+}

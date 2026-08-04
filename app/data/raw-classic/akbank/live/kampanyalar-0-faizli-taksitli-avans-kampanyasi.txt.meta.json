@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/0-faizli-taksitli-avans-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:17+00:00",
+  "content_hash": "6ba28fda7a2ccd35d872a4ad984b3e5b917451763c01514194710600a0d2dd00",
+  "collection_method": "live",
+  "title": "%0 Faizli Taksitli Avans Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 304102,
+  "text_chars": 12280
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/bankomat-kart-ile-giyim-ve-kozmetik-alisverislerinize-600-tl-bankomat-para-40619",
+  "scraped_at": "2026-08-04T13:01:52+00:00",
+  "content_hash": "3088cdddbeb9c4a0ddf71ed2539d633b9af4a1cba2ffc1c6526295fbca8b3061",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 28553,
+  "text_chars": 3389
+}

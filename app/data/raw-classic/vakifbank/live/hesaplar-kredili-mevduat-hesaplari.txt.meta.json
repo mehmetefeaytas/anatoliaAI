@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/hesaplar/kredili-mevduat-hesaplari",
+  "scraped_at": "2026-08-04T12:58:31+00:00",
+  "content_hash": "dae00cf8013b9f8690c5f4f774bdc8c9f36d47a378cb33005918c3fe5b8245b2",
+  "collection_method": "live",
+  "title": "Kredili Mevduat Hesapları ile Anında Nakit | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 172278,
+  "text_chars": 214
+}

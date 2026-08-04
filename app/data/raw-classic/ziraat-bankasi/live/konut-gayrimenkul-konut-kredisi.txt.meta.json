@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/konut-gayrimenkul/konut-kredisi",
+  "scraped_at": "2026-08-04T11:29:24+00:00",
+  "content_hash": "73c450c341bc2774cb873d585b4b84190a0128e49cb01d56a3be41cd4a8e8138",
+  "collection_method": "browser",
+  "title": "Konut Kredisi | Konut / Gayrimenkul | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 83418,
+  "text_chars": 5796
+}

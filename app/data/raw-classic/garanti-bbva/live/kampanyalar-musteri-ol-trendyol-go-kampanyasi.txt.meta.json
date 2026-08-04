@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-trendyol-go-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:18+00:00",
+  "content_hash": "9f1b36f07884e113fec62399e45868b2774ba89a8d7ba8e1be89321ace56f44d",
+  "collection_method": "live",
+  "title": "Müşteri Ol Uber Eats Trendyol Go Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 217683,
+  "text_chars": 37060
+}

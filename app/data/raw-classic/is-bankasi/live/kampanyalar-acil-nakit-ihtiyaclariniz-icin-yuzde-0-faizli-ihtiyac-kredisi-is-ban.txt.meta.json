@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/acil-nakit-ihtiyaclariniz-icin-yuzde-0-faizli-ihtiyac-kredisi-is-bankasi-nda",
+  "scraped_at": "2026-08-04T12:30:53+00:00",
+  "content_hash": "b3a6278452e87a25dc99e6879dbe94725ea4dc7591fb5f827c064d208046fa55",
+  "collection_method": "live",
+  "title": "Acil nakit ihtiyaçlarınız için %0 faizli İhtiyaç Kredisi İş Bankası’nda! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 198571,
+  "text_chars": 2313
+}

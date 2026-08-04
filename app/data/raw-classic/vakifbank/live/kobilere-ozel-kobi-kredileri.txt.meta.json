@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/kobilere-ozel/kobi-kredileri",
+  "scraped_at": "2026-08-04T12:58:59+00:00",
+  "content_hash": "d7d13a343e0b5dca2e0085a96c1fd1ccad437ed8b74e0186a44d2b2ec3b2264e",
+  "collection_method": "live",
+  "title": "KOBİ Kredileri | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 171028,
+  "text_chars": 396
+}

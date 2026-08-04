@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/30-tl-maxipuan-kampanyasi",
+  "scraped_at": "2026-08-04T12:29:27+00:00",
+  "content_hash": "e46197caea9891ed52c1d6e92f82339625f853e37089b87bdd55872b05df3eb1",
+  "collection_method": "live",
+  "title": "30 TL MaxiPuan Kampanyası | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 196601,
+  "text_chars": 2350
+}

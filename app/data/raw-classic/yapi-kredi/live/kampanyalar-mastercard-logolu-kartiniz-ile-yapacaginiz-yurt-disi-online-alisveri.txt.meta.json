@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar/mastercard-logolu-kartiniz-ile-yapacaginiz-yurt-disi-online-alisverislerde-250-tl-puan-agustos",
+  "scraped_at": "2026-08-04T13:19:03+00:00",
+  "content_hash": "1e95956b50eeee812e744c0e951848535064840a8e68c59764e729148459e02e",
+  "collection_method": "browser",
+  "title": "Mastercard logolu kartınız ile yapacağınız yurt dışı online alışverişlerde 250 TL puan! | Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 146082,
+  "text_chars": 11213
+}

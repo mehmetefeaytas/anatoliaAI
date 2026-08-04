@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/alp-ates-kampanyasi",
+  "scraped_at": "2026-08-04T12:32:09+00:00",
+  "content_hash": "6492be6917cabeee790c5de7e067396cb6d2f9e2b1c67033579a7cf77f6a7c2a",
+  "collection_method": "live",
+  "title": "Alp-Ateş Gübre İmece Kart Kampanyası | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 185745,
+  "text_chars": 791
+}

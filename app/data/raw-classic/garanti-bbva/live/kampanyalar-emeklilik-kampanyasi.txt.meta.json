@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/emeklilik-kampanyasi",
+  "scraped_at": "2026-08-04T13:25:42+00:00",
+  "content_hash": "fd0dca9cfbf812eb562acc4b09c9007f9faecdecc8d37bbc408eb6b25d856ce5",
+  "collection_method": "live",
+  "title": "Geleceğinizi Güvence Altına Alan Kampanyalar | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 344582,
+  "text_chars": 117845
+}

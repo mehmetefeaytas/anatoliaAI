@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/kobiyim/krediler/",
+  "scraped_at": "2026-08-04T11:07:53+00:00",
+  "content_hash": "4ac64f317f0b7b169e3372aa3a347025c2dc4ac96dc4479dab7c053cb091dacc",
+  "collection_method": "live",
+  "title": "KOBİ’lere Özel Destek Kredileri | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 178050,
+  "text_chars": 5631
+}

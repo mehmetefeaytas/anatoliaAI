@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-vergi-taksit-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:58+00:00",
+  "content_hash": "777dfde210a454af0b78cf1bfd6b49d65a2c31c1d6323468c1ae3b478647c3cd",
+  "collection_method": "live",
+  "title": "2.000 TL - 1.000.000 TL arası dijital.gib.gov.tr'den yapılan Gelir Vergisi ödemelerinize 3 taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 49326,
+  "text_chars": 3630
+}

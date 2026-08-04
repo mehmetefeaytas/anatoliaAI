@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-nakit-banka-karti",
+  "scraped_at": "2026-08-04T12:39:38+00:00",
+  "content_hash": "c18e854ff0303463f78fb846d08ab002fd447d2516850eb8fac4fc8b7d5e6eb0",
+  "collection_method": "browser",
+  "title": "QNB Nakit Banka Kartı Başvurusu ve Avantajları",
+  "http_status": 200,
+  "raw_bytes": 124565,
+  "text_chars": 36164
+}

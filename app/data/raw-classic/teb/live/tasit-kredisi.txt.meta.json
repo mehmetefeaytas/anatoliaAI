@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/tasit-kredisi/",
+  "scraped_at": "2026-08-04T11:07:19+00:00",
+  "content_hash": "c55c557b1946d377d88a178fbf38742b258972d01f7f76813225f0b5008fd134",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi Başvurusu | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 223155,
+  "text_chars": 15660
+}

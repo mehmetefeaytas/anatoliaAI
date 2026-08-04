@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/kredi-paketleri/ziraat-kredi-paketi",
+  "scraped_at": "2026-08-04T11:29:27+00:00",
+  "content_hash": "1b284e3e6b26aeae1f1a406c29e812946717f5f041fd9ae10066d56a51f2fa0c",
+  "collection_method": "browser",
+  "title": "Tüketici Ürün Paketi | Kredi Paketleri | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63707,
+  "text_chars": 4681
+}

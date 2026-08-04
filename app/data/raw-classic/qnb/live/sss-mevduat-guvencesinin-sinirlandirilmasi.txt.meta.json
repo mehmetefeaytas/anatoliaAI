@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/sss/mevduat-guvencesinin-sinirlandirilmasi",
+  "scraped_at": "2026-08-04T12:40:46+00:00",
+  "content_hash": "d435967a8c84064c92ca8dbf52b6e163ca24137329e488d49149676984eee432",
+  "collection_method": "browser",
+  "title": "Mevduat Güvencesinin Sınırlandırılması | QNB",
+  "http_status": 200,
+  "raw_bytes": 77013,
+  "text_chars": 8294
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/biletcom-etkinlik-kampanyasi",
+  "scraped_at": "2026-08-04T11:44:38+00:00",
+  "content_hash": "571bc817dc11826de05ee848947016962bcc3ca77da6742e121d18c9dd65581a",
+  "collection_method": "live",
+  "title": "Bilet.com Etkinlik Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300194,
+  "text_chars": 9221
+}

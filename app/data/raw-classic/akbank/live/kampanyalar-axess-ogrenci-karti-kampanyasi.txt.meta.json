@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/axess-ogrenci-karti-kampanyasi",
+  "scraped_at": "2026-08-04T11:44:29+00:00",
+  "content_hash": "cf080f7a4876d4811a44fbf9b46b383e23ec5d14eb6bc2c2c0cc2cdf69b961bf",
+  "collection_method": "live",
+  "title": "Axess Öğrenci Kartı Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 304011,
+  "text_chars": 12412
+}

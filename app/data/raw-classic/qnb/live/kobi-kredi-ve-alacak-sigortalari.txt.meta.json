@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kobi-kredi-ve-alacak-sigortalari",
+  "scraped_at": "2026-08-04T12:39:01+00:00",
+  "content_hash": "528d395d64a5ba9077c8a71a0285c415ec5ad7996334ac1774f8c87c10328db7",
+  "collection_method": "browser",
+  "title": "QNB KOBİ Kredi ve Alacak Sigortası",
+  "http_status": 200,
+  "raw_bytes": 69405,
+  "text_chars": 3738
+}

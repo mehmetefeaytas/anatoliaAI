@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/enterprise-kampanyasi",
+  "scraped_at": "2026-08-04T13:25:47+00:00",
+  "content_hash": "ed4f25faf59c0bbd683aa44620a9772352d9fedd1dcd98b617e81436661617e4",
+  "collection_method": "live",
+  "title": "Enterprise Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 206544,
+  "text_chars": 30105
+}

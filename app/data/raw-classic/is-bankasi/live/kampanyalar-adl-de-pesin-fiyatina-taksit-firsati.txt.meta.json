@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/adl-de-pesin-fiyatina-taksit-firsati",
+  "scraped_at": "2026-08-04T12:30:59+00:00",
+  "content_hash": "3cef3a6dae7842979c20e4f391e7109357691ea5445d4c639a81b3b6aa07ac2e",
+  "collection_method": "live",
+  "title": "adL’de Peşin Fiyatına Taksit Fırsatı!",
+  "http_status": 200,
+  "raw_bytes": 191523,
+  "text_chars": 2070
+}

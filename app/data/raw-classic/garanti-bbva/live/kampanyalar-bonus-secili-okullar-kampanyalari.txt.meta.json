@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-secili-okullar-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:49+00:00",
+  "content_hash": "5b0154fa0bd9f1522ae1f639132991a5751145bf97042e4cffacf7c73d06f8fc",
+  "collection_method": "live",
+  "title": "Seçili okullarda yapacağınız peşin okul ödemelerinize ücretsiz 3 taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47158,
+  "text_chars": 2636
+}

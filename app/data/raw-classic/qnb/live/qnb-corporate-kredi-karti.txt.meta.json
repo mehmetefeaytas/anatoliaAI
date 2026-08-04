@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-corporate-kredi-karti",
+  "scraped_at": "2026-08-04T12:39:19+00:00",
+  "content_hash": "227d371b28459a133360f8274baa01ed7f493bf2ca6dc1306fb3efbc99ba3cbb",
+  "collection_method": "browser",
+  "title": "QNB Corporate Kredi Kartı: Kurumsal | QNB",
+  "http_status": 200,
+  "raw_bytes": 64864,
+  "text_chars": 2166
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/bankomat-kart-ile-sinema-tiyatro-konser-ve-eglence-parki-alisverislerinize-300-tl-bankomat-para-40617",
+  "scraped_at": "2026-08-04T13:02:16+00:00",
+  "content_hash": "b261e0af22dcc3ff40e459136c6a628cf7cbfed3a36fd73984b44540b7f28516",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 29046,
+  "text_chars": 3561
+}

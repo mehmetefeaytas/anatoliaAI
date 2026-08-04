@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-genc-cekilis-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:06+00:00",
+  "content_hash": "bd03508dc7bca940077a5fe1206935d3a724c3988727cf2df512d5c264c37853",
+  "collection_method": "live",
+  "title": "Gençlik Günü iPhone Çekiliş Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 193557,
+  "text_chars": 20764
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/afililere-ozel-kampanyalar",
+  "scraped_at": "2026-08-04T11:03:16+00:00",
+  "content_hash": "c1b6628e0d76394e07a97c5db6f501b25e37de5ecd4fda22c98fd7afa93edbff",
+  "collection_method": "live",
+  "title": "Afiliye Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324870,
+  "text_chars": 57191
+}

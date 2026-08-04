@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/255733",
+  "scraped_at": "2026-08-04T13:22:38+00:00",
+  "content_hash": "6ee80672f9821fd95ea54b850533d963353b8101fcea2856cee8946248997e8e",
+  "collection_method": "browser",
+  "title": "SOYADIYILMAZ koduyla Yapı Kredi Mobil müşterisi olanlara özel ev internetinde 2.250 TL'ye varan iade! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 946267,
+  "text_chars": 31337
+}

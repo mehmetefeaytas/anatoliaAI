@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/atelier-rebul-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T13:27:00+00:00",
+  "content_hash": "68a1d2d40aa871e80ed64d5f7a472e2dc5bdfd8c12b4349ab3b4838b8712d02b",
+  "collection_method": "live",
+  "title": "Atelier Rebul'de %10 indirim ayrıcalığı!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47018,
+  "text_chars": 2151
+}

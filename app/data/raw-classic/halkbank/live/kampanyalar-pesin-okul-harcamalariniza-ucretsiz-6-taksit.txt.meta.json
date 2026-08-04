@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/pesin-okul-harcamalariniza-ucretsiz-6-taksit",
+  "scraped_at": "2026-08-04T13:17:03+00:00",
+  "content_hash": "9bb1b389ceab4e4de966242740296a282287700d37a5d681db39cca085c8ab79",
+  "collection_method": "live",
+  "title": "Peşin Okul Harcamalarınıza Ücretsiz 6 Taksit!",
+  "http_status": 200,
+  "raw_bytes": 391668,
+  "text_chars": 1699
+}

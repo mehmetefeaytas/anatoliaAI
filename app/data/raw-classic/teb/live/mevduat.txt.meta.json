@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/mevduat/",
+  "scraped_at": "2026-08-04T11:07:44+00:00",
+  "content_hash": "c71e115379d21bc854365579ec9a2da49e2d8ac738499909d635e823d7eea5e3",
+  "collection_method": "live",
+  "title": "Mevduat Hesapları | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 177467,
+  "text_chars": 5161
+}

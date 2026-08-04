@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar/giyim-ve-kozmetik-sektorunde-yapacaginiz-ilk-3000-tl-ve-uzeri-harcamadan-sonraki-her-3000-tl-ve-agus",
+  "scraped_at": "2026-08-04T13:20:25+00:00",
+  "content_hash": "db6c70fb0451a65c3ae0dd87eb3e43aa3d114c53e6dd43286143bd94c923dd45",
+  "collection_method": "browser",
+  "title": "Giyim ve kozmetik sektöründe yapacağınız ilk 3000 TL ve üzeri harcamadan sonraki her 3.000 TL ve üzeri harcamaya 100 TL, World Pay ile ek 50 TL, toplamda 1.500 TL’ye varan Worldpuan fırsatı! | Yapı Kr",
+  "http_status": 200,
+  "raw_bytes": 133531,
+  "text_chars": 11176
+}

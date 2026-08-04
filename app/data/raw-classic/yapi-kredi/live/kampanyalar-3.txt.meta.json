@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.worldcard.com.tr/kampanyalar",
+  "scraped_at": "2026-08-04T13:18:53+00:00",
+  "content_hash": "c28527d65828dd1157e830d55dd572e2aff53fcb4d105d3ecbd85312adbb7178",
+  "collection_method": "browser",
+  "title": "Worldcard Kampanyaları | Avantajlı ve Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 165063,
+  "text_chars": 7392
+}

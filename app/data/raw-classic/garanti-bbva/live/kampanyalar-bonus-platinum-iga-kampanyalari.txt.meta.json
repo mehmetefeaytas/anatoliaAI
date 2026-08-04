@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-platinum-iga-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:40+00:00",
+  "content_hash": "12cd9a790b5c0cb0ab972cedae60d702b2fa413129fd0fdb441defcf6c19768d",
+  "collection_method": "live",
+  "title": "İstanbul Havalimanı'nda ücretsiz Buggy ayrıcalığı!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48555,
+  "text_chars": 2971
+}

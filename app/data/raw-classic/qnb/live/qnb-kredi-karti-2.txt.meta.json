@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-kredi-karti",
+  "scraped_at": "2026-08-04T12:39:34+00:00",
+  "content_hash": "f4fc42d05d1e08664f326530d09ee4ccc02b128e5b37bd136474c90acf7dd62d",
+  "collection_method": "browser",
+  "title": "Online Kredi Kartı Başvurusu - QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 103570,
+  "text_chars": 8844
+}

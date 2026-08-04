@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/uretici-kartla-otomatik-odemelerde-ek-limit-avantaji-115177",
+  "scraped_at": "2026-08-04T11:04:34+00:00",
+  "content_hash": "2cd2a1583f43178eb857faaa33cdf752c413b09a31f634b9d8cf8f0bcc229315",
+  "collection_method": "live",
+  "title": "Üretici Kartla Otomatik Ödemelerde Ek Limit Avantajı! | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332688,
+  "text_chars": 58380
+}

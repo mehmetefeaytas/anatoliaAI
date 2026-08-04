@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akaryakit-alisverislerinizde-maximum-mobile-ozel-35-tl-maxipuan",
+  "scraped_at": "2026-08-04T12:31:27+00:00",
+  "content_hash": "dbf9bc16deef783b1983d5c6a7ea7b676cfa170feed05f50caa9d37989aeecdc",
+  "collection_method": "live",
+  "title": "Akaryakıt alışverişlerinizde Maximum Mobil’e özel 35 TL MaxiPuan! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 191331,
+  "text_chars": 2497
+}

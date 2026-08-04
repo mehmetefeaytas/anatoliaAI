@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/ihtiyac-kredileri/maasini-halkbanktan-alanlar",
+  "scraped_at": "2026-08-04T13:16:45+00:00",
+  "content_hash": "77300a6b4794555ee7ba13fbbd516cef65a4dce1a5f97304c80907e777504cb4",
+  "collection_method": "live",
+  "title": "Maaşını Halkbank&#39;tan Alanlar | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 407466,
+  "text_chars": 1864
+}

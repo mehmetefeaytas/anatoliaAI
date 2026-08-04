@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ticari-kurumsal-orta-ve-uzun-vadeli-krediler",
+  "scraped_at": "2026-08-04T12:40:10+00:00",
+  "content_hash": "4a6f19d43ba047812cdcb75f566a34495fcd0d7e584bfcbdf19aabd94d465e29",
+  "collection_method": "browser",
+  "title": "Orta ve Uzun Vadeli Ticari Krediler | QNB",
+  "http_status": 200,
+  "raw_bytes": 68026,
+  "text_chars": 3611
+}

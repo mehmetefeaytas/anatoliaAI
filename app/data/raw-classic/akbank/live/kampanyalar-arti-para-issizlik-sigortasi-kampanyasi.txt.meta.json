@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/arti-para-issizlik-sigortasi-kampanyasi",
+  "scraped_at": "2026-08-04T11:44:23+00:00",
+  "content_hash": "5858f10e4aa425970ec4e3a046644438f4618e886e0c913f70debfec4ce8ea6f",
+  "collection_method": "live",
+  "title": "Artı Para İşsizlik Sigortası Akbank Mobil’de | Akbank",
+  "http_status": 200,
+  "raw_bytes": 297885,
+  "text_chars": 9273
+}

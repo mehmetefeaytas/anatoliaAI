@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/petlas-zirai-lastik-alimlarinda-3-ay-vade-138527",
+  "scraped_at": "2026-08-04T11:04:22+00:00",
+  "content_hash": "41063f5e5547a4d3cd873486b57537ee75bfa0665c15c6240a202e7864409c97",
+  "collection_method": "live",
+  "title": "Petlas Zirai Lastik Alımlarında 3 Ay Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332396,
+  "text_chars": 58216
+}

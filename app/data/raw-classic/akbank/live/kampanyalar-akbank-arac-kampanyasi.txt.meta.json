@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-arac-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:44+00:00",
+  "content_hash": "ae401c81911db9497f8c348d2608260a850ef07fc4825b3ef502ae05b1030f01",
+  "collection_method": "live",
+  "title": "Mobilden “ARACIM” kodu ile Akbanklı olanlara özel kampanya | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303806,
+  "text_chars": 11529
+}

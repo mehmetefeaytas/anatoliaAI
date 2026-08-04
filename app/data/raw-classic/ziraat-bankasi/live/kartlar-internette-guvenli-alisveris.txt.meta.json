@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/internette-guvenli-alisveris",
+  "scraped_at": "2026-08-04T11:27:56+00:00",
+  "content_hash": "55f90567c11a7a6ff756f73ffe7267675ab38cec6d338fea049d9668ee9c3225",
+  "collection_method": "browser",
+  "title": "İnternette Güvenli Alışveriş | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 61846,
+  "text_chars": 4136
+}

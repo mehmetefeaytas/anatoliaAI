@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar/restoran-sektorunde-yapacaginiz-her-2000-tl-harcamaya-100-tl-world-pay-ile-odemlerde-ek-50-tl-agusto",
+  "scraped_at": "2026-08-04T13:20:32+00:00",
+  "content_hash": "34f853ed7d6ce7887f8dc459acd6defc618a36aee82c93fbca3ea491d33e369d",
+  "collection_method": "browser",
+  "title": "Restoran sektöründe yapacağınız her 2.000 TL harcamaya 100 TL, World Pay ile ödemlerde ek 50 TL, toplamda 600 TL’ye varan Worldpuan hediye! | Yapı Kredi Play Kampanyaları - Gençlere Özel Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 131696,
+  "text_chars": 9805
+}

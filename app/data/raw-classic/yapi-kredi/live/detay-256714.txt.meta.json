@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256714",
+  "scraped_at": "2026-08-04T13:23:05+00:00",
+  "content_hash": "fb8f3f9270e0fb8de10531bc314976718f0a194e681ef0f5028325290107499c",
+  "collection_method": "browser",
+  "title": "Yapı Kredi dünyasına \"FONAFON\" koduyla adım atın, seçili fonlardan 50.000 TL’lik alım yapın; hem geleceğe yatırım yapın hem de 2.500 TL kazanın! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 947797,
+  "text_chars": 33272
+}

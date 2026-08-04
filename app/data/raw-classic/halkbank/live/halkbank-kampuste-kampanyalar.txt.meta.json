@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/dijital-bankacilik/mobil-bankacilik/halkbank-kampuste/kampanyalar",
+  "scraped_at": "2026-08-04T13:17:27+00:00",
+  "content_hash": "31b828ca5187a6eff1b8aa794e02a23e6414db73811a4123a32aa3aa9d871b4d",
+  "collection_method": "live",
+  "title": "Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 394028,
+  "text_chars": 2061
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/odemeler/bagislar/yardim-kampanyalari-bagis-ve-kurban-tahsilatlari",
+  "scraped_at": "2026-08-04T13:17:33+00:00",
+  "content_hash": "46453a9b113885eee92a9c15893be494987918f1cc81d468963bb7368e79e9c3",
+  "collection_method": "live",
+  "title": "Yardım Kampanyaları, Bağış ve Kurban Tahsilatları | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 416057,
+  "text_chars": 3790
+}

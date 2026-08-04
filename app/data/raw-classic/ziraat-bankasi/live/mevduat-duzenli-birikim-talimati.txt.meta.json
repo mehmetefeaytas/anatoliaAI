@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/duzenli-birikim-talimati",
+  "scraped_at": "2026-08-04T11:28:11+00:00",
+  "content_hash": "17b0c567b03c1cf1f3f5a4608a5ff3b6bd49d497a1ceae1ba3f6a758cfe41b66",
+  "collection_method": "browser",
+  "title": "Düzenli Birikim Talimatı | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 66444,
+  "text_chars": 5876
+}

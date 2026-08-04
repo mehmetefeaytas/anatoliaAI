@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobilden-100000-tlye-varan-kredi-firsati",
+  "scraped_at": "2026-08-04T11:42:35+00:00",
+  "content_hash": "4c1dca7c0b485b6be0ccf495d54dc9345c236076def25c2890f33d3e0b252f77",
+  "collection_method": "live",
+  "title": "100.000 TL’ye varan 12 ay vadeli %0,99 faizli kredi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 398199,
+  "text_chars": 81663
+}
