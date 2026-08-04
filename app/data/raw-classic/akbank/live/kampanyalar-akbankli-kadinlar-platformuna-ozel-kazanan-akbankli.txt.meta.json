@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-kazanan-akbankli",
+  "scraped_at": "2026-08-04T11:43:38+00:00",
+  "content_hash": "123aa10a67126c7e37f973f096c025937878253602b05a01525d8418f3ea65e6",
+  "collection_method": "live",
+  "title": "Akbanklı Kadınlara Özel Kazanan Akbanklı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303683,
+  "text_chars": 11479
+}

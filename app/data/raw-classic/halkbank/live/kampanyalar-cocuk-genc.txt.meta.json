@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/cocuk-genc",
+  "scraped_at": "2026-08-04T13:16:15+00:00",
+  "content_hash": "f79943892f371e223262bfec2b50b65f8ce41974513ccf51190dca0f50eeb5be",
+  "collection_method": "live",
+  "title": "Çocuk/Genç",
+  "http_status": 200,
+  "raw_bytes": 394759,
+  "text_chars": 562
+}

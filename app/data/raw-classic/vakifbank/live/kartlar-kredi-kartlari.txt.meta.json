@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/kartlar/kredi-kartlari",
+  "scraped_at": "2026-08-04T12:58:35+00:00",
+  "content_hash": "b981196b7c1f1f8e5827554dc16ac02b96fb9dd4e66a6d327688953bf3516f66",
+  "collection_method": "live",
+  "title": "Kredi Kartları - Yüksek Limit ve Avantajlar | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 144955,
+  "text_chars": 6183
+}

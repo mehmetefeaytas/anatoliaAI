@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ucretsiz-mamografi-ve-smear-testi",
+  "scraped_at": "2026-08-04T11:43:56+00:00",
+  "content_hash": "2894d2d36167e5d98ef6e24c6e8c54f57b20daef2baf2a33db724568d9f7796e",
+  "collection_method": "live",
+  "title": "Ücretsiz Mamografi, Meme USG veya Smear Testi Fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 302206,
+  "text_chars": 10000
+}

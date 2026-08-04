@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/cek-plus-kampanyasi",
+  "scraped_at": "2026-08-04T11:44:56+00:00",
+  "content_hash": "d0fb5f02d672aa5318a1dcd028a7de29c99126dbfee417275ad3c6a2eacbd3c8",
+  "collection_method": "live",
+  "title": "Çek Plus Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 310476,
+  "text_chars": 16058
+}

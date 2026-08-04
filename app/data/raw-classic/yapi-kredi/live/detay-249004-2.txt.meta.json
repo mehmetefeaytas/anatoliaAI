@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/249004",
+  "scraped_at": "2026-08-04T13:24:09+00:00",
+  "content_hash": "fcdfaef5156dd8c0103e6bf5e58cfbb6d36b2c43d46775030254dd5acfef5ed2",
+  "collection_method": "browser",
+  "title": "Sınırsız Hesap | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 966581,
+  "text_chars": 34961
+}

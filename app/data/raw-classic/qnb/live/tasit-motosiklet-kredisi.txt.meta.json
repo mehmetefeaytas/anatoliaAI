@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/tasit-motosiklet-kredisi",
+  "scraped_at": "2026-08-04T12:39:57+00:00",
+  "content_hash": "f8166b2746aaa63f8398aa7698a2ca8366516c912ddb3c28b3a6fdc29dec5faa",
+  "collection_method": "browser",
+  "title": "Motosiklet Kredisi Hesaplama ve Başvuru | QNB",
+  "http_status": 200,
+  "raw_bytes": 89253,
+  "text_chars": 5313
+}

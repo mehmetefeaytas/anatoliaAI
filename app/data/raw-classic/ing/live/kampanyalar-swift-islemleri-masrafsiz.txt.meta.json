@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/swift-islemleri-masrafsiz",
+  "scraped_at": "2026-08-04T11:33:33+00:00",
+  "content_hash": "ff353786ea24955147dd141cca1825ab35421967398787b052f1a173539369f5",
+  "collection_method": "browser",
+  "title": "SWIFT işlemleri ING’de masrafsız. | ING",
+  "http_status": 200,
+  "raw_bytes": 127426,
+  "text_chars": 2091
+}

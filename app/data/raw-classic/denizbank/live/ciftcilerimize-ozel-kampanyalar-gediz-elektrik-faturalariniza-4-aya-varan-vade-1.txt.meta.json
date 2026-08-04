@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/gediz-elektrik-faturalariniza-4-aya-varan-vade-138226",
+  "scraped_at": "2026-08-04T11:04:10+00:00",
+  "content_hash": "6e86e85b491da45237659e6546518310310ac0baedc9a4e947c62abaaa79f821",
+  "collection_method": "live",
+  "title": "Gediz Elektrik Faturalarınıza 4 Aya Varan Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332367,
+  "text_chars": 58178
+}

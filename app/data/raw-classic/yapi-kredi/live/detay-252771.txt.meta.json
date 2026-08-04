@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/252771",
+  "scraped_at": "2026-08-04T13:21:52+00:00",
+  "content_hash": "c5aba8ce8106764f1a10704004d69b4ab4973b5a6938ffeb6f70379752618f6a",
+  "collection_method": "browser",
+  "title": "Tüm Emeklilere 27.000 TL’ye Varan Nakit Promosyon Kampanyası | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 971964,
+  "text_chars": 36620
+}

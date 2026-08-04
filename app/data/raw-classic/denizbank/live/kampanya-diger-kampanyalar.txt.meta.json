@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/diger-kampanyalar",
+  "scraped_at": "2026-08-04T11:03:22+00:00",
+  "content_hash": "fe40c34109e25219cc4617787b30bea1ff4ec719b6ea803a111dc46ba5151a12",
+  "collection_method": "live",
+  "title": "Diğer Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324798,
+  "text_chars": 57184
+}

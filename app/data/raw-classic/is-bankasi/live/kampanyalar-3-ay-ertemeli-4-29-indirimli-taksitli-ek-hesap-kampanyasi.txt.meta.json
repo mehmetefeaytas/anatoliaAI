@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/3-ay-ertemeli-4-29-indirimli-taksitli-ek-hesap-kampanyasi",
+  "scraped_at": "2026-08-04T12:29:24+00:00",
+  "content_hash": "c1e45eb0dcdb1083a761c29c339b2224b9efb459a2871821af62189066861c8f",
+  "collection_method": "live",
+  "title": "3 Ay Ertelemeli %4,29 İndirimli Taksitli Ek Hesap Kampanyası | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 196465,
+  "text_chars": 3420
+}

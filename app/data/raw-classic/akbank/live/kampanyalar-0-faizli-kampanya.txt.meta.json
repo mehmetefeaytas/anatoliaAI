@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/0-faizli-kampanya",
+  "scraped_at": "2026-08-04T11:41:14+00:00",
+  "content_hash": "0a875bd27971327e5bf0fb1f84781ae246180e1dbe0e43c473dcb5bb0608d778",
+  "collection_method": "live",
+  "title": "90.000 TL’ye varan 3 ay vadeli %0 faiz fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 312410,
+  "text_chars": 17900
+}

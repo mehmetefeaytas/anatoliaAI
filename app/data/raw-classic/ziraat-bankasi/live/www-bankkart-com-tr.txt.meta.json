@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.bankkart.com.tr/",
+  "scraped_at": "2026-08-04T11:27:52+00:00",
+  "content_hash": "e642f0de0177b582c64437a8f9003131020c64867cb2d0d1cb61e87d4312a781",
+  "collection_method": "browser",
+  "title": "Bankkart",
+  "http_status": 200,
+  "raw_bytes": 55760,
+  "text_chars": 2182
+}

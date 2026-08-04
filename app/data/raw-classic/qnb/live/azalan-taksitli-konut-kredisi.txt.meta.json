@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/azalan-taksitli-konut-kredisi",
+  "scraped_at": "2026-08-04T12:38:11+00:00",
+  "content_hash": "fb5b00388d9dc0e51d2dd452bd4e3086069c48ded88160111811c08ddc5fb4a1",
+  "collection_method": "browser",
+  "title": "Azalan Taksitli Konut Kredisi ve Hesaplama | QNB",
+  "http_status": 200,
+  "raw_bytes": 93123,
+  "text_chars": 5982
+}

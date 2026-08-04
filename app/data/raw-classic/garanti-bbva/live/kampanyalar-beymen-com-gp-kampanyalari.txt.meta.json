@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/beymen-com-gp-kampanyalari",
+  "scraped_at": "2026-08-04T13:27:31+00:00",
+  "content_hash": "0d6496e86896e9a4624da373af27113008a1977cb2dbbd2f7e7d086ac4b2db6c",
+  "collection_method": "live",
+  "title": "Beymen.com'da 40.000 TL ve üzeri alışverişlerinizde 1.000 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47946,
+  "text_chars": 2094
+}

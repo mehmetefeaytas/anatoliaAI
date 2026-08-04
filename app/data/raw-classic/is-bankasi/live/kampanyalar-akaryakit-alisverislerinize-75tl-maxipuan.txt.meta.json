@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akaryakit-alisverislerinize-75tl-maxipuan",
+  "scraped_at": "2026-08-04T12:31:30+00:00",
+  "content_hash": "92062081939fc10796ae5b8abaf9cae3520670bf5fa9d422469db31891ac06dd",
+  "collection_method": "live",
+  "title": "Akaryakıt alışverişinize 75 TL MaxiPuan!",
+  "http_status": 200,
+  "raw_bytes": 197064,
+  "text_chars": 3845
+}

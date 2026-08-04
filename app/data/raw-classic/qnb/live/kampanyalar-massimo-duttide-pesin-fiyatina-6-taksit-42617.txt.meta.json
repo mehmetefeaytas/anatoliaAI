@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/massimo-duttide-pesin-fiyatina-6-taksit-42617",
+  "scraped_at": "2026-08-04T12:37:20+00:00",
+  "content_hash": "b20f905412f88e90da8d0028bcfd4238562db7d12454c0672a607a1fc0a9a2f2",
+  "collection_method": "browser",
+  "title": "Massimo Dutti’de Peşin Fiyatına 6 Taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26502,
+  "text_chars": 1825
+}

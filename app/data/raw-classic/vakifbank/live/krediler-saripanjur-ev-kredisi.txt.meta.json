@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi",
+  "scraped_at": "2026-08-04T12:58:28+00:00",
+  "content_hash": "659eb7ea184b962dfe8a849e160b98a538d593737b79dc0124c57f911fb4bbc3",
+  "collection_method": "live",
+  "title": "SarıPanjur Ev Kredisi | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 192595,
+  "text_chars": 1234
+}

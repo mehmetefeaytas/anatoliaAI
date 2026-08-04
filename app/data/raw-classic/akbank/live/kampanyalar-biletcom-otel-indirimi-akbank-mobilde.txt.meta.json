@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/biletcom-otel-indirimi-akbank-mobilde",
+  "scraped_at": "2026-08-04T11:44:47+00:00",
+  "content_hash": "165c73234b1c3daa591066808d7b93205a1ebac23923bf0876ef3bcf1da248bb",
+  "collection_method": "live",
+  "title": "Bilet.com otel indirimi Akbank Mobil’de | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300730,
+  "text_chars": 9248
+}

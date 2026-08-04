@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/254017",
+  "scraped_at": "2026-08-04T13:22:13+00:00",
+  "content_hash": "c52d31a45a7f2ba30d726374ff23f9002e1e7147fcee7fa531196f7c27a926a9",
+  "collection_method": "browser",
+  "title": "Troy Online’da %2,25 faizli Yapı Kredi Alışveriş Kredisi fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 936504,
+  "text_chars": 28699
+}

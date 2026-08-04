@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-dizi-film-kampanyalari",
+  "scraped_at": "2026-08-04T13:28:04+00:00",
+  "content_hash": "eff485a80e5bcb3c88fd70144454ba392c7164efdfe89ec48dd3903ec3435123",
+  "collection_method": "live",
+  "title": "Dijital film ve dizi platformlarında harcadığınız kadar, toplam 600 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47285,
+  "text_chars": 2555
+}

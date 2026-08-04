@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/bireysel-borc-transferi-kredisi",
+  "scraped_at": "2026-08-04T12:38:13+00:00",
+  "content_hash": "a0588011015af62e9913e6f13f030561a6cf5c4834a515e49daba551dd2b7249",
+  "collection_method": "browser",
+  "title": "Borç Kapatma Kredisi ile Kredi Yapılandırma Fırsatı | QNB",
+  "http_status": 200,
+  "raw_bytes": 76854,
+  "text_chars": 4072
+}

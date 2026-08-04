@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/kamu-calisanlarina",
+  "scraped_at": "2026-08-04T13:16:41+00:00",
+  "content_hash": "e3842d320c467a12068bbed1a9f71e3ec0866de773693e733e78eaa0fbdebfc7",
+  "collection_method": "live",
+  "title": "Kamu Çalışanlarına",
+  "http_status": 200,
+  "raw_bytes": 411814,
+  "text_chars": 3193
+}

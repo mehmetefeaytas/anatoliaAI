@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/artan-taksitli-konut-kredisi",
+  "scraped_at": "2026-08-04T12:38:08+00:00",
+  "content_hash": "7c8c1ffd286307d107723ca56f44bcc0c0601eb11498438fcf2d3f5974d4f1af",
+  "collection_method": "browser",
+  "title": "Artan Taksitli Konut Kredisi ve Hesaplama | QNB",
+  "http_status": 200,
+  "raw_bytes": 92987,
+  "text_chars": 5839
+}

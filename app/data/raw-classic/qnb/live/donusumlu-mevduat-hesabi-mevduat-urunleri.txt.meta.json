@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/donusumlu-mevduat-hesabi-mevduat-urunleri",
+  "scraped_at": "2026-08-04T12:38:28+00:00",
+  "content_hash": "52c77c339fec1c3b3418f03f8cb2ffff9c4030887e09eccb8495834ba333914f",
+  "collection_method": "browser",
+  "title": "Dönüşümlü Mevduat: Vadeli Döviz Hesabı Faizi | QNB",
+  "http_status": 200,
+  "raw_bytes": 76446,
+  "text_chars": 6226
+}

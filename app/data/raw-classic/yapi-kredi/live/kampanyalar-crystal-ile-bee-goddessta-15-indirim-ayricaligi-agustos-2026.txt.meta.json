@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar/crystal-ile-bee-goddessta-15-indirim-ayricaligi-agustos-2026",
+  "scraped_at": "2026-08-04T13:19:22+00:00",
+  "content_hash": "97c08d87a47be2235e498816f491c3abadb9d36d65afd0969eab72dc3b41d16f",
+  "collection_method": "browser",
+  "title": "Crystal ile Bee Goddess’ta %15 indirim ayrıcalığı. | Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 98780,
+  "text_chars": 8532
+}

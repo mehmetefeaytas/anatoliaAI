@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/253761",
+  "scraped_at": "2026-08-04T13:22:10+00:00",
+  "content_hash": "c017ddfe557d0bb2941a6bf6a62681ee6dd835c093a615cb29a28a08bb875f69",
+  "collection_method": "browser",
+  "title": "Mobilden yeni müşteri olanlara özel %43,50 hoş geldin faizi ile Sınırsız Hesap’ınızı açın, birikimlerinize günlük kazanç sağlayın! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 940350,
+  "text_chars": 28549
+}

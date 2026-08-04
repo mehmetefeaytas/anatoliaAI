@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-alisveris-internet-kampanya",
+  "scraped_at": "2026-08-04T13:27:49+00:00",
+  "content_hash": "122c9726a0622a419ad086177ca58c8792ff18fb0478864a7df14535b05a6605",
+  "collection_method": "live",
+  "title": "Bonus ile yurt dışı internet alışverişinize 250 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 45791,
+  "text_chars": 1765
+}

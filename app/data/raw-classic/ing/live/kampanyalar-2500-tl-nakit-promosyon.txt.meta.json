@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/2500-tl-nakit-promosyon",
+  "scraped_at": "2026-08-04T11:33:49+00:00",
+  "content_hash": "47a25825473201a429111e4437150986e448fd49ed63b7bd491ccf40be4daf1f",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 58493,
+  "text_chars": 4950
+}

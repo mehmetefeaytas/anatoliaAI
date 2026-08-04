@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/tasit-kredileri",
+  "scraped_at": "2026-08-04T12:58:50+00:00",
+  "content_hash": "880621ba73dbc67bd5007150f5e3d569af7d304a938ad9e39966ea88ec05a572",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi - Hayalinizdeki Araç İçin Uygun Çözümler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 174684,
+  "text_chars": 253
+}

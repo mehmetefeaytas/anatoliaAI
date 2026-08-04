@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ticari-kurumsal-krediler",
+  "scraped_at": "2026-08-04T12:40:07+00:00",
+  "content_hash": "42aed7e0873338e87cc3ef64015f404c4dbda46a9f3a381e5d4bdc96b0675c25",
+  "collection_method": "browser",
+  "title": "Ticari Krediler - Kurumsal Kredi Ürünleri | QNB",
+  "http_status": 200,
+  "raw_bytes": 66649,
+  "text_chars": 3331
+}

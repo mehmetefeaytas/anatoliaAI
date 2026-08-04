@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-restoran-kampanya",
+  "scraped_at": "2026-08-04T13:28:37+00:00",
+  "content_hash": "492599dca1580d12a9fe0b92f4c608696350e192fb64f9f7353d3520f283dfd0",
+  "collection_method": "live",
+  "title": "Bonus Genç'le restoran, fast food ve kahve zincirlerinde 240 TL, Mobil Temassız veya QR ile ödemene 315 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48919,
+  "text_chars": 3548
+}

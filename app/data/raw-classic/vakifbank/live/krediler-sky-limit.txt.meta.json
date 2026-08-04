@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/sky-limit",
+  "scraped_at": "2026-08-04T12:58:40+00:00",
+  "content_hash": "1b6606fc270533a6c4c38727f2be0a5ccd78be6a454b6e7742eff0e9d924afc2",
+  "collection_method": "live",
+  "title": "Sky Limit - Ek Limit ve Finansal Çözümler | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 182711,
+  "text_chars": 3849
+}

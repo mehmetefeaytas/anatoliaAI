@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/dijital-bankacilik/mobil-deniz",
+  "scraped_at": "2026-08-04T11:03:13+00:00",
+  "content_hash": "06671075de215d80d4d3dc1c43cf169de9543d830d338d0639801743d77fe772",
+  "collection_method": "live",
+  "title": "Mobil Bankacılık | MobilDeniz Mobil Bankacılık Uygulaması",
+  "http_status": 200,
+  "raw_bytes": 346022,
+  "text_chars": 65741
+}

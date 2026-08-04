@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/bilgilendirme",
+  "scraped_at": "2026-08-04T11:34:56+00:00",
+  "content_hash": "5e42c5812c9a13dedbd8e7d6d6e293151b1da02f728aeb99eac07af7f0b273f5",
+  "collection_method": "browser",
+  "title": "Hoş Geldin Faizi e-Turuncu Hesap'ta! | ING",
+  "http_status": 200,
+  "raw_bytes": 53347,
+  "text_chars": 1575
+}

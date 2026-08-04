@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/konut-gayrimenkul/kentsel-donusum-kredisi",
+  "scraped_at": "2026-08-04T11:29:21+00:00",
+  "content_hash": "3c7a62b442432ef66575e8e9c7069360c565b43d111f235d6c045e0738d84fe4",
+  "collection_method": "browser",
+  "title": "Kentsel Dönüşüm Kredisi | Konut / Gayrimenkul | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 62154,
+  "text_chars": 4573
+}

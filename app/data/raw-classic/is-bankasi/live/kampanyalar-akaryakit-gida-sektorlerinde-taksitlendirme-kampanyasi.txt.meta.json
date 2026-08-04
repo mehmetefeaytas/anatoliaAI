@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akaryakit-gida-sektorlerinde-taksitlendirme-kampanyasi",
+  "scraped_at": "2026-08-04T12:31:39+00:00",
+  "content_hash": "67dedcd3c8598f4a3b079aca204a508da6ad6731a1c1c7f90450e8869da95d70",
+  "collection_method": "live",
+  "title": "Akaryakıt ve Gıda Sektörlerinde Taksitlendirme Kampanyası | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 494544,
+  "text_chars": 79433
+}

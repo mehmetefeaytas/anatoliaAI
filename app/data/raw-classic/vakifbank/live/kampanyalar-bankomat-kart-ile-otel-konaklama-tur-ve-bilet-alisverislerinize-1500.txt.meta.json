@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/bankomat-kart-ile-otel-konaklama-tur-ve-bilet-alisverislerinize-1500-tl-bankomat-para-40618",
+  "scraped_at": "2026-08-04T13:02:05+00:00",
+  "content_hash": "af93d1cc5f60295c251560a5be626c0f9b17f7fe4597cc1d4955c83fd41900b1",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 29168,
+  "text_chars": 3630
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/paraftan-paraf-gunum-guzelligi",
+  "scraped_at": "2026-08-04T13:16:54+00:00",
+  "content_hash": "af910a5d8246a022f42fa0445703aa56ce323817a58d6a45cd1b9878d9e740a0",
+  "collection_method": "live",
+  "title": "Paraf&#39;tan Paraf Günüm Güzelliği!",
+  "http_status": 200,
+  "raw_bytes": 396198,
+  "text_chars": 5176
+}

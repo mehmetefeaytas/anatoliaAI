@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/acil-nakit-ihtiyaclariniz-icin-aylik-18-ay-vadeli-tna-firsati",
+  "scraped_at": "2026-08-04T12:30:50+00:00",
+  "content_hash": "9ae9e484f9da220cc90d486a2a7abb7dc27aef1c116e3df0cfcd08bb3a7aba54",
+  "collection_method": "live",
+  "title": "Acil nakit ihtiyaçlarınız için 18 ay vadeli TNA Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 225886,
+  "text_chars": 6631
+}

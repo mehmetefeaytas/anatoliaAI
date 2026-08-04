@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256011",
+  "scraped_at": "2026-08-04T13:22:45+00:00",
+  "content_hash": "34f97aab6b542424c4d3d41be49d08b7d6da8b6c12991914457bc59df501b34a",
+  "collection_method": "browser",
+  "title": "Size özel Worldpuan kampanyası! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 938203,
+  "text_chars": 29312
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.paraf.com.tr/content/parafcard/tr/kampanyalar/diger-firsatlar/paraftan-yeni-basvurulariniza-ozel-1200tlye-varan-parafpara.html",
+  "scraped_at": "2026-08-04T13:16:59+00:00",
+  "content_hash": "87950785a44a37069fbac85993a728d200928713788a28b5e4a686a0437ca0e2",
+  "collection_method": "live",
+  "title": "Paraf’tan Yeni Başvurularınıza Özel 1200 TL’ye Varan ParafPara!",
+  "http_status": 200,
+  "raw_bytes": 53191,
+  "text_chars": 3820
+}

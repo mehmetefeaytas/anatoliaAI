@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/akra-hotels-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:27+00:00",
+  "content_hash": "6167f9ef62d231740ffac7989c313742d5a9948867215ac3d4b288b5f90aa93e",
+  "collection_method": "live",
+  "title": "Akra Hotels'de vade farksız 9 taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 48888,
+  "text_chars": 3819
+}

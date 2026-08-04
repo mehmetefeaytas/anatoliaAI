@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/dis-ticaret-kredileri",
+  "scraped_at": "2026-08-04T12:59:21+00:00",
+  "content_hash": "8c2142b2597a798c25fbf7d0114aec6b118c3c610e0208d86ba028237a46b1fd",
+  "collection_method": "live",
+  "title": "Dış Ticaret Kredileri | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 179227,
+  "text_chars": 844
+}

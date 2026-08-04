@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar/crystal-ile-soon-to-be-announcedda-20-indirim-ayricaligi-agustos",
+  "scraped_at": "2026-08-04T13:19:37+00:00",
+  "content_hash": "1d23c79def4996b4ef103437486ab8ae9ce645ddaaa86eadb1e362cf22130e34",
+  "collection_method": "browser",
+  "title": "Crystal ile Soon to be Announced’da %20 indirim ayrıcalığı. | Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 98213,
+  "text_chars": 8159
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar",
+  "scraped_at": "2026-08-04T13:15:35+00:00",
+  "content_hash": "b1c9463237e709090a4d4018b9338775999c51d261720205cf2268ef4bd28428",
+  "collection_method": "live",
+  "title": "Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 427015,
+  "text_chars": 2296
+}

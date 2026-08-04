@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256293",
+  "scraped_at": "2026-08-04T13:22:54+00:00",
+  "content_hash": "ca5f7913d5729af6608ac1e27deccb2611b038f3f27a29bc9189d2226ea888dd",
+  "collection_method": "browser",
+  "title": "1 Yıllık Robom Ön Muhasebe Programı Yapı Kredi'den Hediye! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 940378,
+  "text_chars": 29480
+}

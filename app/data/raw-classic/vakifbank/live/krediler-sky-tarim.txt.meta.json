@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/krediler/sky-tarim",
+  "scraped_at": "2026-08-04T12:59:26+00:00",
+  "content_hash": "e28a8b670a0649bd5d7875ab636914d708b6e16867644a8993359fa35593d0a2",
+  "collection_method": "live",
+  "title": "Sky Tarım | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 170503,
+  "text_chars": 815
+}

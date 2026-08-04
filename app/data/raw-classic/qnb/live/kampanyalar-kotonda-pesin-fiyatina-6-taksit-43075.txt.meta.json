@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/kotonda-pesin-fiyatina-6-taksit-43075",
+  "scraped_at": "2026-08-04T12:37:14+00:00",
+  "content_hash": "676b143405fa1574c51c536c05a25bb79335271e67fe520328149928f256b5b3",
+  "collection_method": "browser",
+  "title": "Koton’da Peşin Fiyatına 6 Taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26269,
+  "text_chars": 1864
+}

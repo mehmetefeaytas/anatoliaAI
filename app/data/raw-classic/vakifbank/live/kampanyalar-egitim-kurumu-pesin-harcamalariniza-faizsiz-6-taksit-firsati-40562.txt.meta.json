@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/egitim-kurumu-pesin-harcamalariniza-faizsiz-6-taksit-firsati-40562",
+  "scraped_at": "2026-08-04T13:07:05+00:00",
+  "content_hash": "2cc0c2d5f84f32db0aec1628ed5f909fa72305073f1344e600fc287f4df82a20",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 31082,
+  "text_chars": 5282
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/ciftciyim/krediler/",
+  "scraped_at": "2026-08-04T11:07:29+00:00",
+  "content_hash": "346e73233d3dcd9466b93a443898741f909f71a1258671df8501442a78eca04a",
+  "collection_method": "live",
+  "title": "Çiftçilere Özel Krediler | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 168055,
+  "text_chars": 3628
+}

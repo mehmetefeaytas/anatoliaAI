@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kampanyalar/diger-kampanyalar/gumus-hesap-qnbde-20914",
+  "scraped_at": "2026-08-04T12:37:48+00:00",
+  "content_hash": "8efc78410ec87f60cdb0fd21a1926951bd6483c97b24047aee4d32a2af62c78b",
+  "collection_method": "browser",
+  "title": "Gümüş Hesap QNB'de! | QNB",
+  "http_status": 200,
+  "raw_bytes": 61214,
+  "text_chars": 362
+}

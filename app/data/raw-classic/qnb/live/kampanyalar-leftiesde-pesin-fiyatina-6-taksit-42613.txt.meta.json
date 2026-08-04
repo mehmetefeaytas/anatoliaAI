@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kampanyalar/leftiesde-pesin-fiyatina-6-taksit-42613",
+  "scraped_at": "2026-08-04T12:37:17+00:00",
+  "content_hash": "3fd4e7ea6224588d96cc1e276c60d760bb67feeb91ea8990cf3d5a3d4b6b1de3",
+  "collection_method": "browser",
+  "title": "Lefties’de Peşin Fiyatına 6 Taksit! | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 26230,
+  "text_chars": 1794
+}

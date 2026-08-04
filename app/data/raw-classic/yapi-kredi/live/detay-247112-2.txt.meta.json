@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/247112",
+  "scraped_at": "2026-08-04T13:23:51+00:00",
+  "content_hash": "72acb0822f59b500b43ae213330e217dda94689018e79d1804c99292f667e51e",
+  "collection_method": "browser",
+  "title": "Size özel yapacağınız harcamalara puan fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 938902,
+  "text_chars": 30137
+}

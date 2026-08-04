@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-kazandiran-harclik-hesap",
+  "scraped_at": "2026-08-04T11:43:41+00:00",
+  "content_hash": "fb57411c16ca082d683ec7d59cf2df584bdbb29e49c60229f80a536ff9dc64ed",
+  "collection_method": "live",
+  "title": "Kazandıran Harçlık Hesap Fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 302003,
+  "text_chars": 9634
+}

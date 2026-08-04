@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.crystalcard.com.tr/kampanyalar/crystal-ile-mandarin-oriental-bodrumda-5-indirim-ayricaligi-yaz-2026",
+  "scraped_at": "2026-08-04T13:19:25+00:00",
+  "content_hash": "7b043b7b0a5daa354e3c56f851580d155115379c81c18d64fe718b03fd3e0ccc",
+  "collection_method": "browser",
+  "title": "Crystal ile Mandarin Oriental Bodrum’da %5 indirim ayrıcalığı. | Crystal Kart İle Kazanmanın En Kolay Yolu | Güncel Kampanyalar",
+  "http_status": 200,
+  "raw_bytes": 97159,
+  "text_chars": 7814
+}

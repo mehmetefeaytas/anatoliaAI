@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/emeklilere-ozel-kampanyalar",
+  "scraped_at": "2026-08-04T11:03:25+00:00",
+  "content_hash": "7b586c5ae174937a7f41142073d402a2e44b554db6c7d56bd9f22ed735338860",
+  "collection_method": "live",
+  "title": "Emeklilere Özel kampanyalar | Kampanyalar | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324925,
+  "text_chars": 57194
+}

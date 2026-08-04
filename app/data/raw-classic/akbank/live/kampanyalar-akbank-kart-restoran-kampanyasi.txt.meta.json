@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-kart-restoran-kampanyasi",
+  "scraped_at": "2026-08-04T11:41:56+00:00",
+  "content_hash": "2d012b6f41c8cac8f8a3aa7db9a2f69b30ab363f218a61aae2853d3ad5fb80ba",
+  "collection_method": "live",
+  "title": "Akbank Kart Restoran Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 298853,
+  "text_chars": 10086
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/arsiv",
+  "scraped_at": "2026-08-04T13:00:27+00:00",
+  "content_hash": "9c583fcd7780d23674e3386f98937a87a28167545f59f6e5c47c394a431dd3f0",
+  "collection_method": "live",
+  "title": "Ge&#231;miş Kampanyalar - Vakıfkart",
+  "http_status": 200,
+  "raw_bytes": 29063,
+  "text_chars": 1878
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/kredi-hesaplama/",
+  "scraped_at": "2026-08-04T11:07:31+00:00",
+  "content_hash": "dbd8eb2771d7933812061012d1d8b701161c3de791716e43f0a01a9de88aac6e",
+  "collection_method": "live",
+  "title": "Kredi Hesaplama Aracı | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 195370,
+  "text_chars": 10737
+}

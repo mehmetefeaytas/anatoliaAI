@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kurumsal/mevduat",
+  "scraped_at": "2026-08-04T11:28:02+00:00",
+  "content_hash": "0406cebcfed671fab7df44af5fa93c4e2720366a7f9ddfa1a96f8d592a9050b7",
+  "collection_method": "browser",
+  "title": "Mevduat | Kurumsal | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 89877,
+  "text_chars": 3486
+}

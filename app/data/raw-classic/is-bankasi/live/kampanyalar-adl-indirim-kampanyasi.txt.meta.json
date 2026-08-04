@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/adl-indirim-kampanyasi",
+  "scraped_at": "2026-08-04T12:31:02+00:00",
+  "content_hash": "0a5a0a0b44aa9defef7da108b2a62d7097e73e27b4a530070b2125db6c690e34",
+  "collection_method": "live",
+  "title": "Maximum'dan adL'de 500 TL İndirim Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 191204,
+  "text_chars": 2276
+}

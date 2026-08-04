@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/sabiha-gokcen-havalimani-dis-hatlar-terminalinde-gecerli-ucretsiz-fast-track-gecisi-40227",
+  "scraped_at": "2026-08-04T13:07:21+00:00",
+  "content_hash": "4c56dd9bc5da45c5a019910bd3bfe48428df5e213848077c98850506ea27f185",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 29619,
+  "text_chars": 4001
+}

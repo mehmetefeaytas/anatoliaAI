@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/aqua-jog-club-indirimi-akbank-mobilde",
+  "scraped_at": "2026-08-04T11:44:11+00:00",
+  "content_hash": "6020676b84ccd2423a76c2f62b9c3dbffd52cade2c375d6a3a79bed1b730aa5a",
+  "collection_method": "live",
+  "title": "Aqua Jog Club indirimi Akbank Mobil’de | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303358,
+  "text_chars": 9825
+}

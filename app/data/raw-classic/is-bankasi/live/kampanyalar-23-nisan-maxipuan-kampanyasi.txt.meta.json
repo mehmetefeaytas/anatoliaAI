@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/23-nisan-maxipuan-kampanyasi",
+  "scraped_at": "2026-08-04T12:29:06+00:00",
+  "content_hash": "c280dbf3f453038b64204c9a5d1a738d7d65719d3d7702e14d7157b378d0864b",
+  "collection_method": "live",
+  "title": "23 Nisan MaxiPuan Kampanyası | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 192187,
+  "text_chars": 2502
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-troy-idefix-kampanyasi",
+  "scraped_at": "2026-08-04T11:43:08+00:00",
+  "content_hash": "d30c98098ea1c4470db3c986a3c849d03fb9e16aad2c8b3638dc7839fed8bbcc",
+  "collection_method": "live",
+  "title": "Akbank Kart TROY kartlara idefix'te 3.000 TL'ye varan indirim | Akbank",
+  "http_status": 200,
+  "raw_bytes": 295599,
+  "text_chars": 10101
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-nahilda-indirim",
+  "scraped_at": "2026-08-04T11:43:47+00:00",
+  "content_hash": "b2028fb12da0b7da9bb200fde7479f17474cdc5b6b29d2f56d67768f7df23500",
+  "collection_method": "live",
+  "title": "Nahıl’da %25 İndirim Fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 302050,
+  "text_chars": 9620
+}

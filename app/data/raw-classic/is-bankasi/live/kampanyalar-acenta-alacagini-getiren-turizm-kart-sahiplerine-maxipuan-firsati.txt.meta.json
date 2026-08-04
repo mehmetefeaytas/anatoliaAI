@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/acenta-alacagini-getiren-turizm-kart-sahiplerine-maxipuan-firsati",
+  "scraped_at": "2026-08-04T12:30:41+00:00",
+  "content_hash": "dc94c5b4a0b3adc99b6f8c4af6a6b99000905f67c703fa9659fc71b1b48b96cc",
+  "collection_method": "live",
+  "title": "Acenta Alacağını Getiren Turizm Kart Sahiplerine MaxiPuan Fırsatı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 195746,
+  "text_chars": 2480
+}

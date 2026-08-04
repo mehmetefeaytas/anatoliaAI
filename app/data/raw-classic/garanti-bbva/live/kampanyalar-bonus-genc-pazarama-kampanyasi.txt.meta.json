@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-pazarama-kampanyasi",
+  "scraped_at": "2026-08-04T13:28:34+00:00",
+  "content_hash": "3c7619608d5fa536795b787972ee8db77cfa9751ca921ef568f862fab98dcb4e",
+  "collection_method": "live",
+  "title": "Bonus'tan gençlere özel Çarşı Pazarama'da 300 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 49205,
+  "text_chars": 3550
+}

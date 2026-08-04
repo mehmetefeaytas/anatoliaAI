@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/atm-masrafsizlik",
+  "scraped_at": "2026-08-04T11:34:23+00:00",
+  "content_hash": "a2eeda16a20541f83bc2ff1186bc7207c62f1596b9ac6346a57f124b0e694c86",
+  "collection_method": "browser",
+  "title": "Aradığınız ING ATM'si, Türkiye'nin her yerinde! | ING",
+  "http_status": 200,
+  "raw_bytes": 57101,
+  "text_chars": 3076
+}

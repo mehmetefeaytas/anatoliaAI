@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256801",
+  "scraped_at": "2026-08-04T13:23:17+00:00",
+  "content_hash": "1f1777b405a985d289481d510ee58f611e92766eda0b1e53537c9ab8453f8740",
+  "collection_method": "browser",
+  "title": "Yakınlarınızı Yapı Kredili olmaya davet edin, hem siz 600 TL puan kazanın hem onlar 600 TL puan kazansın. | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 944396,
+  "text_chars": 30760
+}

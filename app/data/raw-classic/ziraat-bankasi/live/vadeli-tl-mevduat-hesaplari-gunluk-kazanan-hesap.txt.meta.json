@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/gunluk-kazanan-hesap",
+  "scraped_at": "2026-08-04T11:30:24+00:00",
+  "content_hash": "75b79f2e95c1c54ce2c570ef4ab19e3a521376a0af326d00807af7c26eb56f65",
+  "collection_method": "browser",
+  "title": "Günlük Kazanan Hesap | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 73322,
+  "text_chars": 5394
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-art-studyo-serisi",
+  "scraped_at": "2026-08-04T11:43:20+00:00",
+  "content_hash": "3bb40f6d00effeb3c9d6eed6df7a2c3e9e84e1dcafbbc1fb4764b16d5e23645d",
+  "collection_method": "live",
+  "title": "Akbanklı Kadınlar Art Studio Serisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 301754,
+  "text_chars": 9260
+}

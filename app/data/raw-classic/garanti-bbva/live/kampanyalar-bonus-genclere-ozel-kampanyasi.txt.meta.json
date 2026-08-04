@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genclere-ozel-kampanyasi",
+  "scraped_at": "2026-08-04T13:28:46+00:00",
+  "content_hash": "c72208a96c8a1a70334b13546dd2b17995976118d9eca4e547ac53960e1d8d9e",
+  "collection_method": "live",
+  "title": "Bonus'la gençlere özel seyahat harcamalarında toplam 500 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46521,
+  "text_chars": 2165
+}

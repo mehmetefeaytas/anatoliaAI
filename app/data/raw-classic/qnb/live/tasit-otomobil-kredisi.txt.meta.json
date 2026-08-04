@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/tasit-otomobil-kredisi",
+  "scraped_at": "2026-08-04T12:40:00+00:00",
+  "content_hash": "b4cd0813dbea3e24c557d21c4dec16afaf4ec762bf4a47d5308c6bb09b9b6c22",
+  "collection_method": "browser",
+  "title": "Taşıt Kredisi Hesaplama ve Faiz Oranları | QNB",
+  "http_status": 200,
+  "raw_bytes": 96814,
+  "text_chars": 6923
+}

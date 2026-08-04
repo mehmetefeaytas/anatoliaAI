@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/ev-ve-konut-kredileri",
+  "scraped_at": "2026-08-04T12:38:34+00:00",
+  "content_hash": "5d45d2ac0e185abf02b8555321d36328fface4dc2068e2bef9665d6ce17f9a8d",
+  "collection_method": "browser",
+  "title": "QNB Konut Kredi Ürünleri",
+  "http_status": 200,
+  "raw_bytes": 62898,
+  "text_chars": 435
+}

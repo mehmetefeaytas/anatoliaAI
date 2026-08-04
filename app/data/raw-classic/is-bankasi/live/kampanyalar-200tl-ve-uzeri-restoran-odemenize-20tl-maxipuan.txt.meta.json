@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/200tl-ve-uzeri-restoran-odemenize-20tl-maxipuan",
+  "scraped_at": "2026-08-04T12:28:57+00:00",
+  "content_hash": "dd01bf76805aaeb825a3c3428e738f795ee3a36b7a4e59bf4a5d6c44443ae5e2",
+  "collection_method": "live",
+  "title": "200 TL ve Üzeri Restoran Ödemenize 20 TL MaxiPuan! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 265680,
+  "text_chars": 22924
+}

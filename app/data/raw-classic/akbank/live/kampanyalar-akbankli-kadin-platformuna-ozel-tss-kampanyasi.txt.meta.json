@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadin-platformuna-ozel-tss-kampanyasi",
+  "scraped_at": "2026-08-04T11:43:17+00:00",
+  "content_hash": "84824d16423ee48b6cf6a4f99952ea08bdde669bb8ff2fa9f5b2da45a2ba4218",
+  "collection_method": "live",
+  "title": "Tamamlayıcı Sağlık Sigortasında %25 İndirim Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303480,
+  "text_chars": 10015
+}

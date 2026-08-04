@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/kur-korumali-tl-vadeli-mevduat-hesaplari/yuvam-tl-vadeli-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:30:00+00:00",
+  "content_hash": "ba20e2643dd8d8c1521d51190afacdb0d97b7e9a9fb16e40522e1ad9b9b71ceb",
+  "collection_method": "browser",
+  "title": "YUVAM TL Vadeli Mevduat Hesabı | YUVAM TL Vadeli Mevduat Hesabı | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 63885,
+  "text_chars": 5968
+}

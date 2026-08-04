@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/abdullah-kigilida-50tl-maxipuan",
+  "scraped_at": "2026-08-04T12:30:38+00:00",
+  "content_hash": "1abd7afd2b8512bcd8a8cae91854367dd88e0945ad9f44c1df0fbe2c67eae8b6",
+  "collection_method": "live",
+  "title": "Abdullah Kiğılı’da 50 TL MaxiPuan! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 188688,
+  "text_chars": 1849
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformuna-ozel-arti-para",
+  "scraped_at": "2026-08-04T11:43:26+00:00",
+  "content_hash": "cc1c797c549fe7627c9bc6b63b90e769dcce7bc170c40251e61c60a0752e8795",
+  "collection_method": "live",
+  "title": "%0 Faiz Oranlı Artı Para Fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303270,
+  "text_chars": 11345
+}

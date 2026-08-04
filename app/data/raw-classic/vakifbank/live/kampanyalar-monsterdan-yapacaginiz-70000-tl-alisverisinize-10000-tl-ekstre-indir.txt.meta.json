@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/monsterdan-yapacaginiz-70000-tl-alisverisinize-10000-tl-ekstre-indirimi-40626",
+  "scraped_at": "2026-08-04T13:00:45+00:00",
+  "content_hash": "2b611af94cc3a5e7b0b819243c61c43e63af76d0dfeb8857b71146b37bd6d336",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 29676,
+  "text_chars": 3923
+}

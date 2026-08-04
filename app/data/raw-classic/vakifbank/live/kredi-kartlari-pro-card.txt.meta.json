@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/kartlar/kredi-kartlari/pro-card",
+  "scraped_at": "2026-08-04T12:58:53+00:00",
+  "content_hash": "48d913cfdfab0257448a0033318b9846aebf89ff486bd7afb9be553c5d0ee514",
+  "collection_method": "live",
+  "title": "Pro Card - Ticari Kredi Kartları | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 240233,
+  "text_chars": 43531
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-otomotiv-lastik-kampanya",
+  "scraped_at": "2026-08-04T13:29:25+00:00",
+  "content_hash": "9141dade6fc338baf0cfb7ceed0a73e47126d522b00867d096c0555c84ecccaf",
+  "collection_method": "live",
+  "title": "Otomotiv, lastik, bakım ve yedek parça alışverişinize 600 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47038,
+  "text_chars": 2669
+}

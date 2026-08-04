@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-genclik-bankaciligi-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:09+00:00",
+  "content_hash": "56577bc857c4566a25faddd69c84697ea45aed5f9dda970e2c56179f35da4cab",
+  "collection_method": "live",
+  "title": "Müşteri Ol Gençlik Bankacılığı Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 439676,
+  "text_chars": 209636
+}

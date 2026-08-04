@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/arkadasini-getir-nakit-kazan",
+  "scraped_at": "2026-08-04T11:34:19+00:00",
+  "content_hash": "bf65beef87c8c4ac80e35ab1b03c5fc13f2ead7eb5a3d33f68c4afa4acbb6bc4",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 220971,
+  "text_chars": 7877
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-troy-kartlara-pazaramada-indirim",
+  "scraped_at": "2026-08-04T11:43:11+00:00",
+  "content_hash": "38a74626f6977e7c1e470dccad0907e2ca2f88d6bdd3e4c0c2f9a06647f62461",
+  "collection_method": "live",
+  "title": "Akbank TROY kartlara Pazarama’da 200 TL indirim | Akbank",
+  "http_status": 200,
+  "raw_bytes": 300881,
+  "text_chars": 11195
+}

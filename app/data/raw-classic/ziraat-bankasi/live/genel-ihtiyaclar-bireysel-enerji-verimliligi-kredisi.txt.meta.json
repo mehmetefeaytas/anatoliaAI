@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/bireysel-enerji-verimliligi-kredisi",
+  "scraped_at": "2026-08-04T11:28:48+00:00",
+  "content_hash": "8dc9b6a46ab515043a45e74258f037c8d0a7e04cc776931a58eb0e6b8f918c50",
+  "collection_method": "browser",
+  "title": "Bireysel Enerji Verimliliği Kredisi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 62973,
+  "text_chars": 4657
+}

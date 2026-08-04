@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/kart-kampanyalari",
+  "scraped_at": "2026-08-04T11:03:31+00:00",
+  "content_hash": "fbea693f55f9b13e036ceaaf92ddf951432b424a053d2a32e8235ac42840f00f",
+  "collection_method": "live",
+  "title": "Kart Kampanyaları | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 324792,
+  "text_chars": 57184
+}

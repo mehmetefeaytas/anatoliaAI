@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kart-sigortalari",
+  "scraped_at": "2026-08-04T12:38:49+00:00",
+  "content_hash": "ae07c809cf9cc7d3ddc8bc7d91811d0f498d45a95b7c1d6344e9497a3e45183e",
+  "collection_method": "browser",
+  "title": "QNB Kart Sigortası: Kartınıza Özel Güvence | QNB",
+  "http_status": 200,
+  "raw_bytes": 68774,
+  "text_chars": 4828
+}

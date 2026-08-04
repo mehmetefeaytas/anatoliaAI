@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kobi/kampanyalar/detay/246658",
+  "scraped_at": "2026-08-04T13:23:45+00:00",
+  "content_hash": "0e0acd6532a676bfb64839858200e1e1d73e01fd2c2b9125e5f4782fdafb8152",
+  "collection_method": "browser",
+  "title": "Yapı Kredi Case Videosu: Dynamic Deals - Revolutionizing Ads with Interactive Banners | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 930080,
+  "text_chars": 27442
+}

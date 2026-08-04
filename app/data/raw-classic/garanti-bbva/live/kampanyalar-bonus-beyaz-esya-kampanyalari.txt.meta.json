@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-beyaz-esya-kampanyalari",
+  "scraped_at": "2026-08-04T13:27:55+00:00",
+  "content_hash": "94dc0449c5be28e4611e667bfa021172f727b2e762a8ed4f6281e9d69ae5ca82",
+  "collection_method": "live",
+  "title": "Bonus'a özel beyaz eşya ve elektronik alışverişlerinize 1.750 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47501,
+  "text_chars": 2900
+}

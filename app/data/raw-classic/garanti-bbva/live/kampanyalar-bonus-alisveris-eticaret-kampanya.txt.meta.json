@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-alisveris-eticaret-kampanya",
+  "scraped_at": "2026-08-04T13:27:46+00:00",
+  "content_hash": "922a769fff2dc590c61a750ce410742dbed5e52a1f4ad460a7191841ac72eb75",
+  "collection_method": "live",
+  "title": "E-ticaret alışverişlerine 1.250 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 53910,
+  "text_chars": 5071
+}

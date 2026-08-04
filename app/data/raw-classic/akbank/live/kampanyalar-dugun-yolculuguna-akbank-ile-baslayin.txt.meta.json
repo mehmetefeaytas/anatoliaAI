@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/dugun-yolculuguna-akbank-ile-baslayin",
+  "scraped_at": "2026-08-04T11:45:23+00:00",
+  "content_hash": "6cfb96313581725bb7654d6299748873477bd1ddbd01ed753ff055f0edc399e6",
+  "collection_method": "live",
+  "title": "Düğün yolculuğuna Akbank ile başlayın | Akbank",
+  "http_status": 200,
+  "raw_bytes": 304853,
+  "text_chars": 11730
+}

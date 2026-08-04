@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/axess-chip-para-kampanyasi",
+  "scraped_at": "2026-08-04T11:44:26+00:00",
+  "content_hash": "9881b97fa8a7e8d46773eea1ac77bc2e8253e23d39000d78d1ab7b35b9d9bd33",
+  "collection_method": "live",
+  "title": "Axess Chip-para Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 303750,
+  "text_chars": 12191
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/krediler/genel-ihtiyaclar/ipotekli-bireysel-finansman-kredisi",
+  "scraped_at": "2026-08-04T11:29:00+00:00",
+  "content_hash": "b2aff99edf2747bb0aef8ea5d833b94c09f0e5955855121f1d734d30317dc625",
+  "collection_method": "browser",
+  "title": "İpotekli Bireysel Finansman Kredisi | Genel İhtiyaçlar | Krediler | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 66197,
+  "text_chars": 4330
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/ticari/kartlar/banka-kartlari",
+  "scraped_at": "2026-08-04T12:59:06+00:00",
+  "content_hash": "f068dab3c5463848fa8d3d916dc36426fe696e6ba809b6ee3aa211881e6da70b",
+  "collection_method": "live",
+  "title": "VakıfBank Banka Kartları | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 175775,
+  "text_chars": 518
+}

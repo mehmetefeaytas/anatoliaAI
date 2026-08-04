@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/davet-et-kazan",
+  "scraped_at": "2026-08-04T11:45:14+00:00",
+  "content_hash": "eaca2d3269e58aa4c11b3182b4b6c2acfaa90fb9d51416b3a506b7f996df0ad8",
+  "collection_method": "live",
+  "title": "Davet Et Kazan | Akbank",
+  "http_status": 200,
+  "raw_bytes": 414843,
+  "text_chars": 102557
+}

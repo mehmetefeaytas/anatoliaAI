@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/isiniz-icin/kampanyalar/kazancli-kredi",
+  "scraped_at": "2026-08-04T11:33:24+00:00",
+  "content_hash": "4cf641cb0177e099afcfec52cd4f4a586f43b68a1fa4144b40cd30265e87faaf",
+  "collection_method": "browser",
+  "title": "ING Kazançlı Kredi Kampanyası - Avantajlı Faiz ile Kredi | ING",
+  "http_status": 200,
+  "raw_bytes": 132042,
+  "text_chars": 3960
+}

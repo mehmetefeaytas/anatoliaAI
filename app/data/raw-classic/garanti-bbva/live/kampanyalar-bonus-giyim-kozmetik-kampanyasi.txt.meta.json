@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-giyim-kozmetik-kampanyasi",
+  "scraped_at": "2026-08-04T13:28:52+00:00",
+  "content_hash": "aa64c2e7fefbd2eb3d573464ad9044cea5516e3adb14b8ab9b008fbb7290845a",
+  "collection_method": "live",
+  "title": "Giyim, kozmetik, ayakkabı ve aksesuar alışverişlerinize toplam 1.000 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47937,
+  "text_chars": 3259
+}

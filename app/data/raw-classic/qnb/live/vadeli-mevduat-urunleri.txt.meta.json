@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/vadeli-mevduat-urunleri",
+  "scraped_at": "2026-08-04T12:40:19+00:00",
+  "content_hash": "00f0eac2bc4aaace63ffecb63ea5fdd008d4a19e565a879c17e62d4c8dcf6288",
+  "collection_method": "browser",
+  "title": "Vadeli Hesaplama ve Vadeli Hesap Faiz Oranları | QNB",
+  "http_status": 200,
+  "raw_bytes": 83559,
+  "text_chars": 6361
+}

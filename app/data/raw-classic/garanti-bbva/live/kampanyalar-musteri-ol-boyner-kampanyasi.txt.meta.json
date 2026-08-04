@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-boyner-kampanyasi",
+  "scraped_at": "2026-08-04T13:25:57+00:00",
+  "content_hash": "06034c6b4daf5d5e91c0d2e62c0dff1e31858b478de4bdded085f839d2c055c7",
+  "collection_method": "live",
+  "title": "Müşteri Ol Boyner Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 280128,
+  "text_chars": 87008
+}

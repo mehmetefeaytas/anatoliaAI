@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/altinyildiz-classics-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:45+00:00",
+  "content_hash": "51ab1b5abf3bd42f24c519a6727be2acb09bb914d57c574d31794a42c3c361bb",
+  "collection_method": "live",
+  "title": "Altınyıldız Classics'te peşin fiyatına 6 taksit!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46690,
+  "text_chars": 1882
+}

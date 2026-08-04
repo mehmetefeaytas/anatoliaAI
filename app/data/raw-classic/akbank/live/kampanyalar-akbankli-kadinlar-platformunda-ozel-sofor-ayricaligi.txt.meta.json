@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadinlar-platformunda-ozel-sofor-ayricaligi",
+  "scraped_at": "2026-08-04T11:43:59+00:00",
+  "content_hash": "64636347ec25a0c64e2463577bedaf4d0efbf7b7326a5de20ea2f9dede86b36f",
+  "collection_method": "live",
+  "title": "Şoför Hizmetinde İndirim Ayrıcalığı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 302295,
+  "text_chars": 10328
+}

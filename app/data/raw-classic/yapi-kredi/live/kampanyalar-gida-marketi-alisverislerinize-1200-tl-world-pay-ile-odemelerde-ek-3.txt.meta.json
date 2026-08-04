@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar/gida-marketi-alisverislerinize-1200-tl-world-pay-ile-odemelerde-ek-300-tl-toplamda-1500-tlye-agustos",
+  "scraped_at": "2026-08-04T13:20:23+00:00",
+  "content_hash": "9a6e9f5a7267b7d5c0498d954b3f55f6d850dcd543592afde2a36f37de4da42d",
+  "collection_method": "browser",
+  "title": "Gıda marketi alışverişlerinize 1.200 TL, World Pay ile ödemelerde ek 300 TL, toplamda 1.500 TL’ye varan Worldpuan hediye! | Yapı Kredi Play Kampanyaları - Gençlere Özel Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 133347,
+  "text_chars": 11267
+}

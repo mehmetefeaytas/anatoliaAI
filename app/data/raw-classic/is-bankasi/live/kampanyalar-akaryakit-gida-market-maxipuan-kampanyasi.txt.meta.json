@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/akaryakit-gida-market-maxipuan-kampanyasi",
+  "scraped_at": "2026-08-04T12:31:36+00:00",
+  "content_hash": "767c2d90a19a6a3c0ec593be391d8408d36c76c3819adc0a0e30fa5da0ce7f61",
+  "collection_method": "live",
+  "title": "İş Bankası ticari kredi kartınızla akaryakıt, gıda ve market alışverişlerinize Hediye MaxiPuan",
+  "http_status": 200,
+  "raw_bytes": 206138,
+  "text_chars": 5989
+}

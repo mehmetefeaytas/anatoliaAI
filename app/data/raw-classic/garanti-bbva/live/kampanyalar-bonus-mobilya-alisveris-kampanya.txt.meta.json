@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-mobilya-alisveris-kampanya",
+  "scraped_at": "2026-08-04T13:29:10+00:00",
+  "content_hash": "e6c3525ead9346294e1a95c8ef7e272bee8cf5fd0fa9822ebaf42fdbad96d936",
+  "collection_method": "live",
+  "title": "Mobilya alışverişinize 2.000 TL, Mobil Temassız veya QR ile ödemeye 2.050 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 50508,
+  "text_chars": 5014
+}

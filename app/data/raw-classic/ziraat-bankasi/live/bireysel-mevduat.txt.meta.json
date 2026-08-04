@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat",
+  "scraped_at": "2026-08-04T11:27:44+00:00",
+  "content_hash": "b8174c4374bcb6e1090e6710c9437a1aca39c9c4e41a9025b5164b4cb79bfec5",
+  "collection_method": "browser",
+  "title": "Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 101787,
+  "text_chars": 4210
+}

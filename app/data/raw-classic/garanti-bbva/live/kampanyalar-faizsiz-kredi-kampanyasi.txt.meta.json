@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/faizsiz-kredi-kampanyasi",
+  "scraped_at": "2026-08-04T13:25:54+00:00",
+  "content_hash": "2245980f797f8f6be533b5ca44b636d162ed6c149a619d782bb57133c400d0be",
+  "collection_method": "live",
+  "title": "100.000 TL&#39;ye Varan Faizsiz Kredi ve Taksitli Avans Hesap",
+  "http_status": 200,
+  "raw_bytes": 417978,
+  "text_chars": 186204
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/cekimli-vadeli-hesap-mevduat-urunleri",
+  "scraped_at": "2026-08-04T12:38:25+00:00",
+  "content_hash": "590157f440759833a3308591a1c65e16c36f6601c57c0c9fa57e3dec307b47ba",
+  "collection_method": "browser",
+  "title": "Çekimli Hesap: Vade Bozmadan Para Çekme | QNB",
+  "http_status": 200,
+  "raw_bytes": 76545,
+  "text_chars": 6203
+}

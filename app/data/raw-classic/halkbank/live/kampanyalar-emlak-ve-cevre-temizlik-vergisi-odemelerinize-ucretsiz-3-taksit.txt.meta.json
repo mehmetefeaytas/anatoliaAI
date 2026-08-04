@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/kampanyalar/emlak-ve-cevre-temizlik-vergisi-odemelerinize-ucretsiz-3-taksit",
+  "scraped_at": "2026-08-04T13:16:24+00:00",
+  "content_hash": "a70e08285dc800f0d8e2fa3bb82aa0f0fbba339c04ee5308b15c067947131c33",
+  "collection_method": "live",
+  "title": "Emlak ve Çevre Temizlik Vergisi Ödemelerinize Ücretsiz 3 Taksit!",
+  "http_status": 200,
+  "raw_bytes": 391997,
+  "text_chars": 1774
+}

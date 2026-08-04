@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/first-kredi-karti",
+  "scraped_at": "2026-08-04T12:38:40+00:00",
+  "content_hash": "681aac28e0526db3a8dd574fa864a6244392facb14f0f4dbb5300cb9975cdeb4",
+  "collection_method": "browser",
+  "title": "QNB First Kredi Kartı ve Özel Ayrıcalıkları | QNB",
+  "http_status": 200,
+  "raw_bytes": 62256,
+  "text_chars": 1769
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/beymen-giyim-taksit-kampanyasi",
+  "scraped_at": "2026-08-04T13:27:34+00:00",
+  "content_hash": "5ff06ce41b153d046c8e83bbdc12384369aeb833cd66efc7332b5c490722e0b9",
+  "collection_method": "live",
+  "title": "Beymen'de 6 taksit! | Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46577,
+  "text_chars": 1816
+}

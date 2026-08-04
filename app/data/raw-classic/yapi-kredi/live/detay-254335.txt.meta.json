@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/254335",
+  "scraped_at": "2026-08-04T13:22:16+00:00",
+  "content_hash": "0723e02203f04b53dbb65e43d9eeb2c51f01135683b8d622ee97d224e76f4535",
+  "collection_method": "browser",
+  "title": "Size özel, Yapı Kredi Troy bireysel kredi kartlarınızla yapacağınız harcamalarınıza indirim fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 938646,
+  "text_chars": 29781
+}

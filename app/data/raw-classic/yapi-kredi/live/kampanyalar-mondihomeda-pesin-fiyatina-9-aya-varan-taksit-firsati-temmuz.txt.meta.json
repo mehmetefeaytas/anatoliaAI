@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.worldcard.com.tr/kampanyalar/mondihomeda-pesin-fiyatina-9-aya-varan-taksit-firsati-temmuz",
+  "scraped_at": "2026-08-04T13:20:14+00:00",
+  "content_hash": "e4116fae3a69a767feeaf2a60f25260327f756674770cd9aebc92136881bc661",
+  "collection_method": "browser",
+  "title": "MondiHome’da peşin fiyatına 9 aya varan taksit fırsatı! | Worldcard Kampanyaları | Avantajlı ve Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 133389,
+  "text_chars": 7349
+}

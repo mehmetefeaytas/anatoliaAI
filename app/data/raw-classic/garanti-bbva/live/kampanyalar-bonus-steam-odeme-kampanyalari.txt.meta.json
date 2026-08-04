@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-steam-odeme-kampanyalari",
+  "scraped_at": "2026-08-04T13:29:52+00:00",
+  "content_hash": "f415b4a96a3efc319143173c85e12632126b08e5e426a10d0b4fd176e74a9725",
+  "collection_method": "live",
+  "title": "Yeni Bonus kredi kartıyla yapılan Steam ödemelerinde 250 TL'ye varan bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 47395,
+  "text_chars": 2897
+}

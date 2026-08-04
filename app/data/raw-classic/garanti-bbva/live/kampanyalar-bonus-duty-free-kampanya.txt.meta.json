@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-duty-free-kampanya",
+  "scraped_at": "2026-08-04T13:28:07+00:00",
+  "content_hash": "ec7aa12a4952c184064e0fefdf01ab4c47964164965c581fb45246a80fef601c",
+  "collection_method": "live",
+  "title": "Yurt içi ve yurt dışı Duty Free alışverişinize 400 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46344,
+  "text_chars": 2138
+}

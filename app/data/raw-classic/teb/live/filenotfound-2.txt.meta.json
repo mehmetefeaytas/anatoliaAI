@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/_FileNotFound.htm?aspxerrorpath=/banka-kartlari/",
+  "scraped_at": "2026-08-04T11:07:40+00:00",
+  "content_hash": "1d2014b3c45b7561e1010a5d44837cdd5f54e4db1c6a8fef739b0df2eaaa085e",
+  "collection_method": "live",
+  "title": "Türk Ekonomi Bankasi - Teb.com.tr",
+  "http_status": 200,
+  "raw_bytes": 51418,
+  "text_chars": 3062
+}

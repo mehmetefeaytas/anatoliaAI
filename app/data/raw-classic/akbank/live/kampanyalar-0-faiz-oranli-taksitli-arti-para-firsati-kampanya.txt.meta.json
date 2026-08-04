@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/0-faiz-oranli-taksitli-arti-para-firsati-kampanya",
+  "scraped_at": "2026-08-04T11:41:11+00:00",
+  "content_hash": "4324f8c68f55c60141620bc469788068d36557352259c6e86a8ffcf13fcaf5ea",
+  "collection_method": "live",
+  "title": "TSS ile %0 faiz oranlı 25.000 TL Taksitli Artı Para fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 296797,
+  "text_chars": 8025
+}

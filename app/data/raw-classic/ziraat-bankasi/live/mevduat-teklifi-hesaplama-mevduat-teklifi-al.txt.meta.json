@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/mevduat-teklifi-hesaplama/mevduat-teklifi-al",
+  "scraped_at": "2026-08-04T11:29:45+00:00",
+  "content_hash": "a7aa9a739426aaf8fc38bd6d0a08f42fd571765805e7143c73ce34f58a361e21",
+  "collection_method": "browser",
+  "title": "Mevduat Teklifi Al | Mevduat Teklifi / Hesaplama | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 90363,
+  "text_chars": 3602
+}

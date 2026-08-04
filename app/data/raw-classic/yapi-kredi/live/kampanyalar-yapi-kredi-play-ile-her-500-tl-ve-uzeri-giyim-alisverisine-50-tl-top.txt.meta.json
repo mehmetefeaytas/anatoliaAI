@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikrediplay.com.tr/kampanyalar/yapi-kredi-play-ile-her-500-tl-ve-uzeri-giyim-alisverisine-50-tl-toplam-300-tlye-varan-puan-kazanma",
+  "scraped_at": "2026-08-04T13:20:36+00:00",
+  "content_hash": "33ee86dfafc99bbe0f9978528a841148f0f59352229590e1aedb17b1daf51a85",
+  "collection_method": "browser",
+  "title": "Yapı Kredi Play ile her 500 TL ve üzeri giyim alışverişine 50 TL, toplam 300 TL’ye varan puan kazanma fırsatı! | Yapı Kredi Play Kampanyaları - Gençlere Özel Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 128997,
+  "text_chars": 8915
+}

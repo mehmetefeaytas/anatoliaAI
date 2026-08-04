@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbank-mobil-tesla-cekilis-kampanyasi",
+  "scraped_at": "2026-08-04T11:42:29+00:00",
+  "content_hash": "d599f697f046a917f1fe0b705c823fb0365401797645a29d09ff62982c31909e",
+  "collection_method": "live",
+  "title": "Akbank Mobil Tesla Çekiliş Kampanyası | Akbank",
+  "http_status": 200,
+  "raw_bytes": 311038,
+  "text_chars": 17660
+}

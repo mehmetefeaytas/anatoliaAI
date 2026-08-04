@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/kampanyalar/akbankli-kadin-platformuna-ozel-beste-iade-firsati",
+  "scraped_at": "2026-08-04T11:43:14+00:00",
+  "content_hash": "87879d5173e46df0fed64102c672030420c4d6b731fb027ac11d8da6dcd9ddb1",
+  "collection_method": "live",
+  "title": "BES’te İade Fırsatı | Akbank",
+  "http_status": 200,
+  "raw_bytes": 305055,
+  "text_chars": 12414
+}

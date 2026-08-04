@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/bankkart-genc",
+  "scraped_at": "2026-08-04T11:27:53+00:00",
+  "content_hash": "b91989de32b92d3c913d3f5ab1d7313aa2735ada93a60bd9f5a1c54f5cb05171",
+  "collection_method": "browser",
+  "title": "Bankkart Genç | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 71700,
+  "text_chars": 7418
+}

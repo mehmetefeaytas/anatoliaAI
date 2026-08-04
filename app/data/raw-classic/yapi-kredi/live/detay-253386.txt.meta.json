@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/253386",
+  "scraped_at": "2026-08-04T13:22:01+00:00",
+  "content_hash": "727a1644e29d256926ce9c0aadcc0341771a3646f3174d82fc4568ee6b147c0e",
+  "collection_method": "browser",
+  "title": "Yapı Kredi'den firmalara özel 48.000 TL değerinde hoş geldin paketi! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 939527,
+  "text_chars": 29172
+}

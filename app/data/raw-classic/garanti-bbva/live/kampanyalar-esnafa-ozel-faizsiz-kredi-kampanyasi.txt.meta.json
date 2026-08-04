@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/esnafa-ozel-faizsiz-kredi-kampanyasi",
+  "scraped_at": "2026-08-04T13:25:48+00:00",
+  "content_hash": "a7488452690b38c2e30a743043375cb491116895d5ffcb6f9939616962db0d9a",
+  "collection_method": "live",
+  "title": "Esnafa Özel Faizsiz Kredi ve Taksitli Avans Hesap Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 278556,
+  "text_chars": 81450
+}

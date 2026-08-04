@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-genc-steam-kampanyasi",
+  "scraped_at": "2026-08-04T13:28:43+00:00",
+  "content_hash": "3e2aac1cdf16ef3be5a05681b47444e752c4dcd705ad57688e7600759c69e255",
+  "collection_method": "live",
+  "title": "Bonus Genç'le, oyun harcamalarından toplam 400 TL bonus kazan!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46188,
+  "text_chars": 1763
+}

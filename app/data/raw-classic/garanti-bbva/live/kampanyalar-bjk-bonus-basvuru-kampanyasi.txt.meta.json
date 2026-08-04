@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bjk-bonus-basvuru-kampanyasi",
+  "scraped_at": "2026-08-04T13:27:37+00:00",
+  "content_hash": "f87ec2b1f2952528d2d9274bfacb7fb1e4fff6f3c79211b2c90c9b13d8c21eed",
+  "collection_method": "live",
+  "title": "İlk Bonus kartın BJK Bonus olsun 1.000 TL bonus kazan!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46793,
+  "text_chars": 1945
+}

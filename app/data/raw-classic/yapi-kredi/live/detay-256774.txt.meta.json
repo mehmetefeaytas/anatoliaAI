@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/256774",
+  "scraped_at": "2026-08-04T13:23:12+00:00",
+  "content_hash": "d49ccaefa570718a6c291b57f2079fea345a8368e03ad9840c0c3432554770fc",
+  "collection_method": "browser",
+  "title": "Togg’unuz Hazır, sıra finansmanında. Yapı Kredi müşterilerine özel Dijital Taşıt Kredisi ile 1.000.000 TL, 12 ay %0 faiz fırsatıyla! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 946943,
+  "text_chars": 29825
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-online-rezervasyon-kampanyasi",
+  "scraped_at": "2026-08-04T13:29:19+00:00",
+  "content_hash": "b1ed4e88fb7d1f2ef87a00f67e96e0388ce5a976f73c5005359ea381a512050a",
+  "collection_method": "live",
+  "title": "Online rezervasyon ödemelerinize 1.500 TL bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46790,
+  "text_chars": 2377
+}

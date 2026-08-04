@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnbcard.com.tr/kartlar/qnb-sanal-kart",
+  "scraped_at": "2026-08-04T12:40:30+00:00",
+  "content_hash": "75c2b184822cdf5cf06c4e2da0374ea1bf3381df04a94461268d65ec0b3175a9",
+  "collection_method": "browser",
+  "title": "Sanal Kart | Sanal Kart Oluşturma | QNB Kredi Kartı",
+  "http_status": 200,
+  "raw_bytes": 44512,
+  "text_chars": 4554
+}

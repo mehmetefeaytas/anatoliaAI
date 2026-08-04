@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/akaryakit-kampanyasi",
+  "scraped_at": "2026-08-04T11:34:06+00:00",
+  "content_hash": "1eac2581d7e77e8628a49e65e2c6b5dd9715db7969fb1b6ed9f3786ca869cc4a",
+  "collection_method": "browser",
+  "title": "ING Kredi Kartı’nızla Shell'de 250 TL indirim. | ING",
+  "http_status": 200,
+  "raw_bytes": 56862,
+  "text_chars": 2768
+}

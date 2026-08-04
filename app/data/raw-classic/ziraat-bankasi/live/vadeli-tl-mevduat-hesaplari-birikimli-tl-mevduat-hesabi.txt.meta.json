@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/vadeli-hesaplar/vadeli-tl-mevduat-hesaplari/birikimli-tl-mevduat-hesabi",
+  "scraped_at": "2026-08-04T11:30:15+00:00",
+  "content_hash": "93a1733d4d801ddcbc1e7245ed72ee5f6bd8e911611f321a21626f9292a8d1aa",
+  "collection_method": "browser",
+  "title": "Birikimli TL Mevduat Hesabı | Vadeli TL Mevduat Hesapları | Vadeli Hesaplar | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 77478,
+  "text_chars": 5281
+}

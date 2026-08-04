@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/allianz-bes-ek-katki-payi-kampanyasi",
+  "scraped_at": "2026-08-04T11:34:12+00:00",
+  "content_hash": "f71e453e19de409b5abd8a3ead7f5d83b4a8c049c258cc006313d68628131ec7",
+  "collection_method": "browser",
+  "title": "Allianz BES Ek Katkı Payı | ING",
+  "http_status": 200,
+  "raw_bytes": 61897,
+  "text_chars": 6802
+}

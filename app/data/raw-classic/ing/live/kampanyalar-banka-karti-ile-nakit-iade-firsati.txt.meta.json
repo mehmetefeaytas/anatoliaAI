@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/banka-karti-ile-nakit-iade-firsati",
+  "scraped_at": "2026-08-04T11:34:44+00:00",
+  "content_hash": "6a92b237b99a6e6e32465ce17a6d6e78c1bd969b205c83d8b2b45f1c77a7f458",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 55941,
+  "text_chars": 2561
+}

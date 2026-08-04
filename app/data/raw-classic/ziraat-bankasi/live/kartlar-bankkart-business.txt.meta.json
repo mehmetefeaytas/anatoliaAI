@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/kartlar/bankkart-business",
+  "scraped_at": "2026-08-04T11:27:47+00:00",
+  "content_hash": "fc20c3b06ad7de13ce2b2342f8923e26b4ee9490382dbd62fbe6eda7d0aa29d0",
+  "collection_method": "browser",
+  "title": "Bankkart Business | Kartlar | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 62932,
+  "text_chars": 4223
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/kampanyalar/alive-sports-areada-10-indirim-ayricaligi",
+  "scraped_at": "2026-08-04T12:32:00+00:00",
+  "content_hash": "c2ad568764a1d6f026a95cfe94e4cce4b033194bcc3e03c595b70c6ac0b3d439",
+  "collection_method": "live",
+  "title": "Alive Sports Area’da %10 İndirim Ayrıcalığı! | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 185794,
+  "text_chars": 1823
+}

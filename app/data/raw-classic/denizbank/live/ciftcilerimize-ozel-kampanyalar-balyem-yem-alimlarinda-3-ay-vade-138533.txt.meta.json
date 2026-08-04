@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/balyem-yem-alimlarinda-3-ay-vade-138533",
+  "scraped_at": "2026-08-04T11:04:04+00:00",
+  "content_hash": "292cc4a58a52eda7f8fa644700bfb4097d12605cc82519941fd0e9fb3336720b",
+  "collection_method": "live",
+  "title": "Balyem Yem Alımlarında 3 Ay Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 332240,
+  "text_chars": 58187
+}

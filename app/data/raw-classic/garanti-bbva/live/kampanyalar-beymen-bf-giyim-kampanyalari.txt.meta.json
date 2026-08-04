@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/beymen-bf-giyim-kampanyalari",
+  "scraped_at": "2026-08-04T13:27:25+00:00",
+  "content_hash": "e004cfc0057b72afefec5fded1fab814772197e088e671a4a7aa60a034ad2e4a",
+  "collection_method": "live",
+  "title": "Beymen'de 50.000 TL ve üzeri alışverişe 5.000 TL Beymen bonus!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 46620,
+  "text_chars": 2011
+}

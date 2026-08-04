@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kampanyalar/detay/251373",
+  "scraped_at": "2026-08-04T13:21:31+00:00",
+  "content_hash": "93bc7fad02a448f0ab3ce709bde073f79d5a71613a8cf531b9f9008915bab9d5",
+  "collection_method": "browser",
+  "title": "Size özel, Yapı Kredi bireysel kredi kartlarınızla yapacağınız akaryakıt harcamalarınıza puan fırsatı! | Kampanyalar | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 937631,
+  "text_chars": 29824
+}

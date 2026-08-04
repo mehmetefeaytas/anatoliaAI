@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/diger-kampanyalar/hepsipay-ile-denizbank-musterisi-olacaklara-ozel-nakit-firsati-139102",
+  "scraped_at": "2026-08-04T11:04:43+00:00",
+  "content_hash": "7a1be9af4b6357d1ad308cc0df0901a0cbd24eb2bb2aba1249d456bc1c3145d6",
+  "collection_method": "live",
+  "title": "Hepsipay ile DenizBank Müşterisi Olacaklara Özel Nakit Fırsatı! | Diğer Kampanyalar | |",
+  "http_status": 200,
+  "raw_bytes": 332294,
+  "text_chars": 59347
+}

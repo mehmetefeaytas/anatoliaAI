@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bankamiz/bizi-taniyin/haberler-ve-duyurular/haberler/2018/mart/milli-dayanisma-kampanyasi",
+  "scraped_at": "2026-08-04T13:17:39+00:00",
+  "content_hash": "910cc23f389409c7772a6e2a9bf1a4c6c1e9a483f0349072308ba75ef19c5255",
+  "collection_method": "live",
+  "title": "Milli Dayanışma Kampanyası",
+  "http_status": 200,
+  "raw_bytes": 392239,
+  "text_chars": 1037
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/kampanyalar/250-tl-bonus-firsati",
+  "scraped_at": "2026-08-04T11:33:46+00:00",
+  "content_hash": "c6bca6f4f859d55020e92ea7dd4598a0d39c62e9f763cbb31168d05b63fe2204",
+  "collection_method": "browser",
+  "title": "Bonus Fırsatını Kaçırmayın | ING",
+  "http_status": 200,
+  "raw_bytes": 55310,
+  "text_chars": 2252
+}

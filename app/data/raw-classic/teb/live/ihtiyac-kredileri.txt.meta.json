@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/ihtiyac-kredileri/",
+  "scraped_at": "2026-08-04T11:07:13+00:00",
+  "content_hash": "806b7642e970e8c65c93c6af851685b2034eab982172188ef5a74b094b39434a",
+  "collection_method": "live",
+  "title": "İhtiyaç Kredileri | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 181025,
+  "text_chars": 5693
+}

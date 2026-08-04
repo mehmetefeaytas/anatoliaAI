@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ziraat-bankasi",
+  "source_url": "https://www.ziraatbank.com.tr/tr/bireysel/mevduat/altin-hesaplari/ceyrek-altin-hesabi",
+  "scraped_at": "2026-08-04T11:29:36+00:00",
+  "content_hash": "69b2223b09847e408b995ed3699e484f5704b5e74d1b74c27e9ae4e52189e277",
+  "collection_method": "browser",
+  "title": "Çeyrek Altın Hesabı | Kıymetli Maden Hesapları | Mevduat | Bireysel | Ziraat Bankası",
+  "http_status": 200,
+  "raw_bytes": 61577,
+  "text_chars": 3756
+}

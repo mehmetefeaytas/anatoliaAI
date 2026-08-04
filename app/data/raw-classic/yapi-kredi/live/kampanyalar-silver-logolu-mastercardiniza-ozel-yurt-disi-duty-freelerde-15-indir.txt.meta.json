@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.adioscard.com.tr/kampanyalar/silver-logolu-mastercardiniza-ozel-yurt-disi-duty-freelerde-15-indirim-firsati-2025",
+  "scraped_at": "2026-08-04T13:19:12+00:00",
+  "content_hash": "147724c54cf3db601d0917f7a2f18fe1b47caca9deedd428f993295dfd86847e",
+  "collection_method": "browser",
+  "title": "Silver Logolu Mastercard'ınıza özel Yurt Dışı Duty Free’lerde %15 indirim fırsatı! | Kampanyalar: Adios Card ile Kazançlı Fırsatlar",
+  "http_status": 200,
+  "raw_bytes": 145546,
+  "text_chars": 10914
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifkart.com.tr/kampanyalar/bankomat-kart-ile-akaryakit-alisverislerinize-400-tl-bankomat-para-40622",
+  "scraped_at": "2026-08-04T13:01:14+00:00",
+  "content_hash": "1de885a917800df05b11b1d04c116469d131f9129f4129630d16d3bdb689b814",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 28097,
+  "text_chars": 3198
+}

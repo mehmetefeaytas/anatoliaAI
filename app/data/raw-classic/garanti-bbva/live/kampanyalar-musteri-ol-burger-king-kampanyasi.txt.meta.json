@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/kampanyalar/musteri-ol-burger-king-kampanyasi",
+  "scraped_at": "2026-08-04T13:26:00+00:00",
+  "content_hash": "24eedbf25ee2204a8f857af2f27db6ed68a4f1fa1244639d55fd224539d4f124",
+  "collection_method": "live",
+  "title": "Müşteri Ol Burger King Hediye Kampanyası | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 270690,
+  "text_chars": 78973
+}

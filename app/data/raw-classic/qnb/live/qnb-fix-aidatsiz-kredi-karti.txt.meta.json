@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/qnb-fix-aidatsiz-kredi-karti",
+  "scraped_at": "2026-08-04T12:39:25+00:00",
+  "content_hash": "e71268a34f5ebfb9603fa09fca014e8504411c8b4a11a42f7d5b49401cbbd673",
+  "collection_method": "browser",
+  "title": "QNB Fix Aidatsız Kredi Kartı Online Başvurusu | QNB",
+  "http_status": 200,
+  "raw_bytes": 76180,
+  "text_chars": 1907
+}

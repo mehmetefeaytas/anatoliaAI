@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/kampanya/ciftcilerimize-ozel-kampanyalar/mepas-hizmet-noktalarindan-tarimsal-elektrik-faturasi-odemelerine-4-aya-varan-vade-138639",
+  "scraped_at": "2026-08-04T11:04:13+00:00",
+  "content_hash": "a0d9fa7f68af91f94b6a6c20592cdd5499341bd544e2a8a43d907f9811018e80",
+  "collection_method": "live",
+  "title": "Medaş Hizmet Noktaları’ndan Tarımsal Elektrik Faturası Ödemelerine 4 Aya Varan Vade | Çiftçilerimize Özel Kampanyalar | | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 333060,
+  "text_chars": 58391
+}

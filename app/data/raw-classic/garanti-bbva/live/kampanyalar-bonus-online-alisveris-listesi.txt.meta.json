@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.bonus.com.tr/kampanyalar/bonus-online-alisveris-listesi",
+  "scraped_at": "2026-08-04T13:29:13+00:00",
+  "content_hash": "85c1affa7f3ee10beb33c544b2728aa8990759ab3ab089d02ec67eaffe8a4c6c",
+  "collection_method": "live",
+  "title": "Bonuslarınızı online alışverişlerinizde de kullanın!| Garanti Bonus",
+  "http_status": 200,
+  "raw_bytes": 50007,
+  "text_chars": 2230
+}

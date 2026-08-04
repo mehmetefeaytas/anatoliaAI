@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kobi-kredileri",
+  "scraped_at": "2026-08-04T12:39:04+00:00",
+  "content_hash": "2be8f8821f4fbe08df70351d3b4fd64d85d00eed87393327db3c26f4cca685be",
+  "collection_method": "browser",
+  "title": "Kobi Kredisi &amp; Kobi Kredisi Hesaplama | QNB",
+  "http_status": 200,
+  "raw_bytes": 70597,
+  "text_chars": 2626
+}

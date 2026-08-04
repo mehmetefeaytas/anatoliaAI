@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/sss/mevduat-fon-paketi",
+  "scraped_at": "2026-08-04T12:40:43+00:00",
+  "content_hash": "b982b79ed576772d63b344f25927eefdb3dcf54718ef36f045e6bb5b5619debd",
+  "collection_method": "browser",
+  "title": "Mevduat Fon Paketi Hakkında Sıkça Sorulan Sorular | QNB",
+  "http_status": 200,
+  "raw_bytes": 67692,
+  "text_chars": 1943
+}
