@@ -16,6 +16,10 @@ korunuyor:
 3. **Kural katmanının veto hakkı yok.** `RuleHintClassifier` ölçülmüş hata
    taşıyor (sözcük sınırı düzeltmesinden önce korpusun %48'ini sahte Konut
    Finansmanı yapıyordu); yalnızca güveni yükseltebilir.
+4. **Denetleyici, kanıtın bulunduğu metni görebilmeli.** Prompt kırpması
+   gövdeyi keserse denetleyici doğru alıntıyı "belgede yok" sanar; iki oy
+   ölçülemez biçimde kaybolur. Ölçüm: ürün sayfalarında gövde 18.000.
+   karakterde başlıyordu (bkz. `src/extraction/silver/prompts.py`).
 """
 
 from __future__ import annotations
@@ -29,6 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.extraction.silver import (
     CONF_HIGH,
     CONF_MEDIUM,
+    MAX_PROMPT_CHARS,
     STATUS_QUEUE,
     STATUS_REJECT,
     STATUS_SILVER,
@@ -37,8 +42,10 @@ from src.extraction.silver import (
     class_balance_warnings,
     decide,
     evidence_is_verbatim,
+    labeler_user_prompt,
     score_against_gold,
     summarize,
+    verifier_user_prompt,
 )
 from src.extraction.silver.consensus import (
     R_EVIDENCE_WEAK,
@@ -191,6 +198,46 @@ class TestRapor(unittest.TestCase):
         uyarilar = class_balance_warnings(self._kayitlar(), min_per_class=20)
         self.assertTrue(any("Kart" in u for u in uyarilar))
         self.assertTrue(any("Konut Finansmanı: 1/20" in u for u in uyarilar))
+
+
+class TestPromptKirpmasi(unittest.TestCase):
+    """Kırpma penceresi, ürün sayfalarının ölçülmüş gövde konumunu kapsamalı.
+
+    Bu sınıf sessiz bir başarısızlığı çitliyor: `decide` kanıtı TAM metinde
+    arar, denetleyici ise KIRPILMIŞ metinde. Pencere gövdeden önce kapanırsa
+    doğru alıntı mekanik kapıdan geçer ama denetleyici onu göremez ve kayıt
+    haksız yere kuyruğa düşer.
+    """
+
+    # Yapı Kredi ürün sayfalarının ölçülen gövde konumu ~18.000; en uzak
+    # gerekçe alıntısı 18.321. karakterde çıktı.
+    OLCULEN_GOVDE_KONUMU = 18321
+
+    def _uzun_belge(self) -> tuple[str, str]:
+        gurultu = "Şube ve ATM'ler Ürün ve Hizmet Ücretleri Menu " * 500
+        govde = "Yapı Kredi Taşıt Kredisi ile hayalinizdeki araca kavuşun."
+        return gurultu[:self.OLCULEN_GOVDE_KONUMU] + " " + govde, govde
+
+    def test_pencere_olculen_govde_konumunu_kapsar(self):
+        self.assertGreater(MAX_PROMPT_CHARS, self.OLCULEN_GOVDE_KONUMU,
+                           "pencere ölçülen gövde konumundan küçük olamaz")
+
+    def test_etiketleyici_govdeyi_gorur(self):
+        metin, govde = self._uzun_belge()
+        self.assertIn(govde, labeler_user_prompt("yapi-kredi--x", metin))
+
+    def test_denetleyici_de_ayni_govdeyi_gorur(self):
+        """Denetleyicinin penceresi etiketleyiciden dar olamaz."""
+        metin, govde = self._uzun_belge()
+        prompt = verifier_user_prompt("yapi-kredi--x", metin,
+                                      "Taşıt Finansmanı", govde)
+        self.assertIn(govde, prompt)
+
+    def test_kirpma_hala_isaretlenir(self):
+        """Pencere büyüdü diye kırpma bilgisi kaybolmamalı."""
+        cok_uzun = "x" * (MAX_PROMPT_CHARS + 1)
+        self.assertIn("metin kırpıldı", labeler_user_prompt("a--b", cok_uzun))
+        self.assertNotIn("metin kırpıldı", labeler_user_prompt("a--b", "kısa"))
 
 
 class TestGoldPuanlama(unittest.TestCase):
