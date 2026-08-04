@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/canim-evim-konut",
+  "scraped_at": "2026-08-04T14:26:44+00:00",
+  "content_hash": "ff70886824f2a9141e7a3fc0a5d38180dea6bdb9ab74bc8281dd46ce338f90f6",
+  "collection_method": "live",
+  "title": "Canım Evim Konut Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 403987,
+  "text_chars": 2095
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/mortgage-urunleri",
+  "scraped_at": "2026-08-04T14:30:52+00:00",
+  "content_hash": "1f9250a360dfc0b6f96bcf46210fb1b1f2fa5fa23099a92e19c958c732a776bf",
+  "collection_method": "live",
+  "title": "Mortgage Ürünleri | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 267362,
+  "text_chars": 45196
+}

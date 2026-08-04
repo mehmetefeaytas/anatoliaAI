@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri/0-km-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:28:33+00:00",
+  "content_hash": "52c7114cf510a1efd34f16dec5f1d31187267c57f0801cab3570e8bb72446dfa",
+  "collection_method": "live",
+  "title": "0 Km Taşıt Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 275602,
+  "text_chars": 6292
+}

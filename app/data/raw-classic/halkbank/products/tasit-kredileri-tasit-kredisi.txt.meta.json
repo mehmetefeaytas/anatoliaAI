@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/tasit-kredileri/tasit-kredisi",
+  "scraped_at": "2026-08-04T14:27:12+00:00",
+  "content_hash": "896daa392403d29bdc7613fa92e622376a0f2a8237708ac26f3e3b30c38900c5",
+  "collection_method": "live",
+  "title": "Taşıt Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 402083,
+  "text_chars": 1747
+}

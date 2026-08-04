@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/emlakci-yonlendirmeli-kredi",
+  "scraped_at": "2026-08-04T14:28:09+00:00",
+  "content_hash": "9ef4689f2e42c6e432502167c5114ebfda57a5254b1c1bde3122ef3b9fa8df37",
+  "collection_method": "live",
+  "title": "Emlakçı Yönlendirmeli Konut Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 265095,
+  "text_chars": 5472
+}

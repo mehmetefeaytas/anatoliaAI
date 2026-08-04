@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/konut-kredileri/odeme-plani-turleri",
+  "scraped_at": "2026-08-04T14:28:21+00:00",
+  "content_hash": "c67ef6d6793ae7bfaa786fe90b0cc60f151c3d19077550cef94160c542360cc3",
+  "collection_method": "live",
+  "title": "Ödeme Planı Türleri | Akbank",
+  "http_status": 200,
+  "raw_bytes": 262241,
+  "text_chars": 2021
+}

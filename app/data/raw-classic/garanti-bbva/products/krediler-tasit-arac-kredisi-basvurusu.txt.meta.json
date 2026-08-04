@@ -1,0 +1,11 @@
+{
+  "bank_slug": "garanti-bbva",
+  "source_url": "https://www.garantibbva.com.tr/krediler/tasit-arac-kredisi-basvurusu",
+  "scraped_at": "2026-08-04T14:30:58+00:00",
+  "content_hash": "7c815dbf1fb22b4d39eab44afa697890da31325c1615c8dfe9e599244ff7ab34",
+  "collection_method": "live",
+  "title": "Taşıt (Araç) Kredisi Başvurusu | Garanti BBVA",
+  "http_status": 200,
+  "raw_bytes": 168883,
+  "text_chars": 6538
+}

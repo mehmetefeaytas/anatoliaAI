@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kobi-kentsel-donusum-yap-sat",
+  "scraped_at": "2026-08-04T14:32:42+00:00",
+  "content_hash": "e86e7e51b60fa2590793afcd7aeff7f04655246dfdea8f4a0978c1c28f9f5175",
+  "collection_method": "browser",
+  "title": "Kentsel Dönüşüm / Yap - Sat | QNB",
+  "http_status": 200,
+  "raw_bytes": 66942,
+  "text_chars": 1756
+}

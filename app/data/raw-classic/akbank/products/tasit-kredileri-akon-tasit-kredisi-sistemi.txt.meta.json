@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/tasit-kredileri/akon-tasit-kredisi-sistemi",
+  "scraped_at": "2026-08-04T14:28:37+00:00",
+  "content_hash": "d2be73d64f88a10aec07837972e7b02eeb136740ed672aca63a0c55dd79daa31",
+  "collection_method": "live",
+  "title": "AKON Taşıt Kredisi Sistemi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 262464,
+  "text_chars": 4427
+}

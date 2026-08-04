@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kendim-icin/krediler/tasit-almak-icin/rehinsiz-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:32:19+00:00",
+  "content_hash": "7efc5726d53a3241c4ce65dfdfddbb39415a2a12da47ca790da462b4a4aeac17",
+  "collection_method": "browser",
+  "title": "Rehinsiz Taşıt Kredisi: İpoteksiz Araç Kredisi | QNB",
+  "http_status": 200,
+  "raw_bytes": 89039,
+  "text_chars": 5540
+}

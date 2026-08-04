@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/kktc-ye-ozel-krediler/kktc-yeni-evlilere-ozel-konut-kredisi",
+  "scraped_at": "2026-08-04T14:26:30+00:00",
+  "content_hash": "14d8b7b27b49f48314adfeea873632491adb667466e6944e557b309647597147",
+  "collection_method": "live",
+  "title": "KKTC Yeni Evlilere Özel Konut Kredisi",
+  "http_status": 200,
+  "raw_bytes": 405960,
+  "text_chars": 2527
+}

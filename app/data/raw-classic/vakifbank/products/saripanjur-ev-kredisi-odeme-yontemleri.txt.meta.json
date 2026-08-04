@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/saripanjur-ev-kredisi/odeme-yontemleri",
+  "scraped_at": "2026-08-04T14:25:59+00:00",
+  "content_hash": "3a23d18723855253886abb68a9d37ebf122581be575e1e5f45b1f9e613a8286b",
+  "collection_method": "live",
+  "title": "Ödeme Yöntemleri | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 181786,
+  "text_chars": 5153
+}

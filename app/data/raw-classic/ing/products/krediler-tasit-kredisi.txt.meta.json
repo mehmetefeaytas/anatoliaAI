@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/krediler/tasit-kredisi",
+  "scraped_at": "2026-08-04T14:34:03+00:00",
+  "content_hash": "1e93035f4873b734e48bed5ee15b8bff6edf1fad6d70c3c014b93aa5ccbc9f7e",
+  "collection_method": "browser",
+  "title": "Taşıt Kredisi | ING",
+  "http_status": 200,
+  "raw_bytes": 61751,
+  "text_chars": 2578
+}

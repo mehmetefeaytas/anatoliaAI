@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/bankamizi-taniyin/is-bankasi-konut-kredisi-faizini-indirdi",
+  "scraped_at": "2026-08-04T14:31:54+00:00",
+  "content_hash": "d3d74a3d3bec9ac41de02267f87a9303c96832374cc49687684ee47e7e95f33b",
+  "collection_method": "live",
+  "title": "İş Bankası konut kredisi faizini indirdi | Türkiye İş Bankası",
+  "http_status": 200,
+  "raw_bytes": 176096,
+  "text_chars": 617
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/isiniz-icin/krediler/kobi-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:33:57+00:00",
+  "content_hash": "72eedaa918a03fdc17af4816bb5a0b137f9c007ad11bf9b5711c26234f9c749f",
+  "collection_method": "browser",
+  "title": "İşim İçin Taşıt Kredisi ve Faiz Oranları - ING",
+  "http_status": 200,
+  "raw_bytes": 167660,
+  "text_chars": 6939
+}

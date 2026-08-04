@@ -1,0 +1,11 @@
+{
+  "bank_slug": "ing",
+  "source_url": "https://www.ing.com.tr/tr/sizin-icin/krediler/otokoc-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:34:00+00:00",
+  "content_hash": "5c06cdf774b8e99bc7f77e9dfd2c1b4bf90fd5b12421f21fd4fdda3f88a7c862",
+  "collection_method": "browser",
+  "title": "ING",
+  "http_status": 200,
+  "raw_bytes": 62128,
+  "text_chars": 3144
+}

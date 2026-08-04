@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kredi/konut-kredisi/doga-dostu-mortgage",
+  "scraped_at": "2026-08-04T14:29:25+00:00",
+  "content_hash": "39966e1d8e7c8a6beadd9bf636afde40fb055df5a01c6d4a3e7b3c849017b731",
+  "collection_method": "browser",
+  "title": "Doğa Dostu Mortgage | Ev Kredisi - Konut Kredi Faizleri | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 939143,
+  "text_chars": 29160
+}

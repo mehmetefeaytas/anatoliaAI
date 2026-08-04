@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kredi/konut-kredisi/esit-anapara-odemeli-mortgage",
+  "scraped_at": "2026-08-04T14:29:28+00:00",
+  "content_hash": "ac75d8596a28e50bd8adef671dcce5de2287f8b6afc7fc02ad3a4ae4e45af896",
+  "collection_method": "browser",
+  "title": "Eşit Anapara Ödemeli Mortgage | Ev Kredisi - Konut Kredi Faizleri | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 788785,
+  "text_chars": 27679
+}

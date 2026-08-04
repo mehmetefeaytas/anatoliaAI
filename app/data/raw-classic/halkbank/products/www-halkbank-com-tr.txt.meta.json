@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/",
+  "scraped_at": "2026-08-04T14:26:33+00:00",
+  "content_hash": "096bb492b499a1f811e66935e3a65547cbec371d9420ca55348a6bfdcfc71944",
+  "collection_method": "live",
+  "title": "Türkiye Halk Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 570822,
+  "text_chars": 33799
+}

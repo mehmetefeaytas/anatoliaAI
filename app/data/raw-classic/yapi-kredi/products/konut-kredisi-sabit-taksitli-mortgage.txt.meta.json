@@ -1,0 +1,11 @@
+{
+  "bank_slug": "yapi-kredi",
+  "source_url": "https://www.yapikredi.com.tr/kredi/konut-kredisi/sabit-taksitli-mortgage",
+  "scraped_at": "2026-08-04T14:29:34+00:00",
+  "content_hash": "649858f9073bd78e228e0869e112d6767d26c4fd45aef56851f25d650b76fe96",
+  "collection_method": "browser",
+  "title": "Sabit Taksitli Mortgage | Ev Kredisi - Konut Kredi Faizleri | Yapı Kredi",
+  "http_status": 200,
+  "raw_bytes": 937730,
+  "text_chars": 28763
+}

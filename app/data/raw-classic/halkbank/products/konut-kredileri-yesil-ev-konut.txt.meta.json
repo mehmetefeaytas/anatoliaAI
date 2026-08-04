@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/yesil-ev-konut",
+  "scraped_at": "2026-08-04T14:26:48+00:00",
+  "content_hash": "615cec7f954267695afaed16814d3a4ac46bdd7bbe9b7140a58a5f65cd85d4a1",
+  "collection_method": "live",
+  "title": "Yeşil Ev Konut Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 404310,
+  "text_chars": 2573
+}

@@ -1,0 +1,13 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/tasit-kredileri",
+  "scraped_at": "2026-08-04T14:32:48+00:00",
+  "content_hash": "a9a617129658d6ab16c26d113803da9536d6cd171bdd7c864af77b31ac0c5714",
+  "collection_method": "browser",
+  "title": "QNB Taşıt Kredisi Ürünleri",
+  "http_status": 200,
+  "raw_bytes": 61574,
+  "text_chars": 390,
+  "content_status": "kabuk",
+  "content_status_note": "2026-08-04 elle isaretlendi: 390 karakter, yalnizca breadcrumb + nav baglantilari; urun metni yok. MIN_DOC_CHARS=200 esigini gectigi icin otomatik kabuk denetimine yakalanmadi. Etiketlemeye girmez."
+}

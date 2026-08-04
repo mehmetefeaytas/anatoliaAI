@@ -1,0 +1,11 @@
+{
+  "bank_slug": "qnb",
+  "source_url": "https://www.qnb.com.tr/kendim-icin/krediler/ev-almak-icin/a-ve-b-enerji-sinifi-konut-kredisi",
+  "scraped_at": "2026-08-04T14:32:40+00:00",
+  "content_hash": "7ec9324e16f83b57e8fc7b191e1a2fc81c14113eb3115beb1d6e6696a95cb5a1",
+  "collection_method": "browser",
+  "title": "A ve B Enerji Sınıfı Avantajlı Konut Kredisi | QNB",
+  "http_status": 200,
+  "raw_bytes": 97258,
+  "text_chars": 8514
+}

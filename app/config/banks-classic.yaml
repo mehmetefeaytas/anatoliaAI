@@ -119,6 +119,36 @@ banks:
       - /duyuru
       - /insan-kaynaklari
     max_docs: 70
+    # 2026-08-04 KONUT/TAŞIT TURU. Sitemap KULLANILAMADI: robots.txt
+    # www.vakifbank.com.tr_sitemap-tr.xml'i bildiriyor ama adres HTTP 404
+    # döndürüyor (164 KB'lık gövde bir 404 sayfası). Bu yüzden yollar
+    # Playwright ile GEZİLEREK bulundu, sonra curl ile 200 doğrulandı.
+    #
+    # ASIL BULGU: VakıfBank'ın konut kredisi markası "SarıPanjur Ev Kredisi";
+    # /tr/bireysel/krediler/konut-kredileri, /konut-kredisi ve /ev-kredisi
+    # üçü de 404 (ölçüldü). Gerçek ürünler bir alt seviyede, hub sayfasının
+    # ALTINDA duruyor:
+    #   .../saripanjur-ev-kredisi/saripanjur-konut-kredisi
+    #   .../saripanjur-ev-kredisi/yesil-konut-kredisi
+    #   .../saripanjur-ev-kredisi/kentsel-donusum-kredisi
+    #   .../saripanjur-ev-kredisi/konut-finansmani-mortgage        (+3 kampanya)
+    # Kampanya turu `/tr/bireysel/krediler` listesinden yalnız BİR seviye
+    # iniyor, bu yüzden hub'ı (saripanjur-ev-kredisi) alıp çocuklarını
+    # kaçırıyordu — 7 konut belgesi sessizce dışarıda kalmıştı.
+    product_paths:
+      - /tr/bireysel/krediler/saripanjur-ev-kredisi
+      - /tr/bireysel/krediler/tasit-kredileri
+      - /tr/ticari/krediler/ticari-tasit-kredisi
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan|/sss/'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/|/basin|/duyuru'
+    max_product_docs: 40
 
   - slug: halkbank
     name: Halkbank
@@ -164,6 +194,26 @@ banks:
       - /basin
       - /duyuru
     max_docs: 45
+    # 2026-08-04 KONUT/TAŞIT TURU. Kampanya turunda yalnız
+    # /tr/bireysel/krediler/konut-kredileri.html yolu vardı ve max_docs=45
+    # kırpması (290 aday) konut/taşıt ALT sayfalarını atıyordu: korpusta
+    # halkbank'tan yalnız 2 konut, 0 taşıt belgesi vardı. Sitemap'te
+    # (tr.sitemap.xml) konut alt ağacında 11, taşıt alt ağacında 4 ürün
+    # sayfası duruyor. Hub yolları curl ile 200 doğrulandı.
+    product_paths:
+      - /tr/bireysel/krediler/konut-kredileri
+      - /tr/bireysel/krediler/tasit-kredileri
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan|/sss/'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/|/basin|/duyuru'
+      - 'konut-mevduat|konut-hesabi'
+    max_product_docs: 40
 
   # --- Özel bankalar: sınıf dengesi ve ifade çeşitliliği ---
   - slug: akbank
@@ -191,6 +241,37 @@ banks:
       - /Doc
       - /documents
     max_docs: 90
+    # 2026-08-04 KONUT/TAŞIT TURU. Önceki tahminler 404 döndüğü için bu banka
+    # yazılmamıştı; gerçek yollar bankanın KENDİ sitemap'inden çıkarıldı
+    # (https://www.akbank.com/siteassets/data/sitemap.xml, 1421 URL) ve
+    # tek tek `curl -o /dev/null -w %{http_code}` ile 200 doğrulandı.
+    # Doğru önek `/krediler/...`; eski tahmin `/Sayfalar/...` biçimindeydi.
+    # NOT: sitemap'te duran /krediler/tasit-kredileri/cevre-dostu-tasit-kredisi
+    # 404 döndü (sitemap bayat) — YAZILMADI. Sitemap'te görmek kanıt değil.
+    #
+    # Neden ürün turu (harvest_products), kampanya turu değil: discover.rank()
+    # `/kampanya`yı 0. kovaya, ürün sayfalarını EN SON kovaya koyar; max_docs
+    # kırpması bu yüzden konut/taşıt ürün sayfalarını sistematik olarak
+    # atıyordu (ölçüm: 502 belgede Konut 13, Taşıt 9 / hedef 20).
+    # rank_products() ise `kredi`yi 1. kovaya alır — kırpmada hayatta kalır.
+    product_paths:
+      - /krediler/konut-kredileri
+      - /krediler/konut-kredileri/odeme-plani-turleri
+      - /krediler/tasit-kredileri
+      - /kampanyalar/konut-kredilerine-bahari-getiren-kampanya
+      - /kampanyalar/tasit-kredilerine-bahari-getiren-kampanya
+    # DARALTILDI: varsayılan ürün desenleri (kredi|hesap|kart...) yüzlerce
+    # ilgisiz sayfa getirip konut/taşıtı yine kırpmaya kurban ediyordu.
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan|/sss/'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/ajournal|/en/'
+    max_product_docs: 40
 
   - slug: yapi-kredi
     name: Yapı Kredi
@@ -233,6 +314,29 @@ banks:
       - /blog
       - /en/
     max_docs: 110
+    # 2026-08-04 KONUT/TAŞIT TURU. Kampanya turu konut/taşıt hub'larını
+    # gezdi (rapor: "konut-kredisi icin 2 sayfa", "tasit-kredisi icin 3
+    # sayfa") ama 1635 adaydan max_docs=110 kırpması sonucu korpusta Yapı
+    # Kredi'den 0 konut, 1 taşıt belgesi kaldı.
+    #
+    # ASIL BULGU: ürün detayları /kredi/konut-kredisi/ önekinde yaşıyor —
+    # /bireysel-bankacilik/krediler/konut-kredisi ise hub. İki önek AYRI
+    # (ikisi de 200). Taşıt tarafında alt ürünler
+    # /bireysel-bankacilik/krediler/tasit-kredisi/ altında.
+    product_paths:
+      - /kredi/konut-kredisi/
+      - /bireysel-bankacilik/krediler/konut-kredisi
+      - /bireysel-bankacilik/krediler/tasit-kredisi/
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum|karavan'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/|utm_source|basvuru-merkezi'
+    max_product_docs: 40
 
   - slug: garanti-bbva
     name: Garanti BBVA
@@ -266,6 +370,35 @@ banks:
       - engelsiz_ses
       - engelsiz_isaret_dili
     max_docs: 90
+    # 2026-08-04 KONUT/TAŞIT TURU. Kampanya turunda /krediler/konut-kredisi ve
+    # /krediler/tasit-kredisi yolları vardı ama korpusta Garanti'den TEK BİR
+    # konut/taşıt belgesi bile yok: max_docs=90 kırpması (354 aday) ürün
+    # sayfalarını `/kampanya`lı adaylara kaybetti (discover.rank kova sırası).
+    #
+    # Gerçek sitemap sayfalar-sitemap.xml'dir; /sitemap/sitemap.xml yalnızca
+    # bir sitemapindex (356 byte). Aşağıdaki yolların hepsi 200 doğrulandı.
+    # Sitemap ayrıca konut/taşıt adı taşıyan ~45 SÖZLEŞME PDF'i içeriyor;
+    # onlar ürün metni değil, product_exclude_patterns ile atılıyor.
+    product_paths:
+      - /krediler/konut-kredisi
+      - /krediler/mortgage-urunleri
+      - /krediler/konut-projeleri
+      - /krediler/tasit-kredisi
+      - /krediler/2-el-tasit-kredisi
+      - /krediler/elektrikli-hibrit-tasit-kredisi
+      - /isim-icin/krediler/tasit-kredisi
+      - /odemeler-ve-hizmetler/maas-musterilerine-ozel-mortgage
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/|engelsiz_ses|engelsiz_isaret_dili'
+      - 'halka-arz|gayrimenkul-sertifika'
+    max_product_docs: 40
 
   - slug: is-bankasi
     name: Türkiye İş Bankası
@@ -309,6 +442,31 @@ banks:
       - /en/
       - /ru/
     max_docs: 90
+    # 2026-08-04 KONUT/TAŞIT TURU. Önceki tahminler 404 döndü; gerçek yollar
+    # bankanın kendi sitemap'inden (https://www.isbank.com.tr/sitemap/sitemap.xml)
+    # çıkarıldı ve curl ile 200 doğrulandı.
+    #
+    # ASIL BULGU: İş Bankası konut kredisini "konut" adıyla YAYIMLAMIYOR —
+    # ürün sayfası /ev-kredisi. Bu yüzden /konut-kredisi tahminleri 404
+    # veriyordu. Site ayrıca DÜZ (flat): ürün yolları tek segmentli,
+    # /tr/bireysel/... hiyerarşisi yok. Konut tarafında TEK ürün sayfası var
+    # (/ev-kredisi); alt ağaç yok, uydurulmadı.
+    product_paths:
+      - /ev-kredisi
+      - /tasit-kredisi
+      - /aninda-tasit-kredisi
+      - /kampanyalar/tasit-kredisi-kampanyalari
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan|/sss/'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama|arac-bakim'
+      - '/blog|/en/|/ru/|/arama/|/fiyatoran/|/sube-'
+      - 'konut-hesabi|konut-paket'
+    max_product_docs: 40
 
   - slug: qnb
     name: QNB
@@ -344,6 +502,24 @@ banks:
       - /en/
       - /blog
     max_docs: 80
+    # 2026-08-04 KONUT/TAŞIT TURU. QNB korpusun en verimli konut kaynağı
+    # (6 konut + 2 taşıt), ama sitemap'te üç ürün sayfası daha var ve
+    # /kendim-icin/krediler/... önekindeki bu üçü kampanya turunda
+    # kırpılmıştı. Üçü de curl ile 200 doğrulandı.
+    product_paths:
+      - /kendim-icin/krediler/ev-almak-icin/a-ve-b-enerji-sinifi-konut-kredisi
+      - /kendim-icin/krediler/tasit-almak-icin/elektrikli-tasit-kredisi
+      - /kendim-icin/krediler/tasit-almak-icin/rehinsiz-tasit-kredisi
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan|/sss/'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|qnb-blog|/en/'
+    max_product_docs: 40
 
   - slug: denizbank
     name: DenizBank
@@ -362,6 +538,31 @@ banks:
       - /en/
       - /blog
     max_docs: 35
+    # 2026-08-04 KONUT/TAŞIT TURU. Önceki tahminler 404 döndü; gerçek yollar
+    # bankanın kendi sitemap'inden (https://www.denizbank.com/_sitemaps/sitemap.xml)
+    # çıkarıldı ve curl ile 200 doğrulandı.
+    #
+    # ASIL BULGU: DenizBank da "konut kredisi" adını KULLANMIYOR — ürün adı
+    # `mortgage-kredileri`. /krediler/bireysel-bankacilik/konut-kredisi
+    # tahminlerinin 404 vermesinin sebebi bu. `/hesap/konut` ise kredi değil
+    # BİRİKİM HESABI (Yatırım Ürünü); konut deseniyle gelmesin diye
+    # `/hesap/` hariç tutuldu.
+    product_paths:
+      - /krediler/bireysel-bankacilik/mortgage-kredileri
+      - /krediler/bireysel-bankacilik/kentsel-donusum-kredisi
+      - /krediler/bireysel-bankacilik/tasit-kredisi
+      - /krediler/bireysel-bankacilik/togga-ozel-tasit-kredisi
+      - /krediler/kobi-bankaciligi/ticari-tasit
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan|/sss/'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/|/hesap/|satilik-araclar'
+    max_product_docs: 40
 
   - slug: ing
     name: ING
@@ -391,6 +592,28 @@ banks:
       - /en/
       - /blog
     max_docs: 35
+    # 2026-08-04 KONUT/TAŞIT TURU. Kampanya turunda konut/taşıt yolları
+    # vardı ama korpusta ING'den konut/taşıt belgesi ÇIKMADI (metninde
+    # "konut kredisi" geçen tek belge var, o da menü boilerplate'i).
+    # Sitemap'te üç ek ürün/kampanya sayfası bulundu, hepsi 200 doğrulandı.
+    # Sitemap ayrıca 2015-2017 tarihli 6 konut/taşıt SÖZLEŞMESİ içeriyor
+    # (engelsiz-bankacilik-sozlesmeleri) — ürün metni değil, hariç tutuldu.
+    product_paths:
+      - /tr/sizin-icin/krediler/konut-kredisi
+      - /tr/sizin-icin/krediler/avantajli-konut-kredisi-kampanyasi
+      - /tr/sizin-icin/krediler/tasit-kredisi
+      - /tr/sizin-icin/krediler/otokoc-tasit-kredisi
+      - /tr/isiniz-icin/krediler/kobi-tasit-kredisi
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|sozlesmeleri|bilgi-formu|bilgilendirme-form|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/|/odemeler/'
+    max_product_docs: 40
 
   # sitemap YOK (robots.txt'te bildirilmemiş) -> yalnız gezinme yollarıyla.
   - slug: teb
@@ -417,3 +640,21 @@ banks:
       - /en/
       - /blog
     max_docs: 35
+    # 2026-08-04 KONUT/TAŞIT TURU. TEB'de SİTEMAP YOK (robots.txt bildirmiyor),
+    # bu yüzden ürün turu da yalnız aşağıdaki gezinme yollarıyla çalışır —
+    # sitemap yedeği devreye giremez. İki hub 200 doğrulandı. TEB zaten
+    # korpusun en iyi taşıt kaynağı (3 taşıt + 3 konut); bu tur alt sayfaları
+    # (varsa) toplar, yeni belge çıkmazsa bu bir başarısızlık DEĞİLDİR.
+    product_paths:
+      - /konut-kredisi/
+      - /tasit-kredisi/
+    product_patterns:
+      - 'konut|tasit|mortgage|ev-kredisi|ev-almak|kentsel-donusum'
+    product_exclude_patterns:
+      - '\.pdf$|/content/dam/|/Documents'
+      - 'sigorta|kasko|dask|deprem'
+      - 'sozlesme|bilgi-formu|bilgilendirme-form|tercih-formu|bilgi-talep|randevu'
+      - 'hesaplama|maliyet-tablosu|rehber|sozluk|haberler|sikca-sorulan'
+      - 'tasitlar-vergisi|tasit-tanima|tasitmatik|arac-kiralama'
+      - '/blog|/en/'
+    max_product_docs: 40

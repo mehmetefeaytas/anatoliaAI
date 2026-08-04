@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakifbank",
+  "source_url": "https://www.vakifbank.com.tr/tr/bireysel/krediler/tasit-kredileri/2-el-tasit-kredisi",
+  "scraped_at": "2026-08-04T14:26:14+00:00",
+  "content_hash": "eb72449b4512608d3eba1e2c4c762c5eda1f5715cae16480a1f5e6fb284aefb7",
+  "collection_method": "live",
+  "title": "2. El Taşıt Kredisi - Uygun Finansman Seçenekleri | VakıfBank",
+  "http_status": 200,
+  "raw_bytes": 199393,
+  "text_chars": 9705
+}

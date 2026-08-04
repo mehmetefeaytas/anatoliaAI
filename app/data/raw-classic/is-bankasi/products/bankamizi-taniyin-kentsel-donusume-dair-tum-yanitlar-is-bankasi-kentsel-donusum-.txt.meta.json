@@ -1,0 +1,11 @@
+{
+  "bank_slug": "is-bankasi",
+  "source_url": "https://www.isbank.com.tr/bankamizi-taniyin/kentsel-donusume-dair-tum-yanitlar-is-bankasi-kentsel-donusum-danismaninda",
+  "scraped_at": "2026-08-04T14:31:51+00:00",
+  "content_hash": "cbee4ba64c3f0d51596b15e0d40ab537a91162441b5fe214f201e1da2121a737",
+  "collection_method": "live",
+  "title": "Kentsel Dönüşüm’e dair tüm yanıtlar İş Bankası Kentsel Dönüşüm Danışmanı’nda | Türkiye İş Bankası A.Ş.",
+  "http_status": 200,
+  "raw_bytes": 177493,
+  "text_chars": 950
+}

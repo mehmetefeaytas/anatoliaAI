@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/yeni-evlilere-ozel-konut-kredisi",
+  "scraped_at": "2026-08-04T14:26:38+00:00",
+  "content_hash": "89118b9650f8398066fdf128ba7078e859eeb1ac0d4e1829b3bd61da0d26650f",
+  "collection_method": "live",
+  "title": "Yeni Evlilere Özel Konut Kredisi | Halkbank",
+  "http_status": 200,
+  "raw_bytes": 413561,
+  "text_chars": 3519
+}

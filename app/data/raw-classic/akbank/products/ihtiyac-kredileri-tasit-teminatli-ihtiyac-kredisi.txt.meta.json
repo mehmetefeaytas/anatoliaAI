@@ -1,0 +1,11 @@
+{
+  "bank_slug": "akbank",
+  "source_url": "https://www.akbank.com/krediler/ihtiyac-kredileri/tasit-teminatli-ihtiyac-kredisi",
+  "scraped_at": "2026-08-04T14:27:45+00:00",
+  "content_hash": "aaa8544e268b0c755bc42d5990dfa79af17139f3ab44e87dad2563cafbbef4c3",
+  "collection_method": "live",
+  "title": "Taşıt Teminatlı İhtiyaç Kredisi | Akbank",
+  "http_status": 200,
+  "raw_bytes": 264173,
+  "text_chars": 4823
+}

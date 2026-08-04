@@ -1,0 +1,11 @@
+{
+  "bank_slug": "denizbank",
+  "source_url": "https://www.denizbank.com/krediler/bireysel-bankacilik/mortgage-kredileri",
+  "scraped_at": "2026-08-04T14:33:13+00:00",
+  "content_hash": "c9caa91b7e21059346d2693685c8af3a6b5ed1cce52633a6fb8904150570ba48",
+  "collection_method": "live",
+  "title": "En Uygun Konut Kredisi & Ev Kredisi Faiz Oranları | DenizBank",
+  "http_status": 200,
+  "raw_bytes": 367445,
+  "text_chars": 72492
+}

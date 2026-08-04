@@ -1,0 +1,11 @@
+{
+  "bank_slug": "halkbank",
+  "source_url": "https://www.halkbank.com.tr/tr/bireysel/krediler/konut-kredileri/konut-finansmani",
+  "scraped_at": "2026-08-04T14:26:35+00:00",
+  "content_hash": "1c40e515e21795f1f12c3c1fcc2ffd3e730e9d18ea1f64d0c6c4140309b5d3da",
+  "collection_method": "live",
+  "title": "Konut Finansmanı",
+  "http_status": 200,
+  "raw_bytes": 399981,
+  "text_chars": 1077
+}

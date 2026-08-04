@@ -1,0 +1,11 @@
+{
+  "bank_slug": "teb",
+  "source_url": "https://www.teb.com.tr/togg-tasit-kredisi/",
+  "scraped_at": "2026-08-04T14:34:38+00:00",
+  "content_hash": "e79526543888a584bebf3aa08c0f78b45ba04253a358a32f37b196b172606dac",
+  "collection_method": "live",
+  "title": "Togg Taşıt Kredisi | Türk Ekonomi Bankası",
+  "http_status": 200,
+  "raw_bytes": 172995,
+  "text_chars": 5438
+}
