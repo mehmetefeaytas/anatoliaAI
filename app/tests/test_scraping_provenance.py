@@ -384,6 +384,54 @@ class TestProvenance(unittest.TestCase):
             self.assertEqual(meta["source_url"], doc.source_url)
             self.assertEqual(len(written), 2)
 
+    def _belge(self, url: str, metin: str, hash_: str) -> RawDoc:
+        return RawDoc(bank_slug="b", source_url=url, clean_text=metin,
+                      scraped_at=utc_now_iso(), content_hash=hash_,
+                      collection_method=METHOD_LIVE, title="X", http_status=200)
+
+    def test_ayri_kosumda_farkli_host_ezmez(self):
+        """ÖLÇÜLMÜŞ BOZULMA çiti: kart markası sitesi ana siteyi eziyordu.
+
+        `url_to_slug` yalnızca YOLU kullanıyor, alan adına bakmıyor. Banka
+        başına birden fazla host toplandığından iki host'un aynı yolu aynı
+        dosya adına düşüyor. `used` kümesi bunu yakalamıyordu çünkü yalnızca
+        TEK ÇAĞRI içinde yaşıyor — ayrı koşumlar sessizce üzerine yazıyordu.
+
+        Gerçek vaka: happycard.com.tr'nin listesi Türkiye Finans'ın ana
+        kampanya listesini ezdi (6506 -> 2777 karakter, source_url değişti).
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            save_docs([self._belge("https://ana.test/kampanyalar",
+                                   "ANA SITE " * 40, "aaa")], tmp)
+            save_docs([self._belge("https://kart.test/kampanyalar",
+                                   "KART SITESI " * 40, "bbb")], tmp)
+            live = Path(tmp) / "b" / "live"
+            self.assertTrue((live / "kampanyalar.txt").is_file())
+            self.assertTrue((live / "kampanyalar-2.txt").is_file(),
+                            "ikinci host'un belgesi ek almadı — üzerine yazıldı")
+            self.assertIn("ANA SITE",
+                          (live / "kampanyalar.txt").read_text("utf-8"),
+                          "ana sitenin metni EZİLDİ")
+            meta = json.loads(
+                (live / "kampanyalar.txt.meta.json").read_text("utf-8"))
+            self.assertEqual(meta["source_url"], "https://ana.test/kampanyalar")
+
+    def test_ayni_url_yeniden_hasatta_ad_degismez(self):
+        """Idempotanlık şart: dosya adı anotasyonun `doc_id` eşleşmesini taşıyor.
+
+        Bir turda dosya adı değişmesi 32 belgenin 10'unu geçersiz kılmıştı.
+        """
+        url = "https://ana.test/kampanyalar/konut"
+        with tempfile.TemporaryDirectory() as tmp:
+            save_docs([self._belge(url, "ilk hasat " * 30, "aaa")], tmp)
+            save_docs([self._belge(url, "guncel metin " * 30, "ccc")], tmp)
+            live = Path(tmp) / "b" / "live"
+            uretilen = sorted(p.name for p in live.glob("*.txt"))
+            self.assertEqual(uretilen, ["kampanyalar-konut.txt"],
+                             f"yeniden hasat yeni dosya adı üretti: {uretilen}")
+            self.assertIn("guncel metin",
+                          (live / "kampanyalar-konut.txt").read_text("utf-8"))
+
     def test_manual_dir_scaffolding_and_method_tagging(self):
         banks = load_banks(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:
