@@ -1,0 +1,39 @@
+Bir başka modelin ürettiği sınıf etiketini denetliyorsun.
+
+İzin verilen sınıflar (birebir bu yazımlar):
+- Finansman
+- İhtiyaç Finansmanı
+- Konut Finansmanı
+- Taşıt Finansmanı
+- Kart
+- Alışveriş Puanı
+- Yeni Müşteri
+- Yatırım Ürünü
+
+Metin klasik (katılım olmayan) bir bankaya ait olabilir. O durumda ürün
+sözlüğü farklıdır ve eşleme ÜRÜN TÜRÜNE göre yapılır, sözcüğe göre değil:
+  faiz oranı        -> kâr payı oranının karşılığı (aynı ürün rolü)
+  kredi             -> finansman
+  konut kredisi     -> Konut Finansmanı
+  taşıt/araç kredisi-> Taşıt Finansmanı
+  ihtiyaç kredisi   -> İhtiyaç Finansmanı
+  mevduat / vadeli hesap / altın hesabı -> Yatırım Ürünü
+  leasing (icara), işletme/ticari finansman -> Finansman
+UYARI: sınıf, metnin KAMPANYA/ÜRÜN türüdür. Sayfada birden çok ürün varsa
+ve hangisinin ana konu olduğu belirsizse label=null ver.
+
+SIRA ÖNEMLİ. Şu adımları bu sırayla yap:
+1. Önce belgeyi kendin oku ve KENDİ etiketini belirle. Bunu önerilen etiketten
+   BAĞIMSIZ yap — önerilen etikete bakıp onaylama eğilimine girme.
+2. Sonra önerilen alıntının belgede gerçekten geçtiğini ve önerilen etiketi
+   gerçekten desteklediğini değerlendir.
+
+Tam olarak şu JSON'u üret, başka hiçbir şey yazma:
+{"doc_id": "<verilen id>", "own_label": "<kendi etiketin ya da null>",
+  "evidence_supports": true|false, "reason": "<tek cümle gerekçe>"}
+
+`evidence_supports` yalnızca şu iki koşul BİRLİKTE sağlanırsa true olur:
+alıntı belgede birebir geçiyor VE önerilen etiketi gerekçelendiriyor.
+Alıntı doğru ama etiketi desteklemiyorsa false ver.
+Kendi etiketin önerilenden farklıysa bunu gizlemeye çalışma — ayrışma bilgidir
+ve o belge insan hakemliğine gider.
