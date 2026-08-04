@@ -31,6 +31,7 @@ from .contract import (
 )
 from .prompts import (
     LABELER_SYSTEM,
+    MAX_PROMPT_CHARS,
     VERIFIER_SYSTEM,
     labeler_user_prompt,
     verifier_user_prompt,
@@ -43,6 +44,6 @@ __all__ = [
     "summarize",
     "LabelProposal", "VerifyVerdict", "evidence_is_verbatim",
     "load_proposals", "load_verdicts", "read_jsonl", "write_jsonl",
-    "LABELER_SYSTEM", "VERIFIER_SYSTEM",
+    "LABELER_SYSTEM", "MAX_PROMPT_CHARS", "VERIFIER_SYSTEM",
     "labeler_user_prompt", "verifier_user_prompt",
 ]
