@@ -7,5 +7,8 @@
   "title": "404 | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 126761,
-  "text_chars": 247
+  "text_chars": 247,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "bos_sonuc_sayfasi",
+  "content_status": "kabuk"
 }

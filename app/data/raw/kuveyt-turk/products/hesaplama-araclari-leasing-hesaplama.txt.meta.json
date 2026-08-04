@@ -7,5 +7,7 @@
   "title": "Leasing Hesaplama | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 136088,
-  "text_chars": 347
+  "text_chars": 347,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

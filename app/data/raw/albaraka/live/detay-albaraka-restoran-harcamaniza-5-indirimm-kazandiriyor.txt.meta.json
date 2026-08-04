@@ -7,5 +7,7 @@
   "title": "Albaraka Restoran Harcamanıza %10 İndirim Kazandırıyor! | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 180530,
-  "text_chars": 2150
+  "text_chars": 2150,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

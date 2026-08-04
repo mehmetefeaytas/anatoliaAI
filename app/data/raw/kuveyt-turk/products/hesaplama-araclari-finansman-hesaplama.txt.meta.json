@@ -7,5 +7,7 @@
   "title": "Finansman Hesaplama | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 141888,
-  "text_chars": 858
+  "text_chars": 858,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -7,5 +7,7 @@
   "title": "Yüksek Kâr Payı Veren Katılım Hesabı | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 355298,
-  "text_chars": 5990
+  "text_chars": 5990,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

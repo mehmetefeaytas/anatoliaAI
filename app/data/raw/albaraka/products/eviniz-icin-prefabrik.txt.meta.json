@@ -7,5 +7,7 @@
   "title": "Prefabrik - Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 182151,
-  "text_chars": 515
+  "text_chars": 515,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

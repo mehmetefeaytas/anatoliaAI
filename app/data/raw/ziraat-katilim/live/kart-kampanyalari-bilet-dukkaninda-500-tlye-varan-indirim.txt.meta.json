@@ -7,5 +7,7 @@
   "title": "Bilet Dükkanı&#039;nda 500 TL&#039;ye varan İndirim | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 489439,
-  "text_chars": 2297
+  "text_chars": 2297,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

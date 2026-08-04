@@ -7,5 +7,7 @@
   "title": "Altın Katılma Hesabı | Bireysel | Vakıf Katılım",
   "http_status": 200,
   "raw_bytes": 153260,
-  "text_chars": 2872
+  "text_chars": 2872,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

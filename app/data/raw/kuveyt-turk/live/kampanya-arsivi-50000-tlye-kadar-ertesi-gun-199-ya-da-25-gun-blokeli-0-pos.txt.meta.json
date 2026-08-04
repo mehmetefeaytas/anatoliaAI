@@ -7,5 +7,7 @@
   "title": "50.000 TL’ye Kadar Ertesi Gün %1,99 ya da 25 Gün Blokeli %0 POS | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 130251,
-  "text_chars": 1311
+  "text_chars": 1311,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

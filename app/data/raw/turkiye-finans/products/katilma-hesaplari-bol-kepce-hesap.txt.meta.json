@@ -7,5 +7,7 @@
   "title": "Vadeli Yatırım Hesabı: Bol Kepçe Hesap | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 123986,
-  "text_chars": 9685
+  "text_chars": 9685,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -7,5 +7,7 @@
   "title": "Hayat Plus Kredi Kartı Ayrıcalıkları | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 292289,
-  "text_chars": 1448
+  "text_chars": 1448,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

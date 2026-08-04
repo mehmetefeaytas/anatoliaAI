@@ -7,5 +7,7 @@
   "title": "TFX Target: Yurt İçi / Dışı Fon Alım Satımı - Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 119782,
-  "text_chars": 12787
+  "text_chars": 12787,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

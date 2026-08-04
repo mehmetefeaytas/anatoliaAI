@@ -7,5 +7,7 @@
   "title": "Sabiha Gökçen Havalimanı - Hızlı Geçiş Kampanyası | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 180029,
-  "text_chars": 1591
+  "text_chars": 1591,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

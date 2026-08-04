@@ -7,5 +7,7 @@
   "title": "Lukoil&#039;de %3 İndirim | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 485033,
-  "text_chars": 1603
+  "text_chars": 1603,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }
