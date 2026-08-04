@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/dandr-harcamalarinizda-worlde-ozel-7-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:33+00:00",
+  "content_hash": "8e2bd39dc1934ed52dccd31474261e0673fa8c0b4b7002ae0d8a2dd73772225e",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184369,
+  "text_chars": 1818
+}

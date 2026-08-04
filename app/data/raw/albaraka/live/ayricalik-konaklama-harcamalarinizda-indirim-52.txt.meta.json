@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/konaklama-harcamalarinizda-indirim-52",
+  "scraped_at": "2026-08-04T21:01:48+00:00",
+  "content_hash": "5cccab3432ec978a673d953f9c5b1f8f96964473f6972f41f6baf38f7c7ca1cd",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 34343,
+  "text_chars": 1888
+}
