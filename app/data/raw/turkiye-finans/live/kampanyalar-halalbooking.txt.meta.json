@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/Halalbooking.aspx",
+  "scraped_at": "2026-08-04T21:02:50+00:00",
+  "content_hash": "e09689b79d322836e79fd603d4509990aba50c57516f6e79d18d621d3b372694",
+  "collection_method": "browser",
+  "title": "Happy Bonus Kartınıza Halalbooking Ayrıcalığı",
+  "http_status": 200,
+  "raw_bytes": 68325,
+  "text_chars": 3199
+}

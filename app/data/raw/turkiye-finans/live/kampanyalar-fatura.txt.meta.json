@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/fatura.aspx",
+  "scraped_at": "2026-08-04T21:02:47+00:00",
+  "content_hash": "e840fc3b6e84c8c16b7c67524d425fe5b76457f474ab2e14bd12ded7bd91c574",
+  "collection_method": "browser",
+  "title": "Faturanıza 3 Aya Kadar Kâr Paysız Taksit!",
+  "http_status": 200,
+  "raw_bytes": 68184,
+  "text_chars": 3334
+}

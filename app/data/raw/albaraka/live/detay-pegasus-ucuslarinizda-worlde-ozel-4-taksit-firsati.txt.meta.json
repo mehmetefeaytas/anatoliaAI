@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/pegasus-ucuslarinizda-worlde-ozel-4-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:37+00:00",
+  "content_hash": "486e1d8b09512b3e9a9b94b116b8a14c39b9e9cb7944c993da8f673c63cd8a07",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180662,
+  "text_chars": 1647
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/kigili-ve-abdullah-kigili-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:03+00:00",
+  "content_hash": "4647b9f294bc131c714f5212f3d3a3f99ece311db2c7d29b5d87da32faf9909f",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184483,
+  "text_chars": 1860
+}

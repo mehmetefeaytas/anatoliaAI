@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/vatan-bilgisayar-ile-vade-farksiz-3-taksit-firsati-2598",
+  "scraped_at": "2026-08-04T20:58:50+00:00",
+  "content_hash": "2996c027a1e3d5be0a0ecba47a10b8c89cb470b23cf9e040b081add1f8eb2707",
+  "collection_method": "live",
+  "title": "Vatan Bilgisayar’da Vade Farksız 3 Taksit Fırsatı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 19068,
+  "text_chars": 1595
+}

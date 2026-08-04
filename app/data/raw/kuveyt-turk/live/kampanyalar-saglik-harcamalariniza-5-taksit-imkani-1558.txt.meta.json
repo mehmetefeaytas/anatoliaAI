@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/saglik-harcamalariniza-5-taksit-imkani-1558",
+  "scraped_at": "2026-08-04T20:58:56+00:00",
+  "content_hash": "45963b843e91bf5180a78dcad6ec0769ba9f8efd85a8c9f2c7898251c88a9d31",
+  "collection_method": "live",
+  "title": "Sağlık Harcamalarınıza 5 Taksit İmkanı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 19348,
+  "text_chars": 1839
+}

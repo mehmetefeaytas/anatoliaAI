@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/giyim-ve-kozmetik-harcamalarinizda-1000-tlye-varan-worldpuan",
+  "scraped_at": "2026-08-04T21:00:00+00:00",
+  "content_hash": "70e9aa9d60a13d4262cef823ab3064c86b42f9d0cdb569c69db1a350c88bccf9",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184038,
+  "text_chars": 4403
+}

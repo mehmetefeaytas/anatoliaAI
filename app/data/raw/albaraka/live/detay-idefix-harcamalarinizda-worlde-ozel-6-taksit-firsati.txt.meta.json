@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/idefix-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:30+00:00",
+  "content_hash": "9622b0e9f40e9495d9f824bda0059b3b45815a620398fec23021c959c9f1de3e",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188140,
+  "text_chars": 2151
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/trendyol-harcamalarinizda-worlde-ozel-3-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:33+00:00",
+  "content_hash": "2c8525134b21808e37c1a39474e83cc736eb4ee0494391dca9ae626115aa04c8",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188136,
+  "text_chars": 2128
+}

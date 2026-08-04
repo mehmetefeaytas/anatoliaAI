@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/saglam-karttan-mobilya-yapi-harcamalariniza-altin-firsat-2062",
+  "scraped_at": "2026-08-04T20:58:47+00:00",
+  "content_hash": "604046bc7b9e601230940b8860af3927f9ad34fcb7fc01eb149d070867b17f43",
+  "collection_method": "live",
+  "title": "Mobilya Harcamalarınıza 500 TL Altın Puan! | Kampanyalar | Sağlam Kart Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 19424,
+  "text_chars": 1697
+}

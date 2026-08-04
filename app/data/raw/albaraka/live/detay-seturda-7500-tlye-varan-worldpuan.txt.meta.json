@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/seturda-7500-tlye-varan-worldpuan",
+  "scraped_at": "2026-08-04T21:00:15+00:00",
+  "content_hash": "368c84f8309694e97b6542a05cca1f291d65d769e5e06779df6323619b8083d6",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184461,
+  "text_chars": 4897
+}
