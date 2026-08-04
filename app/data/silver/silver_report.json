@@ -1,0 +1,34 @@
+{
+  "toplam": 502,
+  "durum": {
+    "silver": 376,
+    "reject": 83,
+    "queue": 43
+  },
+  "guven": {
+    "orta": 188,
+    "yuksek": 188
+  },
+  "gerekce": {
+    "iki_llm_ayni": 188,
+    "taksonomi_disi": 82,
+    "uc_oy_ayni": 188,
+    "kanit_desteklemiyor": 22,
+    "etiketler_ayristi": 21,
+    "kanit_dogrulanmadi": 1
+  },
+  "sinif_dagilimi": {
+    "İhtiyaç Finansmanı": 32,
+    "Yeni Müşteri": 41,
+    "Alışveriş Puanı": 72,
+    "Finansman": 29,
+    "Kart": 134,
+    "Yatırım Ürünü": 46,
+    "Konut Finansmanı": 13,
+    "Taşıt Finansmanı": 9
+  },
+  "sinif_dengesi_uyarilari": [
+    "Konut Finansmanı: 13/20 — eksik",
+    "Taşıt Finansmanı: 9/20 — eksik"
+  ]
+}

@@ -1,0 +1,38 @@
+Türkçe banka kampanya metinlerini 8 sınıftan birine ayırıyorsun.
+
+İzin verilen sınıflar (birebir bu yazımlar, başka hiçbir şey):
+- Finansman
+- İhtiyaç Finansmanı
+- Konut Finansmanı
+- Taşıt Finansmanı
+- Kart
+- Alışveriş Puanı
+- Yeni Müşteri
+- Yatırım Ürünü
+
+Metin klasik (katılım olmayan) bir bankaya ait olabilir. O durumda ürün
+sözlüğü farklıdır ve eşleme ÜRÜN TÜRÜNE göre yapılır, sözcüğe göre değil:
+  faiz oranı        -> kâr payı oranının karşılığı (aynı ürün rolü)
+  kredi             -> finansman
+  konut kredisi     -> Konut Finansmanı
+  taşıt/araç kredisi-> Taşıt Finansmanı
+  ihtiyaç kredisi   -> İhtiyaç Finansmanı
+  mevduat / vadeli hesap / altın hesabı -> Yatırım Ürünü
+  leasing (icara), işletme/ticari finansman -> Finansman
+UYARI: sınıf, metnin KAMPANYA/ÜRÜN türüdür. Sayfada birden çok ürün varsa
+ve hangisinin ana konu olduğu belirsizse label=null ver.
+
+Her belge için tam olarak şu JSON'u üret, başka hiçbir şey yazma:
+{"doc_id": "<verilen id>", "label": "<8 sınıftan biri ya da null>",
+  "evidence": "<belgeden BİREBİR kopyalanmış, sınıfı gerekçelendiren alıntı>",
+  "confidence": <0.0-1.0>}
+
+Kurallar:
+1. `evidence` belgeden BİREBİR kopyalanacak. Özetleme, yeniden yazma,
+   düzeltme yapma. En az 12 karakter olsun ve sınıfı gerçekten gerekçelendirsin.
+   Uydurulmuş alıntı mekanik olarak yakalanır ve kayıt atılır.
+2. Sınıf belirsizse, sayfada birden çok ürün ana konu ise, ya da metin bir
+   ürün/kampanya sayfası değilse (çerez politikası, KVKK, iletişim, genel
+   kurumsal sayfa): label=null, evidence="", confidence=0.0.
+3. Emin olmadığın etiketi yazmak, boş bırakmaktan DAHA KÖTÜDÜR. Bu veri bir
+   sınıflandırıcı eğitecek; yanlış etiket kalıcı hata öğretir.
