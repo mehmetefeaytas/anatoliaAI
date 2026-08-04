@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-hepsiburadada-pesin-fiyatina-9-aya-varan-taksit-firsati",
-  "scraped_at": "2026-08-03T16:58:13+00:00",
-  "content_hash": "8dccfb678b5f7ae6c9f3aa733f51221692647146e3153d1119fc390f04851e4b",
+  "scraped_at": "2026-07-30T18:44:03+00:00",
+  "content_hash": "8238303f33fd3ea8badc7dd2709019dda805c446e92916a2c473c8fc52641c03",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 163828,
-  "text_chars": 287
+  "raw_bytes": 167351,
+  "text_chars": 2510,
+  "recovered_from": "eb67e65",
+  "recovery_note": "2026-08-03 yeniden hasadi bu sayfada kabuk dondurdu (306 krkt); metin ve provenance Temmuz surumunden birlikte geri alindi"
 }

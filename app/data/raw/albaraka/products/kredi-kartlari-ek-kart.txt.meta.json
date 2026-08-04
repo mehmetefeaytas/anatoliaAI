@@ -7,5 +7,7 @@
   "title": "Ek Kart - Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 186603,
-  "text_chars": 3384
+  "text_chars": 3384,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

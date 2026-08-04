@@ -7,5 +7,7 @@
   "title": "D&#246;viz Transferi (SWIFT) | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165203,
-  "text_chars": 876
+  "text_chars": 876,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -7,5 +7,7 @@
   "title": "Kartlar | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 285407,
-  "text_chars": 522
+  "text_chars": 522,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

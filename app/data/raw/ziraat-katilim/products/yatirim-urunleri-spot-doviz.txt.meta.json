@@ -7,5 +7,7 @@
   "title": "Spot Döviz | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 471494,
-  "text_chars": 266
+  "text_chars": 266,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

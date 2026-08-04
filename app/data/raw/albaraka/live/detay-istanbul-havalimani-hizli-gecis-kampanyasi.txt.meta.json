@@ -7,5 +7,7 @@
   "title": "İstanbul Havalimanı - Hızlı Geçiş Kampanyası | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 179943,
-  "text_chars": 1559
+  "text_chars": 1559,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

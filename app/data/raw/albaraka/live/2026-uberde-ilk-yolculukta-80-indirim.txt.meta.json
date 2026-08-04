@@ -7,5 +7,7 @@
   "title": "Uber'de İlk Yolculukta %80 İndirim! | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 180909,
-  "text_chars": 2215
+  "text_chars": 2215,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

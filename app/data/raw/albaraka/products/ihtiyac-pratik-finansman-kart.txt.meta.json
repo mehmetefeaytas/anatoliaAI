@@ -7,5 +7,7 @@
   "title": "Pratik Finansman Kart | Teknoloji, Sağlık ve Alışveriş Harcamaları",
   "http_status": 200,
   "raw_bytes": 245735,
-  "text_chars": 9733
+  "text_chars": 9733,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

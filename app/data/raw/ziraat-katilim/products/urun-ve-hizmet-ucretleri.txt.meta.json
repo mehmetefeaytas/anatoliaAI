@@ -7,5 +7,7 @@
   "title": "Ürün ve Hizmet Ücretleri | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 481996,
-  "text_chars": 406
+  "text_chars": 406,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi"
 }

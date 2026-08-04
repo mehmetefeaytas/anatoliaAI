@@ -7,5 +7,7 @@
   "title": "Business Plus’tan 1000 TL indirim fırsatı! | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 129987,
-  "text_chars": 701
+  "text_chars": 701,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

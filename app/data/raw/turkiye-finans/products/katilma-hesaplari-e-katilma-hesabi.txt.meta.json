@@ -7,5 +7,7 @@
   "title": "Mobilden Vadeli Hesap Aç: e-Katılma Hesabı | Türkiye Finans",
   "http_status": 200,
   "raw_bytes": 116018,
-  "text_chars": 10307
+  "text_chars": 10307,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

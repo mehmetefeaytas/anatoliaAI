@@ -1,11 +1,13 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-damat-tweende-3000-tl-parafpara",
-  "scraped_at": "2026-08-03T16:57:43+00:00",
-  "content_hash": "947d8c61aebd930c39baa5675b62b66bf385674cd4e1d93e912c32578a735db5",
+  "scraped_at": "2026-07-30T18:43:36+00:00",
+  "content_hash": "38ee96cbfdc53ff5fa516d24acd54fec8849bd3af0c2666fab7952ae21fca1a9",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 163756,
-  "text_chars": 287
+  "raw_bytes": 168551,
+  "text_chars": 3209,
+  "recovered_from": "eb67e65",
+  "recovery_note": "2026-08-03 yeniden hasadi bu sayfada kabuk dondurdu (306 krkt); metin ve provenance Temmuz surumunden birlikte geri alindi"
 }

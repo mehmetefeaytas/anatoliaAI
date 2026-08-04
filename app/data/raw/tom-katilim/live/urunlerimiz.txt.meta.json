@@ -7,5 +7,7 @@
   "title": "Ürünlerimiz | TOM Bank",
   "http_status": 200,
   "raw_bytes": 29309,
-  "text_chars": 7067
+  "text_chars": 7067,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

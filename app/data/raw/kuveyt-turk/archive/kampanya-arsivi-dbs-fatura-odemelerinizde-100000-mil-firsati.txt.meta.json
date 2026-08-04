@@ -8,5 +8,8 @@
   "http_status": 200,
   "raw_bytes": 131166,
   "text_chars": 1396,
-  "campaign_status": "expired"
+  "campaign_status": "expired",
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk"
 }

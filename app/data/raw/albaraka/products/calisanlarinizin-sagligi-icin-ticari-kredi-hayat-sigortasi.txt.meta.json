@@ -7,5 +7,7 @@
   "title": "Ticari Kredi Hayat Sigortası - Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 181880,
-  "text_chars": 733
+  "text_chars": 733,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

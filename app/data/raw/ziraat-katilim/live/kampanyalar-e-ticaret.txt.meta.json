@@ -7,5 +7,7 @@
   "title": "E-Ticaret | Ziraat Katılım",
   "http_status": 200,
   "raw_bytes": 505244,
-  "text_chars": 2454
+  "text_chars": 2454,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

@@ -7,5 +7,7 @@
   "title": "Leasing'e Konu Ürünler ve KDV Oranları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 135775,
-  "text_chars": 2407
+  "text_chars": 2407,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

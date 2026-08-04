@@ -7,5 +7,7 @@
   "title": "bilet.com Uçak Bileti Kampanyası | Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 180856,
-  "text_chars": 2082
+  "text_chars": 2082,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }

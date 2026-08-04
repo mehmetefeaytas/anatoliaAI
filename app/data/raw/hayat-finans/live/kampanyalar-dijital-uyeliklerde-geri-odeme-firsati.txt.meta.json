@@ -7,5 +7,7 @@
   "title": "Biz Kart Dijital Üyelikler | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 297366,
-  "text_chars": 2784
+  "text_chars": 2784,
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok"
 }
