@@ -841,8 +841,14 @@ _PUAN_KROM_RE = re.compile(
     re.IGNORECASE)
 
 # Sayı bir puan/para birimine KOMŞU olmalı; birim opsiyonel değil.
+#
+# Sayı RAKAMLA BİTMEK zorunda (`\d[\d.,]*\d|\d`). Ölçülen yanlış pozitif:
+# sözleşme metnindeki "24. Puan Uygulaması 24.1..." madde numarası. Eski
+# `[\d.,]*` sonu serbest bıraktığı için "24." yutuluyor, ardından `\s*` boşluğu
+# yiyor ve madde numarası 24 puanlık bir ödül sanılıyordu. Rakamla bitme şartı
+# `1.500 TL` gibi binlik ayıraçlı tutarları bozmaz — orada nokta sayının içinde.
 _PUAN_SAYI_RE = re.compile(
-    r"(\d[\d.,]*)\s*(?:adet\s*)?"
+    r"(\d[\d.,]*\d|\d)\s*(?:adet\s*)?"
     r"(?:chip[\s-]*para|parafpara|maximiles|worldpuan|puan|tl|₺)",
     re.IGNORECASE)
 
