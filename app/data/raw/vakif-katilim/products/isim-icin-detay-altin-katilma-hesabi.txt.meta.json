@@ -8,7 +8,8 @@
   "http_status": 200,
   "raw_bytes": 127876,
   "text_chars": 201,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "cerceve",
-  "content_status": "kabuk"
+  "content_status": "kabuk",
+  "recollection_attempt": "2026-08-04",
+  "recollection_method": "browser (Playwright, src/scraping/fetcher.BrowserFetcher)",
+  "recollection_result": "kurtarilamadi: tarayici render'i statik cekimle ayni metni verdi (201 -> 201 krkt); canli sayfada govde icerigi YOK (yalnizca baslik + kirinti yolu). Akordeon/sekme tiklamasi da icerik uretmedi."
 }

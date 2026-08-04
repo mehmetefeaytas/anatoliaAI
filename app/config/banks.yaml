@@ -44,6 +44,10 @@ banks:
   - slug: kuveyt-turk
     name: Kuveyt Türk
     website_url: https://www.kuveytturk.com.tr
+    # `js` DENENDİ ve ÖLÇÜLDÜ (2026-08-04) — bkz. vakif-katilim'daki not.
+    # 21 "kabuk" şüphelisinin TAMAMI yanlış pozitifti: hepsi zaten gerçek
+    # kampanya metni taşıyor (ör. kampanya-arsivi-kampusten-ucuran-firsat
+    # 1182 krkt, tam koşul metniyle). Tarayıcı metni bayt-aynı çıktı.
     scrape_mode: static
     campaign_paths:
       - /kampanyalar
@@ -220,6 +224,13 @@ banks:
   - slug: vakif-katilim
     name: Vakıf Katılım
     website_url: https://www.vakifkatilim.com.tr
+    # `js` DENENDİ ve ÖLÇÜLDÜ (2026-08-04) — `static` KASITLI olarak korunuyor.
+    # 41 "kabuk" şüphelisi Playwright ile yeniden hasat edildi: metin
+    # 33'ünde BAYT-AYNI çıktı, hiçbirinde içerik artmadı. Bu sitelerin
+    # gövdesi sunucuda render ediliyor; kısa kalan sayfalarda içerik CANLI
+    # SİTEDE de yok (yalnızca başlık + kırıntı yolu). `js`'e çevirmek hasadı
+    # ~10x yavaşlatır, tek karakter kazandırmaz. Ayrıntı: aynı tarihli
+    # data/raw/**/*.meta.json `recollection_result` alanları.
     scrape_mode: static
     # 2026-08-04: /tr/kendim-icin/kampanyalar/mevcut-kampanyalar yeniden
     # doğrulandı (HTTP 200) — zaten mevcut, tekrar eklenmedi.
@@ -239,6 +250,10 @@ banks:
   - slug: turkiye-emlak-katilim
     name: Türkiye Emlak Katılım
     website_url: https://www.emlakkatilim.com.tr
+    # `js` DENENDİ ve ÖLÇÜLDÜ (2026-08-04) — bkz. vakif-katilim'daki not.
+    # 39 şüphelinin 38'inde tarayıcı metni statikle BAYT-AYNI. Süresi dolan
+    # kampanya sayfaları (ör. /kampanya/paraf-ile-pttavmcomda-...) canlı
+    # sitede gövdesiz yayında kalıyor; `js` bunu kurtarmıyor.
     scrape_mode: static
     # 2026-08-04: /tr/bireysel/kampanyalar yeniden doğrulandı (HTTP 200) —
     # zaten mevcut, tekrar eklenmedi.

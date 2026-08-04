@@ -8,6 +8,8 @@
   "http_status": 200,
   "raw_bytes": 131425,
   "text_chars": 430,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "content_status": "kabuk",
+  "recollection_attempt": "2026-08-04",
+  "recollection_method": "browser (Playwright, src/scraping/fetcher.BrowserFetcher)",
+  "recollection_result": "kurtarilamadi: tarayici render'i statik cekimle ayni metni verdi (430 -> 430 krkt); canli sayfada govde icerigi YOK (yalnizca baslik + kirinti yolu). Akordeon/sekme tiklamasi da icerik uretmedi."
 }
