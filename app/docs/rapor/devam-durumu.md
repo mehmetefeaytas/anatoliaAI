@@ -14,15 +14,42 @@ Teslime kalan: **22 gün** (son tarih 26 Ağustos 2026).
 | Ölçüm | Değer | Komut |
 |---|---:|---|
 | `data/raw` `.txt` belge | 1684 | `find data/raw -name '*.txt' \| wc -l` |
-| ...600 karakterden kısa | 52 | aşağıdaki ölçüm betiği |
+| ...300 karakterden kısa | 10 | aşağıdaki ölçüm betiği |
+| ...600 karakterden kısa | 52 | aynı |
+| ...1024 karakterden kısa | 226 | aynı |
 | ...`content_status: kabuk` işaretli | 74 | aynı |
 | `data/raw-classic` `.txt` belge | 652 | `find data/raw-classic -name '*.txt' \| wc -l` |
 | Gümüş etiket (`silver.jsonl`) | 416 | `wc -l data/silver/silver.jsonl` |
 
-Kabuk belge sayısı bu oturumda **153 → 101 → 52** indi (14'ü git geçmişinden
-kurtarıldı, kalanı tarayıcı hasadıyla). Bu bir **regresyon onarımıydı**: Ağustos
-yeniden-hasadı mevcut 14 belgeyi bozmuştu (`eb67e65` 3232 bayt vs `e05bc83`
-306 bayt).
+### Kabuk belge dosyası — KAPANDI, ama kurtarmayla değil teşhisle
+
+İki ayrı şey karıştırılmasın:
+
+**(a) Gerçek bir regresyon vardı ve onarıldı.** Ağustos yeniden-hasadı mevcut
+14 belgeyi bozmuştu (`eb67e65` 3232 bayt → `e05bc83` 306 bayt). Bunlar git
+geçmişinden `.txt` + `.meta.json` **birlikte** geri alındı (`3fb361d`), yoksa
+`content_hash` tutarsız kalırdı.
+
+**(b) Kalan kabukların çoğu kurtarılabilir DEĞİL.** 101 kabuk şüphelisi
+(vakif-katilim 21 + 41 + paraf 39) Playwright ile yeniden hasat edildi. Ölçülen
+sonuç:
+
+- Bir kısmı **yanlış pozitifti** — zaten gerçek kampanya metni taşıyorlardı
+  (ör. `kampanya-arsivi-kampusten-ucuran-firsat`, 1182 krkt, tam koşul metniyle).
+- Geri kalanında tarayıcı metni statik çekimle **bayt-aynı** çıktı (33/41 ve
+  38/39). Akordeon/sekme tıklaması da içerik üretmedi.
+- Sebep: bu sayfaların gövdesi **canlı sitede de yok**. Süresi dolan kampanya
+  sayfaları başlık + kırıntı yolu olarak yayında kalıyor.
+
+**Sonuç ve karar:** bu bir çıkarım hatası değil, kaynağın kendi durumu.
+`scrape_mode: static` **kasıtlı olarak korunuyor** — `js`'e çevirmek hasadı ~10x
+yavaşlatır ve tek karakter kazandırmaz. Gerekçe `config/banks.yaml` içine
+banka banka yazıldı, kanıt ise ilgili `.meta.json` dosyalarının
+`recollection_result` alanlarında. 74 belge `content_status: kabuk` ile
+**işaretli tutuluyor, silinmiyor** (CLAUDE.md: silme yok).
+
+> Bu satırlar "denendi ve olmadı" bilgisini taşıdığı için değerli: yoksa bir
+> sonraki oturum aynı 101 sayfayı tekrar tarayıcıyla hasat etmeye kalkar.
 
 Ölçüm betiği (aynı sayıları üretmeli, yoksa bir şey değişmiş):
 
@@ -79,10 +106,13 @@ hiçbirinde kullanılmadı — eşzamanlı yazan agent'ların yarım işini süp
 ### Ağ gerektirenler (önce, çünkü kritik yolu bunlar tıkıyor)
 
 1. Üç devam notunu oku, kaldığı URL listesinden hasadı sürdür.
-2. Kalan 52 kabuk belge → tarayıcı hasadı.
+2. ~~Kabuk belgeleri yeniden hasat et~~ — **YAPMA, kapandı.** Yukarıdaki (b)
+   maddesi: 101 şüpheli denetlendi, kurtarılabilir değil. Tekrar denemek boşa
+   ~10x yavaş bir hasat turu demek.
 3. Konut 13→20, Taşıt 9→20 hasadı, **ardından etiketleme koşusu** (üç oylu).
 4. `vakifkart.com.tr` + Kuveyt Türk / Türkiye Finans / Vakıf Katılım kart markası
-   alanlarını bul (kuyruk maddesi 4).
+   alanlarını bul (kuyruk maddesi 4). **Hiç başlanmadı** — ağ kesildiği için
+   tarayıcı işi başlatılmadı.
 
 ### Ağ gerektirmeyenler (paralel yürüyebilir)
 
