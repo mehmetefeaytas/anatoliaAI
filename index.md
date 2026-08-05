@@ -45,6 +45,7 @@ Son güncelleme: 2026-06-16.
 - [[demo-onceden-doldurulmus-db]] — demo önceden doldurulmuş DB'den
 - [[zor-anlama-vakalari-merkezi]] — zor anlama vakaları + gold alt kümesi
 - [[daraltilmis-yenilikcilik-hedefleri]] — yenilikçilik 3 hedefe daraltıldı
+- [[masrafsizlik-celiskisi-kapsam-testi]] — masrafsızlık çelişkisi kapsam testidir, ücret varlığı testi değil
 
 ## Sorunlar
 - [[standart-veri-formati-eksikligi]] — standart format yok
