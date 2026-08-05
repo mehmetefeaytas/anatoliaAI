@@ -148,6 +148,37 @@ değil; ayrı bir çapraz-kontrol işi.
 metnindeki masrafsızlık iddiasını `rates/*.jsonl` ve ücret tarifesi
 belgelerindeki tahsis ücreti kayıtlarıyla karşılaştırmak.
 
+### KURULDU — `scripts/crosscheck_fees.py` (2026-08-05)
+
+Bu açık uç kapandı. Ölçülen kapsam: **5 bankadan 33 ilan edilmiş tahsis ücreti
+kaydı**, 7 iddia × ürün satırı.
+
+Kurulum sırasında beklenmedik bir şey çıktı ve tasarımı değiştirdi: **"tarifede
+ücret var" tek başına çelişki değil.** 33 kaydın **30'u tam olarak %0,5** — bu
+BDDK'nın konut finansmanı üst sınırı ve sektörde fiilen tek fiyat. Yani her
+"Dosya Masrafsız Konut Finansmanı" kampanyası tarifeyle "çelişiyor" görünür;
+oysa çoğu meşru bir **muafiyettir** (standart %0,5'tir, bu kampanyada alınmaz).
+Ayırt edici olan **kapsam**:
+
+| sonuç | adet | anlamı |
+|---|---:|---|
+| `kosullu_muafiyet` | 6 | muafiyet koşula bağlı (yeni müşteri, tarih) |
+| `kapsamsiz_iddia` | 1 | tanınan türde koşul yok → insan hakemliği |
+| `tutarli` / `tarife_yok` | 0 | — |
+
+Ürün açısından asıl çıktı `dashboard_ifadesi` kolonu: karşılaştırma tablosunda
+"masrafsız" yazmak **yanıltıcı**; doğrusu *"yeni müşterilere kapsamında
+masrafsız; aksi hâlde %0,5"*. Bu, §17'nin adil kıyas kuralının ücretlere
+uygulanmış hâli.
+
+İlk koşu **beş** yanlış pozitif üretti (kâr payı oranını tahsis ücreti sanmak,
+finansman tutarı kolonunu ücret sanmak, rehin ücretini tahsis sanmak, uzak ürün
+bahsi, "masrafsız bankacılık"). Beşi de kapıya çevrildi ve
+`tests/test_crosscheck_fees.py` ile çitlendi.
+
+Yan bulgu: Türkiye Emlak Katılım taşıt tahsis ücretini bir formda %0,5,
+diğerinde %0,1 ilan ediyor — bankanın kendi içinde tutarsızlığı.
+
 ---
 
 ## Tekrar üretim
@@ -171,9 +202,17 @@ belgelerindeki tahsis ücreti kayıtlarıyla karşılaştırmak.
 1. `round2_zor_vaka.csv` anote edilir → gold zor-vaka alt kümesi doğar.
 2. Ablasyon `--split hard` ile tekrar koşulur; §16'nın istediği "hibrit zor
    vakada kazanıyor mu" sorusu **ilk kez** cevaplanabilir hâle gelir.
-3. Ücret çapraz-kontrolü ayrı iş olarak açılır (yukarıdaki `celiskili` bulgusu).
+3. ~~Ücret çapraz-kontrolü ayrı iş olarak açılır.~~ **Yapıldı** —
+   `scripts/crosscheck_fees.py`, yukarıdaki "KURULDU" bölümüne bakın.
+4. `dashboard_ifadesi` kolonu dashboard'un karşılaştırma tablosuna bağlanır.
+   Şu an bir CSV kolonu; ürüne dönüşmesi için `src/comparison/` tarafına
+   girmesi gerekiyor.
+5. `tarife_yok` çıkan banka/ürün çiftleri için ücret tarifesi hasat edilir.
+   Şu an 0 satır ama korpus büyüdükçe çıkacak; kapsamı büyütmenin yolu hasat,
+   desen gevşetmek değil.
 
 ## Related
 - [[ablasyon]] — §8-5 zor-vaka iddiasının neden ölçülemediği
 - [[_bicim-karti]] — paylaşım oranı kuralı (`absent` + `#terminoloji`)
 - [[_hakem-turu-01-finansman-tutari]] — gold hatası / sözleşme boşluğu ayrımı
+- `scripts/crosscheck_fees.py` — `celiskili` bulgusunun ürüne dönüşmüş hâli

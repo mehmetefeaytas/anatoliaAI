@@ -22,6 +22,11 @@ karşılaştırılabilir hale getirilmesi (şartname 5.7, s.9). Çözümün **i�
 
 - Sonuçlar **tablo veya liste** biçiminde sunulabilir; [[dashboard]] ve
   [[chatbot]] üzerinden kullanıcıya verilir.
+- **"En Düşük Masraf" kriteri tek sayıya indirilemez.** Ölçüldü: bankaların ilan
+  ettiği tahsis ücreti kayıtlarının 30/33'ü tam olarak %0,5 (BDDK üst sınırı),
+  ama kampanyalar bundan **koşullu** muafiyet veriyor. Tabloda "masrafsız"
+  yazmak koşulu sağlamayan kullanıcıyı yanıltır; doğru gösterim koşullu
+  ifadedir → [[masrafsizlik-celiskisi-kapsam-testi]].
 - Doğru karşılaştırma, [[veri-normalizasyonu]] ve
   [[yapilandirilmis-veri-formati]]'na bağımlıdır.
 - [[manuel-karsilastirma-zorlugu]] sorununun çözümüdür.
@@ -35,3 +40,4 @@ karşılaştırılabilir hale getirilmesi (şartname 5.7, s.9). Çözümün **i�
 - [[veri-normalizasyonu]] — ön koşul
 - [[manuel-karsilastirma-zorlugu]] — çözdüğü sorun
 - [[dashboard]], [[chatbot]] — sunum
+- [[masrafsizlik-celiskisi-kapsam-testi]] — "En Düşük Masraf" nasıl hesaplanır
