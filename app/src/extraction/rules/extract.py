@@ -57,6 +57,10 @@ def _field(
             name, canon,
             trigger_distance=trigger_distance,
             candidate_count=candidate_count,
+            # Kanıt penceresi güvene girer: gezinme/SSS bağlamındaki değer daha
+            # az kesindir (bkz. confidence.looks_like_chrome). Pencere burada
+            # zaten hesaplanmış durumda; geçirmemek sinyali boşa harcamak olurdu.
+            window=span,
         )
         csource = "rule_heuristic"
     return ExtractedField(
