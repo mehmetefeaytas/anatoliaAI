@@ -287,3 +287,34 @@ Notlar:
 - Slug çakışması düzeltildi: decisions kararı
   `yapilandirilmis-veri-formati-zorunlulugu` olarak adlandırıldı (concept
   `yapilandirilmis-veri-formati` ile çakışmaması için).
+
+## [2026-08-05] karar | masrafsizlik-celiskisi-kapsam-testi
+
+Yenilikçilik hedefi #2'nin ("masrafsız deyip tahsis ücreti alanı yakala") nasıl
+uygulanacağı ölçümle karara bağlandı. Naif tasarım ("tarifede ücret varsa
+çelişki") ölçüldüğünde çöktü: korpustan çıkan 33 ilan edilmiş tahsis ücreti
+kaydının 30'u tam olarak %0,5 — BDDK'nın konut finansmanı üst sınırı, yani
+sektörde fiilen tek fiyat. Naif test her masrafsızlık kampanyasını çelişki
+sayardı ve meşru muafiyetleri sahtekârlık gibi gösterirdi.
+
+Karar: test **kapsam** testidir. Muafiyet bir koşula bağlıysa (`kosullu_muafiyet`)
+çelişki değildir ama karşılaştırma tablosunda "masrafsız" yazılamaz — koşullu
+ifade gösterilir. Koşul yoksa (`kapsamsiz_iddia`) insan hakemliğine gider.
+
+Dokunulan dosyalar:
+- **decisions/** masrafsizlik-celiskisi-kapsam-testi.md (oluşturuldu)
+- **concepts/** urun-karsilastirma.md ("En Düşük Masraf" kriteri tek sayıya
+  indirilemez notu + çift yönlü bağ)
+- index.md (Decisions bölümüne eklendi)
+
+Kod tarafı (app/, ayrı depo alanı):
+- scripts/crosscheck_fees.py, tests/test_crosscheck_fees.py (oluşturuldu)
+- data/gold/fee_crosscheck.csv, .md (üretildi)
+- docs/rapor/zor-vaka-kurleme.md ("KURULDU" bölümü — açık uç kapandı)
+
+Notlar:
+- Bu bir belgeler ARASI kontroldür. Belge İÇİ çelişki korpusta pratik olarak yok
+  (13 adayın 12'si ücret tarifesiydi), o yüzden gold `celiskili` etiketiyle
+  aranamaz — ayrı betiğe ait.
+- Yan bulgu: Türkiye Emlak Katılım taşıt tahsis ücretini bir formda %0,5,
+  diğerinde %0,1 ilan ediyor (bankanın kendi içinde tutarsızlığı).
