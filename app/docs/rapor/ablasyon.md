@@ -356,8 +356,43 @@ span sayfa kromunda mı, tetikleyici sözcük ne kadar uzakta, aynı belgede ka�
 rakip aday var. Bu sinyaller `rules/confidence.py`'de kısmen var
 (`trigger_distance`, `candidate_count`) ama krom/gezinme bağlamı yok. Krom
 kaynaklı halüsinasyonlar bu turda **çıkarıcı katmanında** düzeltildi (`caa260e`,
-`d2cc832`) — doğru katman orasıydı; ama kalibrasyon sorunu genel olarak duruyor
-ve halüsinasyon oranını 0,102'nin altına indirmenin yolu burası.
+`d2cc832`) — doğru katman orasıydı.
+
+### 7c. Kalibrasyon eklendi ve `hibrit-verify` DAHA DA kötüleşti — hipotez çürüdü
+
+§7b'yi ilk yazdığımda şu tahmini kurdum: gezinme/SSS bağlamı cezası eklenirse
+kural hataları eşiğin altına düşer, `verify_low_conf` onlara erişebilir hâle
+gelir ve kol kurtarılabilir. **Ölçüm bu tahmini çürüttü.**
+
+Ceza eklendi (`759a665`: gezinme/SSS bağlamındaki değer 0,95 → 0,65) ve kol
+yeniden koşuldu. İki değişken birlikte değiştiği için confound ayrıştırıldı:
+
+| kol | eşik | güven | mikro-F1 | zor (n=1) |
+|---|---|---|---:|---:|
+| `hibrit-verify` | 0,75 | kalibre **edilmemiş** | 0,562 | 0,333 |
+| `hibrit-verify` | 0,75 | **kalibre** | **0,534** | 0,333 |
+| `hibrit-verify` | 0,70 | **kalibre** | **0,521** | 0,333 |
+| (karşılaştırma) `kural` | — | — | **0,612** | 0,667 |
+
+Kalibrasyon tek başına **0,028 kaybettirdi**; eşiği 0,70'e düşürmek **0,013
+daha**. İki yönde de kayıp, ve mekanizma tutarlı: ceza daha fazla kural değerini
+eşiğin altına indiriyor → daha fazlası LLM'e yeniden soruluyor → `_wins()`
+doğrulama alanlarında önceliği gevşettiği için LLM doğru kural değerlerini
+eziyor. Sayıya dönüşü: TP 42 → 38, FP 39 → 43.
+
+Ve artık istatistiksel olarak kanıtlı: `kural` vs `hibrit-verify` (0,70)
+p = 0,00098, mikro-F1 farkı 0,091 [0,030–0,164] → **GA sıfırı içermiyor.**
+
+**Doğru sonuç:** darboğaz doğrulama kapısının erişilebilirliği DEĞİL. Bu LLM
+(Qwen2.5-7B, tek başına 0,169) bu alanlarda kural katmanından zayıf; ona
+yetki veren her mekanizma doğruluk kaybettirir. Kapıyı açmak sorunu çözmüyor,
+büyütüyor.
+
+**Kalibrasyon yine de geri alınmadı** ve gerekçesi ayrı: site kromundan gelen
+saf uydurmaya 0,95 vermek **kendi başına bir kusurdu** (§18'in 1 numaralı
+yenilikçilik hedefi güven skoru). Düzeltmenin değeri açıklanabilirlik ve
+çekimserlik (abstention); **doğrulama tetikleyicisi olarak kullanılmamalı** —
+en azından bu modelle.
 
 > **Ölçümün kendi sınırı:** bu 41 kayıt `preannotations.json`'dan (v1, 31
 > Temmuz) geliyor ve krom kusuru o zamandan beri düzeltildi. Yani bugün aynı
@@ -377,9 +412,10 @@ ve halüsinasyon oranını 0,102'nin altına indirmenin yolu burası.
    koşul karşılanmadı (kazanç yok, `kar_payi_orani`'nda zarar var). §7b: bu kol
    eşik ayarıyla kurtarılamaz, çünkü halüsinasyonlar da doğru alanlar da 0,95
    güven taşıyor; arada ayırt edici eşik yok.
-2b. **Güven skoru kalibre edilmeli** ve bu, halüsinasyon oranını düşürmenin
-   asıl yolu (§7b). Kalibre olmayan güven aynı zamanda §18'in 1 numaralı
-   yenilikçilik hedefini içi boş bırakıyor.
+2b. **Güven kalibrasyonu `hibrit-verify`'ı KURTARMIYOR** — §7c'de ölçüldü ve
+   kolu 0,562'den 0,534'e (aynı eşikte) düşürdü. Kalibrasyon §18'in 1 numaralı
+   yenilikçilik hedefi ve açıklanabilirlik için tutuluyor, ama **doğrulama
+   tetikleyicisi olarak kullanılmamalı**. Darboğaz kapı değil, LLM'in kendisi.
 3. **LLM katmanının asıl sorunu çekimserlik (abstention) eksikliği.** Kayıp
    geri çağırmadan değil, gold'un `absent` dediği alanlara değer
    üretmesinden geliyor. Doğru müdahale prompt/şema düzeyinde
