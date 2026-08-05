@@ -133,7 +133,24 @@ class Predictor:
     fn: Callable[[str], list[ExtractedField]]
     available: bool = True
     unavailable_reason: str | None = None
-    llm_summary: dict | None = None
+    llm: LLMExtractor | None = None
+
+    @property
+    def llm_summary(self) -> dict | None:
+        """LLM sayaçlarının **o anki** hâli (çağrı sayısı, hata sayısı).
+
+        Neden özellik (property), neden saklanan bir sözlük DEĞİL: eski kod
+        `build_predictor` içinde `active.summary()` çağırıp sonucu bir alanda
+        dondurur ve raporlar bu donmuş kopyayı yazardı. Sayaçlar koşum
+        SIRASINDA artığı için rapora her zaman `calls: 0, ok: 0` düşerdi —
+        yani "LLM gerçekten çağrıldı mı?" sorusu, LLM 60 kez çağrılmış olsa
+        bile cevapsız kalırdı. Bu tam olarak `hibrit` kolunun sessizce
+        kural-only koşup koşmadığını anlamak için var olan sayaçtı.
+
+        Artık okuma anında canlı çıkarıcıdan alınır; künye yazımı koşumdan
+        SONRA yapıldığı için rapora gerçek sayılar girer.
+        """
+        return self.llm.summary() if self.llm is not None else None
 
     def fields(self, text: str) -> list[ExtractedField]:
         """Ham alan listesi (span/güven bilgisi korunur)."""
@@ -176,7 +193,6 @@ def build_predictor(config: str, llm: LLMExtractor | None = None, *,
         return Predictor(CONFIG_KURAL, CONFIG_DESCRIPTIONS[CONFIG_KURAL], _rule_only)
 
     active = llm if llm is not None else default_extractor()
-    summary = active.summary()
 
     if not active.available:
         return Predictor(
@@ -187,7 +203,7 @@ def build_predictor(config: str, llm: LLMExtractor | None = None, *,
                 "LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir "
                 "'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: "
                 "LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1)."),
-            llm_summary=summary,
+            llm=active,
         )
 
     if config == CONFIG_LLM:
@@ -201,7 +217,7 @@ def build_predictor(config: str, llm: LLMExtractor | None = None, *,
     desc = CONFIG_DESCRIPTIONS[config]
     if config == CONFIG_HIBRIT_VERIFY:
         desc = f"{desc} (eşik={verify_threshold})"
-    return Predictor(config, desc, fn, llm_summary=summary)
+    return Predictor(config, desc, fn, llm=active)
 
 
 def build_all(configs: list[str], llm: LLMExtractor | None = None, *,

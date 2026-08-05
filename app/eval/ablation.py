@@ -39,13 +39,34 @@ doğrudur — ortak başarı/başarısızlık iki sistemi ayırt etmez.
 LLM yoksa `llm` / `hibrit` / `hibrit-verify` kolları **ÖLÇÜLMEDİ** yazılır ve
 atlanır. Eski kod bu durumda "hibrit = kural-only" satırı basıyordu; teknik
 olarak doğru ama iletişim olarak yalan — okuyucu hibridin ölçüldüğünü sanır.
+
+## `--matcher both` ve tahmin önbelleği
+
+`run_ablation` her EŞLEŞTİRİCİ için bir kez çağrılır, `score_all` ise belge
+başına `predictor.predict()` çağırır. Önbellek olmadan `--matcher both`,
+aynı belgeyi LLM'e **iki kez** sorar. Bu iki ayrı soruna yol açar:
+
+**1. Ölçüm kusuru (asıl gerekçe).** `strict` ile `tolerant` tablolarının FARKI,
+tanım gereği yalnız eşleştiricinin katılığından gelmelidir. Kol iki kez
+sorulursa örnekleme gürültüsü (aynı prompt, farklı çıktı) bu farka SIZAR ve
+"tolerant eşleştirici 0,02 kazandırdı" cümlesi ölçülmemiş bir şeyi iddia eder.
+`temperature=0` bunu azaltır ama garanti etmez: toplama sırası kaynaklı
+kayan-nokta belirsizliği ve sunucu tarafı toplu iş (batching) çıktıyı
+değiştirebilir.
+
+**2. Maliyet.** Ölçülen: kol başına 20 belge ≈ 12 dk (Ollama + Qwen2.5-7B,
+Apple M5). Üç LLM kolu × iki eşleştirici = ~70 dk; önbellekle ~35 dk.
+
+Çözüm: `cache_predictions` kolu, `fn`'i belge metnine göre bellekleyen bir
+kopyayla değiştirir. Böylece tüm eşleştiriciler **aynı** tahmin kümesini
+puanlar ve eşleştirici karşılaştırması tek değişkenli kalır.
 """
 
 from __future__ import annotations
 
 import argparse
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -218,6 +239,35 @@ def compare_arms(arms: list[ArmResult], *, seed: int = DEFAULT_SEED,
 # --------------------------------------------------------------------------- #
 # Koşum
 # --------------------------------------------------------------------------- #
+def cache_predictions(predictor: Predictor) -> Predictor:
+    """Kolun tahminlerini belge metnine göre belleyen bir KOPYASINI döndürür.
+
+    Neden gerekli: bkz. modül başlığı, "`--matcher both` ve tahmin önbelleği".
+    Kısaca — eşleştirici başına yeniden sormak, eşleştirici karşılaştırmasına
+    LLM örnekleme gürültüsü karıştırır ve maliyeti ikiye katlar.
+
+    Özgün `predictor` DEĞİŞTİRİLMEZ (`dataclasses.replace` ile kopya üretilir);
+    çağıran hâlâ önbelleksiz kolu elinde tutar. Ölçülemeyen kol olduğu gibi
+    döner: `fn`'i sarmalamak `available=False` sözleşmesini (çağrıda
+    `PredictorError`) gizlerdi.
+
+    Anahtar belge METNİdir, `doc_id` değil: `score_all` yalnız metni görür ve
+    aynı metin iki farklı `doc_id` altında geçerse tahmin yine aynı olmalıdır.
+    """
+    if not predictor.available:
+        return predictor
+
+    inner = predictor.fn
+    store: dict[str, list] = {}
+
+    def cached(text: str) -> list:
+        if text not in store:
+            store[text] = inner(text)
+        return store[text]
+
+    return replace(predictor, fn=cached)
+
+
 def run_ablation(records: list[GoldRecord], predictors: list[Predictor],
                  matcher_name: str, *, bootstrap: bool = True,
                  n_resamples: int = DEFAULT_RESAMPLES,
@@ -407,11 +457,12 @@ def main(argv: list[str] | None = None) -> int:
 
     predictors = build_all(arm_names, verify_threshold=args.verify_threshold)
     matcher_names = resolve_matchers(args.matcher)
+    # Tüm eşleştiriciler AYNI tahmin kümesini puanlamalı — yoksa eşleştirici
+    # farkına LLM gürültüsü sızar. Bkz. modül başlığı.
+    predictors = [cache_predictions(p) for p in predictors]
 
     notes = [f"`{p.name}` ÖLÇÜLMEDİ: {p.unavailable_reason}"
              for p in predictors if not p.available]
-    llm_summary = next((p.llm_summary for p in predictors
-                        if p.llm_summary is not None), None)
 
     print(f"\ngold: {gold_path} ({len(records)} kayıt, "
           f"{sum(1 for r in records if r.hard_tags)} zor)")
@@ -432,6 +483,11 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.no_write:
             continue
+
+        # Sayaçlar koşum SIRASINDA artar; künye bu yüzden koşumdan SONRA
+        # okunur. Erken okumak rapora her zaman `calls: 0` yazdırırdı.
+        llm_summary = next((p.llm_summary for p in predictors
+                            if p.llm_summary is not None), None)
 
         env = report_mod.build_env(
             config=f"ablation[{','.join(arm_names)}]", gold_path=str(gold_path),

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/petidi_.aspx",
+  "scraped_at": "2026-08-04T21:02:33+00:00",
+  "content_hash": "e0cd219d2109ee460b578fd98a2ddba3fdd4c129838ced98e38f8dcfbdaaf482",
+  "collection_method": "browser",
+  "title": "Sevimli Dostlarınız için Petidi.com’da 250 TL İndirim Fırsatı!",
+  "http_status": 200,
+  "raw_bytes": 66571,
+  "text_chars": 2346
+}

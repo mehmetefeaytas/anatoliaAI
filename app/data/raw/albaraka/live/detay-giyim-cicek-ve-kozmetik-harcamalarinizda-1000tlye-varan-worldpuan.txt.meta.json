@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/giyim-cicek-ve-kozmetik-harcamalarinizda-1000tlye-varan-worldpuan",
+  "scraped_at": "2026-08-04T21:00:13+00:00",
+  "content_hash": "6561acce3d7a0ddd94f4c1e89ae44d80804e934e3d198fa5395a669b0b09c913",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184313,
+  "text_chars": 4609
+}

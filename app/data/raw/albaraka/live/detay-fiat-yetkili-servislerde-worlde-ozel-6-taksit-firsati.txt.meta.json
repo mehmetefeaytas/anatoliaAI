@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/fiat-yetkili-servislerde-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:24+00:00",
+  "content_hash": "3b1cb0be7193bc4dd6cd31ed12b036a72e19c19efb971424fbf71feb466de17d",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188098,
+  "text_chars": 2139
+}

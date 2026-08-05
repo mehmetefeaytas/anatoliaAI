@@ -1,13 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/default.aspx",
-  "scraped_at": "2026-08-03T16:37:50+00:00",
-  "content_hash": "adf17c0ed183a3281978c04d4a9b7e55788cc4dbe0ff1fbb973f0297af403340",
-  "collection_method": "live",
+  "scraped_at": "2026-08-04T21:10:16+00:00",
+  "content_hash": "094a1dfe0fe2b55b1f2733df5f2ed58750d8f7d048eef83bf4729377333e75ac",
+  "collection_method": "browser",
   "title": "Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 107485,
-  "text_chars": 6506,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 224441,
+  "text_chars": 8175
 }

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/continental-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:27+00:00",
+  "content_hash": "b7d183099fab8735c2a7b745e48a44f15f956576a750c4583e4019365faec7db",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188038,
+  "text_chars": 2089
+}

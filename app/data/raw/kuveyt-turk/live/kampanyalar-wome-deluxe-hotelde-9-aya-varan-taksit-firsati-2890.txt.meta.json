@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/wome-deluxe-hotelde-9-aya-varan-taksit-firsati-2890",
+  "scraped_at": "2026-08-04T20:59:14+00:00",
+  "content_hash": "bd265d2fa67987d1df5a4d0f87d2db7cadc99b5861b63a6b02b9595ee743d924",
+  "collection_method": "live",
+  "title": "Wome Deluxe Hotel’de 9 Aya Varan Taksit Fırsatı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 18621,
+  "text_chars": 1141
+}

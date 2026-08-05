@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/isbir-yatak-ile-6ya-varan-taksit-imkani-1858",
+  "scraped_at": "2026-08-04T20:59:35+00:00",
+  "content_hash": "a715fd3669dc4f425ce1ec6c2bebe851d6c544fa4be136d1e67c10c108de3120",
+  "collection_method": "live",
+  "title": "İşbir Yatak ile 6’ya Varan Taksit İmkanı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 17520,
+  "text_chars": 935
+}

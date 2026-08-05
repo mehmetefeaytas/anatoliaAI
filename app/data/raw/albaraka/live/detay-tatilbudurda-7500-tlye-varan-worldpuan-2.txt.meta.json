@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/tatilbudurda-7500-tlye-varan-worldpuan_2",
+  "scraped_at": "2026-08-04T20:59:57+00:00",
+  "content_hash": "361abd91b3405d52b38c4eb29f2642a9264354e722f0d81ed4cf26cbe1268b97",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 183840,
+  "text_chars": 4308
+}

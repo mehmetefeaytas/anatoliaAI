@@ -54,9 +54,22 @@ data/raw-classic/**/*.htm
 data/gold/review/*.yedek*
 
 # Gümüş hattın TÜRETİLMİŞ çıktıları — `scripts/build_silver.py` yeniden üretir.
-# `trainable.jsonl` (10 MB) ayrıca BİLİNEN KUSURLU: `split_trainable`'ın n-gram
-# kalıp ayıklaması bazı belgelerde gerçek kampanya gövdesini yiyor (ölçülen
-# örnek: 12 belge). Kusur giderilmeden bu dosya depoya konmaz.
+# `trainable.jsonl` 10 MB; türetilmiş olduğu için depoya konmaz (gerekçe BOYUT,
+# artık kusur değil).
+#
+# 2026-08-04 GÜNCELLEME: buradaki eski "BİLİNEN KUSURLU (12 belge)" gerekçesi
+# hem yanlış hem eksikti. Kusur ölçüldüğünde 12 değil 312 belgeydi ve kök neden
+# eşik değil KAMPANYA ŞABLONUYDU: bankalar aynı kampanyayı 3-6 varyantla
+# yayınlıyor (aynı metin, farklı tutar/marka/tarih), bu yüzden gövde cümleleri
+# de "birkaç belgede tekrar eden" hâle gelip site kromuyla aynı kefeye düşüyordu.
+# İkinci, bağımsız kusur: `core_text` sözcükleri `\w+` ile toplayıp boşlukla
+# birleştirdiği için `%2,05` -> `2 05` oluyordu, yani oran işareti çekirdekte
+# hiç görünmüyordu.
+#
+# Düzeltme sonrası içerik kaybeden belge: `data/raw` 312 -> 21 (1684 belgede),
+# `data/raw-classic` 54 -> 4 (709 belgede). Kalan 21 vaka yakın-mükerrer
+# `<slug>` / `<slug>-2` çiftlerinden geliyor; çözümü eşik değil yakın-mükerrer
+# tespiti. Ayrıntı: `docs/rapor/devam-split-trainable.md`.
 # KORUNAN: proposals*/verdicts*/silver/rejected/queue + prompt şablonları —
 # etiketin nasıl üretildiği yeniden üretilebilir olmalı, yoksa veri setinin
 # kökeni savunulamaz (şartname §8).

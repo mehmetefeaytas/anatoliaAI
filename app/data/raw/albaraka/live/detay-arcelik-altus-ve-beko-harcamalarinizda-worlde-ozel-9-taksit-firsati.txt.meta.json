@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/arcelik-altus-ve-beko-harcamalarinizda-worlde-ozel-9-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:48+00:00",
+  "content_hash": "204fe920d7c28006167150fe39ff9ee4e2c37b4ba1819c45035c042c0d3a1405",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 191781,
+  "text_chars": 2292
+}

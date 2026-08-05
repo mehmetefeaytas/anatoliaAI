@@ -165,5 +165,59 @@ class TestAralikYanlisPozitifi(unittest.TestCase):
             )
 
 
+class TestGezinmeBaglamiCezasi(unittest.TestCase):
+    """Kanıt gezinme/SSS bağlamındaysa güven düşer — VETO değil, CEZA.
+
+    Neden var: `alisveris_puani` alanında 41 belge, site kromundaki
+    "Kredi Notu (Kredi Puanı) Nedir?" gezinme bağlantısından **0,95 güvenle**
+    değer üretiyordu. 0,95 aynı zamanda doğru alanların da modu, yani hiçbir
+    eşik ikisini ayıramıyordu ve `reconcile.verify_low_conf` kolu bu yüzden
+    yapısal olarak ölüydü (docs/rapor/ablasyon.md §7b).
+
+    Ölçülen ayrışma (945 alan): krom kaynaklı kayıtların 82/82'si (%100) hem
+    nav işareti hem "?" taşıyor; diğerlerinin 29/863'ü (%3,4).
+    """
+
+    KROM = ("3D Secure Nedir, Ne İşe Yarar? Kredi Notu (Kredi Puanı) Nedir? "
+            "Türkiye Finans'ın 100'ünde Gelecek Olan 5 Üyesi")
+    GOVDE = "Konut finansmanı tutarı 500.000 TL olarak kullandırılır."
+
+    def test_gezinme_penceresi_guveni_dusurur(self) -> None:
+        s, gerekce = C.score("alisveris_puani", {"kind": "points", "value": 10.0},
+                             trigger_distance=0, window=self.KROM)
+        self.assertLess(s, 0.70, "gezinme bağlamı cezalandırılmadı")
+        self.assertIn("gezinme", gerekce)
+
+    def test_normal_govde_cezalanmaz(self) -> None:
+        s, _ = C.score("finansman_tutari", {"value": 500000.0, "currency": "TRY"},
+                       trigger_distance=0, window=self.GOVDE)
+        self.assertGreater(s, 0.90)
+
+    def test_pencere_verilmezse_eski_davranis(self) -> None:
+        """Geriye uyumluluk: pencere geçirmeyen çağrı ceza almamalı."""
+        yok, _ = C.score("alisveris_puani", {"kind": "points", "value": 10.0},
+                         trigger_distance=0)
+        var, _ = C.score("alisveris_puani", {"kind": "points", "value": 10.0},
+                         trigger_distance=0, window=self.GOVDE)
+        self.assertEqual(yok, var)
+
+    def test_iki_kosul_BIRLIKTE_aranir(self) -> None:
+        """Tek sözcüklü sezgisel yasak — ölçülmüş hata sınıfı.
+
+        Bu depoda bir kez, tek sözcüklü bir sezgisel ("ana sayfa"/"müşteri ol")
+        101 belgenin 87'sinde yanlış pozitif üretti; o sözcükler bazı
+        bankaların HER sayfasındaki kırıntı yolunda geçiyor.
+        """
+        self.assertFalse(C.looks_like_chrome("Kampanya nasıl işler açıklaması"),
+                         "'?' olmadan nav sözcüğü tek başına yetmemeli")
+        self.assertFalse(C.looks_like_chrome("Kaç taksit yapılabilir?"),
+                         "nav sözcüğü olmadan '?' tek başına yetmemeli")
+        self.assertTrue(C.looks_like_chrome("Kâr payı nedir? Detaylı Bilgi"))
+
+    def test_bos_pencere_guvenli(self) -> None:
+        self.assertFalse(C.looks_like_chrome(None))
+        self.assertFalse(C.looks_like_chrome(""))
+
+
 if __name__ == "__main__":
     unittest.main()

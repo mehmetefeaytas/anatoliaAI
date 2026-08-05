@@ -57,6 +57,10 @@ def _field(
             name, canon,
             trigger_distance=trigger_distance,
             candidate_count=candidate_count,
+            # Kanıt penceresi güvene girer: gezinme/SSS bağlamındaki değer daha
+            # az kesindir (bkz. confidence.looks_like_chrome). Pencere burada
+            # zaten hesaplanmış durumda; geçirmemek sinyali boşa harcamak olurdu.
+            window=span,
         )
         csource = "rule_heuristic"
     return ExtractedField(
@@ -262,23 +266,127 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     )
 
 
+# Tetikleyici ile sayı arasındaki boşlukta CÜMLE SINIRI olamaz.
+# Ölçülen halüsinasyon (`turkiye-emlak-katilim--finansmanlar-ihtiyac-finansmani`):
+#   "...ihtiyaç finansmanı ürünüdür. Fiyatı 20.000 TL'ye kadar olan cep telefonu"
+# Tetikleyici bir cümlede, sayı başka cümlede ve sayı bir TELEFON FİYATI.
+# Nokta+boşluk+büyük harf aranıyor; "max. 100.000 TL" gibi kısaltmalar bozulmasın
+# diye noktadan sonra RAKAM gelen durum sınır sayılmaz.
+_CUMLE_SINIRI_RE = re.compile(r"[.!?;]\s+[A-ZÇĞİÖŞÜ]|\n")
+
+# Varlık FİYATI finansman TUTARI değildir. Bu ayrım gold setinde de iki kez
+# karışmış (bkz. data/gold/review/_hakem-turu-01-finansman-tutari.md), yani
+# sözleşmenin zayıf olduğu bir yer — kod tarafında açıkça korunuyor.
+_VARLIK_FIYATI_RE = re.compile(
+    r"fiyat\w*|değer\w*|deger\w*|bedel\w*|piyasa\s*değer|ekspertiz", re.IGNORECASE)
+
+_TUTAR_PAT = re.compile(
+    r"(finansman|kredi|tutar|limit)([^\d]{0,20})"
+    r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
+    re.IGNORECASE,
+)
+
+# "Örnek ... Tablosu" TEMSİLİ bir hesap örneğidir, kampanyanın tutarı değil.
+# Ölçülen halüsinasyon (`turkiye-emlak-katilim--finansmanlar-ihtiyac-finansmani`):
+# "Örnek İhtiyaç Finansmanı Tablosu | Finansman Tutarı ... 30.000,00 ₺" —
+# gold doğru olarak `absent` diyor. `örnek` VE `tablo` birlikte aranıyor; tek
+# başına "örneğin" gibi kullanımlar belgeyi elemesin.
+_ORNEK_TABLO_RE = re.compile(r"örnek\w*(?:[^.]{0,80}?)tablo", re.IGNORECASE)
+
+# Belge birden fazla üst sınır veriyorsa TOPLAM sınır kanoniktir.
+# Ölçüm (`vakif-katilim--finansmanlar-kentsel-donusum`): "her bir bağımsız bölüm
+# için 1.250.000 TL'yi aşmamak koşulu ile toplamda azami 3.000.000 TL" —
+# istenen birim başına sınır (1.250.000) değil toplam sınır (3.000.000).
+#
+# Bu neden AYRI bir kalıp: o cümlede tetikleyici sözcük ("tutarı") sayıdan 20
+# karakterden uzakta kaldığı için `_TUTAR_PAT` 3.000.000'u aday olarak HİÇ
+# görmüyordu. Tetikleyici mesafesini genel olarak büyütmek alakasız tutarları
+# içeri alırdı; "toplamda azami <tutar>" ise kendi başına yeterince özgül.
+_TOPLAM_AZAMI_PAT = re.compile(
+    r"toplam\w*\s+azami\s+(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
+    re.IGNORECASE,
+)
+
+# Aralığın ÜST sınırı: ilk tutarın HEMEN ardından gelen ikinci tutar.
+# Sadece kısa bir ayıraç kabul edilir ("- ", "– ", "ila ", ya da boşluk) —
+# uzun mesafeye izin vermek belgedeki alakasız tutarları içeri alır.
+_ARALIK_UST_RE = re.compile(
+    r"[\s]{0,3}(?:[-–—]|ila|ile|arası|arasında|ve)?[\s]{0,3}"
+    r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
+    re.IGNORECASE,
+)
+
+
 def extract_tutar(text: str) -> Optional[ExtractedField]:
-    """Finansman tutarı: 'finansman ... 500.000 TL'."""
-    pat = re.compile(
-        r"(finansman|kredi|tutar|limit)[^\d]{0,20}(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
-        re.IGNORECASE,
-    )
-    m = pat.search(text)
-    if not m:
+    """Finansman tutarı: 'finansman ... 500.000 TL'.
+
+    Üç ölçülmüş kusur bu fonksiyonda düzeltildi (`eval/reports/20260804-202009`
+    teşhisi, F1 0.000):
+
+    1. **Cümle sınırı.** Eski `[^\\d]{0,20}` boşluğu nokta içerebiliyordu, yani
+       eşleşme cümle atlıyordu ve alakasız bir sayıyı tutar sanıyordu.
+    2. **Varlık fiyatı.** "Fiyatı 20.000 TL olan cep telefonu" bir finansman
+       tutarı değil; kredi/değer tablosundaki konut değeri de değil.
+    3. **Aralığın ALT sınırını seçmek.** `search()` ilk adayı alıyordu; iki
+       değerli bir aralıkta bu alt sınır demek. Biçim kartı §3.4 **üst sınırı**
+       kanonik sayıyor (`tom-katilim` hesaplama aracında 5.000 değil 150.000).
+
+    ÖLÇÜLMÜŞ YANLIŞ DENEME — tekrarlanmasın: bir tur "adayların EN BÜYÜĞÜNÜ seç"
+    denendi ve `tom-katilim`'i **daha da bozdu** (5.000 -> 11.891,83, çünkü
+    belgedeki en büyük tutar hesaplama aracının "Geri Ödenecek Tutar" satırıydı).
+    §3.4 *bir aralığın* üst sınırını istiyor, **belgedeki en büyük sayıyı**
+    değil; ikisi aynı şey değil. Bu yüzden ilk geçerli aday esas alınır ve
+    yalnızca o adayın hemen ardından gelen ikinci bir tutar varsa (gerçek aralık
+    kurgusu) üst sınıra yükseltilir.
+    """
+    ilk: Optional[tuple] = None
+    toplam: Optional[tuple] = None
+
+    for m in _TUTAR_PAT.finditer(text):
+        gap = m.group(2)
+        if _CUMLE_SINIRI_RE.search(gap) or _VARLIK_FIYATI_RE.search(gap):
+            continue
+        if _ORNEK_TABLO_RE.search(text[max(0, m.start() - 150): m.start()]):
+            continue
+        canon = N.normalize_money(m.group(3))
+        if canon is None:
+            continue
+
+        s, e = m.span(3)
+        aday = (m.group(3), canon, s, e, s - m.end(1))
+
+        if ilk is None:
+            ilk = aday
+            break
+
+    tm = _TOPLAM_AZAMI_PAT.search(text)
+    if tm is not None:
+        canon = N.normalize_money(tm.group(1))
+        if canon is not None:
+            s, e = tm.span(1)
+            toplam = (tm.group(1), canon, s, e, 0)
+
+    secilen = toplam or ilk
+    if secilen is None:
         return None
-    raw = m.group(2)
-    s, e = m.span(2)
-    canon = N.normalize_money(raw)
+
+    raw, canon, s, e, trigger_distance = secilen
+
+    # Aralık kurgusu: HEMEN ardından ikinci bir tutar geliyor mu?
+    # "5.000 TL 150.000 TL" (kaydırıcı) veya "1.000 TL - 100.000 TL".
+    ileri = _ARALIK_UST_RE.match(text, e)
+    if ileri is not None:
+        ust = N.normalize_money(ileri.group(1))
+        if (isinstance(ust, dict) and isinstance(canon, dict)
+                and (ust.get("value") or 0) > (canon.get("value") or 0)):
+            raw, canon = ileri.group(1), ust
+            s, e = ileri.span(1)
+
     return _field(
-        "finansman_tutari", raw, canon, _window(text, m.start(), m.end()),
+        "finansman_tutari", raw, canon, _window(text, s, e),
         span_start=s, span_end=e,
-        trigger_distance=s - m.end(1),
-        candidate_count=len(pat.findall(text)),
+        trigger_distance=trigger_distance,
+        candidate_count=len(_TUTAR_PAT.findall(text)),
     )
 
 
@@ -723,6 +831,32 @@ def extract_indirim_orani(text: str) -> Optional[ExtractedField]:
                   span_start=s, span_end=e, trigger_distance=0)
 
 
+# Markalı puan birimleri. Bunlar sözlükte yoksa katılım bankalarının ödül
+# kampanyaları sistematik olarak kaçırılır (ölçüm: ParafPara belgesi `null`
+# dönüyordu). `puan` en sona yazıldı: daha özgül alternatifler önce denenmeli.
+_PUAN_TRIGGER_RE = re.compile(
+    r"(chip[\s-]*para|parafpara|maximiles|worldpuan|world\s*puan|"
+    r"bonus\s*puan\w*|alışveriş\s*puan\w*|alisveris\s*puan\w*|"
+    r"puan\s*iade\w*|puan)", re.IGNORECASE)
+
+# Gezinme/SSS bağlantısı kalıbı — ödül bildirimi değil.
+_PUAN_KROM_RE = re.compile(
+    r"nedir|nas[ıi]l\s|ne\s*i[şs]e\s*yarar|kredi\s*notu|s[ıi]k[çc]a\s*sorulan",
+    re.IGNORECASE)
+
+# Sayı bir puan/para birimine KOMŞU olmalı; birim opsiyonel değil.
+#
+# Sayı RAKAMLA BİTMEK zorunda (`\d[\d.,]*\d|\d`). Ölçülen yanlış pozitif:
+# sözleşme metnindeki "24. Puan Uygulaması 24.1..." madde numarası. Eski
+# `[\d.,]*` sonu serbest bıraktığı için "24." yutuluyor, ardından `\s*` boşluğu
+# yiyor ve madde numarası 24 puanlık bir ödül sanılıyordu. Rakamla bitme şartı
+# `1.500 TL` gibi binlik ayıraçlı tutarları bozmaz — orada nokta sayının içinde.
+_PUAN_SAYI_RE = re.compile(
+    r"(\d[\d.,]*\d|\d)\s*(?:adet\s*)?"
+    r"(?:chip[\s-]*para|parafpara|maximiles|worldpuan|puan|tl|₺)",
+    re.IGNORECASE)
+
+
 def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
     """Alışveriş puanı — ORAN ya da ADET olabilir, ikisi farklı kanonik şekil.
 
@@ -731,38 +865,52 @@ def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
 
     İki şekli ayrı tutmak §5.7 karşılaştırmasında elmayla armutun
     kıyaslanmasını engeller (bkz. CLAUDE.md §17 adil kıyas garantisi).
+
+    İki ölçülmüş halüsinasyon mekanizması burada kapatıldı (19 halüsinasyonun
+    2'si): (a) site kromundaki "Kredi Notu (Kredi Puanı) Nedir?" gezinme
+    bağlantısı ödül sanılıyordu, (b) sayı biriminin opsiyonel olması yüzünden
+    ±30 karakterdeki *herhangi* bir sayı kabul ediliyordu. Ayrıca ilk eşleşme
+    yerine tüm tetikleyiciler taranıyor — kromdaki bir eşleşme gerçek ödülü
+    artık gölgelemiyor.
     """
-    trigger = re.compile(r"(chip[\s-]*para|alışveriş\s*puan\w*|alisveris\s*puan\w*|"
-                         r"puan\s*iade\w*|bonus\s*puan\w*|puan)", re.IGNORECASE)
-    tm = trigger.search(text)
-    if tm is None:
-        return None
+    for tm in _PUAN_TRIGGER_RE.finditer(text):
+        # Site kromu / SSS bağlantısı ödül DEĞİLDİR. Ölçülen halüsinasyon:
+        # "3D Secure Nedir, Ne İşe Yarar? Kredi Notu (Kredi Puanı) Nedir?" —
+        # iki Türkiye Finans sayfasında `puan` sözcüğünün geçtiği TEK yer buydu
+        # ve ikisinde de ilgisiz bir sayı (10.0) üretiliyordu.
+        cevre = text[max(0, tm.start() - 40): min(len(text), tm.end() + 40)]
+        if _PUAN_KROM_RE.search(cevre):
+            continue
 
-    ctx_s = max(0, tm.start() - 30)
-    ctx = text[ctx_s: min(len(text), tm.end() + 30)]
+        ctx_s = max(0, tm.start() - 30)
+        ctx = text[ctx_s: min(len(text), tm.end() + 30)]
 
-    rate = re.search(r"%\s*(\d[\d.,]*)|(\d[\d.,]*)\s*%", ctx)
-    if rate:
-        off = ctx_s + (rate.start(1) if rate.group(1) else rate.start(2))
-        end = ctx_s + (rate.end(1) if rate.group(1) else rate.end(2))
-        val = N.parse_tr_number(text[off:end])
-        if val is None:
-            return None
-        canon = {"kind": "rate", "value": val}
+        rate = re.search(r"%\s*(\d[\d.,]*)|(\d[\d.,]*)\s*%", ctx)
+        if rate:
+            off = ctx_s + (rate.start(1) if rate.group(1) else rate.start(2))
+            end = ctx_s + (rate.end(1) if rate.group(1) else rate.end(2))
+            val = N.parse_tr_number(text[off:end])
+            if val is None:
+                continue
+            canon = {"kind": "rate", "value": val}
+        else:
+            # Sayı tetikleyiciye KOMŞU olmak zorunda. Eskiden birim grubu
+            # opsiyoneldi (`(?:chip|puan)?`), yani ±30 karakterdeki herhangi bir
+            # sayı kabul ediliyordu — halüsinasyonun ikinci mekanizması buydu.
+            num = _PUAN_SAYI_RE.search(ctx)
+            if not num:
+                continue
+            off, end = ctx_s + num.start(1), ctx_s + num.end(1)
+            val = N.parse_tr_number(text[off:end])
+            if val is None:
+                continue
+            canon = {"kind": "points", "value": val}
+
         s, e = off, end
-    else:
-        num = re.search(r"(\d[\d.,]*)\s*(?:adet\s*)?(?:chip|puan)?", ctx)
-        if not num or not num.group(1):
-            return None
-        off, end = ctx_s + num.start(1), ctx_s + num.end(1)
-        val = N.parse_tr_number(text[off:end])
-        if val is None:
-            return None
-        canon = {"kind": "points", "value": val}
-        s, e = off, end
-
-    return _field("alisveris_puani", text[s:e], canon, _window(text, s, e),
-                  span_start=s, span_end=e, trigger_distance=0)
+        return _field("alisveris_puani", text[s:e], canon, _window(text, s, e),
+                      span_start=s, span_end=e,
+                      trigger_distance=abs(s - tm.start()))
+    return None
 
 
 def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/pasaport-harci.aspx",
+  "scraped_at": "2026-08-04T21:02:44+00:00",
+  "content_hash": "66e780c58c3301b9ff6eeb49bd21ca7f06d4c6c193167c961f4d1819012f0b16",
+  "collection_method": "browser",
+  "title": "Pasaport Harcı Ödemelerinize Kâr Paysız Taksit!",
+  "http_status": 200,
+  "raw_bytes": 68096,
+  "text_chars": 3059
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/istanbul-havalimaninda-ucretsiz-otopark-ve-vale-ayricaligi-85",
+  "scraped_at": "2026-08-04T21:02:12+00:00",
+  "content_hash": "04a80593b775adaee32f2009b63da4b4a714e0cffe49553c7c604fa333a0020b",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 35740,
+  "text_chars": 3093
+}

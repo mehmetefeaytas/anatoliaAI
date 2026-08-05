@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/otopark-harcamalarinizda-yuzde10-indirim-54",
+  "scraped_at": "2026-08-04T21:01:54+00:00",
+  "content_hash": "422a18cc467064d81c30ee7a5a33dd4ddca790dba2ba6f1db8c90532b227c63c",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 34124,
+  "text_chars": 1662
+}

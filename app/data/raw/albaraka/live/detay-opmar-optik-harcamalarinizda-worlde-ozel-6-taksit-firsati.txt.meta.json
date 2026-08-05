@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/opmar-optik-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:39+00:00",
+  "content_hash": "e1d9827c7c9ca0e36e7c861bdb0c5a27e48a8f0af6cea802cb41e245631e4cbc",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184451,
+  "text_chars": 1840
+}

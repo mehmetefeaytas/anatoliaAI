@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/restoran-harcamalarinizda-yuzde10-indirim-60",
+  "scraped_at": "2026-08-04T21:02:09+00:00",
+  "content_hash": "9ff4e95fccba574ab1c6bf2d3414d5c750c639e582738b024f3563c2271aee4a",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 34263,
+  "text_chars": 1751
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/network-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:06+00:00",
+  "content_hash": "08e9cf4e9cda5471ce50a853d3e0fcb73f083031e43981103c837e261606b118",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188196,
+  "text_chars": 2063
+}

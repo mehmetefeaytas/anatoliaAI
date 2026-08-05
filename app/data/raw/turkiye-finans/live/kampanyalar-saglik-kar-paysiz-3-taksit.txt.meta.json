@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/saglik-kar-paysiz-3-taksit.aspx",
+  "scraped_at": "2026-08-04T21:02:41+00:00",
+  "content_hash": "db22c1a4d9198bbd1d005ee77482de942b045d76f2471cef8fbb9b4c6ee84b94",
+  "collection_method": "browser",
+  "title": "Sağlık Harcamalarınıza Kâr Paysız Taksit!",
+  "http_status": 200,
+  "raw_bytes": 68996,
+  "text_chars": 3371
+}

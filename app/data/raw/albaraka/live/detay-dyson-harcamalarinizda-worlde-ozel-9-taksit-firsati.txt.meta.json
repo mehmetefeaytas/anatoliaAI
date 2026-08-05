@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/dyson-harcamalarinizda-worlde-ozel-9-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:42+00:00",
+  "content_hash": "943fa596b3857a5f43aeb52e7fdba2d49e44cc88efaece9a83c4741bb39c7a64",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188461,
+  "text_chars": 2288
+}

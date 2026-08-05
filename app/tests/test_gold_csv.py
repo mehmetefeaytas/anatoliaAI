@@ -486,6 +486,157 @@ class TestGenerateEndToEnd(unittest.TestCase):
                             calibration=0, duplicate=0, absent_docs=3, seed=42)
             self.assertEqual(len(plan["absent_docs"]), 3)
 
+    def test_duplicate_doc_ids_in_preannotation_are_loud(self):
+        """Kimlik çakışması sözlüğe çevirirken SESSİZCE kayıt düşürür."""
+        docs = [make_doc("bank--ayni"), make_doc("bank--ayni")]
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            pre_path = tmp / "pre.json"
+            pre_path.write_text(json.dumps(make_pre(docs), ensure_ascii=False),
+                                encoding="utf-8")
+            with self.assertRaises(ValueError) as ctx:
+                generate(str(pre_path), str(tmp / "review"), ["A"], calibration=0,
+                         duplicate=0, absent_docs=-1, seed=42)
+            self.assertIn("preannotate", str(ctx.exception))
+
+
+class TestAnnotatedFilesAreProtected(unittest.TestCase):
+    """Anotasyon içeren CSV silinemez ve üzerine yazılamaz.
+
+    `generate` eski turun dosyalarını `round*.csv` kalıbıyla siliyor; kalıp
+    TAMAMLANMIŞ dosyayı da kapsıyor. Korpus büyüdükçe ön-anotasyon tazelenmek
+    zorunda, yani bu üreteç tekrar tekrar koşuyor — koruma olmadan bir gün
+    insan emeği geri alınamaz biçimde gidiyor.
+    """
+
+    def _kur(self, tmp: Path):
+        docs = [make_doc(f"bank--doc-{i:03d}") for i in range(12)]
+        pre_path = tmp / "pre.json"
+        pre_path.write_text(json.dumps(make_pre(docs), ensure_ascii=False),
+                            encoding="utf-8")
+        out = tmp / "review"
+        generate(str(pre_path), str(out), ["A", "B"], calibration=2, duplicate=4,
+                 absent_docs=-1, seed=42)
+        return pre_path, out
+
+    @staticmethod
+    def _anote_et(path: Path, verdict: str = "absent") -> bytes:
+        """Dosyanın ilk veri satırına karar yazar (insan anotasyonu taklidi)."""
+        with path.open(encoding=CSV_ENCODING, newline="") as handle:
+            rows = list(csv.DictReader(handle, delimiter=CSV_DELIMITER))
+        rows[0]["verdict"] = verdict
+        with path.open("w", encoding=CSV_ENCODING, newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=COLUMNS,
+                                    delimiter=CSV_DELIMITER, lineterminator="\r\n")
+            writer.writeheader()
+            writer.writerows(rows)
+        return path.read_bytes()
+
+    def test_annotated_file_is_neither_deleted_nor_overwritten(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            pre_path, out = self._kur(tmp)
+            hedef = out / "round0_kalibrasyon_A.csv"
+            onceki = self._anote_et(hedef)
+
+            plan = generate(str(pre_path), str(out), ["A", "B"], calibration=2,
+                            duplicate=4, absent_docs=-1, seed=42)
+
+            self.assertTrue(hedef.is_file(), "anotasyonlu dosya SİLİNDİ")
+            self.assertEqual(hedef.read_bytes(), onceki,
+                             "anotasyonlu dosyanın ÜZERİNE YAZILDI")
+            self.assertIn("round0_kalibrasyon_A.csv", plan["protected"])
+            self.assertNotIn("round0_kalibrasyon_A.csv", plan["files"])
+            # Anotasyonsuz kardeş dosya normal şekilde yenilenmeli.
+            self.assertIn("round0_kalibrasyon_B.csv", plan["files"])
+
+    def test_stale_model_value_under_silent_approval_is_reported(self):
+        """Boş satır = "gördüğüm değeri onaylıyorum". Değer değişmişse onay geçersiz.
+
+        `build_gold` model değerini GÜNCEL ön-anotasyondan okuyor; korunan
+        dosyadaki eski değer artık hiçbir yerde görünmez.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            pre_path, out = self._kur(tmp)
+            hedef = out / "round0_kalibrasyon_A.csv"
+            self._anote_et(hedef)          # yalnız 1. satırda karar var
+
+            # Ön-anotasyonu tazele: vade 120 -> 36.
+            data = json.loads(pre_path.read_text(encoding="utf-8"))
+            for doc in data["docs"]:
+                doc["fields"]["vade_ay"]["value"] = 36
+            pre_path.write_text(json.dumps(data, ensure_ascii=False),
+                                encoding="utf-8")
+
+            plan = generate(str(pre_path), str(out), ["A", "B"], calibration=2,
+                            duplicate=4, absent_docs=-1, seed=42)
+
+            bayat = plan["protected_stale"]["round0_kalibrasyon_A.csv"]
+            self.assertTrue(any("vade_ay" in item for item in bayat["riskli"]),
+                            f"örtük onay bayatladı ama raporlanmadı: {bayat}")
+            atama = (out / "_atama.md").read_text(encoding="utf-8")
+            self.assertIn("YENİDEN bakılacak satırlar", atama)
+
+
+class TestPinnedCalibration(unittest.TestCase):
+    def test_calibration_set_can_be_pinned(self):
+        """Kalibrasyon kümesi sabitlenmezse dört anotatör farklı belgelere bakar
+        ve Fleiss kappa hesaplanamaz."""
+        ids = [f"doc-{i:03d}" for i in range(250)]
+        pinned = {"doc-100", "doc-200", "doc-007"}
+        calib, dup, main = partition(ids, 20, 50, seed=42,
+                                    pinned_calibration=pinned)
+        self.assertEqual(calib, sorted(pinned))
+        self.assertEqual(len(dup), 50)
+        self.assertEqual(set(calib) | set(dup) | set(main), set(ids))
+        self.assertEqual(set(calib) & (set(dup) | set(main)), set())
+
+    def test_unknown_pinned_ids_are_ignored_not_invented(self):
+        ids = [f"doc-{i:03d}" for i in range(10)]
+        calib, dup, main = partition(ids, 2, 2, seed=42,
+                                     pinned_calibration={"doc-001", "yok-999"})
+        self.assertEqual(calib, ["doc-001"])
+        self.assertNotIn("yok-999", calib + dup + main)
+
+
+class TestInvalidModelValues(unittest.TestCase):
+    """Şemaya uymayan çıkarım onaylanabilir bir değer olarak gösterilmez."""
+
+    @staticmethod
+    def _doc():
+        doc = make_doc()
+        doc["fields"].pop("kar_payi_orani")
+        doc["invalid_fields"] = {
+            "tahsis_ucreti": {
+                "value": {"rate": 0.5}, "raw_value": "%1,89", "confidence": 0.9,
+                "confidence_source": "rule_heuristic", "extractor": "rule",
+                "source_span": "%1,89", "span_start": TEXT.index("%1,89"),
+                "span_end": TEXT.index("%1,89") + len("%1,89"),
+                "disagreement": False,
+                "schema_error": 'tahsis_ucreti: para {"value": 500, ...} olmalı',
+            }
+        }
+        return doc
+
+    def test_row_exists_even_without_absent_coverage(self):
+        """Model o alanda BİR ŞEY bulmuş; düzeltilecek yeri bilen tek satır bu."""
+        rows = {r["field"]: r for r in rows_for_doc(self._doc(), include_absent=False)}
+        self.assertIn("tahsis_ucreti", rows)
+
+    def test_model_value_cell_stays_empty(self):
+        """Dolu olsa boş verdict ONAY sayılır ve şema dışı değer gold'a girer."""
+        rows = {r["field"]: r for r in rows_for_doc(self._doc(), include_absent=True)}
+        row = rows["tahsis_ucreti"]
+        self.assertEqual(row["model_value"], "")
+        self.assertEqual(row["model_conf"], "")
+
+    def test_snippet_carries_the_warning_and_the_span(self):
+        rows = {r["field"]: r for r in rows_for_doc(self._doc(), include_absent=True)}
+        snippet = rows["tahsis_ucreti"]["snippet"]
+        self.assertIn("ŞEMA DIŞI", snippet)
+        self.assertIn("[%1,89]", snippet)       # span işaretli kalmalı
+
 
 if __name__ == "__main__":
     unittest.main()

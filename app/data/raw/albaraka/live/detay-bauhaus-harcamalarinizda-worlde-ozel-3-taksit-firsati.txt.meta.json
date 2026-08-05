@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/bauhaus-harcamalarinizda-worlde-ozel-3-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:54+00:00",
+  "content_hash": "58f4ba4fcaa6701e3d40e810398573c5402430cd82b89f012ca2f3db2cb24418",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180580,
+  "text_chars": 1624
+}

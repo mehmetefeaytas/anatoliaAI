@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/yenilioya-ozel-vade-farksiz-12-taksit-firsati-1820",
+  "scraped_at": "2026-08-04T20:59:38+00:00",
+  "content_hash": "c775ee5346d71f5708db1c8ccea300db23357a314350325768f3238caacbf621",
+  "collection_method": "live",
+  "title": "Yenilio'ya Özel Vade Farksız 12'ye Varan Taksit İmkanı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 17708,
+  "text_chars": 804
+}

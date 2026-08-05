@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/lc-waikiki-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:16+00:00",
+  "content_hash": "6b6c98ec953f9c0d951fb93250db1178c941697244d22f39cd8d96de49122592",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180586,
+  "text_chars": 1605
+}

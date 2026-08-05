@@ -37,6 +37,7 @@ kayıtlıdır.
 
 from __future__ import annotations
 
+import re
 from typing import Any, Optional
 
 # Taban skor: kural eşleşti, normalizasyon başarılı, başka bilgi yok.
@@ -51,8 +52,52 @@ FAR_PENALTY = -0.15        # tetikleyici hiç yok / çok uzak
 IMPLAUSIBLE_PENALTY = -0.45   # değer makul aralığın dışında
 AMBIGUITY_PENALTY = -0.10     # metinde birden çok aday eşleşme
 RANGE_PENALTY = -0.05         # aralık (%1,99–%2,49): nokta değerden az kesin
+CHROME_PENALTY = -0.30        # kanıt gezinme/SSS bağlamında (aşağıya bakın)
 
 FLOOR, CEIL = 0.05, 0.98
+
+# --------------------------------------------------------------------------- #
+# Gezinme / SSS bağlamı — ÖLÇÜLMÜŞ ayrışma
+# --------------------------------------------------------------------------- #
+# Neden gerekli: `alisveris_puani` alanında 41 belge, site kromundaki
+# "Kredi Notu (Kredi Puanı) Nedir?" gezinme bağlantısından **0,95 güvenle**
+# değer üretiyordu. 0,95 aynı zamanda DOĞRU alanların da modu (612 kayıt), yani
+# hiçbir eşik ikisini ayıramıyordu ve `reconcile.verify_low_conf` kolu bu yüzden
+# yapısal olarak ölüydü (bkz. docs/rapor/ablasyon.md §7b).
+#
+# Ölçüm (`data/gold/preannotations.json`, 945 alan):
+#   krom kaynaklı kayıtlar : 82/82  (%100) hem nav işareti hem "?" taşıyor
+#   diğer kayıtlar         : 29/863 (%3,4) taşıyor
+#
+# VETO DEĞİL CEZA, ve sebebi ölçüldü: sinyali tetikleyen o 29 kayıt KARIŞIK.
+# Bir kısmı gerçek ("Hesap açılışı için minimum tutar 50.000 TL" — SSS cevabı
+# ama doğru), bir kısmı yanlış ("Findeks Kredi Notu, 12 ay boyunca borç ödeme
+# olasılığını..." -> vade_ay 12; "07.06.2013 tarihli Resmî Gazete" -> kampanya
+# süresi). Soru-cevap bağlamındaki kanıt gerçekten daha az kesindir; doğru
+# davranış değeri SİLMEK değil (halüsinasyon yasağının ikizi: sessiz silme de
+# yasak) güveni düşürüp doğrulamaya açık hâle getirmek.
+#
+# İki koşul BİRLİKTE aranıyor. Tek başına "nedir" ya da tek başına "?" çok
+# gevşek: bu depoda bir kez, tek sözcüklü bir sezgisel ("ana sayfa"/"müşteri ol")
+# 101 belgenin 87'sinde yanlış pozitif üretti — o sözcükler bazı bankaların HER
+# sayfasındaki kırıntı yolunda geçiyor.
+_CHROME_NAV_RE = re.compile(
+    r"nedir|nas[ıi]l\s|ne\s*i[şs]e\s*yarar|s[ıi]k[çc]a\s*sorulan|"
+    r"detayl[ıi]\s*bilgi|kampanyay[ıi]\s*ke[şs]fet",
+    re.IGNORECASE,
+)
+
+
+def looks_like_chrome(window: Optional[str]) -> bool:
+    """Kanıt penceresi gezinme/SSS bağlamına mı benziyor?
+
+    Pencere düzeyinde çalışır, BELGE düzeyinde değil — "bu belge kromdur" demek
+    ölçülmüş bir hata sınıfıydı. Buradaki iddia yalnızca "bu değerin hemen
+    çevresi soru-cevap/gezinme metnine benziyor".
+    """
+    if not window:
+        return False
+    return bool(_CHROME_NAV_RE.search(window)) and "?" in window
 
 
 # --------------------------------------------------------------------------- #
@@ -122,6 +167,7 @@ def score(
     *,
     trigger_distance: Optional[int] = None,
     candidate_count: int = 1,
+    window: Optional[str] = None,
 ) -> tuple[float, str]:
     """Bir kural çıkarımı için güven skoru ve gerekçesini döndürür.
 
@@ -131,6 +177,9 @@ def score(
         trigger_distance: değer ile alanın tetikleyici anahtar sözcüğü
             arasındaki karakter uzaklığı. `None` = tetikleyici bulunamadı.
         candidate_count: metinde bu alan için kaç aday eşleşme vardı.
+        window: değerin çevresindeki kanıt penceresi. Verilirse gezinme/SSS
+            bağlamı cezası uygulanır (bkz. `looks_like_chrome`). Verilmezse
+            eski davranış korunur — ceza yok.
 
     Returns:
         (skor, gerekçe) — gerekçe insan okunur, UI'da ve hata analizinde
@@ -173,6 +222,11 @@ def score(
     if isinstance(canonical, dict) and "min" in canonical and "max" in canonical:
         s += RANGE_PENALTY
         reasons.append("aralık değeri")
+
+    # 5) Kanıt gezinme/SSS bağlamında mı?
+    if looks_like_chrome(window):
+        s += CHROME_PENALTY
+        reasons.append("kanıt gezinme/SSS bağlamında")
 
     s = max(FLOOR, min(CEIL, s))
     return round(s, 3), "; ".join(reasons)

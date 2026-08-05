@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/beymende-vade-farksiz-4-aya-varan-taksit-firsati-3136",
+  "scraped_at": "2026-08-04T20:58:59+00:00",
+  "content_hash": "36019131b391d50d2a11592e7666529fb80646efe22883ddb6f566d3560047c7",
+  "collection_method": "live",
+  "title": "Beymen’de Vade Farksız 4 Aya Varan Taksit Fırsatı | Kampanyalar | Sağlam Kart Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 19138,
+  "text_chars": 1479
+}

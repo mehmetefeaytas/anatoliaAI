@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/egitim-harcamalarinizda-ucretsiz-6-taksit-imkani-82",
+  "scraped_at": "2026-08-04T21:02:03+00:00",
+  "content_hash": "b60094802069fff22556beb671f55346f260c7bf611767c381585dadfd3b8e66",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 33962,
+  "text_chars": 1547
+}

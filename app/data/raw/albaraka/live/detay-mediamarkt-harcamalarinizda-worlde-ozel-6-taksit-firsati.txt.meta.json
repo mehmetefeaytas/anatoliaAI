@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/mediamarkt-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:45+00:00",
+  "content_hash": "1d6c95da5c23cb1e772bd5ef8a73b6bebba71aad371ccc8160c70df96cfc6282",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188253,
+  "text_chars": 2123
+}

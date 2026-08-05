@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/deichmann-harcamalarinizda-worlde-ozel-5-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:13+00:00",
+  "content_hash": "bb8224dd2fb4726f87a879e62a8a4f9a4e8f0d1dac9fc5c4362de7236e01d36a",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180591,
+  "text_chars": 1625
+}

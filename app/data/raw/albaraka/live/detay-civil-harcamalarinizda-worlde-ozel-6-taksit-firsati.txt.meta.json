@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/civil-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:09+00:00",
+  "content_hash": "ee7f3b54b4727ba47df476e0d526df16e070eb15bd1a1450373e3a346d1384dc",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 180538,
+  "text_chars": 1594
+}

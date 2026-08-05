@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/yurt-disi-duty-free-odemelerinizde-yuzde15-indirim-58",
+  "scraped_at": "2026-08-04T21:02:06+00:00",
+  "content_hash": "2425e8c8c13e297386c99d090274e0c2c364ab02d2669eb80e033050db53bfc8",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 37231,
+  "text_chars": 4313
+}

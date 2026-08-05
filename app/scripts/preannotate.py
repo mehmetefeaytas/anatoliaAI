@@ -31,6 +31,7 @@ etiket başına en çok bilgi orada.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import random
 import sys
@@ -46,6 +47,7 @@ if str(_ROOT) not in sys.path:
 from scripts.gold_schema import (
     CAMPAIGN_TYPE_KEY,
     GOLD_SCHEMA_VERSION,
+    validate_canonical,
     values_equal,
 )
 from src.extraction.llm.extractor import default_extractor
@@ -60,6 +62,9 @@ DEFAULT_OUT = "data/gold/preannotations.json"
 # Çok kısa metinler kampanya değil, menü/gezinme artığıdır; anotatör zamanını
 # yer ve gold'u kirletir.
 DEFAULT_MIN_CHARS = 250
+# Korpus onarımında "içeriği yok, yalnız gezinme iskeleti" diye işaretlenen
+# belgelerin meta değeri (bkz. data/raw/_reextract_report.md).
+SHELL_STATUS = "kabuk"
 
 
 @dataclass
@@ -79,13 +84,59 @@ class RawDoc:
 # --------------------------------------------------------------------------- #
 # Ham veri okuma (data/raw SALT OKUNUR — buraya asla yazılmaz)
 # --------------------------------------------------------------------------- #
-def read_raw_docs(raw_dir: str | Path, min_chars: int = DEFAULT_MIN_CHARS
-                  ) -> list[RawDoc]:
+def _read_meta(txt_path: Path) -> dict[str, Any]:
+    """`<belge>.txt.meta.json` provenance dosyasını okur (yoksa boş sözlük)."""
+    meta_path = Path(f"{txt_path}.meta.json")
+    if not meta_path.is_file():
+        return {}
+    try:
+        loaded = json.loads(meta_path.read_text(encoding="utf-8"))
+    except ValueError:
+        return {}
+    return loaded if isinstance(loaded, dict) else {}
+
+
+def _unique_doc_id(bank_slug: str, txt_path: Path, taken: set[str]) -> str:
+    """Çakışmayan `doc_id` üretir.
+
+    `<banka>--<dosya adı>` TEKİL DEĞİL: aynı sayfa `live/` ve `products/`
+    altında ayrı dosya olarak duruyor. v1'de 1.678 belgenin 88'i aynı kimliği
+    paylaşıyordu; `to_review_csv` girdiyi `{d["id"]: d}` sözlüğüne çevirdiği
+    için bunlar SESSİZCE düşüyordu (plan 250 belge diyor, `_atama.md` 243).
+    Metin farklıysa üstelik hangi metnin kaldığı da rastgele oluyordu:
+    anotatör bir belgenin snippet'ini, başka bir belgenin tam metniyle
+    doğrulamaya çalışırdı.
+
+    Çakışmada klasör adı kimliğe girer (`--products-`), gerekirse sayaç eklenir.
+    """
+    base = f"{bank_slug}--{txt_path.stem}"[:120]
+    if base not in taken:
+        return base
+    scoped = f"{bank_slug}--{txt_path.parent.name}-{txt_path.stem}"[:120]
+    if scoped not in taken:
+        return scoped
+    for n in range(2, 100):
+        candidate = f"{scoped[:116]}-{n}"
+        if candidate not in taken:
+            return candidate
+    raise RuntimeError(f"doc_id çakışması çözülemedi: {txt_path}")
+
+
+def read_raw_docs(raw_dir: str | Path, min_chars: int = DEFAULT_MIN_CHARS,
+                  skip_shell: bool = True) -> list[RawDoc]:
     """`data/raw/<banka>/{live,manual}/*.txt` belgelerini okur.
 
     `.txt.meta.json` varsa provenance (source_url, content_hash, scraped_at)
-    oradan alınır. İçerik hash'i ile tekilleştirme yapılır: aynı sayfa iki
-    kez toplanmışsa gold'a iki kez girmemeli (metrik şişer).
+    oradan alınır. Aynı sayfa iki kez toplanmışsa gold'a iki kez girmemeli
+    (metrik şişer), bu yüzden tekilleştirme yapılır — ölçütü NORMALİZE METİN,
+    çünkü `content_hash` ham HTML'in hash'idir ve aynı içerik iki farklı
+    kaynak yolundan (ör. `live/` + `products/`) geldiğinde HTML farklı, metin
+    aynı olur. v1 ön-anotasyonunda 250 kayıttan 7'si tam bu yüzden çift girdi.
+
+    `skip_shell` açıkken `content_status: kabuk` işaretli belgeler atlanır:
+    bunlar gezinme menüsünden ibaret sayfalardır, 1-2 KB metinle `min_chars`
+    eşiğini geçerler ama 12 alanın 12'si `absent` çıkar — anotatör zamanının
+    tam kaybı.
     """
     root = Path(raw_dir)
     if not root.is_dir():
@@ -93,31 +144,33 @@ def read_raw_docs(raw_dir: str | Path, min_chars: int = DEFAULT_MIN_CHARS
 
     docs: list[RawDoc] = []
     seen_hashes: set[str] = set()
+    seen_ids: set[str] = set()
 
     for bank_dir in sorted(p for p in root.iterdir() if p.is_dir()):
         bank_slug = bank_dir.name
         for txt_path in sorted(bank_dir.rglob("*.txt")):
+            meta = _read_meta(txt_path)
+            if skip_shell and meta.get("content_status") == SHELL_STATUS:
+                continue
+
             raw_text = txt_path.read_text(encoding="utf-8", errors="replace")
             text = normalize_text(raw_text)
             if len(text) < min_chars:
                 continue
 
-            meta: dict[str, Any] = {}
-            meta_path = Path(f"{txt_path}.meta.json")
-            if meta_path.is_file():
-                try:
-                    meta = json.loads(meta_path.read_text(encoding="utf-8"))
-                except ValueError:
-                    meta = {}
-
             content_hash = meta.get("content_hash")
-            dedupe_key = content_hash or text
-            if dedupe_key in seen_hashes:
+            text_key = hashlib.sha256(text.encode("utf-8")).hexdigest()
+            if text_key in seen_hashes or (content_hash and content_hash in seen_hashes):
                 continue
-            seen_hashes.add(dedupe_key)
+            seen_hashes.add(text_key)
+            if content_hash:
+                seen_hashes.add(content_hash)
+
+            doc_id = _unique_doc_id(bank_slug, txt_path, seen_ids)
+            seen_ids.add(doc_id)
 
             docs.append(RawDoc(
-                doc_id=f"{bank_slug}--{txt_path.stem}"[:120],
+                doc_id=doc_id,
                 bank_slug=meta.get("bank_slug") or bank_slug,
                 text=text,
                 source_url=meta.get("source_url"),
@@ -155,8 +208,15 @@ def _katman(doc: RawDoc) -> int:
     return 2
 
 
-def sample_docs(docs: list[RawDoc], limit: Optional[int], seed: int) -> list[RawDoc]:
+def sample_docs(docs: list[RawDoc], limit: Optional[int], seed: int,
+                pinned: frozenset[str] = frozenset()) -> list[RawDoc]:
     """KATMANLI + bankalar arası dengeli, deterministik örnekleme.
+
+    `pinned` içindeki `doc_id`'ler örneklemeye KOŞULSUZ girer (kota içinden
+    sayılır). Gerekçe: korpus büyüyünce aynı `seed` bile farklı bir örneklem
+    verir; halihazırda insan tarafından anote edilmiş belgeler örneklemden
+    düşerse o emek ölçülemez hâle gelir (kalibrasyon turunun Fleiss kappa'sı
+    A'yı diğer üçüyle karşılaştırılamaz kılar).
 
     İki sorunu birden çözer:
 
@@ -177,8 +237,12 @@ def sample_docs(docs: list[RawDoc], limit: Optional[int], seed: int) -> list[Raw
         return sorted(docs, key=lambda d: d.doc_id)
 
     rng = random.Random(seed)
+    picked: list[RawDoc] = [d for d in docs if d.doc_id in pinned]
+
     havuz: dict[int, list[RawDoc]] = {0: [], 1: [], 2: []}
     for doc in docs:
+        if doc.doc_id in pinned:
+            continue
         havuz[_katman(doc)].append(doc)
 
     # KATMAN 2 İÇİN KOTA. Yalnız katman 0+1 alınırsa korpus tamamen
@@ -186,9 +250,8 @@ def sample_docs(docs: list[RawDoc], limit: Optional[int], seed: int) -> list[Raw
     # Alışveriş Puanı / Yeni Müşteri örneği KALMAZ. Şartname üç ürün
     # kategorisini de (finansman, kart, yatırım) istiyor, bu yüzden
     # kalanın ~%25'i katman 2'ye ayrılır ve KAMPANYA TÜRÜNE göre dengelenir.
-    kota2 = max(0, int(round((limit - len(havuz[0])) * 0.25)))
+    kota2 = max(0, int(round((limit - len(picked) - len(havuz[0])) * 0.25)))
 
-    picked: list[RawDoc] = []
     picked += _round_robin(havuz[0], limit - len(picked), rng,
                            anahtar=lambda d: d.bank_slug)
     picked += _round_robin(havuz[1], limit - len(picked) - kota2, rng,
@@ -234,7 +297,32 @@ def _round_robin(docs: list[RawDoc], n: int, rng, anahtar) -> list[RawDoc]:
 # --------------------------------------------------------------------------- #
 # Çıkarım
 # --------------------------------------------------------------------------- #
-def _field_payload(f: ExtractedField) -> dict[str, Any]:
+def _field_payload(f: ExtractedField, text: str) -> dict[str, Any]:
+    """Alanı JSON'a çevirir.
+
+    `span_verified` TAM belge metnine karşı doğrulanır. Eskiden `f.source_span`
+    (±40 karakterlik pencere DİZESİ) veriliyordu; `span_start`/`span_end` ise
+    tam metne göre offset olduğu için doğrulama anlamsızdı ve alanların
+    **%94,7'si `false`** çıkıyordu — doğru değerlerde bile.
+
+    Doğru çağrıyla ölçüm: 60 belgede 196 alanın **196'sı** (%100) doğrulanıyor;
+    eski çağrıyla %95,4'ü `false` çıkıyordu.
+
+    NE OLMADIĞINA dikkat: bu bir halüsinasyon dedektörü DEĞİL. Krom kaynaklı 35
+    `alisveris_puani` halüsinasyonunun span'leri **doğruydu** — `"10"` gerçekten
+    o offset'teydi; yanlış olan yorumdu (gezinme bağlantısını ödül sanmak).
+    Onlarda `span_verified: false` görünmesinin sebebi de halüsinasyon değil,
+    işte bu hatalı çağrıydı. Yani bu alanı halüsinasyon kapısı yapmak yanlış
+    olur; işi provenance doğruluğu.
+
+    Neden yine de önemli: %95 `false` üreten bir "doğrulandı" alanı, yokluğundan
+    daha kötüdür — sinyal gibi görünür, gürültüdür. Ayrıca CLAUDE.md §18'in
+    yenilikçilik hedeflerinden biri **kaynak vurgulama** ve arayüzün doğru
+    karakterleri işaretlemesi buna dayanıyor.
+
+    Doğru çağrı biçimi zaten depoda vardı (`src/api/main.py:620`:
+    `f.verify_span(text)`); iki çağrı yeri ayrışmıştı.
+    """
     return {
         "value": f.canonical_value,
         "raw_value": f.raw_value,
@@ -244,7 +332,7 @@ def _field_payload(f: ExtractedField) -> dict[str, Any]:
         "source_span": f.source_span,
         "span_start": f.span_start,
         "span_end": f.span_end,
-        "span_verified": f.verify_span(f.source_span or ""),
+        "span_verified": f.verify_span(text),
     }
 
 
@@ -263,6 +351,7 @@ def annotate_doc(doc: RawDoc, llm, classifier) -> dict[str, Any]:
                 llm_fields[f.field_name] = f
 
     fields: dict[str, Any] = {}
+    invalid_fields: dict[str, Any] = {}
     for name in EXTRACTION_FIELDS:
         rule_f = rule_fields.get(name)
         llm_f = llm_fields.get(name)
@@ -271,13 +360,31 @@ def annotate_doc(doc: RawDoc, llm, classifier) -> dict[str, Any]:
 
         # Katman önceliği reconcile.py ile aynı: kural birincil.
         winner = rule_f or llm_f
-        payload = _field_payload(winner)
+        payload = _field_payload(winner, text)
         payload["disagreement"] = bool(
             rule_f is not None and llm_f is not None
             and not values_equal(rule_f.canonical_value, llm_f.canonical_value)
         )
         payload["rule_value"] = rule_f.canonical_value if rule_f else None
         payload["llm_value"] = llm_f.canonical_value if llm_f else None
+
+        # ŞEMA DIŞI DEĞER, DEĞER SAYILMAZ. Kural katmanı ara sıra alanın
+        # kanonik biçimini tutmayan bir değer üretiyor — en sık örnek
+        # `tahsis_ucreti` için para yerine oran (`{"rate": 0.5}`: "tahsis
+        # ücreti tutarın %0,5'i"). Bu değer `fields`'a girerse:
+        #   1. CSV'ye ön-doldurulur ve boş verdict = ONAY sayılır,
+        #   2. `build_gold` model değerini olduğu gibi gold'a yazar,
+        #   3. hata en sonda `validate_gold` adımında patlar — anotasyon
+        #      bittikten sonra, yani düzeltmesi en pahalı anda.
+        # Bu yüzden değer burada AYRI tutulur: alan "model üretmedi" sayılır
+        # (kural katmanının hatası gold'a sızmaz) ama kanıtı kaybolmaz —
+        # `to_review_csv` bu kaydı span'i işaretli bir uyarı satırına çevirir,
+        # anotatör metindeki yeri görüp doğru değeri yazabilir.
+        schema_error = validate_canonical(name, payload["value"])
+        if schema_error:
+            payload["schema_error"] = schema_error
+            invalid_fields[name] = payload
+            continue
         fields[name] = payload
 
     campaign_type, type_conf = classifier.classify(text)
@@ -294,17 +401,38 @@ def annotate_doc(doc: RawDoc, llm, classifier) -> dict[str, Any]:
         CAMPAIGN_TYPE_KEY: campaign_type,
         "campaign_type_confidence": round(float(type_conf), 4),
         "fields": fields,
+        # Şemaya uymadığı için DEĞER SAYILMAYAN çıkarımlar (yukarıdaki gerekçe).
+        "invalid_fields": invalid_fields,
         # Modelin HİÇBİR ŞEY üretmediği alanlar: recall kontrolü için CSV'ye
         # ayrı satır olarak düşerler (boş bırakılırsa `absent_fields`'a girer).
         "missing_fields": [n for n in EXTRACTION_FIELDS if n not in fields],
     }
 
 
+def read_pinned_ids(paths: list[str]) -> frozenset[str]:
+    """İnceleme CSV'lerinden (ya da satır başına bir kimlik içeren düz metinden)
+    örneklemde KALMASI gereken `doc_id`'leri toplar.
+
+    Kullanımı: `--pin-csv data/gold/review/round0_kalibrasyon_A.csv`. Anote
+    edilmiş bir dosyanın belgeleri yeni örneklemin dışında kalırsa o anotasyon
+    hiçbir metriğe girmez.
+    """
+    from scripts.to_review_csv import read_doc_ids
+
+    ids: set[str] = set()
+    for raw_path in paths:
+        ids |= read_doc_ids(raw_path)
+    return frozenset(ids)
+
+
 def preannotate(raw_dir: str = DEFAULT_RAW_DIR, limit: Optional[int] = None,
-                seed: int = 42, min_chars: int = DEFAULT_MIN_CHARS
-                ) -> dict[str, Any]:
+                seed: int = 42, min_chars: int = DEFAULT_MIN_CHARS,
+                pinned: frozenset[str] = frozenset()) -> dict[str, Any]:
     """Ham veriyi okur, çıkarımı koşar, ön-anotasyon sözlüğü döndürür."""
-    docs = sample_docs(read_raw_docs(raw_dir, min_chars=min_chars), limit, seed)
+    corpus = read_raw_docs(raw_dir, min_chars=min_chars)
+    docs = sample_docs(corpus, limit, seed, pinned=pinned)
+    secilen = {d.doc_id for d in docs}
+    kayip = sorted(pinned - secilen)
 
     llm = default_extractor()
     classifier = default_classifier()
@@ -312,6 +440,7 @@ def preannotate(raw_dir: str = DEFAULT_RAW_DIR, limit: Optional[int] = None,
     records = [annotate_doc(doc, llm, classifier) for doc in docs]
 
     field_count = sum(len(r["fields"]) for r in records)
+    invalid_count = sum(len(r["invalid_fields"]) for r in records)
     disagreements = sum(
         1 for r in records for p in r["fields"].values() if p["disagreement"]
     )
@@ -320,11 +449,22 @@ def preannotate(raw_dir: str = DEFAULT_RAW_DIR, limit: Optional[int] = None,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "raw_dir": str(raw_dir),
         "seed": seed,
+        "min_chars": min_chars,
         "llm_available": bool(getattr(llm, "available", False)),
         "llm_mode": getattr(llm, "structured_mode", None),
+        # Örneklem tekrar üretilebilirliği: korpus büyüdükçe aynı seed farklı
+        # örneklem verir, bu yüzden havuz büyüklüğü de kayda geçer.
+        "corpus_size": len(corpus),
         "doc_count": len(records),
         "field_count": field_count,
+        # Şema dışı olduğu için değer sayılmayan çıkarımlar (kural katmanı hata
+        # raporu olarak da okunabilir).
+        "invalid_field_count": invalid_count,
         "disagreement_count": disagreements,
+        "pinned_ids": sorted(pinned & secilen),
+        # Sabitlenmesi istenip korpusta BULUNAMAYAN kimlikler. Sessizce
+        # yutulmaz: o belgelerin anotasyonu artık hiçbir metriğe girmiyor.
+        "pinned_missing": kayip,
         "docs": records,
     }
 
@@ -341,11 +481,16 @@ def main(argv: Optional[list[str]] = None) -> int:
                         help="kaç belge örneklenecek (bankalar arası dengeli)")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--min-chars", type=int, default=DEFAULT_MIN_CHARS)
+    parser.add_argument("--pin-csv", action="append", default=[],
+                        metavar="YOL",
+                        help="bu inceleme CSV'sindeki belgeler örneklemde kalsın "
+                             "(anote edilmiş dosyalar için; tekrarlanabilir)")
     args = parser.parse_args(argv)
 
     limit = None if args.limit is not None and args.limit <= 0 else args.limit
+    pinned = read_pinned_ids(args.pin_csv) if args.pin_csv else frozenset()
     result = preannotate(raw_dir=args.raw_dir, limit=limit, seed=args.seed,
-                         min_chars=args.min_chars)
+                         min_chars=args.min_chars, pinned=pinned)
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -355,10 +500,18 @@ def main(argv: Optional[list[str]] = None) -> int:
     banks = sorted({r["bank_slug"] for r in result["docs"]})
     per_doc = result["field_count"] / result["doc_count"] if result["doc_count"] else 0
     print(f"ön-anotasyon yazıldı: {out_path}")
+    print(f"  korpus         : {result['corpus_size']} belge (kabuk + kopya ayıklandı)")
     print(f"  belge          : {result['doc_count']} ({len(banks)} banka)")
     print(f"  dolu alan      : {result['field_count']} (belge başına {per_doc:.1f}/12)")
+    print(f"  şema dışı alan : {result['invalid_field_count']} (değer sayılmadı, "
+          f"CSV'de uyarı satırı)")
     print(f"  anlaşmazlık    : {result['disagreement_count']}")
     print(f"  LLM            : {'açık' if result['llm_available'] else 'KAPALI (kural-only)'}")
+    if result["pinned_ids"]:
+        print(f"  sabitlenen     : {len(result['pinned_ids'])} belge")
+    if result["pinned_missing"]:
+        print(f"  UYARI: sabitlenemedi (korpusta yok): {len(result['pinned_missing'])} "
+              f"belge -> {result['pinned_missing'][:3]}")
     return 0
 
 

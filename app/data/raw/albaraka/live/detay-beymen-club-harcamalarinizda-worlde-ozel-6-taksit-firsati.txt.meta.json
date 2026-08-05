@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/beymen-club-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:01+00:00",
+  "content_hash": "dba16c1f0f2e2ff1b08f64cf004a7e8552689c4ed69767574df211b6333471d5",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188169,
+  "text_chars": 2077
+}

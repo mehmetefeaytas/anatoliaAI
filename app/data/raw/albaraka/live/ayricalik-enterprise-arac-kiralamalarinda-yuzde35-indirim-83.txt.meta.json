@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/enterprise-arac-kiralamalarinda-yuzde35-indirim-83",
+  "scraped_at": "2026-08-04T21:01:57+00:00",
+  "content_hash": "776b11cb8a3c08dd580a8c00eaaa95d55fe2327d5a84b3b5c4174cfe72d5bf4d",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 34671,
+  "text_chars": 2123
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/wome-deluxe-hotelde-9-aya-varan-taksit-firsati-1870",
+  "scraped_at": "2026-08-04T20:59:32+00:00",
+  "content_hash": "e77bb6fd4b9e9e99fbeae44114ffe075f2c588f37eedeef68a0b1ab446b4a652",
+  "collection_method": "live",
+  "title": "Wome Deluxe Hotel'de 9 Aya Varan Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 17723,
+  "text_chars": 765
+}

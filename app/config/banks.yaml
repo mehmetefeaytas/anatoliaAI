@@ -44,6 +44,10 @@ banks:
   - slug: kuveyt-turk
     name: Kuveyt Türk
     website_url: https://www.kuveytturk.com.tr
+    # `js` DENENDİ ve ÖLÇÜLDÜ (2026-08-04) — bkz. vakif-katilim'daki not.
+    # 21 "kabuk" şüphelisinin TAMAMI yanlış pozitifti: hepsi zaten gerçek
+    # kampanya metni taşıyor (ör. kampanya-arsivi-kampusten-ucuran-firsat
+    # 1182 krkt, tam koşul metniyle). Tarayıcı metni bayt-aynı çıktı.
     scrape_mode: static
     campaign_paths:
       - /kampanyalar
@@ -68,6 +72,21 @@ banks:
       - https://saglamkart.kuveytturk.com.tr/kampanyalar
       - /ozel-bankacilik/ayricaliklar/kampanyalar
       - /isim-icin
+      # 2026-08-04 KART MARKASI turu (docs/rapor/devam-kart-markalari.md):
+      # milesandsmiles.kuveytturk.com.tr Kuveyt Türk'ün Türk Hava Yolları ortak
+      # markalı KART SİTESİ. saglamkart.* ile AYNI motorda ama AYRI katalog:
+      # 9 kampanya detayı (`/kampanyalar/<slug>-<id>`), hiçbiri ana alanın
+      # /kampanyalar ağacında YOK (ölçüm: mil kampanyaları yalnız burada).
+      # `extra_hosts` GEREKSİZ — alt alan, `same_site()` zaten tolere ediyor.
+      # robots.txt: "User-agent: * / Allow: /" (ölçüldü) → kısıt yok.
+      # Statik hasat DOĞRULANDI: liste sayfasında 9/9 bağlantı statikte de
+      # görünüyor (js ile bayt-aynı), 3 belge örneklendi → 935-1661 krkt,
+      # üçü de FARKLI hash, TL/taksit/vade sinyali taşıyor.
+      # `/kampanyalar/biten-kampanyalar` arşiv sayfası her iki kart alt
+      # alanında da BOŞ (0 bağlantı, `?isArchived=true` ile de 0) → archive_paths'a
+      # EKLENMEDİ; ayrıca DEFAULT_ARCHIVE_PATTERNS'teki "biten-kampanya" deseni
+      # onu aktif turdan zaten eliyor, yani yanlış "aktif" etiketi riski yok.
+      - https://milesandsmiles.kuveytturk.com.tr/kampanyalar
     # Arşiv listeleme sayfası her kampanyanın BİTİŞ TARİHİNİ ayrı düğümde veriyor
     # (ör. 31.07.2026) → başlık + bitiş tarihi + özet üçlüsü hazır etiket.
     archive_paths:
@@ -92,7 +111,12 @@ banks:
     # bankacılık + ticari segment). Tavan sabit kalsa yeni alanların belgeleri
     # kırpılıp atılırdı; aday havuzunun büyük kısmı hâlâ sitemap'ten geldiği için
     # 2 kat değil ~%25 artış yeterli: 260 → 320.
-    max_docs: 320
+    #
+    # 2026-08-04 (kart markası turu): milesandsmiles alt alanı 9 ÖLÇÜLMÜŞ yeni
+    # aday getiriyor, saglamkart 10. İkisi de ana alanın sitemap'inde YOK
+    # (ayrı alan → sitemap ayrı), yani havuza tam 19 belge ekliyorlar. Tavan
+    # 320'de kalsa sitemap adayları bu 19'u kenara itebilirdi → 340.
+    max_docs: 340
 
   - slug: albaraka
     name: Albaraka Türk
@@ -112,6 +136,24 @@ banks:
       - /tr/ticari-ve-kurumsal
       - /tr/dijital-bankacilik
       - /tr/bireysel/finansmanlar/ihtiyac
+      # 2026-08-04 KART MARKASI turu (docs/rapor/devam-kart-markalari.md).
+      # KANIT TAHMİN DEĞİL: zaten toplanmış data/raw/albaraka/live/tr-kampanyalar.html
+      # içinde "Worldcard Kampanyaları" düğmesi var →
+      #   <a href="https://www.albarakaworldcard.com/kampanyalarimiz">
+      # albarakaworldcard.com AYRI SİTE DEĞİL: 301'le
+      # www.albaraka.com.tr/tr/world-dunyasi/kampanyalar'a düşüyor (ölçüldü).
+      # Bu yüzden `extra_hosts`a YAZILMADI — aynı alan, gereksiz olurdu.
+      # Kayıp GERÇEKTİ: bu ağaç ne campaign_paths'ta ne de detail_patterns'ta
+      # ("/tr/kampanyalar/") eşleşiyordu → 37 kampanya detayı
+      # (`/tr/world-dunyasi/detay/...`) hiç toplanmamıştı (korpusta 0 belge, ölçüldü).
+      - /tr/world-dunyasi/kampanyalar
+      # albarakaozel.com AYRI KAYITLI ALAN (Albaraka Özel Bankacılık) — aşağıdaki
+      # `extra_hosts` girdisi ZORUNLU, aksi halde `same_site()` False döner ve
+      # sayfayla birlikte ondan çıkan tüm bağlantılar atılır.
+      # 11 ayrıcalık detayı (`/tr/ayricalik/<slug>-<id>`) taşıyor; bunlar özel
+      # bankacılık KARTI avantajları (indirim oranı + taksit + TL tavanı), yani
+      # kampanya sınıfı içerik. robots.txt: "User-agent: * / Allow: /" (ölçüldü).
+      - https://www.albarakaozel.com/tr/ayricaliklar
     # 2026-08-04'te HTTP 200 doğrulandı (curl). `campaign_paths`a DEĞİL buraya
     # yazıldı: bu sayfa SÜRESİ DOLMUŞ kampanyaların listesi. campaign_paths'a
     # konsa `live/` altına düşer ve karşılaştırma motoru bitmiş kampanyayı AKTİF
@@ -129,19 +171,59 @@ banks:
     document_paths:
       - /tr/urun-ve-hizmet-ucretleri
       - /tr/hakkimizda/iletisim/sozlesme-ve-formlar
+    extra_hosts:
+      - albarakaozel.com
     sitemap_urls:
       - https://www.albaraka.com.tr/sitemap.xml
     detail_patterns:
       - /tr/kampanyalar/
+      # 2026-08-04: iki YENİ belge deseni. Bunlar olmadan yukarıdaki iki giriş
+      # noktası yalnızca "gezinme başlangıcı" sayılır ve bulunan 48 detay sayfası
+      # BELGE olarak kaydedilmez — yani yol eklemek tek başına yetmiyordu.
+      - /tr/world-dunyasi/detay/
+      - /tr/ayricalik/
     # 2026-08-04: giriş noktası 1 → 5 oldu. 5 kat artırmıyoruz çünkü yalnızca
     # `/tr/kampanyalar/` desenine uyan bağlantılar belge sayılıyor; segment
     # sayfalarının kendisi sayılmıyor. Gerçekçi beklenti ~2 kat: 60 → 120.
-    max_docs: 120
+    #
+    # 2026-08-04 (kart markası turu): ÖLÇÜLEN yeni aday sayısı 48
+    # (37 world-dunyasi/detay + 11 albarakaozel/tr/ayricalik). Tavan 120'de
+    # kalsa `/tr/kampanyalar/` adaylarıyla aynı havuzu paylaşıp kırpılırlardı.
+    # 120 + 48 = 168 → yuvarlanarak 180 (arşiv turu ayrı tavanda, etkilenmez).
+    max_docs: 180
 
   - slug: turkiye-finans
     name: Türkiye Finans
     website_url: https://www.turkiyefinans.com.tr
-    scrape_mode: static
+    # `static` → `js` (2026-08-04, KART MARKASI turu). Bu değişiklik ÖLÇÜMLE
+    # gerekçelendirildi; diğer bankalarda `js` KASITLI olarak reddedildi (bkz.
+    # vakif-katilim notu: 98/101 sayfada tarayıcı metni statikle bayt-aynıydı).
+    # Türkiye Finans'ta durum FARKLI çıktı, iki bağımsız sebeple:
+    #
+    #  1) ZORUNLU SEBEP — happycard.com.tr'ye `static` ile ULAŞILAMIYOR.
+    #     Sunucu TLS el sıkışmasında YALNIZCA yaprak sertifikayı gönderiyor,
+    #     ara sertifikayı (DigiCert Global G2 TLS RSA SHA256 2020 CA1) göndermiyor:
+    #       openssl → "Verify return code: 21 (unable to verify the first certificate)"
+    #     `curl` (macOS anahtar zinciri, AIA ile ara sertifikayı kendi çekiyor) ve
+    #     Playwright başarılı; `requests`+certifi ise
+    #       SSLError: CERTIFICATE_VERIFY_FAILED unable to get local issuer certificate
+    #     ile DÜŞÜYOR (ölçüldü). StaticFetcher bunu `blocked`a yazıp sessizce
+    #     geçerdi → 9 kampanya belgesi hiç toplanmazdı. `verify=False` YAPILMADI:
+    #     doğrulamayı kapatmak tüm alanlar için güvenlik gerilemesi olurdu ve
+    #     fetcher.py bu turun kapsamı dışında.
+    #
+    #  2) DESTEKLEYİCİ ÖLÇÜM — `js` ana sitede de KAYIP VERMİYOR, hatta kazandırıyor:
+    #     /kampanyalar/Sayfalar/default.aspx      static 11 bağlantı → js 12
+    #     /kampanyalar/Sayfalar/kart-kampanyalari static 12 bağlantı → js 14
+    #     Hiçbir sayfada statik-fazlası bağlantı YOK (staticFazla=0). js-only
+    #     bulunanlar gerçek: kobi-kampanyalari.aspx, ...mobilden-tanis.aspx.
+    #     Metin de artıyor (6506→8163 krkt) çünkü liste kartları geç yükleniyor.
+    #     Ayrıca `js` `fetch_all_pages`i etkinleştiriyor; TF liste sayfalarında
+    #     sayfalama widget'ı yok (ölçüldü: sayfa=1) → yan etki üretmiyor,
+    #     biten-kampanyalar.aspx'te 21 arşiv bağlantısı görüyor.
+    #
+    # BEDEL: hasat yavaşlıyor. Kabul edildi çünkü alternatif SESSİZ VERİ KAYBI.
+    scrape_mode: js
     # 2026-08-04 doğrulaması: /tr-tr/kampanyalar/sayfalar/default.aspx HTTP 200
     # döndü, ancak bu aşağıdaki ilk satırın YALNIZCA KÜÇÜK HARFLİ biçimi.
     # SharePoint yollarında büyük/küçük harf farkı aynı sayfayı verir; ayrı satır
@@ -159,6 +241,43 @@ banks:
       - /tr-tr/kampanyalar/Sayfalar/ticari-kampanyalar.aspx
       - /tr-tr/kampanyalar/Sayfalar/sigorta-kampanyalari.aspx
       - /tr-tr/kampanyalar/Sayfalar/diger-kampanyalar.aspx
+      # 2026-08-04 KART MARKASI turu (docs/rapor/devam-kart-markalari.md).
+      # happycard.com.tr = Türkiye Finans'ın Happy Kart markası. Alan adı TAHMİN
+      # EDİLMEDİ: bankanın kendi kredi kartları sayfası
+      # (/tr-tr/bireysel/Sayfalar/kredi-kartlari.aspx) Happy Silver/Gold/Platinum
+      # bağlantılarını doğrudan www.happycard.com.tr'ye veriyor (tarayıcıyla ölçüldü).
+      # 10 kampanya detayı (`/kampanyalar/Sayfalar/*.aspx`), 9'u ana sitenin
+      # kampanya ağacında YOK → gerçek kayıp kaynak.
+      # ÖNEMLİ: çıplak alan adı 404 veriyor, `www.` ZORUNLU (ölçüldü). Yine de
+      # `extra_hosts`a "happycard.com.tr" yazıldı çünkü discover.py `_host()`
+      # "www." ekini atarak karşılaştırıyor.
+      # robots.txt YOK (404 → SharePoint hata sayfasına düşüyor), sitemap.xml da yok;
+      # bu yüzden keşif YALNIZCA aşağıdaki liste sayfasından yürüyor.
+      # Kabuk/tekrar tuzağı kontrol EDİLDİ: 10 sayfa hasat edildi, 10 FARKLI hash,
+      # 2346-4630 krkt, hepsinde TL/taksit/kâr payı sinyali → liste metni her
+      # sayfaya kopyalanmıyor.
+      - https://www.happycard.com.tr/kampanyalar/Sayfalar/default.aspx
+    # happycard.com.tr AYRI KAYITLI ALAN (alt alan değil): `same_site()` testi
+    # happycard.com.tr ↔ turkiyefinans.com.tr için False döner, yani bu satır
+    # olmadan sayfa da ondan çıkan tüm bağlantılar da atılırdı.
+    extra_hosts:
+      - happycard.com.tr
+    # DOSYA ADI ÇAKIŞMASI — ÖLÇÜLDÜ ve KORPUSU BOZDU (2026-08-04, onarıldı).
+    # `collector.url_to_slug` yalnızca yolun son parçalarını kullandığı için
+    #   www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/default.aspx
+    #   www.happycard.com.tr/kampanyalar/Sayfalar/default.aspx
+    # İKİSİ DE `kampanyalar-default` slug'ına düşüyor. Ayrı bir hasat çağrısında
+    # happycard'ın liste sayfası (2777 krkt) Türkiye Finans'ın ANA kampanya
+    # listesini (6506 krkt) sessizce EZDİ — `.meta.json`daki `source_url` bile
+    # happycard'a döndü. (`save_docs` çakışmayı yalnızca AYNI çağrı içinde
+    # `-2` ekiyle çözüyor; çağrılar arasında üzerine yazıyor.)
+    # Çözüm: happycard'ın LİSTE sayfası BELGE olarak sayılmasın. Kayıp yok —
+    # `_discover` bu yolu `campaign_paths` girişi olarak GEZMEYE devam ediyor
+    # (`_listing_pages` exclude'a bakmaz), yalnızca `add()` onu belge listesine
+    # koymuyor; 9 kampanya DETAYI eksiksiz toplanıyor ve liste sayfasının kendi
+    # metni zaten yalnızca kampanya başlıklarından oluşuyordu.
+    exclude_patterns:
+      - happycard\.com\.tr/kampanyalar/Sayfalar/default\.aspx
     # Türkiye Finans süresi dolmuş kampanyaları AYRI sayfada yayımlıyor.
     archive_paths:
       - /tr-tr/kampanyalar/Sayfalar/biten-kampanyalar.aspx
@@ -168,8 +287,17 @@ banks:
       - /tr-tr/bireysel/sozlesmeler-ve-formlar/Sayfalar/default.aspx
     detail_patterns:
       - /tr-tr/kampanyalar/Sayfalar/
+      # happycard.com.tr'de yol öneki "/tr-tr" YOK: /kampanyalar/Sayfalar/x.aspx.
+      # Bu desen ONU da ana sitenin /tr-tr/kampanyalar/Sayfalar/'ını da kapsar
+      # (üstteki satırın üst kümesi); üstteki satır silinmedi, niyeti belgeliyor.
+      # Eşleşme re.I ile yapıldığı için "Sayfalar" büyük harfi sorun değil.
+      - /kampanyalar/Sayfalar/
       - finansmani.aspx
-    max_docs: 80
+    # 2026-08-04 (kart markası turu): happycard.com.tr 10 ÖLÇÜLMÜŞ yeni aday
+    # getiriyor ve kendi sitemap'i olmadığı için tamamı tek liste sayfasından
+    # geliyor. 80 tavanı ana sitenin 10 kategori sayfasıyla paylaşıldığında
+    # kart markası belgeleri sıranın sonunda kalıp kırpılabilirdi: 80 → 100.
+    max_docs: 100
 
   # Ziraat Katılım — 2026-08-03 tarayıcı doğrulaması:
   #  * /bireysel/kampanyalar sayfası PRATİKTE BOŞ (7 bağlantı, hiçbiri kampanya
@@ -186,6 +314,19 @@ banks:
     # mevcut, tekrar eklenmedi. HTTP 200 dönmesi sayfanın DOLU olduğunu
     # göstermiyor; yukarıdaki 2026-08-03 notu geçerli (7 bağlantı, hiçbiri detay
     # değil) — gerçek katalog /kart-kampanyalari'dır.
+    #
+    # KART MARKASI: bankkart.com.tr DENENDİ ve BİLİNÇLİ OLARAK REDDEDİLDİ
+    # (docs/rapor/devam-kart-markalari.md). HTTP 200, robots.txt "Allow: /" —
+    # yani teknik engel yok, ELEME NEDENİ ATIF (attribution):
+    #  * Ziraat Katılım'ın kendi kampanya sayfalarında bankkart.com.tr'ye tek
+    #    referans var ve o da anlaşmalı mağaza listesi PDF'i
+    #    (medium/document-file-129.vsf) — kampanya kataloğu bağlantısı DEĞİL.
+    #  * bankkart.com.tr ana sayfasında "katılım" kelimesi 0 kez geçiyor (ölçüldü):
+    #    site Ziraat BANKASI'nın (konvansiyonel) kart programına ait.
+    # Eklenirse konvansiyonel bankanın kampanyaları katılım bankası korpusuna
+    # girer ve karşılaştırma motoru bunları Ziraat Katılım'a atfeder → korpus
+    # zehirlenmesi. Ziraat Katılım'ın kendi kart kampanyaları zaten
+    # /kart-kampanyalari altında toplanıyor.
     campaign_paths:
       - /bireysel/kampanyalar
       - /kart-kampanyalari
@@ -220,9 +361,29 @@ banks:
   - slug: vakif-katilim
     name: Vakıf Katılım
     website_url: https://www.vakifkatilim.com.tr
+    # `js` DENENDİ ve ÖLÇÜLDÜ (2026-08-04) — `static` KASITLI olarak korunuyor.
+    # 41 "kabuk" şüphelisi Playwright ile yeniden hasat edildi: metin
+    # 33'ünde BAYT-AYNI çıktı, hiçbirinde içerik artmadı. Bu sitelerin
+    # gövdesi sunucuda render ediliyor; kısa kalan sayfalarda içerik CANLI
+    # SİTEDE de yok (yalnızca başlık + kırıntı yolu). `js`'e çevirmek hasadı
+    # ~10x yavaşlatır, tek karakter kazandırmaz. Ayrıntı: aynı tarihli
+    # data/raw/**/*.meta.json `recollection_result` alanları.
     scrape_mode: static
     # 2026-08-04: /tr/kendim-icin/kampanyalar/mevcut-kampanyalar yeniden
     # doğrulandı (HTTP 200) — zaten mevcut, tekrar eklenmedi.
+    #
+    # KART MARKASI ARANDI, YOK — sonuç `null` (docs/rapor/devam-kart-markalari.md).
+    # Vakıf Katılım'ın kart markası "VKart" (site haritasında /kartlar/kredi-karti/vkart,
+    # /banka-karti/vkart-debit, /ticari-kartlar/kredi-karti/vkart-business).
+    # Bu markanın AYRI SİTESİ YOK; kampanyalar ana alanda kalıyor.
+    # DENENDİ ve ÇÖZÜLMEDİ (DNS yok, curl HTTP 000) — tekrar denemeyin:
+    #   vakifkart.com.tr, vkart.com.tr, vkartdunyasi.com.tr, vkartdunyasi.com
+    # (vkart.com çözülüyor ama Vlad Kononov adlı kişisel siteye ait, bankayla
+    # ilgisi yok — alan adı benzerliğine aldanılmamalı.)
+    # Bankanın kendi kart sayfalarında (/tr/kendim-icin/kartlar ve
+    # /kartlar/kredi-karti) tek bir dış kart markası bağlantısı bile yok (ölçüldü);
+    # ayrıca 1067 belgelik Vakıf Katılım ham korpusunda hiçbir kart markası alan
+    # adı geçmiyor. Yani eksik kaynak DEĞİL, var olmayan kaynak.
     campaign_paths:
       - /tr/kendim-icin/kampanyalar/mevcut-kampanyalar
       - /tr/isim-icin/kampanyalar/mevcut-kampanyalar
@@ -239,9 +400,25 @@ banks:
   - slug: turkiye-emlak-katilim
     name: Türkiye Emlak Katılım
     website_url: https://www.emlakkatilim.com.tr
+    # `js` DENENDİ ve ÖLÇÜLDÜ (2026-08-04) — bkz. vakif-katilim'daki not.
+    # 39 şüphelinin 38'inde tarayıcı metni statikle BAYT-AYNI. Süresi dolan
+    # kampanya sayfaları (ör. /kampanya/paraf-ile-pttavmcomda-...) canlı
+    # sitede gövdesiz yayında kalıyor; `js` bunu kurtarmıyor.
     scrape_mode: static
     # 2026-08-04: /tr/bireysel/kampanyalar yeniden doğrulandı (HTTP 200) —
     # zaten mevcut, tekrar eklenmedi.
+    #
+    # KART MARKASI: paraf.com.tr DENENDİ ve BİLİNÇLİ OLARAK REDDEDİLDİ
+    # (docs/rapor/devam-kart-markalari.md). Emlak Katılım'ın kart markası
+    # gerçekten Paraf ("Emlak Katılım Paraf Kredi Kartı", kart sayfasından
+    # ölçüldü) ve paraf.com.tr HTTP 200 dönüyor. ELEME NEDENİ ATIF:
+    #  * Bankanın kendi kart sayfaları (/tr/bireysel/kartlar ve .../kredi-karti)
+    #    paraf.com.tr'ye HİÇBİR bağlantı vermiyor (ölçüldü).
+    #  * paraf.com.tr ana sayfasında "katılım" 0 kez geçiyor; site Halkbank'ın
+    #    Paraf programına ait, robots.txt de yok.
+    # Paraf ORTAK bir program: oradaki kampanyalar Halkbank Paraf kartlarını da
+    # kapsıyor. Toplu hasat, Halkbank kampanyalarını Emlak Katılım'a atfederdi.
+    # Aynı gerekçe dunya-katilim için de geçerli (oradaki nota bak).
     campaign_paths:
       - /tr/bireysel/kampanyalar
       - /tr/kurumsal/kampanyalar
@@ -321,6 +498,15 @@ banks:
     scrape_mode: static
     # 2026-08-04: /kampanyalar yeniden doğrulandı (HTTP 200) — zaten mevcut,
     # tekrar eklenmedi.
+    #
+    # KART MARKASI: paraf.com.tr DENENDİ ve REDDEDİLDİ — turkiye-emlak-katilim
+    # bloğundaki gerekçenin aynısı (ortak program → yanlış atıf riski).
+    # Dünya Katılım'ın kart markası da Paraf: zaten toplanmış
+    # data/raw/dunya-katilim/live/kampanyalar-incehesap.html içinde
+    # "Dünya Katılım Paraf ile ... www.paraf.com.tr/content/parafcard/tr/kampanyalar/..."
+    # geçiyor. Yani bağlantı kampanya METNİNİN İÇİNDE, kataloğa açılan bir
+    # gezinme bağlantısı değil; Dünya Katılım kendi kampanyasını kendi sitesinde
+    # yayımlıyor ve yalnızca detay için ortak programa referans veriyor.
     campaign_paths:
       - /kampanyalar
     document_paths:

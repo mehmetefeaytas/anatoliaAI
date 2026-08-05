@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/hepsiburada-harcamalarinizda-worlde-ozel-6-taksit-firsati",
+  "scraped_at": "2026-08-04T21:00:36+00:00",
+  "content_hash": "b95f5afa20cd25d5f9c482f4735df0b5bff894e31d0b9f8aec2cb7c5c78b702f",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 188259,
+  "text_chars": 2224
+}

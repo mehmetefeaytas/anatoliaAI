@@ -564,9 +564,43 @@ def _default_bundle(delay_s: float) -> FetcherBundle:
 # Diske yazma (provenance sidecar'ı ile)
 # --------------------------------------------------------------------------- #
 
+def _baska_belgeye_ait(target_dir: Path, stem: str, source_url: str) -> bool:
+    """Diskteki bu ada sahip belge BAŞKA bir URL'e mi ait?
+
+    `url_to_slug` yalnızca URL'in YOLUNU kullanır, alan adına bakmaz. Banka
+    başına birden fazla host toplandığından (kart markası siteleri) iki ayrı
+    host'un aynı yolu aynı dosya adına düşüyor.
+
+    ÖLÇÜLMÜŞ BOZULMA: happycard.com.tr'nin liste sayfası Türkiye Finans'ın ana
+    kampanya listesini ezdi — 6506 -> 2777 karakter, `source_url` bile değişti.
+    """
+    meta = target_dir / f"{stem}.txt.meta.json"
+    if not meta.is_file():
+        return False
+    try:
+        kayitli = json.loads(meta.read_text(encoding="utf-8")).get("source_url")
+    except (OSError, ValueError):
+        # Okunamayan sidecar'ı çakışma sayma; üzerine yazmak eski davranıştı.
+        return False
+    return bool(kayitli) and bool(source_url) and kayitli != source_url
+
+
 def save_docs(docs: list[RawDoc], raw_dir: str | Path,
               subdir: str = LIVE_SUBDIR) -> list[Path]:
-    """Belgeleri data/raw/<slug>/<subdir>/ altına yazar + `.meta.json` koyar."""
+    """Belgeleri data/raw/<slug>/<subdir>/ altına yazar + `.meta.json` koyar.
+
+    Çakışma koruması iki katmanlı ve İKİSİ DE gerekli:
+
+    1. `used` — aynı çağrı içindeki çakışmalar (zaten vardı).
+    2. `_baska_belgeye_ait` — **diskteki** çakışmalar. Eskiden yoktu; `used`
+       yalnızca bellekte olduğu için ana siteyi bir koşuda, kart markası
+       sitesini başka koşuda hasat etmek ikincinin birinciyi SESSİZCE ezmesi
+       demekti.
+
+    Aynı URL yeniden hasat edilirse dosya adı DEĞİŞMEZ (idempotent). Bu şart:
+    anotasyonun `doc_id` eşleşmesi dosya adına dayanıyor ve bir turda dosya adı
+    değişmesi 32 belgenin 10'unu geçersiz kılmıştı.
+    """
     written: list[Path] = []
     used: set[str] = set()
     for doc in docs:
@@ -574,7 +608,8 @@ def save_docs(docs: list[RawDoc], raw_dir: str | Path,
         target_dir.mkdir(parents=True, exist_ok=True)
         stem = url_to_slug(doc.source_url or "") or slugify(doc.title or "belge")
         candidate, n = stem, 2
-        while candidate in used:
+        while (candidate in used
+               or _baska_belgeye_ait(target_dir, candidate, doc.source_url or "")):
             candidate, n = f"{stem}-{n}", n + 1
         used.add(candidate)
 

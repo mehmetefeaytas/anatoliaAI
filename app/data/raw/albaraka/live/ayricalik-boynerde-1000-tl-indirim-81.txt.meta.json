@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albarakaozel.com/tr/ayricalik/boynerde-1000-tl-indirim-81",
+  "scraped_at": "2026-08-04T21:02:00+00:00",
+  "content_hash": "b0e6682ea4d243d7bdbe1f5ea60b65bcb71c6eefa005930f5de7e4650e65a217",
+  "collection_method": "live",
+  "title": null,
+  "http_status": 200,
+  "raw_bytes": 35515,
+  "text_chars": 2801
+}

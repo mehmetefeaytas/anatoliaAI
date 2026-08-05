@@ -1,0 +1,11 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/tr/world-dunyasi/detay/saatandsaat-harcamalarinizda-worlde-ozel-7-taksit-firsati",
+  "scraped_at": "2026-08-04T21:01:18+00:00",
+  "content_hash": "c889539e57bb0b30fb27cdbd90ecc8993535aa78b525ceb47be3a09eecb127df",
+  "collection_method": "live",
+  "title": "| Albaraka Türk",
+  "http_status": 200,
+  "raw_bytes": 184483,
+  "text_chars": 1840
+}
