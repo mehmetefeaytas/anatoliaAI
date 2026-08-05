@@ -1,0 +1,9 @@
+{
+  "kural": {
+    "n": 20,
+    "dogru": 14,
+    "cekimser": 1,
+    "accuracy": 0.7,
+    "macro_f1": 0.7625
+  }
+}
