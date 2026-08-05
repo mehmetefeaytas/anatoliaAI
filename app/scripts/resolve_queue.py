@@ -251,6 +251,23 @@ def main(argv: Optional[list[str]] = None) -> int:
         return 0
 
     os.makedirs(args.out_dir, exist_ok=True)
+
+    if not rows:
+        # BOŞ KUYRUKLA KOŞU HİÇBİR ŞEY YAZMAMALI.
+        #
+        # Ölçülmüş veri kaybı: bu betik `silver.jsonl`'a EKLER ama
+        # `queue.jsonl` / `rejected_from_queue.jsonl` dosyalarını "w" ile
+        # yazar. Kuyruk boşken ikinci kez koşulduğunda ilk turun ürettiği
+        # 3 reddedilen kayıt SIFIRLANDI. CLAUDE.md'nin "silme yok" kuralının
+        # sessiz ihlali; tek koruma erken çıkıştır.
+        #
+        # Rapor tazeleme yine de yapılır — o yıkıcı değil, `silver.jsonl`'ı
+        # okuyup sayıları güncelliyor ve zaten bayat raporu düzeltmek için
+        # betiği boşta koşturmanın tek meşru sebebi bu.
+        print("kuyruk boş — dosyalara dokunulmadı.")
+        _rapor_tazele(args.silver, args.out_dir)
+        return 0
+
     with open(args.silver, "a", encoding="utf-8") as fh:
         for r in cozulen:
             fh.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -261,7 +278,51 @@ def main(argv: Optional[list[str]] = None) -> int:
                 fh.write(json.dumps(r, ensure_ascii=False) + "\n")
     print(f"\nyazildi: silver.jsonl +{len(cozulen)}, "
           f"queue.jsonl={len(kalan)}, rejected_from_queue.jsonl={len(reddedilen)}")
+    _rapor_tazele(args.silver, args.out_dir)
     return 0
+
+
+def _rapor_tazele(silver_path: str, out_dir: str) -> None:
+    """`silver_report.json`'ı gerçek `silver.jsonl` içeriğinden tazele.
+
+    Neden gerekli: `build_silver merge` raporu yazar, SONRA bu betik silver'a
+    kayıt ekler. Rapor tazelenmezse sayıyı olduğundan az gösterir — bir kez
+    ölçüldü: rapor 461 derken dosyada 505 kayıt vardı (44 fark, tam da bu
+    betiğin eklediği kadar).
+
+    Bu sessiz bir hata olurdu, çünkü devam notu "gerçek sayıyı rapordan oku,
+    elle sayma" diyor; bayat rapor tam o talimatı yanlış cevaba çeviriyor.
+    Özellikle `sinif_dengesi_uyarilari` yanıltıcı olurdu: fine-tune kapısı
+    aslında açıkken kapalı görünebilirdi.
+    """
+    rapor_yolu = os.path.join(out_dir, "silver_report.json")
+    if not os.path.isfile(rapor_yolu):
+        return
+    with open(rapor_yolu, encoding="utf-8") as fh:
+        rapor = json.load(fh)
+
+    with open(silver_path, encoding="utf-8") as fh:
+        kayitlar = [json.loads(s) for s in fh if s.strip()]
+    dagilim = Counter(r["label"] for r in kayitlar if r.get("label"))
+
+    rapor["durum"]["silver"] = len(kayitlar)
+    rapor["durum"]["queue"] = 0
+    rapor["sinif_dagilimi"] = dict(dagilim)
+    # Eşik ve taksonomi TEK yerden gelir; burada kopyalamak, iki dosyanın
+    # zamanla ayrışıp farklı "eksik sınıf" listesi üretmesi demek olurdu.
+    from scripts.build_silver import MIN_PER_CLASS
+    from src.schemas import CAMPAIGN_TYPES
+
+    rapor["sinif_dengesi_uyarilari"] = [
+        f"{sinif}: {dagilim.get(sinif, 0)}/{MIN_PER_CLASS} — eksik"
+        for sinif in CAMPAIGN_TYPES if dagilim.get(sinif, 0) < MIN_PER_CLASS
+    ]
+    rapor["kuyruk_cozumu_sonrasi"] = True
+
+    with open(rapor_yolu, "w", encoding="utf-8") as fh:
+        json.dump(rapor, fh, ensure_ascii=False, indent=2)
+    print(f"silver_report.json tazelendi: silver={len(kayitlar)}, "
+          f"eksik sınıf={len(rapor['sinif_dengesi_uyarilari'])}")
 
 
 if __name__ == "__main__":
