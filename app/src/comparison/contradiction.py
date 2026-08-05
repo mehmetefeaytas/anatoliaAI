@@ -43,7 +43,7 @@ verir. Bu yüzden her kural üç savunmadan geçer:
 | Başlık/URL'deki tutar vs gövdedeki tutar  |    3 |     0 | ELENDİ-4  |
 | Belgeler arası aynı ürün farklı oran      |    4 |     0 | YAZILDI-5 |
 | Belgeler arası aynı kampanya farklı bitiş |    2 |     0 | YAZILDI-6 |
-| Belgeler arası masrafsız vs ücretli       |    0 |     0 | YAZILMADI |
+| Belgeler arası masrafsız vs ücretli       |    0 |     0 | AYRI-7    |
 
 1. Kural korundu ama KAPSAM KORUMASI eklendi; eski kod korpusta 1 bulgu
    veriyordu, elle doğrulamada o da hayalet çıktı (bkz. yukarıdaki 1. madde).
@@ -56,6 +56,19 @@ verir. Bu yüzden her kural üç savunmadan geçer:
    (banka/kamu çalışanına özel) — kıyaslanabilirlik koruması eliyor.
 6. Kural yazıldı; iki aday da "Kampanya Süresi Dolmuştur" damgalı ardışık
    sürüm — kendi kendini işaretleyen sayfa çelişki değildir.
+7. **Bu modülde YAZILMADI, ama yazılmadığı yerde yapıldı:**
+   `scripts/crosscheck_fees.py`. Buradaki 0 aday bir yokluk kanıtı DEĞİL,
+   eşleştirmenin kapsamı: `detect_across` kampanyayı kampanyayla eşler
+   (`group_by_product`), oysa masrafsızlık iddiasının karşı tarafı bankanın
+   **ücret tarifesi belgesidir** (`data/raw/*/docs/`) — bu modülün gördüğü
+   `Campaign` nesnelerinde o belge yok.
+   Ayrı betikte durmasının iki sebebi var: (a) girdi farklı (tarife belgeleri,
+   DB'deki kampanya kayıtları değil), (b) çıktı bir çelişki KARARI değil,
+   karşılaştırma tablosuna giren bir **kapsam açıklaması** — kardeş desen
+   `crosscheck_rates.py` ile aynı biçim: bağımsız kaynakla kıyasla, insan karar
+   verir. Ölçülen sonuç: 33 ilan edilmiş tahsis ücreti kaydı, 7 satır,
+   6'sı `kosullu_muafiyet` (çelişki değil), 1'i `kapsamsiz_iddia`.
+   Gerekçe: `../../decisions/masrafsizlik-celiskisi-kapsam-testi.md`.
 
 Son durum: **6 çelişki** (5 süresi dolmuş + 1 belge içi çelişen bitiş),
 altısı da elle doğrulandı; belgeler arası doğrulanmış çelişki 0.
