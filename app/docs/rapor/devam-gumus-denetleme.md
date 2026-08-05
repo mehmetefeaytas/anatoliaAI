@@ -16,7 +16,7 @@ eşiğin üzerinde, kuyruk 0. Faz 3'ün (BERTurk ince ayarı) veri kapısı **a�
 | Kart | — | 144 |
 
 Sayı `data/silver/silver_report.json`'dan okunur (elle sayma yok) ve rapor
-artık `resolve_queue` sonrası tazeleniyor — aşağıdaki "iki sessiz kusur"a bakın.
+artık `resolve_queue` sonrası tazeleniyor — aşağıdaki "üç sessiz kusur"a bakın.
 
 Aşağısı tarihsel kayıt: turun neden bir kez bloke olduğu ve nasıl açıldığı.
 
@@ -143,6 +143,51 @@ yönlendirirdi — oysa cevap o değil.
 **Sonuç: etiketleyici bu komutla ölçülemez.** Ölçüm Faz 3'te, ince ayarlı
 sınıflandırıcının **gold üzerindeki macro-F1**'i ile yapılacak; `score`
 komutunun işi yalnız kesişim varsa örtüşme bildirmek.
+
+---
+
+## Faz 3 — kapı açık, temel çizgi kuruldu
+
+Veri tarafı hazır (505 kayıt, 8 sınıf dengeli). Ölçüm tarafı için gereken iki
+şey de kuruldu: `scripts/eval_classifier.py`.
+
+**Kural temel çizgisi (BERTurk'ün geçmesi gereken sayı):**
+
+| ölçüm | değer |
+|---|---:|
+| accuracy | **0,700** |
+| macro-F1 | **0,762** |
+| çekimser | 1 / 20 |
+
+Sınıf başına: `Kart` ve `Alışveriş Puanı` 1,000; en zayıf halka
+`İhtiyaç Finansmanı` (0,500). Karışıklıklar anlamlı ve BERTurk'ün kazanmasının
+beklendiği yeri gösteriyor: `Yatırım Ürünü → İhtiyaç Finansmanı` (2),
+`İhtiyaç → Konut` (2) — yani kural katmanı **ürün ailesi ayrımında** zorlanıyor.
+
+Çekimserlik kasıtlı biçimde **FN sayılır ama FP sayılmaz**: susmak recall'u
+düşürür, precision'ı şişirmez. Aksi hâlde zor belgelerde susup kolaylarda
+konuşan bir model haksız yere kazanırdı.
+
+`n=20` küçük — sınıf başına 2,5 örnek. Bu bir **sıralama sinyali**, kesin
+performans ölçüsü değil; betik bunu her koşuda başa yazıyor ve iki kol arasında
+fark 0,05'in altındaysa "kazanan ilan etme" diyor.
+
+### Kalan adım (yerelde yapılamaz)
+
+İnce ayarın kendisi **Colab işi**: `torch`/`transformers` bu ortamda kurulu
+değil ve CLAUDE.md §2 eğitimi zaten Colab'a veriyor (teslim edilen sistemin
+offline olması eğitimi değil **çalıştırmayı** bağlar).
+
+```bash
+# Colab'da: silver.jsonl ile BERTurk ince ayarı, sonra tahminleri dışa aktar
+#   JSONL biçimi: {"doc_id": "...", "label": "Konut Finansmanı"}   (label null = çekimser)
+
+# Yerelde: aynı hattan geçir, yan yana bas
+.venv/bin/python -m scripts.eval_classifier \
+    --predictions data/eval/berturk_preds.jsonl --name berturk --compare
+```
+
+Kazanan `docs/rapor/ablasyon.md` tablosuna satır olarak girer (§16).
 
 ---
 
