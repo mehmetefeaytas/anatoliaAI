@@ -33,6 +33,22 @@
 > (a) CLAUDE.md §3 hibrit mimariyi zorunlu kılıyor, (b) `llm` satırı planlanan
 > Trendyol-8B yerine Qwen2.5-7B ile ölçüldü (M5'te CUDA yok) ve **alt sınır**.
 > Yani "hibrit kötü" değil, "bu sözleşmeyle hibrit kötü" kanıtlandı.
+>
+> **Denenip ÇÜRÜTÜLEN kurtarma yolu (ablasyon §7c).** "Güven kalibre edilirse
+> `hibrit-verify` kurtulur" hipotezini kurdum, ceza ekledim ve ölçtüm:
+> kalibrasyon tek başına kolu **0,562 → 0,534** düşürdü, eşiği 0,70'e çekmek
+> **0,521**'e. Sebep tutarlı: daha fazla kural değeri LLM'e yeniden sorulunca
+> LLM **doğru** olanları da eziyor (TP 42→38, FP 39→43). Darboğaz kapı değil,
+> LLM'in kendisi. **Bu yolu tekrar denemeyin.** Kalibrasyon geri alınmadı ama
+> gerekçesi ayrı: açıklanabilirlik ve çekimserlik (§18 hedef #1), doğrulama
+> tetikleyicisi DEĞİL.
+>
+> **Zor-vaka alt kümesi hazır (`af82026`).** `round2_zor_vaka.csv`, 71 belge,
+> 949 satır, linter temiz. Anote edilince §16'nın "hibrit zor vakada kazanır"
+> iddiası **ilk kez** ölçülebilir olacak (şu an gold'da 1 zor belge var).
+> Yan bulgu: `celiskili` yapısı gereği belge İÇİ değil **belgeler ARASI** bir iş
+> — 13 adayın 12'si ücret tarifesiydi ve hiçbiri çelişki değildi. §18 hedef #2
+> için `crosscheck_rates.py` deseni ücretlere uygulanmalı.
 
 ---
 
