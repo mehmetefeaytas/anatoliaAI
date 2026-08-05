@@ -1,8 +1,82 @@
 # Devam notu — gümüş denetleyici turu (BLOKE) + kural oyu ölçümü
 
-**Tarih:** 2026-08-05
-**Durum:** denetleyici oyu **koşulamadı**. Sebep teknik değil, **API erişimi**:
-bağımsız denetleyici oturumu **dört kez** `529 Overloaded` ile düştü.
+**Tarih:** 2026-08-05 (ikinci güncelleme)
+**Durum:** denetleyici oyu **koşulamadı**. Sebep teknik değil, **API kapasitesi**:
+bağımsız denetleyici oturumu **on bir kez** `529 Overloaded` ile düştü
+(iki turda: 4 + 7).
+
+## Ölçülen: hatalar iş SIRASINDA değil, BAŞLANGIÇTA
+
+İkinci turda partiler 18'erliye indirildi ve her partiye "6'lı gruplar hâlinde
+birikimli yaz, yarıda düşersen iş diskte kalsın" talimatı verildi. Sonuç:
+**sıfır satır** yazıldı, yedi oturumun hiçbiri tek karar bile üretemedi.
+
+Bu bir bulgu: oturumlar **başlarken** düşüyor, çalışırken değil. Yani
+- parçalı yazma azaltımı **konu dışı** (yazacak iş hiç başlamıyor),
+- parti boyutunu küçültmek **işe yaramaz**,
+- tek çözüm **kapasitenin açılmasını beklemek** ya da işi yerel modele vermek.
+
+Yerel yol (Ollama + `qwen2.5:7b-instruct`, Apache-2.0) zaten kurulu ve
+şartname §5.10 açısından **tercih edilen** yol; harici asistan oturumu yalnız
+kolaylık içindi. Denetleyici oyunu yerel modele vermek hem engeli kaldırır hem
+teslim edilen sistemi harici bağımlılıktan kurtarır.
+
+---
+
+## ÇÖZÜLDÜ — denetleyici oyu yerelde koşuldu (2026-08-05)
+
+`scripts/run_silver_verifier.py` yazıldı ve **89 denetlenmemiş önerinin
+tamamı** koşuldu: 89/89, **0 hata**.
+
+Çıktı: `data/silver/verdicts_local.jsonl` (`verifier: ollama:qwen2.5:7b-instruct`)
+
+| ölçüm | değer |
+|---|---:|
+| öneriyle örtüşme | 85/89 (**%95,5**) |
+| `evidence_supports=true` | 85 (%95,5) |
+| `own_label=null` | 0 |
+
+**%95,5 yüksek ve bu dikkatle okunmalı.** Betiğin lastik damga uyarısı %97'de
+tetikleniyor, yani eşiğin hemen altında. Ancak üç şey lastik damga olmadığını
+gösteriyor: (1) denetleyici öneriyi görmeden önce kendi etiketini veriyor
+(sistem yönergesi bu sırayı zorluyor), (2) ayrışmalar **iki yönlü** — bir
+vakada denetleyici haklı, (3) belgeler gerçekten kolay: 89'un 81'i açık
+Konut/Taşıt sayfası.
+
+### Ayrışan 4 belge (insan hakemliğine gider)
+
+| belge | öneri | denetleyici | kim haklı görünüyor |
+|---|---|---|---|
+| `akbank--birikim-hesaplari-devlet-katkili-konut-hesabi` | Yatırım Ürünü | Konut Finansmanı | **öneri** — bu bir birikim hesabı |
+| `akbank--ihtiyac-kredileri-tasit-teminatli-ihtiyac-kredisi` | İhtiyaç Finansmanı | Taşıt Finansmanı | **öneri** — taşıt yalnız teminat |
+| `teb--tasit-teminatli-kredi` | İhtiyaç Finansmanı | *Taşıt Teminatlı İhtiyaç Kredisi* | **öneri** — denetleyici taksonomi dışı etiket üretti, mekanik kapı reddedecek |
+| `yapi-kredi--konut-kredisi-anahtar-teslim-mortgage` | İhtiyaç Finansmanı | Konut Finansmanı | **denetleyici** — "mortgage" konut finansmanıdır |
+
+Yani zayıf denetleyicinin tipik hatası yüzey anahtar kelimesine takılmak
+("konut" gördü, ürünün birikim hesabı olduğunu kaçırdı) — ama dördü de zaten
+insan kuyruğuna gidiyor, veri setine değil. Tasarımın istediği davranış bu.
+
+### Kalan adım (koşulmadı — kullanıcı durdurdu)
+
+```bash
+# 1) Yerel kararları mevcut verdicts ile birleştir
+cat data/silver/verdicts.jsonl data/silver/verdicts_local.jsonl \
+    > data/silver/verdicts_tum.jsonl
+
+# 2) Uzlaşma — DİKKAT: silver.jsonl'i BAŞTAN YAZAR
+.venv/bin/python -m scripts.build_silver merge \
+    --verdicts data/silver/verdicts_tum.jsonl
+
+# 3) merge sonrası kuyruk çözücü TEKRAR koşulmalı
+.venv/bin/python -m scripts.resolve_queue
+
+# 4) Gerçek sayıyı rapordan oku (elle sayma yok)
+cat data/silver/silver_report.json
+```
+
+Beklenti: Konut 13 → ~40+, Taşıt 9 → ~35+, yani Faz 3'ün (BERTurk ince ayarı)
+20/20 hedefi rahatça aşılır. **Ama bu bir tahmin; ölçüm `merge` sonrası
+`silver_report.json`'dan okunacak.**
 
 ---
 
