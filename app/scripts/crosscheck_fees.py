@@ -1,8 +1,21 @@
 """Masrafsızlık iddiasını bankanın kendi ücret tarifesiyle çapraz kontrol et.
 
 İlgili: ./crosscheck_rates.py (kardeş desen, oranlar için),
+        ../src/comparison/contradiction.py (belge içi + kampanya-kampanya
+          çelişkileri; oradaki ölçüm tablosunun 7 numaralı notu bu betiği
+          işaret eder),
+        ../../decisions/masrafsizlik-celiskisi-kapsam-testi.md (karar),
         ../docs/rapor/zor-vaka-kurleme.md §"celiskili" (bu betiği doğuran bulgu),
         CLAUDE.md §18 yenilikçilik hedefi #2
+
+## Bu betik `contradiction.py` ile ÇAKIŞMAZ
+
+`src/comparison/contradiction.py` çelişki tespitinin iki katmanını taşıyor:
+belge içi (`detect`) ve kampanya-kampanya (`detect_across`). Masrafsızlık
+iddiasının karşı tarafı ise bankanın **ücret tarifesi belgesidir** — o modülün
+gördüğü `Campaign` nesnelerinde bulunmayan bir belge türü. Bu yüzden orada
+ölçülen "belgeler arası masrafsız vs ücretli: 0 aday" bir yokluk kanıtı değil,
+eşleştirmenin kapsamıydı; bu betik o kapsamı açıyor.
 
 Kullanım:
     python -m scripts.crosscheck_fees
