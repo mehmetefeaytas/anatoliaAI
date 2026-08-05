@@ -1,34 +1,38 @@
 {
-  "toplam": 502,
+  "toplam": 608,
   "durum": {
-    "silver": 376,
-    "reject": 83,
-    "queue": 43
+    "silver": 505,
+    "reject": 100,
+    "queue": 0
   },
   "guven": {
-    "orta": 188,
-    "yuksek": 188
+    "orta": 206,
+    "yuksek": 255
   },
   "gerekce": {
-    "iki_llm_ayni": 188,
-    "taksonomi_disi": 82,
-    "uc_oy_ayni": 188,
-    "kanit_desteklemiyor": 22,
+    "iki_llm_ayni": 206,
+    "taksonomi_disi": 99,
+    "uc_oy_ayni": 255,
+    "kanit_desteklemiyor": 26,
     "etiketler_ayristi": 21,
     "kanit_dogrulanmadi": 1
   },
   "sinif_dagilimi": {
-    "İhtiyaç Finansmanı": 32,
+    "İhtiyaç Finansmanı": 54,
     "Yeni Müşteri": 41,
-    "Alışveriş Puanı": 72,
-    "Finansman": 29,
-    "Kart": 134,
-    "Yatırım Ürünü": 46,
-    "Konut Finansmanı": 13,
-    "Taşıt Finansmanı": 9
+    "Alışveriş Puanı": 73,
+    "Finansman": 41,
+    "Kart": 144,
+    "Yatırım Ürünü": 49,
+    "Konut Finansmanı": 56,
+    "Taşıt Finansmanı": 47
   },
-  "sinif_dengesi_uyarilari": [
-    "Konut Finansmanı: 13/20 — eksik",
-    "Taşıt Finansmanı: 9/20 — eksik"
-  ]
+  "sinif_dengesi_uyarilari": [],
+  "kapsam": {
+    "korpus_belge": 724,
+    "onerisi_olan": 608,
+    "onerisi_olmayan": 116,
+    "oran": 0.8398
+  },
+  "kuyruk_cozumu_sonrasi": true
 }
