@@ -203,13 +203,23 @@ def cmd_merge(args: argparse.Namespace) -> int:
 
 
 def _load_gold_types(path: str) -> dict[str, str]:
-    """gold.v1.json içinden doc_id -> campaign_type."""
+    """gold.v1.json içinden doc_id -> campaign_type.
+
+    İKİ HATA düzeltildi (biri diğerini gizliyordu):
+
+    1. `campaign_type` `rec.fields` içinde ARANIYORDU, oysa `GoldRecord`'ın
+       doğrudan alanı. `gold_schema.py:79` bunu zaten yazıyor: *"campaign_type
+       12 alandan biri DEĞİL ama gold'da etiketlenir"*. Sonuç: sözlük hep boş
+       dönüyor, `cmd_score` "gold içinde campaign_type taşıyan kayıt yok"
+       diyordu — oysa 20/20 doluydu.
+    2. `rec.doc_id` diye bir alan YOK; kimlik `rec.id`. Bu satır 1. hata
+       yüzünden hiç çalışmadığı için `AttributeError` de hiç görülmedi.
+    """
     from scripts.gold_schema import load_gold
     out: dict[str, str] = {}
     for rec in load_gold(path):
-        val = rec.fields.get("campaign_type")
-        if isinstance(val, str) and val:
-            out[rec.doc_id] = val
+        if isinstance(rec.campaign_type, str) and rec.campaign_type:
+            out[rec.id] = rec.campaign_type
     return out
 
 
@@ -240,7 +250,21 @@ def cmd_score(args: argparse.Namespace) -> int:
 
     sonuc = score_against_gold(records, gold)
     print(json.dumps(sonuc, ensure_ascii=False, indent=2))
-    if sonuc["gumus_olarak_puanlanan"] < 20:
+
+    if sonuc["gold_kesisimi"] == 0:
+        # SIFIR kesişim "az örneklem" değildir; farklı bir sorundur ve farklı
+        # bir çözüm ister. Bu iki durumu aynı uyarıya bağlamak, okuyanı
+        # "daha çok gold anote et"e yönlendirir — oysa cevap o değil.
+        print(f"\nKESİŞİM YOK: {len(gold)} gold belgenin hiçbiri gümüş kümede "
+              f"değil.\nBu bir kusur değil, TASARIM: gümüş küme "
+              f"`data/raw-classic` (klasik bankalar) üzerine kuruluyor, gold "
+              f"ise\n`data/raw` (katılım bankaları) üzerine. İki küme kasten "
+              f"ayrık — sınıflandırıcının\nterminolojiyi aktarması isteniyor "
+              f"(CLAUDE.md §12).\n"
+              f"Yani bu komut mevcut kurulumda etiketleyiciyi ÖLÇEMEZ; ölçüm "
+              f"Faz 3'te,\nince ayarlı sınıflandırıcının gold üzerindeki "
+              f"macro-F1'i ile yapılacak.")
+    elif sonuc["gumus_olarak_puanlanan"] < 20:
         print("\nUYARI: kesişim 20'nin altında — bu oran istatistiksel "
               "olarak zayıf, raporda örneklem boyutuyla birlikte verilmeli.")
     return 0
