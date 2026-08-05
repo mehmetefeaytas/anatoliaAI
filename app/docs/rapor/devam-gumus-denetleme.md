@@ -101,10 +101,10 @@ Sonuç: uzlaşma 461 gümüş + 47 kuyruk üretti; kuyruk çözücü 47'nin **44
 çözdü (en çok `kural3_urun_ailesi` 29), **3'ünü** taksonomi dışı diye reddetti,
 kuyrukta **0** kaldı. Toplam **505**.
 
-### Bu turda ortaya çıkan iki SESSİZ kusur
+### Bu turda ortaya çıkan ÜÇ SESSİZ kusur
 
-Uzlaşmayı koşarken ikisi de yaşandı; ikisi de düzeltildi ve
-`tests/test_resolve_queue_yazma.py` ile çitlendi.
+Uzlaşmayı koşarken üçü de ortaya çıktı; üçü de düzeltildi ve
+`tests/test_resolve_queue_yazma.py` ve `tests/test_silver.py` ile çitlendi.
 
 **1. Veri kaybı.** `resolve_queue` `silver.jsonl`'a *ekler* ama `queue.jsonl` ve
 `rejected_from_queue.jsonl` dosyalarını `"w"` ile yazar. Kuyruk boşken ikinci
@@ -120,11 +120,29 @@ görünebilirdi — ve bu notun kendi talimatı "sayıyı rapordan oku, elle say
 Artık `resolve_queue` raporu `silver.jsonl`'dan tazeliyor; eşik ve taksonomi
 tek kaynaktan geliyor (`MIN_PER_CLASS` + `CAMPAIGN_TYPES`).
 
-### Hâlâ koşamayan tek şey
+### Üçüncü sessiz kusur: `score` gold'u hiç okuyamıyormuş
 
-`build_silver score` (etiketleyicinin insanla örtüşmesi) **koşamıyor**: gold
-sette `campaign_type` taşıyan kayıt yok. Bu hattın kusuru değil, **insan
-anotasyonu boşluğu** — `round*.csv` doldurulunca ölçülebilir hâle gelir.
+Turun sonunda `build_silver score` şunu diyordu: *"gold içinde campaign_type
+taşıyan kayıt yok."* **Yanlıştı** — gold'da 20/20 dolu. Hata koddaydı ve yine
+ikisi üst üsteydi:
+
+- `campaign_type` `rec.fields` içinde aranıyordu, oysa `GoldRecord`'ın doğrudan
+  alanı (`gold_schema.py:79` bunu zaten yazıyor).
+- `rec.doc_id` diye bir alan yok; kimlik `rec.id`. Bu satır birinci hata
+  yüzünden hiç çalışmadığı için `AttributeError` de hiç görülmedi.
+
+Düzeltilince ortaya çıkan gerçek durum daha ilginç: **kesişim sıfır.** Sebep
+kusur değil **tasarım** — gümüş küme `data/raw-classic` (klasik bankalar), gold
+ise `data/raw` (katılım bankaları) üzerine kuruluyor. İki küme kasten ayrık,
+çünkü sınıflandırıcının **terminolojiyi aktarması** isteniyor (CLAUDE.md §12).
+
+Bu yüzden sıfır kesişime ayrı bir mesaj yazıldı: eski *"kesişim 20'nin altında,
+istatistiksel olarak zayıf"* uyarısı okuyanı "daha çok gold anote et"e
+yönlendirirdi — oysa cevap o değil.
+
+**Sonuç: etiketleyici bu komutla ölçülemez.** Ölçüm Faz 3'te, ince ayarlı
+sınıflandırıcının **gold üzerindeki macro-F1**'i ile yapılacak; `score`
+komutunun işi yalnız kesişim varsa örtüşme bildirmek.
 
 ---
 
