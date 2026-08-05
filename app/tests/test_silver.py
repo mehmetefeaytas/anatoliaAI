@@ -275,5 +275,64 @@ class TestGoldPuanlama(unittest.TestCase):
         self.assertEqual(s["gold_kesisimi"], 1)
 
 
+class TestKapsamSessizKalmaz(unittest.TestCase):
+    """`merge` önerisi OLMAYAN belgeyi sessizce dışarıda bırakmamalı.
+
+    Ölçülmüş boşluk: korpusun 724 belgesine karşı 608 öneri vardı, yani 116
+    belge gümüş kümenin dışındaydı ve `merge` bunu hiç bildirmiyordu. Sessiz
+    kırpma "korpusun tamamı etiketlendi" gibi okunur; okunmayan belge
+    ölçülmemiş belgedir.
+    """
+
+    def _korpus(self, kok, belgeler):
+        for ad, metin in belgeler.items():
+            p = kok / "banka" / f"{ad}.txt"
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_text(metin, encoding="utf-8")
+
+    def _kos(self, belgeler, onerilen):
+        import argparse
+        import json as _json
+        import tempfile
+        from pathlib import Path
+
+        from scripts.build_silver import cmd_merge
+
+        with tempfile.TemporaryDirectory() as td:
+            kok = Path(td)
+            self._korpus(kok / "docs", belgeler)
+            prop = kok / "proposals.jsonl"
+            prop.write_text("\n".join(_json.dumps(
+                {"doc_id": f"banka--{d}", "label": "Konut Finansmanı",
+                 "evidence": belgeler[d][:30], "confidence": 0.9,
+                 "labeler": "t"}, ensure_ascii=False) for d in onerilen),
+                encoding="utf-8")
+            out = kok / "out"
+            kod = cmd_merge(argparse.Namespace(
+                docs=str(kok / "docs"), proposals=str(prop),
+                verdicts=None, out_dir=str(out)))
+            rapor = _json.loads((out / "silver_report.json")
+                                .read_text(encoding="utf-8"))
+            return kod, rapor
+
+    METINLER = {
+        "a": "Konut Finansmanı kampanyası, kâr payı oranı %1,89.",
+        "b": "Taşıt Finansmanı kampanyası, kâr payı oranı %2,45.",
+    }
+
+    def test_eksik_oneri_rapora_yazilir(self):
+        kod, rapor = self._kos(self.METINLER, ["a"])
+        self.assertEqual(kod, 0, "eksik öneri HATA değil, uyarıdır")
+        self.assertEqual(rapor["kapsam"]["korpus_belge"], 2)
+        self.assertEqual(rapor["kapsam"]["onerisi_olan"], 1)
+        self.assertEqual(rapor["kapsam"]["onerisi_olmayan"], 1)
+        self.assertEqual(rapor["kapsam"]["oran"], 0.5)
+
+    def test_tam_kapsamda_bosluk_bildirilmez(self):
+        _kod, rapor = self._kos(self.METINLER, ["a", "b"])
+        self.assertEqual(rapor["kapsam"]["onerisi_olmayan"], 0)
+        self.assertEqual(rapor["kapsam"]["oran"], 1.0)
+
+
 if __name__ == "__main__":
     unittest.main()

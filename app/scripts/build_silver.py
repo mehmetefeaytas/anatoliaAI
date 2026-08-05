@@ -148,6 +148,17 @@ def cmd_merge(args: argparse.Namespace) -> int:
               f"ör: {bilinmeyen[:3]}")
         return 2
 
+    # Ters yön de sessiz kalmamalı: önerisi OLMAYAN belge `merge` için hata
+    # değil ama gümüş kümenin dışında kalıyor. Sessiz kırpma "korpusun tamamı
+    # etiketlendi" gibi okunur, oysa okunmayan belge ölçülmemiş belgedir.
+    onerisiz = sorted(set(texts) - set(proposals))
+    if onerisiz:
+        print(f"UYARI: {len(onerisiz)} belgenin önerisi YOK — gümüş kümenin "
+              f"dışında kalıyorlar ({len(proposals)}/{len(texts)} kapsandı, "
+              f"%{100 * len(proposals) / len(texts):.1f}).")
+        print(f"       Kapsamı büyütmek için `prepare` çıktısının etiketsiz "
+              f"kısmı etiketlenmeli. Örnek: {onerisiz[:3]}")
+
     rule = RuleHintClassifier()
     records = []
     for doc_id, prop in proposals.items():
@@ -167,6 +178,14 @@ def cmd_merge(args: argparse.Namespace) -> int:
     rapor = summarize(records)
     eksik = class_balance_warnings(records, MIN_PER_CLASS)
     rapor["sinif_dengesi_uyarilari"] = eksik
+    # Kapsam raporun İÇİNDE durmalı: yalnız ekrana basılan bir uyarı, raporu
+    # sonradan okuyan için görünmez olur ve gümüş küme "tam" sanılır.
+    rapor["kapsam"] = {
+        "korpus_belge": len(texts),
+        "onerisi_olan": len(proposals),
+        "onerisi_olmayan": len(onerisiz),
+        "oran": round(len(proposals) / len(texts), 4) if texts else 0.0,
+    }
     with open(os.path.join(args.out_dir, "silver_report.json"), "w",
               encoding="utf-8") as fh:
         json.dump(rapor, fh, ensure_ascii=False, indent=2)
