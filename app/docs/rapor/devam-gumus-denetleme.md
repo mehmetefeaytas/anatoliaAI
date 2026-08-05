@@ -1,7 +1,30 @@
-# Devam notu — gümüş denetleyici turu (BLOKE) + kural oyu ölçümü
+# Gümüş denetleyici turu — TAMAMLANDI
 
-**Tarih:** 2026-08-05 (ikinci güncelleme)
-**Durum:** denetleyici oyu **koşulamadı**. Sebep teknik değil, **API kapasitesi**:
+**Tarih:** 2026-08-05 (üçüncü güncelleme — kapanış)
+**Durum:** ✅ **Tur tamamlandı.** Gümüş küme 505 kayıt, 8 sınıfın tamamı
+eşiğin üzerinde, kuyruk 0. Faz 3'ün (BERTurk ince ayarı) veri kapısı **açık**.
+
+| sınıf | önce | sonra |
+|---|---:|---:|
+| Konut Finansmanı | 13 | **56** |
+| Taşıt Finansmanı | 9 | **47** |
+| İhtiyaç Finansmanı | — | 54 |
+| Yatırım Ürünü | — | 49 |
+| Yeni Müşteri | — | 41 |
+| Finansman | — | 41 |
+| Alışveriş Puanı | — | 73 |
+| Kart | — | 144 |
+
+Sayı `data/silver/silver_report.json`'dan okunur (elle sayma yok) ve rapor
+artık `resolve_queue` sonrası tazeleniyor — aşağıdaki "iki sessiz kusur"a bakın.
+
+Aşağısı tarihsel kayıt: turun neden bir kez bloke olduğu ve nasıl açıldığı.
+
+---
+
+## Engel kaydı (tarihsel)
+
+Denetleyici oyu bir süre **koşulamadı**. Sebep teknik değil, **API kapasitesi**:
 bağımsız denetleyici oturumu **on bir kez** `529 Overloaded` ile düştü
 (iki turda: 4 + 7).
 
@@ -56,10 +79,10 @@ Yani zayıf denetleyicinin tipik hatası yüzey anahtar kelimesine takılmak
 ("konut" gördü, ürünün birikim hesabı olduğunu kaçırdı) — ama dördü de zaten
 insan kuyruğuna gidiyor, veri setine değil. Tasarımın istediği davranış bu.
 
-### Kalan adım (koşulmadı — kullanıcı durdurdu)
+### Uzlaşma koşuldu
 
 ```bash
-# 1) Yerel kararları mevcut verdicts ile birleştir
+# 1) Yerel kararları mevcut verdicts ile birleştir (türetilmiş, commit'lenmez)
 cat data/silver/verdicts.jsonl data/silver/verdicts_local.jsonl \
     > data/silver/verdicts_tum.jsonl
 
@@ -68,15 +91,40 @@ cat data/silver/verdicts.jsonl data/silver/verdicts_local.jsonl \
     --verdicts data/silver/verdicts_tum.jsonl
 
 # 3) merge sonrası kuyruk çözücü TEKRAR koşulmalı
-.venv/bin/python -m scripts.resolve_queue
+.venv/bin/python -m scripts.resolve_queue --apply
 
-# 4) Gerçek sayıyı rapordan oku (elle sayma yok)
+# 4) Sayıyı rapordan oku (elle sayma yok)
 cat data/silver/silver_report.json
 ```
 
-Beklenti: Konut 13 → ~40+, Taşıt 9 → ~35+, yani Faz 3'ün (BERTurk ince ayarı)
-20/20 hedefi rahatça aşılır. **Ama bu bir tahmin; ölçüm `merge` sonrası
-`silver_report.json`'dan okunacak.**
+Sonuç: uzlaşma 461 gümüş + 47 kuyruk üretti; kuyruk çözücü 47'nin **44'ünü**
+çözdü (en çok `kural3_urun_ailesi` 29), **3'ünü** taksonomi dışı diye reddetti,
+kuyrukta **0** kaldı. Toplam **505**.
+
+### Bu turda ortaya çıkan iki SESSİZ kusur
+
+Uzlaşmayı koşarken ikisi de yaşandı; ikisi de düzeltildi ve
+`tests/test_resolve_queue_yazma.py` ile çitlendi.
+
+**1. Veri kaybı.** `resolve_queue` `silver.jsonl`'a *ekler* ama `queue.jsonl` ve
+`rejected_from_queue.jsonl` dosyalarını `"w"` ile yazar. Kuyruk boşken ikinci
+kez koşturunca ilk turun ürettiği **3 reddedilen kayıt sıfırlandı** —
+CLAUDE.md'nin "silme yok" kuralının sessiz ihlali. Artık boş kuyrukla koşu
+hiçbir dosyaya dokunmuyor. Kaybolan 3 kayıt hattı baştan koşarak yeniden
+üretildi; hat deterministik olduğu için birebir aynısı geldi.
+
+**2. Bayat rapor.** `merge` raporu yazıyor, **sonra** `resolve_queue` silver'a
+44 kayıt ekliyordu. Rapor **461** derken dosyada **505** vardı. Tehlikeli olan
+sayı değil `sinif_dengesi_uyarilari`: fine-tune kapısı **açıkken kapalı**
+görünebilirdi — ve bu notun kendi talimatı "sayıyı rapordan oku, elle sayma".
+Artık `resolve_queue` raporu `silver.jsonl`'dan tazeliyor; eşik ve taksonomi
+tek kaynaktan geliyor (`MIN_PER_CLASS` + `CAMPAIGN_TYPES`).
+
+### Hâlâ koşamayan tek şey
+
+`build_silver score` (etiketleyicinin insanla örtüşmesi) **koşamıyor**: gold
+sette `campaign_type` taşıyan kayıt yok. Bu hattın kusuru değil, **insan
+anotasyonu boşluğu** — `round*.csv` doldurulunca ölçülebilir hâle gelir.
 
 ---
 
@@ -185,11 +233,19 @@ içindeki 10 kapının hiçbirine düşmüyor (2 belge, 0,4 güvenle artakalan
 ikinci oy olarak gerekçeli öneri yazmalı ama **tek başına kesinleştirmemeli** —
 "iki oyla önerildi, üçüncü onay bekliyor" diye işaretlenmeli.
 
-## Açık uç
+## Açık uç — sessizlik giderildi, boşluk duruyor
 
-Korpusta **116 yeni `live/` belgesi** hâlâ etiketsiz (724 belge − 608 öneri) ve
-`merge` eksik öneriyi hata saymıyor, yani **sessizce dışarıda kalıyorlar.** Bu
-sessizlik en azından bir uyarıya çevrilmeli.
+Korpusta **116 belge** hâlâ etiketsiz (724 belge − 608 öneri) ve `merge` eksik
+öneriyi hata saymıyordu, yani **sessizce dışarıda kalıyorlardı.** ~~Bu sessizlik
+en azından bir uyarıya çevrilmeli.~~ **Yapıldı:** `merge` artık hem ekrana uyarı
+basıyor hem `silver_report.json` içine `kapsam` bloğu yazıyor
+(`608/724 = %84,0`).
+
+Boşluğun kendisi duruyor ama **sayı bir hedef değil**: örneklere bakıldığında
+116'nın bir kısmı zaten etiketlenemez (kampanya listeleme sayfaları
+`akbank--kampanyalar`, bir test sayfası `denizbank--...deneeme-kampanya-18027`).
+Kapsamı büyütmenin yolu bu belgeleri ayıklayıp geri kalanı etiketlemek — desen
+gevşetmek değil.
 
 ## Related
 - [[devam-gumus-etiketleme]] — etiketleyici turunun bıraktığı notlar
