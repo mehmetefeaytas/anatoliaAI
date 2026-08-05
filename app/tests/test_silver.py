@@ -275,6 +275,60 @@ class TestGoldPuanlama(unittest.TestCase):
         self.assertEqual(s["gold_kesisimi"], 1)
 
 
+class TestGoldTipleriOkunur(unittest.TestCase):
+    """`_load_gold_types` iki hata taşıyordu, biri diğerini gizliyordu.
+
+    H1 — `campaign_type` `rec.fields` içinde aranıyordu, oysa `GoldRecord`'ın
+         DOĞRUDAN alanı (`gold_schema.py:79` bunu zaten yazıyor: "campaign_type
+         12 alandan biri DEĞİL ama gold'da etiketlenir"). Sonuç: sözlük hep boş
+         dönüyor ve `score` "gold içinde campaign_type taşıyan kayıt yok"
+         diyordu — oysa gerçek gold'da 20/20 doluydu.
+    H2 — `rec.doc_id` diye bir alan YOK; kimlik `rec.id`. Bu satır H1 yüzünden
+         hiç çalışmadığı için `AttributeError` de hiç görülmedi.
+    """
+
+    GOLD = [{
+        "id": "albaraka--detay-vade-farksiz-kampanyasi",
+        "text": "Vade farksız kampanya metni, ihtiyaç finansmanı.",
+        "campaign_type": "İhtiyaç Finansmanı",
+        "fields": {}, "absent_fields": [], "hard_tags": [],
+        "bank_slug": "albaraka", "annotators": ["A"], "adjudicated": True,
+    }]
+
+    def test_ust_seviye_campaign_type_okunur(self):
+        import json as _json
+        import tempfile
+        from pathlib import Path
+
+        from scripts.build_silver import _load_gold_types
+
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "gold.json"
+            p.write_text(_json.dumps(self.GOLD, ensure_ascii=False),
+                         encoding="utf-8")
+            tipler = _load_gold_types(str(p))
+
+        self.assertEqual(len(tipler), 1, "campaign_type bulunamadı (H1)")
+        # Anahtar `id` olmalı — `doc_id` diye bir alan yok (H2).
+        self.assertEqual(tipler["albaraka--detay-vade-farksiz-kampanyasi"],
+                         "İhtiyaç Finansmanı")
+
+    def test_campaign_type_yoksa_atlanir(self):
+        import json as _json
+        import tempfile
+        from pathlib import Path
+
+        from scripts.build_silver import _load_gold_types
+
+        kayit = dict(self.GOLD[0])
+        kayit.pop("campaign_type")
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "gold.json"
+            p.write_text(_json.dumps([kayit], ensure_ascii=False),
+                         encoding="utf-8")
+            self.assertEqual(_load_gold_types(str(p)), {})
+
+
 class TestKapsamSessizKalmaz(unittest.TestCase):
     """`merge` önerisi OLMAYAN belgeyi sessizce dışarıda bırakmamalı.
 
