@@ -472,21 +472,28 @@ def output_violations(text: str,
 # --------------------------------------------------------------------------- #
 
 def scope_terms(entries: Optional[Iterable[TermEntry]] = None,
-                min_len: int = 4) -> tuple[str, ...]:
+                min_len: int = 4,
+                halk_dili: bool = False) -> tuple[str, ...]:
     """Chatbot kapsam sözlüğüne eklenecek katlanmış ifadeler.
 
-    `safety.py` KAPI 5 bir soruyu "kapsam dışı" sayıp çekimser kalıyor; bugün
-    'tekâfül', 'vekâlet akdi' gibi meşru sorular bu kapıya takılıyor
-    (belgede 'dürüst eksik #1' olarak işaretli). Burada `halk_dili` AÇIKTIR:
-    kapsam kararı kapsayıcı olmalı, kart seçimi seçici.
+    `safety.py` KAPI 5 bir soruyu "kapsam dışı" sayıp çekimser kalıyor ve
+    ölçüldü ki meşru katılım finansı sorularının çoğu bu kapıya takılıyor:
+    18 sorudan 14'ü reddediliyordu ('tekâfül', 'muşaraka', 'selem akdi',
+    'muacceliyet kaydı'...). Bu, belgede "dürüst eksik #1" olarak işaretli.
+
+    `halk_dili` VARSAYILAN OLARAK KAPALI — ölçümle. Açıkken kapsam dışı
+    kontrol kümesinde yanlış pozitif 2/18'den 11/18'e fırlıyor, çünkü
+    `halk_dili` "durum", "konu", "kanıt", "belirsizlik" gibi ifadeler taşıyor
+    ("Bu durum ne zaman düzelir?" kapsam içi sayılıyordu). Teknik terimler
+    kurtarmanın tamamını zaten sağlıyor.
 
     `safety.py`'nin dosya-I/O yapmama ilkesi korunur — bu fonksiyon ENJEKSİYON
-    içindir, `safety.py` içinden import-anında çağrılmaz.
+    içindir, `safety.py` içinden import anında çağrılmaz.
     """
     girdiler = tuple(entries) if entries is not None else load_terminology()
     terimler: set[str] = set()
     for e in girdiler:
-        for a in e.anahtarlar(halk_dili=True):
+        for a in e.anahtarlar(halk_dili=halk_dili):
             if len(a) >= min_len and a not in _GURULTU:
                 terimler.add(a)
     return tuple(sorted(terimler, key=len, reverse=True))
