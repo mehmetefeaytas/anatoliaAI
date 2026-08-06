@@ -93,3 +93,9 @@ web/out/
 
 # Yedek dosyalari (betiklerin aldigi guvenlik kopyalari)
 *.bak
+
+# Rakip analizi — YAYIN KADEMESİ 3, asla push edilmez.
+# Jüri bu belgeyi istemiyor; rakip ondan doğrudan faydalanır. Ayrıca içinde
+# başka takımların depolarına dair değerlendirme var. Buraya konmasının sebebi
+# silmek değil KORUMAK: `git add -A` ile kazara indekse girmesini engeller.
+docs/rapor/rakip-analizi.md
