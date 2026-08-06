@@ -43,7 +43,7 @@ import os
 import time
 from dataclasses import dataclass
 from dataclasses import field as dc_field
-from typing import Any, Optional, Protocol, runtime_checkable
+from typing import Any, Callable, Optional, Protocol, Sequence, runtime_checkable
 
 from ...schemas import ExtractedField, Extractor
 from . import confidence as conf_mod
@@ -101,13 +101,38 @@ class LLMExtractor:
     """
 
     def __init__(self, client: Optional[LLMClient] = None,
-                 strict: Optional[bool] = None, max_repairs: int = 1):
+                 strict: Optional[bool] = None, max_repairs: int = 1, *,
+                 system_builder: Optional[Callable[[str], str]] = None,
+                 fields: Optional[Sequence[str]] = None,
+                 role: str = "genel"):
+        """
+        system_builder: belge metnini alıp sistem prompt'u üretir. Neden
+            sabit bir dize değil: terim kartları BELGEYE bağlıdır (bkz.
+            domain/terminology.py) — hangi terimin enjekte edileceği ancak
+            metin görüldüğünde bilinir. Verilmezse bugünkü sabit
+            `SYSTEM_PROMPT` kullanılır, yani mevcut davranış değişmez.
+        fields: bu ajanın sorumlu olduğu alan alt kümesi. Orkestrasyonda rol
+            ayrımını taşır; verilmezse 12 alanın tamamı.
+        role: yalnız log/rapor etiketi.
+        """
         self.client = client
         # LLM_STRICT=1 -> hatalar yutulmaz. Açıkça verilen argüman env'i ezer.
         self.strict = (_env_flag("LLM_STRICT") if strict is None else bool(strict))
         self.max_repairs = max_repairs
+        self.system_builder = system_builder
+        self.fields: tuple[str, ...] = tuple(
+            f for f in (fields or EXTRACTION_FIELDS) if f in EXTRACTION_FIELDS)
+        if not self.fields:
+            self.fields = tuple(EXTRACTION_FIELDS)
+        self.role = role
         self.stats = _new_stats()
         self.last_result: Optional[LLMCallResult] = None
+
+    def _system_for(self, text: str) -> str:
+        """Bu belge için sistem prompt'u."""
+        if self.system_builder is None:
+            return SYSTEM_PROMPT
+        return self.system_builder(text) or SYSTEM_PROMPT
 
     @property
     def available(self) -> bool:
@@ -131,7 +156,7 @@ class LLMExtractor:
             f"JSON: {json.dumps(ex['json'], ensure_ascii=False)}"
             for ex in FEWSHOT
         )
-        wanted = missing or list(EXTRACTION_FIELDS)
+        wanted = missing or list(self.fields)
         return (
             "Aşağıdaki örneklerde KISALIK için yalnız ilgili alanlar gösterilmiştir; "
             "senin çıktında istenen alanların TAMAMI bulunmalıdır.\n\n"
@@ -162,9 +187,9 @@ class LLMExtractor:
         if not self.available:
             return LLMCallResult(fields=[], error=None)
 
-        wanted = [f for f in (missing or EXTRACTION_FIELDS) if f in EXTRACTION_FIELDS]
+        wanted = [f for f in (missing or self.fields) if f in self.fields]
         if not wanted:
-            wanted = list(EXTRACTION_FIELDS)
+            wanted = list(self.fields)
         schema = guided_json_schema(wanted)
         user = self._build_user_prompt(text, wanted)
 
@@ -179,7 +204,8 @@ class LLMExtractor:
             prompt = user if attempt == 0 else user + self._repair_suffix(
                 last_error or "", raw_text)
             try:
-                raw_text, logprobs, direct = self._invoke(SYSTEM_PROMPT, prompt, schema)
+                raw_text, logprobs, direct = self._invoke(
+                    self._system_for(text), prompt, schema)
             except Exception as exc:                     # taşıma/HTTP/biçim hatası
                 self.stats["http_error"] += 1
                 msg = f"{type(exc).__name__}: {exc}"
@@ -260,11 +286,13 @@ class LLMExtractor:
         kaynakları karıştıramasın diye).
         """
         lp_conf = conf_mod.field_confidences(logprobs, EXTRACTION_FIELDS)
+        # Rol dışı alan ihlaldir: ajana yalnız kendi alanları soruldu ve
+        # şema onları kısıtladı; fazlası sessizce kabul edilmemeli.
         out: list[ExtractedField] = []
         violations: list[str] = []
 
         for name, obj in (raw or {}).items():
-            if name not in EXTRACTION_FIELDS:
+            if name not in self.fields:
                 violations.append(name)
                 continue
             if obj is None:

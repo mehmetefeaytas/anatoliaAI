@@ -56,8 +56,11 @@ CONFIG_KURAL = "kural"
 CONFIG_LLM = "llm"
 CONFIG_HIBRIT = "hibrit"
 CONFIG_HIBRIT_VERIFY = "hibrit-verify"
+CONFIG_ORKESTRA = "orkestra"
+CONFIG_ORKESTRA_HAKEMSIZ = "orkestra-hakemsiz"
 
-CONFIG_NAMES = (CONFIG_KURAL, CONFIG_LLM, CONFIG_HIBRIT, CONFIG_HIBRIT_VERIFY)
+CONFIG_NAMES = (CONFIG_KURAL, CONFIG_LLM, CONFIG_HIBRIT, CONFIG_HIBRIT_VERIFY,
+                CONFIG_ORKESTRA, CONFIG_ORKESTRA_HAKEMSIZ)
 
 # Teslim edilen sistem: dashboard ve API `reconcile()` çağırır, dolayısıyla
 # "resmî" metriğin varsayılanı da bu olmalıdır.
@@ -69,6 +72,10 @@ CONFIG_DESCRIPTIONS: dict[str, str] = {
     CONFIG_HIBRIT: "kural birincil + eksikleri LLM doldurur (TESLİM EDİLEN SİSTEM)",
     CONFIG_HIBRIT_VERIFY: ("hibrit + düşük güvenli KURAL alanlarını LLM doğrular "
                            "(reconcile.verify_low_conf)"),
+    CONFIG_ORKESTRA: ("kural birincil + ÇOK-AJANLI LLM (sayısal/bağlamsal ajan "
+                      "+ kanıt kapısı + hakem); ajanlar önerir, hakem reddeder"),
+    CONFIG_ORKESTRA_HAKEMSIZ: ("orkestra ama HAKEM KAPALI — hakemin katkısını "
+                               "yalıtmak için (mentör D4)"),
 }
 
 # `hibrit-verify` kolunun eşiği. 0,75 seçildi çünkü kural katmanının güven
@@ -205,6 +212,16 @@ def build_predictor(config: str, llm: LLMExtractor | None = None, *,
                 "LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1)."),
             llm=active,
         )
+
+    if config in (CONFIG_ORKESTRA, CONFIG_ORKESTRA_HAKEMSIZ):
+        # Orkestrasyon `LLMExtractor` ile AYNI arayüzü sunar
+        # (`.available` + `.extract`), bu yüzden `reconcile()` hiç
+        # değişmeden kullanılabiliyor.
+        from src.extraction.llm.orchestrator import LLMOrchestrator
+        orc = LLMOrchestrator(active.client,
+                              judge=(config == CONFIG_ORKESTRA))
+        return Predictor(config, CONFIG_DESCRIPTIONS[config],
+                         fn=lambda t: list(reconcile(t, llm=orc)), llm=orc)
 
     if config == CONFIG_LLM:
         fn: Callable[[str], list[ExtractedField]] = lambda t: list(active.extract(t))
