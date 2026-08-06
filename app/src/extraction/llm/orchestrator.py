@@ -146,6 +146,40 @@ class LLMOrchestrator:
         for a in self.ajanlar.values():
             a.reset_stats()
 
+    def summary(self) -> dict[str, Any]:
+        """Rapor satırı — `LLMExtractor.summary()` ile AYNI sözleşme.
+
+        Bu metot eksikti ve ölçüm koşusu 30 dakika sonunda, tam rapor
+        yazılırken `AttributeError` ile çöktü: sayılar hesaplanmıştı ama
+        diske hiç yazılmadı. Arayüz uyumluluğu `.available`/`.extract` ile
+        bitmiyor — `eval/predictors.py::llm_summary` bunu da çağırıyor.
+        """
+        # Ajanların LLM çağrı sayaçları ÜST DÜZEYE toplanır. Testte yakalandı:
+        # `LLMExtractor.summary()` bu anahtarları taşıyor ve rapor katmanı
+        # onları okuyor; orkestrasyon kolunda eksik kalsalardı "kaç çağrı,
+        # kaç ayrıştırma hatası" sorusu sessizce cevapsız kalırdı.
+        toplam = {k: 0 for k in ("calls", "ok", "parse_error", "http_error",
+                                 "schema_violation", "repairs")}
+        for a in self.ajanlar.values():
+            for k in toplam:
+                toplam[k] += a.stats.get(k, 0)
+
+        return {
+            "available": self.available,
+            "strict": self.strict,
+            "structured_mode": self.structured_mode,
+            "client": type(self.client).__name__ if self.client else None,
+            **toplam,
+            "orkestrasyon": True,
+            "hakem": self.judge,
+            "terim_karti": self.terim_karti,
+            "kanit_kapisi": self.kanit_kapisi,
+            "roller": [r.ad for r in self.roller],
+            **self.stats,
+            "ajan_sayaclari": {ad: dict(a.stats)
+                               for ad, a in self.ajanlar.items()},
+        }
+
     # ------------------------------------------------------------------ #
     def extract(self, text: str,
                 missing: Optional[list[str]] = None) -> list[ExtractedField]:

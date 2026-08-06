@@ -280,10 +280,28 @@ class TestTerimKartiEnjeksiyonu(unittest.TestCase):
 
 class TestArayuzUyumu(unittest.TestCase):
     def test_LLMExtractor_arayuzunu_karsilar(self) -> None:
+        """Arayüz uyumu `.available`/`.extract` ile BİTMİYOR.
+
+        `summary()` eksikti ve 30 dakikalık ölçüm koşusu tam rapor
+        yazılırken AttributeError ile çöktü — sayılar hesaplanmıştı ama
+        diske hiç yazılmadı.
+        """
+        from src.extraction.llm.extractor import LLMExtractor
         orc, _ = _orc()
-        self.assertTrue(hasattr(orc, "available"))
-        self.assertTrue(callable(orc.extract))
+        for ad in ("available", "extract", "summary", "reset_stats",
+                   "structured_mode", "stats"):
+            self.assertTrue(hasattr(orc, ad), f"eksik: {ad}")
+        eksik = {k for k in LLMExtractor(None).summary()} - set(orc.summary())
+        self.assertEqual(eksik, set(), f"summary() sözleşmesi eksik: {eksik}")
         self.assertTrue(orc.available)
+
+    def test_summary_orkestrasyon_ayrintisini_tasir(self) -> None:
+        orc, _ = _orc()
+        orc.extract(METIN)
+        s = orc.summary()
+        self.assertTrue(s["orkestrasyon"])
+        self.assertEqual(sorted(s["roller"]), ["baglamsal", "sayisal"])
+        self.assertIn("sayisal", s["ajan_sayaclari"])
 
     def test_istemcisiz_bos_doner(self) -> None:
         self.assertEqual(LLMOrchestrator(None).extract(METIN), [])

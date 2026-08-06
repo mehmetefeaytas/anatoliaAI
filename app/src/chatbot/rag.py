@@ -28,10 +28,12 @@ import os
 import re
 from collections import defaultdict
 from dataclasses import dataclass
+from dataclasses import field as dc_field
 from typing import Any, Optional
 
 from ..db.repository import Repository
 from ..preprocessing.clean import tr_fold
+from . import safety
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +71,10 @@ class RagAnswer:
     # Hangi retriever cevabı üretti ('keyword' | 'vector'). Varsayılanı olan
     # bir alan: mevcut `RagAnswer(text, passages)` çağrıları bozulmaz.
     retriever: str = "keyword"
+    # KAPI 6 — talimat-devralma işareti taşıdığı için düşürülen pasajlar.
+    # Boş liste normal koşu; dolu ise korpusta zehirli belge VAR demektir ve
+    # bu SESSİZ GEÇİLMEZ (bkz. safety.detect_injection).
+    quarantined: list[dict] = dc_field(default_factory=list)
 
 
 def _tokenize(text: str) -> list[str]:
@@ -366,6 +372,16 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
     if not passages:
         return RagAnswer("İlgili bir kampanya metni bulunamadı.", [], used)
 
+    # KAPI 6 — getirilen içerik karantinası. LLM'e VE çıkarımsal yedeğe
+    # gitmeden ÖNCE çalışır: ölçüldü ki yedek yol, saldırganın belgeye gömdüğü
+    # talimat cümlesini kullanıcıya aynen basıyordu (eval_injection PI15).
+    passages, karantina = _karantina(passages)
+    if not passages:
+        return RagAnswer(
+            "İlgili kaynak bulundu ama içeriği güvenlik denetiminden geçmedi: "
+            "belgede talimat devralma işareti var. Uydurmak yerine cevap "
+            "vermiyorum.", [], used, quarantined=karantina)
+
     if llm is not None and getattr(llm, "available", False):
         context = "\n---\n".join(f"[{p['bank']}] {p['text']}" for p in passages)
         try:
@@ -375,11 +391,32 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
                 f"Bağlam:\n{context}\n\nSoru: {question}",
                 {"type": "object", "properties": {"cevap": {"type": "string"}}},
             )
-            return RagAnswer(resp.get("cevap", ""), passages, used)
+            return RagAnswer(resp.get("cevap", ""), passages, used,
+                             quarantined=karantina)
         except Exception:
             pass
 
     # LLM yok → extractive: en alakalı pasajı kaynağıyla döndür
     top = passages[0]
     text = f"İlgili kampanya ({top['bank']}): {top['text']}"
-    return RagAnswer(text, passages, used)
+    return RagAnswer(text, passages, used, quarantined=karantina)
+
+
+def _karantina(passages: list[dict]) -> tuple[list[dict], list[dict]]:
+    """(temiz pasajlar, karantinaya alınanlar).
+
+    Belge TAMAMEN düşürülür, saldırı satırı ayıklanmaz: içine talimat
+    gömülmüş bir sayfanın geri kalanına da güvenilemez. Kaynak üçüncü taraf
+    bir banka sitesidir ve içeriği bizim denetimimizde değildir.
+    """
+    temiz: list[dict] = []
+    kirli: list[dict] = []
+    for p in passages:
+        isaret = safety.detect_injection(p.get("text", ""))
+        if isaret:
+            kirli.append({**p, "isaret": isaret})
+            logger.warning("KAPI 6: pasaj karantinaya alindi (%s) isaret=%r",
+                           p.get("source_url") or p.get("bank"), isaret)
+        else:
+            temiz.append(p)
+    return temiz, kirli
