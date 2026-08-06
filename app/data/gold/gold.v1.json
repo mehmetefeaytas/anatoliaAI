@@ -796,7 +796,7 @@
         "currency": "TRY"
       },
       "indirim_orani": 75.0,
-      "kampanya_suresi": "2021-12-31",
+      "kampanya_suresi": "2027-12-31",
       "kampanya_kosullari": [
         "Kampanya Geçerlilik Tarihi 14 Aralık 2021 - 31 Aralık 2027 Kampanya Detayları Sadece görüntülü görüşme ile dijital müşteri ol an ve dijital kanallardan yatırım hesabı açan bireysel müşteriler kampanyadan yararlanabilir.",
         "Kampanya Şartları Kampanyaya yalnızca görüntülü görüşme ile müşteri olan ve dijital kanallardan yatırım hesabı açan müşteriler katılabilir.",
@@ -819,7 +819,7 @@
     "annotators": [
       "A"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -834,7 +834,7 @@
       "masraf_durumu": "Masraf bilgisi metinde yoktur",
       "odul_miktari": "Yüzde 75 komisyon tanımaktadır",
       "alisveris_puani": "Alışveriş Puanı yok",
-      "kampanya_suresi": "Kampanya başlangıç tarihini almış ama bitiş tarihini almamış | baslangic=2021-12-14"
+      "kampanya_suresi": "Hakemlik düzeltmesi 2026-08-07: anotatör GÜNÜ bitiş tarihinden, AY/YILI başlangıç tarihinden almış. Metin '14 Aralık 2021 - 31 Aralık 2027' diyor; eski değer '2021-12-31' metinde HİÇ geçmiyor. Alan kılavuz gereği kampanyanın BİTİŞ tarihidir -> '2027-12-31'."
     }
   },
   {
@@ -853,7 +853,7 @@
         "value": 2.0,
         "currency": "TRY"
       },
-      "kampanya_suresi": "2026-01-31",
+      "kampanya_suresi": "2026-12-31",
       "kampanya_kosullari": [
         "Kampanya Şartları Espressolab Hediye Kahve Kodu Nasıl Kazanılır? \"KAHVE\" davet koduyla Vakıf Katılım Mobil Şube üzerinden müşteri olanlara Espressolab mobil uygulamasında kullanabilecekleri 2 adet hediye kahve kodu iletilecektir.",
         "Kampanya katılımı ilk 1.000 kişi için geçerlidir.",
@@ -875,7 +875,7 @@
     "annotators": [
       "A"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -890,7 +890,7 @@
       "odul_miktari": "Kampanya ödülü 2 adet ücretsiz kahvedir.",
       "indirim_orani": "Yüzdesel bir indirim belirtilmiyor.",
       "alisveris_puani": "Alışveriş puanı veya puan kazanımı bulunmuyor.",
-      "kampanya_suresi": "Kampanya başlangıç tarihini almış ama bitiş tarihini almamış | baslangic=2026-01-01",
+      "kampanya_suresi": "Hakemlik düzeltmesi 2026-08-07: anotatör GÜNÜ bitiş tarihinden, AY/YILI başlangıç tarihinden almış. Metin '01 Ocak 2026 - 31 Aralık 2026' diyor; eski değer '2026-01-31' metinde HİÇ geçmiyor. Alan kılavuz gereği kampanyanın BİTİŞ tarihidir -> '2026-12-31'.",
       "hedef_kitle": "Kampanyadan yalnızca mobil üzerinden \"KAHVE\" davet koduyla müşteri olan kişiler yararlanabilir."
     }
   },
