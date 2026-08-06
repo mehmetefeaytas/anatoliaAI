@@ -127,6 +127,99 @@ def collapse_degenerate_range(value):
 
 
 # --------------------------------------------------------------------------- #
+# Oransal (yüzdeli) ücret ifadeleri — "tutarın %2,5'i", "binde 5"
+# --------------------------------------------------------------------------- #
+# Katılım bankalarının ücret tarifeleri tahsis ücretini çoğu zaman TUTAR olarak
+# değil ORAN olarak yayımlıyor. Korpus ölçümü (2026-08-07, 1759 belge):
+# tahsis/dosya tetikleyicisi olan 101 belgenin **62'sinde** ücret yüzde olarak
+# veriliyor ve bunların **51'i hiçbir değer üretmiyordu** (kural katmanı açık
+# para birimi arıyor, yüzde ifadesini eliyordu).
+#
+# İki ayrı yazım var ve ikisi de gerçek veride bulundu:
+#   "Finansman Tutarı'nın (Anaparasının) %0,5'i"   -> yüzde
+#   "finansman tutarının binde 5'i"                -> binde (‰) = %0,5
+# "binde" ile "yüzde" arasındaki 10 kat fark sessizce yanlış sıralama üretir,
+# bu yüzden ayrıştırma tek yerde ve açıkça yapılır.
+_ORAN_IFADE_RE = re.compile(
+    r"(?P<binde>binde\s*(?P<binde_sayi>\d[\d.,]*))"
+    r"|(?P<yuzde_sozcuk>y[üu]zde\s*(?P<yuzde_sayi>\d[\d.,]*))"
+    r"|(?P<onde>%\s*\d[\d.,]*)"
+    r"|(?P<arkada>\d[\d.,]*\s*%)",
+    re.IGNORECASE,
+)
+
+
+def parse_oran_ifadesi(text: str) -> Optional[float]:
+    """Oransal ifadeyi YÜZDE cinsinden float'a çevirir.
+
+        "%2,5"        -> 2.5
+        "2,5%"        -> 2.5
+        "yüzde 2,5"   -> 2.5
+        "binde 5"     -> 0.5      (‰ 5 = %0,5 — ONDA BİR, karıştırılırsa 10 kat hata)
+        "500 TL"      -> None     (oran değil, tutar)
+
+    `None` döndürmek "oran yok" demektir; asla tahmin edilmez.
+    """
+    if text is None:
+        return None
+    m = _ORAN_IFADE_RE.search(text)
+    if m is None:
+        return None
+    if m.group("binde"):
+        val = parse_tr_number(m.group("binde_sayi"))
+        return None if val is None else val / 10.0
+    if m.group("yuzde_sozcuk"):
+        return parse_tr_number(m.group("yuzde_sayi"))
+    return parse_tr_number(m.group("onde") or m.group("arkada"))
+
+
+def bicimle_tr_sayi(value: float) -> str:
+    """Sayıyı TR gösterimine çevirir (binlik '.', ondalık ','): 2500.0 -> '2.500'.
+
+    Yalnızca AÇIKLAMA dizeleri (formül) içindir; kanonik değer her zaman
+    float kalır. Tam sayıysa ondalık kısım yazılmaz — "2.500,00 TL" yerine
+    "2.500 TL" insan okuruna daha yakın.
+    """
+    if value == int(value):
+        govde, ondalik = f"{int(value):,}".replace(",", "."), ""
+    else:
+        govde, _, kesir = f"{value:,.2f}".partition(".")
+        govde, ondalik = govde.replace(",", "."), "," + kesir
+    return govde + ondalik
+
+
+def hesapla_oransal_ucret(
+    oran: float, taban: float, *, currency: str = "TRY"
+) -> Optional[tuple[dict, str]]:
+    """Oranı bilinen tabana uygulayıp ücret tutarını hesaplar.
+
+        hesapla_oransal_ucret(2.5, 100000.0)
+        -> ({"value": 2500.0, "currency": "TRY"},
+            "100.000 TL × %2,5 = 2.500 TL")
+
+    Neden formül de dönüyor: hesaplanan değer metinde GEÇMEZ, yani
+    `source_span` ile gösterilemez. Açıklanabilirlik iddiası (CLAUDE.md §18-1)
+    "bu sayıyı nereden buldun" sorusuna cevap veremezse çöker; formül o cevabın
+    kendisidir ve çağıran taraf onu `source_span`'e yazar.
+
+    **Girdi bilinmiyorsa bu fonksiyon ÇAĞRILMAZ** — taban `None` ise hesap
+    yapılmaz, oran olduğu gibi bırakılır (CLAUDE.md §19: bilgi yoksa uydurma).
+    Burada yalnızca savunma amaçlı bir kontrol var.
+
+    Returns:
+        (kanonik_para, formul_metni) ya da girdiler geçersizse `None`.
+    """
+    if oran is None or taban is None:
+        return None
+    if taban <= 0 or oran < 0:
+        return None
+    tutar = round(taban * oran / 100.0, 2)
+    formul = (f"{bicimle_tr_sayi(taban)} TL × %{bicimle_tr_sayi(oran)} "
+              f"= {bicimle_tr_sayi(tutar)} TL")
+    return {"value": tutar, "currency": currency}, formul
+
+
+# --------------------------------------------------------------------------- #
 # Para → {value, currency}
 # --------------------------------------------------------------------------- #
 _CURRENCY = {
@@ -201,6 +294,13 @@ _TR_MONTHS = {
 }
 
 _FOLDED_TR_MONTHS = {tr_fold_ascii(k): v for k, v in _TR_MONTHS.items()}
+
+#: Ay adları — desen kurmak isteyen çıkarıcılar için TEK KAYNAK.
+#: `extract.py` kendi listesini tutsaydı ikisi zamanla ayrışırdı; tarih
+#: desenini burada tutmak "ay adı" tanımının tek yerde kalmasını sağlar.
+#: Hem diakritikli hem sadeleştirilmiş varyantlar (mayıs/mayis) içerir, bu
+#: yüzden ALL-CAPS yazımlar `re.IGNORECASE` ile de eşleşir.
+TR_AY_ADLARI: tuple[str, ...] = tuple(_TR_MONTHS)
 
 
 def normalize_date(text: str) -> Optional[str]:

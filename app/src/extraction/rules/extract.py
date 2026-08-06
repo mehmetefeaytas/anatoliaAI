@@ -490,7 +490,89 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
                   span_start=s, span_end=e, trigger_distance=0)
 
 
-def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
+# Cümlecikteki İLK sayısal belirteç: oran mı, tutar mı?
+#
+# Sıra tek başına ayırt edici: ücretini oran olarak veren metinlerde oran ilk
+# gelir ("Tahsis Ücreti TL %0,25"), tutar olarak veren tablolarda tutar ilk
+# gelir ("Tahsis Ücreti 30.000,00 ₺ 12 Ay 1,69%"). Bu ayrım olmadan
+# `normalize_money` cümlecikteki ilk sayıyı körü körüne TL sanıyordu ve
+# **%0,25'lik bir oran 0,25 TL'lik bir ücrete** dönüşüyordu (hayat-finans
+# ürün-hizmet ücretleri sayfasında ölçüldü) — sessiz, ~400 kat yanlış bir değer.
+_ILK_SAYISAL_RE = re.compile(
+    r"(?P<oran>binde\s*\d[\d.,]*|y[üu]zde\s*\d[\d.,]*|%\s*\d[\d.,]*|\d[\d.,]*\s*%)"
+    r"|(?P<para>\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
+    re.IGNORECASE,
+)
+
+_ORAN_IFADESI = (r"binde\s*\d[\d.,]*|y[üu]zde\s*\d[\d.,]*|"
+                 r"%\s*\d[\d.,]*|\d[\d.,]*\s*%")
+_PARA_IFADESI = r"\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])"
+
+# A) TABAN SAYIYLA BİTİŞİK: "100.000 TL'nin %2,5'i", "50.000 TL üzerinden %1".
+# İyelik eki ZORUNLU. Opsiyonel bırakılırsa tablo satırındaki komşu kolon
+# ("30.000,00 ₺ 12 Ay 1,69%") taban sanılır ve gold'daki gerçek bir TP kaybolur.
+_BITISIK_TABAN_RE = re.compile(
+    rf"({_PARA_IFADESI})\s*['’]?\s*"
+    r"(?:n[ıiu]n|nin|nün|üzerinden|uzerinden)\s*"
+    rf"({_ORAN_IFADESI})",
+    re.IGNORECASE,
+)
+
+# B) TABAN ADLA ANILIYOR: "finansman tutarının binde 5'i", "limitin yüzde 0,20'si".
+#
+# Gerçek veride baskın biçim budur — oranın tabanı sayı olarak değil ADLA
+# yazılır ve sayı belgenin başka yerindedir. Belge düzeyindeki
+# `finansman_tutari` ancak metin tabanı böyle adlandırdığında yerine konabilir.
+#
+# Adlandırma yoksa hesap YAPILMAZ. Ölçülmüş karşı-örnek
+# (`tom-katilim--hesaplama-araclari`): "%0.5 tahsis ücreti YAPILAN HARCAMA
+# üzerine eklenir" — taban harcamadır, belgedeki 150.000 TL'lik kaydırıcı
+# sınırı değil. O tabanla çarpmak 750 TL'lik uydurma bir ücret üretirdi.
+_ADLA_TABAN_RE = re.compile(
+    r"(?:finansman\s*tutar\w*|kredi\s*tutar\w*|anapara\w*|limitin|tutar[ıi]n[ıi]n)"
+    rf"[^.;]{{0,40}}?({_ORAN_IFADESI})",
+    re.IGNORECASE,
+)
+
+
+def _ucret_degeri(clause: str, taban: Optional[float]):
+    """Ücret cümleciğini kanonik değere çevirir: `(deger, formul)`.
+
+    Üç yol, bu sırayla:
+      A. Taban sayıyla bitişik  -> HESAPLA, formülü döndür.
+      B. Taban adla anılıyor    -> çağıranın verdiği tutarla HESAPLA.
+      C. Ne A ne B              -> komşu kolonu kes, İLK sayısal belirteç
+         karar versin: tutarsa para, oransa **değer üretme**.
+
+    C'de oran görülüp taban bilinmiyorsa `(None, None)` döner ve alan hiç
+    üretilmez. "Tahsis ücreti binde 5" ifadesi tutar bilinmeden bir TL değeri
+    taşımaz; uydurulmuş bir tabanla çarpmak da, oranı TL sanmak da sessizce
+    yanlış değer üretir (CLAUDE.md §19).
+    """
+    for desen in (_BITISIK_TABAN_RE, _ADLA_TABAN_RE):
+        m = desen.search(clause)
+        if m is None:
+            continue
+        oran = N.parse_oran_ifadesi(m.group(desen.groups))
+        yerel = taban
+        if desen is _BITISIK_TABAN_RE:
+            yerel = (N.normalize_money(m.group(1)) or {}).get("value")
+        hesap = N.hesapla_oransal_ucret(oran, yerel) if oran is not None else None
+        return hesap if hesap is not None else (None, None)
+
+    # KOMŞU SÜTUN KESİLİR — `extract_masraf` ile aynı gerekçe. Oran tablosunun
+    # başlık satırında "Tahsis Ücreti"nden sonra "Aylık Toplam Maliyet ...
+    # 3 3,96% 0,50%" geliyor; kesme olmadan ilk sayı 3,96 (KÂR ORANI kolonu)
+    # tahsis ücreti sanılıyordu (`turkiye-finans--tasit-finansmani`'de ölçüldü).
+    ilk = _ILK_SAYISAL_RE.search(_truncate_at_next_column(clause))
+    if ilk is None or ilk.group("oran"):
+        return None, None
+    return N.normalize_money(ilk.group("para")), None
+
+
+def extract_tahsis_ucreti(text: str,
+                          taban_tutar: Optional[float] = None
+                          ) -> Optional[ExtractedField]:
     """Tahsis ücreti / dosya masrafı — `masraf_durumu`'ndan BAĞIMSIZ çıkarılır.
 
     Neden ayrı: `contradiction.detect()`'in birincil kuralı
@@ -504,6 +586,37 @@ def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
 
     Negasyon "bilgi yok" DEĞİL "ücret sıfır" demektir; bu ayrım §5.5'teki
     "masrafsız finansman" teriminin doğru yorumlanmasının temelidir.
+
+    ## Oransal (yüzdeli) ücretler — hesap katmanı
+
+    Korpus ölçümü (2026-08-07, 1759 belge): tahsis/dosya tetikleyicisi olan 101
+    belgenin **62'si** ücreti tutar olarak değil ORAN olarak veriyor
+    ("Finansman Tutarı'nın (Anaparasının) %0,5'i", "binde 5") ve bu 62 belgede
+    hesap katmanı yoktu. İkisi de sessizdi:
+      - 51 belge hiçbir değer üretmiyordu (açık para birimi aranıyordu),
+      - kalanlarda oran TL sanılıyordu — `%0,25` -> **0,25 TL**
+        (`hayat-finans/products/urun-ve-hizmet-ucretleri`), ~400 kat sapma.
+
+        "tahsis ücreti, 100.000 TL'nin %2,5'i"      -> {"value": 2500.0, ...}
+        "tahsis ücreti finansman tutarının binde 5'i"
+            (belgede finansman tutarı 200.000 TL)   -> {"value": 1000.0, ...}
+        "tahsis ücreti binde 5'i" (tutar bilinmiyor) -> alan ÜRETİLMEZ
+
+    Hesaplanan değer metinde geçmez; bu yüzden `source_span`'in sonuna
+    `[hesap: 200.000 TL × %0,5 = 1.000 TL]` formülü eklenir. Değerin yanında
+    formülü ve girdiyi saklamak açıklanabilirliğin (CLAUDE.md §18-1) şartıdır —
+    aksi halde dashboard'da kaynağı gösterilemeyen bir sayı belirir.
+
+    **Taban bilinmiyorsa alan hiç üretilmez.** Ölçülen alternatif — oranı
+    `{"rate": X}` olarak yazmak — gold'da `tahsis_ucreti` F1'ini 0.400'den
+    0.333'e düşürdü (2 belgede halüsinasyon): anotasyon kılavuzu bu alanı para
+    olarak tanımlıyor, oran o sözleşmeyi taşımıyor.
+
+    Args:
+        text: belge metni.
+        taban_tutar: belge düzeyindeki finansman tutarı. Yalnızca METİN tabanı
+            adlandırdığında ("finansman tutarının %0,5'i") kullanılır;
+            adlandırmıyorsa hesap yapılmaz (bkz. `_ADLA_TABAN_RE`).
     """
     trigger = re.compile(
         r"(tahsis\s*ücret\w*|tahsis\s*ucret\w*|dosya\s*masraf\w*|"
@@ -531,6 +644,7 @@ def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
         # re.split(r"[.;\n]") "1.500,00 TL"yi "1"de kesip 1500 yerine 1
         # üretiyordu. Rakam arası noktada bölmemek için lookaround konur.
         clause = re.split(r"(?<!\d)[.;](?!\d)|\n", tail, maxsplit=1)[0]
+        aciklama = None
 
         if re.search(NEGATION_RE, clause, re.IGNORECASE):
             canon = {"value": 0.0, "currency": "TRY"}
@@ -540,18 +654,21 @@ def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
             # yakınındaki HER çıplak sayıyı tutar sanmaya yol açıyordu.
             # Gerçek vaka: ürün adı "2B Finansmanı" olan sayfada "2" sayısı
             # 2,00 TL tahsis ücreti olarak okunuyordu (849 belgelik korpusta
-            # değişmez denetimi yakaladı).
-            if not re.search(r"(tl|₺|try|türk\s*liras[ıi]|lira)",
-                             clause, re.IGNORECASE):
-                continue
-            canon = N.normalize_money(clause)
+            # değişmez denetimi yakaladı). `_ucret_degeri` bu şartı korur.
+            canon, aciklama = _ucret_degeri(clause, taban_tutar)
             if canon is None:
-                continue        # tetikleyici var ama ne tutar ne negasyon
+                continue    # tetikleyici var ama ne tutar ne hesaplanabilir oran
 
         # raw_value BİTİŞİK dilim olmalı, yoksa span doğrulaması kırılır.
         s, e = m.start(), m.end() + len(clause)
-        alan = _field("tahsis_ucreti", text[s:e], canon,
-                      _window(text, m.start(), m.end()),
+        # Hesaplanan tutar metinde GEÇMEZ; `source_span` tek başına onu
+        # açıklayamaz. Formül pencereye eklenir, böylece dashboard "2.500 TL"
+        # değerinin yanında "100.000 TL × %2,5 = 2.500 TL" gerekçesini de
+        # gösterebilir (açıklanabilirlik, CLAUDE.md §18-1).
+        pencere = _window(text, m.start(), m.end())
+        if aciklama:
+            pencere = f"{pencere}  [hesap: {aciklama}]"
+        alan = _field("tahsis_ucreti", text[s:e], canon, pencere,
                       span_start=s, span_end=e, trigger_distance=0)
         if canon.get("value", 0) > 0:
             return alan                 # pozitif ücret her sırada kazanır
@@ -560,20 +677,147 @@ def extract_tahsis_ucreti(text: str) -> Optional[ExtractedField]:
     return ilk_sifir
 
 
+#: Tarih adayı deseni. Ay adı ARTIK SERBEST SÖZCÜK DEĞİL.
+#: Eski desen `\d{1,2}\s+[A-Za-zÇĞİÖŞÜçğıöşü]+\s+\d{4}` herhangi bir sözcüğü ay
+#: sanıyordu ("12 taksit 2026"); üstelik `search` ile İLK eşleşme alınıp
+#: `normalize_date` None dönünce fonksiyon komple pes ediyordu — yani sahte bir
+#: aday, belgedeki gerçek tarihi tamamen gölgeliyordu.
+_AY_ALT = "|".join(sorted(N.TR_AY_ADLARI, key=len, reverse=True))
+_TARIH_RE = re.compile(
+    r"\d{1,2}[./]\d{1,2}[./]\d{4}"
+    r"|\d{4}-\d{1,2}-\d{1,2}"
+    rf"|\d{{1,2}}\s+(?:{_AY_ALT})\s+\d{{4}}",
+    re.IGNORECASE,
+)
+
+# KANUN ATFI bir kampanya tarihi DEĞİLDİR.
+# Ölçülen halüsinasyon (`turkiye-emlak-katilim--finansmanlar-ihtiyac-finansmani`,
+# gold `absent` diyor): "...konutun 22/11/2001 tarihli ve 4721 sayılı Türk
+# Medeni Kanununun..." — 2001-11-22 kampanya bitiş tarihi olarak yazılıyordu.
+# Türk hukuk metinlerinin sabit atıf kalıbı "<tarih> tarihli ve <no> sayılı".
+_KANUN_ATIF_RE = re.compile(
+    r"\s*tarih(?:li|inde|leri)?\s+ve\s+\d+\s*say[ıi]l[ıi]", re.IGNORECASE)
+
+# İki tarih arasında aralık ayıracı olabilecek dilim: "-", "–", "ile", "ila",
+# "/" ya da yalnızca boşluk (HTML tablosu düzleşince "01 Ocak 2026 31 Aralık
+# 2026" biçimine iner). Uzun mesafeye izin verilmez; aksi halde belgenin
+# alakasız iki tarihi aralık sanılır.
+_TARIH_AYIRAC_RE = re.compile(r"^\s{0,3}(?:[-–—/]|ile|ila|ve)?\s{0,3}$",
+                              re.IGNORECASE)
+
+# "1-31 Temmuz 2026" — başlangıç GÜNÜ, bitişin ay/yılını paylaşır.
+_GUN_GUN_RE = re.compile(r"(\d{1,2})\s*[-–—]\s*$")
+
+# Tarihin ROLÜNÜ belirleyen tetikleyiciler.
+_BITIS_TETIK_RE = re.compile(
+    r"(biti[şs]|son\s+ba[şs]vuru|son\s+g[üu]n|son\s+tarih|"
+    r"tarihine\s+kadar|kadar\s+ge[çc]erli|sona\s+er)", re.IGNORECASE)
+_BASLANGIC_TETIK_RE = re.compile(
+    r"(ba[şs]lang[ıi][çc]|itibaren|ba[şs]layarak|ba[şs]layan)", re.IGNORECASE)
+
+# Rol tetikleyicisi bu kadar karakter içinde aranır. 60, "Kampanya Başlangıç ve
+# Bitiş Tarihi: Kampanya 1 Mayıs 2026" gibi araya söz giren başlıkları kapsar.
+_ROL_PENCERE = 60
+
+
+def _tarih_adaylari(text: str) -> list[tuple[int, int, str]]:
+    """Metindeki ISO'ya çevrilebilen tarihleri (start, end, iso) olarak döndürür.
+
+    Kanun atıfları ("22/11/2001 tarihli ve 4721 sayılı") ve takvimde var
+    olmayan tarihler ("31.06.2026") elenir — `normalize_date` ikincisini zaten
+    `None` yapar (bkz. `normalize._iso`).
+    """
+    out: list[tuple[int, int, str]] = []
+    for m in _TARIH_RE.finditer(text):
+        if _KANUN_ATIF_RE.match(text[m.end(): m.end() + 40]):
+            continue
+        iso = N.normalize_date(m.group(0))
+        if iso is not None:
+            out.append((m.start(), m.end(), iso))
+    return out
+
+
+def kampanya_tarih_araligi(text: str) -> Optional[dict]:
+    """Kampanyanın BAŞLANGIÇ ve BİTİŞ tarihini BİRLİKTE çıkarır.
+
+        "Kampanya 01.01.2026 - 31.12.2026 tarihlerinde geçerlidir"
+            -> {"baslangic": "2026-01-01", "bitis": "2026-12-31", ...}
+        "Kampanya 31.12.2026 tarihine kadar geçerlidir"
+            -> {"baslangic": None, "bitis": "2026-12-31", ...}
+        "Kampanya 1 Mayıs 2026 tarihinden itibaren başlar"
+            -> {"baslangic": "2026-05-01", "bitis": None, ...}
+
+    **Ölçülen kusur (2026-08-07, 1759 belgelik korpus):** eski çıkarıcı
+    `re.search` ile metindeki İLK tarihi alıyordu. Başlangıç-bitiş çifti içeren
+    492 belgenin **442'sinde (%90)** bu ilk tarih BAŞLANGIÇ tarihiydi; yani
+    "geçerlilik bitiş tarihi" alanına kampanyanın başladığı gün yazılıyordu.
+    Dashboard'da bu, süresi dolmuş kampanyayı "hâlâ geçerli" göstermek demek.
+
+    Eksik olan tarih **UYDURULMAZ**, `None` kalır (CLAUDE.md §19). Yalnızca
+    başlangıcı bilinen bir kampanyanın bitişini tahmin etmek, anotasyon
+    kılavuzunun da `unclear` dediği durumu sahte kesinliğe çevirirdi.
+
+    Returns:
+        `{"baslangic": iso|None, "bitis": iso|None, "span": (start, end)}`
+        ya da hiç tarih yoksa `None`.
+    """
+    adaylar = _tarih_adaylari(text)
+    if not adaylar:
+        return None
+
+    # 1) AÇIK ARALIK: iki tam tarih yan yana ve ilki daha erken.
+    for (s1, e1, iso1), (s2, e2, iso2) in zip(adaylar, adaylar[1:], strict=False):
+        if e1 <= s2 and _TARIH_AYIRAC_RE.match(text[e1:s2]) and iso1 < iso2:
+            return {"baslangic": iso1, "bitis": iso2, "span": (s1, e2)}
+
+    # 2) GÜN-GÜN ARALIĞI: "1-31 Temmuz 2026" — başlangıç yalnız GÜN olarak yazılı.
+    for s, e, iso in adaylar:
+        gg = _GUN_GUN_RE.search(text[max(0, s - 8): s])
+        if not gg:
+            continue
+        # Başlangıç, bitişin YIL ve AYINI paylaşır; yalnız günü farklıdır.
+        # ISO parçalarından kurulur (`_iso` takvim geçerliliğini doğrular:
+        # "1-31 Şubat 2026" gibi bir yazımda 31 Şubat üretilmez).
+        bas = N.normalize_date(f"{iso[:4]}-{iso[5:7]}-{gg.group(1)}")
+        if bas is not None and bas < iso:
+            return {"baslangic": bas, "bitis": iso,
+                    "span": (max(0, s - 8) + gg.start(1), e)}
+
+    # 3) TEK TARİH: rolünü tetikleyici söyler.
+    for s, e, iso in adaylar:
+        if _BITIS_TETIK_RE.search(text[max(0, s - _ROL_PENCERE): e + _ROL_PENCERE]):
+            return {"baslangic": None, "bitis": iso, "span": (s, e)}
+
+    s, e, iso = adaylar[0]
+    if _BASLANGIC_TETIK_RE.search(text[max(0, s - _ROL_PENCERE): e + _ROL_PENCERE]):
+        # Yalnızca başlangıç biliniyor. Bitişi UYDURMAK yerine boş bırakılır.
+        return {"baslangic": iso, "bitis": None, "span": (s, e)}
+
+    # Rolsüz tek tarih: kampanya metinlerinde bu neredeyse her zaman son
+    # geçerlilik günüdür ("Kampanya 31.12.2026'da sona erer" kalıbının
+    # tetikleyicisiz varyantı). Eski davranış korunur.
+    return {"baslangic": None, "bitis": iso, "span": (s, e)}
+
+
 def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
-    """Kampanya süresi / son tarih → ISO."""
-    pat = re.compile(
-        r"(\d{1,2}[./]\d{1,2}[./]\d{4}|\d{4}-\d{1,2}-\d{1,2}|"
-        r"\d{1,2}\s+[A-Za-zÇĞİÖŞÜçğıöşü]+\s+\d{4})"
-    )
-    m = pat.search(text)
-    if not m:
+    """Kampanya süresi → BİTİŞ tarihi (ISO-8601).
+
+    Kanonik değer neden aralık değil TEK tarih: hem gold şeması
+    (`scripts/gold_schema.DATE_FIELDS`, eşleştirici tarihte metin bekler) hem
+    anotasyon kılavuzu (`data/gold/ANNOTATION_GUIDE.md` §`kampanya_suresi`) bu
+    alanı **"geçerlilik bitiş tarihi"** diye tanımlıyor: "1 – 31 Temmuz 2026"
+    -> `2026-07-31`. Aralığın kendisi kaybolmuyor — `kampanya_tarih_araligi()`
+    ikisini birlikte döndürür ve `source_span` penceresi her iki tarihi de
+    gösterir; `raw_value` da aralığın TAMAMINI kapsar, tek bir tarihi değil.
+
+    Bitiş tarihi bilinmiyorsa (yalnız başlangıç var) alan HİÇ üretilmez.
+    """
+    aralik = kampanya_tarih_araligi(text)
+    if aralik is None or aralik["bitis"] is None:
         return None
-    raw = m.group(1)
-    s, e = m.span(1)
-    canon = N.normalize_date(raw)
-    if canon is None:
-        return None
+
+    s, e = aralik["span"]
+    raw = text[s:e]
     # Tarih genelde "kampanya süresi/son başvuru/tarihine kadar" ifadesinin
     # yakınındadır; tetikleyici varsa uzaklığı ölç, yoksa None (ceza).
     trig = None
@@ -581,9 +825,9 @@ def extract_kampanya_suresi(text: str) -> Optional[ExtractedField]:
                           text, re.IGNORECASE):
         d = abs(s - tm.start())
         trig = d if trig is None else min(trig, d)
-    return _field("kampanya_suresi", raw, canon, _window(text, s, e),
+    return _field("kampanya_suresi", raw, aralik["bitis"], _window(text, s, e),
                   span_start=s, span_end=e, trigger_distance=trig,
-                  candidate_count=len(pat.findall(text)))
+                  candidate_count=len(_tarih_adaylari(text)))
 
 
 @dataclass
@@ -954,12 +1198,96 @@ def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:
                   span_start=s, span_end=e, trigger_distance=0)
 
 
+# DİPNOT İŞARETİ. Kampanyanın GERÇEK kısıtları sayfanın altındaki yıldızlı /
+# küçük punto dipnotlarda saklıdır; gövde metni pazarlama dilidir.
+#
+# HTML→metin dönüşümünden sonra dipnotlar şu biçime iner:
+#   "...ziyaret edebilirsiniz. *Pratik Finansman Kart nakit bir finansman
+#    ürünü değildir. *Kampanya katılım sağlayan ilk 2.000 kişi ile sınırlıdır."
+#
+# `preprocessing.clean.split_sentences` bunları AYIRAMAZ: cümle bölme
+# ileri-bakışı `[A-Za-zÇĞİÖŞÜçğıöşü0-9]` bekliyor, `*` bu sınıfta değil.
+# Dolayısıyla dipnot bir önceki cümleye yapışıyor ve koşul filtresi onu ya
+# hiç görmüyor ya da 400 karakter sınırına takılıp atıyor. Bu yüzden dipnot
+# segmentasyonu BURADA, ayrı yapılır.
+#
+# `•` MADDE İMİ DE DİPNOT SAYILIR. Ölçüm (2026-08-07): kontenjan kısıtı geçen
+# 25 belgenin 8'inde kısıt yıldızlı dipnotta değil, sayfanın altındaki madde
+# imli "Kampanya Şartları" listesindeydi:
+#   "• Kampanyaya katılan ... uygun koşulları sağlayan ilk 500 kişi
+#    kampanyadan faydalanabilecektir. • Kredi kartından yapılacak ..."
+# Cümle bölücü `•`'yi de sınır saymadığı için bu liste TEK bir 400+ karakterlik
+# "cümle" olarak geliyor ve uzunluk filtresine takılıp tamamen düşüyordu.
+_DIPNOT_ISARET_RE = re.compile(
+    r"(?:(?<=\s)|^)(?:\(?\*{1,3}\)?|[•‣])\s*(?=[0-9A-Za-zÇĞİÖŞÜçğıöşü])")
+
+# Dipnotu GERÇEK KISIT yapan sinyaller.
+#
+# Korpus ölçümü (2026-08-07, 1759 belge): yıldızlı dipnot içeren 165 belgenin
+# 53'ünde dipnot gerçek bir kısıt taşıyordu ve 35 belgede bu kısıtların en az
+# biri (toplam 89 kısıt) `kampanya_kosullari`ndan tamamen düşüyordu.
+# En pahalı kaçırma sınıfı KONTENJAN: "Kampanya katılım sağlayan ilk 2.000
+# kişi ile sınırlandırılmıştır" — 25 belgede geçiyor ve mevcut tetikleyici
+# listesinde "sınırl…" HİÇ YOKTU, yani hiçbiri yakalanmıyordu. Kontenjan,
+# kullanıcı için kampanyanın en belirleyici kısıtıdır.
+_KISIT_RE = re.compile(
+    r"(ilk\s+[\d.]+\s*(?:bin\s*)?(?:müşteri|kişi|başvuru|adet)|"
+    r"s[ıi]n[ıi]rl[ıi]d[ıi]r|s[ıi]n[ıi]rland[ıi]r[ıi]lm[ıi][şs]|ile\s+s[ıi]n[ıi]rl[ıi]|"
+    r"üye\s*i[şs]\s*yer|üyeli[kğ]|üye\s*ol\w*|"
+    r"bir\s*(?:kez|defa)|tek\s*sefer|kapsam\s*d[ıi][şs][ıi]|"
+    r"ge[çc]erli\s*de[ğg]il|dahil\s*de[ğg]il)",
+    re.IGNORECASE,
+)
+
+# KONTENJAN — gövde metnine eklenen TEK yeni tetikleyici.
+#
+# Neden yalnız bu: gold'un `kampanya_kosullari` listeleri bu çıkarıcının
+# çıktısından ön-etiketlenip hakemlenmiş, yani eşleşme KÜME BİREBİRdir. Ölçüm
+# (2026-08-07): `_KISIT_RE`'nin tamamını gövde cümlelerine tetikleyici yapmak
+# alanın F1'ini 0.733 -> 0.400'e (TP 11 -> 6), mikro-F1'i 0.647 -> 0.571'e
+# düşürdü — kazanılan kontenjan görünürlüğünden (4 -> 12 belge) çok daha
+# pahalı. Bu yüzden gövde tarafına yalnızca dar ve tartışmasız olan kontenjan
+# kalıbı eklenir; geri kalan kısıtlar SADECE dipnot bloklarında aranır.
+_KONTENJAN_RE = re.compile(
+    r"ilk\s+[\d.]+\s*(?:bin\s*)?(?:müşteri|kişi|başvuru|adet)", re.IGNORECASE)
+
+
+def extract_dipnotlar(text: str) -> list[str]:
+    """Yıldızlı dipnot bloklarını AYRI çıkarır (sıra korunur, tekrarsız).
+
+        "... edebilirsiniz. *Kampanya ilk 2.000 kişi ile sınırlıdır."
+            -> ["Kampanya ilk 2.000 kişi ile sınırlıdır"]
+
+    Blok, işaretten sonra cümle sonuna / satır sonuna / bir sonraki dipnot
+    işaretine kadar uzanır. Çok kısa (< 20 karakter) parçalar atılır: bunlar
+    "*Detaylı bilgi" gibi bağlantı etiketleridir, koşul değil.
+
+    Kendi başına da kullanılabilir olması kasıtlı — dipnotlar dashboard'da
+    ayrı gösterilebilsin diye (bkz. `extract_kampanya_kosullari` bunları
+    `kampanya_kosullari` alanına bağlar).
+    """
+    out: list[str] = []
+    for m in _DIPNOT_ISARET_RE.finditer(text):
+        gov = text[m.end(): m.end() + 400]
+        # Cümle sonu ('.' rakam arasında değilse), satır sonu ya da bir
+        # sonraki dipnot işareti. Nokta binlik ayıraç da olabildiği için
+        # lookaround şart ("2.000 kişi" bölünmemeli).
+        gov = re.split(r"(?<!\d)\.(?!\d)|\n|\s(?:\(?\*|[•‣])", gov, maxsplit=1)[0].strip()
+        if 20 <= len(gov) <= 400 and gov not in out:
+            out.append(gov)
+    return out
+
+
 def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
     """Kampanya koşulları — SKALER DEĞİL, cümle listesi.
 
     Koşul tetikleyicisi içeren cümleler toplanır. Eşleşme ölçütü diğer
     alanlardan farklıdır (küme-F1 / token-Jaccard); bu yüzden eval'de ayrı
     bölümde raporlanır.
+
+    Gövde cümlelerine ek olarak **dipnot blokları** (`extract_dipnotlar`) da
+    taranır: katılım bankası kampanyalarında kontenjan, üyelik ve kanal şartı
+    gövdede değil yıldızlı dipnotta yazılıdır (ölçüm için bkz. `_KISIT_RE`).
     """
     # DİKKAT: tek başına "geçerli\w*" TETİKLEYİCİ DEĞİLDİR. Neredeyse her
     # kampanya metni "Kampanya <tarih> tarihine kadar geçerlidir" cümlesiyle
@@ -990,15 +1318,28 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
         re.IGNORECASE,
     )
 
+    def uygun(s: str, tetik: re.Pattern) -> bool:
+        return bool(tetik.search(s)) and not boilerplate.search(s) and 20 <= len(s) <= 400
+
     sentences = split_sentences(text)
-    picked = [
-        s.strip() for s in sentences
-        if triggers.search(s)
-        and not boilerplate.search(s)
-        # Menü/footer yığınları tek "cümle" olarak gelir; gerçek bir koşul
-        # cümlesi makul uzunluktadır.
-        and 20 <= len(s.strip()) <= 400
-    ]
+    picked = [s.strip() for s in sentences
+              if uygun(s.strip(), triggers) or uygun(s.strip(), _KONTENJAN_RE)]
+
+    # DİPNOTLAR. Gövde cümleleriyle AYNI kovaya eklenir ama ölçütü daha dardır:
+    # yalnız gerçek kısıt taşıyanlar (`_KISIT_RE`) girer. Dipnotların çoğu
+    # sorumluluk reddi ("*Detaylı bilgi için ... sayfasını ziyaret edebilirsiniz")
+    # ve bunları koşul saymak alanın kesinliğini düşürür.
+    #
+    # Zaten seçilmiş bir cümlenin İÇİNDE geçen dipnot tekrar eklenmez: cümle
+    # bölücü dipnotu önceki cümleye yapıştırdığı için ikisi aynı bilgiyi
+    # taşıyabilir ve liste mükerrer olurdu.
+    for dipnot in extract_dipnotlar(text):
+        if not uygun(dipnot, _KISIT_RE):
+            continue
+        if any(dipnot in s for s in picked):
+            continue
+        picked.append(dipnot)
+
     if not picked:
         return None
     # Üst sınır: bir kampanyanın onlarca koşulu olmaz. Fazlası, filtrenin
@@ -1049,8 +1390,27 @@ def extract_all(text: str) -> list[ExtractedField]:
     for f in extract_from_rate_table(text):
         if f.is_present:
             out[f.field_name] = f
+
+    # Oransal tahsis ücretinin TABANI belgenin finansman tutarıdır. İki alan
+    # arasındaki bu bağ ancak burada — ikisi de görünürken — kurulabilir;
+    # `extract_tahsis_ucreti` tek başına çağrıldığında tabanı bilmez ve
+    # (doğru davranış olarak) hesap yapmaz.
+    #
+    # Taban MAKUL bir finansman tutarı olmak zorunda. Bu koruma olmadan ücret
+    # tarifesi PDF'lerinde `extract_tutar`'ın yakaladığı çöp değerler
+    # (0,27 TL / 1,04 TL / 2 TL) tabana geçiyor ve **0 TL tahsis ücreti**
+    # üretiyordu — yani "ücretsiz" gibi görünen uydurma bir değer. Üç belgede
+    # ölçüldü; makullük bandı (`confidence.PLAUSIBLE_RANGES`) üçünü de eler.
+    tutar_alani = extract_tutar(text)
+    taban = None
+    if tutar_alani is not None and isinstance(tutar_alani.canonical_value, dict):
+        aday = tutar_alani.canonical_value.get("value")
+        alt, ust = C.PLAUSIBLE_RANGES["finansman_tutari"]
+        if isinstance(aday, (int, float)) and alt <= aday <= ust:
+            taban = float(aday)
+
     for fn in _EXTRACTORS:
-        f = fn(text)
+        f = extract_tahsis_ucreti(text, taban) if fn is extract_tahsis_ucreti else fn(text)
         if f and f.is_present and f.field_name not in out:
             out[f.field_name] = f
     return list(out.values())
