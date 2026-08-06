@@ -56,6 +56,18 @@ jobs:
       - name: Degismez (invariant) denetimi
         run: python -m eval.properties --raw-dir data/raw
 
+      # Katilim jargonu denetimi. Kullaniciya/modele donuk metinde
+      # konvansiyonel bankacilik terimi (faiz/kredi/mevduat) bulunursa kirilir.
+      #
+      # Kapsam bilincli olarak dar. Kor tarama tum repoda 494 bulgu veriyordu ve
+      # neredeyse hepsi mesruydu: eslestirici sabitler yasak terimi ICERMEK
+      # ZORUNDA (onlari banka metninde ariyorlar), belgeler ayrimi anlatiyor,
+      # fiksturlar gercek banka metnini alintiliyor. 494 bulgu basan bir lint
+      # kimsenin kosmadigi bir linttir — ruff isindeki "sifir bulgu" ilkesinin
+      # aynisi.
+      - name: Jargon denetimi
+        run: python -m scripts.jargon_lint
+
       - name: Degerlendirme hatti duman testi
         run: python -m eval.run_eval --gold data/gold/gold.sample.json
 

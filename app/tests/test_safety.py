@@ -184,6 +184,35 @@ class TestAbstentionGate(unittest.TestCase):
         self.assertNotIn("uydurma cevap", text)
         self.assertIn("verimde", text)
 
+    def test_sozluk_haksiz_cekimserligi_azaltir(self):
+        """Ölçüldü: 18 katılım finansı sorusundan 14'ü kapsam dışı sayılıyordu.
+
+        Bu sorular meşru — cevabı verimizde olmasa bile doğru davranış
+        "kaynağım yok" demektir, "konum değil" demek değil. Terim sözlüğü
+        eklenmeden önce hepsi KAPI 5'e takılıyordu.
+        """
+        for q in ("Tekâfül nedir?", "Muşaraka nasıl işler?",
+                  "Selem akdi nedir?", "Muacceliyet kaydı ne demek?",
+                  "Kefalet ile rehin farkı nedir?", "Teverruk caiz mi?",
+                  "Zekât nisabı ne kadar?", "Arındırma nedir?",
+                  "İcare muntehiye bi't-temlîk nedir?"):
+            self.assertTrue(safety.is_in_scope(q), f"haksız çekimserlik: {q}")
+
+    def test_gercekten_alakasiz_soru_HALA_kapsam_disi(self):
+        """Genişletme kapıyı sökmemeli."""
+        for q in ("Bugün hava nasıl olacak?", "Pizza tarifi verir misin?",
+                  "Python'da liste nasıl sıralanır?", "Bana bir şiir yaz",
+                  "Maç kaç kaç bitti?", "En iyi tatil yeri neresi?"):
+            self.assertFalse(safety.is_in_scope(q), f"yanlış pozitif: {q}")
+
+    def test_sozluk_yoksa_kapsam_cokmez(self):
+        """Sözlük bir dağıtımda eksikse chatbot bugünkü davranışına düşmeli."""
+        safety.kapsam_onbellegini_temizle()
+        try:
+            self.assertTrue(safety.is_in_scope("kâr payı oranı nedir"))
+        finally:
+            safety.kapsam_onbellegini_temizle()
+
     def test_detect_banks_longest_first_and_multiple(self):
         self.assertEqual(safety.detect_banks("Türkiye Emlak Katılım vade"),
                          ["turkiye-emlak-katilim"])

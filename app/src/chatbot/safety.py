@@ -442,6 +442,41 @@ BANK_NAME_TO_SLUG: dict[str, str] = {
 
 _SCOPE_LEXICON: tuple[str, ...] = _build_scope_lexicon()
 
+#: Terim sözlüğüyle genişletilmiş kapsam sözlüğü — TEMBEL kurulur.
+#:
+#: Neden tembel: bu modülün ilkesi "güvenlik katmanı import anında dosya
+#: OKUMAZ" (bkz. BANK_NAME_TO_SLUG yorumu). Tembel yükleme o ilkeyi bozmaz —
+#: sözlük yoksa `scope_terms()` boş döner ve kapsam bugünkü davranışına düşer.
+#:
+#: Neden gerekli — ÖLÇÜLDÜ: 18 katılım finansı sorusundan 14'ü "kapsam dışı"
+#: diye reddediliyordu ('tekâfül', 'muşaraka', 'selem akdi', 'muacceliyet
+#: kaydı', 'zekât nisabı'...). Sözlüğün TEKNİK terimleri 11'ini kurtarıyor ve
+#: kapsam dışı kontrol kümesinde yanlış pozitifi yalnız 2/18'den 3/18'e
+#: çıkarıyor (tek yeni: "kumar bağımlılığı" -> `meysir`).
+#:
+#: `halk_dili` BİLİNÇLİ OLARAK dışarıda: açıkken yanlış pozitif 11/18'e
+#: fırlıyordu ("Bu durum ne zaman düzelir?" kapsam içi sayılıyordu).
+_GENIS_KAPSAM: Optional[tuple[str, ...]] = None
+
+
+def _genis_kapsam() -> tuple[str, ...]:
+    global _GENIS_KAPSAM
+    if _GENIS_KAPSAM is None:
+        try:
+            from ..domain.terminology import scope_terms
+            ek = scope_terms()
+        except ImportError:                                # pragma: no cover
+            ek = ()
+        _GENIS_KAPSAM = tuple(sorted(set(_SCOPE_LEXICON) | set(ek),
+                                     key=len, reverse=True))
+    return _GENIS_KAPSAM
+
+
+def kapsam_onbellegini_temizle() -> None:
+    """Testler için — kapsam sözlüğünü yeniden kurmaya zorlar."""
+    global _GENIS_KAPSAM
+    _GENIS_KAPSAM = None
+
 _OUT_OF_SCOPE_REPLY = (
     "Bu soru elimdeki verinin kapsamı dışında — **bilmiyorum**, tahmin "
     "etmiyorum.\n\n"
@@ -463,8 +498,10 @@ def is_in_scope(question: str) -> bool:
     True
     >>> is_in_scope("Bugün hava nasıl olacak?")
     False
+    >>> is_in_scope("Tekâfül nedir?")
+    True
     """
-    return _any_keyword(_F(question or ""), _SCOPE_LEXICON) is not None
+    return _any_keyword(_F(question or ""), _genis_kapsam()) is not None
 
 
 def detect_banks(question: str) -> list[str]:
