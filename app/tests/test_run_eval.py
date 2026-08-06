@@ -92,6 +92,52 @@ class TestCounts(unittest.TestCase):
         self.assertEqual(c.skipped, 7)
 
 
+class TestHataSiniflari(unittest.TestCase):
+    """Üç hata sınıfı AYRI ölçülür (mentör talebi).
+
+    Cavide Hanım'ın teşhisi: kanun maddesindeki "1 yıl"ı vade sanmak
+    halüsinasyon DEĞİL, grounding hatasıdır. İkisini aynı sayıda toplamak
+    hangi düzeltmenin gerektiğini gizler.
+    """
+
+    def test_kacirma_ve_yanlis_cikarim_ayrisir(self):
+        # 10 gold kararı: 4 doğru, 3 yanlış değer, 3 hiç üretilmedi.
+        # `score_document` yanlış değere HEM fp_wrong HEM fn yazar.
+        c = Counts(tp=4, fn=6, fp=3, fp_wrong=3)
+        self.assertEqual(c.yanlis_cikarim, 3)
+        self.assertEqual(c.kacirma, 3)
+        self.assertEqual(c.kacirma + c.yanlis_cikarim, c.fn)
+
+    def test_kacirma_fn_ile_MUKERRER_saymaz(self):
+        """fn yanlış-değer vakalarını da içeriyor; naif toplama şişirirdi."""
+        c = Counts(tp=1, fn=5, fp_wrong=5)
+        self.assertEqual(c.kacirma, 0)
+
+    def test_cikarim_hatasi_orani(self):
+        c = Counts(tp=6, fn=4, fp_wrong=1)
+        self.assertAlmostEqual(c.extraction_failure_rate(), 0.4)
+
+    def test_destek_yoksa_cikarim_hatasi_TANIMSIZ(self):
+        self.assertIsNone(Counts(tn=5).extraction_failure_rate())
+
+    def test_PAYDALAR_AYRI(self):
+        """Aynı paydaya bölünürlerse iki oran karşılaştırılamaz hale gelir."""
+        c = Counts(tp=2, fn=8, tn=90, fp_hallucinated=10, fp=10, fp_wrong=0)
+        self.assertAlmostEqual(c.extraction_failure_rate(), 0.8)   # 8/10
+        self.assertAlmostEqual(c.hallucination_rate(), 0.1)        # 10/100
+
+    def test_as_dict_adlandirilmis_alanlari_tasir(self):
+        d = Counts(tp=1, fn=3, fp_wrong=2, tn=4, fp_hallucinated=1).as_dict()
+        self.assertEqual(d["kacirma"], 1)
+        self.assertEqual(d["yanlis_cikarim"], 2)
+        self.assertEqual(d["halusinasyon"], 1)
+        self.assertIn("extraction_failure_rate", d)
+
+    def test_negatif_kacirma_uretmez(self):
+        """Savunma: fp_wrong > fn tutarsızlığında bile negatif sayı basmayalım."""
+        self.assertEqual(Counts(fn=1, fp_wrong=3).kacirma, 0)
+
+
 class TestPuanlama(unittest.TestCase):
     """`score_document` — karar tablosunun her satırı."""
 

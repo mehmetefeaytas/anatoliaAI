@@ -135,6 +135,44 @@ class Counts:
         """Gold'da "YOK" denen karar sayısı (halüsinasyon oranının paydası)."""
         return self.tn + self.fp_hallucinated
 
+    # -- Hata sınıfları -------------------------------------------------- #
+    #
+    # Mentör (Cavide Hanım) `extraction_failure` ile `hallucination`ın AYRI
+    # raporlanmasını istedi ve teşhisi şuydu: kanun maddesindeki "1 yıl"ı vade
+    # sanmak halüsinasyon DEĞİL, grounding hatasıdır.
+    #
+    # Ayrım zaten bu sınıfın içindeydi ama ADI yoktu. Üçe ayırmak ikiye
+    # ayırmaktan daha doğru, çünkü iki farklı düzeltme gerektiriyorlar:
+    #
+    #   kacirma        bilgi metinde var, model HİÇBİR şey üretmedi
+    #                  -> kapsama sorunu (regex/prompt eksik)
+    #   yanlis_cikarim bilgi metinde var, model YANLIŞ yerden aldı
+    #                  -> grounding sorunu (Cavide Hanım'ın vakası)
+    #   halusinasyon   bilgi metinde YOK, model uydurdu
+    #                  -> zemin sorunu (en tehlikelisi)
+
+    @property
+    def yanlis_cikarim(self) -> int:
+        """Gold'da değer var, model YANLIŞ değer üretti (grounding hatası)."""
+        return self.fp_wrong
+
+    @property
+    def kacirma(self) -> int:
+        """Gold'da değer var, model HİÇ değer üretmedi.
+
+        `fn` her iki durumu da sayar (yanlış değer üreten belge hem FP hem FN
+        alır, bkz. `score_document`), bu yüzden fark alınır.
+        """
+        return max(0, self.fn - self.fp_wrong)
+
+    def extraction_failure_rate(self) -> float | None:
+        """(kaçırma + yanlış çıkarım) / gold'da değer olan karar sayısı.
+
+        Halüsinasyonun paydası AYRIDIR (`absent_decisions`); ikisi aynı
+        paydaya bölünürse karşılaştırılamaz hale gelirler.
+        """
+        return (self.fn / self.support) if self.support else None
+
     def hallucination_rate(self) -> float | None:
         """Gold "YOK" dediği hâlde değer uydurma oranı.
 
@@ -152,6 +190,12 @@ class Counts:
             "tp": self.tp, "fp": self.fp, "fn": self.fn, "tn": self.tn,
             "fp_hallucinated": self.fp_hallucinated, "fp_wrong": self.fp_wrong,
             "support": self.support, "absent_decisions": self.absent_decisions,
+            # Adlandırılmış hata sınıfları (mentör talebi) — sayılar zaten
+            # yukarıdaki ham alanlardan türer, burada AYRI AD alırlar.
+            "kacirma": self.kacirma,
+            "yanlis_cikarim": self.yanlis_cikarim,
+            "halusinasyon": self.fp_hallucinated,
+            "extraction_failure_rate": self.extraction_failure_rate(),
             "hallucination_rate": self.hallucination_rate(),
             "skipped_undecided": self.skipped, "unclear": self.unclear,
         }
@@ -434,8 +478,21 @@ def format_result(result: MatcherResult, predictor: Predictor) -> str:
         f"{predictor.name.upper()} / {result.matcher} — TÜM VAKALAR", result.table)]
 
     m = result.micro
+    # Üç hata sınıfı AYRI raporlanır (mentör talebi). Paydaları da ayrıdır:
+    # çıkarım hatasının paydası "gold'da değer var" kararları, halüsinasyonun
+    # paydası "gold'da YOK" kararlarıdır. Aynı paydaya bölünürlerse
+    # karşılaştırılamaz hale gelirler.
+    parts.append("\n=== HATA SINIFLARI ===")
     parts.append(
-        f"\nhalüsinasyon oranı (gold 'YOK' derken üretilen değer): "
+        f"çıkarım hatası (bilgi metinde VAR, doğru alınamadı): "
+        f"{_rate_str(m.extraction_failure_rate())}  [{m.fn}/{m.support}]")
+    parts.append(
+        f"    ├─ kaçırma        (hiç değer üretilmedi) : {m.kacirma}")
+    parts.append(
+        f"    └─ yanlış çıkarım (yanlış yerden alındı) : {m.yanlis_cikarim}"
+        f"   <- grounding hatası, halüsinasyon DEĞİL")
+    parts.append(
+        f"halüsinasyon (bilgi metinde YOK, değer uyduruldu): "
         f"{_rate_str(m.hallucination_rate())}"
         f"  [{m.fp_hallucinated}/{m.absent_decisions}]")
     if m.skipped:
@@ -517,6 +574,23 @@ def markdown_report(results: list[MatcherResult], predictor: Predictor,
         ("- **halüsinasyon oranı** = `fp_hallucinated / (tn + fp_hallucinated)`; "
          "gold'da hiç `absent_fields` kararı yoksa TANIMSIZDIR (0,0 yazmak yalan "
          "olurdu)."),
+        "",
+        "### Hata sınıfları — üçü AYRI ölçülür", "",
+        ("Aynı sayıya bakıp \"model kötü\" demek yerine hangi hatanın "
+         "yapıldığını ayırıyoruz; üçü farklı düzeltme gerektiriyor:"),
+        "",
+        ("- **kaçırma** (`fn - fp_wrong`): bilgi metinde VAR, model hiçbir "
+         "değer üretmedi. Kapsama sorunu — regex ya da prompt eksik."),
+        ("- **yanlış çıkarım** (`fp_wrong`): bilgi metinde VAR, model YANLIŞ "
+         "yerden aldı. *Grounding* sorunudur, halüsinasyon DEĞİLDİR — kanun "
+         "maddesindeki \"1 yıl\"ı vade sanmak bu sınıfa girer."),
+        ("- **halüsinasyon** (`fp_hallucinated`): bilgi metinde YOK, model "
+         "uydurdu. En tehlikelisi; zemin sorunu."),
+        "",
+        ("**Paydalar ayrıdır:** çıkarım hatası oranının paydası gold'da DEĞER "
+         "olan kararlar (`support`), halüsinasyon oranının paydası gold'da "
+         "\"YOK\" denen kararlardır (`absent_decisions`). Aynı paydaya "
+         "bölünürlerse karşılaştırılamaz hale gelirler."),
         ("- **makro-F1**: alanların F1 ortalaması (yalnız gold desteği olan "
          "alanlar). Mikro seyrek alanları gizler, makro gizlemez."),
         ("- **%95 GA**: belge düzeyinde küme bootstrap. Aynı belgeden çıkan 12 "
