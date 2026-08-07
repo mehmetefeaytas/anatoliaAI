@@ -17,7 +17,7 @@ Model Başarısı %30 · Fonksiyonellik %20 · Teknik %20 · On-Prem %20 · Yeni
 |---|---|---|
 | **K-1** | Çerçeve ayıklaması: n-gram mı, blok mu, hiçbiri mi? | `karar-bekleyenler.md` |
 | **K-2** | `DEFAULT_CONFIG` hâlâ `hibrit` — ölçüm kuralı 0,10 F1 önde gösteriyor | aynı |
-| **K-3** | **77 commit push edilmedi.** Şartname §20 haftalık commit istiyor | aynı |
+| **K-3** | **87 commit push edilmedi.** Şartname §20 haftalık commit istiyor | aynı |
 | **K-4** | Prompt-injection LLM modunda koşulsun mu (~10 dk) | aynı |
 
 **K-3 en aciliyetlisi.** İki dosya (`yapilacaklar-envanteri.md`,
@@ -39,7 +39,7 @@ girdi; dalı olduğu gibi push etmek onları yayına sokar. Geçmişten çıkarm
 | 1.5 | **κ için ikinci insan anotatör.** gold.v2 yerine GEÇMEZ; 1.4b'den sonra | **S** | başlamadı |
 | 1.6 | Ö1 üç kollu terim deneyi (temel / sadeleştirme / sözlük kartı) | B | kol hazır, koşulmadı |
 | 1.7 | BERTurk ince ayarı (Colab) → gold makro-F1 GA alt sınırı 0,762'yi aşarsa al | **S** koşar, B hazırladı | defter hazır, lisans MIT doğrulandı |
-| **1.8** | **gold.v2'de orkestra kolunu da ölç** — kural/orkestra farkı yalnız n=20'de bilinıyor | B | başlamadı |
+| **1.8** | **gold.v2'de orkestra kolunu da ölç** — kural/orkestra farkı yalnız n=20'de biliniyor | B | başlamadı |
 
 **1.4b neden kritik:** dört anotatör **bağımsız olarak** aynı üç boşluğu
 işaretledi — kampanya olmayan belgeler için sınıf yok (gold.v2'nin %19'u),
@@ -80,14 +80,15 @@ gider. Kılavuz düzeltilmeden ölçülen κ, anotatör uyumsuzluğunu değil
 
 ## 5. Teknik borç — ölçülmüş, kapatılmamış
 
+_(Bu turda kapanan iki madde listeden çıkarıldı: demo DB tazelik kapısı ve
+tek karakterli token gürültüsü — ikisi de "kapananlar" bölümünde.)_
+
 | | iş | not |
 |---|---|---|
-| 5.1 | `data/demo.db` bayatlayabiliyor | 31 Tem'de kurulmuş, 3 Ağu'da korpus büyümüş, kimse fark etmemişti. Kurulum tarihi ile korpus tarihini karşılaştıran bir kapı gerekiyor |
-| 5.2 | **Sözleşme PDF'leri kampanya gibi işleniyor** | Ölçüldü: 113 PDF belgesi (%6,4) kampanya olarak kayıtlı, **41'i kıyaslanabilir alan taşıyor** (oran/vade/tutar) ve karşılaştırma tablosuna giriyor. Akit metni kampanya değildir: erişimde (RAG) KALMALI, kıyasta OLMAMALI. Çözüm `campaigns` tablosuna `belge_turu` (kampanya/sözleşme) alanı ister — korpus yolundaki bölümden türetilir. Şema göçü + iki backend |
-| 5.3 | `müşaraka` korpusta 3 belgede, hiçbiri tanım değil | veri boşluğu — kapatılacaksa hedefli toplama gerek |
-| 5.4 | Güvenlik setinde 2 kayıt düşüyor (C05, K02) | ikisi de eski, bu turda gelmedi |
-| 5.5 | `rakip-analizi.md` teslim öncesi tekrar koşulmalı | görülen depolar çalışma depoları, nihai teslim değil |
-| 5.6 | `karz-ı hasen` tokenizasyonda `karz` + `ı` + `hasen` oluyor | tek harflik `ı` gürültü token; erişim skorunu bozabiliyor |
+| 5.1 | **Sözleşme PDF'leri kampanya gibi işleniyor** | Ölçüldü: 113 PDF belgesi (%6,4) kampanya olarak kayıtlı, **41'i kıyaslanabilir alan taşıyor** (oran/vade/tutar) ve karşılaştırma tablosuna giriyor. Akit metni kampanya değildir: erişimde (RAG) KALMALI, kıyasta OLMAMALI. Çözüm `campaigns` tablosuna `belge_turu` (kampanya/sözleşme) alanı ister — korpus yolundaki bölümden türetilir. Şema göçü + iki backend |
+| 5.2 | `müşaraka` korpusta 3 belgede, hiçbiri tanım değil | veri boşluğu — kapatılacaksa hedefli toplama gerek |
+| 5.3 | Güvenlik setinde 2 kayıt düşüyor (C05, K02) | ikisi de eski, bu turda gelmedi |
+| 5.4 | `rakip-analizi.md` teslim öncesi tekrar koşulmalı | görülen depolar çalışma depoları, nihai teslim değil |
 
 ---
 
