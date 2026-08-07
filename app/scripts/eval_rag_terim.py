@@ -41,8 +41,8 @@ KOK = Path(__file__).resolve().parents[1]
 if str(KOK) not in sys.path:
     sys.path.insert(0, str(KOK))
 
-from src.chatbot.rag import KeywordRetriever, _tokenize  # noqa: E402
-from src.db.repository import Repository  # noqa: E402
+from src.chatbot.rag import KeywordRetriever, _tokenize
+from src.db.repository import Repository
 
 # Ölçülen terimler. Fıkhî/Osmanlıca çekirdek + iki yaygın terim (`kâr payı`,
 # `katılma hesabı`) kontrol grubu olarak: onlar kapsanmıyorsa sorun terimlerin
