@@ -1,0 +1,80 @@
+{
+  "db_path": "/Users/mehmetefeaytas/anatoliaaI/app/data/demo.db",
+  "db_bytes": 23089152,
+  "elapsed_s": 67.04,
+  "mode": "corpus",
+  "documents_loaded": 1761,
+  "docs_per_bank": {
+    "kuveyt-turk": 533,
+    "albaraka": 217,
+    "turkiye-finans": 92,
+    "ziraat-katilim": 291,
+    "vakif-katilim": 197,
+    "turkiye-emlak-katilim": 239,
+    "tom-katilim": 15,
+    "hayat-finans": 48,
+    "dunya-katilim": 123,
+    "adil-katilim": 6
+  },
+  "campaigns_per_bank": {
+    "kuveyt-turk": 533,
+    "ziraat-katilim": 291,
+    "turkiye-emlak-katilim": 239,
+    "albaraka": 217,
+    "vakif-katilim": 197,
+    "dunya-katilim": 123,
+    "turkiye-finans": 92,
+    "hayat-finans": 48,
+    "tom-katilim": 15,
+    "adil-katilim": 6
+  },
+  "counts": {
+    "banks": 10,
+    "banks_with_campaigns": 10,
+    "campaigns": 1761,
+    "fields": 5450,
+    "campaigns_with_fields": 1607
+  },
+  "belge_turu_dagilimi": {
+    "kampanya": 1648,
+    "sozlesme": 113,
+    "bilinmeyen": 0
+  },
+  "field_coverage_kiyas": {
+    "kampanya_kosullari": 1249,
+    "kampanya_suresi": 900,
+    "vade_ay": 623,
+    "masraf_durumu": 542,
+    "taksit_sayisi": 404,
+    "odul_miktari": 384,
+    "hedef_kitle": 372,
+    "finansman_tutari": 288,
+    "indirim_orani": 204,
+    "alisveris_puani": 89,
+    "kar_payi_orani": 55,
+    "tahsis_ucreti": 29
+  },
+  "field_coverage": {
+    "kampanya_kosullari": 1347,
+    "kampanya_suresi": 925,
+    "vade_ay": 659,
+    "masraf_durumu": 626,
+    "taksit_sayisi": 409,
+    "odul_miktari": 397,
+    "hedef_kitle": 387,
+    "finansman_tutari": 303,
+    "indirim_orani": 205,
+    "alisveris_puani": 89,
+    "kar_payi_orani": 70,
+    "tahsis_ucreti": 33
+  },
+  "fields_by_extractor": {
+    "rule": 5450
+  },
+  "contradiction_count": 6,
+  "contradictions_by_kind": {
+    "masrafsiz_ama_ucret": 1,
+    "celisen_tutar_bandi": 4,
+    "celisen_kampanya_bitisi": 1
+  }
+}
