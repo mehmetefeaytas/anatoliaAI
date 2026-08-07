@@ -13,25 +13,44 @@
 
 import { useState } from "react";
 import AuditPanel from "./components/AuditPanel";
+import BankDeltaPanel from "./components/BankDeltaPanel";
 import ChatPanel from "./components/ChatPanel";
 import ComparePanel from "./components/ComparePanel";
 import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
+import JuryModeToggle from "./components/JuryModeToggle";
 import { api } from "./lib/api";
+import { JuryModeProvider } from "./lib/juryMode";
 import { useAsync } from "./lib/useAsync";
 
-type TabKey = "compare" | "audit" | "contradictions" | "extract" | "chat";
+type TabKey =
+  | "compare"
+  | "delta"
+  | "audit"
+  | "contradictions"
+  | "extract"
+  | "chat";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "compare", label: "Karşılaştırma" },
+  { key: "delta", label: "Banka İçi Delta" },
   { key: "audit", label: "Jüri Audit Paneli" },
   { key: "contradictions", label: "Çelişki Tespiti" },
   { key: "extract", label: "Canlı Çıkarım" },
   { key: "chat", label: "Chatbot" },
 ];
 
+/** Jüri modu tüm sekmeleri sarar; ComparePanel içeriden okur. */
 export default function Home() {
+  return (
+    <JuryModeProvider>
+      <Dashboard />
+    </JuryModeProvider>
+  );
+}
+
+function Dashboard() {
   const [tab, setTab] = useState<TabKey>("compare");
   const [auditTarget, setAuditTarget] = useState<number | null>(null);
 
@@ -49,6 +68,8 @@ export default function Home() {
 
   return (
     <main>
+      <JuryModeToggle />
+
       <nav className="tabs" role="tablist" aria-label="Panel bölümleri">
         {TABS.map((t) => (
           <button
@@ -88,6 +109,24 @@ export default function Home() {
           </div>
         ) : null)}
 
+      {tab === "delta" &&
+        (fields.loading || campaigns.loading ? (
+          <Loading label="Banka ve alan listesi yükleniyor…" />
+        ) : fields.data && fields.data.length > 0 ? (
+          <BankDeltaPanel
+            fields={fields.data}
+            campaigns={campaigns.data ?? []}
+            campaignTypes={campaignTypes}
+            onInspect={inspect}
+          />
+        ) : !fields.error ? (
+          <div className="notice notice-warn">
+            <strong>Alan listesi boş</strong>
+            API <span className="mono">/fields</span> ucundan hiçbir alan dönmedi;
+            delta hesaplanamaz.
+          </div>
+        ) : null)}
+
       {tab === "audit" &&
         (campaigns.loading ? (
           <Loading label="Belgeler yükleniyor…" />
@@ -99,7 +138,7 @@ export default function Home() {
 
       {tab === "extract" && <ExtractLive />}
 
-      {tab === "chat" && <ChatPanel />}
+      {tab === "chat" && <ChatPanel onInspect={inspect} />}
     </main>
   );
 }

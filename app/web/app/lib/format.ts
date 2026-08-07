@@ -9,7 +9,7 @@ import type { Extractor } from "./api";
 
 const NF = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 2 });
 /** Türkçe sayı biçimlendirici (binlik `.`, ondalık `,`). */
-const trNum = NF.format.bind(NF);
+export const trNum = NF.format.bind(NF);
 
 function isRec(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
@@ -112,4 +112,29 @@ export const CONTRADICTION_LABELS: Record<string, string> = {
 
 export function contradictionLabel(kind: string): string {
   return CONTRADICTION_LABELS[kind] ?? kind;
+}
+
+/**
+ * Katlanan çerçeve bloğunun gerekçesi → Türkçe etiket.
+ *
+ * Bilinmeyen bir kod gelirse OLDUĞU GİBİ gösterilir: gerekçeyi "diğer"e
+ * çevirmek, katlamanın neden yapıldığını gizlerdi.
+ */
+export const BLOCK_REASON_LABELS: Record<string, string> = {
+  cerez: "çerez",
+  cookie: "çerez",
+  kvkk: "KVKK",
+  gizlilik: "gizlilik metni",
+  alan_disi: "alan dışı",
+  menu: "menü",
+  navigasyon: "navigasyon",
+  header: "sayfa başlığı",
+  footer: "sayfa altı",
+  yasal_uyari: "yasal uyarı",
+  tekrar: "tekrar eden metin",
+};
+
+export function blockReasonLabel(gerekce: string | null | undefined): string {
+  if (!gerekce) return "gerekçe belirtilmemiş";
+  return BLOCK_REASON_LABELS[gerekce] ?? gerekce;
 }

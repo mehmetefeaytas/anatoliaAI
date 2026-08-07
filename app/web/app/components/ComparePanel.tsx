@@ -13,18 +13,26 @@
  *  - `intent` (en düşük / en yüksek) artık gerçekten çalışır.
  *  - Çelişki taşıyan kampanyalar satırda işaretlenir.
  *  - Hata artık yutulmuyor; "veri yok" ile "API kapalı" ayrı gösteriliyor.
+ *
+ * GÜVEN SKORU burada JÜRİ MODUNA bağlıdır (bkz. ../lib/juryMode.tsx): bu tablo
+ * ticari/bilgi arayan izleyicinin gördüğü tek yüzeydir ve kalibre edilmemiş bir
+ * skoru orada kalite iddiası gibi göstermek yanıltıcıdır. Denetim yüzeyleri
+ * (Audit / Canlı Çıkarım / Şeffaf Skorlama) skoru her hâlde gösterir.
  */
 
 import { useState } from "react";
 import { api } from "../lib/api";
 import type { CompareRow, FieldMeta } from "../lib/api";
 import { extractorClass, extractorLabel, formatValue } from "../lib/format";
+import { useJuryMode } from "../lib/juryMode";
 import { useAsync } from "../lib/useAsync";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
+import FairnessNotice from "./FairnessNotice";
 import FieldChips from "./FieldChips";
 import ScoringExplainer from "./ScoringExplainer";
 import SourceSpanView from "./SourceSpanView";
+import SummaryNotice from "./SummaryNotice";
 
 type Intent = "" | "lowest" | "highest";
 
@@ -44,6 +52,7 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
   const [intent, setIntent] = useState<Intent>("");
   const [type, setType] = useState("");
   const [openRow, setOpenRow] = useState<string | null>(null);
+  const { jury } = useJuryMode();
 
   const rows = useAsync(
     () => api.compare(field, intent || undefined, type || undefined),
@@ -59,6 +68,8 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
           Yalnızca aynı birime normalize edilmiş değerler kıyaslanır. Kıyaslanamayan
           değerler silinmez — gerekçesiyle listenin sonunda kalır (CLAUDE.md §17).
         </p>
+
+        <FairnessNotice />
 
         <FieldChips fields={fields} value={field} onChange={setField} />
 
@@ -130,7 +141,7 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                     <th scope="col">Sıra</th>
                     <th scope="col">Banka</th>
                     <th scope="col">Değer</th>
-                    <th scope="col">Güven</th>
+                    {jury && <th scope="col">Güven</th>}
                     <th scope="col">Katman</th>
                     <th scope="col">Durum</th>
                     <th scope="col">Kaynak</th>
@@ -146,6 +157,7 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                         row={r}
                         field={field}
                         open={open}
+                        jury={jury}
                         onToggle={() => setOpenRow(open ? null : key)}
                       />
                     );
@@ -166,11 +178,14 @@ function RowPair({
   row,
   field,
   open,
+  jury,
   onToggle,
 }: {
   row: CompareRow;
   field: string;
   open: boolean;
+  /** Jüri modu — güven sütunu yalnız açıkken basılır. */
+  jury: boolean;
   onToggle: () => void;
 }) {
   return (
@@ -195,10 +210,12 @@ function RowPair({
             </div>
           )}
         </td>
-        <td>
-          <ConfidenceBadge value={row.confidence} source={row.confidence_source} />
-          <div className="conf-src">{row.confidence_source ? `kaynak: ${labelOf(row.confidence_source)}` : "kaynak: kaydedilmedi"}</div>
-        </td>
+        {jury && (
+          <td>
+            <ConfidenceBadge value={row.confidence} source={row.confidence_source} />
+            <div className="conf-src">{row.confidence_source ? `kaynak: ${labelOf(row.confidence_source)}` : "kaynak: kaydedilmedi"}</div>
+          </td>
+        )}
         <td>
           <span className={extractorClass(row.extractor)}>
             {extractorLabel(row.extractor)}
@@ -233,7 +250,8 @@ function RowPair({
       </tr>
       {open && (
         <tr className="selected">
-          <td colSpan={7}>
+          {/* Sütun sayısı jüri moduna göre değişir; colSpan da değişmeli. */}
+          <td colSpan={jury ? 7 : 6}>
             <SourceDrawer row={row} />
           </td>
         </tr>
@@ -275,7 +293,13 @@ function SourceDrawer({ row }: { row: CompareRow }) {
               </>
             )}
           </dl>
-          <SourceSpanView text={doc.data.text} span={row} rawValue={row.raw_value} />
+          <SummaryNotice ozet={doc.data.ozet} ozetKaynak={doc.data.ozet_kaynak} />
+          <SourceSpanView
+            text={doc.data.text}
+            span={row}
+            rawValue={row.raw_value}
+            blocks={doc.data.bloklar}
+          />
         </>
       )}
     </div>
