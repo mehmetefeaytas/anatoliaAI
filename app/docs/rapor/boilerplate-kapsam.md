@@ -493,3 +493,86 @@ zaaf değil, girdi kalitesi sorunuydu ve ikisini de eşit vuruyordu.
 orkestrasyonu geçiyor (0,677>0,672 ve 0,688>0,682) ve halüsinasyonu her iki
 koşulda da ~0,018 daha düşük. Ayıklama K3 kararını değiştirmiyor, yalnız iki
 kolu birlikte yukarı taşıyor.
+
+---
+
+## Kaçırmayı çözecek tasarım önerisi — blok düzeyinde üç sinyal
+
+### Teşhis: tek sinyal, iki soru
+
+Kaybolan 8 alanın **7'si çöp**, yalnız 1'i gerçek içerik:
+
+| kaybolan | kanıtı | hüküm |
+|---|---|---|
+| `masraf_durumu='ücretsiz'` ×2 | "30 gün içinde ücretsiz sonuçlandırılmaktadır" (KVKK) | çöp |
+| `vade_ay='1 yıl'` ×2 | "kullanılan çerezdir. 1 yıl" | çöp |
+| `hedef_kitle='Hoş Geldin'` ×2 | "Hoş Geldin Ramazan!" afişi | çöp |
+| `kampanya_kosullari` | blog başlıkları ("DASK nedir?") | çöp |
+| `kampanya_kosullari` | "Konut finansmanı başvurusu için gerekli form…" | **gerçek** |
+
+Yani "kaçırma 13 → 16" büyük ölçüde *yanlış değer üretmeyi bırakmak*. Tek
+gerçek kayıp, **tekrar ettiği için** silinen meşru bir koşul cümlesi.
+
+Kök neden burada: mekanizma **tek sinyalle (tekrar) iki ayrı soruyu**
+cevaplamaya çalışıyor.
+
+1. *Bu blok site çerçevesi mi?* → tekrar iyi bir kanıt
+2. *Bu blok ürünle ilgili mi?* → tekrar **kötü** bir kanıt
+
+Şablonlaşmış gerçek içerik (her ürün sayfasındaki standart başvuru cümlesi)
+birinci soruda "evet" çıkıyor ve siliniyor. Tersi de var: bir bankanın 3'ten
+az benzer sayfası varsa çerez bloğu eşiği geçemiyor ve **hiç silinemiyor** —
+bugün dokunamadığımız bir uydurma kaynağı.
+
+### Öneri: karar bloğa taşınır, sinyal üçe çıkar
+
+Karar birimi **token değil blok** olmalı (başlık / boş satır / noktalama
+yoğunluğu değişimiyle bölünmüş). Gerekçe ölçüldü: KVKK bloğundaki "ücretsiz"
+kelimesinin 200 karakter ötesindeki "Kişisel Veri" işaretiyle ilişkisi ancak
+blok düzeyinde görülür.
+
+Her blok üç skor alır:
+
+| sinyal | kaynak | yön |
+|---|---|---|
+| **tekrar** | mevcut shingling, banka içi df | siler |
+| **alan değeri** | `synonyms.FIELD_TRIGGERS` + sayı/birim deseni + `domain/terminology.py` (101 terim) | korur |
+| **alan-dışılık** | çerez, KVKK, kişisel veri, aydınlatma metni, açık rıza, gizlilik politikası, site haritası, blog, sosyal medya | siler |
+
+**Öncelik sırası kritik:** `alan-dışılık > alan değeri > tekrar`.
+
+Sıra bu olmazsa KVKK bloğu kurtulur: içindeki "ücretsiz" bir `masraf_durumu`
+tetikleyicisidir ve naif bir değer-koruması onu koruyarak bugün kazandığımız
+halüsinasyon düşüşünü geri verir.
+
+### Bu ne kazandırır
+
+- **Şablonlaşmış gerçek içerik korunur** → tek gerçek kayıp kapanır.
+- **Alan-dışı blok tekrar eşiğinden BAĞIMSIZ silinir** → bugün eşiği geçemeyen
+  çerez/KVKK blokları da temizlenir, halüsinasyon kazancı büyür.
+- **Karar açıklanabilir olur**: hangi blok neden silindi, üç skorla yazılabilir
+  (dashboard'daki kaynak vurgulaması için de kullanılabilir).
+
+### Emniyet ağı — değer taşıyan span geri alınır
+
+Ayıklamadan sonra ham metin taranır: bir alan tetikleyicisinin N sözcük
+yakınında sayı+birim taşıyan bir span silinmişse, bağlamıyla birlikte geri
+konur. Bu, kaçırmaya **taban** koyar: değer taşıyan hiçbir kanıt sessizce
+kaybolamaz. Alan-dışı bloklar bu ağın dışında tutulur (öncelik sırası gereği).
+
+### İkincil düzeltme — sınır aşınması
+
+`core_text` bugün bir sözcüğü, onu kapsayan **herhangi** bir çerçeve
+8-gramı varsa siliyor. İçerik/çerçeve sınırında pencere gerçek içeriğe 7
+sözcük kadar sarkabiliyor. Düzeltme: yalnız **kapsayan her n-gramı çerçeve
+olan** sözcükler silinir.
+
+Buradaki tek gerçek kayıp bir sınır artefaktı değil (tam cümle), yani bu
+düzeltme ikincil — ama ucuz ve ilkeli.
+
+### Ölçüm planı
+
+Öneri ancak şu üçü birlikte sağlanırsa uygulanır:
+1. gold'da **kaçırma artmaz** (13'ün üstüne çıkmaz),
+2. halüsinasyon en az bugünkü kadar düşer (≤ 0,066),
+3. yanlış silinen blok listesi elle örneklenip doğrulanır.
