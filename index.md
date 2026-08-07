@@ -1,7 +1,7 @@
 # Anatolia AI — Dizin (Index)
 
 Bu vault'taki tüm sayfaların kategorize dizini. Her ingest sonrası güncellenir.
-Son güncelleme: 2026-06-16.
+Son güncelleme: 2026-08-07.
 
 ## Sources
 - [[2026-06-16-teknofest-tyda-sartname-2-senaryo]] — TEKNOFEST TYDA Teknik Şartname (2. Senaryo) ingest özeti
@@ -15,7 +15,9 @@ Son güncelleme: 2026-06-16.
 - [[github]] — kod/veri/doküman teslim ortamı
 - [[chatbot]] — sunum bileşeni (soru-cevap)
 - [[dashboard]] — sunum bileşeni (raporlama)
-- [[veri-seti]] — kampanya/ürün metinleri veri kümesi
+- [[veri-seti]] — kampanya/ürün metinleri veri kümesi (kapsam **İÇİ**)
+- [[klasik-banka-korpusu]] — `data/raw-classic`, klasik banka korpusu — **YARIŞMA
+  KAPSAMI DIŞI**, yalnızca gümüş eğitim verisi
 - [[katilim-bankalari]] — hedef kuruluşlar
 
 ## Concepts
@@ -46,6 +48,7 @@ Son güncelleme: 2026-06-16.
 - [[zor-anlama-vakalari-merkezi]] — zor anlama vakaları + gold alt kümesi
 - [[daraltilmis-yenilikcilik-hedefleri]] — yenilikçilik 3 hedefe daraltıldı
 - [[masrafsizlik-celiskisi-kapsam-testi]] — masrafsızlık çelişkisi kapsam testidir, ücret varlığı testi değil
+- [[klasik-veri-ince-ayar-rag-reddi]] — klasik banka verisi ince ayar ve RAG kaynağı olarak reddedildi
 
 ## Sorunlar
 - [[standart-veri-formati-eksikligi]] — standart format yok
