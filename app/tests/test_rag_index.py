@@ -193,6 +193,19 @@ class TestIndexInvariants(unittest.TestCase):
         self.assertTrue(r.retrieve("Kampanya nedir?"),
                         "tek sözcüklü soru yapısal olarak cevapsız kaldı")
 
+    def test_tek_karakterli_token_ESIGI_DOLDURAMAZ(self):
+        """Osmanlıca tamlamanın tire parçası eşiği gürültüyle dolduruyordu.
+
+        Ölçülen vaka: "Hüsn-i niyet nedir?" -> ['hüsn','i','niyet']. 'i'
+        token'ı korpusta 672 belgede geçtiği için üç pasaj dönüyordu ve
+        hiçbiri iki gerçek terimi de taşımıyordu — yani `MIN_OVERLAP`'in
+        engellemek için var olduğu sessiz halüsinasyonun ta kendisi.
+        """
+        self.assertEqual(rag._tokenize("Karz-ı hasen nedir?"), ["karz", "hasen"])
+        self.assertEqual(rag._tokenize("Hüsn-i niyet nedir?"), ["hüsn", "niyet"])
+        # Tek haneli rakam da ayırt edici değil; çok haneli sayı KORUNUR.
+        self.assertEqual(rag._tokenize("5 taksit 36 ay"), ["taksit", "36", "ay"])
+
     def test_etkin_esik_soru_uzunlugunu_ASMAZ(self):
         """Kuralın kendisi: eşik = min(eşik, anlamlı sözcük sayısı)."""
         self.assertEqual(rag._etkin_esik(2, {"sukuk"}), 1)

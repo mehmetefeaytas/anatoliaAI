@@ -103,9 +103,26 @@ def _tokenize(text: str) -> list[str]:
     'İ'.lower() -> 'i' + U+0307 birleşen nokta). Bu retriever'da eskiden
     `.lower()` vardı ve ALL-CAPS banka başlıklarını sessizce kaçırıyordu
     (bkz. preprocessing/clean.tr_fold docstring'i).
+
+    **Tek karakterli token'lar atılır.** Osmanlıca tamlamalar tirelidir ve
+    ayırıcı sözcük sınırı sayıldığı için ortada tek harflik bir parça kalır:
+
+        "Karz-ı hasen nedir?"  ->  ['karz', 'ı', 'hasen']
+        "Hüsn-i niyet nedir?"  ->  ['hüsn', 'i', 'niyet']
+
+    Bu parçalar leksik sinyal taşımaz ama örtüşme sayısını ŞİŞİRİR. Ölçüldü:
+    'i' token'ı korpusta 672 belgede geçiyor; "Hüsn-i niyet nedir?" sorusu
+    üç pasaj döndürüyor ve **hiçbiri iki gerçek terimi de taşımıyordu** —
+    yani eşik gürültüyle dolduruluyordu. `MIN_OVERLAP`'in var oluş sebebi
+    tam olarak bu sessiz halüsinasyondur; tek harfli token onu delen bir
+    arka kapıydı.
+
+    Rakamlar da atılır ('5', '3'): tek başına bir rakam bu retriever'da
+    ayırt edici değildir — '5' korpusta 722 belgede geçiyor. Çok haneli
+    sayılar ('36', '120') KORUNUR.
     """
     toks = re.findall(r"[a-zçğıöşü0-9]+", tr_fold(text or ""))
-    return [t for t in toks if t not in _STOPWORDS]
+    return [t for t in toks if len(t) > 1 and t not in _STOPWORDS]
 
 
 class KeywordRetriever:
