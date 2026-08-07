@@ -473,3 +473,74 @@ olarak iki farklı değer verdi). Bu yüzden son koşum `git worktree` ile
 
 - `docs/rapor/olcumler.md` — konsolide ölçüm tablosu (bu sonuçlar oraya işlenmeli)
 - `docs/OFFLINE-KANIT.md` — T-042/T-044 kanıt satırları (ağırlık SHA-256 yukarıda)
+
+---
+
+# Ek — 2026-08-07: çok-ajanlı orkestrasyon kolu
+
+**Ölçüm HEAD'i:** `654dd1f` · **gold sha:** `29b70e09ba6b` (20 belge) ·
+eşleştirici `strict`.
+
+## Sonuç
+
+| kol | mikro-F1 | makro-F1 | halüsinasyon | kaçırma | yanlış çıkarım |
+|---|---|---|---|---|---|
+| **kural** | **0,677** | **0,618** | **0,096** | 13 | 9 |
+| orkestra | 0,672 | 0,613 | 0,114 | 12 | 7 |
+
+**Orkestrasyon kural kolunu geçemedi** (Δ = −0,005) ve halüsinasyonu
+kötüleştirdi (0,096 → 0,114). K3 kararı gereği `DEFAULT_CONFIG` **kural**
+kalır; orkestrasyon bu tabloya ölçülmüş bir satır olarak girer.
+
+Kazanç yok değil ama net değil: orkestrasyon bir alan daha kurtarıyor
+(kaçırma 13 → 12) ve grounding hatasını azaltıyor (9 → 7) — hakem ve kanıt
+kapısının hedefi tam olarak buydu ve o kısım çalışıyor. Ama karşılığında
+gold'un "YOK" dediği yerlerde üç değer daha üretiyor. Net etki sıfırın hafif
+altında.
+
+## Tasarım garantisi ölçümle tuttu
+
+Asıl bulgu bu. Önceki ölçümde hibrit kol kural kolunun **altına** düşüyordu:
+
+| kol | mikro-F1 | halüsinasyon |
+|---|---|---|
+| hibrit (yazma yetkili LLM) | 0,575 | 0,163 |
+| orkestra (yetkisiz LLM) | 0,672 | 0,114 |
+
+Aradaki fark mimari: hibritte LLM alan **yazabiliyor**, orkestrasyonda yalnız
+**önerebiliyor** ve hakem yalnız **reddedebiliyor**. Yetki alınınca regresyon
+ortadan kalktı. "LLM ekle" 0,037 F1 kaybettiriyordu; "LLM ekle ama yazdırma"
+kaybı sıfırladı.
+
+## Tekrar üretilebilirlik — önemli uyarı
+
+Bu kol için **tek koşuya güvenilmez**. Ölçülen davranış:
+
+- Sabit HEAD, sabit gold, ardışık ve sakin rejimde **3 koşu birebir aynı**
+  (0,672 / 0,672 / 0,672). Yani hat kendi içinde deterministik.
+- Ama daha önce **aynı çıkarım koduyla** iki koşu 0,609 ve 0,638 verdi.
+  Aradaki tek kod farkı rapor-only `summary()` ekiydi (saf ekleme,
+  `extract()` yoluna dokunmuyor — diff'le doğrulandı). Yani sebep bizim
+  kodumuzda değil.
+
+En olası açıklama Ollama sunucu durumu: model yeniden yüklendiğinde GPU/CPU
+katman bölüşümü değişiyor ve llama.cpp'de sayısal sonuç bölüşüme bağlıdır.
+İkinci koşu sırasında makinede eşzamanlı başka iş de vardı.
+
+**Operasyonel kural:** LLM kolları ölçülürken model önceden ısıtılır, başka iş
+koşturulmaz ve ölçüm **3 kez** tekrarlanır; üçü aynı değilse sayı rapora
+girmez. Deterministik kollar (kural) bu kuraldan muaftır.
+
+## Kural kolundaki 0,612 → 0,677 nereden geldi
+
+Aynı güne ait iki ayrı kazanç; **toplanmazlar, ayrı ayrı okunmalıdır**:
+
+| adım | mikro-F1 | ne değişti |
+|---|---|---|
+| başlangıç | 0,612 | — |
+| Faz D — üç çıkarım düzeltmesi | 0,647 | **sistem** iyileşti |
+| gold hakemliği — 2 anotasyon hatası | 0,677 | **ölçüm** düzeldi, sistem aynı |
+
+Son satırda sistem hiç değişmedi: daha önce de doğru cevap veriyordu, yanlış
+gold yüzünden hatalı sayılıyordu. Tek bir "0,612 → 0,677" olarak sunmak kendi
+ölçüm hatamızı sistem başarısı diye göstermek olurdu.
