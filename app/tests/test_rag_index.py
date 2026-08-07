@@ -78,8 +78,14 @@ def seed(repo: Repository) -> None:
 class UnindexedRetriever:
     """Dizin ÖNCESİ referans uygulama — eski `KeywordRetriever.retrieve`.
 
-    Bilerek birebir kopya: optimizasyonun doğruluk referansı budur. Üretim
-    kodu değişse de bu sınıf değişmez.
+    Bilerek birebir kopya: **ters dizin optimizasyonunun** doğruluk referansı
+    budur. Korpusu her soruda baştan tarar; bu O(n) tarama asla değişmez.
+
+    Eşik kuralı ise bilinçli olarak DEĞİŞTİ (bkz. `rag._etkin_esik`): eşik
+    sorunun anlamlı sözcük sayısını aşamaz, yoksa tek sözcüklük terim soruları
+    ("Sukuk nedir?") matematiksel olarak cevapsız kalıyordu. Kural burada
+    ELDEN yazılır, üretimden import EDİLMEZ — böylece üretimdeki eşik
+    semantiği bir daha sessizce değişirse bu test yine kırılır.
     """
 
     def __init__(self, repo: Repository, min_overlap: int = rag.MIN_OVERLAP):
@@ -89,13 +95,15 @@ class UnindexedRetriever:
 
     def retrieve(self, query: str, k: int = 3) -> list[dict]:
         qtok = set(rag._tokenize(query))
+        esik = (min(self.min_overlap, len(qtok)) if qtok and self.min_overlap > 0
+                else self.min_overlap)
         scored = []
         for d in self._docs:
             dtok = set(rag._tokenize(d.get("raw_text", "")))
             if not dtok:
                 continue
             overlap = len(qtok & dtok)
-            if overlap < self.min_overlap:
+            if overlap < esik:
                 continue
             score = overlap / (len(qtok) ** 0.5 + 1)
             scored.append({
@@ -169,6 +177,30 @@ class TestIndexInvariants(unittest.TestCase):
         r = rag.KeywordRetriever(self.repo)
         self.assertEqual(
             r.retrieve("Helal gıda alışverişinde puan veren kampanya var mı?"), [])
+
+    def test_tek_sozcuklu_terim_sorusu_CEVAPSIZ_KALMAZ(self):
+        """Mutlak eşik 2, tek token'lı soruyu matematiksel olarak imkânsız kılıyordu.
+
+        Ölçüldü (`docs/rapor/rag-terim-kapsama.md`): 15 fıkhî terimin 1761
+        belgelik korpusta kapsanma oranı mutlak eşikle 4/15, oransal eşikle
+        14/15. Kapsanma ölçütü kanıt şartlıdır — dönen pasaj terimi gerçekten
+        içermelidir.
+        """
+        r = rag.KeywordRetriever(self.repo)
+        # Tek anlamlı sözcüğe inen soru: eşik 2 iken 0 pasaj dönüyordu.
+        tekil = rag._tokenize("Kampanya nedir?")
+        self.assertEqual(len(tekil), 1, "ön koşul: soru tek token'a inmeli")
+        self.assertTrue(r.retrieve("Kampanya nedir?"),
+                        "tek sözcüklü soru yapısal olarak cevapsız kaldı")
+
+    def test_etkin_esik_soru_uzunlugunu_ASMAZ(self):
+        """Kuralın kendisi: eşik = min(eşik, anlamlı sözcük sayısı)."""
+        self.assertEqual(rag._etkin_esik(2, {"sukuk"}), 1)
+        self.assertEqual(rag._etkin_esik(2, {"sukuk", "vade"}), 2)
+        self.assertEqual(rag._etkin_esik(2, {"a", "b", "c"}), 2)
+        # Eşiksiz yol (0) ve boş soru dokunulmadan geçer.
+        self.assertEqual(rag._etkin_esik(0, {"sukuk"}), 0)
+        self.assertEqual(rag._etkin_esik(2, set()), 2)
 
     def test_index_is_built_once_not_per_query(self):
         """`retrieve` depoya gitmemeli — dizin kurulumda hazırlanır."""
