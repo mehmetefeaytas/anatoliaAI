@@ -354,7 +354,8 @@
       "taksit_sayisi": "«Tespo'da 2 Taksit» sayfa sonundaki ilgili-kampanya bloğuna ait, bu belgenin değeri değil.",
       "alisveris_puani": "«Toplam 450 TL Bankkart Lira» / «Toplam 1.500 TL Bankkart Lira» ifadeleri sayfa sonundaki BAŞKA kampanyalara ait.",
       "hedef_kitle": "«Tüm TROY logolu bireysel ve ticari kartlar kampanya kapsamındadır» — kart sahipliği genel bir katılım şartıdır, 4 segment etiketinden birine karşılık gelmiyor.",
-      "masraf_durumu": "«teslimat ücreti dâhil değildir» ifadesi banka masrafı değil, sipariş teslimat ücretidir."
+      "masraf_durumu": "«teslimat ücreti dâhil değildir» ifadesi banka masrafı değil, sipariş teslimat ücretidir.",
+      "campaign_type": "Aday dosyada «Konut Finansmanı» yazıyordu — yanlış. Belge, TROY logolu kredi/banka kartlarıyla Yemeksepeti siparişlerinde indirim kampanyası -> «Kart»."
     }
   },
   {
