@@ -25,6 +25,7 @@ from eval.predictors import (
     CONFIG_KURAL,
     CONFIG_LLM,
     CONFIG_NAMES,
+    DEFAULT_CONFIG,
     DEFAULT_VERIFY_THRESHOLD,
     PredictorError,
     build_all,
@@ -262,6 +263,32 @@ class TestKayit(unittest.TestCase):
         for config in CONFIG_NAMES:
             with self.subTest(config=config):
                 self.assertTrue(build_predictor(config, llm=llm).description)
+
+
+class TestVarsayilanKol(unittest.TestCase):
+    """K-2 kararı: resmî varsayılan kol `kural`.
+
+    Sabiti teste bağlamanın sebebi: `DEFAULT_CONFIG` hiçbir çalışma yolunda
+    okunmuyor (CLI kendi varsayılanını taşıyor), dolayısıyla yanlışlıkla
+    değiştirilse hiçbir test kırılmaz ve beyan sessizce ölçümden ayrışır —
+    bu modülün var olma sebebi olan hatanın ta kendisi.
+
+    Değeri değiştirmek serbesttir, ama ÖLÇÜMLE: `docs/rapor/ablasyon.md`
+    n=48 eki ve `docs/rapor/karar-bekleyenler.md` K-2 birlikte güncellenmeli.
+    """
+
+    def test_varsayilan_gecerli_bir_konfig(self):
+        self.assertIn(DEFAULT_CONFIG, CONFIG_NAMES)
+
+    def test_varsayilan_kural(self):
+        """n=20 ve n=48'de kural kolu hibridi de orkestrayı da geçti."""
+        self.assertEqual(DEFAULT_CONFIG, CONFIG_KURAL)
+
+    def test_varsayilan_llm_gerektirmiyor(self):
+        """Varsayılan kol offline'da da ölçülebilmeli — yoksa 'resmî' metrik
+        LLM sunucusunun o günkü hâline bağlı olur."""
+        predictor = build_predictor(DEFAULT_CONFIG, llm=offline_llm())
+        self.assertTrue(predictor.available)
 
 
 if __name__ == "__main__":
