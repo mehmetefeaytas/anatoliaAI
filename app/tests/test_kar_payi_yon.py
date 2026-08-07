@@ -169,5 +169,41 @@ class TestYabanciKavram(unittest.TestCase):
         self.assertEqual(_ext("kâr payı oranı %2,05 ile 36 ay vade"), 2.05)
 
 
+class TestGecikmeCezasiOranSayilmaz(unittest.TestCase):
+    """Ceza maddesindeki oran, ürünün kâr payı oranı DEĞİLDİR.
+
+    Korpus `docs/` bölümündeki sözleşme/tarife PDF'leriyle 849'dan 1761
+    belgeye çıkınca ortaya çıktı: üretilen 84 `kar_payi_orani` kaydının
+    **15'i (%17,9)** bir gecikme cezası maddesinden geliyordu. Bu kayıtlar
+    karşılaştırma tablosunda bankayı %30 "oranla" en pahalı gösteriyordu.
+
+    Kapı çifttir (bkz. `_YABANCI_KAVRAM_RE` + `_CEZA_BAGLAMI_RE`); aşağıdaki
+    vakalar iki kalıbı da ayrı ayrı sınar.
+    """
+
+    def test_akdi_oranin_artirimi_oran_sayilmaz(self) -> None:
+        metin = ("Gecikme cezası, sözleşmede belirtilen akdi kar payı "
+                 "oranının %30 artırımı suretiyle bulunacak orandır.")
+        self.assertIsNone(_ext(metin))
+
+    def test_akdi_oranin_fazlasi_oran_sayilmaz(self) -> None:
+        metin = "Gecikme Cezası Oranı, akdi kar payı oranının %30 fazlasını geçemez."
+        self.assertIsNone(_ext(metin))
+
+    def test_temerrut_maddesi_oran_sayilmaz(self) -> None:
+        self.assertIsNone(
+            _ext("Temerrüt hâlinde kâr payı oranının %50 fazlası uygulanır."))
+
+    def test_SONRAKI_cumledeki_ceza_gercek_orani_ELEMEZ(self) -> None:
+        """Bağlam penceresi cümle sınırını aşmamalı — yoksa aşırı red olur."""
+        self.assertEqual(
+            _ext("Kâr payı oranı %1,99. Gecikme cezası ayrıca hesaplanır."), 1.99)
+
+    def test_ONCEKI_cumledeki_ceza_gercek_orani_ELEMEZ(self) -> None:
+        self.assertEqual(
+            _ext("Gecikme cezası uygulanmaz. "
+                 "Kâr payı oranı %1,45 olarak belirlenmiştir."), 1.45)
+
+
 if __name__ == "__main__":
     unittest.main()

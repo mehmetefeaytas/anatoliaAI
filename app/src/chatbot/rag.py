@@ -45,6 +45,25 @@ logger = logging.getLogger(__name__)
 # dürüstçe "verimde yok" der.
 MIN_OVERLAP = 2
 
+# ...ama eşik MUTLAK sayı olarak uygulanamaz: soru tek anlamlı sözcükten
+# ibaretse (`Sukuk nedir?` -> {'sukuk'}) 2 örtüşme MATEMATİKSEL OLARAK
+# imkânsızdır ve terim soruları yapısal olarak cevapsız kalır. Ölçüldü
+# (`docs/rapor/rag-terim-kapsama.md`, 15 fıkhî terim, kanıt şartı: dönen
+# pasaj terimi gerçekten içermeli):
+#
+#     korpus 1761 belge, mutlak eşik 2   ->  4/15
+#     korpus 1761 belge, oransal eşik    -> 14/15
+#
+# Doğru ölçüt "kaç sözcük tuttu" değil, **sorunun ne kadarı kanıtlandı**:
+# eşik, sorunun anlamlı sözcük sayısını AŞAMAZ. Çok sözcüklü sorularda
+# davranış birebir eskisi gibi kalır (min(2, n) = 2), yani yukarıdaki
+# "helal gıda" halüsinasyonu geri gelmez.
+def _etkin_esik(min_overlap: int, qtok: set[str]) -> int:
+    """Eşiği sorunun anlamlı sözcük sayısıyla sınırlar (asla onu aşmaz)."""
+    if min_overlap <= 0:
+        return min_overlap
+    return min(min_overlap, len(qtok)) if qtok else min_overlap
+
 # Soru kalıbı sözcükleri: örtüşme sayımında sinyal değil gürültüdür.
 _STOPWORDS = frozenset("""
 bir bu şu o ve ile için mi mı mu mü var yok ne nedir nelerdir hangi hangisi
@@ -151,6 +170,7 @@ class KeywordRetriever:
     def retrieve(self, query: str, k: int = 3) -> list[dict]:
         qtok = set(_tokenize(query))
         overlaps = self._count_overlaps(qtok)
+        esik = _etkin_esik(self.min_overlap, qtok)
 
         scored = []
         denom = len(qtok) ** 0.5 + 1
@@ -158,7 +178,7 @@ class KeywordRetriever:
         # sıralamasını korumak için artan sırada geziyoruz.
         for i in sorted(overlaps):
             overlap = overlaps[i]
-            if overlap < self.min_overlap:
+            if overlap < esik:
                 continue
             d = self._docs[i]
             scored.append({
