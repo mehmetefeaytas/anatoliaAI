@@ -414,3 +414,59 @@ cd app
 > `--gold` bayrağı TÜM bölümleri temizler (§0 tablosunun "tüm bölümler"
 > satırı). Yalnız `products` kapsamı `section_of` ile filtrelenerek üretildi;
 > filtreyi bayrağa taşımak `src/` kararı verildikten sonra anlamlı olacak.
+
+---
+
+## Ek — 2026-08-07: güncel temel çizgide yeniden ölçüm
+
+Bu raporun ana ölçümü `0,612` temel çizgisine göre yapıldı. O ölçümden sonra
+aynı gün iki şey değişti ve **ikisi de aynı alanı düzeltiyordu**
+(`kampanya_suresi`), dolayısıyla kazançlar toplanamaz:
+
+- `b2a4845` — Faz D'nin üç çıkarım düzeltmesi (sistem iyileşmesi)
+- `da02e22` — gold hakemliği, iki anotasyon hatası (ölçüm düzelmesi)
+
+Güncel temel çizgi **0,677**. Öneri bu çizgide yeniden ölçüldü.
+
+### Sonuç (kural / strict, gold n=20, HEAD `8f92c27`)
+
+| yapılandırma | mikro-F1 | makro-F1 | P | R | halüsinasyon | kaçırma | yanlış çıkarım |
+|---|---|---|---|---|---|---|---|
+| temel (ayıklama yok) | 0,677 | 0,618 | 0,662 | 0,692 | 0,096 | 13 | 7 |
+| **products (önerilen)** | **0,688** | **0,624** | 0,717 | 0,662 | **0,066** | 16 | 6 |
+| tüm bölümler | 0,562 | 0,563 | 0,607 | 0,523 | 0,066 | — | 11 |
+
+### Okunuşu — kazanç F1'de değil, halüsinasyonda
+
+**Önerinin varış noktası doğrulandı:** 0,688 birebir yeniden üretildi. Ama
+**kazancın büyüklüğü değişti**: eski çizgide +0,076 görünen fark, güncel
+çizgide **+0,011**. Aradaki farkı Faz D zaten toplamıştı.
+
++0,011 F1, n=20'de gürültünün içindedir ve tek başına uygulama gerekçesi
+sayılmaz. Uygulamayı haklı çıkaran sayı şu:
+
+    halüsinasyon 0,096 -> 0,066   (16 uydurma -> 11, göreli %31 azalma)
+
+Bu, projenin en sert kuralına (CLAUDE.md §19, bilgi yoksa `null`) doğrudan
+hizmet eden bir iyileşme ve F1'den daha sağlam bir sinyal: precision 0,662'den
+0,717'ye çıkıyor.
+
+**Bedeli var ve gizlenmemeli:** kaçırma 13'ten 16'ya çıkıyor, yani ayıklama üç
+gerçek alanı da götürüyor. Takas "daha az uydurma, biraz daha az kapsama" —
+bu proje için doğru yönde bir takas, çünkü uydurulmuş bir kâr payı oranı,
+eksik bir kâr payı oranından pahalıdır.
+
+### "Tüm bölümler" satırı neden burada
+
+Kapsam kararının kendisi bu satırda görünüyor: aynı mekanizma ayrım
+gözetmeden uygulandığında F1 **0,562**'ye düşüyor (−0,115). Yani karar
+"ayıklama iyi mi kötü mü" değil, **nereye uygulandığı**. `docs` bölümündeki
+sözleşme şablonlarında tekrar eden metin gürültü değil içeriğin kendisidir;
+orada mekanizma ters çalışır.
+
+### Uygulama durumu
+
+**Henüz uygulanmadı.** `src/` değişikliği gerekiyor: çerçeve kümesi banka
+bazında hesaplanıp `products` belgelerinin `core_text`'i çıkarım girdisi
+olmalı. Bu, teslim edilen hattın birincil girdisini değiştiren bir karardır ve
+ayrı ele alınmalıdır.
