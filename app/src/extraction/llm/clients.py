@@ -344,7 +344,7 @@ class OllamaClient:
         base_url: Optional[str] = None,
         model: Optional[str] = None,
         transport: Optional[Transport] = None,
-        timeout: float = 180.0,
+        timeout: Optional[float] = None,
         keep_alive: Optional[str] = None,
         num_ctx: Optional[int] = None,
         temperature: float = 0.0,
@@ -359,7 +359,16 @@ class OllamaClient:
         self.model = model or os.environ.get(
             "OLLAMA_MODEL", "qwen2.5:7b-instruct")
         self.transport: Transport = transport or _urllib_transport
-        self.timeout = timeout
+        # Sabit 180 sn DEĞİL. Bu sınır boştaki makinede bol, yüklü makinede
+        # yetersiz: 48 belgelik bir ablasyon, aynı anda koşan bir ince ayarla
+        # çakışınca `timed out` ile düştü. Demo donanımı da bizimkinden yavaş
+        # olabilir ve on-prem iddiası (%20) "yavaş donanımda da koşar" demek
+        # zorunda. `LLM_STRICT=1` altında zaman aşımı sessiz bir kural-only
+        # düşüşü değil, gürültülü bir hata üretir — yani sınır fazla dar
+        # olduğunda ölçüm kaybedilir, bozulmaz. Yine de ayarlanabilir olmalı.
+        self.timeout = float(
+            timeout if timeout is not None
+            else os.environ.get("OLLAMA_TIMEOUT", 180.0))
         self.keep_alive = keep_alive or os.environ.get("OLLAMA_KEEP_ALIVE", "30m")
         self.num_ctx = int(num_ctx or os.environ.get("OLLAMA_NUM_CTX", 8192))
         self.temperature = temperature
