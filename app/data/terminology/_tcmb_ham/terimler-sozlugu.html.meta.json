@@ -1,0 +1,30 @@
+{
+  "kaynak_url": "https://www.tcmb.gov.tr/wps/wcm/connect/tr/tcmb+tr/main+menu/banka+hakkinda/egitim-akademik/terimler+sozlugu/",
+  "kaynak_kurum": "Türkiye Cumhuriyet Merkez Bankası (TCMB)",
+  "belge_adi": "TCMB - Terimler Sözlüğü",
+  "cekilme_tarihi": "2026-08-07",
+  "http_durum": 200,
+  "http_yontem": "GET",
+  "icerik_boyutu_bayt": 239180,
+  "sha256": "ae1e00692de152aa52ba8ee6d66cb4f76229de540dccfeabfb89346bc17daaed",
+  "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+  "robots_kontrol_sonucu": {
+    "durum": "izinli",
+    "robots_url": "https://www.tcmb.gov.tr/robots.txt",
+    "robots_http_durum": 200,
+    "robots_icerigi_tam": "User-agent: *\nDisallow: */search+results",
+    "gerekce": "robots.txt yalnızca '*/search+results' yolunu yasaklıyor. Terimler Sözlüğü yolu bu kalıba uymadığı için kazıma izinlidir. Crawl-delay direktifi yok; proje kuralı (CLAUDE.md §14) gereği yine de istekler arasında 3 sn beklendi.",
+    "kontrol_tarihi": "2026-08-07"
+  },
+  "istek_sayisi": 2,
+  "istekler_arasi_bekleme_sn": 3,
+  "notlar": [
+    "Sözlüğün tamamı tek HTML sayfasındadır; sayfalama (pagination) yoktur.",
+    "İçerik sunucu tarafında üretilir (server-side); JavaScript ile yüklenen gizli bölüm YOKTUR — 314 terimin tümü ham HTML içinde mevcuttur.",
+    "Paylaşım bağlantısındaki alternatif URL (.../Terimler+Sozlugu/Sozluk) de aynı içeriği döndürür (byte-özdeş, 239180 bayt); mükerrer olduğu için kaydedilmedi.",
+    "Ham HTML'de toplam 336 adet 'block-collapse-title' düğümü var; bunların 22'si harf grubu başlığı (A, B, C-Ç, ... Z), 314'ü terimdir. Eksik terim yoktur.",
+    "J, Q, W, X harf grupları sayfada hiç yoktur (Türkçe sözlükte bu harflerle başlayan terim bulunmuyor)."
+  ],
+  "turetilen_dosya": "../tcmb-terimler.json",
+  "ayristirici": "../../../scripts/tcmb_sozluk_ayristir.py"
+}
