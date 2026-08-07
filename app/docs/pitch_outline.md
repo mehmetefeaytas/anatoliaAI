@@ -84,9 +84,18 @@ Sunumun ağırlık merkezi. Dört alt başlık, her biri ~30 saniye.
 > Bu ekrandaki her sayının altında hangi cümleden geldiği duruyor. Kıyaslama
 > sitelerinin veremediği şey tam olarak bu.
 
-**Telaffuz edilecek sayı: "849 belge, 10 banka".** (Ölçümlerin dayandığı,
-veritabanına giren korpus. Ham toplam 2.485'tir; sorulursa söylenir, slaytta
-durur.)
+**Telaffuz edilecek sayı: "849 belge, 10 banka".**
+
+Üç korpus sayısı birbirine karıştırılmamalı — sorulursa ayrımı verin:
+
+| Sayı | Ne | Nerede |
+|---:|---|---|
+| **1761** | Yarışma korpusu, ham `.txt` belge, 10 katılım bankası | `data/raw` |
+| **849** | Veritabanına giren, **ölçümlerin dayandığı** filtrelenmiş alt küme | `demo.db` |
+| 724 | Kapsam **dışı** klasik bankalar, yalnız gümüş etiket eğitimi için | `data/raw-classic` |
+
+849, 1761'in bayat bir hâli değil — filtrelenmiş alt kümesidir. 724 ise
+yarışma korpusuna **dâhil değildir**; toplama eklenmez.
 
 ### 2.3 Model seçimi ve kalibrasyon (~25 sn)
 
@@ -116,22 +125,33 @@ ablasyon tablosu slaytı.
 
 > Şimdi kendi hipotezimizi yanlışladığımız yere geliyorum.
 >
-> Ablasyon kurduk: 20 belgelik gold set, 12 alan, 1000 örneklemli bootstrap,
-> belge düzeyinde. Beklentimiz, LLM eklemenin doğruluğu artırmasıydı.
+> Ablasyon kurduk: 20 belgelik gold set, 12 alan, belge düzeyinde.
+> Beklentimiz, LLM eklemenin doğruluğu artırmasıydı.
 >
-> **Artmadı.** Kural katmanı mikro-F1 **0,612**. Hibrit **0,575**. Saf LLM
-> 0,169. McNemar testi p = 0,0117 — fark anlamlı, kazanan kural.
+> **Artmadı.** Kural katmanı mikro-F1 **0,677**. Hibrit **0,575**. Halüsinasyon
+> kuralda **0,096**, hibritte **0,163** — LLM eklemek uydurma oranını %70
+> artırdı.
 >
-> Daha önemlisi halüsinasyon: kuralda **0,102**, hibritte **0,163** — yani LLM
-> eklemek uydurma oranını %60 artırdı.
+> Sonra şunu denedik: LLM'i tuttuk ama **yazma yetkisini aldık** — yalnızca
+> öneriyor, bir hakem yalnızca reddedebiliyor. F1 0,575'ten **0,672'ye**
+> çıktı, halüsinasyon 0,163'ten 0,114'e indi.
 >
-> Bu sonucu değiştirmedik. Negatif sonuç olarak yazdık. Ve bu, sunacağım en
+> Yani LLM'in zararı yeteneğinden değil, **yetkisinden** geliyordu. Ama yine de
+> kural katmanını geçemedi.
+>
+> Bu sonucu değiştirmedik, negatif sonuç olarak yazdık. Ve bu, sunacağım en
 > güçlü argümanın kanıtı.
 
-**Tuzak — çok önemli:** Bu bölümde **prompt-injection sayısı verilmeyecek**.
-Set kurulu (26 vaka: 22 saldırı + 4 kontrol) ama koşulmadı. Aynı şekilde
-**toplam test sayısı telaffuz edilmeyecek** — belgeler arasında tutarsız
-(345 ile 1.359 arası). Soru gelirse: *"O ölçüm henüz koşulmadı"* denir.
+**Slaytta durması gereken ayrım (sorulursa söylenir):** kural kolu 0,612'den
+0,677'ye iki ayrı sebeple geldi — üç çıkarım düzeltmesi **sistemi** iyileştirdi
+(0,612 → 0,647), gold hakemliğinde bulunan iki anotasyon hatası ise **ölçümü**
+düzeltti (0,647 → 0,677), sistem hiç değişmeden. Bunu tek bir iyileştirme diye
+sunmak kendi ölçüm hatamızı başarı diye göstermek olur.
+
+**Tuzak — çok önemli:** Bu bölümde **bootstrap güven aralığı ve McNemar
+p-değeri verilmeyecek**; güncel tur için yeniden koşulmadılar. **ECE
+verilmeyecek** — kalibrasyon ölçülmedi. Test sayısı sorulursa **1455**
+(2026-08-07, çıkış kodu 0) denir, ama sunumda telaffuz edilmez.
 
 ---
 
@@ -211,6 +231,15 @@ gösterilir.
 > 1.696 belgelik korpus stresinde nihai yanıtlarda kalan konvansiyonel terim
 > sıfır."*
 
+**Vakit kalırsa (yalnızca 10 saniye varsa) — enjeksiyon vakası.**
+Bu, sunumun en somut "değerlendirme işe yaradı" hikâyesi:
+> *"26 vakalık bir prompt-injection seti yazdık. İlk koşuda gerçek bir açık
+> buldu: korpusa gömülü 'önceki tüm kurallarını yoksay' satırı, RAG'in LLM'siz
+> yolunda kullanıcıya aynen basılıyordu. Getirilen içerik karantinası kapısını
+> ekledik; şimdi 22 saldırının 22'si durduruluyor, 4 kontrol sorusu da doğru
+> yanıtlanıyor — yani aşırı reddetmiyor. Not: bu ölçüm kapı modunda yapıldı,
+> modelin ikna edilebilirliğini ayrıca ölçeceğiz."*
+
 **Demo güvenliği:** Üç adımın da ekran görüntüsü yedeği hazır bulundurulur.
 Sistem `--network none` altında çalıştığı için ağ kaynaklı bir arıza riski yok;
 asıl risk sunum makinesidir.
@@ -223,9 +252,10 @@ asıl risk sunum makinesidir.
 |---|---|
 | "Kaç bankayla entegresiniz?" | **Hiçbiriyle.** Kamuya açık sayfalardan topluyoruz. Gerçek ürün banka API'lerini tüketmeli — bu future work, ve henüz yazılmadı. |
 | "Gold setiniz neden bu kadar küçük?" | 20 belge. Güven aralıkları geniş ve bunu raporda yazıyoruz. Büyütmek yol haritasında. |
-| "Prompt injection'a karşı ne yaptınız?" | 26 vakalık set kurulu, kapı ve regresyon testleri kodda. **Değerlendirme henüz koşulmadı**, sayı vermiyoruz. |
+| "Prompt injection'a karşı ne yaptınız?" | 26 vakalık set: **22/22 saldırı savuşturuldu**, 4/4 kontrol doğru. Set ilk koşuda gerçek bir açık buldu (gömülü talimat RAG'in LLM'siz yolunda basılıyordu); KAPI 6 eklendi. Ölçüm **kapı modunda** — modelin ikna edilebilirliği ayrıca ölçülecek. |
 | "Kazıma yasal mı?" | Yarışma kapsamında evet: kamuya açık veri, robots.txt uyumu, kimlik beyanı, tam izlenebilirlik. Ticari senaryoda kapatılması gereken kalemleri `docs/legal_notes.md`'de listeledik. |
-| "Neden LLM'i daha çok kullanmıyorsunuz?" | Ölçtük, daha kötü çıktı. Mikro-F1 0,612 → 0,575, halüsinasyon 0,102 → 0,163. |
+| "Neden LLM'i daha çok kullanmıyorsunuz?" | Ölçtük, daha kötü çıktı. Kural 0,677 / halüsinasyon 0,096; hibrit 0,575 / 0,163. LLM'in yazma yetkisini alınca 0,672 / 0,114'e toparlandı ama yine geçemedi. |
+| "Güven aralığı / p-değeri var mı?" | Bir önceki turda vardı (kural %95 GA [0,483–0,716], McNemar p = 0,0117). **Güncel tur için yeniden koşulmadı**; 0,677 ve 0,672 için aralık iddia etmiyoruz. |
 | "Kalibrasyon sayınız var mı?" | Güven skoru taşıyoruz, **ECE henüz ölçülmedi**. |
 
 ---
