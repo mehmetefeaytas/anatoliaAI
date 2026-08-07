@@ -12,11 +12,15 @@
 
 from __future__ import annotations
 
+import logging
+import os
 from typing import Optional, Protocol
 
 from ...preprocessing.clean import tr_fold_ascii
 from ...schemas import CAMPAIGN_TYPES
 from ..rules.synonyms import FOLDED_TYPE_HINTS, matches
+
+logger = logging.getLogger(__name__)
 
 
 class Classifier(Protocol):
@@ -75,14 +79,35 @@ class BerturkClassifier:
     def __init__(self, model_dir: Optional[str] = None):
         self._pipe = None
         self._fallback = RuleHintClassifier()
+        self._calisma_zamani_hatasi_loglandi = False
+
+        # Geri düşüş (fallback) DAVRANIŞI kasıtlı: çevrimdışı demoda ağırlık
+        # yoksa sistem çökmemeli, kural katmanıyla çalışmalı. Ama SESSİZ geri
+        # düşüş kusurluydu: model beklerken kural koşuyorsa çıktıyı okuyan
+        # kişi hangi kolun ölçüldüğünü bilemez ve "BERTurk sonucu" sanılan
+        # sayı aslında kural sonucudur. Davranış aynı kaldı, görünürlük eklendi.
+        md = model_dir or os.environ.get("BERTURK_MODEL_DIR")
+        if not md:
+            logger.info(
+                "BERTURK_MODEL_DIR tanımsız -> RuleHintClassifier "
+                "(kural-ipucu, kasıtlı offline varsayılan)")
+            return
+        if not os.path.isdir(md):
+            logger.warning(
+                "BERTurk model dizini YOK: %r -> RuleHintClassifier'a "
+                "düşülüyor. Model bekleniyorsa ölçülen kol KURAL'dır.", md)
+            return
         try:
-            import os
-            md = model_dir or os.environ.get("BERTURK_MODEL_DIR")
-            if md and os.path.isdir(md):
-                from transformers import pipeline  # type: ignore
-                self._pipe = pipeline("text-classification", model=md, top_k=1)
-        except Exception:
+            from transformers import pipeline  # type: ignore
+            self._pipe = pipeline("text-classification", model=md, top_k=1)
+            logger.info("BERTurk yüklendi: %s", md)
+        except Exception as exc:
+            # Geniş yakalama bilinçli: eksik `transformers`, bozuk ağırlık,
+            # uyumsuz sürüm — hepsinde kural katmanı çalışmaya devam etmeli.
             self._pipe = None
+            logger.warning(
+                "BERTurk yüklenemedi (%s: %s) -> RuleHintClassifier'a "
+                "düşülüyor. Dizin: %r", type(exc).__name__, exc, md)
 
     @property
     def available(self) -> bool:
@@ -97,9 +122,23 @@ class BerturkClassifier:
             label = top["label"]
             # model etiketi geçerli türe eşlenir; değilse fallback
             if label not in CAMPAIGN_TYPES:
+                logger.warning(
+                    "BERTurk taksonomi dışı etiket üretti: %r -> "
+                    "RuleHintClassifier. Model `id2label` haritası "
+                    "CAMPAIGN_TYPES ile uyumlu mu?", label)
                 return self._fallback.classify(text)
             return label, float(top["score"])
-        except Exception:
+        except Exception as exc:
+            # Belge başına log basmamak için yalnız İLK hata uyarı seviyesinde.
+            if not self._calisma_zamani_hatasi_loglandi:
+                self._calisma_zamani_hatasi_loglandi = True
+                logger.warning(
+                    "BERTurk çıkarımı başarısız (%s: %s) -> "
+                    "RuleHintClassifier. Sonraki hatalar debug seviyesinde.",
+                    type(exc).__name__, exc)
+            else:
+                logger.debug("BERTurk çıkarımı başarısız (%s): %s",
+                             type(exc).__name__, exc)
             return self._fallback.classify(text)
 
 
