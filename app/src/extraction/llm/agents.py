@@ -48,6 +48,19 @@ KART_BUTCESI = 1500
 KART_LIMITI = 6
 
 
+def kart_metni(text: str, butce: int = KART_BUTCESI,
+               limit: int = KART_LIMITI) -> str:
+    """Bir belgenin ajan prompt'una girecek terim kartları.
+
+    `sistem_kurucu` bunu çağırır; ölçüm betikleri de aynı kapıdan geçer. Neden
+    ayrı bir ad: kart bütçesinin aşılıp aşılmadığını koşumda loglamak için
+    çağıranın `cards_for`u kendi varsayılanlarıyla yeniden çağırması gerekirdi
+    ve o varsayılanlar buradakilerden sessizce ayrışabilirdi. O zaman raporda
+    yazan kart boyutu, modele giden kart boyutu OLMAZDI.
+    """
+    return cards_for(text or "", limit=limit, budget_chars=butce)
+
+
 @dataclass(frozen=True)
 class AgentRole:
     """Tek bir çıkarım ajanının kimliği."""
@@ -134,7 +147,7 @@ def sistem_kurucu(rol: Optional[AgentRole] = None,
         if rol is not None:
             parcalar.append(rol.yonerge)
         if terim_karti:
-            kartlar = cards_for(text or "", limit=limit, budget_chars=butce)
+            kartlar = kart_metni(text, butce=butce, limit=limit)
             if kartlar:
                 parcalar.append(
                     "## Bu metinde geçen katılım finansı terimleri\n\n"

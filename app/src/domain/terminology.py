@@ -34,6 +34,20 @@ Sözlüğün tamamı ~76 000 karakter; `OLLAMA_NUM_CTX` 8192 token (Türkçede k
 25–30 bin karakter). Tümü prompt'a sığmaz ve Ollama taşan bağlamı **baştan**
 sessizce kırpar — yani sistem prompt'unu yok eder. `to_prompt_cards` bu yüzden
 karakter bütçesine uyar ve kartı yarıda kesmez.
+
+## Sadeleştirme — ölçülmek için var, kullanılmak için değil
+
+`simplify_text` mentörün D2 önerisinin ("terimi sadeleştirince model daha iyi
+anlar") çalıştırılabilir hâlidir: belgedeki fıkhî terim, sözlüğün `resmi_tr` /
+`halk_dili` karşılığıyla DEĞİŞTİRİLİR. Cavide Hanım'ın maili bunun anlamı
+bozduğunu söylüyor. İki iddia otoriteyle değil ÖLÇÜMLE ayrılır; bu yüzden
+sadeleştirme bir ablasyon KOLU olarak kodda vardır ve varsayılan yol değildir
+(bkz. `docs/rapor/o1-terim-deneyi.md`).
+
+Değiştirme `synonyms.keyword_pattern` üzerinden sözcük sınırlıdır. Çıplak
+`str.replace` KULLANILMAZ: korpusta ölçülmüş biçimde çöküyordu ('fon' deseni
+'fonksiyon'u yakalıyor, korpusun %48'i sahte "Konut Finansmanı" çıkıyordu) ve
+mentörün uyardığı kelime birebir "fon"dur.
 """
 
 from __future__ import annotations
@@ -465,6 +479,197 @@ def output_violations(text: str,
                     f"verilemez. {e.risk_notu}", "yuksek"))
 
     return ihlaller
+
+
+# --------------------------------------------------------------------------- #
+# Sadeleştirme — mentör D2 kolunun çalıştırılabilir hâli
+# --------------------------------------------------------------------------- #
+
+#: Konum korumalı katlamada karşılığı olmayan karakterin yerine yazılan im.
+#: NUL hiçbir desende geçmez, dolayısıyla yanlış eşleşme üretemez.
+_HIZALI_YEDEK = "\x00"
+
+
+def _hizali_katla(text: str) -> str:
+    """`tr_fold_ascii`nin KONUM KORUYAN sürümü.
+
+    Neden ayrı bir fonksiyon: `tr_fold_ascii` NFKD ayrıştırması yaptığı için
+    bazı karakterlerde uzunluğu değiştirir (gold v2'nin 48 belgesinden 1'inde
+    ölçüldü). Katlanmış metinde bulunan bir eşleşmenin konumu, özgün metne
+    birebir denk düşmezse yanlış aralığı değiştiririz — sessiz bozulma.
+
+    Bu yüzden katlama KARAKTER KARAKTER yapılır ve tek karaktere inmeyen
+    girdilerde ilk karaktere düşülür (hiç karşılığı yoksa `_HIZALI_YEDEK`).
+    Sonuç `tr_fold_ascii`den nadiren ayrışır; ayrıştığı yerde eşleşme kaçar,
+    ki bu güvenli yöndür — uydurma değişiklik yapmaktansa değiştirmemek.
+    """
+    parcalar: list[str] = []
+    for ch in text:
+        f = tr_fold_ascii(ch)
+        parcalar.append(f if len(f) == 1 else (f[0] if f else _HIZALI_YEDEK))
+    return "".join(parcalar)
+
+
+@dataclass(frozen=True)
+class Replacement:
+    """Sadeleştirmenin tek bir değişikliği — ve o değişikliğin teşhisi."""
+
+    term_id: str
+    start: int
+    end: int
+    kaynak: str
+    hedef: str
+    alan: str                       # "resmi_tr" | "halk_dili"
+    degildir_cokmesi: bool = False
+    karsitlik_baglami: bool = False
+    tekrar_cokmesi: bool = False
+    baglam: str = ""
+
+    @property
+    def anlam_bozucu(self) -> bool:
+        """Sözlüğün KENDİ verisiyle kanıtlanabilir anlam bozulması.
+
+        İki bağımsız kanıt sayılır:
+
+        `degildir_cokmesi` — terim, sözlüğün "bu DEĞİLDİR" dediği kavramla
+        değiştirildi (ör. `kar-payi.halk_dili[0]`, aynı girdinin `degildir`
+        listesinde de yazılıdır). Bu, mailin "Türkçeleri aynı anlamı replace
+        ile taşımıyor" cümlesinin makine-okunur karşılığıdır.
+
+        `tekrar_cokmesi` — hedef ifade zaten pencerede geçiyordu; değişiklik
+        cümleyi totolojiye çeviriyor. `safety.py`'nin ölçtüğü vaka budur:
+        "Kâr Payı ile Faiz Arasındaki Farklar" -> iki taraf da aynı sözcük.
+
+        `karsitlik_baglami` tek başına bozulma SAYILMAZ: karşıtlık işaretçisi
+        taşıyan bir cümlede yapılan her değişiklik zararlı değildir. Ağırlaştırıcı
+        bir koşuldur, raporda ayrı sayılır.
+        """
+        return self.degildir_cokmesi or self.tekrar_cokmesi
+
+    def as_dict(self) -> dict:
+        return {"term_id": self.term_id, "start": self.start, "end": self.end,
+                "kaynak": self.kaynak, "hedef": self.hedef, "alan": self.alan,
+                "degildir_cokmesi": self.degildir_cokmesi,
+                "karsitlik_baglami": self.karsitlik_baglami,
+                "tekrar_cokmesi": self.tekrar_cokmesi,
+                "anlam_bozucu": self.anlam_bozucu,
+                "baglam": self.baglam}
+
+
+@dataclass(frozen=True)
+class SimplifyResult:
+    """`simplify_text` çıktısı — değişen metin + her değişikliğin künyesi."""
+
+    text: str
+    replacements: tuple[Replacement, ...] = ()
+
+    @property
+    def bozucu(self) -> tuple[Replacement, ...]:
+        return tuple(r for r in self.replacements if r.anlam_bozucu)
+
+    def as_dict(self) -> dict:
+        return {"degisim": len(self.replacements),
+                "anlam_bozucu": len(self.bozucu),
+                "degildir_cokmesi": sum(1 for r in self.replacements
+                                        if r.degildir_cokmesi),
+                "tekrar_cokmesi": sum(1 for r in self.replacements
+                                      if r.tekrar_cokmesi),
+                "karsitlik_baglami": sum(1 for r in self.replacements
+                                         if r.karsitlik_baglami),
+                "resmi_tr": sum(1 for r in self.replacements
+                                if r.alan == "resmi_tr"),
+                "halk_dili": sum(1 for r in self.replacements
+                                 if r.alan == "halk_dili")}
+
+
+def simplification_target(e: TermEntry, anahtar: str) -> Optional[tuple[str, str]]:
+    """`anahtar` yüzeyinin yerine yazılacak sade karşılık, ya da `None`.
+
+    Sıra `resmi_tr` -> `halk_dili`. Gerekçe: `resmi_tr` sözlüğün resmî Türkçe
+    karşılığıdır ve D2'nin ilk tercihidir.
+
+    Kritik ayrıntı — ÖZDEŞ karşılık atlanır. Sözlüğün 101 girdisinin çoğunda
+    `resmi_tr`, kanonik terimin kendisidir (`Kâr payı` -> `Kâr payı`). Böyle
+    bir "değişiklik" hiçbir şey sadeleştirmez; onu bir değişiklik gibi saymak
+    sadeleştirme kolunun etkisini gizler. Özdeş olduğunda `halk_dili`ye
+    düşülür — ki D2'nin asıl istediği de günlük dildir.
+
+    Bu düşüşün BEDELİ vardır ve deneyin tam olarak ölçtüğü şey odur:
+    `kar-payi` girdisinde `halk_dili[0]`, aynı girdinin `degildir` listesinde
+    yazılıdır. Yani sözlük, kendi sade karşılığının o terim OLMADIĞINI
+    söylemektedir. Kod bunu gizlemez, `degildir_cokmesi` bayrağıyla sayar.
+    """
+    resmi = tr_fold_ascii(e.resmi_tr).strip()
+    if resmi and resmi != anahtar:
+        return e.resmi_tr, "resmi_tr"
+    for h in e.halk_dili:
+        if tr_fold_ascii(h).strip() and tr_fold_ascii(h).strip() != anahtar:
+            return h, "halk_dili"
+    return None
+
+
+def simplify_text(text: str,
+                  entries: Optional[Iterable[TermEntry]] = None,
+                  ) -> SimplifyResult:
+    """Belgedeki fıkhî terimleri sade karşılıklarıyla DEĞİŞTİRİR (D2 kolu).
+
+    Bu fonksiyon bir ablasyon kolunun gövdesidir; çıkarım hattının varsayılan
+    yolu DEĞİLDİR. Varsayılan yol terimi yerinde bırakıp kartı prompt'a
+    enjekte eder (`cards_for`).
+
+    Eşleşme `keyword_pattern` ile sözcük sınırlıdır; çakışan adaylar arasında
+    en soldaki, eşitlikte en UZUN olan kazanır, o da eşitse `_oncelik` karar
+    verir. Sıralamanın tamamı deterministiktir — aynı belge iki koşuda aynı
+    metni üretmezse kol yeniden üretilemez ve ölçüm kanıt olmaktan çıkar.
+
+    Returns:
+        `SimplifyResult`. Sözlük yoksa ya da metin boşsa metin AYNEN döner
+        (sessiz bozulma yok, sadece değişiklik yok).
+    """
+    girdiler = tuple(entries) if entries is not None else load_terminology()
+    if not text or not girdiler:
+        return SimplifyResult(text or "", ())
+
+    katli = _hizali_katla(text)
+    adaylar: list[tuple[int, int, TermEntry, str, str, str]] = []
+    for e in girdiler:
+        if _uslup_terimi(e):
+            continue
+        for anahtar in e.anahtarlar():
+            if anahtar in _GURULTU:
+                continue
+            hedef = simplification_target(e, anahtar)
+            if hedef is None:
+                continue
+            for m in re.finditer(_desen(anahtar), katli):
+                adaylar.append((m.start(), m.end(), e, anahtar, *hedef))
+
+    adaylar.sort(key=lambda a: (a[0], -(a[1] - a[0]), _oncelik(a[2])))
+
+    parcalar: list[str] = []
+    kalemler: list[Replacement] = []
+    imlec = 0
+    for bas, bit, e, _anahtar, hedef, alan in adaylar:
+        if bas < imlec:                    # çakışan aday — soldaki kazandı
+            continue
+        hedef_katli = tr_fold_ascii(hedef).strip()
+        pencere = _pencere_al(katli, bas)
+        kalemler.append(Replacement(
+            term_id=e.id, start=bas, end=bit,
+            kaynak=text[bas:bit], hedef=hedef, alan=alan,
+            degildir_cokmesi=any(
+                matches(tr_fold_ascii(d).strip(), hedef_katli)
+                for d in e.degildir if tr_fold_ascii(d).strip()),
+            karsitlik_baglami=bool(_KARSITLIK_RE.search(pencere)),
+            tekrar_cokmesi=bool(
+                hedef_katli
+                and re.search(_desen(hedef_katli), pencere) is not None),
+            baglam=pencere.strip()))
+        parcalar.append(text[imlec:bas])
+        parcalar.append(hedef)
+        imlec = bit
+    parcalar.append(text[imlec:])
+    return SimplifyResult("".join(parcalar), tuple(kalemler))
 
 
 # --------------------------------------------------------------------------- #
