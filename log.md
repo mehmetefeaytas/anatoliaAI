@@ -2,6 +2,98 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-07] belge | klasik-banka-korpusu "YARIŞMA KAPSAMI DIŞI" etiketlendi
+
+`app/data/raw-classic/` (11 klasik banka, 724 belge) yarışma veri seti sanılma
+riski taşıyordu: dizin `data/raw`ın hemen yanında duruyor, aynı hasat betiği
+üretiyor ve içinde Akbank/Garanti/İş Bankası gibi tanınmış banka adları var.
+TEKNOFEST jürisi bunu şartname §5.1 kapsamının parçası sayarsa veri seti yanlış
+değerlendirilir. Korpusa ve vault'a açık kapsam-dışı etiketi eklendi.
+
+Ölçüm (2026-08-07, tahmin YOK — hepsi bu oturumda koşuldu):
+
+- `find app/data/raw-classic -name '*.txt' | wc -l` → **724** belge
+- `git ls-files data/raw-classic | wc -l` → **1461** izlenen dosya
+- 724 `.meta.json` dosyasının tamamında `scraped_at` = **2026-08-04** (tek tur)
+- `app/data/raw`: **1761** `.txt`; bunun 2'si banka kökündeki demo fikstürü
+  (`kuveyt-turk/konut.txt`, `turkiye-finans/tasit.txt`) → **1759** kazınmış
+- Terim kapsama oranı (`.txt` küçük harfe indirilip alt dizge araması):
+  klasik korpus `faiz` **%70,2** (508/724), `kâr payı` %0,3 (2/724), fıkhî
+  terim (murabaha·icara·mudarebe·muşareke·karz-ı hasen·sukuk·katılma
+  hesabı·tekafül) **%0,0** (0/724); katılım korpusu `faiz` **%7,3** (128/1759),
+  `kâr payı` **%18,1** (319/1759)
+- `app/data/silver/silver.jsonl` `wc -l` → **505** gümüş kayıt
+  (`silver_report.json`: 608 öneri → 505 gümüş, 100 red)
+
+Dokunulan dosyalar:
+
+- **entities/** klasik-banka-korpusu.md (oluşturuldu)
+- **entities/** veri-seti.md (`## Related` altına çift yönlü bağ eklendi —
+  kapsam içi/dışı ayrımı vurgulandı)
+- index.md (Entities bölümüne eklendi, son güncelleme tarihi 2026-08-07)
+
+Kod tarafı (app/, ayrı depo alanı):
+
+- **app/data/raw-classic/README.md** (oluşturuldu) — kapsam dışı uyarı bloğu,
+  toplama gerekçesi, nerede KULLANILIR / KULLANILMAZ, ölçülmüş terim dağılımı
+  tablosu + ölçüm komutu, `data/raw` ile fark tablosu
+- **app/data/raw/README.md** (oluşturuldu) — kapsam İÇİ korpus tanımı +
+  `../raw-classic/README.md`e karşı-referans
+- **app/data/raw-classic/_collection_report.md** (başa kapsam uyarısı bloğu
+  eklendi; dosyanın kalanına dokunulmadı)
+
+Notlar:
+
+- `_collection_report.md` otomatik üretilir ("Elle düzenlemeyin"). Eklenen blok
+  bir HTML yorumuyla işaretlendi: `python -m src.scraping.harvest` yeniden
+  koşarsa blok silinir, geri eklenmelidir. Aynı raporun gövdesindeki 288
+  belge / 5 banka sayıları **tek turun** sayılarıdır; korpus toplamı 724/11 —
+  bu da rapor başına not düşüldü.
+- Kapsam dışılık kodda zaten beyan edilmişti (`config/banks-classic.yaml` "NE
+  İÇİN VAR" bloğu; `scripts/split_trainable.py` "Bu araç ne YAPMAZ";
+  `scripts/build_silver.py` sıfır-kesişim mesajı) ama **korpus dizininin
+  kendisinde** hiçbir işaret yoktu — dizine bakan biri kodu okumuyordu.
+- Tasarımın özü kayda geçirildi: gümüş hat klasik veride EĞİTİR, altın hat
+  katılım verisinde ÖLÇER; ayrıklık kasıtlıdır ve terminoloji aktarımını
+  sınanabilir kılar (`app/CLAUDE.md §12`).
+- Aynı gün alınan [[klasik-veri-ince-ayar-rag-reddi]] kararıyla aynı ölçümlere
+  dayanır ve onu tamamlar: o karar korpusun ince ayar/RAG kaynağı olmasını
+  reddeder, bu belge korpusun kapsam dışılığını dizinin kendisinde ilan eder.
+
+## [2026-08-07] karar | klasik-veri-ince-ayar-rag-reddi
+
+"Klasik (katılım olmayan) banka verisiyle LLM ince ayarı ve RAG yapma" fikri
+ölçümle **reddedildi** ve gerekçesiyle kalıcı kayda geçirildi.
+
+Ölçüm: klasik korpusun (724 belge) **%70,2'si "faiz"** içeriyor, fıkhî terim
+oranı %0,0 (murabaha/icare/mudaraba/müşaraka/katılma hesabı hepsi sıfır).
+Yarışma korpusunda (1759 belge) ise "faiz" yalnız %7,3, kâr payı %18,1.
+
+Dört gerekçe: (1) ters register — bu veriyle ince ayar, yasakladığımız sözlüğü
+öğretir; (2) **seyreklik** (asıl teknik gerekçe) — fıkhî terimler katılım
+korpusunda da nadir (murabaha %1,9, icare %0,6, mudaraba %0,5); %0,6
+sıklığındaki terim ince ayarla öğrenilmez, enjekte edilir; (3) RAG'de olgusal
+yanlışlık — katılım sorusuna kaynak göstererek Akbank/Garanti pasajı basmak;
+(4) yanlış halkaya yatırım — kural 0,677 / orkestra 0,672 / hibrit 0,575, yani
+LLM katmanı şu anda zarar veriyor.
+
+Kararın sınırı açıkça yazıldı: klasik veri **gümüş eğitimde geçerlidir ve
+kullanılıyor** (505 kayıt, 8 sınıf) — orada aktarılan terminoloji değil ürün
+ailesi yapısıdır; ayrıklık kasıtlıdır (klasikte eğit, katılımda ölç). RAG'in
+kendisi de reddedilmiyor; reddedilen klasik korpusun RAG kaynağı olmasıdır —
+doğru kaynak `app/data/raw/*/docs/` bölümüdür (fıkhî terim yoğunluğu %42,0).
+
+Dokunulan dosyalar:
+- **decisions/** klasik-veri-ince-ayar-rag-reddi.md (oluşturuldu)
+- index.md (Decisions bölümüne eklendi)
+- **app/docs/rapor/** karar-bekleyenler.md ("Kapanmış kararlar" bölümüne bir
+  madde eklendi)
+
+Notlar:
+- Fıkhî terimler korpusa eşit dağılmıyor: `docs` %42,0, `products` %16,3,
+  `live` %4,8, `archive` %1,5. RAG önceliği bu yüzden `docs/` bölümüne verilir.
+- Karar dar kapsamlıdır; ne ince ayarın tümünü ne RAG'in kendisini reddeder.
+
 ## [2026-07-27] kod+yöntem | Gün 1c: Veri modeli, gerçek güven, 12/12 alan, değişmez denetimi
 
 Üç blok iş yapıldı. Sonuncusu bir **yöntem değişikliğidir** ve kalan 29 günün
