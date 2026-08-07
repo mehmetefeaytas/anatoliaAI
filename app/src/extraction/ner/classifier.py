@@ -62,7 +62,14 @@ class RuleHintClassifier:
 class BerturkClassifier:
     """Fine-tune BERTurk yolu. Model yüklenemezse RuleHint'e düşer.
 
-    model_dir: kaydedilmiş HuggingFace modeli (offline, Apache-2.0 BERTurk).
+    model_dir: kaydedilmiş HuggingFace modeli (offline, **MIT** BERTurk).
+
+    Lisans doğrulandı (2026-08-07): `dbmdz/bert-base-turkish-cased`
+    `cardData.license = "mit"`, `base_model` beyanı YOK — zincirin kökü,
+    yani "türev kökünden serbest olamaz" tuzağı oluşmuyor. Kaynak:
+    https://huggingface.co/api/models/dbmdz/bert-base-turkish-cased
+    Bu satır eskiden "Apache-2.0" diyordu; ikisi de izinli listede
+    (CLAUDE.md §7) ama yanlış lisans beyanı uyumluluk iddiasını çürütür.
     """
 
     def __init__(self, model_dir: Optional[str] = None):
