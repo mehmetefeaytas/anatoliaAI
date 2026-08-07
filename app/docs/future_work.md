@@ -89,15 +89,19 @@ gösteriyor: kapalı tarafa, yani on-prem'e."*
 
 Aşağıdakiler ölçülmüş boşluklardır; hiçbiri bugün tamamlanmış gibi sunulmaz.
 
-**(a) Prompt-injection değerlendirmesini koştur.** Set kurulu:
-`data/safety/prompt-injection-seti.jsonl`, **26 vaka** (22 saldırı + 4 kontrol).
-Koşucu `scripts/eval_injection.py`, kapı `src/chatbot/safety.py` KAPI 6.
-Sonuç hiçbir belgede yazılı değil. Bu, güvenlik anlatısındaki en görünür
-boşluktur ve kapatılması ucuzdur.
+**(a) Prompt-injection'ı LLM modunda koştur.** Kapı modu ölçüldü ve **22/22
+saldırı savuşturuldu**, aşırı-red denetimi 4/4 (`data/eval/injection.json`).
+Ancak ölçüm `llm_modu: false` ile yapıldı — yani deterministik kapılar
+sınandı, **RAG sentezi devre dışıydı**. Eksik olan, modelin ikna edilip
+edilemediğidir. Aynı seti `llm_modu: true` ile koşturmak, güvenlik anlatısının
+kalan tek boşluğunu kapatır.
 
-**(b) Gold seti büyüt.** Ablasyon n = 20 üzerinde koştu; güven aralıkları geniş
-([0,483–0,716]). n'i büyütmek, hâlihazırda anlamlı çıkan kural-hibrit farkını
-(McNemar p = 0,0117) daha dar bir aralıkla raporlamayı sağlar.
+**(b) Gold seti büyüt ve güven aralıklarını yeniden üret.** Ablasyon n = 20
+üzerinde koştu. Güncel turda (kural 0,677 / orkestra 0,672) bootstrap güven
+aralığı ve McNemar testi **yeniden koşulmadı**; bir önceki turda kural kolunun
+aralığı [0,483–0,716] genişliğindeydi. Δ = −0,005'lik bir farkın bu n'de
+anlamlılık taşıması zaten beklenmez — n'i büyütmek hem aralığı daraltır hem de
+orkestrasyon karşılaştırmasını sonuçlandırılabilir kılar.
 
 **(c) BERTurk ince ayarını yap.** Kampanya türü sınıflandırmasında geçilmesi
 gereken kural temel çizgisi ölçüldü: accuracy **0,700**, makro-F1 **0,762**
@@ -107,8 +111,12 @@ zorlandığı yer teşhis edildi — **ürün ailesi ayrımı** (İhtiyaç Finan
 zayıf halka, 0,500; karışıklıklar Yatırım Ürünü → İhtiyaç ve İhtiyaç → Konut
 yönünde). BERTurk'ün kazanması beklenen yer tam olarak burasıdır.
 
-**(d) Kanonik test sayısını belirle.** Belgeler arasında 345 ile 1.359 arasında
-değişen sayılar var. Tek bir sayım yöntemi seçilip tüm belgeler hizalanmalı.
+**(d) Test sayısını belgeler arasında hizala.** Kanonik değer ölçüldü:
+`python -m unittest discover -s tests` → **1455 test**, çıkış kodu 0
+(2026-08-07). Eski belgelerdeki 345 / 607 / 890 / 1187 / 1359 sayıları
+yazıldıkları anda doğruydu; bayat değiller ama güncel de değiller. Yeni
+belgeler 1455 kullanıyor — bu sayı büyümeye devam edeceği için her alıntıda
+tarih verilmeli.
 
 **(e) Ticarileşme öncesi hukuki kapatmalar.** `docs/legal_notes.md` §4'teki
 yedi kalem: robots fail-open'ın 403/5xx için fail-closed'a çevrilmesi,

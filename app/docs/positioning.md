@@ -119,13 +119,21 @@ yok. Bazı çalışmalar noktasal doğruluk oranları yayımlıyor, ancak güven
 ablasyon kolu ve anlamlılık testi içeren bir ölçüm yok.
 
 **Bizim konumumuz:** Aynı mimari tezi savunuyoruz — ama onu 12 alanlık bir gold
-set üzerinde, 1000 örneklemli bootstrap ile, güven aralıklarıyla ve McNemar
-testiyle **ölçtük**. Ve ölçüm hipotezimizi yanlışladığında (hibrit, kuraldan
-kötü çıktı) sonucu değiştirmedik, negatif sonuç olarak yazdık.
+set üzerinde, birden fazla ablasyon koluyla (kural / hibrit / orkestrasyon /
+saf LLM), hata sınıfları ayrı paydalarla (kaçırma, yanlış çıkarım, halüsinasyon)
+**ölçtük**. İlk turda bootstrap güven aralığı ve McNemar testi de üretildi
+(kural %95 GA [0,483–0,716], p = 0,0117). Ve ölçüm hipotezimizi yanlışladığında
+— hibrit kuraldan kötü çıktı, orkestrasyon da geçemedi — sonucu değiştirmedik,
+negatif sonuç olarak yazdık.
+
+Ölçme disiplininin bir parçası da neyi **ölçmediğimizi** söylemektir: güncel
+ablasyon turu için güven aralıkları yeniden koşulmadı, kalibrasyon (ECE) hiç
+üretilmedi ve prompt-injection yalnızca kapı modunda sınandı. Bunların hepsi
+`docs/resilience_narrative.md` §8'de açıkça işaretli.
 
 > Sunumdaki cümle şu olmalı: *"Bu mimariyi savunan tek ekip biz değiliz.
-> Ama onu güven aralığıyla ölçen ve kendi hipotezini yanlışlayan sonucu
-> yayımlayan ekibiz."*
+> Ama onu ölçen, kendi hipotezini yanlışlayan sonucu yayımlayan ve neyi henüz
+> ölçmediğini de yazan ekibiz."*
 
 ---
 

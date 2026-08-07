@@ -60,6 +60,17 @@ aynı tutar bandı içinde kıyas yapıyor (adil-kıyas garantisi).
 **çelişkiler** tespit ediliyor — aynı ürün için farklı sayfalarda farklı
 sayılar. Kullanıcının bunu elle fark etme şansı yok.
 
+**Problemin ne kadar sinsi olduğunu gösteren somut bir bulgu:** kampanya
+metinlerinde başlangıç ve bitiş tarihi çoğu zaman aynı cümlede geçiyor.
+Naif bir çıkarım — metindeki ilk tarihi al — başlangıç-bitiş çifti içeren
+**492 belgenin 442'sinde (%90)** kampanya süresi alanına yanlışlıkla
+**başlangıç** tarihini yazıyordu. Yani kullanıcıya "bu kampanya şu tarihte
+bitiyor" diye gösterilen şey, aslında kampanyanın başladığı tarihti.
+Düzeltmeden sonra aynı ölçüm **sıfır** verdi.
+
+Bu bulgu problemin doğasını özetliyor: metin insan gözüne açık, makineye
+tuzaklı. Sorun veriye erişmek değil, **doğru okumak**.
+
 > TODO: ölçülecek — kullanıcının elle kıyas için harcadığı ortalama süre
 > saha ölçümüyle doğrulanmadı; bu belge süre iddiası yapmıyor.
 
@@ -99,12 +110,18 @@ Her belge `source_url` + `scraped_at` + sha256 `content_hash` ile izlenebilir.
 Kıyaslama sitelerinin veremediği şey tam olarak budur.
 
 **(c) İddiamızı ölçtük — ve ölçüm bizi yanlışladığında onu da yazdık.**
-Ablasyonda LLM eklemek doğruluğu **artırmadı**: kural katmanı mikro-F1 **0,612**
-[0,483–0,716], hibrit **0,575**, saf LLM **0,169** (gold n=20, 12 alan,
-1000 örneklemli bootstrap, belge düzeyi; McNemar p = 0,0117, kazanan kural).
-Halüsinasyon oranı kuralda **0,102**, hibritte **0,163**. Bu sonuç beklentimizin
-tersiydi ve `docs/rapor/ablasyon.md` bunu açıkça "kanıtlanmadı, tersi ölçüldü"
-diye yazıyor.
+Ablasyonda LLM eklemek doğruluğu **artırmadı**. Güncel ölçüm (HEAD `654dd1f`,
+gold 20 belge, 12 alan, `strict` eşleştirici):
+
+| kol | mikro-F1 | halüsinasyon |
+|---|---:|---:|
+| **kural** | **0,677** | **0,096** |
+| orkestra (yetkisiz LLM) | 0,672 | 0,114 |
+| hibrit (yazma yetkili LLM) | 0,575 | 0,163 |
+
+Kural katmanı her iki LLM'li kolu da geçti. Bu sonuç beklentimizin tersiydi ve
+`docs/rapor/ablasyon.md` bunu açıkça "kanıtlanmadı, tersi ölçüldü" diye yazıyor.
+Ayrıntılı gerekçe: `docs/resilience_narrative.md`.
 
 Bu üçüncü madde konumlandırmanın kalbidir: alanda "önce kural, sonra LLM"
 argümanını savunan başka çalışmalar da var. Ayrıştığımız yer argüman değil,
@@ -114,8 +131,9 @@ argümanını savunan başka çalışmalar da var. Ayrıştığımız yer argüm
 
 ## 6. Kapsam sınırı — dürüstlük notu
 
-- Ablasyon **n = 20 belgelik** bir gold set üzerinde koştu. Güven aralıkları
-  geniş ([0,483–0,716]) ve bu belge dar bir aralık iddia etmiyor.
+- Ablasyon **n = 20 belgelik** bir gold set üzerinde koştu. Bir önceki ölçüm
+  turunda kural kolunun %95 güven aralığı **[0,483–0,716]** genişliğindeydi;
+  bu belge dar bir aralık iddia etmiyor.
 - Kampanya türü sınıflandırmasında kural temel çizgisi accuracy **0,700**,
   makro-F1 **0,762** (n=20, çekimser 1/20). Sınıf başına ~2,5 örnek düştüğü
   için bu bir **sıralama sinyalidir**, kesin performans değil. BERTurk ince
