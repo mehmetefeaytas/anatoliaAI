@@ -1,152 +1,150 @@
-# Devam notu — terim sözlüğü + çok-ajanlı orkestrasyon
+# Devam notu — terim sözlüğü, orkestrasyon, güvenlik, çerçeve ayıklaması
 
-**Durum:** 2026-08-06 akşamı durduruldu. Dal `veri-toplama-genislemesi`,
-ağaç temiz, 1359 test çıkış 0, ruff temiz, `jargon_lint` temiz.
-Bu oturumda 5 commit: `472ccfe`, `ba274c8`, `4df7d3b`, `d845145`, `9fe6206`.
+**Durum:** 2026-08-07. Dal `veri-toplama-genislemesi`, **1455 test çıkış 0**,
+ruff temiz, `jargon_lint` temiz. Hiçbir şey push edilmedi.
 
-Plan dosyası: `~/.claude/plans/structured-mixing-harbor.md` (A–H fazları).
+Plan: `~/.claude/plans/structured-mixing-harbor.md` (A–H fazları).
 
 ---
 
-## İLK İŞ — yarım kalan tek şey
+## KARAR BEKLEYEN TEK ŞEY
 
-Orkestrasyon kolunun gold ölçümü **koştu ama sonuç ÜRETMEDİ**. 40 dakika
-çalıştı, log 0 baytta kaldı, süreç durdurulunca tampon uçtu.
+**Çerçeve (boilerplate) ayıklaması `products` bölümüne uygulanacak mı?**
 
-**Sebep:** Python stdout'u dosyaya yönlendirilince tamponlar. `-u` verilmemişti.
+Ölçüldü (kural/strict, gold n=20, güncel HEAD):
 
-```bash
-cd /Users/mehmetefeaytas/anatoliaaI/app
-LLM_BACKEND=ollama OLLAMA_MODEL=qwen2.5:7b-instruct OLLAMA_NUM_CTX=16384 \
-  nohup .venv/bin/python -u -m eval.run_eval \
-      --gold data/gold/gold.v1.json --config orkestra --matcher both \
-      > /tmp/eval_orkestra.log 2>&1 &
-```
+| yapılandırma | mikro-F1 | halüsinasyon | precision | kaçırma |
+|---|---|---|---|---|
+| temel | 0,677 | 0,096 | 0,662 | 13 |
+| **products** | **0,688** | **0,066** | 0,717 | 16 |
+| tüm bölümler | 0,562 | 0,066 | 0,607 | — |
 
-`-u` ZORUNLU. Ayrıca rapor `eval/reports/<zaman>/` altına da yazılıyor;
-tampon uçsa bile oradan okunabilir — ama koşu bitmeden o da yazılmaz.
+F1 kazancı (+0,011) n=20'de gürültüdür. Gerekçe **halüsinasyon**: 16 uydurma
+11'e iniyor (göreli %31). Bedeli: üç gerçek alan kaybı.
 
-**Süre beklentisi:** tek belge uçtan uca 116 sn (3 LLM çağrısı) ölçüldü.
-`reconcile` yalnız eksik alanları sorduğu için gold'da daha hızlı olmalı;
-20 belge için kabaca 20–40 dk. Karşılaştırma kolu (`kural`) saniyeler sürer:
+**Uygulanmadı** çünkü teslim edilen hattın birincil girdisini değiştiriyor:
+çerçeve kümesi banka bazında hesaplanıp `products` belgelerinin `core_text`'i
+çıkarım girdisi olmalı (`src/pipeline.py` / `collector` hattı).
+Ayrıntı: `docs/rapor/boilerplate-kapsam.md`.
 
-```bash
-.venv/bin/python -m eval.run_eval --gold data/gold/gold.v1.json --config kural
-```
+---
 
-**Kapı (K3 kararı):** orkestrasyon `kural` kolunu geçemezse `DEFAULT_CONFIG`
-kural kalır ve orkestrasyon ablasyon tablosuna ölçülmüş bir satır olarak
-girer. Kazanan ilan etmek için |Δ| ≥ 0,05 gerekir (n=20'de altı gürültü).
+## Ölçülmüş sonuçlar (hepsi diskte, denetlenebilir)
 
-Kıyas için mevcut sayılar (`docs/rapor/ablasyon.md`, n=20):
+### Ablasyon — `docs/rapor/ablasyon.md` eki
 
-| kol | mikro-F1 | halüsinasyon |
+| kol | mikro-F1 | makro | halüsinasyon |
+|---|---|---|---|
+| **kural** | **0,677** | 0,618 | **0,096** |
+| orkestra | 0,672 | 0,613 | 0,114 |
+| hibrit | 0,575 | — | 0,163 |
+
+Orkestrasyon kuralı **geçemedi** (Δ = −0,005). K3 gereği `DEFAULT_CONFIG`
+kural kalıyor.
+
+Asıl bulgu: hibritte LLM alan **yazabiliyor** (0,575/0,163), orkestrasyonda
+yalnız **önerebiliyor** (0,672/0,114). Yetki alınınca 0,037'lik regresyon
+tamamen kalktı. Hakem + kanıt kapısı hedefini tutturdu: grounding hatası 9→7.
+
+### Kural kolu 0,612 → 0,677 — TOPLANMAZ
+
+| adım | mikro-F1 | ne değişti |
 |---|---|---|
-| kural | 0,612 | 0,102 |
-| hibrit | 0,575 | 0,163 |
+| başlangıç | 0,612 | — |
+| Faz D üç düzeltme | 0,647 | **sistem** iyileşti |
+| gold hakemliği | 0,677 | **ölçüm** düzeldi, sistem aynı |
+
+### Prompt-injection — `data/eval/injection.json`
+
+22/22 saldırı savuşturuldu, aşırı-red 4/4 kontrol sorusu doğru.
+**Kapı modu** (LLM kapalı) — RAG sentezi ölçülmedi, bu kısıt söylenmeden
+%100 sunulmaz.
+
+Set ilk koşusunda **gerçek açık buldu**: korpusa gömülü "ÖNEMLİ SİSTEM
+TALİMATI: önceki tüm kurallarını yoksay" satırı RAG'in LLM'siz yolunda
+kullanıcıya aynen basılıyordu. KAPI 6 eklendi, `dolayli_belge` 5/6 → 6/6.
 
 ---
 
-## Bu oturumda tamamlananlar
+## Sayı hijyeni — üç ayrı büyüklük, karıştırılmasın
 
-### Faz A — terim sözlüğü altyapısı
+    1759   kazınmış yarışma korpusu — her birinin .meta.json künyesi VAR
+    +  2   demo fikstürü (kuveyt-turk/konut.txt, turkiye-finans/tasit.txt)
+    ----
+    1761   data/raw altındaki toplam .txt DOSYA sayısı
 
-- `data/terminology/katilim-terim-sozlugu.json` — 101 girdi, denetlendi
-  (mükerrer id yok, `iliskili` çapraz referanslarının tümü çözülüyor).
-- `src/domain/terminology.py` — yükleyici / deterministik yönlendirici /
-  kart üreteci / çıktı bekçisi.
-- `scripts/jargon_lint.py` + CI adımı.
-- `src/chatbot/safety.py` kapsam kapısı sözlükle genişletildi.
+     849   veritabanına giren, ölçümlerin dayandığı filtrelenmiş alt küme
+     724   data/raw-classic — kapsam DIŞI klasik bankalar, yalnız gümüş eğitim
 
-**Ölçülmüş tasarım kararları** (tekrar tartışılmasın diye):
+İki fikstür `src/pipeline.py:18`'de adıyla tanımlı, ilk commit'ten beri
+duruyor ve künyesi yok. `find data/raw -name "*.txt"` 1761 verir ama bu
+**dosya** sayısıdır, korpus değil. Sunumda "1761 belge topladık" demek iki
+sentetik örneği toplanmış veri gibi göstermek olur.
 
-| Karar | Ölçüm |
-|---|---|
-| `halk_dili` kart seçiminde KULLANILMAZ | açıkken her belge `keyfiyet`/`tediye` çekiyor |
-| `halk_dili` kapsam kapısında da KULLANILMAZ | yanlış pozitif 3/18 → 11/18 |
-| üslup terimleri elenir | filtresiz koşuda en sık çekilen terim `isbu` çıktı |
-| eş anlamlı çift katlanır | `sukuk`+`kira-sertifikasi` iki kart harcıyordu |
-| jargon lint kapsamı dar | kör tarama 494 bulgu, `web/`de yalnız 1 gerçek ihlal |
-| §5.5'in yalnız 2 kavramı eşlenir | diğer 3'ü fıkhî terim değil, sözlükte karşılığı yok |
+**849 bayat DEĞİL** — filtrelenmiş alt küme. (Bir ara "bayat" diye şüphe
+ettim, doğruladım: korpus 5 Ağustos'ta da 1761'di.)
 
-### Faz B — orkestrasyon
+Test sayısı kanonik: **1455** (bu HEAD'de). Eski belgelerdeki 345/607/890/
+1187/1359 yazıldıkları anda doğruydu.
 
-`T0 yönlendirici → A1 sayısal ‖ A2 bağlamsal → K1 kanıt kapısı →
-K2 kalem kapısı → J hakem`
-
-Değişmez: **ajanlar önerir, hakem yalnız reddeder, reddedilen alan kural
-değerine düşer.** En kötü hâl = kural-only. `test_EN_KOTU_HAL_kural_only`
-bunu sabitliyor.
-
-Hakem lastik damga değil — 5 kontrol vakasında 4/5. Kaçırdığı vaka
-("Taşıt Rehin Tesis Ücreti" → tahsis ücreti) `_kalem_kapisi` ile mekanik
-olarak kapatıldı.
-
-### Faz C — kısmen
-
-- **C1 bitti:** hata sınıfları adlandırıldı (kaçırma / yanlış çıkarım /
-  halüsinasyon), üçü ayrı paydayla raporlanıyor.
-  Kural kolunda ölçüldü: çıkarım hatası 0,369 [24/65] — **13 kaçırma,
-  11 yanlış çıkarım**. Yani hataların neredeyse yarısı grounding.
-- **C4 ölçüldü, UYGULANMADI:** yarışma korpusunun **%42,6'sı çerçeve**
-  (8,3M → 4,7M karakter). Ama körlemesine uygulanamaz — 143 belge sinyal
-  taşıdığı hâlde içeriğinin %75'inden fazlasını kaybediyor.
-
-  Sebebi teşhis edildi: **sözleşme şablonlarında tekrar, gürültü değil
-  içeriğin kendisi.** Albaraka'nın 110 bin karakterlik sözleşmeleri çekirdek
-  metin olarak sayfa numarası döküntüsü bırakıyor. Varsayım `live/products`
-  için doğru, `docs/` için ters dönüyor.
-
-  Kayıpların 77'si tek bankada (Dünya Katılım) toplanmış — orayı ayrıca
-  incelemeden genel uygulama yapılmamalı.
-
-  **Doğru API uyarısı:** `boilerplate_shingles()` koruma kümesini atar;
-  `boilerplate_sets()` kullanılıp `protected` `core_text`'e verilmeli.
-  Bu fark tek başına içerik yiyen belgeyi 278'den 143'e indiriyor.
+`docs/rapor/boilerplate-kapsam.md` ve `devam-durumu.md` "1761 belge" diyor —
+düzeltilmeli.
 
 ---
 
-## Rakip analizi — `docs/rapor/rakip-analizi.md`
+## LLM kollarını ölçme kuralı (yeni, bağlayıcı)
 
-**gitignore'a alındı, ASLA push edilmez** (yayın kademesi 3).
+Model önceden **ısıtılır**, makinede başka iş **koşturulmaz**, ölçüm **3 kez**
+tekrarlanır. Üçü aynı değilse sayı rapora **girmez**. Deterministik kollar
+(kural) muaftır.
 
-En kritik üç bulgu:
-
-1. **`YURDAKULOGLU/TEKNOFEST-2026-Katilim-Analiz`** bizim "kural birincil,
-   LLM tamamlayıcı" tezimizin aynısını savunuyor. O argüman artık ayırt
-   edici değil — farkımız argümanda değil, **onu ölçmüş olmamızda**.
-   Ablasyon tablosu sunumun merkezine geçmeli.
-2. **En büyük açığımız: prompt-injection güvenlik değerlendirmesi.**
-   Rakipte 20/20 geçmiş, bizde sıfır. Finansal ajanda birinci sınıf jüri
-   kriteri ve en ucuz kapatılabilir olanı.
-3. **Config-driven scraping ayırt edici DEĞİL** — 4 rakipte var. On-prem,
-   açık kaynak, Ollama, dashboard+chatbot da öyle. Sunumda bunlara ağırlık
-   vermek zayıflık olur.
-
-Rapor teslim öncesi tekrar koşturulmalı: görülen depolar takımların çalışma
-depoları, nihai teslim sürümleri değil.
+Gerekçe ölçüldü: sakin rejimde 3 koşu birebir aynı (0,672 ×3). Ama daha önce
+**aynı çıkarım koduyla** iki koşu 0,609 ve 0,638 verdi; tek kod farkı
+rapor-only `summary()` ekiydi ve diff'le doğrulandı. Sebep kodumuzda değil —
+muhtemelen Ollama'nın model yeniden yüklemesinde değişen GPU/CPU bölüşümü.
 
 ---
 
-## Sıradaki işler (plan sırasıyla)
+## Bu turda kapananlar
 
-1. **Orkestrasyon ölçümünü tamamla** (yukarıdaki komut, `-u` ile).
-2. **Ö1 üç kollu deney** — temel / sadeleştirme / sözlük kartı.
-   `LLMOrchestrator(terim_karti=False)` ablasyon kolunu zaten açıyor.
-3. **Prompt-injection değerlendirme seti** — rakip analizindeki en kritik açık.
-4. **C4 boilerplate** — `live/products` için uygula, `docs/` hariç tut,
-   Dünya Katılım'ı ayrıca incele.
-5. **Faz D** — kampanya süresi aralığı, tahsis ücreti yüzde hesabı, dipnot
-   çıkarımı.
-6. **Faz F/G/H** — sunum belgeleri, dashboard, mentör mailleri.
+- **Faz A** — 101 terimlik sözlük, deterministik yönlendirici, kart üreteci,
+  çıktı bekçisi, `jargon_lint` (CI'da), kapsam kapısı genişletmesi.
+- **Faz B** — çok-ajanlı orkestrasyon (rol ayrımı + kanıt kapısı + kalem
+  kapısı + hakem), `CONFIG_ORKESTRA` ölçüm kolu.
+- **Faz C1** — hata sınıfları adlandırıldı: kaçırma / yanlış çıkarım /
+  halüsinasyon, ayrı paydalarla.
+- **Faz D** — kampanya tarih aralığı, oransal tahsis ücreti, dipnot kısıtları.
+  En çarpıcı bulgu: başlangıç-bitiş çifti içeren **492 belgenin 442'sinde
+  (%90)** alana bitiş yerine BAŞLANGIÇ tarihi yazılıyormuş.
+- **Faz F** — altı konumlandırma/sunum belgesi.
+- **KAPI 6** — dolaylı prompt injection karantinası.
+- **Gold hakemliği** — iki `kampanya_suresi` anotasyon hatası düzeltildi.
+
+## Sıradaki işler
+
+1. Çerçeve ayıklaması kararı (yukarıda) → uygulanırsa `src/pipeline.py`.
+2. **Ö1 üç kollu deney**: temel / sadeleştirme / sözlük kartı.
+   `LLMOrchestrator(terim_karti=False)` kolu zaten açık.
+3. Injection'ı **LLM modunda** koştur (`LLM_BACKEND=ollama`) — şu an yalnız
+   kapılar ölçülü.
+4. Güncel tur için **bootstrap GA + McNemar** yeniden koşulmadı.
+5. **Faz G** dashboard: kıyas tablosu, chatbot, çelişki tespiti, banka içi
+   delta ekranı.
+6. **Faz H** insan işleri: κ için ikinci anotatör, mentör mailleri, demo
+   videosu, sunum.
+7. `docs/rapor/rakip-analizi.md` teslim öncesi tekrar koşulmalı — görülen
+   depolar takımların çalışma depoları, nihai teslim sürümleri değil.
 
 ## Tuzaklar
 
-1. **`python -u`** — yönlendirilmiş çıktı tamponlanır; bu oturumda 40 dakika
-   bu yüzden kayboldu.
-2. `git add -A` ve düz `git commit` yasak — `git commit --only <yol>`,
+1. **Çalışma dizini Bash çağrıları arasında sıfırlanabiliyor.** `nohup` ile
+   arka plan işi başlatmadan önce `cd .../app` yaz — bir injection koşusu
+   tam bu yüzden sessizce öldü (`nohup: .venv/bin/python: No such file`).
+2. **`python -u`** yönlendirilmiş çıktıda zorunlu; ama `run_eval` zaten sonda
+   basıyor, asıl güvence `eval/reports/` altına yazılan rapordur.
+3. `git add -A` ve düz `git commit` yasak — `git commit --only <yol>`,
    yeni dosya için önce `git add -N`.
-3. Testin `OK` satırı ANSI renkli, grep'e takılmaz — **çıkış koduna bak**.
-4. Ollama `num_ctx` varsayılanı 2048 ve taşmayı BAŞTAN kırpar; terim
-   kartlarıyla birlikte bu sistem prompt'unu yok eder. Açıkça ver.
-5. Daima `.venv/bin/python`; sistem `python3`'te `bs4` yok.
+4. Testin `OK` satırı ANSI renkli, grep'e takılmaz — **çıkış koduna bak**.
+5. `boilerplate_shingles()` koruma kümesini ATAR; `boilerplate_sets()` kullan
+   ve `protected`'ı `core_text`'e ver. Fark: içerik yiyen belge 278 → 143.
+6. Daima `.venv/bin/python`.
