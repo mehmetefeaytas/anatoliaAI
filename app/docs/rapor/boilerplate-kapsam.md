@@ -470,3 +470,26 @@ orada mekanizma ters çalışır.
 bazında hesaplanıp `products` belgelerinin `core_text`'i çıkarım girdisi
 olmalı. Bu, teslim edilen hattın birincil girdisini değiştiren bir karardır ve
 ayrı ele alınmalıdır.
+
+### Ayıklama LLM koluna daha mı çok yarıyor? — HAYIR
+
+Beklenti şuydu: çerçevenin %40'ını okuyan taraf LLM olduğuna göre, ayıklamadan
+en çok o faydalanmalı. **Ölçüm bunu yanlışladı.** İki kol × iki girdi:
+
+| | kural | orkestra |
+|---|---|---|
+| ham gold | 0,677 · hal 0,096 | 0,672 · hal 0,114 |
+| **temizlenmiş** | **0,688** · hal **0,066** | 0,682 · hal 0,084 |
+| kazanç | +0,011 · −0,030 | +0,010 · −0,030 |
+
+İki kol da **aynı miktarda** kazanıyor: F1'de ~+0,010, halüsinasyonda −0,030.
+
+Açıklaması geriye dönük bakınca açık: çerçeve metni iki katmanı da **aynı
+şekilde** kandırıyordu. Çerez metnindeki "1 yıl"ı `vade_ay` sanmak için LLM
+olmaya gerek yok — regex de aynı tuzağa düşüyor. Yani gürültü LLM'e özgü bir
+zaaf değil, girdi kalitesi sorunuydu ve ikisini de eşit vuruyordu.
+
+**İkinci sonuç: sıralama girdiden bağımsız.** Kural kolu her iki koşulda da
+orkestrasyonu geçiyor (0,677>0,672 ve 0,688>0,682) ve halüsinasyonu her iki
+koşulda da ~0,018 daha düşük. Ayıklama K3 kararını değiştirmiyor, yalnız iki
+kolu birlikte yukarı taşıyor.
