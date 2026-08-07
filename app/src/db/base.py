@@ -29,9 +29,70 @@ from __future__ import annotations
 
 import json
 import threading
+from collections.abc import Mapping
 from typing import Any, Optional, Protocol, runtime_checkable
 
 from ..schemas import Campaign
+
+# --------------------------------------------------------------------------- #
+# Belge türü — kampanya mı, akit mi?
+# --------------------------------------------------------------------------- #
+#
+# Ölçülmüş sorun (bkz. docs/rapor/belge-turu.md): korpustaki 1761 belgenin
+# 113'ü (%6,4) kampanya sayfası DEĞİL, sözleşme/tarife/form PDF'idir. Hepsi
+# `campaigns` tablosuna kampanya olarak giriyordu ve 43'ü kıyaslanabilir alan
+# (oran/vade/tutar) taşıdığı için `/compare` tablosuna karışıyordu. Bir genel
+# kredi sözleşmesindeki "%2,49" ile bir kampanya sayfasındaki "%2,49" aynı
+# kolonda sıralanamaz: akit kampanya değildir (CLAUDE.md §17 "adil kıyas
+# garantisi").
+#
+# Değerler Türkçe ve sadeleştirilmiş yazılır (`sozlesme`, `ş` değil `s`):
+# sütun bir SINIF ETİKETİ taşıyor, kullanıcıya dönük metin değil; etiketin
+# kodlama/normalizasyon sorunu çıkarmaması için ASCII tutuldu.
+BELGE_TURU_KAMPANYA = "kampanya"
+BELGE_TURU_SOZLESME = "sozlesme"
+BELGE_TURLERI = (BELGE_TURU_KAMPANYA, BELGE_TURU_SOZLESME)
+
+
+def belge_turu_dogrula(deger: Optional[str]) -> Optional[str]:
+    """Belge türünü doğrular; `None` geçerlidir (bilinmiyor).
+
+    Doğrulama neden Python'da, şemada CHECK ile DEĞİL: SQLite `ALTER TABLE
+    ADD COLUMN` ile CHECK kısıtı eklemeye izin vermez. Kısıtı yalnız
+    `CREATE TABLE` içine koysaydık, SIFIRDAN kurulan bir DB ile GÖÇLE
+    güncellenen eski bir DB farklı davranırdı (biri reddeder, diğeri kabul
+    eder) — parite iddiasının tam olarak yasakladığı şey. Tek doğrulama
+    noktası burasıdır ve iki backend de buradan geçer.
+
+    `None` bilinçli olarak geçerlidir: sınıflandırılamayan belgeye tür
+    UYDURMAK yerine bilgi yokluğu saklanır (CLAUDE.md §19: bilgi yoksa null).
+    """
+    if deger is None or deger in BELGE_TURLERI:
+        return deger
+    raise ValueError(
+        f"belge_turu={deger!r} geçersiz. Geçerli: "
+        f"{', '.join(repr(t) for t in BELGE_TURLERI)} veya None (bilinmiyor).")
+
+
+def kiyas_where(sutun: str = "c.belge_turu") -> str:
+    """Kıyas yolunun WHERE parçası: sözleşme HARİÇ, **bilinmeyen DAHİL**.
+
+    Üretilen SQL:  `(c.belge_turu IS NULL OR c.belge_turu <> 'sozlesme')`
+
+    İki tasarım kararı burada kilitli:
+
+    1. **`<> 'sozlesme'`, `= 'kampanya'` DEĞİL.** İkisi dolu bir korpusta aynı
+       kümeyi verir, ama sütunu HENÜZ doldurulmamış bir veri tabanında
+       (`belge_turu` her satırda NULL) `= 'kampanya'` **hiçbir satır
+       döndürmezdi** — karşılaştırma tablosu sessizce boşalırdı. `IS NULL OR
+       <> ...` biçimi eski/doldurulmamış DB'lerde bugünkü davranışı birebir
+       korur ve yalnızca türü KESİN olarak bilinen akitleri eler.
+    2. **Değer SQL metnine gömülür, yer tutucu kullanılmaz.** `sqlite3` `?`,
+       `psycopg` `%s` bekler; parça iki backend'de birebir aynı metin olsun
+       diye sabit modül düzeyinde gömülüdür. Kullanıcı girdisi buraya
+       girmez — `BELGE_TURU_SOZLESME` bir kod sabitidir.
+    """
+    return f"({sutun} IS NULL OR {sutun} <> '{BELGE_TURU_SOZLESME}')"
 
 
 @runtime_checkable
@@ -52,9 +113,14 @@ class RepositoryProtocol(Protocol):
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
                         scraped_at: Optional[str] = None) -> int: ...
 
+    def set_belge_turu(self, atamalar: Mapping[int, Optional[str]]) -> int: ...
+
+    def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int: ...
+
     def field_value(self, campaign_id: int, field_name: str) -> Any: ...
 
-    def query_fields(self, field_name: str) -> list[dict]: ...
+    def query_fields(self, field_name: str, *,
+                     sozlesme_dahil: bool = False) -> list[dict]: ...
 
     def campaign_text(self, campaign_id: int) -> Optional[dict]: ...
 
@@ -62,13 +128,17 @@ class RepositoryProtocol(Protocol):
 
     def counts(self) -> dict[str, int]: ...
 
-    def field_coverage(self) -> dict[str, int]: ...
+    def belge_turu_counts(self) -> dict[str, int]: ...
+
+    def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]: ...
 
     def campaigns_per_bank(self) -> dict[str, int]: ...
 
-    def fields_by_extractor(self) -> dict[str, int]: ...
+    def fields_by_extractor(self, *,
+                            sozlesme_dahil: bool = True) -> dict[str, int]: ...
 
-    def all_campaigns(self) -> list[dict]: ...
+    def all_campaigns(self, *,
+                      belge_turu: Optional[str] = None) -> list[dict]: ...
 
     def close(self) -> None: ...
 
@@ -172,13 +242,23 @@ class ThreadSafeRepository:
         with self.lock:
             return self._inner.insert_campaign(c, clean_text, scraped_at)
 
+    def set_belge_turu(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        with self.lock:
+            return self._inner.set_belge_turu(atamalar)
+
+    def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        with self.lock:
+            return self._inner.set_ozet(atamalar)
+
     def field_value(self, campaign_id: int, field_name: str) -> Any:
         with self.lock:
             return self._inner.field_value(campaign_id, field_name)
 
-    def query_fields(self, field_name: str) -> list[dict]:
+    def query_fields(self, field_name: str, *,
+                     sozlesme_dahil: bool = False) -> list[dict]:
         with self.lock:
-            return self._inner.query_fields(field_name)
+            return self._inner.query_fields(
+                field_name, sozlesme_dahil=sozlesme_dahil)
 
     def campaign_text(self, campaign_id: int) -> Optional[dict]:
         with self.lock:
@@ -188,21 +268,27 @@ class ThreadSafeRepository:
         with self.lock:
             return self._inner.all_banks()
 
-    def all_campaigns(self) -> list[dict]:
+    def all_campaigns(self, *, belge_turu: Optional[str] = None) -> list[dict]:
         with self.lock:
-            return self._inner.all_campaigns()
+            return self._inner.all_campaigns(belge_turu=belge_turu)
 
     def counts(self) -> dict[str, int]:
         with self.lock:
             return self._inner.counts()
 
-    def field_coverage(self) -> dict[str, int]:
+    def belge_turu_counts(self) -> dict[str, int]:
         with self.lock:
-            return self._inner.field_coverage()
+            return self._inner.belge_turu_counts()
 
-    def fields_by_extractor(self) -> dict[str, int]:
+    def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]:
         with self.lock:
-            return self._inner.fields_by_extractor()
+            return self._inner.field_coverage(sozlesme_dahil=sozlesme_dahil)
+
+    def fields_by_extractor(self, *,
+                            sozlesme_dahil: bool = True) -> dict[str, int]:
+        with self.lock:
+            return self._inner.fields_by_extractor(
+                sozlesme_dahil=sozlesme_dahil)
 
     def campaigns_per_bank(self) -> dict[str, int]:
         with self.lock:

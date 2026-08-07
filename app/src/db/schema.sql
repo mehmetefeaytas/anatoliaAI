@@ -25,7 +25,26 @@ CREATE TABLE IF NOT EXISTS campaigns (
     -- Okuma tarafı (`PostgresRepository`) değeri tekrar ISO-8601 UTC metnine
     -- çevirir; parite testi tests/test_pgvector_repository.py'de kilitli.
     scraped_at    TIMESTAMPTZ,
-    campaign_type TEXT
+    campaign_type TEXT,
+    -- Belgenin NE OLDUĞU: 'kampanya' | 'sozlesme' | NULL (bilinmiyor).
+    --
+    -- `campaign_type` ile karıştırma: o, kampanyanın 8 sınıflık TÜRÜDÜR
+    -- (Konut Finansmanı, Kart, ...). Bu sütun bir adım daha geridedir ve
+    -- belgenin kampanya sayfası mı yoksa akit/tarife metni mi olduğunu
+    -- söyler. Korpustaki 1761 belgenin 113'ü (%6,4) sözleşme/tarife PDF'i
+    -- ve bunların 43'ü oran/vade/tutar taşıyor; süzülmezse akit metni
+    -- karşılaştırma tablosuna girer (CLAUDE.md §17 adil kıyas garantisi).
+    -- Ölçüm ve kural: docs/rapor/belge-turu.md.
+    --
+    -- CHECK kısıtı BİLEREK YOK: SQLite `ALTER TABLE ADD COLUMN` ile CHECK
+    -- eklemeyi desteklemez, yani kısıt burada olsaydı sıfırdan kurulan
+    -- Postgres ile göçle güncellenen SQLite geçersiz değere FARKLI tepki
+    -- verirdi. Tek doğrulama noktası `src/db/base.belge_turu_dogrula()`.
+    belge_turu    TEXT,
+    -- LLM üretimi kısa özet. Sütun burada AÇILIR; dolduran taraf ayrıdır
+    -- (depo sözleşmesindeki yol: `set_ozet()`). Boş kalması normaldir —
+    -- özet üretilmediyse uydurulmaz, NULL kalır (CLAUDE.md §19).
+    ozet          TEXT
 );
 
 CREATE TABLE IF NOT EXISTS extracted_fields (
