@@ -1,0 +1,788 @@
+{
+ "belge": 48,
+ "kart_butcesi": 1500,
+ "kart_limiti": 6,
+ "kart_butce_asan_belge": [],
+ "kart_karakteri_max": 1427,
+ "kart_karakteri_ortalama": 314.0,
+ "kart_sayisi_max": 6,
+ "kart_ureten_belge": 24,
+ "sadelestirme_degisim": 261,
+ "sadelestirme_anlam_bozucu": 43,
+ "sadelestirme_degildir_cokmesi": 29,
+ "sadelestirme_tekrar_cokmesi": 14,
+ "sadelestirme_karsitlik_baglami": 12,
+ "sadelestirme_resmi_tr": 150,
+ "sadelestirme_halk_dili": 111,
+ "degisim_gormeyen_belge": 24,
+ "belgeler": [
+  {
+   "doc_id": "kuveyt-turk--kampanya-arsivi-kuveyt-turkten-eczacilara-ozel-8000-mil",
+   "uzunluk": 1553,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-emlak-katilim--kampanya-beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara",
+   "uzunluk": 3251,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-emlak-katilim--kampanya-paraf-ile-secili-e-ticaret-alisverislerinize-1500-tlye-varan-parafpara",
+   "uzunluk": 3380,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-emlak-katilim--kampanya-paraf-ile-adv-magazalarinda-1000-tl-parafpara",
+   "uzunluk": 3017,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-emlak-katilim--kampanya-giyim-ve-kozmetik-alisverislerinize-1000-tl-parafpara",
+   "uzunluk": 3845,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "vakif-katilim--hesaplar-ozel-cari-hesaplar",
+   "uzunluk": 4159,
+   "kart_sayisi": 3,
+   "kart_karakteri": 902,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 23,
+    "anlam_bozucu": 4,
+    "degildir_cokmesi": 2,
+    "tekrar_cokmesi": 2,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 13,
+    "halk_dili": 10
+   }
+  },
+  {
+   "doc_id": "albaraka--hayat-ve-ferdi-kaza-sigortasi-kredi-hayat-sigortasi",
+   "uzunluk": 1245,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "vakif-katilim--odemeler-tasarruf-finansman-sirketleri-tahsilat-sistemi-2",
+   "uzunluk": 1114,
+   "kart_sayisi": 1,
+   "kart_karakteri": 119,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 5,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 5,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "ziraat-katilim--yatirim-urunleri-sukuk",
+   "uzunluk": 3774,
+   "kart_sayisi": 5,
+   "kart_karakteri": 1371,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 57,
+    "anlam_bozucu": 18,
+    "degildir_cokmesi": 11,
+    "tekrar_cokmesi": 7,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 28,
+    "halk_dili": 29
+   }
+  },
+  {
+   "doc_id": "vakif-katilim--dis-ticaret-dis-ticaret-finansmanlari",
+   "uzunluk": 669,
+   "kart_sayisi": 1,
+   "kart_karakteri": 312,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 1,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 1,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "dunya-katilim--kampanyalar-tod-paraf",
+   "uzunluk": 10274,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-finans--kampanyalar-ofot",
+   "uzunluk": 3262,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "dunya-katilim--kendim-icin-kartlar",
+   "uzunluk": 9600,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "tom-katilim--kampanyalar-a101de-her-alisveriste-3-nakit-iade",
+   "uzunluk": 2093,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-finans--kampanyalar-turkiye-finans-avantajlariyla-mobilden-tanis",
+   "uzunluk": 16452,
+   "kart_sayisi": 5,
+   "kart_karakteri": 1427,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 11,
+    "anlam_bozucu": 3,
+    "degildir_cokmesi": 3,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 3,
+    "halk_dili": 8
+   }
+  },
+  {
+   "doc_id": "adil-katilim--katilim-bankaciligi-urun-ve-hizmetler",
+   "uzunluk": 1552,
+   "kart_sayisi": 4,
+   "kart_karakteri": 994,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 5,
+    "anlam_bozucu": 1,
+    "degildir_cokmesi": 1,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 2,
+    "halk_dili": 3
+   }
+  },
+  {
+   "doc_id": "ziraat-katilim--konut-finansmani-kentsel-donusum-finansmani",
+   "uzunluk": 2036,
+   "kart_sayisi": 1,
+   "kart_karakteri": 370,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 4,
+    "anlam_bozucu": 4,
+    "degildir_cokmesi": 4,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 4,
+    "resmi_tr": 0,
+    "halk_dili": 4
+   }
+  },
+  {
+   "doc_id": "ziraat-katilim--ozel-bankacilik-finansman-urunleri",
+   "uzunluk": 1408,
+   "kart_sayisi": 2,
+   "kart_karakteri": 385,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 2,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 2,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "ziraat-katilim--kart-kampanyalari-troy-kart-yemeksepeti-kampanyasi",
+   "uzunluk": 3982,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "ziraat-katilim--zekat-hesaplama",
+   "uzunluk": 8490,
+   "kart_sayisi": 4,
+   "kart_karakteri": 850,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 25,
+    "anlam_bozucu": 6,
+    "degildir_cokmesi": 3,
+    "tekrar_cokmesi": 3,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 7,
+    "halk_dili": 18
+   }
+  },
+  {
+   "doc_id": "hayat-finans--kampanyalar-hayat-finans-ile-gastroclub-ayricaliklari",
+   "uzunluk": 2771,
+   "kart_sayisi": 2,
+   "kart_karakteri": 532,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 2,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 1,
+    "halk_dili": 1
+   }
+  },
+  {
+   "doc_id": "albaraka--tasit-finansmani-togg-finansmani",
+   "uzunluk": 2528,
+   "kart_sayisi": 1,
+   "kart_karakteri": 226,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 1,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 1,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "kuveyt-turk--leasing-leasing-sureci-ve-hesaplama-araci",
+   "uzunluk": 1822,
+   "kart_sayisi": 1,
+   "kart_karakteri": 203,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 17,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 3,
+    "resmi_tr": 17,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "kuveyt-turk--kampanya-arsivi-business-plus-ile-akaryakitta-indirim-firsati",
+   "uzunluk": 1075,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "kuveyt-turk--kampanya-arsivi-kuveyt-turkten-avantajli-leasing-finansmani",
+   "uzunluk": 1430,
+   "kart_sayisi": 2,
+   "kart_karakteri": 574,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 5,
+    "anlam_bozucu": 2,
+    "degildir_cokmesi": 2,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 3,
+    "halk_dili": 2
+   }
+  },
+  {
+   "doc_id": "hayat-finans--hesaplar-avantajli-hesap",
+   "uzunluk": 10444,
+   "kart_sayisi": 4,
+   "kart_karakteri": 871,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 40,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 2,
+    "resmi_tr": 25,
+    "halk_dili": 15
+   }
+  },
+  {
+   "doc_id": "hayat-finans--hesaplar",
+   "uzunluk": 2207,
+   "kart_sayisi": 3,
+   "kart_karakteri": 751,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 7,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 4,
+    "halk_dili": 3
+   }
+  },
+  {
+   "doc_id": "hayat-finans--yatirim-ve-birikim-hfy-gunluk-kazandiran-fon",
+   "uzunluk": 4170,
+   "kart_sayisi": 2,
+   "kart_karakteri": 700,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 2,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 2,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "hayat-finans--yatirim-ve-birikim-hisse-senedi-islemleri-yatirim-ve-birikim",
+   "uzunluk": 7334,
+   "kart_sayisi": 6,
+   "kart_karakteri": 1159,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 16,
+    "anlam_bozucu": 3,
+    "degildir_cokmesi": 2,
+    "tekrar_cokmesi": 1,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 8,
+    "halk_dili": 8
+   }
+  },
+  {
+   "doc_id": "hayat-finans--yatirim-ve-birikim-yatirim-fonlari-yatirim-ve-birikim",
+   "uzunluk": 7216,
+   "kart_sayisi": 6,
+   "kart_karakteri": 1139,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 13,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 2,
+    "resmi_tr": 12,
+    "halk_dili": 1
+   }
+  },
+  {
+   "doc_id": "albaraka--detay-dijital-katilma-hesabina-ozel-paylasim-oranlari-10",
+   "uzunluk": 1523,
+   "kart_sayisi": 2,
+   "kart_karakteri": 532,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 7,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 2,
+    "halk_dili": 5
+   }
+  },
+  {
+   "doc_id": "albaraka--tr-kampanyalar",
+   "uzunluk": 2144,
+   "kart_sayisi": 2,
+   "kart_karakteri": 725,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 3,
+    "anlam_bozucu": 1,
+    "degildir_cokmesi": 1,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 3
+   }
+  },
+  {
+   "doc_id": "vakif-katilim--detay-troy-kredi-karti-ile-50si-bizden",
+   "uzunluk": 2081,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "vakif-katilim--detay-ria-a101-hediye-ceki-kampanyasi",
+   "uzunluk": 2258,
+   "kart_sayisi": 1,
+   "kart_karakteri": 312,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 2,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 2,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "vakif-katilim--musteri-alisveris-finansmani-basvurusu",
+   "uzunluk": 1807,
+   "kart_sayisi": 1,
+   "kart_karakteri": 177,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 5,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 5,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "adil-katilim--katilim-bankaciligi",
+   "uzunluk": 2012,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "adil-katilim--www-adilkatilim-com-tr",
+   "uzunluk": 3080,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "dunya-katilim--kampanyalar-carter-s",
+   "uzunluk": 9485,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "dunya-katilim--kampanyalar-divarese",
+   "uzunluk": 9448,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "dunya-katilim--ihtiyac-finansmanlari-enerya-ihtiyac-finansmani",
+   "uzunluk": 10542,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "adil-katilim--katilim-bankaciligi-danisma-komitesi",
+   "uzunluk": 3813,
+   "kart_sayisi": 2,
+   "kart_karakteri": 320,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 2,
+    "anlam_bozucu": 1,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 1,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 1,
+    "halk_dili": 1
+   }
+  },
+  {
+   "doc_id": "turkiye-emlak-katilim--kampanya-paraf-ile-networkte-4-taksit-firsati",
+   "uzunluk": 991,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "turkiye-emlak-katilim--kampanya-paraf-ile-yargici-magazalarinda-4-taksit-firsati",
+   "uzunluk": 1033,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "kuveyt-turk--musteri-ol-kampanyalari-kuveyt-turk-mobilden-musterimiz-olun-ozel-kur-firsatini-",
+   "uzunluk": 1401,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr",
+   "uzunluk": 1375,
+   "kart_sayisi": 1,
+   "kart_karakteri": 119,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 6,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 1,
+    "resmi_tr": 6,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan",
+   "uzunluk": 6127,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle",
+   "uzunluk": 2329,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  },
+  {
+   "doc_id": "tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b",
+   "uzunluk": 2009,
+   "kart_sayisi": 0,
+   "kart_karakteri": 0,
+   "kart_butce_asimi": false,
+   "sadelestirme": {
+    "degisim": 0,
+    "anlam_bozucu": 0,
+    "degildir_cokmesi": 0,
+    "tekrar_cokmesi": 0,
+    "karsitlik_baglami": 0,
+    "resmi_tr": 0,
+    "halk_dili": 0
+   }
+  }
+ ]
+}

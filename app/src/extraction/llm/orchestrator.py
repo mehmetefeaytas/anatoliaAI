@@ -23,6 +23,30 @@ hibrit kolun kuraldan daha kötü olduğunu gösterdi (mikro-F1 0,612 -> 0,575,
 halüsinasyon 0,102 -> 0,163). LLM'in yazma yetkisi olduğu sürece bu regresyon
 tekrarlanabilir; yetki alınınca yapısal olarak tekrarlanamaz.
 
+## Terim müdahalesi — üç kol, tek anahtar çifti
+
+Ö1 deneyi (`docs/rapor/o1-terim-deneyi.md`) iki mentör kaynağının çelişkisini
+ölçümle kapatır ve üç kolun tamamı bu sınıfın iki anahtarıyla kurulur:
+
+    temel           terim_karti=False, sadelestirme=False   müdahale yok
+    sadeleştirme    terim_karti=False, sadelestirme=True    metinde DEĞİŞTİR (D2)
+    sözlük kartı    terim_karti=True,  sadelestirme=False   kartı ENJEKTE et
+
+İkisi aynı anda açılabilir ama açılmamalıdır: o zaman ölçüm iki değişkenli
+olur ve hangi müdahalenin etkidiği söylenemez.
+
+## Sadeleştirme kolunda metin kimliği — sessiz tuzak
+
+Sadeleştirme AÇIKSA ajanlar, kanıt kapısı ve hakem AYNI (değiştirilmiş) metni
+görmek zorundadır. Ajanın değiştirilmiş metinden aldığı alıntı özgün metinde
+birebir GEÇMEZ; kanıt kapısı özgün metne bakarsa kolun tüm önerilerini düşürür
+ve kol sessizce kural-only'ye dönüşür — tam olarak `extractor.py`'nin baştan
+yazılma sebebi olan hata sınıfı.
+
+Bunun bir BEDELİ vardır ve raporda yazılıdır: bu kolda `source_span`
+değiştirilmiş metne aittir, yani alan bazlı kaynak vurgulama (CLAUDE.md §18-1)
+özgün belgeye götürmez. Kart kolunda böyle bir bedel yoktur.
+
 ## Hakem çökerse ne olur — SESSİZ DEĞİL
 
 Hakem çağrısı başarısız olursa tüm LLM önerileri düşer (fail-closed) ve sonuç
@@ -41,6 +65,7 @@ from dataclasses import dataclass
 from dataclasses import field as dc_field
 from typing import Any, Optional
 
+from ...domain.terminology import simplify_text
 from ...schemas import ExtractedField
 from .agents import (
     HAKEM_SEMASI,
@@ -67,6 +92,8 @@ class OrkestrasyonRaporu:
     hakem_red: int = 0
     hakem_hata: Optional[str] = None
     gecen: int = 0
+    sadelestirme_degisim: int = 0
+    sadelestirme_bozucu: int = 0
 
     def as_dict(self) -> dict[str, Any]:
         return {"rol_onerisi": dict(self.rol_onerisi),
@@ -75,12 +102,15 @@ class OrkestrasyonRaporu:
                 "kalem_kapisi_red": self.kalem_kapisi_red,
                 "hakem_red": self.hakem_red,
                 "hakem_hata": self.hakem_hata,
-                "gecen": self.gecen}
+                "gecen": self.gecen,
+                "sadelestirme_degisim": self.sadelestirme_degisim,
+                "sadelestirme_bozucu": self.sadelestirme_bozucu}
 
 
 def _yeni_sayaclar() -> dict[str, int]:
     return {"belge": 0, "oneri": 0, "kanit_kapisi_red": 0, "kalem_kapisi_red": 0,
-            "hakem_red": 0, "hakem_hata": 0, "gecen": 0}
+            "hakem_red": 0, "hakem_hata": 0, "gecen": 0,
+            "sadelestirme_degisim": 0, "sadelestirme_bozucu": 0}
 
 
 #: Ücret alanları ve onlarla KARIŞAN komşu kalemler.
@@ -118,12 +148,16 @@ class LLMOrchestrator:
                  strict: Optional[bool] = None,
                  judge: bool = True,
                  terim_karti: bool = True,
+                 sadelestirme: bool = False,
                  kanit_kapisi: bool = True,
                  roller: tuple[AgentRole, ...] = ROLLER):
         self.client = client
         self.strict = _env_flag("LLM_STRICT") if strict is None else bool(strict)
         self.judge = judge
         self.terim_karti = terim_karti
+        # Ö1 sadeleştirme kolu. Varsayılan KAPALI: ölçülmek için var, teslim
+        # edilen yol olmak için değil (bkz. modül başlığı).
+        self.sadelestirme = sadelestirme
         self.kanit_kapisi = kanit_kapisi
         self.roller = roller
         self.ajanlar = {
@@ -173,6 +207,7 @@ class LLMOrchestrator:
             "orkestrasyon": True,
             "hakem": self.judge,
             "terim_karti": self.terim_karti,
+            "sadelestirme": self.sadelestirme,
             "kanit_kapisi": self.kanit_kapisi,
             "roller": [r.ad for r in self.roller],
             **self.stats,
@@ -189,22 +224,48 @@ class LLMOrchestrator:
             return []
         self.stats["belge"] += 1
 
-        oneriler = self._rolleri_kostur(text, missing, rapor)
+        # Bu noktadan SONRA `text` değil `metin` kullanılır. Sadeleştirme
+        # kolunda ajan, kanıt kapısı ve hakem aynı metni görmek zorundadır;
+        # aksi halde kanıt kapısı tüm önerileri düşürür ve kol sessizce
+        # kural-only'ye döner (bkz. modül başlığı).
+        metin = self._sadelestir(text, rapor)
+
+        oneriler = self._rolleri_kostur(metin, missing, rapor)
         rapor.rol_onerisi = {r: len([f for f in oneriler if f[0] == r])
                              for r in self.ajanlar}
         alanlar = [f for _, f in oneriler]
         self.stats["oneri"] += len(alanlar)
 
         if self.kanit_kapisi:
-            alanlar = self._kanit_kapisi(text, alanlar, rapor)
+            alanlar = self._kanit_kapisi(metin, alanlar, rapor)
             alanlar = self._kalem_kapisi(alanlar, rapor)
 
         if self.judge and alanlar:
-            alanlar = self._hakem(text, alanlar, rapor)
+            alanlar = self._hakem(metin, alanlar, rapor)
 
         rapor.gecen = len(alanlar)
         self.stats["gecen"] += len(alanlar)
         return alanlar
+
+    # ------------------------------------------------------------------ #
+    def _sadelestir(self, text: str, rapor: OrkestrasyonRaporu) -> str:
+        """Ö1 D2 kolu: terimi yerinde bırakmak yerine metinde DEĞİŞTİR.
+
+        Kapalıyken metni AYNEN döndürür — kol dışında hiçbir davranış değişmez.
+        Açıkken kaç değişiklik yapıldığı ve bunların kaçının sözlüğün kendi
+        verisiyle anlam bozucu olduğu rapora yazılır; deneyin ölçtüğü sayı bu.
+        """
+        if not self.sadelestirme:
+            return text
+        sonuc = simplify_text(text or "")
+        rapor.sadelestirme_degisim = len(sonuc.replacements)
+        rapor.sadelestirme_bozucu = len(sonuc.bozucu)
+        self.stats["sadelestirme_degisim"] += rapor.sadelestirme_degisim
+        self.stats["sadelestirme_bozucu"] += rapor.sadelestirme_bozucu
+        if sonuc.bozucu:
+            logger.debug("sadelestirme: %d degisim, %d anlam bozucu",
+                         rapor.sadelestirme_degisim, rapor.sadelestirme_bozucu)
+        return sonuc.text
 
     # ------------------------------------------------------------------ #
     def _rolleri_kostur(self, text: str, missing: Optional[list[str]],
@@ -361,7 +422,9 @@ def rapor_ozeti(orc: LLMOrchestrator) -> str:
             f"kanit_kapisi_red={s['kanit_kapisi_red']} "
             f"kalem_kapisi_red={s['kalem_kapisi_red']} "
             f"hakem_red={s['hakem_red']} hakem_hata={s['hakem_hata']} "
-            f"gecen={s['gecen']}")
+            f"gecen={s['gecen']} "
+            f"sadelestirme_degisim={s['sadelestirme_degisim']} "
+            f"sadelestirme_bozucu={s['sadelestirme_bozucu']}")
 
 
 __all__ = ["LLMOrchestrator", "OrkestrasyonRaporu", "default_orchestrator",
