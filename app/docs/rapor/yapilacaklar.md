@@ -31,13 +31,21 @@ girdi; dalı olduğu gibi push etmek onları yayına sokar. Geçmişten çıkarm
 
 | | iş | kim | durum |
 |---|---|---|---|
-| 1.1 | **gold.v2 anotasyonu** — 48 belge, 10 banka, kör protokol | B | koşuyor |
-| 1.2 | gold.v2 üzerinde kural / orkestra kollarını ölç, gold.v1 ile **ayrı ayrı** raporla | B | 1.1 bekliyor |
-| 1.3 | **K-1'i geniş sette tekrarla** (temel / n-gram / blok) — n=20'de fark gürültüydü | B | 1.1 bekliyor |
-| 1.4 | Bootstrap GA + McNemar bu tur için yeniden koşulmadı | B | 1.2 bekliyor |
-| 1.5 | **κ için ikinci insan anotatör.** gold.v2 bunun yerine GEÇMEZ, önceliğini artırır | **S** | başlamadı |
+| 1.1 | gold.v2 anotasyonu — 48 belge, 10 banka, kör protokol | B | **bitti** (112 alan, 444 "yok", %3,5 belirsiz) |
+| 1.2 | gold.v2'de kural kolu ölçüldü, gold.v1 ile ayrı raporlandı | B | **bitti** (0,387 vs 0,677 — sebebi protokol) |
+| 1.3 | K-1'i geniş sette tekrarla | B | **bitti** — F1 kazancı gürültüymüş, halüsinasyon kazancı gerçek |
+| 1.4 | Bootstrap GA (2000 örnek) üç kol için koşuldu; **McNemar hâlâ yok** | B | yarım |
+| **1.4b** | **Anotasyon kılavuzundaki 8 boşluğu kapat** — κ'dan ÖNCE | B + **S** | **yeni, kritik** |
+| 1.5 | **κ için ikinci insan anotatör.** gold.v2 yerine GEÇMEZ; 1.4b'den sonra | **S** | başlamadı |
 | 1.6 | Ö1 üç kollu terim deneyi (temel / sadeleştirme / sözlük kartı) | B | kol hazır, koşulmadı |
-| 1.7 | BERTurk ince ayarı (Colab) → kural temel çizgisi 0,700 / 0,762'yi geçerse al | **S** koşar, B hazırladı | defter hazır |
+| 1.7 | BERTurk ince ayarı (Colab) → gold makro-F1 GA alt sınırı 0,762'yi aşarsa al | **S** koşar, B hazırladı | defter hazır, lisans MIT doğrulandı |
+| **1.8** | **gold.v2'de orkestra kolunu da ölç** — kural/orkestra farkı yalnız n=20'de bilinıyor | B | başlamadı |
+
+**1.4b neden kritik:** dört anotatör **bağımsız olarak** aynı üç boşluğu
+işaretledi — kampanya olmayan belgeler için sınıf yok (gold.v2'nin %19'u),
+ürün kısıtı mı müşteri segmenti mi, tutar cinsinden indirim hangi alana
+gider. Kılavuz düzeltilmeden ölçülen κ, anotatör uyumsuzluğunu değil
+**kılavuz belirsizliğini** ölçer. Ayrıntı: `gold-genisletme.md` §4.
 
 ## 2. Fonksiyonellik %20 — Faz G dashboard
 
@@ -92,4 +100,11 @@ girdi; dalı olduğu gibi push etmek onları yayına sokar. Geçmişten çıkarm
 - RAG terim kapsaması **4/15 → 14/15** (korpus tazelendi + erişim eşiği oransal oldu)
 - Gecikme cezası maddesinden kâr payı oranı çıkarma hatası kapatıldı (**15 → 1**)
 - `demo.db` yeniden kuruldu: **849 → 1761 belge**
-- Ölçüm seti için 48 belgelik tabakalı aday havuzu üretildi
+- Ölçüm seti **n=20 → n=68**'e çıktı; K-1 geniş sette tekrarlandı ve
+  n=20'deki F1 kazancının gürültü olduğu, halüsinasyon kazancının gerçek
+  olduğu ayrıştı
+- **gold.v1'in 0,677'si çapa etkisi taşıyor** — kılavuz §3.1 "boş bırakmak
+  = model doğru" diyor. Kör protokolde karşılığı 0,536 (liste alanı hariç).
+  Bu, jüriye tek sayı sunmama gerekçesidir
+- Tek karakterli token'ın erişim eşiğini gürültüyle doldurması kapatıldı
+- Demo DB tazelik kapısı + testleri (CI'da)
