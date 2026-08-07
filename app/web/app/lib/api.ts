@@ -69,6 +69,23 @@ export type Contradiction = {
   fields: string[];
 };
 
+/**
+ * Ham metnin bir parçası ve gösterilip gösterilmeyeceği.
+ *
+ * Bloklar ham metni **bitişik ve eksiksiz** kaplar (ilk blok 0'dan başlar, son
+ * bloğun `end`'i metin uzunluğudur). Offsetler HAM metne göredir; katlama
+ * yalnız neyin ekrana basıldığını değiştirir, numaralandırmayı değil
+ * (bkz. ../components/SourceText.tsx).
+ */
+export type TextBlock = {
+  start: number;
+  end: number;
+  /** Çerçeve/gürültü olduğu için varsayılan olarak katlanır mı. */
+  gizle: boolean;
+  /** Katlama gerekçesi (ör. "cerez", "kvkk", "alan_disi"). */
+  gerekce: string | null;
+};
+
 export type CampaignText = {
   campaign_id: number;
   bank: string;
@@ -80,6 +97,15 @@ export type CampaignText = {
   text_length: number;
   fields: CampaignFieldDetail[];
   contradictions: Contradiction[];
+  /**
+   * OPSİYONEL — API henüz göndermiyor olabilir (eski sürüm). Yoksa arayüz
+   * katlama yapmadan düz metne düşer.
+   */
+  bloklar?: TextBlock[] | null;
+  /** OPSİYONEL — üretilmiş özet. `null` ise özet bölümü hiç basılmaz. */
+  ozet?: string | null;
+  /** OPSİYONEL — özeti hangi katman üretti ("llm" vb.). */
+  ozet_kaynak?: string | null;
 };
 
 export type CampaignSummary = {
@@ -161,6 +187,13 @@ export type ChatSource = {
   bank?: string;
   value?: unknown;
   source_span?: string | null;
+  /**
+   * OPSİYONEL — denetlenebilir kaynak bağlantısı. Alan gelmediğinde arayüz
+   * çökmez, kaynak satırı bağlantısız gösterilir (bkz. ../components/ChatPanel.tsx).
+   */
+  source_url?: string | null;
+  /** OPSİYONEL — «belgeye git» sıçraması için kampanya kimliği. */
+  campaign_id?: number | null;
   [k: string]: unknown;
 };
 

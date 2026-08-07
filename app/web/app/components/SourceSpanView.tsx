@@ -13,10 +13,15 @@
  *  - `span_ambiguous` (aynı pencere metni belgede birden çok kez geçiyor) işaretlenir.
  *  - Doğrulama `src/schemas.py:verify_span()` mantığının API karşılığıdır
  *    (`span_verified`).
+ *
+ * Çerçeve katlaması `SourceText`e devredilmiştir. Bu bileşenin sözleşmesi
+ * DEĞİŞMEDİ: tüm offsetler hâlâ HAM metne göredir; katlama yalnız hangi
+ * karakterlerin ekrana basıldığını etkiler, hesabı değil.
  */
 
 import { useMemo, useState } from "react";
-import type { SpanInfo } from "../lib/api";
+import type { SpanInfo, TextBlock } from "../lib/api";
+import SourceText from "./SourceText";
 
 type Props = {
   text: string;
@@ -25,6 +30,8 @@ type Props = {
   rawValue?: string | null;
   /** Varsayılan olarak yalnız span çevresi gösterilir; tam metne geçilebilir. */
   defaultFullText?: boolean;
+  /** API'den gelen çerçeve blokları (opsiyonel — yoksa düz metin). */
+  blocks?: TextBlock[] | null;
 };
 
 /** Kısaltılmış görünümde span'in çevresinde bırakılan karakter sayısı. */
@@ -35,6 +42,7 @@ export default function SourceSpanView({
   span,
   rawValue,
   defaultFullText = false,
+  blocks,
 }: Props) {
   const [full, setFull] = useState(defaultFullText);
 
@@ -115,11 +123,18 @@ export default function SourceSpanView({
         </p>
       )}
 
-      <div className="source-text">
-        {sliceFrom > 0 && <span className="dim">…</span>}
-        {renderSegments(text, sliceFrom, sliceTo, start, end, ctxStart, ctxEnd)}
-        {sliceTo < text.length && <span className="dim">…</span>}
-      </div>
+      <SourceText
+        text={text}
+        blocks={blocks}
+        from={sliceFrom}
+        to={sliceTo}
+        hitStart={start}
+        hitEnd={end}
+        ctxStart={ctxStart}
+        ctxEnd={ctxEnd}
+        leadingEllipsis={sliceFrom > 0}
+        trailingEllipsis={sliceTo < text.length}
+      />
 
       <p className="offset-note">
         Belge uzunluğu: <span className="mono">{text.length}</span> karakter
@@ -136,50 +151,3 @@ export default function SourceSpanView({
   );
 }
 
-/**
- * Metni [dilim başı .. dilim sonu] aralığında parçalara ayırıp vurgular.
- * Katmanlar: düz metin → bağlam penceresi (.ctx) → tam isabet (mark.hit).
- */
-function renderSegments(
-  text: string,
-  from: number,
-  to: number,
-  start: number | null,
-  end: number | null,
-  ctxStart: number | null,
-  ctxEnd: number | null,
-) {
-  if (start === null || end === null) {
-    return <span>{text.slice(from, to)}</span>;
-  }
-  const cs = ctxStart === null ? start : Math.max(from, Math.min(ctxStart, start));
-  const ce = ctxEnd === null ? end : Math.min(to, Math.max(ctxEnd, end));
-
-  const parts: { key: string; cls: string; body: string }[] = [
-    { key: "pre", cls: "", body: text.slice(from, cs) },
-    { key: "ctx-a", cls: "ctx", body: text.slice(cs, start) },
-    { key: "hit", cls: "hit", body: text.slice(start, end) },
-    { key: "ctx-b", cls: "ctx", body: text.slice(end, ce) },
-    { key: "post", cls: "", body: text.slice(ce, to) },
-  ];
-
-  return (
-    <>
-      {parts.map((p) => {
-        if (!p.body) return null;
-        if (p.cls === "hit") {
-          return (
-            <mark key={p.key} className="hit">
-              {p.body}
-            </mark>
-          );
-        }
-        return (
-          <span key={p.key} className={p.cls}>
-            {p.body}
-          </span>
-        );
-      })}
-    </>
-  );
-}

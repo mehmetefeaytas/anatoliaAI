@@ -12,11 +12,18 @@
  *  2. KAYNAKLAR artık ham JSON dökümü değil, okunur bir tablo. Kaynağı
  *     gösterebilmek açıklanabilirlik iddiasının kanıtıdır; `<pre>{JSON}</pre>`
  *     bunu kanıt olmaktan çıkarıp gürültüye çeviriyordu.
+ *  3. DENETLENEBİLİR BAĞLANTI — kaynak metin parçası tek başına yetmez: jüri
+ *     "bu bilgiyi nereden aldın" diye sorduğunda bankanın kendi sayfasına
+ *     (`source_url`) ve belgenin denetim ekranına (`campaign_id` →
+ *     Jüri Audit Paneli) gidebilmek gerekir.
+ *
+ * `source_url` / `campaign_id` alanları API'de HENÜZ OLMAYABİLİR. Eksikse satır
+ * bağlantısız gösterilir; arayüz çökmez, sahte bağlantı da üretmez.
  */
 
 import { useState } from "react";
 import { api } from "../lib/api";
-import type { ChatResp } from "../lib/api";
+import type { ChatResp, ChatSource } from "../lib/api";
 import { formatValue } from "../lib/format";
 import { ErrorNotice } from "./ErrorNotice";
 
@@ -38,7 +45,12 @@ const HANDLER_LABELS: Record<string, string> = {
   rag: "RAG (anlamsal arama)",
 };
 
-export default function ChatPanel() {
+type Props = {
+  /** Belgeyi Jüri Audit Paneli'nde açar (page.tsx `inspect` deseni). */
+  onInspect?: (campaignId: number) => void;
+};
+
+export default function ChatPanel({ onInspect }: Props) {
   const [q, setQ] = useState("");
   const [resp, setResp] = useState<ChatResp | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -123,6 +135,10 @@ export default function ChatPanel() {
           {resp.sources?.length > 0 ? (
             <>
               <h3>Kaynaklar ({resp.sources.length})</h3>
+              <p className="small muted" style={{ margin: "0 0 8px" }}>
+                Her satır, cevabın dayandığı belgeye götürür: bankanın kendi
+                sayfası ve belgenin denetim ekranı.
+              </p>
               <div className="table-wrap">
                 <table className="data">
                   <thead>
@@ -130,6 +146,7 @@ export default function ChatPanel() {
                       <th scope="col">Banka</th>
                       <th scope="col">Değer</th>
                       <th scope="col">Kaynak metin parçası</th>
+                      <th scope="col">Kaynak</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -143,6 +160,9 @@ export default function ChatPanel() {
                           {typeof s.source_span === "string" && s.source_span
                             ? `…${s.source_span.trim()}…`
                             : summarize(s)}
+                        </td>
+                        <td>
+                          <SourceLinks source={s} onInspect={onInspect} />
                         </td>
                       </tr>
                     ))}
@@ -158,6 +178,59 @@ export default function ChatPanel() {
         </div>
       )}
     </section>
+  );
+}
+
+/**
+ * Kaynak bağlantıları — alan eksikse SESSİZCE atlanır, uydurulmaz.
+ *
+ * `source_url` ve `campaign_id` API sözleşmesinde opsiyoneldir; ikisi de yoksa
+ * satır "bağlantı yok" der. Bu, bilgiyi gizlemek değil, elimizde denetlenebilir
+ * bir bağlantı OLMADIĞINI söylemektir.
+ */
+function SourceLinks({
+  source,
+  onInspect,
+}: {
+  source: ChatSource;
+  onInspect?: (campaignId: number) => void;
+}) {
+  const url = typeof source.source_url === "string" ? source.source_url.trim() : "";
+  const id =
+    typeof source.campaign_id === "number" && Number.isFinite(source.campaign_id)
+      ? source.campaign_id
+      : null;
+
+  if (!url && id === null) {
+    return (
+      <span className="small faint" title="API bu kaynak için bağlantı döndürmedi">
+        bağlantı yok
+      </span>
+    );
+  }
+
+  return (
+    <div className="row-tight" style={{ gap: 10, flexWrap: "wrap" }}>
+      {url && (
+        <a
+          className="btn-link"
+          href={url}
+          target="_blank"
+          rel="noreferrer noopener"
+          title={url}
+        >
+          banka sayfası ↗
+        </a>
+      )}
+      {id !== null && onInspect && (
+        <button type="button" className="btn-link" onClick={() => onInspect(id)}>
+          belgeye git (#{id})
+        </button>
+      )}
+      {id !== null && !onInspect && (
+        <span className="small faint mono">#{id}</span>
+      )}
+    </div>
   );
 }
 

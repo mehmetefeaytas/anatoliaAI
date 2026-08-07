@@ -28,6 +28,8 @@ import { useAsync } from "../lib/useAsync";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import SourceSpanView from "./SourceSpanView";
+import SourceText from "./SourceText";
+import SummaryNotice from "./SummaryNotice";
 
 type Props = {
   campaigns: CampaignSummary[];
@@ -220,15 +222,23 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
               aralığı burada vurgulanır.
             </p>
           )}
+
+          {/* Özet varsa metnin ÜSTÜNDE ve etiketli; yoksa hiç basılmaz. */}
+          <SummaryNotice
+            ozet={doc.data.ozet}
+            ozetKaynak={doc.data.ozet_kaynak}
+          />
+
           {activeField ? (
             <SourceSpanView
               text={doc.data.text}
               span={activeField}
               rawValue={activeField.raw_value}
               defaultFullText
+              blocks={doc.data.bloklar}
             />
           ) : (
-            <div className="source-text">{doc.data.text}</div>
+            <SourceText text={doc.data.text} blocks={doc.data.bloklar} />
           )}
         </section>
       )}
