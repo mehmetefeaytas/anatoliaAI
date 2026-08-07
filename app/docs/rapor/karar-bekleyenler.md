@@ -107,3 +107,9 @@ Karar: koşalım mı, yoksa kapı modu sayısıyla mı yetinelim?
   `decisions/terim-sozlugu-enjeksiyon-replace-degil.md`.
 - **Orkestrasyon yetkisi:** ajanlar önerir, hakem reddeder.
   `decisions/orkestrasyon-yetki-asimetrisi.md`.
+- **Klasik veriyle ince ayar + RAG:** reddedildi. Klasik korpusun %70,2'si
+  "faiz" içeriyor, fıkhî terim oranı %0,0; üstelik terimler katılım korpusunda
+  da nadir (murabaha %1,9, icare %0,6) — bu sıklık ince ayarla öğrenilmez,
+  enjekte edilir. Klasik veri **yalnız gümüş sınıflandırma eğitiminde** kalır
+  (505 kayıt, 8 sınıf); RAG kaynağı `data/raw/*/docs/` bölümüdür (fıkhî terim
+  yoğunluğu %42,0). Ayrıntı: `decisions/klasik-veri-ince-ayar-rag-reddi.md`.
