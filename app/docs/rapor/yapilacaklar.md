@@ -75,7 +75,7 @@ girdi; dalı olduğu gibi push etmek onları yayına sokar. Geçmişten çıkarm
 | | iş | not |
 |---|---|---|
 | 5.1 | `data/demo.db` bayatlayabiliyor | 31 Tem'de kurulmuş, 3 Ağu'da korpus büyümüş, kimse fark etmemişti. Kurulum tarihi ile korpus tarihini karşılaştıran bir kapı gerekiyor |
-| 5.2 | Sözleşme PDF'leri kampanya gibi işleniyor | `docs/` bölümü akit metnidir; erişimde (RAG) kalmalı, karşılaştırma tablosunda olmamalı. Bölüm farkındalığı yok |
+| 5.2 | **Sözleşme PDF'leri kampanya gibi işleniyor** | Ölçüldü: 113 PDF belgesi (%6,4) kampanya olarak kayıtlı, **41'i kıyaslanabilir alan taşıyor** (oran/vade/tutar) ve karşılaştırma tablosuna giriyor. Akit metni kampanya değildir: erişimde (RAG) KALMALI, kıyasta OLMAMALI. Çözüm `campaigns` tablosuna `belge_turu` (kampanya/sözleşme) alanı ister — korpus yolundaki bölümden türetilir. Şema göçü + iki backend |
 | 5.3 | `müşaraka` korpusta 3 belgede, hiçbiri tanım değil | veri boşluğu — kapatılacaksa hedefli toplama gerek |
 | 5.4 | Güvenlik setinde 2 kayıt düşüyor (C05, K02) | ikisi de eski, bu turda gelmedi |
 | 5.5 | `rakip-analizi.md` teslim öncesi tekrar koşulmalı | görülen depolar çalışma depoları, nihai teslim değil |
