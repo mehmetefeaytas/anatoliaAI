@@ -90,12 +90,25 @@ Sunumun ağırlık merkezi. Dört alt başlık, her biri ~30 saniye.
 
 | Sayı | Ne | Nerede |
 |---:|---|---|
-| **1761** | Yarışma korpusu, ham `.txt` belge, 10 katılım bankası | `data/raw` |
+| **1759** | **Kazınmış yarışma korpusu** — 10 katılım bankası, her belgenin künyesi (kaynak URL + zaman damgası) var | `data/raw` |
 | **849** | Veritabanına giren, **ölçümlerin dayandığı** filtrelenmiş alt küme | `demo.db` |
 | 724 | Kapsam **dışı** klasik bankalar, yalnız gümüş etiket eğitimi için | `data/raw-classic` |
 
-849, 1761'in bayat bir hâli değil — filtrelenmiş alt kümesidir. 724 ise
+849, 1759'un bayat bir hâli değil — filtrelenmiş alt kümesidir. 724 ise
 yarışma korpusuna **dâhil değildir**; toplama eklenmez.
+
+**"1761" görürseniz o dosya sayısıdır, korpus sayısı değil.** `data/raw`
+altında 1761 `.txt` dosya var; ikisi (`kuveyt-turk/konut.txt`,
+`turkiye-finans/tasit.txt`) kazınmış belge değil, `build_demo_repo`'nun
+**demo fikstürü**. Ayırt edici ölçüt künyedir: korpustaki 1759 belgenin
+hepsinin `.meta.json` dosyası var, yalnız bu ikisinin yok. Sunumda
+"1761 belge topladık" demek iki sentetik örneği toplanmış veri gibi
+göstermek olur — jüri künyeleri kontrol ederse tutarsızlık çıkar.
+
+    1759  kazınmış korpus (künyeli)
+    +  2  demo fikstürü (sentetik)
+    ----
+    1761  data/raw altındaki toplam .txt dosya
 
 ### 2.3 Model seçimi ve kalibrasyon (~25 sn)
 
