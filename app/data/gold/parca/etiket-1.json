@@ -1,0 +1,571 @@
+[
+  {
+    "id": "kuveyt-turk--35985512",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-eczacilara-ozel-8000-mil",
+    "content_hash": "a1968bfe1ee17d721e3bdd70d6a5c32b3f93f8f51ce30bb41b2c49386a932fa1",
+    "text": "Ana Sayfa Kampanyalar Kampanya Arşivi Kuveyt Türk'ten Eczacılara Özel 8.000 Mil! Kuveyt Türk'ten tüzel hesap sahibi eczacıların yıl sonuna kadar yapacağı 10.000 TL ve üzeri Miles&Smiles Business Kart harcamasına tam 8.000 Mil hediye! Kampanya Tarihleri 1.09.2024 - 31.12.2024 Kampanya Süresi Doldu! Kampanyayı Paylaş Facebook'da paylaş X'de paylaş LinkedIn'de paylaş Whatsapp'da paylaş 01 Haziran 2024 tarihi itibari ile 31 Ağustos 2024 tarihleri arasında SGK Sağlık ödemesini Kuveyt Türk Katılım Bankası üzerinden almamış olup, 01 Eylül 2024 tarihinden sonra 31 Aralık 2024 tarihine kadar herhangi bir dönemde toplamda 250.000 TL tutarında hak ediş ödemesini ilk defa bankamızdan alan eczacı müşterilerimize; Miles&Smiles Business Kart ile yapacağı 10.000 TL ve üzeri ilk harcamasına tek seferde 8.000 Mil hediye; Kampanyaya dahil olmak için 01 Eylül 2024 - 31 Aralık 2024 tarihleri arasında toplamda 250.000 TL ve üzeri yeni SGK sağlık ödemelerinizi yönlendirmeniz yeterli olup ek bir başvuru yapmanıza gerek bulunmamaktadır. Ödül kazanımı sağlayan müşterilerimizle SMS ve mail yolları ile iletişime geçilecektir, iletişim metni size ulaştıktan sonraki 10.000 TL üzeri ilk alışverişlerinizde 8.000 Mil puan kazanımından faydalanabilirsiniz. Kampanyadan tüzel ve şahıs firmasına sahip eczaneler faydalanabilir. Kampanyadan bir kez faydalanılabilir. Kampanya 01 Eylül 2024 tarihinde başlayacak olup, 31 Aralık 2024 tarihinde sona erecektir. Kuveyt Türk, önceden haber vermeden kampanya koşullarında değişiklik yapabilir ya da kampanyayı sonlandırabilir.",
+    "campaign_type": "Alışveriş Puanı",
+    "fields": {
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 8000
+      },
+      "kampanya_suresi": "2024-12-31",
+      "kampanya_kosullari": [
+        "Miles&Smiles Business Kart ile 10.000 TL ve üzeri ilk harcama yapılması gerekir",
+        "01 Eylül 2024 - 31 Aralık 2024 arasında toplamda 250.000 TL ve üzeri yeni SGK sağlık ödemesinin bankaya yönlendirilmesi gerekir",
+        "Kampanyadan tüzel ve şahıs firmasına sahip eczaneler faydalanabilir",
+        "Kampanyadan bir kez faydalanılabilir"
+      ],
+      "hedef_kitle": [
+        "belirli_segment"
+      ]
+    },
+    "field_spans": {
+      "alisveris_puani": "10.000 TL ve üzeri ilk harcamasına tek seferde 8.000 Mil hediye",
+      "kampanya_suresi": "Kampanya Tarihleri 1.09.2024 - 31.12.2024",
+      "kampanya_kosullari": "Kampanyadan tüzel ve şahıs firmasına sahip eczaneler faydalanabilir. Kampanyadan bir kez faydalanılabilir.",
+      "hedef_kitle": "Kampanyadan tüzel ve şahıs firmasına sahip eczaneler faydalanabilir."
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "format_varyant"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "Aralığın BİTİŞİ alındı; 1.09.2024 başlangıç tarihidir.",
+      "odul_miktari": "Ödül 8.000 Mil — parasal tutar değil. Kılavuz §4 'alisveris_puani' örneği (60.000 Mil) gereği puan/adet olarak alisveris_puani'na yazıldı.",
+      "finansman_tutari": "250.000 TL SGK hak ediş ödemesi ve 10.000 TL harcama eşiğidir; ikisi de finansman tutarı değildir.",
+      "hedef_kitle": "Eczacı/eczane segmenti -> belirli_segment. 'müşterilerimize' ifadesi tek başına mevcut_musteri etiketi için yeterli görülmedi (kılavuz §4 örneğiyle aynı yaklaşım)."
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--92358376",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara",
+    "content_hash": "3e1ef69b2f2b964e56e4dc9604ecb19caec0faaa021f2446dc15d31b964a126d",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Beyaz Eşya ve Elektronik Alışverişlerinize 3.000 TL'ye varan ParafPara! Beyaz Eşya ve Elektronik Alışverişlerinize 3.000 TL'ye varan ParafPara! Beyaz Eşya ve Elektronik Alışverişlerinize 3.000 TL'ye varan ParafPara! Kampanyaya Nasıl Katılırım? Kampanyaya katılmak için \"HARCA\" yazıp 6026'ya SMS gönderilmesi gerekmektedir. Kampanya katılımının başarılı sayılabilmesi için banka sisteminde adınıza tanımlı telefon numarasından katılım sağlanmalıdır. Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir. Kampanya Koşulları Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir. Kampanya kapsamında yurt içi beyaz eşya, elektronik ve bilgisayar sektörlerinde tek seferde yapılacak 5.000 TL ile 14.999 TL arasındaki ilk harcamaya 300 TL, 15.000 TL ile 49.999 TL arasındaki ilk harcamaya 750 TL, 50.000 TL ile 99.999 TL arasındaki ilk harcamaya 1.750 TL, 100.000 TL ve üzeri ilk harcamaya 3.000 TL ParafPara verilecektir. Kampanya müşteri bazlı olup bir müşteri kampanyadan bir defa yararlanabilir ve ilk alışveriş tutarına göre 300 TL, 750 TL, 1.750 TL ya da 3.000 TL ParafPara tutarından sadece birini kazanabilir. -Bir kart ile kampanyaya katılım yapıldığında müşterinin tüm kartları kampanyaya dahil olur. Hedefe ulaşılan harcama hangi kart ile yapılırsa ParafPara ödülü o karta yansıtılmaktadır. Kampanyaya beyaz eşya, elektronik ve bilgisayar kategorisine giren fiziki ve sanal iş yerlerinde yapılan harcamalar dahildir. Alışverişin yapıldığı iş yerinin, sistemde kayıtlı sektör bilgisinin doğru olmasının sorumluluğu iş yerine aittir. Pazar yeri e-ticaret sitelerinden yapılan harcamalar kampanyaya dahil değildir. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Alışverişin iptal/iade edilmesi durumunda ParafPara yüklenmeyecektir. Finans kuruluşları ve ödeme hizmet sağlayıcıları üzerinden gerçekleşen harcama işlemleri ile dijital cüzdana yapılan yüklemeler ve dijital cüzdan kullanılarak yapılan harcamalar kampanyaya dahil değildir. ParafPara kullanılarak yapılan alışverişler kampanyaya dahil değildir. Ödül kazanımı için kampanyaya katılım sağlandıktan sonra yapılan harcamalar dikkate alınacaktır. Harcama yapıldıktan sonra kampanyaya katılım durumlarında ödül yüklemesi yapılmayacaktır. Kampanya başka kampanyalarla birleştirilmez. ParafPara Yüklenmesi Ne Zaman Yapılır? Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 14‘ünde, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır. Kazanılan ParafPara'lar puan kullanımına uygun tüm Paraf üye iş yerlerinde kullanılabilecektir. Kullanılmayan ParafPara'lar 15 Eylül 2026 tarihinde geri alınacaktır. Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. × Your browser does not support the audio element.",
+    "campaign_type": "Alışveriş Puanı",
+    "fields": {
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 3000
+      },
+      "kampanya_suresi": "2026-07-31",
+      "kampanya_kosullari": [
+        "Kampanyaya katılmak için HARCA yazıp 6026'ya SMS gönderilmesi gerekir",
+        "Yurt içi beyaz eşya, elektronik ve bilgisayar sektörlerinde tek seferde en az 5.000 TL ilk harcama yapılması gerekir",
+        "Bir müşteri kampanyadan bir defa yararlanabilir ve tek bir ParafPara tutarı kazanır",
+        "Pazar yeri e-ticaret sitelerinden yapılan harcamalar kampanyaya dahil değildir",
+        "Yalnızca Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar kampanyaya dahildir"
+      ]
+    },
+    "field_spans": {
+      "alisveris_puani": "100.000 TL ve üzeri ilk harcamaya 3.000 TL ParafPara verilecektir",
+      "kampanya_suresi": "Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir.",
+      "kampanya_kosullari": "Kampanya müşteri bazlı olup bir müşteri kampanyadan bir defa yararlanabilir"
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "format_varyant",
+      "kosullu_aralik"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "Aralığın BİTİŞİ alındı (1 Temmuz başlangıç). 15 Eylül 2026 ParafPara geri alma tarihidir, kampanya bitişi değildir.",
+      "alisveris_puani": "Kademeli ödül: 300 / 750 / 1.750 / 3.000 TL ParafPara. Puan alanı aralık kabul etmediği için başlıkta ilan edilen üst sınır (3.000) yazıldı. #kosullu_aralik",
+      "odul_miktari": "ParafPara, TL cinsinden ifade edilen sadakat puanıdır (kılavuz §4'teki chip-para ile aynı sınıf) -> alisveris_puani'na yazıldı; ayrı bir parasal ödül tutarı yok.",
+      "masraf_durumu": "Metindeki tek 'ücretsiz' ifadesi katılım SMS'ine aittir; bankanın ürün/hizmet masrafına dair bilgi yok.",
+      "hedef_kitle": "Tek kısıt kart ürünü (Paraf / Paraf Premium); müşteri segmenti sinyali yok -> kılavuz §4 gereği absent.",
+      "finansman_tutari": "5.000 / 15.000 / 50.000 / 100.000 TL harcama eşikleridir, finansman tutarı değildir."
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--8417798",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-secili-e-ticaret-alisverislerinize-1500-tlye-varan-parafpara",
+    "content_hash": "e254af9a805085ecc41aabe983a638a92f5bd905bad0dbee8eb4cd9a6fbe7473",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Paraf ile Seçili E-Ticaret Alışverişlerinize 1.500 TL'ye varan ParafPara! Paraf ile Seçili E-Ticaret Alışverişlerinize 1.500 TL'ye varan ParafPara! Paraf ile Seçili E-Ticaret Alışverişlerinize 1.500 TL'ye varan ParafPara! Kampanyaya Nasıl Katılırım? Kampanyaya katılmak için \" ALIŞVERİŞ \" yazıp 6026'ya SMS gönderilmesi gerekmektedir. Kampanya katılımının başarılı sayılabilmesi için banka sisteminde adınıza tanımlı telefon numarasından katılım sağlanmalıdır. Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir. Kampanya Koşulları Paraf ile 1-31 Ağustos 2026 tarihleri arasında Amazon.com.tr, Çiçek Sepeti, Hepsiburada, İdefix, n11, Pazarama, PttAvm, Trendyol web siteleri ve mobil uygulamaları üzerinden Paraf POS'larından, tek seferde yapılacak 30.000 TL ve üzeri ilk taksitli harcamaya 1.500 TL ParafPara verilecektir. Kampanya sadece taksitli işlemlerde geçerlidir. Kampanya müşteri bazındadır. Bir müşteri kampanyadan bir defa yararlanabilir ve en fazla 1.500 TL ParafPara kazanabilir. Fiziki mağazalardan, fiziki POS'lardan ve ödeme kuruluşları aracılığıyla yapılan işlemler kampanyaya dahil olmayıp, kampanya koşullarında yer alan seçili internet sitelerinden ve mobil uygulamalarından ve Paraf POS'larından gerçekleştirilen alışverişler kampanyaya dahildir. Market, Altın & Gümüş, Hat, Bilet vd belirli kategorilerinden yapılan alışverişler kampanya kapsamında değildir. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Alışverişin iptal/iade edilmesi durumunda ParafPara yüklenmeyecektir. Fatura ödemesi, düzenli ödeme, para yatırma-çekme, vergi ve bağış ödemesi, BES ödemesi, bakiye görüntüleme ve para transferi işlemleri kampanyaya dahil değildir. Finans kuruluşları ve ödeme hizmet sağlayıcıları üzerinden gerçekleşen harcama işlemleri ile dijital cüzdana yapılan yüklemeler ve dijital cüzdan kullanılarak yapılan harcamalar kampanyaya dahil değildir. ParafPara kullanılarak yapılan alışverişler kampanyaya dahil değildir. Ödül kazanımı için kampanyaya katılım sağlandıktan sonra yapılan harcamalar dikkate alınacaktır. Harcama yapıldıktan sonra kampanyaya katılım durumlarında ödül yüklemesi yapılmayacaktır. Alışverişin yapıldığı iş yerinin, sistemde kayıtlı sektör bilgisinin doğru olmasının sorumluluğu iş yerine aittir. Hedefe ulaşılan harcama hangi kart ile yapılırsa ParafPara ödülü o karta yansıtılmaktadır. Kampanya başka kampanyalarla birleştirilmez. Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. ParafPara Yüklenmesi Ne Zaman Yapılır? Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 10‘unda, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır. Kazanılan ParafPara'lar puan kullanımına uygun tüm Paraf üye iş yerlerinde kullanılabilecektir. Kullanılmayan ParafPara'lar 15 Ekim 2026 tarihinde geri alınacaktır. × Your browser does not support the audio element.",
+    "campaign_type": "Alışveriş Puanı",
+    "fields": {
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 1500
+      },
+      "kampanya_suresi": "2026-08-31",
+      "kampanya_kosullari": [
+        "Kampanyaya katılmak için ALIŞVERİŞ yazıp 6026'ya SMS gönderilmesi gerekir",
+        "Seçili e-ticaret siteleri ve mobil uygulamalarından Paraf POS'undan tek seferde 30.000 TL ve üzeri ilk taksitli harcama yapılması gerekir",
+        "Kampanya sadece taksitli işlemlerde geçerlidir",
+        "Bir müşteri kampanyadan bir defa yararlanabilir ve en fazla 1.500 TL ParafPara kazanabilir",
+        "Fiziki mağaza ve fiziki POS işlemleri kampanyaya dahil değildir"
+      ]
+    },
+    "field_spans": {
+      "alisveris_puani": "tek seferde yapılacak 30.000 TL ve üzeri ilk taksitli harcamaya 1.500 TL ParafPara verilecektir",
+      "kampanya_suresi": "Paraf ile 1-31 Ağustos 2026 tarihleri arasında",
+      "kampanya_kosullari": "Kampanya sadece taksitli işlemlerde geçerlidir."
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "eksik_bilgi",
+      "format_varyant"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "Aralığın BİTİŞİ alındı. 15 Ekim 2026 ParafPara geri alma tarihidir.",
+      "taksit_sayisi": "'sadece taksitli işlemlerde geçerlidir' — taksit ADEDİ verilmemiş. #eksik_bilgi",
+      "odul_miktari": "ParafPara TL cinsinden sadakat puanıdır (chip-para sınıfı) -> alisveris_puani.",
+      "masraf_durumu": "Tek 'ücretsiz' ifadesi katılım SMS'ine aittir; ürün/hizmet masrafı bilgisi yok.",
+      "hedef_kitle": "Yalnızca kart ürünü kısıtı var; müşteri segmenti sinyali yok."
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--89327819",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-adv-magazalarinda-1000-tl-parafpara",
+    "content_hash": "c1094d434f497f5fee2aa5f9690210d7263f5de598998c4b8c91b2165726850e",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Paraf ile ADV mağazalarında 1.000 TL ParafPara Paraf ile ADV mağazalarında 1.000 TL ParafPara Paraf ile ADV Mağazalarında 1.000 TL ParafPara Kampanyaya Nasıl Katılırım? Kampanyaya katılmak için \" ADV \" yazıp 6026'ya SMS gönderilmesi gerekmektedir. Kampanya katılımının başarılı sayılabilmesi için banka sisteminde adınıza tanımlı telefon numarasından katılım sağlanmalıdır. Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir. Kampanya Koşulları 01-31 Ağustos 2026 tarihleri arasında ADV mağazalarında Paraf POS'undan tek seferde yapılacak 10.000 TL ve üzeri ilk alışverişe 1.000 TL ParafPara verilecektir. Kampanya dönemi boyunca bir müşteri sadece bir kez 1.000 TL ParafPara kazanabilecektir. Ödül kazanımına ilişkin bilgi SMS ile bildirilecektir. Kazanılan ParafPara'ların son kullanım 14 Ekim 2026 saat 21:59 olup, kullanılmayan ParafPara'lar 15 Ekim 2026 tarihinde geri alınacaktır. Kampanyaya ilişkin bilgi müşteriye ait slip üzerinde yer alacak olup geriye dönük yararlandırma ya da değişiklik yapılmayacaktır. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Alışverişin iptal/iade edilmesi durumunda ParafPara yüklenmeyecektir. Fatura ödemesi, düzenli ödeme, para yatırma-çekme, vergi ve bağış ödemesi, BES ödemesi, bakiye görüntüleme ve para transferi işlemleri kampanyaya dahil değildir. Finans kuruluşları ve ödeme hizmet sağlayıcıları üzerinden gerçekleşen harcama işlemleri ile dijital cüzdana yapılan yüklemeler ve dijital cüzdan kullanılarak yapılan harcamalar kampanyaya dahil değildir. ParafPara kullanılarak yapılan alışverişler kampanyaya dahil değildir. Ödül kazanımı için kampanyaya katılım sağlandıktan sonra yapılan harcamalar dikkate alınacaktır. Harcama yapıldıktan sonra kampanyaya katılım durumlarında ödül yüklemesi yapılmayacaktır. Alışverişin yapıldığı iş yerinin, sistemde kayıtlı sektör bilgisinin doğru olmasının sorumluluğu iş yerine aittir. Hedefe ulaşılan harcama hangi kart ile yapılırsa ParafPara ödülü o karta yansıtılmaktadır. Kampanya başka kampanyalarla birleştirilmez. Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. ParafPara Yüklenmesi Ne Zaman Yapılır? Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 10‘unda, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır. Kazanılan ParafPara'lar puan kullanımına uygun tüm Paraf üye iş yerlerinde kullanılabilecektir. Kullanılmayan ParafPara'lar 15 Ekim 2026 tarihinde geri alınacaktır. × Your browser does not support the audio element.",
+    "campaign_type": "Alışveriş Puanı",
+    "fields": {
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 1000
+      },
+      "kampanya_suresi": "2026-08-31",
+      "kampanya_kosullari": [
+        "Kampanyaya katılmak için ADV yazıp 6026'ya SMS gönderilmesi gerekir",
+        "ADV mağazalarında Paraf POS'undan tek seferde 10.000 TL ve üzeri ilk alışveriş yapılması gerekir",
+        "Kampanya dönemi boyunca bir müşteri sadece bir kez 1.000 TL ParafPara kazanabilir",
+        "Yalnızca Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar kampanyaya dahildir"
+      ]
+    },
+    "field_spans": {
+      "alisveris_puani": "10.000 TL ve üzeri ilk alışverişe 1.000 TL ParafPara verilecektir",
+      "kampanya_suresi": "01-31 Ağustos 2026 tarihleri arasında ADV mağazalarında",
+      "kampanya_kosullari": "Kampanya dönemi boyunca bir müşteri sadece bir kez 1.000 TL ParafPara kazanabilecektir."
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "format_varyant"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "Aralığın BİTİŞİ alındı. Metindeki 14 Ekim 2026 / 15 Ekim 2026 tarihleri ParafPara son kullanım ve geri alma tarihleridir, kampanya bitişi değildir.",
+      "odul_miktari": "ParafPara TL cinsinden sadakat puanıdır (chip-para sınıfı) -> alisveris_puani.",
+      "masraf_durumu": "Tek 'ücretsiz' ifadesi katılım SMS'ine aittir; ürün/hizmet masrafı bilgisi yok.",
+      "hedef_kitle": "Yalnızca kart ürünü kısıtı var; müşteri segmenti sinyali yok."
+    }
+  },
+  {
+    "id": "turkiye-emlak-katilim--88968193",
+    "bank_slug": "turkiye-emlak-katilim",
+    "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/giyim-ve-kozmetik-alisverislerinize-1000-tl-parafpara",
+    "content_hash": "4a326d89fc56b1ba20406eb5a56e7f5a966df36c49eb158837f5c1fdea294447",
+    "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Giyim ve Kozmetik Alışverişlerinize 1.000 TL ParafPara! Giyim ve Kozmetik Alışverişlerinize 1.000 TL ParafPara! Giyim ve Kozmetik Alışverişlerinize 1.000 TL ParafPara! Kampanyaya Nasıl Katılırım? Kampanyaya katılmak için \"GIYIM2\" yazıp 6026'ya SMS gönderilmesi gerekmektedir. Kampanya katılımının başarılı sayılabilmesi için banka sisteminde adınıza tanımlı telefon numarasından katılım sağlanmalıdır. Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir. Kampanya Koşulları Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir. Kampanya kapsamında yurt içi giyim, kozmetik, optik ve saat sektörlerinde tek seferde yapılacak 10.000 TL ile 24.999 TL arasındaki ilk harcamaya 500 TL, 25.000 TL ve üzerindeki ilk harcamaya 1.000 TL ParafPara verilecektir. Kampanya müşteri bazlı olup bir müşteri kampanyadan bir defa yararlanabilir ve ilk alışveriş tutarına göre 500 TL ya da 1.000 TL ParafPara tutarından sadece birini kazanabilir. Kampanyaya katılmak için harcama yapmadan önce Paraf Mobil veya Halkbank Mobil uygulamamızın Paraf kart kampanyaları alanında yer alan HEMEN KATIL butonuna tıklanması gerekmektedir. Kazanılan ParafPara'lar, işyeri tarafından POS üzerinden yapılacak günsonu işlemi aracılığıyla kazanım sağlanan işlemin banka sistemine ulaşmasından bir sonraki gün sistem tarafından yüklenmektedir. Bir kart ile kampanyaya katılım yapıldığında müşterinin tüm kartları kampanyaya dahil olur. Hedefe ulaşılan harcama hangi kart ile yapılırsa ParafPara ödülü o karta yansıtılmaktadır. Kampanyaya giyim, kozmetik, optik ve saat kategorisine giren fiziki ve sanal iş yerlerinde yapılan harcamalar dahildir. Alışverişin yapıldığı iş yerinin, sistemde kayıtlı sektör bilgisinin doğru olmasının sorumluluğu iş yerine aittir. Pazar yeri e-ticaret sitelerinden yapılan harcamalar kampanyaya dahil değildir. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Alışverişin iptal/iade edilmesi durumunda ParafPara yüklenmeyecektir. Finans kuruluşları ve ödeme hizmet sağlayıcıları üzerinden gerçekleşen harcama işlemleri ile dijital cüzdana yapılan yüklemeler ve dijital cüzdan kullanılarak yapılan harcamalar kampanyaya dahil değildir. ParafPara kullanılarak yapılan alışverişler kampanyaya dahil değildir. Ödül kazanımı için kampanyaya katılım sağlandıktan sonra yapılan harcamalar dikkate alınacaktır. Harcama yapıldıktan sonra kampanyaya katılım durumlarında ödül yüklemesi yapılmayacaktır. Kampanya başka kampanyalarla birleştirilmez. Aynı sektörde takip edilen kampanyalar birbirinden bağımsız olmayıp aynı işlem birden fazla kampanyaya konu edilemez. Birden fazla kampanya koşulunun aynı anda sağlanması halinde, hak kazanılan en yüksek tutarlı ödül yüklenir. Müşterinin kampanya dönemi içerisinde gerçekleştirdiği farklı işlemler, ilgili tutar koşullarını sağlamaları halinde kendi kampanyaları kapsamında ayrıca ödüllendirilecektir. ParafPara Yüklenmesi Ne Zaman Yapılır? Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 14‘ünde, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır. Kazanılan ParafPara'lar puan kullanımına uygun tüm Paraf üye iş yerlerinde kullanılabilecektir. Kullanılmayan ParafPara'lar 15 Eylül 2026 tarihinde geri alınacaktır. Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. × Your browser does not support the audio element.",
+    "campaign_type": "Alışveriş Puanı",
+    "fields": {
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 1000
+      },
+      "kampanya_suresi": "2026-07-31",
+      "kampanya_kosullari": [
+        "Kampanyaya katılmak için GIYIM2 yazıp 6026'ya SMS gönderilmesi gerekir",
+        "Harcamadan önce Paraf Mobil veya Halkbank Mobil uygulamasındaki HEMEN KATIL butonuna tıklanması gerekir",
+        "Yurt içi giyim, kozmetik, optik ve saat sektörlerinde tek seferde en az 10.000 TL ilk harcama yapılması gerekir",
+        "Bir müşteri kampanyadan bir defa yararlanabilir ve tek bir ParafPara tutarı kazanır",
+        "Pazar yeri e-ticaret sitelerinden yapılan harcamalar kampanyaya dahil değildir"
+      ]
+    },
+    "field_spans": {
+      "alisveris_puani": "25.000 TL ve üzerindeki ilk harcamaya 1.000 TL ParafPara verilecektir",
+      "kampanya_suresi": "Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir.",
+      "kampanya_kosullari": "harcama yapmadan önce Paraf Mobil veya Halkbank Mobil uygulamamızın Paraf kart kampanyaları alanında yer alan HEMEN KATIL butonuna tıklanması gerekmektedir"
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "format_varyant",
+      "kosullu_aralik"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "Aralığın BİTİŞİ alındı. 15 Eylül 2026 ParafPara geri alma tarihidir.",
+      "alisveris_puani": "Kademeli ödül: 10.000-24.999 TL -> 500 TL, 25.000 TL üzeri -> 1.000 TL. Üst sınır yazıldı. #kosullu_aralik",
+      "odul_miktari": "ParafPara TL cinsinden sadakat puanıdır (chip-para sınıfı) -> alisveris_puani.",
+      "masraf_durumu": "Tek 'ücretsiz' ifadesi katılım SMS'ine aittir; ürün/hizmet masrafı bilgisi yok.",
+      "hedef_kitle": "Yalnızca kart ürünü kısıtı var; müşteri segmenti sinyali yok."
+    }
+  },
+  {
+    "id": "vakif-katilim--56108976",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/hesaplar/ozel-cari-hesaplar",
+    "content_hash": "0e77c8d78b20d4d4da5a4bb6fbd3a5e86cca372ef1bebde7c96a13514f6b1d94",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa İşim İçin Hesaplar Özel Cari Hesaplar Özel Cari Hesaplar Özel cari hesaplar, vadesiz olarak açılan istenildiği zaman para yatırılıp çekilebilen ve kâr payı dağıtımı yapılmayan hesaplardır. Özel Cari Hesaplar Nedir? Cari hesaplar vadesiz olarak açılan, istenildiği zaman para yatırılıp çekilebilen ve kâr payı dağıtımı yapılmayan hesaplardır. Cari hesaplarınızla tasarruflarınızı güvenli bir şekilde Vakıf Katılım hesabınızda tutabilir, dilediğiniz vakit kullanabilirsiniz. Cari hesaplarınızı; Türk Lirası, yabancı para ya da kıymetli maden cinsinde açabilirsiniz. Özellikler Para Yatırma/Çekme Vakıf Katılım Şube ve ATM'lerimizin yanı sıra 20 bini aşkın kamu bankası ve PTT ATM'lerinden de ücretsiz para yatırıp/çekebilirsiniz. Para Transferi (Havale, EFT, Swift) TL, döviz ve kıymetli maden para cinsindeki transferlerinizi gerçekleştirebilirsiniz. Finansman ve Kredi Kartı Ödemeleri Şubelerimiz ve dijital kanallarımız üzerinden ödemelerinizi hızlı ve kolay bir şekilde gerçekleştirebilirsiniz. Döviz/Kıymetli Maden İşlemleri Döviz/Kıymetli Maden alım-satım işlemlerinizi uygun kurlarla gerçekleştirebilirsiniz. Bağış Ödemeleri Şubelerimiz, Mobil Şubemiz ve İnternet Şubemiz üzerinden Ödemeler/Bağış menüsünü tercih ederek, bağış yapacağınız kurumu seçebilir ve bağış ödemenizi gerçekleştirebilirsiniz. Kira ve Aidat Ödemeleri Şubelerimiz ve dijital kanallarımız üzerinden ödemelerinizi kolaylıkla gerçekleştirebilirsiniz. Fatura, Vergi ve SGK Prim Ödemeleri Şubelerimiz ve dijital kanallarımız üzerinden anlaşmalı olduğumuz kurum ödemelerinizi gerçekleştirebilirsiniz. Çek ve Senet İşlemleri Vakıf Katılım hesabınız üzerinden çek karnesi alabilir, ödemelerinizi nakit sıkışıklığı yaşamadan çek karnenizle tamamlayabilirsiniz. Özel Cari Hesaplar ile ilgili Sıkça Sorulan Sorular Özel Cari Hesabı Nereden Açtırabilirim? Size en yakın Vakıf Katılım Şubesinden hesap açtırabilirsiniz. Özel Cari Hesabı Nereden Açtırabilirim? Size en yakın Vakıf Katılım Şubesinden hesap açtırabilirsiniz. Özel Cari Hesaptan Ücret Alınıyor Mu? Vakıf Katılım'dan açtıracağınız hesaplardan hesap işletim ücreti alınmamaktadır. Birden Fazla Özel Cari Hesap Açabilir Miyim? Vakıf Katılım Şube, İnternet Şube ve Mobil Şube kanalları üzerinden birden fazla cari hesap açabilirsiniz. Hesap numaranız aynı kalacak şekilde hesabınıza birden fazla ek numarası tanımlayabilirsiniz. Birden Fazla Özel Cari Hesap Açabilir Miyim? Vakıf Katılım Şube, İnternet Şube ve Mobil Şube kanalları üzerinden birden fazla cari hesap açabilirsiniz. Hesap numaranız aynı kalacak şekilde hesabınıza birden fazla ek numarası tanımlayabilirsiniz. Mevcutta Bankada Hesabım Var, Yine de Hesap Açmak için Şubeye Gitmeli Miyim? Mevcutta hesabınız bulunması durumunda şubeye gitmeden Vakıf Katılım İnternet ve Mobil Şube üzerinden hesap açabilirsiniz. Özel Cari Hesabıma İsim Verebilir Miyim? Tanımladığınız her hesaba dilediğiniz ismi verebilirsiniz. Tüm Hesaplarımı ATM'den Görüntüleyebilir Miyim? Vakıf Katılım Şube, İnternet Şube ve Mobil Şube kanalları üzerinden izin verdiğiniz istediğiniz ek numaraları seçerek, tüm hesaplarınızı kamu bankası ve PTT ATM'lerinden ücretsiz görüntüleyebilir veya görünmesini istemediğiniz hesaplarınıza engel koyabilirsiniz. EFT ve Havale İşlemlerini Nereden Yapabilirim? Havale sistemiyle tüm Vakıf Katılım hesapları arasında TL, EUR, USD ve kıymetli maden transferlerinizi gerçekleştirebilirsiniz. havale işlemlerinizi Vakıf Katılım Şubelerinden 17.00'ye kadar, Vakıf Katılım ATM, İnternet Şube ve Mobil Şube üzerinden 7/24 gerçekleştirebilirsiniz. EFT sistemiyle Vakıf Katılım hesabınızdan başka bir banka hesabına para transferlerinizi gerçekleştirebilirsiniz. EFT işlemlerinizi Vakıf Katılım Şubelerinden 17.00'ye kadar, Vakıf Katılım ATM, İnternet Şube ve Mobil Şube üzerinden 17.20'ye kadar gerçekleştirebilirsiniz. Vakıf Katılımlı olun, ayrıcalıklar dünyasına katılın! Mobil Şubeyi indirip görüntülü görüşmeyle müşterimiz olun; havale, EFT ve FAST işlemlerinize para ödemekten kurtulun. Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": null,
+    "fields": {
+      "masraf_durumu": {
+        "has_fee": false,
+        "amount": 0.0
+      }
+    },
+    "field_spans": {
+      "masraf_durumu": "Vakıf Katılım'dan açtıracağınız hesaplardan hesap işletim ücreti alınmamaktadır."
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "terminoloji"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "masraf_durumu": "'hesap işletim ücreti alınmamaktadır' NEGASYONDUR: masraf sıfırdır, bilgi eksikliği değil (kılavuz §4).",
+      "kar_payi_orani": "'kâr payı dağıtımı yapılmayan hesaplardır' — bu bir FİNANSMAN kâr payı oranı değil, cari hesabın niteliği; sayı da yok. #terminoloji",
+      "campaign_type": "8 sınıfın hiçbiri uymuyor: özel cari hesap ürün sayfası (ne finansman ne yatırım ürünü — kâr payı dağıtılmıyor). Aday dosyadaki 'Finansman' yanlış; tahmin yerine null bırakıldı.",
+      "kampanya_kosullari": "Kampanya değil ürün tanıtım sayfası; koşul cümlesi yok.",
+      "hedef_kitle": "Yalnızca 'İşim İçin' menü kırıntısı var; metinde açık segment ifadesi yok.",
+      "tahsis_ucreti": "Hesap işletim ücretinden bahsedilmiş; tahsis/dosya ücreti geçmiyor."
+    }
+  },
+  {
+    "id": "albaraka--37137642",
+    "bank_slug": "albaraka",
+    "source_url": "https://www.albaraka.com.tr/tr/bireysel/sigorta-ve-emeklilik/hayat-ve-ferdi-kaza-sigortasi/kredi-hayat-sigortasi",
+    "content_hash": "f998ab5cc6dd5180a9e4eb2e63f0603f69eb53e06c2ccdb6bb24d1cc401bc441",
+    "text": "Albaraka Mobil Mobil Bankacılık Aç Kredi Hayat Sigortası Anasayfa Bireysel Sigorta ve Emeklilik Hayat ve Ferdi Kaza Sigortası Kredi Hayat Sigortası Kredi Ferdi Kaza Sigortası Güvenceli Hayat Sigortası Kredi Hayat Sigortası Destek Ferdi Kaza Sigortası Eğitim Güvence Sigortası Eğitim Ödeme Sigortası Kritik Hastalıklar Sigortası Kadınlara Özel Sigorta Kredi Hayat Sigortası ile olası bir maluliyet ve vefat durumunda, kalan kredi tutarı Katılım Emeklilik tarafından bankaya ödenir. Sigorta süresi, finansman süresi ile eş değerdir. Sigorta tutarı finansman sözleşmesinde belirlenen geri ödeme planındaki borç tutarı kadardır. Yaşam kaybı durumunda poliçede belirtilen teminat tutarı, Katılım Emeklilik tarafından ilgili banka şubesine ödenir. Kredi borcu kapatıldıktan sonra, varsa kalan tutar sigortalının lehtarlarına ödenir. Kredi Hayat Sigortası ürünümüzde primi etkileyen faktörler şunlardır; Yaşınız Kredi süreniz Prim ödeme şekliniz (peşin/aylık) Kredi tutarınız Sağlık durumunuz Daha detaylı bilgilere www.katilimemeklilik.com.tr adresinden ulaşabilirsiniz. Albaraka Türk Katılım Bankası A.Ş., Katılım Emeklilik ve Hayat A.Ş., Bereket Sigorta A.Ş., HDI Katılım Sigorta A.Ş., Neova Sigorta A.Ş. ve Türkiye Katılım Sigorta A.Ş. acentesidir.",
+    "campaign_type": null,
+    "fields": {},
+    "field_spans": {},
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "eksik_bilgi"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "vade_ay": "'Sigorta süresi, finansman süresi ile eş değerdir' — ay cinsinden sayı verilmemiş. #eksik_bilgi",
+      "finansman_tutari": "'Kredi tutarınız' primi etkileyen faktör olarak sayılmış; tutar yok.",
+      "masraf_durumu": "Sigorta primi olduğu ima ediliyor ama tutar yok; ayrıca prim ürünün bedelidir, banka masrafı (dosya/tahsis) değildir.",
+      "campaign_type": "8 sınıfın hiçbiri uymuyor: sigorta ürünü sayfası. Aday dosyadaki 'Finansman' yanlış; tahmin yerine null bırakıldı."
+    }
+  },
+  {
+    "id": "vakif-katilim--92356865",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/nakit-yonetimi/odemeler-ve-hizmetler/odemeler/tasarruf-finansman-sirketleri-tahsilat-sistemi",
+    "content_hash": "776baa95e6ab765b342809168d6fcebddc1c21e3b5ecc4af0ae5d57044e10b4c",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa İşim İçin Nakit Yönetimi Ödemeler ve Hizmetler Ödemeler Tasarruf Finansman Şirketleri Tahsilat Sistemi Tasarruf Finansman Şirketleri Tahsilat Sistemi Tasarruf Finansman Şirketleri Tahsilat Sistemi Vakıf Katılım'da İçeriği Nedir? Tasarruf Finansman şirketlerinden Eminevim, Birevim, Fuzulev ve Sinpaş ile yapılan entegrasyon sonrasında şirketlerin sistemine kayıtlı tasarruf sahiplerinin aidat ödemelerine aracılık edilmektedir. Eminevim, Birevim ve Fuzulev adına Şubelerimizden, İnternet Şubemizden, Mobil Şubemizden ve TAM ATM'lerinden tahsilat yapılabilmektedir. Sinpaş adına tahsilatlar şu an için sadece şube gişe kanalından yapılabilmekte olup İnternet Şube, Mobil Şube ve TAM ATM entegrasyon çalışmaları devam etmektedir. Ödemelere İlişkin Önemli Notlar: İnternet Şube ve Mobil Şube'de ödeme adımları aşağıdaki gibidir. Ödemeler-> Kira ve Taksit Ödemeleri -> Kira ve Taksit Öde ->Kurum Seçilmesi ->Ödeme Yapılması Tümünü Göster Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": null,
+    "fields": {},
+    "field_spans": {},
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [],
+    "hard": false,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "campaign_type": "8 sınıfın hiçbiri uymuyor: tasarruf finansman şirketleri adına aidat TAHSİLAT hizmeti sayfası; bankanın finansman ürünü değil. Aday dosyadaki 'Finansman' başlıktaki kelimeden kaynaklanıyor. #terminoloji",
+      "finansman_tutari": "Başlıkta 'Tasarruf Finansman' geçiyor ama hiçbir tutar verilmemiş."
+    }
+  },
+  {
+    "id": "ziraat-katilim--70669565",
+    "bank_slug": "ziraat-katilim",
+    "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri/sukuk",
+    "content_hash": "6f40605e808b71d87d766937de9778372bab9300a941b829ed6be169533c87e0",
+    "text": "Kira Sertifikaları (Sukuk) Kira sertifikası: Her türlü varlık ve hakkın finansmanını sağlamak amacıyla varlık kiralama şirketi tarafından ihraç edilen ve sahiplerinin bu varlık veya haktan elde edilen gelirlerden payları oranında hak sahibi olmalarını sağlayan menkul kıymeti ifade eder. Kira Sertifikaları Tebliğinin Düzenlediği Kira Sertifikası Türleri ve Şartları 1. Sahipliğe dayalı kira sertifikası (İcara sukuk) Sahipliğe dayalı kira sertifikaları, kaynak kuruluşa veya üçüncü kişilere kiralanmak veya VKŞ adına yönetilmek üzere VKŞ tarafından kaynak kuruluştan devralınacak varlık ve hakların finansmanını sağlamak için ihraç edilen kira sertifikalarıdır. 2. Yönetim sözleşmesine dayalı kira sertifikası (Wakala sukuk) Yönetim sözleşmesine dayalı kira sertifikaları, kaynak kuruluşa ait varlık veya hakların vade boyunca kiralanması da dahil olmak üzere VKŞ lehine yönetilmesi neticesinde elde edilen gelirlerin sözleşme hükümleri çerçevesinde VKŞ'ye aktarılması amacıyla ihraç edilen kira sertifikalarıdır. 3. Alım-satıma dayalı kira sertifiksı (Murabaha sukuk) Alım-satıma dayalı kira sertifikaları, bir varlık veya hakkın VKŞ tarafından satın alınarak 12 nci maddenin birinci fıkrasında belirtilen nitelikteki şirketlere vadeli olarak satılması işleminde varlık veya hak alımının finansmanını sağlamak için ihraç edilen kira sertifikalarıdır. 4. Ortaklığa dayalı kira sertifikası (Mudaraba/Muşaraka sukuk) Ortaklığa dayalı kira sertifikaları, VKŞ'nin ortak girişime ortak olmak amacıyla ihraç ettiği kira sertifikalarıdır. Münhasıran VKŞ'nin sermaye koyduğu ortak girişimlerin finanse edildiği ortaklığa dayalı kira sertifikası ihraçlarında; ortak girişimin yönetimi, girişimci veya girişimcinin atadığı üçüncü bir kişi tarafından gerçekleştirilir. Ortak girişimden elde edilecek karın girişimci ve VKŞ arasındaki paylaşım oranı veya vekalet sözleşmesi kapsamında girişimcinin alacağı sabit ücret ortaklık sözleşmesinde belirtilir. Ortaklığa dayalı kira sertifikası ihraç tutarı, Kira Sertifikaları Tebliğinin 11 inci maddesi çerçevesinde hazırlanan değerleme raporunda tespit edilen gerçeğe uygun değerin % 90'ını aşamaz. 5.Eser sözleşmesine dayalı kira sertifikası (İstisna sukuk) Eser sözleşmesine dayalı kira sertifikaları, VKŞ'nin iş sahibi sıfatıyla taraf olduğu bir eser sözleşmesi kapsamında eserin meydana getirilmesini sağlamak amacıyla ihraç edilen kira sertifikalarıdır. Bu madde kapsamındaki ihraçlarda VKŞ kendi adına ve kira sertifikası sahipleri hesabına akdedilecek eser sözleşmesine iş sahibi sıfatıyla taraf olur. VKŞ meydana getirilecek eseri önce kiralayarak veya kiralamaksızın doğrudan satış sözleşmesine konu edebilir. Kira sertifikasının vade bitimi tarihi itibarıyla satış bedelinin tamamının VKŞ tarafından tahsil edilmesi ve kira sertifikası sahiplerine ödeme yapılması zorunludur. Eser sözleşmesine dayalı kira sertifikası ihraç tutarı, 11 inci madde çerçevesinde hazırlanan değerleme raporunda tespit edilen gerçeğe uygun değerin % 90'ını aşamaz. Eser bedelinin VKŞ tarafından peşin ödendiği durumlarda, eserin tam ve zamanında tamamlanmasını teminen yüklenici tarafından VKŞ lehine menkul ve gayrimenkul rehni veya benzer nitelikte teminat verilmesi zorunludur. Katılım Mobil İnternet Şubesi Şube Müşteri İletişim Merkezi Hesaplarınıza Dilediğiniz Anda Ulaşın Katılım Mobil uygulaması ile hesaplarınıza istediğiniz zaman, istediğiniz yerde erişebilirsiniz. SAYFAYI PAYLAŞ WhatsApp İletişim Hattı WhatsApp İletişim Hattı Siz değerli müşterilerimizin bankacılık sorularına anında cevap vermek, sorunlarınıza hızlı çözüm bulmak için, hafta içi 09:00 ila 18:00 saatleri arasında WhatsApp İletişim Hattımız hizmetinizde! Ziraat Katılım müşterisi olmak için mobil uygulamamızı indirebilirsiniz. Müşterimiz Olun WhatsApp İletişim Hattımız ×",
+    "campaign_type": "Yatırım Ürünü",
+    "fields": {},
+    "field_spans": {},
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "terminoloji"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kar_payi_orani": "Metindeki tek yüzde '% 90'ını aşamaz' — ihraç tutarının gerçeğe uygun değere oranla ÜST SINIRIDIR, kâr payı oranı değildir. #terminoloji",
+      "vade_ay": "'12 nci maddenin birinci fıkrası' mevzuat madde numarasıdır, vade değildir.",
+      "campaign_type": "Kira sertifikası (sukuk) bir YATIRIM ÜRÜNÜDÜR. Aday dosyadaki 'Finansman' yanlış — metinde 'finansmanını sağlamak' ifadeleri sukukun işlevini anlatıyor, ürün türünü değil. Düzeltildi.",
+      "kampanya_kosullari": "Kampanya değil, mevzuat/ürün tanımı sayfası; koşul cümlesi kampanya koşulu değildir."
+    }
+  },
+  {
+    "id": "vakif-katilim--34248010",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/isim-icin/dis-ticaret/dis-ticaret-finansmanlari",
+    "content_hash": "30a9484a7355d82d9b2abb6ff35ae8eb352162953ac2feb9b81cbd5aa803f454",
+    "text": "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ İşim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ Hakkımızda Ana Sayfa İşim İçin Dış Ticaret Dış Ticaret Finansmanları Dış Ticaret Finansmanları Dış ticaret finansman desteğimizle ticaretiniz hız kesmiyor. İthalat Finansmanı İthalat finansman desteği Vakıf Katılım ile hizmetinizde. Detaylı Bilgi İhracat Finansmanı İhracat finansman desteği Vakıf Katılım ile hizmetinizde. Detaylı Bilgi Vakıf Katılımlı olun, ayrıcalıklar dünyasına katılın! Mobil Şubeyi indirip görüntülü görüşmeyle müşterimiz olun; havale, EFT ve FAST işlemlerinize para ödemekten kurtulun. Çerezleri Özelleştirin Reddet Kabul Ediyorum",
+    "campaign_type": "Finansman",
+    "fields": {},
+    "field_spans": {},
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "eksik_bilgi"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "finansman_tutari": "'Dış ticaret finansman desteğimizle' — niteleyici var, sayı yok. #eksik_bilgi",
+      "masraf_durumu": "Sayfa altındaki 'havale, EFT ve FAST işlemlerinize para ödemekten kurtulun' ifadesi tüm siteye ait tanıtım bandıdır ve havale/EFT ücretine değinir; kılavuz §4 gereği ürünün masraf durumu bilgisi sayılmadı.",
+      "campaign_type": "İthalat/ihracat finansmanı ürün sayfası -> 'Finansman' doğru, korundu."
+    }
+  },
+  {
+    "id": "dunya-katilim--42723888",
+    "bank_slug": "dunya-katilim",
+    "source_url": "https://dunyakatilim.com.tr/kampanyalar/tod-paraf",
+    "content_hash": "9e66d72f1eca9bc138610250e1f34a76a2a080b23661e75c1f09b10a4d158b1b",
+    "text": "Anasayfa Kampanyalar TOD Paraf Paraf Kart'la alışverişe başla, TOD ayrıcalığını ücretsiz yaşa! 01.01.2026 - 29.01.2026 tarihleri arasında Dünya Katılım Paraf kredi kartı ile yapacağınız toplam 1.000 TL ve üzeri alışverişine özel 3 aylık TOD Trendyol Süperlig Paketi üyeliği hediye! 01.01.2026 - 29.01.2026 tarihleri arasında Dünya Katılım Paraf kredi kartı ile yapacağınız toplam 1.000 TL ve üzeri alışverişine özel 3 aylık TOD Trendyol Süperlig Paketi üyeliği hediye! Kampanya Şartları; Kampanya, 01.01.2026 - 29.01.2026 tarihleri arasında geçerlidir. Kampanya bireysel müşterilerimiz için geçerlidir. Kampanyadan 29.01.2026 tarihinden önce Dünya Katılım Paraf kredi kartına sahip ancak henüz hiç harcama yapmamış müşterilerimiz faydalanabilecektir. Kampanyadan faydalanılabilmesi için kampanyanın başlamasından itibaren Paraf kredi kartı ile 01.01.2026-29.01.2026 tarihleri arasında toplam 1.000 TL ve üzeri harcama yapılması gereklidir. Kampanya şartlarının yerine getirilmesi durumunda 3 aylık ücretsiz TOD Trendyol Süperlig üyelik kodu en fazla 1 hafta içerisinde SMS yoluyla iletilecektir. Kampanya ödülünden faydalanabilmek için SMS ile gönderilen TOD kodu ile TOD platformuna üye olunması gerekmektedir. Kampanya 300 adet kod ile sınırlıdır. Kodların son aktifleştirme tarihi 31.01.2026 olup bu tarih sonrasında kodlar kullanılamayacaktır. Dünya Katılım Bankası, kampanya süresi boyunca dilediği zaman kampanyayı sonlandırma ve kampanya şartlarını değiştirme hakkını saklı tutar. Paraf Kampanyaları Bitiş Tarihi: - Paylaş Diğer Kampanyalar Tüm site ziyaretçilerimizi daha iyi tanımak, sitemizdeki kullanıcı deneyimini kişiselleştirmek ve iyileştirmek için web sitemizde çerezler kullanıyoruz. Çerez ayarlarınızı yönetmek için \"Tercihler\" seçeneğine tıklayabilir, sitemizdeki çerezlerle ilgili detaylı bilgiler için Çerez Aydınlatma Metni 'ni inceleyebilirsiniz. Tercihler Reddet Kabul Et Çerez Ayarları Çerez Politikası Zorunlu Çerezler Bu çerezler, web sitemizin çalışması için gereklidir ve sistemlerimizde kapatılamaz. Bunlar genellikle tarafınızca yapılan ve hizmet talebi anlamına gelen eylemlere yanıt olarak yerleştirilir, örneğin gizlilik tercihlerinizi ayarlamak, oturum açmak ya da formları doldurmak. Tarayıcınızı bu çerezleri engelleyecek ya da bu çerezlerle ilgili olarak size uyarıda bulunacak şekilde ayarlayabilirsiniz, ancak bu durumda sitenizin bazı kısımları çalışmayabilir. Bu çerezler sizi kişisel olarak tanımlayabilecek herhangi bir bilgi saklamamaktadır. İşlevsellik Çerezleri Web sitesi deneyiminizi iyileştirmek amacıyla analitik çerezler kullanılır. Analitik çerezler, web sitesini nasıl kullandığınızı (örn; hangi sayfaları ziyaret ettiğiniz, ziyaret süresi vb.) anlamamızı sağlar. Böylelikle sunduğumuz içerikleri geliştirebilir ya da web sitesi tasarımını değiştirebiliriz. Kişiselleştirilmiş Reklam Çerezleri Bu çerezler reklam partnerlerimiz tarafından sitemiz üzerinden yerleştirilebilir. Bunlar söz konusu şirketler tarafından ilgi alanlarınızın bir profilini oluşturmak ve size diğer sitelerdeki ilgili reklamları göstermek amacıyla kullanılabilir ve paylaşılabilir. Bu işlem, tarayıcınızı ve internet cihazınızı benzersiz biçimde tanımlamaya dayalıdır. Bu çerezlere izin vermediğiniz takdirde, hedefli reklamları daha az görebileceksiniz. ÇEREZ KULLANIMINA İLİŞKİN AYDINLATMA METNİ 1. Giriş Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun (\"Kanun\") 10'uncu maddesi, Aydınlatma Yükümlülüğünün Yerine Getirilmesinde Uyulacak Usul ve Esaslar Hakkında Tebliğ (\"Tebliğ\") ve Çerez Uygulamaları Hakkında Rehber (\"Rehber\") kapsamında veri sorumlusu sıfatıyla Dünya Katılım Bankası A.Ş. tarafından hazırlanmıştır. Bu Çerez Aydınlatma Metni, internet sitemiz ziyaret edildiğinde kullanılan çerezler aracılığıyla toplanan kişisel verilerin işlenmesi, çerezlerin hangi amaçlarla ve hangi tür çerezlerin kullanıldığı konusunda bilgi sağlamanması, bu çerezleri nasıl yönetebileceğiniz hakkında rehberlik edilmesi amacıyla hazırlanmıştır. 2. Çerez Nedir ve Neden Kullanılmaktadır? Çerezler, bir internet sitesini ziyaret ettiğinizde bilgisayarınıza veya diğer internet bağlantılı cihazlara (örneğin, akıllı telefonlar veya tabletler) yerleştirilebilen dosyalar veya bilgi parçalarıdır. Başka bir deyişle, çerezler internet siteleri veya mobil uygulamalar gibi çevrim içi platformları kullanırken, cihazınıza yerleştirilen küçük metin dosyalarıdır. Çerezler, kullanıcılara kişiselleştirilmiş içerik sunmanın yanı sıra, internet sitesinin daha verimli ve etkin bir şekilde çalışmasını sağlamaktadır. Sizlere daha iyi bir ziyaret deneyimi sunmak için kullanıcının kişisel tercihlerine ve ihtiyaçlarına uygun içerikleri sunmaktadır. Önemli bir nokta olarak, çerezler sadece internet geçmişinizle ilgili bilgiler içermekte ve cihazınızda depolanan dosyalara erişim sağlayamamaktadır. Ayrıca, çerezler hizmetlerimizi sizin ilgi ve ihtiyaçlarınıza uygun hale getirmek için kullanılabilmektedir. Bu sayede, gelecekte internet sitelerimizi ziyaret ettiğinizde daha hızlı ve kişiselleştirilmiş deneyimler yaşamanız sağlanmaktadır. 3. Çerez Türleri Nelerdir? Taraflarına göre çerezler: Birinci Taraf Çerezleri: Kullanıcılarca oluşturularak internet sitesine konulan ve banka kontrolünde olan çerezlerdir. Üçüncü Taraf Çerezleri: İşbirliği yaptığımız üçüncü taraf firmalar tarafından oluşturulan ve yönetilen çerezlerdir. Saklama süresine göre çerezler: Oturum Çerezleri: Kullanıcıların sadece tarayıcıları açıkken mevcut olan ve tarayıcı kapanınca silinen çerez tipidir. Kalıcı Çerezler: Kullanıcıların tarayıcısı kapandıktan sonra belirli bir sona erme tarihine kadar kalıcı olan çerez türüdür. Yeniden web sitesi ziyaret edildiğinde bu çerezler aktif olur ve aynı bilgisayardan yapılan ziyareti tespit edebilmek amacıyla kullanılmaktadır. Kullanım amaçlarına göre çerezler a.Zorunlu Çerezler Bu çerezler internet sitesinin doğru ve etkin çalışmasını sağlamak amaçlarıyla kesinlikle gerekli olan çerezlerdir. Bu çerezler kaldırılırsa veya engellenirse internet sitesi kısmen veya tamamen belli işlevlerini yitirebilmektedir. b.İşlevsel Çerezler Web sitesinde kullanılan kişiselleştirme ve tercihlerin hatırlanması amaçları ile kullanılan çerezlerdir. Bu çerezler zorunlu çerezler dışında kalan işlevsellikleri sağlama amacıyla kullanılmaktadır. c.Performans - Analitik Çerezler İnternet sitelerinde kullanıcıların davranışlarını analiz etmek amacıyla istatistiki ölçümüne imkân veren çerezlerdir. Bu çerezler, sitenin iyileştirilmesi için sıklıkla kullanılmakta olup bu duruma reklamların ilgili kişiler üzerindeki etkisinin ölçümü de dâhildir. İnternet sitesi sahipleri tarafından, ziyarete yönelik ölçüm yapmak, analiz etmek ve tahminde bulunmak ile bir internet sayfasına götüren en önemli arama motoru anahtar kelimelerini tespit etmek için kullanılabilmektedir. d.Reklam / Pazarlama Çerezleri Reklam ve pazarlama amaçlı çerezler ile internet ortamında kullanıcıların çevrim içi hareketleri takip edilerek kişisel ilgi alanları saptanıp bu ilgi alanlarına yönelik internet ortamında kullanıcılara reklam gösterilmesi her durumda aynı reklamların sürekli tekrarlanmasının engellemesi, reklamların düzgün bir şekilde gösterilmesi sağlanabilmektedir. Bu çerezlerin kullanılmasındaki amaç kullanıcıya geliştirilmiş ve kişisel bir deneyim sunulabilmesidir. 4.Sitemizde Kullanılan Çerez Türleri Aşağıda İnternet Sitesinde kullandığımız farklı türdeki çerezlere yer verilmiştir. Zorunlu Çerezler Çerez Adı Sağlayıcı Kullanım amacı Kullanım Süresi CultureInfo Banka Ziyaretçilerin internet site sayfalarını hangi dil kullandığını gösterir. Oturum süresince .AspNetCore.Session Banka Ziyaretçilere atanmış benzersiz bir kimlik numarasını gösterir Oturum süresince Performans ve Analitik Çerezleri Çerez Adı Sağlayıcı Kullanım amacı Kullanım Süresi _ga_XXXXXXXXX Google Analytics Tracking Google Analytics tarafından ziyaretçilerin İnternet Sitesini ziyaret sıklığına ve ziyaret zamanlarına ilişkin bilgi toplamak amacıyla kullanılan çerezdir. 1 yıl 5.Kişisel Veri Sahibi Olarak Haklarınız Nelerdir? Kişisel veri sahipleri Kanunun \"ilgili kişinin haklarını düzenleyen\" 11'inci maddesi kapsamında aşağıda listeli haklara sahiptir. Kişisel veri işlenip işlenmediğini öğrenme Kişisel verileri işlenmişse buna ilişkin bilgi talep etme Kişisel verilerin işlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme Yurt içinde veya yurt dışında kişisel verilerin aktarıldığı üçüncü kişileri bilme Kişisel verilerin eksik veya yanlış işlenmiş olması hâlinde bunların düzeltilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme Kanun ve ilgili diğer kanun hükümlerine uygun olarak işlenmiş olmasına rağmen, işlenmesini gerektiren sebeplerin ortadan kalkması hâlinde kişisel verilerin silinmesini veya yok edilmesini isteme ve bu kapsamda yapılan işlemin kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme İşlenen verilerin münhasıran otomatik sistemler vasıtasıyla analiz edilmesi suretiyle kişinin kendisi aleyhine bir sonucun ortaya çıkmasına itiraz etme Kişisel verilerin kanuna aykırı olarak işlenmesi sebebiyle zarara uğraması hâlinde zararın giderilmesini talep etme Yukarıda belirtilen haklarınızı kullanmak için; Kimlik tespiti yapılarak şubelerimiz aracılığıyla Kimlik doğrulaması gerçekleştirilerek Dijital Kanallarımız ya da Çağrı Merkezimiz üzerinden Yamanevler Mah. Ahmet Tevfik İleri Cad. 4B PLAZA No:26 KAT:15-16-17 Ümraniye / İSTANBUL adresine noter kanalıyla dunyakatilim@hs01.kep.tr adresine güvenli elektronik imzalı olarak Bankamız sisteminde kayıtlı bulunan elektronik posta adresinizi kullanarak taleplerinizi bankamıza iletebilirsiniz. Başvuruda; a) ad, soyadı ve başvuru yazılı ise imza b) Türkiye Cumhuriyeti vatandaşları için T.C. kimlik numarası, yabancılar için uyruğu, pasaport numarası veya varsa kimlik numarası c) tebligata esas yerleşim yeri veya iş yeri adresi ç) varsa bildirime esas elektronik posta adresi, telefon ve faks numarası d) talep konusu bulunmalıdır. Talebiniz en kısa sürede ve en geç otuz (30) gün içinde ücretsiz olarak sonuçlandırılmaktadır. Başvurunuza yönelik işlemlerin ayrı bir maliyeti gerektirmesi hâlinde, Kurul tarafından belirlenen tarifedeki ücret tarafınıza yansıtabilmektedir. Tercihlerimi Kaydet",
+    "campaign_type": "Kart",
+    "fields": {
+      "kampanya_suresi": "2026-01-29",
+      "kampanya_kosullari": [
+        "Kampanya bireysel müşteriler için geçerlidir",
+        "01.01.2026-29.01.2026 tarihleri arasında Paraf kredi kartı ile toplam 1.000 TL ve üzeri harcama yapılması gerekir",
+        "Kampanyadan 29.01.2026 tarihinden önce Dünya Katılım Paraf kredi kartına sahip ancak hiç harcama yapmamış müşteriler faydalanabilir",
+        "Ödülden faydalanmak için SMS ile gönderilen kod ile TOD platformuna üye olunması gerekir",
+        "Kampanya 300 adet kod ile sınırlıdır"
+      ],
+      "hedef_kitle": [
+        "mevcut_musteri",
+        "belirli_segment"
+      ]
+    },
+    "field_spans": {
+      "kampanya_suresi": "Kampanya, 01.01.2026 - 29.01.2026 tarihleri arasında geçerlidir.",
+      "kampanya_kosullari": "Kampanyadan faydalanılabilmesi için kampanyanın başlamasından itibaren Paraf kredi kartı ile 01.01.2026-29.01.2026 tarihleri arasında toplam 1.000 TL ve üzeri harcama yapılması gereklidir.",
+      "hedef_kitle": "Kampanyadan 29.01.2026 tarihinden önce Dünya Katılım Paraf kredi kartına sahip ancak henüz hiç harcama yapmamış müşterilerimiz faydalanabilecektir."
+    },
+    "absent_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "format_varyant"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "Aralığın BİTİŞİ alındı (01.01.2026 başlangıçtır). Sayfadaki 'Bitiş Tarihi: -' boştur; 31.01.2026 ise kodların son AKTİFLEŞTİRME tarihidir.",
+      "vade_ay": "'3 aylık TOD Trendyol Süperlig Paketi' hediye üyeliğin süresidir, finansman vadesi değildir.",
+      "odul_miktari": "Ödül 3 aylık TOD üyeliğidir; parasal tutar verilmemiş.",
+      "masraf_durumu": "'ücretsiz' ifadeleri hediye TOD üyeliğine aittir; bankanın ürün/hizmet masrafına dair bilgi yok.",
+      "finansman_tutari": "1.000 TL harcama eşiğidir, finansman tutarı değildir.",
+      "hedef_kitle": "Kartı olan ama hiç harcama yapmamış bireysel müşteriler -> mevcut_musteri + belirli_segment."
+    }
+  },
+  {
+    "id": "turkiye-finans--82311527",
+    "bank_slug": "turkiye-finans",
+    "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/ofot.aspx",
+    "content_hash": "63b1ce858b14c831633a6621adf0aa4f963495cd6c127ec51527ba71020d4514",
+    "text": "Size daha iyi hizmet sunabilmek için sitemizde çerezler kullanıyoruz. Sitemizi kullanmaya devam etmeden önce çerezleri kabul etmeniz, bu hizmeti daha da iyileştirebilmemiz adına çok önemli. Ayrıntılı bilgi için Gizlilik Politikamızı ve Çerez Politikamızı inceleyebilirsiniz. Çerez Ayarları Tüm Çerezleri Kabul Et Daha yüksek erişilebilirlik modunu aç Daha yüksek erişilebilirlik modunu kapat Oturum Aç Ara Kampanyalar Skip Navigation Links Anasayfa / Kampanyalar / Otomatik Ödeme Talimatınıza 500 TL'ye Varan Bonus! Otomatik Ödeme Talimatınıza 500 TL'ye Varan Bonus! CampaignDetailImg Facebook Twitter LinkedIn Whatsapp 01 Ağustos - 31 Ağustos Bonus Kampanyaları 26 Gün kaldı Sayfa İçeriği Kampanya ayın ilk ve son günleri arasında geçerlidir. Happy Bonus kartınızdan her fatura için 100 TL toplam 500 TL Bonus kazanılacaktır. Her müşteri kampanyadan sadece 1 kez yararlanabilir. Otomatik fatura ödeme Kampanyadan Bonus kazanılabilmesi için; talimatın tanımlandığı ayı takip eden ay içinde faturaların otomatik olarak ödenmesi gerekir. Hak edilen Bonus'lar ödeme yapıldıktan sonraki ayın 15'inde kredi kartına yüklenir. Bonusların kullanım süresi, yüklendiği tarihten sonraki 15 gündür. Kullanılmayan bonuslar son kullanım tarihinin ertesi günü silinir. Bireysel Happy Kart Silver, Happy Kart Gold, Happy Kart Platinum ve Happy Zero kart kampanyaya dahildir. Âlâ,Türkiye Finans Siftah Kart, Happy Bonus Business Kart, On Numara, On Numara Plus ve Ticari Kart kampanyaya dahil değildir. Faturaların sistemde bilgilerinin hatalı olması veya kampanya kapsamı dışında kalması durumunda sorumluluk Türkiye Finans Katılım Bankası A.Ş.'ye ait değildir. Bu kampanya ilgili üye işyerinde devam etmekte olan bir başka Türkiye Finans Katılım Bankası A.Ş. kampanyası ile birleştirilemez. Kampanyaya katılacak ve Bonus kazanan müşterilerimizin kartının açık durumda olması ve kampanya tarihi itibari ile kredi kartlarını kullanmasını engelleyen herhangi bir durumun olmaması gerekmektedir. Harcamanın gerçekleştirildiği iş yerinin sistemde kayıtlı sektör bilgisinin hatalı ya da kampanya dahilinde olmaması durumunda sorumluluk Türkiye Finans Katılım Bankası A.Ş.'ye ait değildir. Hakkında haciz işlemi başlatılmış, bir dönemden fazla borç gecikmesi olan kredi kartı hesapları, bu ve benzeri durumlardan doğan idari ve kanuni takipteki hesaplar, kart sahibinin vefat bildirimi yapılmış hesaplar ve aynı tarihte tüm kartlarında iptal kart blokesi bulunan kişiler kampanyaya katılamaz. Web sayfaları, e-posta ya da SMSlerdeki yazım hataları bağlayıcı değildir. Harcama yapılan işyerlerinin bildirdiği kampanya bilgilerinde meydana gelebilecek hatalardan Türkiye Finans Katılım Bankası A.Ş. sorumlu tutulamaz. Türkiye Finans Katılım Bankası A.Ş kampanya koşullarını dilediği zaman durdurma ve değiştirme hakkına sahiptir. Fikirleriniz Bizim İçin Önemli Yeni happycard.com.tr'yi değerlendirir misiniz? Kart Şifremi Nasıl Alabilirim? İnternet/Mobil Şube kullanıcısıysanız; İnternet Şube'de Güvenlik Ayarları/Şifre-Parola adımından, Mobil Şube'de ise Ayarlar/Kredi Kartı adımından şifrenizi alabilirsiniz. İnternet Şube Giriş İnternet/Mobil Şube kullanıcısı değilseniz; 0850 222 22 44 numaralı Müşteri İletişim Merkezimizi telefonla arayarak şifrenizi alabilirsiniz. Çerez Ayarları",
+    "campaign_type": "Kart",
+    "fields": {
+      "alisveris_puani": {
+        "kind": "points",
+        "value": 500
+      },
+      "kampanya_kosullari": [
+        "Kampanya ayın ilk ve son günleri arasında geçerlidir",
+        "Her fatura için 100 TL, toplamda en fazla 500 TL Bonus kazanılır",
+        "Her müşteri kampanyadan sadece 1 kez yararlanabilir",
+        "Talimatın tanımlandığı ayı takip eden ay içinde faturaların otomatik olarak ödenmesi gerekir",
+        "Bonusların kullanım süresi yüklendiği tarihten sonraki 15 gündür"
+      ]
+    },
+    "field_spans": {
+      "alisveris_puani": "her fatura için 100 TL toplam 500 TL Bonus kazanılacaktır",
+      "kampanya_kosullari": "Kampanyadan Bonus kazanılabilmesi için; talimatın tanımlandığı ayı takip eden ay içinde faturaların otomatik olarak ödenmesi gerekir."
+    },
+    "absent_fields": [
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
+    ],
+    "hard_tags": [
+      "format_varyant"
+    ],
+    "hard": true,
+    "annotators": [
+      "M1"
+    ],
+    "adjudicated": false,
+    "notes": {
+      "kampanya_suresi": "BELİRSİZ: '01 Ağustos - 31 Ağustos' ifadesinde YIL yok ('26 Gün kaldı' dinamik sayaç). ISO-8601 tarih yıl olmadan üretilemez, tahmin edilmedi. #format_varyant",
+      "alisveris_puani": "Bonus, TL cinsinden ifade edilen sadakat puanıdır (kılavuz §4'teki chip-para ile aynı sınıf) -> puan/adet olarak yazıldı.",
+      "odul_miktari": "Ödül Bonus puanıdır; ayrı bir nakit/hediye tutarı yok.",
+      "hedef_kitle": "Yalnızca kart ürünü kısıtı (Happy Kart Silver/Gold/Platinum/Zero); müşteri segmenti sinyali yok.",
+      "campaign_type": "Aday etiket 'Kart' korundu: kampanya alışveriş değil OTOMATİK ÖDEME TALİMATI üzerine kurulu. Ancak ödül Bonus puanı olduğu için 'Alışveriş Puanı' da savunulabilir — hakemliğe açık."
+    },
+    "unclear_fields": [
+      "kampanya_suresi"
+    ]
+  }
+]
