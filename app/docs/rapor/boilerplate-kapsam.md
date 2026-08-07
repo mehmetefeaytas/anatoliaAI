@@ -576,3 +576,59 @@ düzeltme ikincil — ama ucuz ve ilkeli.
 1. gold'da **kaçırma artmaz** (13'ün üstüne çıkmaz),
 2. halüsinasyon en az bugünkü kadar düşer (≤ 0,066),
 3. yanlış silinen blok listesi elle örneklenip doğrulanır.
+
+---
+
+## Ek — blok düzeyinde üç sinyal: uygulandı ve ölçüldü
+
+Öneri `src/preprocessing/blocks.py` olarak kodlandı ve dört yapılandırma
+gold'da ölçüldü (kural/strict, products kapsamı, n=20).
+
+| yapılandırma | mikro-F1 | halüsinasyon | kaçırma | atılan |
+|---|---|---|---|---|
+| temel (ayıklama yok) | 0,677 | 0,096 | **13** | %0 |
+| **n-gram** (mevcut) | **0,688** | **0,066** | 16 | %38,8 |
+| **blok** (alan-dışı + sayısal) | 0,687 | 0,090 | **14** | %28,3 |
+| blok + cümle-DF | 0,672 | 0,084 | 16 | %36,9 |
+| blok + n-gram | 0,672 | 0,084 | 16 | %41,0 |
+
+### Sonuç: hiçbiri baskın değil, iki sınır noktası var
+
+- **n-gram** halüsinasyonda en iyi (0,066) ama 3 gerçek alan götürüyor.
+- **blok** kaçırmada en iyi (14, temele bir alan uzaklıkta) ve F1'de n-gram'la
+  istatistiksel olarak eşit (0,687 vs 0,688), ama halüsinasyonu 0,090'da
+  bırakıyor.
+
+Kullanıcının hedefi kaçırmayı çözmekti: **çözüldü** — kaybolan 3 alanın 2'si
+geri geldi. Ama bedelsiz değil; kazanç halüsinasyondan ödendi.
+
+### Yol boyunca ölçümün düzelttiği üç tasarım hatası
+
+1. **2 cümlelik blok, sınırda gerçek içeriği öldürüyordu.** "Yeni açılan ve
+   vadesi yenilenen TL Katılma Hesapları yüksek paylaşım oranları üzerinden
+   kâr dağıtacaktır" cümlesi, yalnız ardından gelen çerez cümlesiyle aynı
+   bloğa düştüğü için siliniyordu — n-gram'da düzeltmeye çalıştığımız sınır
+   sorununun aynısını blok düzeyinde yeniden üretmişiz. `BLOK_CUMLE=1`.
+2. **Alan sözcüğü tekrarı ezerse menüler kurtuluyor.** Menü satırları tam
+   olarak "Konut Finansmanı Taşıt Finansmanı Kampanyalar" gibi alan
+   sözcüklerinden oluşuyor. Ayrım: **sayısal değer** tekrarı ezer, alan
+   sözcüğü ezmez.
+3. **Cümle-DF, çözmeye çalıştığımız sorunu geri getiriyor.** "Başvuru formu"
+   cümlesi birebir tekrar ettiği için DF onu yakalıyor ve sayısı olmadığı
+   için siliyor. Tekrar sinyali bu tasarımda **kapalı** bırakıldı.
+
+Ayrıca ölçüm, `keyword_pattern`'in kısa anahtarı iki taraftan sınırlaması
+yüzünden **"vade" anahtarının "vadesi"yi kaçırdığını** ortaya çıkardı; alan
+sözcüğü sinyali için soldan sınırlı ayrı bir desen kullanılıyor.
+
+### Karar
+
+Uygulama kapısı (kaçırma ≤ 13 **ve** halüsinasyon ≤ 0,066) **sağlanmadı**.
+İki sınır noktası arasındaki seçim teknik değil ürün kararıdır:
+
+- *daha az uydurma* isteniyorsa → n-gram
+- *daha çok kapsama* isteniyorsa → blok
+
+n=20'de bu farklar küçük sayılara dayanıyor (halüsinasyonda 5 kayıt, kaçırmada
+2 alan); karar verilmeden önce gold büyütülmeli. Modül ve ölçüm hattı hazır,
+uygulama `src/pipeline.py`'ye bağlanmadı.
