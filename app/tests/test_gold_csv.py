@@ -16,6 +16,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from scripts import lint_review_csv, report_iaa
 from scripts.build_gold import build, infer_annotator, read_review_csv
 from scripts.gold_schema import CAMPAIGN_TYPE_KEY
 from scripts.to_review_csv import (
@@ -636,6 +637,153 @@ class TestInvalidModelValues(unittest.TestCase):
         snippet = rows["tahsis_ucreti"]["snippet"]
         self.assertIn("ŞEMA DIŞI", snippet)
         self.assertIn("[%1,89]", snippet)       # span işaretli kalmalı
+
+
+# --------------------------------------------------------------------------- #
+# v2 protokolü — boş hücre artık ONAY DEĞİL
+# --------------------------------------------------------------------------- #
+REVIEW_DIR = Path(__file__).resolve().parents[1] / "data" / "gold" / "review"
+V2_CALIBRATION = sorted(REVIEW_DIR.glob("round0_kalibrasyon_v2_*.csv"))
+
+
+def _row(**overrides):
+    """Tek inceleme satırı; `_line` lint için zorunlu."""
+    row = {"doc_id": "kuveyt-turk--konut-001", "field": "kar_payi_orani",
+           "model_value": "1.89", "gold_value": "", "verdict": "", "note": "",
+           "_line": 2}
+    row.update(overrides)
+    return row
+
+
+class TestProtocolAwareVerdict(unittest.TestCase):
+    """`ANNOTATION_GUIDE.md` §3.1 — boş hücrenin anlamı protokole bağlı.
+
+    v1'de boş = `ok` idi ve gold, modelin çıktısına ÇAPALANDI: anotatörün
+    bakmadığı satırda model kendi cevabıyla karşılaştırılıp haklı çıktı
+    (mikro-F1 0,677 vs kör protokolde 0,536). v2'de boş = karar verilmedi.
+    """
+
+    def test_v1_bos_hucre_ok_sayilir(self):
+        """Geriye dönük uyum: `protokol` sütunu yoksa dosya v1'dir."""
+        self.assertEqual(report_iaa.row_verdict(_row()), "ok")
+
+    def test_v2_bos_hucre_karar_degildir(self):
+        self.assertIsNone(report_iaa.row_verdict(_row(protokol="v2")))
+
+    def test_v2_acik_onay_ok_olarak_okunur(self):
+        """Onay AÇIK işaretle verilir; `ok` yazan satır uyuma girer."""
+        self.assertEqual(report_iaa.row_verdict(_row(protokol="v2", verdict="ok")),
+                         "ok")
+
+    def test_her_iki_protokolde_de_yazilmis_duzeltme_korunur(self):
+        """`verdict` atlanmış ama değer yazılmışsa `fix`; o emek çöpe atılmaz."""
+        for protocol in ("v1", "v2"):
+            with self.subTest(protocol=protocol):
+                row = _row(protokol=protocol, gold_value="2.05")
+                self.assertEqual(report_iaa.row_verdict(row), "fix")
+                self.assertEqual(report_iaa.row_value_token(row), "2.05")
+
+    def test_v2_karar_verilmemis_satirin_degeri_de_yoktur(self):
+        """Boş satır Krippendorff'a eksik değer olarak girer, modelin değeri değil."""
+        self.assertIsNone(report_iaa.row_value_token(_row(protokol="v2")))
+        self.assertEqual(report_iaa.row_value_token(_row()), "1.89")
+
+    def test_bilinmeyen_protokol_degeri_v1_kabul_edilir(self):
+        """Tanınmayan değer sessizce v2 sayılmamalı — v1 güvenli varsayılandır."""
+        self.assertEqual(report_iaa.row_protocol(_row(protokol="v3")), "v1")
+        self.assertEqual(report_iaa.row_protocol(_row(protokol="V2")), "v2")
+
+
+class TestLintCompleteness(unittest.TestCase):
+    """`lint_review_csv` — v2'de karar verilmemiş satır sayılır.
+
+    Varsayılan UYARI (anotasyon sürüyor), `--eksiksiz` ile HATA: `build_gold`
+    hâlâ v1 sözleşmesini uyguladığı için boş satırın ona ULAŞMAMASI gerekir.
+    """
+
+    def _findings(self, rows, protocol="auto", require_complete=False):
+        return list(lint_review_csv.check_completeness(
+            rows, "x.csv", protocol, require_complete))
+
+    def test_v1_dosyada_bos_satir_bulgu_uretmez(self):
+        self.assertEqual(self._findings([_row()]), [])
+
+    def test_v2_bos_satir_varsayilanda_uyaridir(self):
+        findings = self._findings([_row(protokol="v2")])
+        self.assertEqual(len(findings), 1)
+        self.assertEqual(findings[0].severity, lint_review_csv.SEVERITY_WARN)
+
+    def test_eksiksiz_bayragi_hataya_cevirir(self):
+        findings = self._findings([_row(protokol="v2")], require_complete=True)
+        self.assertEqual(findings[0].severity, lint_review_csv.SEVERITY_ERROR)
+
+    def test_dosya_basina_tek_bulgu(self):
+        """260 özdeş satır 260 bulgu basmamalı; gerçek biçim hataları kaybolur."""
+        rows = [_row(protokol="v2", _line=n) for n in range(2, 262)]
+        findings = self._findings(rows, require_complete=True)
+        self.assertEqual(len(findings), 1)
+        self.assertIn("260/260", findings[0].message)
+
+    def test_karar_verilmis_dosya_temiz(self):
+        rows = [_row(protokol="v2", verdict="ok"),
+                _row(protokol="v2", verdict="absent"),
+                _row(protokol="v2", gold_value="2.05")]
+        self.assertEqual(self._findings(rows, require_complete=True), [])
+
+
+@unittest.skipUnless(V2_CALIBRATION, "v2 kalibrasyon paketi yok")
+class TestV2CalibrationPackage(unittest.TestCase):
+    """Paket bütünlüğü — κ ancak AYNI satırlar paylaşılırsa hesaplanır.
+
+    `data/gold/parca/parca-1..4.json` tamamen ayrıktır (48 belge, sıfır tekrar)
+    ve tam bu yüzden κ vermez. Bu paket o hatayı tekrarlamamalı.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.files = {p.name: read_review_csv(p) for p in V2_CALIBRATION}
+
+    def test_dort_anotator_dosyasi_var(self):
+        self.assertEqual(len(self.files), 4)
+        self.assertEqual({infer_annotator(name) for name in self.files},
+                         {"v2_A", "v2_B", "v2_C", "v2_D"})
+
+    def test_ayni_satir_kumesi_paylasilir(self):
+        keys = [ {(r["doc_id"], r["field"]) for r in rows}
+                 for rows in self.files.values() ]
+        for other in keys[1:]:
+            self.assertEqual(keys[0], other)
+        self.assertEqual(len({k[0] for k in keys[0]}), 20)   # 20 belge
+        self.assertEqual(len(keys[0]), 260)
+
+    def test_protokol_sutunu_v2(self):
+        for name, rows in self.files.items():
+            with self.subTest(file=name):
+                self.assertTrue(all(report_iaa.row_protocol(r) == "v2"
+                                    for r in rows))
+
+    def test_karar_sutunlari_bos_baslar(self):
+        for name, rows in self.files.items():
+            with self.subTest(file=name):
+                for column in ("gold_value", "verdict", "note"):
+                    self.assertEqual({(r.get(column) or "").strip() for r in rows},
+                                     {""})
+
+    def test_bos_paket_sahte_kappa_uretmez(self):
+        """Hiç karar yokken κ 'ölçülemedi' (nan) olmalı, 1,0 değil."""
+        result = report_iaa.compute([str(p) for p in V2_CALIBRATION])
+        self.assertNotEqual(result["verdict_kappa"], result["verdict_kappa"])
+        self.assertFalse(result["mixed_protocols"])
+        self.assertEqual(result["shared_rows"], 260)
+
+    def test_karisik_protokol_isaretlenir(self):
+        """v1 + v2 aynı koşuda birleştirilirse rapor bunu SÖYLEMELİ."""
+        v1_file = REVIEW_DIR / "round0_kalibrasyon_A.csv"
+        if not v1_file.exists():
+            self.skipTest("v1 referans dosyası yok")
+        result = report_iaa.compute([str(v1_file), str(V2_CALIBRATION[0])])
+        self.assertTrue(result["mixed_protocols"])
+        self.assertIn("UYARI", report_iaa.render(result))
 
 
 if __name__ == "__main__":

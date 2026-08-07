@@ -20,10 +20,23 @@ Gürültülü hatalar (`fix` + boş değer, 8 sınıf dışı tür) `build_gold`
 durur; ama orada durmak, işin bitmesinden SONRA durmak demektir. Bu araç aynı
 kontrolü öne çeker.
 
+## Protokol duyarlılığı (v1 / v2)
+
+v1'de boş `verdict` "model doğru" demekti; v2'de **"karar verilmedi"** demek
+(ANNOTATION_GUIDE.md §3.1, §11). Protokol satırdaki `protokol` sütunundan
+okunur; sütun yoksa dosya **v1** sayılır — eski CSV'lerin yorumu değişmez.
+
+v2 dosyasında karar verilmemiş satırlar **dosya başına tek satırda** raporlanır:
+anotasyon sürerken UYARI, `--eksiksiz` verildiğinde HATA. İkincisi bir kapıdır:
+`scripts/build_gold.py` hâlâ v1 sözleşmesini uygular (boş -> `ok` -> modelin
+değeri gold'a girer), dolayısıyla v2 dosyası bu kapıdan geçmeden derlenmemelidir.
+
 ## Kullanım
 
     python3 -m scripts.lint_review_csv data/gold/review/round0_kalibrasyon_A.csv
     python3 -m scripts.lint_review_csv data/gold/review/*.csv
+    python3 -m scripts.lint_review_csv --eksiksiz \\
+        data/gold/review/round0_kalibrasyon_v2_*.csv   # derleme öncesi kapı
 
 Çıkış kodu: hata varsa 1, yalnız uyarı varsa 0.
 """
@@ -47,6 +60,17 @@ from scripts.gold_schema import (
 
 REQUIRED_COLUMNS = {"doc_id", "field", "model_value", "gold_value", "verdict"}
 VALID_VERDICTS = ("ok", "fix", "absent", "unclear")
+
+PROTOCOL_COLUMN = "protokol"
+PROTOCOL_V1 = "v1"
+PROTOCOL_V2 = "v2"
+PROTOCOL_AUTO = "auto"
+
+
+def row_protocol(row: dict) -> str:
+    """Satırın protokolü. `protokol` sütunu yoksa **v1** (geriye dönük uyum)."""
+    value = (row.get(PROTOCOL_COLUMN) or "").strip().casefold()
+    return PROTOCOL_V2 if value == PROTOCOL_V2 else PROTOCOL_V1
 
 # `doc_id` kebab-case slug'dır (CLAUDE.md — isimlendirme). Elektronik tablonun
 # otomatik düzeltmesi `--` ayıracını em-dash'e (`—`) çevirebiliyor; kalibrasyon
@@ -158,12 +182,18 @@ def read_rows(path: str) -> tuple[list[dict], list[Finding]]:
     return rows, findings
 
 
-def check_row(row: dict, path: str) -> Iterator[Finding]:
-    """Tek satırı `build_gold` sözleşmesine göre denetler."""
+def check_row(row: dict, path: str, protocol: str = PROTOCOL_AUTO) -> Iterator[Finding]:
+    """Tek satırı `build_gold` sözleşmesine göre denetler.
+
+    Args:
+        protocol: `v1` | `v2` | `auto`. `auto` satırın `protokol` sütununa bakar.
+    """
     line, doc_id, field = row["_line"], row.get("doc_id", ""), row.get("field", "")
     verdict = (row.get("verdict") or "").strip().casefold()
     gold = (row.get("gold_value") or "").strip()
     model, has_model = _model_value(row.get("model_value", ""))
+    if protocol == PROTOCOL_AUTO:
+        protocol = row_protocol(row)
 
     def f(sev: str, msg: str) -> Finding:
         return Finding(sev, path, line, doc_id, field, msg)
@@ -234,8 +264,16 @@ def check_row(row: dict, path: str) -> Iterator[Finding]:
                     f"{err}")
 
 
-def lint(paths: list[str]) -> list[Finding]:
-    """Verilen CSV'leri denetler, bulguları döndürür."""
+def lint(paths: list[str], protocol: str = PROTOCOL_AUTO,
+         require_complete: bool = False) -> list[Finding]:
+    """Verilen CSV'leri denetler, bulguları döndürür.
+
+    Args:
+        protocol: `v1` | `v2` | `auto` (satırın `protokol` sütunu, yoksa v1).
+        require_complete: v2 dosyalarında karar verilmemiş satır kalmışsa HATA
+            üret. Anotasyon SÜRERKEN kapalıdır (uyarı yeter); `build_gold`
+            öncesi KAPI olarak açılır — bkz. `--eksiksiz`.
+    """
     out: list[Finding] = []
     for path in paths:
         rows, findings = read_rows(path)
@@ -243,7 +281,7 @@ def lint(paths: list[str]) -> list[Finding]:
         if not rows:
             continue
         for row in rows:
-            out.extend(check_row(row, path))
+            out.extend(check_row(row, path, protocol))
 
         unclear = sum(1 for r in rows
                       if (r.get("verdict") or "").strip().casefold() == "unclear")
@@ -253,7 +291,44 @@ def lint(paths: list[str]) -> list[Finding]:
                 f"satirlarin %{100 * unclear / len(rows):.0f}'i unclear "
                 f"({unclear}/{len(rows)}) — esik %{UNCLEAR_WARN_RATIO:.0%}. "
                 f"Kilavuzda eksik olabilir (§3.4)."))
+
+        out.extend(check_completeness(rows, path, protocol, require_complete))
     return out
+
+
+def check_completeness(rows: list[dict], path: str, protocol: str,
+                       require_complete: bool) -> Iterator[Finding]:
+    """v2 dosyasında karar verilmemiş satırları DOSYA BAŞINA tek bulgu olarak sayar.
+
+    Neden satır başına değil: boş bir 260 satırlık pakette satır başına bulgu
+    260 özdeş satır basar ve gerçek biçim hatalarını görünmez yapar. Anotatörün
+    ihtiyacı olan sayı tektir — "kaç karar kaldı".
+
+    Neden varsayılan UYARI: anotasyon sürerken dosya zaten eksiktir; her koşuda
+    HATA vermek aracı kullanılmaz yapar. `build_gold` öncesi `--eksiksiz` ile
+    HATA'ya çevrilir ve KAPI görevi görür: v2'de boş satır `build_gold`a
+    ulaşırsa v1 kuralıyla `ok` sayılır ve anotatörün BAKMADIĞI satırda modelin
+    değeri gold'a çapalanır (ANNOTATION_GUIDE.md §3.1, §11).
+    """
+    effective = protocol
+    if effective == PROTOCOL_AUTO:
+        effective = row_protocol(rows[0]) if rows else PROTOCOL_V1
+    if effective != PROTOCOL_V2:
+        return
+
+    blank = [r for r in rows
+             if not (r.get("verdict") or "").strip()
+             and not (r.get("gold_value") or "").strip()]
+    if not blank:
+        return
+
+    severity = SEVERITY_ERROR if require_complete else SEVERITY_WARN
+    yield Finding(
+        severity, path, blank[0]["_line"], "-", "-",
+        f"{len(blank)}/{len(rows)} satirda karar yok. v2 protokolunde bos "
+        f"hucre 'karar verilmedi' demektir ve gold'a GIRMEZ (§3.1). Model "
+        f"dogruysa `ok`, yanlissa `fix`+deger, metinde yoksa `absent`, karar "
+        f"veremiyorsan `unclear` yaz. Ilk bos satir: {blank[0]['_line']}.")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -261,10 +336,17 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("csv", nargs="+", help="inceleme CSV'leri (glob olabilir)")
     ap.add_argument("--quiet", action="store_true",
                     help="yalnizca ozet bas")
+    ap.add_argument("--protokol", choices=(PROTOCOL_AUTO, PROTOCOL_V1, PROTOCOL_V2),
+                    default=PROTOCOL_AUTO,
+                    help="anotasyon protokolu; auto = satirdaki `protokol` "
+                         "sutunu (yoksa v1)")
+    ap.add_argument("--eksiksiz", action="store_true",
+                    help="v2 dosyasinda karar verilmemis satir kalmissa HATA "
+                         "ver (build_gold oncesi kapi)")
     args = ap.parse_args(argv)
 
     paths = sorted({p for pat in args.csv for p in (glob.glob(pat) or [pat])})
-    findings = lint(paths)
+    findings = lint(paths, args.protokol, args.eksiksiz)
     errors = [f for f in findings if f.severity == SEVERITY_ERROR]
     warns = [f for f in findings if f.severity == SEVERITY_WARN]
 

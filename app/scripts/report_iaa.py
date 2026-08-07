@@ -24,6 +24,20 @@ kullanılır — fark büyüklüğe oranlanır, 1,89 vs 1,90 neredeyse uyum say�
 
 İkisi birlikte raporlanır; sadece birine bakmak yanlış yerde kılavuz revize
 ettirir.
+
+## Protokol duyarlılığı (v1 / v2)
+
+Boş `verdict` hücresinin anlamı protokole göre DEĞİŞİR:
+
+    v1  boş = `ok` ("model doğru")            -> gold modelin çıktısına çapalanır
+    v2  boş = karar verilmedi                 -> κ hesabından ÇIKARILIR
+
+Protokol satırdaki `protokol` sütunundan okunur; sütun yoksa dosya **v1**
+sayılır. Böylece eski CSV'lerin yorumu değişmez — geriye dönük hiçbir karar
+kaybolmaz — ama yeni paketlerde "bakılmamış satır" uyuma katılmaz.
+
+Bu ayrım kozmetik değil: v1'de bakılmamış satırlar hem gold'a hem κ'ya "tam
+uyum" olarak girer ve ikisini de olduğundan iyi gösterir (ANNOTATION_GUIDE §11).
 """
 
 from __future__ import annotations
@@ -53,17 +67,38 @@ from scripts.gold_schema import (
 ABSENT_TOKEN = "__YOK__"
 DEFAULT_REPORT = "data/gold/iaa_report.md"
 
+PROTOCOL_COLUMN = "protokol"
+PROTOCOL_V1 = "v1"
+PROTOCOL_V2 = "v2"
+
 
 def _clean(value: Optional[str]) -> str:
     return (value or "").strip()
 
 
-def row_verdict(row: dict) -> str:
-    """Satırın normalize edilmiş kararı. Boş = `ok` (kılavuz §3)."""
+def row_protocol(row: dict) -> str:
+    """Satırın anotasyon protokolü. Sütun yoksa **v1** (geriye dönük uyum)."""
+    value = _clean(row.get(PROTOCOL_COLUMN)).casefold()
+    return PROTOCOL_V2 if value == PROTOCOL_V2 else PROTOCOL_V1
+
+
+def row_verdict(row: dict) -> Optional[str]:
+    """Satırın normalize edilmiş kararı.
+
+    Boş hücrenin anlamı protokole bağlıdır (ANNOTATION_GUIDE §3.1, §11):
+
+      v1: boş = `ok` ("modelin çıktısını onaylıyorum")
+      v2: boş = KARAR VERİLMEDİ -> `None`, uyum hesabına girmez
+
+    Her iki protokolde de boş `verdict` + dolu `gold_value` = `fix`; anotatör
+    düzeltmeyi yazıp karar sütununu atlamıştır, o düzeltme çöpe atılmaz.
+    """
     verdict = _clean(row.get("verdict")).casefold()
-    if not verdict:
-        return "fix" if _clean(row.get("gold_value")) else "ok"
-    return verdict
+    if verdict:
+        return verdict
+    if _clean(row.get("gold_value")):
+        return "fix"
+    return None if row_protocol(row) == PROTOCOL_V2 else "ok"
 
 
 def row_value_token(row: dict) -> Optional[str]:
@@ -71,9 +106,10 @@ def row_value_token(row: dict) -> Optional[str]:
 
     `unclear` -> None (eksik değer; Krippendorff bunu doğal eler).
     `absent`  -> ABSENT_TOKEN (kendi başına bir kategori; "yok" da bir karardır).
+    Karar verilmemiş satır (v2, boş) -> None.
     """
     verdict = row_verdict(row)
-    if verdict == "unclear":
+    if verdict is None or verdict == "unclear":
         return None
     if verdict == "absent":
         return ABSENT_TOKEN
@@ -136,6 +172,15 @@ def align(csv_paths: list[str]) -> tuple[list[str], dict[tuple[str, str], dict[s
     return annotators, shared
 
 
+def file_protocols(csv_paths: list[str]) -> dict[str, str]:
+    """Dosya -> protokol (`v1` | `v2`). Dosyanın İLK satırı belirler."""
+    out: dict[str, str] = {}
+    for path in csv_paths:
+        rows = read_review_csv(path)
+        out[str(path)] = row_protocol(rows[0]) if rows else PROTOCOL_V1
+    return out
+
+
 def compute(csv_paths: list[str]) -> dict[str, Any]:
     """Kappa/alpha değerlerini ve uyuşmazlık listesini hesaplar."""
     annotators, shared = align(csv_paths)
@@ -180,8 +225,16 @@ def compute(csv_paths: list[str]) -> dict[str, Any]:
                 "values": dict(zip(annotators, val_unit, strict=False)),
             })
 
+    protocols = file_protocols(csv_paths)
+    # v2'de boş hücre karar değildir; kaç karar-yeri boş kaldığı raporlanır,
+    # yoksa "hiç uyuşmazlık yok" ile "kimse bakmamış" ayırt edilemez.
+    undecided = sum(1 for unit in verdict_units for v in unit if v is None)
+
     return {
         "annotators": annotators,
+        "protocols": protocols,
+        "mixed_protocols": len(set(protocols.values())) > 1,
+        "undecided_cells": undecided,
         "shared_rows": len(keys),
         "verdict_metric": verdict_metric,
         "verdict_kappa": verdict_kappa,
@@ -212,7 +265,28 @@ def render(result: dict) -> str:
         "",
         f"- Anotatörler: {', '.join(result['annotators'])}",
         f"- Ortak anote edilmiş satır: **{result['shared_rows']}**",
+        f"- Karar bulunmayan hücre (boş/eksik): **{result['undecided_cells']}**",
         "",
+        "## Protokol künyesi",
+        "",
+        "| Dosya | Protokol | Boş hücrenin anlamı |",
+        "|---|---|---|",
+    ]
+    for path, protocol in sorted(result["protocols"].items()):
+        meaning = ("karar verilmedi — metrik dışı" if protocol == PROTOCOL_V2
+                   else "`ok` (onay) — modele çapalı")
+        lines.append(f"| `{path}` | **{protocol}** | {meaning} |")
+    lines.append("")
+    if result["mixed_protocols"]:
+        lines += [
+            "> ⚠️ **UYARI — protokoller karışık.** v1 ve v2 dosyaları aynı κ "
+            "koşusunda birleştirildi. v1'de bakılmamış satır 'onay' sayıldığı "
+            "için uyum OLDUĞUNDAN İYİ çıkar. Bu sayı jüriye tek başına "
+            "sunulamaz (ANNOTATION_GUIDE.md §11).",
+            "",
+        ]
+
+    lines += [
         "## Sonuçlar",
         "",
         "| Ölçüt | Neyi ölçer | Değer |",
@@ -272,7 +346,13 @@ def main(argv: Optional[list[str]] = None) -> int:
     Path(args.out).write_text(render(result), encoding="utf-8")
 
     status, action = interpret_kappa(result["verdict_kappa"])
+    protocols = "+".join(sorted(set(result["protocols"].values())))
+    print(f"protokol            : {protocols}")
+    if result["mixed_protocols"]:
+        print("UYARI: v1 ve v2 karıştırıldı — uyum olduğundan İYİ çıkar "
+              "(ANNOTATION_GUIDE.md §11)")
     print(f"ortak satır         : {result['shared_rows']}")
+    print(f"karar bulunmayan    : {result['undecided_cells']}")
     print(f"{result['verdict_metric']:<20}: {_fmt(result['verdict_kappa'])}")
     print(f"Krippendorff nominal: {_fmt(result['value_alpha_nominal'])}")
     print(f"Krippendorff ratio  : {_fmt(result['value_alpha_ratio'])}")
