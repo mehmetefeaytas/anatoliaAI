@@ -71,6 +71,14 @@ jobs:
       - name: Degerlendirme hatti duman testi
         run: python -m eval.run_eval --gold data/gold/gold.sample.json
 
+      # Demo DB korpusla ayrisirsa chatbot/dashboard/RAG korpusun bir kismini
+      # SESSIZCE gormez. Bir kez yasandi: DB 31 Temmuz'da 849 belgeyle
+      # kuruldu, korpus 3 Agustos'ta 1761'e cikti, bir hafta boyunca hicbir
+      # test kirilmadi. `data/demo.db` git'te izlenmedigi icin CI'da tipik
+      # olarak atlanir; kapi asil YEREL kosuda ve demo provasinda is gorur.
+      - name: Demo DB tazeligi
+        run: python -m scripts.check_demo_db --db-yoksa-gec
+
       - name: API import guvenligi
         run: python -c "from src.api.main import app; print('API import OK')"
 
