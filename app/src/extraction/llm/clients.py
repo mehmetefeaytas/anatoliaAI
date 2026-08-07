@@ -351,7 +351,13 @@ class OllamaClient:
     ):
         self.base_url = (base_url or os.environ.get(
             "OLLAMA_URL", "http://localhost:11434")).rstrip("/")
-        self.model = model or os.environ.get("OLLAMA_MODEL", "qwen2.5:7b")
+        # `qwen2.5:7b` DEĞİL: Ollama etiketleri birebir eşleşir, kısaltma
+        # çözülmez. Ablasyonda ölçülen ve `docs/rapor/ablasyon.md §6`da künyesi
+        # verilen ağırlık `qwen2.5:7b-instruct` (Q4_K_M, Apache-2.0). Eski
+        # varsayılan kurulu değildi; `OLLAMA_MODEL` elle verilmeyen her koşum
+        # "model not found" ile düşüyordu.
+        self.model = model or os.environ.get(
+            "OLLAMA_MODEL", "qwen2.5:7b-instruct")
         self.transport: Transport = transport or _urllib_transport
         self.timeout = timeout
         self.keep_alive = keep_alive or os.environ.get("OLLAMA_KEEP_ALIVE", "30m")
