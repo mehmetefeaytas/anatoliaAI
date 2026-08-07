@@ -191,6 +191,70 @@ düşük κ, anotatör uyumsuzluğu değil kılavuz belirsizliği ölçer.
 
 ---
 
+## McNemar — eşleştirilmiş test (n=48)
+
+Bootstrap güven aralığı farkın **büyüklüğünü** söyler; McNemar farkın
+**yönünü** söyler. İkisi ayrı sorulardır ve aşağıda bir kez ayrışıyorlar.
+
+Eşleştirme birimi `(doc_id, alan)`: iki kol aynı belgenin aynı alanında
+doğru mu, yanlış mı. Üç çiftin de **556 kararı hizalandı, 0 kayıp** — yani
+kollar aynı evreni ölçüyor. `b` = yalnız A'nın doğru bildiği, `c` = yalnız
+B'nin. Uyumsuz çift sayısı 25'in altında kaldığı için üçünde de **tam
+binom** kullanıldı (`eval/stats.py:310`), χ² yaklaşımına düşülmedi.
+
+| A ↔ B | karar doğruluğu (A / B) | eşleşmiş fark %95 GA | b | c | uyumsuz | p | sonuç |
+|---|---|---|---|---|---|---|---|
+| temel ↔ **n-gram** | 0,804 / 0,817 | −0,013 [−0,025 – 0,000] | 8 | 15 | 23 | 0,21 | anlamsız |
+| temel ↔ **blok** | 0,804 / 0,815 | **−0,011 [−0,020 – −0,002]** | 5 | 11 | 16 | 0,21 | anlamsız |
+| n-gram ↔ blok | 0,817 / 0,815 | +0,002 [−0,009 – 0,013] | 5 | 4 | 9 | 1,00 | anlamsız |
+
+`tolerant` eşleştiricide üç satır da aynı kalıyor (±0,001) — sonuç
+eşleştirici seçimine duyarlı değil.
+
+> **n=48 uyarısı.** Bu bir sıralama sinyalidir, kesin performans ölçüsü
+> değil. Kararların çoğu "alan yok" kararıdır; karar doğruluğu bu yüzden
+> mikro-F1'den yüksektir ve ikisi **kıyaslanamaz**.
+
+### İki ölçütün ayrıştığı yer — temel ↔ blok
+
+Tek ilginç satır bu: bootstrap fark aralığı **sıfırı dışlıyor** (−0,020 –
+−0,002) ama McNemar **anlamsız** diyor (p = 0,21). Çelişki değil, iki
+ölçütün farklı şeye bakması:
+
+- **Bootstrap** belgeleri yeniden örnekler. Blok kolunun üstünlüğü 48
+  belgenin geneline **tutarlı biçimde** yayılmışsa, aralık dar çıkar ve
+  sıfırı dışlar.
+- **McNemar** yalnız **uyumsuz** kararları sayar — burada 16 tane. 16 çiftte
+  11'e 5 bölünme tam binomda p = 0,21 verir; bu örneklem büyüklüğünde
+  ayrımı ilan edecek güç yoktur.
+
+Okunuşu: **etki küçük ve tutarlı, ama uyumsuz karar sayısı onu ilan etmeye
+yetmiyor.** Yalnız bootstrap'a bakıp "blok kazandı" demek, ölçümün
+söylemediği bir şeyi söylemek olurdu. İki ölçütü birlikte raporlamamızın
+sebebi tam olarak bu.
+
+### Bu ölçüm neden yapıldı
+
+Kullanıcı kararı: **çerçeve ayıklaması çıkarımda uygulanmayacak.** Ayıklama
+kaçırmayı artırıyor (temel 21 → n-gram 33, blok 29) ve F1 kazancı yok.
+Ayıklama bunun yerine **sunum katmanına** taşındı: metnin gösterildiği
+yerlerde çerçeve katlanıyor, silinmiyor (bkz. `src/preprocessing/blocks.py`
+ve `/campaigns/{id}/text` uç noktası).
+
+Yani bu tablo bir kol seçmek için değil, **"neden ayıklama yapmıyoruz"
+sorusunun ölçülmüş cevabını** kayda geçirmek için. Üç çiftin hiçbirinde
+anlamlı fark yok; ayıklamanın çıkarım tarafında bedeli var, kazancı yok.
+
+Tekrar üretim:
+
+```bash
+.venv/bin/python -m scripts.mcnemar_report \
+  --a eval/reports/<temel> --b eval/reports/<n-gram> \
+  --ad-a temel --ad-b n-gram --resamples 2000
+```
+
+---
+
 ## Bulunan ve düzeltilen bir ölçüm kusuru
 
 İlk koşuda n-gram kolu temel kolla **birebir aynı sayıyı** verdi. Sebep
