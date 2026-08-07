@@ -1,0 +1,311 @@
+"""Blok düzeyinde içerik/çerçeve ayrımı — üç sinyal, öncelikli.
+
+İlgili: ../../scripts/split_trainable.py (tekrar sinyali buradan gelir),
+        ../../scripts/boilerplate_audit.py (kapsam kararı),
+        ../../docs/rapor/boilerplate-kapsam.md (ölçümler ve gerekçe),
+        ../extraction/rules/synonyms.py, ../domain/terminology.py
+
+## Neden bu modül var
+
+Mevcut çerçeve ayıklaması **tek sinyalle (tekrar) iki ayrı soruyu**
+cevaplamaya çalışıyor:
+
+    1. Bu blok site çerçevesi mi?   -> tekrar İYİ bir kanıt
+    2. Bu blok ürünle ilgili mi?    -> tekrar KÖTÜ bir kanıt
+
+Ölçüldü: ayıklamanın kaybettiği 8 alanın 7'si çöptü (KVKK'daki "ücretsiz",
+çerez metnindeki "1 yıl", "Hoş Geldin Ramazan!" afişi, blog başlıkları) ama
+1'i gerçek içerikti — her ürün sayfasında geçtiği için, yani **tekrar ettiği
+için** silinen meşru bir başvuru koşulu cümlesi.
+
+Tersi de var: 3'ten az benzer sayfası olan bir bankanın çerez bloğu tekrar
+eşiğini geçemiyor ve bugün **hiç silinemiyor**.
+
+## Öncelik sırası: alan-dışılık > alan değeri > tekrar
+
+Sıra sekiz kombinasyonun hepsine karşı sınandı; dördü sırayı zorluyor:
+
+| alan-dışı | değer | tekrar | olması gereken | gerektirdiği kural |
+|---|---|---|---|---|
+| var | **var** | var | SİL — KVKK'daki "ücretsiz" | alan-dışı > değer |
+| var | yok | **yok** | SİL — az sayfalı bankanın çerezi | alan-dışı, tekrarsız da yeter |
+| yok | **var** | var | KORU — şablonlaşmış başvuru cümlesi | değer > tekrar |
+| yok | yok | var | SİL — menü/altbilgi | tekrar, değersiz de yeter |
+
+Sıra ters kurulursa kazanç sıfırlanır: KVKK bloğundaki "ücretsiz" bir
+`masraf_durumu` tetikleyicisidir ve naif bir değer-koruması o bloğu kurtarıp
+bugünkü halüsinasyon düşüşünü geri verir.
+
+## Neden blok, neden bölge yayılımı
+
+Belgeler HTML çıkarımından **tek satır** olarak geliyor — boş satır yok,
+düzen ipucu yok. Bu yüzden bölme cümle dizisi üzerinden yapılır.
+
+Ve karar tek cümleye bakarak verilemez: "en geç otuz (30) gün içinde
+ÜCRETSİZ olarak sonuçlandırılmaktadır" cümlesinde hiçbir alan-dışı işaret
+yoktur; onu KVKK yapan şey cümlelerce önce geçen "Kişisel Veri"dir. Bu yüzden
+alan-dışılık bir **bölge** olarak yayılır ve ancak güçlü bir alan değeri
+görülünce ya da yayılım ömrü dolunca söner.
+"""
+
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass
+from typing import Iterable, Optional
+
+from ..extraction.rules.synonyms import FOLDED_FIELD_TRIGGERS, matches
+from .clean import split_sentences, tr_fold_ascii
+
+#: Bir bloğa girecek en fazla cümle. **1 = cümle düzeyi** ve bu ölçümle
+#: seçildi: 2 cümlelik blokta içerik/KVKK sınırına oturan blok tamamen
+#: siliniyordu ve "Yeni açılan ve vadesi yenilenen TL Katılma Hesapları
+#: yüksek paylaşım oranları üzerinden kâr dağıtacaktır" gibi GERÇEK ürün
+#: cümleleri, yalnız ardından gelen çerez cümlesi yüzünden gidiyordu.
+#: n-gram yaklaşımında düzeltmeye çalıştığımız sınır sorununun aynısı.
+BLOK_CUMLE = 1
+
+#: Alan-dışı bölgenin, yeni işaret görülmeden kaç blok daha süreceği.
+#: Ölçümle ayarlanır; 0 = yayılım kapalı (yalnız işaretin kendi bloğu silinir).
+YAYILIM_BLOK = 6
+
+#: Bölgeyi söndürmek için gereken alan değeri. Yüksek tutuluyor — bölgeyi
+#: zayıf bir sinyalle söndürmek KVKK metnini geri getirir.
+SONDURME_DEGERI = 3
+
+#: Bir cümlenin çerçeve sayılması için gereken BELGE sayısı (grup içinde).
+CERCEVE_MIN_BELGE = 3
+
+
+# --------------------------------------------------------------------------- #
+# Alan-dışılık — yüksek kesinlikli olmak ZORUNDA
+# --------------------------------------------------------------------------- #
+#
+# Bu sinyal tek başına siliyor (tekrar kanıtı aranmadan), dolayısıyla yanlış
+# pozitifi doğrudan içerik kaybı demek. Liste bu yüzden dar ve ifade düzeyinde:
+# tek başına "veri", "politika", "çerez" gibi sözcükler DEĞİL, yalnız hukuki
+# metin bloklarını adlandıran kalıplar.
+_ANTI_DESENLER: tuple[str, ...] = (
+    r"cerez(?:ler)?\s+(?:politika|ayar|aydinlatma|kullan|tercih)",
+    r"cerez\s+(?:kullaniyoruz|kullanilmaktadir)",
+    r"zorunlu\s+cerez|analitik\s+cerez|pazarlama\s+cerez|islevsel\s+cerez",
+    r"kisisel\s+veri(?:ler)?(?:in|inizin)?\s+(?:korunmasi|islenmesi|sahibi)",
+    r"aydinlatma\s+metni",
+    r"acik\s+riza\s+(?:metni|beyani)",
+    r"veri\s+sorumlusu",
+    r"gizlilik\s+(?:politikasi|bildirimi)",
+    r"kullanim\s+(?:kosullari|sartlari)\s*$|kullanim\s+kosullari\s+ve",
+    r"kvkk",
+    r"6698\s+sayili",
+    r"site\s+haritasi",
+    r"bizi\s+takip\s+edin|sosyal\s+medya\s+hesap",
+    r"cookie\s+(?:policy|settings|consent)",
+)
+_ANTI_RE = re.compile("|".join(_ANTI_DESENLER), re.IGNORECASE)
+
+
+def anti_skoru(metin: str) -> int:
+    """Blokta kaç alan-dışı kalıp geçiyor."""
+    return len(_ANTI_RE.findall(tr_fold_ascii(metin)))
+
+
+# --------------------------------------------------------------------------- #
+# Alan değeri
+# --------------------------------------------------------------------------- #
+#: Sayı + birim: oran, para, vade, taksit. `split_trainable._SIGNAL_RE` ile
+#: aynı aile ama burada blok metnine uygulanır.
+_DEGER_RE = re.compile(
+    r"%\s?\d|\d[\d.,]*\s?%"
+    r"|\d[\d.,]*\s?(?:tl\b|try\b|₺|turk lirasi)"
+    r"|\d+\s*(?:ay\b|yil\b|taksit)"
+    r"|\d{1,2}[./]\d{1,2}[./]\d{2,4}",
+    re.IGNORECASE)
+
+
+#: Alan sözcükleri — SOLDAN sınırlı, ek serbest.
+#:
+#: `FIELD_TRIGGERS` üzerinden `matches()` yetmiyor: `keyword_pattern` kısa
+#: anahtarı (<=4 karakter) iki taraftan sınırlıyor, dolayısıyla "vade"
+#: anahtarı **"vadesi"yi kaçırıyor**. Ölçümde yakalandı — gerçek bir ürün
+#: cümlesi ("vadesi yenilenen ... paylaşım oranları") `değer=0` alıyordu.
+#: Burada Türkçenin sondan eklemeli yapısına uygun ayrı bir desen kullanılır.
+_ALAN_SOZCUK_RE = re.compile(
+    r"\b(?:kar\s*payi|kâr\s*payi|vade|taksit|tahsis|masraf|ucret|oran|"
+    r"finansman|katilma\s*hesab|cari\s*hesap|kampanya|puan|indirim|"
+    r"faiz|getiri|tutar|limit|odeme)", re.IGNORECASE)
+
+
+def deger_skoru(metin: str, terimler: Optional[Iterable[str]] = None) -> int:
+    """Blokta kaç alan-değeri sinyali var.
+
+    Üç kaynak toplanır: alan sözcükleri, sayı+birim desenleri ve verilirse
+    katılım finansı terim sözlüğü. Üçü de repoda zaten var — bu sinyal için
+    yeni altyapı gerekmiyor.
+    """
+    katli = tr_fold_ascii(metin)
+    skor = len(_DEGER_RE.findall(katli))
+    skor += len(_ALAN_SOZCUK_RE.findall(katli))
+    for anahtarlar in FOLDED_FIELD_TRIGGERS.values():
+        if any(matches(a, katli) for a in anahtarlar):
+            skor += 1
+    if terimler:
+        skor += sum(1 for t in terimler if t and matches(t, katli))
+    return skor
+
+
+# --------------------------------------------------------------------------- #
+# Bloklar ve karar
+# --------------------------------------------------------------------------- #
+
+@dataclass(frozen=True)
+class Blok:
+    """Ardışık birkaç cümle. `bas`/`son` ORİJİNAL metindeki karakter aralığı."""
+
+    metin: str
+    bas: int
+    son: int
+
+
+@dataclass
+class Karar:
+    """Tek bir blok için karar ve gerekçesi — denetlenebilir olmak zorunda."""
+
+    blok: Blok
+    tut: bool
+    gerekce: str
+    anti: int = 0
+    deger: int = 0
+    tekrar: float = 0.0
+    bolge: bool = False          # alan-dışı bölge yayılımıyla mı silindi
+
+    def as_dict(self) -> dict:
+        return {"bas": self.blok.bas, "son": self.blok.son, "tut": self.tut,
+                "gerekce": self.gerekce, "anti": self.anti,
+                "deger": self.deger, "tekrar": round(self.tekrar, 3),
+                "bolge": self.bolge,
+                "onizleme": self.blok.metin[:80]}
+
+
+def bloklara_ayir(text: str, blok_cumle: int = BLOK_CUMLE) -> list[Blok]:
+    """Metni ardışık cümle gruplarına böler.
+
+    Belgeler tek satır geldiği için düzen (boş satır/başlık) kullanılamaz;
+    `clean.split_sentences` TR kısaltma ve ondalık sayı duyarlıdır.
+
+    Cümleler orijinal metinde SIRAYLA aranır — aynı cümle iki kez geçse bile
+    ikinci kopya birincinin konumunu almaz, aksi hâlde silme aralıkları
+    çakışırdı.
+    """
+    cumleler = split_sentences(text or "")
+    if not cumleler:
+        return []
+    bloklar: list[Blok] = []
+    imlec = 0
+    for i in range(0, len(cumleler), blok_cumle):
+        parca = cumleler[i:i + blok_cumle]
+        bas = text.find(parca[0], imlec)
+        if bas < 0:
+            bas = imlec
+        son = bas
+        for c in parca:
+            k = text.find(c, son)
+            son = (k + len(c)) if k >= 0 else (son + len(c))
+        imlec = son
+        bloklar.append(Blok(" ".join(parca), bas, min(son, len(text))))
+    return bloklar
+
+
+def cumle_anahtari(cumle: str) -> str:
+    """Cümlenin tekrar karşılaştırması için kanonik anahtarı."""
+    return " ".join(re.findall(r"\w+", tr_fold_ascii(cumle)))
+
+
+def cerceve_cumleler(metinler: Iterable[str], min_docs: int = 3,
+                     min_sozcuk: int = 3) -> set[str]:
+    """Grup içinde >= `min_docs` BELGEDE geçen cümlelerin anahtar kümesi.
+
+    Neden cümle-DF, neden 8-gram değil: karar birimi cümleye indiğinde
+    n-gram kapsaması ölçülemez hale geliyor — cümlelerin çoğu 8 sözcükten
+    kısa, dolayısıyla tekrar sinyali SESSİZCE hiç ateşlenmiyordu (ölçüldü:
+    eşiği değiştirmek sonucu hiç değiştirmedi). Cümle-DF aynı olguyu doğrudan
+    ölçer: menü satırı ve altbilgi cümlesi belgeler arasında BİREBİR tekrar
+    eder.
+
+    Çok kısa cümleler (`min_sozcuk` altı) dışarıda: "Detaylı Bilgi", "Başvur"
+    gibi parçalar her yerde geçer ve gerçek içeriğin parçası olabilir.
+    """
+    df: dict[str, int] = {}
+    for metin in metinler:
+        gorulen = {cumle_anahtari(c) for c in split_sentences(metin or "")}
+        for a in gorulen:
+            if a and a.count(" ") + 1 >= min_sozcuk:
+                df[a] = df.get(a, 0) + 1
+    return {a for a, n in df.items() if n >= min_docs}
+
+
+def kararlar(text: str, cerceve: Optional[set[str]] = None, *,
+             terimler: Optional[Iterable[str]] = None,
+             yayilim: int = YAYILIM_BLOK) -> list[Karar]:
+    """Her blok için tut/sil kararı — öncelik: alan-dışı > sayısal > tekrar."""
+    cerceve = cerceve or set()
+    cikti: list[Karar] = []
+    kalan_yayilim = 0
+
+    for blok in bloklara_ayir(text):
+        anti = anti_skoru(blok.metin)
+        deger = deger_skoru(blok.metin, terimler)
+        sayisal = len(_DEGER_RE.findall(tr_fold_ascii(blok.metin)))
+        tekrar = 1.0 if cumle_anahtari(blok.metin) in cerceve else 0.0
+
+        # 1) ALAN-DIŞILIK — en yüksek öncelik, tekrar kanıtı aranmaz.
+        if anti:
+            kalan_yayilim = yayilim
+            cikti.append(Karar(blok, False, "alan_disi", anti, deger, tekrar))
+            continue
+
+        # 1b) Bölge yayılımı: işaret cümlelerce önce geçmiş olabilir.
+        #     Güçlü alan değeri bölgeyi SÖNDÜRÜR.
+        if kalan_yayilim > 0:
+            if deger >= SONDURME_DEGERI:
+                kalan_yayilim = 0
+            else:
+                kalan_yayilim -= 1
+                cikti.append(Karar(blok, False, "alan_disi_bolge",
+                                   anti, deger, tekrar, bolge=True))
+                continue
+
+        # 2) SAYISAL DEĞER — tekrarı EZER.
+        #
+        #    Yalnız sayı+birim bu ayrıcalığı hak ediyor. Ölçüldü: alan
+        #    SÖZCÜĞÜ (finansman, kampanya, hesap...) tek başına yeterli
+        #    sayılınca menü blokları da kurtuluyor — menüler tam olarak bu
+        #    sözcüklerden oluşuyor — ve halüsinasyon geri geliyordu.
+        if sayisal > 0:
+            cikti.append(Karar(blok, True, "sayisal_deger", anti, deger, tekrar))
+            continue
+
+        # 3) TEKRAR — sayısal değer yoksa çerçeve sayılır. Alan sözcüğü
+        #    taşısa bile: menü/altbilgi tam da böyle görünür.
+        if tekrar > 0:
+            cikti.append(Karar(blok, False, "tekrar", anti, deger, tekrar))
+            continue
+
+        # 3b) ALAN SÖZCÜĞÜ — tekrar kanıtı YOKKEN korur. Şablonlaşmış ama
+        #     tekrar eşiğini geçmeyen gerçek içerik burada kurtulur.
+        if deger > 0:
+            cikti.append(Karar(blok, True, "alan_sozcugu", anti, deger, tekrar))
+            continue
+
+        # 4) Hiçbir sinyal yok -> KORU. Çerçeve olduğunu ispatlayamıyoruz.
+        cikti.append(Karar(blok, True, "sinyal_yok", anti, deger, tekrar))
+
+    return cikti
+
+
+def temizle(text: str, cerceve: Optional[set[str]] = None, *,
+            terimler: Optional[Iterable[str]] = None,
+            yayilim: int = YAYILIM_BLOK) -> tuple[str, list[Karar]]:
+    """(temiz metin, kararlar). Kararlar denetim için birlikte döner."""
+    kr = kararlar(text, cerceve, terimler=terimler, yayilim=yayilim)
+    tutulan = " ".join(k.blok.metin for k in kr if k.tut)
+    return tutulan.strip(), kr
