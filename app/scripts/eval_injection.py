@@ -56,6 +56,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.chatbot.bot import Chatbot
 from src.chatbot.run_safety_eval import build_corpus_repo, check, load_set
 from src.db.repository import Repository
+from src.extraction.llm.extractor import default_extractor
 from src.extraction.reconcile import build_campaign
 
 VARSAYILAN_SET = "data/safety/prompt-injection-seti.jsonl"
@@ -89,8 +90,14 @@ def zehirli_belgeleri_ek(repo: Repository, items: list[dict]) -> int:
     return n
 
 
-def kosu(items: list[dict], bot: Chatbot) -> dict[str, Any]:
-    """Seti koşar; kategori kırılımlı sonuç döndürür."""
+def kosu(items: list[dict], bot: Chatbot,
+         llm_acik: Optional[bool] = None) -> dict[str, Any]:
+    """Seti koşar; kategori kırılımlı sonuç döndürür.
+
+    `llm_acik` **ölçülen** gerçeği taşır: botun elindeki istemci gerçekten
+    kullanılabilir miydi. Verilmezse bottan okunur. Env değişkeninin varlığına
+    bakmak yeterli DEĞİLDİR — bkz. `_llm_modu` altında.
+    """
     kayitlar: list[dict] = []
     for it in items:
         try:
@@ -121,8 +128,25 @@ def kosu(items: list[dict], bot: Chatbot) -> dict[str, Any]:
         "saldiri_savusturulan": sum(1 for k in saldiri if k["gecti"]),
         "kontrol_toplam": len(kontrol),
         "kontrol_gecen": sum(1 for k in kontrol if k["gecti"]),
-        "llm_modu": bool(os.environ.get("LLM_BACKEND", "").strip()),
+        "llm_modu": _llm_modu(bot) if llm_acik is None else bool(llm_acik),
     }
+
+
+def _llm_modu(bot: Chatbot) -> bool:
+    """Botun LLM'i gerçekten kullanılabilir mi?
+
+    Eskiden burada `bool(os.environ.get("LLM_BACKEND"))` vardı ve bu **yanlış
+    etiketli sayı** üretiyordu: `main()` botu `Chatbot(repo)` diye, yani
+    `llm=None` ile kuruyordu. `LLM_BACKEND=ollama` verilen bir koşumda rapor
+    "SENTEZ DAHİL (LLM açık)" yazıyor, model ise hiç çağrılmıyordu —
+    `rag.answer` `llm.available` False görüp çıkarımsal yola düşüyor
+    (`src/chatbot/rag.py:422`).
+
+    `eval/predictors.py:204-214` bu tuzağı çıkarım tarafında zaten kapatmış
+    ("sahte bir 'hibrit = kural' satırı üretmemek için atlandı"); aynı ilke
+    burada da geçerli olmak zorunda.
+    """
+    return bool(getattr(getattr(bot, "llm", None), "available", False))
 
 
 def _rapor(res: dict[str, Any]) -> None:
@@ -165,11 +189,21 @@ def main(argv: Optional[list[str]] = None) -> int:
     args = ap.parse_args(argv)
 
     items = load_set(args.set)
+    # `LLM_BACKEND` boşsa `NullLLMExtractor` döner (available=False) ve koşu
+    # kapı moduna düşer — bu meşru bir ölçüm, ama ETİKETİ doğru olmak zorunda.
+    llm = default_extractor()
+    istendi = bool(os.environ.get("LLM_BACKEND", "").strip())
+    if istendi and not llm.available:
+        print("HATA: LLM_BACKEND verildi ama istemci kurulamadı; koşu kapı "
+              "modunda 'LLM açık' diye etiketlenirdi. LLM_STRICT=1 ile "
+              "sebebi görün.", file=sys.stderr)
+        return 2
+
     repo = build_corpus_repo(args.banks, args.raw_dir)
     try:
         n = zehirli_belgeleri_ek(repo, items)
         print(f"Set: {len(items)} kayıt | korpusa eklenen zehirli belge: {n}")
-        res = kosu(items, Chatbot(repo))
+        res = kosu(items, Chatbot(repo, llm=llm), llm_acik=llm.available)
         _rapor(res)
     finally:
         repo.close()
