@@ -20,10 +20,16 @@ from __future__ import annotations
 
 import json
 import sqlite3
+from collections.abc import Mapping
 from typing import Any, Optional
 
 from ..schemas import Campaign
-from .base import finalize_campaign_text
+from .base import (
+    BELGE_TURLERI,
+    belge_turu_dogrula,
+    finalize_campaign_text,
+    kiyas_where,
+)
 
 # SQLite uyumlu şema (Postgres schema.sql'in alt kümesi)
 _SQLITE_SCHEMA = """
@@ -35,7 +41,14 @@ CREATE TABLE IF NOT EXISTS banks (
 CREATE TABLE IF NOT EXISTS campaigns (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     bank_id INTEGER, raw_text TEXT NOT NULL, clean_text TEXT,
-    source_url TEXT, scraped_at TEXT, campaign_type TEXT
+    source_url TEXT, scraped_at TEXT, campaign_type TEXT,
+    -- 'kampanya' | 'sozlesme' | NULL (bilinmiyor) — bkz. base.BELGE_TURLERI.
+    -- `campaign_type` ile KARIŞTIRMA: o, 8 kampanya TÜRÜ sınıflandırmasıdır
+    -- (Konut Finansmanı, Kart, ...); bu ise belgenin kampanya mı yoksa akit
+    -- metni mi olduğudur. Akit karşılaştırma tablosuna girmemelidir.
+    belge_turu TEXT,
+    -- LLM üretimi kısa özet. Sütun burada AÇILIR, bu modül DOLDURMAZ.
+    ozet TEXT
 );
 CREATE TABLE IF NOT EXISTS extracted_fields (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,6 +81,10 @@ _SONRADAN_EKLENEN = (
     ("extracted_fields", "span_start", "INTEGER"),
     ("extracted_fields", "span_end", "INTEGER"),
     ("extracted_fields", "confidence_source", "TEXT"),
+    # 4 Ağu 2026: belge türü + özet. Diskteki 21,6 MB'lık `data/demo.db` bu
+    # satırlar olmadan açıldığında `no such column: belge_turu` ile ölürdü.
+    ("campaigns", "belge_turu", "TEXT"),
+    ("campaigns", "ozet", "TEXT"),
 )
 
 
@@ -160,27 +177,82 @@ class Repository:
         self.conn.commit()
         return cid
 
+    # --- belge türü / özet (toplu yazma) ---
+    def set_belge_turu(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        """Kampanya id → belge türü ataması. Dönen: güncellenen satır sayısı.
+
+        Toplu (`executemany`) yazılır: 1761 belgelik korpusta satır başına ayrı
+        `commit()` kurulum süresini saniyelerce uzatırdı.
+
+        **Tüm sözlük önce doğrulanır, sonra tek satır bile yazılır.** Yarım
+        uygulanmış bir atama, kısmen sınıflandırılmış bir korpus bırakırdı ve
+        kıyas tablosu belgelerin bir kısmını eler bir kısmını elemezdi —
+        sessizce yanlış bir tablo, gürültülü bir hatadan çok daha kötüdür.
+        """
+        temiz = [(belge_turu_dogrula(v), k) for k, v in atamalar.items()]
+        if not temiz:
+            return 0
+        cur = self.conn.executemany(
+            "UPDATE campaigns SET belge_turu=? WHERE id=?", temiz)
+        self.conn.commit()
+        return cur.rowcount
+
+    def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        """Kampanya id → LLM üretimi özet. Dönen: güncellenen satır sayısı.
+
+        Bu modül özet ÜRETMEZ, yalnızca yazma yolunu açar: üreten taraf
+        (LLM katmanı) depo dışında ham SQL yazmak zorunda kalmasın diye
+        sözleşmede duruyor (bkz. `fields_by_extractor` docstring'indeki aynı
+        gerekçe).
+        """
+        temiz = [(v, k) for k, v in atamalar.items()]
+        if not temiz:
+            return 0
+        cur = self.conn.executemany(
+            "UPDATE campaigns SET ozet=? WHERE id=?", temiz)
+        self.conn.commit()
+        return cur.rowcount
+
     def field_value(self, campaign_id: int, field_name: str) -> Any:
         row = self.conn.execute(
             "SELECT canonical_value FROM extracted_fields WHERE campaign_id=? "
             "AND field_name=?", (campaign_id, field_name)).fetchone()
         return json.loads(row["canonical_value"]) if row else None
 
-    def query_fields(self, field_name: str) -> list[dict]:
-        """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için)."""
+    def query_fields(self, field_name: str, *,
+                     sozlesme_dahil: bool = False) -> list[dict]:
+        """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için).
+
+        **Varsayılan olarak sözleşme belgeleri ELENİR** (`sozlesme_dahil=False`).
+        Bu metot `/compare` tablosunu ve chatbot'un text-to-SQL yolunu besler;
+        oradaki soru her zaman "hangi KAMPANYA daha avantajlı"dır. Korpustaki
+        113 akit/tarife PDF'inin 43'ü oran/vade/tutar taşıyor ve filtre olmadan
+        bir genel kredi sözleşmesi bir konut kampanyasıyla aynı kolonda
+        sıralanıyordu (CLAUDE.md §17 "adil kıyas garantisi").
+
+        `sozlesme_dahil=True` filtreyi tamamen kaldırır — akit metnindeki bir
+        değeri bilerek arayan çağıranlar için. RAG/chatbot'un serbest metin
+        yolu zaten `campaign_text()` üzerinden gider ve HİÇ filtrelemez:
+        kullanıcı "sözleşmede ne yazıyor" diye sorabilmelidir.
+
+        Türü bilinmeyen (NULL) belgeler ELENMEZ; gerekçe `base.kiyas_where()`.
+        """
         rows = self.conn.execute(
             "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
-            "c.campaign_type, c.source_url, c.scraped_at, f.canonical_value, f.raw_value, "
+            "c.campaign_type, c.belge_turu, c.source_url, c.scraped_at, "
+            "f.canonical_value, f.raw_value, "
             "f.confidence, f.source_span, f.extractor, "
             "f.span_start, f.span_end, f.confidence_source "
             "FROM extracted_fields f "
             "JOIN campaigns c ON c.id=f.campaign_id "
             "JOIN banks b ON b.id=c.bank_id "
+            "WHERE f.field_name=? "
+            + ("" if sozlesme_dahil else f"AND {kiyas_where()} ")
             # `ORDER BY f.id` parite için ŞART: Postgres yolunda vardı, burada
             # yoktu. Sırasız SELECT'in dönüş sırası garantili değildir ve bu
             # metot `/compare` tablosunu besliyor — eşit değerli satırların
             # sırası backend'e göre değişebilirdi.
-            "WHERE f.field_name=? ORDER BY f.id", (field_name,)).fetchall()
+            + "ORDER BY f.id", (field_name,)).fetchall()
         out = []
         for r in rows:
             d = dict(r)
@@ -204,7 +276,11 @@ class Repository:
         """
         row = self.conn.execute(
             "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
-            "c.scraped_at, c.campaign_type, b.slug AS bank, b.name AS bank_name "
+            "c.scraped_at, c.campaign_type, c.belge_turu, c.ozet, "
+            "b.slug AS bank, b.name AS bank_name "
+            # Bu metot RAG/chatbot'un metin yoludur ve **belge türüne göre
+            # SÜZMEZ**: kullanıcı "sözleşmede ne yazıyor" diye sorabilmelidir.
+            # Süzülen tek yer kıyas yoludur (`query_fields`).
             "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=?",
             (campaign_id,)).fetchone()
         if row is None:
@@ -232,31 +308,63 @@ class Repository:
                 one("SELECT COUNT(DISTINCT campaign_id) FROM extracted_fields"),
         }
 
-    def field_coverage(self) -> dict[str, int]:
+    def belge_turu_counts(self) -> dict[str, int]:
+        """Belge türü → kampanya sayısı. Bilinmeyen `'bilinmeyen'` altında.
+
+        Anahtar kümesi SABİTTİR (`kampanya`, `sozlesme`, `bilinmeyen`) ve sıfır
+        değerler de yazılır: sütun hiç doldurulmamışsa `{"kampanya": 0,
+        "sozlesme": 0, "bilinmeyen": 1761}` döner. Eksik anahtar döndürmek,
+        raporu okuyanın `0` ile "ölçülmedi" arasındaki farkı görememesi
+        demek olurdu.
+        """
+        rows = self.conn.execute(
+            "SELECT belge_turu, COUNT(*) AS n FROM campaigns "
+            "GROUP BY belge_turu").fetchall()
+        out = dict.fromkeys((*BELGE_TURLERI, "bilinmeyen"), 0)
+        for r in rows:
+            out[r["belge_turu"] or "bilinmeyen"] += int(r["n"])
+        return out
+
+    def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]:
         """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı.
 
         Satır değil kampanya sayılır: aynı kampanyada bir alan (şu an olmasa da)
         birden çok kez yazılabilirse "kapsam" yüzdesi 100'ü aşardı.
+
+        `sozlesme_dahil` varsayılanı **True** — kıyas yolunun tersine. Bu metot
+        bir KAPSAM ÖLÇÜSÜDÜR: "çıkarıcı korpusun ne kadarından alan üretti"
+        sorusuna cevap verir ve akitten çıkan alanlar da gerçekten üretilmiş
+        alanlardır. Varsayılanı `False` yapmak, mevcut raporların sayılarını
+        sessizce küçültürdü. Akitsiz kapsam isteyen açıkça `False` geçer.
         """
         rows = self.conn.execute(
-            "SELECT field_name, COUNT(DISTINCT campaign_id) AS n "
+            "SELECT f.field_name AS field_name, "
+            "COUNT(DISTINCT f.campaign_id) AS n FROM extracted_fields f "
+            + ("" if sozlesme_dahil else
+               f"JOIN campaigns c ON c.id=f.campaign_id WHERE {kiyas_where()} ")
             # İkincil `field_name` sıralaması Postgres yolundaki ile aynı olmalı;
             # yoksa eşit sayıdaki alanlar iki backend'de farklı sırada raporlanır.
-            "FROM extracted_fields GROUP BY field_name "
-            "ORDER BY n DESC, field_name").fetchall()
+            + "GROUP BY f.field_name ORDER BY n DESC, field_name").fetchall()
         return {r["field_name"]: int(r["n"]) for r in rows}
 
-    def fields_by_extractor(self) -> dict[str, int]:
+    def fields_by_extractor(self, *,
+                            sozlesme_dahil: bool = True) -> dict[str, int]:
         """Katman adı (rule/ner/llm) → o katmanın ürettiği alan SAYISI.
 
         Ablasyonun ve raporların "hangi katman ne kadar iş yaptı" sorusu.
         Depo dışında ham SQL yazılmaması kuralı gereği burada duruyor
         (bkz. src/api/main.py başlığı: beş ham SQL çağrısı Postgres'te
         `?` yer tutucusu nedeniyle patlıyordu).
+
+        `sozlesme_dahil` varsayılanı **True**: `field_coverage` ile aynı
+        gerekçe — bu bir üretim ölçüsüdür, bir kıyas tablosu değil.
         """
         rows = self.conn.execute(
-            "SELECT extractor, COUNT(*) AS n FROM extracted_fields "
-            "GROUP BY extractor ORDER BY n DESC, extractor").fetchall()
+            "SELECT f.extractor AS extractor, COUNT(*) AS n "
+            "FROM extracted_fields f "
+            + ("" if sozlesme_dahil else
+               f"JOIN campaigns c ON c.id=f.campaign_id WHERE {kiyas_where()} ")
+            + "GROUP BY f.extractor ORDER BY n DESC, extractor").fetchall()
         return {r["extractor"]: int(r["n"]) for r in rows}
 
     def campaigns_per_bank(self) -> dict[str, int]:
@@ -267,19 +375,30 @@ class Repository:
             "GROUP BY b.slug ORDER BY n DESC, b.slug").fetchall()
         return {r["slug"]: int(r["n"]) for r in rows}
 
-    def all_campaigns(self) -> list[dict]:
+    def all_campaigns(self, *, belge_turu: Optional[str] = None) -> list[dict]:
         """Tüm kampanyalar, `id` sırasında.
 
         `ORDER BY c.id` EKSİKTİ; Postgres yolunda vardı. Sırasız SELECT'in
         dönüş sırası garantili değildir, yani iki backend aynı korpusta farklı
         sıralı liste verebilirdi — `GET /campaigns` de bu metoda dayandığı için
         arayüzdeki kampanya sırası backend'e göre değişirdi.
+
+        `belge_turu` **kesin eşleşmeli** bir seçicidir, varsayılanı `None` =
+        süzme yok (geriye tam uyumlu; `GET /campaigns` bugünkü listeyi verir).
+        `'sozlesme'` geçildiğinde YALNIZ akitler döner — chatbot'un "hangi
+        sözleşmeler var" sorusunun yolu budur. Burada `kiyas_where()`
+        kullanılmaz: bu bir listeleme seçicisidir, kıyas güvenliği değil.
         """
-        rows = self.conn.execute(
-            "SELECT c.id, b.slug AS bank, b.name AS bank_name, c.campaign_type, "
-            "c.raw_text, c.source_url, c.scraped_at "
-            "FROM campaigns c JOIN banks b ON b.id=c.bank_id ORDER BY c.id"
-        ).fetchall()
+        belge_turu = belge_turu_dogrula(belge_turu)
+        sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
+               "c.campaign_type, c.belge_turu, c.ozet, "
+               "c.raw_text, c.source_url, c.scraped_at "
+               "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
+        params: tuple = ()
+        if belge_turu is not None:
+            sql += "WHERE c.belge_turu=? "
+            params = (belge_turu,)
+        rows = self.conn.execute(sql + "ORDER BY c.id", params).fetchall()
         return [dict(r) for r in rows]
 
     def close(self):

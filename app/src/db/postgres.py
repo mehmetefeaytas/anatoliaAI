@@ -71,13 +71,18 @@ from __future__ import annotations
 
 import json
 import logging
-from collections.abc import Iterator
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Optional
 
 from ..schemas import Campaign
-from .base import finalize_campaign_text
+from .base import (
+    BELGE_TURLERI,
+    belge_turu_dogrula,
+    finalize_campaign_text,
+    kiyas_where,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -104,6 +109,14 @@ _LATER_COLUMNS = (
     ("extracted_fields", "confidence_source", "TEXT"),
     ("embeddings", "chunk_index", "INTEGER NOT NULL DEFAULT 0"),
     ("embeddings", "model", "TEXT"),
+    # 4 Ağu 2026: belge türü + özet (SQLite tarafındaki
+    # repository._SONRADAN_EKLENEN ile AYNI alanlar — iki liste ayrışırsa
+    # bir backend sütunu olan, diğeri olmayan bir şemayla koşar).
+    # `belge_turu`ya CHECK kısıtı BİLEREK konmadı: SQLite ADD COLUMN ile CHECK
+    # eklemeyi desteklemez, dolayısıyla kısıt yalnız burada olsaydı iki backend
+    # geçersiz değere farklı tepki verirdi. Doğrulama `base.belge_turu_dogrula`.
+    ("campaigns", "belge_turu", "TEXT"),
+    ("campaigns", "ozet", "TEXT"),
 )
 
 
@@ -289,6 +302,35 @@ class PostgresRepository:
         self.conn.commit()
         return cid
 
+    # --- belge türü / özet (toplu yazma) ---
+    def set_belge_turu(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        """Kampanya id → belge türü ataması. SQLite yolu ile aynı sözleşme.
+
+        Doğrulama TÜM sözlük için yazmadan ÖNCE koşar; gerekçe SQLite
+        `Repository.set_belge_turu()` docstring'inde.
+        """
+        temiz = [(belge_turu_dogrula(v), k) for k, v in atamalar.items()]
+        if not temiz:
+            return 0
+        with self.conn.cursor() as cur:
+            cur.executemany("UPDATE campaigns SET belge_turu=%s WHERE id=%s",
+                            temiz)
+            n = cur.rowcount
+        self.conn.commit()
+        return n
+
+    def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        """Kampanya id → LLM üretimi özet. Bu modül özet ÜRETMEZ."""
+        baglam = "ozet yazımı"
+        temiz = [(self._text(v, "ozet", baglam), k) for k, v in atamalar.items()]
+        if not temiz:
+            return 0
+        with self.conn.cursor() as cur:
+            cur.executemany("UPDATE campaigns SET ozet=%s WHERE id=%s", temiz)
+            n = cur.rowcount
+        self.conn.commit()
+        return n
+
     def field_value(self, campaign_id: int, field_name: str) -> Any:
         with self._read() as cur:
             cur.execute(
@@ -298,19 +340,29 @@ class PostgresRepository:
             row = cur.fetchone()
         return json.loads(row["canonical_value"]) if row else None
 
-    def query_fields(self, field_name: str) -> list[dict]:
-        """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için)."""
+    def query_fields(self, field_name: str, *,
+                     sozlesme_dahil: bool = False) -> list[dict]:
+        """Bir alanı tüm bankalar için döndürür (karşılaştırma/text-to-SQL için).
+
+        Varsayılan olarak sözleşme belgeleri elenir; gerekçe ve `sozlesme_dahil`
+        semantiği SQLite yolundaki eşdeğer metotta yazılıdır. Süzgeç metni
+        `base.kiyas_where()` ile ÜRETİLİR, burada tekrar yazılmaz — iki
+        backend'in kıyas süzgeci ayrışırsa `/compare` hangi veri tabanına
+        bağlandığına göre farklı satır kümesi döndürürdü.
+        """
         with self._read() as cur:
             cur.execute(
                 "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
-                "c.campaign_type, c.source_url, "
+                "c.campaign_type, c.belge_turu, c.source_url, "
                 f"{_SCRAPED_AT_ISO} AS scraped_at, "
                 "f.canonical_value, f.raw_value, f.confidence, f.source_span, "
                 "f.extractor, f.span_start, f.span_end, f.confidence_source "
                 "FROM extracted_fields f "
                 "JOIN campaigns c ON c.id=f.campaign_id "
                 "JOIN banks b ON b.id=c.bank_id "
-                "WHERE f.field_name=%s ORDER BY f.id", (field_name,))
+                "WHERE f.field_name=%s "
+                + ("" if sozlesme_dahil else f"AND {kiyas_where()} ")
+                + "ORDER BY f.id", (field_name,))
             rows = cur.fetchall()
         out = []
         for r in rows:
@@ -331,7 +383,9 @@ class PostgresRepository:
             cur.execute(
                 "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
                 f"{_SCRAPED_AT_ISO} AS scraped_at, "
-                "c.campaign_type, b.slug AS bank, b.name AS bank_name "
+                "c.campaign_type, c.belge_turu, c.ozet, "
+                "b.slug AS bank, b.name AS bank_name "
+                # RAG/chatbot metin yolu — belge türüne göre SÜZMEZ.
                 "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=%s",
                 (campaign_id,))
             row = cur.fetchone()
@@ -363,22 +417,42 @@ class PostgresRepository:
                 one("SELECT COUNT(DISTINCT campaign_id) FROM extracted_fields"),
         }
 
-    def field_coverage(self) -> dict[str, int]:
-        """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı (satır değil)."""
+    def belge_turu_counts(self) -> dict[str, int]:
+        """Belge türü → kampanya sayısı. Anahtar kümesi SQLite ile aynı ve sabit."""
+        with self._read() as cur:
+            cur.execute("SELECT belge_turu, COUNT(*) AS n FROM campaigns "
+                        "GROUP BY belge_turu")
+            rows = cur.fetchall()
+        out = dict.fromkeys((*BELGE_TURLERI, "bilinmeyen"), 0)
+        for r in rows:
+            out[r["belge_turu"] or "bilinmeyen"] += int(r["n"])
+        return out
+
+    def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]:
+        """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı (satır değil).
+
+        `sozlesme_dahil` varsayılanı True; gerekçe SQLite yolundaki eşdeğerde.
+        """
         with self._read() as cur:
             cur.execute(
-                "SELECT field_name, COUNT(DISTINCT campaign_id) AS n "
-                "FROM extracted_fields GROUP BY field_name "
-                "ORDER BY n DESC, field_name")
+                "SELECT f.field_name AS field_name, "
+                "COUNT(DISTINCT f.campaign_id) AS n FROM extracted_fields f "
+                + ("" if sozlesme_dahil else
+                   f"JOIN campaigns c ON c.id=f.campaign_id WHERE {kiyas_where()} ")
+                + "GROUP BY f.field_name ORDER BY n DESC, field_name")
             rows = cur.fetchall()
         return {r["field_name"]: int(r["n"]) for r in rows}
 
-    def fields_by_extractor(self) -> dict[str, int]:
+    def fields_by_extractor(self, *,
+                            sozlesme_dahil: bool = True) -> dict[str, int]:
         """Katman adı (rule/ner/llm) → alan sayısı. SQLite ile aynı sıralama."""
         with self._read() as cur:
             cur.execute(
-                "SELECT extractor, COUNT(*) AS n FROM extracted_fields "
-                "GROUP BY extractor ORDER BY n DESC, extractor")
+                "SELECT f.extractor AS extractor, COUNT(*) AS n "
+                "FROM extracted_fields f "
+                + ("" if sozlesme_dahil else
+                   f"JOIN campaigns c ON c.id=f.campaign_id WHERE {kiyas_where()} ")
+                + "GROUP BY f.extractor ORDER BY n DESC, extractor")
             rows = cur.fetchall()
         return {r["extractor"]: int(r["n"]) for r in rows}
 
@@ -392,13 +466,23 @@ class PostgresRepository:
             rows = cur.fetchall()
         return {r["slug"]: int(r["n"]) for r in rows}
 
-    def all_campaigns(self) -> list[dict]:
+    def all_campaigns(self, *, belge_turu: Optional[str] = None) -> list[dict]:
+        """Tüm kampanyalar, `id` sırasında. `belge_turu` kesin eşleşmeli seçici.
+
+        Varsayılan `None` = süzme yok (geriye tam uyumlu); gerekçe ve
+        `'sozlesme'` kullanımı SQLite yolundaki eşdeğerde yazılı.
+        """
+        belge_turu = belge_turu_dogrula(belge_turu)
+        sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
+               "c.campaign_type, c.belge_turu, c.ozet, c.raw_text, c.source_url, "
+               f"{_SCRAPED_AT_ISO} AS scraped_at "
+               "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
+        params: tuple = ()
+        if belge_turu is not None:
+            sql += "WHERE c.belge_turu=%s "
+            params = (belge_turu,)
         with self._read() as cur:
-            cur.execute(
-                "SELECT c.id, b.slug AS bank, b.name AS bank_name, "
-                "c.campaign_type, c.raw_text, c.source_url, "
-                f"{_SCRAPED_AT_ISO} AS scraped_at "
-                "FROM campaigns c JOIN banks b ON b.id=c.bank_id ORDER BY c.id")
+            cur.execute(sql + "ORDER BY c.id", params)
             return [dict(r) for r in cur.fetchall()]
 
     def close(self) -> None:

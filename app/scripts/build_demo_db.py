@@ -79,8 +79,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from src.db.base import BELGE_TURU_KAMPANYA, BELGE_TURU_SOZLESME
 from src.db.repository import Repository
-from src.pipeline import MODE_CORPUS, PipelineResult, run_pipeline
+from src.pipeline import CORPUS_SUFFIX, MODE_CORPUS, PipelineResult, run_pipeline
 
 DEFAULT_OUT = "data/demo.db"
 DEFAULT_CONFIG = "config/banks.yaml"
@@ -88,6 +89,105 @@ DEFAULT_RAW = "data/raw"
 
 # İlerleme çıktısı: kaç belgede bir satır basılsın (tty değilse).
 PROGRESS_EVERY = 50
+
+# --------------------------------------------------------------------------- #
+# Belge türü kuralı — akit metnini kıyas tablosundan çıkarır
+# --------------------------------------------------------------------------- #
+#
+# Korpus yolu: `data/raw/<banka>/<bolum>/<slug>.txt`. Bölüm dağılımı (ölçüldü,
+# 4 Ağu 2026): live 808 · products 637 · archive 201 · docs 112 · manual 1
+# + 2 kök fixture = 1761.
+#
+# Kural: `docs` bölümündeki VEYA `source_url`'ünde `.pdf` geçen belge
+# sözleşmedir; gerisi kampanyadır. Kuralın iki bacağının ÖLÇÜLEN kesişimi
+# (docs=112, .pdf=113, kesişim=112, birleşim=113) ve bu kuralın neyi
+# kaçırdığı `docs/rapor/belge-turu.md` içinde yazılıdır — özeti: `docs`
+# bacağı tek başına yeterli DEĞİL (bir PDF `products/` altında duruyor),
+# `.pdf` bacağı bugün tek başına yeterli ama korpus büyüdüğünde `docs`
+# altına PDF olmayan bir tarife sayfası girerse bacak gerekecek.
+#
+# Sınıflandırılamayan belge (korpusta eşleşmeyen `source_url`) için tür
+# UYDURULMAZ, `None` yazılır (CLAUDE.md §19).
+BOLUM_SOZLESME = "docs"
+PDF_IPUCU = ".pdf"
+
+
+def korpus_bolumleri(raw_dir: str | Path) -> dict[str, set[str]]:
+    """`source_url` → o URL'ye ait belgelerin BÖLÜM kümesi.
+
+    URL türetimi `src.pipeline.collect_corpus` ile birebir aynı olmak
+    ZORUNDA (`meta.json` içindeki `source_url`, yoksa `file://<mutlak yol>`);
+    ayrışırsa eşleşmeyen her belge sessizce `bilinmeyen` kovasına düşer.
+    Ayrışmayı görünür kılan şey rapordaki `bilinmeyen` sayacıdır: bugün 0,
+    0 olmaktan çıkarsa kural değil eşleştirme bozulmuştur.
+
+    Küme (set) döner çünkü `source_url` TEKİL DEĞİLDİR: ölçüldü, 88 URL
+    birden fazla bölümde birden görünüyor (tipik olarak aynı sayfanın
+    `live/` ve `archive/` kopyaları). Tek bir bölüm seçmek hangi kopyanın
+    kazanacağını dosya sırasına bırakırdı.
+    """
+    kok = Path(raw_dir)
+    out: dict[str, set[str]] = {}
+    for path in sorted(kok.rglob(f"*{CORPUS_SUFFIX}")):
+        if not path.is_file():
+            continue
+        parcalar = path.relative_to(kok).parts
+        # <banka>/<bolum>/<slug>.txt → bölüm ortadaki parça.
+        # <banka>/<slug>.txt (2 kök fixture) → bölümsüz.
+        bolum = parcalar[1] if len(parcalar) > 2 else ""
+        meta_path = path.with_suffix(path.suffix + ".meta.json")
+        source_url = None
+        if meta_path.is_file():
+            try:
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+            except (ValueError, OSError):
+                meta = {}
+            if isinstance(meta, dict):
+                source_url = meta.get("source_url")
+        out.setdefault(source_url or f"file://{path}", set()).add(bolum)
+    return out
+
+
+def belge_turu_ata(kampanyalar: list[dict],
+                   bolumler: dict[str, set[str]]) -> dict[int, Optional[str]]:
+    """Kampanya id → `'kampanya'` | `'sozlesme'` | `None`.
+
+    Saf fonksiyon (DB'ye dokunmaz), böylece kural veri tabanı kurmadan
+    test edilebilir. Sıra önemlidir:
+
+    1. `source_url`'de `.pdf` → sözleşme. Belgenin korpustaki yerinden
+       BAĞIMSIZ; kaynağın kendisi bir PDF ise kampanya sayfası değildir.
+    2. URL korpusta eşleşmiyor → `None`. Tür uydurmaktansa bilgi yokluğu
+       saklanır; bu satırlar kıyastan ELENMEZ (bkz. `base.kiyas_where`).
+    3. Bölümlerinden biri `docs` → sözleşme.
+    4. Kalan her şey → kampanya.
+    """
+    atamalar: dict[int, Optional[str]] = {}
+    for k in kampanyalar:
+        url = k.get("source_url")
+        if url and PDF_IPUCU in url.lower():
+            atamalar[int(k["id"])] = BELGE_TURU_SOZLESME
+            continue
+        bolum_kumesi = bolumler.get(url) if url else None
+        if bolum_kumesi is None:
+            atamalar[int(k["id"])] = None
+            continue
+        atamalar[int(k["id"])] = (
+            BELGE_TURU_SOZLESME if BOLUM_SOZLESME in bolum_kumesi
+            else BELGE_TURU_KAMPANYA)
+    return atamalar
+
+
+def _belge_turu_uygula(repo: Any, raw_dir: str, stream: Any) -> dict[str, int]:
+    """Korpus yolundan türetilen belge türünü DB'ye yazar; dağılımı döndürür."""
+    atamalar = belge_turu_ata(repo.all_campaigns(), korpus_bolumleri(raw_dir))
+    repo.set_belge_turu(atamalar)
+    dagilim = repo.belge_turu_counts()
+    if dagilim.get("bilinmeyen"):
+        print(f"UYARI: {dagilim['bilinmeyen']} belgenin türü belirlenemedi "
+              f"(source_url korpusta eşleşmedi). Tür UYDURULMADI, NULL yazıldı; "
+              f"bu belgeler kıyas tablosundan ELENMEZ.", file=stream)
+    return dagilim
 
 
 class _Progress:
@@ -171,8 +271,9 @@ def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
             repo.close()
             out.unlink(missing_ok=True)
             return None, 2
+        dagilim = _belge_turu_uygula(repo, raw_dir, stream)
         elapsed = time.perf_counter() - t0
-        report = _report(repo, result, out, elapsed)
+        report = _report(repo, result, out, elapsed, dagilim)
     finally:
         repo.close()
     return report, 0
@@ -218,13 +319,14 @@ def _build_postgres(database_url: str, config: str, raw_dir: str, force: bool,
                   f"Boş bir DB üretip 'kuruldu' demek sessiz bir yalan olurdu; "
                   f"--raw-dir yolunu kontrol edin.", file=stream)
             return None, 2
-        return _report(repo, result, None, time.perf_counter() - t0), 0
+        dagilim = _belge_turu_uygula(repo, raw_dir, stream)
+        return _report(repo, result, None, time.perf_counter() - t0, dagilim), 0
     finally:
         repo.close()
 
 
 def _report(repo: Any, result: PipelineResult, out: Optional[Path],
-            elapsed: float) -> dict:
+            elapsed: float, belge_turu_dagilimi: dict[str, int]) -> dict:
     """Özet raporu — ölçülen sayılar, tahmin yok."""
     counts = repo.counts()
     coverage = repo.field_coverage()
@@ -246,6 +348,11 @@ def _report(repo: Any, result: PipelineResult, out: Optional[Path],
         "docs_per_bank": result.docs_per_bank,
         "campaigns_per_bank": per_bank,
         "counts": counts,
+        "belge_turu_dagilimi": belge_turu_dagilimi,
+        # Kıyas yolunun GERÇEKTEN gördüğü alan sayısı: sözleşmeler elenmiş
+        # hâl. `field_coverage` ile arasındaki fark, akitlerin karşılaştırma
+        # tablosuna ne kadar sızdığının doğrudan ölçüsüdür.
+        "field_coverage_kiyas": repo.field_coverage(sozlesme_dahil=False),
         "field_coverage": coverage,
         "fields_by_extractor": by_extractor,
         "contradiction_count": len(result.contradictions),
@@ -279,9 +386,15 @@ def format_report(rep: dict) -> str:
     ]
     for slug, n in rep["campaigns_per_bank"].items():
         satirlar.append(f"    {slug:<26} {n:>5}")
-    satirlar += ["", "  ALAN KAPSAMI (kaç kampanyada var)"]
+    satirlar += ["", "  BELGE TÜRÜ (kampanya mı, akit mi)"]
+    for tur, n in rep["belge_turu_dagilimi"].items():
+        satirlar.append(f"    {tur:<26} {n:>5}   %{100.0 * n / camp:5.1f}")
+    satirlar += ["", "  ALAN KAPSAMI (kaç kampanyada var — kıyas: akit hariç)"]
+    kiyas = rep.get("field_coverage_kiyas", {})
     for alan, n in rep["field_coverage"].items():
-        satirlar.append(f"    {alan:<26} {n:>5}   %{100.0 * n / camp:5.1f}")
+        k = kiyas.get(alan, 0)
+        satirlar.append(f"    {alan:<26} {n:>5}   %{100.0 * n / camp:5.1f}"
+                        f"   kıyas: {k:>5}  (-{n - k})")
     satirlar += ["", "  KATMAN BAŞINA ALAN"]
     for ext, n in rep["fields_by_extractor"].items():
         satirlar.append(f"    {ext:<26} {n:>5}")
