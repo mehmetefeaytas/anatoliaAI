@@ -139,12 +139,54 @@ _KAR_PAYI_ONCE_RE = re.compile(
 # İkisi de karşılaştırma tablosuna girdiğinde o bankayı yanlış konumlandırır.
 _YABANCI_KAVRAM_RE = re.compile(
     r"\s*(?:['’]?\s*(?:ye|ya|e|a)?\s*kadar\s*)?"
-    r"(?:devlet\s*(?:katk|destek|deste[ğg])|puanl[ıi]k)",
+    r"(?:devlet\s*(?:katk|destek|deste[ğg])|puanl[ıi]k"
+    # "akdi kâr payı oranının %30 FAZLASI / ARTIRIMI" — değer oranın kendisi
+    # değil, orana uygulanan ÇARPANDIR. Sözleşme metinlerinde gecikme cezası
+    # hep bu kalıpla yazılır (bkz. `_CEZA_BAGLAMI_RE`).
+    r"|fazla|artt?[ıi]r[ıi]m|katt?[ıi])",
     re.IGNORECASE,
 )
 # Değerin sağında bu kadar karakter içinde yabancı kavram aranır. 30 karakter
 # "'ye kadar devlet katkısıyla" ifadesini kapsar, sonraki cümleye taşmaz.
 _YABANCI_KAVRAM_PENCERE = 30
+
+# Değerden ÖNCE gelip onu kâr payı oranı olmaktan çıkaran bağlam: gecikme
+# cezası / temerrüt maddeleri.
+#
+# Ölçüm (2026-08-07, 1761 belgelik korpus, `data/demo.v2.db`): korpus `docs/`
+# bölümündeki sözleşme ve tarife PDF'leriyle büyüdükten sonra üretilen 84
+# `kar_payi_orani` kaydının **15'i (%17,9)** bir ceza maddesinden geliyordu.
+# Tipik metin:
+#
+#     "Gecikme Cezası Oranı, akdi kâr payı oranının %30 fazlasını geçemez."
+#
+# Buradaki %30 ürünün kâr payı oranı DEĞİL, gecikme hâlinde orana uygulanan
+# artırımdır. Karşılaştırma tablosuna girdiğinde bankayı %30 "oranla" en
+# pahalı gösteriyordu — sessizce yanlış değer üreten sınıftan.
+#
+# Kapı ÇİFTTİR ve ikisi de aynı vakayı bağımsız yakalar: sağdaki `fazla|
+# artırım` eki (`_YABANCI_KAVRAM_RE`) ve soldaki ceza bağlamı (bu desen).
+# Birinin kaçırdığını diğeri tutar; korpusta iki kalıp da gözlendi.
+# "akdi kâr payı oranı" BİLEREK YOK: o, sözleşmedeki GERÇEK kâr payı oranıdır.
+# Korpusta doğrulandı — "Bankamızca, akdi kâr payı oranı %0 olarak
+# belirlenmiştir" cümlesindeki %0 kartın gerçek oranıdır ve tutulmalıdır.
+_CEZA_BAGLAMI_RE = re.compile(
+    r"\b(?:gecikme|temerr[üu]t|ceza[ıi]?)", re.IGNORECASE)
+# Değerin solunda bu kadar karakter geriye bakılır — ama CÜMLE sınırını
+# aşmadan. Sınır olmasa "…%1,89 kâr payı. Gecikme cezası…" sırasındaki
+# gerçek oran, SONRAKİ cümlenin ceza sözcüğü yüzünden reddedilirdi.
+_CEZA_BAGLAMI_PENCERE = 90
+
+
+def _ceza_baglami_onceliyor(text: str, match_start: int) -> bool:
+    """Eşleşmenin solunda, AYNI cümle içinde bir ceza/gecikme maddesi var mı?"""
+    bas = max(0, match_start - _CEZA_BAGLAMI_PENCERE)
+    onceki = text[bas:match_start]
+    # Cümle sonu varsa yalnız son cümlenin kalanına bak.
+    for ayirac in (". ", "! ", "? ", "\n"):
+        if ayirac in onceki:
+            onceki = onceki.rsplit(ayirac, 1)[1]
+    return bool(_CEZA_BAGLAMI_RE.search(onceki))
 
 
 def _yabanci_kavram_takip_ediyor(text: str, value_end: int) -> bool:
@@ -171,7 +213,8 @@ def extract_kar_payi(text: str) -> Optional[ExtractedField]:
     # aynı belgede gerçek kâr payı oranı daha sonra gelebilir.
     for onceki in _KAR_PAYI_ONCE_RE.finditer(text):
         s, e = onceki.span(1)
-        if _yabanci_kavram_takip_ediyor(text, onceki.end()):
+        if (_yabanci_kavram_takip_ediyor(text, onceki.end())
+                or _ceza_baglami_onceliyor(text, onceki.start())):
             continue
         raw = onceki.group(1)
         return _field(
@@ -211,9 +254,11 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
     )
     for m in pat.finditer(text):
         s, e = m.span(3)
-        # Değeri yabancı bir kavram takip ediyorsa bu eşleşme reddedilir ve
-        # aramaya devam edilir (gerekçe: `_YABANCI_KAVRAM_RE`).
-        if _yabanci_kavram_takip_ediyor(text, e):
+        # Değeri yabancı bir kavram takip ediyorsa ya da eşleşmeyi bir ceza
+        # maddesi öncelİyorsa bu eşleşme reddedilir ve aramaya devam edilir
+        # (gerekçe: `_YABANCI_KAVRAM_RE`, `_CEZA_BAGLAMI_RE`).
+        if (_yabanci_kavram_takip_ediyor(text, e)
+                or _ceza_baglami_onceliyor(text, m.start())):
             continue
         raw = m.group(3)
         canon = N.normalize_rate(raw)
