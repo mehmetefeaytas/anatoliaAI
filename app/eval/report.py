@@ -25,7 +25,25 @@ değişirse sha256 değişir ve eski karşılaştırmaların geçersiz olduğu A
       metrics.json    makine-okur tüm metrikler (CI kapısı bunu okur)
       report.md       insan-okur tablo (jüri / ekip)
       per_field.csv   alan bazında satırlar (Excel'de hata analizi)
+      decisions.csv   BELGE×ALAN düzeyinde ham kararlar (eşleştirilmiş testler)
       env.json        tekrar-üretim künyesi
+
+## decisions.csv neden ayrı bir dosya
+
+`per_field.csv` alan×kapsam düzeyinde TOPLAR; `doc_id` sütunu yoktur. Toplanmış
+sayılardan eşleştirilmiş (paired) bir test kurulamaz: McNemar'ın sorduğu soru
+"AYNI belgenin AYNI alanında A doğru, B yanlış mıydı?" sorusudur ve toplam
+tablo bu bilgiyi geri döndürülemez biçimde yitirir.
+
+`run_eval.DocScore.decisions` bu bilgiyi zaten üretiyordu ama diske hiç
+yazılmıyordu — süreç bitince veri çöpe gidiyor, iki ayrı koşum sonradan
+eşleştirilemiyordu. `decisions.csv` tam olarak bu boşluğu kapatır:
+
+    matcher;doc_id;field;correct
+
+`matcher` sütunu ŞART: strict ve tolerant iki AYRI geçiştir, aynı (doc_id,
+field) çifti iki kez görünür ve karışırlarsa eşleştirme sessizce bozulur.
+Tüketici: `scripts/mcnemar_report.py`.
 """
 
 from __future__ import annotations
@@ -209,17 +227,30 @@ class WrittenReport:
         return "\n".join(lines)
 
 
+DECISION_COLUMNS = ["matcher", "doc_id", "field", "correct"]
+
+
 def write_report(run_dir: Path, *, metrics: dict, env: EnvInfo,
                  markdown: str, per_field_rows: list[dict],
                  per_field_columns: list[str] | None = None,
+                 decision_rows: list[dict] | None = None,
+                 decision_columns: list[str] | None = None,
                  extra_json: dict[str, Any] | None = None) -> WrittenReport:
-    """Dört (veya daha fazla) çıktıyı tek çağrıda yazar."""
+    """Dört (veya daha fazla) çıktıyı tek çağrıda yazar.
+
+    `decision_rows` verilirse `decisions.csv` de yazılır (bkz. modül başlığı).
+    `None` ise dosya HİÇ üretilmez — boş bir dosya yazmak, kararların
+    kaydedildiği ama hepsinin kaybolduğu izlenimini verirdi.
+    """
     files = [
         write_json(run_dir / "metrics.json", metrics),
         write_json(run_dir / "env.json", env.as_dict()),
         write_text(run_dir / "report.md", markdown),
         write_csv(run_dir / "per_field.csv", per_field_rows, per_field_columns),
     ]
+    if decision_rows is not None:
+        files.append(write_csv(run_dir / "decisions.csv", decision_rows,
+                               decision_columns or DECISION_COLUMNS))
     for name, payload in (extra_json or {}).items():
         files.append(write_json(run_dir / f"{name}.json", payload))
     return WrittenReport(run_dir, files)
