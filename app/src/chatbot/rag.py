@@ -86,7 +86,17 @@ RETRIEVER_MODES = ("keyword", "auto", "vector")
 @dataclass
 class RagAnswer:
     text: str
-    passages: list[dict]   # [{"bank","source_url","text","score"}]
+    #: Kaynak pasajlar — `/chat` yanıtındaki `sources` bunlardır.
+    #: [{"bank","bank_slug","campaign_id","source_url","text","score"}]
+    #:
+    #: `campaign_id` ve `source_url` DENETİM alanlarıdır: jüri "bu bilgiyi
+    #: nereden aldın" diye sorduğunda arayüz tek tıkla
+    #: `GET /campaigns/{campaign_id}/text` uç noktasına gidip iddianın
+    #: geldiği belgeyi offset'leriyle gösterebilmelidir. Daha önce yalnız
+    #: metin parçası dönüyordu ve bağlantı kurulamıyordu.
+    #:
+    #: Bilinmeyen alan **null** kalır; URL uydurulmaz (CLAUDE.md §21).
+    passages: list[dict]
     # Hangi retriever cevabı üretti ('keyword' | 'vector'). Varsayılanı olan
     # bir alan: mevcut `RagAnswer(text, passages)` çağrıları bozulmaz.
     retriever: str = "keyword"
@@ -198,8 +208,13 @@ class KeywordRetriever:
             if overlap < esik:
                 continue
             d = self._docs[i]
+            cid = d.get("id")
             scored.append({
                 "bank": d.get("bank_name") or d.get("bank"),
+                # Slug ayrıca taşınır: `bank` insan-okur addır ve iki bankanın
+                # görünen adı benzeşebilir; denetim bağlantısı slug'a dayanır.
+                "bank_slug": d.get("bank"),
+                "campaign_id": int(cid) if cid is not None else None,
                 "source_url": d.get("source_url"),
                 "text": d.get("raw_text"),
                 "score": round(overlap / denom, 3),
@@ -343,6 +358,8 @@ class VectorRetriever:
                 continue
             scored.append({
                 "bank": meta.get("bank_name") or meta.get("bank"),
+                "bank_slug": meta.get("bank"),
+                "campaign_id": int(campaign_id),
                 "source_url": meta.get("source_url"),
                 # Tam kampanya metni döndürülür (KeywordRetriever ile aynı
                 # sözleşme); eşleşen parça ayrıca `chunk` alanında verilir.

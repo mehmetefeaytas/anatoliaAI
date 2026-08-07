@@ -106,8 +106,15 @@ class UnindexedRetriever:
             if overlap < esik:
                 continue
             score = overlap / (len(qtok) ** 0.5 + 1)
+            cid = d.get("id")
+            # Alan kümesi üretimdekiyle BİREBİR aynı olmak zorunda; `bank_slug`
+            # ve `campaign_id` denetim alanları olarak eklendiğinde bu referans
+            # güncellenmemişti ve denklik testi 14 kez düştü. Test doğru
+            # davrandı: sözleşme kaymasını yakalamak onun işi.
             scored.append({
                 "bank": d.get("bank_name") or d.get("bank"),
+                "bank_slug": d.get("bank"),
+                "campaign_id": int(cid) if cid is not None else None,
                 "source_url": d.get("source_url"),
                 "text": d.get("raw_text"),
                 "score": round(score, 3),

@@ -56,6 +56,40 @@ durur:
   `span_ambiguous` ile işaretlenir. Bulunamazsa offset `null` döner —
   uydurma yok (CLAUDE.md §21).
 
+## Çerçeve KATLANIR, SİLİNMEZ (`bloklar` alanı)
+
+`GET /campaigns/{id}/text` metnin yanında bir de `bloklar` listesi döndürür:
+her blok bir karakter aralığı + `gizle` bayrağı + gizleme `gerekce`si.
+
+Metin DEĞİŞMEZ. Çerçeveyi (çerez/KVKK/menü) metinden ayıklamak `span_start` /
+`span_end` offset'lerinin tamamını kaydırırdı ve projenin en özgün iddiası —
+her değerin ham metinde bir karakter aralığına bağlı olması — çökerdi. Bu
+yüzden ayıklama ÇIKARIM yolundan alınıp sunum katmanına taşındı: arayüz
+`gizle=true` aralıkları katlar, kullanıcı isterse açar, offset'ler yerinde
+kalır.
+
+`bloklar` ham metni **eksiksiz ve bitişik** kaplar (boşluk yok, örtüşme yok),
+yani arayüz metni aralıklardan yeniden birleştirebilir. Garanti
+`src/preprocessing/blocks.gorunum_araliklari()` içinde kurulur ve
+`tests/test_bloklar_gorunum.py` ile kilitlidir. `gerekce` değerleri
+`blocks.py`'nin kendi karar adlarıdır (`alan_disi`, `alan_disi_bolge`,
+`tekrar`); burada yeni ad üretilmez.
+
+## `ozet` / `ozet_kaynak` — LLM özeti, yalnız gösterim
+
+`ozet` DB'den okunur (`campaigns.ozet`), istek anında ÜRETİLMEZ — 4 dakikalık
+sunumda canlı model çağrısı donma riskidir (CLAUDE.md §11). Toplu üretim
+`scripts/build_summaries.py` ile önceden yapılır.
+
+Özet yoksa `ozet` ve `ozet_kaynak` **null**'dır. Kural tabanlı sahte bir özet
+(ilk N cümle) asla basılmaz: kullanıcı onu modelin ürettiğini sanır
+(`src/summarize/ozet.py`). `ozet_kaynak`'ın tek geçerli değeri `'llm'`dir ve
+bu bir SÜTUN DEĞİL, türetilmiş bir alandır — özet üretmenin başka yolu
+olmadığı için özet varsa kaynağı tanım gereği modeldir.
+
+Özet hiçbir ölçüm yoluna girmez: kıyas, çıkarım ve çelişki tespiti onu
+görmez.
+
 `confidence_source` da artık DB'den okunur. Eskiden "DB'de sütunu yok"
 gerekçesiyle kampanya başına kural katmanı YENİDEN KOŞTURULUYOR ve alan adı +
 ham değer eşleşmesiyle geri kazanılıyordu; sütun 31 Tem'de eklendi ve
@@ -66,6 +100,7 @@ hem de eşleşmeyen alanlarda sessizce `null` veriyordu. `POST /extract` canlı
 
 from __future__ import annotations
 
+import inspect
 import os
 from typing import Any, Optional
 
@@ -78,7 +113,9 @@ from ..extraction.llm.schema import EXTRACTION_FIELDS
 from ..extraction.ner.classifier import default_classifier
 from ..extraction.reconcile import build_campaign
 from ..pipeline import run_pipeline
+from ..preprocessing.blocks import cerceve_cumleler, gorunum_araliklari
 from ..preprocessing.clean import normalize_text
+from ..summarize.ozet import OZET_KAYNAK_LLM
 
 CONFIG = os.environ.get("BANKS_CONFIG", "config/banks.yaml")
 RAW_DIR = os.environ.get("RAW_DIR", "data/raw")
@@ -280,6 +317,19 @@ def build_app():
     _view_cache: dict[int, Optional[dict]] = {}
     # kampanya_id → çelişki listesi (kural katmanı kampanya başına bir kez koşar)
     _contra_cache: dict[int, list[dict]] = {}
+    # kampanya_id → görünürlük aralıkları (blok kararları bir kez hesaplanır)
+    _blok_cache: dict[int, list[dict]] = {}
+    # banka slug'ı → o bankanın belgelerinde tekrar eden cümlelerin anahtarları.
+    # TEMBEL ve BANKA BAZINDA: `cerceve_cumleler()` bir grup içindeki belge
+    # frekansına bakar (blocks.py'nin tasarımı), ve tüm korpusu açılışta
+    # taramak demonun ilk tıklamasına saniyeler eklerdi (CLAUDE.md §11).
+    _cerceve_cache: dict[str, set[str]] = {}
+
+    # `query_fields(..., sozlesme_dahil=...)` depo sözleşmesinde tanımlı
+    # (src/db/base.py) ama backend uygulamaları ajan G tarafından yazılıyor.
+    # İmza yoklanır; yoksa çağrı eski biçimde yapılır ve süzme YAPILAMAZ.
+    _SUZME_HAZIR = "sozlesme_dahil" in inspect.signature(
+        repo.query_fields).parameters
 
     # ----------------------------------------------------------------- #
     # Dahili yardımcılar
@@ -299,15 +349,117 @@ def build_app():
         _view_cache[campaign_id] = view
         return view
 
-    def _field_rows(field: str) -> list[dict]:
+    def _field_rows(field: str, *, sozlesme_dahil: bool = False) -> list[dict]:
         """Bir alanın tüm banka satırları — kaynak, güven ve katman bilgisiyle.
 
         `repo.query_fields()` `raw_value`, `extractor`, `confidence_source` ve
         saklanan span offset'lerini zaten döndürür; `canonical_value` da çözülmüş
         gelir. Eskiden burada ham SQL vardı — `?` yer tutucusuyla, yani Postgres
         yolunda çalışması imkânsızdı.
+
+        `sozlesme_dahil=False` (öntanım) **kıyas yolu** içindir: sözleşme /
+        tarife / form belgeleri karşılaştırma tablosuna girmez. Korpustaki
+        1761 belgenin 113'ü akit metnidir ve 41'i kıyaslanabilir bir alan
+        taşır; bir genel finansman sözleşmesindeki oran ile bir kampanya
+        sayfasındaki oran aynı kolonda sıralanamaz (CLAUDE.md §17 adil kıyas).
+
+        RAG / chatbot yolu bu süzmeyi UYGULAMAZ: "şu sözleşmede ne yazıyor"
+        sorusunun cevabı akit metnindedir; onu aramadan çıkarmak veri varken
+        "bulunamadı" demek olurdu.
         """
+        if _SUZME_HAZIR:
+            return repo.query_fields(field, sozlesme_dahil=sozlesme_dahil)
+        # TODO(G): `query_fields(..., sozlesme_dahil=)` bu backend'de henüz
+        # yok. Süzme YAPILAMIYOR — akit belgeleri kıyas tablosuna karışmaya
+        # devam eder. Sessizce doğru davranıyormuş gibi yapmamak için bu
+        # durum burada açıkça duruyor.
         return repo.query_fields(field)
+
+    def _cerceve(bank_slug: str) -> set[str]:
+        """Bir bankanın belgelerinde tekrar eden cümlelerin anahtar kümesi.
+
+        `blocks.kararlar()`'ın "tekrar" sinyali bu kümeye bakar. Küme
+        verilmezse sinyal hiç ateşlenmez ve menü/altbilgi blokları
+        katlanmadan kalır — yani boş küme geçmek sessiz bir yetenek kaybıdır.
+
+        Grup neden BANKA: `cerceve_cumleler()` belge frekansı sayar ve bir
+        cümlenin çerçeve olduğunun kanıtı AYNI SİTEDE tekrar etmesidir.
+        Bankalar arası tekrar farklı bir olgudur (sektör şablonu) ve burada
+        aranmaz.
+        """
+        if bank_slug in _cerceve_cache:
+            return _cerceve_cache[bank_slug]
+        metinler = [c.get("raw_text") or "" for c in repo.all_campaigns()
+                    if c.get("bank") == bank_slug]
+        _cerceve_cache[bank_slug] = cerceve_cumleler(metinler)
+        return _cerceve_cache[bank_slug]
+
+    def _bloklar(campaign_id: int, text: str, bank_slug: str) -> list[dict]:
+        """Ham metni eksiksiz kaplayan görünürlük aralıkları — önbellekli."""
+        cached = _blok_cache.get(campaign_id)
+        if cached is not None:
+            return cached
+        try:
+            araliklar = gorunum_araliklari(text, _cerceve(bank_slug))
+            out = [a.as_dict() for a in araliklar]
+        except Exception:  # pragma: no cover - blok hatası metni düşürmesin
+            # Tek güvenli geri düşüş: metnin TAMAMI görünür. Kapsama garantisi
+            # (bitişik + eksiksiz) bu yolda da korunur.
+            out = ([{"start": 0, "end": len(text), "gizle": False,
+                     "gerekce": None}] if text else [])
+        _blok_cache[campaign_id] = out
+        return out
+
+    def _ozet(camp: dict) -> tuple[Optional[str], Optional[str]]:
+        """(ozet, ozet_kaynak) — üretilmemişse (None, None).
+
+        Özet DB'den okunur; burada ÜRETİLMEZ (CLAUDE.md §11). `ozet_kaynak`
+        bir sütun değildir: özet üretmenin tek yolu yerel model olduğu için
+        (`src/summarize/ozet.py` kural tabanlı yedeği yasaklar) özet varsa
+        kaynağı tanım gereği `'llm'`dir.
+
+        TODO(G): `campaign_text()` henüz `c.ozet` sütununu SELECT etmiyor;
+        ettiğinde bu alan kendiliğinden dolar. O ana kadar dürüst cevap
+        `null`'dır — boş bir özet kutusu uydurmaktansa hiç göstermemek doğru.
+        """
+        ozet = (camp.get("ozet") or "").strip()
+        return (ozet, OZET_KAYNAK_LLM) if ozet else (None, None)
+
+    def _kaynaklari_zenginlestir(handler: str, field: Optional[str],
+                                 sources: list) -> list[dict]:
+        """`/chat` kaynaklarına `campaign_id` + `source_url` ekler.
+
+        Jüri "bu bilgiyi nereden aldın" diye sorduğunda arayüz tek tıkla
+        `GET /campaigns/{campaign_id}/text`e gidebilmeli. RAG yolu bu iki
+        alanı zaten taşır (`chatbot/rag.py`); yapısal sorgu yolu `RankRow`
+        döndürür ve `RankRow`'da kampanya kimliği YOKTUR.
+
+        Eksik alan burada `query_fields()` satırlarıyla (banka slug'ı +
+        `source_span`) eşleştirilerek geri kazanılır. Eşleşme **tekil
+        olmak zorunda**: aynı banka+pencere birden çok kampanyaya işaret
+        ediyorsa hangisi olduğunu bilmiyoruz demektir ve alan `null` kalır.
+        Yaklaşık eşleştirmeyle bir kampanya seçmek, denetlenebilir bağlantı
+        vaadinin tam tersi olurdu (CLAUDE.md §21: değer uydurma).
+        """
+        dizin: dict[tuple[Any, Any], Optional[dict]] = {}
+        if handler == "structured" and field:
+            # Kıyas süzmesi UYGULANMAZ: chat yolu sözleşmeleri de görebilir.
+            for r in _field_rows(field, sozlesme_dahil=True):
+                anahtar = (r.get("bank"), r.get("source_span"))
+                # İkinci kez görülen anahtar belirsizdir -> None ile zehirle.
+                dizin[anahtar] = None if anahtar in dizin else r
+
+        out: list[dict] = []
+        for s in sources:
+            kayit = dict(s) if isinstance(s, dict) else {"value": s}
+            eslesme = dizin.get((kayit.get("bank"), kayit.get("source_span")))
+            if kayit.get("campaign_id") is None:
+                cid = eslesme.get("campaign_id") if eslesme else None
+                kayit["campaign_id"] = int(cid) if cid is not None else None
+            if kayit.get("source_url") is None:
+                kayit["source_url"] = eslesme.get("source_url") if eslesme else None
+            out.append(kayit)
+        return out
 
     def _campaign_contradictions(campaign_id: int, text: str, bank_slug: str,
                                  scraped_at: Optional[str] = None) -> list[dict]:
@@ -381,6 +533,13 @@ def build_app():
         `span_reference` alanı offsetlerin HANGİ metinde ölçüldüğünü söyler
         (`clean_text` varsa o, yoksa `raw_text`); `text` de o metindir. İkisini
         karıştırmak offsetleri kaydırır, bu yüzden sözleşmede açıkça durur.
+
+        `bloklar` AYNI metnin görünürlük haritasıdır ve onu eksiksiz kaplar:
+        `"".join(text[b.start:b.end] for b in bloklar) == text`. `gizle=true`
+        aralıklar arayüzde katlanır; metin kırpılmaz, offsetler kaymaz.
+
+        `ozet` / `ozet_kaynak` önceden üretilmiş LLM özetidir; yoksa ikisi de
+        `null` (modül docstring'i).
         """
         camp = _campaign_view(campaign_id)
         if camp is None:
@@ -403,16 +562,21 @@ def build_app():
                             d.get("span_start"), d.get("span_end")),
             })
 
+        ozet, ozet_kaynak = _ozet(camp)
         return {
             "campaign_id": campaign_id,
             "bank": camp["bank"],
             "bank_name": camp["bank_name"],
             "campaign_type": camp["campaign_type"],
+            "belge_turu": camp.get("belge_turu"),
             "source_url": camp["source_url"],
             "scraped_at": camp.get("scraped_at"),
             "text": text,
             "text_length": len(text),
             "span_reference": camp.get("span_reference"),
+            "bloklar": _bloklar(campaign_id, text, camp["bank"]),
+            "ozet": ozet,
+            "ozet_kaynak": ozet_kaynak,
             "fields": fields_out,
             "contradictions": _campaign_contradictions(
                 campaign_id, text, camp["bank"], camp.get("scraped_at")),
@@ -422,6 +586,11 @@ def build_app():
     def compare(field: str, intent: Optional[str] = None,
                 type: Optional[str] = None):
         """Bir alanı bankalar arası karşılaştırır (adil kıyas — CLAUDE.md §17).
+
+        BELGE TÜRÜ SÜZMESİ: yalnız kampanya belgeleri döner; sözleşme / tarife
+        / form metinleri kıyas tablosuna girmez (`_field_rows` docstring'i).
+        Süzme depo katmanında yapılır, burada değil — böylece iki backend de
+        aynı kümeyi görür. Chatbot'un RAG yolu bu süzmeyi UYGULAMAZ.
 
         `intent` KARARI: parametre eskiden imzada duruyor ama gövdede hiç
         kullanılmıyordu (sessiz ölü parametre). KALDIRILMADI, **uygulandı** —
@@ -583,9 +752,17 @@ def build_app():
 
     @app.post("/chat")
     def chat(req: ChatReq):
+        """Hibrit chatbot — her kaynak kaydı DENETLENEBİLİR bağlantı taşır.
+
+        `sources` içindeki her kayıt `campaign_id` ve `source_url` alanlarını
+        **her zaman içerir**; bilinmiyorsa değeri `null`'dır. Eskiden yalnız
+        metin parçası dönüyordu ve "bu bilgiyi nereden aldın" sorusunun
+        cevabı arayüzde kurulamıyordu.
+        """
         a = bot.ask(req.question)
         return {"answer": a.text, "handler": a.handler, "field": a.field,
-                "sources": a.sources}
+                "sources": _kaynaklari_zenginlestir(a.handler, a.field,
+                                                    a.sources)}
 
     @app.post("/extract")
     def extract(req: ExtractReq):

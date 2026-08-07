@@ -309,3 +309,163 @@ def temizle(text: str, cerceve: Optional[set[str]] = None, *,
     kr = kararlar(text, cerceve, terimler=terimler, yayilim=yayilim)
     tutulan = " ".join(k.blok.metin for k in kr if k.tut)
     return tutulan.strip(), kr
+
+
+# --------------------------------------------------------------------------- #
+# Sunum katmanı — çerçeveyi SİLMEDEN "katlanabilir" işaretle
+# --------------------------------------------------------------------------- #
+#
+# ## Neden silme değil katlama (pazarlıksız kısıt)
+#
+# `extracted_fields.span_start` / `span_end` offset'leri **HAM metne** göre
+# ölçülür ve veri tabanında öyle saklanır (`src/db/repository.py`, sütunlar
+# 31 Tem 2026'da tam bu sebeple eklendi). Çerçeveyi metinden SİLMEK bu
+# offset'lerin tamamını kaydırır ve projenin en özgün iddiası — her çıkarılan
+# değerin ham metinde bir karakter aralığına bağlı olması (CLAUDE.md §18
+# yenilikçilik hedefi #1) — sessizce çöker.
+#
+# Bu yüzden çerçeve ayıklaması ÇIKARIM yolundan alınıp SUNUM katmanına
+# taşındı: metin değişmez, yalnızca hangi karakter aralığının arayüzde
+# katlanacağı bildirilir. `kararlar()`'ın karar mantığına dokunulmaz; burası
+# yalnızca bir OKUMA yoludur.
+#
+# ## Kapsama garantisi
+#
+# Dönen aralıklar ham metni **eksiksiz ve bitişik** kaplar:
+#
+#     araliklar[0].start == 0
+#     araliklar[i].end   == araliklar[i+1].start      (boşluk ve örtüşme yok)
+#     araliklar[-1].end  == len(text)
+#     "".join(text[a.start:a.end] for a in araliklar) == text
+#
+# Bu garanti şart, çünkü arayüz metni aralıklardan yeniden birleştiriyor.
+# `bloklara_ayir()` tek başına bunu VERMEZ: cümle segmentasyonu
+# `normalize_whitespace()`'ten geçtiği için cümleler arası ayırıcılar blok
+# aralıklarının dışında kalır ve bir cümle ham metinde hiç bulunamazsa blok
+# kayabilir. Aradaki boşluklar burada açıkça doldurulur.
+
+#: Gizleme gerekçeleri — `kararlar()`'ın ürettiği adların gizleyen alt kümesi.
+#: Arayüz bu değerleri kullanıcıya çevirir; buraya yeni ad UYDURULMAZ.
+GIZLEME_GEREKCELERI: tuple[str, ...] = ("alan_disi", "alan_disi_bolge", "tekrar")
+
+
+@dataclass(frozen=True)
+class Aralik:
+    """Ham metnin bir karakter aralığı ve arayüzde katlanıp katlanmayacağı.
+
+    `gerekce` yalnızca `gizle=True` iken doludur ve `kararlar()`'ın kendi
+    gerekçe adıdır (`alan_disi`, `alan_disi_bolge`, `tekrar`). Gösterilen
+    aralıklarda `None`'dır: "neden gizlendi" sorusunun cevabı yoktur.
+    """
+
+    start: int
+    end: int
+    gizle: bool
+    gerekce: Optional[str]
+
+    def as_dict(self) -> dict:
+        return {"start": self.start, "end": self.end,
+                "gizle": self.gizle, "gerekce": self.gerekce}
+
+
+def _sigdir(text: str, kr: list[Karar]) -> list[tuple[int, int, bool, Optional[str]]]:
+    """Karar bloklarını metne sığdırılmış, monoton, örtüşmeyen aralıklara indirger.
+
+    `bloklara_ayir()` imleci ileri taşıdığı için aralıklar zaten artan sırada
+    gelir; yine de savunmacı davranılır: bir cümle ham metinde bulunamazsa
+    (`find` -1) blok imlece düşer ve sınırlar metin dışına taşabilir. Kapsama
+    garantisi buradaki kırpmaya dayanıyor, varsayıma değil.
+    """
+    n = len(text)
+    out: list[tuple[int, int, bool, Optional[str]]] = []
+    imlec = 0
+    for k in kr:
+        bas = max(imlec, min(k.blok.bas, n))
+        son = max(bas, min(k.blok.son, n))
+        if son <= bas:
+            continue  # boş ya da tamamen kaymış blok — kapsamı bozmasın
+        out.append((bas, son, not k.tut, k.gerekce if not k.tut else None))
+        imlec = son
+    return out
+
+
+def gorunum_araliklari(text: str, cerceve: Optional[set[str]] = None, *,
+                       terimler: Optional[Iterable[str]] = None,
+                       yayilim: int = YAYILIM_BLOK) -> list[Aralik]:
+    """Ham metni eksiksiz kaplayan görünürlük aralıkları (silme YOK).
+
+    Blok aralıkları arasında kalan boşluklar iki kuraldan biriyle sahiplenilir:
+
+    * Boşluk yalnızca beyaz karakterden ibaretse ve İKİ yanındaki aralık aynı
+      kararı taşıyorsa, o kararı devralır. Aksi hâlde `BLOK_CUMLE = 1` olduğu
+      için gizlenen her bölge cümleler arası boşluklarla onlarca parçaya
+      bölünürdü.
+    * Diğer her durumda **gösterilir**. Sınıflandırılamayan metni gizlemek,
+      `kararlar()`'ın "sinyal yok -> KORU" ilkesini sunum katmanında delmek
+      olurdu: çerçeve olduğunu ispatlayamadığımız şeyi saklamayız.
+
+    Ardışık ve aynı kararlı aralıklar birleştirilir; farklı gerekçeler
+    (`alan_disi` ile `alan_disi_bolge`) denetlenebilirlik için ayrı kalır.
+    """
+    text = text or ""
+    n = len(text)
+    if n == 0:
+        return []
+
+    kr = kararlar(text, cerceve, terimler=terimler, yayilim=yayilim)
+
+    # 1) Boşlukları `gizle=None` (sahipsiz) işaretiyle araya serp.
+    ham: list[tuple[int, int, Optional[bool], Optional[str]]] = []
+    imlec = 0
+    for bas, son, gizle, gerekce in _sigdir(text, kr):
+        if bas > imlec:
+            ham.append((imlec, bas, None, None))
+        ham.append((bas, son, gizle, gerekce))
+        imlec = son
+    if imlec < n:
+        ham.append((imlec, n, None, None))
+    if not ham:  # hiç karar üretilmedi (ör. cümle bulunamadı) — metnin tamamı görünür
+        ham.append((0, n, False, None))
+
+    # 2) Sahipsiz boşlukları çöz.
+    cozulmus: list[tuple[int, int, bool, Optional[str]]] = []
+    for i, (bas, son, gizle, gerekce) in enumerate(ham):
+        if gizle is not None:
+            cozulmus.append((bas, son, gizle, gerekce))
+            continue
+        onceki = cozulmus[-1] if cozulmus else None
+        sonraki = next((h for h in ham[i + 1:] if h[2] is not None), None)
+        if (not text[bas:son].strip() and onceki is not None and sonraki is not None
+                and onceki[2] == sonraki[2] and onceki[3] == sonraki[3]):
+            cozulmus.append((bas, son, onceki[2], onceki[3]))
+        else:
+            cozulmus.append((bas, son, False, None))
+
+    # 3) Ardışık aynı kararları birleştir.
+    birlesik: list[Aralik] = []
+    for bas, son, gizle, gerekce in cozulmus:
+        if (birlesik and birlesik[-1].end == bas
+                and birlesik[-1].gizle == gizle
+                and birlesik[-1].gerekce == gerekce):
+            onceki_a = birlesik.pop()
+            birlesik.append(Aralik(onceki_a.start, son, gizle, gerekce))
+        else:
+            birlesik.append(Aralik(bas, son, gizle, gerekce))
+    return birlesik
+
+
+def gorunur_metin(text: str, cerceve: Optional[set[str]] = None, *,
+                  terimler: Optional[Iterable[str]] = None,
+                  yayilim: int = YAYILIM_BLOK) -> str:
+    """Katlanmış metin: arayüzde GÖRÜNEN aralıkların birleşimi.
+
+    `temizle()` ile aynı kararlara dayanır ama parçaları ham metinden keser,
+    yeniden birleştirmez — yani kullanıcının panelde gördüğü metnin birebir
+    aynısıdır. Özet üretimi bunu kullanır: modele giden metin ile kullanıcıya
+    gösterilen metin ayrışırsa, özet ekranda olmayan bir cümleyi anlatabilir.
+    """
+    text = text or ""
+    return "".join(text[a.start:a.end]
+                   for a in gorunum_araliklari(text, cerceve, terimler=terimler,
+                                               yayilim=yayilim)
+                   if not a.gizle).strip()
