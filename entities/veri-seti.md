@@ -25,6 +25,9 @@ web sitelerinden toplanan finansman, kart ve yatırım ürünü kampanya metinle
   Bilgileri Sunumları (s.18)
 
 ## Related
+- [[klasik-banka-korpusu]] — `data/raw-classic`; **YARIŞMA KAPSAMI DIŞI** klasik
+  banka korpusu. Bu sayfadaki veri seti (`data/raw`) ile karıştırılmamalıdır:
+  o korpus değerlendirmeye girmez, yalnızca gümüş eğitim verisi kaynağıdır.
 - [[bddk]] — kapsam kaynağı
 - [[katilim-bankalari]] — veri kaynağı bankalar
 - [[web-scraping]] — toplama tekniği
