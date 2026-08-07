@@ -555,6 +555,30 @@ PER_FIELD_COLUMNS = [
 ]
 
 
+def decision_rows(results: list[MatcherResult]) -> list[dict]:
+    """`decisions.csv` satırları — BELGE×ALAN düzeyinde ham karar dökümü.
+
+    `DocScore.decisions` McNemar'ın eşleştirme birimidir ama şimdiye kadar
+    diske hiç yazılmıyordu: süreç bitince veri gidiyor ve iki ayrı koşum
+    sonradan eşleştirilemiyordu. Burası o boşluğu kapatır.
+
+    `matcher` sütunu ŞART: strict ve tolerant AYRI geçişlerdir, aynı
+    `(doc_id, field)` çifti iki kez görünür. Eşleştiricileri ayırmayan bir
+    tüketici iki farklı kararı aynı hücreye yazar ve testi sessizce bozar.
+
+    Sıra deterministiktir (eşleştirici → belge → alan), `bool` yerine 0/1
+    yazılır: CSV'de `True/False` metnini geri okurken `bool("False") == True`
+    tuzağı vardır.
+    """
+    return [
+        {"matcher": result.matcher, "doc_id": doc.doc_id, "field": name,
+         "correct": int(ok)}
+        for result in results
+        for doc in result.docs
+        for name, ok in doc.decisions
+    ]
+
+
 def markdown_report(results: list[MatcherResult], predictor: Predictor,
                     env: report_mod.EnvInfo) -> str:
     """`report.md` gövdesi — jüri ve ekip için insan-okur rapor."""
@@ -754,7 +778,9 @@ def main(argv: list[str] | None = None) -> int:
         run_dir, metrics=metrics, env=env,
         markdown=markdown_report(results, predictor, env),
         per_field_rows=per_field_rows(results, predictor.name),
-        per_field_columns=PER_FIELD_COLUMNS)
+        per_field_columns=PER_FIELD_COLUMNS,
+        decision_rows=decision_rows(results),
+        decision_columns=report_mod.DECISION_COLUMNS)
     print("\n" + written.summary())
     return 0
 
