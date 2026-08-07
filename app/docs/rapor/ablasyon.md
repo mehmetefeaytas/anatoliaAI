@@ -544,3 +544,88 @@ Aynı güne ait iki ayrı kazanç; **toplanmazlar, ayrı ayrı okunmalıdır**:
 Son satırda sistem hiç değişmedi: daha önce de doğru cevap veriyordu, yanlış
 gold yüzünden hatalı sayılıyordu. Tek bir "0,612 → 0,677" olarak sunmak kendi
 ölçüm hatamızı sistem başarısı diye göstermek olurdu.
+
+---
+
+## Ek (2026-08-07) — orkestrasyon geniş sette: n=48
+
+Orkestrasyon kolu bugüne kadar **yalnız n=20'de** ölçülmüştü (kural 0,677 /
+orkestra 0,672). n=48'lik bağımsız, kör etiketlenmiş sette tekrarlandı.
+Koşum: `eval/reports/20260807-223915`, `qwen2.5:7b-instruct` (Q4_K_M,
+Apache-2.0), `num_ctx=8192`, bootstrap 2000, tohum 42, eşleştirici `strict`.
+
+| kol | mikro-F1 | %95 GA | makro | F1 (zor) | TP | FP | FN |
+|---|---|---|---|---|---|---|---|
+| **kural** | **0,387** | [0,329–0,442] | **0,408** | **0,405** | 48 | **88** | 64 |
+| orkestra | 0,377 | [0,325–0,426] | 0,404 | 0,394 | 49 | 99 | 63 |
+| orkestra-hakemsiz | 0,362 | [0,308–0,414] | 0,380 | 0,377 | 49 | 110 | 63 |
+
+Üç hata sınıfı, ayrı paydalarla:
+
+| kol | kaçırma | yanlış çıkarım | halüsinasyon | halüsinasyon oranı |
+|---|---|---|---|---|
+| kural | **21** | **43** | **45** | **0,101** [45/444] |
+| orkestra | 17 | 46 | 53 | 0,119 [53/444] |
+| orkestra-hakemsiz | **13** | 50 | 60 | 0,135 [60/444] |
+
+### Okunuşu: tek yönlü bir takas, üç kolda da aynı
+
+LLM'in yetkisi arttıkça **kaçırma düşüyor** (21 → 17 → 13) ama **uydurma
+artıyor** (45 → 53 → 60) ve F1 geriliyor. Mekanizma TP/FP kırılımında
+çıplak: orkestra kurala göre **1 doğru** ekliyor (48 → 49) ve **11 yanlış**
+(88 → 99). Hakemsiz kolda aynı 1 doğruya karşılık **22 yanlış** var.
+
+Bu, n=20'de hibrit kolda görülen desenin **farklı bir kolda ve farklı bir
+ölçekte tekrarlanmasıdır**: LLM boşluğu doldururken doğru bilgi eklemiyor,
+yanlış ekliyor.
+
+### Hakemin katkısı ÖLÇÜLDÜ
+
+`orkestra-hakemsiz` kolu tam bu soruyu izole etmek için var. Hakem:
+
+- halüsinasyonu **60 → 53** düşürüyor (göreli −%12),
+- bedeli kaçırmanın **13 → 17** çıkması,
+- McNemar `b=7, c=0`, p = 0,0156 → **anlamlı, kazanan orkestra**; eşleşmiş
+  mikro-F1 farkı 0,015 [0,007–0,025], **sıfırı dışlıyor**.
+
+Yani "ajan önerir, hakem reddeder" yetki asimetrisi **işe yarıyor ve bu
+ölçülmüştür**. Ama yeterli değil: hakemli kol bile kuralı geçemiyor.
+
+### McNemar — ve iki ölçütün ters yönde ayrışması
+
+| A ↔ B | b | c | uyumsuz | p | kazanan | eşleşmiş fark %95 GA |
+|---|---|---|---|---|---|---|
+| kural ↔ orkestra | 8 | 1 | 9 | **0,0391** | **kural** | 0,010 [−0,008 – 0,026] — sıfırı **içeriyor** |
+| kural ↔ orkestra-hakemsiz | 15 | 1 | 16 | **0,0005** | **kural** | 0,025 [0,005 – 0,042] — sıfırı **dışlıyor** |
+| orkestra ↔ orkestra-hakemsiz | 7 | 0 | 7 | **0,0156** | **orkestra** | 0,015 [0,007 – 0,025] — sıfırı **dışlıyor** |
+
+Üçü de tam binom (uyumsuz çift < 25). Zor-vaka alt kümesinde üç satır da
+aynı yönde ve aynı anlamlılıkta.
+
+**İlk satır dikkat ister:** McNemar farkı **anlamlı** buluyor ama bootstrap
+aralığı sıfırı **içeriyor**. Bu, `gold-genisletme.md`'deki temel↔blok
+vakasının **tam tersi** yönde bir ayrışma — orada bootstrap sıfırı
+dışlıyordu, McNemar anlamsızdı.
+
+İkisi çelişmiyor, farklı şeye bakıyorlar:
+
+- **McNemar** yalnız uyumsuz kararları sayar. 9 uyumsuz karardan 8'i tek
+  yönde olması, "hangi kol daha sık haklı" sorusuna güçlü bir cevaptır.
+- **Bootstrap** toplam mikro-F1'in belge örneklemesi altındaki oynaklığını
+  ölçer. Az sayıda kararın yönü tutarlı olsa bile toplam skora etkisi
+  küçükse aralık sıfırı kapsar.
+
+Doğru okuma: **kural daha sık haklı (yön kesin), ama toplam skora etkisi
+ilan edilecek kadar büyük değil.** İki ölçütü birlikte raporlamamızın sebebi
+budur; tek başına biri bu farkı ya abartır ya kaçırır.
+
+### K-2 kapısı: kapandı, karar ölçümün
+
+Kapı şuydu: *n=48'de orkestra kuralı GA'lar örtüşmeden geçerse varsayılan
+orkestraya döner.* **Geçmedi** — üç ölçütte de kural önde (F1, makro, zor
+vaka) ve McNemar kuralı kazanan ilan ediyor.
+
+`DEFAULT_CONFIG = CONFIG_KURAL` **kalıyor**. Orkestrasyon ürüne girmiyor;
+ablasyon tablosunda ölçülmüş bir satır ve mimari bir gösterim olarak kalıyor
+— yetki asimetrisinin ölçülebilir katkısı (hakem, −%12 uydurma) onun
+gerekçesidir.

@@ -67,24 +67,39 @@ uygulanınca F1 0,562'ye çakılıyor, çünkü `docs` altındaki sözleşme
 
 ---
 
-## K-2 · `DEFAULT_CONFIG` hâlâ `hibrit` — ölçümle çelişiyor
+## ~~K-2~~ · KAPANDI (2026-08-07) — `DEFAULT_CONFIG = kural`
 
-**Durum:** `eval/predictors.py:67` → `DEFAULT_CONFIG = CONFIG_HIBRIT`.
-Bilinçli olarak değiştirilmedi; teslim edilen sistemin hangi kol olduğu
-ürün kararıdır.
+**Karar:** `eval/predictors.py:67` → `DEFAULT_CONFIG = CONFIG_KURAL`.
+Kullanıcı kararı + ölçüm kapısı; ikisi de aynı yeri gösterdi.
 
-| kol | mikro-F1 | halüsinasyon |
-|---|---|---|
-| **kural** | **0,677** | **0,096** |
-| orkestra | 0,672 | 0,114 |
-| hibrit | **0,575** | **0,163** |
+**Asıl sorun sayı değil tutarsızlıktı:** `DEFAULT_CONFIG` `hibrit`ti ama
+`run_eval` CLI varsayılanı `kural`dı. Dashboard ve API `reconcile()`
+çağırdığı için kullanıcıya giden yol hibritti — yani **ölçtüğümüz kol ile
+teslim ettiğimiz kol aynı değildi.** Jüri bunu sorsa cevabımız yoktu.
 
-Fark artık küçük değil: hibrit kuraldan **0,10 F1 geride** ve halüsinasyonu
-**%70 daha yüksek**. Dashboard ve API `reconcile()` çağırıyor, yani
-kullanıcıya giden yol bu.
+n=20'de zaten yanlışlanmıştı (kural 0,677 / orkestra 0,672 / hibrit 0,575;
+hibridin halüsinasyonu %70 fazla). Kapı şuydu: *n=48'de orkestra kuralı
+GA'lar örtüşmeden geçerse varsayılan orkestraya döner.*
 
-**Not:** `hibrit` LLM gerektiriyor; LLM kapalıyken zaten kural gibi davranıyor.
-Yani karar pratikte "LLM açıkken hangi kol koşsun".
+**Geçmedi.** n=48 (`eval/reports/20260807-223915`):
+
+| kol | mikro-F1 | %95 GA | halüsinasyon | kaçırma |
+|---|---|---|---|---|
+| **kural** | **0,387** | [0,329–0,442] | **0,101** [45/444] | 21 |
+| orkestra | 0,377 | [0,325–0,426] | 0,119 [53/444] | 17 |
+| orkestra-hakemsiz | 0,362 | [0,308–0,414] | 0,135 [60/444] | 13 |
+
+McNemar kuralı kazanan ilan etti (orkestraya karşı p = 0,039; hakemsize
+karşı p = 0,0005). Zor-vaka alt kümesinde de aynı yön.
+
+**Yan bulgu — hakemin katkısı ölçüldü:** orkestra, hakemsiz kolu anlamlı
+geçiyor (p = 0,0156, eşleşmiş fark sıfırı dışlıyor) ve halüsinasyonu
+60 → 53 düşürüyor. "Ajan önerir, hakem reddeder" asimetrisi işe yarıyor —
+ama kuralı geçmeye yetmiyor. Orkestrasyon ürüne girmiyor; ablasyon
+tablosunda ölçülmüş bir satır olarak kalıyor.
+
+Ayrıntı: `docs/rapor/ablasyon.md` → "Ek (2026-08-07) — orkestrasyon geniş
+sette: n=48".
 
 ---
 
