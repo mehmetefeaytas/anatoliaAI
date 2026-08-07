@@ -26,7 +26,8 @@ ve `run_eval` ile `ablation` ikisi de buradan beslenir.
 
 ## Offline dürüstlüğü
 
-LLM yoksa `llm`, `hibrit` ve `hibrit-verify` konfigleri `available=False`
+LLM yoksa LLM'e dokunan tüm konfigler (`llm`, `hibrit`, `hibrit-verify`,
+`orkestra`, `orkestra-hakemsiz`) `available=False`
 döner ve çağıranlar bunları ATLAR. "hibrit = kural" satırı BASILMAZ: bu satır
 teknik olarak doğru ama iletişim olarak yalandır — okuyucu hibridin ölçüldüğünü
 sanır. `unavailable_reason` neden atlandığını Türkçe söyler.
@@ -62,14 +63,37 @@ CONFIG_ORKESTRA_HAKEMSIZ = "orkestra-hakemsiz"
 CONFIG_NAMES = (CONFIG_KURAL, CONFIG_LLM, CONFIG_HIBRIT, CONFIG_HIBRIT_VERIFY,
                 CONFIG_ORKESTRA, CONFIG_ORKESTRA_HAKEMSIZ)
 
-# Teslim edilen sistem: dashboard ve API `reconcile()` çağırır, dolayısıyla
-# "resmî" metriğin varsayılanı da bu olmalıdır.
-DEFAULT_CONFIG = CONFIG_HIBRIT
+# Teslim edilen kol — K-2 kararı (2026-08-07), ÖLÇÜMLE verildi.
+#
+# Eskiden `CONFIG_HIBRIT` idi ve gerekçesi "dashboard/API `reconcile()` çağırıyor,
+# öyleyse resmî metrik de hibrit olsun" idi. Bu gerekçe geriye doğru işliyordu:
+# ölçüm kolu, teslim kolunu değiştirmek yerine ona uyduruluyordu. Ölçüm ise
+# hibridin aleyhine:
+#
+#   n=20 (gold.v1, strict)   kural 0,677 · orkestra 0,672 · hibrit 0,575
+#   halüsinasyon             kural 0,096 · orkestra 0,114 · hibrit 0,163
+#
+# Hibridin kaybı geri çağırma kaybı değil, PRECISION kaybıdır ve mekanizma alan
+# kırılımında görünür: `hedef_kitle`'de doğru sayısı 4 → 4 (hiç artmıyor), buna
+# karşılık uydurma 2 → 6. Yani LLM'in yazma yetkisi yeni bilgi getirmiyor,
+# gold'un "YOK" dediği yerleri dolduruyor. Ayrıntı: `docs/rapor/ablasyon.md` §2, §4.
+#
+# ÖLÇÜM KAPISI: n=48'de (`data/gold/gold.v2.json`) orkestra kolu kural kolunu
+# GA'lar örtüşmeden geçerse bu sabit `CONFIG_ORKESTRA` olur. Geçemedi
+# (bkz. `docs/rapor/ablasyon.md`, "Ek — n=48 orkestra"), bu yüzden kural kalıyor.
+#
+# KAPSAM UYARISI — bu sabit tek başına teslim yolunu DEĞİŞTİRMEZ. `src/api/main.py`
+# canlı çıkarım ucu hâlâ `build_campaign(..., llm=llm)` çağırıyor, yani LLM
+# açıkken hibrit koşuyor. Sabitin işi "resmî metriğin hangi kol olduğunu" tek
+# yerde beyan etmek; API tarafının bu beyana hizalanması ayrı bir değişikliktir.
+DEFAULT_CONFIG = CONFIG_KURAL
 
 CONFIG_DESCRIPTIONS: dict[str, str] = {
-    CONFIG_KURAL: "yalnız kural katmanı (regex + normalizasyon), LLM kapalı",
+    CONFIG_KURAL: ("yalnız kural katmanı (regex + normalizasyon), LLM kapalı "
+                   "— RESMÎ VARSAYILAN (K-2)"),
     CONFIG_LLM: "yalnız LLM katmanı (kısıtlı decoding), kural kapalı",
-    CONFIG_HIBRIT: "kural birincil + eksikleri LLM doldurur (TESLİM EDİLEN SİSTEM)",
+    CONFIG_HIBRIT: ("kural birincil + eksikleri LLM doldurur (API canlı çıkarım "
+                    "ucunun yolu; K-2 ile resmî varsayılan olmaktan çıktı)"),
     CONFIG_HIBRIT_VERIFY: ("hibrit + düşük güvenli KURAL alanlarını LLM doğrular "
                            "(reconcile.verify_low_conf)"),
     CONFIG_ORKESTRA: ("kural birincil + ÇOK-AJANLI LLM (sayısal/bağlamsal ajan "
