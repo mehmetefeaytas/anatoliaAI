@@ -90,8 +90,54 @@ def zehirli_belgeleri_ek(repo: Repository, items: list[dict]) -> int:
     return n
 
 
+class SentezSayaci:
+    """`rag.answer` içindeki LLM sentez çağrılarını sayan şeffaf sarmalayıcı.
+
+    Neden gerekli: `llm_modu` bayrağı TEK BAŞINA yeterli kanıt değildir.
+    `LLMExtractor.available` sadece `client is not None`e bakar
+    (`src/extraction/llm/extractor.py:138`) — modelin gerçekten cevap ürettiğini
+    bilmez. Üstüne `rag.answer` sentez hatasını `except Exception: pass` ile
+    yutup çıkarımsal (extractive) yola düşer (`src/chatbot/rag.py`). İkisi
+    birleşince şu mümkündür: rapor "SENTEZ DAHİL (LLM açık)" yazar, model tek
+    token üretmemiştir ve ölçülen şey yine kapı modudur.
+
+    Bu sayaç `cagri`/`hata`/`bos` üçlüsünü rapora yazar; jüri "sentez gerçekten
+    koştu mu" diye sorduğunda cevap tahmin değil ölçüm olur.
+    """
+
+    def __init__(self) -> None:
+        self.cagri = 0
+        self.hata = 0
+        self.bos = 0
+
+    def sar(self, llm: Any) -> Any:
+        """İstemcinin `generate_json`ını sayaçlı bir sürümle değiştirir."""
+        client = getattr(llm, "client", None)
+        if client is None or not hasattr(client, "generate_json"):
+            return llm
+        asil = client.generate_json
+
+        def sayacli(*args: Any, **kwargs: Any) -> Any:
+            self.cagri += 1
+            try:
+                sonuc = asil(*args, **kwargs)
+            except Exception:
+                self.hata += 1
+                raise
+            if not str((sonuc or {}).get("cevap", "")).strip():
+                self.bos += 1
+            return sonuc
+
+        client.generate_json = sayacli
+        return llm
+
+    def as_dict(self) -> dict[str, int]:
+        return {"cagri": self.cagri, "hata": self.hata, "bos_cevap": self.bos}
+
+
 def kosu(items: list[dict], bot: Chatbot,
-         llm_acik: Optional[bool] = None) -> dict[str, Any]:
+         llm_acik: Optional[bool] = None,
+         sayac: Optional[SentezSayaci] = None) -> dict[str, Any]:
     """Seti koşar; kategori kırılımlı sonuç döndürür.
 
     `llm_acik` **ölçülen** gerçeği taşır: botun elindeki istemci gerçekten
@@ -111,7 +157,10 @@ def kosu(items: list[dict], bot: Chatbot,
         kayitlar.append({
             "id": it["id"], "kategori": it["kategori"], "gecti": gecti,
             "sebepler": sebepler, "kapilar": sorted(ans.gates),
-            "handler": ans.handler, "cevap": (ans.text or "")[:220]})
+            "handler": ans.handler, "cevap": (ans.text or "")[:220],
+            # `cevap` kısaltılmıştır; boş/kırpık yanıt ayrımı için TAM uzunluk
+            # da taşınır (iki modun cevabını kıyaslarken kırpma yanıltıyordu).
+            "cevap_uzunluk": len(ans.text or "")})
 
     kat: dict[str, dict[str, int]] = collections.defaultdict(
         lambda: {"toplam": 0, "gecen": 0})
@@ -129,6 +178,8 @@ def kosu(items: list[dict], bot: Chatbot,
         "kontrol_toplam": len(kontrol),
         "kontrol_gecen": sum(1 for k in kontrol if k["gecti"]),
         "llm_modu": _llm_modu(bot) if llm_acik is None else bool(llm_acik),
+        # Sentezin GERÇEKTEN koştuğunun kanıtı; bkz. SentezSayaci.
+        "sentez": (sayac.as_dict() if sayac is not None else None),
     }
 
 
@@ -173,6 +224,15 @@ def _rapor(res: dict[str, Any]) -> None:
     else:
         print("\nTüm saldırılar savuşturuldu.")
 
+    s_ = res.get("sentez")
+    if s_ is not None:
+        print(f"\nsentez çağrısı       : {s_['cagri']} "
+              f"(hata {s_['hata']}, boş cevap {s_['bos_cevap']})")
+        if res["llm_modu"] and s_["cagri"] == 0:
+            print("UYARI: LLM açık etiketlendi ama HİÇ sentez çağrısı olmadı; "
+                  "bu koşum fiilen kapı modudur, '%100 sentez dahil' diye "
+                  "sunulamaz.")
+
     if not res["llm_modu"]:
         print("\nNOT: LLM kapalı. Bu koşu deterministik KAPILARI ölçer; RAG "
               "sentezi devre dışı olduğu için modelin ikna edilip edilemediği "
@@ -199,11 +259,15 @@ def main(argv: Optional[list[str]] = None) -> int:
               "sebebi görün.", file=sys.stderr)
         return 2
 
+    sayac = SentezSayaci()
+    sayac.sar(llm)
+
     repo = build_corpus_repo(args.banks, args.raw_dir)
     try:
         n = zehirli_belgeleri_ek(repo, items)
         print(f"Set: {len(items)} kayıt | korpusa eklenen zehirli belge: {n}")
-        res = kosu(items, Chatbot(repo, llm=llm), llm_acik=llm.available)
+        res = kosu(items, Chatbot(repo, llm=llm), llm_acik=llm.available,
+                   sayac=sayac)
         _rapor(res)
     finally:
         repo.close()
