@@ -78,16 +78,135 @@ gold.v2 onun yerine geçmez, önceliğini artırır.
 
 ## Sonuçlar
 
-_(anotasyon tamamlandıkça doldurulur)_
+Anotasyon bitti: **48 belge, 112 dolu alan, 444 "yok" kararı, 20 belirsiz
+(%3,5)**. Üç kapı da geçti (şema, kanıt, ayrıklık). 40 belge `hard`.
 
-| ölçüm | gold.v1 (n=20) | gold.v2 (n=48) | birleşik (n=68) |
+### 1. Ana ölçüm — ve neden iki sayı bu kadar ayrışıyor
+
+| ölçüm | gold.v1 (n=20) | gold.v2 (n=48) |
+|---|---|---|
+| kural / strict mikro-F1 | **0,677** | **0,387** |
+| `kampanya_kosullari` hariç mikro-F1 | 0,660 | 0,536 |
+| halüsinasyon | 0,096 [16/166] | **0,101 [45/444]** |
+
+Farkın **yaklaşık %57'si tek bir alandan** geliyor: `kampanya_kosullari`
+gold.v2'de **0/36/33** (TP/FP/FN), yani F1 = 0,000. 33 destekli vakada tek
+bir isabet yok. Bu bir kabiliyet çöküşü değil — serbest metin **liste**
+alanında birebir eşleşme.
+
+**Kök neden protokol farkı.** `ANNOTATION_GUIDE.md` §3.1 birebir şöyle:
+
+> "Boş bırakmak = `ok` = model doğru. Boş bırakınca *modelin bu satırdaki
+> çıktısını onaylıyorum* demiş olursunuz."
+
+Yani gold.v1, **modelin çıktısı çapa alınarak** etiketlendi. Anotatörün
+itiraz etmediği her değer gold'a modelin yazdığı gibi girdi. Bu bilinçli ve
+belgelenmiş bir tasarım (anotatör verimliliği) ama ölçülen skoru yukarı
+çeker — özellikle "doğru cevap tek değil" tipindeki alanlarda.
+
+gold.v2 **kör** etiketlendi. Serbest metin liste alanında iki bağımsız
+seçimin birebir örtüşmesi zaten beklenmez; 0,000 bunu gösteriyor.
+
+**Bu bir suçlama değil, bir kalibrasyon.** İki protokol iki farklı soruyu
+ölçüyor:
+
+- gold.v1 → *"model önerisini bir uzman onaylar mı?"*
+- gold.v2 → *"model, bağımsız bir uzmanın vardığı sonuca varır mı?"*
+
+İkincisi jürinin sorduğu sorudur. **0,677 tek başına sunulmamalıdır.**
+
+### 2. Halüsinasyon — asıl güvenilir sayı
+
+0,096 → **0,101**, üstelik payda **166'dan 444'e** çıkmışken. Yani
+"uydurma oranı ~%10" bulgusu 2,7 kat daha fazla kararla **tekrarlandı**.
+Bu, iki protokolden de bağımsız çıkan tek sayıdır ve raporlanabilir.
+
+### 3. K-1 yeniden ölçümü — n=20'deki F1 kazancı GÜRÜLTÜYMÜŞ
+
+Kural kolu / strict, aynı üç yapılandırma, n=20 ve n=48 yan yana:
+
+| yapılandırma | F1 (n=20) | F1 (n=48) | halüsinasyon (n=20) | halüsinasyon (n=48) | kaçırma (n=48) |
+|---|---|---|---|---|---|
+| temel | 0,677 | **0,387** | 0,096 [16/166] | 0,101 [45/444] | 21 |
+| n-gram | **0,688** | 0,369 | **0,066** | **0,070 [31/444]** | 33 |
+| blok | 0,687 | 0,376 | 0,090 | 0,077 [34/444] | 29 |
+
+%95 güven aralıkları (belge düzeyi bootstrap, 2000 örnek, seed=42):
+
+| yapılandırma | mikro-F1 | %95 GA | genişlik |
 |---|---|---|---|
-| kural / strict mikro-F1 | 0,677 | — | — |
-| halüsinasyon | 0,096 | — | — |
+| temel | 0,387 | [0,329–0,442] | 0,113 |
+| n-gram | 0,369 | [0,304–0,427] | 0,123 |
+| blok | 0,376 | [0,315–0,435] | 0,120 |
 
-### K-1 yeniden ölçümü
+**Üç aralık da tamamen örtüşüyor** — F1 farkları istatistiksel olarak
+ayırt edilemez. Karşılaştırma için n=20'deki aralık **[0,493–0,748]**,
+yani genişlik **0,255**. n=48'de genişlik yarıya indi: ölçüm gerçekten
+keskinleşti ve keskinleşince F1 farkının olmadığını gösterdi.
 
-_(temel / n-gram / blok üç kolu geniş sette tekrarlanacak)_
+**Üç bulgu:**
+
+1. **F1 kazancı yok oldu.** n=20'de iki temizleme kolu da temel çizginin
+   ÜSTÜNDEYDİ (+0,011). n=48'de ikisi de ALTINDA (−0,018 ve −0,011).
+   İşaret değişti — yani n=20'deki "kazanç" gürültüydü. Bu tam olarak
+   K-1'de uyarılan kırılganlıktı ve geniş ölçüm onu doğruladı.
+
+2. **Halüsinasyon azalması ise TEKRARLANDI.** n-gram göreli olarak
+   n=20'de −%31, n=48'de −%31 (0,101 → 0,070). Aynı büyüklük, 2,7 kat
+   fazla kararla. Bu artık gürültü değil.
+
+3. **İki kolun sıralaması da tekrarlandı.** Her iki ölçekte de n-gram
+   halüsinasyonda önde, blok kaçırmada önde. Ödünleşim gerçek ve kararlı.
+
+**K-1 için sonuç:** karar F1'e bakılarak verilemez (fark yok, hatta hafif
+negatif). Karar ödünleşimdir ve iki uç nettir:
+
+- uydurmayı en aza indir → **n-gram** (halüsinasyon 0,070, bedeli 12 ek kaçırma)
+- kapsamayı koru → **temel** (halüsinasyon 0,101, kaçırma 21)
+- ortası → **blok** (0,077 / 29)
+
+### 4. Anotasyon kılavuzunda 8 boşluk bulundu
+
+Dört anotatör **bağımsız olarak** aynı belirsizlikleri işaretledi — bu,
+anotatör gürültüsü değil kılavuz kusuru olduklarının kanıtıdır. En sık
+üçü:
+
+1. **Kampanya olmayan belgeler için sınıf yok.** Korpusta zekât hesaplama
+   aracı, KVKK metni, kurumsal sayfa, kampanya LİSTESİ sayfaları var. 8
+   sınıfın hiçbiri uymuyor; `null`'ın meşruluğu kılavuzda yazmıyor.
+   gold.v2'nin **9 belgesi (%19)** bu durumda.
+2. **Ürün kısıtı mı, müşteri segmenti mi?** "Yalnız Paraf kartlar" bir
+   `hedef_kitle` değeri mi, koşul mu? Kural yok; dört anotatör de kendi
+   kuralını koydu. `hedef_kitle` F1'i 0,727 → 0,267 düşüşünün muhtemel
+   payı burada.
+3. **Tutar cinsinden indirim** ("100 TL indirim") `indirim_orani`ya
+   sığmıyor (yalnız yüzde), `odul_miktari` ise "ödül/hediye" tanımlı.
+
+Kalan beşi: çok değerli `alisveris_puani` (sektöre göre farklı oranlar),
+oransal tahsis ücreti (binde 5), `N/M` biçiminde kâr paylaşım oranı, gün
+cinsinden vade, yan menü/"İlginizi çekebilir" bloğu kirliliği.
+
+**κ ölçümünden önce kılavuz bu sekiz maddeyle güncellenmeli.** Aksi hâlde
+düşük κ, anotatör uyumsuzluğu değil kılavuz belirsizliği ölçer.
+
+---
+
+## Bulunan ve düzeltilen bir ölçüm kusuru
+
+İlk koşuda n-gram kolu temel kolla **birebir aynı sayıyı** verdi. Sebep
+`sample_gold_v2`nin kimliği `abs(hash(url))` ile üretmesiydi:
+
+- `hash()` string'lerde süreç başına rastgeledir (`PYTHONHASHSEED`) — yani
+  "deterministik örnekleme" iddiası yanlıştı;
+- `boilerplate_audit.clean_gold` gold kaydını korpustaki grubuna **`id`
+  üzerinden** bağlar. Uydurma kimlik hiçbir gruba oturmadığı için çerçeve
+  ayıklaması **0/48 belgeye** uygulandı.
+
+Kusur "hata" olarak değil, **"fark yok" sonucu** olarak görünüyordu — bu
+projede avlanan sessiz yanlış rapor sınıfının bir örneği daha. Kimlik
+kuralı `split_trainable.iter_docs` ile aynı hâle getirildi
+(`<banka>--<dosya adı>`); düzeltmeden sonra n-gram 44/48 belgeyi
+temizliyor (karakterlerin %42'si).
 
 ---
 

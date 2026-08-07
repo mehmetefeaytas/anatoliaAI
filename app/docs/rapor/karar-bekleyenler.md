@@ -35,6 +35,28 @@ F1 farkı (0,688 vs 0,687) istatistiksel olarak yok.
 **Uyarı:** n=20'de bu farklar küçük sayılara dayanıyor — halüsinasyonda **5
 kayıt**, kaçırmada **2 alan**. Gold büyümeden verilen karar kırılgan olur.
 
+### GÜNCELLEME (2026-08-07): n=48'de tekrarlandı — uyarı haklı çıktı
+
+`docs/rapor/gold-genisletme.md`. Aynı üç kol, 48 belgelik bağımsız
+etiketlenmiş sette:
+
+| yapılandırma | F1 (n=20) | F1 (n=48) | %95 GA (n=48) | halüsinasyon (n=48) | kaçırma |
+|---|---|---|---|---|---|
+| temel | 0,677 | 0,387 | [0,329–0,442] | 0,101 [45/444] | 21 |
+| n-gram | **0,688** | 0,369 | [0,304–0,427] | **0,070 [31/444]** | 33 |
+| blok | 0,687 | 0,376 | [0,315–0,435] | 0,077 [34/444] | 29 |
+
+- **F1 kazancı gürültüymüş.** n=20'de iki temizleme kolu da temelin
+  üstündeydi; n=48'de ikisi de altında. İşaret değişti, üç GA tamamen
+  örtüşüyor.
+- **Halüsinasyon azalması gerçek.** n-gram göreli olarak her iki ölçekte de
+  **−%31**. Payda 166'dan 444'e çıkmışken tekrarlandı.
+- **Kolların sıralaması da tekrarlandı**: n-gram uydurmada önde, blok
+  kaçırmada önde.
+
+**Karar F1'e bakılarak verilemez.** Soru şu: uydurmayı mı azaltalım
+(n-gram, bedeli 12 ek kaçırma), kapsamayı mı koruyalım (temel)?
+
 **Seçmemenin bedeli:** bugünkü hâl (ayıklama yok) her iki metrikte de
 ikisinden kötü; korpusun %40'ı gürültü olarak LLM'e gidiyor ve çerez/KVKK
 metninden `vade_ay="1 yıl"`, `masraf_durumu="ücretsiz"` uyduruluyor.

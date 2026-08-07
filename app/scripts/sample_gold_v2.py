@@ -95,6 +95,7 @@ def havuz(db: str, gold_yolu: str) -> list[dict]:
     finally:
         repo.close()
     haric = _gold_hashleri(gold_yolu)
+    kimlikler = _korpus_kimlikleri()
     out = []
     for c in kampanyalar:
         url = (c.get("source_url") or "")
@@ -108,8 +109,13 @@ def havuz(db: str, gold_yolu: str) -> list[dict]:
         h = content_hash(metin)
         if h in haric:
             continue
+        kimlik = kimlikler.get(metin)
+        if kimlik is None:
+            # Korpusta karşılığı yoksa aday DEĞİLDİR. Sentetik kimlik üretmek,
+            # kaydı çerçeve ayıklaması ölçümüne görünmez kılar (bkz. altta).
+            continue
         out.append({
-            "id": f"{c.get('bank')}--{abs(hash(url)) % 10**8}",
+            "id": kimlik,
             "bank_slug": c.get("bank"),
             "source_url": url,
             "content_hash": h,
@@ -117,6 +123,36 @@ def havuz(db: str, gold_yolu: str) -> list[dict]:
             "campaign_type": c.get("campaign_type"),
         })
     return out
+
+
+def _korpus_kimlikleri() -> dict[str, str]:
+    """Normalize metin -> `<banka>--<dosya adı>` kimliği.
+
+    ## Neden bu kimlik, `hash(url)` değil
+
+    İlk sürüm kimliği `abs(hash(url)) % 10**8` ile üretiyordu. İki ayrı
+    kusurdu ve ikincisi ölçümü sessizce yok ediyordu:
+
+    1. `hash()` string'lerde süreç başına rastgeledir (`PYTHONHASHSEED`).
+       Aynı komut farklı kimlikler üretiyordu — "deterministik" iddiası
+       yanlıştı.
+    2. `scripts/boilerplate_audit.clean_gold`, gold kaydını korpustaki
+       grubuna **`id` üzerinden** bağlar. Uydurma kimlik hiçbir gruba
+       oturmadığı için çerçeve ayıklaması gold'un **0/48 belgesine**
+       uygulandı ve n-gram kolu temel kolla BİREBİR aynı sayıyı verdi.
+       Hata olarak değil, "fark yok" sonucu olarak görünüyordu.
+
+    Kimlik kuralı `scripts/split_trainable.iter_docs` ile aynı tutulur;
+    ikisinin ayrışması aynı sessiz kusuru geri getirir.
+    """
+    from src.preprocessing.clean import normalize_text
+    harita: dict[str, str] = {}
+    for p in Path("data/raw").rglob("*.txt"):
+        parcalar = p.relative_to("data/raw").parts
+        metin = normalize_text(p.read_text(encoding="utf-8", errors="ignore"))
+        if metin:
+            harita.setdefault(metin, f"{parcalar[0]}--{p.stem}")
+    return harita
 
 
 def orneklendir(adaylar: list[dict], n: int, tohum: int = TOHUM) -> list[dict]:
