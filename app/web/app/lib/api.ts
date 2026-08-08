@@ -116,6 +116,59 @@ export type CampaignSummary = {
   raw_text: string;
   source_url: string | null;
   scraped_at?: string | null;
+  /**
+   * Üretilmiş özet. API bu alanı ZATEN döndürüyordu (`repository.py` SELECT'i
+   * `c.ozet` içeriyor) ama bu tip onu tanımlamıyordu, dolayısıyla liste ekranı
+   * veriyi göremiyordu. Kapsam sayacı buradan hesaplanır — ek uç gerekmez.
+   */
+  ozet?: string | null;
+};
+
+/** Bileşik skorun tek bir ölçüt bileşeni (`GET /advantageous`). */
+export type ScoreComponent = {
+  field_name: string;
+  value: unknown;
+  normalized: number | null;
+  weight: number;
+  contribution: number | null;
+  note: string | null;
+};
+
+export type CompositeScore = {
+  bank: string | null;
+  bank_name: string | null;
+  campaign_id: number | null;
+  /** 0..1; kapsanan ölçütler üzerinden ortalama. Kıyas dışıysa null. */
+  score: number | null;
+  /** Ağırlıkça kapsama oranı (0..1). */
+  coverage: number;
+  comparable: boolean;
+  note: string | null;
+  components: ScoreComponent[];
+};
+
+export type AdvantageousGroup = {
+  count: number;
+  /** Grup küçükse (MIN_GROUP_SIZE altı) sıralama YAPILMAZ; gerekçe burada. */
+  note: string | null;
+  ranked: CompositeScore[];
+};
+
+/** Ağırlık + GEREKÇESİ. Ağırlık bir ürün kararıdır, ölçümden türetilmiş sabit değil. */
+export type WeightRow = {
+  field_name: string;
+  weight: number;
+  rationale: string | null;
+  direction: "dusuk_iyi" | "yuksek_iyi";
+};
+
+export type Advantageous = {
+  min_group_size: number;
+  min_coverage: number;
+  weights: WeightRow[];
+  fairness_note: string;
+  /** Kampanya türü → grup. Sıralama TÜR İÇİNDE yapılır (CLAUDE.md §17). */
+  types: Record<string, AdvantageousGroup>;
 };
 
 export type ScoringStep = { no: number; name: string; detail: string };
@@ -268,6 +321,17 @@ export const api = {
     if (intent) p.set("intent", intent);
     if (type) p.set("type", type);
     return request<CompareRow[]>(`/api/compare?${p.toString()}`);
+  },
+  /**
+   * Çok alanlı, ağırlıklı bileşik skor — sıralama TÜR İÇİNDE yapılır.
+   * Uç 2026-08-08'de eklendi ama arayüzden hiç çağrılmıyordu; tür içinde adil
+   * sıralama yapan tek kod yolu budur.
+   */
+  advantageous: (type?: string) => {
+    const p = new URLSearchParams();
+    if (type) p.set("type", type);
+    const q = p.toString();
+    return request<Advantageous>(`/api/advantageous${q ? `?${q}` : ""}`);
   },
   scoring: (field: string, type?: string) => {
     const p = new URLSearchParams({ field });

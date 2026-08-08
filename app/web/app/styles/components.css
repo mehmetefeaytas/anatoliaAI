@@ -567,10 +567,24 @@ table.data tbody tr.group-head:not(:first-child) td {
   font-size: var(--fs-sm);
   color: var(--fg-dim);
 }
+/* Jüri anahtarı kendi zeminini taşır: `.jury-bar` zaten `--bg-2` olduğu için
+ * genel `.chip[aria-pressed="true"]` kuralı (aynı zemin) burada görünmez kalırdı. */
 .jury-toggle {
   flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--bg-3);
+  color: var(--fg);
 }
-/* Durum noktası: renk TEK sinyal değil — yanındaki metin de değişir. */
+.jury-toggle[aria-pressed="true"],
+.jury-toggle.on {
+  background: var(--accent-wash);
+  color: var(--fg);
+  box-shadow: none;
+}
+/* Durum noktası: renk TEK sinyal değil — düğmenin metni de
+ * "açık"/"kapalı" yazar ve `aria-pressed` aynı bilgiyi taşır. */
 .jury-dot {
   width: var(--sp-2);
   height: var(--sp-2);
@@ -578,6 +592,8 @@ table.data tbody tr.group-head:not(:first-child) td {
   background: var(--fg-faint);
   flex: none;
 }
+.jury-toggle[aria-pressed="true"] .jury-dot,
+.jury-toggle.on .jury-dot,
 .jury-dot.on {
   background: var(--ok);
 }
