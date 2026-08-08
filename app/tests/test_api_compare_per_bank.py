@@ -33,6 +33,7 @@ if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
 from fastapi.testclient import TestClient
+
 from src.db.repository import Repository
 from src.extraction.reconcile import build_campaign
 

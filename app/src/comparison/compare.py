@@ -580,3 +580,55 @@ def weight_manifest(weights: Optional[dict[str, float]] = None) -> list[dict[str
              "rationale": WEIGHT_RATIONALE.get(f),
              "direction": "dusuk_iyi" if f in _LOWER_IS_BETTER else "yuksek_iyi"}
             for f, wt in sorted(w.items(), key=lambda kv: -kv[1])]
+
+
+# --------------------------------------------------------------------------- #
+# Banka içi delta — "bende ne eksik, rakipte ne var?"
+# --------------------------------------------------------------------------- #
+#
+# Diğer fonksiyonlar müşterinin sorusunu ("hangi banka daha ucuz?") yanıtlar;
+# bu blok BANKANIN sorusunu yanıtlar. Aynı çıkarım verisi, tersinden okunmuş.
+#
+# Delta aritmetiği ARAYÜZDE DEĞİL burada durur. Fark hesabı yönü bilmek
+# zorundadır ("düşük iyi" alanda daha küçük değer avantajdır) ve bu bilgi
+# `_LOWER_IS_BETTER` kümesinde yaşar. Aynı kararı istemcide ikinci kez
+# uygulamak, bugün iki kez düzeltilen hatanın (`masraf_durumu` sıfır sayımı,
+# aralık ucu seçimi) tam kalıbıdır: ilke bir yolda doğru, diğerinde eskimiş.
+
+#: Delta durumları. `eksik_urun` ile `eksik_veri` BİLEREK ayrıdır — biri
+#: bankanın o ürünü sunmadığını, diğeri çıkarımın alanı bulamadığını söyler ve
+#: ikisini tek etikette toplamak, olmayan bir ürün eksikliği iddia etmektir.
+DELTA_KINDS = (
+    "eksik_urun", "eksik_veri", "daha_iyi", "daha_kotu",
+    "esit", "kiyaslanamaz", "rakip_yok",
+)
+
+
+def delta_between(field_name: str,
+                  mine_key: Optional[float],
+                  rival_key: Optional[float]) -> tuple[str, Optional[float],
+                                                       Optional[float]]:
+    """İki sıralama anahtarı arasındaki farkı YÖNE göre yorumlar.
+
+    Dönüş: ``(kind, abs_diff, rel_pct)``.
+
+    Taraflardan biri sayıya indirgenemiyorsa (aralık, zaman-koşullu oran,
+    farklı para birimi) fark **hesaplanmaz** ve `kiyaslanamaz` döner. Yaklaşık
+    bir fark üretmek, CLAUDE.md §17'nin yasakladığı uydurma sıralamadır.
+
+    Göreli fark rakibin değerine oranlanır ve rakip 0 ise **hesaplanmaz**:
+    sıfıra bölme tanımsızdır ve 0 burada gerçek bir üründür ("masrafsız",
+    "vade farksız"), eksik veri değil.
+    """
+    if mine_key is None or rival_key is None:
+        return "kiyaslanamaz", None, None
+
+    fark = mine_key - rival_key
+    if fark == 0:
+        return "esit", 0.0, 0.0
+
+    dusuk_iyi = field_name in _LOWER_IS_BETTER
+    daha_iyi = fark < 0 if dusuk_iyi else fark > 0
+    goreli = (None if rival_key == 0
+              else abs(fark) / abs(rival_key) * 100)
+    return ("daha_iyi" if daha_iyi else "daha_kotu"), abs(fark), goreli

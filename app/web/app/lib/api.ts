@@ -53,6 +53,75 @@ export type CompareRow = SpanInfo & {
 /** `/compare?per_bank=` — banka başına tek satır mı, her kayıt ayrı mı. */
 export type PerBank = "best" | "all";
 
+export type Bank = {
+  slug: string;
+  name: string;
+  website_url: string | null;
+  bddk_active: boolean;
+};
+
+/**
+ * Delta durumu. `eksik_urun` ile `eksik_veri` BİLEREK ayrıdır: biri bankanın o
+ * ürünü sunmadığını, diğeri çıkarımın alanı bulamadığını söyler.
+ */
+export type DeltaKind =
+  | "eksik_urun"
+  | "eksik_veri"
+  | "daha_iyi"
+  | "daha_kotu"
+  | "esit"
+  | "kiyaslanamaz"
+  | "rakip_yok";
+
+/** Deltanın bir tarafı — değer + KANITI. */
+export type DeltaSide = {
+  bank: string;
+  bank_name: string | null;
+  value: unknown;
+  raw_value: string | null;
+  sort_key: number | null;
+  comparable: boolean;
+  note: string | null;
+  campaign_id: number;
+  campaign_type: string | null;
+  source_url: string | null;
+  confidence: number | null;
+  confidence_source: string | null;
+  extractor: Extractor | null;
+  contradiction_count: number;
+};
+
+export type DeltaField = {
+  field: string;
+  label: string;
+  direction: FieldMeta["direction"];
+  direction_label: string;
+  kind: DeltaKind;
+  /** Mutlak fark — yalnız iki taraf da kıyaslanabilirse. */
+  abs_diff: number | null;
+  /** Göreli fark (%) — rakibin değeri 0 ise hesaplanmaz. */
+  rel_pct: number | null;
+  /** Bankanın bu alandaki sıralama konumu ("7 bankadan 3."). */
+  position: number | null;
+  bank_count: number;
+  mine: DeltaSide | null;
+  rival: DeltaSide | null;
+};
+
+export type DeltaFamily = {
+  campaign_type: string | null;
+  /** Bankanın bu ailede kaç belgesi var — "ürün yok" ile "veri yok" ayrımı. */
+  own_campaigns: number;
+  fields: DeltaField[];
+};
+
+export type BankDelta = {
+  bank: string;
+  rival: string | null;
+  fairness_note: string;
+  families: DeltaFamily[];
+};
+
 export type FieldMeta = {
   field: string;
   label: string;
@@ -324,6 +393,19 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export const api = {
   fields: () => request<FieldMeta[]>("/api/fields"),
   campaigns: () => request<CampaignSummary[]>("/api/campaigns"),
+  /**
+   * Banka kataloğu. Delta paneli bunu kullanır — `/campaigns`'ten türetmek,
+   * hiç kampanyası toplanmamış bankayı listeden düşürüyordu; oysa "bende hiç
+   * ürün yok" tam da o panelin cevaplaması gereken soru.
+   */
+  banks: () => request<Bank[]>("/api/banks"),
+  /** Banka içi delta — tek istekte, ürün ailesi içinde (bkz. `/bank-delta`). */
+  bankDelta: (bank: string, type?: string, rival?: string) => {
+    const p = new URLSearchParams({ bank });
+    if (type) p.set("type", type);
+    if (rival) p.set("rival", rival);
+    return request<BankDelta>(`/api/bank-delta?${p.toString()}`);
+  },
   campaignText: (id: number) => request<CampaignText>(`/api/campaigns/${id}/text`),
   compare: (field: string, intent?: string, type?: string, perBank?: PerBank) => {
     const p = new URLSearchParams({ field });

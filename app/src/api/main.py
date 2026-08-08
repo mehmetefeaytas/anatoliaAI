@@ -113,6 +113,7 @@ from ..comparison.compare import (
     MIN_COVERAGE,
     MIN_GROUP_SIZE,
     RankRow,
+    delta_between,
     rank,
     rank_advantageous_by_type,
     weight_manifest,
@@ -123,6 +124,7 @@ from ..extraction.llm.extractor import default_extractor
 from ..extraction.llm.schema import EXTRACTION_FIELDS
 from ..extraction.ner.classifier import default_classifier
 from ..extraction.reconcile import build_campaign
+from ..normalization.normalize import collapse_degenerate_range
 from ..pipeline import run_pipeline
 from ..preprocessing.blocks import cerceve_cumleler, gorunum_araliklari
 from ..preprocessing.clean import normalize_text
@@ -178,6 +180,20 @@ VALID_INTENTS = ("lowest", "highest", "list", "filter")
 # bir satır" tablosunu üretir; `all` eski davranışı (her kayıt ayrı satır)
 # korur ve geriye dönük uyumluluk için kaldırılmaz.
 VALID_PER_BANK = frozenset({"best", "all"})
+
+
+def _en_iyi_taraf(adaylar: list) -> tuple:
+    """Bir tarafın gösterilecek kaydı: ilk KIYASLANABİLİR satır.
+
+    `rank()` çıktısı en iyiden kötüye sıralı ve kıyaslanabilirler baştadır,
+    dolayısıyla ilk kıyaslanabilir satır o tarafın en iyi kaydıdır. Hiç
+    kıyaslanabilir satır yoksa ilk satır döner — değer yine gösterilir, ama
+    `comparable=False` olduğu için fark hesaplanmaz.
+    """
+    for kayit, x in adaylar:
+        if x.comparable and x.sort_key is not None:
+            return kayit, x
+    return adaylar[0] if adaylar else (None, None)
 
 
 # --------------------------------------------------------------------------- #
@@ -817,6 +833,205 @@ def build_app():
                 ),
             })
         return out
+
+    @app.get("/bank-delta")
+    def bank_delta(bank: str, type: Optional[str] = None,
+                   rival: Optional[str] = None):
+        """Banka içi delta — "bende ne eksik, rakipte ne var?" (tek istekte).
+
+        Diğer uçlar müşterinin sorusunu ("hangi banka daha ucuz?") yanıtlar;
+        bu uç BANKANIN sorusunu yanıtlar. Aynı çıkarım verisi, tersinden.
+
+        ## Neden ayrı bir uç
+
+        Arayüz bunu 8 ayrı `/compare` çağrısının üstüne istemcide kuruyordu.
+        Üç sonucu vardı: (1) tür süzmesi opsiyonel olduğu için delta ürün
+        aileleri arasında hesaplanabiliyordu — "Vade: rakip 84 ay önde"
+        cümlesi bir ihtiyaç finansmanı ile bir konut finansmanı arasında
+        üretilmiş olabiliyordu; (2) `/compare` her satır için
+        `_campaign_view()` + `_campaign_contradictions()` koşuyor, yani 8
+        istek korpusun tamamını 8 kez geziyordu; (3) fark aritmetiği
+        istemcideydi.
+
+        Burada delta **her zaman ürün ailesi İÇİNDE** hesaplanır (CLAUDE.md
+        §17) ve pahalı çelişki sorgusu yalnız gösterilecek 2 satır için koşar.
+
+        ## Ürün ailesi
+
+        `type` verilirse yalnız o aile döner; verilmezse bankanın belge
+        taşıdığı HER aile ayrı ayrı döner. Aileler arası hiçbir kıyas
+        yapılmaz.
+
+        ## `rival`
+
+        Belirtilmezse rakip, o ailede o alanda **en iyi** olan diğer bankadır.
+        Belirtilirse yalnız o banka rakip alınır — "en iyiye göre neredeyim"
+        ile "şu bankaya göre neredeyim" farklı sorulardır ve ikincisi eskiden
+        hiç sorulamıyordu.
+
+        ## `eksik_urun` ile `eksik_veri` AYRIDIR
+
+        Eskiden ikisi de kırmızı "eksik ürün" etiketine düşüyordu. Banka o
+        ailede hiç belge taşımıyorsa `eksik_urun`; belgesi var ama alan
+        çıkarılamamışsa `eksik_veri`. Bunları tek etikette toplamak, olmayan
+        bir ürün eksikliği iddia etmektir — `FairnessNotice`'ın "veri yok ≠
+        ürün yok" vaadi tam burada tutulur.
+        """
+        alanlar = [f for f in EXTRACTION_FIELDS
+                   if scoring_direction(f)[0] != "unranked"]
+
+        # Alan × satır tablosu tek geçişte kurulur; her alan için depo bir kez
+        # sorgulanır (eskiden istemci 8 ayrı HTTP isteği atıyordu).
+        alan_satirlari: dict[str, list[dict]] = {}
+        aileler: set[Any] = set()
+        for alan in alanlar:
+            satirlar = _field_rows(alan)
+            if type:
+                satirlar = [r for r in satirlar
+                            if r.get("campaign_type") == type]
+            alan_satirlari[alan] = satirlar
+            aileler.update(r.get("campaign_type") for r in satirlar)
+
+        # Bankanın kendi belgelerinin bulunduğu aileler — "ürün yok" ile "veri
+        # yok" ayrımı buna dayanır.
+        kendi_belgeleri: dict[Any, int] = {}
+        for c in repo.all_campaigns():
+            if c.get("bank") != bank:
+                continue
+            tur = c.get("campaign_type")
+            if type and tur != type:
+                continue
+            kendi_belgeleri[tur] = kendi_belgeleri.get(tur, 0) + 1
+
+        aileler.update(kendi_belgeleri)
+        if type:
+            aileler = {a for a in aileler if a == type}
+
+        def _gorunum(satir: Optional[dict], sk: Optional[float],
+                     kiyaslanabilir: bool, not_: Optional[str]) -> Optional[dict]:
+            """Bir tarafın gösterilecek alanları + KANITI.
+
+            `confidence`, `extractor` ve `contradiction_count` bilerek
+            döndürülür: "%10 daha kötüsünüz" iddiasını, arkasındaki değerin
+            hangi katmandan geldiği ve o belgede çelişki olup olmadığı
+            bilinmeden sunmak, denetlenemez bir iddiadır.
+            """
+            if satir is None:
+                return None
+            view = _campaign_view(satir["campaign_id"]) or {}
+            metin = view.get("text") or ""
+            return {
+                "bank": satir["bank"],
+                "bank_name": satir["bank_name"],
+                "value": collapse_degenerate_range(satir.get("canonical_value")),
+                "raw_value": satir.get("raw_value"),
+                "sort_key": sk,
+                "comparable": kiyaslanabilir,
+                "note": not_,
+                "campaign_id": satir["campaign_id"],
+                "campaign_type": satir.get("campaign_type"),
+                "source_url": satir.get("source_url"),
+                "confidence": satir.get("confidence"),
+                "confidence_source": satir.get("confidence_source"),
+                "extractor": satir.get("extractor"),
+                "contradiction_count": len(_campaign_contradictions(
+                    satir["campaign_id"], metin, satir["bank"],
+                    satir.get("scraped_at"))),
+            }
+
+        cikti_aileler = []
+        for aile in sorted(aileler, key=lambda a: (a is None, str(a))):
+            alan_ciktilari = []
+            for alan in alanlar:
+                aile_satirlari = [r for r in alan_satirlari[alan]
+                                  if r.get("campaign_type") == aile]
+                siralanmis = rank([
+                    {"bank": f"{i}{_ROW_TOKEN_SEP}{r['bank']}",
+                     "bank_name": r["bank_name"],
+                     "canonical_value": r["canonical_value"],
+                     "source_span": r["source_span"]}
+                    for i, r in enumerate(aile_satirlari)
+                ], alan)
+
+                # Sıralama satırını kaynak kayda geri bağla. Token'daki indeks
+                # `aile_satirlari` içindeki konumdur (bkz. `_ROW_TOKEN_SEP`).
+                eslesmis = [
+                    (aile_satirlari[int(x.bank.split(_ROW_TOKEN_SEP, 1)[0])], x)
+                    for x in siralanmis
+                ]
+
+                benimkiler = [(k, x) for k, x in eslesmis if k["bank"] == bank]
+                rakipler = [(k, x) for k, x in eslesmis
+                            if k["bank"] != bank
+                            and (rival is None or k["bank"] == rival)]
+
+                benim_kayit, benim = _en_iyi_taraf(benimkiler)
+                rakip_kayit, rakip = _en_iyi_taraf(rakipler)
+
+                # Bankanın sıralamadaki kendi konumu — "7 bankadan 3.".
+                # Banka başına TEK konum: aynı bankanın birden çok kaydı
+                # sıralamayı şişirmemeli.
+                gorulen: list[Any] = []
+                for kayit, x in eslesmis:
+                    if x.comparable and x.sort_key is not None \
+                            and kayit["bank"] not in gorulen:
+                        gorulen.append(kayit["bank"])
+                konum = gorulen.index(bank) + 1 if bank in gorulen else None
+
+                if rakip is None:
+                    tur_kind, mutlak, goreli = "rakip_yok", None, None
+                elif benim is None:
+                    # Bankanın o ailede HİÇ belgesi yoksa ürün eksikliği;
+                    # belgesi var ama alan çıkarılamadıysa VERİ eksikliği.
+                    tur_kind = ("eksik_urun" if not kendi_belgeleri.get(aile)
+                                else "eksik_veri")
+                    mutlak = goreli = None
+                else:
+                    tur_kind, mutlak, goreli = delta_between(
+                        alan,
+                        benim.sort_key if benim.comparable else None,
+                        rakip.sort_key if rakip.comparable else None,
+                    )
+
+                alan_ciktilari.append({
+                    "field": alan,
+                    "label": FIELD_LABELS.get(alan, alan),
+                    "direction": scoring_direction(alan)[0],
+                    "direction_label": scoring_direction(alan)[1],
+                    "kind": tur_kind,
+                    "abs_diff": mutlak,
+                    "rel_pct": goreli,
+                    "position": konum,
+                    "bank_count": len(gorulen),
+                    "mine": _gorunum(
+                        benim_kayit,
+                        benim.sort_key if benim else None,
+                        bool(benim and benim.comparable),
+                        benim.note if benim else None),
+                    "rival": _gorunum(
+                        rakip_kayit,
+                        rakip.sort_key if rakip else None,
+                        bool(rakip and rakip.comparable),
+                        rakip.note if rakip else None),
+                })
+
+            cikti_aileler.append({
+                "campaign_type": aile,
+                "own_campaigns": kendi_belgeleri.get(aile, 0),
+                "fields": alan_ciktilari,
+            })
+
+        return {
+            "bank": bank,
+            "rival": rival,
+            "fairness_note": (
+                "Delta her zaman ÜRÜN AİLESİ İÇİNDE hesaplanır; bir konut "
+                "finansmanı ile bir ihtiyaç finansmanı arasında fark "
+                "üretilmez (CLAUDE.md §17). Taraflardan biri sayıya "
+                "indirgenemiyorsa fark boş bırakılır — yaklaşık bir fark "
+                "uydurulmaz."),
+            "families": cikti_aileler,
+        }
 
     @app.get("/scoring")
     def scoring(field: str, type: Optional[str] = None):

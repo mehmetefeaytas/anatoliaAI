@@ -136,19 +136,9 @@ function Dashboard() {
           <AdvantageousPanel campaignTypes={campaignTypes} onInspect={inspect} />
         )}
 
-        {sekme === "delta" &&
-          (fields.loading || campaigns.loading ? (
-            <Loading label="Banka ve alan listesi yükleniyor…" />
-          ) : fields.data && fields.data.length > 0 ? (
-            <BankDeltaPanel
-              fields={fields.data}
-              campaigns={rows}
-              campaignTypes={campaignTypes}
-              onInspect={inspect}
-            />
-          ) : !fields.error ? (
-            <AlanListesiBos ek="Delta hesaplanamaz." />
-          ) : null)}
+        {sekme === "delta" && (
+          <BankDeltaPanel campaignTypes={campaignTypes} onInspect={inspect} />
+        )}
 
         {sekme === "audit" &&
           (campaigns.loading ? (
