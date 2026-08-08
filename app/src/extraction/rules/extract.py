@@ -272,6 +272,49 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
     return None
 
 
+#: Takvim yılı olarak okunması gereken sayı aralığı. "2026 yılı" bir SÜRE
+#: değil bir TARİHTİR; 2026 yıllık finansman diye bir şey yoktur.
+_TAKVIM_YILI_ARALIGI = (1900, 2100)
+
+#: Gerçekçi üst sınır. Korpustaki meşru en yüksek vade 120 ay (10 yıl);
+#: 50 yıl, konut finansmanına bile fazlasıyla geniş bir tavandır.
+MAKS_VADE_AY = 600
+
+
+def _takvim_yili(m: "re.Match[str]") -> bool:
+    """Eşleşme bir takvim yılı mı (süre değil)?
+
+    ## Neden var — ölçülmüş hata
+
+    `vade_ay` deseni "2026 yılı" ifadesini 2026 × 12 = **24312 ay** diye
+    okuyordu. Güvenlik setindeki K02 ("en yüksek vade hangi bankada?")
+    bu yüzden "Albaraka Türk, 24312 ay" cevabını veriyordu — yani 2026 yıl.
+    demo.db'de bu sınıftan **10 kayıt** vardı ('2024/2025/2026 yılı'), ayrıca
+    bir açılır menü döküntüsü ('2021 Ay' → 2021 ay ≈ 168 yıl).
+
+    Bu artefaktlar dışlandığında korpustaki meşru en yüksek vade **120 ay**.
+    Kıyas tablosu ve chatbot "en yüksek vade" sorusunda bu sayıyı gösteriyordu;
+    jüriye görünen bir yüzeydi.
+
+    İki kapı:
+    1. Sayı 1900–2100 aralığında ve birim yıl/sene → takvim yılı. Bu aralıkta
+       bir *süre* fiilen imkânsızdır, ek (`yılı` / `yılında`) aranmasına gerek
+       kalmaz — ekli olmayan "2026 yıl" de aynı şekilde reddedilir.
+    2. Aya çevrilmiş değer `MAKS_VADE_AY`'ı aşıyorsa → gerçek vade değil.
+       'ay' birimiyle gelen döküntüyü ('2021 Ay') bu kapı yakalar.
+    """
+    sayi_ham, birim = m.group(1), m.group(2).lower()
+    try:
+        sayi = float(sayi_ham.replace(".", "").replace(",", "."))
+    except ValueError:                                  # pragma: no cover
+        return False
+    alt, ust = _TAKVIM_YILI_ARALIGI
+    if birim in ("yıl", "yil", "sene") and alt <= sayi <= ust:
+        return True
+    ay = N.normalize_term_months(m.group(0))
+    return ay is not None and ay > MAKS_VADE_AY
+
+
 def extract_vade(text: str) -> Optional[ExtractedField]:
     """Vade: '120 aya kadar', '36 ay vade', '1 yıl'.
 
@@ -283,7 +326,7 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
         r"(\d[\d.,]*)\s*(ay|yıl|yil|sene)(?:a|da|ta|dan|tan|ı|i|lık|lik)?\b",
         re.IGNORECASE,
     )
-    matches = list(pat.finditer(text))
+    matches = [m for m in pat.finditer(text) if not _takvim_yili(m)]
     if not matches:
         return None
     # tr_fold: 'İLK 6 AY' -> .lower() 'i̇lk' promo tespitini kaçırıyordu.
