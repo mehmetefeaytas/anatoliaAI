@@ -61,11 +61,22 @@ Sunumun ağırlık merkezi. Dört alt başlık, her biri ~30 saniye.
 > Boru hattı: topla → temizle → çıkar → uzlaştır → normalize et → sakla →
 > kıyasla → dashboard ve chatbot.
 >
-> Çıkarım üç katmanlı: deterministik kurallar birincil; GLiNER2 tamamlayıcı;
-> yerel LLM yalnızca kuralların kaçırdığı örtük ifadeler için, kısıtlı JSON
-> üretimiyle. Uzlaştırma şu sırayla çalışır: kural çıktısı varsa onu tercih et,
-> boşlukları LLM ile doldur, her alana güven skoru ve **kaynak span'i** ekle.
-> Alan gerçekten yoksa `null` döndürürüz — asla değer uydurmayız.
+> Çıkarım katmanlı: **deterministik kurallar birincil**; yerel LLM yalnızca
+> kuralların kaçırdığı örtük ifadeler için, kısıtlı JSON üretimiyle.
+> Uzlaştırma şu sırayla çalışır: kural çıktısı varsa onu tercih et, boşlukları
+> LLM ile doldur, her alana güven skoru ve **kaynak span'i** ekle. Alan
+> gerçekten yoksa `null` döndürürüz — asla değer uydurmayız.
+>
+> **Teslim edilen sistemde çıkarımın tamamını kural katmanı yapıyor** ve bu bir
+> eksiklik değil, ölçülmüş bir karar: LLM'li kolları üç kez denedik (hibrit,
+> orkestrasyon, BERTurk), üçü de kural katmanının altında kaldı. Ayrıntı §3'te.
+
+&gt; **SUNUMDA SÖYLENMEYECEK:** "GLiNER2 tamamlayıcı katman". Bu satır burada
+&gt; vardı ve **yanlıştı** — GLiNER kodda hiç yok (`src/extraction/ner/` yalnız
+&gt; sınıflandırıcı içeriyor, `requirements.txt:43` yorum satırı).
+&gt; `docs/model-license-audit.md:181` bunu zaten dürüstçe kaydetmiş; sunum
+&gt; iskeleti güncellenmemişti. Jüri koda bakıp vaat edilen katmanı bulamazsa
+&gt; kaybedilen şey bir puan değil, anlatının tamamına duyulan güvendir.
 
 ### 2.2 Veri toplama (~30 sn)
 
