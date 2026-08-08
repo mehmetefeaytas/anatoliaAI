@@ -324,6 +324,89 @@ def _list_equal(pred: Any, gold: Any, *, unordered: bool, fold: bool) -> Match:
 
 
 # --------------------------------------------------------------------------- #
+# Kalem düzeyinde puanlama (liste alanları)
+# --------------------------------------------------------------------------- #
+# `_list_equal` KÜME EŞİTLİĞİ arar: beş koşuldan dördü doğru çıkarılsa bile
+# sonuç TP=0, FP=1, FN=1. Ölçüldü — `kampanya_kosullari` her iki eşleştiricide
+# de TAM OLARAK 0,000; gevşetmek hiçbir şeyi değiştirmiyor, çünkü sorun
+# toleransta değil ÖLÇÜTÜN İKİLİ olmasında. Bu alan manşet mikro-F1'in
+# ~%28'ini oluşturuyor.
+#
+# Kalem düzeyi ölçüt bunu düzeltir ama **ölçüm düzelmesidir, sistem düzelmesi
+# değildir** ve raporlarda öyle etiketlenir. İki sayı yan yana yayımlanır;
+# aradaki fark, ikili ölçütün ne kadar cezalandırdığının doğrudan ölçüsüdür.
+
+# Serbest metin kalemleri için jeton-Jaccard eşiği. ÖNCEDEN İLAN EDİLMİŞTİR;
+# sayılara bakıp değiştirmek yasaktır. Duyarlılık 0,6 ve 0,8'de ayrıca
+# yayımlanır (`--kalem-esik`).
+ITEM_JACCARD_ESIK = 0.7
+
+
+@dataclass(frozen=True)
+class ItemCounts:
+    """Bir (belge, alan) için kalem düzeyinde sayaçlar."""
+
+    tp: int = 0
+    fp: int = 0
+    fn: int = 0
+
+
+def _jetonlar(text: str) -> set[str]:
+    return {t for t in _fold_text(text).split() if t}
+
+
+def _jaccard(a: str, b: str) -> float:
+    """İki serbest metin kaleminin jeton örtüşmesi."""
+    ja, jb = _jetonlar(a), _jetonlar(b)
+    if not ja or not jb:
+        return 1.0 if ja == jb else 0.0
+    return len(ja & jb) / len(ja | jb)
+
+
+def item_counts(field_name: str, pred: Any, gold: Any, *,
+                esik: float = ITEM_JACCARD_ESIK) -> ItemCounts | None:
+    """Liste alanı için kalem başına (TP, FP, FN). Liste değilse `None`.
+
+    Eşleştirme **açgözlü ve 1-1**: her gold kalemi en yüksek benzerlikteki
+    boştaki tahmin kalemiyle eşleşir. Bir tahmin kalemi iki gold kalemini
+    birden karşılayamaz — aksi halde tek bir uzun cümle tüm koşulları
+    "karşılıyor" görünür ve ölçüt kendini kandırır.
+
+    Etiket listeleri (`hedef_kitle`) denetimli sözcüklerdir; orada Jaccard
+    değil BİREBİR eşleşme aranır — "KOBİ" ile "KOBİ sahipleri" farklı hedef
+    kitlelerdir, jeton örtüşmesi onları birleştirirdi.
+    """
+    if field_name not in TEXT_LIST_FIELDS and field_name not in LABEL_LIST_FIELDS:
+        return None
+    if not isinstance(gold, list):
+        return None
+    if not isinstance(pred, list):
+        # Model liste üretmedi: gold'un her kalemi kaçırıldı.
+        return ItemCounts(fn=len(gold))
+
+    serbest = field_name in TEXT_LIST_FIELDS
+    kalan = list(range(len(pred)))
+    tp = 0
+
+    for g in gold:
+        if not isinstance(g, str):
+            continue
+        en_iyi, en_iyi_skor = None, 0.0
+        for idx in kalan:
+            p = pred[idx]
+            if not isinstance(p, str):
+                continue
+            skor = _jaccard(p, g) if serbest else float(_fold_text(p) == _fold_text(g))
+            if skor > en_iyi_skor:
+                en_iyi, en_iyi_skor = idx, skor
+        if en_iyi is not None and en_iyi_skor >= (esik if serbest else 1.0):
+            kalan.remove(en_iyi)
+            tp += 1
+
+    return ItemCounts(tp=tp, fp=len(pred) - tp, fn=len(gold) - tp)
+
+
+# --------------------------------------------------------------------------- #
 # Kayıt (registry)
 # --------------------------------------------------------------------------- #
 Matcher = Callable[[str, Any, Any], Match]

@@ -59,7 +59,13 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from eval import report as report_mod
-from eval.matchers import get_matcher, resolve_matchers
+from eval.matchers import (
+    ITEM_JACCARD_ESIK,
+    ItemCounts,
+    get_matcher,
+    item_counts,
+    resolve_matchers,
+)
 from eval.predictors import (
     CONFIG_NAMES,
     DEFAULT_VERIFY_THRESHOLD,
@@ -69,6 +75,8 @@ from eval.predictors import (
 from eval.stats import DEFAULT_RESAMPLES, DEFAULT_SEED, bootstrap_ci
 from scripts.gold_schema import (
     ALL_HARD_TAGS,
+    LABEL_LIST_FIELDS,
+    TEXT_LIST_FIELDS,
     GoldRecord,
     load_gold,
     validate_gold,
@@ -213,6 +221,14 @@ class DocScore:
     doc_id: str
     hard_tags: list[str] = dc_field(default_factory=list)
     per_field: dict[str, Counts] = dc_field(default_factory=dict)
+    # KALEM düzeyinde ikinci tablo. Liste alanlarında (`kampanya_kosullari`,
+    # `hedef_kitle`) kalem başına TP/FP/FN sayar; diğer alanlarda `per_field`
+    # ile BİREBİR AYNIDIR, böylece iki mikro-F1 doğrudan karşılaştırılabilir.
+    #
+    # `per_field` DEĞİŞTİRİLMEZ: manşet sayı ve tüm geçmiş koşumlar ikili
+    # ölçüte dayanıyor; onu yerinde değiştirmek geriye dönük her karşılaştırmayı
+    # sessizce geçersiz kılardı. İki sayı yan yana yayımlanır.
+    per_field_item: dict[str, Counts] = dc_field(default_factory=dict)
     # McNemar için: (alan adı, karar doğru muydu). Sıra deterministiktir.
     decisions: list[tuple[str, bool]] = dc_field(default_factory=list)
 
@@ -224,9 +240,15 @@ class DocScore:
 # --------------------------------------------------------------------------- #
 # Puanlama
 # --------------------------------------------------------------------------- #
+def _liste_alani(name: str) -> bool:
+    """Alan kalem listesi mi (`kampanya_kosullari`, `hedef_kitle`)?"""
+    return name in TEXT_LIST_FIELDS or name in LABEL_LIST_FIELDS
+
+
 def score_document(record: GoldRecord, preds: dict[str, Any],
                    matcher: Callable[[str, Any, Any], Any],
-                   fields: Sequence[str] = tuple(EXTRACTION_FIELDS)) -> DocScore:
+                   fields: Sequence[str] = tuple(EXTRACTION_FIELDS),
+                   *, item_esik: float = ITEM_JACCARD_ESIK) -> DocScore:
     """Tek belgeyi puanlar — `absent_fields` dahil, karar verilmemiş alan HARİÇ.
 
     Karar tablosu (bkz. modül başlığı, kusur 2):
@@ -252,24 +274,41 @@ def score_document(record: GoldRecord, preds: dict[str, Any],
 
     for name in fields:
         counts = score.per_field.setdefault(name, Counts())
+        item = score.per_field_item.setdefault(name, Counts())
         has_pred = name in preds
 
         if name in unclear:
             counts.unclear += 1
+            item.unclear += 1
             continue
 
         if name in gold_values:
             if has_pred and matcher(name, preds[name], gold_values[name]):
-                counts.tp += 1
+                ikili = ItemCounts(tp=1)
                 score.decisions.append((name, True))
             elif has_pred:
-                counts.fp += 1
-                counts.fp_wrong += 1
-                counts.fn += 1
+                ikili = ItemCounts(fp=1, fn=1)
                 score.decisions.append((name, False))
             else:
-                counts.fn += 1
+                ikili = ItemCounts(fn=1)
                 score.decisions.append((name, False))
+
+            counts.tp += ikili.tp
+            counts.fp += ikili.fp
+            counts.fn += ikili.fn
+            counts.fp_wrong += ikili.fp
+
+            # Liste alanında kalem başına sayaç; `None` -> alan liste değil,
+            # kalem tablosu ikili tablonun AYNISI olur (iki mikro-F1 böylece
+            # doğrudan karşılaştırılabilir kalır).
+            kalem = item_counts(name, preds.get(name), gold_values[name],
+                                esik=item_esik) or ikili
+            item.tp += kalem.tp
+            item.fp += kalem.fp
+            item.fn += kalem.fn
+            # Fazladan kalem uydurma DEĞİL: gold bu alanda değer taşıyor,
+            # model yanlış koşulu iddia etmiş -> `fp_wrong`.
+            item.fp_wrong += kalem.fp
             continue
 
         if name in absent:
@@ -277,34 +316,62 @@ def score_document(record: GoldRecord, preds: dict[str, Any],
                 counts.fp += 1
                 counts.fp_hallucinated += 1
                 score.decisions.append((name, False))
+                # Gold "YOK" derken üretilen HER kalem ayrı bir uydurmadır.
+                n = (len(preds[name]) if _liste_alani(name)
+                     and isinstance(preds[name], list) else 1)
+                item.fp += n
+                item.fp_hallucinated += n
             else:
                 counts.tn += 1
+                item.tn += 1
                 score.decisions.append((name, True))
             continue
 
         # Gold bu alan hakkında KARAR VERMEMİŞ. Tahmin varsa da yoksa da
         # metriğe girmez — bilmediğimizi lehimize sayamayız.
         counts.skipped += 1
+        item.skipped += 1
 
     return score
 
 
 def score_all(records: Sequence[GoldRecord], predictor: Predictor,
-              matcher: Callable[[str, Any, Any], Any]) -> list[DocScore]:
+              matcher: Callable[[str, Any, Any], Any],
+              *, item_esik: float = ITEM_JACCARD_ESIK) -> list[DocScore]:
     """Tüm belgeleri puanlar. Tahmin ÜRETİMİ belge başına bir kez yapılır."""
-    return [score_document(r, predictor.predict(r.text), matcher) for r in records]
+    return [score_document(r, predictor.predict(r.text), matcher,
+                           item_esik=item_esik) for r in records]
 
 
 # --------------------------------------------------------------------------- #
 # Toplama
 # --------------------------------------------------------------------------- #
 def aggregate(docs: Iterable[DocScore]) -> dict[str, Counts]:
-    """Belge puanlarını alan bazında toplar."""
+    """Belge puanlarını alan bazında toplar (İKİLİ ölçüt — manşet sayı)."""
     table: dict[str, Counts] = {}
     for doc in docs:
         for name, counts in doc.per_field.items():
             table.setdefault(name, Counts()).add(counts)
     return table
+
+
+def aggregate_item(docs: Iterable[DocScore]) -> dict[str, Counts]:
+    """Aynı toplama, KALEM düzeyinde ölçütle.
+
+    Liste alanlarında kalem başına TP/FP/FN; diğer alanlarda `aggregate` ile
+    birebir aynı. İki tablonun farkı yalnız `kampanya_kosullari` ve
+    `hedef_kitle`den gelir.
+    """
+    table: dict[str, Counts] = {}
+    for doc in docs:
+        for name, counts in doc.per_field_item.items():
+            table.setdefault(name, Counts()).add(counts)
+    return table
+
+
+def micro_f1_kalem_of(docs: Sequence[DocScore]) -> float:
+    """Bootstrap'ın çağırdığı istatistik: belge listesi -> kalem mikro-F1."""
+    return micro(aggregate_item(docs)).f1()
 
 
 def micro(table: dict[str, Counts]) -> Counts:
@@ -414,13 +481,28 @@ class MatcherResult:
     ci_micro: Any = None
     ci_macro: Any = None
 
+    @property
+    def item_table(self) -> dict[str, Counts]:
+        """KALEM düzeyinde alan tablosu (liste alanları kalem kalem sayılır)."""
+        return aggregate_item(self.docs)
+
     def as_dict(self) -> dict:
+        item_table = self.item_table
         data: dict[str, Any] = {
             "matcher": self.matcher,
             "documents": len(self.docs),
             "hard_documents": self.hard_docs,
             "micro": self.micro.as_dict(),
             "macro_f1": self.macro_f1,
+            # KALEM düzeyi ölçüt — ikili ölçütün YANINDA durur, yerine geçmez.
+            # Fark yalnız liste alanlarından gelir ve bir ÖLÇÜM düzelmesidir,
+            # sistem düzelmesi değildir (bkz. `eval/matchers.py::item_counts`).
+            "micro_f1_kalem": micro(item_table).f1(),
+            "macro_f1_kalem": macro_f1(item_table),
+            "kalem_esik_jaccard": ITEM_JACCARD_ESIK,
+            "per_field_kalem": {k: v.as_dict()
+                                for k, v in sorted(item_table.items())
+                                if _liste_alani(k)},
             # Süzgecin LEHE sapan kör noktasının ölçüsü — bkz. `macro_f1`
             # docstring'i. İkisi arasındaki fark, makro sayının ne kadar
             # iyimser olduğunu doğrudan verir.
@@ -455,10 +537,11 @@ def evaluate(records: Sequence[GoldRecord], predictor: Predictor,
              matcher_name: str, *,
              bootstrap: bool = True,
              n_resamples: int = DEFAULT_RESAMPLES,
-             seed: int = DEFAULT_SEED) -> MatcherResult:
+             seed: int = DEFAULT_SEED,
+             item_esik: float = ITEM_JACCARD_ESIK) -> MatcherResult:
     """Tek konfig + tek eşleştirici için tüm metrikleri üretir."""
     matcher = get_matcher(matcher_name)
-    docs = score_all(records, predictor, matcher)
+    docs = score_all(records, predictor, matcher, item_esik=item_esik)
     table = aggregate(docs)
     hard_docs = [d for d in docs if d.is_hard]
 
@@ -484,8 +567,9 @@ def evaluate(records: Sequence[GoldRecord], predictor: Predictor,
 # --------------------------------------------------------------------------- #
 # Çıktı biçimlendirme
 # --------------------------------------------------------------------------- #
-def format_table(title: str, table: dict[str, Counts]) -> str:
-    """Konsol tablosu — alan satırları + MİKRO + MAKRO."""
+def format_table(title: str, table: dict[str, Counts],
+                 item_table: dict[str, Counts] | None = None) -> str:
+    """Konsol tablosu — alan satırları + MİKRO + MAKRO (+ varsa KALEM)."""
     lines = [f"=== {title} ===",
              (f"{'alan':<22}{'P':>7}{'R':>7}{'F1':>7}{'TP':>5}{'FP':>5}"
               f"{'FN':>5}{'TN':>5}{'UYD':>5}{'ATL':>5}")]
@@ -509,6 +593,30 @@ def format_table(title: str, table: dict[str, Counts]) -> str:
             f"{'MAKRO (uydurma dahil)':<22}{'':>7}{'':>7}{dahil:>7.3f}"
             f"   <- {yalniz_uydurma} desteksiz alan YALNIZ uydurma üretti; "
             f"süzgeçli makro onları cezasız bırakıyor")
+
+    if item_table:
+        im = micro(item_table)
+        lines += [
+            "",
+            "--- KALEM DÜZEYİ ÖLÇÜT (liste alanları kalem kalem sayılır) ---",
+            "Bu bir ÖLÇÜM değişikliğidir, sistem değişikliği DEĞİL. Yukarıdaki",
+            f"ikili ölçüt manşet sayıdır; aşağıdaki yanında durur. Eşik: "
+            f"jeton-Jaccard >= {ITEM_JACCARD_ESIK} (önceden ilan edildi).",
+        ]
+        for name, c in sorted(item_table.items()):
+            if not _liste_alani(name):
+                continue
+            ikili = table.get(name, Counts())
+            lines.append(
+                f"{name:<22}{c.precision():>7.3f}{c.recall():>7.3f}{c.f1():>7.3f}"
+                f"{c.tp:>5}{c.fp:>5}{c.fn:>5}{c.tn:>5}{c.fp_hallucinated:>5}"
+                f"{'':>5}   <- ikili F1 {ikili.f1():.3f}")
+        lines.append(
+            f"{'MİKRO (kalem)':<22}{im.precision():>7.3f}{im.recall():>7.3f}"
+            f"{im.f1():>7.3f}{im.tp:>5}{im.fp:>5}{im.fn:>5}{im.tn:>5}"
+            f"{im.fp_hallucinated:>5}")
+        lines.append(
+            f"{'MAKRO (kalem)':<22}{'':>7}{'':>7}{macro_f1(item_table):>7.3f}")
     return "\n".join(lines)
 
 
@@ -519,7 +627,8 @@ def _rate_str(rate: float | None) -> str:
 def format_result(result: MatcherResult, predictor: Predictor) -> str:
     """Bir eşleştiricinin tam konsol çıktısı."""
     parts = [format_table(
-        f"{predictor.name.upper()} / {result.matcher} — TÜM VAKALAR", result.table)]
+        f"{predictor.name.upper()} / {result.matcher} — TÜM VAKALAR",
+        result.table, result.item_table)]
 
     m = result.micro
     # Üç hata sınıfı AYRI raporlanır (mentör talebi). Paydaları da ayrıdır:
@@ -725,6 +834,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
                     help="eşleştirici (varsayılan: both — ikisi de raporlanır)")
     ap.add_argument("--split", default="all", choices=list(SPLITS),
                     help="değerlendirilecek alt küme (varsayılan: all)")
+    ap.add_argument("--kalem-esik", type=float, default=ITEM_JACCARD_ESIK,
+                    help=("liste alanlarında kalem eşleşmesi için jeton-Jaccard "
+                          f"eşiği (varsayılan: {ITEM_JACCARD_ESIK}). ÖNCEDEN "
+                          "İLAN EDİLMİŞTİR; sonuca bakıp değiştirmek yasaktır. "
+                          "Duyarlılık analizi için kullanın."))
     ap.add_argument("--out-dir", default=report_mod.DEFAULT_OUT_DIR,
                     help=f"rapor kök dizini (varsayılan: {report_mod.DEFAULT_OUT_DIR})")
     ap.add_argument("--no-write", action="store_true",
@@ -783,7 +897,8 @@ def main(argv: list[str] | None = None) -> int:
     results = [
         evaluate(selected, predictor, name,
                  bootstrap=not args.no_bootstrap,
-                 n_resamples=args.resamples, seed=args.seed)
+                 n_resamples=args.resamples, seed=args.seed,
+                 item_esik=args.kalem_esik)
         for name in matcher_names
     ]
 
