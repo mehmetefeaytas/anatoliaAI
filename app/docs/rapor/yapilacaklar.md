@@ -1,4 +1,4 @@
-# Yapılacaklar — 2026-08-07 · teslime **19 gün**
+# Yapılacaklar — 2026-08-08 · teslime **18 gün**
 
 Bu liste **bugünkü** durumu yansıtır. `yapilacaklar-envanteri.md` (3 Ağustos,
 62 KB) tam envanterdir ama bayattır; buradaki maddelerle çeliştiğinde **bu
@@ -11,19 +11,21 @@ Model Başarısı %30 · Fonksiyonellik %20 · Teknik %20 · On-Prem %20 · Yeni
 
 ---
 
-## 0. Senin kararını bekleyen — hiçbiri ilerleyemez
+## 0. Senin kararını bekleyen
 
-| # | karar | dosya |
+| # | karar | durum |
 |---|---|---|
-| **K-1** | Çerçeve ayıklaması: n-gram mı, blok mu, hiçbiri mi? | `karar-bekleyenler.md` |
-| **K-2** | `DEFAULT_CONFIG` hâlâ `hibrit` — ölçüm kuralı 0,10 F1 önde gösteriyor | aynı |
-| **K-3** | **87 commit push edilmedi.** Şartname §20 haftalık commit istiyor | aynı |
-| **K-4** | Prompt-injection LLM modunda koşulsun mu (~10 dk) | aynı |
+| ~~K-1~~ | Çerçeve ayıklaması | **kapandı** — çıkarımda uygulanmıyor; ayıklama arayüze taşındı (çerçeve katlanıyor + LLM özeti) |
+| ~~K-2~~ | `DEFAULT_CONFIG` | **kapandı** — `kural`. Orkestra n=48'de geçemedi |
+| ~~K-4~~ | Prompt-injection LLM modu | **kapandı** — koşuldu, sentez açıkken de 22/22 |
+| **K-3** | **106 commit push edilmedi** | **AÇIK — tek bekleyen karar** |
 
-**K-3 en aciliyetlisi.** İki dosya (`yapilacaklar-envanteri.md`,
-`banka-siteleri-veri-kaynagi-haritasi.md`) `0fcab79`'da zaten depo geçmişine
-girdi; dalı olduğu gibi push etmek onları yayına sokar. Geçmişten çıkarmak
-`git filter-repo` ister ve geri alınamaz. Karar senin.
+**K-3 tek kalan.** `yayin/hafta-04` dalı hazırlandı ve iki yayın-dışı dosya
+geçmişinden çıkarıldı, doğrulandı. Ama dal o günden beri **bayatladı**; push
+öncesi çalışma dalından yeniden üretilmeli. Ayrıca yayın kademesi denetimi
+`yapilacaklar.md` ve `karar-bekleyenler.md` için de kademe-3 önerdi — ikisi
+de kendi açıklarımızı madde madde sayıyor. Karar senin.
+Ayrıntı: `yayin-kademesi.md` (kendisi de yayınlanmıyor).
 
 ---
 
@@ -31,15 +33,27 @@ girdi; dalı olduğu gibi push etmek onları yayına sokar. Geçmişten çıkarm
 
 | | iş | kim | durum |
 |---|---|---|---|
-| 1.1 | gold.v2 anotasyonu — 48 belge, 10 banka, kör protokol | B | **bitti** (112 alan, 444 "yok", %3,5 belirsiz) |
-| 1.2 | gold.v2'de kural kolu ölçüldü, gold.v1 ile ayrı raporlandı | B | **bitti** (0,387 vs 0,677 — sebebi protokol) |
-| 1.3 | K-1'i geniş sette tekrarla | B | **bitti** — F1 kazancı gürültüymüş, halüsinasyon kazancı gerçek |
-| 1.4 | Bootstrap GA (2000 örnek) üç kol için koşuldu; **McNemar hâlâ yok** | B | yarım |
-| **1.4b** | **Anotasyon kılavuzundaki 8 boşluğu kapat** — κ'dan ÖNCE | B + **S** | **yeni, kritik** |
-| 1.5 | **κ için ikinci insan anotatör.** gold.v2 yerine GEÇMEZ; 1.4b'den sonra | **S** | başlamadı |
-| 1.6 | Ö1 üç kollu terim deneyi (temel / sadeleştirme / sözlük kartı) | B | kol hazır, koşulmadı |
-| 1.7 | BERTurk ince ayarı (Colab) → gold makro-F1 GA alt sınırı 0,762'yi aşarsa al | **S** koşar, B hazırladı | defter hazır, lisans MIT doğrulandı |
-| **1.8** | **gold.v2'de orkestra kolunu da ölç** — kural/orkestra farkı yalnız n=20'de biliniyor | B | başlamadı |
+| 1.1 | gold.v2 anotasyonu — 48 belge, 10 banka, kör protokol | B | **bitti** |
+| 1.2 | gold.v2'de kural kolu, gold.v1 ile ayrı raporlandı | B | **bitti** (0,387 vs 0,677 — sebebi protokol) |
+| 1.3 | K-1'i geniş sette tekrarla | B | **bitti** — F1 kazancı gürültüymüş |
+| 1.4 | McNemar eşleştirilmiş test | B | **bitti** — üç çiftte de anlamlı fark yok |
+| 1.4b | Anotasyon kılavuzundaki 8 boşluk + §3.1 çapa düzeltmesi | B | **bitti** |
+| 1.5 | **κ ölçümü** — çift anotasyonlu 20 belgelik paket hazır, doldurulmayı bekliyor | **S** | hat hazır, veri senden |
+| 1.6 | Ö1 üç kollu terim deneyi | B | **bitti** — sadeleştirme reddedildi |
+| 1.7 | BERTurk ince ayarı | B | **bitti** — kapıda kaldı, model ALINMADI |
+| 1.8 | gold.v2'de orkestra kolu | B | **bitti** — kuralı geçemedi |
+
+**Bu bölümün özeti:** Model Başarısı tarafında ölçülmemiş iş kalmadı. Üç ayrı
+"daha güçlü model ekleyelim" denemesi (hibrit kol, orkestrasyon, BERTurk)
+**üçü de ölçümle yanlışlandı**; kural katmanı her seferinde önde kaldı ve
+mekanizma her seferinde aynı çıktı — doğru sayısı artmıyor, yanlış artıyor.
+Bu, jüriye anlatılacak en güçlü tek bulgudur.
+
+**1.5 senin elinde:** düzeltilmiş kılavuz ve aynı 20 belgeyi taşıyan çift
+anotasyon paketi hazır (`data/gold/review/round0_kalibrasyon_v2_*.csv`).
+Doldurulunca `python -m scripts.report_iaa <dosyalar>` tek komutla Fleiss κ +
+Krippendorff α üretir. Eşikler önceden ilan edildi (κ≥0,80 kabul · 0,67–0,80
+notla · <0,67 hakemlik), sonradan oynatılmayacak.
 
 **1.4b neden kritik:** dört anotatör **bağımsız olarak** aynı üç boşluğu
 işaretledi — kampanya olmayan belgeler için sınıf yok (gold.v2'nin %19'u),
@@ -49,14 +63,19 @@ gider. Kılavuz düzeltilmeden ölçülen κ, anotatör uyumsuzluğunu değil
 
 ## 2. Fonksiyonellik %20 — Faz G dashboard
 
-| | iş | kim |
-|---|---|---|
-| 2.1 | Kıyas tablosu — hangi bankada hangi oran | B |
-| 2.2 | Chatbot arayüzü — **kaynak göstererek** cevap | B |
-| 2.3 | Çelişki tespiti ekranı (mentör: "çarpıcı olabilir") | B |
-| 2.4 | Banka içi delta ekranı — B2B konumlandırmayı taşır | B |
-| 2.5 | Güven skorlarını ticari görünümden kaldır, jüri/geliştirici moduna al | B |
-| 2.6 | **"0 = ürün yok, ceza değil"** arayüzde açıkça yazsın | B |
+Altısı da **bitti** (`npm run build` geçiyor): kıyas tablosu · kaynak gösteren
+chatbot (artık tıklanabilir `campaign_id` + `source_url`) · çelişki tespiti ·
+banka içi delta ekranı · güven skorları jüri moduna alındı · **"0 = ürün yok,
+ceza değil"** ve adil-kıyas notu arayüzde yazıyor.
+
+Ek olarak K-1'in yeni hâli: metnin gösterildiği yerlerde çerçeve **siliniyor
+değil katlanıyor** — `source_span` offset'leri ham metne göre olduğu için
+silme bütün kaynak vurgularını kaydırırdı. Katlanmış bir bloğun içinde kanıt
+span'i varsa blok otomatik açılıyor; kanıt gizlenemiyor.
+
+| kalan | durum |
+|---|---|
+| LLM özetlerinin önceden üretimi | **kısmi** — makine ~28 sn/belge yapıyor, tam korpus ~13 saat. Kıyasta görünen alt küme üretiliyor; arayüz özet yoksa bölümü hiç göstermiyor (sahte özet basmıyor) |
 
 ## 3. Şartname zorunlulukları — yapılmazsa puan yanar
 
@@ -80,17 +99,14 @@ gider. Kılavuz düzeltilmeden ölçülen κ, anotatör uyumsuzluğunu değil
 
 ## 5. Teknik borç — ölçülmüş, kapatılmamış
 
-_(Bu turda kapanan iki madde listeden çıkarıldı: demo DB tazelik kapısı ve
-tek karakterli token gürültüsü — ikisi de "kapananlar" bölümünde.)_
-
 | | iş | not |
 |---|---|---|
-| 5.1 | **Sözleşme PDF'leri kampanya gibi işleniyor** | Ölçüldü: 113 PDF belgesi (%6,4) kampanya olarak kayıtlı, **41'i kıyaslanabilir alan taşıyor** (oran/vade/tutar) ve karşılaştırma tablosuna giriyor. Akit metni kampanya değildir: erişimde (RAG) KALMALI, kıyasta OLMAMALI. Çözüm `campaigns` tablosuna `belge_turu` (kampanya/sözleşme) alanı ister — korpus yolundaki bölümden türetilir. Şema göçü + iki backend |
-| 5.2 | `müşaraka` korpusta 3 belgede, hiçbiri tanım değil | veri boşluğu — kapatılacaksa hedefli toplama gerek |
-| 5.3 | Güvenlik setinde 2 kayıt düşüyor (C05, K02) | ikisi de eski, bu turda gelmedi |
-| 5.4 | `rakip-analizi.md` teslim öncesi tekrar koşulmalı | görülen depolar çalışma depoları, nihai teslim değil |
-
----
+| ~~5.1~~ | Sözleşme PDF'leri kampanya gibi işleniyor | **kapandı** — `belge_turu` sütunu; 113 sözleşme kıyastan çıktı, RAG'de kaldı. Ayrım bölüme değil belgenin kendisine dayanıyor (113/113 `.pdf`) |
+| 5.2 | `müşaraka` 3 belgede, hiçbiri tanım değil | veri boşluğu — hedefli toplama sırada |
+| 5.3 | Güvenlik setinde 2 kayıt düşüyor (C05, K02) | teşhis sürüyor |
+| 5.4 | `rakip-analizi.md` teslim öncesi tekrar koşulmalı | |
+| **5.5** | **LLM çağrısında toplam süre sınırı yok** | **yeni.** `urllib` zaman aşımı soket başına; bağlantı açık kalıp veri gelmeyince tetiklenmiyor. Demo donanımında model takılırsa arayüz süresiz bekler. `OLLAMA_TIMEOUT` eklendi ama bu bir *soket* sınırı — hattın **deadline**'ı ayrı iş |
+| **5.6** | **`build_summaries` parti sonunda yazıyor** | **yeni.** Kesilen koşum bütün işini kaybediyor; 20 belgelik parça 569 sn sürüyor ve erken kesilirse 0 satır yazılıyor |
 
 ## Bu turda kapananlar (kayıt için)
 
