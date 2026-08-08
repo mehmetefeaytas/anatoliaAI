@@ -1,7 +1,7 @@
 ---
 title: "Katılım finansı terim sözlüğü"
 tags: [concept, terminoloji, katilim-bankaciligi, sozluk]
-source: "[[2026-08-06-cavide-terim-sozlugu]]"
+source: "[[2026-08-06-mentor-terim-sozlugu]]"
 date: 2026-08-06
 status: stable
 ---
@@ -55,7 +55,7 @@ Gerçek korpusta (120 belge örneklem) en sık çekilen terimler: `kar-payi`,
 taksit kampanyaları ve bu doğru davranıştır (kart yok, bağlam israfı yok).
 
 ## Sources
-- [[2026-08-06-cavide-terim-sozlugu]]
+- [[2026-08-06-mentor-terim-sozlugu]]
 
 ## Related
 - [[terim-sozlugu-enjeksiyon-replace-degil]] — nasıl kullanıldığı kararı

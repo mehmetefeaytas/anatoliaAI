@@ -5,7 +5,7 @@ Tarih: 2026-08-07
 
 ---
 
-## 1. Cavide Hanım'ın içgörüsü — fiyat tek sayı değil
+## 1. mentörün içgörüsü — fiyat tek sayı değil
 
 Mentör toplantısında ortaya çıkan ve ürün yönümüzü değiştiren tespit şudur:
 

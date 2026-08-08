@@ -12,7 +12,7 @@ status: stable
 **Mentör belgesi §2.3 + D2 deneyi** bir *yasak/karşılık tablosu* istiyor ve
 "terimi sadeleştirince model daha iyi anlar" hipotezini kuruyor.
 
-**Cavide Hanım'ın maili** (avukat gözünden geçmiş ~101 terimlik sözlükle
+**mentörün maili** (avukat gözünden geçmiş ~101 terimlik sözlükle
 birlikte) bunu reddediyor:
 
 > "Birebir değiştirmek anlamda bozukluk yaratıyor… Türkçeleri aynı anlamı
@@ -28,7 +28,7 @@ birlikte) bunu reddediyor:
 |---|---|
 | **temel** | terim müdahalesi yok (`LLMOrchestrator(terim_karti=False)`) |
 | **sadeleştirme** | belgedeki fıkhî terim, sözlüğün `resmi_tr` / `halk_dili` karşılığıyla **değiştirilerek** modele verilir (mentör D2) |
-| **sözlük kartı** | terim değiştirilmez; `kanonik → degildir → ayrim_notu → risk_notu` kartı prompt'a **enjekte** edilir (Cavide) |
+| **sözlük kartı** | terim değiştirilmez; `kanonik → degildir → ayrim_notu → risk_notu` kartı prompt'a **enjekte** edilir (mentör) |
 
 Set `data/gold/gold.v2.json` (n=48, kör etiketli), bootstrap 2000, tohum 42,
 eşleştirici `strict`, model `qwen2.5:7b-instruct` (Q4_K_M, Apache-2.0),
@@ -37,7 +37,7 @@ eşleştirici `strict`, model `qwen2.5:7b-instruct` (Q4_K_M, Apache-2.0),
 Değiştirme **çıplak `str.replace` ile değil**, `synonyms.keyword_pattern`
 üzerinden yapıldı — projenin ölçülmüş tuzağı bu: `'fon'` deseni
 `'fonksiyon'`u yakalıyordu ve korpusun %48'i sahte "Konut Finansmanı"
-çıkmıştı. Cavide'nin uyardığı kelime tam olarak "fon".
+çıkmıştı. mentörün uyardığı kelime tam olarak "fon".
 
 ## Sonuç 1 — F1'de kazanan yok
 
@@ -94,7 +94,7 @@ gereğidir; özgün cümlenin söylediği şey — bu hesabın **kâr payı da**
 dağıtmadığı — kayboldu. Ürünü ayırt eden tek bilgi silindi.
 
 **② Mailin birebir uyardığı vaka.** `kira sertifikası → faizsiz tahvil`,
-**10 kez**. Cavide Hanım "dönüşte fon ya da bono yazmak da yanlış" diye
+**10 kez**. mentör "dönüşte fon ya da bono yazmak da yanlış" diye
 yazmıştı; sukuk bir borç senedi değil varlığa dayalı ortaklık belgesidir,
 "tahvil" demek onu fıkhen yanlış bir enstrüman sınıfına sokar.
 
@@ -109,7 +109,7 @@ Zarar **cevabın kendisinde**: chatbot bu metinden konuşurken kullanıcıya
 yüzey — güvenlik seti (`data/safety/katilim-guvenlik-seti.jsonl`,
 terminoloji kapısı) ve `jargon_lint` orayı ölçüyor.
 
-**Ö1, Cavide Hanım'ın iddiasını yanlış yüzeyde sınamış.** Bu da bir
+**Ö1, mentörün iddiasını yanlış yüzeyde sınamış.** Bu da bir
 bulgudur: mailin itirazı çıkarım doğruluğuna değil, **cevap kalitesine**
 dairdi ve haklıydı.
 

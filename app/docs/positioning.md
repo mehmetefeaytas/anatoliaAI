@@ -67,7 +67,7 @@ karşılaştır" diyor ve karşılaştırma sonucunda **kendi üstünlüğünü*
 
 ---
 
-## 4. On-prem gerekçesi — Cavide Hanım'ın eleştirisi haklıydı
+## 4. On-prem gerekçesi — mentörün eleştirisi haklıydı
 
 **Eleştiri:** "Sadece herkese açık veri kazıyorsan lokal host anlamsız."
 

@@ -1,7 +1,7 @@
 ---
 title: "Karar: orkestrasyonda ajanlar önerir, hakem yalnız reddeder"
 tags: [decision, llm, orkestrasyon, olcum, halusinasyon]
-source: "[[2026-08-06-cavide-terim-sozlugu]]"
+source: "[[2026-08-06-mentor-terim-sozlugu]]"
 date: 2026-08-06
 status: stable
 ---
@@ -63,7 +63,7 @@ orkestrasyon ablasyon tablosuna ölçülmüş bir satır olarak girer. Kazanan i
 etmek için |Δ| ≥ 0,05 gerekir (n=20'de altı gürültüdür).
 
 ## Sources
-- [[2026-08-06-cavide-terim-sozlugu]] — multi-agent + hakem önerisi
+- [[2026-08-06-mentor-terim-sozlugu]] — multi-agent + hakem önerisi
 
 ## Related
 - [[terim-sozlugu-enjeksiyon-replace-degil]] — kartların enjekte edildiği yer

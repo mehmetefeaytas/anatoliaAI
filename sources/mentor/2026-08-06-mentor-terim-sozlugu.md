@@ -1,5 +1,5 @@
 ---
-title: "Mentör maili: katılım finansı terim sözlüğü (Cavide Hanım)"
+title: "Mentör maili: katılım finansı terim sözlüğü (mentör)"
 tags: [source, mentor, terminoloji, prompt, chatbot]
 date: 2026-08-06
 status: stable
@@ -9,7 +9,7 @@ status: stable
 
 ## goal
 
-Mentör Cavide Hanım (eski bankacı; chatbot ve çok-ajanlı sistem deneyimi), ilk
+Mentör (eski bankacı; chatbot ve çok-ajanlı sistem deneyimi), ilk
 mentörlük toplantısında konuşulan terminoloji sorunu üzerine yazılı görüş ve
 **101 girdilik yapılandırılmış bir katılım finansı sözlüğü** gönderdi.
 
@@ -69,7 +69,7 @@ Kanunu, Türk Medeni Kanunu, 6361 sayılı Kanun, SEDDK.
 
 ## Sources
 
-- Cavide Hanım'ın 2026-08-06 tarihli e-postası (ekli JSON sözlük dahil)
+- Mentörün 2026-08-06 tarihli e-postası (ekli JSON sözlük dahil)
 
 ## Related
 

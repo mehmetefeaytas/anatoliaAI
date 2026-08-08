@@ -92,7 +92,7 @@ span'i varsa blok otomatik açılıyor; kanıt gizlenemiyor.
 
 | | iş | kim |
 |---|---|---|
-| 4.1 | **Cavide Hanım'a dönüş**: TCMB çapraz analizinin 19 terimlik `ayrim_notu` zenginleştirme önerisi onayını bekliyor | **S** |
+| 4.1 | **mentöre dönüş**: TCMB çapraz analizinin 19 terimlik `ayrim_notu` zenginleştirme önerisi onayını bekliyor | **S** |
 | 4.2 | Samet Bey'in ödevi: problem / hangi sorun / farkımız / MVP / somut bitiş | **S** |
 | 4.3 | 4 mentör toplantısı şartının tuttuğunu sekretaryaya doğrula | **S** |
 | 4.4 | `iletisim@teknofest.org` — ücretli LLM sorusu; **yazılı cevap savunma olur** | **S** |

@@ -1,7 +1,7 @@
 ---
 title: "Karar: klasik banka verisi ince ayar ve RAG kaynağı olarak reddedildi"
 tags: [decision, veri, fine-tune, rag, terminoloji, olcum]
-source: "[[2026-08-06-cavide-terim-sozlugu]]"
+source: "[[2026-08-06-mentor-terim-sozlugu]]"
 date: 2026-08-07
 status: stable
 ---
@@ -46,7 +46,7 @@ Klasik korpusun **%70,2'si "faiz" kelimesini içeriyor**; fıkhî terim oranı
 pratikte **sıfır**. Bu veriyle ince ayar yapmak, modele tam olarak kullanmasını
 **yasakladığımız** sözlüğü öğretmek demektir.
 
-Bu, mentör Cavide Hanım'ın uyarısının ([[2026-08-06-cavide-terim-sozlugu]])
+Bu, mentörün uyarısının ([[2026-08-06-mentor-terim-sozlugu]])
 makine öğrenmesi karşılığıdır: "faiz"i çıktı tarafında yasaklayıp
 ([[terim-sozlugu-enjeksiyon-replace-degil]], `output_violations`) eğitim
 tarafında %70 yoğunlukta beslemek kendi kendini bozan bir tasarımdır.
@@ -123,7 +123,7 @@ Bu karar dar kapsamlıdır; iki noktada **aşırı genellenmemelidir**:
   katılım korpusunda yapılır.
 
 ## Sources
-- [[2026-08-06-cavide-terim-sozlugu]] — "faiz" sözlüğünün yasaklanması, çıktı
+- [[2026-08-06-mentor-terim-sozlugu]] — "faiz" sözlüğünün yasaklanması, çıktı
   tarafı bağlayıcılığı
 - `app/data/raw-classic/_collection_report.md` — klasik korpusun toplanma raporu
 - `app/docs/rapor/karar-bekleyenler.md` — K-2, kol bazlı mikro-F1 ölçümleri

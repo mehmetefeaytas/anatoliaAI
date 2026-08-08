@@ -221,7 +221,7 @@
   },
   {
    "kol": "sozluk-karti",
-   "aciklama": "terim değiştirilmez; kanonik -> degildir -> ayrim_notu -> risk_notu kartı prompt'a enjekte edilir (Cavide)",
+   "aciklama": "terim değiştirilmez; kanonik -> degildir -> ayrim_notu -> risk_notu kartı prompt'a enjekte edilir (mentör)",
    "belge": 48,
    "saniye": 1178.3,
    "mikro_f1": 0.3769230769230769,

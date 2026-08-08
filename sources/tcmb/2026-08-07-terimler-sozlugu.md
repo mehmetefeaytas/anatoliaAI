@@ -11,7 +11,7 @@ status: stable
 ## goal
 
 Projeye **ikinci bir terminoloji otoritesi** kazandırmak. Elimizdeki tek sözlük
-(mentör Cavide Hanım'ın 101 girdilik, avukat teyitli katılım finansı sözlüğü)
+(mentörün 101 girdilik, avukat teyitli katılım finansı sözlüğü)
 katılım tarafını tanımlıyor; karşı tarafı — konvansiyonel bankacılığın resmî
 dilini — tanımlayan bir referansımız yoktu. Türkiye Cumhuriyet Merkez Bankası'nın
 Terimler Sözlüğü bu boşluğu doldurur ve aynı zamanda projenin temel tezini
@@ -136,7 +136,7 @@ Bu ingest'ten çıkan ve `decisions/` altına açılması gereken karar:
   mutabakat…) `otorite_tipi: "notr"` yardımcı sözlüğe alınması **yapılmadı** —
   ayrı karar, ayrı commit gerektirir.
 - `ayrim_notu` alanlarına TCMB alıntısı eklenmesi **yapılmadı**; sözlük mentör
-  teyitli olduğu için alan düzenlemesinden önce **Cavide Hanım'ın onayı**
+  teyitli olduğu için alan düzenlemesinden önce **mentörün onayı**
   alınmalı.
 - TCMB terimlerinin kalıcı ID'si veya sürüm etiketi yok; sayfa güncellenirse
   fark tespiti yalnız `.meta.json` içindeki SHA-256 ile yapılabilir. Periyodik
@@ -156,7 +156,7 @@ Bu ingest'ten çıkan ve `decisions/` altına açılması gereken karar:
 
 ## Related
 
-- [[2026-08-06-cavide-terim-sozlugu]] — karşılaştırmanın diğer tarafı;
+- [[2026-08-06-mentor-terim-sozlugu]] — karşılaştırmanın diğer tarafı;
   101 terimlik katılım sözlüğünün geldiği mentör maili
 - [[katilim-finans-terimleri]] — katılım sözlüğünün kavram sayfası
 - [[terim-sozlugu-enjeksiyon-replace-degil]] — bu ingest o kararı **sınırlıyor**:

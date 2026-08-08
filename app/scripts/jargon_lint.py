@@ -14,7 +14,7 @@ Kullanım:
 
 ## Neden bu betik DEĞİŞTİRMİYOR
 
-Mentör (Cavide Hanım, 2026-08-06): "Birebir değiştirmek anlamda bozukluk
+Mentör (eski bankacı, 2026-08-06): "Birebir değiştirmek anlamda bozukluk
 yaratıyor… Türkçeleri aynı anlamı replace ile taşımıyor." Bu betik bir dönüşüm
 aracı değil; yanlış terimi bulur, sözlükten türettiği doğru karşılığı ÖNERİR ve
 düzeltmeyi insana bırakır.
