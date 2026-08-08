@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-1610%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-1615%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-849%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -29,6 +29,13 @@ normalize → PostgreSQL → compare → dashboard + hibrit chatbot (text-to-SQL
 Detay: [`CLAUDE.md`](CLAUDE.md) §3–§6.
 
 ## Hızlı Başlangıç (deterministik çekirdek — sıfır bağımlılık)
+
+> **Python 3.11+ gerekir.** Kod `zip(..., strict=)` gibi 3.10+ sözdizimi
+> kullanıyor. Stok macOS `/usr/bin/python3` **3.9.6**'dır ve aşağıdaki
+> komutlar orada `TypeError: zip() takes no keyword arguments` ile patlar.
+> `python3 -V` ile doğrulayın; düşükse `python3.11 -m ...` kullanın.
+> "Sıfır bağımlılık" üçüncü taraf **paket** gerekmediği anlamına gelir,
+> sürüm bağımsızlığı değil.
 
 Normalizasyon + kural çıkarımı + eval saf stdlib ile çalışır:
 
@@ -136,10 +143,10 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **1.774 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **1.610 test yeşil**, ağ gerektirmeden koşuyor |
+| Testler | ✅ **1.615 test yeşil**, ağ gerektirmeden koşuyor |
 | Değişmez (invariant) denetimi | ✅ **849 belgede 0 ihlal** — etiketsiz veride otomatik hata avı (`python -m eval.properties`) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
-| İnsan-etiketli gold set | ✅ **66 tekil belge** (gold.v1 n=20 + gold.v2 n=48, ikisi 2 belgede örtüşüyor) |
+| Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
 | Ablasyon + McNemar | ✅ ölçüldü — `docs/rapor/ablasyon.md` |
 | Anotatörler arası uyum (κ) | ⏳ **henüz ölçülmedi** — çift anotasyonlu veri yok (aşağıda) |
@@ -151,10 +158,28 @@ belge düzeyi bootstrap 2000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| mikro-F1 | **0,389** [%95 GA 0,329–0,442] |
+| mikro-F1 | **0,389** [%95 GA 0,331–0,443] |
 | makro-F1 | 0,409 |
 | halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,099** [44/444] |
 | kaçırma | 21 · yanlış çıkarım 43 |
+
+#### Gold setin statüsü — iki set, iki farklı güvenilirlik
+
+Bu ayrım metriklerden önce gelir ve **birleştirilerek sunulmaz**:
+
+| set | n | kim etiketledi | hakemlik |
+|---|---|---|---|
+| `gold.v1` | 20 | **insan** anotatör | ✅ geçti (2 kayıt düzeltildi) |
+| `gold.v2` | 48 | **makine** anotatör (M1–M4), her belge birebir alıntı kanıtıyla | ❌ **insan hakemliği bekliyor** (`adjudicated: false`) |
+
+Yukarıdaki 0,389 **gold.v2 üzerinde** ölçüldü, yani **insan hakemliğinden
+geçmemiş** bir sette. Bunu gizlemek yerine yazıyoruz çünkü alternatifi
+(0,677'yi manşete koymak) daha kötü — o da modele çapalı bir protokolden
+geliyor. İkisi de kısıtlıdır ve ikisi de kısıtıyla birlikte sunulur.
+
+**Bu, kapatılması gereken en öncelikli açıktır.** Anotasyon kanıt kapılıydı
+(her değer metinde birebir geçen bir alıntıya bağlı, programatik
+doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 
 **Bu sayı düşük ve nedenini saklamıyoruz.** İki şey birden doğru:
 
@@ -165,6 +190,12 @@ belge düzeyi bootstrap 2000 örnek, tohum 42:
 - Farkın ~%57'si tek bir alandan geliyor: `kampanya_kosullari` serbest metin
   **liste** alanı ve birebir eşleşmede F1 = 0,000. Kabiliyet çöküşü değil,
   eşleştirici sertliği.
+
+> **Senaryonun kalp alanı yeterince ölçülmedi.** `kar_payi_orani` gold.v2'de
+> yalnız **3 karar** destekli (TP 1, FN 2). Oradan çıkan F1 = 0,500
+> **yorumlanamaz**. Korpusta da alan 70/1.774 belgede (%3,9) var — bu bir
+> model kısıtı değil, **veri gerçeği**: bankalar oranları kampanya
+> sayfalarında büyük ölçüde yayımlamıyor.
 
 **Tekrarlanan tek sayı halüsinasyon oranıdır** (~%10), payda 166'dan 444'e
 çıkarken korundu. İki protokolden de bağımsız çıkan tek metrik budur.
