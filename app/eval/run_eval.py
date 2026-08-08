@@ -321,8 +321,37 @@ def macro_f1(table: dict[str, Counts]) -> float:
     Süzgeç `support > 0` (gold'da en az bir DEĞER kararı olan alan). Desteksiz
     alanın recall'u tanımsızdır; onu 0 sayıp ortalamaya katmak makro-F1'i gold
     setinin kapsamına göre keyfî biçimde düşürür.
+
+    ## Süzgecin LEHE sapan kör noktası — `macro_f1_uydurma_dahil` bunun için var
+
+    Gold bir alanda hiç değer taşımıyor **ama model orada yalnızca uydurma
+    üretiyorsa**, o alan `support == 0` olduğu için ortalamadan tamamen düşer
+    ve ceza **sıfır** olur. Yani bildiğimiz bir uydurmayı lehimize saymış
+    oluruz — bu modülün kendi ilkesiyle ("bilmediğimizi lehimize sayamayız")
+    çelişir.
+
+    gold.v2'de fiilen gerçekleşti: `tahsis_ucreti` desteksiz, tek çıktısı bir
+    halüsinasyon. Süzgeçli makro **0,409**, alan dâhil edilseydi **0,375** —
+    **+0,034 lehimize**, sessizce.
+
+    Süzgeç KALDIRILMADI (gerekçesi hâlâ geçerli), ama artık yanında ikinci bir
+    sayı raporlanıyor. İkisinin arasındaki fark, ölçümün ne kadar iyimser
+    olduğunun doğrudan ölçüsüdür.
     """
     scores = [c.f1() for c in table.values() if c.support > 0]
+    return sum(scores) / len(scores) if scores else 0.0
+
+
+def macro_f1_uydurma_dahil(table: dict[str, Counts]) -> float:
+    """Makro-F1 + yalnızca UYDURMA üreten desteksiz alanlar (F1 = 0 sayılır).
+
+    `macro_f1`'in kör noktasını kapatır: gold'da desteği olmayan ama model
+    tarafından doldurulan alan cezasız kalmasın. Hiç dokunulmamış desteksiz
+    alanlar (ne gold ne model) yine dışarıda — onlar hakkında bilgi yok ve
+    onları 0 saymak gold kapsamını cezalandırırdı.
+    """
+    scores = [c.f1() for c in table.values()
+              if c.support > 0 or c.fp_hallucinated > 0]
     return sum(scores) / len(scores) if scores else 0.0
 
 
@@ -392,8 +421,15 @@ class MatcherResult:
             "hard_documents": self.hard_docs,
             "micro": self.micro.as_dict(),
             "macro_f1": self.macro_f1,
+            # Süzgecin LEHE sapan kör noktasının ölçüsü — bkz. `macro_f1`
+            # docstring'i. İkisi arasındaki fark, makro sayının ne kadar
+            # iyimser olduğunu doğrudan verir.
+            "macro_f1_uydurma_dahil": macro_f1_uydurma_dahil(self.table),
             "macro_support_fields": sum(1 for c in self.table.values()
                                         if c.support > 0),
+            "macro_uydurma_only_fields": sum(
+                1 for c in self.table.values()
+                if c.support == 0 and c.fp_hallucinated > 0),
             "per_field": {k: v.as_dict() for k, v in sorted(self.table.items())},
         }
         if self.hard_table:
@@ -465,6 +501,14 @@ def format_table(title: str, table: dict[str, Counts]) -> str:
         f"{m.tp:>5}{m.fp:>5}{m.fn:>5}{m.tn:>5}{m.fp_hallucinated:>5}"
         f"{m.skipped:>5}")
     lines.append(f"{'MAKRO (F1 ort.)':<22}{'':>7}{'':>7}{macro_f1(table):>7.3f}")
+    dahil = macro_f1_uydurma_dahil(table)
+    yalniz_uydurma = sum(1 for c in table.values()
+                         if c.support == 0 and c.fp_hallucinated > 0)
+    if yalniz_uydurma:
+        lines.append(
+            f"{'MAKRO (uydurma dahil)':<22}{'':>7}{'':>7}{dahil:>7.3f}"
+            f"   <- {yalniz_uydurma} desteksiz alan YALNIZ uydurma üretti; "
+            f"süzgeçli makro onları cezasız bırakıyor")
     return "\n".join(lines)
 
 
