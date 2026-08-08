@@ -5,12 +5,20 @@
  *
  * İlgili: src/api/main.py `/scoring`, src/comparison/compare.py, CLAUDE.md §17
  *
- * ÖNEMLİ (dürüstlük): Kod tabanında alanlar arası **ağırlıklı bileşik skor
- * YOKTUR**. `compare.py` sıralamayı tek alan üzerinden, iki adımda yapar:
- * (1) `_numeric_key()` ile sıralama anahtarı, (2) alanın yönü
- * (`_LOWER_IS_BETTER` / `_HIGHER_IS_BETTER`). Bu bileşen bu iki adımı ve her
- * bankanın aldığı ara değeri (`sort_key`) olduğu gibi gösterir; olmayan bir
- * ağırlık tablosu UYDURMAZ — API'nin `composite_note` alanı bunu açıkça söyler.
+ * DÜZELTME (2026-08-09): bu başlık eskiden *"kod tabanında alanlar arası
+ * ağırlıklı bileşik skor **YOKTUR**"* diyordu. Yanlıştı ve `src/api/main.py`
+ * aynı yanlışı 2026-08-08'de kendi tarafında düzeltmişti — düzeltme buraya
+ * işlenmemişti. `compare.py` `DEFAULT_WEIGHTS`, `WEIGHT_RATIONALE`,
+ * `_composite_numeric`, `rank_advantageous` ve `weight_manifest`'i taşıyor ve
+ * test ediyor; bileşik skor `GET /advantageous` ucundan sunuluyor ve artık
+ * «En Avantajlı» sekmesinde görünüyor. Jüri iki dosyayı yan yana okusa
+ * çelişkiyi görürdü.
+ *
+ * Bu bileşenin kapsamı DEĞİŞMEDİ: **tek alan** sıralamasını açıklar.
+ * `compare.py` bunu iki adımda yapar: (1) `_numeric_key()` ile sıralama
+ * anahtarı, (2) alanın yönü (`_LOWER_IS_BETTER` / `_HIGHER_IS_BETTER`). Her
+ * bankanın aldığı ara değer (`sort_key`) olduğu gibi gösterilir. Çok alanlı
+ * ağırlıklı skor için «En Avantajlı» sekmesine bakılır.
  */
 
 import { api } from "../lib/api";

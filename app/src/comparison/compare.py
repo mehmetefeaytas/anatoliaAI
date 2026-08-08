@@ -53,8 +53,25 @@ def _numeric_key(field_name: str, value: Any) -> tuple[Optional[float], bool, Op
     # sessizce düşer -> §5.7 "En Düşük Kâr Payı" yanlış banka verir.
     value = collapse_degenerate_range(value)
     # aralık: {"min":, "max":}
+    #
+    # Aralık DOĞRUDAN KIYASLANAMAZ (comparable=False) ve bu değişmiyor. Ama
+    # döndürülen `sort_key` aralığın hangi ucunu temsil ediyor önemlidir:
+    # arayüz o sayıyı gösteriyor ve `BankDeltaPanel` fark hesabında kullanıyor.
+    #
+    # Eskiden `field_name` parametresi gövdede HİÇ KULLANILMIYOR ve her zaman
+    # `min` alınıyordu. Yani `vade_ay` alanında `{min: 12, max: 120}` taşıyan
+    # bir kampanya 12 ay gibi görünüyordu — ürünün ilan ettiği en uzun vade
+    # 120 iken. Yön, alanın kendisine bağlıdır: düşük-iyi alanlarda ürünün
+    # vaat ettiği uç alt sınır, yüksek-iyi alanlarda üst sınırdır.
+    #
+    # İkiz fonksiyon `_composite_numeric` bunu ZATEN doğru yapıyordu
+    # (`best_end = lo if field_name in _LOWER_IS_BETTER else hi`). İlke doğru
+    # yazılmış, tek alanlı yola uygulanmamıştı — `masraf_durumu`'nda yaşanan
+    # (yukarıda uzun uzun anlatılan) hatanın aynısı.
     if isinstance(value, dict) and "min" in value and "max" in value:
-        return float(value["min"]), False, "aralık — doğrudan kıyaslanamaz"
+        lo, hi = float(value["min"]), float(value["max"])
+        uc = lo if field_name in _LOWER_IS_BETTER else hi
+        return uc, False, "aralık — doğrudan kıyaslanamaz"
     # para: {"value":, "currency":}
     if isinstance(value, dict) and "value" in value:
         cur = value.get("currency")

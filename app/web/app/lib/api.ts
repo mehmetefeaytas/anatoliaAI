@@ -42,7 +42,16 @@ export type CompareRow = SpanInfo & {
   sort_key: number | null;
   rank: number | null;
   contradiction_count: number;
+  /**
+   * Bu bankanın AYNI ürün ailesinde kaç kampanyası daha var. `per_bank=best`
+   * (varsayılan) iken elenen satırların sayısıdır; `all` iken 0.
+   * Bilgi gizlenmiyor, özetleniyor — tamamı `per_bank=all` ile alınabilir.
+   */
+  other_count: number;
 };
+
+/** `/compare?per_bank=` — banka başına tek satır mı, her kayıt ayrı mı. */
+export type PerBank = "best" | "all";
 
 export type FieldMeta = {
   field: string;
@@ -316,10 +325,11 @@ export const api = {
   fields: () => request<FieldMeta[]>("/api/fields"),
   campaigns: () => request<CampaignSummary[]>("/api/campaigns"),
   campaignText: (id: number) => request<CampaignText>(`/api/campaigns/${id}/text`),
-  compare: (field: string, intent?: string, type?: string) => {
+  compare: (field: string, intent?: string, type?: string, perBank?: PerBank) => {
     const p = new URLSearchParams({ field });
     if (intent) p.set("intent", intent);
     if (type) p.set("type", type);
+    if (perBank) p.set("per_bank", perBank);
     return request<CompareRow[]>(`/api/compare?${p.toString()}`);
   },
   /**

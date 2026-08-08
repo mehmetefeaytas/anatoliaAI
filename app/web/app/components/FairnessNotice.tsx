@@ -16,6 +16,12 @@
  *    zaman-koşullu oran («ilk 6 ay %0») aynı birime indirgenemez; sistem
  *    bunları sıralamaya SOKMAZ, «doğrudan kıyaslanamaz» işaretiyle listede
  *    bırakır. Uydurma sıralama yapılmaz.
+ * 3. **Farklı ürün aileleri kıyaslanmaz** (2026-08-09'da eklendi). Bu madde
+ *    bir ŞİKÂYETTEN doğdu: `vade_ay` ekranında 120 aylık bir konut finansmanı
+ *    ile 36 aylık bir ihtiyaç finansmanı yan yana sıralanıyordu. Kural §17'de
+ *    zaten vardı ama yalnız BİRİM düzeyinde uygulanmıştı; ürün ailesi
+ *    düzeyinde uygulanmıyordu. Artık tablo aileye göre bölümleniyor ve sıra
+ *    numaraları bölüm içinde veriliyor.
  *
  * Kapatılabilir DEĞİLDİR (dismiss düğmesi yoktur): jüri ekranı ilk açtığında
  * görüp kapattıysa, demonun geri kalanında bu bilgi ekranda kalmalıdır.
@@ -46,6 +52,18 @@ export default function FairnessNotice() {
           alınmaz; <span className="badge badge-warn">doğrudan kıyaslanamaz</span>{" "}
           gerekçesiyle listede kalır. Silinmez, uydurma sıra da verilmez
           (CLAUDE.md §17).
+        </p>
+      </div>
+      <div className="fairness-item">
+        <strong>Farklı ürünler yan yana sıralanmaz</strong>
+        <p>
+          Bir <b>konut finansmanı</b> ile bir <b>ihtiyaç finansmanı</b>{" "}
+          birbirinin alternatifi değildir; «hangisi daha avantajlı» sorusu bu
+          ikisi arasında iyi tanımlı değildir. Tablo <b>ürün ailesine göre
+          bölümlenir</b> ve sıra numaraları yalnız bölüm içinde verilir.
+          Aileler arası hiçbir sıralama üretilmez — 120 aylık bir konut
+          finansmanının 36 aylık bir ihtiyaç finansmanını «yenmesi» bir bilgi
+          değil, bir ölçüm hatasıdır.
         </p>
       </div>
     </div>

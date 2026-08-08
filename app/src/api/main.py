@@ -174,6 +174,11 @@ FIELD_LABELS: dict[str, str] = {
 # sıralama verir.
 VALID_INTENTS = ("lowest", "highest", "list", "filter")
 
+# `/compare?per_bank=` için geçerli değerler. `best` şartnamenin "banka başına
+# bir satır" tablosunu üretir; `all` eski davranışı (her kayıt ayrı satır)
+# korur ve geriye dönük uyumluluk için kaldırılmaz.
+VALID_PER_BANK = frozenset({"best", "all"})
+
 
 # --------------------------------------------------------------------------- #
 # İstek gövdesi şemaları — MODÜL SEVİYESİNDE olmak ZORUNDA (hata düzeltmesi)
@@ -646,7 +651,7 @@ def build_app():
 
     @app.get("/compare")
     def compare(field: str, intent: Optional[str] = None,
-                type: Optional[str] = None):
+                type: Optional[str] = None, per_bank: str = "best"):
         """Bir alanı bankalar arası karşılaştırır (adil kıyas — CLAUDE.md §17).
 
         BELGE TÜRÜ SÜZMESİ: yalnız kampanya belgeleri döner; sözleşme / tarife
@@ -669,18 +674,42 @@ def build_app():
         kıyaslanamayanlar not'larıyla sonda kalır. Geçersiz intent artık
         sessizce yok sayılmaz, 400 döner.
 
+        `per_bank` KARARI (2026-08-09): şartnamenin çalışılmış örneği (s.12–13)
+        **banka başına bir satır** gösteriyor; bu uç ise `extracted_fields`
+        tablosundaki HER satırı döndürüyordu. Aynı banka aynı alanda 5
+        kampanya taşıyorsa tabloda 5 satır oluşuyor ve her biri ayrı sıra
+        alıyordu — "en düşük kâr payı hangi bankada" sorusunun cevabı, bir
+        bankanın kendi kampanyalarıyla dolu bir liste hâline geliyordu.
+
+          best (VARSAYILAN) → ürün ailesi başına bankanın EN İYİ satırı
+          all               → eski davranış; her satır ayrı döner
+
+        Tekilleştirme anahtarı `(bank, campaign_type)`'dır, yalnız `bank`
+        değil: bir bankanın konut finansmanı ile taşıt finansmanı **farklı
+        ürünlerdir** ve aynı satıra indirgenmeleri, adil kıyas garantisinin
+        (CLAUDE.md §17) ürün ailesi düzeyindeki karşılığını bozardı.
+
+        Elenen satırlar SAKLANMAZ, SAYILIR: her satır `other_count` taşır —
+        "bu bankanın bu ailede kaç kampanyası daha var". Bilgi gizlenmiyor,
+        özetleniyor; `per_bank=all` ile tamamı yine alınabilir.
+
         Dönen alanlar (mevcutlar korunur, yenileri eklendi):
           bank, bank_name, value, comparable, note, source_span  (mevcut)
           campaign_id, campaign_type, source_url, raw_value, confidence,
           confidence_source, extractor, span_start, span_end, span_scope,
           span_verified, span_ambiguous, window_start, window_end, sort_key,
-          rank, contradiction_count
+          rank, contradiction_count, other_count
         """
         if intent is not None and intent not in VALID_INTENTS:
             raise HTTPException(
                 status_code=400,
                 detail=f"Geçersiz intent: {intent!r}. "
                        f"Geçerli değerler: {', '.join(VALID_INTENTS)}")
+        if per_bank not in VALID_PER_BANK:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Geçersiz per_bank: {per_bank!r}. "
+                       f"Geçerli değerler: {', '.join(sorted(VALID_PER_BANK))}")
 
         rows = _field_rows(field)
         if type:
@@ -709,6 +738,29 @@ def build_app():
             head = [x for x in ranked if x.comparable and x.sort_key is not None]
             tail = [x for x in ranked if not (x.comparable and x.sort_key is not None)]
             ranked = list(reversed(head)) + tail
+
+        # Banka başına tekilleştirme. `ranked` zaten en iyiden kötüye sıralı ve
+        # kıyaslanabilirler başta; dolayısıyla bir `(banka, tür)` çiftinin İLK
+        # görülen satırı o bankanın o ailedeki en iyisidir. Ayrı bir "en iyiyi
+        # seç" mantığı yazmak, sıralama kuralını ikinci kez (ve ayrışma riskiyle)
+        # uygulamak olurdu.
+        aile_sayisi: dict[tuple[Any, Any], int] = {}
+        for x in ranked:
+            src = by_token[x.bank]
+            anahtar = (src["bank"], src["campaign_type"])
+            aile_sayisi[anahtar] = aile_sayisi.get(anahtar, 0) + 1
+
+        if per_bank == "best":
+            gorulen: set[tuple[Any, Any]] = set()
+            tekil: list[RankRow] = []
+            for x in ranked:
+                src = by_token[x.bank]
+                anahtar = (src["bank"], src["campaign_type"])
+                if anahtar in gorulen:
+                    continue
+                gorulen.add(anahtar)
+                tekil.append(x)
+            ranked = tekil
 
         out = []
         position = 0
@@ -757,6 +809,12 @@ def build_app():
                 "contradiction_count": len(_campaign_contradictions(
                     src["campaign_id"], text, src["bank"],
                     src.get("scraped_at"))),
+                # Bu satırın temsil ettiği ailede bankanın KAÇ kampanyası daha
+                # var. `per_bank=all` iken 0'dır (hiçbir şey elenmemiştir).
+                "other_count": (
+                    aile_sayisi[(src["bank"], src["campaign_type"])] - 1
+                    if per_bank == "best" else 0
+                ),
             })
         return out
 
