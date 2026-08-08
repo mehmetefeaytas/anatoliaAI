@@ -101,6 +101,7 @@ hem de eşleşmeyen alanlarda sessizce `null` veriyordu. `POST /extract` canlı
 from __future__ import annotations
 
 import inspect
+import logging
 import os
 from typing import Any, Optional
 
@@ -117,8 +118,26 @@ from ..preprocessing.blocks import cerceve_cumleler, gorunum_araliklari
 from ..preprocessing.clean import normalize_text
 from ..summarize.ozet import OZET_KAYNAK_LLM
 
+logger = logging.getLogger(__name__)
+
 CONFIG = os.environ.get("BANKS_CONFIG", "config/banks.yaml")
 RAW_DIR = os.environ.get("RAW_DIR", "data/raw")
+
+
+def _otorite_kaynak_sluglari() -> frozenset[str]:
+    """`banks.yaml`'da `otorite_kaynak: true` işaretli slug'lar (bkz. `/banks`).
+
+    Config OKUNAMAZSA boş küme döner, yani süzme yapılmaz. Bilinçli seçim:
+    banka kataloğunun eksik dönmesi, fazla dönmesinden daha kötüdür — eksik
+    liste sessizce yanlış kıyas üretir, fazla liste ise gözle görülür.
+    """
+    try:
+        from ..scraping.config import load_banks
+        return frozenset(b.slug for b in load_banks(CONFIG) if b.otorite_kaynak)
+    except Exception:  # config yoksa/bozuksa uç çalışmaya devam etmeli
+        logger.warning("banks.yaml okunamadı; /banks otorite süzmesi atlandı",
+                       exc_info=True)
+        return frozenset()
 # SQLite yolu için dosya (yalnızca DATABASE_URL boşken kullanılır — seçimi
 # `src/db/factory.create_repository()` yapar).
 DB_PATH = os.environ.get("DATABASE_PATH", ":memory:")
@@ -501,8 +520,41 @@ def build_app():
         return {"status": "ok", "llm": llm.available, "backend": repo.backend}
 
     @app.get("/banks")
-    def banks():
-        return repo.all_banks()
+    def banks(otorite_kaynaklari_dahil: bool = False):
+        """BDDK Liste 77 bankaları (CLAUDE.md §13).
+
+        OTORİTE KAYNAK SÜZMESİ: korpus yalnızca bankalardan beslenmiyor —
+        fıkhî terimlerin TANIMI banka sayfalarında yok, bankalar terimi
+        kullanır ama açıklamaz (ölçüldü: `docs/rapor/musaraka-veri-boslugu.md`).
+        Bu yüzden TKBB gibi sektör otoriteleri de korpus kaynağıdır ve
+        `config/banks.yaml` içinde `bddk_active: false` ile durur — ingest
+        yolu (`src/pipeline.py::run_pipeline`) banka kayıtlarını o dosyadan
+        sürdüğü için başka türlü korpusa giremezler.
+
+        Ama KAYNAK OLMAK ile BANKA OLMAK aynı şey değildir. Süzme olmadan
+        TKBB bu uçtan "11. banka" olarak dönüyordu ve arayüzdeki banka
+        listesine düşüyordu; jüri kıyas ekranında TKBB satırı görseydi bu
+        doğrudan bir kusur olurdu (CLAUDE.md §13, §17).
+
+        `/compare` bu riski ZATEN taşımıyor: kıyas tablosu belge türüne göre
+        süzülüyor ve otorite belgelerinin ikisi de `belge_turu='sozlesme'`
+        (ölçüldü) — yani hiçbir zaman kıyas satırı üretmediler. Açıkta kalan
+        tek yer banka KATALOĞUYDU, burası.
+
+        Süzme GİZLEME DEĞİLDİR: `?otorite_kaynaklari_dahil=true` tam listeyi
+        döndürür, böylece korpusun gerçek kaynak kümesi denetlenebilir kalır.
+
+        Ayrım `bddk_active` ÜZERİNDEN YAPILMAZ. O alan "gerçek banka ama BDDK
+        lisansı aktif değil" demektir ve lisansı düşmüş GERÇEK bir bankayı da
+        katalogdan silerdi. Ayrım `config/banks.yaml`'daki `otorite_kaynak`
+        bayrağıdır — yani banka/kaynak kararı config-driven kalır (CLAUDE.md
+        §18-3) ve DB şeması değişmeden çalışır.
+        """
+        rows = repo.all_banks()
+        if otorite_kaynaklari_dahil:
+            return rows
+        otorite = _otorite_kaynak_sluglari()
+        return [b for b in rows if b.get("slug") not in otorite]
 
     @app.get("/campaigns")
     def campaigns():

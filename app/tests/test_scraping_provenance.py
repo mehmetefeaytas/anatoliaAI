@@ -481,12 +481,35 @@ class TestRateLimiter(unittest.TestCase):
 
 class TestBanksConfigIntegrity(unittest.TestCase):
     def test_every_bank_has_a_discovery_entry_point(self):
+        """Her BANKA gezilebilir olmalı — otorite kaynakları muaftır.
+
+        MUAFİYETİN GEREKÇESİ (gevşetme değil, farklı bir sözleşme):
+        `campaign_paths`/`sitemap_urls` OTOMATİK KEŞFİN girdisidir — "bu
+        siteyi gez, kampanya bul" demektir. Bankalar için zorunludur, çünkü
+        kampanya kataloğu sürekli değişir ve elle takip edilemez.
+
+        Otorite kaynakları (TKBB) bu sözleşmeye girmez: kampanya yayımlamazlar,
+        yayımladıkları şey standart ve eğitim materyalidir. Belgeleri hedefli
+        ve ELLE seçilerek toplandı (`scrape_mode: manual`, robots.txt tek tek
+        doğrulanarak — bkz. docs/rapor/musaraka-veri-boslugu.md). Onlara boş
+        bir `campaign_paths` verip keşif başlatmak, sektör birliğinin tüm
+        sitesini kampanya sanarak taramak olurdu.
+
+        Muafiyet DAR: yalnız `bddk_active=False` kayıtlar kapsam dışıdır ve
+        onlar için de `scrape_mode` MUTLAKA `manual` olmalıdır — yani muafiyet
+        otomatik gezinmeyi kapatmayı da ZORUNLU kılar, sadece izin vermez.
+        """
         for bank in load_banks(CONFIG):
             with self.subTest(bank=bank.slug):
-                self.assertTrue(bank.campaign_paths or bank.sitemap_urls,
-                                "keşif için en az bir başlangıç noktası gerekir")
                 self.assertIn(bank.scrape_mode, ("static", "js", "manual"))
                 self.assertTrue(bank.website_url.startswith("https://"))
+                if not bank.bddk_active:
+                    self.assertEqual(
+                        bank.scrape_mode, "manual",
+                        "otorite kaynağı otomatik gezinme TETİKLEYEMEZ")
+                    continue
+                self.assertTrue(bank.campaign_paths or bank.sitemap_urls,
+                                "keşif için en az bir başlangıç noktası gerekir")
 
     def test_js_banks_are_declared(self):
         js = {b.slug for b in load_banks(CONFIG) if b.scrape_mode == "js"}
