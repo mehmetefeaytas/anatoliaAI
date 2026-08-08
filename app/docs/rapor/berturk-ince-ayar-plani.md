@@ -294,3 +294,89 @@ korunur).
 - Gümüş etiketlerin insan doğrulaması (R2)
 
 Bunların hiçbiri koşulmadı; sonuç raporlanırken açık risk olarak taşınmalıdır.
+
+---
+
+## 10. SONUÇ (2026-08-07) — kabul kapısında KALDI, model alınmadı
+
+Eğitim **yerelde** koşuldu (Apple Silicon / MPS), Colab'a gerek kalmadı.
+Bu bir yan kazanç: eğitim de teslim ortamında tekrarlanabilir, on-prem
+anlatısı güçleniyor. Ağırlıklar `models/berturk-kampanya-8sinif/`
+(442,5 MB, `sha256=2c9e3af2410d835a…`), künye `KUNYE.json`.
+
+### Ölçüm — aynı gold küme (n=20), aynı metrik hattı
+
+| kol | accuracy | makro-F1 | çekimser |
+|---|---|---|---|
+| **kural** (`RuleHintClassifier`) | **0,700** | **0,762** | 1 |
+| BERTurk (ince ayarlı) | 0,550 | 0,565 | 0 |
+| **fark** | **−0,150** | **−0,198** | |
+
+Bootstrap %95 GA (2000 yineleme, gold n=20):
+
+| ölçüt | nokta | %95 GA | genişlik |
+|---|---|---|---|
+| accuracy | 0,552 | [0,350 – 0,750] | 0,400 |
+| makro-F1 | 0,521 | [0,317 – 0,710] | 0,393 |
+
+### Kapı (plan §5) — geçilmedi
+
+Kural: *gold makro-F1'in %95 GA **alt sınırı** temel çizgiyi (0,762) aşmalı.*
+Alt sınır **0,317**. Aşmadı; üstelik **nokta tahmini bile** temel çizginin
+0,20 altında.
+
+**❌ BERTurk projeye ALINMADI. Kural sınıflandırıcısı korunuyor.**
+`BERTURK_MODEL_DIR` ayarlanmadığı sürece `default_classifier()` zaten kurala
+düşer; ürün yolunda değişiklik yok.
+
+### Kök neden — plan §9 bunu risk olarak yazmıştı
+
+Model **gümüş etiketle eğitildi, altın etiketle ölçüldü.** `KUNYE.json`
+bunu birebir kaydediyor: *"data/eval/berturk_egitim.jsonl (n=505, gümüş
+etiket — LLM uzlaşması, insan doğrulaması YOK)"*.
+
+Yani BERTurk, gerçeği değil **LLM'in etiketleme fonksiyonunu** öğrendi.
+Gold, insan protokolüyle etiketlendi; ikisi ayrıştığı ölçüde model
+kaçınılmaz olarak geride kalır. Bu, planın §9'unda "gümüş etiketlerin insan
+doğrulaması (R2) koşulmadı" diye açıkça taşınan riskin gerçekleşmesidir.
+
+İkinci etken: **BERTurk hiç çekimser kalmıyor** (0 vs kuralın 1'i). Kural
+katmanı emin olmadığında susuyor; çekimserlik muhasebesinde susmak recall'u
+düşürür ama precision'ı şişirmez (`scripts/eval_classifier.py:109-113`).
+Her belgeye bir sınıf atamak, belirsiz belgelerde ücretsiz hata üretiyor.
+
+Karışıklıklar da bunu destekliyor: `İhtiyaç Finansmanı → Konut Finansmanı`
+(2), `Yatırım Ürünü → İhtiyaç Finansmanı` (2) — yani model, gümüş kümede
+sık karışan komşu sınıfları ayırt edemiyor.
+
+### Dürüst okuma — n=20 uyarısı
+
+GA genişliği 0,39. n=20 bu kararı **kesinleştirmek için dar bir set**;
+`eval_classifier.py:173-178` zaten "SIRALAMA sinyalidir" uyarısı basıyor.
+Ama kapı bilinçli olarak muhafazakâr kuruldu (alt sınır > temel çizgi) ve
+fark bu kadar büyükken (−0,198, nokta tahmininde de geride) sonucun n ile
+tersine dönmesi beklenmez.
+
+**Bu bir başarısızlık değil, ölçülmüş bir sonuçtur** ve ablasyon anlatısının
+parçasıdır: projede "LLM/derin model ekleyelim" refleksi üçüncü kez ölçümle
+yanlışlandı (hibrit kol, orkestrasyon kolu, şimdi BERTurk).
+
+### Neyin denenmediği — hâlâ geçerli
+
+Plan §9'daki listeden hiçbiri koşulmadı. Bu sonucu tersine çevirebilecek en
+olası iki müdahale, önem sırasıyla:
+
+1. **Gümüş etiketlerin insan doğrulaması (R2)** — kök neden burada.
+2. **Yalnız `yuksek` güvenli 255 kayıtla eğitim (R2 varyantı)** — gürültülü
+   etiketleri elemek.
+
+Teslime kalan sürede ikisi de anotasyon bütçesi ister; bütçe gold setine
+gidiyor (CLAUDE.md §4).
+
+### Tekrar üretim
+
+```bash
+.venv/bin/python -m scripts.train_berturk --bootstrap 2000
+.venv/bin/python -m scripts.eval_classifier \
+  --predictions data/eval/berturk_preds.jsonl --name berturk --compare
+```
