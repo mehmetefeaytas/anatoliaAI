@@ -106,6 +106,9 @@ span'i varsa blok otomatik açılıyor; kanıt gizlenemiyor.
 | 5.3 | Güvenlik setinde 2 kayıt düşüyor (C05, K02) | teşhis sürüyor |
 | 5.4 | `rakip-analizi.md` teslim öncesi tekrar koşulmalı | |
 | **5.5** | **LLM çağrısında toplam süre sınırı yok** | **yeni.** `urllib` zaman aşımı soket başına; bağlantı açık kalıp veri gelmeyince tetiklenmiyor. Demo donanımında model takılırsa arayüz süresiz bekler. `OLLAMA_TIMEOUT` eklendi ama bu bir *soket* sınırı — hattın **deadline**'ı ayrı iş |
+| **5.7** | **κ hâlâ ÖLÇÜLEMEZ durumda** | **yeni, kritik.** v2 kalibrasyon paketinin 4 dosyası da tamamen boş; gold.v2'nin 4 anotatörü **ayrık** kümelere baktı, örtüşme sıfır. "4 anotatör" çift anotasyon demek değil. Kod, eşik ve CSV hazır — **eksik olan tek şey doldurulmuş veri** |
+| **5.8** | **`jargon_lint` `docs/*.md`'yi taramıyor** | **yeni.** İç çalışma belgelerinde konvansiyonel terim kullanımı denetlenmiyor. Jüriye giden teknik raporda ihlal YOK (denetlendi), yani risk sınırlı; ama muafiyet listesiyle birlikte kapsamı genişletmek en ucuz kapanış |
+| **5.9** | **`parca/etiket-*.json` ile `gold.v2.json` kimlik kuralı ayrışmış** | **yeni.** Parçalarda sayısal id (`kuveyt-turk--35985512`), çıktıda slug id; kesişim **0/48**. `merge_gold_v2` bugün yeniden koşulursa gold.v2 sayısal id'lerle üretilir ve id-anahtarlı her eşleştirme (ablasyon, McNemar, çerçeve ayıklaması) **sessizce** boşa düşer. Bu kusur bir kez zaten gerçekleşti |
 | **5.6** | **`build_summaries` parti sonunda yazıyor** | **yeni.** Kesilen koşum bütün işini kaybediyor; 20 belgelik parça 569 sn sürüyor ve erken kesilirse 0 satır yazılıyor |
 
 ## Bu turda kapananlar (kayıt için)
