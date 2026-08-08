@@ -1,0 +1,86 @@
+{
+  "kabul_kapisi": "KALDI",
+  "gold": {
+    "n": 20,
+    "dogru": 11,
+    "cekimser": 0,
+    "accuracy": 0.55,
+    "macro_f1": 0.5648809523809524
+  },
+  "gold_ga95": {
+    "accuracy": [
+      0.5520999999999999,
+      0.35,
+      0.75
+    ],
+    "macro_f1": [
+      0.5206280031753479,
+      0.3174479166666667,
+      0.7102069160997732
+    ]
+  },
+  "test_gumus": {
+    "n": 76,
+    "dogru": 68,
+    "cekimser": 0,
+    "accuracy": 0.8947368421052632,
+    "macro_f1": 0.9017992424242425
+  },
+  "temel_cizgi_gold": {
+    "accuracy": 0.7,
+    "macro_f1": 0.762
+  },
+  "epoch_gecmisi": [
+    {
+      "epoch": 1,
+      "egitim_kaybi": 2.1634,
+      "dogrulama_macro_f1": 0.2002,
+      "dogrulama_accuracy": 0.2895
+    },
+    {
+      "epoch": 2,
+      "egitim_kaybi": 1.9305,
+      "dogrulama_macro_f1": 0.3165,
+      "dogrulama_accuracy": 0.3684
+    },
+    {
+      "epoch": 3,
+      "egitim_kaybi": 1.5443,
+      "dogrulama_macro_f1": 0.5155,
+      "dogrulama_accuracy": 0.5263
+    },
+    {
+      "epoch": 4,
+      "egitim_kaybi": 1.0868,
+      "dogrulama_macro_f1": 0.684,
+      "dogrulama_accuracy": 0.6711
+    },
+    {
+      "epoch": 5,
+      "egitim_kaybi": 0.7158,
+      "dogrulama_macro_f1": 0.7782,
+      "dogrulama_accuracy": 0.75
+    },
+    {
+      "epoch": 6,
+      "egitim_kaybi": 0.5347,
+      "dogrulama_macro_f1": 0.7598,
+      "dogrulama_accuracy": 0.75
+    },
+    {
+      "epoch": 7,
+      "egitim_kaybi": 0.4048,
+      "dogrulama_macro_f1": 0.764,
+      "dogrulama_accuracy": 0.7632
+    },
+    {
+      "epoch": 8,
+      "egitim_kaybi": 0.3572,
+      "dogrulama_macro_f1": 0.7885,
+      "dogrulama_accuracy": 0.7763
+    }
+  ],
+  "egitim_suresi_dk": 6.74,
+  "tohum": 42,
+  "cihaz": "mps"
+}
