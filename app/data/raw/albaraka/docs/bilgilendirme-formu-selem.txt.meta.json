@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/selem.pdf",
+  "scraped_at": "2026-08-08T09:59:44+00:00",
+  "content_hash": "95b891ff84bb9490e0feecae3ea814f62427bd9242ba3d2337669c71dce36496",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu selem",
+  "http_status": 200,
+  "raw_bytes": 169889,
+  "text_chars": 4572,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/karz-i-hasen-fon-kullandirma.pdf",
+  "scraped_at": "2026-08-08T09:59:53+00:00",
+  "content_hash": "5815a085a143131eb0110e5b4f97265ab81dae1311e4e17ebcede4e7bd78dc98",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu karz i hasen fon kullandirma",
+  "http_status": 200,
+  "raw_bytes": 211263,
+  "text_chars": 2270,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 1
+}

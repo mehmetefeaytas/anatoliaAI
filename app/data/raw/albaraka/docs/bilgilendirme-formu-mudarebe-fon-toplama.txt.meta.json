@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/mudarebe_-fon_toplama.pdf",
+  "scraped_at": "2026-08-08T09:59:35+00:00",
+  "content_hash": "a7b9b1b66a8a5df6e0114845e1ef92ec9a1f9a5e6c41d10dd534e9e014ecd231",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu mudarebe fon toplama",
+  "http_status": 200,
+  "raw_bytes": 221520,
+  "text_chars": 4073,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

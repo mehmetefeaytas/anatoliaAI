@@ -541,3 +541,35 @@ banks:
       - kampanya
       - finansman
     max_docs: 40
+
+  # ---------------------------------------------------------------------------
+  # TKBB — BANKA DEĞİL, OTORİTE KAYNAK. `banks:` listesinde durmasının tek
+  # nedeni ingest yolunun (src/pipeline.py::run_pipeline) banka kayıtlarını
+  # banks.yaml'dan sürmesi: burada olmayan bir `data/raw/<slug>/` klasörü
+  # korpusa HİÇ girmez. Yani bu blok bir "banka tanımı" değil, bir KORPUS
+  # KAYNAĞI tanımıdır.
+  #
+  # Neden eklendi (docs/rapor/musaraka-veri-boslugu.md): fıkhî terimlerin
+  # TANIMI banka kampanya/ürün sayfalarında yok — bankalar terimi kullanır,
+  # açıklamaz. Ölçüldü: korpusta müşarakayı tanımlayan tek belge yoktu, terim
+  # yalnız 6 belgede ve hepsinde "geçerken anma" biçiminde geçiyordu.
+  # TKBB'nin Katılım Finansı Standartları ve eğitim portalı bu tanımların
+  # BİRİNCİL kaynağıdır.
+  #
+  # DİKKAT — KIYAS TEHLİKESİ (CLAUDE.md §17): `bddk_active: false` bu kaydı
+  # BDDK lisanslı banka OLMADIĞINI belirtir, ama kod bugün bu alanı hiçbir
+  # yerde SÜZME ölçütü olarak kullanmıyor (yalnız `banks` tablosuna yazılıyor).
+  # Dashboard/kıyas motoru banka listesini süzmüyorsa TKBB "11. banka" gibi
+  # görünür. Bu belgelerin hiçbirinde kâr payı oranı/vade gibi kıyas alanı
+  # olmadığı için sıralamaya değer katmaz, ama GÖRÜNÜRLÜK sorunu çözülmelidir.
+  #
+  # `scrape_mode: manual` → yalnız data/raw fixture'ından okunur; bu blok
+  # otomatik gezinme (discover) TETİKLEMEZ. Belgeler hedefli ve elle seçilerek,
+  # robots.txt doğrulanarak toplandı (ikisi de "Allow: /", kural yok).
+  - slug: tkbb
+    name: Türkiye Katılım Bankaları Birliği
+    website_url: https://tkbb.org.tr
+    bddk_active: false
+    scrape_mode: manual
+    campaign_paths: []
+    max_docs: 40

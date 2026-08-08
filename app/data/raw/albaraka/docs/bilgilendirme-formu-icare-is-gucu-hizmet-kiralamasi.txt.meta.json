@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/icara_-is_gucu_hizmet_kiralamasi.pdf",
+  "scraped_at": "2026-08-08T10:00:02+00:00",
+  "content_hash": "135fb2425a9e3e0c192745d017bd40046773f6161b835fec9215ba7d634e9d55",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu icare is gucu hizmet kiralamasi",
+  "http_status": 200,
+  "raw_bytes": 218284,
+  "text_chars": 4017,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

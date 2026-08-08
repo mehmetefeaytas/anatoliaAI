@@ -1,0 +1,14 @@
+{
+  "bank_slug": "tkbb",
+  "source_url": "https://tkbb.org.tr/upload/2263051557-musareke_standardi.pdf",
+  "scraped_at": "2026-08-08T09:59:29+00:00",
+  "content_hash": "bd714628eff4483525b92a901d4973bf96a640376d1e884d10a1d5f4b9ac4cca",
+  "collection_method": "pdf",
+  "title": "tkbb katilim finansi standardi 7 musareke",
+  "http_status": 200,
+  "raw_bytes": 361151,
+  "text_chars": 36463,
+  "robots_decision": "robots.txt kural icermiyor — izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 16
+}
