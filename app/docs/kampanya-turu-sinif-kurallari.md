@@ -9,6 +9,25 @@
 
 ---
 
+## Terminoloji uyarısı — bu belge konvansiyonel terim İÇERİR ve içermelidir
+
+Bu belge bir **sınıflandırma kuralıdır** ve iki korpusu birden sınıflandırır:
+yarışma korpusu (`data/raw`, katılım bankaları) ve gümüş eğitim korpusu
+(`data/raw-classic`, konvansiyonel bankalar — `CLAUDE.md` §12 kapsamı
+dışında, yalnız sınıflandırıcı eğitiminde).
+
+Bu yüzden aşağıda "ihtiyaç kredisi", "KMH", "faiz" gibi terimler geçer.
+Bunlar **bizim ürünümüzün adı değil, tanınması gereken girdi desenleridir**:
+sınıflandırıcı konvansiyonel bir sayfayı doğru sınıfa atayabilmek için o
+sayfanın kendi sözcüklerini bilmek zorundadır. Konvansiyonel bir rotatif
+limitin faizle işlediğini yazmak da olgusal olarak doğrudur.
+
+**Kural:** konvansiyonel terim yalnız *konvansiyonel ürünü* anlatırken
+kullanılır. Katılım ürünü anlatılırken katılım terimi kullanılır ve ikisi
+aynı listede ayrım yapılmadan yan yana yazılmaz. Kullanıcıya dönük hiçbir
+yüzeyde (arayüz, chatbot, özet) bu terimler üretilmez — orayı
+`scripts/jargon_lint.py` ve `src/chatbot/safety.py` KAPI 1 korur.
+
 ## Neden bu belge var
 
 Kılavuzda 8 sınıfın listesi vardı, ama **aralarındaki sınır tanımlı değildi.**
@@ -156,8 +175,11 @@ puan değil, kartın kendisidir.
 ## BES kararı — `null`, ve gerekçesi ölçülmüş bir hataya dayanıyor
 
 BES ekonomik olarak bir yatırım ürünü. Ama bu taksonomide `Yatırım Ürünü`
-**banka tasarruf-yatırım ürünü** demek: mevduat, katılma hesabı, altın/gümüş
-hesabı, yatırım fonu. Bunların ortak yanı ilan edilmiş bir **getiri oranı**
+**banka tasarruf-yatırım ürünü** demek: katılım tarafında katılma hesabı,
+altın/gümüş hesabı, katılım fonu; konvansiyonel tarafta bunların karşılığı
+mevduat ve yatırım fonu. (İki taraf ayrı yazılır: katılma hesabı mevduat
+DEĞİLDİR — biri kâr/zarar ortaklığı, diğeri getirisi taahhüt edilen borç
+ilişkisidir.) Bunların ortak yanı ilan edilmiş bir **getiri oranı**
 taşıması ve karşılaştırma tablosunda o oranla yer alması.
 
 BES'in karşılaştırılabilir bir oranı yok; **%25 devlet katkısı** ve fon getirisi
@@ -190,7 +212,7 @@ yeniden etiketlenebilir.
 4. Ürün amaca bağlı finansman mı? → `Konut Finansmanı` / `Taşıt Finansmanı`
 5. Ürün bireysel + genel amaçlı + vadeli + taksitli mi? → `İhtiyaç Finansmanı`
 6. Ürün finansman ama (a) bireysel değil ya da (b) rotatif/vadesiz mi? → `Finansman`
-7. Ürün tasarruf/yatırım (mevduat, altın, fon) mu? → `Yatırım Ürünü`
+7. Ürün tasarruf/yatırım (katılma hesabı / mevduat, altın, fon) mu? → `Yatırım Ürünü`
 8. Teklif harcamaya bağlı puan/iade mi? → `Alışveriş Puanı`
 9. Teklif kart edinimi ya da kart avantajı mı? → `Kart`
 10. Teklifin kendisi müşteri kazanımı mı? → `Yeni Müşteri`
