@@ -178,6 +178,54 @@ _CEZA_BAGLAMI_RE = re.compile(
 _CEZA_BAGLAMI_PENCERE = 90
 
 
+# Değeri kâr payı oranı olmaktan çıkaran ÜÇÜNCÜ sınıf: türev/oransal ifade.
+#
+# Bunlar ceza maddesi DEĞİLDİR — `_CEZA_BAGLAMI_RE`'yi genişletmek yanlış
+# teşhis olurdu. Ortak yapıları şu: değer, oranın KENDİSİ değil orana ya da
+# kâr payına uygulanan bir katsayıdır. Üç kalıp korpusta ölçüldü
+# (2026-08-08, `data/demo.db`, 70 `kar_payi_orani` kaydı):
+#
+#   4 kayıt  "yıllık bileşik kâr payı oranının YÜZDE 5'İ ile kalan vade…"
+#            -> 5 bir çarpandır; erken ödeme tazminatı formülünün parçası.
+#   4 kayıt  "brüt kâr payının %50'Sİ geri alınır"
+#            -> 50 kâr PAYLAŞIM payıdır, finansman oranı değil.
+#   3 kayıt  "(Finansmanın yıllık bileşik kâr payı oranı * 0,05) + …"
+#            -> 0,05 aynı formülün cebirsel yazımı.
+#
+# Üçü de karşılaştırma tablosuna girdiğinde bankayı yanlış konumlandırıyordu;
+# demonun manşet sorusu ("en düşük kâr payı hangi bankada?") tam bu alanı
+# sıralıyor.
+#
+# Ayırt edici işaret İYELİK EKİdir: "oranı %5" ile "oranıNIN %5'i" farklı
+# şeylerdir. Birincisi oranın kendisi, ikincisi ondan türetilen bir büyüklük.
+_TUREV_ORAN_RE = re.compile(
+    r"(?:oran|pay)[ıi]n[ıi]n\s*(?:y[üu]zde\s*|%\s*)?\d",
+    re.IGNORECASE,
+)
+# Cebirsel yazım: değerin yakınında çarpma işareti. "* 0,05" ya da "x 0,05".
+_CARPAN_RE = re.compile(r"[*x×]\s*0[.,]\d")
+_TUREV_PENCERE = 90
+
+
+def _turev_oran_baglami(text: str, match_start: int, match_end: int) -> bool:
+    """Değer, bir orandan TÜRETİLMİŞ büyüklük mü (oranın kendisi değil)?
+
+    `_ceza_baglami_onceliyor` ile aynı cümle-sınırı disiplinini kullanır:
+    sınır olmasa "…%1,89 kâr payı. Kâr payı oranının yüzde 5'i…" sırasındaki
+    GERÇEK oran, sonraki cümle yüzünden reddedilirdi.
+    """
+    bas = max(0, match_start - _TUREV_PENCERE)
+    onceki = text[bas:match_start]
+    for ayirac in (". ", "! ", "? ", "\n"):
+        if ayirac in onceki:
+            onceki = onceki.rsplit(ayirac, 1)[1]
+    # Değerin kendisi de kalıba dahil: "oranının yüzde 5'i"nde sayı SAĞDA.
+    if _TUREV_ORAN_RE.search(onceki + text[match_start:match_end]):
+        return True
+    # Cebirsel yazımda çarpan değerin İÇİNDE ya da hemen sağında olur.
+    return bool(_CARPAN_RE.search(onceki + text[match_start:match_end + 8]))
+
+
 def _ceza_baglami_onceliyor(text: str, match_start: int) -> bool:
     """Eşleşmenin solunda, AYNI cümle içinde bir ceza/gecikme maddesi var mı?"""
     bas = max(0, match_start - _CEZA_BAGLAMI_PENCERE)
@@ -214,7 +262,8 @@ def extract_kar_payi(text: str) -> Optional[ExtractedField]:
     for onceki in _KAR_PAYI_ONCE_RE.finditer(text):
         s, e = onceki.span(1)
         if (_yabanci_kavram_takip_ediyor(text, onceki.end())
-                or _ceza_baglami_onceliyor(text, onceki.start())):
+                or _ceza_baglami_onceliyor(text, onceki.start())
+                or _turev_oran_baglami(text, s, e)):
             continue
         raw = onceki.group(1)
         return _field(
@@ -254,11 +303,13 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
     )
     for m in pat.finditer(text):
         s, e = m.span(3)
-        # Değeri yabancı bir kavram takip ediyorsa ya da eşleşmeyi bir ceza
-        # maddesi öncelİyorsa bu eşleşme reddedilir ve aramaya devam edilir
-        # (gerekçe: `_YABANCI_KAVRAM_RE`, `_CEZA_BAGLAMI_RE`).
+        # Değeri yabancı bir kavram takip ediyorsa, eşleşmeyi bir ceza maddesi
+        # öncelİyorsa ya da değer orandan TÜRETİLMİŞ bir büyüklükse eşleşme
+        # reddedilir ve aramaya devam edilir (gerekçe: `_YABANCI_KAVRAM_RE`,
+        # `_CEZA_BAGLAMI_RE`, `_TUREV_ORAN_RE`).
         if (_yabanci_kavram_takip_ediyor(text, e)
-                or _ceza_baglami_onceliyor(text, m.start())):
+                or _ceza_baglami_onceliyor(text, m.start())
+                or _turev_oran_baglami(text, s, e)):
             continue
         raw = m.group(3)
         canon = N.normalize_rate(raw)
@@ -927,6 +978,28 @@ class RateRow:
     tahsis_ucreti: Optional[float] = None
 
 
+# Oran tablosunun BAŞLIĞI — TEK DOĞRULUK KAYNAĞI.
+#
+# Bankalar farklı etiket kullanıyor; gerçek veride görülenler:
+#   "Vade  Kâr Payı Oranı  Tahsis Ücreti ..."        (Türkiye Finans)
+#   "Finansman Tutarı  Vade  Kar Oranı  Taksit ..."  (Emlak Katılım)
+# Bu yüzden "payı" ZORUNLU DEĞİL ve kolon sırası esnek.
+#
+# Bu desen bir zamanlar İKİ KOPYAydı ve kopyalar AYRIŞMIŞTI: `parse_rate_table`
+# gevşek olanı ("payı" opsiyonel, "paylaşım" da kabul), `extract_from_rate_table`
+# katı olanı ("payı" zorunlu) kullanıyordu. Sonuç sessizdi ve ölçüldü
+# (2026-08-08, `data/demo.db`): tablo AYRIŞIYOR ve değer üretiliyor, ama ikinci
+# arama tutmadığı için konum `(0, 0)`a düşüyor — `raw_value` boş, `span` yok,
+# güven yine 0,95. 70 `kar_payi_orani` kaydının **26'sı (%37)** böyleydi.
+#
+# Yani projenin en özgün iddiası — "her değer bir karakter aralığına bağlıdır" —
+# bu alanın üçte birinde tutmuyordu; üstelik değer YANLIŞ değil, yalnız
+# KANITSIZdı, bu yüzden hiçbir doğruluk metriği bunu göstermiyordu.
+_ORAN_TABLOSU_BASLIK_RE = re.compile(
+    r"vade[^%\d]{0,40}?(kâr|kar)\s*(pay[ıi]\s*|payla[şs][ıi]m\s*)?oran[ıi]",
+    re.IGNORECASE)
+
+
 def parse_rate_table(text: str) -> list[RateRow]:
     """Banka ürün sayfalarındaki ORAN TABLOSUNU ayrıştırır.
 
@@ -953,9 +1026,7 @@ def parse_rate_table(text: str) -> list[RateRow]:
     #   "Vade  Kâr Payı Oranı  Tahsis Ücreti ..."        (Türkiye Finans)
     #   "Finansman Tutarı  Vade  Kar Oranı  Taksit ..."  (Emlak Katılım)
     # Bu yüzden "payı" ZORUNLU DEĞİL ve kolon sırası esnek.
-    baslik = re.search(
-        r"vade[^%\d]{0,40}?(kâr|kar)\s*(pay[ıi]\s*|payla[şs][ıi]m\s*)?oran[ıi]",
-        text, re.IGNORECASE)
+    baslik = _ORAN_TABLOSU_BASLIK_RE.search(text)
     if not baslik:
         return []
 
@@ -1056,9 +1127,13 @@ def extract_from_rate_table(text: str) -> list[ExtractedField]:
     if not rows:
         return []
 
-    m = re.search(r"vade[^%\d]{0,40}?(kâr|kar)\s*pay[ıi]\s*oran[ıi]",
-                  text, re.IGNORECASE)
-    s, e = (m.span() if m else (0, 0))
+    # Konum, tabloyu AYRIŞTIRAN desenin kendisinden gelir. Ayrı bir arama
+    # yapmak (eskiden öyleydi) iki deseni ayrıştırır ve kanıt bağını sessizce
+    # koparır — gerekçe `_ORAN_TABLOSU_BASLIK_RE` başlığında.
+    m = _ORAN_TABLOSU_BASLIK_RE.search(text)
+    if m is None:                      # `parse_rate_table` satır döndürdüyse
+        return []                      # başlık VARDIR; buraya düşmek çelişkidir
+    s, e = m.span()
     pencere = _window(text, s, e)
 
     oranlar = [r.kar_payi for r in rows]
