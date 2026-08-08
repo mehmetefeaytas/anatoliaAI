@@ -1,0 +1,233 @@
+/* Anatolia AI — taban katmanı: reset, tipografi, odak, kabuk, kırılımlar.
+ *
+ * İlgili: tokens.css (tüm değerler oradan gelir), components.css
+ *         CLAUDE.md §1 (offline), §19 (erişilebilirlik/dürüstlük)
+ *
+ * Bu dosyada LİTERAL renk, boşluk veya yazı boyutu yoktur; hepsi token.
+ * Tek istisna kırılım noktalarıdır (`@media` genişlikleri) — CSS custom
+ * property'ler medya sorgusunda kullanılamaz, bu dilin kısıtı.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- kabuk --- */
+.shell {
+  max-width: var(--shell-max);
+  margin: 0 auto;
+  padding: var(--sp-6) var(--sp-4) var(--sp-10);
+}
+
+/* --- başlık --- */
+.site-header {
+  margin-bottom: var(--sp-5);
+}
+.site-header h1 {
+  margin: 0;
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+}
+.site-header p {
+  margin: var(--sp-2) 0 0;
+  color: var(--fg-dim);
+  font-size: var(--fs-sm);
+  max-width: 68ch; /* okuma satırı; ch birimi yazı tipine göreli, token değil */
+}
+
+/* --- tipografi yardımcıları --- */
+.muted {
+  color: var(--fg-dim);
+}
+.faint {
+  color: var(--fg-faint);
+}
+.small {
+  font-size: var(--fs-xs);
+}
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+.nowrap {
+  white-space: nowrap;
+}
+
+/* --- düzen --- */
+.stack {
+  display: grid;
+  gap: var(--sp-5);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+}
+.row-tight {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+}
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+/* --- odak ---
+ * Tek global kural. Renk TEK sinyal değildir: outline hem kalın hem offsetli,
+ * yani kontrast düşük ekranda bile konum belli olur. */
+:focus-visible {
+  outline: 2px solid var(--accent-soft);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* --- hareket ---
+ * Geçişler yalnızca renk/gölge üzerinde; düzen animasyonu yok (kaydırma
+ * sırasında yeniden akış maliyeti). */
+a,
+button,
+input,
+select,
+textarea,
+.card,
+.chip,
+.btn {
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-fast) var(--ease);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===================================================================
+ * KIRILIMLAR
+ *
+ * Eski stylesheet'te `@media` sorgusu SIFIRDI: mobil düzen ne kırılımla ne
+ * ayrı bileşenle ele alınmıştı; esneklik yalnızca `flex-wrap` ve tabloların
+ * yatay kaydırmasından geliyordu. Jüri bir ekranı telefonda açarsa tablolar
+ * kaydırma kutusuna hapsoluyor ve `.kv` gridinin 120px sabit ilk sütunu
+ * taşıyordu.
+ * =================================================================== */
+
+/* --- 900px: tablolar kart yığınına döner --- */
+@media (max-width: 900px) {
+  .shell {
+    padding: var(--sp-5) var(--sp-3) var(--sp-8);
+  }
+
+  /* Yığın modunda başlık satırı gizlenir, her hücre kendi etiketini
+   * `data-label` üzerinden taşır (bkz. components.css `table.data`). */
+  table.data.stackable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  table.data.stackable tbody tr {
+    display: grid;
+    gap: var(--sp-1);
+    padding: var(--sp-3) 0;
+    border-top: 1px solid var(--line);
+  }
+  table.data.stackable tbody td {
+    display: grid;
+    grid-template-columns: minmax(90px, 34%) 1fr;
+    gap: var(--sp-3);
+    padding: var(--sp-1) 0;
+  }
+  table.data.stackable tbody td::before {
+    content: attr(data-label);
+    color: var(--fg-dim);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+  }
+  table.data.stackable tbody td:empty {
+    display: none;
+  }
+
+  .kv {
+    grid-template-columns: 1fr;
+    gap: 0 0;
+  }
+  .kv dt {
+    margin-top: var(--sp-3);
+  }
+  .kv dd {
+    margin-bottom: var(--sp-1);
+  }
+}
+
+/* --- 600px: sekmeler kaydırmalı şerit, sayaçlar iki sütun --- */
+@media (max-width: 600px) {
+  .site-header h1 {
+    font-size: var(--fs-xl);
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Kaydırılabilir olduğunu kenar boşluğuyla ima et. */
+    padding-inline: var(--sp-1);
+    margin-inline: calc(-1 * var(--sp-1));
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs .chip {
+    flex: none;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .stat {
+    min-width: 0;
+  }
+
+  .card {
+    padding: var(--sp-4);
+    border-radius: var(--radius-md);
+  }
+
+  .source-text {
+    max-height: none; /* mobilde sabit yükseklik ekranı hapsediyordu */
+  }
+}

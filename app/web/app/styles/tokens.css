@@ -1,0 +1,167 @@
+/* Anatolia AI — tasarım tokenları. TEK doğruluk kaynağı.
+ *
+ * İlgili: base.css, components.css, scripts/kontrast_kontrol.py
+ *         CLAUDE.md §1 (offline), §7 (Next.js + React)
+ *
+ * ## Neden bu dosya var
+ *
+ * Eski `globals.css` 16 token taşıyordu ve 14'ü renkti: boşluk, tipografi,
+ * gölge ve hareket için token YOKTU. Sonuç ölçüldü — padding değerleri
+ * 6/8/10/14/16/20/24/64px karışık literal, yazı boyutu 11 · 11,5 · 12 · 12,5 ·
+ * 13 · 13,5 · 14 · 15 · 18 · 21 · 24px, yani modüler skala değil elle ayar.
+ * Ayrıca 9 rgba değeri mevcut tokenların elle çoğaltılmış kopyasıydı; token
+ * değişince onlar değişmiyordu.
+ *
+ * ## İki tema, eşit vatandaş
+ *
+ * AÇIK tema `:root`'ta TAM tanımlanır. KOYU tema `prefers-color-scheme` altında
+ * yalnızca AYNI isimleri yeniden tanımlar. Hiçbir renk tek tanımını media
+ * bloğunun içinde bulmaz — böylece medya sorgusu desteklenmese bile sayfa
+ * eksiksiz bir palete sahiptir.
+ *
+ * ## Alfa varyantları neden ayrı token
+ *
+ * `color-mix()` daha zarif olurdu ama Safari 16.2 / Chrome 111 öncesinde yok.
+ * Demo makinesinin tarayıcı sürümüne bağımlılık bırakmamak için her "wash"
+ * (yıkama) rengi tema başına açıkça yazıldı. Maliyeti birkaç satır, kazancı
+ * jüri makinesinde sürprizsiz render.
+ *
+ * ## Kontrast
+ *
+ * Metin/zemin çiftlerinin tamamı WCAG AA (≥ 4,5:1) sağlar ve bu göz kararı
+ * değil, ÖLÇÜLMÜŞTÜR: `scripts/kontrast_kontrol.py` bu dosyayı okuyup oranları
+ * hesaplar, `tests/test_kontrast.py` onu kapıya bağlar.
+ */
+
+:root {
+  /* --- zemin katmanları ---
+   * bg      : sayfa zemini ve KART İÇİ girinti (input, notice, stat, badge)
+   * bg-2    : kart yüzeyi — sayfadan bir kademe öne çıkar
+   * bg-3    : dolgu (çip zemini, ilerleme çubuğu yolu)
+   * Koyu temada sıra tersine döner (kart zeminden AÇIK olur); anlam korunur. */
+  --bg: #fbfbfd;
+  --bg-2: #ffffff;
+  --bg-3: #eeeef2;
+
+  --line: #d6d6dc;
+  --line-soft: #e9e9ee;
+
+  /* --- metin --- */
+  --fg: #1d1d1f;
+  --fg-dim: #5f5f66;
+  --fg-faint: #6c6c78;
+  /* Vurgu zemini üstündeki metin. Açık temada beyaz (mavi yeterince koyu),
+   * KOYU temada koyu lacivert: oradaki vurgu parlak bir mavidir ve üstündeki
+   * beyaz metin ÖLÇÜLDÜ — 3,24:1, AA eşiğinin altında. Koyu tema bu tokenı
+   * yeniden tanımlar. */
+  --on-accent: #ffffff;
+
+  /* --- vurgu --- */
+  --accent: #0071e3;
+  --accent-soft: #0062c4; /* bağlantı/odak: beyaz üstünde AA gerektirir */
+
+  /* --- durum --- */
+  --ok: #1d7a54;
+  --warn: #a8480a;
+  --bad: #b3261e;
+  --mark: #ffd60a; /* ZEMİN rengidir, metin değil — üstüne --on-mark gelir */
+  --on-mark: #1a1400;
+
+  /* --- yıkamalar (alfa yerine düz renk; bkz. dosya başlığı) --- */
+  --accent-wash: #e8f1fd;
+  --ok-wash: #e6f4ee;
+  --warn-wash: #fdf0e6;
+  --bad-wash: #fceceb;
+  --mark-ring: #ffeb8a;
+
+  /* --- köşe --- */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  /* --- gölge ---
+   * Açık temada yükseklik gölgeyle, koyu temada kenarlıkla anlatılır: koyu
+   * zeminde gölge görünmez, kenarlık görünür. Aynı token, farklı fizik. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.07);
+  --ring-mark: 0 0 0 2px var(--mark-ring);
+
+  /* --- boşluk: 4px tabanlı skala ---
+   * Bileşen CSS'inde literal px boşluk KALMAZ; hepsi buradan gelir. */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-8: 48px;
+  --sp-10: 64px;
+
+  /* --- tipografi ---
+   * HARİCİ FONT / CDN ÇAĞRISI YOK (offline kısıtı, CLAUDE.md §1). Yalnızca
+   * sistem yazı tipleri; eskiden bu liste iki ayrı yerde literal tekrarlanıyordu. */
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-base: 15px;
+  --fs-lg: 17px;
+  --fs-xl: 21px;
+  --fs-2xl: 28px;
+
+  --lh-tight: 1.25;
+  --lh-normal: 1.5;
+  --lh-relaxed: 1.75;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  --track-tight: -0.015em; /* büyük başlıklarda optik sıkılaştırma */
+  --track-wide: 0.04em; /* küçük büyük-harf etiketlerde nefes */
+
+  /* --- hareket --- */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* --- ölçü --- */
+  --shell-max: 1120px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0f;
+    --bg-2: #16161c;
+    --bg-3: #26262e;
+
+    --line: #2f2f38;
+    --line-soft: #23232b;
+
+    --fg: #f5f5f7;
+    --fg-dim: #98989d;
+    --fg-faint: #8a8a93;
+
+    --accent: #2e8fff;
+    --accent-soft: #5aa9ff;
+    /* Parlak mavi zeminde koyu metin — beyaz burada AA'yı geçmiyor. */
+    --on-accent: #06213d;
+
+    --ok: #34c77b;
+    --warn: #f5a524;
+    --bad: #ff6b60;
+
+    --accent-wash: #12243a;
+    --ok-wash: #10281e;
+    --warn-wash: #2e2211;
+    --bad-wash: #33191a;
+    --mark-ring: #6b5a06;
+
+    /* Koyu zeminde gölge görünmez; yükseklik kenarlıkla anlatılır. */
+    --shadow-sm: none;
+    --shadow-md: none;
+  }
+}

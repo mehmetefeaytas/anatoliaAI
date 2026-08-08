@@ -1,0 +1,773 @@
+/* Anatolia AI — bileşen katmanı.
+ *
+ * İlgili: tokens.css, base.css, web/app/components/*
+ *         CLAUDE.md §18-1 (güven skoru + kaynak vurgulama), §19
+ *
+ * ## Kural
+ *
+ * Bu dosyada LİTERAL renk, boşluk, yazı boyutu, köşe veya süre YOKTUR.
+ * Hepsi tokens.css'ten gelir. Tek istisna: `1px` kenarlık kalınlıkları ve
+ * hairline ölçüler (`2px` vurgu şeridi gibi) — bunlar ölçek değil, fiziksel
+ * çizgi kalınlığıdır ve tokenlaştırmak okunurluğu düşürürdü.
+ *
+ * ## Eskiden tanımsız olan 11 sınıf
+ *
+ * `summary-box/-label/-body`, `fairness/-item`, `jury-bar/-dot/-toggle`,
+ * `fold/-open/-note/folded-body`, `headlines/headline*` — beş bileşen bu
+ * sınıfları kullanıyordu ama CSS karşılıkları HİÇ YAZILMAMIŞTI, yani
+ * tarayıcıda stilsiz (varsayılan blok/inline) render oluyorlardı. En görünür
+ * sonucu: `SummaryNotice` kendi docstring'inin vaadini tutamıyordu — LLM
+ * özeti kaynak metinden görsel olarak ayrışmıyordu. Hepsi burada tanımlıdır.
+ */
+
+/* ===================================================================
+ * KART
+ * =================================================================== */
+.card {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: var(--sp-5);
+  box-shadow: var(--shadow-sm);
+}
+.card + .card {
+  margin-top: var(--sp-5);
+}
+.card h2 {
+  margin: 0 0 var(--sp-1);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+}
+/* Kart içi bölüm başlığı: küçük, büyük harf, sakin — içeriğin önüne geçmez. */
+.card h3 {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+}
+.card > .lede {
+  margin: 0 0 var(--sp-4);
+  color: var(--fg-dim);
+  font-size: var(--fs-sm);
+  max-width: 72ch;
+}
+
+/* ===================================================================
+ * SEKMELER — tek parça segment denetimi görünümü
+ * =================================================================== */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-5);
+  padding: var(--sp-1);
+  background: var(--bg-3);
+  border-radius: var(--radius-full);
+}
+
+/* ===================================================================
+ * KONTROLLER
+ * =================================================================== */
+.chip {
+  background: transparent;
+  color: var(--fg-dim);
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  padding: var(--sp-2) var(--sp-4);
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  font-family: inherit;
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+}
+.chip:hover {
+  color: var(--fg);
+}
+/* Seçili durum yalnız renkle anlatılmaz: `aria-selected`/`aria-pressed`
+ * niteliği ekran okuyucuya aynı bilgiyi verir. */
+.chip[aria-pressed="true"],
+.chip[aria-selected="true"] {
+  background: var(--bg-2);
+  color: var(--fg);
+  box-shadow: var(--shadow-sm);
+}
+.chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.chip-muted {
+  color: var(--fg-faint);
+}
+
+/* Sekme şeridi DIŞINDaki çipler (hazır sorular, alan seçiciler) kendi
+ * zeminini taşır — arkalarında `.tabs` dolgusu yok. */
+.row > .chip,
+.field-list > .chip {
+  background: var(--bg-3);
+  color: var(--fg);
+}
+.row > .chip:hover,
+.field-list > .chip:hover {
+  border-color: var(--accent);
+}
+.row > .chip[aria-pressed="true"],
+.row > .chip[aria-selected="true"],
+.field-list > .chip[aria-pressed="true"],
+.field-list > .chip[aria-selected="true"] {
+  background: var(--accent);
+  color: var(--on-accent);
+  box-shadow: none;
+}
+
+.btn {
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-full);
+  border: none;
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  font-family: inherit;
+  line-height: var(--lh-tight);
+  white-space: nowrap;
+}
+.btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--fg-dim);
+}
+.btn-ghost:hover:not(:disabled) {
+  color: var(--fg);
+  border-color: var(--accent);
+  filter: none;
+}
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent-soft);
+  cursor: pointer;
+  padding: 0;
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.btn-link:hover {
+  color: var(--accent);
+}
+
+.input,
+.textarea,
+.select {
+  padding: var(--sp-3);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  width: 100%;
+}
+.input:hover,
+.textarea:hover,
+.select:hover {
+  border-color: var(--fg-faint);
+}
+.textarea {
+  resize: vertical;
+  line-height: var(--lh-relaxed);
+  min-height: calc(var(--sp-10) + var(--sp-4));
+}
+/* Chatbot girdisi: otomatik büyüyen tek/çok satır alan. Sabit `min-height`
+ * yerine satır sayısına göre büyür (ChatPanel yüksekliği JS'ten ayarlar). */
+.textarea-auto {
+  min-height: 0;
+  resize: none;
+  overflow-y: auto;
+  max-height: calc(var(--sp-10) * 3);
+}
+
+/* ===================================================================
+ * TABLO
+ * =================================================================== */
+.table-wrap {
+  overflow-x: auto;
+}
+table.data {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+table.data th {
+  text-align: left;
+  padding: var(--sp-2);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+}
+table.data td {
+  padding: var(--sp-3) var(--sp-2);
+  vertical-align: top;
+}
+table.data tbody tr {
+  border-top: 1px solid var(--line-soft);
+}
+table.data tbody tr:first-child {
+  border-top: none;
+}
+table.data tbody tr.selected {
+  background: var(--accent-wash);
+}
+table.data td.num,
+table.data th.num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ürün ailesi ayracı — farklı kampanya türleri ASLA tek sıralamada karışmaz
+ * (CLAUDE.md §17). Bu satır, tablonun içindeki grup başlığıdır. */
+table.data tbody tr.group-head td {
+  padding-top: var(--sp-5);
+  padding-bottom: var(--sp-1);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+}
+table.data tbody tr.group-head {
+  border-top: none;
+}
+table.data tbody tr.group-head:not(:first-child) td {
+  border-top: 1px solid var(--line);
+}
+
+/* ===================================================================
+ * ROZETLER
+ * =================================================================== */
+.badge {
+  display: inline-block;
+  background: var(--bg);
+  color: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1px var(--sp-2);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+.badge-rule {
+  color: var(--ok);
+}
+/* NER katmanı bu teslimde ÜRETİLMİYOR (CLAUDE.md §3): `Extractor.NER` hiçbir
+ * kod yolunda oluşmuyor. Sınıf şema uyumluluğu için duruyor, kullanılmıyor. */
+.badge-ner {
+  color: var(--accent-soft);
+}
+.badge-llm {
+  color: var(--warn);
+}
+.badge-ok {
+  color: var(--ok);
+}
+.badge-warn {
+  color: var(--warn);
+}
+.badge-bad {
+  color: var(--bad);
+}
+
+.rank-pill {
+  display: inline-block;
+  min-width: var(--sp-5);
+  text-align: center;
+  border-radius: var(--radius-sm);
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  padding: 1px var(--sp-1);
+  font-variant-numeric: tabular-nums;
+}
+.rank-pill.first {
+  background: var(--ok);
+  color: var(--bg-2);
+  font-weight: var(--fw-semibold);
+}
+
+.pill {
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-full);
+  padding: var(--sp-1) var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+}
+
+/* ===================================================================
+ * GÜVEN GÖSTERGESİ
+ *
+ * Renk TEK sinyal DEĞİLDİR: çubuğun yanında hem sayısal skor hem sözel seviye
+ * ("yüksek/orta/düşük") yazar. Çubuk `aria-hidden`; bilgi metinde taşınır.
+ * =================================================================== */
+.conf {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  white-space: nowrap;
+}
+.conf-bar {
+  width: var(--sp-8);
+  height: var(--sp-1);
+  border-radius: var(--radius-full);
+  background: var(--bg-3);
+  overflow: hidden;
+  flex: none;
+}
+.conf-bar > span {
+  display: block;
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+.conf-num {
+  font-variant-numeric: tabular-nums;
+  font-size: var(--fs-sm);
+}
+.conf-level {
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+}
+.conf-src {
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+}
+
+/* ===================================================================
+ * KAYNAK METİN + SPAN VURGULAMA  (CLAUDE.md §18-1)
+ * =================================================================== */
+.source-text {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-4);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: calc(var(--sp-10) * 5);
+  overflow-y: auto;
+}
+.source-text .ctx {
+  background: var(--accent-wash);
+  border-radius: var(--radius-sm);
+}
+.source-text mark.hit {
+  background: var(--mark);
+  color: var(--on-mark);
+  font-weight: var(--fw-semibold);
+  border-radius: var(--radius-sm);
+  padding: 1px var(--sp-1);
+  box-shadow: var(--ring-mark);
+}
+.source-text .dim {
+  color: var(--fg-faint);
+}
+.offset-note {
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  margin: var(--sp-2) 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- katlama (SourceText) ---
+ * Uzun kaynak metin varsayılan olarak katlanır; açmak kullanıcının kararıdır.
+ * Bu sınıflar eskiden CSS'siz olduğu için kat açma düğmesi düz metin gibi
+ * görünüyordu. */
+.fold {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.fold-open {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg);
+  border: none;
+  border-top: 1px solid var(--line-soft);
+  color: var(--accent-soft);
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  text-align: left;
+}
+.fold-open:hover {
+  color: var(--accent);
+  background: var(--accent-wash);
+}
+.fold-note {
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  margin: var(--sp-2) 0 0;
+}
+.folded-body {
+  position: relative;
+  max-height: calc(var(--sp-10) * 4);
+  overflow: hidden;
+}
+/* Katlanmış metnin kesildiği yer belli olsun: sert kesme "içerik bitti"
+ * yanılsaması yaratır. */
+.folded-body::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: var(--sp-8);
+  background: linear-gradient(to bottom, transparent, var(--bg-2));
+  pointer-events: none;
+}
+
+/* ===================================================================
+ * BİLDİRİMLER
+ * =================================================================== */
+.notice {
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-sm);
+  border: 1px solid var(--line);
+  background: var(--bg);
+}
+.notice strong {
+  display: block;
+  margin-bottom: var(--sp-1);
+  font-weight: var(--fw-semibold);
+}
+.notice-error {
+  border-color: var(--bad);
+  color: var(--bad);
+  background: var(--bad-wash);
+}
+.notice-warn {
+  border-color: var(--warn);
+  color: var(--warn);
+  background: var(--warn-wash);
+}
+.notice-info {
+  color: var(--fg-dim);
+}
+.notice-ok {
+  border-color: var(--ok);
+  color: var(--ok);
+  background: var(--ok-wash);
+}
+/* Bildirim gövdesi durum renginde DEĞİL, normal metin renginde okunur:
+ * uzun açıklamayı doygun renkte basmak okunurluğu düşürüyordu. */
+.notice > p,
+.notice > ul,
+.notice > .notice-body {
+  color: var(--fg);
+  margin: var(--sp-1) 0 0;
+}
+
+/* --- adil kıyas notu (FairnessNotice) ---
+ * CLAUDE.md §17'nin kullanıcıya dönük yüzü. Eskiden CSS'siz olduğu için üç
+ * madde arasında görsel ayrım yoktu. */
+.fairness {
+  display: grid;
+  gap: var(--sp-2);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+.fairness-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-2);
+  align-items: baseline;
+}
+.fairness-item strong {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+}
+
+/* ===================================================================
+ * LLM ÖZETİ  (SummaryNotice)
+ *
+ * Özet ile kaynak metin aynı ekranda görünüyorsa hangisinin ÜRETİLMİŞ olduğu
+ * tek bakışta anlaşılmalıdır. Bu kutu eskiden tanımsızdı: `.badge-llm` çipi
+ * görünüyor ama kutu kaynak metinden ayrışmıyordu.
+ * =================================================================== */
+.summary-box {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--warn);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-3) var(--sp-4);
+}
+.summary-label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--fg-dim);
+  margin-bottom: var(--sp-2);
+}
+.summary-body {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--fg);
+}
+/* Özet YOKSA sessiz kalınmaz: neden üretilmediği yazılır ve sahte özet
+ * basılmaz (CLAUDE.md §19 halüsinasyon yasağı). */
+.summary-box.summary-empty {
+  border-left-color: var(--line);
+}
+.summary-box.summary-empty .summary-body {
+  color: var(--fg-dim);
+  font-style: italic;
+}
+
+/* ===================================================================
+ * JÜRİ MODU
+ * =================================================================== */
+.jury-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--bg-2);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+.jury-toggle {
+  flex: none;
+}
+/* Durum noktası: renk TEK sinyal değil — yanındaki metin de değişir. */
+.jury-dot {
+  width: var(--sp-2);
+  height: var(--sp-2);
+  border-radius: var(--radius-full);
+  background: var(--fg-faint);
+  flex: none;
+}
+.jury-dot.on {
+  background: var(--ok);
+}
+
+/* ===================================================================
+ * SAYAÇLAR
+ * =================================================================== */
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+.stat {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  min-width: calc(var(--sp-10) + var(--sp-8));
+}
+.stat .k {
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+}
+.stat .v {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  margin-top: var(--sp-1);
+  letter-spacing: var(--track-tight);
+}
+
+/* --- delta manşetleri (BankDeltaPanel) ---
+ * "Bende ne eksik, rakipte ne var" sorusunun tek cümlelik cevapları. Eskiden
+ * CSS'siz olduğu için düz paragraf gibi akıyorlardı. */
+.headlines {
+  display: grid;
+  gap: var(--sp-2);
+  margin: var(--sp-4) 0 0;
+}
+.headline {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  align-items: baseline;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--fg-faint);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  font-size: var(--fs-sm);
+}
+.headline strong {
+  font-weight: var(--fw-medium);
+}
+.headline-bad {
+  border-left-color: var(--bad);
+}
+.headline-warn {
+  border-left-color: var(--warn);
+}
+
+/* ===================================================================
+ * ŞEFFAF SKORLAMA
+ * =================================================================== */
+ol.steps {
+  margin: 0;
+  padding-left: var(--sp-5);
+  display: grid;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+}
+ol.steps b {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+}
+ol.steps span {
+  color: var(--fg-dim);
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: minmax(var(--sp-10), max-content) 1fr;
+  gap: var(--sp-1) var(--sp-4);
+  font-size: var(--fs-sm);
+}
+.kv dt {
+  color: var(--fg-dim);
+}
+.kv dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.field-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+
+/* ===================================================================
+ * CHATBOT
+ * =================================================================== */
+.chat-log {
+  display: grid;
+  gap: var(--sp-4);
+  margin-top: var(--sp-4);
+}
+.chat-turn {
+  display: grid;
+  gap: var(--sp-2);
+}
+.chat-q {
+  justify-self: start;
+  max-width: 90%;
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radius-lg);
+  background: var(--bg-3);
+  color: var(--fg);
+  font-size: var(--fs-sm);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.chat-a {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-4);
+}
+/* Markdown gövdesi — sunucu şablonları `**kalın**` ve `- liste` üretiyor
+ * (src/chatbot/structured.py, safety.py). Render `Markdown.tsx`'te yapılır. */
+.md {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  word-break: break-word;
+}
+.md strong {
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+}
+.md em {
+  color: var(--fg-dim);
+}
+.md code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  background: var(--bg-3);
+  border-radius: var(--radius-sm);
+  padding: 1px var(--sp-1);
+}
+.md ul {
+  margin: var(--sp-2) 0;
+  padding-left: var(--sp-5);
+  display: grid;
+  gap: var(--sp-1);
+}
+.md p {
+  margin: 0 0 var(--sp-2);
+}
+.md p:last-child {
+  margin-bottom: 0;
+}
+
+/* Yükleniyor iskeleti — "bir şey oluyor mu" belirsizliğini kaldırır.
+ * `prefers-reduced-motion` altında nabız durur (base.css). */
+.skeleton {
+  display: grid;
+  gap: var(--sp-2);
+}
+.skeleton > span {
+  display: block;
+  height: var(--sp-3);
+  border-radius: var(--radius-sm);
+  background: var(--bg-3);
+  animation: skeleton-pulse 1.4s var(--ease) infinite;
+}
+.skeleton > span:nth-child(2) {
+  width: 82%;
+}
+.skeleton > span:nth-child(3) {
+  width: 56%;
+}
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}

@@ -1,9 +1,19 @@
 import type { ReactNode } from "react";
-import "./globals.css";
+import "./styles/tokens.css";
+import "./styles/base.css";
+import "./styles/components.css";
 
 /**
- * Kök yerleşim. Stiller tek global stylesheet'ten gelir (bkz. globals.css);
- * inline `CSSProperties` objeleri kaldırıldı.
+ * Kök yerleşim.
+ *
+ * Stiller ÜÇ katmandan gelir ve sıra önemlidir: token → taban → bileşen.
+ * Eskiden tek `globals.css` vardı (471 satır, `docs/archive/globals-v1.css`);
+ * 16 tokenının 14'ü renkti, boşluk/tipografi/gölge için token yoktu ve
+ * `@media` sorgusu hiç bulunmuyordu. Ayrıntılı gerekçe: `styles/tokens.css`.
+ *
+ * Tema seçilmez, DEVRALINIR: açık palet `:root`'ta, koyu palet
+ * `prefers-color-scheme` altında tanımlıdır. Sunucu ve istemci aynı HTML'i
+ * üretir, hidrasyon uyuşmazlığı olmaz.
  *
  * Harici font/CDN çağrısı YOKTUR — sistem yazı tipleri kullanılır (offline kısıtı).
  */
