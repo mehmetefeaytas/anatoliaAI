@@ -159,9 +159,83 @@ tartışılmaz."*
 
 ---
 
+## EK — 2026-08-08 akşamı: puan yükseltme turu
+
+Denetimden sonra aynı gün içinde yedi fazlık bir kapatma turu koşuldu. Üç yeni
+sessiz kusur bulundu (8., 9., 10.) ve hepsi testle kilitlendi.
+
+> Not: yukarıdaki bölüm "altı kusur" diyor ama **yedi** madde listeliyor;
+> numaralandırma buradan devam ediyor.
+
+### Kapatılanlar
+
+| faz | ne yapıldı | ölçülen sonuç |
+|---|---|---|
+| 1 | κ hattı: `round1_A`/`round1_B` çiftinin **aynı 50 belge / 650 satır** olduğu bulundu; round1+round2 v2 protokolüne damgalandı | κ paketi 20 belgeden **50 belgeye** çıktı |
+| 2 | `kampanya_kosullari` kalem düzeyinde puanlandı | alan 0,000 → **0,198**; mikro 0,389 → **0,338** |
+| 3 | Vitrin sorusunun grounding hataları + kanıtsız değerler | 13 hatalı kayıt düştü, **26 kanıtsız kayıt → 0** |
+| 4a | Bileşik skorlama `GET /advantageous` ile bağlandı | 9 kampanya türü sıralanıyor |
+| 4b | "3 katman" anlatısı dürüst 2 katmana indirildi | erişilmez dal açıkça işaretlendi |
+| 4c | Postgres paritesi koşuldu | **53 atlanan test → 0**, `postgres.py` %20,4 → **%80,4** |
+| 5 | Ağ kapalı tam prova (`--internal` Docker ağı) | kalkış **1,5 sn**, API **106 MiB**, en yavaş uç p95 **64 ms** |
+| 6 | Özet üretimi (sürüyor) | hata %40 → **%0**, hız 44 → **6,9 sn/belge** |
+| 7 | Yayın dalı `yayin/hafta-05` **push edildi** | `origin/main` 31 Tem → **8 Ağu** |
+
+### Bulunan üç yeni sessiz kusur
+
+**8. Gold derleyici v2 protokolünü hiç bilmiyordu.** `report_iaa` ve
+`lint_review_csv` protokolü sayıyordu, `build_gold` koşulsuz `verdict = "ok"`
+diyordu. Yani **κ dürüst, gold çapalı** olacaktı: ekip v2 dosyasını doldurup
+derleseydi dokunulmamış her satır sessizce "model doğru" sayılırdı — kılavuzun
+§3.1 ile kaldırdığı çapalamanın kendisi. Ayrıca canlı kalibrasyon dosyasında
+**134 satırda not var ama karar yok** (*"Ödül tutarı yok"* yazıp `verdict` boş).
+
+**9. Oran tablosunda kanıt bağı sessizce kopuyordu.** `parse_rate_table`
+başlıkta "payı"yı opsiyonel sayıyor, `extract_from_rate_table` zorunlu tutan
+**ikinci bir arama** yapıyordu. Tablo ayrışıyor, değer üretiliyor, konum
+`(0,0)`'a düşüyordu: `raw_value` boş, span yok, güven yine 0,95. 70 kaydın
+**26'sı (%37)** böyleydi — "her değer bir karakter aralığına bağlıdır" iddiası
+bu alanın üçte birinde tutmuyordu.
+
+**10. LLM çıktısında token sınırı yoktu.** Model geçerli özet üretip JSON'u
+kapatmadan `<tool_call>` yazıyor ve çöp döngüsüne giriyordu. Tek arıza iki
+yüzle görünüyordu: döngü zaman aşımına kadar sürerse `LLMTransportError`
+(180 sn), bağlam dolup çıktı kesilirse `LLMError`. 5. kusurda eklenen
+duvar-saati sınırı doğru çalışıyordu ama **sebebi teşhis edilmemişti**.
+
+### Ortak kalıp: ayrışma, dördüncü ve beşinci kez
+
+6. kusur (`_numeric_key` / `_composite_numeric`) bir kalıbın ilk örneğiydi;
+bu turda **dört tane daha** bulundu:
+
+| ayrışan çift | bedeli |
+|---|---|
+| `build_gold` / `report_iaa` (protokol) | κ dürüst, gold çapalı |
+| `parse_rate_table` / `extract_from_rate_table` (başlık deseni) | değer var, kanıt yok |
+| `schema.sql` / `_SQLITE_SCHEMA` (`extractor` CHECK) | iki backend aynı veriyi kabul etmiyor |
+| `/scoring` metni / `compare.py` kodu | uç kendi kodunu yalanlıyor |
+
+Kalıp her seferinde aynı: **doğru kural bir yolda kilitli, karşıtı diğerinde
+serbest, ve fark sessiz.** Beşinin de üstüne yolları birbirine bağlayan parite
+testleri yazıldı — tek doğruluk kaynağı yetmiyor, bağ gerekiyor.
+
+### Kişisel veri
+
+Yayın dalı taranınca mentörün adının **17 izlenen dosyada** geçtiği bulundu
+(kod yorumları, bir test, kasa sayfaları, dosya adı). Kaynak sayfasını
+geçmişten çıkarmak yetmiyordu. Ad role dönüştürüldü (`Mentör (eski bankacı)`),
+kaynak dosyası yeniden adlandırıldı, 11 wikilink güncellendi. Katkının izi ve
+gerekçesi korundu; kişi tanımlanamıyor (CLAUDE.md §19).
+
+---
+
 ## Kapanmayan üç açık
 
-### A. κ ölçülmedi ve **ölçülemez** — §16'nın tek karşılanmayan kalemi
+### A. κ ölçülmedi — §16'nın tek karşılanmayan kalemi
+
+> **GÜNCELLEME (8 Ağu akşamı): artık ÖLÇÜLEBİLİR.** `round1_A`/`round1_B`
+> çifti birebir aynı 50 belgeyi ve 650 satırı taşıyor; v2 protokolüne
+> damgalandı ve doldurulmayı bekliyor. Eksik olan tek şey insan işi.
 
 Kod hazır (`eval/iaa.py`: Cohen, Fleiss, Krippendorff), eşikler **önceden
 ilan edilmiş** (κ≥0,80 kabul · 0,67–0,80 notla · <0,67 hakemlik), CSV paketi
@@ -173,6 +247,9 @@ Model Başarısı'nın tamamı, güvenilirliği ölçülmemiş 66 belgelik bir e
 dayanıyor. **En öncelikli açık budur ve insan işidir.**
 
 ### B. Vitrin sorusu yanlış cevap veriyor
+
+> **GÜNCELLEME (8 Ağu akşamı): KAPANDI.** Üç desen de yakalandı (13 kayıt
+> düştü), 26 kanıtsız kayıt sıfırlandı, chatbot uçtan uca doğrulandı.
 
 "En düşük kâr payı hangi bankada?" sorusunda üç gerçek grounding hatası
 ölçüldü ve **henüz düzeltilmedi**:
@@ -201,6 +278,10 @@ sayılır.
 ---
 
 ### D. Kod/mimari hakeminin üç ek açığı
+
+> **GÜNCELLEME (8 Ağu akşamı): ÜÇÜ DE KAPANDI.** Katman anlatısı 2'ye
+> indirildi, bileşik skorlama `/advantageous` ile bağlandı, Postgres paritesi
+> koşuldu (53 atlanan test → 0, kapsam %20,4 → %80,4).
 
 - **"3 katmanlı mimari" fiilen 2 katman.** `Extractor.NER` hiçbir kod
   yolunda üretilmiyor; `reconcile._PRIORITY`'nin orta basamağı erişilmez dal.
