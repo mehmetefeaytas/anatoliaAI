@@ -29,6 +29,12 @@
   border-radius: var(--radius-lg);
   padding: var(--sp-5);
   box-shadow: var(--shadow-sm);
+  /* Grid/flex öğelerinin varsayılanı `min-width: auto`dur: öğe, içeriğinin
+   * min-content genişliğinden DAR olamaz ve o genişlik kabı dışarı iter.
+   * Ölçüldü — 360px'lik bir görünüm alanında `.card` 910px'e çıkıyor ve TÜM
+   * sayfa yatay kayıyordu. Sıfırlanınca taşma, kendi kaydırma kutusu olan
+   * `.table-wrap` içinde kalır; sayfa gövdesi asla yatay kaymaz. */
+  min-width: 0;
 }
 .card + .card {
   margin-top: var(--sp-5);
@@ -785,5 +791,116 @@ ol.steps span {
   }
   50% {
     opacity: 0.45;
+  }
+}
+
+/* ===================================================================
+ * KIRILIMLAR
+ *
+ * Bileşen kırılımları BURADA, temel kurallarının ARDINDAN durur. `base.css`
+ * içindeyken aynı özgüllükteki temel kural onları sessizce eziyordu (bu dosya
+ * sonra yükleniyor) — 375px'te sekmeler kaydırmalı şeride hiç dönmüyordu ve
+ * adil kıyas notunun sabit ilk sütunu sayfayı yatay kaydırtıyordu.
+ * =================================================================== */
+
+/* --- 900px: tablolar kart yığınına döner --- */
+@media (max-width: 900px) {
+  /* Yığın modunda başlık satırı gizlenir; her hücre kendi etiketini
+   * `data-label` üzerinden taşır. Tablo yapısı korunur, yalnız görünümü
+   * değişir — ekran okuyucu için satır/sütun ilişkisi bozulmaz. */
+  table.data.stackable thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  table.data.stackable tbody tr {
+    display: grid;
+    gap: var(--sp-1);
+    padding: var(--sp-3) 0;
+    border-top: 1px solid var(--line);
+  }
+  table.data.stackable tbody td {
+    display: grid;
+    grid-template-columns: minmax(80px, 32%) 1fr;
+    gap: var(--sp-3);
+    padding: var(--sp-1) 0;
+    min-width: 0;
+  }
+  table.data.stackable tbody td::before {
+    content: attr(data-label);
+    color: var(--fg-dim);
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--track-wide);
+  }
+  /* Grup başlığı yığın modunda da tek parça kalmalı. */
+  table.data.stackable tbody tr.group-head {
+    display: block;
+  }
+  table.data.stackable tbody tr.group-head td {
+    display: block;
+  }
+  table.data.stackable tbody tr.group-head td::before {
+    content: none;
+  }
+
+  .kv {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .kv dt {
+    margin-top: var(--sp-3);
+  }
+  .kv dd {
+    margin-bottom: var(--sp-1);
+  }
+}
+
+/* --- 600px: sekmeler kaydırmalı şerit, iki sütun sayaç --- */
+@media (max-width: 600px) {
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-radius: var(--radius-lg);
+  }
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .tabs .chip {
+    flex: none;
+  }
+
+  /* Adil kıyas notunun `auto` ilk sütunu dar ekranda taşıyordu: başlık
+   * sarmadığı için satır genişliği ekranı aşıyor ve TÜM sayfa yatay
+   * kaydırıyordu. Tek sütuna iner. */
+  .fairness-item,
+  .headline {
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .stat {
+    min-width: 0;
+  }
+
+  .card {
+    padding: var(--sp-4);
+    border-radius: var(--radius-md);
+  }
+
+  .chat-q {
+    max-width: 100%;
+  }
+
+  .source-text {
+    max-height: none; /* mobilde sabit yükseklik ekranı hapsediyordu */
   }
 }

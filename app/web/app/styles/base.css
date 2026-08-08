@@ -78,6 +78,11 @@ body {
   display: grid;
   gap: var(--sp-5);
 }
+/* Bkz. `.card` içindeki `min-width` notu: grid öğesinin varsayılan
+ * `min-width: auto` değeri, geniş içerikte kabı dışarı iter. */
+.stack > * {
+  min-width: 0;
+}
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -133,101 +138,24 @@ textarea,
 }
 
 /* ===================================================================
- * KIRILIMLAR
+ * KIRILIMLAR — yalnız bu dosyada TANIMLANAN sınıflar
  *
- * Eski stylesheet'te `@media` sorgusu SIFIRDI: mobil düzen ne kırılımla ne
- * ayrı bileşenle ele alınmıştı; esneklik yalnızca `flex-wrap` ve tabloların
- * yatay kaydırmasından geliyordu. Jüri bir ekranı telefonda açarsa tablolar
- * kaydırma kutusuna hapsoluyor ve `.kv` gridinin 120px sabit ilk sütunu
- * taşıyordu.
+ * Bileşen sınıflarının (`.card`, `.tabs`, `.kv`, `table.data` …) kırılımları
+ * `components.css`'in SONUNDADIR, burada değil. Sebep ölçüldü: iki dosya aynı
+ * özgüllükte kural yazıyor ve `components.css` sonra yükleniyor, yani buradaki
+ * bir `@media` bloğu onun temel kuralı tarafından SESSİZCE eziliyordu —
+ * 375px'te sekmeler kaydırmalı şeride hiç dönmüyordu. Kural: bir sınıfın
+ * duyarlı davranışı, o sınıfın tanımlandığı dosyada yaşar.
  * =================================================================== */
 
-/* --- 900px: tablolar kart yığınına döner --- */
 @media (max-width: 900px) {
   .shell {
     padding: var(--sp-5) var(--sp-3) var(--sp-8);
   }
-
-  /* Yığın modunda başlık satırı gizlenir, her hücre kendi etiketini
-   * `data-label` üzerinden taşır (bkz. components.css `table.data`). */
-  table.data.stackable thead {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-  table.data.stackable tbody tr {
-    display: grid;
-    gap: var(--sp-1);
-    padding: var(--sp-3) 0;
-    border-top: 1px solid var(--line);
-  }
-  table.data.stackable tbody td {
-    display: grid;
-    grid-template-columns: minmax(90px, 34%) 1fr;
-    gap: var(--sp-3);
-    padding: var(--sp-1) 0;
-  }
-  table.data.stackable tbody td::before {
-    content: attr(data-label);
-    color: var(--fg-dim);
-    font-size: var(--fs-xs);
-    text-transform: uppercase;
-    letter-spacing: var(--track-wide);
-  }
-  table.data.stackable tbody td:empty {
-    display: none;
-  }
-
-  .kv {
-    grid-template-columns: 1fr;
-    gap: 0 0;
-  }
-  .kv dt {
-    margin-top: var(--sp-3);
-  }
-  .kv dd {
-    margin-bottom: var(--sp-1);
-  }
 }
 
-/* --- 600px: sekmeler kaydırmalı şerit, sayaçlar iki sütun --- */
 @media (max-width: 600px) {
   .site-header h1 {
     font-size: var(--fs-xl);
-  }
-
-  .tabs {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    /* Kaydırılabilir olduğunu kenar boşluğuyla ima et. */
-    padding-inline: var(--sp-1);
-    margin-inline: calc(-1 * var(--sp-1));
-  }
-  .tabs::-webkit-scrollbar {
-    display: none;
-  }
-  .tabs .chip {
-    flex: none;
-  }
-
-  .stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-  .stat {
-    min-width: 0;
-  }
-
-  .card {
-    padding: var(--sp-4);
-    border-radius: var(--radius-md);
-  }
-
-  .source-text {
-    max-height: none; /* mobilde sabit yükseklik ekranı hapsediyordu */
   }
 }
