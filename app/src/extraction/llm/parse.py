@@ -106,6 +106,63 @@ def find_balanced_object(text: str) -> Optional[str]:
     return None if span is None else text[span[0]:span[1]]
 
 
+def _kapanmamis_dizgeyi_onar(text: str) -> Optional[str]:
+    """Modelin KAPANIŞ TIRNAĞINI düşürdüğü tek vakayı onarır — başka hiçbirini.
+
+    ## Neden var — ölçülmüş, dar ve tek bir kusur
+
+    `qwen2.5:7b-instruct` özet üretiminde şunu yapıyor (2026-08-08, 8 belgede
+    4 kez): tamamlanmış bir cümle yazıyor, sonra kapanış tırnağını ATLAYIP
+    doğrudan `}` koyuyor::
+
+        {"ozet": "… maksimum kazanım 300 TL'dir.}      <- tırnak yok
+
+    Cümle bitmiş (nokta ile), nesne kapanmış, YALNIZCA sınırlayıcı eksik.
+    Model kendi iradesiyle durmuş (`done_reason='stop'`), kesilmemiş.
+
+    ## Neden bu bir "uydurma" değil
+
+    Onarım **içeriğe dokunmaz**; yalnız bir sınırlayıcı ekler. Kabul koşulları
+    bilerek dar tutuldu, çünkü genel bir "kesik JSON'u tamamla" davranışı
+    yarım kalmış bir cümleyi tam cevap gibi kabul ettirirdi:
+
+      1. metin `{` ile başlamalı ve `}` ile bitmeli — yani modelin kendisi
+         nesneyi kapatmış olmalı,
+      2. son `}` hariç geriye kalanda tam olarak TEK bir kapanmamış dizge
+         olmalı (tek sayıda kaçışsız tırnak),
+      3. açık dizgenin içinde başka `{` ya da `}` bulunmamalı — iç içe yapı
+         varsa neyin kesildiği belirsizdir, dokunulmaz.
+
+    Koşullardan biri tutmazsa `None` döner ve çağıran normal "kesik yanıt"
+    hatasını verir. Özet üretilmemesi, yanlış özet üretilmesinden iyidir
+    (`src/summarize/ozet.py` modül başlığı).
+    """
+    s = text.strip()
+    if not (s.startswith("{") and s.endswith("}")):
+        return None
+
+    govde = s[:-1]                      # kapanış `}` hariç
+    tirnak = 0
+    kacis = False
+    son_tirnak = -1
+    for i, ch in enumerate(govde):
+        if kacis:
+            kacis = False
+            continue
+        if ch == "\\":
+            kacis = True
+        elif ch == '"':
+            tirnak += 1
+            son_tirnak = i
+    if tirnak % 2 == 0:                 # tüm dizgeler kapalı -> başka bir sorun
+        return None
+    if "{" in govde[son_tirnak:] or "}" in govde[son_tirnak:]:
+        return None                     # açık dizgede yapı var; dokunma
+
+    onarilmis = govde + '"}'
+    return onarilmis if find_balanced_object(onarilmis) else None
+
+
 def _single_to_double_quotes(text: str) -> str:
     """Tek tırnaklı (Python-vari) JSON'u çift tırnaklıya çevirir.
 
@@ -151,6 +208,8 @@ def parse_llm_json(text: Optional[str]) -> ParseResult:
         return None, "temizleme sonrasi icerik kalmadi (yalnizca think/cit)"
 
     candidate = find_balanced_object(cleaned)
+    if candidate is None:
+        candidate = _kapanmamis_dizgeyi_onar(cleaned)
     if candidate is None:
         if "{" in cleaned:
             return None, "dengeli JSON nesnesi kapanmamis (kesik yanit olabilir)"

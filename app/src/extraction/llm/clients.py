@@ -411,6 +411,7 @@ class OllamaClient:
         timeout: Optional[float] = None,
         keep_alive: Optional[str] = None,
         num_ctx: Optional[int] = None,
+        num_predict: Optional[int] = None,
         temperature: float = 0.0,
     ):
         self.base_url = (base_url or os.environ.get(
@@ -435,6 +436,23 @@ class OllamaClient:
             else os.environ.get("OLLAMA_TIMEOUT", 180.0))
         self.keep_alive = keep_alive or os.environ.get("OLLAMA_KEEP_ALIVE", "30m")
         self.num_ctx = int(num_ctx or os.environ.get("OLLAMA_NUM_CTX", 8192))
+        # ÇIKTI TOKEN SINIRI. Ollama varsayılanı sınırsızdır ve bu ölçülmüş bir
+        # arızaya yol açıyordu (2026-08-08, özet üretimi, qwen2.5:7b-instruct):
+        # model geçerli bir özet üretiyor, JSON'u kapatmadan `<tool_call>`
+        # yazıyor ve çöp döngüsüne giriyordu. Sonuç iki farklı hata olarak
+        # görünüyordu ama kök neden tekti:
+        #
+        #   * döngü zaman aşımına kadar sürerse -> LLMTransportError (180 sn)
+        #   * bağlam dolup çıktı kesilirse      -> LLMError "kesik yanit"
+        #
+        # 10 belgelik ölçümde 4'ü düşüyordu ve iki hang tek başına 360 sn
+        # yiyordu. Sınır + durdurucu ile aynı belgeler 4-8 sn'de bitiyor.
+        #
+        # 512 seçildi: özet için fazlasıyla yeterli, çıkarım şemasının en geniş
+        # çıktısını da (12 alan + span) rahat kapsıyor. Kaçan üretimin bedelini
+        # 180 sn'den ~10 sn'ye indirmek asıl kazanç.
+        self.num_predict = int(num_predict if num_predict is not None
+                               else os.environ.get("OLLAMA_NUM_PREDICT", 512))
         self.temperature = temperature
         # Ollama tek moda sahiptir; pazarlık gerekmez ama arayüz aynı olsun.
         self.structured_mode = "ollama_format"
@@ -454,7 +472,17 @@ class OllamaClient:
             "format": schema,          # Ollama yapılandırılmış çıktı
             "stream": False,
             "keep_alive": self.keep_alive,
-            "options": {"temperature": self.temperature, "num_ctx": self.num_ctx},
+            "options": {
+                "temperature": self.temperature,
+                "num_ctx": self.num_ctx,
+                "num_predict": self.num_predict,
+                # `<tool_call>` qwen ailesinin araç çağrısı kaçış belirtecidir.
+                # Yapılandırılmış çıktı modunda bile üretiliyor ve ARDINDAN
+                # model çöp üretmeye başlıyor (ölçüldü). Burada durdurmak,
+                # kaçışın maliyetini sıfıra indirir; çıktının kendisi zaten
+                # o noktada tamamlanmış oluyor.
+                "stop": ["<tool_call>"],
+            },
         }
 
     def negotiate(self, schema: dict, force: bool = False) -> str:
