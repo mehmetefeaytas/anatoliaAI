@@ -100,6 +100,20 @@ def _fmt_value(field: str, value) -> str:
         return f"{value['value']:g} {value.get('currency', 'TRY')}"
     if isinstance(value, dict) and "min" in value:
         return f"%{value['min']:g}–%{value['max']:g}".replace(".", ",")
+    # Masraf durumu üç ayrı DURUMDUR ve üçü farklı cümle gerektirir. Bu dal
+    # olmadan kullanıcıya ham sözlük gidiyordu — ölçüldü, demonun manşet
+    # sorusunda görünüyordu:
+    #     "en düşük masraf durumu: Kuveyt Türk ({'has_fee': False, ...})"
+    # `amount is None` hâli ayrıca önemli: "ücret var, tutarı bilinmiyor"
+    # sıralamada 0 TL sayılmamalıdır (bkz. `compare._numeric_key` — altıncı
+    # kusur) ve metinde de "masrafsız" gibi okunmamalıdır.
+    if isinstance(value, dict) and "has_fee" in value:
+        if value.get("has_fee") is False:
+            return "masrafsız"
+        amount = value.get("amount")
+        if amount is None:
+            return "ücret var, tutarı belirtilmemiş"
+        return f"{amount:g} TRY masraf"
     return str(value)
 
 
