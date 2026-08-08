@@ -1,0 +1,9 @@
+# İmaja girmemesi gerekenler. Bunlar olmadan `COPY . .` node_modules'ü ve
+# .next önbelleğini imaja taşıyor: build yavaşlıyor ve host'un yerel
+# artefaktları imaja sızıyor (tekrar üretilebilirlik kaybı).
+node_modules
+.next
+out
+npm-debug.log*
+.env*
+.git
