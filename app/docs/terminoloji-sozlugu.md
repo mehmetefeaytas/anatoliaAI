@@ -1,7 +1,7 @@
 # Katılım finansı terim sözlüğü — köken ve kullanım
 
 **Dosya:** `data/terminology/katilim-terim-sozlugu.json`
-**Kaynak:** Mentör Cavide Hanım (eski bankacı; chatbot ve çok-ajanlı sistem
+**Kaynak:** Mentör (eski bankacı; chatbot ve çok-ajanlı sistem
 deneyimi), 2026-08-06 tarihli e-posta.
 **Doğrulama:** Terimlerin hukuki ayrımları mentörün avukat eşi tarafından
 gözden geçirildi (Osmanlıca/fıkhî muamelat dili).

@@ -100,7 +100,7 @@ deterministiktir ve bu bir kaza değil, ölçümün doğrudan sonucudur.
 
 ## 3. Bankanın gerçekten sorduğu üç soru
 
-Cavide Hanım'ı ikna eden anlatı, üç operasyonel senaryo üzerinden kuruldu.
+Mentörü ikna eden anlatı, üç operasyonel senaryo üzerinden kuruldu.
 Üçünde de soru aynıdır: **LLM olmadığında sistem ne yapar?**
 
 ### (a) "LLM'i acilen kapatmam gerekirse?"

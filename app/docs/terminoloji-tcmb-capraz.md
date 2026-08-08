@@ -3,7 +3,7 @@
 > **Ölçüm tarihi:** 2026-08-07
 > **Ölçüm aracı:** `scripts/tcmb_capraz_analiz.py` (yeniden üretilebilir)
 > **Veri:** `data/terminology/tcmb-terimler.json` (314 terim, TCMB) ×
-> `data/terminology/katilim-terim-sozlugu.json` (101 terim, mentör Cavide Hanım,
+> `data/terminology/katilim-terim-sozlugu.json` (101 terim, mentör,
 > avukat teyitli)
 > **Ham kanıt:** `data/terminology/_tcmb_ham/terimler-sozlugu.html` (+ `.meta.json`)
 
@@ -296,7 +296,7 @@ yalnız artan bütçe varsa devreye gir.
 - Bu 39 terimin `otorite_tipi: "notr"` yardımcı sözlüğe alınması henüz
   **yapılmadı** — ayrı bir karar ve ayrı bir commit gerektirir.
 - `ayrim_notu` alanlarına TCMB alıntısı eklenmesi henüz **yapılmadı**; sözlük
-  mentör (Cavide Hanım) teyitli olduğu için alan düzenlemesi öncesinde mentör
+  Mentör (eski bankacı) teyitli olduğu için alan düzenlemesi öncesinde mentör
   onayı alınmalıdır.
 - TCMB terimlerinin kalıcı ID'si veya sürüm etiketi yok; sayfa güncellenirse
   fark tespiti yalnızca `.meta.json` içindeki SHA-256 ile yapılabilir.
@@ -308,7 +308,7 @@ yalnız artan bütçe varsa devreye gir.
 - TCMB Terimler Sözlüğü — `data/terminology/_tcmb_ham/terimler-sozlugu.html`
   (çekilme 2026-08-07, HTTP 200, SHA-256 `ae1e0069…7daaed`)
 - Katılım Terim Sözlüğü — `data/terminology/katilim-terim-sozlugu.json`
-  (mentör Cavide Hanım, 2026-08-06, avukat teyitli)
+  (mentör, 2026-08-06, avukat teyitli)
 - `src/domain/terminology.py` — kart üretimi, `degildir` / `ayrim_notu` semantiği
 - `scripts/jargon_lint.py` — yasak kökler ve `oneri_tablosu()`
 - `CLAUDE.md` §12 (Domain Bilgisi — Faizsiz Finans), §14 (Scraping Kuralları)

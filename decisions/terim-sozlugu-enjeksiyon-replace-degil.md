@@ -1,7 +1,7 @@
 ---
 title: "Karar: terim sözlüğü sisteme ENJEKTE edilir, terimler REPLACE edilmez"
 tags: [decision, terminoloji, prompt, chatbot, mentor]
-source: "[[2026-08-06-cavide-terim-sozlugu]]"
+source: "[[2026-08-06-mentor-terim-sozlugu]]"
 date: 2026-08-06
 status: stable
 ---
@@ -15,7 +15,7 @@ kuralı* değil, yalnız bir *tespit hedefi* ve *öneri kaynağı* olarak kalır
 
 ## Gerekçe
 
-Mentör Cavide Hanım'ın 2026-08-06 tarihli maili ([[2026-08-06-cavide-terim-sozlugu]]):
+Mentörün 2026-08-06 tarihli maili ([[2026-08-06-mentor-terim-sozlugu]]):
 
 > "Birebir değiştirmek anlamda bozukluk yaratıyor… Türkçeleri aynı anlamı
 > replace ile taşımıyor. O sebeple böyle bir kapsamlı analiz vermek gerekiyor."
@@ -55,7 +55,7 @@ temel / sadeleştirme / sözlük kartı. Kart enjeksiyonu bu yüzden
 kapatılabilir (`LLMOrchestrator(terim_karti=False)`).
 
 ## Sources
-- [[2026-08-06-cavide-terim-sozlugu]] — mailin tam metni ve sözlük şeması
+- [[2026-08-06-mentor-terim-sozlugu]] — mailin tam metni ve sözlük şeması
 
 ## Related
 - [[katilim-finans-terimleri]] — sözlüğün kavram sayfası

@@ -95,7 +95,7 @@ class TestCounts(unittest.TestCase):
 class TestHataSiniflari(unittest.TestCase):
     """Üç hata sınıfı AYRI ölçülür (mentör talebi).
 
-    Cavide Hanım'ın teşhisi: kanun maddesindeki "1 yıl"ı vade sanmak
+    Mentörün teşhisi: kanun maddesindeki "1 yıl"ı vade sanmak
     halüsinasyon DEĞİL, grounding hatasıdır. İkisini aynı sayıda toplamak
     hangi düzeltmenin gerektiğini gizler.
     """

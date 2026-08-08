@@ -19,7 +19,7 @@ kusurdur (bkz. `eval/predictors.py` modül başlığı, Kusur 2) ve tekrarlanmaz
 
 ## Deneyin tezi
 
-İki mentör kaynağı çelişiyor: D2 terimin sadeleştirilmesini, Cavide Hanım'ın
+İki mentör kaynağı çelişiyor: D2 terimin sadeleştirilmesini, mentörün
 maili ise terime DOKUNULMAYIP analizin modele verilmesini istiyor. Çelişki
 otoriteyle değil ölçümle kapanır. Betik bu yüzden iki şey birden üretir:
 
@@ -77,7 +77,7 @@ KOL_ACIKLAMA: dict[str, str] = {
     "sadelestirme": ("belge metnindeki terim sözlüğün resmi_tr/halk_dili "
                      "karşılığıyla DEĞİŞTİRİLİR (mentör D2)"),
     "sozluk-karti": ("terim değiştirilmez; kanonik -> degildir -> ayrim_notu "
-                     "-> risk_notu kartı prompt'a enjekte edilir (Cavide)"),
+                     "-> risk_notu kartı prompt'a enjekte edilir (mentör)"),
 }
 
 #: `|Δ| < 0,05` ise kazanan ilan edilmez. n=48'de bu büyüklükteki bir fark

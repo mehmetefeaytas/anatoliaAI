@@ -145,7 +145,7 @@ class Counts:
 
     # -- Hata sınıfları -------------------------------------------------- #
     #
-    # Mentör (Cavide Hanım) `extraction_failure` ile `hallucination`ın AYRI
+    # Mentör (eski bankacı) `extraction_failure` ile `hallucination`ın AYRI
     # raporlanmasını istedi ve teşhisi şuydu: kanun maddesindeki "1 yıl"ı vade
     # sanmak halüsinasyon DEĞİL, grounding hatasıdır.
     #
@@ -155,7 +155,7 @@ class Counts:
     #   kacirma        bilgi metinde var, model HİÇBİR şey üretmedi
     #                  -> kapsama sorunu (regex/prompt eksik)
     #   yanlis_cikarim bilgi metinde var, model YANLIŞ yerden aldı
-    #                  -> grounding sorunu (Cavide Hanım'ın vakası)
+    #                  -> grounding sorunu (mentörün vakası)
     #   halusinasyon   bilgi metinde YOK, model uydurdu
     #                  -> zemin sorunu (en tehlikelisi)
 

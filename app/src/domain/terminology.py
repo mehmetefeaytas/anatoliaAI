@@ -8,7 +8,7 @@
 
 ## Neden bu modül var
 
-Mentör (Cavide Hanım, 2026-08-06) kör terim değiştirmenin anlamı bozduğunu
+Mentör (eski bankacı, 2026-08-06) kör terim değiştirmenin anlamı bozduğunu
 söyledi ve 101 terimlik bir sözlük gönderdi. Bu bir teori değil, bizim kendi
 ölçtüğümüz kusurun genellemesi: `safety.py` "Kâr Payı ile Faiz Arasındaki
 Farklar" başlığını "Kâr Payı ile Kâr Payı Arasındaki Farklar" yapıyordu.
@@ -39,7 +39,7 @@ karakter bütçesine uyar ve kartı yarıda kesmez.
 
 `simplify_text` mentörün D2 önerisinin ("terimi sadeleştirince model daha iyi
 anlar") çalıştırılabilir hâlidir: belgedeki fıkhî terim, sözlüğün `resmi_tr` /
-`halk_dili` karşılığıyla DEĞİŞTİRİLİR. Cavide Hanım'ın maili bunun anlamı
+`halk_dili` karşılığıyla DEĞİŞTİRİLİR. mentörün maili bunun anlamı
 bozduğunu söylüyor. İki iddia otoriteyle değil ÖLÇÜMLE ayrılır; bu yüzden
 sadeleştirme bir ablasyon KOLU olarak kodda vardır ve varsayılan yol değildir
 (bkz. `docs/rapor/o1-terim-deneyi.md`).
@@ -47,7 +47,7 @@ sadeleştirme bir ablasyon KOLU olarak kodda vardır ve varsayılan yol değildi
 Değiştirme `synonyms.keyword_pattern` üzerinden sözcük sınırlıdır. Çıplak
 `str.replace` KULLANILMAZ: korpusta ölçülmüş biçimde çöküyordu ('fon' deseni
 'fonksiyon'u yakalıyor, korpusun %48'i sahte "Konut Finansmanı" çıkıyordu) ve
-mentörün uyardığı kelime birebir "fon"dur.
+Mentörün uyardığı kelime birebir "fon"dur.
 """
 
 from __future__ import annotations
