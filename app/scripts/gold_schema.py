@@ -70,11 +70,43 @@ ALL_HARD_TAGS = HARD_TAGS + (LEGACY_HARD_TAG,)
 # --------------------------------------------------------------------------- #
 # Anotasyon kararları
 # --------------------------------------------------------------------------- #
-# `ok` VARSAYILANDIR: boş bırakılan hücre "model doğru" demektir. Yüksek güvenli
-# satırlarda anotatörün hiçbir tuşa basmaması için (Cuma günü darboğaz insan
-# zamanı, bkz. ANNOTATION_GUIDE.md §2).
 VERDICTS = ("ok", "fix", "absent", "unclear")
 DEFAULT_VERDICT = "ok"
+
+# --------------------------------------------------------------------------- #
+# Anotasyon protokolü — boş hücrenin anlamı (TEK DOĞRULUK KAYNAĞI)
+# --------------------------------------------------------------------------- #
+# v1  boş = `ok` ("model doğru"). Anotatörün hiçbir tuşa basmaması için
+#     tasarlanmıştı (darboğaz insan zamanı, ANNOTATION_GUIDE.md §2). Bedeli
+#     ölçüldü: gold.v1 modele ÇAPALANDI — aynı belgeler kör protokolde 0,536,
+#     çapalı protokolde 0,677 ölçüldü (§3.1). Fark model başarısı değil,
+#     protokol artefaktı.
+# v2  boş = KARAR VERİLMEDİ. Gold'a girmez, κ'ya girmez, metrik dışıdır.
+#
+# Bu sabitler burada durur çünkü üç ayrı tüketicisi var ve üçü de aynı cevabı
+# vermek zorunda: `build_gold` (gold'u YAZAN), `report_iaa` (κ'yı hesaplayan),
+# `lint_review_csv` (kapı). Kopyaların ayrışması bu projede ölçülmüş bir hata
+# sınıfıdır: aynı semantik bir yolda kilitli, karşıtı diğerinde serbest kalır
+# ve kimse fark etmez (bkz. `comparison/compare.py::_numeric_key`).
+PROTOCOL_COLUMN = "protokol"
+PROTOCOL_V1 = "v1"
+PROTOCOL_V2 = "v2"
+PROTOCOLS = (PROTOCOL_V1, PROTOCOL_V2)
+
+# v2'de karar verilmemiş satırın kararı. `unclear`DAN FARKLIDIR: `unclear`
+# "baktım, karar veremedim" (hakemliğe düşer); `skipped` "hiç bakılmadı".
+SKIPPED_DECISION = "skipped"
+
+
+def row_protocol(row: dict) -> str:
+    """Satırın anotasyon protokolü. `protokol` sütunu yoksa **v1**.
+
+    Geriye dönük uyum bilinçlidir: eski CSV'lerin yorumu değişmez, yoksa
+    v1 döneminde verilmiş binlerce örtük onay sessizce "karar verilmedi"ye
+    döner ve gold küçülürken kimse fark etmez.
+    """
+    value = (row.get(PROTOCOL_COLUMN) or "").strip().casefold()
+    return PROTOCOL_V2 if value == PROTOCOL_V2 else PROTOCOL_V1
 
 # `campaign_type` 12 alandan biri DEĞİL ama gold'da etiketlenir: 8-sınıf
 # BERTurk sınıflandırıcısının macro-F1'i buna dayanır (CLAUDE.md §16).

@@ -27,9 +27,13 @@ v1'de boş `verdict` "model doğru" demekti; v2'de **"karar verilmedi"** demek
 okunur; sütun yoksa dosya **v1** sayılır — eski CSV'lerin yorumu değişmez.
 
 v2 dosyasında karar verilmemiş satırlar **dosya başına tek satırda** raporlanır:
-anotasyon sürerken UYARI, `--eksiksiz` verildiğinde HATA. İkincisi bir kapıdır:
-`scripts/build_gold.py` hâlâ v1 sözleşmesini uygular (boş -> `ok` -> modelin
-değeri gold'a girer), dolayısıyla v2 dosyası bu kapıdan geçmeden derlenmemelidir.
+anotasyon sürerken UYARI, `--eksiksiz` verildiğinde HATA.
+
+`scripts/build_gold.py` artık aynı protokolü uyguluyor (v2'de boş satır gold'a
+GİRMEZ, `skipped` sayılır ve derleme raporunda görünür). Yani bu kapı artık
+"sessiz çapalamaya karşı tek savunma" değil, **kapsama kapısı**: derlemeden
+önce kaç kararın eksik kaldığını söyler. Bir satırı atlamak gold'u bozmaz ama
+o alanı ölçüm dışı bırakır.
 
 ## Kullanım
 
@@ -53,24 +57,20 @@ from dataclasses import dataclass
 from typing import Any, Iterator
 
 from scripts.gold_schema import (
+    PROTOCOL_V1,
+    PROTOCOL_V2,
     GoldValidationError,
     parse_gold_value,
+    row_protocol,
     validate_canonical,
 )
 
 REQUIRED_COLUMNS = {"doc_id", "field", "model_value", "gold_value", "verdict"}
 VALID_VERDICTS = ("ok", "fix", "absent", "unclear")
 
-PROTOCOL_COLUMN = "protokol"
-PROTOCOL_V1 = "v1"
-PROTOCOL_V2 = "v2"
+# Protokol sabitleri ve `row_protocol` `gold_schema`dan gelir (tek doğruluk
+# kaynağı). `auto` yalnız BU aracın CLI seçeneğidir — satırın kendi sütununa bak.
 PROTOCOL_AUTO = "auto"
-
-
-def row_protocol(row: dict) -> str:
-    """Satırın protokolü. `protokol` sütunu yoksa **v1** (geriye dönük uyum)."""
-    value = (row.get(PROTOCOL_COLUMN) or "").strip().casefold()
-    return PROTOCOL_V2 if value == PROTOCOL_V2 else PROTOCOL_V1
 
 # `doc_id` kebab-case slug'dır (CLAUDE.md — isimlendirme). Elektronik tablonun
 # otomatik düzeltmesi `--` ayıracını em-dash'e (`—`) çevirebiliyor; kalibrasyon
