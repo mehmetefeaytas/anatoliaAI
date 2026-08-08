@@ -35,11 +35,25 @@
  * jüriye yanlış bir metin gösterir.
  */
 
-/** Satır içi parça. `text` dışındakiler tek bir stil taşır. */
+/**
+ * Satır içi parça.
+ *
+ * `strong` ve `em` ÇOCUK taşır, düz metin değil: sunucu şablonları iç içe
+ * işaret üretiyor. Gerçek örnek (`safety.py:337`)::
+ *
+ *     _Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır…_
+ *
+ * İçerik düz metin olarak saklansaydı dıştaki italik çözülür, içteki kalın
+ * ham `**` olarak ekrana basılırdı — ve bu, düzeltmeye çalıştığımız kusurun
+ * ta kendisi olurdu.
+ *
+ * `code` özyinelemez: ters tırnak arası birebir korunur, yoksa
+ * `` `kar_payi_orani` `` içindeki alt çizgiler italik sanılırdı.
+ */
 export type Inline =
   | { tur: "text"; icerik: string }
-  | { tur: "strong"; icerik: string }
-  | { tur: "em"; icerik: string }
+  | { tur: "strong"; cocuklar: Inline[] }
+  | { tur: "em"; cocuklar: Inline[] }
   | { tur: "code"; icerik: string };
 
 /** Blok düzeyi düğüm. */
@@ -58,8 +72,35 @@ function sozcukKarakteri(k: string | undefined): boolean {
   return k !== undefined && /[\p{L}\p{N}_]/u.test(k);
 }
 
+/** İçerik geçerli bir işaretçi gövdesi mi (boş değil, kenarları boşluksuz). */
+function gecerliGovde(icerik: string): boolean {
+  return icerik.trim() !== "" && icerik === icerik.trim();
+}
+
 /**
- * Bir satırı satır içi parçalara ayırır.
+ * `_italik_` için kapanış konumu.
+ *
+ * İlk alt çizgiyi körü körüne almak yetmez: `_not: kar_payi_orani_` satırında
+ * ilk aday `kar_`'ın çizgisidir ve orada kapatmak alan adını ortadan ikiye
+ * böler. Sözcük sınırında duran İLK aday aranır; yoksa -1.
+ */
+function italikKapanisi(satir: string, baslangic: number): number {
+  let k = satir.indexOf("_", baslangic);
+  while (k !== -1) {
+    if (!sozcukKarakteri(satir[k + 1]) && gecerliGovde(satir.slice(baslangic, k))) {
+      return k;
+    }
+    k = satir.indexOf("_", k + 1);
+  }
+  return -1;
+}
+
+/**
+ * Bir satırı satır içi parçalara ayırır — İÇ İÇE işaretler dâhil.
+ *
+ * `strong`/`em` gövdeleri özyinelemeli ayrıştırılır; gövde her zaman girdiden
+ * kısa olduğu için özyineleme sonlanır. Sunucu şablonları gerçekten iç içe
+ * yazıyor (`safety.py:337`: italik bir notun içinde kalın bir terim).
  *
  * Lookbehind (`(?<=…)`) BİLEREK kullanılmadı: eski Safari sürümlerinde yok ve
  * demo makinesinin tarayıcısına bağımlılık bırakmak istemiyoruz. Sınır
@@ -82,17 +123,16 @@ export function satirAyristir(satir: string): Inline[] {
     if (satir.startsWith("**", i)) {
       const kapanis = satir.indexOf("**", i + 2);
       const icerik = kapanis === -1 ? "" : satir.slice(i + 2, kapanis);
-      // İçerik boş olamaz ve kenarlarında boşluk taşıyamaz: `** x **` markdown
-      // değildir, düz metindir.
-      if (kapanis !== -1 && icerik.trim() !== "" && icerik === icerik.trim()) {
+      // `** x **` markdown değildir, düz metindir.
+      if (kapanis !== -1 && gecerliGovde(icerik)) {
         tamponuBosalt();
-        parcalar.push({ tur: "strong", icerik });
+        parcalar.push({ tur: "strong", cocuklar: satirAyristir(icerik) });
         i = kapanis + 2;
         continue;
       }
     }
 
-    // `kod`
+    // `kod` — özyinelemez, gövde birebir korunur
     if (satir[i] === "`") {
       const kapanis = satir.indexOf("`", i + 1);
       if (kapanis !== -1 && kapanis > i + 1) {
@@ -103,18 +143,15 @@ export function satirAyristir(satir: string): Inline[] {
       }
     }
 
-    // _italik_ — yalnız sözcük sınırında
+    // _italik_ — yalnız sözcük sınırında açılır ve kapanır
     if (satir[i] === "_" && !sozcukKarakteri(satir[i - 1])) {
-      const kapanis = satir.indexOf("_", i + 1);
-      const icerik = kapanis === -1 ? "" : satir.slice(i + 1, kapanis);
-      if (
-        kapanis !== -1 &&
-        icerik.trim() !== "" &&
-        icerik === icerik.trim() &&
-        !sozcukKarakteri(satir[kapanis + 1])
-      ) {
+      const kapanis = italikKapanisi(satir, i + 1);
+      if (kapanis !== -1) {
         tamponuBosalt();
-        parcalar.push({ tur: "em", icerik });
+        parcalar.push({
+          tur: "em",
+          cocuklar: satirAyristir(satir.slice(i + 1, kapanis)),
+        });
         i = kapanis + 1;
         continue;
       }

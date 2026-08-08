@@ -14,12 +14,25 @@
 import { Fragment } from "react";
 import { markdownAyristir, type Inline } from "../../lib/markdown";
 
+/** İç içe işaretleri özyinelemeli basar (kalın içinde italik ve tersi). */
 function Parcalar({ parcalar }: { parcalar: Inline[] }) {
   return (
     <>
       {parcalar.map((p, i) => {
-        if (p.tur === "strong") return <strong key={i}>{p.icerik}</strong>;
-        if (p.tur === "em") return <em key={i}>{p.icerik}</em>;
+        if (p.tur === "strong") {
+          return (
+            <strong key={i}>
+              <Parcalar parcalar={p.cocuklar} />
+            </strong>
+          );
+        }
+        if (p.tur === "em") {
+          return (
+            <em key={i}>
+              <Parcalar parcalar={p.cocuklar} />
+            </em>
+          );
+        }
         if (p.tur === "code") return <code key={i}>{p.icerik}</code>;
         return <Fragment key={i}>{p.icerik}</Fragment>;
       })}

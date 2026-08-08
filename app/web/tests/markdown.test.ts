@@ -23,8 +23,14 @@ import {
 
 /** Test okunurluğu için kısa kurucular. */
 const t = (icerik: string): Inline => ({ tur: "text", icerik });
-const b = (icerik: string): Inline => ({ tur: "strong", icerik });
-const i = (icerik: string): Inline => ({ tur: "em", icerik });
+const b = (...cocuklar: (Inline | string)[]): Inline => ({
+  tur: "strong",
+  cocuklar: cocuklar.map((x) => (typeof x === "string" ? t(x) : x)),
+});
+const i = (...cocuklar: (Inline | string)[]): Inline => ({
+  tur: "em",
+  cocuklar: cocuklar.map((x) => (typeof x === "string" ? t(x) : x)),
+});
 const c = (icerik: string): Inline => ({ tur: "code", icerik });
 
 describe("satirAyristir — kalın", () => {
@@ -61,6 +67,32 @@ describe("satirAyristir — kalın", () => {
     assert.deepEqual(satirAyristir("oran * 0,05 kadar"), [
       t("oran * 0,05 kadar"),
     ]);
+  });
+});
+
+describe("satirAyristir — İÇ İÇE işaretler", () => {
+  it("italik notun içindeki kalın da çözülür", () => {
+    // safety.py:337 gerçekten bu biçimi üretiyor ve ilk sürümde içteki `**`
+    // ham yıldız olarak ekrana basılıyordu — tarayıcıda görüldü.
+    assert.deepEqual(satirAyristir("_Not: oran **beklenen** bir orandır._"), [
+      i("Not: oran ", b("beklenen"), " bir orandır."),
+    ]);
+  });
+
+  it("kalının içindeki italik de çözülür", () => {
+    assert.deepEqual(satirAyristir("**çok _önemli_ uyarı**"), [
+      b("çok ", i("önemli"), " uyarı"),
+    ]);
+  });
+
+  it("iki iç içe kalın tek italikte", () => {
+    assert.deepEqual(satirAyristir("_**a** ve **b**_"), [
+      i(b("a"), " ve ", b("b")),
+    ]);
+  });
+
+  it("kod içindeki işaretler özyinelemez", () => {
+    assert.deepEqual(satirAyristir("_`a_b` sonu_"), [i(c("a_b"), " sonu")]);
   });
 });
 
@@ -155,12 +187,12 @@ describe("markdownAyristir — bloklar", () => {
 });
 
 describe("kayıp yok garantisi", () => {
-  /** Parçaların metnini birleştirince ham satır geri gelmeli. */
+  /** Parçaların metnini birleştirince ham satır geri gelmeli (özyinelemeli). */
   function geriBirlestir(parcalar: Inline[]): string {
     return parcalar
       .map((p) => {
-        if (p.tur === "strong") return `**${p.icerik}**`;
-        if (p.tur === "em") return `_${p.icerik}_`;
+        if (p.tur === "strong") return `**${geriBirlestir(p.cocuklar)}**`;
+        if (p.tur === "em") return `_${geriBirlestir(p.cocuklar)}_`;
         if (p.tur === "code") return `\`${p.icerik}\``;
         return p.icerik;
       })
@@ -174,6 +206,11 @@ describe("kayıp yok garantisi", () => {
       "**a**_b_`c`",
       "** bozuk ** _bozuk_ok",
       "hiç işaret yok",
+      // Sunucunun gerçek çıktısı — iç içe, uzun, noktalamalı.
+      "_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt " +
+        "edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak " +
+        "olur; oran garanti anlamı taşımaz (CLAUDE.md §12)._",
+      "_not: kar_payi_orani_",
     ];
     for (const ham of ornekler) {
       assert.equal(geriBirlestir(satirAyristir(ham)), ham, `kayıp: ${ham}`);
