@@ -53,7 +53,15 @@ CREATE TABLE IF NOT EXISTS campaigns (
 CREATE TABLE IF NOT EXISTS extracted_fields (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     campaign_id INTEGER, field_name TEXT NOT NULL, raw_value TEXT,
-    canonical_value TEXT, confidence REAL, source_span TEXT, extractor TEXT,
+    canonical_value TEXT, confidence REAL, source_span TEXT,
+    -- CHECK kısıtı `schema.sql` (Postgres) tarafında VARDI, burada YOKTU.
+    -- İki şemanın ayrışması bu projede ölçülmüş bir hata sınıfıdır: doğru
+    -- kural bir yolda kilitli, karşıtı diğerinde serbest (bkz. `_numeric_key`
+    -- / `_composite_numeric`, `parse_rate_table` başlık deseni). Burada bedeli
+    -- somut: SQLite yolunda geçersiz bir `extractor` değeri sessizce yazılır,
+    -- Postgres yolunda aynı yazma HATA verir — yani iki backend aynı veriyi
+    -- kabul etmez ve parite testi backend'e göre farklı davranır.
+    extractor TEXT CHECK (extractor IS NULL OR extractor IN ('rule','ner','llm')),
     span_start INTEGER, span_end INTEGER, confidence_source TEXT
 );
 -- RAG vektör deposu — Postgres'teki `vector(1024)` sütununun SQLite karşılığı.
