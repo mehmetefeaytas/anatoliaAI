@@ -3,29 +3,51 @@
 /**
  * Hibrit chatbot arayüzü (CLAUDE.md §5 — router'lı text-to-SQL + RAG).
  *
- * İlgili: src/api/main.py `POST /chat`, src/chatbot/router.py
+ * İlgili: src/api/main.py `POST /chat`, src/chatbot/router.py,
+ *         ./ui/Markdown.tsx, ../lib/markdown.ts
  *
- * İki iyileştirme:
+ * Dört iyileştirme:
  *  1. HAZIR SORU BUTONLARI — 4 dakikalık sunumda soru yazmak zaman kaybı ve
  *     yazım hatası riski. Altı soru router'ın iki yolunu da (yapısal sorgu ve
  *     RAG) kapsayacak şekilde seçildi; demo sürtünmesi sıfırlanır.
- *  2. KAYNAKLAR artık ham JSON dökümü değil, okunur bir tablo. Kaynağı
- *     gösterebilmek açıklanabilirlik iddiasının kanıtıdır; `<pre>{JSON}</pre>`
- *     bunu kanıt olmaktan çıkarıp gürültüye çeviriyordu.
+ *  2. KAYNAKLAR ham JSON dökümü değil, okunur bir tablo. Kaynağı gösterebilmek
+ *     açıklanabilirlik iddiasının kanıtıdır; `<pre>{JSON}</pre>` bunu kanıt
+ *     olmaktan çıkarıp gürültüye çeviriyordu.
  *  3. DENETLENEBİLİR BAĞLANTI — kaynak metin parçası tek başına yetmez: jüri
  *     "bu bilgiyi nereden aldın" diye sorduğunda bankanın kendi sayfasına
  *     (`source_url`) ve belgenin denetim ekranına (`campaign_id` →
  *     Jüri Audit Paneli) gidebilmek gerekir.
+ *  4. BİÇİMLENDİRME ve GEÇMİŞ (bu turda) — aşağıda.
  *
- * `source_url` / `campaign_id` alanları API'de HENÜZ OLMAYABİLİR. Eksikse satır
- * bağlantısız gösterilir; arayüz çökmez, sahte bağlantı da üretmez.
+ * ## Bu turda düzeltilen dört kusur
+ *
+ * a) **Markdown render edilmiyordu.** Cevap `<p>{resp.answer}</p>` ile düz
+ *    metin basılıyordu, oysa markdown'ı sunucunun kendi şablonları üretiyor
+ *    (`structured.py:125,136,137`; `safety.py`'de 12 satır). Sonuç: her yapısal
+ *    cevapta ekranda ham `**Kuveyt Türk**` görünüyordu. Artık `Markdown`
+ *    bileşeni render ediyor — yeni bağımlılık olmadan, ayrıştırıcı testli.
+ *
+ * b) **Enter `busy` kontrol etmiyordu.** Düğmede `disabled={busy}` vardı ama
+ *    `onKeyDown`'da yoktu; istek uçarken Enter'a basmak ikinci (ve üçüncü)
+ *    `POST /chat` başlatıyor, `finally` blokları yarışıyor ve son dönen cevap
+ *    ekrana yazılıyordu. Yerel LLM gecikmesi saniyelerle ölçüldüğü için bu
+ *    demoda gerçekleşebilir bir arızaydı.
+ *
+ * c) **Tek satır `<input>`.** Çok satırlı soru yazmak imkânsızdı ve
+ *    Shift+Enter ayrımı yoktu. Artık otomatik büyüyen `<textarea>`:
+ *    Enter gönderir, Shift+Enter yeni satır açar.
+ *
+ * d) **Her cevap bir öncekini siliyordu** (tek `resp` state'i). Jüri arka
+ *    arkaya soru sorduğunda önceki cevap kayboluyordu; artık konuşma listesi
+ *    tutuluyor.
  */
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../lib/api";
 import type { ChatResp, ChatSource } from "../lib/api";
 import { formatValue } from "../lib/format";
 import { ErrorNotice } from "./ErrorNotice";
+import Markdown from "./ui/Markdown";
 
 /**
  * Hazır sorular. İlk beşi `router.py` anahtar kelimeleriyle yapısal sorguya
@@ -45,6 +67,14 @@ const HANDLER_LABELS: Record<string, string> = {
   rag: "RAG (anlamsal arama)",
 };
 
+/** Ekranda duran tek bir soru-cevap turu. */
+type Tur = {
+  id: number;
+  soru: string;
+  cevap: ChatResp | null;
+  hata: unknown;
+};
+
 type Props = {
   /** Belgeyi Jüri Audit Paneli'nde açar (page.tsx `inspect` deseni). */
   onInspect?: (campaignId: number) => void;
@@ -52,25 +82,41 @@ type Props = {
 
 export default function ChatPanel({ onInspect }: Props) {
   const [q, setQ] = useState("");
-  const [resp, setResp] = useState<ChatResp | null>(null);
-  const [error, setError] = useState<unknown>(null);
+  const [turlar, setTurlar] = useState<Tur[]>([]);
   const [busy, setBusy] = useState(false);
+  const alanRef = useRef<HTMLTextAreaElement>(null);
+  const sayacRef = useRef(0);
 
-  async function ask(question: string) {
-    const text = question.trim();
-    if (!text) return;
-    setQ(text);
-    setBusy(true);
-    setError(null);
-    try {
-      setResp(await api.chat(text));
-    } catch (e) {
-      setError(e);
-      setResp(null);
-    } finally {
-      setBusy(false);
-    }
-  }
+  // Otomatik yükseklik: içerik büyüdükçe alan büyür, `max-height`e kadar.
+  useEffect(() => {
+    const el = alanRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  }, [q]);
+
+  const ask = useCallback(
+    async (question: string) => {
+      const text = question.trim();
+      // Yarışan istek YOK: `busy` burada da kontrol edilir, yalnız düğmede değil.
+      if (!text || busy) return;
+
+      const id = (sayacRef.current += 1);
+      setQ(text);
+      setBusy(true);
+      setTurlar((t) => [...t, { id, soru: text, cevap: null, hata: null }]);
+
+      try {
+        const cevap = await api.chat(text);
+        setTurlar((t) => t.map((x) => (x.id === id ? { ...x, cevap } : x)));
+      } catch (e) {
+        setTurlar((t) => t.map((x) => (x.id === id ? { ...x, hata: e } : x)));
+      } finally {
+        setBusy(false);
+      }
+    },
+    [busy],
+  );
 
   return (
     <section className="card">
@@ -80,7 +126,7 @@ export default function ChatPanel({ onInspect }: Props) {
         RAG&apos;e yönlendirilir. Hangi yolun kullanıldığı cevabın yanında yazar.
       </p>
 
-      <div className="row" style={{ marginBottom: 12 }}>
+      <div className="row" style={{ marginBottom: "var(--sp-3)" }}>
         {PRESETS.map((p) => (
           <button
             key={p}
@@ -94,91 +140,164 @@ export default function ChatPanel({ onInspect }: Props) {
         ))}
       </div>
 
-      <div className="row-tight">
-        <input
-          className="input grow"
+      <div className="row-tight" style={{ alignItems: "flex-end" }}>
+        <textarea
+          ref={alanRef}
+          rows={1}
+          className="textarea textarea-auto grow"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter") ask(q);
+            // Enter gönderir, Shift+Enter yeni satır açar.
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              ask(q);
+            }
           }}
-          placeholder="ör. Hangi bankada en düşük kâr payı var?"
+          placeholder="ör. Hangi bankada en düşük kâr payı var? (Shift+Enter: yeni satır)"
           aria-label="Chatbot sorusu"
+          aria-describedby="chat-ipucu"
         />
         <button type="button" className="btn" onClick={() => ask(q)} disabled={busy}>
           {busy ? "…" : "Sor"}
         </button>
       </div>
+      <p id="chat-ipucu" className="small faint" style={{ margin: "var(--sp-2) 0 0" }}>
+        Enter gönderir · Shift+Enter yeni satır
+      </p>
 
-      {!!error && (
-        <div style={{ marginTop: 14 }}>
-          <ErrorNotice error={error} />
+      <div className="chat-log" aria-live="polite" aria-busy={busy}>
+        {turlar.map((t) => (
+          <TurGorunumu key={t.id} tur={t} onInspect={onInspect} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TurGorunumu({
+  tur,
+  onInspect,
+}: {
+  tur: Tur;
+  onInspect?: (campaignId: number) => void;
+}) {
+  const bekliyor = !tur.cevap && !tur.hata;
+
+  return (
+    <div className="chat-turn">
+      <div className="chat-q">{tur.soru}</div>
+
+      {bekliyor && (
+        <div className="chat-a">
+          {/* İskelet gösterge: eskiden yükleniyor durumu yalnız düğme
+              yazısındaki "…" ile belliydi; ekran okuyucu ve hızlı kullanıcı
+              için "bir şey oluyor mu" belirsizdi. */}
+          <div className="skeleton" role="status">
+            <span />
+            <span />
+            <span />
+          </div>
         </div>
       )}
 
-      {resp && (
-        <div style={{ marginTop: 16 }}>
-          <div className="row" style={{ marginBottom: 6 }}>
+      {!!tur.hata && <ErrorNotice error={tur.hata} />}
+
+      {tur.cevap && (
+        <div className="chat-a">
+          <div className="row" style={{ marginBottom: "var(--sp-2)" }}>
             <span className="badge">
-              {HANDLER_LABELS[resp.handler] ?? resp.handler}
+              {HANDLER_LABELS[tur.cevap.handler] ?? tur.cevap.handler}
             </span>
-            {resp.field && (
+            {tur.cevap.field && (
               <span className="badge" title="Router'ın çıkardığı alan">
-                alan: <span className="mono">{resp.field}</span>
+                alan: <span className="mono">{tur.cevap.field}</span>
               </span>
             )}
           </div>
-          <p style={{ whiteSpace: "pre-wrap", lineHeight: 1.6, margin: "8px 0 0" }}>
-            {resp.answer}
-          </p>
 
-          {resp.sources?.length > 0 ? (
-            <>
-              <h3>Kaynaklar ({resp.sources.length})</h3>
-              <p className="small muted" style={{ margin: "0 0 8px" }}>
-                Her satır, cevabın dayandığı belgeye götürür: bankanın kendi
-                sayfası ve belgenin denetim ekranı.
-              </p>
-              <div className="table-wrap">
-                <table className="data">
-                  <thead>
-                    <tr>
-                      <th scope="col">Banka</th>
-                      <th scope="col">Değer</th>
-                      <th scope="col">Kaynak metin parçası</th>
-                      <th scope="col">Kaynak</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {resp.sources.map((s, i) => (
-                      <tr key={i}>
-                        <td>{typeof s.bank === "string" ? s.bank : "—"}</td>
-                        <td className="num">
-                          {"value" in s ? formatValue(s.value, resp.field ?? undefined) : "—"}
-                        </td>
-                        <td className="small muted">
-                          {typeof s.source_span === "string" && s.source_span
-                            ? `…${s.source_span.trim()}…`
-                            : summarize(s)}
-                        </td>
-                        <td>
-                          <SourceLinks source={s} onInspect={onInspect} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </>
-          ) : (
-            <p className="small muted" style={{ marginTop: 12 }}>
-              Bu cevap için kaynak satırı döndürülmedi.
-            </p>
-          )}
+          <Markdown metin={tur.cevap.answer} />
+
+          <Kaynaklar cevap={tur.cevap} onInspect={onInspect} />
         </div>
       )}
-    </section>
+    </div>
   );
+}
+
+function Kaynaklar({
+  cevap,
+  onInspect,
+}: {
+  cevap: ChatResp;
+  onInspect?: (campaignId: number) => void;
+}) {
+  if (!cevap.sources?.length) {
+    return (
+      <p className="small muted" style={{ marginTop: "var(--sp-3)" }}>
+        Bu cevap için kaynak satırı döndürülmedi.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      <h3>Kaynaklar ({cevap.sources.length})</h3>
+      <p className="small muted" style={{ margin: "0 0 var(--sp-2)" }}>
+        Her satır, cevabın dayandığı belgeye götürür: bankanın kendi sayfası ve
+        belgenin denetim ekranı.
+      </p>
+      <div className="table-wrap">
+        <table className="data stackable">
+          <thead>
+            <tr>
+              <th scope="col">Banka</th>
+              <th scope="col">Değer</th>
+              <th scope="col">Kaynak metin parçası</th>
+              <th scope="col">Kaynak</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cevap.sources.map((s, i) => (
+              <tr key={i}>
+                <td data-label="Banka">
+                  {typeof s.bank === "string" ? s.bank : "—"}
+                </td>
+                <td data-label="Değer" className="num">
+                  {"value" in s ? formatValue(s.value, cevap.field ?? undefined) : "—"}
+                </td>
+                <td data-label="Kaynak metin" className="small muted">
+                  <Parca kaynak={s} />
+                </td>
+                <td data-label="Kaynak">
+                  <SourceLinks source={s} onInspect={onInspect} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+/**
+ * Kaynak metin parçası.
+ *
+ * RAG pasajları `bank/value/source_span` şeklinde gelmeyebilir; birkaç bilinen
+ * anahtar denenir. Hiçbiri yoksa eskiden `JSON.stringify(s)` basılıyordu —
+ * jüri ekranına ham JSON dökmek, kaynağı kanıt olmaktan çıkarıp gürültüye
+ * çevirir. Artık bilginin yokluğu SÖYLENİR.
+ */
+function Parca({ kaynak }: { kaynak: ChatSource }) {
+  if (typeof kaynak.source_span === "string" && kaynak.source_span.trim()) {
+    return <>…{kaynak.source_span.trim()}…</>;
+  }
+  for (const key of ["text", "chunk_text", "passage", "detail"]) {
+    const v = kaynak[key];
+    if (typeof v === "string" && v.trim()) return <>{v.trim()}</>;
+  }
+  return <span className="faint">kaynak metin parçası döndürülmedi</span>;
 }
 
 /**
@@ -210,7 +329,7 @@ function SourceLinks({
   }
 
   return (
-    <div className="row-tight" style={{ gap: 10, flexWrap: "wrap" }}>
+    <div className="row-tight" style={{ flexWrap: "wrap" }}>
       {url && (
         <a
           className="btn-link"
@@ -227,18 +346,7 @@ function SourceLinks({
           belgeye git (#{id})
         </button>
       )}
-      {id !== null && !onInspect && (
-        <span className="small faint mono">#{id}</span>
-      )}
+      {id !== null && !onInspect && <span className="small faint mono">#{id}</span>}
     </div>
   );
-}
-
-/** RAG pasajları `bank/value/source_span` şeklinde gelmeyebilir. */
-function summarize(s: Record<string, unknown>): string {
-  for (const key of ["text", "chunk_text", "passage", "detail"]) {
-    const v = s[key];
-    if (typeof v === "string" && v.trim()) return v.trim();
-  }
-  return JSON.stringify(s);
 }
