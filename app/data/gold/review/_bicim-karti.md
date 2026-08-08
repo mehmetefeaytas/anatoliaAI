@@ -10,21 +10,43 @@
 
 ---
 
-## 1. Üç cümlelik karar kuralı
+## 1. Dört cümlelik karar kuralı (v2 protokolü)
+
+> **DEĞİŞTİ (2026-08-08).** Bu tablo v1 protokolüne göre yazılmıştı: "model
+> doğruysa boş bırak". `round1_*` ve `round2_*` dosyaları artık **v2**
+> protokolündedir (`protokol` sütunu `v2` yazar) ve orada **boş hücre onay
+> değildir**. Eski satır aşağıda arşivde duruyor.
 
 | Durum | verdict | `gold_value` |
 |---|---|---|
-| Modelin değeri doğru | **boş bırak** | **boş bırak** |
+| Modelin değeri doğru | **`ok`** | boş bırak |
+| Model değer üretmemiş, ben de kontrol ettim: yok | **`ok`** | boş bırak |
 | Değer yanlış, doğrusunu biliyorum | `fix` | doğru değer (zorunlu) |
-| Metinde böyle bir değer **yok** | `absent` | **boş bırak** |
+| Metinde böyle bir değer **yok** (model uydurmuş) | `absent` | **boş bırak** |
 | Metin belirsiz, karar veremiyorum | `unclear` | boş bırak |
+| **Bakmadım** | boş bırak | boş bırak |
+
+Son satır v2'nin bütün farkı: **sessizlik artık onay sayılmıyor**, "bakmadım"
+sayılıyor ve o satır gold'a hiç girmiyor (`skipped_undecided`). Gerekçesi
+ölçülmüştür: eski kuralla gold modele çapalandı, aynı sistem 0,677 yerine kör
+protokolde **0,536** ölçüldü (`ANNOTATION_GUIDE.md` §3.1).
+
+<details>
+<summary><b>ARŞİV — v1 satırı (round0 dosyaları için hâlâ geçerli)</b></summary>
+
+> | Modelin değeri doğru | **boş bırak** | **boş bırak** |
+>
+> `round0_kalibrasyon_A..D` dosyaları v1'dir ve bu kuralla doldurulmuştur;
+> yorumları değişmez.
+
+</details>
 
 Üç tuzak, üçü de A dosyasında görüldü:
 
 1. **Doğru değeri `gold_value`'ya tekrar yazmak `fix` sayılır.** Kılavuz §3.2:
-   verdict boş + gold_value dolu → sistem `fix` varsayar. Model doğruysa **iki
-   hücreyi de boş bırakın**; yazdığınız her tekrar, modeli haksız yere yanlış
-   gösterir.
+   verdict boş + gold_value dolu → sistem `fix` varsayar. Model doğruysa
+   `verdict`e **`ok`** yazın, `gold_value`'yu **boş bırakın**; yazdığınız her
+   tekrar, modeli haksız yere yanlış gösterir.
 2. **`absent` + değer birlikte olamaz.** `build_gold.py:142` `absent` görünce
    yazdığınız değeri **sessizce atar** ve modeli halüsinasyon sayar. Değeri
    biliyorsanız kural `fix`'tir. `absent` yalnızca "metinde hiçbir değer yok"
