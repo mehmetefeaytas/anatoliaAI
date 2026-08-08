@@ -22,6 +22,7 @@ güvenlik-dayanıklılık-on-prem · jüri simülasyonu. Ayrıca iki alt denetim
 | Şartname / uyum | **66 / 100** | ağırlıklı toplam |
 | Ölçüm / istatistik | **15 / 30** | Model Başarısı |
 | Güvenlik / on-prem | **13 / 20** | On-Prem |
+| Kod / mimari | **13 / 20** | Teknik İmplementasyon |
 
 İki bağımsız hakem toplamı **62** ve **66** verdi. Ölçüm hakemi Model
 Başarısı'na 15/30, jüri simülasyonu aynı kaleme 15/30 verdi — **birbirinden
@@ -107,7 +108,28 @@ yazmadan. Demo günü tek gerçek donma riski buydu.
 
 Çağrı artık duvar-saati sınırıyla bağlı (`LLM_DEADLINE_CARPANI`).
 
-### 6. Sunumda olmayan bir katman vaat ediliyordu
+### 6. Tutarı bilinmeyen ücret sıralamada 0 TL sayılıyordu
+
+`_numeric_key`, `{"has_fee": True, "amount": None}` değerini **0,0** sayıp
+`comparable=True` işaretliyordu. `masraf_durumu` "düşük daha iyi" alanı
+olduğu için 0,0 sıralamanın **tepesidir**.
+
+Sonuç demonun manşet ekranındaydı: kanıt metninde *"1.000 TL başvuru ücreti
+tahsil edilecektir"* yazan bir kampanya, "En Düşük Masraf" sıralamasında
+gerçekten ücretsiz olanların **önünde**, tek uyarı işareti olmadan.
+Ölçüldü: `sort_key == 0.0` olan 509 satırın **35'i** ücretliydi.
+
+Proje bunun yanlış olduğunu **zaten biliyordu**: ikiz fonksiyon
+`_composite_numeric` tersini yapıyor ve gerekçesini yazıyor — *"sıfır saymak
+'masrafsız' demek olurdu (yalan)"*. İlke doğru yazılmış, tek alanlı yola
+uygulanmamıştı. Üstelik arayüzdeki `FairnessNotice` şeridi tam bu ayrımı
+vaat ediyordu; sistem uyardığı karışıklığı kendisi yapıyordu.
+
+Düzeltmeden sonra 31 kayıt doğru şekilde kıyaslanamaz işaretleniyor. Kök
+neden **ayrışmaydı** — doğru semantik bir yolda kilitli, karşı semantik
+diğerinde serbest. Parite testi ikisini birbirine bağladı.
+
+### 7. Sunumda olmayan bir katman vaat ediliyordu
 
 `docs/pitch_outline.md` — jüri sunumuna giden metin — "çıkarım üç katmanlı:
 kurallar birincil, **GLiNER2 tamamlayıcı**" diyordu. GLiNER kodda **hiç
@@ -177,6 +199,28 @@ büyük ölçüde yayımlamıyor. Ama senaryonun kalp alanı bu, ve ölçülmemi
 sayılır.
 
 ---
+
+### D. Kod/mimari hakeminin üç ek açığı
+
+- **"3 katmanlı mimari" fiilen 2 katman.** `Extractor.NER` hiçbir kod
+  yolunda üretilmiyor; `reconcile._PRIORITY`'nin orta basamağı erişilmez dal.
+  `reconcile.py` başlığı hâlâ "3 katmanı birleştirir" diyor. Dürüst bir
+  2-katman anlatısı, erişilmez bir daldan iyi okunur.
+- **§5.7'nin beşinci ölçütü (bileşik skorlama) yazılmış, test edilmiş,
+  hiçbir uçtan çağrılmıyor** — ~420 satır. Üstelik `/scoring` ucu
+  *"kod tabanında ağırlıklı bileşik skor **yoktur**"* diyerek kendi kodunu
+  yalanlıyor; `DEFAULT_WEIGHTS` gerekçeleriyle o dosyada duruyor.
+- **Postgres paritesi varsayılan koşumda hiç doğrulanmıyor** — 53 testin
+  tamamı atlanıyor, `postgres.py` kapsamı %20,4. Ayrıca `schema.sql`
+  `extractor` için `CHECK` kısıtı taşıyor, `_SQLITE_SCHEMA` taşımıyor.
+
+Aynı hakem test kapsamını ölçtü: toplam **%67,7**, ama kritik yollar gerçekten
+kapsanmış (`extract.py` %96,5, `normalization` %93,3, `safety.py` %92,0,
+`router.py` %95,9). Kapsanmayan alanlar dış servis gerektirenler ve CLI'lar —
+yani "kanıt üretemeyeceğimiz" yerler. Sayı kolay yerlerde şişmemiş.
+
+Ölü kod taraması: 54.000 satırlık ağaçta yalnız 15 sembol çağrılmıyor. Hakem
+bunu *"çok temiz"* diye niteledi.
 
 ## Hakemlerin ortak vurgusu: en güçlü yan ölçüm dürüstlüğü
 
