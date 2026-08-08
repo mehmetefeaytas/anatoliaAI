@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
@@ -89,8 +90,71 @@ class LLMResponse:
     raw: dict = field(default_factory=dict)
 
 
+#: Soket zaman aşımının kaç katı bir DUVAR-SAATİ sınırı uygulanacağı.
+#: `LLM_DEADLINE_CARPANI` ile ayarlanabilir; 0 (veya negatif) sınırı kapatır.
+_DEADLINE_CARPANI_VARSAYILAN = 1.5
+
+
+def _deadline(timeout: float) -> float:
+    try:
+        carpan = float(os.environ.get("LLM_DEADLINE_CARPANI",
+                                      _DEADLINE_CARPANI_VARSAYILAN))
+    except ValueError:                                 # pragma: no cover
+        carpan = _DEADLINE_CARPANI_VARSAYILAN
+    return timeout * carpan if carpan > 0 else 0.0
+
+
 def _urllib_transport(url: str, payload: dict, timeout: float) -> dict:
-    """Varsayılan taşıma: saf stdlib POST. Hataları LLMError'a çevirir."""
+    """Varsayılan taşıma: saf stdlib POST + **duvar-saati sınırı**.
+
+    ## Neden ayrı bir sınır gerekiyor — ölçülmüş donma
+
+    `urlopen(..., timeout=t)` bir SOKET zaman aşımıdır: her `recv` çağrısı
+    için ayrı ayrı işler. Sunucu bağlantıyı açık tutup veri göndermezse
+    (ya da çok yavaş damlatırsa) süre **hiç dolmaz**.
+
+    Ölçüldü (2026-08-08): `build_summaries` koşumu `OLLAMA_TIMEOUT=900`
+    verilmiş olmasına rağmen Ollama'ya **açık bir TCP soketiyle 18 dakika
+    uykuda** bekledi — %0 CPU, log'a tek satır yazmadan. Zaman aşımı
+    tetiklenmedi çünkü tetiklenecek bir `recv` yoktu.
+
+    Demo açısından bu, tek gerçek donma riskiydi: jüri önünde model takılırsa
+    arayüz **süresiz** bekler. Bu yüzden çağrı bir arka plan iş parçacığında
+    koşuyor ve `join(deadline)` ile üstten sınırlanıyor.
+
+    İş parçacığı `daemon`: sınır dolduğunda onu öldüremeyiz (Python'da
+    güvenli bir iptal yok), ama süreç sonlanırken beklemez ve çağıran
+    kontrolü **geri alır**. Sızan iş parçacığı asılı soketle birlikte
+    süreçle ölür.
+    """
+    sinir = _deadline(timeout)
+    if sinir <= 0:                                     # sınır kapatılmış
+        return _urllib_transport_ic(url, payload, timeout)
+
+    kutu: dict[str, Any] = {}
+
+    def _kos() -> None:
+        try:
+            kutu["sonuc"] = _urllib_transport_ic(url, payload, timeout)
+        except BaseException as exc:
+            kutu["hata"] = exc
+
+    th = threading.Thread(target=_kos, daemon=True,
+                          name="llm-transport")
+    th.start()
+    th.join(sinir)
+    if th.is_alive():
+        raise LLMTransportError(
+            f"{url} {sinir:.0f} sn duvar-saati sınırını aştı (soket zaman "
+            f"aşımı {timeout:.0f} sn tetiklenmedi — bağlantı açık ama veri "
+            f"gelmiyor). Sınır: LLM_DEADLINE_CARPANI.")
+    if "hata" in kutu:
+        raise kutu["hata"]
+    return kutu["sonuc"]
+
+
+def _urllib_transport_ic(url: str, payload: dict, timeout: float) -> dict:
+    """Asıl POST. Hataları LLMError'a çevirir."""
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
     req = urllib.request.Request(
         url, data=data, headers={"Content-Type": "application/json"})
