@@ -66,11 +66,45 @@ def _kok_token(terim: str) -> str:
     return toks[0] if toks else ""
 
 
+def _kok_tanisi(terim: str) -> dict:
+    """Kanıt kökünün terimi ne kadar temsil ettiğini ölçer.
+
+    `_tokenize` ŞAPKALI ÜNLÜYÜ (â, î, û) sözcük sınırı sayıyor ve terimleri
+    ortadan bölüyor. Ölçüldü (2026-08-08):
+
+        _tokenize('kâr payı')  -> ['payı']          # 'kâr' TAMAMEN düşüyor
+        _tokenize('vekâlet')   -> ['vek', 'let']
+        _tokenize('müşâreke')  -> ['müş', 'reke']
+        _tokenize('mudârebe')  -> ['mud', 'rebe']
+
+    Sonuç: kanıt kapısı bu terimlerde terimin KENDİSİNİ değil bir HECESİNİ
+    arıyor. `vekâlet` için kök 'vek' — "vekil", "vekaleten", hatta "vektör"
+    kanıt sayılır. Bu, "kapsandı" iddiasını olduğundan güçlü gösterir.
+
+    Kusur `src/chatbot/rag.py::_tokenize`'dadır ve bu betikten DÜZELTİLEMEZ.
+    Düzeltilene kadar en azından GÖRÜNÜR olmalı: sessiz yumuşak kanıt,
+    yanlış kanıttan daha tehlikelidir çünkü kimse sorgulamaz.
+    """
+    toks = _tokenize(terim)
+    kok = toks[0] if toks else ""
+    # Terimin ilk sözcüğü (boşluğa kadar) — kökün onu tam karşılaması beklenir.
+    ilk_sozcuk = terim.split()[0] if terim.split() else terim
+    # Kök, terimin ilk sözcüğünden KISAysa tokenizasyon bölmüş demektir.
+    parcali = bool(kok) and len(kok) < len(ilk_sozcuk.replace("-", ""))
+    return {
+        "kok_token": kok,
+        "token_sayisi": len(toks),
+        # True ise: kanıt kapısı terimin tamamını değil bir parçasını arıyor.
+        "kok_parcali": parcali,
+    }
+
+
 def kapsama(retriever: KeywordRetriever, terim: str, k: int = 3) -> dict:
     """Tek terim için kapsama kararı + kanıt."""
     soru = f"{terim} nedir?"
     pasajlar = retriever.retrieve(soru, k=k)
-    kok = _kok_token(terim)
+    tani = _kok_tanisi(terim)
+    kok = tani["kok_token"]
     kanit = None
     for p in pasajlar:
         ptok = _tokenize(p.get("text") or "")
@@ -84,6 +118,7 @@ def kapsama(retriever: KeywordRetriever, terim: str, k: int = 3) -> dict:
         "kapsandi": kanit is not None,
         # Kanıt URL'si RAPORA GİRER: "kapsandı" iddiası denetlenebilir olmalı.
         "kanit_url": kanit,
+        **tani,
     }
 
 
@@ -99,6 +134,9 @@ def calistir(db: str, min_overlap: int | None = None, k: int = 3) -> dict:
             "min_overlap": r.min_overlap,
             "terim_sayisi": len(satirlar),
             "kapsanan": sum(s["kapsandi"] for s in satirlar),
+            # Kanıtı terimin tamamı yerine bir HECESİ üzerinden kurulan terim
+            # sayısı. 0 olmalı; değilse `kapsanan` olduğundan iyimserdir.
+            "kok_parcali_terim": sum(s["kok_parcali"] for s in satirlar),
             "satirlar": satirlar,
         }
     finally:
@@ -112,12 +150,26 @@ def yazdir(rapor: dict) -> None:
     for s in rapor["satirlar"]:
         isaret = "✓" if s["kapsandi"] else "·"
         kaynak = s["kanit_url"] or "—"
-        print(f"  {isaret} {s['terim']:<16} pasaj={s['pasaj_sayisi']}  {kaynak[:78]}")
+        uyari = " ⚠kök-parçalı" if s["kok_parcali"] else ""
+        print(f"  {isaret} {s['terim']:<16} pasaj={s['pasaj_sayisi']}  "
+              f"{kaynak[:66]}{uyari}")
     eksik = [s["terim"] for s in rapor["satirlar"] if not s["kapsandi"]]
     if eksik:
         print(f"\nKapsanmayan: {', '.join(eksik)}")
         print("  Not: kapsanmama erişim kusuru DA olabilir, veri boşluğu DA. "
               "Terimin korpusta kaç belgede geçtiğine bakmadan karar verilmez.")
+    parcali = [s for s in rapor["satirlar"] if s["kok_parcali"]]
+    if parcali:
+        print(f"\n⚠ Kök-parçalı terim: {rapor['kok_parcali_terim']}/"
+              f"{rapor['terim_sayisi']} — kanıt kapısı terimin TAMAMINI değil "
+              f"bir parçasını arıyor:")
+        for s in parcali:
+            print(f"    {s['terim']:<16} -> aranan kök: '{s['kok_token']}' "
+                  f"({s['token_sayisi']} token)")
+        print("  Neden: _tokenize şapkalı ünlüyü (â/î/û) sözcük sınırı sayıyor.\n"
+              "  Etki: bu terimlerin 'kapsandı' sonucu olduğundan İYİMSERdir.\n"
+              "  Kusurun yeri: src/chatbot/rag.py::_tokenize (bu betikten "
+              "düzeltilemez).")
 
 
 def main(argv: list[str] | None = None) -> int:

@@ -1,114 +1,160 @@
 {
   "db": "data/demo.db",
-  "belge_sayisi": 1761,
+  "belge_sayisi": 1774,
   "min_overlap": 2,
   "terim_sayisi": 15,
   "kapsanan": 14,
+  "kok_parcali_terim": 2,
   "satirlar": [
     {
       "terim": "murabaha",
       "soru": "murabaha nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-musterilerine-ozel-199-oranli-kar-payli-taksitlendirme-firsati"
+      "kanit_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turk-musterilerine-ozel-199-oranli-kar-payli-taksitlendirme-firsati",
+      "kok_token": "murabaha",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "mudaraba",
       "soru": "mudaraba nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri/sukuk"
+      "kanit_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri/sukuk",
+      "kok_token": "mudaraba",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "müşaraka",
       "soru": "müşaraka nedir?",
       "pasaj_sayisi": 0,
       "kapsandi": false,
-      "kanit_url": null
+      "kanit_url": null,
+      "kok_token": "müşaraka",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "icare",
       "soru": "icare nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/diger-dis-ticaret-islem-ve-odemeleri/turk-eximbank-faizsiz-finansman-urunlerine-yonelik-teminat-mektubu"
+      "kanit_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/diger-dis-ticaret-islem-ve-odemeleri/turk-eximbank-faizsiz-finansman-urunlerine-yonelik-teminat-mektubu",
+      "kok_token": "icare",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "sukuk",
       "soru": "sukuk nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/medium/sermaye-piyasasi-islemleri-komisyon-ve-ucret-tarif-3857.pdf"
+      "kanit_url": "https://www.kuveytturk.com.tr/medium/sermaye-piyasasi-islemleri-komisyon-ve-ucret-tarif-3857.pdf",
+      "kok_token": "sukuk",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "istisna",
       "soru": "istisna nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/diger-dis-ticaret-islem-ve-odemeleri/turk-eximbank-faizsiz-finansman-urunlerine-yonelik-teminat-mektubu"
+      "kanit_url": "https://www.kuveytturk.com.tr/isim-icin/dis-ticaret/diger-dis-ticaret-islem-ve-odemeleri/turk-eximbank-faizsiz-finansman-urunlerine-yonelik-teminat-mektubu",
+      "kok_token": "istisna",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "karz-ı hasen",
       "soru": "karz-ı hasen nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/dijital-musterilere-ozel-pratik-finansman-kart"
+      "kanit_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/dijital-musterilere-ozel-pratik-finansman-kart",
+      "kok_token": "karz",
+      "token_sayisi": 2,
+      "kok_parcali": true
     },
     {
       "terim": "vekâlet",
       "soru": "vekâlet nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/bayide-finansman-ihtiyac---aracilik-ve-garantorluk-sozlesmesi-(komisyonsuz).pdf"
+      "kanit_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/teverruk.pdf",
+      "kok_token": "vek",
+      "token_sayisi": 2,
+      "kok_parcali": true
     },
     {
       "terim": "muacceliyet",
       "soru": "muacceliyet nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/medium/banka-karti-ve-kredi-karti-talep-ve-bilgi-formu-391.pdf"
+      "kanit_url": "https://www.kuveytturk.com.tr/medium/banka-karti-ve-kredi-karti-talep-ve-bilgi-formu-391.pdf",
+      "kok_token": "muacceliyet",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "tekafül",
       "soru": "tekafül nedir?",
       "pasaj_sayisi": 1,
       "kapsandi": true,
-      "kanit_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/genel-kredi-sozlesmesi.pdf"
+      "kanit_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/qr/genel-kredi-sozlesmesi.pdf",
+      "kok_token": "tekafül",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "katılma hesabı",
       "soru": "katılma hesabı nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/medium/sermaye-piyasasi-islemleri-komisyon-ve-ucret-tarif-3856.pdf"
+      "kanit_url": "https://www.kuveytturk.com.tr/medium/sermaye-piyasasi-islemleri-komisyon-ve-ucret-tarif-3856.pdf",
+      "kok_token": "katılma",
+      "token_sayisi": 2,
+      "kok_parcali": false
     },
     {
       "terim": "kâr payı",
       "soru": "kâr payı nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/ihracatta-yuzunuzu-guldurecek-uygun-oranli-ihracat-tesvikli-tl-finansmani-kuveyt-turkte2"
+      "kanit_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bisiklet-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-orani-firsati",
+      "kok_token": "payı",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "teverruk",
       "soru": "teverruk nedir?",
       "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/Sayfalar/default.aspx"
+      "kanit_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/teverruk.pdf",
+      "kok_token": "teverruk",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "selem",
       "soru": "selem nedir?",
-      "pasaj_sayisi": 2,
+      "pasaj_sayisi": 3,
       "kapsandi": true,
-      "kanit_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/Sayfalar/default.aspx"
+      "kanit_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/selem.pdf",
+      "kok_token": "selem",
+      "token_sayisi": 1,
+      "kok_parcali": false
     },
     {
       "terim": "vaad",
       "soru": "vaad nedir?",
       "pasaj_sayisi": 1,
       "kapsandi": true,
-      "kanit_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/katilma-hesaplari/eli-bol-hesap"
+      "kanit_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/katilma-hesaplari/eli-bol-hesap",
+      "kok_token": "vaad",
+      "token_sayisi": 1,
+      "kok_parcali": false
     }
   ]
 }
