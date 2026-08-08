@@ -62,9 +62,32 @@ def _numeric_key(field_name: str, value: Any) -> tuple[Optional[float], bool, Op
             return None, False, f"farklı para birimi ({cur})"
         return float(value["value"]), True, None
     # masraf: {"has_fee":, "amount":}
+    #
+    # `has_fee=True, amount=None` SIFIR SAYILMAZ. Eskiden sayılıyordu ve
+    # `masraf_durumu` "düşük daha iyi" alanı olduğu için 0,0 sıralamanın
+    # TEPESİYDİ: kanıt metninde "1.000 TL başvuru ücreti tahsil edilecektir"
+    # yazan bir kampanya, "En Düşük Masraf" ekranında gerçekten ücretsiz
+    # olanların ÖNÜNDE, tek bir uyarı işareti olmadan görünüyordu.
+    # Ölçüldü (2026-08-08): `sort_key == 0.0` olan 509 satırın **35'i**
+    # ücretliydi; korpusta bu kalıptan 39 kayıt var.
+    #
+    # İkiz fonksiyon `_composite_numeric` bunu ZATEN doğru yapıyordu ve
+    # gerekçesini de yazmıştı: *"sıfır saymak 'masrafsız' demek olurdu
+    # (yalan), popülasyonun en kötüsünü atamak ise değer uydurmak olurdu."*
+    # İlke doğru yazılmış, tek alanlı yola uygulanmamıştı — ve `rank()`
+    # dashboard ile chatbot'un kullandığı yoldur.
+    #
+    # Arayüzdeki `FairnessNotice` şeridi tam bu ayrımı vaat ediyor:
+    # "Bilgi gerçekten yoksa hücre — gösterir ve satır kıyaslanamaz
+    # işaretlenir; ikisi karıştırılmamalıdır." Sistem uyardığı karışıklığı
+    # kendisi yapıyordu.
     if isinstance(value, dict) and "has_fee" in value:
+        if value.get("has_fee") is False:
+            return 0.0, True, None
         amt = value.get("amount")
-        return (float(amt) if amt is not None else 0.0), True, None
+        if amt is None:
+            return None, False, "ücret var, tutarı belirtilmemiş"
+        return float(amt), True, None
     if isinstance(value, (int, float)):
         return float(value), True, None
     return None, False, "sayısal değil"
