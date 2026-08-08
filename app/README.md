@@ -3,7 +3,7 @@
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Testler](https://img.shields.io/badge/testler-1615%20ye%C5%9Fil-brightgreen.svg)](tests/)
-[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-849%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1774%20belge%20%C2%B7%201%20ihlal-yellow.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
 (Bilişim Vadisi). Türkiye'deki katılım bankalarının kampanya/ürün metinlerinden
@@ -144,7 +144,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 |---|---|
 | Korpus | **1.774 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
 | Testler | ✅ **1.615 test yeşil**, ağ gerektirmeden koşuyor |
-| Değişmez (invariant) denetimi | ✅ **849 belgede 0 ihlal** — etiketsiz veride otomatik hata avı (`python -m eval.properties`) |
+| Değişmez (invariant) denetimi | ⚠️ **1.774 belgede 1 ihlal** (`P4_cumle_sirasi`, kapsam %91,3) — etiketsiz veride otomatik hata avı (`python -m eval.properties`). Eski "849 belgede 0 ihlal" rozeti korpus büyüyünce geçersizleşti |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
@@ -187,9 +187,16 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
   kaynaklı: v1'de anotatör modelin çıktısını onaylayarak etiketledi
   (`ANNOTATION_GUIDE.md` §3.1, eski kural), v2 ise **kör** etiketlendi.
   0,677 tek başına sunulmaz — ikisi birlikte sunulur.
-- Farkın ~%57'si tek bir alandan geliyor: `kampanya_kosullari` serbest metin
-  **liste** alanı ve birebir eşleşmede F1 = 0,000. Kabiliyet çöküşü değil,
-  eşleştirici sertliği.
+- Farkın ~%57'si tek bir alandan geliyor: `kampanya_kosullari` F1 = **0,000**
+  (TP 0, FP 36, FN 33). **Bu bir ölçüm tasarımı kusurudur, "eşleştirici
+  sertliği" değil** — `tolerant` eşleştirici de tam olarak 0,000 veriyor,
+  birebir aynı TP/FP/FN ile. Sebep `eval/matchers.py` liste karşılaştırmasının
+  **küme eşitliği** araması: beş koşuldan dördü tutsa bile sonuç FP+FN.
+  33 belgenin **hiçbirinde** tam küme eşleşmesi yok.
+  Yani sistem bu alanda ölçüldüğünden iyi olabilir ama **bugünkü metrik bunu
+  gösteremiyor**; kalem düzeyinde kısmi kredi verecek bir puanlama gerekiyor
+  (açık iş). Manşet sayının ~%28'i bu tek alanın ölçülemez tasarımından
+  geliyor.
 
 > **Senaryonun kalp alanı yeterince ölçülmedi.** `kar_payi_orani` gold.v2'de
 > yalnız **3 karar** destekli (TP 1, FN 2). Oradan çıkan F1 = 0,500
@@ -208,7 +215,7 @@ Bu projede "daha güçlü model ekleyelim" refleksi **üç kez** denendi ve
 | deneme | sonuç |
 |---|---|
 | Hibrit kol (LLM boşlukları doldurur) | 0,575 vs kural 0,677; halüsinasyon %70 fazla |
-| Orkestrasyon (ajan önerir, hakem reddeder) | 0,377 vs kural 0,387; McNemar p=0,039, **kazanan kural** |
+| Orkestrasyon (ajan önerir, hakem reddeder) | 0,377 vs kural 0,387; üç ölçütte de kural önde. McNemar yönü kuralı gösteriyor (ham p=0,039) ama **çoklu karşılaştırma düzeltmesi yapılmadı** — projede ≥18 test koşuldu, bu p tek başına kanıt sayılmamalı |
 | BERTurk ince ayarı (8 sınıf) | makro-F1 0,565 vs kural 0,762 — kabul kapısında **kaldı**, projeye alınmadı |
 
 Mekanizma üçünde de aynı: LLM doğru sayısını artırmıyor, yanlış sayısını
