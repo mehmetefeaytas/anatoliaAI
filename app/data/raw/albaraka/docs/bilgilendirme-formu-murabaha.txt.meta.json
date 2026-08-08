@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/murabaha.pdf",
+  "scraped_at": "2026-08-08T09:59:41+00:00",
+  "content_hash": "477df4b39bb06c36810bea6aada51c02b1789421ab1bc30ab8a0fa7613f1b6e5",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu murabaha",
+  "http_status": 200,
+  "raw_bytes": 217265,
+  "text_chars": 4331,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

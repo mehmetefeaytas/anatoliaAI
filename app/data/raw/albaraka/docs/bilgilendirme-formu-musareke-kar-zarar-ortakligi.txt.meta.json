@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/musareke_-kar_zarar_ortakligi.pdf",
+  "scraped_at": "2026-08-08T09:59:32+00:00",
+  "content_hash": "5787f0a7fc010e5dc3af50e2caf2797f2ec474ea583f8a4014f3b4d884890756",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu musareke kar zarar ortakligi",
+  "http_status": 200,
+  "raw_bytes": 212622,
+  "text_chars": 3230,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 1
+}

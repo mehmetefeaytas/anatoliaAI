@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/tevliye.pdf",
+  "scraped_at": "2026-08-08T09:59:47+00:00",
+  "content_hash": "6983e1acbec7398d8a8173024f676c8d4d525be624e8af9d0f064edd885e3011",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu tevliye",
+  "http_status": 200,
+  "raw_bytes": 221504,
+  "text_chars": 4715,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

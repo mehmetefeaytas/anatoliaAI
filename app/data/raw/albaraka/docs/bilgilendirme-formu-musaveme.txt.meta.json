@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/musaveme.pdf",
+  "scraped_at": "2026-08-08T09:59:50+00:00",
+  "content_hash": "59e3b166f948f9bccc1270dc259e54655227cf61ea8a673a88c600b28b973f59",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu musaveme",
+  "http_status": 200,
+  "raw_bytes": 216660,
+  "text_chars": 3433,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

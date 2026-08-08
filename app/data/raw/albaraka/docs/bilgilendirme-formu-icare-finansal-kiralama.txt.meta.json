@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/icara_-finansal_kiralama.pdf",
+  "scraped_at": "2026-08-08T09:59:58+00:00",
+  "content_hash": "6579481d23d97c3c09a8eba7271b39c9e13353ed9f092ad304805db20c0d49ba",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu icare finansal kiralama",
+  "http_status": 200,
+  "raw_bytes": 218563,
+  "text_chars": 4938,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}

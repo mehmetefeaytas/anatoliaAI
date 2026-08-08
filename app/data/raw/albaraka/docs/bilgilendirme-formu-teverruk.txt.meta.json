@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/teverruk.pdf",
+  "scraped_at": "2026-08-08T09:59:37+00:00",
+  "content_hash": "43dbbb7da0738f73f663285fc7a6bda9ab3b19e62b1cde950be2220beae694a2",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu teverruk",
+  "http_status": 200,
+  "raw_bytes": 212867,
+  "text_chars": 2736,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 1
+}

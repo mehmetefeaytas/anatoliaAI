@@ -1,0 +1,13 @@
+{
+  "bank_slug": "tkbb",
+  "source_url": "https://tkbbegitim.org.tr/tr/sayfa/faizsiz-finans-urunleri-99",
+  "scraped_at": "2026-08-08T09:59:31+00:00",
+  "content_hash": "9651263463e1caaa28a71da41271ecc62fc95375ff1b63327a8b6c5ca4b7d69e",
+  "collection_method": "static",
+  "title": "Faizsiz Finans Ürünleri - Türkiye Katılım Bankaları Birliği Eğitim Portalı",
+  "http_status": 200,
+  "raw_bytes": 33875,
+  "text_chars": 10765,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)"
+}

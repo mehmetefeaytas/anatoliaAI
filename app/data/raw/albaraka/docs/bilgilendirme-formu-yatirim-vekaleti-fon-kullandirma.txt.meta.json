@@ -1,0 +1,14 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/katilim-bankaciligi-bilgilendirme-formu/yatirim_vekaleti_-fon_kullandirma.pdf",
+  "scraped_at": "2026-08-08T09:59:56+00:00",
+  "content_hash": "506bef065131ca07e8693cb6bdb7a96ef2a210228da451fe0ed234a38ce89480",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu yatirim vekaleti fon kullandirma",
+  "http_status": 200,
+  "raw_bytes": 214717,
+  "text_chars": 3603,
+  "robots_decision": "izin",
+  "user_agent": "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)",
+  "pdf_pages": 2
+}
