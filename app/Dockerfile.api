@@ -16,11 +16,17 @@ COPY requirements-api.txt .
 RUN pip install --no-cache-dir -r requirements-api.txt
 
 # Offline / telemetri kapalı: konteyner hiçbir dış servise ulaşmaya çalışmaz.
+#
+# Buradaki dört değişken KÜTÜPHANELERİN GERÇEKTEN OKUDUĞU değişkenlerdir
+# (`huggingface_hub`, `transformers`). Eskiden yanlarında bir de
+# `ANATOLIA_OFFLINE=1` duruyordu; repoda **hiçbir yerde okunmuyordu**, yani
+# offline olduğumuza dair sahte bir sinyaldi. Kaldırıldı — çevrimdışılığın
+# gerçek zorlaması bu dört değişken ve koddaki `local_files_only=True`
+# çağrılarıdır (`src/rag/embedding.py`, `src/extraction/ner/classifier.py`).
 ENV HF_HUB_OFFLINE=1 \
     TRANSFORMERS_OFFLINE=1 \
     HF_HUB_DISABLE_TELEMETRY=1 \
     HF_HUB_DISABLE_UPDATE_CHECK=1 \
-    ANATOLIA_OFFLINE=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 

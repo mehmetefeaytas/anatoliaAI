@@ -99,7 +99,19 @@ class BerturkClassifier:
             return
         try:
             from transformers import pipeline  # type: ignore
-            self._pipe = pipeline("text-classification", model=md, top_k=1)
+            # `local_files_only=True` KOŞULSUZ: `md` yukarıda `os.path.isdir`
+            # ile doğrulanmış YEREL bir dizin, dolayısıyla hub'a çıkmak için
+            # hiçbir meşru sebep yok. Bayrak olmadan `transformers`, eksik bir
+            # yardımcı dosya için (tokenizer, config) **sessizce ağa çıkar** —
+            # çevrimdışı makinede bu, yükleme anında değil ÇALIŞMA ANINDA
+            # patlar. `src/rag/embedding.py:102` aynı korumayı zaten
+            # uyguluyordu; burada atlanmıştı.
+            #
+            # Konteynerde `HF_HUB_OFFLINE=1` + `TRANSFORMERS_OFFLINE=1` bunu
+            # ayrıca zorluyor (`Dockerfile.api`), ama kod konteyner dışında da
+            # koşuyor ve doğruluğu ortam değişkenine bağlı olmamalı.
+            self._pipe = pipeline("text-classification", model=md, top_k=1,
+                                  model_kwargs={"local_files_only": True})
             logger.info("BERTurk yüklendi: %s", md)
         except Exception as exc:
             # Geniş yakalama bilinçli: eksik `transformers`, bozuk ağırlık,

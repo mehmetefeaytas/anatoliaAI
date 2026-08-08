@@ -1,0 +1,40 @@
+Anatolia AI
+Copyright 2026 Anatolia AI
+
+Bu ürün Apache License 2.0 altında dağıtılmaktadır (bkz. LICENSE).
+
+TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
+(Bilişim Vadisi yürütücülüğünde) için geliştirilmiştir.
+
+------------------------------------------------------------------------
+Üçüncü taraf model ağırlıkları
+------------------------------------------------------------------------
+
+Bu depo model ağırlığı DAĞITMAZ. Aşağıdaki modeller çalışma zamanında
+yerel olarak yüklenir; lisansları kendi sağlayıcılarına aittir. Tam
+denetim ve `base_model` zinciri: docs/model-license-audit.md
+
+  * Qwen2.5-7B-Instruct — Apache-2.0 (Alibaba Cloud)
+    zincir: Qwen2.5-7B-Instruct -> Qwen2.5-7B -> kök
+
+  * Trendyol-LLM-8B-T1 — Apache-2.0 (Trendyol)
+    zincir: Qwen3-8B-Base -> Qwen3-8B -> Trendyol-LLM-8B-T1
+
+  * dbmdz/bert-base-turkish-cased (BERTurk) — MIT (Bayerische
+    Staatsbibliothek / MDZ Digital Library)
+    zincir: kök model (taban beyanı yok)
+
+  * BAAI/bge-m3 — MIT (Beijing Academy of Artificial Intelligence)
+
+Projenin lisans kısıtı gereği YALNIZCA Apache-2.0 ve MIT lisanslı
+ağırlıklar kullanılır. Gemma ve Llama community license altındaki
+modeller bilinçli olarak reddedilmiştir.
+
+------------------------------------------------------------------------
+Veri
+------------------------------------------------------------------------
+
+data/raw/ altındaki metinler Türkiye'deki katılım bankalarının kamuya
+açık web sayfalarından, robots.txt kurallarına uyularak ve kaynak adresi
+ile toplama zamanı kaydedilerek derlenmiştir. Telif hakkı ilgili
+kurumlara aittir; burada yalnızca araştırma amacıyla saklanmaktadır.
