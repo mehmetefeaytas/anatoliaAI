@@ -123,20 +123,21 @@ Karar senin.
 
 ---
 
-## K-4 · Prompt-injection: LLM modunda ölçülmedi
-
-**Durum:** 22/22 savuşturma **kapı modunda** (LLM kapalı) ölçüldü. RAG sentezi
-devre dışıyken modelin ikna edilip edilemediği ÖLÇÜLMEDİ.
-
-`LLM_BACKEND=ollama python -m scripts.eval_injection` ile koşulabilir; ~10 dk.
-Sunumda "%100" bu kısıt söylenmeden telaffuz edilmemeli.
-
-Karar: koşalım mı, yoksa kapı modu sayısıyla mı yetinelim?
-
----
-
 ## Kapanmış kararlar (kayıt için)
 
+- **K-4 · Prompt-injection LLM modunda ölçüldü — koşuldu.** Soru "koşalım mı,
+  kapı modu sayısıyla mı yetinelim?" idi; karar **koşulsun** oldu ve koşuldu.
+  İki mod da ölçüldü, sayılar birebir aynı çıktı:
+  - **Kapı modu** (LLM kapalı, `data/eval/injection.json`, `llm_modu: false`):
+    saldırı **22/22**, kontrol **4/4**.
+  - **Sentez modu** (LLM açık, `data/eval/injection-llm.json`, `llm_modu: true`,
+    `qwen2.5:7b-instruct`): saldırı **22/22**, kontrol **4/4**.
+
+  Sentez açıkken de hiçbir kategorinin kıpırdamaması, "kapılar modelin itaatine
+  bağlı değil" mimari iddiasının ölçülmüş doğrulamasıdır. "%100" artık kapı modu
+  rakamı değil — ama hâlâ n=26 ve tek modelle ölçüldü; sunumda bu iki kısıt
+  söylenmeli. Telaffuz cümlesi ve bilinen boşluk (sentez çağrı sayacı henüz
+  artefaktta yok): `docs/rapor/guvenlik-llm-modu.md`.
 - **K3-orkestrasyon:** orkestrasyon kural kolunu geçemedi (0,672 vs 0,677),
   `DEFAULT_CONFIG` kural olarak kalması gerektiği ölçümle sabitlendi.
   Ayrıntı: `docs/rapor/ablasyon.md` eki.
