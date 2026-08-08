@@ -1,12 +1,12 @@
 {
   "db_path": "/Users/mehmetefeaytas/anatoliaaI/app/data/demo.db",
-  "db_bytes": 23089152,
-  "elapsed_s": 67.04,
+  "db_bytes": 23314432,
+  "elapsed_s": 22.06,
   "mode": "corpus",
-  "documents_loaded": 1761,
+  "documents_loaded": 1774,
   "docs_per_bank": {
     "kuveyt-turk": 533,
-    "albaraka": 217,
+    "albaraka": 228,
     "turkiye-finans": 92,
     "ziraat-katilim": 291,
     "vakif-katilim": 197,
@@ -14,36 +14,38 @@
     "tom-katilim": 15,
     "hayat-finans": 48,
     "dunya-katilim": 123,
-    "adil-katilim": 6
+    "adil-katilim": 6,
+    "tkbb": 2
   },
   "campaigns_per_bank": {
     "kuveyt-turk": 533,
     "ziraat-katilim": 291,
     "turkiye-emlak-katilim": 239,
-    "albaraka": 217,
+    "albaraka": 228,
     "vakif-katilim": 197,
     "dunya-katilim": 123,
     "turkiye-finans": 92,
     "hayat-finans": 48,
     "tom-katilim": 15,
-    "adil-katilim": 6
+    "adil-katilim": 6,
+    "tkbb": 2
   },
   "counts": {
-    "banks": 10,
-    "banks_with_campaigns": 10,
-    "campaigns": 1761,
-    "fields": 5450,
-    "campaigns_with_fields": 1607
+    "banks": 11,
+    "banks_with_campaigns": 11,
+    "campaigns": 1774,
+    "fields": 5468,
+    "campaigns_with_fields": 1619
   },
   "belge_turu_dagilimi": {
     "kampanya": 1648,
-    "sozlesme": 113,
+    "sozlesme": 126,
     "bilinmeyen": 0
   },
   "field_coverage_kiyas": {
     "kampanya_kosullari": 1249,
     "kampanya_suresi": 900,
-    "vade_ay": 623,
+    "vade_ay": 617,
     "masraf_durumu": 542,
     "taksit_sayisi": 404,
     "odul_miktari": 384,
@@ -55,10 +57,10 @@
     "tahsis_ucreti": 29
   },
   "field_coverage": {
-    "kampanya_kosullari": 1347,
-    "kampanya_suresi": 925,
-    "vade_ay": 659,
-    "masraf_durumu": 626,
+    "kampanya_kosullari": 1356,
+    "kampanya_suresi": 937,
+    "vade_ay": 653,
+    "masraf_durumu": 629,
     "taksit_sayisi": 409,
     "odul_miktari": 397,
     "hedef_kitle": 387,
@@ -69,7 +71,7 @@
     "tahsis_ucreti": 33
   },
   "fields_by_extractor": {
-    "rule": 5450
+    "rule": 5468
   },
   "contradiction_count": 6,
   "contradictions_by_kind": {
