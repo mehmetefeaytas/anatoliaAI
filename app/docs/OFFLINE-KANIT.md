@@ -468,13 +468,61 @@ Ayrıntılı tablo ve profil kırılımı: [`kaynak-tuketimi.md`](kaynak-tuketim
 
 ---
 
+## 0-b. TAZELİK UYARISI (2026-08-08)
+
+Bu belgedeki koşum **31 Temmuz 2026**'da yapıldı. O tarihten bu yana depo
+136 commit ilerledi; belgedeki bazı sayılar o günün fotoğrafıdır ve
+**bugünkü sistemle örtüşmez**:
+
+| belgede | bugün |
+|---|---|
+| 607 test | **1.610 test** |
+| 849 belge | **1.774 belge** |
+| gold 3 kayıt | **66 tekil belge** (v1 n=20 + v2 n=48, 2 örtüşme) |
+| `app/models/` yok | **var** (BERTurk, bkz. §9) |
+
+**Kanıtın kendisi (14/14 adım, `--network none`, pozitif + negatif kontrol)
+geçerliliğini korur** — ölçülen şey API konteynerinin ağsız davranışıdır ve
+o katmanda mimari değişmedi. Ama sayılar güncellenmeden jüriye sunulmamalı;
+en doğrusu teslimden önce `scripts/offline_proof.sh`'i **temiz ağaçta**
+yeniden koşmaktır (o koşumda ağaç kirliydi, transkript bunu kaydediyor).
+
+**Kapsam sınırı — sunumda açıkça söylenmeli:** kanıt yalnız **API
+konteynerini** kapsıyor. `docker compose up` tam yığını (Postgres, web,
+vLLM, Ollama) ağsız denenmedi. Ayrıca **imaj derlemesi internet
+gerektiriyor** (`pip install`, `npm ci`): "internetsiz çalışır" iddiası
+**önceden derlenmiş imajlarla** doğrudur. Bu boşluğu jüri kendisi bulursa
+kaybedilen bir puan değil, belgenin geri kalanına duyulan güven olur.
+
+---
+
 ## 9. Ağırlık bütünlüğü (model ağırlıkları)
 
-**`⏳ KOŞTURULMADI — sebep: bu ortamda model ağırlıkları indirilmedi.`**
+**`◐ KISMEN KOŞTURULDU (güncelleme: 2026-08-08).`**
 
-`app/models/` dizini repoda **yok** ve bu makinede oluşturulmadı. Ağırlıklar
-onlarca GB'dır, git'e girmez ve GPU olmadan doğrulanmalarının pratik faydası
-yok. Aşağıdaki tablo **boş bırakılmıştır** — uydurma SHA-256 yazılmadı.
+Bu bölüm 31 Temmuz'da yazıldığında `app/models/` dizini gerçekten yoktu.
+**Artık var:** BERTurk 8 Ağustos'ta yerelde (Apple Silicon / MPS) ince
+ayarlandı ve ağırlığı diskte duruyor. Doğrulandı:
+
+| Bileşen | Repo ID | Dosya | Boyut | SHA-256 | Durum |
+|---|---|---|---|---|---|
+| BERTurk 8-sınıf (ince ayarlı) | `dbmdz/bert-base-turkish-cased` tabanlı | `models/berturk-kampanya-8sinif/model.safetensors` | 442,5 MB | `2c9e3af2410d835a479c7e33b033c01535247bef63ad49f1c436548985eb1a5d` | ✅ künye ile **eşleşiyor** |
+
+Hash `models/berturk-kampanya-8sinif/KUNYE.json` içindeki kayıtla birebir
+tutuyor (2026-08-08'de yeniden hesaplanarak doğrulandı). Ağırlık git'e
+**girmiyor** (`.gitignore`), tekrar üretimi `scripts/train_berturk.py`
+(tohum 42, katmanlı %70/%15/%15 bölme).
+
+> **Not:** bu model **teslim sisteminde KULLANILMIYOR.** Kabul kapısında
+> kaldı (gold makro-F1 0,565 vs kural temel çizgisi 0,762, `KUNYE.json`
+> `"kabul_kapisi": "KALDI"`), dolayısıyla `docker-compose.yml` içinde
+> `BERTURK_MODEL_DIR` bilinçli olarak set edilmiyor ve `Dockerfile.api`
+> `models/` dizinini kopyalamıyor. Ağırlığın burada listelenmesi bütünlük
+> kaydı içindir, kullanım beyanı değildir.
+
+Aşağıdaki tablodaki **diğer** bileşenler (vLLM/Ollama LLM ağırlıkları,
+bge-m3) bu ortamda indirilmedi; onlar için satırlar **boş bırakılmıştır** —
+uydurma SHA-256 yazılmadı.
 
 | Bileşen | Repo ID | Revizyon (commit) | Dosya | SHA-256 |
 |---|---|---|---|---|
