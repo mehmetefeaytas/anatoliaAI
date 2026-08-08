@@ -54,3 +54,19 @@ Metrik hesabının DIŞINDA tutulur.
 | `turkiye-finans--konut-finansmani-konut-finansmani` | `tahsis_ucreti` |
 | `vakif-katilim--detay-dijitalden-musteri-ol-hisse-senedi-islemlerinde-75-komisyon-indirimi-kazan` | `taksit_sayisi` |
 | `vakif-katilim--detay-espressolab-hediye-kahve-kampanyasi` | `taksit_sayisi` |
+
+---
+
+## Çapa yenilendi (2026-08-08)
+
+`gold.v1.json.sha256` bu tarihe kadar **eskimişti**: dosya `da02e22`
+commit'inde değişti (iki anotasyon hatası hakemlikle düzeltildi,
+`kampanya_suresi` F1 0,667 → 1,000) ama çapa yeniden üretilmedi. Yani
+bütünlük kontrolü aylardır kırık geçiyordu ve dışarıdan kimse gold'un
+değişmediğini doğrulayamazdı.
+
+Çapa şimdi güncel içerikten yeniden üretildi. Bu belgedeki bazı sayılar
+(hakemlik bekleyen kayıt sayısı gibi) o değişiklikten önceki hâli yansıtır;
+kanonik sayı için `data/gold/gold.v1.json` esastır.
+
+**Ayrıca:** `gold.v2.json` için hiç sha256 çapası yoktu. Eklendi.

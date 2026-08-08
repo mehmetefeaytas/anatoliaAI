@@ -92,10 +92,39 @@ def ayriklik_kapisi(kayitlar: list[dict], v1_yolu: str) -> list[str]:
             hatalar.append(f"content_hash {h!r} {n} kez geçiyor (parçalar çakışmış)")
     p = Path(v1_yolu)
     if p.is_file():
-        v1 = {x.get("content_hash") for x in json.loads(p.read_text(encoding="utf-8"))}
+        v1_kayitlar = json.loads(p.read_text(encoding="utf-8"))
+        # `content_hash` ÜZERİNDEN KARŞILAŞTIRMA YAPILMAZ — kapı böyle kördü.
+        #
+        # Ölçüldü (2026-08-08): gold.v2'nin 48/48 kaydında
+        # `content_hash == sha256(text)`, gold.v1'in ise **0/20**'sinde. v1
+        # hash'i başka bir şeyden (muhtemelen ham HTML) türetilmiş. İki hash
+        # uzayı karşılaştırılamaz olduğu için kapı YAPISAL OLARAK her zaman
+        # "kesişim yok" döndürüyordu.
+        #
+        # Gerçekte iki belge örtüşüyordu — aynı `id`, **bayt bayt aynı**
+        # `text` (`kuveyt-turk--leasing-…` 1822 krk,
+        # `albaraka--tasit-finansmani-togg-finansmani` 2528 krk) — ve sessizce
+        # geçti. Sonuç: ölçüm seti 20+48=68 diye raporlandı, gerçekte **66**
+        # tekil belge.
+        #
+        # Bu, projede ikinci kez görülen "anahtar uzayı ayrıştı, kapı sessizce
+        # geçti" kusurudur; ilki gold `id` kuralının `abs(hash(url))`e
+        # kaymasıydı (bkz. `sample_gold_v2._korpus_kimlikleri`). Bu yüzden
+        # karşılaştırma artık **içeriğin kendisi** üzerinden yapılıyor:
+        # metin türetilmiş bir anahtar değil, belgenin ta kendisidir.
+        v1_metin = {x.get("text") for x in v1_kayitlar if x.get("text")}
+        v1_id = {x.get("id") for x in v1_kayitlar if x.get("id")}
         for k in kayitlar:
-            if k.get("content_hash") in v1:
-                hatalar.append(f"{k.get('id')}: gold.v1 ile AYNI belge")
+            if k.get("text") in v1_metin:
+                hatalar.append(
+                    f"{k.get('id')}: gold.v1 ile AYNI belge (metin birebir)")
+            elif k.get("id") in v1_id:
+                # Metin farklı ama kimlik aynı: aynı sayfanın iki çekimi.
+                # Ayrı bir hata sınıfı — n'i şişirmez ama bağımsızlık varsayımını
+                # zedeler (aynı sayfa iki kez ölçüme girer).
+                hatalar.append(
+                    f"{k.get('id')}: gold.v1 ile AYNI KİMLİK (metin farklı — "
+                    "aynı sayfanın iki çekimi olabilir)")
     return hatalar
 
 

@@ -1,4 +1,4 @@
-# Ölçüm setini genişletme — n=20'den n=68'e
+# Ölçüm setini genişletme — n=20'den n=66'ya
 
 **Durum:** aday havuzu üretildi ve anotasyon koştu. Sonuç bölümü ölçüm
 bittikçe doldurulur.
@@ -32,7 +32,14 @@ Adil Katılım (6) ölçümde **hiç temsil edilmiyordu**.
 
 ### Örnekleme (`scripts/sample_gold_v2.py`)
 
-- **48 yeni belge**, gold.v1'in 20'sine EK. Toplam **n=68** (3,4×).
+- **48 yeni belge**, gold.v1'in 20'sine EK. Toplam **n=66** (3,3×).
+  *Düzeltme (2026-08-08):* önce 68 diye raporlandı. İki belge iki sette
+  de var — aynı `id`, **bayt bayt aynı metin**
+  (`kuveyt-turk--leasing-…`, `albaraka--tasit-finansmani-togg-finansmani`).
+  Ayrıklık kapısı `content_hash` karşılaştırdığı için göremedi: v2'nin
+  48/48 kaydında `content_hash == sha256(text)`, v1'in **0/20**'sinde.
+  İki hash uzayı karşılaştırılamazdı, kapı hep 'kesişim yok' diyordu.
+  Kapı artık metnin kendisini karşılaştırıyor ve ikisini de yakalıyor.
 - Tabakalı: 8 kampanya türü + sınıflandırılmamışlar; tür başına ~5 belge.
 - Banka çeşitliliği gözetilir — **10 bankanın hepsi** temsil ediliyor.
 - `content_hash` ile gold.v1'den ayrık: aynı belge iki kez ölçülmez.

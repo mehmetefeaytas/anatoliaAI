@@ -117,7 +117,7 @@ span'i varsa blok otomatik açılıyor; kanıt gizlenemiyor.
 - RAG terim kapsaması **4/15 → 14/15** (korpus tazelendi + erişim eşiği oransal oldu)
 - Gecikme cezası maddesinden kâr payı oranı çıkarma hatası kapatıldı (**15 → 1**)
 - `demo.db` yeniden kuruldu: **849 → 1761 belge**
-- Ölçüm seti **n=20 → n=68**'e çıktı; K-1 geniş sette tekrarlandı ve
+- Ölçüm seti **n=20 → n=66**'ya çıktı (önce 68 sanılmıştı; iki belge örtüşüyordu); K-1 geniş sette tekrarlandı ve
   n=20'deki F1 kazancının gürültü olduğu, halüsinasyon kazancının gerçek
   olduğu ayrıştı
 - **gold.v1'in 0,677'si çapa etkisi taşıyor** — kılavuz §3.1 "boş bırakmak
