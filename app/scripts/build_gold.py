@@ -47,10 +47,14 @@ if str(_ROOT) not in sys.path:
 from scripts.gold_schema import (
     CAMPAIGN_TYPE_KEY,
     EXTRACTION_FIELDS,
+    PROTOCOL_V1,
+    PROTOCOL_V2,
+    SKIPPED_DECISION,
     GoldRecord,
     GoldValidationError,
     extract_hard_tags,
     parse_gold_value,
+    row_protocol,
     validate_gold,
     values_equal,
     write_gold,
@@ -117,7 +121,14 @@ def resolve_decision(row: dict, model_value: Any, has_model_value: bool
                      ) -> tuple[str, Any]:
     """Tek satırı `(karar, değer)` ikilisine çevirir.
 
-    karar: "value" | "absent" | "unclear"
+    karar: "value" | "absent" | "unclear" | "skipped"
+
+    `skipped` YALNIZCA v2 protokolünde çıkar: boş `verdict` + boş `gold_value`
+    = "karar verilmedi". Gold'a girmez.
+
+    Boş hücrenin anlamı satırın `protokol` sütunundan okunur
+    (`gold_schema.row_protocol`, tek doğruluk kaynağı). Sütun yoksa v1 sayılır
+    ve eski davranış korunur — geriye dönük hiçbir karar kaybolmaz.
 
     Raises:
         BuildError: `gold_value` kanonik biçime çevrilemezse.
@@ -130,6 +141,12 @@ def resolve_decision(row: dict, model_value: Any, has_model_value: bool
     if not verdict and gold_raw:
         verdict = "fix"
     if not verdict:
+        # v2: boş hücre onay DEĞİLDİR. Burayı `ok`a düşürmek, kılavuzun §3.1
+        # ile kaldırdığı çapalamayı gold'un yazıldığı yerde geri getirirdi —
+        # κ tarafı (report_iaa) protokolü sayarken derleyici saymazsa, ölçüm
+        # dürüst, gold değil.
+        if row_protocol(row) == PROTOCOL_V2:
+            return (SKIPPED_DECISION, None)
         verdict = "ok"
 
     if verdict not in ("ok", "fix", "absent", "unclear"):
@@ -173,10 +190,17 @@ def build(pre_path: str, csv_paths: list[str]) -> dict[str, Any]:
     decisions: dict[tuple[str, str], list[tuple[str, str, Any, str]]] = defaultdict(list)
     doc_annotators: dict[str, list[str]] = defaultdict(list)
     unknown_docs: Counter = Counter()
+    # v2 protokolünde karar verilmemiş satırlar (anotatör başına).
+    skipped: Counter = Counter()
+    skipped_with_note: list[dict] = []
+    protocols: dict[str, str] = {}
 
     for csv_path in csv_paths:
         annotator = infer_annotator(csv_path)
-        for row in read_review_csv(csv_path):
+        rows = read_review_csv(csv_path)
+        # Boş dosya: `row_protocol` ile aynı geriye dönük varsayım (v1).
+        protocols[str(csv_path)] = row_protocol(rows[0]) if rows else PROTOCOL_V1
+        for row in rows:
             doc_id = _clean(row.get("doc_id"))
             field = _clean(row.get("field"))
             if doc_id not in docs:
@@ -201,6 +225,19 @@ def build(pre_path: str, csv_paths: list[str]) -> dict[str, Any]:
                 errors.append(exc)
                 continue
 
+            # v2: karar verilmemiş satır gold'a GİRMEZ. Sayılır ve raporlanır —
+            # "hiç uyuşmazlık yok" ile "kimse bakmamış" ayrılabilsin.
+            if kind == SKIPPED_DECISION:
+                skipped[annotator] += 1
+                if _clean(row.get("note")):
+                    # Anotatör bir sorun yazmış ama kararı işaretlememiş.
+                    # v1'de bu satır sessizce "model doğru" olurdu.
+                    skipped_with_note.append({
+                        "annotator": annotator, "doc_id": doc_id,
+                        "field": field, "note": _clean(row.get("note")),
+                    })
+                continue
+
             decisions[(doc_id, field)].append(
                 (annotator, kind, value, _clean(row.get("note"))))
             if annotator not in doc_annotators[doc_id]:
@@ -214,6 +251,9 @@ def build(pre_path: str, csv_paths: list[str]) -> dict[str, Any]:
         "errors": errors,
         "unknown_docs": unknown_docs,
         "csv_files": list(csv_paths),
+        "protocols": protocols,
+        "skipped": skipped,
+        "skipped_with_note": skipped_with_note,
     }
 
 
@@ -359,6 +399,40 @@ def write_report(path: str | Path, result: dict, records: list[GoldRecord],
         f"- Çelişki (anotatörler ayrıştı): **{len(result['conflicts'])}**",
         f"- Hakemlik bekleyen kayıt: "
         f"**{sum(1 for r in records if r.needs_adjudication)}**",
+        "",
+        "## Protokol künyesi",
+        "",
+        "| Dosya | Protokol | Boş hücre |",
+        "|---|---|---|",
+    ]
+    for path_key, protocol in sorted(result.get("protocols", {}).items()):
+        meaning = ("karar verilmedi — gold'a GİRMEZ" if protocol == PROTOCOL_V2
+                   else "`ok` (onay) — modele çapalı")
+        lines.append(f"| `{path_key}` | **{protocol}** | {meaning} |")
+
+    skipped = result.get("skipped") or Counter()
+    skipped_notes = result.get("skipped_with_note") or []
+    lines += ["", f"- v2'de karar verilmemiş satır: **{sum(skipped.values())}** "
+              + (f"({', '.join(f'{a}={n}' for a, n in sorted(skipped.items()))})"
+                 if skipped else ""), ""]
+    if skipped_notes:
+        lines += [
+            f"> ⚠️ **{len(skipped_notes)} satırda not var ama karar yok.** "
+            "Anotatör bir sorun yazmış, `verdict` sütununu işaretlememiş. "
+            "v1 protokolünde bu satırlar sessizce **'model doğru'** sayılırdı; "
+            "v2'de gold'a girmiyorlar. Kapatılmaları gerekir.",
+            "",
+            "| Anotatör | Belge | Alan | Not |",
+            "|---|---|---|---|",
+        ]
+        for item in skipped_notes[:100]:
+            note = item["note"].replace("|", "\\|")[:90]
+            lines.append(f"| {item['annotator']} | `{item['doc_id']}` "
+                         f"| `{item['field']}` | {note} |")
+        if len(skipped_notes) > 100:
+            lines.append(f"\n_… ve {len(skipped_notes) - 100} tane daha._")
+
+    lines += [
         "",
         "## Ölçülebilirlik",
         "",

@@ -61,25 +61,26 @@ from eval.iaa import (
 from scripts.build_gold import infer_annotator, read_review_csv
 from scripts.gold_schema import (
     NUMERIC_FIELDS,
+    PROTOCOL_COLUMN,
+    PROTOCOL_V1,
+    PROTOCOL_V2,
     parse_gold_value,
+    row_protocol,
 )
 
 ABSENT_TOKEN = "__YOK__"
 DEFAULT_REPORT = "data/gold/iaa_report.md"
 
-PROTOCOL_COLUMN = "protokol"
-PROTOCOL_V1 = "v1"
-PROTOCOL_V2 = "v2"
+# `PROTOCOL_*` ve `row_protocol` burada YENİDEN TANIMLANMAZ; tek doğruluk
+# kaynağı `gold_schema`dır. Üç tüketici (bu dosya, `build_gold`,
+# `lint_review_csv`) aynı cevabı vermek zorunda — kopyalar ayrışırsa κ dürüst,
+# gold çapalı kalır ve kimse fark etmez.
+__all__ = ["PROTOCOL_COLUMN", "PROTOCOL_V1", "PROTOCOL_V2", "row_protocol",
+           "row_verdict", "row_value_token", "compute", "render", "main"]
 
 
 def _clean(value: Optional[str]) -> str:
     return (value or "").strip()
-
-
-def row_protocol(row: dict) -> str:
-    """Satırın anotasyon protokolü. Sütun yoksa **v1** (geriye dönük uyum)."""
-    value = _clean(row.get(PROTOCOL_COLUMN)).casefold()
-    return PROTOCOL_V2 if value == PROTOCOL_V2 else PROTOCOL_V1
 
 
 def row_verdict(row: dict) -> Optional[str]:
