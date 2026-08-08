@@ -17,12 +17,38 @@ RAW = str(ROOT / "data" / "raw")
 
 
 class TestConfig(unittest.TestCase):
-    def test_loads_ten_banks(self):
+    def test_loads_ten_bddk_banks(self):
+        """BDDK Liste 77'de 10 katılım bankası var (CLAUDE.md §13).
+
+        İDDİA `len(banks) == 10` DEĞİL, `bddk_active` olanların sayısı 10'dur.
+        Fark önemli: `config/banks.yaml` artık yalnız bankaları değil, korpus
+        KAYNAKLARINI listeliyor. TKBB (sektör birliği) oraya `bddk_active:
+        false` ile eklendi çünkü ingest yolu banka kayıtlarını o dosyadan
+        sürüyor — listede olmayan bir `data/raw/<slug>/` korpusa hiç girmiyor.
+
+        Testi "10 yerine 11" diye güncellemek bu ayrımı SİLERDİ ve yarın
+        eklenecek ikinci bir otorite kaynağı yine testi kırardı. Sayılan şey
+        artık doğru şey: kaç BDDK bankası tanımlı.
+        """
         banks = load_banks(CONFIG)
-        self.assertEqual(len(banks), 10)
-        slugs = {b.slug for b in banks}
+        bddk = [b for b in banks if b.bddk_active]
+        self.assertEqual(len(bddk), 10)
+        slugs = {b.slug for b in bddk}
         self.assertIn("kuveyt-turk", slugs)
         self.assertIn("albaraka", slugs)
+
+    def test_otorite_kaynagi_banka_sayilmaz(self):
+        """TKBB banka DEĞİL: kaynak olarak yüklenir, banka olarak sayılmaz.
+
+        Bu testin varlık sebebi bir ürün riski: süzme olmadan TKBB `GET /banks`
+        üzerinden arayüzdeki banka listesine düşüyordu ve jüri kıyas ekranında
+        "11. banka" olarak görünebilirdi (CLAUDE.md §13 hedef listeyi BDDK
+        Liste 77 ile tanımlar, TKBB orada yoktur).
+        """
+        banks = {b.slug: b for b in load_banks(CONFIG)}
+        self.assertIn("tkbb", banks, "otorite kaynağı config'de tanımlı olmalı")
+        self.assertFalse(banks["tkbb"].bddk_active,
+                         "TKBB BDDK lisanslı banka olarak işaretlenemez")
 
     def test_campaign_paths_parsed(self):
         banks = {b.slug: b for b in load_banks(CONFIG)}

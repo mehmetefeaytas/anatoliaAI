@@ -556,12 +556,21 @@ banks:
   # TKBB'nin Katılım Finansı Standartları ve eğitim portalı bu tanımların
   # BİRİNCİL kaynağıdır.
   #
-  # DİKKAT — KIYAS TEHLİKESİ (CLAUDE.md §17): `bddk_active: false` bu kaydı
-  # BDDK lisanslı banka OLMADIĞINI belirtir, ama kod bugün bu alanı hiçbir
-  # yerde SÜZME ölçütü olarak kullanmıyor (yalnız `banks` tablosuna yazılıyor).
-  # Dashboard/kıyas motoru banka listesini süzmüyorsa TKBB "11. banka" gibi
-  # görünür. Bu belgelerin hiçbirinde kâr payı oranı/vade gibi kıyas alanı
-  # olmadığı için sıralamaya değer katmaz, ama GÖRÜNÜRLÜK sorunu çözülmelidir.
+  # KIYAS TEHLİKESİ ve ÇÖZÜMÜ (CLAUDE.md §13, §17): süzme olmadan TKBB
+  # `GET /banks` üzerinden "11. banka" olarak dönüyordu ve arayüzdeki banka
+  # listesine düşüyordu. Jüri kıyas ekranında TKBB satırı görseydi bu doğrudan
+  # bir kusur olurdu — §13 hedef listeyi BDDK Liste 77 ile tanımlar.
+  #
+  # Ayrım `otorite_kaynak: true` ile kurulur, `bddk_active` ile DEĞİL:
+  #   bddk_active=false  -> gerçek banka, lisansı aktif değil (kıyasa girer)
+  #   otorite_kaynak=true -> banka değil (katalogda ve kıyasta yeri yok)
+  # İkisini tek alana yıkmak, lisansı düşmüş gerçek bir bankayı da katalogdan
+  # silerdi. `GET /banks` otorite kaynaklarını süzer;
+  # `?otorite_kaynaklari_dahil=true` tam listeyi verir (süzme ≠ gizleme).
+  #
+  # Kıyas tarafı ZATEN korunuyordu: `/compare` belge türüne göre süzülüyor ve
+  # bu iki belgenin de `belge_turu='sozlesme'` (ölçüldü) — hiçbir zaman kıyas
+  # satırı üretmediler.
   #
   # `scrape_mode: manual` → yalnız data/raw fixture'ından okunur; bu blok
   # otomatik gezinme (discover) TETİKLEMEZ. Belgeler hedefli ve elle seçilerek,
@@ -570,6 +579,7 @@ banks:
     name: Türkiye Katılım Bankaları Birliği
     website_url: https://tkbb.org.tr
     bddk_active: false
+    otorite_kaynak: true
     scrape_mode: manual
     campaign_paths: []
     max_docs: 40

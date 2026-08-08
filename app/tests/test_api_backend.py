@@ -131,6 +131,41 @@ class TestSqliteYolu(unittest.TestCase):
                          ["albaraka", "kuveyt-turk", "vakif-katilim"])
         self.assertIsInstance(rows[0]["bddk_active"], bool)
 
+    def test_banks_lisansi_dusmus_BANKAYI_SUZMEZ(self) -> None:
+        """`bddk_active=False` bir bankayı katalogdan DÜŞÜRMEZ.
+
+        Bu testin varlık sebebi, otorite süzmesi eklenirken az kalsın yapılan
+        hata: süzme `bddk_active` üzerinden kurulsaydı fixture'daki
+        `vakif-katilim` (bddk_active=False, ama GERÇEK banka) sessizce
+        kaybolurdu. Lisans durumu ile "banka olup olmama" ayrı sorulardır.
+        """
+        rows = _get(self.app, "/banks")
+        vakif = [r for r in rows if r["slug"] == "vakif-katilim"]
+        self.assertEqual(len(vakif), 1, "lisansı aktif olmayan banka listede kalmalı")
+        self.assertFalse(vakif[0]["bddk_active"])
+
+    def test_banks_OTORITE_KAYNAGINI_SUZER(self) -> None:
+        """TKBB banka değildir: `/banks` onu döndürmemeli (CLAUDE.md §13).
+
+        Süzme `config/banks.yaml`'daki `otorite_kaynak` bayrağına dayanır, o
+        yüzden burada gerçek config ile geçici bir banka kaydı birlikte
+        kurulur: repo'da TKBB satırı VAR ama uç onu ELEMELİ.
+        """
+        repo = Repository(self.path)
+        repo.upsert_bank("Türkiye Katılım Bankaları Birliği", "tkbb",
+                         "https://tkbb.org.tr", False)
+        repo.close()
+        app = _build_app(database_path=self.path)
+
+        sluglar = [r["slug"] for r in _get(app, "/banks")]
+        self.assertNotIn("tkbb", sluglar, "otorite kaynağı banka listesine düştü")
+        self.assertIn("kuveyt-turk", sluglar, "gerçek bankalar etkilenmemeli")
+
+        # Süzme GİZLEME değildir: denetim için tam liste erişilebilir kalmalı.
+        tam = [r["slug"] for r in
+               _get(app, "/banks", otorite_kaynaklari_dahil=True)]
+        self.assertIn("tkbb", tam)
+
     def test_campaigns_dolu(self) -> None:
         rows = _get(self.app, "/campaigns")
         self.assertEqual(len(rows), len(CORPUS))

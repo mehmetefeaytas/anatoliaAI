@@ -28,6 +28,16 @@ class BankConfig:
     scrape_mode: str = "static"
     campaign_paths: list[str] = field(default_factory=list)
     bddk_active: bool = True
+    # BANKA MI, KAYNAK MI? — `bddk_active` ile KARIŞTIRILMAMALI.
+    #
+    # `bddk_active=False`: gerçek bir bankadır ama BDDK Liste 77'de aktif
+    #   değildir (lisans durumu değişebilir). Kıyasa girer, listede görünür.
+    # `otorite_kaynak=True`: BANKA DEĞİLDİR (ör. TKBB — sektör birliği).
+    #   Korpusa belge sağlar ama banka kataloğunda ve kıyasta YERİ YOKTUR.
+    #
+    # İkisi ayrı alan olmak zorunda: `bddk_active`'i "banka değil" anlamında
+    # kullanmak, lisansı düşmüş GERÇEK bir bankayı da katalogdan silerdi.
+    otorite_kaynak: bool = False
     # Keşif (iki aşamalı gezinme) ayarları — bkz. scraping/discover.py
     sitemap_urls: list[str] = field(default_factory=list)
     detail_patterns: list[str] = field(default_factory=list)
