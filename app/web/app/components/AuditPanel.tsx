@@ -99,14 +99,14 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
 
         {doc.loading && <Loading />}
         {!!doc.error && (
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: "var(--sp-3)" }}>
             <ErrorNotice error={doc.error} />
           </div>
         )}
 
         {doc.data && (
           <>
-            <dl className="kv" style={{ marginTop: 16 }}>
+            <dl className="kv" style={{ marginTop: "var(--sp-4)" }}>
               <dt>Banka</dt>
               <dd>{doc.data.bank_name || doc.data.bank}</dd>
               <dt>Kampanya türü</dt>
@@ -130,7 +130,7 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
             </dl>
 
             {doc.data.contradictions.length > 0 && (
-              <div style={{ marginTop: 14, display: "grid", gap: 8 }}>
+              <div style={{ marginTop: "var(--sp-4)", display: "grid", gap: "var(--sp-2)" }}>
                 {doc.data.contradictions.map((c, i) => (
                   <div key={i} className="notice notice-error">
                     <strong>{contradictionLabel(c.kind)}</strong>

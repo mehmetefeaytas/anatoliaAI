@@ -468,9 +468,17 @@ def build_app():
         (`src/summarize/ozet.py` kural tabanlı yedeği yasaklar) özet varsa
         kaynağı tanım gereği `'llm'`dir.
 
-        TODO(G): `campaign_text()` henüz `c.ozet` sütununu SELECT etmiyor;
-        ettiğinde bu alan kendiliğinden dolar. O ana kadar dürüst cevap
-        `null`'dır — boş bir özet kutusu uydurmaktansa hiç göstermemek doğru.
+        ÇÖZÜLDÜ (2026-08-09): buradaki `TODO(G)` *"campaign_text() henüz
+        c.ozet sütununu SELECT etmiyor"* diyordu. Artık ediyor — iki backend'de
+        de (`db/repository.py`, `db/postgres.py`). Yorum bayattı ve teşhisi
+        yanlış yere saptırıyordu: "özet görünmüyor" arandığında insanı
+        olmayan bir SQL eksiğine yönlendiriyordu, oysa gerçek sebepler
+        arayüzdeydi (tanımsız `.summary-box` CSS'i) ve veri kapsamındaydı
+        (belgelerin ~%81'inde özet üretilmemiş).
+
+        Özet yoksa cevap yine `null`'dır ve bu değişmedi. Değişen, arayüzün o
+        `null`'ı artık SESSİZCE yutmaması: boşluk adlandırılıyor
+        (`web/app/components/SummaryNotice.tsx`).
         """
         ozet = (camp.get("ozet") or "").strip()
         return (ozet, OZET_KAYNAK_LLM) if ozet else (None, None)

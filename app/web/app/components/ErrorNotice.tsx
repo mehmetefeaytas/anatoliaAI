@@ -13,7 +13,7 @@ export function ErrorNotice({ error }: { error: unknown }) {
     <div className="notice notice-error" role="alert">
       <strong>İstek başarısız</strong>
       {message}
-      {hint && <div className="small" style={{ marginTop: 6 }}>{hint}</div>}
+      {hint && <div className="small" style={{ marginTop: "var(--sp-2)" }}>{hint}</div>}
     </div>
   );
 }

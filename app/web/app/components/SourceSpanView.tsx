@@ -81,7 +81,7 @@ export default function SourceSpanView({
   return (
     <div>
       {start === null || end === null ? (
-        <div className="notice notice-warn" style={{ marginBottom: 10 }}>
+        <div className="notice notice-warn" style={{ marginBottom: "var(--sp-3)" }}>
           <strong>Bu değer için karakter offset&apos;i doğrulanamadı</strong>
           Kaynak metin aşağıda ama vurgulama yapılmıyor — yanlış yeri boyamak,
           boyamamaktan kötüdür. (Değer yine de kaynağa dayanıyor:{" "}

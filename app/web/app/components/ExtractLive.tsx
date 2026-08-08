@@ -97,7 +97,7 @@ export default function ExtractLive() {
           güvenliği). Burası canlı yol: metni yapıştırın, çıkarım o anda koşar.
         </p>
 
-        <div className="row" style={{ marginBottom: 10 }}>
+        <div className="row" style={{ marginBottom: "var(--sp-3)" }}>
           {SAMPLES.map((s) => (
             <button
               key={s.label}
@@ -125,7 +125,7 @@ export default function ExtractLive() {
           placeholder="Bir katılım bankası kampanya metnini buraya yapıştırın…"
         />
 
-        <div className="row" style={{ marginTop: 10 }}>
+        <div className="row" style={{ marginTop: "var(--sp-3)" }}>
           <div className="row-tight">
             <label className="small muted" htmlFor="extract-bank">
               Banka etiketi
@@ -133,7 +133,7 @@ export default function ExtractLive() {
             <input
               id="extract-bank"
               className="input"
-              style={{ width: 180 }}
+              style={{ width: "auto" }}
               value={bank}
               onChange={(e) => setBank(e.target.value)}
             />
@@ -145,7 +145,7 @@ export default function ExtractLive() {
         </div>
 
         {!!error && (
-          <div style={{ marginTop: 12 }}>
+          <div style={{ marginTop: "var(--sp-3)" }}>
             <ErrorNotice error={error} />
             <p className="small muted">{toDisplayError(error).hint}</p>
           </div>
@@ -156,16 +156,16 @@ export default function ExtractLive() {
         <>
           <section className="card">
             <h2>Sonuç</h2>
-            <div className="stats" style={{ marginBottom: 14 }}>
+            <div className="stats" style={{ marginBottom: "var(--sp-4)" }}>
               <div className="stat">
                 <div className="k">Kampanya türü</div>
-                <div className="v" style={{ fontSize: 16 }}>
+                <div className="v" style={{ fontSize: "var(--fs-lg)" }}>
                   {result.campaign_type ?? "—"}
                 </div>
               </div>
               <div className="stat">
                 <div className="k">Tür güveni</div>
-                <div className="v" style={{ fontSize: 16 }}>
+                <div className="v" style={{ fontSize: "var(--fs-lg)" }}>
                   {result.campaign_type_confidence === null
                     ? "—"
                     : result.campaign_type_confidence.toFixed(2).replace(".", ",")}
@@ -192,14 +192,14 @@ export default function ExtractLive() {
               </div>
               <div className="stat">
                 <div className="k">Yerel LLM</div>
-                <div className="v" style={{ fontSize: 16 }}>
+                <div className="v" style={{ fontSize: "var(--fs-lg)" }}>
                   {result.llm_available ? "açık" : "kapalı"}
                 </div>
               </div>
             </div>
 
             {!result.llm_available && (
-              <div className="notice notice-info" style={{ marginBottom: 14 }}>
+              <div className="notice notice-info" style={{ marginBottom: "var(--sp-4)" }}>
                 <strong>Yerel LLM kapalı — sonuçlar yalnızca kural katmanından</strong>
                 Hibrit mimaride kurallar birincildir (CLAUDE.md §3); LLM yalnızca
                 kuralların kaçırdığı örtük ifadeler için devreye girer. LLM
@@ -208,12 +208,12 @@ export default function ExtractLive() {
             )}
 
             {result.contradictions.length > 0 && (
-              <div style={{ marginBottom: 14, display: "grid", gap: 8 }}>
+              <div style={{ marginBottom: "var(--sp-4)", display: "grid", gap: "var(--sp-2)" }}>
                 {result.contradictions.map((c, i) => (
                   <div key={i} className="notice notice-error">
                     <strong>{contradictionLabel(c.kind)}</strong>
                     {c.detail}
-                    <div className="small mono" style={{ marginTop: 4 }}>
+                    <div className="small mono" style={{ marginTop: "var(--sp-1)" }}>
                       {c.fields.join(", ")}
                     </div>
                   </div>

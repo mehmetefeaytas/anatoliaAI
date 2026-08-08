@@ -59,7 +59,7 @@ export default function ContradictionAlert({
         </div>
       )}
 
-      <div style={{ marginTop: 16 }}>
+      <div style={{ marginTop: "var(--sp-4)" }}>
         {list.loading && <Loading />}
         {!!list.error && <ErrorNotice error={list.error} />}
         {list.data?.length === 0 && !list.loading && (
@@ -71,12 +71,12 @@ export default function ContradictionAlert({
           </EmptyNotice>
         )}
         {list.data && list.data.length > 0 && (
-          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: 10 }}>
+          <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "grid", gap: "var(--sp-3)" }}>
             {list.data.map((c, i) => (
               <li key={`${c.campaign_id}-${c.kind}-${i}`} className="notice notice-error">
                 <strong>{contradictionLabel(c.kind)}</strong>
                 <div>{c.detail}</div>
-                <div className="small" style={{ marginTop: 6 }}>
+                <div className="small" style={{ marginTop: "var(--sp-2)" }}>
                   <b>{c.bank_name || c.bank}</b>
                   {c.campaign_type ? ` · ${c.campaign_type}` : ""} · belge #
                   {c.campaign_id} · ilgili alanlar:{" "}
@@ -95,7 +95,7 @@ export default function ContradictionAlert({
                   )}
                 </div>
                 {c.source_url && (
-                  <div className="small mono faint" style={{ marginTop: 4 }}>
+                  <div className="small mono faint" style={{ marginTop: "var(--sp-1)" }}>
                     {c.source_url}
                   </div>
                 )}

@@ -57,9 +57,9 @@ export default function ScoringExplainer({
             ))}
           </ol>
 
-          <div className="notice notice-warn" style={{ marginTop: 16 }}>
-            <strong>Bileşik (çok alanlı) puan yok — bilinçli bir karar</strong>
-            {s.data.composite_note}
+          <div className="notice notice-info" style={{ marginTop: "var(--sp-4)" }}>
+            <strong>Bu tablo TEK alanı açıklar</strong>
+            <div className="notice-body">{s.data.composite_note}</div>
           </div>
 
           <h3>Bankaların aldığı ara değerler</h3>
