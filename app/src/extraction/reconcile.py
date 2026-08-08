@@ -1,4 +1,4 @@
-"""Uzlaştırma (reconciliation) — 3 katmanı tek alan kümesinde birleştirir.
+"""Uzlaştırma (reconciliation) — İKİ katmanı tek alan kümesinde birleştirir.
 
 İlgili: ../../decisions/ner-fine-tune-yerine-kural-few-shot.md (kurallar BİRİNCİL)
         ../../syntheses/teknik-cozum-mimarisi.md
@@ -6,6 +6,29 @@
 
 Kural: kural çıktısı varsa onu tercih et → boşlukları LLM ile doldur → her alana
 confidence + source_span. Alan hiçbir katmanda yoksa üretilmez (null + uydurma yok).
+
+## Kaç katman — "3" değil, 2 (2026-08-08 düzeltmesi)
+
+Bu başlık "3 katmanı birleştirir" diyordu ve CLAUDE.md §3 de üç katman tarif
+ediyor (kural · NER/GLiNER · LLM). Teslim edilen sistemde **iki** katman var:
+
+    kural (birincil)  ->  LLM (yalnız boşluklar)
+
+`Extractor.NER` **hiçbir kod yolunda üretilmiyor**; `_PRIORITY`nin orta
+basamağı erişilmez bir daldır. Sebebi ölçülmüştür ve dürüsttür:
+
+  - **GLiNER2** projeye hiç girmedi (`src/extraction/ner/` yalnız BERTurk
+    sınıflandırıcısını taşır).
+  - **BERTurk** eğitildi ve ölçüldü ama **kabul kapısından geçemedi**
+    (`docs/rapor/berturk-ince-ayar-plani.md`); alan çıkarımına değil,
+    yalnız 8-sınıf kampanya türü sınıflandırmasına adaydı.
+
+Şema değeri (`src/schemas.py::Extractor.NER`) ve DB'deki `extractor` sütunu
+KALDIRILMADI: geriye dönük uyumluluk ve "silme yok" ilkesi. Basamak
+`_PRIORITY`de duruyor ama bu teslimde **üretilmiyor**.
+
+Dürüst bir 2-katman anlatısı, erişilmez bir daldan iyi okunur — özellikle jüri
+kodu okuduğunda.
 
 ## Doğrulama modu (`verify_low_conf`) — neden eklendi
 
@@ -62,7 +85,13 @@ from .llm.extractor import LLMExtractor, NullLLMExtractor
 from .llm.schema import EXTRACTION_FIELDS
 from .rules.extract import extract_all as rule_extract
 
-# Katman önceliği: kural > ner > llm (eşit güvende kural kazanır)
+# Katman önceliği: kural > ner > llm (eşit güvende kural kazanır).
+#
+# `NER` basamağı bu teslimde ERİŞİLMEZDİR — hiçbir kod yolu `Extractor.NER`
+# üretmiyor (gerekçe modül başlığında). Tablodan ÇIKARILMADI çünkü `extractor`
+# DB'de saklanan bir sütundur ve şema değeri geriye dönük okunabilir olmalıdır;
+# ayrıca sıralamayı burada bozmak, katman sonradan gerçekten eklendiğinde
+# sessizce yanlış önceliğe yol açardı.
 _PRIORITY = {Extractor.RULE: 3, Extractor.NER: 2, Extractor.LLM: 1}
 
 

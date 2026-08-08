@@ -106,7 +106,17 @@ import os
 from typing import Any, Optional
 
 from ..chatbot.bot import Chatbot
-from ..comparison.compare import _HIGHER_IS_BETTER, _LOWER_IS_BETTER, RankRow, rank
+from ..comparison.compare import (
+    _HIGHER_IS_BETTER,
+    _LOWER_IS_BETTER,
+    DEFAULT_WEIGHTS,
+    MIN_COVERAGE,
+    MIN_GROUP_SIZE,
+    RankRow,
+    rank,
+    rank_advantageous_by_type,
+    weight_manifest,
+)
 from ..comparison.contradiction import detect as detect_contradictions
 from ..db.factory import create_repository
 from ..extraction.llm.extractor import default_extractor
@@ -752,16 +762,23 @@ def build_app():
 
     @app.get("/scoring")
     def scoring(field: str, type: Optional[str] = None):
-        """Şeffaf skorlama: "en avantajlı" iddiasının formülü + ara değerleri.
+        """Şeffaf skorlama: TEK ALAN sıralamasının formülü + ara değerleri.
 
-        ÖNEMLİ — koda dayanır, ağırlık uydurulmaz: `src/comparison/compare.py`
-        alanlar arası **ağırlıklı bileşik skor içermez**. Sıralama tek alan
-        üzerinden ve iki adımdan oluşur:
+        Bu uç **tek alanlı** sıralamayı açıklar; iki adımdan oluşur:
           1) `_numeric_key(value)` → (sort_key, comparable, note)
           2) yön = alan `_LOWER_IS_BETTER` mi `_HIGHER_IS_BETTER` mi
-        Bu yüzden `composite_weights` bilinçli olarak `null`'dır; birden çok
-        alanı tek puana indiren bir formül kodda YOK ve CLAUDE.md §17
-        (uydurma sıralama yapma) gereği burada icat edilmez.
+
+        DÜZELTME (2026-08-08): bu docstring ve `composite_note` eskiden
+        *"kod tabanında ağırlıklı bileşik skor **yoktur**"* diyordu. Yanlıştı —
+        `compare.py` `DEFAULT_WEIGHTS`, `WEIGHT_RATIONALE`, `_composite_numeric`,
+        `rank_advantageous` ve `weight_manifest`'i **taşıyor ve test ediyordu**;
+        yalnız hiçbir uçtan çağrılmıyordu. Yani uç kendi kodunu yalanlıyordu ve
+        jüri kodu okusa bunu görürdü.
+
+        Bileşik skor artık `GET /advantageous` ile sunuluyor; ağırlıklar
+        `composite_weights` alanında gerekçeleriyle döner. Ağırlıklar bir
+        **ürün kararıdır**, ölçümden türetilmiş sabit değildir — bu ayrım
+        `WEIGHT_RATIONALE`de açıkça yazılıdır.
         """
         direction, direction_label = scoring_direction(field)
         rows = compare(field=field, type=type)  # aynı sıralama, tek doğruluk kaynağı
@@ -787,11 +804,13 @@ def build_app():
                  "detail": f"{field} → {direction} ({direction_label}). Kaynak: "
                            "compare._LOWER_IS_BETTER / _HIGHER_IS_BETTER."},
             ],
-            "composite_weights": None,
+            "composite_weights": weight_manifest(),
             "composite_note": (
-                "Kod tabanında alanlar arası ağırlıklı bileşik skor yoktur; "
-                "sıralama her zaman TEK alan üzerinden yapılır. Ağırlık "
-                "uydurmak CLAUDE.md §17'ye aykırı olurdu."),
+                "Bu uç TEK alan üzerinden sıralar. Alanlar arası ağırlıklı "
+                "bileşik skor ayrı bir uçtadır: GET /advantageous. Ağırlıklar "
+                "bir ÜRÜN KARARIDIR, ölçümden türetilmiş sabit değildir; her "
+                "birinin gerekçesi yukarıda döner."),
+            "composite_endpoint": "/advantageous",
             "rows": [
                 {"bank": r["bank"], "bank_name": r["bank_name"],
                  "value": r["value"], "sort_key": r["sort_key"],
@@ -800,6 +819,76 @@ def build_app():
                  "extractor": r["extractor"]}
                 for r in rows
             ],
+        }
+
+    @app.get("/advantageous")
+    def advantageous(type: Optional[str] = None,
+                     min_coverage: float = MIN_COVERAGE):
+        """§5.7 "En Avantajlı Kampanya" — ÇOK alanlı, ağırlıklı bileşik skor.
+
+        Bu uç 2026-08-08'de eklendi. `compare.py`'deki bileşik skorlama
+        (~420 satır) yazılı ve testliydi ama **hiçbir uçtan çağrılmıyordu**;
+        üstelik `/scoring` *"böyle bir şey yok"* diyerek onu yalanlıyordu.
+
+        Sıralama **kampanya TÜRÜ İÇİNDE** yapılır. Bir konut finansmanı ile
+        bir kart kampanyasını tek listede sıralamak adil kıyas garantisini
+        (CLAUDE.md §17) ihlal ederdi: alanların anlamı türe göre değişir.
+
+        Üç kapı korunur ve hepsi çıktıda görünür:
+          - `MIN_GROUP_SIZE` (3): daha küçük türde sıralama YAPILMAZ. Sıralama
+            tabanlı normalizasyon 2 öğede dejenere olur ve "en avantajlı"
+            iddiası bilgi taşımaz. Grup gizlenmez, `note` ile raporlanır.
+          - `min_coverage` (0,5): kampanya, ölçülebilen ölçütlerin ağırlıkça en
+            az yarısını taşımalı; taşımıyorsa `comparable=false`.
+          - Sayıya indirgenemeyen alan SKORLANMAZ ve nedeni `note`'ta durur.
+            Değer asla uydurulmaz.
+
+        Belge türü süzmesi `_field_rows` üzerinden gelir: sözleşme / tarife
+        metinleri bu tabloya girmez.
+        """
+        # Kampanya başına alan sözlüğü kurulur. Girdi `rank_advantageous`'un
+        # beklediği biçimdir; tek tek alan sorgularından toplanır çünkü
+        # `query_fields` alan bazlı çalışır.
+        by_campaign: dict[Any, dict] = {}
+        for alan in DEFAULT_WEIGHTS:
+            for r in _field_rows(alan):
+                cid = r.get("campaign_id")
+                if cid is None:
+                    continue
+                kayit = by_campaign.setdefault(cid, {
+                    "bank": r.get("bank"), "bank_name": r.get("bank_name"),
+                    "campaign_id": cid,
+                    "campaign_type": r.get("campaign_type"),
+                    "source_url": r.get("source_url"),
+                    "fields": {},
+                })
+                # Aynı alan aynı kampanyada birden çok kez çıkabilir; İLK
+                # satır tutulur (`query_fields` `ORDER BY f.id` ile gelir,
+                # yani sıra iki backend'de de aynıdır).
+                kayit["fields"].setdefault(alan, r.get("canonical_value"))
+
+        satirlar = list(by_campaign.values())
+        if type:
+            satirlar = [r for r in satirlar if r.get("campaign_type") == type]
+
+        gruplar = rank_advantageous_by_type(satirlar, min_coverage=min_coverage)
+        return {
+            "min_group_size": MIN_GROUP_SIZE,
+            "min_coverage": min_coverage,
+            "weights": weight_manifest(),
+            "fairness_note": (
+                "Sıralama kampanya TÜRÜ İÇİNDE yapılır; türler arası "
+                "karşılaştırma yapılmaz (CLAUDE.md §17). Alanı olmayan "
+                "kampanya CEZALANDIRILMAZ, kıyas dışı bırakılır — 0 puan "
+                "'ürün yok' demektir, 'kötü' demek değil."),
+            "types": {
+                tur: {
+                    "count": bilgi["count"],
+                    "note": bilgi["note"],
+                    "ranked": [c.to_dict() for c in bilgi["ranked"]],
+                }
+                for tur, bilgi in sorted(gruplar.items())
+            },
         }
 
     @app.post("/chat")

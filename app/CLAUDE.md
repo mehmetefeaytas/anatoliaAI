@@ -52,6 +52,18 @@ LLM kritik yolda olmamalı: demo donanımında çalışmazsa **Ollama** yedeği 
 
 ## 3. Mimari: "Önce Kural, Sonra LLM" Hibrit
 
+> **TESLİM EDİLEN SİSTEM: 2 KATMAN (ölçüldü, 2026-08-08).** Aşağıdaki üç
+> katmanlı tasarım PLANDIR; 2. katman teslim edilmedi ve bu belge onu
+> gizlemez. `Extractor.NER` hiçbir kod yolunda üretilmiyor:
+> **GLiNER2** projeye hiç girmedi, **BERTurk** eğitildi ve ölçüldü ama kabul
+> kapısından geçemedi (`docs/rapor/berturk-ince-ayar-plani.md`) — üstelik
+> aday olduğu iş alan çıkarımı değil, 8-sınıf tür sınıflandırmasıydı.
+> Ayrıntı: `src/extraction/reconcile.py` modül başlığı.
+>
+> Sunumda ve README'de anlatı **iki katmandır**: kural (birincil) → LLM
+> (yalnız boşluklar). Dürüst bir 2-katman anlatısı, erişilmez bir daldan iyi
+> okunur.
+
 Çıkarım üç katman + uzlaştırma (reconciliation):
 
 1. **Kurallar/Regex (deterministik, birincil)** — sayısal/yapısal alanlar: kâr
