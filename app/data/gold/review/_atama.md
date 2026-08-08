@@ -7,40 +7,67 @@
 
 ---
 
-## ⚠️ ÖNCE BURAYI OKUYUN — v2 kalibrasyon paketi (κ bu paketten hesaplanır)
+## ⚠️ ÖNCE BURAYI OKUYUN — κ hangi paketten çıkar
 
 Kılavuz revize edildi (`ANNOTATION_GUIDE.md` v2): **boş hücre artık onay değil**
 ve dört anotatörün bağımsız işaretlediği **sekiz boşluk kapatıldı** (§4.13).
-Aşağıdaki tablodaki v1 dosyaları **eski kuralla** üretilmiştir; κ ölçümü onlardan
-değil, v2 paketinden yapılır.
 
-| Anotatör | Dosya | Satır | Belge | Durum |
-|---|---|---:|---:|---|
-| A | `round0_kalibrasyon_v2_A.csv` | 260 | 20 | boş — doldurulacak |
-| B | `round0_kalibrasyon_v2_B.csv` | 260 | 20 | boş — doldurulacak |
-| C | `round0_kalibrasyon_v2_C.csv` | 260 | 20 | boş — doldurulacak |
-| D | `round0_kalibrasyon_v2_D.csv` | 260 | 20 | boş — doldurulacak |
+κ için iki koşul birden gerekir ve ikisi de sessizce bozulabilir:
+**(1)** en az iki dosya AYNI `(doc_id, field)` kümesini taşımalı, **(2)** o
+ortak satırlarda ikisinin de açık kararı olmalı. Durumu tek komutla görün:
 
-**Dört dosya da AYNI 20 belgeyi ve AYNI 260 `(doc_id, field)` satırını içerir.**
-Bu sabittir; değiştirilirse Fleiss κ hesaplanamaz. (Mevcut `parca/parca-1..4.json`
-tamamen ayrık — 48 benzersiz belge, sıfır tekrar — bu yüzden ondan κ çıkmaz.)
+```bash
+.venv/bin/python -m scripts.kappa_durum
+```
+
+### κ üretebilecek iki paket
+
+| paket | dosyalar | belge | satır | protokol | ne ölçer |
+|---|---|---:|---:|---|---|
+| **kalibrasyon** | `round0_kalibrasyon_v2_A..D` | 20 | 260 | **v2** | Fleiss κ (4 anotatör) |
+| **çift anotasyon** | `round1_A` + `round1_B` | **50** | **650** | **v2** | Cohen κ — **asıl paket** |
+
+`round1_A` ile `round1_B` birebir aynı 50 belgeyi ve aynı 650 satırı taşır;
+ölçüldü ve doğrulandı. Daha geniş olduğu için κ'nın **manşet kaynağı budur**.
+Satır kümesi sabittir; değiştirilirse κ birimleri hizalanmaz.
+(`parca/parca-1..4.json` tamamen ayrık — 48 benzersiz belge, sıfır tekrar —
+bu yüzden ondan κ çıkmaz.)
 
 - En az **iki** dosya dolduğunda κ hesaplanır (Cohen). Dördü de dolarsa Fleiss.
 - Dosyalarda salt-okunur bir **`protokol`** sütunu var (`v2`). Silmeyin;
   araçlar boş hücrenin anlamını buradan okur.
 - **Her satıra `verdict` yazılır.** Boş = "karar verilmedi", gold'a girmez.
+- v1 ve v2 dosyaları **aynı κ koşusuna girmez**. v1'de dokunulmamış satır
+  "onay" sayılır, dört anotatör de dokunmadıysa tam uyum üretir ve κ olduğundan
+  iyi çıkar (ANNOTATION_GUIDE.md §11). `kappa_durum` grupları protokole göre
+  ayırır, `report_iaa` karıştırılırsa uyarır.
 
-### Üç komut
+### ⚠️ v1 dosyasında not var, karar yok
+
+`round0_kalibrasyon_A.csv` v1 protokolündedir ve ölçüldü: **134 satırda**
+anotatör bir not yazmış (*"Ödül tutarı yok"*, *"Birden fazla vade seçeneği
+var"*) ama `verdict` sütununu işaretlememiş. v1'de boş hücre onaydır — yani
+bu satırlar, notun içeriği tersini söylemesine rağmen **"model doğru"** olarak
+gold'a girer.
+
+Kapatılması anotatörün birkaç dakikasıdır: not zaten kararı söylüyor, yalnız
+`verdict` hücresi doldurulacak. Sayı `kappa_durum` çıktısında görünür.
+
+### Dört komut
 
 ```bash
+# 0) κ'ya ne kadar kaldı — hangi grup hazır
+.venv/bin/python -m scripts.kappa_durum
+
 # 1) doldururken — biçim + kalan karar sayısı (uyarı verir, durdurmaz)
-.venv/bin/python -m scripts.lint_review_csv 'data/gold/review/round0_kalibrasyon_v2_*.csv'
+.venv/bin/python -m scripts.lint_review_csv 'data/gold/review/round1_[AB].csv'
 
 # 2) κ + Krippendorff α  ->  data/gold/iaa_report.md
-.venv/bin/python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_v2_*.csv
+.venv/bin/python -m scripts.report_iaa data/gold/review/round1_A.csv \
+                                       data/gold/review/round1_B.csv
 
 # 3) derlemeden ÖNCE kapı — boş satır kalmışsa HATA verir
-.venv/bin/python -m scripts.lint_review_csv --eksiksiz 'data/gold/review/round0_kalibrasyon_v2_*.csv'
+.venv/bin/python -m scripts.lint_review_csv --eksiksiz 'data/gold/review/round1_[AB].csv'
 ```
 
 Eşik politikası **önceden ilan edilmiştir** ve değiştirilmez
@@ -62,17 +89,22 @@ Ayrıntı: [`../../../docs/rapor/kilavuz-revizyonu.md`](../../../docs/rapor/kila
 
 ## Kim neyi açacak
 
-> Bu tablodaki dosyaların tamamı **v1 protokolüne** aittir (boş hücre = onay).
-> Kalibrasyon için artık yukarıdaki v2 paketi kullanılır. `round1_*` ve
-> `round1_main_*` dosyaları henüz doldurulmadıysa, kalibrasyon κ'sı alındıktan
-> sonra aynı yöntemle v2'ye taşınacaktır.
+> **Protokol durumu (2026-08-08 itibarıyla ölçüldü).** `round0_kalibrasyon_*`
+> dosyaları **v1**'dir (boş hücre = onay) ve ekip şu an A'yı dolduruyor.
+> `round1_*`, `round1_main_*` ve `round2_zor_vaka` **v2'ye taşındı** —
+> taşıma anında hiçbiri etiketlenmemişti, satır kümeleri bozulmadı, her
+> dosyanın `.yedek-v1` kopyası alındı
+> (`scripts/protokol_yukselt.py --damgala`).
 
-| Anotatör | 1. Kalibrasyon | 2. Çift anotasyon | 3. Ana küme | Toplam satır |
+| Anotatör | 1. Kalibrasyon (v1) | 2. Çift anotasyon (v2) | 3. Ana küme (v2) | Toplam satır |
 |---|---|---|---|---:|
-| A | `round0_kalibrasyon_A.csv` ✔ dolu | `round1_A.csv` | — | 910 |
+| A | `round0_kalibrasyon_A.csv` — 79/260 | `round1_A.csv` | — | 910 |
 | B | `round0_kalibrasyon_B.csv` | `round1_B.csv` | — | 910 |
 | C | `round0_kalibrasyon_C.csv` | — | `round1_main_C.csv` (90 belge) | 833 |
 | D | `round0_kalibrasyon_D.csv` | — | `round1_main_D.csv` (90 belge) | 832 |
+
+`round2_zor_vaka.csv` (73 belge, 949 satır) tek anotatörlüdür — κ üretmez,
+zor-vaka kapsamını büyütür.
 
 ## Sıra ÖNEMLİ
 
