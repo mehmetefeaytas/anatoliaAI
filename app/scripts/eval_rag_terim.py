@@ -166,10 +166,12 @@ def yazdir(rapor: dict) -> None:
         for s in parcali:
             print(f"    {s['terim']:<16} -> aranan kök: '{s['kok_token']}' "
                   f"({s['token_sayisi']} token)")
-        print("  Neden: _tokenize şapkalı ünlüyü (â/î/û) sözcük sınırı sayıyor.\n"
-              "  Etki: bu terimlerin 'kapsandı' sonucu olduğundan İYİMSERdir.\n"
-              "  Kusurun yeri: src/chatbot/rag.py::_tokenize (bu betikten "
-              "düzeltilemez).")
+        print("  Neden: terim TİRELİDİR; ayırıcı sözcük sınırı sayılıyor ve\n"
+              "  ortada kalan tek harfli parça eleniyor. Bu KASITLI bir kural\n"
+              "  (tek harfli token eşiği gürültüyle dolduruyordu).\n"
+              "  Not: şapkalı ünlü kusuru AYRIYDI ve kapatıldı —\n"
+              "  rag.py::_SAPKA_INDIRGEME. Önce bu satır onu da sayıyordu.\n"
+              "  Etki: bu terimlerin 'kapsandı' sonucu olduğundan İYİMSERdir.")
 
 
 def main(argv: list[str] | None = None) -> int:

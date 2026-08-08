@@ -106,6 +106,13 @@ class RagAnswer:
     quarantined: list[dict] = dc_field(default_factory=list)
 
 
+#: Şapkalı ünlü -> taban ünlü. `tr_fold` küçültme yaptığı için büyük
+#: biçimler de eşlenir (girdi her iki hâlde de gelebilsin diye).
+_SAPKA_INDIRGEME = str.maketrans({
+    "â": "a", "Â": "a", "î": "i", "Î": "i", "û": "u", "Û": "u",
+})
+
+
 def _tokenize(text: str) -> list[str]:
     """TR-doğru katlama + durak sözcük ayıklaması.
 
@@ -130,8 +137,27 @@ def _tokenize(text: str) -> list[str]:
     Rakamlar da atılır ('5', '3'): tek başına bir rakam bu retriever'da
     ayırt edici değildir — '5' korpusta 722 belgede geçiyor. Çok haneli
     sayılar ('36', '120') KORUNUR.
+
+    **Şapkalı ünlüler tabanlarına indirilir** (`â î û` → `a i u`).
+    Sebebi ölçülmüş bir kayıptı: karakter sınıfı bu harfleri tanımıyordu,
+    bu yüzden sözcük sınırı sayılıyorlardı ve ortada kalan tek harfli
+    parçalar yukarıdaki kuralla atılıyordu:
+
+        "kâr payı oranı"  ->  ['payı', 'oranı']      # 'kâr' TAMAMEN düştü
+        "vekâlet akdi"    ->  ['vek', 'let', 'akdi']
+
+    `kâr payı` bu projenin merkezî terimi ve korpusun **319 belgesinde
+    (%18) şapkalı** yazılıyor; hepsinde erişim dizininden düşüyordu.
+    İndirgeme ayrıca iki yazımı birleştiriyor: 84 belgedeki şapkasız
+    'kar payı' ile 319 belgedeki 'kâr payı' artık aynı token.
+
+    Yalnız şapka kaldırılır, tam ASCII katlaması YAPILMAZ: `ş ç ğ ı ö ü`
+    Türkçede ayırt edici harflerdir ve onları da katlamak farklı sözcükleri
+    ('sac'/'saç') birleştirirdi. Tam katlama gerektiğinde
+    `preprocessing.clean.tr_fold_ascii` var.
     """
-    toks = re.findall(r"[a-zçğıöşü0-9]+", tr_fold(text or ""))
+    metin = tr_fold(text or "").translate(_SAPKA_INDIRGEME)
+    toks = re.findall(r"[a-zçğıöşü0-9]+", metin)
     return [t for t in toks if len(t) > 1 and t not in _STOPWORDS]
 
 
