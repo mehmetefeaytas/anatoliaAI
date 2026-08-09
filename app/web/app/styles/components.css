@@ -547,11 +547,18 @@ table.data tbody tr.group-head:not(:first-child) td {
 }
 
 /* ===================================================================
- * LLM ÖZETİ  (SummaryNotice)
+ * AI ÖZETİ  (SummaryNotice)
  *
  * Özet ile kaynak metin aynı ekranda görünüyorsa hangisinin ÜRETİLMİŞ olduğu
  * tek bakışta anlaşılmalıdır. Bu kutu eskiden tanımsızdı: `.badge-llm` çipi
  * görünüyor ama kutu kaynak metinden ayrışmıyordu.
+ *
+ * Ayrışma tarayıcıda DOĞRULANDI (2026-08-09, Jüri Audit Paneli, #1): özet
+ * kutusunun turuncu sol kenarı + çerçevesi + `--bg` zemini, hemen altındaki
+ * `.source-text` bloğundan bakışta ayrılıyor. Sınıf adları `.badge-llm` /
+ * `--llm` olarak KALDI: bunlar `extractor` şemasının adları (rule/ner/llm) ve
+ * görünen etiketin dili değiştiği için şema adını değiştirmek, iki ayrı şeyi
+ * birbirine bağlamak olurdu.
  * =================================================================== */
 .summary-box {
   border: 1px solid var(--line);
@@ -570,6 +577,16 @@ table.data tbody tr.group-head:not(:first-child) td {
   color: var(--fg-dim);
   margin-bottom: var(--sp-2);
 }
+/* Etiket satırındaki AÇIKLAMA cümlesi büyük harfe çevrilmez. `.summary-label`
+ * bir göz-üstü şeridi olarak tasarlandı ve büyük harf kısa bir çip için
+ * doğrudur; aynı biçim tam bir cümleye uygulanınca tarayıcıda
+ * «AI TARAFINDAN ÜRETİLMİŞTİR — KAYNAK METİN AŞAĞIDADIR. (ÜRETEN: YEREL LLM)»
+ * çıkıyordu: bağıran ve okunması yavaş bir satır. Rozet büyük harf kalır,
+ * cümle normal okunur — söylenen şey aynı, sesi düşük. */
+.summary-note {
+  text-transform: none;
+  letter-spacing: normal;
+}
 .summary-body {
   margin: 0;
   font-size: var(--fs-sm);
@@ -577,7 +594,8 @@ table.data tbody tr.group-head:not(:first-child) td {
   color: var(--fg);
 }
 /* Özet YOKSA sessiz kalınmaz: neden üretilmediği yazılır ve sahte özet
- * basılmaz (CLAUDE.md §19 halüsinasyon yasağı). */
+ * basılmaz (halüsinasyon yasağı). Kutu VURGUSUZ olur — turuncu sol kenar
+ * yalnız üretilmiş içeriğe aittir; boşluk uyarı değil, durum bildirimidir. */
 .summary-box.summary-empty {
   border-left-color: var(--line);
 }

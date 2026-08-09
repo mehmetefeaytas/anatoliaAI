@@ -223,7 +223,10 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
             </p>
           )}
 
-          {/* Özet varsa metnin ÜSTÜNDE ve etiketli; yoksa hiç basılmaz. */}
+          {/* AI özeti metnin ÜSTÜNDE ve etiketli durur; yoksa boşluk kısa bir
+            * notla adlandırılır (sahte özet basılmaz). Yorum eskiden «yoksa hiç
+            * basılmaz» diyordu — `SummaryNotice` bunu bırakalı çoktan oldu ve
+            * yorum sessizce yanlışa döndü. */}
           <SummaryNotice
             ozet={doc.data.ozet}
             ozetKaynak={doc.data.ozet_kaynak}
