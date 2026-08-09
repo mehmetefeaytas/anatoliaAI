@@ -1,5 +1,17 @@
 # Kalibrasyon Turu Sonucu (round0, 20 belge · 260 satır · 4 anotatör)
 
+> ## 🔧 HAKEMLİK UYGULANDI (2026-08-09)
+>
+> Aşağıdaki §1–§7 hakemlik **öncesi** ölçümdür ve teşhis kaydı olarak duruyor.
+> Uygulanan kurallar ve güncel sayılar için **[§8](#8-hakemlik-sonrası)**.
+>
+> | | önce | sonra |
+> |---|---:|---:|
+> | Fleiss κ | 0,051 | **0,268** |
+> | Krippendorff α (nominal) | 0,575 | 0,575 |
+> | uyuşmazlık | 252 | **138** |
+> | `lint` hatası | 149 | **87** |
+
 > Ölçüldü: 2026-08-09. Üreten komutlar bu belgenin sonunda.
 > Kaynak dosyalar: `round0_kalibrasyon_{A,B,C,D}.csv` (protokol **v1**).
 > Ham rapor: [`../iaa_report.md`](../iaa_report.md)
@@ -195,3 +207,82 @@ Sonra `report_iaa` yeniden koşulur. κ ≥ 0,67 ise ana tura geçilir.
 # 4) κ'nın nereden çıkacağını gör
 .venv/bin/python -m scripts.kappa_durum
 ```
+
+---
+
+# 8. Hakemlik sonrası
+
+`scripts/kalibrasyon_hakemlik.py` ile iki kılavuz kuralı uygulandı
+(2026-08-09). Değişen her hücrenin kaydı:
+[`_hakemlik-degisim.md`](./_hakemlik-degisim.md). Geri alma kopyaları
+`*.yedek-hakemlik`.
+
+## Uygulanan kurallar
+
+| Kural | Ne yapar | Kaynak |
+|---|---|---|
+| `bos-ok` | boş `verdict` + boş `gold_value` → `ok` | §3.1 (v1'de zaten öyle okunuyordu) |
+| `absent-ok` | `model_value` boşken `absent` → `ok` | §3.1 / §3.3 |
+
+Kural kişiye değil, **dosyalara uniform** uygulandı — `absent` yanlış kullanımı
+dört dosyanın hepsinde vardı (A 18 · B 4 · C 3 · D 134).
+
+## Değişen ve korunan
+
+| Dosya | değişen | korunan: dolu `gold_value` | korunan: meşru `absent` |
+|---|---:|---:|---:|
+| A | 199 | 0 | 19 |
+| B | 136 | **39** | 2 |
+| C | 3 | 0 | 6 |
+| D | 134 | 0 | 10 |
+| **toplam** | **472** | **39** | **37** |
+
+**Korunan 39:** boş `verdict` + dolu `gold_value` = `fix`. Anotatör düzeltmeyi
+yazıp karar sütununu atlamış; `ok` yazmak o düzeltmeyi onaya çevirirdi.
+
+**Korunan 37:** modelin gerçekten bir değer ürettiği ve anotatörün reddettiği
+satırlar — halüsinasyon (FP) iddiası, projenin ölçtüğü en değerli sinyal.
+
+## Sonuç
+
+```
+Fleiss κ            0,051 -> 0,268
+Krippendorff α      0,575 -> 0,575   (DEĞİŞMEDİ)
+uyuşmazlık            252 -> 138
+lint hatası           149 ->  87
+```
+
+α'nın kılı kıpırdamaması **kanıttır**: değerlere dokunulmadı, yalnız aynı şeyi
+söyleyen farklı etiketler birleştirildi.
+
+## Ama eşik hâlâ geçilmedi
+
+**0,268 < 0,67.** Kalan 138 uyuşmazlığın **106'sı gerçek değer ayrışması**
+(önce 106'ydı — hiç azalmadı, çünkü hakemlik onlara dokunmadı), yalnız 32'si
+etiket farkı.
+
+| Alan | uyuşmazlık |
+|---|---:|
+| `campaign_type` | 20 |
+| `kampanya_kosullari` | 20 |
+| `hedef_kitle` | 19 |
+| `taksit_sayisi` | 15 |
+| `vade_ay` | 15 |
+| `masraf_durumu` | 10 |
+
+Bunlar mekanik kuralla çözülemez; **içerik tartışması** gerektirir. §7'deki
+gündemin 3. ve 4. maddeleri (kanonik biçim, 8 sınıf sabittir) tam olarak bu
+altı alanı hedefliyor.
+
+## Kalan biçim hataları (87)
+
+Hakemlik `verdict` sütununu düzeltti, `gold_value`'nun İÇERİĞİNİ değil.
+Duran hatalar:
+
+- **B (48):** `hedef_kitle`de serbest metin (18); tek değerli alana iki değer
+  (18); karar sütununa not yazılmış (1)
+- **C (18):** tek değerli alana iki değer; taksonomi dışı tür
+- **D (21):** `gold_value`'da belge açıklaması
+
+Bunları anotatörün kendisi düzeltmeli — değerin ne olması gerektiğini
+bilen tek kişi o.
