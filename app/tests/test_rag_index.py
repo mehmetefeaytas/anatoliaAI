@@ -110,13 +110,16 @@ class UnindexedRetriever:
             # Alan kümesi üretimdekiyle BİREBİR aynı olmak zorunda; `bank_slug`
             # ve `campaign_id` denetim alanları olarak eklendiğinde bu referans
             # güncellenmemişti ve denklik testi 14 kez düştü. Test doğru
-            # davrandı: sözleşme kaymasını yakalamak onun işi.
+            # davrandı: sözleşme kaymasını yakalamak onun işi. `ozet` alanı
+            # (2026-08-09, arayüzdeki «AI Özeti») aynı yoldan geçti.
+            ozet = (d.get("ozet") or "").strip()
             scored.append({
                 "bank": d.get("bank_name") or d.get("bank"),
                 "bank_slug": d.get("bank"),
                 "campaign_id": int(cid) if cid is not None else None,
                 "source_url": d.get("source_url"),
                 "text": d.get("raw_text"),
+                "ozet": ozet or None,
                 "score": round(score, 3),
             })
         scored.sort(key=lambda x: x["score"], reverse=True)

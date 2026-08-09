@@ -765,6 +765,62 @@ ol.steps span {
   margin-bottom: 0;
 }
 
+/* --- kaynak satırı: AI Özeti + katlanmış ham metin (ChatPanel) ---
+ *
+ * RAG pasajı kaynak olarak belgenin TAMAMINI taşır ve hücreye olduğu gibi
+ * basılınca tek satır ekranı dolduruyordu. Görünüm artık üç parçalı: rozet
+ * (özet var/yok), kısa gövde, katlanmış tam metin. Kutu `max-width` almaz —
+ * tablo hücresi zaten `.table-wrap` içinde kendi kaydırmasını taşıyor. */
+.kaynak-govde {
+  display: grid;
+  justify-items: start;
+  gap: var(--sp-2);
+}
+.kaynak-ozet {
+  margin: 0;
+  line-height: var(--lh-relaxed);
+  color: var(--fg);
+}
+/* Özet YOKSA gövde bir açıklamadır, içerik değil: rengi ve eğimi onu
+ * belgeden gelen metinden ayırır (sahte özet sanılmasın). */
+.kaynak-ozet-yok {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-style: italic;
+}
+.kaynak-onizleme {
+  margin: 0;
+  line-height: var(--lh-relaxed);
+  color: var(--fg-dim);
+}
+.kaynak-ham {
+  width: 100%;
+  border-top: 1px solid var(--line-soft);
+  padding-top: var(--sp-2);
+}
+.kaynak-ham > summary {
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-wide);
+  color: var(--accent-soft);
+}
+.kaynak-ham > summary:hover {
+  color: var(--accent);
+}
+/* Tam metin binlerce karakter olabilir: kendi kaydırma kutusunda kalır,
+ * yoksa açılan bir satır tabloyu sayfa boyu uzatırdı. */
+.kaynak-ham-govde {
+  margin: var(--sp-2) 0 0;
+  max-height: calc(var(--sp-10) * 4);
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-relaxed);
+  color: var(--fg-dim);
+}
+
 /* Yükleniyor iskeleti — "bir şey oluyor mu" belirsizliğini kaldırır.
  * `prefers-reduced-motion` altında nabız durur (base.css). */
 .skeleton {

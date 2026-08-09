@@ -325,6 +325,15 @@ export type ChatSource = {
   source_url?: string | null;
   /** OPSİYONEL — «belgeye git» sıçraması için kampanya kimliği. */
   campaign_id?: number | null;
+  /**
+   * Belgenin önceden üretilmiş özeti («AI Özeti»); üretilmemişse `null`.
+   *
+   * RAG yolunda kaynak, belgenin TAMAMIDIR ve ham hâliyle tabloya basılınca
+   * tek satır ekranı dolduruyordu. Sunucu bu alanı her kayıtta gönderir
+   * (bkz. src/api/main.py `_kaynaklari_zenginlestir`); `null` ise arayüz
+   * özet UYDURMAZ, ham metnin kırpılmış olduğunu açıkça yazar.
+   */
+  ozet?: string | null;
   [k: string]: unknown;
 };
 

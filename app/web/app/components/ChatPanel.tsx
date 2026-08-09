@@ -40,12 +40,29 @@
  * d) **Her cevap bir öncekini siliyordu** (tek `resp` state'i). Jüri arka
  *    arkaya soru sorduğunda önceki cevap kayboluyordu; artık konuşma listesi
  *    tutuluyor.
+ *
+ * ## Kaynak satırındaki «AI Özeti»
+ *
+ * RAG pasajının `text` alanı belgenin TAMAMIDIR ve tabloya olduğu gibi
+ * basılıyordu: tek bir kaynak satırı üç satır boyunca 4.000+ karakter ham
+ * kampanya metni döküyor, ekran okunmaz hâle geliyordu. Korpusta belge başına
+ * ortalama 4.744 karakter var; 1774 belgenin 1005'i 2.000 karakteri aşıyor.
+ *
+ * Artık satır, belgenin önceden üretilmiş özetini basar (`ozet`, ortalama 259
+ * karakter). İki kural bu görünümü bağlar:
+ *
+ *  - **Özet uydurulmaz.** `ozet` boşsa «AI Özeti» etiketi BASILMAZ; ham metnin
+ *    kırpılmış başlangıcı gösterilir ve bunun özet olmadığı yazılır. İlk
+ *    cümleleri özet diye sunmak, üretilmemiş bir yeteneği üretilmiş gibi
+ *    göstermek olurdu (src/summarize/ozet.py aynı yasağı sunucuda koyuyor).
+ *  - **Ham metne erişim kaybolmaz.** Tam metin katlanır bir kutuda durur;
+ *    denetlenebilirlik iddiası kısaltmayla feda edilemez.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../lib/api";
 import type { ChatResp, ChatSource } from "../lib/api";
-import { formatValue } from "../lib/format";
+import { formatValue, trNum } from "../lib/format";
 import { ErrorNotice } from "./ErrorNotice";
 import Markdown from "./ui/Markdown";
 
@@ -66,6 +83,25 @@ const HANDLER_LABELS: Record<string, string> = {
   structured: "yapısal sorgu (text-to-SQL)",
   rag: "RAG (anlamsal arama)",
 };
+
+/**
+ * Özeti OLMAYAN belgede tabloya basılacak ham metin payı.
+ *
+ * Sunucudaki `rag.ALINTI_KARAKTER` ile aynı büyüklük seçildi ki cevap gövdesi
+ * ile kaynak satırı aynı uzunlukta okunsun. Bu bir kırpmadır, özetleme değil —
+ * kullanıcıya da öyle söylenir.
+ */
+const HAM_ONIZLEME_KARAKTER = 320;
+
+/** Ham metinden okunur bir önizleme — sözcük ortasından kesmez. */
+function kirp(metin: string, sinir: number): string {
+  const tek = metin.replace(/\s+/g, " ").trim();
+  if (tek.length <= sinir) return tek;
+  const kesik = tek.slice(0, sinir);
+  const bosluk = kesik.lastIndexOf(" ");
+  const govde = bosluk > sinir / 2 ? kesik.slice(0, bosluk) : kesik;
+  return `${govde.replace(/[ ,;:.]+$/, "")}…`;
+}
 
 /** Ekranda duran tek bir soru-cevap turu. */
 type Tur = {
@@ -250,7 +286,8 @@ function Kaynaklar({
       <h3>Kaynaklar ({cevap.sources.length})</h3>
       <p className="small muted" style={{ margin: "0 0 var(--sp-2)" }}>
         Her satır, cevabın dayandığı belgeye götürür: bankanın kendi sayfası ve
-        belgenin denetim ekranı.
+        belgenin denetim ekranı. Uzun belgelerde önce AI Özeti gösterilir; ham
+        metnin tamamı satırın içinde açılır.
       </p>
       <div className="table-wrap">
         <table className="data stackable">
@@ -258,7 +295,7 @@ function Kaynaklar({
             <tr>
               <th scope="col">Banka</th>
               <th scope="col">Değer</th>
-              <th scope="col">Kaynak metin parçası</th>
+              <th scope="col">AI Özeti / kaynak metin</th>
               <th scope="col">Kaynak</th>
             </tr>
           </thead>
@@ -271,7 +308,7 @@ function Kaynaklar({
                 <td data-label="Değer" className="num">
                   {"value" in s ? formatValue(s.value, cevap.field ?? undefined) : "—"}
                 </td>
-                <td data-label="Kaynak metin" className="small muted">
+                <td data-label="AI Özeti / kaynak metin" className="small muted">
                   <Parca kaynak={s} />
                 </td>
                 <td data-label="Kaynak">
@@ -286,23 +323,78 @@ function Kaynaklar({
   );
 }
 
-/**
- * Kaynak metin parçası.
- *
- * RAG pasajları `bank/value/source_span` şeklinde gelmeyebilir; birkaç bilinen
- * anahtar denenir. Hiçbiri yoksa eskiden `JSON.stringify(s)` basılıyordu —
- * jüri ekranına ham JSON dökmek, kaynağı kanıt olmaktan çıkarıp gürültüye
- * çevirir. Artık bilginin yokluğu SÖYLENİR.
- */
-function Parca({ kaynak }: { kaynak: ChatSource }) {
-  if (typeof kaynak.source_span === "string" && kaynak.source_span.trim()) {
-    return <>…{kaynak.source_span.trim()}…</>;
-  }
+/** Kaynak kaydındaki ilk dolu ham metin alanı (RAG pasajları farklı adlar kullanır). */
+function hamMetin(kaynak: ChatSource): string {
   for (const key of ["text", "chunk_text", "passage", "detail"]) {
     const v = kaynak[key];
-    if (typeof v === "string" && v.trim()) return <>{v.trim()}</>;
+    if (typeof v === "string" && v.trim()) return v.trim();
   }
+  return "";
+}
+
+/**
+ * Kaynak satırının gövdesi: varsa AI Özeti, yoksa kırpılmış ham metin.
+ *
+ * Sıra bilinçli. `source_span` yapısal sorgu yolunun dar kanıt penceresidir
+ * (değerin çıkarıldığı yer) ve özet ondan daha iyi bir kanıt DEĞİLDİR; bu
+ * yüzden özet yalnızca elde dar pencere yokken, yani belgenin tamamı kaynak
+ * olarak geldiğinde öne geçer.
+ *
+ * Hiçbir alan yoksa eskiden `JSON.stringify(s)` basılıyordu — jüri ekranına
+ * ham JSON dökmek, kaynağı kanıt olmaktan çıkarıp gürültüye çevirir. Artık
+ * bilginin yokluğu SÖYLENİR.
+ */
+function Parca({ kaynak }: { kaynak: ChatSource }) {
+  const span = typeof kaynak.source_span === "string" ? kaynak.source_span.trim() : "";
+  if (span) return <>…{span}…</>;
+
+  const ham = hamMetin(kaynak);
+  const ozet = typeof kaynak.ozet === "string" ? kaynak.ozet.trim() : "";
+
+  if (ozet) {
+    return (
+      <div className="kaynak-govde">
+        <span className="badge badge-llm">AI Özeti</span>
+        <p className="kaynak-ozet">{ozet}</p>
+        {ham && <HamMetin metin={ham} />}
+      </div>
+    );
+  }
+
+  if (ham) {
+    return (
+      <div className="kaynak-govde">
+        {/* Özet YOK: etiket bunu söyler. «AI Özeti» rozeti burada basılmaz,
+            çünkü aşağıdaki metin özet değil, belgenin ilk cümleleridir. */}
+        <span className="badge">AI Özeti yok</span>
+        <p className="kaynak-ozet-yok">
+          Bu belge için AI Özeti üretilmedi. Aşağıdaki satır özet değil, ham
+          metnin kırpılmış başlangıcıdır.
+        </p>
+        <p className="kaynak-onizleme">{kirp(ham, HAM_ONIZLEME_KARAKTER)}</p>
+        <HamMetin metin={ham} />
+      </div>
+    );
+  }
+
   return <span className="faint">kaynak metin parçası döndürülmedi</span>;
+}
+
+/**
+ * Ham metnin tamamı — katlanmış, ama erişilebilir.
+ *
+ * Kısaltma denetlenebilirliği azaltmamalı: jüri «kırptın, gerisinde ne var»
+ * diye sorabilmeli ve cevap aynı satırda, ağ isteği olmadan açılmalı. Yerel
+ * `<details>` kullanılır; yeni bağımlılık yok, klavye ve ekran okuyucu desteği
+ * tarayıcıdan gelir.
+ */
+function HamMetin({ metin }: { metin: string }) {
+  return (
+    <details className="kaynak-ham">
+      <summary>Ham metnin tamamı ({trNum(metin.length)} karakter)</summary>
+      <p className="kaynak-ham-govde">{metin}</p>
+    </details>
+  );
 }
 
 /**

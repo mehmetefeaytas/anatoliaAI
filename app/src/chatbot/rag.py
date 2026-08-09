@@ -19,6 +19,19 @@ yapmak demek olurdu.
 
 Üretim cevabı yerel LLM ile sentezlenir; LLM yoksa en alakalı pasajlar
 "alıntı (extractive)" olarak döndürülür — yine kaynağa dayalı, halüsinasyonsuz.
+
+## Pasajlar neden `ozet` taşıyor
+
+Pasaj sözlüğündeki `text` belgenin TAMAMIDIR ve öyle kalmalıdır: LLM bağlamı,
+karantina taraması ve denetim hep tam metne bakar. Ama tam metin arayüzde
+basılabilir bir şey değil — korpusta belge başına ortalama 4.744 karakter var,
+1774 belgenin 1005'i (%57) 2.000 karakteri aşıyor, en uzunu 178.825 karakter.
+Kaynak tablosuna bu metnin dökülmesi ekranı okunmaz hâle getiriyordu.
+
+Bu yüzden her pasaj, belgenin ÖNCEDEN üretilmiş özetini (`campaigns.ozet`,
+ortalama 259 karakter) da taşır. Özet burada ÜRETİLMEZ, yalnızca taşınır;
+üretilmemişse alan `None` kalır ve kural tabanlı sahte bir özet uydurulmaz —
+gerekçesi `src/summarize/ozet.py` modül başlığında yazılı.
 """
 
 from __future__ import annotations
@@ -104,6 +117,45 @@ class RagAnswer:
     # Boş liste normal koşu; dolu ise korpusta zehirli belge VAR demektir ve
     # bu SESSİZ GEÇİLMEZ (bkz. safety.detect_injection).
     quarantined: list[dict] = dc_field(default_factory=list)
+
+
+# --------------------------------------------------------------------------- #
+# Özet taşıma — üretim değil, aktarım
+# --------------------------------------------------------------------------- #
+#: LLM kapalıyken üretilen çıkarımsal cevaba konacak ham metin payı.
+#: Cevap satırı bir okuma kutusudur, belge görüntüleyicisi değil; belgenin
+#: tamamına erişim kaybolmaz, kaynak satırındaki katlanır kutuda durur.
+ALINTI_KARAKTER = 320
+
+
+def _ozet_alani(d: dict) -> Optional[str]:
+    """Belgenin önceden üretilmiş özeti; üretilmemişse `None`.
+
+    Burada özet ÜRETİLMEZ. Boş dizeyi `None`'a indirger, çünkü arayüz için
+    "özet yok" ile "özet boş" aynı şeydir ve boş bir «AI Özeti» kutusu
+    göstermek, üretilmemiş bir yeteneği üretilmiş gibi göstermek olurdu.
+    """
+    ozet = (d.get("ozet") or "").strip()
+    return ozet or None
+
+
+def kisa_alinti(metin: str, sinir: int = ALINTI_KARAKTER) -> str:
+    """Metnin başından, sözcük ortasından kesmeyen kısa parça — ÖZET DEĞİL.
+
+    Adı bilerek "özet" değil: bu parça belgenin ilk cümlelerinden ibarettir ve
+    belgenin neyi anlattığına dair hiçbir iddia taşımaz. Onu «özet» diye
+    sunmak, `src/summarize/ozet.py`'nin yasakladığı kural tabanlı sahte özetin
+    ta kendisi olurdu; çağıran taraf bu ayrımı kullanıcıya SÖYLEMEK zorundadır.
+    """
+    metin = " ".join((metin or "").split())
+    if len(metin) <= sinir:
+        return metin
+    kesik = metin[:sinir]
+    bosluk = kesik.rfind(" ")
+    # Tek bir devasa "sözcük" (boşluksuz) gelirse geri düşüş sert kesmedir.
+    if bosluk > sinir // 2:
+        kesik = kesik[:bosluk]
+    return kesik.rstrip(" ,;:.") + "…"
 
 
 #: Şapkalı ünlü -> taban ünlü. `tr_fold` küçültme yaptığı için büyük
@@ -243,6 +295,9 @@ class KeywordRetriever:
                 "campaign_id": int(cid) if cid is not None else None,
                 "source_url": d.get("source_url"),
                 "text": d.get("raw_text"),
+                # Önceden üretilmiş özet; yoksa None. Arayüz uzun ham metin
+                # yerine bunu basar (modül başlığı).
+                "ozet": _ozet_alani(d),
                 "score": round(overlap / denom, 3),
             })
         scored.sort(key=lambda x: x["score"], reverse=True)
@@ -390,6 +445,9 @@ class VectorRetriever:
                 # Tam kampanya metni döndürülür (KeywordRetriever ile aynı
                 # sözleşme); eşleşen parça ayrıca `chunk` alanında verilir.
                 "text": meta.get("raw_text"),
+                # `KeywordRetriever` ile aynı sözleşme: arayüz hangi
+                # retriever'ın konuştuğunu bilmeden özeti bulabilmeli.
+                "ozet": _ozet_alani(meta),
                 "score": round(float(hit.score), 3),
                 "chunk": hit.chunk_text,
                 "chunk_index": hit.chunk_index,
@@ -477,9 +535,34 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
             pass
 
     # LLM yok → extractive: en alakalı pasajı kaynağıyla döndür
-    top = passages[0]
-    text = f"İlgili kampanya ({top['bank']}): {top['text']}"
-    return RagAnswer(text, passages, used, quarantined=karantina)
+    return RagAnswer(_cikarimsal_cevap(passages[0]), passages, used,
+                     quarantined=karantina)
+
+
+def _cikarimsal_cevap(top: dict) -> str:
+    """LLM kapalıyken gösterilen cevap gövdesi.
+
+    Eskiden burada `f"İlgili kampanya ({bank}): {top['text']}"` vardı ve
+    `text` belgenin TAMAMIYDI: tek soru, cevap kutusuna 4.000+ karakterlik
+    ham sayfa döküyordu. Ölçüldü — korpustaki 1774 belgenin 1005'i 2.000
+    karakteri aşıyor, en uzunu 178.825 karakter.
+
+    Artık önceden üretilmiş özet varsa o basılır. Yoksa ham metnin başlangıcı
+    gösterilir ve bunun özet OLMADIĞI açıkça yazılır: özeti olmayan belgede
+    ilk cümleleri «özet» diye sunmak, ölçülmemiş bir yeteneği ölçülmüş gibi
+    göstermek olurdu.
+    """
+    banka = top.get("bank") or "banka bilinmiyor"
+    ozet = _ozet_alani(top)
+    if ozet:
+        return f"İlgili kampanya ({banka}) — AI Özeti: {ozet}"
+
+    alinti = kisa_alinti(top.get("text") or "")
+    if not alinti:
+        return (f"İlgili kampanya ({banka}). Belgenin metni boş olduğu için "
+                "gösterilecek bir parça yok.")
+    return (f"İlgili kampanya ({banka}). Bu belge için AI Özeti üretilmedi; "
+            f"aşağıdaki satır özet değil, ham metnin başlangıcıdır: {alinti}")
 
 
 def _karantina(passages: list[dict]) -> tuple[list[dict], list[dict]]:

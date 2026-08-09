@@ -485,7 +485,7 @@ def build_app():
 
     def _kaynaklari_zenginlestir(handler: str, field: Optional[str],
                                  sources: list) -> list[dict]:
-        """`/chat` kaynaklarına `campaign_id` + `source_url` ekler.
+        """`/chat` kaynaklarına `campaign_id` + `source_url` + `ozet` ekler.
 
         Jüri "bu bilgiyi nereden aldın" diye sorduğunda arayüz tek tıkla
         `GET /campaigns/{campaign_id}/text`e gidebilmeli. RAG yolu bu iki
@@ -498,6 +498,20 @@ def build_app():
         ediyorsa hangisi olduğunu bilmiyoruz demektir ve alan `null` kalır.
         Yaklaşık eşleştirmeyle bir kampanya seçmek, denetlenebilir bağlantı
         vaadinin tam tersi olurdu (CLAUDE.md §21: değer uydurma).
+
+        ## `ozet` neden HER kayıtta var
+
+        RAG pasajı kaynak olarak belgenin TAMAMINI taşır ve arayüz onu tabloya
+        basıyordu — tek satır ekranı dolduruyordu. Arayüz artık varsa özeti
+        basıyor; bunu yapabilmesi için alanın VARLIĞI sözleşme olmalı, yoksa
+        `undefined` ile `null` ayrımı istemci tarafında tahmine dönüşür.
+
+        Yapısal sorgu yolunda `ozet` **her zaman `null`**'dır ve bu bir eksik
+        değil, doğru cevaptır: o yolun kaynak parçası `source_span`, yani
+        değerin çıkarıldığı dar penceredir — zaten kısadır ve özetlenecek bir
+        şey değildir. `query_fields()` özeti seçmez; kampanya başına özet
+        çekmek için ayrı bir sorgu koşturmak, gösterilmeyecek bir alan için
+        istek başına maliyet olurdu.
         """
         dizin: dict[tuple[Any, Any], Optional[dict]] = {}
         if handler == "structured" and field:
@@ -516,6 +530,10 @@ def build_app():
                 kayit["campaign_id"] = int(cid) if cid is not None else None
             if kayit.get("source_url") is None:
                 kayit["source_url"] = eslesme.get("source_url") if eslesme else None
+            # Özet ÜRETİLMEZ, yalnız taşınır: RAG pasajı getirmişse geçer,
+            # getirmemişse alan açıkça `null` olur.
+            ozet = kayit.get("ozet")
+            kayit["ozet"] = ozet.strip() if isinstance(ozet, str) and ozet.strip() else None
             out.append(kayit)
         return out
 
@@ -1176,10 +1194,15 @@ def build_app():
     def chat(req: ChatReq):
         """Hibrit chatbot — her kaynak kaydı DENETLENEBİLİR bağlantı taşır.
 
-        `sources` içindeki her kayıt `campaign_id` ve `source_url` alanlarını
-        **her zaman içerir**; bilinmiyorsa değeri `null`'dır. Eskiden yalnız
-        metin parçası dönüyordu ve "bu bilgiyi nereden aldın" sorusunun
-        cevabı arayüzde kurulamıyordu.
+        `sources` içindeki her kayıt `campaign_id`, `source_url` ve `ozet`
+        alanlarını **her zaman içerir**; bilinmiyorsa değeri `null`'dır.
+        Eskiden yalnız metin parçası dönüyordu ve "bu bilgiyi nereden aldın"
+        sorusunun cevabı arayüzde kurulamıyordu.
+
+        `ozet` önceden üretilmiş belge özetidir (`campaigns.ozet`) ve istek
+        anında ÜRETİLMEZ. Arayüz uzun ham metin yerine onu basar; özeti
+        olmayan belgede sahte bir özet uydurulmaz, ham metnin kırpıldığı
+        kullanıcıya söylenir.
         """
         a = bot.ask(req.question)
         return {"answer": a.text, "handler": a.handler, "field": a.field,
