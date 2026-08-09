@@ -97,11 +97,18 @@ anotasyon gerekmez.
 | 3 | Vade tutara bağlı (`100 gr'a kadar 1 ay, üstü 3–12 ay`) | `gold_value` = en uzun (`12`). `note`'a kademeleri yaz + `#kosullu_aralik` |
 | 4 | Finansman tutarı aralık (`5.000 – 150.000 TL`) | `gold_value` = **üst sınır** (ürünün ilan ettiği tavan). `note`'a: `alt=5000` |
 | 5 | Birden çok masraf kalemi | `gold_value` = **toplam** `{"has_fee": true, "amount": 20000}`. `note`'a kalemleri tek tek yaz |
-| 6 | Oransal tahsis ücreti (`binde 5`) | **`unclear`** + `note`: `binde 5, tutara bagli`. Para şeması oran tutamıyor — gerçek şema açığı, karar bekliyor |
+| 6 | Oransal tahsis ücreti (`binde 5`) | **`unclear`** + `note`: `binde 5, tutara bagli`. Ayrıca `masraf_durumu` = `{"has_fee": true, "amount": null}`. **KARAR (2026-08-09):** alan para tipli KALIR; oranı kabul etmek %0,5 ile 500 TL'yi aynı sütunda sıralamak olurdu. Çıkarıcı da artık oran üretmiyor |
 | 7 | Kâr payı **paylaşım** oranı (`%85 / %15`) | `kar_payi_orani` = **`absent`** + `note`: `#terminoloji paylasim orani`. Kılavuz §4: finansman oranı DEĞİLDİR |
-| 8 | 8 sınıfa sığmayan tür | Katılma/altın/yatırım hesabı → `Yatırım Ürünü` · Leasing (icara) → `Finansman`. `note`'a gerçek ürün adını yaz |
+| 8 | 8 sınıfa sığmayan tür | Katılma/altın/yatırım hesabı → `Yatırım Ürünü` · Leasing (icara) → `Finansman`. `note`'a gerçek ürün adını yaz. **Önce tek özne testi:** sayfa tek bir ürünü anlatıyorsa bu eşleme geçerlidir; ürün LİSTESİ ise `campaign_type` = `absent` (kılavuz §4.13/1) |
 
 ### Bir belgede birden çok ürün varsa
+
+> **`campaign_type` ile karıştırmayın.** Buradaki `unclear` kuralı **değer
+> alanları** içindir (`kar_payi_orani`, `vade_ay` …): iki ürünün iki farklı
+> oranı varsa hangisinin gold'a gireceği gerçekten belirsizdir.
+> `campaign_type` için durum farklıdır — liste sayfasının 8 sınıftan hiçbirine
+> ait OLMADIĞI kesindir, yani kararsızlık yoktur: **`absent`** yazılır
+> (kılavuz §4.13/1).
 
 Aynı metinde iki farklı ihtiyaç finansmanı varsa hangi değeri yazacağınız
 belirsizdir → **`unclear`** + `note`'a kaç ürün olduğu. `fix` yazıp bir ürünün

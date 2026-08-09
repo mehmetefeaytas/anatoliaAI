@@ -417,24 +417,47 @@ etiketten biri değildi, yani hiçbiri gold'a girmedi — linter hepsini reddett
 > Kural yoksa dört anotatör dört ayrı kural icat eder; sonra çıkan düşük κ
 > anotatör uyumsuzluğunu değil kılavuz belirsizliğini ölçer.
 
-### 1) Kampanya olmayan belge — 8 sınıfın hiçbiri uymuyorsa `absent`
+### 1) Tek özne testi — belgenin bir öznesi yoksa `absent`
 
 Korpusta zekât hesaplama aracı, KVKK/aydınlatma metni, kurumsal tanıtım sayfası
-ve **kampanya LİSTESİ** sayfaları var. gold.v2'nin **9 belgesi (%19)** böyle.
+ve **liste** sayfaları var. gold.v2'nin **9 belgesi (%19)** böyle.
 
-**Kural:** Belge tek bir kampanyayı anlatmıyorsa `campaign_type` → **`absent`**.
+**Kural — tek soru:** *Bu belgenin tek bir öznesi var mı?*
+
+| Belge | `campaign_type` |
+|---|---|
+| Tek bir **kampanyayı** anlatıyor | ilgili sınıf |
+| Tek bir **ürünü** anlatıyor (katılma hesabı, altın hesabı, leasing) | ilgili sınıf — §4.13/8'deki eşleme |
+| Birden çok ürün/kampanya **sıralıyor**, hiçbirinin ayrıntısını vermiyor | **`absent`** |
+| Kampanya da ürün de değil (KVKK metni, hesaplama aracı, kurumsal tanıtım) | **`absent`** |
+
 `null` meşrudur ve bir hatanın değil, bir kararın adıdır. 12 alan da varsayılan
-olarak `absent`tir; ancak metinde o kampanyaya ait gerçek bir değer geçiyorsa
+olarak `absent`tir; ancak metinde o özneye ait gerçek bir değer geçiyorsa
 doldurulur. `note`'a **`#kampanya_disi`** yazın.
 
 *Gerekçe:* 8 sınıf kapalı bir kümedir; uymayan belgeye en yakın sınıfı vermek
 macro-F1'i dürüst bir `null`dan daha çok bozar ve modelin "her metne bir sınıf
 uydurma" davranışını ödüllendirir.
 
-**Kampanya listesi sayfası ayrımı:** sayfa birden çok kampanyanın başlığını
-sıralıyor ve hiçbirinin koşulunu vermiyorsa listedir → `absent`. Tek kampanyayı
-anlatıp altında "diğer kampanyalar" bloğu taşıyorsa liste değildir → normal
-anote edilir, blok yok sayılır (§4.13/8).
+**Liste sayfası ayrımı:** sayfa birden çok özneyi sıralıyor ve hiçbirinin
+koşulunu vermiyorsa listedir → `absent`. Tek özneyi anlatıp altında "diğer
+kampanyalar" bloğu taşıyorsa liste değildir → normal anote edilir, blok yok
+sayılır (§4.13/8).
+
+**Liste sayfasında `unclear` YAZILMAZ.** `unclear` "karar veremedim" demektir;
+liste sayfası ise kararsız bir belge değildir — 8 sınıftan hiçbirine ait
+OLMADIĞI kesindir. Doğru karar `absent`tir.
+
+> **KARAR (2026-08-09) — ekip onayı.** Bu kural revize edildi. Eski metin
+> *"Belge tek bir kampanyayı anlatmıyorsa `absent`"* diyordu ve `_bicim-karti.md`
+> §8 ile çarpışıyordu: §8 katılma/altın/yatırım hesabını `Yatırım Ürünü`,
+> leasing'i `Finansman` sayıyor, oysa bunlar **ürün** sayfasıdır, kampanya
+> değil. Kalibrasyonda dört anotatörün dördü de kılavuza uygun davrandı ama
+> farklı maddeye — sonuç κ'ya uyuşmazlık olarak yansıdı.
+>
+> Ölçülen bedel: geniş okuma (her ürün sayfası `absent`) korpusun **264
+> belgesini** (`Yatırım Ürünü`, ikinci en büyük sınıf) tür kıyasından
+> düşürüyordu. Ayrım artık "kampanya mı ürün mü" değil, **"tek özne var mı"**.
 
 ### 2) Ürün kısıtı mı, müşteri segmenti mi — tek soruluk test
 
