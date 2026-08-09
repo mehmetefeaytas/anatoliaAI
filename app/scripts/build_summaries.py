@@ -111,38 +111,67 @@ def _yaz(repo: Repository, atamalar: dict[int, str]) -> int:
     return int(yazici(atamalar))
 
 
+#: Kaç belgede bir depoya yazılacağı. Tam korpus koşusu ~1400 belge ve belge
+#: başına ~6 sn, yani ~2,5 saat. Tek seferde sonda yazmak, o 2,5 saatin
+#: TAMAMINI tek bir kesintiye (Ctrl-C, uyku, OOM) bağlar: yazılmamış özetler
+#: kaybolur ve `--devam` sıfırdan başlar çünkü DB'de hiçbir iz yoktur.
+#: Parçalı yazma ile kayıp en fazla bir parçadır ve `--devam` gerçekten
+#: kaldığı yerden devam eder.
+YAZMA_PARCASI = 25
+
+
 def calistir(db_yolu: str, *, kapsam: str = "kiyas", devam: bool = False,
              limit: Optional[int] = None, kuru: bool = False,
              maks_karakter: int = MAKS_GIRDI_KARAKTER,
-             llm=None) -> dict:
-    """Toplu özet üretimi. Rapor sözlüğü döndürür (JSON'a yazılabilir)."""
+             llm=None, parca: int = YAZMA_PARCASI,
+             ilerleme=None) -> dict:
+    """Toplu özet üretimi. Rapor sözlüğü döndürür (JSON'a yazılabilir).
+
+    Özetler `parca` belgede bir depoya YAZILIR (bkz. `YAZMA_PARCASI`).
+    `ilerleme` verilirse her parçadan sonra `(islenen, hedef, yazilan)` ile
+    çağrılır — uzun koşuda ilerlemeyi görünür kılar.
+    """
     llm = llm if llm is not None else default_extractor()
     repo = Repository(db_yolu)
     try:
         hedefler, toplam = hedef_kampanyalar(repo, kapsam=kapsam, devam=devam,
                                              limit=limit)
         basladi = time.time()
-        atamalar: dict[int, str] = {}
+        bekleyen: dict[int, str] = {}
         sebepler: dict[str, int] = {}
         kirpilan = 0
+        ozetlenen = 0
+        yazilan = 0
 
-        for camp in hedefler:
+        def bosalt() -> None:
+            nonlocal bekleyen, yazilan
+            if kuru or not bekleyen:
+                return
+            yazilan += _yaz(repo, bekleyen)
+            bekleyen = {}
+
+        for i, camp in enumerate(hedefler, start=1):
             sonuc: OzetSonucu = ozetle(camp.get("raw_text") or "", llm,
                                        maks_karakter=maks_karakter)
             kirpilan += 1 if sonuc.kirpildi else 0
             if sonuc.uretildi and sonuc.ozet:
-                atamalar[int(camp["id"])] = sonuc.ozet
+                bekleyen[int(camp["id"])] = sonuc.ozet
+                ozetlenen += 1
             else:
                 anahtar = sonuc.sebep or "bilinmiyor"
                 sebepler[anahtar] = sebepler.get(anahtar, 0) + 1
+            if parca > 0 and i % parca == 0:
+                bosalt()
+                if ilerleme is not None:
+                    ilerleme(i, len(hedefler), yazilan)
 
-        yazilan = 0 if kuru else _yaz(repo, atamalar)
+        bosalt()
         return {
             "db": db_yolu,
             "kapsam": kapsam,
             "korpus_belge": toplam,
             "hedef_belge": len(hedefler),
-            "ozetlenen": len(atamalar),
+            "ozetlenen": ozetlenen,
             "yazilan": yazilan,
             "kuru": kuru,
             "kirpilan_girdi": kirpilan,
@@ -186,6 +215,9 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--maks-karakter", type=int, default=MAKS_GIRDI_KARAKTER,
                     help="modele verilecek en fazla karakter")
     ap.add_argument("--json-report", default=None, help="raporu JSON olarak yaz")
+    ap.add_argument("--parca", type=int, default=YAZMA_PARCASI,
+                    help=f"kaç belgede bir DB'ye yazılsın (öntanım {YAZMA_PARCASI}; "
+                         "0 = yalnız sonda yaz)")
     a = ap.parse_args(argv)
 
     # Ollama varsayılan bağlamı 2048'dir ve fazlasını SESSİZCE baştan kırpar —
@@ -207,9 +239,17 @@ def main(argv: Optional[list[str]] = None) -> int:
               file=sys.stderr)
         return 3
 
+    def _ilerleme(islenen: int, hedef: int, yazilan: int) -> None:
+        # Uzun koşuda tek çıktı sondaki rapor olmamalı: ilerleme görünmezse
+        # "takıldı mı, çalışıyor mu" ayırt edilemez. `flush` şart — çıktı bir
+        # dosyaya yönlendirildiğinde satır tamponlaması devreye girmez.
+        print(f"  ... {islenen}/{hedef} belge · {yazilan} satır yazıldı",
+              flush=True)
+
     try:
         rapor = calistir(a.db, kapsam=a.kapsam, devam=a.devam, limit=a.limit,
-                         kuru=a.kuru, maks_karakter=a.maks_karakter, llm=llm)
+                         kuru=a.kuru, maks_karakter=a.maks_karakter, llm=llm,
+                         parca=a.parca, ilerleme=_ilerleme)
     except AttributeError as exc:
         print(f"HATA: {exc}", file=sys.stderr)
         return 4
