@@ -19,6 +19,7 @@ from ...normalization import normalize as N
 from ...preprocessing.clean import split_sentences, tr_fold
 from ...schemas import ExtractedField, Extractor
 from . import confidence as C
+from .ihtar import ihtar_mi
 from .synonyms import NEGATION_RE
 
 # Kural katmanının güveni yüksektir (deterministik); LLM'inkinden ayrışsın diye 0.95.
@@ -530,25 +531,41 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
 
 
 def extract_taksit(text: str) -> Optional[ExtractedField]:
-    """Taksit sayısı: '12 taksit', 'taksit sayısı 36'."""
-    pat = re.compile(r"(\d{1,3})\s*taksit|taksit\s*(?:say[ıi]s[ıi])?\s*[:\-]?\s*(\d{1,3})",
-                     re.IGNORECASE)
-    m = pat.search(text)
-    if not m:
-        return None
-    num = m.group(1) or m.group(2)
-    try:
-        canon = int(num)
-    except (TypeError, ValueError):
-        canon = None
-    s, e = m.span()
-    return _field(
-        "taksit_sayisi", m.group(0), canon, _window(text, s, e),
-        span_start=s, span_end=e,
-        # "taksit" sözcüğü eşleşmenin kendi içinde → bitişik kabul edilir
-        trigger_distance=0,
-        candidate_count=len(pat.findall(text)),
-    )
+    """Taksit sayısı: '12 taksit', 'taksit sayısı 36'.
+
+    İLK eşleşme değil, ilk GEÇERLİ eşleşme alınır. Gerekçe ölçümle geldi
+    (`turkiye-finans--bireysel-urun-hizmet-ucretleri`,
+    `scripts/lint_review_csv` round1 hatası): sayfada
+        "02.01.2026 00:00:00 Taksitli Ticari Taşıt Finansmanı"
+    geçiyor ve desen ZAMAN DAMGASININ son iki hanesini yakalayıp
+    **`taksit_sayisi = 0`** üretiyordu — hem şema dışı (sayı pozitif olmalı)
+    hem uydurma. Belgenin gerçek taksit bahsi çok daha sonra geliyordu ama
+    `search` ilk eşleşmede duruyordu.
+
+    İki koruma: sayının solunda `:` ya da rakam olamaz (zaman/ondalık
+    parçası değil) ve **0 taksit yoktur**.
+    """
+    pat = re.compile(
+        r"(?<![:.,\d])(\d{1,3})\s*taksit"
+        r"|taksit\s*(?:say[ıi]s[ıi])?\s*[:\-]?\s*(?<![:.,\d])(\d{1,3})",
+        re.IGNORECASE)
+    for m in pat.finditer(text):
+        num = m.group(1) or m.group(2)
+        try:
+            canon = int(num)
+        except (TypeError, ValueError):
+            continue
+        if canon < 1:
+            continue        # "0 taksit" diye bir şey yok — sayı başka bir şeyin parçası
+        s, e = m.span()
+        return _field(
+            "taksit_sayisi", m.group(0), canon, _window(text, s, e),
+            span_start=s, span_end=e,
+            # "taksit" sözcüğü eşleşmenin kendi içinde → bitişik kabul edilir
+            trigger_distance=0,
+            candidate_count=len(pat.findall(text)),
+        )
+    return None
 
 
 # Oran tablosu sütun başlıkları. Bir ücret tetikleyicisinden sonra bunlardan
@@ -709,6 +726,22 @@ def _ucret_degeri(clause: str, taban: Optional[float]):
     return N.normalize_money(ilk.group("para")), None
 
 
+# "500 TL tahsis ücreti" — TUTAR TETİKLEYİCİDEN ÖNCE.
+#
+# Türkçede ücret adı sıfat tamlamasının SONUNA gelebiliyor ve bu biçim ileri
+# pencereyle okunamaz. Gerçek vaka (Türkiye Finans arsa/işyeri/konut
+# finansmanı, 2026-08-09 ölçümü): "Alınacak ücretler: 60 ay vadede **500 TL
+# tahsis ücreti**, 3.000 TL ipotek tesis ücreti, 16.500 TL Ekspertiz ücreti."
+# İleri pencere virgülden sonrasını okuyup **3.000 TL** (İPOTEK TESİS ücreti)
+# üretiyordu — yanlış kalemin tutarı. Doğrusu 500 TL ve tetikleyicinin hemen
+# SOLUNDA duruyor.
+#
+# Bitişiklik ŞART (`\s*$`): araya söz girerse bağ kopar ve cümlenin herhangi
+# bir tutarı ücret sanılır.
+_ONCEKI_TUTAR_RE = re.compile(
+    r"(\d[\d.,]*\s*(?:TL|₺|TRY|türk\s*liras[ıi]))\s*$", re.IGNORECASE)
+
+
 def extract_tahsis_ucreti(text: str,
                           taban_tutar: Optional[float] = None
                           ) -> Optional[ExtractedField]:
@@ -784,9 +817,20 @@ def extract_tahsis_ucreti(text: str,
         # üretiyordu. Rakam arası noktada bölmemek için lookaround konur.
         clause = re.split(r"(?<!\d)[.;](?!\d)|\n", tail, maxsplit=1)[0]
         aciklama = None
+        # Sol pencere: tetikleyiciye BİTİŞİK tutar (gerekçe `_ONCEKI_TUTAR_RE`).
+        onceki_ham = text[max(0, m.start() - 40): m.start()]
+        onceki_ham = re.split(r"(?<!\d)[.;](?!\d)|\n", onceki_ham)[-1]
+        onceki = _ONCEKI_TUTAR_RE.search(onceki_ham)
+        sol_bas = None
 
         if re.search(NEGATION_RE, clause, re.IGNORECASE):
             canon = {"value": 0.0, "currency": "TRY"}
+        elif onceki is not None:
+            # Bitişik sol tutar ileri pencereyi YENER: bağ daha sıkıdır.
+            canon = N.normalize_money(onceki.group(1))
+            if canon is None:
+                continue
+            sol_bas = m.start() - (len(onceki_ham) - onceki.start(1))
         else:
             # AÇIK PARA BİRİMİ ŞART. `normalize_money` para birimi işareti
             # olmasa da varsayılan "TRY" döndürür; bu, ücret tetikleyicisinin
@@ -799,12 +843,15 @@ def extract_tahsis_ucreti(text: str,
                 continue    # tetikleyici var ama ne tutar ne hesaplanabilir oran
 
         # raw_value BİTİŞİK dilim olmalı, yoksa span doğrulaması kırılır.
-        s, e = m.start(), m.end() + len(clause)
+        # Değer soldan geldiyse span da SOLDAN başlar ve tetikleyicide biter
+        # ("500 TL tahsis ücreti"); aksi halde kanıt değeri göstermezdi.
+        s, e = ((sol_bas, m.end()) if sol_bas is not None
+                else (m.start(), m.end() + len(clause)))
         # Hesaplanan tutar metinde GEÇMEZ; `source_span` tek başına onu
         # açıklayamaz. Formül pencereye eklenir, böylece dashboard "2.500 TL"
         # değerinin yanında "100.000 TL × %2,5 = 2.500 TL" gerekçesini de
         # gösterebilir (açıklanabilirlik, CLAUDE.md §18-1).
-        pencere = _window(text, m.start(), m.end())
+        pencere = _window(text, s, e)
         if aciklama:
             pencere = f"{pencere}  [hesap: {aciklama}]"
         alan = _field("tahsis_ucreti", text[s:e], canon, pencere,
@@ -999,6 +1046,22 @@ _ORAN_TABLOSU_BASLIK_RE = re.compile(
     r"vade[^%\d]{0,40}?(kâr|kar)\s*(pay[ıi]\s*|payla[şs][ıi]m\s*)?oran[ıi]",
     re.IGNORECASE)
 
+# TAHSİS KOLONU — başlıkta ADI GEÇİYORSA vardır, yoksa YOKTUR.
+#
+# Eskiden tahsis ücreti "kâr payından sonraki ilk makul yüzde" diye
+# tahmin ediliyordu ve tablo o kolona sahip değilse KOMŞU KOLONU okuyordu.
+# `data/demo.db`de ölçüldü (2026-08-09): oran tablosundan üretilen 19
+# `tahsis_ucreti` değerinin **4'ü** tabloda hiç bulunmayan bir kolondan
+# geliyordu —
+#   %3,80 ve %8,07 aslında "Aylık/Yıllık Maliyet Oranı" (Kuveyt Türk),
+#   %0,00 ise yalnızca "Vade / Kredi Tutarı / Kâr Oranı" kolonları olan bir
+#   tablodan (Albaraka TOGG) devşirilmişti.
+# Yani değer metinde YOKTU; bu bir halüsinasyondur (CLAUDE.md §19) ve
+# üstelik "%0,00 tahsis" en zararlı biçimidir: kampanyayı ücretsiz gösterir.
+_TAHSIS_KOLON_RE = re.compile(
+    r"tahsis\s*(ücret|ucret|bedel)|dosya\s*(masraf|ücret|ucret)",
+    re.IGNORECASE)
+
 
 def parse_rate_table(text: str) -> list[RateRow]:
     """Banka ürün sayfalarındaki ORAN TABLOSUNU ayrıştırır.
@@ -1029,6 +1092,11 @@ def parse_rate_table(text: str) -> list[RateRow]:
     baslik = _ORAN_TABLOSU_BASLIK_RE.search(text)
     if not baslik:
         return []
+
+    # Tahsis kolonu başlıkta adlandırılmadıysa `RateRow.tahsis_ucreti` HİÇ
+    # doldurulmaz (gerekçe: `_TAHSIS_KOLON_RE`).
+    tahsis_kolonu = bool(
+        _TAHSIS_KOLON_RE.search(text[baslik.start(): baslik.end() + 120]))
 
     kuyruk = text[baslik.end(): baslik.end() + 4000]
 
@@ -1073,7 +1141,8 @@ def parse_rate_table(text: str) -> list[RateRow]:
             continue
         kati_rows.append(RateRow(
             vade_ay=vade, kar_payi=oranlar[0],
-            tahsis_ucreti=oranlar[1] if 0 <= oranlar[1] <= 10 else None))
+            tahsis_ucreti=(oranlar[1] if tahsis_kolonu and 0 <= oranlar[1] <= 10
+                           else None)))
     if kati_rows:
         return kati_rows
 
@@ -1104,9 +1173,11 @@ def parse_rate_table(text: str) -> list[RateRow]:
             # kolonudur (yıllık toplam maliyet %92 gibi) — satır değil.
             continue
         kullanilan.add(s0)
-        # Tahsis ücreti: bir sonraki yüzde, varsa ve makulse.
+        # Tahsis ücreti: bir sonraki yüzde — YALNIZ tablonun böyle bir kolonu
+        # varsa (gerekçe: `_TAHSIS_KOLON_RE`).
         tahsis = None
-        ardindan = [y for y in yuzdeler if y[0] >= e0 and y[0] - e0 <= 30]
+        ardindan = ([y for y in yuzdeler if y[0] >= e0 and y[0] - e0 <= 30]
+                    if tahsis_kolonu else [])
         if ardindan:
             t = N.parse_tr_number(ardindan[0][2])
             if t is not None and 0 <= t <= 10:
@@ -1116,12 +1187,42 @@ def parse_rate_table(text: str) -> list[RateRow]:
 
 
 def extract_from_rate_table(text: str) -> list[ExtractedField]:
-    """Oran tablosundan `kar_payi_orani`, `vade_ay`, `tahsis_ucreti` üretir.
+    """Oran tablosundan `kar_payi_orani`, `vade_ay` ve `masraf_durumu` üretir.
 
     Tablo birden çok vade içerir, şema ise alan başına tek değer ister.
     Karar: kâr payı **aralık** olarak verilir (dürüst — vadeye göre değişir),
-    vade **en uzun** vade, tahsis ücreti tablodaki sabit değer.
+    vade **en uzun** vade.
     §5.7 "En Düşük Kâr Payı" karşılaştırması aralığın alt sınırını kullanır.
+
+    ## Tablodaki tahsis ücreti neden `tahsis_ucreti` alanına YAZILMAZ
+
+    Türkiye Finans tablolarında kolon gerçekten var ve değeri bir ORANdır
+    ("Tahsis Ücreti … %0,50"). `tahsis_ucreti` ise PARA tiplidir
+    (`scripts/gold_schema.py::MONEY_FIELDS`, ANNOTATION_GUIDE §5). Buraya
+    `{"rate": 0.5}` yazmak üç şeyi aynı anda bozuyordu:
+
+    1. **Şema ihlali.** `lint_review_csv` round1 dosyalarında 10 hatanın
+       9'unu bu üretiyordu; `preannotate` değeri "model üretmedi" sayıp
+       eliyor, anotatöre boş satır gidiyordu.
+    2. **Kıyas yok zaten.** `compare._scalar` oran biçimli ücrete `None`
+       döndürür ("oran biçimli ücret — TL ile kıyaslanamaz"), yani değer
+       hiçbir sıralamaya girmiyordu. Adil kıyas kuralı gereği de giremez:
+       %0,50 ile 500 TL aynı sütunda sıralanamaz.
+    3. **Ölçülen zarar.** Gold'da `{"rate": X}` denemesi `tahsis_ucreti`
+       F1'ini 0.400 -> 0.333'e düşürmüştü (`extract_tahsis_ucreti`
+       docstring'i). gold.v2'deki iki oran-tablolu belgede de altın değer
+       `null`; üretilen her oran YANLIŞ POZİTİFti.
+
+    Bilgi yine de kaybolmuyor: kılavuzun oransal ücret kuralı (§5) bu durumu
+    `masraf_durumu = {"has_fee": true, "amount": null}` diye kaydeder —
+    "ücret VAR, TL tutarı metinde YOK". `compare._scalar` bunu skorlamaz ama
+    **görünür bir gerekçeyle** ("ücret var, tutarı belirtilmemiş"), yani
+    kampanya sessizce masrafsız görünmez. Oran %0,00 ise ücret gerçekten
+    yoktur ve `{"has_fee": false, "amount": 0}` yazılır.
+
+    Bu `masraf_durumu` YEDEKTİR: `extract_masraf` bir değer üretebiliyorsa
+    (çoğu belgede TL tutarını da biliyor) onunkisi kazanır — bkz.
+    `extract_all` / `_TABLO_YEDEK_ALANLARI`.
     """
     rows = parse_rate_table(text)
     if not rows:
@@ -1148,9 +1249,12 @@ def extract_from_rate_table(text: str) -> list[ExtractedField]:
     ]
     ucretler = {r.tahsis_ucreti for r in rows if r.tahsis_ucreti is not None}
     if len(ucretler) == 1:
-        # Tahsis ücreti tabloda ORAN olarak veriliyor (%0,50), tutar değil.
-        out.append(_field("tahsis_ucreti", text[s:e],
-                          {"rate": ucretler.pop()}, pencere,
+        # Tahsis ücreti tabloda ORAN olarak veriliyor (%0,50), tutar değil —
+        # bu yüzden para tipli `tahsis_ucreti` yerine `masraf_durumu`.
+        oran = ucretler.pop()
+        durum = ({"has_fee": False, "amount": 0.0} if oran == 0
+                 else {"has_fee": True, "amount": None})
+        out.append(_field("masraf_durumu", text[s:e], durum, pencere,
                           span_start=s, span_end=e, trigger_distance=0))
     return out
 
@@ -1481,8 +1585,14 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
         re.IGNORECASE,
     )
 
+    # GENEL YASAL İHTAR — koşul DEĞİLDİR. Desen `ihtar.py`de tek kez tanımlı;
+    # anotasyon tarafındaki `kosul-ihtar` kuralı da oradan okur. Ayrıntı ve
+    # ölçüm için o modülün başlığına bakın: kural yalnız anotasyonda
+    # uygulanıp çıkarıcıda uygulanmadığı sürece gold ile model 20 kalibrasyon
+    # belgesinin 5'inde YAPAY olarak ayrışıyordu.
     def uygun(s: str, tetik: re.Pattern) -> bool:
-        return bool(tetik.search(s)) and not boilerplate.search(s) and 20 <= len(s) <= 400
+        return (bool(tetik.search(s)) and not boilerplate.search(s)
+                and not ihtar_mi(s) and 20 <= len(s) <= 400)
 
     sentences = split_sentences(text)
     picked = [s.strip() for s in sentences
@@ -1523,6 +1633,10 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
                   trigger_distance=0)
 
 
+# Oran tablosundan gelen ama tekil çıkarıcıya ÖNCELİK bırakan alanlar.
+# Gerekçe `extract_all` içinde, uygulandığı yerde.
+_TABLO_YEDEK_ALANLARI = frozenset({"masraf_durumu"})
+
 # Tüm kural çıkarıcılar — sırayla denenir.
 _EXTRACTORS = [
     extract_kar_payi,
@@ -1547,11 +1661,16 @@ def extract_all(text: str) -> list[ExtractedField]:
     çok kez yakalanırsa ilk (en yüksek güvenli) tutulur.
     """
     out: dict[str, ExtractedField] = {}
-    # ORAN TABLOSU önce denenir: tablo varsa kâr payı/vade/tahsis ücreti
-    # oradan gelir ve tekil çıkarıcıların tablo gövdesinden yanlış değer
-    # devşirmesi engellenir (tabloda onlarca sayı yan yana durur).
+    # ORAN TABLOSU önce denenir: tablo varsa kâr payı/vade oradan gelir ve
+    # tekil çıkarıcıların tablo gövdesinden yanlış değer devşirmesi engellenir
+    # (tabloda onlarca sayı yan yana durur).
+    tablo_yedek: dict[str, ExtractedField] = {}
     for f in extract_from_rate_table(text):
-        if f.is_present:
+        if not f.is_present:
+            continue
+        if f.field_name in _TABLO_YEDEK_ALANLARI:
+            tablo_yedek[f.field_name] = f
+        else:
             out[f.field_name] = f
 
     # Oransal tahsis ücretinin TABANI belgenin finansman tutarıdır. İki alan
@@ -1576,4 +1695,15 @@ def extract_all(text: str) -> list[ExtractedField]:
         f = extract_tahsis_ucreti(text, taban) if fn is extract_tahsis_ucreti else fn(text)
         if f and f.is_present and f.field_name not in out:
             out[f.field_name] = f
+
+    # Tablodan gelen YEDEK alanlar en sonda: tekil çıkarıcı sustuysa devreye
+    # girerler. Ters sıra bilgi KAYBETTİRİRDİ — `extract_masraf` bu belgelerin
+    # çoğunda TL tutarını da biliyor (`{"has_fee": true, "amount": 60}`),
+    # tablodan gelen yedek ise yalnız "ücret var" diyebiliyor. Ölçüldü
+    # (`data/demo.db`, 2026-08-09): 19 oran-tablolu belgenin 11'inde tekil
+    # çıkarıcının değeri daha zengin, 8'inde hiç değer yok — yedek tam o
+    # 8 belgede kazandırıyor.
+    for ad, f in tablo_yedek.items():
+        if ad not in out:
+            out[ad] = f
     return list(out.values())

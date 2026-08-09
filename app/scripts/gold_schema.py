@@ -181,8 +181,17 @@ def validate_canonical(name: str, value: Any) -> Optional[str]:
 
     if name in MONEY_FIELDS:
         if not isinstance(value, dict) or set(value) != {"value", "currency"}:
-            return (f'{name}: para {{"value": 500, "currency": "TRY"}} biçiminde '
-                    f"olmalı; {value!r} geldi.")
+            mesaj = (f'{name}: para {{"value": 500, "currency": "TRY"}} biçiminde '
+                     f"olmalı; {value!r} geldi.")
+            # ORANSAL ÜCRET — en sık düşülen tuzak, o yüzden çözümü de yazılır.
+            # Kılavuz §5: "binde 5" bir oran, ücret TUTARI değildir; TL karşılığı
+            # metinde yoksa hesaplanmaz, masrafın VARLIĞI kaydedilir.
+            if isinstance(value, dict) and "rate" in value:
+                mesaj += (' Oran biçimli ücret ("%0,5" / "binde 5") bu alana '
+                          "yazılmaz (kılavuz §5): alanı `unclear` bırakıp not'a "
+                          'ifadeyi + #oransal_ucret yazın, masraf_durumu\'na '
+                          '{"has_fee": true, "amount": null} girin.')
+            return mesaj
         if not _is_number(value["value"]):
             return f"{name}: para value alanı sayı olmalı, {value['value']!r} geldi."
         if value["currency"] != "TRY":
