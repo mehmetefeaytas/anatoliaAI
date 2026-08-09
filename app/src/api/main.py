@@ -1051,7 +1051,7 @@ def build_app():
             "bank": bank,
             "rival": rival,
             "fairness_note": (
-                "Delta her zaman ÜRÜN AİLESİ İÇİNDE hesaplanır; bir konut "
+                "Delta her zaman KAMPANYA TÜRÜ İÇİNDE hesaplanır; bir konut "
                 "finansmanı ile bir ihtiyaç finansmanı arasında fark "
                 "üretilmez. Taraflardan biri sayıya "
                 "indirgenemiyorsa fark boş bırakılır — yaklaşık bir fark "

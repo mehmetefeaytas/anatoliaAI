@@ -206,8 +206,18 @@ class KanitTasiniyor(_DepoluTest):
         self.assertIn("source_url", f["rival"])
 
     def test_adil_kiyas_notu_doner(self):
+        """Not, kullanıcıya dönük KANONİK terimi kullanmalı.
+
+        Eskiden «ÜRÜN AİLESİ» yazıyordu. Aynı kavramın (`campaign_type`,
+        8 sınıf) arayüzde üç ayrı adı vardı — «ürün ailesi», yalın «aile» ve
+        «Ürün» — ve kullanıcı bunları farklı şeyler sandı. Tek ad seçildi:
+        **kampanya türü**. `CLAUDE.md` §12'de 8 sınıfın resmî başlığı budur
+        ve `campaign_type` alan adının birebir karşılığıdır; «ürün ailesi»
+        hiçbir şemada ya da uçta geçmiyordu, iç jargondu.
+        """
         veri = self.delta("kuveyt-turk")
-        self.assertIn("ÜRÜN AİLESİ", veri["fairness_note"])
+        self.assertIn("KAMPANYA TÜRÜ", veri["fairness_note"])
+        self.assertNotIn("ÜRÜN AİLESİ", veri["fairness_note"])
 
 
 class DeltaAritmetigi(unittest.TestCase):
