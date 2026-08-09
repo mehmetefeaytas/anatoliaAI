@@ -365,6 +365,18 @@ def build_app():
     # Tembel önbellekler — kampanya başına BİR kez; istek başına değil.
     # kampanya_id → `repo.campaign_text()` sonucu (metin + alanlar + offsetler)
     _view_cache: dict[int, Optional[dict]] = {}
+    # "önbellekte yok" ile "önbellekte None var" (bilinmeyen kampanya) ayrı
+    # şeyler; `.get()` ikisini karıştırırdı.
+    _YOK = object()
+
+    def _ozeti_var(view: Optional[dict]) -> bool:
+        """Önbellek kaydı tazelenmeden servis edilebilir mi.
+
+        `None` (bilinmeyen kampanya) tazelenmez: o cevap değişmez.
+        """
+        if view is None:
+            return True
+        return bool((view.get("ozet") or "").strip())
     # kampanya_id → çelişki listesi (kural katmanı kampanya başına bir kez koşar)
     _contra_cache: dict[int, list[dict]] = {}
     # kampanya_id → görünürlük aralıkları (blok kararları bir kez hesaplanır)
@@ -393,8 +405,19 @@ def build_app():
         arayüzün `/campaigns/{id}/text`'ten aldığı metinde başka bir yeri
         gösterirdi.
         """
-        if campaign_id in _view_cache:
-            return _view_cache[campaign_id]
+        onbellek = _view_cache.get(campaign_id, _YOK)
+        # Özeti OLMAYAN belge önbellekten SERVİS EDİLMEZ. Özetler toplu koşumda
+        # (`scripts/build_summaries`) parça parça yazılıyor; koşu sürerken
+        # açılan bir belge "özet yok" diye önbelleğe giriyor ve özet DB'ye
+        # düşse bile API yeniden başlayana kadar öyle kalıyordu. Demo sırasında
+        # jüri aynı belgeyi ikinci kez açtığında hâlâ "özet üretilmedi"
+        # görürdü — üstelik özet artık VARDI.
+        #
+        # Maliyet yalnız eksik özetli belgelerde ödenir: özet bir kez geldiğinde
+        # kayıt normal biçimde önbellekte kalır. Metin/alan/offset hesabı zaten
+        # aynı sorgudan geliyor, ek yük tek satırlık bir SELECT.
+        if onbellek is not _YOK and _ozeti_var(onbellek):
+            return onbellek
         view = repo.campaign_text(campaign_id)
         _view_cache[campaign_id] = view
         return view
