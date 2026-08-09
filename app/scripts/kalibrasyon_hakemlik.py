@@ -59,9 +59,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import re
 import shutil
 import sys
+from datetime import date
 from pathlib import Path
+from typing import Optional
 
 _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
@@ -72,6 +75,63 @@ from scripts.to_review_csv import (
     CSV_ENCODING,
     CSV_LINETERMINATOR,
 )
+from src.preprocessing.clean import tr_fold_ascii
+
+#: 8 kampanya türü (CLAUDE.md §12). Yazım BİREBİR bu kümedendir.
+KAMPANYA_TURLERI = (
+    "Finansman", "İhtiyaç Finansmanı", "Konut Finansmanı", "Taşıt Finansmanı",
+    "Kart", "Alışveriş Puanı", "Yeni Müşteri", "Yatırım Ürünü",
+)
+
+#: `tr_fold_ascii(tür) -> kanonik yazım`. Türkçe küçültme `str.lower()` ile
+#: hatalıdır ('İhtiyaç'.lower() -> 'i̇htiyaç'), o yüzden proje katlayıcısı.
+_TUR_INDEKS = {tr_fold_ascii(t): t for t in KAMPANYA_TURLERI}
+
+#: ISO-8601 tarih.
+_ISO = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+#: `31.12.2026`, `31/12/2026`, `31-12-2026`. Yıl DÖRT haneli olmalı.
+_TR_TARIH = re.compile(r"\b(\d{1,2})[./-](\d{1,2})[./-](\d{4})\b")
+
+#: Aynı kalıbın gevşek hâli: yıl 2 ya da 4 haneli. Yalnız SAYMAK için.
+#: İki haneli yılı çözmeye çalışmıyoruz ('23' -> 1923 mü 2023 mü); varlığını
+#: fark edip ÇEKİLİYORUZ.
+_TR_TARIH_GEVSEK = re.compile(r"\b\d{1,2}[./-]\d{1,2}[./-]\d{2,4}\b")
+
+
+def _iso_bitis(metin: str) -> Optional[str]:
+    """Metindeki EN SON tarihi ISO-8601 olarak döndürür.
+
+    `kampanya_suresi` kılavuzda "geçerlilik BİTİŞ tarihi" olarak tanımlı
+    (`ANNOTATION_GUIDE.md`): "1 – 31 Temmuz 2026" -> `2026-07-31`. Anotatör
+    aralığın tamamını yazdıysa ("01.01.2026 - 31.12.2026") bitiş alınır.
+
+    Kural çıkarıcısı da aynı şeyi yapıyor (`extract_kampanya_suresi` ->
+    `aralik["bitis"]`), yani gold ile üretim aynı tanımda buluşur.
+
+    Tek tarih varsa o alınır. Hiç tarih yoksa `None` — uydurulmaz.
+
+    ÇÖZÜLEMEYEN TARİH VARSA HİÇ DOKUNULMAZ. Ölçüldü: `'1.07.2023-31.08.23'`
+    girdisinde bitişin yılı iki haneli ve katı kalıp onu görmüyor; "son eşleşme
+    = bitiş" kuralı o zaman BAŞLANGICI (`2023-07-01`) döndürüyordu — yani tam
+    da bu aracın düzeltmeye çalıştığı hatayı üretiyordu. İki haneli yılı
+    çözmeye çalışmak da doğru değil ('23' -> 1923 mü 2023 mü); doğru davranış
+    çekilmek ve satırı insana bırakmaktır.
+    """
+    metin = (metin or "").strip()
+    if _ISO.fullmatch(metin):
+        return metin
+    bulunan = _TR_TARIH.findall(metin)
+    if not bulunan:
+        return None
+    if len(_TR_TARIH_GEVSEK.findall(metin)) != len(bulunan):
+        return None                     # çözülemeyen tarih var -> dokunma
+    gun, ay, yil = bulunan[-1]          # aralıkta SON tarih = bitiş
+    try:
+        return date(int(yil), int(ay), int(gun)).isoformat()
+    except ValueError:
+        return None                     # 21.13.2026 gibi geçersiz tarih
+
 
 #: Kural adı -> (açıklama, koşul). Koşul `(verdict, gold_value, model_value)`
 #: üçlüsünü alır ve satırın `ok`'a çevrilip çevrilmeyeceğini söyler.
@@ -84,6 +144,14 @@ KURALLAR = {
     "absent-ok": (
         "model bir şey üretmediyse absent -> ok (kılavuz §3.1/§3.3)",
         lambda verdict, gold, model: verdict == "absent" and not model,
+    ),
+    # `verdict` değil `gold_value` üzerinde çalışır; koşulu `uygula()` içinde,
+    # alana özgü olduğu için. Burada yalnız adı ve açıklaması duruyor ki
+    # `--kural` seçenekleri ve değişim raporu tek yerden okunsun.
+    "deger-bicim": (
+        "gold_value BİÇİMİ kanonikleştirilir: kampanya_suresi -> ISO bitiş "
+        "tarihi, campaign_type -> 8 sınıfın birebir yazımı",
+        None,
     ),
 }
 
@@ -121,6 +189,25 @@ def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
     korunan = {"dolu_gold_value": 0, "mesru_absent": 0}
 
     for s in satirlar:
+        # --- DEĞER normalizasyonu (yalnız BİÇİM; anlam değişmez) -----------
+        # `verdict` kurallarından ÖNCE çalışır ve onlardan bağımsızdır:
+        # anotatörün ne dediğini değil, NASIL yazdığını düzeltir.
+        if "deger-bicim" in kurallar:
+            alan = (s.get("field") or "").strip()
+            ham = (s.get("gold_value") or "").strip()
+            yeni = None
+            if ham and alan == "kampanya_suresi":
+                yeni = _iso_bitis(ham)
+            elif ham and alan == "campaign_type":
+                yeni = _TUR_INDEKS.get(tr_fold_ascii(ham))
+            if yeni and yeni != ham:
+                degisimler.append({
+                    "dosya": yol.name, "doc_id": s.get("doc_id", ""),
+                    "field": alan, "sutun": "gold_value",
+                    "eski": ham, "yeni": yeni, "kural": "deger-bicim",
+                })
+                s["gold_value"] = yeni
+
         verdict = (s.get("verdict") or "").strip().casefold()
         gold = (s.get("gold_value") or "").strip()
         model = (s.get("model_value") or "").strip()
@@ -133,6 +220,8 @@ def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
 
         for ad in kurallar:
             _, kosul = KURALLAR[ad]
+            if kosul is None:            # `deger-bicim` yukarıda işlendi
+                continue
             if not kosul(verdict, gold, model):
                 continue
             eski = (s.get("verdict") or "").strip()
