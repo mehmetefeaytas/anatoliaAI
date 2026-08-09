@@ -76,6 +76,7 @@ from scripts.to_review_csv import (
     CSV_ENCODING,
     CSV_LINETERMINATOR,
 )
+from src.extraction.rules.ihtar import IHTAR_RE
 from src.preprocessing.clean import tr_fold_ascii
 
 #: 8 kampanya türü (CLAUDE.md §12). Yazım BİREBİR bu kümedendir.
@@ -177,15 +178,11 @@ KURALLAR = {
     ),
 }
 
-#: Her kampanyada birebir tekrarlanan genel yasal ihtar. Kıyasta sıfır bilgi
-#: taşır: ayırt edici olmayan bir cümle "koşul" diye sayılırsa iki bankanın
-#: koşul listesi aynı görünür. Projede bu kalıbı gürültü sayan bir kod yolu
-#: zaten var (`scripts/boilerplate_audit.py`).
-_IHTAR = re.compile(
-    r"hakk[ıi]n[ıi]\s+sakl[ıi]\s+tutar|"
-    r"de[ğg]i[şs]iklik\s+yapma\s+(?:ve/?veya\s+)?(?:kampanyay[ıi]\s+)?durdurma|"
-    r"bilgilendirme\s+ama[çc]l[ıi]d[ıi]r",
-    re.IGNORECASE)
+#: Genel yasal ihtar deseni TEK KAYNAKTAN okunur. Aynı desen bir de çıkarıcıda
+#: yaşasaydı biri güncellenip öteki güncellenmediğinde fark sessizce "model
+#: yanlış" diye okunurdu — kuralın anotasyon tarafında uygulanıp çıkarıcıda
+#: uygulanmaması tam olarak bu hatayı üretmişti (1774 belgenin 248'i).
+_IHTAR = IHTAR_RE
 
 
 def _kosul_ayikla(ham: str) -> Optional[str]:
