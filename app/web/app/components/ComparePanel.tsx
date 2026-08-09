@@ -19,19 +19,27 @@
  * skoru orada kalite iddiası gibi göstermek yanıltıcıdır. Denetim yüzeyleri
  * (Audit / Canlı Çıkarım / Şeffaf Skorlama) skoru her hâlde gösterir.
  *
- * ## ÜRÜN AİLESİ KAPISI (2026-08-09)
+ * ## KAMPANYA TÜRÜ KAPISI (2026-08-09)
  *
  * Bu tablo «elma ile armut kıyaslıyor» diye bildirildi ve şikâyet yerindeydi.
  * Tür süzmesi VARDI ama varsayılanı «Tümü» idi ve `comparable` bayrağı yalnız
- * BİRİM uyumunu doğruluyordu, ürün ailesini değil. Sonuç: `vade_ay` alanında
+ * BİRİM uyumunu doğruluyordu, kampanya türünü değil. Sonuç: `vade_ay` alanında
  * 120 aylık bir **konut finansmanı** 1. sırada, 36 aylık bir **ihtiyaç
  * finansmanı** 2. sırada listeleniyordu — hiçbir uyarı olmadan.
  *
  * Çözüm süzmeyi zorunlu kılmak DEĞİL (o, veriyi gizlemek olurdu): «Tümü»
- * seçiliyken satırlar ürün ailesine göre BÖLÜMLENİYOR ve sıralama yalnız
- * bölüm içinde yapılıyor. Farklı aileler hiçbir koşulda aynı sıralamaya
+ * seçiliyken satırlar kampanya türüne göre BÖLÜMLENİYOR ve sıralama yalnız
+ * bölüm içinde yapılıyor. Farklı türler hiçbir koşulda aynı sıralamaya
  * girmiyor. `compare.py:502-507` bu boşluğu kendi docstring'inde zaten
  * yazmıştı; burası onun kullanıcıya dönük karşılığı.
+ *
+ * ## TEK TERİM (2026-08-09)
+ *
+ * Yukarıdaki kapı ilk yazıldığında kavrama «ürün ailesi» deniyordu; oysa
+ * ekrandaki süzgecin etiketi «Kampanya türü» idi ve kullanıcı ikisini iki
+ * ayrı süzgeç sandı. Kavram tektir: `campaign_type`, 8 sınıf. Arayüzün
+ * tamamında adı **kampanya türü**dür. Tanımı `FairnessNotice`'ta bir kez
+ * yazılır; buradaki tablo notu ona atıf yapar, kavramı yeniden tanımlamaz.
  */
 
 import { Fragment, useState } from "react";
@@ -65,7 +73,7 @@ type Props = {
 const TURSUZ = "Türü belirlenemedi";
 
 /**
- * Satırları ürün ailesine böler ve her bölüm içinde SIRA NUMARASINI yeniden
+ * Satırları kampanya türüne böler ve her bölüm içinde SIRA NUMARASINI yeniden
  * verir.
  *
  * Sunucu `rank`'i tüm sonuç kümesi üzerinden hesaplar; tek tür seçiliyken bu
@@ -74,7 +82,7 @@ const TURSUZ = "Türü belirlenemedi";
  * sıralama varmış izlenimi verirdi. Sıra bölüm içinde yeniden numaralanır;
  * `rank === null` olan (kıyaslanamaz) satırlar numara ALMAZ.
  */
-function aileleriBol(
+function turlereBol(
   rows: CompareRow[],
 ): { tur: string; satirlar: { row: CompareRow; sira: number | null }[] }[] {
   const bolumler = new Map<string, { row: CompareRow; sira: number | null }[]>();
@@ -109,8 +117,9 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
     [field, intent, type, perBank],
   );
   const meta = fields.find((f) => f.field === field);
-  const bolumler = aileleriBol(rows.data ?? []);
-  // Sütun sayısı: Sıra, Banka, Ürün, Değer, [Güven], Katman, Durum, Kaynak.
+  const bolumler = turlereBol(rows.data ?? []);
+  // Sütun sayısı: Sıra, Banka, Kampanya türü, Değer, [Güven], Katman, Durum,
+  // Kaynak.
   const sutunSayisi = jury ? 8 : 7;
 
   return (
@@ -146,8 +155,11 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
             </select>
           </div>
           <div className="row-tight">
+            {/* Etiket bilinçli olarak «süzgeci» ile bitiyor: hemen üstündeki
+                alan çipleriyle karıştırılıyordu. Çipler NEYİN kıyaslanacağını
+                seçer, bu süzgeç KİMİN kıyaslanacağını daraltır. */}
             <label className="small muted" htmlFor="cmp-type">
-              Kampanya türü
+              Kampanya türü süzgeci
             </label>
             <select
               id="cmp-type"
@@ -156,7 +168,7 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
               value={type}
               onChange={(e) => setType(e.target.value)}
             >
-              <option value="">Tümü</option>
+              <option value="">Tümü (türe göre bölümlenir)</option>
               {campaignTypes.map((t) => (
                 <option key={t} value={t}>
                   {t}
@@ -208,14 +220,17 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                   }}
                 >
                   Bir satırdaki «Kaynağı gör» bağlantısı, değerin kaynak metindeki
-                  karakter aralığını vurgular. Sıra numaraları <b>ürün ailesi
-                  içinde</b> verilir; aileler arasında sıralama yapılmaz.
+                  karakter aralığını vurgular. Sıra numaraları <b>kampanya türü
+                  içinde</b> verilir; türler arasında sıralama yapılmaz —
+                  «Kampanya türü» sütunu her satırın hangi türe ait olduğunu
+                  gösterir, yukarıdaki «Kampanya türü» süzgeci ise listeyi tek
+                  türe indirir.
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Sıra</th>
                     <th scope="col">Banka</th>
-                    <th scope="col">Ürün</th>
+                    <th scope="col">Kampanya türü</th>
                     <th scope="col">Değer</th>
                     {jury && <th scope="col">Güven</th>}
                     <th scope="col">Katman</th>
@@ -226,12 +241,16 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                 <tbody>
                   {bolumler.map((bolum) => (
                     <Fragment key={bolum.tur}>
-                      {/* Bölüm başlığı yalnız birden fazla aile varsa gerekli;
-                          tek tür seçiliyken gereksiz bir katman olurdu. */}
+                      {/* Bölüm başlığı yalnız birden fazla tür varsa gerekli;
+                          tek tür seçiliyken gereksiz bir katman olurdu.
+                          «Kampanya türü:» öneki bilinçli: başlıkta çıplak bir
+                          ürün adı görünce kullanıcı onu bir banka ürünü
+                          zannediyordu, oysa bir SINIF adıdır. */}
                       {bolumler.length > 1 && (
                         <tr className="group-head">
                           <td colSpan={sutunSayisi}>
-                            {bolum.tur} · {bolum.satirlar.length} banka
+                            Kampanya türü: {bolum.tur} · {bolum.satirlar.length}{" "}
+                            banka
                           </td>
                         </tr>
                       )}
@@ -275,7 +294,7 @@ function RowPair({
   onToggle,
 }: {
   row: CompareRow;
-  /** Ürün ailesi İÇİNDEKİ sıra; kıyaslanamaz satırlarda null. */
+  /** Kampanya türü İÇİNDEKİ sıra; kıyaslanamaz satırlarda null. */
   sira: number | null;
   field: string;
   open: boolean;
@@ -302,7 +321,7 @@ function RowPair({
             </div>
           )}
         </td>
-        <td data-label="Ürün" className="small muted">
+        <td data-label="Kampanya türü" className="small muted">
           {row.campaign_type || <span className="faint">belirlenemedi</span>}
         </td>
         <td data-label="Değer" className="num">

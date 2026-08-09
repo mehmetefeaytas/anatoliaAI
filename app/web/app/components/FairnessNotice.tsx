@@ -16,12 +16,23 @@
  *    zaman-koşullu oran («ilk 6 ay %0») aynı birime indirgenemez; sistem
  *    bunları sıralamaya SOKMAZ, «doğrudan kıyaslanamaz» işaretiyle listede
  *    bırakır. Uydurma sıralama yapılmaz.
- * 3. **Farklı ürün aileleri kıyaslanmaz** (2026-08-09'da eklendi). Bu madde
+ * 3. **Farklı kampanya türleri kıyaslanmaz** (2026-08-09'da eklendi). Bu madde
  *    bir ŞİKÂYETTEN doğdu: `vade_ay` ekranında 120 aylık bir konut finansmanı
  *    ile 36 aylık bir ihtiyaç finansmanı yan yana sıralanıyordu. Kural §17'de
- *    zaten vardı ama yalnız BİRİM düzeyinde uygulanmıştı; ürün ailesi
- *    düzeyinde uygulanmıyordu. Artık tablo aileye göre bölümleniyor ve sıra
+ *    zaten vardı ama yalnız BİRİM düzeyinde uygulanmıştı; kampanya türü
+ *    düzeyinde uygulanmıyordu. Artık tablo türe göre bölümleniyor ve sıra
  *    numaraları bölüm içinde veriliyor.
+ *
+ * ## Kavramın TEK ADI burada tanımlanır (2026-08-09)
+ *
+ * Aynı kavram — `campaign_type` alanı, §12'deki 8 sınıf — arayüzde iki ayrı
+ * adla dolaşıyordu: kimi yerde «ürün ailesi», kimi yerde «kampanya türü».
+ * Kullanıcı bunları iki FARKLI süzgeç sandığını bildirdi ve haklıydı: kıyas
+ * ekranında açılır süzgeç «Kampanya türü» derken hemen altındaki tablo notu
+ * «ürün ailesi içinde sıralanır» diyordu. Tek ad seçildi: **kampanya türü**
+ * (§12'nin resmî sınıf adı; «ürün ailesi» iç jargondu). Bu blok, kavramın NE
+ * OLDUĞUNU kullanıcıya bir kez açıkça yazan tek yerdir — 8 sınıf sayılır ve
+ * «neden yalnız tür içinde sıralanır» gerekçesi verilir.
  *
  * Kapatılabilir DEĞİLDİR (dismiss düğmesi yoktur): jüri ekranı ilk açtığında
  * görüp kapattıysa, demonun geri kalanında bu bilgi ekranda kalmalıdır.
@@ -54,15 +65,21 @@ export default function FairnessNotice() {
         </p>
       </div>
       <div className="fairness-item">
-        <strong>Farklı ürünler yan yana sıralanmaz</strong>
+        <strong>Kampanya türü nedir, neden yalnız tür içinde sıralanır?</strong>
         <p>
-          Bir <b>konut finansmanı</b> ile bir <b>ihtiyaç finansmanı</b>{" "}
-          birbirinin alternatifi değildir; «hangisi daha avantajlı» sorusu bu
-          ikisi arasında iyi tanımlı değildir. Tablo <b>ürün ailesine göre
-          bölümlenir</b> ve sıra numaraları yalnız bölüm içinde verilir.
-          Aileler arası hiçbir sıralama üretilmez — 120 aylık bir konut
-          finansmanının 36 aylık bir ihtiyaç finansmanını «yenmesi» bir bilgi
-          değil, bir ölçüm hatasıdır.
+          <b>Kampanya türü</b>, bir belgenin ait olduğu ürün sınıfıdır ve sekiz
+          değerden birini alır:{" "}
+          <span className="tur-listesi">
+            Finansman · İhtiyaç Finansmanı · Konut Finansmanı · Taşıt Finansmanı ·
+            Kart · Alışveriş Puanı · Yeni Müşteri · Yatırım Ürünü
+          </span>
+          . Farklı türler <b>birbirinin alternatifi değildir</b>: bir konut
+          finansmanı ile bir ihtiyaç finansmanı arasında «hangisi daha
+          avantajlı» sorusu iyi tanımlı değildir. Bu yüzden tablolar{" "}
+          <b>kampanya türüne göre bölümlenir</b> ve sıra numaraları yalnız tür
+          içinde verilir. Türler arası hiçbir sıralama üretilmez — 120 aylık bir
+          konut finansmanının 36 aylık bir ihtiyaç finansmanını «yenmesi» bir
+          bilgi değil, bir ölçüm hatasıdır.
         </p>
       </div>
     </div>

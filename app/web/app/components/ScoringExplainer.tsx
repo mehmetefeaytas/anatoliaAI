@@ -19,6 +19,19 @@
  * anahtarı, (2) alanın yönü (`_LOWER_IS_BETTER` / `_HIGHER_IS_BETTER`). Her
  * bankanın aldığı ara değer (`sort_key`) olduğu gibi gösterilir. Çok alanlı
  * ağırlıklı skor için «En Avantajlı» sekmesine bakılır.
+ *
+ * ## KAPSAM ŞERİDİ (2026-08-09)
+ *
+ * Bu tablo kıyas panelinin süzgeçlerini AYNEN devralır ama kendi başlığında
+ * bunu söylemiyordu. Kampanya türü süzgeci «Tümü» iken buradaki sıra numarası
+ * türler arasında verilir — üstteki kıyas tablosunda ise tür içinde. İki tablo
+ * yan yana duruyor ve aynı bankayı farklı sırada gösterebiliyordu; kullanıcı
+ * hangi sıranın doğru olduğunu bilemezdi.
+ *
+ * Sıralama değiştirilmedi: bu tablonun işi bir tavsiye üretmek değil, FORMÜLÜ
+ * göstermektir; formül tür bilmez. Değişen, kapsamın artık YAZILMASI. Adil
+ * sıralama için okuyucu kıyas tablosuna ya da «En Avantajlı» sekmesine
+ * yönlendirilir.
  */
 
 import { api } from "../lib/api";
@@ -43,6 +56,31 @@ export default function ScoringExplainer({
         Sıralamanın formülü ve her bankanın aldığı ara değer aşağıda. Formülün
         kaynağı: <span className="mono">{s.data?.formula_source ?? "src/comparison/compare.py"}</span>
       </p>
+
+      <div className="notice notice-info">
+        <strong>
+          Kapsam:{" "}
+          {type
+            ? `yalnız «${type}» kampanya türü`
+            : "tüm kampanya türleri birlikte"}
+        </strong>
+        <div className="notice-body">
+          {type ? (
+            <>
+              Yukarıdaki kampanya türü süzgeci uygulandı; bu tablodaki sıra
+              numaraları yalnız bu tür içinde anlamlıdır.
+            </>
+          ) : (
+            <>
+              Süzgeç «Tümü» olduğu için bu tablo <b>türleri ayırmaz</b>: buradaki
+              sıra numarası bir tavsiye değil, formülün nasıl çalıştığının
+              gösterimidir. Farklı türler birbirinin alternatifi olmadığından
+              adil sıralamayı kıyas tablosunun tür bölümlerinden ya da «En
+              Avantajlı» sekmesinden okuyun.
+            </>
+          )}
+        </div>
+      </div>
 
       {s.loading && <Loading />}
       {!!s.error && <ErrorNotice error={s.error} />}

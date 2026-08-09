@@ -110,6 +110,24 @@
   color: var(--fg-faint);
 }
 
+/* Çip kümesinin GÖRÜNÜR başlığı.
+ *
+ * Alan seçici çipler etiketsizdi ve hemen altındaki «Kampanya türü» açılır
+ * süzgeciyle tek bir küme gibi okunuyordu; kullanıcı ikisini aynı şeyin iki
+ * hâli sandı. İki eksen ayrı: çipler HANGİ ALAN kıyaslanacağını, süzgeç HANGİ
+ * KAMPANYA TÜRÜNÜN listeleneceğini seçer. Başlık, açılır süzgeç etiketleriyle
+ * (`.small.muted`) aynı tipografiyi taşır ki ikisi eş düzey görünsün; ayrı bir
+ * satıra alınması ise çiplerin bir GRUP olduğunu gösterir. */
+.chip-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.chip-group-label {
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
 /* Sekme şeridi DIŞINDaki çipler (hazır sorular, alan seçiciler) kendi
  * zeminini taşır — arkalarında `.tabs` dolgusu yok. */
 .row > .chip,
@@ -247,7 +265,7 @@ table.data th.num {
   font-variant-numeric: tabular-nums;
 }
 
-/* Ürün ailesi ayracı — farklı kampanya türleri ASLA tek sıralamada karışmaz
+/* Kampanya türü ayracı — farklı kampanya türleri ASLA tek sıralamada karışmaz
  * (CLAUDE.md §17). Bu satır, tablonun içindeki grup başlığıdır. */
 table.data tbody tr.group-head td {
   padding-top: var(--sp-5);
@@ -513,6 +531,17 @@ table.data tbody tr.group-head:not(:first-child) td {
   align-items: baseline;
 }
 .fairness-item strong {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+}
+
+/* 8 kampanya türünün sayıldığı satır.
+ *
+ * Kavramın tanımı arayüzde TEK yerde yazılır (FairnessNotice) ve orada
+ * sınıfların tamamı sayılır. Sayım, çevresindeki gerekçe cümlesinden görsel
+ * olarak ayrılmalı — aksi hâlde göz sekiz özel adı düz metin sanıp atlıyor.
+ * Kutu değil vurgu kullanılıyor: bunlar bir liste değil, bir DEĞER KÜMESİ. */
+.tur-listesi {
   color: var(--fg);
   font-weight: var(--fw-medium);
 }

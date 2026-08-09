@@ -12,7 +12,7 @@
  * `compare.py`'deki bileşik skorlama (~420 satır) yazılı ve TESTLİYDİ;
  * `GET /advantageous` ucu da 2026-08-08'de açıldı. Ama arayüzde hiç
  * çağrılmıyordu — `web/` içinde `advantageous` geçen tek satır yoktu. Yani
- * ürün ailesi İÇİNDE adil sıralama yapan tek kod yolu kullanıcıya kapalıydı.
+ * kampanya türü İÇİNDE adil sıralama yapan tek kod yolu kullanıcıya kapalıydı.
  *
  * Bu, kıyas ekranındaki «elma ile armut» şikâyetinin köküne iner: `/compare`
  * tek alan üzerinden ve tür süzmesi opsiyonel çalışır; burada sıralama her
@@ -53,14 +53,16 @@ export default function AdvantageousPanel({ campaignTypes, onInspect }: Props) {
       <h2>En Avantajlı Kampanya</h2>
       <p className="lede">
         Tek alan değil, <b>ağırlıklı bileşik skor</b>. Sıralama her zaman{" "}
-        <b>kampanya türü içinde</b> yapılır: bir kart kampanyası ile bir konut
-        finansmanı birbirinin alternatifi değildir, aralarında «hangisi daha
-        avantajlı» sorusu iyi tanımlı değildir.
+        <b>kampanya türü içinde</b> yapılır — kampanya türü, belgenin ait olduğu
+        ürün sınıfıdır (Konut Finansmanı, Taşıt Finansmanı, Kart … sekiz sınıf).
+        Bir kart kampanyası ile bir konut finansmanı birbirinin alternatifi
+        değildir, aralarında «hangisi daha avantajlı» sorusu iyi tanımlı
+        değildir.
       </p>
 
       <div className="row" style={{ marginBottom: "var(--sp-4)" }}>
         <label className="small muted" htmlFor="avantaj-tur">
-          Kampanya türü
+          Kampanya türü süzgeci
         </label>
         <select
           id="avantaj-tur"
@@ -184,7 +186,7 @@ function TurBolumu({
   return (
     <div style={{ marginTop: "var(--sp-5)" }}>
       <h3>
-        {ad} · {grup.count} kampanya
+        Kampanya türü: {ad} · {grup.count} kampanya
       </h3>
 
       {/* Küçük grup GİZLENMEZ: kaç kampanya olduğu ve neden sıralanmadığı yazılır. */}

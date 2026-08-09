@@ -14,12 +14,12 @@
  *
  * Panel «geliştirilmeli» diye bildirildi. Beş somut kusur bulundu:
  *
- * 1. **Ürün ailesi karışıyordu.** Delta 8 ayrı tür-filtresiz `/compare`
+ * 1. **Kampanya türü karışıyordu.** Delta 8 ayrı tür-filtresiz `/compare`
  *    çağrısının üstüne kuruluyordu; «Vade — rakip 84 ay önde» cümlesi bir
  *    ihtiyaç finansmanı ile bir konut finansmanı arasında üretilmiş
- *    olabiliyordu. Artık hesap sunucuda ve HER ZAMAN ürün ailesi içinde.
+ *    olabiliyordu. Artık hesap sunucuda ve HER ZAMAN kampanya türü içinde.
  * 2. **Kampanya türü tabloda hiç görünmüyordu** — kullanıcı neyin neyle
- *    kıyaslandığını göremiyordu bile. Artık aile başlıklı bölümler var.
+ *    kıyaslandığını göremiyordu bile. Artık tür başlıklı bölümler var.
  * 3. **Kanıt çöpe gidiyordu.** API `confidence`, `extractor` ve
  *    `contradiction_count` taşıyordu; panel hiçbirini göstermiyordu. «%10 daha
  *    kötüsünüz» iddiasını, değerin hangi katmandan geldiği ve belgede çelişki
@@ -35,6 +35,14 @@
  * sözlüğüydü (`DELTA_UNITS` / `KIND_LABEL` / `KIND_CLASS`, aynı enum üç kez).
  * Tek `KINDS` kaydına indi; ölü `taksit_sayisi` birimi kalktı (alan
  * `unranked`, panele hiç girmiyordu).
+ *
+ * ## TEK TERİM (2026-08-09)
+ *
+ * Bu panel kavrama «ürün ailesi» diyordu, kıyas paneli ise aynı kavrama
+ * «kampanya türü». İkisi de `campaign_type` alanıdır — §12'deki 8 sınıf.
+ * Kullanıcı iki ayrı süzgeç sandığını bildirdi. Arayüzün tamamında tek ad
+ * kullanılıyor: **kampanya türü**. Tanımı `FairnessNotice` içinde bir kez
+ * yazılır ve bu panel de o şeridi basar.
  *
  * HESAPLANMAYAN DURUM korundu: taraflardan biri `comparable = false` ise
  * (aralık, zaman-koşullu oran, farklı para birimi) delta **boş bırakılır**.
@@ -142,9 +150,9 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
       <section className="card">
         <h2>Banka İçi Delta — bende ne eksik, rakipte ne var?</h2>
         <p className="lede">
-          Bir banka seçin: her <b>ürün ailesinde</b>, her alanda o bankanın en
-          iyi kaydı ile rakip kayıt yan yana konur. Fark yalnız aynı ürün
-          ailesi içinde hesaplanır.
+          Bir banka seçin: her <b>kampanya türünde</b>, her alanda o bankanın en
+          iyi kaydı ile rakip kayıt yan yana konur. Fark yalnız aynı kampanya
+          türü içinde hesaplanır.
         </p>
 
         <div className="row">
@@ -189,7 +197,7 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
           </div>
           <div className="row-tight">
             <label className="small muted" htmlFor="delta-type">
-              Ürün ailesi
+              Kampanya türü süzgeci
             </label>
             <select
               id="delta-type"
@@ -198,7 +206,7 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
               value={type}
               onChange={(e) => setType(e.target.value)}
             >
-              <option value="">Tümü (ayrı ayrı)</option>
+              <option value="">Tüm türler (ayrı ayrı)</option>
               {campaignTypes.map((t) => (
                 <option key={t} value={t}>
                   {t}
@@ -211,12 +219,12 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
         <FairnessNotice />
 
         {(banks.loading || delta.loading) && (
-          <Loading label="Ürün aileleri karşılaştırılıyor…" />
+          <Loading label="Kampanya türleri karşılaştırılıyor…" />
         )}
         {!!delta.error && <ErrorNotice error={delta.error} />}
 
         {delta.data && delta.data.families.length === 0 && (
-          <EmptyNotice title={`${bankName} için kıyaslanacak ürün ailesi yok`}>
+          <EmptyNotice title={`${bankName} için kıyaslanacak kampanya türü yok`}>
             Seçilen filtrede ne bu bankaya ait belge var, ne de kıyaslanacak
             rakip kaydı. Veri eksikliği ile ürün eksikliği aynı şey değildir;
             bu ayrımı aşağıdaki tablolar satır satır verir.
@@ -224,12 +232,12 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
         )}
       </section>
 
-      {delta.data?.families.map((aile) => (
-        <AileBolumu
-          key={aile.campaign_type ?? "__belirsiz__"}
-          tur={aile.campaign_type}
-          ownCampaigns={aile.own_campaigns}
-          fields={aile.fields}
+      {delta.data?.families.map((tur) => (
+        <TurBolumu
+          key={tur.campaign_type ?? "__belirsiz__"}
+          tur={tur.campaign_type}
+          ownCampaigns={tur.own_campaigns}
+          fields={tur.fields}
           bankName={bankName}
           onInspect={onInspect}
         />
@@ -238,7 +246,7 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
   );
 }
 
-function AileBolumu({
+function TurBolumu({
   tur,
   ownCampaigns,
   fields,
@@ -263,13 +271,15 @@ function AileBolumu({
 
   return (
     <section className="card">
-      <h2>{tur ?? "Türü belirlenemeyen belgeler"}</h2>
+      <h2>
+        {tur ? `Kampanya türü: ${tur}` : "Türü belirlenemeyen belgeler"}
+      </h2>
       <p className="lede">
-        {bankName} bu ailede <b>{ownCampaigns}</b> belge taşıyor.
+        {bankName} bu türde <b>{ownCampaigns}</b> belge taşıyor.
         {ownCampaigns === 0 && (
           <>
             {" "}
-            Bu ailede hiç belgesi yok — aşağıdaki satırlar «ürün bulunamadı»
+            Bu türde hiç belgesi yok — aşağıdaki satırlar «ürün bulunamadı»
             der, «veri çıkarılamadı» demez. İkisi aynı şey değildir.
           </>
         )}
@@ -392,7 +402,7 @@ function Manset({ f, bankName }: { f: DeltaField; bankName: string }) {
   if (f.kind === "eksik_urun") {
     return (
       <>
-        {bankName} bu ailede bu alanda ürün taşımıyor; <b>{rakip}</b> tarafında
+        {bankName} bu türde bu alanda ürün taşımıyor; <b>{rakip}</b> tarafında
         var: <span className="mono">{formatValue(f.rival?.value, f.field)}</span>
       </>
     );
@@ -400,7 +410,7 @@ function Manset({ f, bankName }: { f: DeltaField; bankName: string }) {
   if (f.kind === "eksik_veri") {
     return (
       <>
-        {bankName}&apos;in bu ailede belgesi var ama bu alan <b>çıkarılamadı</b>.
+        {bankName}&apos;in bu türde belgesi var ama bu alan <b>çıkarılamadı</b>.
         Bu bir ürün eksikliği değildir; rakipte değer:{" "}
         <span className="mono">{formatValue(f.rival?.value, f.field)}</span>
       </>
