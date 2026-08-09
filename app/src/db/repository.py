@@ -89,6 +89,16 @@ _SONRADAN_EKLENEN = (
     ("extracted_fields", "span_start", "INTEGER"),
     ("extracted_fields", "span_end", "INTEGER"),
     ("extracted_fields", "confidence_source", "TEXT"),
+    # `postgres._LATER_COLUMNS` ile AYNI kalmak ZORUNDA — o dosyanın kendi
+    # yorumu bunu şart koşuyor: "iki liste ayrışırsa bir backend sütunu olan,
+    # diğeri olmayan bir şemayla koşar". Ayrışmıştı: aşağıdaki iki `embeddings`
+    # sütunu yalnız Postgres tarafında vardı. Diskteki `data/demo.db` bugün
+    # onları TAŞIYOR ama `CREATE TABLE` yolundan (schema.sql), göçten değil —
+    # yani kusur gizliydi ve ancak o sütunlar eklenmeden ÖNCE yaratılmış bir
+    # `.db` dosyası açıldığında görünürdü: `SqliteVectorStore.replace_campaign()`
+    # INSERT'i `no such column: chunk_index` ile düşerdi.
+    ("embeddings", "chunk_index", "INTEGER NOT NULL DEFAULT 0"),
+    ("embeddings", "model", "TEXT"),
     # 4 Ağu 2026: belge türü + özet. Diskteki 21,6 MB'lık `data/demo.db` bu
     # satırlar olmadan açıldığında `no such column: belge_turu` ile ölürdü.
     ("campaigns", "belge_turu", "TEXT"),

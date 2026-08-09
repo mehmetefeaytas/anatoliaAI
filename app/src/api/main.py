@@ -106,6 +106,7 @@ import os
 from typing import Any, Optional
 
 from ..chatbot.bot import Chatbot
+from ..chatbot.router import baglam_birlestir
 from ..comparison.compare import (
     _HIGHER_IS_BETTER,
     _LOWER_IS_BETTER,
@@ -212,9 +213,21 @@ try:  # pragma: no cover - pydantic yokluğu build_app()'te raporlanır
     from pydantic import BaseModel
 
     class ChatReq(BaseModel):
-        """`POST /chat` gövdesi."""
+        """`POST /chat` gövdesi.
+
+        `context` = istemcinin sakladığı son turların DURUM kayıtları,
+        YENİDEN ESKİYE sıralı. Sunucu oturum tutmaz (bkz. `chatbot/bot.py`
+        modül başlığı); hafıza istemcidedir ve her istekte geri gelir.
+
+        Kayıtların içeriği serbest metin DEĞİLDİR: `chatbot/router.py`
+        `ChatContext.dogrula()` her değeri sonlu bir izin listesinden geçirir,
+        uymayanı sessizce atar. Bu yüzden bağlam kanalı bir enjeksiyon yüzeyi
+        oluşturmaz — taşınabilecek tek şey, sunucunun kendi ürettiği alan /
+        niyet / kampanya türü / banka slug'ı etiketleridir.
+        """
 
         question: str
+        context: list[dict] = []
 
     class ExtractReq(BaseModel):
         """`POST /extract` gövdesi (canlı çıkarım — CLAUDE.md §11)."""
@@ -561,7 +574,8 @@ def build_app():
         return out
 
     def _campaign_contradictions(campaign_id: int, text: str, bank_slug: str,
-                                 scraped_at: Optional[str] = None) -> list[dict]:
+                                 scraped_at: Optional[str] = None,
+                                 source_url: Optional[str] = None) -> list[dict]:
         """Bir kampanyanın iç çelişkileri.
 
         `scraped_at` verilirse zaman bağımlı kural da koşar: *"kampanya
@@ -577,7 +591,8 @@ def build_app():
         if cached is not None:
             return cached
         try:
-            c = build_campaign(text, bank_slug=bank_slug)
+            c = build_campaign(text, bank_slug=bank_slug,
+                               source_url=source_url)
             out = [{"kind": k.kind, "detail": k.detail, "fields": k.fields}
                    for k in detect_contradictions(c, as_of=scraped_at)]
         except Exception:  # pragma: no cover - çıkarım hatası UI'yı düşürmesin
@@ -711,7 +726,8 @@ def build_app():
             "ozet_kaynak": ozet_kaynak,
             "fields": fields_out,
             "contradictions": _campaign_contradictions(
-                campaign_id, text, camp["bank"], camp.get("scraped_at")),
+                campaign_id, text, camp["bank"], camp.get("scraped_at"),
+                camp.get("source_url")),
         }
 
     @app.get("/compare")
@@ -873,7 +889,7 @@ def build_app():
                 # artık aynı cevabı veriyor.
                 "contradiction_count": len(_campaign_contradictions(
                     src["campaign_id"], text, src["bank"],
-                    src.get("scraped_at"))),
+                    src.get("scraped_at"), src.get("source_url"))),
                 # Bu satırın temsil ettiği ailede bankanın KAÇ kampanyası daha
                 # var. `per_bank=all` iken 0'dır (hiçbir şey elenmemiştir).
                 "other_count": (
@@ -985,7 +1001,7 @@ def build_app():
                 "extractor": satir.get("extractor"),
                 "contradiction_count": len(_campaign_contradictions(
                     satir["campaign_id"], metin, satir["bank"],
-                    satir.get("scraped_at"))),
+                    satir.get("scraped_at"), satir.get("source_url"))),
             }
 
         cikti_aileler = []
@@ -1226,11 +1242,25 @@ def build_app():
         anında ÜRETİLMEZ. Arayüz uzun ham metin yerine onu basar; özeti
         olmayan belgede sahte bir özet uydurulmaz, ham metnin kırpıldığı
         kullanıcıya söylenir.
+
+        ## Sohbet hafızası (durumsuz)
+
+        `req.context` istemcinin taşıdığı son turların durumudur; sunucu
+        hiçbir oturum saklamaz. Yanıttaki `context` bir sonraki tur için
+        üretilen yeni durumdur, `inherited` ise bu turda önceki turlardan
+        DEVRALINAN boyutların Türkçe etiketleridir — arayüz bunu rozet olarak
+        basar, böylece kullanıcı hangi bağlamla cevaplandığını görür.
+
+        `verbalize` yapısal cevabın LLM ile sözelleştirilip
+        sözelleştirilmediğini bildirir. `applied` yanlışsa ekranda ŞABLON
+        cevap vardır; `reason` neden düşüldüğünü söyler.
         """
-        a = bot.ask(req.question)
+        a = bot.ask(req.question, baglam_birlestir(req.context))
         return {"answer": a.text, "handler": a.handler, "field": a.field,
                 "sources": _kaynaklari_zenginlestir(a.handler, a.field,
-                                                    a.sources)}
+                                                    a.sources),
+                "context": a.context, "inherited": a.inherited,
+                "verbalize": a.verbalize}
 
     @app.post("/extract")
     def extract(req: ExtractReq):
@@ -1284,7 +1314,8 @@ def build_app():
         for camp in repo.all_campaigns():
             text = camp.get("raw_text", "") or ""
             for k in _campaign_contradictions(camp["id"], text, camp["bank"],
-                                              camp.get("scraped_at")):
+                                              camp.get("scraped_at"),
+                                              camp.get("source_url")):
                 out.append({
                     "bank": camp["bank"],
                     "bank_name": camp.get("bank_name"),
