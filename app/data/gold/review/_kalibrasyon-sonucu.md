@@ -24,20 +24,25 @@ kararı hangi ETİKETLE yazacağı konusunda değil (κ 0,05).
 
 ## 2. Uyuşmazlığın yapısı
 
-260 ortak satır:
+260 ortak satır (`report_iaa`'nın kendi okuyucularıyla):
 
 | | satır | pay |
 |---|---:|---:|
-| Tam uyum (hem etiket hem değer) | 24 | %9 |
-| **Değer AYNI, etiket farklı** | **120** | **%46** |
-| Değer gerçekten farklı | 116 | %45 |
+| Tam uyum (hem etiket hem değer) | 8 | %3 |
+| **Değer AYNI, etiket farklı** | **146** | **%56** |
+| Değer gerçekten farklı | 106 | %41 |
 
-Yani ölçülen uyuşmazlığın **yarısı içerik değil, etiketleme geleneği**.
+Yani ölçülen uyuşmazlığın **yarısından fazlası içerik değil, etiketleme
+geleneği**.
 
-## 3. Kök neden: 107 satırlık tek bir kalıp
+## 3. Kök neden: 134 satırlık tek bir kalıp
 
-`D='absent'` · `A/B/C='ok'` · dördünün de ürettiği gold değeri `__YOK__`:
-**107 satır.**
+D, modelin **hiçbir şey üretmediği** 134 satırda `absent` yazmış; bunların
+107'sinde A/B/C `ok` bırakmış.
+
+> D'nin `absent`lerinin **10 tanesi meşru**: modelin gerçekten bir değer
+> ürettiği ve D'nin onu reddettiği satırlar. Bunlar halüsinasyon (FP)
+> iddiasıdır ve normalizasyonda **korunmalıdır**.
 
 Kılavuz bu durumu zaten tanımlıyor (`ANNOTATION_GUIDE.md` §3.1 tablosu):
 
@@ -53,20 +58,55 @@ Kılavuz bu durumu zaten tanımlıyor (`ANNOTATION_GUIDE.md` §3.1 tablosu):
 > kılavuz "model boş bırakmışsa `absent` YAZMAYIN" cümlesini hiç kurmuyor;
 > §3.3 tablosuna bu satırın eklenmesi öneriliyor.
 
-### Karşı-olgu: tek bu kural netleşse κ nereye giderdi
+### Karşı-olgu: kurallar netleşse κ nereye giderdi
 
-Etiketler `ok` ve `absent`, ortaya çıkan değer `__YOK__` olduğunda
-birleştirilerek yeniden hesaplandı (veriye dokunulmadı):
+Veriye dokunulmadan, etiketler okuma anında normalize edilerek ölçüldü:
 
 | Senaryo | Fleiss κ |
 |---|---:|
 | Bugünkü | 0,051 |
-| **+ "değer yoksa `ok`" kuralı uygulanmış olsaydı** | **0,482** |
-| + campaign_type yazımı da normalize edilseydi | 0,485 |
+| 1) Boş `verdict` → `ok` (koşulsuz) | 0,099 |
+| 2) Boş `verdict` + yazılan değer = modelin değeri → `ok` | 0,100 |
+| **3) Model boş bıraktıysa `absent` ≡ `ok`** | **0,268** |
+| 2 + 3 birlikte | 0,337 |
 
-**+0,431** — ölçülen uyuşmazlığın %85'i tek bir etiketleme farkından geliyor.
-0,482 hâlâ eşiğin altında, yani hakemlik yine gerekli; ama toplantı gündemi
-"252 uyuşmazlığı konuş"tan "3 kuralı netleştir"e iniyor.
+> ### ⚠️ DÜZELTME (2026-08-09)
+>
+> Bu tablonun ilk sürümü senaryo 3 için **0,482** diyordu. **Yanlıştı.**
+> O hesap `ok`/`absent` etiketlerini *"ortaya çıkan değer `__YOK__`"*
+> ölçütüyle birleştiriyordu; bu ölçüt, modelin gerçekten bir değer ürettiği ve
+> anotatörün onu reddettiği satırları da kapsıyor — yani **meşru halüsinasyon
+> iddialarını da** uyum sayıyordu.
+>
+> Doğru ölçüt kılavuzun kendi ölçütüdür: **`model_value` boş mu**. `absent`
+> modelin ÜRETTİĞİ bir değeri reddetmek içindir; üretmediğinde reddedilecek
+> bir şey yoktur. Bu ölçütle κ **0,268**.
+
+Hiçbir senaryo eşiği (0,67) geçmiyor: **hakemlik ve yeniden anotasyon
+kaçınılmaz.** Ama gündem "252 uyuşmazlığı tek tek konuş"tan "4 kuralı
+netleştir"e iniyor.
+
+## 3b. "Boşlar zaten `ok` sayılsın" — bu ZATEN yapılıyor
+
+Boş `verdict` hücresi v1 dosyalarında **hâlihazırda `ok` okunuyor**
+(`report_iaa.row_verdict`), yani κ=0,051 bunu zaten içeriyor. 352 boş hücreye
+açıkça `ok` yazmak κ'yı 0,051 → 0,099'a taşıyor ve **o kazanç istenen yerden
+gelmiyor**:
+
+Tek istisna kuralı var — *boş `verdict` + dolu `gold_value` = `fix`*. Anotatör
+düzeltmeyi yazıp karar sütununu atlamıştır ve o düzeltme çöpe atılmaz. B'de
+**39 satır** böyle. Koşulsuz `ok` yazmak bu 39 düzeltmeyi **onaya çevirir**:
+
+| alan | modelin değeri | B'nin yazdığı |
+|---|---|---|
+| `kampanya_suresi` | `2026-01-01` | `01.01.2026 - 31.12.2026` |
+| `finansman_tutari` | `{"value": 40000.0}` | `{"value": 100000.0}` |
+
+Yani κ'daki +0,048'in kaynağı, B'nin gerçek düzeltmelerinin sessizce
+silinmesidir. **Yapılmamalı.**
+
+Güvenli daraltılmış hâli senaryo 2'dir (yazılan değer modelinkiyle
+birebir aynıysa `ok` say) ve κ'ya katkısı +0,001.
 
 ## 4. Biçim ihlalleri (`lint_review_csv`)
 
@@ -126,7 +166,7 @@ kararı olan satır **52/260**.
 ## 7. Toplantı gündemi (30 dk, sırayla)
 
 1. **`ok` mi `absent` mi** — model boş bıraktıysa `ok`. `absent` yalnız model
-   bir değer ÜRETTİ ve metinde yoksa. *(107 satırı, κ'nın 0,43'ünü etkiler)*
+   bir değer ÜRETTİ ve metinde yoksa. *(134 satır; κ 0,051 → 0,268)*
 2. **`gold_value` alanın değeridir**, belgenin özeti değil. Değer yoksa boş
    kalır. *(D'nin 69 hatası)*
 3. **Kanonik biçim** — `48`, `"48 aya kadar"` değil. Aralıklar için
