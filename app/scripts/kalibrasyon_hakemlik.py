@@ -153,7 +153,105 @@ KURALLAR = {
         "tarihi, campaign_type -> 8 sınıfın birebir yazımı",
         None,
     ),
+    # Kanıta dayalı: karar BELGE METNİNDEN çıkar, hücreye bakarak değil.
+    "taksit-vade": (
+        "belgede 'taksit' hiç geçmiyorsa taksit_sayisi'na yazılan sayı "
+        "vadedir; değer silinir (kılavuz: vade ayı taksit sayısı DEĞİLDİR)",
+        None,
+    ),
+    "paylasim-orani": (
+        "belge 'kâr paylaşım oranı' diyorsa X/Y biçimindeki değer paylaşım "
+        "oranıdır, kâr payı oranı değil; değer silinir",
+        None,
+    ),
+    "hedef-kitle-etiket": (
+        "hedef_kitle serbest metni izinli dört etikete indirgenir; segment "
+        "sinyali yoksa ('bireysel müşteriler') silinir, çözülemezse dokunulmaz",
+        None,
+    ),
 }
+
+#: Belge metni gerektiren kurallar.
+_KANIT_KURALLARI = {"taksit-vade", "paylasim-orani"}
+
+#: `hedef_kitle`'nin İZİN VERİLEN dört etiketi (ANNOTATION_GUIDE §hedef_kitle).
+HEDEF_KITLE_ETIKETLERI = ("yeni_musteri", "mevcut_musteri",
+                          "maas_musterisi", "belirli_segment")
+
+#: Serbest metinden etikete eşleme. Sıra önemli: 'yeni müşteri' 'müşteri'den
+#: önce denenmeli. Anahtarlar `tr_fold_ascii` ile katlanmış aranır.
+_HEDEF_KITLE_IPUCU = (
+    ("yeni musteri", "yeni_musteri"),
+    ("yeni bireysel musteri", "yeni_musteri"),
+    ("musteri olan", "yeni_musteri"),
+    ("maas", "maas_musterisi"),
+    ("emekli", "belirli_segment"),
+    ("mevcut musteri", "mevcut_musteri"),
+    ("ogrenci", "belirli_segment"),
+    ("esnaf", "belirli_segment"),
+    ("kamu calisan", "belirli_segment"),
+)
+
+#: Segment SİNYALİ TAŞIMAYAN ifadeler. "Bireysel müşteriler" herkestir;
+#: kılavuz §4.13/2 ürün/kanal/kitle kısıtının segment olmadığını söylüyor.
+#: Bunlar tek başınaysa değer SİLİNİR — uydurma etiket üretilmez.
+_HEDEF_KITLE_SINYALSIZ = ("bireysel musteri", "tum musteri", "herkes",
+                          "bireysel musteriler")
+
+
+def _hedef_kitle_etiketle(ham: str) -> Optional[str]:
+    """Serbest metni izinli etiketlere indirger.
+
+    Dönen: `"yeni_musteri | belirli_segment"` biçiminde etiket dizgesi,
+    sinyal yoksa `""` (değer silinir), zaten geçerliyse `None` (dokunma).
+
+    Uydurma YOK: metinde karşılığı olmayan etiket üretilmez. Hiçbir ipucu
+    tutmuyorsa ve metin de "sinyalsiz" listesinde değilse `None` döner —
+    yani karar insana bırakılır.
+    """
+    ham = (ham or "").strip()
+    if not ham:
+        return None
+    katlanmis = tr_fold_ascii(ham)
+
+    # Zaten yalnız izinli etiketlerden mi oluşuyor?
+    parcalar = [p.strip().strip('[]"\'' + " ")
+                for p in re.split(r"[|,]", ham.strip("[]"))]
+    parcalar = [p for p in parcalar if p]
+    if parcalar and all(p in HEDEF_KITLE_ETIKETLERI for p in parcalar):
+        return None
+
+    bulunan = []
+    for ipucu, etiket in _HEDEF_KITLE_IPUCU:
+        if ipucu in katlanmis and etiket not in bulunan:
+            bulunan.append(etiket)
+    if bulunan:
+        return " | ".join(bulunan)
+    if any(s in katlanmis for s in _HEDEF_KITLE_SINYALSIZ):
+        return ""              # segment sinyali yok -> değer silinir
+    return None                # çözemedim -> insana bırak
+
+#: Belge metinlerinin bulunduğu dizin.
+BELGE_DIZINI = _ROOT / "data" / "gold" / "review" / "belgeler"
+
+_TAKSIT = re.compile(r"taksit", re.IGNORECASE)
+_PAYLASIM = re.compile(r"payla[şs][ıi]m\s+oran", re.IGNORECASE)
+
+#: `85/15`, `%40-60`, `%40'a %60` — iki payı olan PAYLAŞIM biçimi.
+#: Tek sayı (`2.99`) ya da min/max sözlüğü bir ORANDIR, buraya girmez.
+_PAY_ORANI = re.compile(
+    r"^[\"'“”]?\s*%?\s*\d{1,3}\s*(?:/|-|'a\s*%?|\s+/\s+)\s*%?\s*\d{1,3}\s*[\"'“”]?$"
+)
+
+
+def _belge_metinleri(satirlar: list[dict], dizin: Path) -> dict[str, str]:
+    """`doc_id -> metin`. Metni bulunamayan belge sözlüğe GİRMEZ."""
+    out: dict[str, str] = {}
+    for doc in sorted({(s.get("doc_id") or "").strip() for s in satirlar}):
+        p = dizin / f"{doc}.txt"
+        if p.exists():
+            out[doc] = p.read_text(encoding="utf-8")
+    return out
 
 VARSAYILAN_KURALLAR = tuple(KURALLAR)
 
@@ -178,7 +276,7 @@ def _yedekle(yol: Path) -> Path:
 
 
 def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
-           kuru: bool = False) -> dict:
+           kuru: bool = False, belge_dizini: Path = BELGE_DIZINI) -> dict:
     """Kuralları bir dosyaya uygular; değişen her hücreyi kaydeder."""
     bilinmeyen = [k for k in kurallar if k not in KURALLAR]
     if bilinmeyen:
@@ -187,26 +285,68 @@ def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
     baslik, satirlar = _oku(yol)
     degisimler: list[dict] = []
     korunan = {"dolu_gold_value": 0, "mesru_absent": 0}
+    # Belge metni yalnız KANITA DAYALI kurallar için okunur; ötekiler
+    # metne bakmadan çalıştığı için maliyet ödenmez.
+    metinler = (_belge_metinleri(satirlar, belge_dizini)
+                if _KANIT_KURALLARI & set(kurallar) else {})
 
     for s in satirlar:
-        # --- DEĞER normalizasyonu (yalnız BİÇİM; anlam değişmez) -----------
-        # `verdict` kurallarından ÖNCE çalışır ve onlardan bağımsızdır:
-        # anotatörün ne dediğini değil, NASIL yazdığını düzeltir.
-        if "deger-bicim" in kurallar:
+        # --- KANITA DAYALI kurallar: karar BELGEDEN çıkar -------------------
+        if metinler:
             alan = (s.get("field") or "").strip()
             ham = (s.get("gold_value") or "").strip()
-            yeni = None
-            if ham and alan == "kampanya_suresi":
-                yeni = _iso_bitis(ham)
-            elif ham and alan == "campaign_type":
-                yeni = _TUR_INDEKS.get(tr_fold_ascii(ham))
-            if yeni and yeni != ham:
+            metin = metinler.get((s.get("doc_id") or "").strip())
+            gerekce = None
+            if metin is not None and ham:
+                if alan == "taksit_sayisi" and "taksit-vade" in kurallar \
+                        and not _TAKSIT.search(metin):
+                    gerekce = "belgede 'taksit' geçmiyor; yazılan sayı vadedir"
+                elif alan == "kar_payi_orani" and "paylasim-orani" in kurallar \
+                        and _PAY_ORANI.match(ham) and _PAYLASIM.search(metin):
+                    gerekce = ("belge 'kâr paylaşım oranı' diyor; X/Y bir "
+                               "paylaşım oranıdır, kâr payı oranı değil")
+            if gerekce:
                 degisimler.append({
                     "dosya": yol.name, "doc_id": s.get("doc_id", ""),
                     "field": alan, "sutun": "gold_value",
-                    "eski": ham, "yeni": yeni, "kural": "deger-bicim",
+                    "eski": ham, "yeni": "(boş)",
+                    "kural": gerekce,
+                })
+                s["gold_value"] = ""
+                # Model bir değer ÜRETTİYSE bu artık meşru bir `absent`tir
+                # (üretilen değer metinde bu alana ait değil). Üretmediyse
+                # `ok` — "kontrol ettim, bu alan belgede yok".
+                s["verdict"] = "absent" if (s.get("model_value") or "").strip() \
+                    else "ok"
+
+        # --- DEĞER normalizasyonu (yalnız BİÇİM; anlam değişmez) -----------
+        # `verdict` kurallarından ÖNCE çalışır ve onlardan bağımsızdır:
+        # anotatörün ne dediğini değil, NASIL yazdığını düzeltir.
+        if {"deger-bicim", "hedef-kitle-etiket"} & set(kurallar):
+            alan = (s.get("field") or "").strip()
+            ham = (s.get("gold_value") or "").strip()
+            bicim = "deger-bicim" in kurallar
+            yeni = None
+            if ham and alan == "kampanya_suresi" and bicim:
+                yeni = _iso_bitis(ham)
+            elif ham and alan == "campaign_type" and bicim:
+                yeni = _TUR_INDEKS.get(tr_fold_ascii(ham))
+            elif ham and alan == "hedef_kitle" \
+                    and "hedef-kitle-etiket" in kurallar:
+                yeni = _hedef_kitle_etiketle(ham)
+            # `yeni == ""` DE bir karardır (değer silinir); `None` "dokunma"
+            # demektir. `if yeni:` yazmak silmeyi sessizce atlardı.
+            if yeni is not None and yeni != ham:
+                degisimler.append({
+                    "dosya": yol.name, "doc_id": s.get("doc_id", ""),
+                    "field": alan, "sutun": "gold_value",
+                    "eski": ham, "yeni": yeni or "(boş)",
+                    "kural": ("hedef-kitle-etiket" if alan == "hedef_kitle"
+                              else "deger-bicim"),
                 })
                 s["gold_value"] = yeni
+                if not yeni and not (s.get("model_value") or "").strip():
+                    s["verdict"] = "ok"   # değer yok, model de üretmedi
 
         verdict = (s.get("verdict") or "").strip().casefold()
         gold = (s.get("gold_value") or "").strip()
