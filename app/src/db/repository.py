@@ -234,7 +234,7 @@ class Repository:
         **Varsayılan olarak sözleşme belgeleri ELENİR** (`sozlesme_dahil=False`).
         Bu metot `/compare` tablosunu ve chatbot'un text-to-SQL yolunu besler;
         oradaki soru her zaman "hangi KAMPANYA daha avantajlı"dır. Korpustaki
-        113 akit/tarife PDF'inin 43'ü oran/vade/tutar taşıyor ve filtre olmadan
+        113 akit/tarife PDF'inin 41'i oran/vade/tutar taşıyor ve filtre olmadan
         bir genel kredi sözleşmesi bir konut kampanyasıyla aynı kolonda
         sıralanıyordu (CLAUDE.md §17 "adil kıyas garantisi").
 
