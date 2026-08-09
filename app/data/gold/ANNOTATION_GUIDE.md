@@ -6,6 +6,22 @@
 > protokolle etiketlendiği §11'de kayıtlıdır; v1 metinleri silinmedi, arşiv
 > kutularında duruyor.
 
+> **Kalibrasyon turu sonrası ek (2026-08-09).** Kalibrasyonda ÖLÇÜLEN dört
+> kusur kılavuza yazıldı; hiçbir kural değişmedi, eksik olan cümleler kuruldu:
+>
+> | Ek | Nerede | Neyi kapatıyor |
+> |---|---|---|
+> | `model_value` boşsa `absent` YAZMAYIN, `ok` yazın | §3.3 kutusu | 159 hücre |
+> | `kampanya_kosullari` dört kuralı (K1–K4) | §4 | 20 uyuşmazlık |
+> | "taksit" kelime testi | §4 `taksit_sayisi` | 19 hücre / 10 belge |
+> | "Bireysel müşteriler" segment değildir | §4 `hedef_kitle` | 19 hücre |
+>
+> Sayıların ölçümü ve komutları ilgili bölümlerde. Turun tam teşhisi:
+> `review/_kalibrasyon-sonucu.md`. **Kalibrasyon yeniden etiketlenmiyor**;
+> asıl κ `round1_A` + `round1_B`'den çıkacak. Ana tur talimatı:
+> `review/_ANA-TUR-TALIMATI.md` · anotatör başına ölçülmüş hata kalıpları:
+> `review/_calisma-listesi-<ad>.md`.
+
 > **Anotasyona başlamadan önce bu kılavuz baştan sona okunur.** Kalibrasyon turu
 > (§8) atlanmaz. Eşik politikası (§7) anotasyon başlamadan ilan edilmiştir ve
 > sonuçlara bakılarak değiştirilmez.
@@ -138,6 +154,31 @@ alışkanlık edinmeyin.
 
 **Bu kılavuzun en önemli tek talimatı.**
 
+> ## ⛔ `model_value` boşsa `absent` YAZMAYIN — `ok` yazın.
+>
+> `absent`, **modelin ÜRETTİĞİ bir değeri reddetmek** içindir. Model hiçbir şey
+> üretmediyse reddedilecek bir şey yoktur; `absent` yazmak **olmayan bir
+> halüsinasyonu işaretlemektir**. Doğru karar `ok`'tur ve "kontrol ettim, bu
+> alan belgede yok" demektir (§3.1 tablosu).
+>
+> | `model_value` | Metinde de yok | Doğru karar |
+> |---|---|---|
+> | **boş** | evet | **`ok`** ← burası karıştırılıyor |
+> | **dolu** | evet | **`absent`** — halüsinasyon iddiası |
+>
+> **Neden bu cümle eklendi (ölçüldü, 2026-08-09).** Kural §3.1 tablosunda
+> yazılıydı ama kılavuz bu YASAĞI hiç kurmuyordu. Kalibrasyon turunda dört
+> anotatörün **hepsi** aynı hatayı yaptı: modelin boş bıraktığı **159 hücreye**
+> `absent` yazıldı (A 18 · B 4 · C 3 · D 134). Aynı dosyalarda **37 meşru
+> `absent`** vardı — model gerçekten bir değer üretmişti.
+>
+> Bedeli tek başına ölçüldü: yalnız bu etiketler birleştirilince Fleiss κ
+> **0,051 → 0,268** çıktı, Krippendorff α **kılı kıpırdamadı** (0,575). α'nın
+> sabit kalması kanıttır — kimse fikrini değiştirmedi, aynı şeyi söyleyen iki
+> farklı etiket kullanılıyordu. Ayrıntı: `review/_kalibrasyon-sonucu.md` §3.
+>
+> Sayı ve komut: `.venv/bin/python -m scripts.kappa_durum`
+
 `absent`, model bir değer ürettiğinde yazıldığında **onaylanmış bir halüsinasyondur**
 ve gold setteki en değerli tek etikettir. Modelin uydurma oranı birebir bu
 etiketlerden hesaplanır.
@@ -208,6 +249,37 @@ pahalıdır.
 - **Sayılmaz:** vade ayı (ikisi aynı sayı olsa bile ayrı alandır)
 - **Sınır vaka:** "3 taksit" bir KART kampanyasında geçiyorsa yine `taksit_sayisi`.
 
+#### KELİME TESTİ — "taksit" geçmiyorsa o sayı VADEDİR
+
+**Belgede "taksit" kelimesi hiç geçmiyorsa `taksit_sayisi` `absent`tir.**
+Metin taksitten söz etmiyorsa taksit sayısı da vermemiştir; oradaki sayı
+vadedir ve `vade_ay`a aittir.
+
+Tersi de geçerli: metin hem *"48 ay vade"* hem *"12 taksit"* diyorsa **iki alan
+da** doldurulur. İki alanın aynı sayıyı taşıması yasak değil; **aynı cümleden
+türetilmesi** yasak.
+
+| Belgede geçen | `vade_ay` | `taksit_sayisi` |
+|---|---|---|
+| "48 aya varan vade" — "taksit" yok | `48` | **`absent`** |
+| "vade farksız 6 taksit" — vade yok | `absent` | `6` |
+| "36 ay vade, 36 taksit" | `36` | `36` |
+
+**Ölçüldü (2026-08-09).** Kalibrasyonda dört anotatörün **hepsi** bu hatayı
+yaptı: **10 belgede**, "taksit" kelimesi hiç geçmediği hâlde `taksit_sayisi`
+dolduruldu (A 3 · B 6 · C 3 · D 7 hücre). Örnek —
+`albaraka--tasit-finansmani-togg-finansmani`: belgede yalnız vade var, dördü de
+`taksit_sayisi`ne `48` / `12 ile 48 arasında` / `{"min": 12, "max": 48}` yazdı.
+`taksit_sayisi` kalibrasyonun en çok ayrışan dördüncü alanıydı (15 uyuşmazlık).
+
+Ölçen komut (hakemlik **öncesi** anlık görüntü — güncel dosyalarda bu kural
+zaten uygulandığı için 0 döner):
+
+```bash
+.venv/bin/python -m scripts.kalibrasyon_hakemlik --kural taksit-vade --kuru \
+    data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv.yedek-hakemlik
+```
+
 ### `tahsis_ucreti` — tahsis / dosya ücreti
 - **Sayılır:** "tahsis ücreti 500 TL", "dosya masrafı 1.250 TL"
 - **Sayılmaz:** kart yıllık ücreti, EFT/havale ücreti
@@ -253,6 +325,47 @@ pahalıdır.
 - **Biçim:** birden çok koşul → dikey çizgi ile ayırın:
   `İlk 6 ay %0 uygulanır | Yalnızca mobilden başvuru`
 
+#### Dört kural — ekip onayladı (2026-08-09)
+
+Kalibrasyon turunda `kampanya_kosullari` **20 uyuşmazlıkla** en çok ayrışan iki
+alandan biriydi (`campaign_type` ile başa baş). Ekip dört kural üzerinde
+uzlaştı; hepsi buradan itibaren bağlayıcıdır.
+
+**K1 — Koşul cümlesi metinden BİREBİR alınır, yeniden yazılmaz.**
+Özetlemeyin, kısaltmayın, kendi cümlenizle anlatmayın. Kopyalayıp yapıştırın.
+*Gerekçe:* Bu alan `snippet` üzerinden metne geri izlenebilir olmak zorundadır
+(kaynak vurgulama, CLAUDE.md §18/1). Yeniden yazılmış cümle metinde
+bulunamaz; ayrıca iki anotatörün aynı koşulu iki farklı cümleyle özetlemesi
+uyuşmazlık üretir — ölçtüğü şey anlaşmazlık değil, üslup farkıdır.
+
+**K2 — Genel yasal ihtar koşul DEĞİLDİR.**
+Şu kalıplar atılır: *"…hakkını saklı tutar"*, *"…değişiklik yapma ve/veya
+kampanyayı durdurma…"*, *"…bilgilendirme amaçlıdır"*. Cümle bunlardan
+ibaretse alan **`absent`** olur (K4).
+*Gerekçe:* Bu cümle her kampanyada birebir tekrarlanır, yani kıyasta **sıfır
+bilgi** taşır. Koşul sayılırsa iki bankanın koşul listesi aynı görünür ve
+karşılaştırma motoru ayırt edici olmayan bir alanla çalışır. Projede bu kalıbı
+gürültü sayan bir kod yolu zaten var (`scripts/boilerplate_audit.py`).
+
+**K3 — Başka alana ait değer koşula TEKRAR yazılmaz.**
+Vade, tutar, oran, tarih, taksit kendi alanına yazılır; koşullara ikinci kez
+kopyalanmaz. *"120 aya varan vade"* tek başına bir koşul değildir → `vade_ay`.
+*İstisna:* değer bir KOŞULA bağlıysa cümlenin tamamı buraya da girer
+(*"İlk 6 ay %0, sonrasında %1,89"* → `kar_payi_orani` = `1.89` **artı** koşul
+cümlesi; §4 `kar_payi_orani` sınır vakası ve §4.13/4 ile aynı kural).
+*Gerekçe:* Aynı bilgi iki alanda durursa çelişki tespiti (CLAUDE.md §18/2)
+kendi kendini yakalar ve yanlış alarm üretir.
+
+**K4 — Hiç koşul yoksa `absent`.**
+K2 ve K3 uygulandıktan sonra geriye cümle kalmıyorsa alan boş bırakılmaz,
+`absent` yazılır. Boş bırakmak "bakmadım" demektir (§3.1); `absent` "baktım,
+koşul yok" demektir.
+
+> **Zaten uygulandı:** K2 ve K4 kalibrasyon dosyalarına
+> `scripts/kalibrasyon_hakemlik.py --kural kosul-ihtar` ile geçmişe dönük
+> işlendi; değişen her hücrenin kaydı `review/_hakemlik-degisim-4.md`.
+> K1 ve K3 mekanik değildir — insan kararı gerektirir.
+
 ### `hedef_kitle` — segment etiketleri (yalnız 4 etiket)
 `yeni_musteri` · `mevcut_musteri` · `maas_musterisi` · `belirli_segment`
 - **Sayılır:** "Maaşını bankamızdan alan emekli müşterilerimize" →
@@ -261,6 +374,35 @@ pahalıdır.
   `yeni_musteri` etiketi ÜRETMEZ. Olumsuzlanan segmenti etiketlemeyin.
 - Sinyal yoksa (herkese açık kampanya) → `absent`.
 - **Ürün/kart/kanal kısıtı segment DEĞİLDİR** — §4.13/2.
+- **Serbest metin yazılmaz.** Bu alan yalnız yukarıdaki dört etiketi alır.
+  Metinden alıntı yapılmaz; alıntı gerekiyorsa cümle `kampanya_kosullari`na
+  gider.
+
+#### "Bireysel müşteriler" bir segment DEĞİLDİR
+
+*"Bireysel müşteriler"*, *"gerçek kişi müşteriler"*, *"bireysel müşterilerimiz"*
+= **herkes**. Bankanın tüzel/ticari tarafını dışarıda bırakır, ama bireyler
+arasında hiçbir ayrım yapmaz — yani segment kısıtı yoktur.
+
+**Kural:** Tek sinyal buysa `hedef_kitle` → **`absent`**. Cümleyi saklamak
+istiyorsanız `kampanya_kosullari`na yazın (K1: birebir).
+
+| Metin | `hedef_kitle` | Neden |
+|---|---|---|
+| "Bireysel müşterilerimize" | **`absent`** | herkes — ayırt etmiyor |
+| "Ticari ve tüzel müşteriler dahil değildir" | **`absent`** | negatif kısıt (§4 NEGASYON) |
+| "Konut sahibi olmak isteyen bireysel müşteriler" | **`absent`** | "konut isteyen" niyettir, kişi niteliği değil |
+| "Emekli bireysel müşterilerimize" | `belirli_segment` | "emekli" kişi niteliğidir |
+| "İlk kez müşteri olan bireyler" | `yeni_musteri` | bankayla ilişki |
+
+**Ölçüldü (2026-08-09).** Kalibrasyonda `hedef_kitle` hücrelerinin **19'una**
+"bireysel" içeren serbest metin yazıldı (B 15 · C 1 · D 3; A 0). Hiçbiri dört
+etiketten biri değildi, yani hiçbiri gold'a girmedi — linter hepsini reddetti.
+`hedef_kitle` kalibrasyonun en çok ayrışan üçüncü alanıydı (19 uyuşmazlık) ve
+`lint` hatalarının en büyük tek kalıbıydı.
+
+> Bu, gold.v2'de `hedef_kitle` F1'inin **0,727 → 0,267** düşmesiyle aynı kök
+> nedendir (§4.13/2): etiket kümesi genişletildiğinde eşleşme rastlantısallaşır.
 
 ---
 
@@ -554,6 +696,18 @@ Atlanırsa 250 belgenin yeniden anote edilmesi gerekebilir.
     yazılırsa karşılaştırma yanlış sıralar (§4.13/8).
 12. **Kampanya olmayan belgeye "en yakın" sınıfı vermek.** `absent` meşrudur
     (§4.13/1).
+13. **Model boş bırakmışken `absent` yazmak.** En sık ölçülen hata: kalibrasyonda
+    159 hücre. Doğrusu `ok` (§3.3 kutusu).
+14. **"taksit" geçmeyen belgede `taksit_sayisi` doldurmak.** O sayı vadedir
+    (§4 kelime testi).
+15. **"Bireysel müşteriler"i segment sanmak.** Herkes demektir → `absent`
+    (§4 `hedef_kitle`).
+16. **Koşul cümlesini kendi kelimelerinizle özetlemek.** Birebir kopyalayın
+    (§4 K1).
+17. **Genel yasal ihtarı koşul saymak.** "…hakkını saklı tutar" her kampanyada
+    var, sıfır bilgi taşır (§4 K2).
+18. **`gold_value`'ya belgenin ne hakkında olduğunu yazmak.** O sütun alanın
+    DEĞERİ içindir; `build_gold` açıklamayı sessizce atar (§5).
 
 ---
 
