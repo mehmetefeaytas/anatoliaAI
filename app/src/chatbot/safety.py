@@ -370,7 +370,7 @@ _GUARANTEE_STEMS: tuple[str, ...] = (
 _GUARANTEE_DISCLAIMER = (
     "_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt "
     "edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; "
-    "oran garanti anlamı taşımaz (CLAUDE.md §12)._"
+    "oran garanti anlamı taşımaz._"
 )
 _GUARANTEE_CORRECTION = (
     "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti "

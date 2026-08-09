@@ -119,7 +119,7 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
         <h2>Karşılaştırma Paneli</h2>
         <p className="lede">
           Yalnızca aynı birime normalize edilmiş değerler kıyaslanır. Kıyaslanamayan
-          değerler silinmez — gerekçesiyle listenin sonunda kalır (CLAUDE.md §17).
+          değerler silinmez — gerekçesiyle listenin sonunda kalır.
         </p>
 
         <FairnessNotice />
@@ -193,8 +193,7 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
             <EmptyNotice title="Bu alan için kayıt bulunamadı">
               API çalışıyor ve yanıt verdi, ancak seçilen alan
               {type ? ` ve «${type}» türü` : ""} için çıkarılmış değer yok. Bu bir
-              hata değil: alan metinlerde geçmiyorsa sistem değer UYDURMAZ
-              (CLAUDE.md §21).
+              hata değil: alan metinlerde geçmiyorsa sistem değer UYDURMAZ.
             </EmptyNotice>
           )}
           {rows.data && rows.data.length > 0 && (

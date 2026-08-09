@@ -43,11 +43,37 @@ _FOLDED_SUP_LOW = [_F(s) for s in _SUPERLATIVE_LOW]
 _FOLDED_SUP_HIGH = [_F(s) for s in _SUPERLATIVE_HIGH]
 _FOLDED_LIST_INTENT = [_F(s) for s in _LIST_INTENT]
 
-# Kampanya türü filtresi: soru içindeki ipucu → 8 sınıftan biri
+# Kampanya türü filtresi: soru içindeki ipucu → 8 sınıftan biri.
+# Kullanıcı ürün adını değil GÜNLÜK KELİMEYİ kullanır: "araba alımında en
+# yüksek finansman kimde" sorusu ölçüldü ve `taşıt` geçmediği için tür
+# filtresi hiç kurulmuyordu.
 _FOLDED_TYPE_MAP = {_F(k): v for k, v in {
-    "konut": "Konut Finansmanı", "taşıt": "Taşıt Finansmanı",
+    "konut": "Konut Finansmanı", "ev alım": "Konut Finansmanı",
+    "mortgage": "Konut Finansmanı",
+    "taşıt": "Taşıt Finansmanı", "araba": "Taşıt Finansmanı",
+    "araç": "Taşıt Finansmanı", "otomobil": "Taşıt Finansmanı",
+    "sıfır km": "Taşıt Finansmanı",
     "ihtiyaç": "İhtiyaç Finansmanı", "kart": "Kart",
     "yatırım": "Yatırım Ürünü",
+}.items()}
+
+# SUPERLATİF VARSA alan bulunamadığında başvurulan gevşek eşleme.
+# Sadece "en yüksek/en düşük" gibi açık bir sıralama niyeti varken devreye
+# girer; niyetsiz sorular (ör. "Konut finansmanı kampanyasının koşulları
+# neler?") RAG'de kalır ve davranışları değişmez.
+#
+# Sebebi ölçüldü: "Araba alımında en yüksek finansman kimde var?" sorusunda
+# `finansman` hiçbir alan anahtarına uymuyordu, alan `None` kalıyor ve soru
+# RAG'e düşüyordu. RAG de sorunun yalnız iki yaygın kelimesiyle ('alımında',
+# 'yüksek') örtüşen bir SEYAHAT kampanyasını "ilgili kampanya" diye
+# döndürüyordu. Açık sıralama niyeti olan bir soruyu anlamsal aramaya
+# göndermek, router'ın var oluş sebebine aykırı.
+_FOLDED_SUP_FIELD_KEYWORDS = {_F(k): v for k, v in {
+    "finansman": "finansman_tutari",
+    "kredi": "finansman_tutari",
+    "puan": "alisveris_puani",
+    "ödül": "odul_miktari",
+    "indirim": "indirim_orani",
 }.items()}
 
 
@@ -74,6 +100,15 @@ def route(question: str) -> Route:
     # Sözcük sınırlı ve 'faizsiz' muaf — bkz. safety.mentions_interest_term.
     if field is None and mentions_interest_term(question):
         field = INTEREST_FIELD_HINT
+
+    # Açık sıralama niyeti var ama alan çıkmadıysa gevşek eşlemeyi dene.
+    # Bu kapı OLMADAN soru RAG'e düşüyor ve anahtar-kelime araması sorunun
+    # yalnız yaygın sözcükleriyle örtüşen alakasız bir belge döndürebiliyor.
+    if field is None and intent in ("lowest", "highest"):
+        for ipucu, alan in _FOLDED_SUP_FIELD_KEYWORDS.items():
+            if ipucu in q:
+                field = alan
+                break
 
     # sayısal/karşılaştırmalı sinyal varsa yapısal sorgu
     if field and (intent or filters):

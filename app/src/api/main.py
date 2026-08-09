@@ -1035,7 +1035,7 @@ def build_app():
             "fairness_note": (
                 "Delta her zaman ÜRÜN AİLESİ İÇİNDE hesaplanır; bir konut "
                 "finansmanı ile bir ihtiyaç finansmanı arasında fark "
-                "üretilmez (CLAUDE.md §17). Taraflardan biri sayıya "
+                "üretilmez. Taraflardan biri sayıya "
                 "indirgenemiyorsa fark boş bırakılır — yaklaşık bir fark "
                 "uydurulmaz."),
             "families": cikti_aileler,
@@ -1072,7 +1072,7 @@ def build_app():
             "steps": [
                 {"no": 1, "name": "Kanonik değer",
                  "detail": "Ham ifade normalize edilir (oran→float, para→"
-                           "{value,currency}, vade→ay). CLAUDE.md §10."},
+                           "{value,currency}, vade→ay)."},
                 {"no": 2, "name": "Sıralama anahtarı (sort_key)",
                  "detail": "compare._numeric_key(): sayı→kendisi, para→value, "
                            "masraf→amount (yoksa 0), aralık→min ve "
@@ -1080,7 +1080,7 @@ def build_app():
                 {"no": 3, "name": "Adil kıyas kapısı",
                  "detail": "Yalnız comparable=True satırlar sıralanır. Aralık, "
                            "farklı para birimi, sayısal olmayan ve boş değerler "
-                           "not'uyla sona alınır (CLAUDE.md §17)."},
+                           "not'uyla sona alınır."},
                 {"no": 4, "name": "Yön",
                  "detail": f"{field} → {direction} ({direction_label}). Kaynak: "
                            "compare._LOWER_IS_BETTER / _HIGHER_IS_BETTER."},
@@ -1159,7 +1159,7 @@ def build_app():
             "weights": weight_manifest(),
             "fairness_note": (
                 "Sıralama kampanya TÜRÜ İÇİNDE yapılır; türler arası "
-                "karşılaştırma yapılmaz (CLAUDE.md §17). Alanı olmayan "
+                "karşılaştırma yapılmaz. Alanı olmayan "
                 "kampanya CEZALANDIRILMAZ, kıyas dışı bırakılır — 0 puan "
                 "'ürün yok' demektir, 'kötü' demek değil."),
             "types": {

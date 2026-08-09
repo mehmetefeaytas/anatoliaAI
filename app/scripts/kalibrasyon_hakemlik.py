@@ -59,6 +59,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import re
 import shutil
 import sys
@@ -169,7 +170,46 @@ KURALLAR = {
         "sinyali yoksa ('bireysel müşteriler') silinir, çözülemezse dokunulmaz",
         None,
     ),
+    "kosul-ihtar": (
+        "kampanya_kosullari'ndan genel yasal ihtar cümlesi ayıklanır "
+        "('…hakkını saklı tutar'); geriye koşul kalmazsa değer silinir",
+        None,
+    ),
 }
+
+#: Her kampanyada birebir tekrarlanan genel yasal ihtar. Kıyasta sıfır bilgi
+#: taşır: ayırt edici olmayan bir cümle "koşul" diye sayılırsa iki bankanın
+#: koşul listesi aynı görünür. Projede bu kalıbı gürültü sayan bir kod yolu
+#: zaten var (`scripts/boilerplate_audit.py`).
+_IHTAR = re.compile(
+    r"hakk[ıi]n[ıi]\s+sakl[ıi]\s+tutar|"
+    r"de[ğg]i[şs]iklik\s+yapma\s+(?:ve/?veya\s+)?(?:kampanyay[ıi]\s+)?durdurma|"
+    r"bilgilendirme\s+ama[çc]l[ıi]d[ıi]r",
+    re.IGNORECASE)
+
+
+def _kosul_ayikla(ham: str) -> Optional[str]:
+    """Koşul listesinden genel yasal ihtar cümlelerini düşürür.
+
+    Dönen: temizlenmiş değer, hiç koşul kalmazsa `""` (silinir), değişiklik
+    gerekmiyorsa `None`.
+
+    Liste hem JSON dizisi (`["a", "b"]`) hem `|` ayraçlı olarak geliyor;
+    ikisi de desteklenir ve ÇIKTI `|` ayraçlıdır (kılavuzun biçimi).
+    """
+    ham = (ham or "").strip()
+    if not ham:
+        return None
+    try:
+        cozulmus = json.loads(ham)
+        parcalar = ([str(x) for x in cozulmus] if isinstance(cozulmus, list)
+                    else [str(cozulmus)])
+    except (json.JSONDecodeError, ValueError):
+        parcalar = [p.strip() for p in ham.split("|")]
+
+    kalan = [p.strip() for p in parcalar if p.strip() and not _IHTAR.search(p)]
+    yeni = " | ".join(kalan)
+    return None if yeni == ham else yeni
 
 #: Belge metni gerektiren kurallar.
 _KANIT_KURALLARI = {"taksit-vade", "paylasim-orani"}
@@ -322,7 +362,7 @@ def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
         # --- DEĞER normalizasyonu (yalnız BİÇİM; anlam değişmez) -----------
         # `verdict` kurallarından ÖNCE çalışır ve onlardan bağımsızdır:
         # anotatörün ne dediğini değil, NASIL yazdığını düzeltir.
-        if {"deger-bicim", "hedef-kitle-etiket"} & set(kurallar):
+        if {"deger-bicim", "hedef-kitle-etiket", "kosul-ihtar"} & set(kurallar):
             alan = (s.get("field") or "").strip()
             ham = (s.get("gold_value") or "").strip()
             bicim = "deger-bicim" in kurallar
@@ -334,6 +374,9 @@ def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
             elif ham and alan == "hedef_kitle" \
                     and "hedef-kitle-etiket" in kurallar:
                 yeni = _hedef_kitle_etiketle(ham)
+            elif ham and alan == "kampanya_kosullari" \
+                    and "kosul-ihtar" in kurallar:
+                yeni = _kosul_ayikla(ham)
             # `yeni == ""` DE bir karardır (değer silinir); `None` "dokunma"
             # demektir. `if yeni:` yazmak silmeyi sessizce atlardı.
             if yeni is not None and yeni != ham:
@@ -341,8 +384,9 @@ def uygula(yol: Path, kurallar: tuple[str, ...] = VARSAYILAN_KURALLAR,
                     "dosya": yol.name, "doc_id": s.get("doc_id", ""),
                     "field": alan, "sutun": "gold_value",
                     "eski": ham, "yeni": yeni or "(boş)",
-                    "kural": ("hedef-kitle-etiket" if alan == "hedef_kitle"
-                              else "deger-bicim"),
+                    "kural": {"hedef_kitle": "hedef-kitle-etiket",
+                              "kampanya_kosullari": "kosul-ihtar"}.get(
+                                  alan, "deger-bicim"),
                 })
                 s["gold_value"] = yeni
                 if not yeni and not (s.get("model_value") or "").strip():

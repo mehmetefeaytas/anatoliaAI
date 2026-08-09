@@ -50,8 +50,7 @@ export default function FairnessNotice() {
           Koşulları farklı olanlar — aralık (<span className="mono">%1,99–%2,49</span>),
           zaman-koşullu oran («ilk 6 ay %0»), farklı para birimi — sıralamaya
           alınmaz; <span className="badge badge-warn">doğrudan kıyaslanamaz</span>{" "}
-          gerekçesiyle listede kalır. Silinmez, uydurma sıra da verilmez
-          (CLAUDE.md §17).
+          gerekçesiyle listede kalır. Silinmez, uydurma sıra da verilmez.
         </p>
       </div>
       <div className="fairness-item">

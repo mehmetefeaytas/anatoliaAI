@@ -102,7 +102,12 @@ export default function ChatPanel({ onInspect }: Props) {
       if (!text || busy) return;
 
       const id = (sayacRef.current += 1);
-      setQ(text);
+      // Kutu BOŞALTILIR. Eskiden `setQ(text)` ile soru kutuda kalıyordu:
+      // kullanıcı ikinci soruyu yazmaya başlayınca eskisinin ARDINA ekleniyor,
+      // Enter'a basınca da aynı soru yeniden gönderiliyordu. Ekranda hiçbir
+      // şey değişmediği için "ikinci soru sorulamıyor, sayfayı yenilemek
+      // gerekiyor" diye görünüyordu.
+      setQ("");
       setBusy(true);
       setTurlar((t) => [...t, { id, soru: text, cevap: null, hata: null }]);
 

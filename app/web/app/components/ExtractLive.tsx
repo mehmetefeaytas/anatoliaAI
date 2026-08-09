@@ -201,7 +201,7 @@ export default function ExtractLive() {
             {!result.llm_available && (
               <div className="notice notice-info" style={{ marginBottom: "var(--sp-4)" }}>
                 <strong>Yerel LLM kapalı — sonuçlar yalnızca kural katmanından</strong>
-                Hibrit mimaride kurallar birincildir (CLAUDE.md §3); LLM yalnızca
+                Hibrit mimaride kurallar birincildir; LLM yalnızca
                 kuralların kaçırdığı örtük ifadeler için devreye girer. LLM
                 servisi ayakta değilken sistem çalışmaya devam eder.
               </div>
