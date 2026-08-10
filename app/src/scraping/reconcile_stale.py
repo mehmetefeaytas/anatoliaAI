@@ -26,11 +26,24 @@ Bu yüzden her kayıp URL **yeniden çekilir** ve karar kanıta bağlanır:
 | Yeniden çekim            | Karar                                            |
 |--------------------------|--------------------------------------------------|
 | 404 / 410 / 451          | gerçekten kaldırılmış → arşive, `expired`        |
-| 200 + "Süresi Dolmuştur" | yayında ama bitmiş → arşive, `expired`           |
+| 200 + bitmişlik DAMGASI  | yayında ama bitmiş → arşive, `expired`           |
 | 200 + normal içerik      | duruyor → `live/` kalır, KEŞİF AÇIĞI olarak raporla |
 | diğer (5xx, ağ, robots)  | karar verilemedi → dokunulmaz, `unverified`      |
 
 Üçüncü satır bedava teşhistir: keşif giriş noktalarımızın neyi kaçırdığını ölçer.
+
+## Damga kararı neden ayrı bir modülde
+
+İkinci satırın kararı önce `comparison.contradiction._SELF_EXPIRED` deseninin
+**ham HTML** üzerinde koşulmasıyla veriliyordu. Ölçüldü (2026-08-10): o koşuda
+üretilen 5 `suresi_dolmus` kararının **5'i de yanlış pozitifti** — üçü Türkiye
+Finans'ın her sayfasında duran "Biten Kampanyalar" MENÜ BAĞLANTISI, ikisi Vakıf
+Katılım'ın "… sona erdirme … hakkını saklı tutar" İHTAR cümlesiydi. Aynı desen
+canlı sayılan 750 belgenin 190'ında (%25,3) ateşliyordu.
+
+Karar artık `expiry_stamp.find_expiry_stamp` ile veriliyor: **temiz metin** +
+**dar damga deseni** + ihtar/kuyruk vetoları. Aynı korpusta yanlış pozitif 0'a
+indi; ayrıntı ve ölçüm tabloları `docs/rapor/suresi-dolmus-damgasi.md`.
 
 ## Güvenlik
 
@@ -48,25 +61,22 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Optional
 
-from .collector import ARCHIVE_SUBDIR, LIVE_SUBDIR, STATUS_EXPIRED, utc_now_iso
+from .collector import (
+    ARCHIVE_SUBDIR,
+    LIVE_SUBDIR,
+    STATUS_EXPIRED,
+    _extract_main_text,
+    utc_now_iso,
+)
+from .expiry_stamp import ExpiryStamp, find_expiry_stamp
 from .fetcher import RateLimiter, StaticFetcher
 from .robots import DEFAULT_USER_AGENT, RobotsCache
 from .snapshot import diff_manifests
-
-# Sayfanın kendini "bitmiş" ilan ettiği ifadeler. `comparison.contradiction`
-# ile AYNI kalıp — tek doğruluk kaynağı olsun diye oradan alınır.
-try:
-    from ..comparison.contradiction import _SELF_EXPIRED as SELF_EXPIRED
-except ImportError:  # comparison katmanı yoksa da çalış
-    SELF_EXPIRED = re.compile(
-        r"(s[üu]resi\s+dolmu[şs]|sona\s+erdi|sona\s+ermi[şs]|"
-        r"biten\s+kampanya|ge[çc]mi[şs]\s+kampanya)", re.IGNORECASE)
 
 # Belgenin GERÇEKTEN kaldırıldığını gösteren HTTP kodları.
 REMOVED_STATUSES = (404, 410, 451)
@@ -100,6 +110,8 @@ class Verdict:
     detail: str = ""
     meta_path: Optional[str] = None
     moved: list[str] = field(default_factory=list)
+    #: `suresi_dolmus` kararının dayandığı damga — kanıt dosyaya yazılır.
+    stamp: Optional[ExpiryStamp] = None
 
     def to_json(self) -> dict[str, Any]:
         return {
@@ -107,6 +119,7 @@ class Verdict:
             "decision": self.decision, "http_status": self.http_status,
             "detail": self.detail, "meta_path": self.meta_path,
             "moved": self.moved,
+            "stamp": self.stamp.to_json() if self.stamp else None,
         }
 
 
@@ -178,13 +191,17 @@ def verify_stale(before: dict[str, Any], after: dict[str, Any], raw_dir: str | P
                                    detail=f"HTTP {r.status} — sayfa kaldırılmış",
                                    meta_path=meta_rel))
             elif r.ok:
-                if SELF_EXPIRED.search(r.html or ""):
+                # Damga HAM HTML'de değil TEMİZ METİNDE aranır ve DAR desenle
+                # karar verilir — gerekçe ve ölçüm: `expiry_stamp` modülü.
+                stamp = find_expiry_stamp(_extract_main_text(r.html or ""))
+                if stamp is not None:
+                    tarih = f", bitiş {stamp.end_date}" if stamp.end_date else ""
                     out.append(Verdict(
                         url=url, bank_slug=slug, bucket=bucket,
                         decision=DECISION_SELF_EXPIRED, http_status=r.status,
-                        detail="sayfa yayında ama kendini 'süresi dolmuş' "
-                               "olarak işaretliyor",
-                        meta_path=meta_rel))
+                        detail=f"sayfa yayında ama kendini bitmiş ilan ediyor: "
+                               f"«{stamp.phrase}»{tarih} | kanıt: …{stamp.quote}…",
+                        meta_path=meta_rel, stamp=stamp))
                 else:
                     out.append(Verdict(
                         url=url, bank_slug=slug, bucket=bucket,
@@ -250,6 +267,8 @@ def apply_moves(verdicts: list[Verdict], raw_dir: str | Path) -> list[Verdict]:
             "checked_at": utc_now_iso(),
             "moved_from": f"{v.bank_slug}/{LIVE_SUBDIR}",
         }
+        if v.stamp is not None:
+            meta["removal_check"]["expiry_stamp"] = v.stamp.to_json()
         new_meta.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
                             encoding="utf-8")
     return verdicts
