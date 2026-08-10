@@ -420,8 +420,57 @@ _CUMLE_SINIRI_RE = re.compile(r"[.!?;]\s+[A-ZÇĞİÖŞÜ]|\n")
 _VARLIK_FIYATI_RE = re.compile(
     r"fiyat\w*|değer\w*|deger\w*|bedel\w*|piyasa\s*değer|ekspertiz", re.IGNORECASE)
 
+# Tetikleyici FİNANSMANA BAĞLI olmak zorunda — çıplak "tutar"/"limit" yetmez.
+#
+# ## Ölçülmüş kusur (2026-08-10, `data/demo.db`, 1774 belge)
+#
+# Eski tetikleyici listesi `(finansman|kredi|tutar|limit)` idi. Güven kapısını
+# (`comparison/compare.py`, eşik 0,65) geçen 237 `finansman_tutari` kaydının
+# tetikleyiciye göre dağılımı:
+#
+#     tutar   117 | limit  15 | kredi  56 | finansman  47
+#
+# `tutar` ve `limit` tek başına HİÇBİR ŞEY ayırt etmiyor; Türkçede her parasal
+# büyüklüğün adı "… tutarı"dır. Kanıt pencereleri:
+#
+#     "Kampanyadan maksimum kazanım tutarı 500 TL"      -> ödül tavanı
+#     "müşteri bazlı toplam indirim tutarı 1.000 TL"    -> indirim tavanı
+#     "kazanılabilecek maksimum iade tutarı 1000 TL"    -> iade tavanı
+#     "Ödenecek toplam tutar: 133.746,12 TL"            -> toplam geri ödeme
+#     "Hesap açılışı için gereken minimum tutar 10.000 TL" -> hesap asgarisi
+#     "Mektup tutarı üst limiti 15.000.000 TL"          -> teminat mektubu
+#     "maksimum teminat limiti 100.000 TL"              -> teminat
+#     "günlük para çekme limiti 25.000 TL"              -> ATM limiti
+#
+# `kredi` de ayırt etmiyor, çünkü korpusta 56 kaydın 54'ü **kredi KARTI**:
+#
+#     "İlk Ek Kredi Kartınıza 1.000 TL Bankkart Lira"   -> kart ödülü
+#     "TROY kredi kartınız ile 1.000 TL- 100.000 TL"    -> harcama bandı
+#
+# Kredi kartı bir finansman ürünü değil bir ödeme aracıdır; yanındaki tutar
+# harcama eşiği ya da ödüldür. Hepsi 0,95 güvenle üretiliyordu — yani güven
+# kapısı bu sınıfı GÖREMEZ, çünkü çıkarıcı kendinden emin. Kapı değil, kanıt
+# ölçütü düzelmeli.
+#
+# ## Kural
+#
+# Tetikleyici ancak FİNANSMANIN KENDİSİNİ adlandırıyorsa geçerlidir:
+# `finansman*`, `kredi*` (ama "kredi kartı" DEĞİL), `kullandırım*`.
+# "tutar/limit/miktar" artık bağımsız tetikleyici değil, bu çapaların
+# İSTEĞE BAĞLI KUYRUĞUdur: "Finansman Tutarı" tek parça olarak yutulur, böylece
+# 20 karakterlik boşluk kuyruktan SONRA başlar. Kuyruk olmasa
+# "Finansman Tutarı Kar Oranı Vade 150.000 TL" (Kuveyt Türk oran tablosu) ve
+# "Finansman Tutarı Taksit Miktarı 125.000 TL" (Albaraka) kaybolurdu — ikisi de
+# DOĞRU kayıt.
+_TUTAR_TETIK = (
+    r"(?:finansman\w*"
+    r"|kredi\w*(?!\s*kart)"
+    r"|kulland[ıi]r[ıi]m\w*)"
+    r"(?:\s*(?:tutar|limit|miktar)\w*)?"
+)
+
 _TUTAR_PAT = re.compile(
-    r"(finansman|kredi|tutar|limit)([^\d]{0,20})"
+    rf"({_TUTAR_TETIK})([^\d]{{0,20}})"
     r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
     re.IGNORECASE,
 )
