@@ -27,6 +27,39 @@ hemfikirlerse uygulanır, ayrışırlarsa alan `unclear_fields`'a düşer ve kay
 `needs_adjudication: true` işaretlenir. Çelişki gizlenmez, otomatik de
 çözülmez — hangi tarafın haklı olduğuna insan karar verir (CLAUDE.md HARD
 RULE #4 ile aynı ilke).
+
+## Kanıt (`field_spans`) — kaynağı ve SINIRI
+
+Ölçüldü (2026-08-10): bu hattın çıktısı gold.v1.json'un **65 alanının
+0'ında** kanıt vardı, çünkü betik `field_spans` üretmiyordu. Aynı anda
+`merge_gold_v2.py` her alanda kanıt ŞART koşuyordu; iki hat sessizce
+ayrışmıştı (bkz. `gold_schema` modül başlığı).
+
+Kanıtın kaynağı **ön-anotasyondaki çıkarıcı konumudur**, inceleme CSV'si
+değil. CSV'nin `snippet` sütunu kanıt taşıyamaz: `to_review_csv.build_snippet`
+onu okunurluk için BOZAR — pencere kenarlarına `…`, değerin çevresine `[ ]`
+koyar ve boşlukları düzler. Metinde birebir aranırsa hiçbiri bulunmaz.
+Ön-anotasyon ise aynı pencerenin bozulmamış hâlini (`source_span`) ve tam
+metne göre offset'ini (`span_start`/`span_end`) taşır.
+
+Kanıt YALNIZCA şu üç koşul birden sağlanırsa yazılır:
+
+  1. anotatörün onayladığı gold değeri, modelin ürettiği değerle AYNI
+     (yani `verdict=ok` yolu — anotatör CSV'de gördüğü snippet'i onaylamıştır),
+  2. offset'ler gerçekten o değeri gösteriyor (`text[start:end] == raw_value`),
+  3. `source_span` metinde birebir geçiyor ve ham değeri İÇERİYOR.
+
+`verdict=fix` değerlerinde kanıt **YAZILMAZ**. Anotatör düzeltilmiş bir
+değer yazdı ama alıntı yazmadı; modelin konumu YANLIŞ değerin kanıtıdır,
+düzeltilmişin değil. Kanonik değeri (`{"value": 500, "currency": "TRY"}`)
+metinde geri arayıp bir yer "bulmak", kanıt üretmek değil kanıt UYDURMAKTIR
+— ve tam olarak kapının engellemek için var olduğu şeydir. O alanlar
+kanıtsız kalır, sayılır ve raporda tek tek listelenir.
+
+Bu yüzden bu hattın kanıtı ile `merge_gold_v2` hattınınki aynı ağırlıkta
+DEĞİLDİR ve rapor bunu yazar: orada alıntıyı anotatör kör olarak elle yazdı,
+burada çıkarıcının kaydettiği konumu anotatör onayladı. İkisi de belgede
+birebir geçer; ikincisi bağımsız bir gözlem değildir.
 """
 
 from __future__ import annotations
@@ -53,8 +86,11 @@ from scripts.gold_schema import (
     GoldRecord,
     GoldValidationError,
     extract_hard_tags,
+    fabrication_errors,
     parse_gold_value,
     row_protocol,
+    span_supports,
+    uncovered_fields,
     validate_gold,
     values_equal,
     write_gold,
@@ -175,6 +211,48 @@ def resolve_decision(row: dict, model_value: Any, has_model_value: bool
         return ("value", model_value)
     # Model hiçbir şey üretmedi + anotatör onayladı = "kontrol ettim, YOK".
     return ("absent", None)
+
+
+# --------------------------------------------------------------------------- #
+# Kanıt türetme
+# --------------------------------------------------------------------------- #
+def kanit_alintisi(doc: dict, field: str, gold_value: Any) -> Optional[str]:
+    """Alanın kanıt alıntısı — türetilemiyorsa `None` (uydurma YOK).
+
+    Üç koşulun üçü de sağlanmazsa `None` döner; "yaklaşık doğru" bir alıntı
+    yazmak yerine alan kanıtsız bırakılır. Gerekçe için modül başlığına bakın.
+
+    `None` dönmesi kayıt için bir kusur değil, bir ÖLÇÜMDÜR: kaç alanın
+    kanıtı, kaç alanın sadece iddiası var.
+    """
+    payload = (doc.get("fields") or {}).get(field)
+    if not payload:
+        # Model bu alanı hiç üretmedi -> gold değeri anotatörden geldi (fix).
+        return None
+    if not values_equal(payload.get("value"), gold_value):
+        # Anotatör modeli DÜZELTTİ. Modelin konumu düzeltilmiş değerin kanıtı
+        # değildir; onu kanıt diye yazmak kapıyı kandırmaktır.
+        return None
+
+    text = doc.get("text") or ""
+    raw = payload.get("raw_value") or ""
+    start, end = payload.get("span_start"), payload.get("span_end")
+    if not (isinstance(start, int) and isinstance(end, int)):
+        return None
+    if not (0 <= start <= end <= len(text)) or not raw.strip():
+        return None
+    if text[start:end] != raw:
+        # Offset kaymış: gösterilen yer ile raporlanan değer uyuşmuyor.
+        # `ExtractedField.verify_span` ile aynı kontrol; ölçüldü, alanların
+        # ~%4'ünde tutmuyor ve o alanlar kanıtsız kalır.
+        return None
+
+    alinti = payload.get("source_span") or ""
+    # Alıntı ham değeri İÇERMELİ: değeri göstermeyen bir pencere, o değerin
+    # kanıtı değildir — yalnızca belgeden rastgele bir cümledir.
+    if raw not in alinti or not span_supports(text, alinti):
+        return None
+    return alinti
 
 
 # --------------------------------------------------------------------------- #
@@ -351,6 +429,9 @@ def _assemble(docs: dict[str, dict],
                                   "entries": [(a, k, v) for a, k, v, _ in entries]})
             if kind == "value":
                 record.fields[field] = value
+                alinti = kanit_alintisi(doc, field, value)
+                if alinti:
+                    record.field_spans[field] = alinti
             elif kind == "absent":
                 record.absent_fields.append(field)
             else:
@@ -385,6 +466,10 @@ def write_report(path: str | Path, result: dict, records: list[GoldRecord],
 
     double = [r for r in records if len(r.annotators) > 1]
 
+    deger_sayisi = sum(len(r.fields) for r in records)
+    kanitsiz = uncovered_fields(records)
+    kanitli = deger_sayisi - len(kanitsiz)
+
     lines = [
         "# Gold Derleme Raporu",
         "",
@@ -399,6 +484,8 @@ def write_report(path: str | Path, result: dict, records: list[GoldRecord],
         f"- Çelişki (anotatörler ayrıştı): **{len(result['conflicts'])}**",
         f"- Hakemlik bekleyen kayıt: "
         f"**{sum(1 for r in records if r.needs_adjudication)}**",
+        f"- Kanıtlı alan (`field_spans`): **{kanitli}/{deger_sayisi}**"
+        + (f" (%{100 * kanitli / deger_sayisi:.1f})" if deger_sayisi else ""),
         "",
         "## Protokol künyesi",
         "",
@@ -442,14 +529,40 @@ def write_report(path: str | Path, result: dict, records: list[GoldRecord],
         f"{len(full)} kayıtta ölçülebilir; diğerlerinde anote edilmemiş alan "
         "ile gerçekten olmayan alan ayrılamaz.",
         "",
+        "## Kanıt (`field_spans`)",
+        "",
+        f"- Kanıtlı: **{kanitli}/{deger_sayisi}** alan",
+        f"- Kanıtsız: **{len(kanitsiz)}** alan — değer var, belgede birebir "
+        "geçen alıntısı yok.",
+        "",
+        "> Bu hattın kanıtı `merge_gold_v2` hattınınkiyle **aynı ağırlıkta "
+        "değildir.** Orada alıntıyı anotatör belgeyi kör okuyarak elle yazdı; "
+        "burada çıkarıcının kaydettiği konumu anotatör onayladı (`verdict=ok`). "
+        "İkisi de belgede birebir geçer, ikincisi bağımsız bir gözlem değildir.",
+        "",
+        "> Kanıtsız alanların çoğu `verdict=fix`tir: anotatör değeri düzeltti "
+        "ama alıntı yazacağı bir sütun yok. Kanonik değeri metinde geri arayıp "
+        "bir yer bulmak kanıt üretmek değil, **kanıt uydurmak** olurdu.",
+        "",
         "## Alan bazında",
         "",
-        "| Alan | değer | yok (absent) | belirsiz |",
-        "|---|---:|---:|---:|",
+        "| Alan | değer | kanıtlı | yok (absent) | belirsiz |",
+        "|---|---:|---:|---:|---:|",
     ]
+    field_evidence: Counter = Counter()
+    for record in records:
+        field_evidence.update(record.field_spans.keys())
     for field in EXTRACTION_FIELDS:
-        lines.append(f"| `{field}` | {field_values[field]} | {field_absent[field]} "
-                     f"| {field_unclear[field]} |")
+        lines.append(f"| `{field}` | {field_values[field]} | {field_evidence[field]} "
+                     f"| {field_absent[field]} | {field_unclear[field]} |")
+
+    if kanitsiz:
+        lines += ["", "### Kanıtsız alanlar — kapatılacak iş listesi", "",
+                  "| Belge | Alan |", "|---|---|"]
+        for doc_id, field in kanitsiz[:200]:
+            lines.append(f"| `{doc_id}` | `{field}` |")
+        if len(kanitsiz) > 200:
+            lines.append(f"\n_… ve {len(kanitsiz) - 200} tane daha._")
 
     lines += ["", "## Zor-vaka etiketleri", ""]
     if hard_counter:
@@ -499,6 +612,10 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--excluded-out", default=DEFAULT_EXCLUDED)
     parser.add_argument("--allow-errors", action="store_true",
                         help="hatalı satırları atlayıp devam et (varsayılan: durdur)")
+    parser.add_argument("--kanit-zorunlu", action="store_true",
+                        help="kanıtsız alan varsa yazma (varsayılan: yaz ama "
+                             "sayıyı raporla). Uydurma alıntı her hâlükârda "
+                             "ölümcüldür.")
     args = parser.parse_args(argv)
 
     csv_paths = list(args.csv)
@@ -530,6 +647,31 @@ def main(argv: Optional[list[str]] = None) -> int:
         if not args.allow_errors:
             return 1
 
+    # UYDURMA KAPISI — asla gevşemez, `--allow-errors` bile geçemez.
+    # Buradaki alıntılar `kanit_alintisi` tarafından doğrulanarak yazıldığı
+    # için normalde boş çıkar; boş çıkmazsa türetme mantığı bozulmuştur ve
+    # gold'un yazılmaması DOĞRU davranıştır.
+    uydurma = fabrication_errors(records)
+    if uydurma:
+        print(f"\n{len(uydurma)} UYDURMA ALINTI — DOSYA YAZILMADI:\n", file=sys.stderr)
+        for message in uydurma[:50]:
+            print(f"  {message}", file=sys.stderr)
+        return 1
+
+    # KANIT KAPSAMI — kusur değil ÖLÇÜM. Sıfırlanması hedeftir; gizlenmesi
+    # değil. Ölümcül yapmak `verdict=fix` olan her alanı gold dışına atardı:
+    # anotatörün elle girdiği en değerli veri sessizce kaybolurdu.
+    kanitsiz = uncovered_fields(records)
+    deger_sayisi = sum(len(r.fields) for r in records)
+    if kanitsiz and args.kanit_zorunlu:
+        print(f"\n{len(kanitsiz)}/{deger_sayisi} ALAN KANITSIZ "
+              f"(--kanit-zorunlu) — DOSYA YAZILMADI:\n", file=sys.stderr)
+        for doc_id, field in kanitsiz[:50]:
+            print(f"  {doc_id} / {field}: değer var, kanıt YOK", file=sys.stderr)
+        if len(kanitsiz) > 50:
+            print(f"  … ve {len(kanitsiz) - 50} tane daha", file=sys.stderr)
+        return 1
+
     digest = write_gold(records, args.out)
     Path(args.excluded_out).write_text(
         json.dumps(result["excluded"], ensure_ascii=False, indent=2) + "\n",
@@ -542,8 +684,14 @@ def main(argv: Optional[list[str]] = None) -> int:
     print(f"  12/12 kapsanan     : {full}")
     print(f"  elenen (kampanya değil): {len(result['excluded'])}")
     print(f"  çelişki            : {len(result['conflicts'])}")
+    print(f"  kanıtlı alan       : {deger_sayisi - len(kanitsiz)}/{deger_sayisi}")
     print(f"  sha256             : {digest}")
     print(f"rapor: {args.report}")
+    if kanitsiz:
+        # stderr: sayı görünür kalsın, log'a bakan gözden kaçmasın.
+        print(f"UYARI: {len(kanitsiz)}/{deger_sayisi} alan KANITSIZ "
+              f"(değer var, belgede alıntısı yok). Listesi raporda: "
+              f"{args.report}", file=sys.stderr)
     if result["unknown_docs"]:
         print(f"UYARI: {len(result['unknown_docs'])} bilinmeyen doc_id atlandı "
               f"(ön-anotasyonda yok).", file=sys.stderr)
