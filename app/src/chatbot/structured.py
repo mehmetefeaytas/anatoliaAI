@@ -6,20 +6,76 @@
 LLM'e serbest SQL ürettirmek yerine (enjeksiyon + halüsinasyon riski), router'ın
 çıkardığı (alan, niyet, filtre) niyetini repository sorgularına ve karşılaştırma
 motoruna güvenle eşler. Sonuç her zaman kaynağa (source_span) dayalıdır.
+
+## Sunum kapıları — neden burada değil, `comparison/compare.py` içinde
+
+Bu modül sıralamayı bastığı hâliyle üç kapıdan geçirir ve üçünün de MANTIĞI
+`comparison/compare.py` içindedir:
+
+    yon_zorla()        — kullanıcının istediği sıralama yönü
+    tekil_banka_urun() — banka × ürün ailesi başına tek satır
+    turlere_ayir()     — kıyas ürün ailesi İÇİNDE
+
+Kapılar eskiden yoktu ve eksiklikleri tarayıcıda görüldü (ölçüldü,
+`data/demo.db`, 2026-08-10):
+
+  * "Peki vade?" → aynı banka aynı değerle **232 satır**; 16 sorunun 6'sında
+    tekrar vardı.
+  * 16 sorunun 12'sinde cevap **birden fazla ürün ailesinden** besleniyordu;
+    en kötü hâlde 9 aile tek listede sıralanıyordu.
+  * `vade_ay` alanında "en düşük" sorusuna sıralamanın tepesi, yani **en uzun**
+    vade basılıyordu ("en düşük vade: Ziraat Katılım (360 ay)").
+
+Aynı kararlar `/compare` ucunda zaten alınmıştı. Kuralı ikinci kez buraya
+yazmak yerine ortak yere taşındı; ayrışmayı `tests/test_chatbot_kiyas_paritesi.py`
+kapıda tutar.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Optional
 
-from ..comparison.compare import RankRow, rank
+from ..comparison.compare import (
+    RankRow,
+    rank,
+    tekil_banka_urun,
+    turlere_ayir,
+    yon_zorla,
+)
 from ..db.repository import Repository
 from .router import Route
+
+#: Kullanıcı ürün ailesini SÖYLEMEDİĞİNDE tam listelenen aile sayısı.
+#:
+#: Karar (2026-08-10): tür söylenmediğinde ne yapılacağı üç seçenekliydi —
+#: (a) ailelere göre grupla, (b) en kalabalık aileyi seç, (c) "hangi tür?" diye
+#: sor. Seçilen **(a)**. Gerekçe:
+#:
+#:   * (b) bilgi ATAR ve attığını söylemez: `data/demo.db`'de "vade" sorusunun
+#:     havuzunda 9 aile var ve en kalabalığı toplamın beşte birinden azını
+#:     kapsıyor. Kullanıcının sormadığı bir daraltmayı sessizce yapmak, bu
+#:     dosyanın banka süzgecinde açıkça yasakladığı davranışın aynısı.
+#:   * (c) her listeleme sorusuna bir tur ekler; "en düşük kâr payı hangi
+#:     bankada?" gibi manşet soruya soruyla karşılık vermek demodan puan
+#:     götürür. Ayrıca cevabı bir tur ertelemek bilgi vermez.
+#:   * (a) hiçbir bilgiyi atmaz, hiçbir aileler-arası sıralama üretmez ve
+#:     `rank_advantageous_by_type()` ile aynı kararı verir — bileşik skor
+#:     panelinde kapatılan "elma ile armut" boşluğu burada da kapanır.
+#:
+#: Sınır neden 3: aynı ölçümde tekilleştirme sonrası en kalabalık cevap 9
+#: ailede 51 satırdı. Üç aile ~24 satır eder; sohbet kanalında okunabilir üst
+#: sınır budur. Kalan aileler GİZLENMEZ, adlarıyla ve banka sayılarıyla
+#: sayılır — kullanıcı aile adını yazarak tamamını alabilir.
+_AZAMI_TUR = 3
 
 
 @dataclass
 class StructuredAnswer:
     text: str
+    #: Cevapta GÖSTERİLEN satırlar (tekilleştirilmiş, gösterim sırasında).
+    #: Eskiden havuzun tamamıydı: tek bir cevap 617 kaynak satırı taşıyabiliyor
+    #: ve arayüzdeki kaynak listesi ekrandaki cevapla örtüşmüyordu.
     rows: list[RankRow]
     field: str
     intent: str
@@ -31,21 +87,44 @@ def answer(repo: Repository, r: Route) -> StructuredAnswer:
     # filtreler
     rows = _apply_filters(repo, rows, r.filters)
 
-    ranked = rank(rows, r.field)
-    comparables = [x for x in ranked if x.comparable]
+    ranked = yon_zorla(rank(rows, r.field), r.field, r.intent)
+    tekil = tekil_banka_urun(ranked)
+    gruplar = turlere_ayir(tekil)
 
     if r.intent in ("lowest", "highest"):
-        if not comparables:
-            return StructuredAnswer(
-                "Karşılaştırılabilir veri bulunamadı (değerler aralık veya farklı "
-                "birimde olabilir).", ranked, r.field, r.intent)
-        top = comparables[0]
-        text = _phrase_superlative(r.field, r.intent, top)
-        return StructuredAnswer(text, ranked, r.field, r.intent)
+        # Tek aile (ya da hiç veri): soru zaten iyi tanımlı, tek cümle yeter.
+        # Bu dal ayrıca sözelleştirmenin çalıştığı tek dal — `bot._sozellestir`
+        # yalnız tek satırlık şablonları LLM'e verir.
+        if len(gruplar) <= 1:
+            top = _grup_kazanani(tekil)
+            if top is None:
+                return StructuredAnswer(_KIYASLANAMAZ, tekil, r.field, r.intent)
+            return StructuredAnswer(_phrase_superlative(r.field, r.intent, top),
+                                    tekil, r.field, r.intent)
+        kazananlar = [(tur, _grup_kazanani(grup)) for tur, grup in gruplar]
+        gosterilen = [k for _, k in kazananlar if k is not None]
+        if not gosterilen:
+            return StructuredAnswer(_KIYASLANAMAZ, tekil, r.field, r.intent)
+        return StructuredAnswer(
+            _phrase_superlative_by_type(r.field, r.intent, kazananlar),
+            gosterilen, r.field, r.intent)
 
     # list / filter
-    text = _phrase_list(r.field, ranked, r.filters)
-    return StructuredAnswer(text, ranked, r.field, r.intent)
+    if len(gruplar) <= 1:
+        return StructuredAnswer(_phrase_list(r.field, tekil, r.filters),
+                                tekil, r.field, r.intent)
+    text, gosterilen = _phrase_list_by_type(r.field, gruplar)
+    return StructuredAnswer(text, gosterilen, r.field, r.intent)
+
+
+def _grup_kazanani(grup: list[RankRow]) -> Optional[RankRow]:
+    """Bir ailenin gösterilecek kazananı: ilk KIYASLANABİLİR satır.
+
+    Sıra `rank()` + `yon_zorla()` tarafından zaten kurulmuştur; burada ikinci
+    bir "en iyiyi seç" kuralı yazmak, sıralamayı ayrışma riskiyle tekrarlamak
+    olurdu. Hiç kıyaslanabilir satır yoksa `None` — uydurma kazanan yok.
+    """
+    return next((x for x in grup if x.comparable), None)
 
 
 def _apply_filters(repo: Repository, rows: list[dict], filters: dict) -> list[dict]:
@@ -117,6 +196,18 @@ def _fmt_value(field: str, value) -> str:
     return str(value)
 
 
+#: Hiçbir satır kıyaslanabilir değilken basılan cevap.
+_KIYASLANAMAZ = ("Karşılaştırılabilir veri bulunamadı (değerler aralık veya "
+                 "farklı birimde olabilir).")
+
+#: Kıyasın ürün ailesi içinde yapıldığını söyleyen dipnot. Kullanıcı ekranda
+#: neden tek bir kazanan görmediğini bilmeli; aksi hâlde gruplu cevap
+#: "sistem karar veremedi" gibi okunur.
+_AILE_NOTU = ("_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin "
+              "alternatifi değildir; bu yüzden kıyas her ailenin içinde "
+              "yapılır._")
+
+
 def _phrase_superlative(field: str, intent: str, row: RankRow) -> str:
     label = _FIELD_LABEL.get(field, field)
     sup = "en düşük" if intent == "lowest" else "en yüksek"
@@ -125,17 +216,78 @@ def _phrase_superlative(field: str, intent: str, row: RankRow) -> str:
     return f"{sup} {label}: **{name}** ({val})."
 
 
+def _phrase_superlative_by_type(
+        field: str, intent: str,
+        kazananlar: list[tuple[str, Optional[RankRow]]]) -> str:
+    """Aile başına tek kazanan — aileler arası kıyas YAPILMADAN.
+
+    Kazananı olmayan aile de satırıyla görünür ("kıyaslanabilir veri yok"):
+    bir ailenin listeden düşmesi ile o ailede veri olmaması farklı şeylerdir
+    ve ikisini tek görüntüde toplamak, olmayan bir kapsama iddia etmektir.
+    """
+    label = _FIELD_LABEL.get(field, field)
+    sup = "en düşük" if intent == "lowest" else "en yüksek"
+    lines = [f"{sup} {label} — her ürün ailesinde ayrı ayrı:"]
+    for tur, k in kazananlar:
+        if k is None:
+            lines.append(f"- {tur}: kıyaslanabilir veri yok")
+            continue
+        lines.append(f"- {tur}: **{k.bank_name or k.bank}** "
+                     f"({_fmt_value(field, k.value)})")
+    lines.append("")
+    lines.append(_AILE_NOTU)
+    return "\n".join(lines)
+
+
+def _satir(field: str, r: RankRow) -> str:
+    """Tek liste satırı — kıyaslanamama notu ve elenen kampanya sayısıyla.
+
+    `other_count` `/compare`'in "+N kampanya daha" rozetinin sohbet
+    karşılığıdır: bankanın o ailedeki diğer kampanyaları SİLİNMEZ, sayılır.
+    """
+    name = r.bank_name or r.bank
+    val = _fmt_value(field, r.value)
+    ek = "" if r.comparable else f"  _(not: {r.note})_"
+    if r.other_count:
+        ek += f"  _(+{r.other_count} kampanya daha)_"
+    return f"- {name}: {val}{ek}"
+
+
 def _phrase_list(field: str, ranked: list[RankRow], filters: dict) -> str:
     label = _FIELD_LABEL.get(field, field)
     if not ranked:
         return "Bu kritere uyan kampanya bulunamadı."
-    lines = []
-    for r in ranked:
-        name = r.bank_name or r.bank
-        val = _fmt_value(field, r.value)
-        flag = "" if r.comparable else f"  _(not: {r.note})_"
-        lines.append(f"- {name}: {val}{flag}")
+    lines = [_satir(field, r) for r in ranked]
     head = f"{label} (uygun kampanyalar):"
     if filters.get("campaign_type"):
         head = f"{filters['campaign_type']} — {head}"
     return head + "\n" + "\n".join(lines)
+
+
+def _phrase_list_by_type(field: str,
+                         gruplar: list[tuple[str, list[RankRow]]]
+                         ) -> tuple[str, list[RankRow]]:
+    """Ürün ailesine göre bloklu liste; taşan aileler sayılarak duyurulur.
+
+    Dönüş: (metin, gösterilen satırlar). Gösterilmeyen aileler adlarıyla ve
+    banka sayılarıyla yazılır — kullanıcı aile adını sorup tamamını alabilir.
+    """
+    label = _FIELD_LABEL.get(field, field)
+    gosterilecek = gruplar[:_AZAMI_TUR]
+    tasan = gruplar[_AZAMI_TUR:]
+
+    lines = [f"{label} — ürün ailesine göre:"]
+    gosterilen: list[RankRow] = []
+    for tur, grup in gosterilecek:
+        lines.append("")
+        lines.append(f"**{tur}**")
+        for x in grup:
+            lines.append(_satir(field, x))
+            gosterilen.append(x)
+    lines.append("")
+    lines.append(_AILE_NOTU)
+    if tasan:
+        adlar = ", ".join(f"{tur} ({len(grup)} banka)" for tur, grup in tasan)
+        lines.append(f"_Bu alanda veri taşıyan diğer ürün aileleri: {adlar}. "
+                     f"Aile adını yazarsanız o aileyi tam listelerim._")
+    return "\n".join(lines), gosterilen

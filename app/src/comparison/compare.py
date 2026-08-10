@@ -19,7 +19,7 @@ sıralamada aralığın alt sınırı (en iyi senaryo) kullanılır ve flag veri
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from dataclasses import field as dc_field
 from typing import Any, Iterable, Optional
 
@@ -35,6 +35,16 @@ class RankRow:
     comparable: bool        # doğrudan kıyaslanabilir mi
     note: Optional[str]     # kıyaslanamazsa neden
     source_span: Optional[str]
+    #: Satırın geldiği kampanya ve ürün ailesi. Tekilleştirme ve tür kapısı
+    #: bu iki alan olmadan kurulamaz; eskiden `rank()` ikisini de düşürüyordu
+    #: ve `/compare` ucu bilgiyi geri getirmek için satır kimliğini `bank`
+    #: alanına gömmek zorunda kalmıştı. Varsayılanları `None`: bu alanları
+    #: taşımayan sözlüklerle çağıran mevcut yollar aynen çalışır.
+    campaign_id: Optional[Any] = None
+    campaign_type: Optional[str] = None
+    #: Tekilleştirmede bu satırın TEMSİL ETTİĞİ, gösterilmeyen kampanya sayısı.
+    #: `tekil_banka_urun()` doldurur; tekilleştirme yapılmamışsa 0'dır.
+    other_count: int = 0
 
 
 # Alan → (sayısal_anahtar_çıkarıcı, küçük_mü_iyi)
@@ -118,6 +128,11 @@ _HIGHER_IS_BETTER = {
     "vade_ay", "finansman_tutari", "odul_miktari", "indirim_orani", "alisveris_puani",
 }
 
+#: Kampanya türü boş (NULL) olan belgelerin grup adı. Belge GİZLENMEZ, kendi
+#: grubunda kalır: türü bilinmeyen bir kampanyayı sınıflandırılmış bir ailenin
+#: içine koymak, olmayan bir bilgiyi iddia etmek olurdu.
+BILINMEYEN_TUR = "Sınıflandırılamadı"
+
 
 def rank(rows: list[dict], field_name: str) -> list[RankRow]:
     """query_fields() çıktısını alıp adil sıralama döndürür.
@@ -138,6 +153,8 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
             comparable=comparable,
             note=note,
             source_span=r.get("source_span"),
+            campaign_id=r.get("campaign_id"),
+            campaign_type=r.get("campaign_type"),
         ))
 
     lower_better = field_name in _LOWER_IS_BETTER
@@ -154,6 +171,115 @@ def best(rows: list[dict], field_name: str) -> Optional[RankRow]:
         if r.comparable:
             return r
     return None
+
+
+# --------------------------------------------------------------------------- #
+# Sunum kapıları — "banka başına tek satır" ve "tür içinde kıyas"
+# --------------------------------------------------------------------------- #
+#
+# Bu iki fonksiyon `rank()` çıktısını KULLANICIYA GÖSTERİLECEK hâle getirir ve
+# BİLEREK sıralama motorunun yanında durur. Sebebi ölçülmüş bir kusurdur:
+# `/compare` ucu 2026-08-09'da banka başına tekilleştirmeyi kendi gövdesinde
+# kurdu, chatbot'un yapısal yolu ise `rank()` çıktısını olduğu gibi bastı.
+# Sonuç, tarayıcıda görüldü — "Peki vade?" sorusuna aynı banka ve aynı değer
+# **232 satır** boyunca tekrarlandı.
+#
+# Aynı kararın iki yerde ayrı ayrı yaşaması bu depoda üç kez pahalıya mal oldu
+# (`ihtar.py` belge süzmesi, oran tablosu başlık deseni, göç listesi paritesi).
+# Kural burada TEK bir yerde tanımlıdır; ayrışmayı `tests/
+# test_chatbot_kiyas_paritesi.py` kapıda tutar.
+
+
+def yon_zorla(ranked: list[RankRow], field_name: str,
+              intent: Optional[str]) -> list[RankRow]:
+    """Kullanıcının istediği sıralama yönünü uygular.
+
+    `rank()` her alanı KENDİ doğal yönünde sıralar (`vade_ay`'da uzun vade
+    önce). Kullanıcı bunun tersini isterse ("en kısa vade") sıra çevrilmelidir.
+
+    Kural `/compare?intent=` ile birebir aynıdır:
+
+        lowest  → küçük değer önce
+        highest → büyük değer önce
+        list / filter / None → alanın kendi doğal yönü
+
+    Çevirme yalnız `comparable=True` önekine uygulanır; kıyaslanamayanlar
+    notlarıyla sonda kalır — onların bir "yönü" yoktur.
+
+    Bu kapı olmadan tek alanlı yol sessizce YANLIŞ cevap veriyordu: `vade_ay`
+    alanında `intent='lowest'` sorusuna sıralamanın tepesindeki satır, yani
+    **en uzun** vade, "en düşük vade" etiketiyle basılıyordu.
+    """
+    istenen_dusuk = {"lowest": True, "highest": False}.get(intent or "")
+    if istenen_dusuk is None or istenen_dusuk == (field_name in _LOWER_IS_BETTER):
+        return list(ranked)
+    bas = [x for x in ranked if x.comparable and x.sort_key is not None]
+    son = [x for x in ranked if not (x.comparable and x.sort_key is not None)]
+    return list(reversed(bas)) + son
+
+
+def tekil_banka_urun(ranked: list[RankRow]) -> list[RankRow]:
+    """Banka × ürün ailesi başına TEK satır bırakır (`per_bank=best` kuralı).
+
+    Tekilleştirme anahtarı ``(bank, campaign_type)``'dır, yalnız ``bank``
+    değil: bir bankanın konut finansmanı ile taşıt finansmanı **farklı
+    ürünlerdir** ve aynı satıra indirgenmeleri, adil kıyas garantisinin ürün
+    ailesi düzeyindeki karşılığını bozardı.
+
+    `ranked` zaten en iyiden kötüye sıralı ve kıyaslanabilirler baştadır;
+    dolayısıyla bir çiftin İLK görülen satırı o bankanın o ailedeki en
+    iyisidir. Ayrı bir "en iyiyi seç" mantığı yazmak, sıralama kuralını ikinci
+    kez (ve ayrışma riskiyle) uygulamak olurdu.
+
+    Elenen satırlar SAKLANMAZ, SAYILIR: kalan satırın `other_count` alanı "bu
+    bankanın bu ailede kaç kampanyası daha var" sorusunu yanıtlar. Bilgi
+    gizlenmiyor, özetleniyor.
+    """
+    aile_sayisi: dict[tuple[Any, Any], int] = {}
+    for x in ranked:
+        anahtar = (x.bank, x.campaign_type)
+        aile_sayisi[anahtar] = aile_sayisi.get(anahtar, 0) + 1
+
+    gorulen: set[tuple[Any, Any]] = set()
+    out: list[RankRow] = []
+    for x in ranked:
+        anahtar = (x.bank, x.campaign_type)
+        if anahtar in gorulen:
+            continue
+        gorulen.add(anahtar)
+        out.append(replace(x, other_count=aile_sayisi[anahtar] - 1))
+    return out
+
+
+def turlere_ayir(ranked: list[RankRow]) -> list[tuple[str, list[RankRow]]]:
+    """Sıralamayı **ürün ailesine** böler; grup içi sıra korunur.
+
+    Şartnamenin çalışılmış örneği (s.12–13) aynı ürünü karşılaştırıyor: üç
+    bankanın **konut finansmanı** kampanyaları, tek tabloda. Bir kredi kartı
+    kampanyası ile bir konut finansmanı birbirinin alternatifi değildir;
+    "hangisi daha düşük" sorusu bu ikisi arasında iyi tanımlı değildir.
+    `rank_advantageous_by_type()` aynı kararı bileşik skor için çoktan verdi —
+    bu, onun tek alanlı sıralamadaki karşılığıdır.
+
+    Grup sırası: **önce kalabalık aile**, eşitlikte ada göre — aynı kural
+    `rank_advantageous_by_type()` içinde de geçerli; iki yüzeyin aileleri
+    farklı sırada göstermesi kullanıcı için sebepsiz bir tutarsızlık olurdu.
+
+    "Kalabalık" ölçüsü SATIR sayısı değil **kampanya** sayısıdır
+    (``1 + other_count``). Tekilleştirmeden sonra tek bankalı bir sorguda her
+    ailede tam bir satır kalır ve satır sayısına göre sıralamak eşitlik
+    üretir; sıra o zaman alfabeye düşer ve 113 kampanyalık bir aile, tek
+    kampanyalık bir ailenin arkasında kalır. Tekilleştirme yapılmamış
+    girdilerde `other_count` sıfırdır ve ölçü satır sayısına eşitlenir.
+
+    Türü boş olan satırlar `BILINMEYEN_TUR` grubunda toplanır — elenmezler.
+    """
+    gruplar: dict[str, list[RankRow]] = {}
+    for x in ranked:
+        gruplar.setdefault(x.campaign_type or BILINMEYEN_TUR, []).append(x)
+    return sorted(gruplar.items(),
+                  key=lambda kv: (-sum(1 + x.other_count for x in kv[1]),
+                                  -len(kv[1]), kv[0]))
 
 
 # =========================================================================== #
@@ -487,8 +613,6 @@ def best_advantageous(rows: Iterable[dict],
 # ve "en avantajlı" iddiası anlamsızlaşır — 2 kampanyadan birinin en iyi
 # olduğunu söylemek bilgi taşımaz. Grup gizlenmez, sebebiyle raporlanır.
 MIN_GROUP_SIZE = 3
-
-BILINMEYEN_TUR = "Sınıflandırılamadı"
 
 
 def rank_advantageous_by_type(
