@@ -119,6 +119,87 @@ _BIRIM_SONEKLI = (
 _PAYLASIM_ORANI_RE = re.compile(
     r"(?:kâr|kar)\s*pay[ıi]\s*payla[şs][ıi]m\s*oran[ıi]", re.IGNORECASE)
 
+# Paylaşım oranının DİZGİYE dayanmayan işareti: TOPLAMI 100 EDEN İKİ YÜZDE.
+#
+# ## Neden dizgi araması yetmiyor — ölçüldü
+#
+# `_PAYLASIM_ORANI_RE` yalnız "kâr payı paylaşım oranı" TAMLAMASINI arar ve
+# gold kalibrasyonunda bu ölçütün iki kusuru ölçüldü
+# (`data/gold/review/_uyusmazlik-kaliplari.md` §2b):
+#
+#   * 3 isabetin 2'si SAYFA GEZİNME MENÜSÜnden geliyordu ("…Katılma Hesapları
+#     Kâr Payı Oranları Kâr Paylaşım Oranları Kıymetli Maden…"). Tamlamayı tek
+#     başına kural yapmak iki DOĞRU satırı haksızca `absent`e çevirirdi.
+#   * En güçlü vakayı KAÇIRIYORDU: belge tamlamayı hiç kullanmadan
+#     *"Hesabın kâr payı oranı %40'a %60'dır"* diyor (Kuveyt Türk, Altına Altın
+#     Katılma Hesabı). Bu %40 karşılaştırma ekranında "en yüksek kâr payı"
+#     sırasının tepesine çıkıyordu.
+#
+# Kalibrasyonda ölçülen daha iyi ölçüt şuydu: **toplamı 100 eden iki yüzde +
+# paylaşım fiili**. Gerekçe kavramsal: bir bölüşüm oranı tanımı gereği 100'e
+# tamamlanır, gerçek oran çiftleri ise asla tamamlanmaz (2,95 + 4,42 = 7,37).
+#
+# ## Bu korpustaki ölçüm (2026-08-10, `data/demo.db`, 1774 belge)
+#
+# Desen 9 belgede 25 kez eşleşiyor: 40/60, 55/45, 95/5, 98/2, 60/40, 90/10,
+# 70/30 — **hepsi gerçek katılma hesabı paylaşım oranı, 0 yanlış alarm.**
+#
+# İki biçim kuralı ölçümden geldi:
+#   * Yüzdeler TAM SAYI olmak zorunda (`(?![\d.,])`). Ondalığa izin verilseydi
+#     "%1,99 ya da 25 Gün Blokeli %0" ifadesindeki virgül bağlaç sanılıp
+#     1 + 99 = 100 çıkıyordu — ölçüldü, 18 belgede yanlış alarm.
+#   * Bağlaç yalnız iyelikli "'a/'e", tire ya da bölü olabilir. Virgül bağlaç
+#     DEĞİLDİR (aynı gerekçe).
+_PAYLASIM_CIFTI_RE = re.compile(
+    r"%\s*(\d{1,3})(?![\d.,])\s*(?:['’]\s*[ae]|[-–—/])\s*%?\s*(\d{1,3})(?![\d.,])")
+
+# Paylaşım FİİLİ — "paylaşılır", "paylaşım oranı", "bölüşülür".
+_PAYLASIM_FIILI_RE = re.compile(r"payla[şs]|b[öo]l[üu][şs]", re.IGNORECASE)
+
+# Fiil, çiftin bu kadar karakter yakınında aranır. 160 karakter hem
+# "…hesap sahibi ile kurum arasında %40'a %60 şeklinde paylaşılır" cümlesini
+# hem de tablo başlığı ile satırı arasındaki mesafeyi ("Kar Paylaşım Oranı …
+# %98-%2") kapsar; belgenin geri kalanına taşmaz. Belge düzeyinde serbest
+# bırakmak yanlış olurdu: "Whatsapp'da paylaş" düğmesi neredeyse her sayfada
+# var ve fiil ölçütünü anlamsızlaştırırdı.
+_PAYLASIM_FIIL_PENCERE = 160
+
+
+def paylasim_cifti_araliklari(text: str) -> list[tuple[int, int]]:
+    """Toplamı 100 eden yüzde çiftlerinin (başlangıç, bitiş) konumları.
+
+    Tek doğruluk kaynağı: hem belge düzeyi kapı hem değer düzeyi kapı bu
+    listeyi kullanır. Aynı deseni iki yerde yazmak bu depoda beş kez ayrışmaya
+    yol açtı (bkz. `rules/ihtar.py` başlığı).
+    """
+    out: list[tuple[int, int]] = []
+    for m in _PAYLASIM_CIFTI_RE.finditer(text):
+        if int(m.group(1)) + int(m.group(2)) == 100:
+            out.append(m.span())
+    return out
+
+
+def _paylasim_beyani_var(text: str) -> bool:
+    """Belge bir kâr PAYLAŞIM oranı ilan ediyor mu (çift + yakınında fiil)?"""
+    for s, e in paylasim_cifti_araliklari(text):
+        pencere = text[max(0, s - _PAYLASIM_FIIL_PENCERE):
+                       e + _PAYLASIM_FIIL_PENCERE]
+        if _PAYLASIM_FIILI_RE.search(pencere):
+            return True
+    return False
+
+
+def _paylasim_ciftinin_parcasi(text: str, s: int, e: int) -> bool:
+    """Değerin kendisi, toplamı 100 eden bir çiftin İÇİNDE mi?
+
+    Fiil ARANMAZ ve aranmamalı: "%40'a %60" ifadesi tek başına zaten tek bir
+    oran OLAMAZ. Belge düzeyi kapının kaçırdığı (fiilin uzakta kaldığı) vakayı
+    bu tutar.
+    """
+    return any(bas <= s and e <= son
+               for bas, son in paylasim_cifti_araliklari(text))
+
+
 _KAR_PAYI_ONCE_RE = re.compile(
     r"(%\s*\d[\d.,]*)\s{0,3}(?:kâr|kar)\s*pay[ıi](?:\s*oran[ıi])?",
     re.IGNORECASE,
@@ -252,11 +333,18 @@ def extract_kar_payi(text: str) -> Optional[ExtractedField]:
     işaretsiz bir sayıdan daha güçlü kanıttır. Bu sıra olmadan
     "%1,89 kâr payı oranı ile 120 aya kadar" ifadesi 120 döndürüyordu.
     """
-    if _PAYLASIM_ORANI_RE.search(text):
+    if _PAYLASIM_ORANI_RE.search(text) or _paylasim_beyani_var(text):
         # "kâr payı PAYLAŞIM oranı %55'e %45" — bu, banka ile müşteri
         # arasındaki kâr BÖLÜŞÜMÜ, finansman kâr payı oranı DEĞİL. İkisini
         # aynı alana yazmak karşılaştırmayı bozar: %55 bir "oran" olarak
         # tabloya girip o bankayı en pahalı gösterirdi.
+        #
+        # İki kapı BİRLİKTE durur ve farklı vakaları tutar: tamlama araması
+        # ("kâr payı paylaşım oranı") ile toplamı 100 eden çift + paylaşım
+        # fiili. İkincisi, tamlamayı hiç kullanmayan
+        # "Hesabın kâr payı oranı %40'a %60'dır" cümlesini yakalar.
+        # Anotasyon tarafındaki karar: `kar_payi_orani = absent`
+        # (`data/gold/ANNOTATION_GUIDE.md`, biçim kartı §3 kural 7).
         return None
     # Yabancı kavram takip eden eşleşmeler ATLANIR, ilk eşleşmede durulmaz:
     # aynı belgede gerçek kâr payı oranı daha sonra gelebilir.
@@ -264,7 +352,8 @@ def extract_kar_payi(text: str) -> Optional[ExtractedField]:
         s, e = onceki.span(1)
         if (_yabanci_kavram_takip_ediyor(text, onceki.end())
                 or _ceza_baglami_onceliyor(text, onceki.start())
-                or _turev_oran_baglami(text, s, e)):
+                or _turev_oran_baglami(text, s, e)
+                or _paylasim_ciftinin_parcasi(text, s, e)):
             continue
         raw = onceki.group(1)
         return _field(
@@ -310,7 +399,8 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
         # `_CEZA_BAGLAMI_RE`, `_TUREV_ORAN_RE`).
         if (_yabanci_kavram_takip_ediyor(text, e)
                 or _ceza_baglami_onceliyor(text, m.start())
-                or _turev_oran_baglami(text, s, e)):
+                or _turev_oran_baglami(text, s, e)
+                or _paylasim_ciftinin_parcasi(text, s, e)):
             continue
         raw = m.group(3)
         canon = N.normalize_rate(raw)
