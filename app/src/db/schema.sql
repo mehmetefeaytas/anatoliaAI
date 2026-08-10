@@ -55,6 +55,19 @@ CREATE TABLE IF NOT EXISTS extracted_fields (
     canonical_value TEXT,          -- JSON metni (oran=float, para=obj, aralık=obj)
     confidence      REAL,
     source_span     TEXT,
+    -- CHECK kısıtı SQLite şeması (`repository._SQLITE_SCHEMA`) ile AYNI, ama
+    -- sözleşme ona DAYANMAZ: kısıt yalnız `CREATE TABLE` yolundan gelir.
+    -- Zaten kurulmuş bir veri tabanında `CREATE TABLE IF NOT EXISTS` hiçbir şey
+    -- yapmaz ve göç yolu (`_LATER_COLUMNS`) yalnız `ADD COLUMN` bilir — yani
+    -- eski bir DB kısıtsız kalır. SQLite'ta durum daha kötüdür: `ALTER TABLE`
+    -- ile CHECK eklenemez, dolayısıyla oradaki eksik kısıt SONRADAN
+    -- ONARILAMAZ. ÖLÇÜLDÜ (2026-08-10): teslim edilen `data/demo.db` sütunu
+    -- kısıtsız taşıyor. Gerçek doğrulama noktası `base.extractor_dogrula()`;
+    -- iki backend de `insert_campaign()` içinde oradan geçer. Buradaki CHECK
+    -- taze DB'lerde ham SQL yazanları yakalayan ikinci savunmadır.
+    -- NOT: `NULL IN (...)` SQL'de NULL üretir ve CHECK NULL'ı GEÇİRİR; yani
+    -- bu kısıt SQLite'taki `extractor IS NULL OR ...` yazımıyla aynı kümeyi
+    -- kabul eder (bilinmeyen katman = NULL geçerlidir).
     extractor       TEXT CHECK (extractor IN ('rule','ner','llm')),
     -- Kaynak izlenebilirliği: clean_text içindeki karakter aralığı.
     -- Bu iki sütun olmadan arayüz "bu değer metnin neresinden geldi"

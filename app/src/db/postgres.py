@@ -79,17 +79,30 @@ from typing import Any, Optional
 from ..schemas import Campaign
 from .base import (
     BELGE_TURLERI,
+    ON_NUL_MODES,
+    NulByteInText,
     belge_turu_dogrula,
+    extractor_dogrula,
     finalize_campaign_text,
     kiyas_where,
+    nul_denetle,
+    on_nul_dogrula,
 )
 
 logger = logging.getLogger(__name__)
 
 SCHEMA_PATH = Path(__file__).with_name("schema.sql")
 
-# NUL baytı politikası (bkz. modül başlığı).
-ON_NUL_MODES = ("error", "strip")
+# `ON_NUL_MODES` ve `NulByteInText` `base.py`'ye TAŞINDI (SQLite yolu da aynı
+# denetimden geçiyor). Burada yeniden dışa verilmelerinin tek sebebi geriye
+# uyumluluk: çağıranlar bunları `src.db.postgres`ten import ediyordu.
+__all__ = [
+    "ON_NUL_MODES",
+    "NulByteInText",
+    "PostgresRepository",
+    "PsycopgUnavailable",
+    "psycopg_available",
+]
 
 # `utc_now_iso()` çıktısını birebir yeniden üreten okuma biçimi.
 # `isoformat(timespec="seconds")` UTC için '...+00:00' üretir; `to_char` saat
@@ -150,10 +163,6 @@ def _load_psycopg():
     return psycopg, dict_row
 
 
-class NulByteInText(ValueError):
-    """Metinde PostgreSQL'in kabul etmediği NUL (0x00) baytı var."""
-
-
 class PostgresRepository:
     """PostgreSQL depo. `base.RepositoryProtocol` sözleşmesini uygular."""
 
@@ -162,12 +171,9 @@ class PostgresRepository:
     def __init__(self, dsn: str, *, ensure_schema: bool = True,
                  schema_path: Optional[Path] = None,
                  on_nul: str = "error"):
-        if on_nul not in ON_NUL_MODES:
-            raise ValueError(
-                f"on_nul={on_nul!r} geçersiz. Geçerli: {', '.join(ON_NUL_MODES)}")
+        self.on_nul = on_nul_dogrula(on_nul)
         psycopg, dict_row = _load_psycopg()
         self.dsn = dsn
-        self.on_nul = on_nul
         self.conn = psycopg.connect(dsn, row_factory=dict_row, autocommit=False)
         if ensure_schema:
             self.ensure_schema(schema_path or SCHEMA_PATH)
@@ -188,24 +194,14 @@ class PostgresRepository:
 
     def _text(self, value: Optional[str], alan: str,
               baglam: str) -> Optional[str]:
-        """Metni NUL baytına karşı denetler (bkz. modül başlığı)."""
-        if value is None or "\x00" not in value:
-            return value
-        adet = value.count("\x00")
-        if self.on_nul == "strip":
-            logger.warning(
-                "%s alanında %d NUL baytı temizlendi (%s). DİKKAT: karakter "
-                "offset'leri kaydı, span doğrulaması bozulabilir.",
-                alan, adet, baglam)
-            return value.replace("\x00", "")
-        raise NulByteInText(
-            f"{baglam}: '{alan}' alanı {adet} adet NUL (0x00) baytı içeriyor. "
-            "PostgreSQL TEXT sütunları NUL kabul etmez (SQLite eder — bu "
-            "yüzden hata ancak Postgres yolunda görünür). Genellikle metin "
-            "yerine ikili (binary) bir belgenin korpusa .txt olarak girmesi "
-            "demektir; kaynağı düzeltmek doğru çözümdür. Geçici olarak "
-            "PostgresRepository(dsn, on_nul='strip') ile temizlenebilir, ama "
-            "temizlik span offset'lerini kaydırır.")
+        """Metni NUL baytına karşı denetler — mantık `base.nul_denetle()`.
+
+        Denetim burada KOPYALANMAZ: SQLite yolu (`Repository._text`) birebir
+        aynı fonksiyonu çağırır. Kopyalansaydı biri düzeltilip diğeri
+        unutulduğunda iki backend farklı veri kabul ederdi — bu dosyanın
+        varlık sebebi olan paritenin tam tersi.
+        """
+        return nul_denetle(value, alan, baglam, on_nul=self.on_nul)
 
     # --- şema ---
     def ensure_schema(self, schema_path: Path = SCHEMA_PATH) -> None:
@@ -272,6 +268,27 @@ class PostgresRepository:
         baglam = f"kampanya (banka={c.bank_slug}, url={c.source_url})"
         raw_text = self._text(c.raw_text, "raw_text", baglam)
         clean_text = self._text(clean_text, "clean_text", baglam)
+        # Alanların TAMAMI, TEK satır bile yazılmadan ÖNCE doğrulanır —
+        # `set_belge_turu()` docstring'indeki aynı gerekçe. Doğrulama işlem
+        # açıldıktan SONRA patlarsa, kampanya satırı yazılmış ama alanları
+        # yazılmamış bir işlem yarıda kalır ve psycopg bağlantıyı iptal edilmiş
+        # (aborted) işlemde bırakır; sonraki her sorgu da düşer.
+        # span_start/end ve confidence_source burada YAZILMAZSA, projenin en
+        # özgün iddiası (her değer bir karakter aralığına bağlı) veri tabanı
+        # sınırında kaybolur. SQLite yolundaki aynı gerekçe.
+        alanlar = [
+            (f.field_name,
+             self._text(f.raw_value, f"{f.field_name}.raw_value", baglam),
+             json.dumps(f.canonical_value, ensure_ascii=False),
+             f.confidence,
+             self._text(f.source_span, f"{f.field_name}.source_span", baglam),
+             # Şemadaki CHECK'e GÜVENİLMEZ: kısıt yalnız `CREATE TABLE`
+             # yolundan gelir, yani önceden kurulmuş bir DB onu taşımaz
+             # (ölçüldü — `base.extractor_dogrula()` docstring'i).
+             extractor_dogrula(f.extractor), f.span_start, f.span_end,
+             getattr(f, "confidence_source", None))
+            for f in c.fields
+        ]
         with self.conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO campaigns(bank_id, raw_text, clean_text, source_url, "
@@ -280,25 +297,13 @@ class PostgresRepository:
                 (bank_id, raw_text, clean_text, c.source_url, scraped_at,
                  c.campaign_type))
             cid = int(cur.fetchone()["id"])
-            # span_start/end ve confidence_source burada YAZILMAZSA, projenin
-            # en özgün iddiası (her değer bir karakter aralığına bağlı) veri
-            # tabanı sınırında kaybolur. SQLite yolundaki aynı gerekçe.
-            rows = [
-                (cid, f.field_name,
-                 self._text(f.raw_value, f"{f.field_name}.raw_value", baglam),
-                 json.dumps(f.canonical_value, ensure_ascii=False),
-                 f.confidence,
-                 self._text(f.source_span, f"{f.field_name}.source_span", baglam),
-                 f.extractor.value, f.span_start, f.span_end,
-                 getattr(f, "confidence_source", None))
-                for f in c.fields
-            ]
-            if rows:
+            if alanlar:
                 cur.executemany(
                     "INSERT INTO extracted_fields(campaign_id, field_name, "
                     "raw_value, canonical_value, confidence, source_span, "
                     "extractor, span_start, span_end, confidence_source) "
-                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)", rows)
+                    "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    [(cid, *a) for a in alanlar])
         self.conn.commit()
         return cid
 

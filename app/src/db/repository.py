@@ -27,8 +27,11 @@ from ..schemas import Campaign
 from .base import (
     BELGE_TURLERI,
     belge_turu_dogrula,
+    extractor_dogrula,
     finalize_campaign_text,
     kiyas_where,
+    nul_denetle,
+    on_nul_dogrula,
 )
 
 # SQLite uyumlu şema (Postgres schema.sql'in alt kümesi)
@@ -54,13 +57,16 @@ CREATE TABLE IF NOT EXISTS extracted_fields (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     campaign_id INTEGER, field_name TEXT NOT NULL, raw_value TEXT,
     canonical_value TEXT, confidence REAL, source_span TEXT,
-    -- CHECK kısıtı `schema.sql` (Postgres) tarafında VARDI, burada YOKTU.
-    -- İki şemanın ayrışması bu projede ölçülmüş bir hata sınıfıdır: doğru
-    -- kural bir yolda kilitli, karşıtı diğerinde serbest (bkz. `_numeric_key`
-    -- / `_composite_numeric`, `parse_rate_table` başlık deseni). Burada bedeli
-    -- somut: SQLite yolunda geçersiz bir `extractor` değeri sessizce yazılır,
-    -- Postgres yolunda aynı yazma HATA verir — yani iki backend aynı veriyi
-    -- kabul etmez ve parite testi backend'e göre farklı davranır.
+    -- CHECK kısıtı `schema.sql` (Postgres) ile AYNI. Ama tek başına YETMEZ ve
+    -- sözleşme ona DAYANMAZ: kısıt yalnız `CREATE TABLE` yolundan gelir, yani
+    -- ZATEN VAR OLAN bir DB dosyası onu taşımaz — `CREATE TABLE IF NOT EXISTS`
+    -- hiçbir şey yapmaz ve `_SONRADAN_EKLENEN` göçü yalnız `ADD COLUMN` bilir;
+    -- SQLite `ALTER TABLE` ile CHECK eklemeye zaten izin vermez.
+    -- ÖLÇÜLDÜ (2026-08-10): teslim edilen `data/demo.db` bu sütunu KISITSIZ
+    -- (`extractor TEXT`) taşıyor ve geçici bir kopyasına `'UYDURMA'` yazılabildi.
+    -- Bu yüzden gerçek doğrulama noktası `base.extractor_dogrula()`'dır; iki
+    -- backend de `insert_campaign()` içinde oradan geçer. Buradaki CHECK taze
+    -- DB'lerde ham SQL yazan çağıranları bedava yakalayan ikinci savunmadır.
     extractor TEXT CHECK (extractor IS NULL OR extractor IN ('rule','ner','llm')),
     span_start INTEGER, span_end INTEGER, confidence_source TEXT
 );
@@ -115,7 +121,7 @@ class Repository:
     backend: str = "sqlite"
 
     def __init__(self, path: str = ":memory:", *,
-                 check_same_thread: bool = True):
+                 check_same_thread: bool = True, on_nul: str = "error"):
         """`check_same_thread=False` yalnızca çok thread'li sunucu için.
 
         `sqlite3` varsayılan olarak bağlantıyı onu OLUŞTURAN thread'e kilitler.
@@ -125,12 +131,29 @@ class Repository:
         `base.ThreadSafeRepository` bunu yapar ve `factory.create_repository(
         thread_safe=True)` ikisini birlikte kurar. Bu yüzden varsayılan
         DEĞİŞMEDİ; tek başına açmak sessiz bir yarış koşulu davetidir.
+
+        `on_nul` **`PostgresRepository` ile aynı ada, aynı kipe ve aynı
+        varsayılana** ('error') sahiptir. SQLite NUL baytını saklayabilir ama
+        saklamaz: gerekçe `base.nul_denetle()` docstring'inde — offline yolda
+        sorunsuz kurulan bir korpusun üretime göç ederken düşmesi, iki
+        backend'in aynı veriyi kabul ettiği iddiasının ihlalidir.
         """
+        self.on_nul = on_nul_dogrula(on_nul)
         self.conn = sqlite3.connect(path, check_same_thread=check_same_thread)
         self.conn.row_factory = sqlite3.Row
         self.conn.executescript(_SQLITE_SCHEMA)
         self._migrate()
         self.conn.commit()
+
+    def _text(self, value: Optional[str], alan: str,
+              baglam: str) -> Optional[str]:
+        """Metni NUL baytına karşı denetler — mantık `base.nul_denetle()`.
+
+        SQLite NUL'u saklayabilir; yine de reddedilir. Gerekçe (ve ölçülen
+        sıfır bedel) `base.nul_denetle()` docstring'inde. Denetim Postgres
+        yolundan KOPYALANMAZ, aynı fonksiyon çağrılır.
+        """
+        return nul_denetle(value, alan, baglam, on_nul=self.on_nul)
 
     def _migrate(self) -> None:
         """Eski bir DB dosyasına sonradan eklenen sütunları tamamlar."""
@@ -172,26 +195,41 @@ class Repository:
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
                         scraped_at: Optional[str] = None) -> int:
         bank_id = self.upsert_bank(c.bank_slug, c.bank_slug)
+        baglam = f"kampanya (banka={c.bank_slug}, url={c.source_url})"
+        raw_text = self._text(c.raw_text, "raw_text", baglam)
+        clean_text = self._text(clean_text, "clean_text", baglam)
+        # Alanların TAMAMI, TEK satır bile yazılmadan ÖNCE doğrulanır —
+        # `set_belge_turu()` docstring'indeki aynı gerekçe: yarım yazılmış bir
+        # kampanya (satırı var, alanları yok) sessizce eksik bir korpus
+        # bırakırdı. Postgres yolu birebir aynı sırayı izler.
+        # span_start/end ve confidence_source burada YAZILMAZSA, projenin en
+        # özgün iddiası (her değer bir karakter aralığına bağlı) veri tabanı
+        # sınırında kaybolur ve arayüz offset'i tahmin etmek zorunda kalır.
+        # Bu sütunlar 31 Tem'de tam bu sebeple eklendi.
+        alanlar = [
+            (f.field_name,
+             self._text(f.raw_value, f"{f.field_name}.raw_value", baglam),
+             json.dumps(f.canonical_value, ensure_ascii=False),
+             f.confidence,
+             self._text(f.source_span, f"{f.field_name}.source_span", baglam),
+             # Şemadaki CHECK'e GÜVENİLMEZ: diskteki `data/demo.db` onu
+             # taşımıyor (ölçüldü — `base.extractor_dogrula()` docstring'i).
+             extractor_dogrula(f.extractor), f.span_start, f.span_end,
+             getattr(f, "confidence_source", None))
+            for f in c.fields
+        ]
         cur = self.conn.execute(
             "INSERT INTO campaigns(bank_id, raw_text, clean_text, source_url, "
             "scraped_at, campaign_type) VALUES (?,?,?,?,?,?)",
-            (bank_id, c.raw_text, clean_text, c.source_url, scraped_at, c.campaign_type))
+            (bank_id, raw_text, clean_text, c.source_url, scraped_at,
+             c.campaign_type))
         cid = cur.lastrowid
-        for f in c.fields:
-            # span_start/end ve confidence_source burada YAZILMAZSA, projenin
-            # en özgün iddiası (her değer bir karakter aralığına bağlı) veri
-            # tabanı sınırında kaybolur ve arayüz offset'i tahmin etmek
-            # zorunda kalır. Bu sütunlar 31 Tem'de tam bu sebeple eklendi.
-            self.conn.execute(
-                "INSERT INTO extracted_fields(campaign_id, field_name, raw_value, "
-                "canonical_value, confidence, source_span, extractor, "
-                "span_start, span_end, confidence_source) "
-                "VALUES (?,?,?,?,?,?,?,?,?,?)",
-                (cid, f.field_name, f.raw_value,
-                 json.dumps(f.canonical_value, ensure_ascii=False),
-                 f.confidence, f.source_span, f.extractor.value,
-                 f.span_start, f.span_end,
-                 getattr(f, "confidence_source", None)))
+        self.conn.executemany(
+            "INSERT INTO extracted_fields(campaign_id, field_name, raw_value, "
+            "canonical_value, confidence, source_span, extractor, "
+            "span_start, span_end, confidence_source) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?)",
+            [(cid, *a) for a in alanlar])
         self.conn.commit()
         return cid
 
@@ -222,8 +260,15 @@ class Repository:
         (LLM katmanı) depo dışında ham SQL yazmak zorunda kalmasın diye
         sözleşmede duruyor (bkz. `fields_by_extractor` docstring'indeki aynı
         gerekçe).
+
+        NUL denetimi Postgres yolundaki ile AYNI: özet bir LLM çıktısıdır ve
+        bozuk bir kod çözme (decode) NUL üretebilir. Denetim yalnız Postgres'te
+        yaşasaydı, offline üretilmiş bir özet kümesi üretime göç ederken
+        düşerdi — bkz. `base.nul_denetle()`.
         """
-        temiz = [(v, k) for k, v in atamalar.items()]
+        baglam = "ozet yazımı"
+        temiz = [(self._text(v, "ozet", baglam), k)
+                 for k, v in atamalar.items()]
         if not temiz:
             return 0
         cur = self.conn.executemany(

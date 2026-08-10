@@ -28,11 +28,14 @@ soruya AYNI cevabı vermesidir. Bu dosya iki şeyi merkezileştirir:
 from __future__ import annotations
 
 import json
+import logging
 import threading
 from collections.abc import Mapping
 from typing import Any, Optional, Protocol, runtime_checkable
 
-from ..schemas import Campaign
+from ..schemas import Campaign, Extractor
+
+logger = logging.getLogger(__name__)
 
 # --------------------------------------------------------------------------- #
 # Belge türü — kampanya mı, akit mi?
@@ -93,6 +96,130 @@ def kiyas_where(sutun: str = "c.belge_turu") -> str:
        girmez — `BELGE_TURU_SOZLESME` bir kod sabitidir.
     """
     return f"({sutun} IS NULL OR {sutun} <> '{BELGE_TURU_SOZLESME}')"
+
+
+# --------------------------------------------------------------------------- #
+# Çıkarıcı katmanı — hangi katman bu alanı üretti?
+# --------------------------------------------------------------------------- #
+#
+# Geçerli küme `schemas.Extractor`ten TÜRETİLİR, burada elle yazılmaz: üç yerde
+# (enum, `schema.sql` CHECK, `repository._SQLITE_SCHEMA` CHECK) aynı liste
+# yaşıyor ve elle yazılan her kopya, birinin güncellenip ötekinin unutulacağı
+# bir yer demektir. Enum tek doğruluk kaynağıdır; iki CHECK metninin onunla
+# uyuştuğunu `tests/test_kisit_paritesi.py` denetler.
+EXTRACTOR_DEGERLERI = tuple(e.value for e in Extractor)
+
+
+def extractor_dogrula(deger: Optional[Any]) -> Optional[str]:
+    """Çıkarıcı katman etiketini doğrular; `None` geçerlidir (bilinmiyor).
+
+    ## Doğrulama neden Python'da, YALNIZCA şemadaki CHECK ile değil
+
+    `belge_turu_dogrula()` ile birebir aynı gerekçe, ama burada bedeli
+    ÖLÇÜLDÜ (2026-08-10). İki şema da CHECK kısıtını `CREATE TABLE` içinde
+    tanımlar:
+
+        extractor TEXT CHECK (extractor IS NULL OR extractor IN ('rule','ner','llm'))
+
+    Bu, kısıtın **yalnız SIFIRDAN kurulan** bir veri tabanına ulaşması demektir.
+    Zaten var olan bir DB'de `CREATE TABLE IF NOT EXISTS` hiçbir şey yapmaz ve
+    göç yolu (`_SONRADAN_EKLENEN` / `_LATER_COLUMNS`) yalnız `ADD COLUMN`
+    biliyor — SQLite `ALTER TABLE` ile CHECK eklemeye zaten İZİN VERMEZ.
+
+    Ölçüm: teslim edilen `data/demo.db` (22,8 MB, 1774 belge) sütunu
+    `extractor TEXT` olarak, KISITSIZ taşıyor. Salt-okunur açılıp doğrulandı;
+    geçici bir kopyaya `extractor='UYDURMA'` yazma denemesi BAŞARILI oldu,
+    `Repository(...)` ile açıp göç koşturmak da şemayı onarmadı. Aynı yazma
+    taze bir DB'de `CHECK constraint failed` ile reddediliyor.
+
+    Yani kısıt paritesi iki backend arasında değil, **taze DB ile diskteki DB**
+    arasında delinmişti ve teslim edilen dosya yanlış taraftaydı.
+
+    Şemalardaki CHECK KALDIRILMADI: taze DB'lerde ham SQL yazan çağıranları
+    (ör. `rag.store` gibi `conn`'a doğrudan dokunan yollar) bedava yakalar.
+    Ama SÖZLEŞME artık ona dayanmıyor — tek doğrulama noktası burasıdır ve iki
+    backend de `insert_campaign()` içinde buradan geçer.
+
+    `None` bilinçli olarak geçerlidir: sütun sonradan eklenmiş bir DB'deki eski
+    satırlar `NULL` taşır ve o satırları uydurma bir katmana atamak yerine
+    bilgi yokluğu saklanır (CLAUDE.md §19).
+    """
+    if deger is None:
+        return None
+    ham = deger.value if isinstance(deger, Extractor) else deger
+    if ham in EXTRACTOR_DEGERLERI:
+        return ham
+    raise ValueError(
+        f"extractor={deger!r} geçersiz. Geçerli: "
+        f"{', '.join(repr(d) for d in EXTRACTOR_DEGERLERI)} veya None "
+        "(bilinmiyor).")
+
+
+# --------------------------------------------------------------------------- #
+# NUL (0x00) baytı — PostgreSQL kabul etmez, SQLite eder
+# --------------------------------------------------------------------------- #
+
+ON_NUL_MODES = ("error", "strip")
+
+
+class NulByteInText(ValueError):
+    """Metinde PostgreSQL'in kabul etmediği NUL (0x00) baytı var."""
+
+
+def on_nul_dogrula(mod: str) -> str:
+    """`on_nul` kipini doğrular. İki backend de kurulumda bunu çağırır."""
+    if mod not in ON_NUL_MODES:
+        raise ValueError(
+            f"on_nul={mod!r} geçersiz. Geçerli: {', '.join(ON_NUL_MODES)}")
+    return mod
+
+
+def nul_denetle(value: Optional[str], alan: str, baglam: str, *,
+                on_nul: str = "error") -> Optional[str]:
+    """Metni NUL baytına karşı denetler. **İki backend için ORTAK.**
+
+    ## Neden SQLite de reddediyor, saklayabildiği halde
+
+    PostgreSQL `TEXT` sütunları NUL baytı KABUL ETMEZ; SQLite eder. Denetim
+    31 Tem 2026'da yalnız Postgres yoluna yazıldı ve gerçek bir veri hatası
+    yakaladı (kuveyt-turk, 352 NUL baytı: metin değil ikili çöp, korpusa `.txt`
+    olarak girmişti). Ama denetimin TEK backend'de yaşaması, "iki backend aynı
+    veriyi kabul eder" iddiasını tersinden deliyordu: offline yolda (SQLite)
+    sorunsuz kurulan bir korpus, üretime (Postgres) taşınırken düşüyordu — ve
+    hata ancak GÖÇ ANINDA, kaynağı düzeltmenin en pahalı olduğu noktada
+    görünüyordu. 849 belgelik aktarımda tam olarak bu yaşandı.
+
+    Sıkı olan taraf kazanır: SQLite artık Postgres'in reddettiğini reddeder,
+    böylece hata belgenin korpusa GİRDİĞİ anda çıkar. Ölçülen bedel sıfır —
+    teslim edilen `data/demo.db`'de `instr(sütun, char(0)) > 0` sorgusu
+    `campaigns` (raw_text, clean_text, ozet, source_url) ve `extracted_fields`
+    (raw_value, source_span, canonical_value) sütunlarının hepsinde **0**
+    satır döndürdü (ölçüldü 2026-08-10).
+
+    `on_nul="strip"` kaçış kapısı ikisinde de durur ve UYARI loglar — ama
+    dikkat: temizlik karakter offset'lerini KAYDIRIR, yani
+    `span_start`/`span_end` doğrulaması bozulabilir. Bu yüzden varsayılan
+    değildir.
+    """
+    if value is None or "\x00" not in value:
+        return value
+    adet = value.count("\x00")
+    if on_nul == "strip":
+        logger.warning(
+            "%s alanında %d NUL baytı temizlendi (%s). DİKKAT: karakter "
+            "offset'leri kaydı, span doğrulaması bozulabilir.",
+            alan, adet, baglam)
+        return value.replace("\x00", "")
+    raise NulByteInText(
+        f"{baglam}: '{alan}' alanı {adet} adet NUL (0x00) baytı içeriyor. "
+        "PostgreSQL TEXT sütunları NUL kabul etmez; SQLite eder ama bu depo "
+        "iki backend'de AYNI veriyi kabul etmek zorunda olduğu için SQLite "
+        "yolu da reddeder (aksi halde hata ancak Postgres'e göç anında "
+        "çıkardı). Genellikle metin yerine ikili (binary) bir belgenin "
+        "korpusa .txt olarak girmesi demektir; kaynağı düzeltmek doğru "
+        "çözümdür. Geçici olarak Repository/PostgresRepository(..., "
+        "on_nul='strip') ile temizlenebilir, ama temizlik span offset'lerini "
+        "kaydırır.")
 
 
 @runtime_checkable
