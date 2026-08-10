@@ -1,0 +1,513 @@
+{
+ "before_label": "2026-08-10-korpus-tam",
+ "after_label": "son-tam-tur (>=2026-08-03T16:00Z)",
+ "summary": {
+  "kayip": 61,
+  "yeni": 0,
+  "degisti": 0,
+  "ayni": 1702
+ },
+ "kayip": [
+  {
+   "bank_slug": "albaraka",
+   "bucket": "live",
+   "url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-restoran-harcamaniza-5-indirim-kazandiriyor",
+   "title": "Albaraka Restoran Harcamanıza %10 İndirim Kazandırıyor! | Albaraka Türk",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "albaraka",
+   "bucket": "live",
+   "url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-restoran-harcamaniza-5-indirimm-kazandiriyor",
+   "title": "Albaraka Restoran Harcamanıza %10 İndirim Kazandırıyor! | Albaraka Türk",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "albaraka",
+   "bucket": "manual",
+   "url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/saglik-harcamalarina-vade-farksiz-6-taksit-kampanyasi-1_1",
+   "title": "Sağlık Harcamalarına Vade Farksız 6 Taksit Kampanyası | Albaraka Türk",
+   "yeni_bucket": [
+    "live"
+   ]
+  },
+  {
+   "bank_slug": "albaraka",
+   "bucket": "products",
+   "url": "https://www.albaraka.com.tr/tr/bireysel/finansmanlar/ihtiyac",
+   "title": "İhtiyaç Finansmanı - Albaraka Türk",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "dunya-katilim",
+   "bucket": "products",
+   "url": "https://dunyakatilim.com.tr/kendim-icin/yatirim-urunleri",
+   "title": "Yat&#x131;r&#x131;m &#xDC;r&#xFC;nleri | Dünya Katılım",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1-aylik-tod-taraftar-paketi-ucretsiz",
+   "title": "1 Aylık TOD Taraftar Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10-yilini-dolduran-milesandsmiles-kredi-karti-sahibi-musterilerimize-1000-mil-hediye-scr",
+   "title": "10. Yılını Dolduran Miles&Smiles Kredi Kartı Sahibi Müşterilerimize 1000 Mil Hediye! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10-yilini-dolduran-saglam-kart-sahibi-musterilerimize-500-tl-indirim-scr",
+   "title": "10. Yılını Dolduran Sağlam Kart Sahibi Müşterilerimize 500 TL İndirim! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1000-tl-hediyesiyle-saglam-tohum-kart-hizmetinizde",
+   "title": "1000 TL Hediyesiyle Sağlam Tohum Kart Hizmetinizde! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/1000-tlye-varan-market-indirimi-saglam-kart-troyda",
+   "title": "1.000 TL'ye Varan Market İndirimi Sağlam Kart Troy'da! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/10000-tl-degerindeki-cek-karnesi-ve-cek-tahsil-paketi-ucretsiz-scr",
+   "title": "10.000 TL Değerindeki Çek Karnesi Ve Çek Tahsil Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/3000-tl-degerindeki-cek-karnesi-paketi-ucretsiz-scr",
+   "title": "3.000 TL Değerindeki Çek Karnesi Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/50000-tlye-kadar-ertesi-gun-199-ya-da-25-gun-blokeli-0-pos",
+   "title": "50.000 TL’ye Kadar Ertesi Gün %1,99 ya da 25 Gün Blokeli %0 POS | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr",
+   "title": "7.000 TL Değerindeki Çek Tahsil Paketi Ücretsiz! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/akaryakit-istasyonlari-kuveyt-turk-ile-gelecege-hazir",
+   "title": "Akaryakıt İstasyonları Kuveyt Türk ile Geleceğe Hazır! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/anneler-gunu-hediyenize-500-tl-nakit-iade",
+   "title": "Anneler Günü Hediyenize 500 TL Nakit İade! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-tl-indirim-scr",
+   "title": "Araç Finansmanı Müşterilerine Özel Akaryakıt Harcamalarına 300 TL İndirim! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmani-musterilerine-ozel-akaryakit-harcamalarina-300-tl-indirim-firsati",
+   "title": "Araç Finansmanı Müşterilerine Özel Akaryakıt Harcamalarına 300 TL'ye Varan İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-finansmanina-ucretsiz-hgs-etiketi-kuveyt-turkte",
+   "title": "Araç Finansmanına Ücretsiz HGS Etiketi Kuveyt Türk'te! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/arac-kiralamasina-ozel-ekstra-3000-mil",
+   "title": "Araç Kiralamasına Özel Ekstra 3000 Mil! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avalli-islemlerde-uygun-oran-kuveyt-turkte-scr",
+   "title": "Avalli İşlemlerde Uygun Oran Kuveyt Türk’te | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avansasta-1500-tl-indirim-ve-vade-farksiz-5-aya-varan-taksit-firsati",
+   "title": "Avansas'ta 1.500 TL İndirim ve Vade Farksız 5 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avansasta-1500-tlye-varan-indirim-ve-vade-farksiz-5-aya-varan-taksit-firsati",
+   "title": "Avansas'ta 1.500 TL'ye Varan İndirim ve Vade Farksız 5 Aya Varan Taksit Fırsatı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/avvada-500-tl-indirim-firsati",
+   "title": "Avva'da 500 TL İndirim Fırsatı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/babalar-gunu-hediyenize-1000-tl-nakit-iade",
+   "title": "Babalar Günü Hediyenize 1.000 TL Nakit İade! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bireysel-kredi-kartlariyla-indirimli-alisveris-altinbasta",
+   "title": "Bireysel Kredi Kartlarıyla İndirimli Alışveriş Altınbaş’ta | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bisiklet-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-orani-firsati",
+   "title": "Bisiklet Finansmanı’nda Enerji Tasarrufu Haftasına Özel %4.19 Kar Oranı Fırsatı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/biz-bize-ile-yurt-disi-seyahatlerinizde-ayricaliklar-sizinle-scr",
+   "title": "Biz Bize ile Yurt Dışı Seyahatlerinizde Ayrıcalıklar Sizinle! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-ile-akaryakitta-indirim-firsati",
+   "title": "Business Plus ile Akaryakıtta İndirim Fırsatı | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-karta-ozel-yapi-malzemeleri-ve-mobilya",
+   "title": "Business Plus Kart’a Özel Yapı Malzemeleri ve Mobilya Alışverişlerinizde 300₺ İndirim! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-karttan-vade-farksiz-3-taksit-imkani",
+   "title": "Business Plus Kart’tan Vade Farksız 3 Taksit İmkânı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plus-ve-milesandsmiles-business-ramazan-kampanyasi",
+   "title": "Business Plus ve Miles&Smiles Business Ramazan Kampanyası! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/business-plustan-1000-tl-indirim-firsati-scr",
+   "title": "Business Plus’tan 1000 TL indirim fırsatı! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/cocugunuzun-gelecegini-guvence-altina-almak-sizden-karne-hediyesi-bizden",
+   "title": "Çocuğunuzun Geleceğini Güvence Altına Almak Sizden, Karne Hediyesi Bizden! | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dbs-fatura-odemelerinizde-100000-mil-firsati",
+   "title": "DBS Fatura Ödemelerinizde 100.000 Mil Fırsatı | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/dbs-firmalarina-akaryakit-indirimi",
+   "title": "DBS Firmalarına Akaryakıt İndirimi | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi?root=kendim-icin",
+   "title": "Kampanya Arşivi | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "kuveyt-turk",
+   "bucket": "live",
+   "url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi",
+   "title": "Kampanya Arşivi | Kuveyt Türk Katılım Bankası",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "tom-katilim",
+   "bucket": "live",
+   "url": "https://tombankhadi.com/kampanyalar/tum-market-harcamalarinda-secimini-yap-5-iade-kazan",
+   "title": "Tüm market harcamalarında %5 iade kazan! Üstelik Çok kazananlar Kulübü’ne özel %10 iade! | TOM Bank Hadi",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/akaryakit-harcamalariniza-300-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-katilim-paraftan-tabii-premium-uyeligi-hediye",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-katilim-paraftan-trendyol-plus-uyelik-ucretiniz-iade",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/giyim-ve-kozmetik-alisverislerinize-1000-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/giyim-ve-kozmetik-alisverislerinize-2000-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/market-alisverislerinize-1500-tl-parafpara-hediye",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/market-alisverislerinize-700-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/market-alisverislerinize-800-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/mobilya-dekorasyon-ve-yapi-marketi-alisverisinize-4000-tlye-varan-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-damat-tweende-3000-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-ds-damatta-2000-tl-parafpara",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-emlak-katilim",
+   "bucket": "live",
+   "url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-hepsiburadada-pesin-fiyatina-9-aya-varan-taksit-firsati",
+   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-finans",
+   "bucket": "live",
+   "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/Biten-Kampanyalar.aspx",
+   "title": "Biten Kampanyalar | Türkiye Finans",
+   "yeni_bucket": [
+    "archive"
+   ]
+  },
+  {
+   "bank_slug": "turkiye-finans",
+   "bucket": "live",
+   "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/emekliler-haftasina-ozel-avantajlar.aspx",
+   "title": "Emekliler Haftasına Özel Avantajlar Türkiye Finans'ta! | Kampanyalar | Türkiye Finans",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-finans",
+   "bucket": "live",
+   "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/gunluk-hesap-vade-kampanyasi.aspx",
+   "title": "Günlük Hesap’la İhtiyaç Anında Vadeni Bozma! | Kampanyalar | Türkiye Finans",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "turkiye-finans",
+   "bucket": "live",
+   "url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/katilim-hesabi-kampanyasi.aspx",
+   "title": "Katılım Hesabınızı Şimdi Açın, Daha Yüksek Getiri Oranlarından Yararlanın! | Kampanyalar | Türkiye Finans",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "vakif-katilim",
+   "bucket": "live",
+   "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-ile-enuyguncomda-150-tl-indirim",
+   "title": "Detay | Vakıf Katılım",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "vakif-katilim",
+   "bucket": "live",
+   "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-200-tl-marti-kuponu",
+   "title": "Detay | Vakıf Katılım",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "vakif-katilim",
+   "bucket": "live",
+   "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-n11-alisverisinize-300-tl-indirim_1",
+   "title": "Detay | Vakıf Katılım",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "vakif-katilim",
+   "bucket": "live",
+   "url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercardla-egitimde-vade-farksiz-5-taksit",
+   "title": "Detay | Vakıf Katılım",
+   "yeni_bucket": null
+  },
+  {
+   "bank_slug": "ziraat-katilim",
+   "bucket": "live",
+   "url": "https://www.ziraatkatilim.com.tr/ticari/finansman-urunleri/surdurulebilirlik-temali-ticari-urunler/ges-cati-ges-ges-yatirim-ve-isletme-finansmani",
+   "title": "GES / Çatı GES / GES Yatırım ve İşletme Finansmanı | Ziraat Katılım",
+   "yeni_bucket": [
+    "products"
+   ]
+  }
+ ],
+ "yeni": [],
+ "degisti": []
+}
