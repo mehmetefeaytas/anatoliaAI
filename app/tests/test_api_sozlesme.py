@@ -19,8 +19,8 @@ yakalar. Üç iddia kilitleniyor:
 
 from __future__ import annotations
 
-import sys
 import inspect
+import sys
 import unittest
 from pathlib import Path
 
