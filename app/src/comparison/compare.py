@@ -51,6 +51,72 @@ class RankRow:
     #: hem aralık hem süresi dolmuş olabilir; ikisini tek metne sıkıştırmak
     #: birini gizlerdi. Arayüz rozeti bu alandan okunur.
     campaign_status: Optional[str] = None
+    #: Çıkarımın bu alandaki KENDİ güveni (`extracted_fields.confidence`).
+    #: Güven kapısı bu sayıyı okuyup notu üretiyor ama sayının kendisini
+    #: düşürüyordu; oysa "hepsi düşük güvenli" diyen bir cevabın *en yüksek*
+    #: güveni söyleyebilmesi gerekir ("0,55 — eşik 0,65"). Notun içinden
+    #: sayıyı geri ayrıştırmak, aynı bilgiyi iki biçimde taşımak olurdu.
+    confidence: Optional[float] = None
+
+
+# --------------------------------------------------------------------------- #
+# Eleme sebepleri — metin ve KOD
+# --------------------------------------------------------------------------- #
+#
+# `note` kullanıcıya gösterilecek Türkçe cümledir; iki tanesi ölçülen sayıyı
+# (güven, para birimi) gövdesinde taşıdığı için sabit bir dize DEĞİLDİR.
+# Bu yüzden sebebi programatik ayırt etmek isteyen çağıranlar (chatbot'un boş
+# cevabı, "kaç kayıt hangi kapıda düştü" sayımı) metne bakmak zorunda kalıyordu.
+# Metinler burada TEK yerde tanımlıdır ve `eleme_sebebi()` onları kararlı bir
+# koda çevirir: cümle güzelleştiğinde kod değişmez, kod değiştiğinde eşleme
+# tek dosyada güncellenir.
+
+NOT_DEGER_YOK = "değer yok"
+NOT_ARALIK = "aralık — doğrudan kıyaslanamaz"
+NOT_TUTAR_BELIRSIZ = "ücret var, tutarı belirtilmemiş"
+NOT_SAYISAL_DEGIL = "sayısal değil"
+NOT_SURESI_DOLMUS = "kampanya süresi dolmuş — doğrudan kıyaslanamaz"
+
+#: Ölçülen sayıyı gövdesinde taşıyan iki notun sabit öneki.
+_NOT_GUVEN_ONEKI = "düşük çıkarım güveni"
+_NOT_PARA_ONEKI = "farklı para birimi"
+
+#: Eleme sebebi kodları. `bilinmiyor` bilerek vardır: tanınmayan bir not
+#: sessizce başka bir sebebe yazılmamalı, "sınıflandıramadım" demeli.
+ELEME_SURESI_DOLMUS = "suresi_dolmus"
+ELEME_DUSUK_GUVEN = "dusuk_guven"
+ELEME_ARALIK = "aralik"
+ELEME_TUTAR_BELIRSIZ = "tutar_belirsiz"
+ELEME_DEGER_YOK = "deger_yok"
+ELEME_PARA_BIRIMI = "para_birimi"
+ELEME_SAYISAL_DEGIL = "sayisal_degil"
+ELEME_BILINMIYOR = "bilinmiyor"
+
+_TAM_NOT_KODU = {
+    NOT_SURESI_DOLMUS: ELEME_SURESI_DOLMUS,
+    NOT_ARALIK: ELEME_ARALIK,
+    NOT_TUTAR_BELIRSIZ: ELEME_TUTAR_BELIRSIZ,
+    NOT_DEGER_YOK: ELEME_DEGER_YOK,
+    NOT_SAYISAL_DEGIL: ELEME_SAYISAL_DEGIL,
+}
+
+
+def eleme_sebebi(note: Optional[str]) -> Optional[str]:
+    """Kullanıcıya dönük eleme notunu kararlı bir koda çevirir.
+
+    `None` → `None` (satır elenmemiş). Tanınmayan bir not `ELEME_BILINMIYOR`
+    döner: yanlış bir kutuya koymaktansa bilmediğini söylemek yeğdir.
+    """
+    if note is None:
+        return None
+    kod = _TAM_NOT_KODU.get(note)
+    if kod is not None:
+        return kod
+    if note.startswith(_NOT_GUVEN_ONEKI):
+        return ELEME_DUSUK_GUVEN
+    if note.startswith(_NOT_PARA_ONEKI):
+        return ELEME_PARA_BIRIMI
+    return ELEME_BILINMIYOR
 
 
 # Alan → (sayısal_anahtar_çıkarıcı, küçük_mü_iyi)
@@ -61,7 +127,7 @@ def _numeric_key(field_name: str, value: Any) -> tuple[Optional[float], bool, Op
     Para ise value alanı. Sayı ise kendisi.
     """
     if value is None:
-        return None, False, "değer yok"
+        return None, False, NOT_DEGER_YOK
     # Dejenere aralığı ({"min": X, "max": X}) düz sayıya indirge. Aynı savunma
     # normalizasyon katmanında da var; burada TEKRARLANIYOR çünkü LLM katmanı
     # kanonik değeri doğrudan üretebiliyor ve normalize_rate'ten geçmeyebilir.
@@ -87,12 +153,12 @@ def _numeric_key(field_name: str, value: Any) -> tuple[Optional[float], bool, Op
     if isinstance(value, dict) and "min" in value and "max" in value:
         lo, hi = float(value["min"]), float(value["max"])
         uc = lo if field_name in _LOWER_IS_BETTER else hi
-        return uc, False, "aralık — doğrudan kıyaslanamaz"
+        return uc, False, NOT_ARALIK
     # para: {"value":, "currency":}
     if isinstance(value, dict) and "value" in value:
         cur = value.get("currency")
         if cur and cur != "TRY":
-            return None, False, f"farklı para birimi ({cur})"
+            return None, False, f"{_NOT_PARA_ONEKI} ({cur})"
         return float(value["value"]), True, None
     # masraf: {"has_fee":, "amount":}
     #
@@ -119,11 +185,11 @@ def _numeric_key(field_name: str, value: Any) -> tuple[Optional[float], bool, Op
             return 0.0, True, None
         amt = value.get("amount")
         if amt is None:
-            return None, False, "ücret var, tutarı belirtilmemiş"
+            return None, False, NOT_TUTAR_BELIRSIZ
         return float(amt), True, None
     if isinstance(value, (int, float)):
         return float(value), True, None
-    return None, False, "sayısal değil"
+    return None, False, NOT_SAYISAL_DEGIL
 
 
 # Hangi alanda küçük değer "daha iyi"? (sıralama yönü)
@@ -212,7 +278,7 @@ def _guven_notu(confidence: Optional[float]) -> Optional[str]:
         return None
     olculen = f"{confidence:.2f}".replace(".", ",")
     esik = f"{ASGARI_GUVEN:.2f}".replace(".", ",")
-    return (f"düşük çıkarım güveni ({olculen} < {esik}) — "
+    return (f"{_NOT_GUVEN_ONEKI} ({olculen} < {esik}) — "
             f"doğrudan kıyaslanamaz")
 
 
@@ -256,7 +322,7 @@ def _durum_notu(campaign_status: Optional[str]) -> Optional[str]:
     """
     if not suresi_dolmus_mu(campaign_status):
         return None
-    return "kampanya süresi dolmuş — doğrudan kıyaslanamaz"
+    return NOT_SURESI_DOLMUS
 
 
 def rank(rows: list[dict], field_name: str) -> list[RankRow]:
@@ -305,6 +371,7 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
             campaign_id=r.get("campaign_id"),
             campaign_type=r.get("campaign_type"),
             campaign_status=r.get("campaign_status"),
+            confidence=r.get("confidence"),
         ))
 
     lower_better = field_name in _LOWER_IS_BETTER
