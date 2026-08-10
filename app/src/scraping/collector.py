@@ -27,7 +27,7 @@ import unicodedata
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any, Callable, Optional
 
 from ..preprocessing.clean import normalize_text
 from .config import BankConfig
@@ -68,11 +68,16 @@ def content_hash(content: str | bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def _text_key(text: str) -> str:
+def text_key(text: str) -> str:
     """Tekilleştirme anahtarı: temiz metnin boşluk-normalize sha256'sı.
 
     Ham HTML hash'i tekilleştirme için YETERSİZDİR (bkz. `collect_live` içindeki
     gerekçe): analitik/oturum gürültüsü aynı sayfayı farklı gösterir.
+
+    Ad AÇIK (alt çizgisiz), çünkü ikinci bir çağıran var: tazeleme işi bir
+    belgenin GERÇEKTEN değişip değişmediğini bu anahtarla ölçüyor
+    (`tazeleme.py`). Ham bayt özetiyle ölçseydi her tazeleme "hepsi değişti"
+    derdi — oturum simgesi ve analitik kimliği her istekte farklı gelir.
     """
     return hashlib.sha256(re.sub(r"\s+", " ", text).strip().encode("utf-8")).hexdigest()
 
@@ -325,11 +330,25 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
                  max_docs: int = 40,
                  report: Optional[dict[str, Any]] = None,
                  discover_fn: Optional[Any] = None,
-                 campaign_status: Optional[str] = None) -> list[RawDoc]:
+                 campaign_status: Optional[str] = None,
+                 ilerleme: Optional[Callable[[int, int], None]] = None,
+                 iptal: Optional[Callable[[], bool]] = None) -> list[RawDoc]:
     """Canlı toplama — `scrape_mode` dispatch'li, robots.txt uyumlu.
 
     Bağımlılık yoksa boş liste döner (çağıran fixture'a düşer). `report` verilirse
     banka bazlı tanılama (engellenen URL'ler, robots durumu) doldurulur.
+
+    `ilerleme` ve `iptal` İSTEĞE BAĞLI ve varsayılan olarak KAPALI: verilmezse
+    davranış bit bit eskisiyle aynıdır. Toplu hasat (CLI) uzun sürebilir ve
+    kimse ona bakmaz; arayüzden tetiklenen tek-banka tazelemesi ise hem
+    "kaçıncı belgedeyiz" bilgisini hem de "vazgeç" düğmesini zorunlu kılar.
+
+    - `ilerleme(tamamlanan, toplam)`: her URL denemesinden SONRA çağrılır
+      (başarılı da olsa başarısız da) — ilerleme çubuğu belge atlandığında
+      donmaz.
+    - `iptal()`: her URL'den ÖNCE sorulur; True dönerse döngü kırılır ve
+      `report["iptal"] = True` yazılır. O ana kadar toplanan belgeler
+      DÖNDÜRÜLÜR; yazma kararı çağıranındır.
     """
     owns_bundle = bundle is None
     bundle = bundle or _default_bundle(delay_s)
@@ -391,8 +410,16 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
 
     docs: list[RawDoc] = []
     seen_texts: set[str] = set()
-    for url in found.urls:
+    toplam = len(found.urls)
+    for sira, url in enumerate(found.urls):
+        if iptal is not None and iptal():
+            diag["iptal"] = True
+            diag["notes"].append(
+                f"iptal edildi: {sira}/{toplam} URL denendi")
+            break
         res = guarded_fetch(url)
+        if ilerleme is not None:
+            ilerleme(sira + 1, toplam)
         if not res.ok:
             if res.error != "robots disallow":
                 diag["blocked"].append({
@@ -428,11 +455,11 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
         #
         # `content_hash` provenance alanı DEĞİŞMEDİ: o, ham baytların özetidir
         # (yeniden-üretilebilirlik) ve belgelenmiş anlamı korunur.
-        text_key = _text_key(text)
-        if text_key in seen_texts:
+        metin_anahtari = text_key(text)
+        if metin_anahtari in seen_texts:
             diag["notes"].append(f"mukerrer icerik atlandi: {url}")
             continue
-        seen_texts.add(text_key)
+        seen_texts.add(metin_anahtari)
         docs.append(RawDoc(
             bank_slug=bank.slug,
             source_url=res.final_url or url,
@@ -670,7 +697,8 @@ def collect(bank: BankConfig, raw_dir: str | Path = "data/raw",
 __all__ = [
     "RawDoc", "collect", "collect_live", "collect_documents",
     "collect_from_fixtures", "save_docs",
-    "ensure_manual_dirs", "content_hash", "utc_now_iso", "slugify", "url_to_slug",
+    "ensure_manual_dirs", "content_hash", "text_key", "utc_now_iso", "slugify",
+    "url_to_slug",
     "METHOD_LIVE", "METHOD_BROWSER", "METHOD_MANUAL", "METHOD_FIXTURE", "METHOD_PDF",
     "LIVE_SUBDIR", "MANUAL_SUBDIR", "PRODUCTS_SUBDIR", "ARCHIVE_SUBDIR", "DOCS_SUBDIR",
     "STATUS_ACTIVE", "STATUS_EXPIRED",
