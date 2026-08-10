@@ -20,8 +20,7 @@ demo yalnız okur.
     python3 -m scripts.build_summaries --db data/demo.db --kapsam hepsi
     python3 -m scripts.build_summaries --db data/demo.db --kuru    # yazmadan dene
 
-Çıkış kodları: 0 başarılı · 2 hedef DB yok/boş · 3 LLM kapalı · 4 depo
-sözleşmesi eksik (`set_ozet` yok — bkz. TODO(G)).
+Çıkış kodları: 0 başarılı · 2 hedef DB yok/boş · 3 LLM kapalı.
 
 Kod 3 neden ayrı ve neden GÜRÜLTÜLÜ: LLM kapalıyken bu betik hiçbir şey
 üretmez ve **üretmemesi gerekir** (`src/summarize/ozet.py`: kural tabanlı
@@ -96,19 +95,26 @@ def hedef_kampanyalar(repo: Repository, *, kapsam: str, devam: bool,
 
 
 def _yaz(repo: Repository, atamalar: dict[int, str]) -> int:
-    """Özetleri depoya yazar. `set_ozet` sözleşme metodudur (ajan G)."""
+    """Özetleri depoya yazar — `set_ozet()` sözleşme metodu üzerinden.
+
+    Ham SQL yazılmaz: betik tek bir backend'e bağlanmamalı.
+
+    ## `getattr` yoklaması KALDIRILDI (2026-08-10)
+
+    Burada `getattr(repo, "set_ozet", None)` ile metodun varlığı yoklanıyor,
+    yoksa "bu backend'de henüz uygulanmamış" diyen bir `AttributeError`
+    atılıyordu (ve `main()` onu 4 çıkış koduna çeviriyordu). O metin artık
+    GERÇEK DEĞİL: `set_ozet()` hem `RepositoryProtocol`te hem
+    `ThreadSafeRepository`de hem iki backend'de de (`db/repository.py`,
+    `db/postgres.py`) uygulanmış durumda.
+
+    Üstelik bu betikte depo dışarıdan geçirilmiyor — `calistir()` onu
+    `Repository(db_yolu)` ile kendisi kuruyor, yani soyut bir "başka backend"
+    ihtimali yok. Dal ölüydü ve okuyana olmayan bir eksiklik gösteriyordu.
+    """
     if not atamalar:
         return 0
-    yazici = getattr(repo, "set_ozet", None)
-    if yazici is None:
-        # TODO(G): `RepositoryProtocol.set_ozet()` sözleşmede tanımlı ama bu
-        # backend'de henüz uygulanmamış. Ham SQL ile yazmak bu betiği tek bir
-        # backend'e bağlardı; sessizce atlamak ise boş sütunu başarı gibi
-        # raporlamak olurdu. Bu yüzden gürültülü biçimde durulur.
-        raise AttributeError(
-            "depo `set_ozet()` uygulamıyor — TODO(G): src/db/repository.py "
-            "ve src/db/postgres.py içinde sözleşme metodunu uygulayın.")
-    return int(yazici(atamalar))
+    return int(repo.set_ozet(atamalar))
 
 
 #: Kaç belgede bir depoya yazılacağı. Tam korpus koşusu ~1400 belge ve belge
@@ -246,13 +252,11 @@ def main(argv: Optional[list[str]] = None) -> int:
         print(f"  ... {islenen}/{hedef} belge · {yazilan} satır yazıldı",
               flush=True)
 
-    try:
-        rapor = calistir(a.db, kapsam=a.kapsam, devam=a.devam, limit=a.limit,
-                         kuru=a.kuru, maks_karakter=a.maks_karakter, llm=llm,
-                         parca=a.parca, ilerleme=_ilerleme)
-    except AttributeError as exc:
-        print(f"HATA: {exc}", file=sys.stderr)
-        return 4
+    # `AttributeError` yakalayıp 4 döndüren dal KALDIRILDI: yakaladığı durum
+    # (depoda `set_ozet()` yok) artık oluşamaz — gerekçe `_yaz()` içinde.
+    rapor = calistir(a.db, kapsam=a.kapsam, devam=a.devam, limit=a.limit,
+                     kuru=a.kuru, maks_karakter=a.maks_karakter, llm=llm,
+                     parca=a.parca, ilerleme=_ilerleme)
 
     _rapor_bas(rapor)
     if a.json_report:

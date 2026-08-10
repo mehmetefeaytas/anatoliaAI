@@ -100,7 +100,6 @@ hem de eşleşmeyen alanlarda sessizce `null` veriyordu. `POST /extract` canlı
 
 from __future__ import annotations
 
-import inspect
 import logging
 import os
 from typing import Any, Optional
@@ -524,12 +523,6 @@ def build_app():
     # taramak demonun ilk tıklamasına saniyeler eklerdi (CLAUDE.md §11).
     _cerceve_cache: dict[str, set[str]] = {}
 
-    # `query_fields(..., sozlesme_dahil=...)` depo sözleşmesinde tanımlı
-    # (src/db/base.py) ama backend uygulamaları ajan G tarafından yazılıyor.
-    # İmza yoklanır; yoksa çağrı eski biçimde yapılır ve süzme YAPILAMAZ.
-    _SUZME_HAZIR = "sozlesme_dahil" in inspect.signature(
-        repo.query_fields).parameters
-
     # ----------------------------------------------------------------- #
     # Dahili yardımcılar
     # ----------------------------------------------------------------- #
@@ -576,14 +569,27 @@ def build_app():
         RAG / chatbot yolu bu süzmeyi UYGULAMAZ: "şu sözleşmede ne yazıyor"
         sorusunun cevabı akit metnindedir; onu aramadan çıkarmak veri varken
         "bulunamadı" demek olurdu.
+
+        ## İmza yoklaması KALDIRILDI (2026-08-10)
+
+        Burada `inspect.signature(repo.query_fields)` ile `sozlesme_dahil`
+        parametresi yoklanıyor, yoksa çağrı süzgeçsiz yapılıyordu. O savunma
+        yazıldığında parametre yalnız sözleşmede (`src/db/base.py`) vardı ve
+        backend'ler henüz uygulamamıştı.
+
+        Artık dal ÖLÜ: parametre `RepositoryProtocol`te, `ThreadSafeRepository`
+        sarmalayıcısında ve iki backend'in ikisinde de (`db/repository.py`,
+        `db/postgres.py`) uygulanmış durumda. Depo bu modüle dışarıdan
+        geçirilmiyor — `build_app()` onu `create_repository()` ile kendisi
+        kuruyor, yani üçüncü bir uygulama sızamıyor.
+
+        Kaldırıldı çünkü zararsız değildi: yoklama kodu okuyana "bu yetenek
+        eksik olabilir" diyordu ve olmayan bir eksiklik, arananın yanlış yerde
+        aranmasına yol açıyordu. Yeni bir backend eklenirse sözleşme onu zaten
+        bağlar; eksik uygularsa `TypeError` ile GÜRÜLTÜLÜ düşer — sessizce
+        süzgeçsiz kıyas üretmekten iyidir.
         """
-        if _SUZME_HAZIR:
-            return repo.query_fields(field, sozlesme_dahil=sozlesme_dahil)
-        # TODO(G): `query_fields(..., sozlesme_dahil=)` bu backend'de henüz
-        # yok. Süzme YAPILAMIYOR — akit belgeleri kıyas tablosuna karışmaya
-        # devam eder. Sessizce doğru davranıyormuş gibi yapmamak için bu
-        # durum burada açıkça duruyor.
-        return repo.query_fields(field)
+        return repo.query_fields(field, sozlesme_dahil=sozlesme_dahil)
 
     def _cerceve(bank_slug: str) -> set[str]:
         """Bir bankanın belgelerinde tekrar eden cümlelerin anahtar kümesi.
