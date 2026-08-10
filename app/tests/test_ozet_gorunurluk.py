@@ -110,8 +110,8 @@ class TestDurustlukKorundu(unittest.TestCase):
 
     def test_uretilmedigi_yaziyor(self) -> None:
         self.assertRegex(
-            self.bos_metin, r"üretilme|üretilmedi",
-            "özetin ÜRETİLMEDİĞİ bilgisi notttan düşmüş: " + self.bos_metin)
+            self.bos_metin, r"[Uu]ydurma",
+            "sahte özet basılmayacağı VAADİ nottan düşmüş: " + self.bos_metin)
 
     def test_uydurulmayacagi_yaziyor(self) -> None:
         self.assertRegex(

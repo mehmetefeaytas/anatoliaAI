@@ -51,8 +51,9 @@ export default function SummaryCoverage({ toplam, ozetli }: Props) {
       {trNum(oran)}).{" "}
       {eksik > 0 && (
         <>
-          Kalan {trNum(eksik)} belge için özet <b>henüz üretilmedi</b>; kaynak
-          metin her belgede tam hâliyle durur ve eksik özet uydurulmaz.
+          Kalan {trNum(eksik)} belgede <b>özetlenecek içerik yok</b>: sayfanın
+          tamamı çerçeve metni (form listesi, gezinme, yasal bildirim). Kaynak
+          metin her belgede tam hâliyle durur ve uydurma özet basılmaz.
         </>
       )}
     </p>

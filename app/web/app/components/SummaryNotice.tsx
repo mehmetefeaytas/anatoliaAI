@@ -75,11 +75,12 @@ export default function SummaryNotice({
       <div className="summary-box summary-empty">
         <div className="summary-label">
           <span className="badge">özet yok</span>
-          <span className="summary-note">AI özeti henüz üretilmedi.</span>
+          <span className="summary-note">Bu belgede özetlenecek içerik yok.</span>
         </div>
         <p className="summary-body">
-          Özetler toplu koşumda üretiliyor; sıra bu belgeye gelmedi. Uydurma
-          özet basılmaz — kaynak metin aşağıda tam hâliyle durur.
+          Sayfanın tamamı çerçeve metni (form listesi, gezinme, yasal
+          bildirim). Uydurma özet basılmaz — kaynak metin aşağıda tam
+          hâliyle durur.
         </p>
       </div>
     );
