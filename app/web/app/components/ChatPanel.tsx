@@ -57,12 +57,42 @@
  *    göstermek olurdu (src/summarize/ozet.py aynı yasağı sunucuda koyuyor).
  *  - **Ham metne erişim kaybolmaz.** Tam metin katlanır bir kutuda durur;
  *    denetlenebilirlik iddiası kısaltmayla feda edilemez.
+ *
+ * ## Bu turdaki üç değişiklik
+ *
+ * e) **YENİ TUR EN ÜSTTE.** Turlar eskiden yeniye diziliyordu; üçüncü sorudan
+ *    sonra yeni cevabı görmek için aşağı kaydırmak gerekiyordu — soru kutusu
+ *    ise yukarıda kalıyordu, yani göz sürekli iki uç arasında gidip geliyordu.
+ *    Liste artık ters basılır (durum listesi kronolojik kalır; yalnız görünüm
+ *    tersine döner, böylece bağlam penceresi ve saklama mantığı sadeleşir).
+ *    Ekran okuyucu duyurusu KAYBOLMAZ: `aria-live` bölgesi eklenen düğümü
+ *    konumundan bağımsız duyurur, ayrıca ayrı bir `role="status"` satırı
+ *    durumu ("cevap hazır" / "cevap bekleniyor") açıkça bildirir.
+ *
+ * f) **SOHBET HAFIZASI.** Her istek son turların durum kayıtlarını da taşır
+ *    (`lib/sohbetOturumu.ts`), böylece takip soruları çözülür: "Peki vade?"
+ *    artık önceki cevabın öznesine sorulmuş sayılır. Devralınan bağlam
+ *    ROZET olarak gösterilir — kullanıcı hangi bağlamla cevaplandığını
+ *    görmeden bağlam devralmak, sessiz bir varsayım olurdu.
+ *
+ * g) **OTURUM KALICILIĞI.** Sohbet `localStorage`'ta yaşar; sayfa yenilenince
+ *    kaybolmaz, «Yeni sohbet» ile temizlenir. Hidrasyon uyuşmazlığı
+ *    `juryMode.tsx` deseniyle önlenir: okuma render sırasında değil,
+ *    `useEffect` içinde yapılır.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api";
 import type { ChatResp, ChatSource } from "../lib/api";
 import { formatValue, trNum } from "../lib/format";
+import {
+  baglamListesi,
+  oku as oturumOku,
+  sonrakiKimlik,
+  temizle as oturumTemizle,
+  yaz as oturumYaz,
+  type Tur,
+} from "../lib/sohbetOturumu";
 import { ErrorNotice } from "./ErrorNotice";
 import Markdown from "./ui/Markdown";
 
@@ -103,14 +133,6 @@ function kirp(metin: string, sinir: number): string {
   return `${govde.replace(/[ ,;:.]+$/, "")}…`;
 }
 
-/** Ekranda duran tek bir soru-cevap turu. */
-type Tur = {
-  id: number;
-  soru: string;
-  cevap: ChatResp | null;
-  hata: unknown;
-};
-
 type Props = {
   /** Belgeyi Jüri Audit Paneli'nde açar (page.tsx `inspect` deseni). */
   onInspect?: (campaignId: number) => void;
@@ -120,6 +142,9 @@ export default function ChatPanel({ onInspect }: Props) {
   const [q, setQ] = useState("");
   const [turlar, setTurlar] = useState<Tur[]>([]);
   const [busy, setBusy] = useState(false);
+  // Saklanan sohbet OKUNDU mu. Okunmadan yazmak, ilk render'daki boş listeyi
+  // diske basıp geçmişi silerdi.
+  const [hazir, setHazir] = useState(false);
   const alanRef = useRef<HTMLTextAreaElement>(null);
   const sayacRef = useRef(0);
 
@@ -130,6 +155,19 @@ export default function ChatPanel({ onInspect }: Props) {
     el.style.height = "auto";
     el.style.height = `${el.scrollHeight}px`;
   }, [q]);
+
+  // Hidrasyon: sunucu ve ilk istemci render'ı AYNI (boş liste) olmalı; gerçek
+  // değer mount sonrası okunur (juryMode.tsx ile aynı desen).
+  useEffect(() => {
+    const kayitli = oturumOku();
+    sayacRef.current = sonrakiKimlik(kayitli) - 1;
+    setTurlar(kayitli);
+    setHazir(true);
+  }, []);
+
+  useEffect(() => {
+    if (hazir) oturumYaz(turlar);
+  }, [turlar, hazir]);
 
   const ask = useCallback(
     async (question: string) => {
@@ -145,10 +183,14 @@ export default function ChatPanel({ onInspect }: Props) {
       // gerekiyor" diye görünüyordu.
       setQ("");
       setBusy(true);
+      // Bağlam, isteği AÇMADAN önce o anki geçmişten okunur: yeni turu
+      // ekledikten sonra okumak, cevabı henüz gelmemiş turu da listeye
+      // sokardı (bağlamı boş, faydası yok, gövdesi şişik).
+      const baglam = baglamListesi(turlar);
       setTurlar((t) => [...t, { id, soru: text, cevap: null, hata: null }]);
 
       try {
-        const cevap = await api.chat(text);
+        const cevap = await api.chat(text, baglam);
         setTurlar((t) => t.map((x) => (x.id === id ? { ...x, cevap } : x)));
       } catch (e) {
         setTurlar((t) => t.map((x) => (x.id === id ? { ...x, hata: e } : x)));
@@ -156,8 +198,21 @@ export default function ChatPanel({ onInspect }: Props) {
         setBusy(false);
       }
     },
-    [busy],
+    [busy, turlar],
   );
+
+  const yeniSohbet = useCallback(() => {
+    oturumTemizle();
+    setTurlar([]);
+    setQ("");
+    alanRef.current?.focus();
+  }, []);
+
+  // GÖRÜNÜM tersine döner, durum listesi kronolojik kalır. Bağlam penceresi ve
+  // saklama mantığı zaman sırasına dayandığı için ters çevirmeyi state'e
+  // taşımak iki yerde birden sıralama düşünmeyi gerektirirdi.
+  const gorunum = useMemo(() => [...turlar].reverse(), [turlar]);
+  const sonCevap = turlar.length ? turlar[turlar.length - 1] : null;
 
   return (
     <section className="card">
@@ -165,6 +220,8 @@ export default function ChatPanel({ onInspect }: Props) {
       <p className="lede">
         Sayısal/karşılaştırmalı sorular yapısal sorguya, koşul/açıklama soruları
         RAG&apos;e yönlendirilir. Hangi yolun kullanıldığı cevabın yanında yazar.
+        Takip sorusu sorabilirsiniz: önceki turun alanı, süzgeci ve öznesi
+        devralınır ve devralınan bağlam cevabın yanında rozet olarak yazar.
       </p>
 
       <div className="row" style={{ marginBottom: "var(--sp-3)" }}>
@@ -203,15 +260,44 @@ export default function ChatPanel({ onInspect }: Props) {
           {busy ? "…" : "Sor"}
         </button>
       </div>
-      <p id="chat-ipucu" className="small faint" style={{ margin: "var(--sp-2) 0 0" }}>
-        Enter gönderir · Shift+Enter yeni satır
+      <div className="chat-araclar">
+        <p id="chat-ipucu" className="small faint" style={{ margin: 0 }}>
+          Enter gönderir · Shift+Enter yeni satır · en yeni cevap en üstte
+        </p>
+        <button
+          type="button"
+          className="btn-link"
+          onClick={yeniSohbet}
+          disabled={busy || turlar.length === 0}
+          title="Sohbeti temizler ve bağlam devralmayı sıfırlar"
+        >
+          Yeni sohbet
+        </button>
+      </div>
+
+      {/* Durum satırı ekran okuyucu içindir. Turlar ters sırada basıldığı için
+          «yeni bir şey eklendi» bilgisi tek başına konumdan okunamaz; durum
+          burada AÇIKÇA söylenir. */}
+      <p className="chat-durum" role="status">
+        {busy
+          ? "Cevap bekleniyor."
+          : sonCevap?.cevap
+            ? "Cevap hazır, listenin en üstünde."
+            : ""}
       </p>
 
       <div className="chat-log" aria-live="polite" aria-busy={busy}>
-        {turlar.map((t) => (
+        {gorunum.map((t) => (
           <TurGorunumu key={t.id} tur={t} onInspect={onInspect} />
         ))}
       </div>
+
+      {hazir && turlar.length === 0 && (
+        <p className="chat-bos small muted">
+          Sohbet boş. Bir soru sorun; sohbet bu tarayıcıda saklanır ve sayfayı
+          yenileseniz de kaybolmaz.
+        </p>
+      )}
     </section>
   );
 }
@@ -255,6 +341,18 @@ function TurGorunumu({
                 alan: <span className="mono">{tur.cevap.field}</span>
               </span>
             )}
+            {/* Devralınan bağlam GÖRÜNÜR olmalı: kullanıcı sormadığı bir
+                süzgeçle cevaplandığını göremezse, cevabı yanlış okur. */}
+            {(tur.cevap.inherited ?? []).map((d, i) => (
+              <span
+                key={`${d.kind}-${i}`}
+                className="badge badge-baglam"
+                title="Bu bilgi sizin bu turdaki sorunuzda yoktu, önceki turdan devralındı"
+              >
+                önceki sorudan: {d.label}
+              </span>
+            ))}
+            <SozellestirmeRozeti bilgi={tur.cevap.verbalize} />
           </div>
 
           <Markdown metin={tur.cevap.answer} />
@@ -263,6 +361,41 @@ function TurGorunumu({
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Cevabın LLM ile sözelleştirilip sözelleştirilmediği.
+ *
+ * Üç hâl vardır ve ikisi kullanıcıya söylenir:
+ *
+ *  - LLM hiç denenmedi (kapalı / yok / liste cevabı) → rozet YOK. Şablon
+ *    cevap zaten varsayılandır; her cevabın yanına "şablon" yazmak gürültü
+ *    olurdu.
+ *  - Denendi ve UYGULANDI → «LLM ile sözelleştirildi».
+ *  - Denendi ama doğrulama kapısı REDDETTİ (uydurulmuş sayı, kaybolan banka
+ *    adı, zaman aşımı) → «şablon cevap» + gerekçe. Bu hâli gizlemek, kapının
+ *    çalıştığını gizlemek olurdu; oysa kapının düşmesi iyi haberdir.
+ */
+function SozellestirmeRozeti({ bilgi }: { bilgi?: ChatResp["verbalize"] }) {
+  if (!bilgi?.attempted) return null;
+  if (bilgi.applied) {
+    return (
+      <span
+        className="badge badge-llm"
+        title="Olgular şablon cevapla birebir doğrulandı; LLM yalnız yeniden ifade etti"
+      >
+        LLM ile sözelleştirildi
+      </span>
+    );
+  }
+  return (
+    <span
+      className="badge badge-warn"
+      title={`Doğrulama kapısı LLM çıktısını reddetti: ${bilgi.reason ?? "bilinmiyor"}`}
+    >
+      şablon cevap
+    </span>
   );
 }
 

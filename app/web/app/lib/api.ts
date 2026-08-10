@@ -337,11 +337,52 @@ export type ChatSource = {
   [k: string]: unknown;
 };
 
+/**
+ * Bir turun sonunda geriye kalan, bir SONRAKİ tura taşınabilir durum.
+ *
+ * Sunucu oturum saklamaz: bu kaydı üretir, istemci saklar (bkz.
+ * ./sohbetOturumu.ts) ve bir sonraki istekte geri gönderir. İçeriği serbest
+ * metin DEĞİLDİR — sunucu (`src/chatbot/router.py` `ChatContext.dogrula`)
+ * her değeri sonlu bir izin listesinden geçirir. Bu yüzden bağlam kanalı
+ * güvenlik kapıları için bir atlatma yüzeyi oluşturmaz.
+ */
+export type ChatContext = {
+  field: string | null;
+  intent: string | null;
+  filters: Record<string, unknown>;
+  /** Önceki CEVABIN öznesi (banka slug'ı) — varsa. */
+  subject_banks: string[];
+};
+
+/** Bu turda önceki turlardan devralınan tek bir boyut. */
+export type ChatInherited = {
+  kind: string;
+  /** Kullanıcıya gösterilecek Türkçe etiket — sunucu üretir. */
+  label: string;
+};
+
+/**
+ * Yapısal cevabın LLM ile sözelleştirilip sözelleştirilmediğinin denetim kaydı.
+ *
+ * `applied` yanlışsa ekrandaki metin ŞABLON cevaptır. `attempted` doğru ama
+ * `applied` yanlışsa doğrulama kapısı LLM çıktısını REDDETMİŞTİR (uydurulmuş
+ * sayı, kaybolan banka adı, zaman aşımı…) ve `reason` gerekçeyi taşır.
+ */
+export type ChatVerbalize = {
+  attempted?: boolean;
+  applied?: boolean;
+  ms?: number | null;
+  reason?: string | null;
+};
+
 export type ChatResp = {
   answer: string;
   handler: "structured" | "rag" | string;
   field: string | null;
   sources: ChatSource[];
+  context?: ChatContext | null;
+  inherited?: ChatInherited[];
+  verbalize?: ChatVerbalize;
 };
 
 /** Kullanıcıya gösterilebilir, Türkçe API hatası. */
@@ -448,11 +489,18 @@ export const api = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, bank }),
     }),
-  chat: (question: string) =>
+  /**
+   * `context` = son turların durum kayıtları, YENİDEN ESKİYE sıralı.
+   *
+   * Sunucu durumsuzdur; sohbet hafızası bu dizide taşınır. Boş dizi
+   * göndermek "bu yeni bir sohbet" demektir ve bugünkü (bağlamsız)
+   * davranışın aynısını verir.
+   */
+  chat: (question: string, context: ChatContext[] = []) =>
     request<ChatResp>("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ question, context }),
     }),
 };
 
