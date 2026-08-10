@@ -94,6 +94,13 @@ web/out/
 # Yedek dosyalari (betiklerin aldigi guvenlik kopyalari)
 *.bak
 
+# Demo DB'nin yeniden kurulmadan once alinan zaman damgali kopyasi.
+# `*.db` kurali `data/demo.db`'yi zaten disliyor ama `demo.db.yedek-<tarih>`
+# uzantiyla bitmedigi icin o kurala TAKILMIYORDU; 23 MB'lik ikili bir dosya
+# `git add -A` ile indekse girebilirdi. Dosyanin kendisi SILINMEZ (yeniden
+# kurulum oncesi guvenlik kopyasidir), yalnizca depoya girmez.
+data/demo.db.yedek-*
+
 # Yayın kademesi 3 — iç çalışma belgeleri, depoya konmaz.
 #
 # Bu dosyalar SİLİNMİYOR (CLAUDE.md "silme yok"); yerelde çalışmaya devam
