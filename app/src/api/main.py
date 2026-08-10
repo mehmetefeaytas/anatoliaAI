@@ -121,7 +121,9 @@ from ..comparison.compare import (
     delta_between,
     rank,
     rank_advantageous_by_type,
+    tekil_banka_urun,
     weight_manifest,
+    yon_zorla,
 )
 from ..comparison.contradiction import detect as detect_contradictions
 from ..db.factory import create_repository
@@ -926,57 +928,47 @@ def build_app():
         if type:
             rows = [r for r in rows if r.get("campaign_type") == type]
 
-        # Satır kimliğini `bank`'a göm (bkz. _ROW_TOKEN_SEP açıklaması).
-        by_token: dict[str, dict] = {}
+        # Satır kimliğini `bank` alanına gömen token hilesi KALDIRILDI.
+        # Yazıldığında gerekliydi: `rank()` girdideki ek alanları `RankRow`a
+        # taşımıyordu ve kaynak satıra dönmenin başka yolu yoktu. Artık
+        # `campaign_id` ile `campaign_type` taşınıyor.
+        #
+        # Hile yalnız gereksiz değil, ENGELDİ: paylaşılan sunum kapısı
+        # `tekil_banka_urun()` `(bank, campaign_type)` çiftine bakar; her
+        # satırın `bank`ı benzersiz bir token olsaydı hiçbir şey tekilleşmez,
+        # uç nokta da kuralı kendi gövdesinde ikinci kez yazmak zorunda
+        # kalırdı — bu depoda beş kez pahalıya mal olmuş "aynı karar iki
+        # yerde" hatası.
+        kaynak: dict[tuple[Any, Any], dict] = {}
         rank_input: list[dict] = []
-        for i, r in enumerate(rows):
-            token = f"{i}{_ROW_TOKEN_SEP}{r['bank']}"
-            by_token[token] = r
+        for r in rows:
+            # Anahtar (kampanya, kanıt penceresi): `query_fields()` bir alan
+            # için kampanya başına tek kayıt döndürür (ölçüldü, data/demo.db:
+            # 5455 satırda mükerrer (alan, kampanya) çifti YOK) ve pencere
+            # aynı kampanyada bile ayırt edicidir. İlk kayıt kazanır.
+            kaynak.setdefault((r["campaign_id"], r["source_span"]), r)
             rank_input.append({
-                "bank": token,
+                "bank": r["bank"],
                 "bank_name": r["bank_name"],
                 "canonical_value": r["canonical_value"],
                 "source_span": r["source_span"],
+                "campaign_id": r["campaign_id"],
+                "campaign_type": r["campaign_type"],
             })
 
-        ranked: list[RankRow] = rank(rank_input, field)
-
-        # intent yön zorlaması: rank() comparable'ları alanın doğal yönünde
-        # sıralar ve başa koyar; istenen yön tersse yalnız o önek ters çevrilir.
-        natural_lower = field in _LOWER_IS_BETTER
-        want_lower = {"lowest": True, "highest": False}.get(intent or "")
-        if want_lower is not None and want_lower != natural_lower:
-            head = [x for x in ranked if x.comparable and x.sort_key is not None]
-            tail = [x for x in ranked if not (x.comparable and x.sort_key is not None)]
-            ranked = list(reversed(head)) + tail
-
-        # Banka başına tekilleştirme. `ranked` zaten en iyiden kötüye sıralı ve
-        # kıyaslanabilirler başta; dolayısıyla bir `(banka, tür)` çiftinin İLK
-        # görülen satırı o bankanın o ailedeki en iyisidir. Ayrı bir "en iyiyi
-        # seç" mantığı yazmak, sıralama kuralını ikinci kez (ve ayrışma riskiyle)
-        # uygulamak olurdu.
-        aile_sayisi: dict[tuple[Any, Any], int] = {}
-        for x in ranked:
-            src = by_token[x.bank]
-            anahtar = (src["bank"], src["campaign_type"])
-            aile_sayisi[anahtar] = aile_sayisi.get(anahtar, 0) + 1
-
+        # Sıralama → istenen yön → banka × ürün ailesi başına tek satır.
+        # Üçü de `comparison/compare.py`'nin ortak kapıları; chatbot'un yapısal
+        # yolu (`chatbot/structured.py`) BİREBİR aynı çağrıları yapar ve
+        # ayrışmayı `tests/test_chatbot_kiyas_paritesi.py` kilitler.
+        ranked: list[RankRow] = yon_zorla(rank(rank_input, field), field,
+                                          intent)
         if per_bank == "best":
-            gorulen: set[tuple[Any, Any]] = set()
-            tekil: list[RankRow] = []
-            for x in ranked:
-                src = by_token[x.bank]
-                anahtar = (src["bank"], src["campaign_type"])
-                if anahtar in gorulen:
-                    continue
-                gorulen.add(anahtar)
-                tekil.append(x)
-            ranked = tekil
+            ranked = tekil_banka_urun(ranked)
 
         out = []
         position = 0
         for x in ranked:
-            src = by_token[x.bank]
+            src = kaynak[(x.campaign_id, x.source_span)]
             # Metin `_campaign_view()`'dan gelir — `/campaigns/{id}/text` ile
             # AYNI metin. `query_fields()` bilerek `raw_text` döndürmez: aynı
             # belgenin tam metnini her alan satırında tekrarlamak, chatbot'un
@@ -1021,11 +1013,10 @@ def build_app():
                     src["campaign_id"], text, src["bank"],
                     src.get("scraped_at"), src.get("source_url"))),
                 # Bu satırın temsil ettiği ailede bankanın KAÇ kampanyası daha
-                # var. `per_bank=all` iken 0'dır (hiçbir şey elenmemiştir).
-                "other_count": (
-                    aile_sayisi[(src["bank"], src["campaign_type"])] - 1
-                    if per_bank == "best" else 0
-                ),
+                # var. `tekil_banka_urun()` doldurur; `per_bank=all` iken
+                # tekilleştirme hiç koşmaz ve alan 0 kalır (hiçbir şey
+                # elenmemiştir).
+                "other_count": x.other_count,
             })
         return out
 
