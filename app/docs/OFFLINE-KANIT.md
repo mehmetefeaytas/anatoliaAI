@@ -476,7 +476,7 @@ Bu belgedeki koşum **31 Temmuz 2026**'da yapıldı. O tarihten bu yana depo
 
 | belgede | bugün |
 |---|---|
-| 607 test | **1.610 test** |
+| 607 test | **1.977 test** |
 | 849 belge | **1.774 belge** |
 | gold 3 kayıt | **66 tekil belge** (v1 n=20 + v2 n=48, 2 örtüşme) |
 | `app/models/` yok | **var** (BERTurk, bkz. §9) |
