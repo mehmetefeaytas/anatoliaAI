@@ -1,10 +1,21 @@
 # Anatolia AI — Dizin (Index)
 
 Bu vault'taki tüm sayfaların kategorize dizini. Her ingest sonrası güncellenir.
-Son güncelleme: 2026-08-07.
+Son güncelleme: 2026-08-10.
 
 ## Sources
 - [[2026-06-16-teknofest-tyda-sartname-2-senaryo]] — TEKNOFEST TYDA Teknik Şartname (2. Senaryo) ingest özeti
+- [[2026-08-06-mentor-terim-sozlugu]] — mentör maili: 101 girdilik katılım finansı
+  sözlüğü + "replace etme, LLM'e analizi ver" görüşü
+- [[2026-08-07-terimler-sozlugu]] — TCMB Terimler Sözlüğü (314 terim), karşıt
+  (konvansiyonel) terminoloji otoritesi
+
+> **Dizine alınmamış 3 kaynak sayfası var** (`sources/docs/` altında:
+> `2026-07-31-offline-kanit`, `2026-08-03-anatolia-ai-teknik-rapor`,
+> `2026-08-05-ablasyon`). Yarıda kalmış bir ingest'e aittirler: ürettikleri
+> ~45 türev sayfa (entity/concept/decision) hiç oluşturulmamış, dolayısıyla o
+> sayfalardan çıkan wikilink'ler kırık. **Bilerek** dizine alınmadılar;
+> kullanıcı kararı bekliyorlar. Silinmediler, taşınmadılar (hard rule #3).
 
 ## Entities
 - [[teknofest]] — yarışma organizasyonu
@@ -34,6 +45,8 @@ Son güncelleme: 2026-08-07.
 - [[acik-kaynak-yaklasimi]] — açık kaynak kısıtı
 - [[web-scraping]] — veri toplama tekniği
 - [[urun-karsilastirma]] — bankalar arası kıyas
+- [[katilim-finans-terimleri]] — 101 girdilik yapılandırılmış terim sözlüğü
+  (şema: `kanonik`/`varyantlar`/`degildir`/`ayrim_notu`/`risk_notu`)
 
 ## Decisions
 - [[on-premise-calistirilabilir-mimari]] — kurum içi mimari
@@ -49,6 +62,10 @@ Son güncelleme: 2026-08-07.
 - [[daraltilmis-yenilikcilik-hedefleri]] — yenilikçilik 3 hedefe daraltıldı
 - [[masrafsizlik-celiskisi-kapsam-testi]] — masrafsızlık çelişkisi kapsam testidir, ücret varlığı testi değil
 - [[klasik-veri-ince-ayar-rag-reddi]] — klasik banka verisi ince ayar ve RAG kaynağı olarak reddedildi
+- [[terim-sozlugu-enjeksiyon-replace-degil]] — terim sözlüğü prompt'a enjekte
+  edilir; kör dize değiştirme (replace) yapılmaz
+- [[orkestrasyon-yetki-asimetrisi]] — ajanlar önerir, hakem yalnız reddeder;
+  LLM ajanlarının yazma yetkisi yok
 
 ## Sorunlar
 - [[standart-veri-formati-eksikligi]] — standart format yok

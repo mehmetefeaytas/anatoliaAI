@@ -2,6 +2,76 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-10] bakım | index.md ve log.md geriye dönük tamamlandı
+
+İki ingest (2026-08-06 mentör terim sözlüğü, 2026-08-07 TCMB) **5 sayfa üretmiş
+ama ne `index.md`'ye ne `log.md`'ye işlenmişti.** CLAUDE.md "Workflow: INGEST"
+adım 8-9 ikisinin de her ingest sonrası güncellenmesini şart koşuyor; kural
+yazılıydı, uygulanmamıştı. Bu girdi ve aşağıdaki iki ingest girdisi o boşluğu
+geriye dönük kapatır.
+
+Ölçüm (dosya sistemi ↔ index.md karşılaştırması, 2026-08-10):
+- vault'ta 53 sayfa, index.md'de 45 → **8 sayfa dizinde yok**
+- aynı 8 slug `log.md`'de de **0 kez** geçiyor (eksik küme ikisinde birebir aynı)
+- 8'in **5'i** iki ingest'e ait ve bu turda eklendi
+- 8'in **3'ü** (`sources/docs/` altındaki offline-kanit, teknik-rapor, ablasyon)
+  yarıda kalmış bir ingest'e ait — **bilerek eklenmedi**, kullanıcı kararı
+  bekliyorlar
+
+Dokunulan dosyalar:
+- index.md (Sources'a 2, Concepts'e 1, Decisions'a 2 girdi; `Son güncelleme`
+  2026-08-07 → 2026-08-10; yarım ingest için açıklayıcı not)
+- log.md (bu girdi + iki ingest girdisi)
+
+Notlar:
+- Sayfaların **içeriğine dokunulmadı**; yalnız dizin ve günlük kaydı.
+- Silme/taşıma yapılmadı (hard rule #3).
+- `lint-report.md` hâlâ 2026-06-16 tarihli ve "0 kırık link" diyor; yarım
+  ingest'in ~45 kırık wikilink'i ondan sonra birikti. Lint yeniden koşturulmadı
+  — bu turun kapsamı dışında, açık uç olarak kalıyor.
+
+## [2026-08-07] ingest | tcmb-terimler-sozlugu
+
+Kaynak: `sources/tcmb/2026-08-07-terimler-sozlugu.md` (TCMB Terimler Sözlüğü,
+314 terim). Projeye **ikinci ve karşıt** bir terminoloji otoritesi kazandırdı:
+elimizdeki tek sözlük katılım tarafını tanımlıyordu, konvansiyonel bankacılığın
+resmî dilini tanımlayan referans yoktu. Aynı zamanda projenin temel tezini
+(*"konvansiyonel otorite katılım terminolojisini kapsamıyor"*) sayıyla test
+etmeye imkân verdi.
+
+Ölçüm (üç geçişli çapraz analiz — KAPSAMA / ÇATIŞMA / SAHTE-DOST):
+- gerçek kavramsal kesişim **4 / 101**
+- TCMB'de karşılığı olmayan katılım terimi **94 / 101 (%93,1)**
+- çekirdek 18 fıkhî terimin **17'si** TCMB'de yok (tek istisna Sukuk)
+- "kâr payı", "katılma hesabı", "özel cari hesap" → 314 başlık ve 314 tanım
+  metninde **sıfır**
+- doğrudan çatışma: **24 çift, 19 ayrı katılım terimi**
+- hedef korpusta isabet (389 katılım belgesi): katılım sözlüğü %55,4, TCMB %14,0
+
+Dokunulan dosyalar:
+- **sources/tcmb/** 2026-08-07-terimler-sozlugu.md (oluşturuldu)
+- index.md (Sources bölümüne eklendi — 2026-08-10'da, geriye dönük)
+
+Kod tarafı (app/, ayrı depo alanı):
+- data/terminology/tcmb-terimler.json (314 terim), _tcmb_ham/ (ham HTML + künye)
+- scripts/tcmb_sozluk_ayristir.py, scripts/tcmb_capraz_analiz.py (oluşturuldu)
+- docs/terminoloji-tcmb-capraz.md (üretildi)
+
+Notlar:
+- **Tezin dürüst sınırı yazıldı:** "TCMB katılım terminolojisini hiç kapsamıyor"
+  savunulamaz — 5 kayıt (%1,6) İslami finansa değiyor. Savunulabilir ifade
+  oransaldır.
+- Beklenmedik bulgu: TCMB'nin kendi Sukuk tanımı ("tahvil borca dayalı, sukuk
+  varlığa dayalı sertifika") sözlüğümüzün `ayrim_notu` alanıyla birebir aynı
+  ayrımı yapıyor — ayrım kartı artık düzenleyici metinle desteklenebilir.
+- Bu ingest **türev sayfa üretmedi**; çıkan iki karar (TCMB birleştirilmez;
+  rolü karşıt-otorite referansı) hâlâ `decisions/` altında sayfası olmayan
+  **açık uçtur**.
+- Çift yönlü bağ eksik: kaynak sayfa `[[katilim-finans-terimleri]]`,
+  `[[terim-sozlugu-enjeksiyon-replace-degil]]` ve
+  `[[katilim-bankaciligi-terminoloji-farkliligi]]`e link veriyor ama o
+  sayfalarda karşı-link yok (hard rule #6). Açık uç.
+
 ## [2026-08-07] belge | klasik-banka-korpusu "YARIŞMA KAPSAMI DIŞI" etiketlendi
 
 `app/data/raw-classic/` (11 klasik banka, 724 belge) yarışma veri seti sanılma
@@ -93,6 +163,37 @@ Notlar:
 - Fıkhî terimler korpusa eşit dağılmıyor: `docs` %42,0, `products` %16,3,
   `live` %4,8, `archive` %1,5. RAG önceliği bu yüzden `docs/` bölümüne verilir.
 - Karar dar kapsamlıdır; ne ince ayarın tümünü ne RAG'in kendisini reddeder.
+
+## [2026-08-06] ingest | mentor-terim-sozlugu
+
+Kaynak: `sources/mentor/2026-08-06-mentor-terim-sozlugu.md`. Mentör (eski
+bankacı; chatbot ve çok-ajanlı sistem deneyimi) ilk mentörlük toplantısında
+konuşulan terminoloji sorunu üzerine yazılı görüş ve **101 girdilik
+yapılandırılmış katılım finansı sözlüğü** gönderdi (avukat teyitli).
+
+Mailin özü tek cümlede: **terimi replace etme, LLM'e analizi ver.**
+
+> "Birebir değiştirmek anlamda bozukluk yaratıyor… Türkçeleri aynı anlamı
+> replace ile taşımıyor. O sebeple böyle bir kapsamlı analiz vermek gerekiyor."
+
+Dokunulan dosyalar:
+- **sources/mentor/** 2026-08-06-mentor-terim-sozlugu.md (oluşturuldu)
+- **concepts/** katilim-finans-terimleri.md (oluşturuldu)
+- **decisions/** terim-sozlugu-enjeksiyon-replace-degil.md (oluşturuldu)
+- **decisions/** orkestrasyon-yetki-asimetrisi.md (oluşturuldu)
+- index.md (Sources/Concepts/Decisions bölümleri — 2026-08-10'da, geriye dönük)
+
+Notlar:
+- İki karar çıktı ve ikisi de ölçüme dayanıyor: (1) sözlük **enjekte** edilir,
+  kör replace yapılmaz; (2) orkestrasyonda **ajanlar önerir, hakem yalnız
+  reddeder** — ablasyon (n=20, bootstrap 1000) hibrit kolun kural kolundan daha
+  kötü olduğunu ölçtüğü için LLM ajanlarına yazma yetkisi verilmedi.
+- Aynı kaynağa dayanan `klasik-veri-ince-ayar-rag-reddi` kararı ertesi gün
+  (2026-08-07) ayrı bir "karar" girdisiyle zaten işlenmişti; bu ingest'in
+  **kendisi** ve diğer üç türev sayfası işlenmemişti — bu girdi onu kapatıyor.
+- `sources/mentor/2026-08-06-mentor-terim-sozlugu.md` frontmatter'ında `source:`
+  alanı **yok** (diğer tüm kaynak sayfalarında var). İçeriğe dokunulmadığı için
+  düzeltilmedi; açık uç.
 
 ## [2026-07-27] kod+yöntem | Gün 1c: Veri modeli, gerçek güven, 12/12 alan, değişmez denetimi
 
