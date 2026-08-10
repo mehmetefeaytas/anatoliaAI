@@ -70,6 +70,17 @@ class ChatAnswer:
     inherited: list[dict] = dc_field(default_factory=list)
     #: Sözelleştirme denetim kaydı — {attempted, applied, ms, note}.
     verbalize: dict = dc_field(default_factory=dict)
+    #: KAPI 6 — talimat-devralma işareti taşıdığı için DÜŞÜRÜLEN pasajlar.
+    #:
+    #: `rag.RagAnswer.quarantined` bu bilgiyi zaten üretiyordu ama bot katmanı
+    #: onu taşımıyordu: kapı çalışıyor, pasajı düşürüyor ve düşürdüğünü
+    #: kimseye söylemiyordu. Korpusta talimat gömülü bir belge bulunduğunda
+    #: `rag.py` bunu WARNING olarak loglar; ekranda hiçbir iz kalmıyordu.
+    #: Projenin en güçlü güvenlik iddiasının sessiz kalması demekti.
+    #:
+    #: Yapısal (text-to-SQL) yolda her zaman boştur — o yol serbest metin
+    #: getirmez, dolayısıyla karantinaya alınacak pasajı da yoktur.
+    quarantined: list[dict] = dc_field(default_factory=list)
 
 
 # --------------------------------------------------------------------------- #
@@ -224,6 +235,8 @@ class _Dagitim:
     route: Route
     verbalize: dict
     rows: list
+    #: KAPI 6'nın düşürdüğü pasajlar (yalnız RAG yolunda dolabilir).
+    quarantined: list = dc_field(default_factory=list)
 
 
 def _yeni_baglam(d: _Dagitim) -> dict:
@@ -316,7 +329,8 @@ class Chatbot:
         return ChatAnswer(text, d.handler, d.field, d.sources, report,
                           report.gates, context=_yeni_baglam(d),
                           inherited=list(d.route.inherited),
-                          verbalize=d.verbalize)
+                          verbalize=d.verbalize,
+                          quarantined=list(d.quarantined))
 
     # --- iç yardımcılar ----------------------------------------------------
     def _dispatch(self, question: str, scr: safety.InputScreening,
@@ -351,7 +365,8 @@ class Chatbot:
         return _Dagitim("rag", r.field, ans.text, ans.passages,
                         safety.contains_rate(ans.text), r,
                         {"attempted": False, "applied": False,
-                         "ms": None, "reason": "RAG yolu"}, [])
+                         "ms": None, "reason": "RAG yolu"}, [],
+                        quarantined=list(getattr(ans, "quarantined", []) or []))
 
     def _sozellestir(self, sablon: str, kaynak_var: bool) -> tuple[str, dict]:
         """Şablon cevabı LLM ile yeniden ifade eder; kapıyı geçemezse şablon.
@@ -425,4 +440,5 @@ class Chatbot:
         return ChatAnswer(d.body, d.handler, d.field, d.sources,
                           context=_yeni_baglam(d),
                           inherited=list(d.route.inherited),
-                          verbalize=d.verbalize)
+                          verbalize=d.verbalize,
+                          quarantined=list(d.quarantined))
