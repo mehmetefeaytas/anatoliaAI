@@ -82,6 +82,27 @@ export default function FairnessNotice() {
           bilgi değil, bir ölçüm hatasıdır.
         </p>
       </div>
+      <div className="fairness-item">
+        <strong>Tablo neden seyrek? — az ama doğru</strong>
+        <p>
+          Bu tablo, metinde geçen her sayıyı göstermez. Üç kapı satırları
+          eler ve <b>hiçbiri satırı silmez</b>: elenen değer gerekçesiyle
+          birlikte listede kalır.{" "}
+          <b>Belge türü</b> — sözleşme, tarife ve bilgi formu metinleri kıyasa
+          girmez; bir akitteki oran bir kampanya teklifi değildir.{" "}
+          <b>Çıkarım güveni</b> — çerez metninden ya da işlem ücreti
+          tarifesinden toplanmış bir sayı{" "}
+          <span className="badge badge-warn">doğrudan kıyaslanamaz</span>{" "}
+          işaretlenir.{" "}
+          <b>Kampanya süresi</b> — sayfası kendi bitişini ilan eden ya da
+          arşive düşmüş kampanya{" "}
+          <span className="badge badge-expired">süresi dolmuş</span> rozetiyle
+          sıralama dışında kalır; bugün başvurulamayan bir teklif, bugünkü
+          tekliflerin üstünde görünemez. Sonuç daha az satırdır ve bu bir
+          kayıp değildir: <b>kaynağına bağlanabilen az sayıda kayıt, sayısı
+          şişirilmiş bir tablodan iyidir.</b>
+        </p>
+      </div>
     </div>
   );
 }

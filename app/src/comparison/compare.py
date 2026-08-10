@@ -23,6 +23,7 @@ from dataclasses import dataclass, replace
 from dataclasses import field as dc_field
 from typing import Any, Iterable, Optional
 
+from ..db.base import suresi_dolmus_mu
 from ..normalization.normalize import collapse_degenerate_range
 
 
@@ -45,6 +46,11 @@ class RankRow:
     #: Tekilleştirmede bu satırın TEMSİL ETTİĞİ, gösterilmeyen kampanya sayısı.
     #: `tekil_banka_urun()` doldurur; tekilleştirme yapılmamışsa 0'dır.
     other_count: int = 0
+    #: Kampanyanın geçerlilik durumu (`'expired'` | `'active'` | `None`).
+    #: `note` alanından AYRI taşınır: not tek bir dizedir ve satır aynı anda
+    #: hem aralık hem süresi dolmuş olabilir; ikisini tek metne sıkıştırmak
+    #: birini gizlerdi. Arayüz rozeti bu alandan okunur.
+    campaign_status: Optional[str] = None
 
 
 # Alan → (sayısal_anahtar_çıkarıcı, küçük_mü_iyi)
@@ -210,6 +216,49 @@ def _guven_notu(confidence: Optional[float]) -> Optional[str]:
             f"doğrudan kıyaslanamaz")
 
 
+# --------------------------------------------------------------------------- #
+# Süre kapısı — kapanmış kampanya açık olanla aynı kolonda sıralanmaz
+# --------------------------------------------------------------------------- #
+#
+# `docs/rapor/suresi-dolmus-damgasi.md` 458 belgeyi `campaign_status: expired`
+# ile işaretledi (237 `archive/`, 221 `live/`) ve o raporun §5'i boşluğu açıkça
+# yazdı: *"Kıyas motoru bu alanı henüz OKUMUYOR."* Bu kapı o boşluğu kapatır.
+#
+# Neden gerekli: süresi dolmuş bir kampanyanın oranı hâlâ metinde yazılıdır ve
+# çıkarıcı onu yüksek güvenle bulur. Kapanmış bir kampanya çoğu zaman
+# sıralamanın TEPESİNDE oturur — bugün başvurulabilecek en iyi tekliften daha
+# iyi görünür, çünkü artık kimseye verilmiyor. Kullanıcı "en düşük kâr payı"
+# ekranında var olmayan bir ürünü görür. CLAUDE.md §17'nin (adil kıyas
+# garantisi) ihlali budur.
+#
+# ## Neden "kıyas dışı", neden "sil" değil
+#
+# Güven kapısındaki (yukarıda) aynı üç seçenek ve aynı gerekçe. Satırı düşürmek
+# bilgiyi SAKLARDI: kullanıcıya "bu bankada böyle bir kampanya yok" demek
+# olurdu, oysa kampanya var — süresi dolmuş. Bu ayrım arayüzdeki `FairnessNotice`
+# şeridinde açıkça vaat ediliyor. Değer görünür kalır, gerekçesi yanındadır,
+# sıralamaya girmez.
+#
+# ## Neden damgasız belgeler etkilenmez
+#
+# `suresi_dolmus_mu()` yalnız `'expired'`e `True` döner; `None` (damgasız)
+# geçer. Korpusun 1316 belgesi damgasızdır ve bunları "muhtemelen dolmuştur"
+# saymak, ölçülmemiş bir bilgi iddia etmek olurdu (CLAUDE.md §19).
+
+
+def _durum_notu(campaign_status: Optional[str]) -> Optional[str]:
+    """Süresi dolmuş satırın kullanıcıya dönük gerekçesi.
+
+    Metin "doğrudan kıyaslanamaz" ile bitiyor çünkü arayüz o deseni zaten
+    tanıyor: aralık, farklı para birimi ve düşük güven aynı sonu kullanıyor.
+    Dördüncü bir gerekçeye dördüncü bir dil uydurmak, aynı kararı iki farklı
+    biçimde anlatmak olurdu.
+    """
+    if not suresi_dolmus_mu(campaign_status):
+        return None
+    return "kampanya süresi dolmuş — doğrudan kıyaslanamaz"
+
+
 def rank(rows: list[dict], field_name: str) -> list[RankRow]:
     """query_fields() çıktısını alıp adil sıralama döndürür.
 
@@ -221,10 +270,22 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
     yazar. Alanı taşımayan çağıranlar (eski sözlükler, testler) aynen çalışır —
     güven bilinmiyorsa kapı ateşlenmez, çünkü "bilinmiyor" ile "düşük" aynı şey
     değildir ve olmayan bir belirsizlik iddia edilmez.
+
+    `campaign_status` taşınmışsa **süre kapısı** de aynı biçimde uygulanır:
+    `'expired'` işaretli satır sıralamaya girmez, notunda sebebi yazar ve
+    durum `RankRow.campaign_status` alanında ayrıca taşınır (arayüz rozeti).
+    Damgasız (`None`) satır etkilenmez.
     """
     built: list[RankRow] = []
     for r in rows:
         sk, comparable, note = _numeric_key(field_name, r.get("canonical_value"))
+        # Süre kapısı GÜVEN kapısından önce: ikisi de ateşlenirse kullanıcıya
+        # gösterilecek tek not, kampanyanın artık geçerli olmadığıdır. Düşük
+        # güven bir ölçüm kusurudur; süresi dolmuşluk ürünün kendisiyle ilgili
+        # bir gerçektir ve daha temel bir eleme sebebidir.
+        durum_notu = _durum_notu(r.get("campaign_status"))
+        if durum_notu is not None and comparable:
+            comparable, note = False, durum_notu
         # Güven kapısı sayısallaştırmadan SONRA uygulanır: zaten kıyaslanamayan
         # bir satırın (aralık, farklı para birimi) notunu güvenle değiştirmek
         # daha bilgilendirici olmaz, yalnız asıl nedeni gizlerdi.
@@ -243,6 +304,7 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
             source_span=r.get("source_span"),
             campaign_id=r.get("campaign_id"),
             campaign_type=r.get("campaign_type"),
+            campaign_status=r.get("campaign_status"),
         ))
 
     lower_better = field_name in _LOWER_IS_BETTER
@@ -476,6 +538,9 @@ class CompositeScore:
     comparable: bool
     note: Optional[str]
     components: list[ScoreComponent] = dc_field(default_factory=list)
+    #: Kampanyanın geçerlilik durumu — `RankRow.campaign_status` ile aynı
+    #: gerekçe: rozet, nottan ayrı bir alandan okunur.
+    campaign_status: Optional[str] = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -486,6 +551,7 @@ class CompositeScore:
             "coverage": self.coverage,
             "comparable": self.comparable,
             "note": self.note,
+            "campaign_status": self.campaign_status,
             "components": [c.to_dict() for c in self.components],
         }
 
@@ -624,6 +690,13 @@ def rank_advantageous(rows: Iterable[dict],
         for r in rows:
             raw = (r.get("fields") or {}).get(fname)
             num, note = _composite_numeric(fname, raw)
+            # Süre kapısı: `rank()` ile aynı sıra (güvenden ÖNCE), aynı metin.
+            # Kampanya düzeyinde bir gerçektir, bu yüzden o kampanyanın TÜM
+            # alanlarını birden düşürür — bir alanı skorlayıp diğerini elemek,
+            # kapanmış bir kampanyayı kısmen sıralamaya sokmak olurdu.
+            durum_notu = _durum_notu(r.get("campaign_status"))
+            if durum_notu is not None and num is not None:
+                num, note = None, durum_notu
             # Güven kapısı: `rank()` ile aynı eşik, aynı gerekçe metni.
             guven_notu = _guven_notu((r.get("field_confidence") or {}).get(fname))
             if guven_notu is not None and num is not None:
@@ -640,7 +713,10 @@ def rank_advantageous(rows: Iterable[dict],
         return [CompositeScore(bank=r.get("bank"), bank_name=r.get("bank_name"),
                                campaign_id=r.get("campaign_id"), score=None,
                                coverage=0.0, comparable=False,
-                               note="hiçbir ölçüt ölçülemedi", components=[])
+                               note=(_durum_notu(r.get("campaign_status"))
+                                     or "hiçbir ölçüt ölçülemedi"),
+                               components=[],
+                               campaign_status=r.get("campaign_status"))
                 for r in rows]
 
     # 2) Alan içi sıralama normalizasyonu
@@ -678,8 +754,16 @@ def rank_advantageous(rows: Iterable[dict],
         coverage = covered_w / total_active
         score = (total / covered_w) if covered_w > 0 else None
         comparable = coverage >= min_coverage and score is not None
+        # Süre kapısı bu kampanyanın alanlarını düşürmüşse, üst düzey not
+        # bunu SÖYLEMELİ. Aksi halde kapanmış bir kampanya "ölçülebilen ölçüt
+        # yok" diye görünürdü — çıkarımın başarısızlığı gibi okunan, yanlış
+        # bir gerekçe. Kapı, kapsamayı düşüren diğer sebeplerin önüne geçer:
+        # süresi dolmuş bir kampanyada eksik veri artık ikincil bir sorundur.
+        durum_notu = _durum_notu(r.get("campaign_status"))
         note = None
-        if score is None:
+        if durum_notu is not None:
+            comparable, note = False, durum_notu
+        elif score is None:
             note = "ölçülebilen ölçüt yok"
         elif not comparable:
             note = (f"veri kapsaması düşük ({coverage:.0%}) — doğrudan "
@@ -689,6 +773,7 @@ def rank_advantageous(rows: Iterable[dict],
             bank=r.get("bank"), bank_name=r.get("bank_name"),
             campaign_id=r.get("campaign_id"), score=score, coverage=coverage,
             comparable=comparable, note=note, components=components,
+            campaign_status=r.get("campaign_status"),
         ))
 
     ok = [c for c in out if c.comparable]

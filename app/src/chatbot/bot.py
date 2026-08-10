@@ -359,7 +359,13 @@ class Chatbot:
             # iddiası, ve tam da o iddia sessizce düşüyordu.
             sources = [{"bank": x.bank, "value": x.value,
                         "source_span": x.source_span,
-                        "campaign_id": x.campaign_id} for x in ans.rows]
+                        "campaign_id": x.campaign_id,
+                        # Kampanyanın geçerlilik damgası: sohbette gösterilen
+                        # bir kaynak, süresi dolmuşsa bunu SÖYLEMELİ. Metin
+                        # gövdesindeki not satır bazlıdır ve kaynak listesi
+                        # ayrı bir yüzeydir; alan taşınmazsa o yüzey damgayı
+                        # hiç görmez.
+                        "campaign_status": x.campaign_status} for x in ans.rows]
             has_rate = (r.field == "kar_payi_orani"
                         or safety.contains_rate(ans.text))
             govde, soz = self._sozellestir(ans.text, bool(sources))

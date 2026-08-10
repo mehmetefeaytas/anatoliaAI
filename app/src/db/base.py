@@ -99,6 +99,43 @@ def kiyas_where(sutun: str = "c.belge_turu") -> str:
 
 
 # --------------------------------------------------------------------------- #
+# Kampanya geçerlilik durumu — süresi dolmuş mu?
+# --------------------------------------------------------------------------- #
+#
+# Değer `.meta.json` provenance sidecar'ından gelir (`campaign_status`) ve üç
+# ayrı yazar tarafından üretilir: arşiv hasadı (`harvest_extra`), bayat sayfa
+# mutabakatı (`reconcile_stale`) ve sayfanın kendi bitiş damgası
+# (`scripts/damga_isaretle.py`). Ölçüm (2026-08-10, `data/raw`): 1774 belgenin
+# 458'i `expired` — 237'si `archive/`, 221'i `live/` altında.
+#
+# `live/` altındaki 221 belge bu sütunun asıl gerekçesidir: dosya konumundan
+# ("arşivde mi?") çıkarılamaz, çünkü sayfa hâlâ yayında ama METNİ kendi
+# bitişini ilan ediyor ("Kampanya 31.12.2025 tarihinde sona ermiştir").
+#
+# `belge_turu` ile KARIŞTIRMA: o, belgenin NE OLDUĞUNU söyler (kampanya mı,
+# akit mi); bu ise kampanyanın HÂLÂ GEÇERLİ olup olmadığını. Bir belge hem
+# `kampanya` hem `expired` olabilir — en sık görülen bileşim budur.
+#
+# Değer İngilizce ve sidecar'daki yazımla BİREBİR aynı tutuldu
+# (`scraping.collector.STATUS_EXPIRED`): sütun bir sınıf etiketi taşıyor ve
+# diskteki 458 dosyada yazılı olan dizgeyi burada Türkçeleştirmek, iki tarafın
+# sessizce ayrışabileceği bir çeviri adımı eklerdi.
+KAMPANYA_DURUMU_SURESI_DOLMUS = "expired"
+KAMPANYA_DURUMU_AKTIF = "active"
+
+
+def suresi_dolmus_mu(durum: Optional[str]) -> bool:
+    """Bu kampanya süresi dolmuş olarak işaretli mi?
+
+    `None` **süresi dolmamış SAYILMAZ, bilinmiyor demektir** ve bu fonksiyon
+    `False` döndürür — yani bilgi yokluğu bir kampanyayı sıralamadan atmaz.
+    Ters yön (bilinmeyeni dolmuş saymak) korpusun %74'ünü sessizce eleyecekti:
+    işaretsiz 1316 belgenin çoğu süresi dolmuş değil, sadece damgasız.
+    """
+    return durum == KAMPANYA_DURUMU_SURESI_DOLMUS
+
+
+# --------------------------------------------------------------------------- #
 # Çıkarıcı katmanı — hangi katman bu alanı üretti?
 # --------------------------------------------------------------------------- #
 #
@@ -238,7 +275,8 @@ class RepositoryProtocol(Protocol):
                     bddk_active: bool = True) -> int: ...
 
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
-                        scraped_at: Optional[str] = None) -> int: ...
+                        scraped_at: Optional[str] = None,
+                        campaign_status: Optional[str] = None) -> int: ...
 
     def set_belge_turu(self, atamalar: Mapping[int, Optional[str]]) -> int: ...
 
@@ -365,9 +403,11 @@ class ThreadSafeRepository:
             return self._inner.upsert_bank(name, slug, website_url, bddk_active)
 
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
-                        scraped_at: Optional[str] = None) -> int:
+                        scraped_at: Optional[str] = None,
+                        campaign_status: Optional[str] = None) -> int:
         with self.lock:
-            return self._inner.insert_campaign(c, clean_text, scraped_at)
+            return self._inner.insert_campaign(
+                c, clean_text, scraped_at, campaign_status)
 
     def set_belge_turu(self, atamalar: Mapping[int, Optional[str]]) -> int:
         with self.lock:

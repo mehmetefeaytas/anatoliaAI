@@ -874,6 +874,7 @@ def build_app():
             "belge_turu": camp.get("belge_turu"),
             "source_url": camp["source_url"],
             "scraped_at": camp.get("scraped_at"),
+            "campaign_status": camp.get("campaign_status"),
             "text": text,
             "text_length": len(text),
             "span_reference": camp.get("span_reference"),
@@ -983,6 +984,11 @@ def build_app():
                 # kapalı kalırdı ve tablo, çıkarıcının zaten zayıf
                 # işaretlediği bir değeri "en düşük" diye basardı.
                 "confidence": r.get("confidence"),
+                # Kampanyanın geçerlilik damgası (`compare.rank()` süre
+                # kapısı). Aynı gerekçe: alan taşınmazsa kapı sessizce kapalı
+                # kalır ve kapanmış bir kampanya, bugün başvurulabilecek
+                # tekliflerin ÜSTÜNDE görünür.
+                "campaign_status": r.get("campaign_status"),
             })
 
         # Sıralama → istenen yön → banka × ürün ailesi başına tek satır.
@@ -1019,6 +1025,9 @@ def build_app():
                 "comparable": x.comparable,
                 "note": x.note,
                 "source_span": x.source_span,
+                # Rozet için ayrı alan: bir satır aynı anda hem aralık hem
+                # süresi dolmuş olabilir ve `note` tek bir dizedir.
+                "campaign_status": x.campaign_status,
                 # --- denetim / açıklanabilirlik ---
                 "campaign_id": src["campaign_id"],
                 "campaign_type": src["campaign_type"],
@@ -1143,6 +1152,7 @@ def build_app():
                 "sort_key": sk,
                 "comparable": kiyaslanabilir,
                 "note": not_,
+                "campaign_status": satir.get("campaign_status"),
                 "campaign_id": satir["campaign_id"],
                 "campaign_type": satir.get("campaign_type"),
                 "source_url": satir.get("source_url"),
@@ -1168,7 +1178,11 @@ def build_app():
                      # Güven kapısı burada da geçerli: delta paneli
                      # `comparable` bayrağına bakıyor ve düşük güvenli bir
                      # değerle fark hesaplamak, o farkı uydurmak olurdu.
-                     "confidence": r.get("confidence")}
+                     "confidence": r.get("confidence"),
+                     # Süre kapısı da geçerli, aynı gerekçeyle: kapanmış bir
+                     # kampanyayla "rakipten %10 daha iyisiniz" demek, artık
+                     # kimseye verilmeyen bir teklife dayanan bir iddiadır.
+                     "campaign_status": r.get("campaign_status")}
                     for i, r in enumerate(aile_satirlari)
                 ], alan)
 
@@ -1317,6 +1331,7 @@ def build_app():
                 {"bank": r["bank"], "bank_name": r["bank_name"],
                  "value": r["value"], "sort_key": r["sort_key"],
                  "comparable": r["comparable"], "note": r["note"],
+                 "campaign_status": r["campaign_status"],
                  "rank": r["rank"], "confidence": r["confidence"],
                  "extractor": r["extractor"]}
                 for r in rows
@@ -1362,6 +1377,9 @@ def build_app():
                     "campaign_id": cid,
                     "campaign_type": r.get("campaign_type"),
                     "source_url": r.get("source_url"),
+                    # Süre kapısı kampanya düzeyindedir; `rank_advantageous`
+                    # bu alanı satırın kökünde arar (alan sözlüğünde değil).
+                    "campaign_status": r.get("campaign_status"),
                     "fields": {},
                     "field_confidence": {},
                 })

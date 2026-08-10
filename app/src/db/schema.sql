@@ -41,6 +41,20 @@ CREATE TABLE IF NOT EXISTS campaigns (
     -- Postgres ile göçle güncellenen SQLite geçersiz değere FARKLI tepki
     -- verirdi. Tek doğrulama noktası `src/db/base.belge_turu_dogrula()`.
     belge_turu    TEXT,
+    -- Kampanya HÂLÂ GEÇERLİ Mİ: 'expired' | 'active' | NULL (bilinmiyor).
+    --
+    -- `belge_turu` ile karıştırma: o, belgenin NE OLDUĞUNU söyler; bu ise
+    -- kampanyanın süresinin dolup dolmadığını. Değer `.meta.json` provenance
+    -- sidecar'ındaki `campaign_status` alanından gelir. Ölçüm (2026-08-10,
+    -- `data/raw`): 1774 belgenin 458'i `expired` — 237'si `archive/`, 221'i
+    -- `live/` altında. `live/` bacağı bu sütunun asıl gerekçesidir: sayfa
+    -- hâlâ yayında, ama metni kendi bitişini ilan ediyor; dosya konumundan
+    -- çıkarılamaz.
+    --
+    -- Süresi dolmuş kampanya sıralamaya alınmaz (CLAUDE.md §17 adil kıyas)
+    -- ama tablodan SİLİNMEZ: değeri ve gerekçesi görünür kalır.
+    -- CHECK kısıtı BİLEREK YOK; gerekçe `belge_turu` ile aynı.
+    campaign_status TEXT,
     -- LLM üretimi kısa özet. Sütun burada AÇILIR; dolduran taraf ayrıdır
     -- (depo sözleşmesindeki yol: `set_ozet()`). Boş kalması normaldir —
     -- özet üretilmediyse uydurulmaz, NULL kalır (CLAUDE.md §19).

@@ -130,6 +130,10 @@ _LATER_COLUMNS = (
     # geçersiz değere farklı tepki verirdi. Doğrulama `base.belge_turu_dogrula`.
     ("campaigns", "belge_turu", "TEXT"),
     ("campaigns", "ozet", "TEXT"),
+    # 10 Ağu 2026: kampanya geçerlilik durumu (`expired` | `active` | NULL).
+    # SQLite tarafındaki `repository._SONRADAN_EKLENEN` ile AYNI kalmak
+    # ZORUNDA; ayrışmayı `tests/test_goc_listesi_paritesi.py` kapıda tutar.
+    ("campaigns", "campaign_status", "TEXT"),
 )
 
 
@@ -263,7 +267,8 @@ class PostgresRepository:
 
     # --- kampanya + alanlar ---
     def insert_campaign(self, c: Campaign, clean_text: Optional[str] = None,
-                        scraped_at: Optional[str] = None) -> int:
+                        scraped_at: Optional[str] = None,
+                        campaign_status: Optional[str] = None) -> int:
         bank_id = self.upsert_bank(c.bank_slug, c.bank_slug)
         baglam = f"kampanya (banka={c.bank_slug}, url={c.source_url})"
         raw_text = self._text(c.raw_text, "raw_text", baglam)
@@ -292,10 +297,10 @@ class PostgresRepository:
         with self.conn.cursor() as cur:
             cur.execute(
                 "INSERT INTO campaigns(bank_id, raw_text, clean_text, source_url, "
-                "scraped_at, campaign_type) "
-                "VALUES (%s,%s,%s,%s,CAST(%s AS TIMESTAMPTZ),%s) RETURNING id",
+                "scraped_at, campaign_type, campaign_status) "
+                "VALUES (%s,%s,%s,%s,CAST(%s AS TIMESTAMPTZ),%s,%s) RETURNING id",
                 (bank_id, raw_text, clean_text, c.source_url, scraped_at,
-                 c.campaign_type))
+                 c.campaign_type, campaign_status))
             cid = int(cur.fetchone()["id"])
             if alanlar:
                 cur.executemany(
@@ -358,7 +363,8 @@ class PostgresRepository:
         with self._read() as cur:
             cur.execute(
                 "SELECT b.slug AS bank, b.name AS bank_name, c.id AS campaign_id, "
-                "c.campaign_type, c.belge_turu, c.source_url, "
+                "c.campaign_type, c.belge_turu, c.campaign_status, "
+                "c.source_url, "
                 f"{_SCRAPED_AT_ISO} AS scraped_at, "
                 "f.canonical_value, f.raw_value, f.confidence, f.source_span, "
                 "f.extractor, f.span_start, f.span_end, f.confidence_source "
@@ -388,7 +394,7 @@ class PostgresRepository:
             cur.execute(
                 "SELECT c.id, c.raw_text, c.clean_text, c.source_url, "
                 f"{_SCRAPED_AT_ISO} AS scraped_at, "
-                "c.campaign_type, c.belge_turu, c.ozet, "
+                "c.campaign_type, c.belge_turu, c.campaign_status, c.ozet, "
                 "b.slug AS bank, b.name AS bank_name "
                 # RAG/chatbot metin yolu — belge türüne göre SÜZMEZ.
                 "FROM campaigns c JOIN banks b ON b.id=c.bank_id WHERE c.id=%s",
@@ -479,7 +485,8 @@ class PostgresRepository:
         """
         belge_turu = belge_turu_dogrula(belge_turu)
         sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
-               "c.campaign_type, c.belge_turu, c.ozet, c.raw_text, c.source_url, "
+               "c.campaign_type, c.belge_turu, c.campaign_status, c.ozet, "
+               "c.raw_text, c.source_url, "
                f"{_SCRAPED_AT_ISO} AS scraped_at "
                "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
         params: tuple = ()

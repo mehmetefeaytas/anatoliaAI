@@ -351,6 +351,16 @@ function RowPair({
               {row.note ?? "kıyaslanamaz"}
             </span>
           )}
+          {row.campaign_status === "expired" && (
+            <div style={{ marginTop: "var(--sp-1)" }}>
+              <span
+                className="badge badge-expired"
+                title="Kampanya sayfası kendi bitişini ilan ediyor ya da arşivde. Değer görünür kalır, sıralamaya girmez."
+              >
+                süresi dolmuş
+              </span>
+            </div>
+          )}
           {row.contradiction_count > 0 && (
             <div style={{ marginTop: "var(--sp-1)" }}>
               <span className="badge badge-bad">

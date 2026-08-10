@@ -99,8 +99,14 @@ def collect_corpus(bank: BankConfig, raw_dir: str | Path = "data/raw",
     okumamalıdır (bkz. `CORPUS_SUFFIX`).
 
     Provenance korunur: `<dosya>.txt.meta.json` yanındaysa `source_url`,
-    `scraped_at`, `content_hash`, `collection_method`, `title` oradan alınır.
-    Sidecar yoksa `source_url` `file://` yoluna düşer — uydurulmaz.
+    `scraped_at`, `content_hash`, `collection_method`, `title`,
+    `campaign_status` oradan alınır. Sidecar yoksa `source_url` `file://`
+    yoluna düşer — uydurulmaz.
+
+    `campaign_status` sidecar'da yoksa `None` kalır ve bu "süresi dolmamış"
+    ANLAMINA GELMEZ, "bilinmiyor" demektir (bkz. `db.base.suresi_dolmus_mu`).
+    Korpustaki 1774 belgenin 1316'sı damgasızdır; bunları varsayılan olarak
+    geçerli ya da geçersiz saymak, ölçülmemiş bir bilgi iddia etmek olurdu.
     """
     base = Path(raw_dir) / bank.slug
     docs: list[RawDoc] = []
@@ -122,6 +128,7 @@ def collect_corpus(bank: BankConfig, raw_dir: str | Path = "data/raw",
             content_hash=meta.get("content_hash") or content_hash(content),
             collection_method=meta.get("collection_method") or METHOD_FIXTURE,
             title=meta.get("title"),
+            campaign_status=meta.get("campaign_status"),
         ))
     return docs
 
@@ -190,8 +197,17 @@ def run_pipeline(repo: Repository, banks_yaml: str, raw_dir: str = "data/raw",
             for con in detect_contradictions(campaign):
                 contradictions.append({"bank": bank.slug, "kind": con.kind,
                                        "detail": con.detail})
+            # `campaign_status` toplama anında BİLİNİYOR (sidecar'da yazılı) ve
+            # burada DB'ye taşınır. Alternatifi, `build_demo_db` içinde
+            # `source_url` üzerinden ikinci bir korpus taraması yapmaktı —
+            # `belge_turu` orada öyle atanıyor. Bu alanda o yol YANLIŞ olurdu:
+            # `source_url` tekil değil (ölçüldü: 88 URL birden fazla bölümde),
+            # ve aynı sayfanın `live/` ile `archive/` kopyaları tam da durumu
+            # FARKLI olan çifttir. Belge başına taşımak bu çakışmayı hiç
+            # doğurmaz.
             repo.insert_campaign(campaign, clean_text=text,
-                                 scraped_at=doc.scraped_at)
+                                 scraped_at=doc.scraped_at,
+                                 campaign_status=doc.campaign_status)
             stored += 1
             done += 1
             if on_progress is not None:

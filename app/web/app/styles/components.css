@@ -323,6 +323,16 @@ table.data tbody tr.group-head:not(:first-child) td {
   color: var(--accent);
   border-color: var(--accent-soft);
 }
+/* Süresi dolmuş kampanya. `--warn` tonundadır, `--bad` değil: bu bir HATA
+ * değil, bir GEÇERLİLİK bilgisidir — kampanya doğru okunmuştur, yalnız artık
+ * verilmemektedir. Zeminli (dolu) yazılır ki tablodaki diğer uyarı
+ * rozetlerinden ilk bakışta ayrılsın; kıyas tablosundan çıkarılan satırın
+ * SEBEBİ jüri için tek bakışta okunabilmeli. */
+.badge-expired {
+  color: var(--warn);
+  background: var(--warn-wash);
+  border-color: var(--warn);
+}
 
 .rank-pill {
   display: inline-block;

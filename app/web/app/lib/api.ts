@@ -25,12 +25,25 @@ export type SpanInfo = {
 
 export type Extractor = "rule" | "ner" | "llm";
 
+/**
+ * Kampanyanın geçerlilik damgası (`campaigns.campaign_status`).
+ *
+ * `null` "geçerli" DEMEK DEĞİLDİR, "damgasız" demektir — korpusun büyük kısmı
+ * bu durumdadır. Yalnız `"expired"` bir iddia taşır ve sıralamadan çıkarır.
+ */
+export type CampaignStatus = "expired" | "active";
+
 export type CompareRow = SpanInfo & {
   bank: string;
   bank_name: string | null;
   value: unknown;
   comparable: boolean;
   note: string | null;
+  /**
+   * Süresi dolmuş kampanya rozeti. `note`'tan AYRI taşınır: bir satır aynı
+   * anda hem aralık hem süresi dolmuş olabilir ve `note` tek bir dizedir.
+   */
+  campaign_status: CampaignStatus | null;
   source_span: string | null;
   campaign_id: number;
   campaign_type: string | null;
