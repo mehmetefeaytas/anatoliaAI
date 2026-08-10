@@ -348,8 +348,18 @@ class Chatbot:
 
         if r.handler == "structured" and r.field:
             ans = structured.answer(self.repo, r)
+            # `campaign_id` BURADA taşınır. `RankRow` onu zaten biliyor ama
+            # kaynak sözlüğüne konmuyordu; `/chat` ucu da kampanyayı geri
+            # bulmak için (banka, kanıt penceresi) çiftiyle eşleştirmek
+            # zorunda kalıyordu. O çift TEKİL DEĞİL: ölçüldü (data/demo.db),
+            # `finansman_tutari`'nda satırların %48'i, `masraf_durumu`'nda
+            # %63'ü aynı çifti paylaşıyor. Eşleşme belirsiz olunca alan
+            # `null` kalıyordu ve arayüzde üç kaynağın üçünde birden
+            # "bağlantı yok" yazıyordu — belge denetlenebilirliği bu projenin
+            # iddiası, ve tam da o iddia sessizce düşüyordu.
             sources = [{"bank": x.bank, "value": x.value,
-                        "source_span": x.source_span} for x in ans.rows]
+                        "source_span": x.source_span,
+                        "campaign_id": x.campaign_id} for x in ans.rows]
             has_rate = (r.field == "kar_payi_orani"
                         or safety.contains_rate(ans.text))
             govde, soz = self._sozellestir(ans.text, bool(sources))

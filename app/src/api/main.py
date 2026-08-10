@@ -661,12 +661,24 @@ def build_app():
         alanı zaten taşır (`chatbot/rag.py`); yapısal sorgu yolu `RankRow`
         döndürür ve `RankRow`'da kampanya kimliği YOKTUR.
 
-        Eksik alan burada `query_fields()` satırlarıyla (banka slug'ı +
-        `source_span`) eşleştirilerek geri kazanılır. Eşleşme **tekil
-        olmak zorunda**: aynı banka+pencere birden çok kampanyaya işaret
-        ediyorsa hangisi olduğunu bilmiyoruz demektir ve alan `null` kalır.
-        Yaklaşık eşleştirmeyle bir kampanya seçmek, denetlenebilir bağlantı
-        vaadinin tam tersi olurdu (CLAUDE.md §21: değer uydurma).
+        Yapısal yol artık `campaign_id`'yi kaynakla birlikte TAŞIYOR
+        (`chatbot/bot.py`), çünkü `RankRow` onu zaten biliyor. Kampanya
+        kimliği elde olduğunda `source_url` doğrudan o kampanyadan okunur —
+        tahmin yok.
+
+        Kimlik yoksa (eski çağıranlar, RAG dışı yollar) `query_fields()`
+        satırlarıyla (banka slug'ı + `source_span`) eşleştirmeye düşülür.
+        O eşleşme **tekil olmak zorunda**: aynı banka+pencere birden çok
+        kampanyaya işaret ediyorsa hangisi olduğunu bilmiyoruz demektir ve
+        alan `null` kalır. Yaklaşık eşleştirmeyle bir kampanya seçmek,
+        denetlenebilir bağlantı vaadinin tam tersi olurdu (CLAUDE.md §21:
+        değer uydurma).
+
+        Geri düşüş yolunun NEDEN tek başına yetmediği ölçüldü
+        (`data/demo.db`): (banka, pencere) çifti `finansman_tutari`'nda
+        satırların %48'inde, `vade_ay`'da %44'ünde, `masraf_durumu`'nda
+        %63'ünde mükerrer. Yani kaynakların yarısına yakını "bağlantı yok"
+        olarak basılıyordu — bilgi vardı, anahtar yanlıştı.
 
         ## `ozet` neden HER kayıtta var
 
@@ -683,17 +695,28 @@ def build_app():
         istek başına maliyet olurdu.
         """
         dizin: dict[tuple[Any, Any], Optional[dict]] = {}
+        kimlikle: dict[Any, dict] = {}
         if handler == "structured" and field:
             # Kıyas süzmesi UYGULANMAZ: chat yolu sözleşmeleri de görebilir.
             for r in _field_rows(field, sozlesme_dahil=True):
                 anahtar = (r.get("bank"), r.get("source_span"))
                 # İkinci kez görülen anahtar belirsizdir -> None ile zehirle.
                 dizin[anahtar] = None if anahtar in dizin else r
+                # Kampanya kimliği alan başına TEKİLDİR (ölçüldü: 5455
+                # satırda mükerrer (alan, kampanya) çifti yok), bu yüzden
+                # zehirlenmeye gerek duymaz.
+                if r.get("campaign_id") is not None:
+                    kimlikle.setdefault(r["campaign_id"], r)
 
         out: list[dict] = []
         for s in sources:
             kayit = dict(s) if isinstance(s, dict) else {"value": s}
-            eslesme = dizin.get((kayit.get("bank"), kayit.get("source_span")))
+            # ÖNCE kimlik: kaynak kampanya numarasını taşıyorsa eşleştirme
+            # tahmini değil, kesindir.
+            eslesme = kimlikle.get(kayit.get("campaign_id"))
+            if eslesme is None:
+                eslesme = dizin.get((kayit.get("bank"),
+                                     kayit.get("source_span")))
             if kayit.get("campaign_id") is None:
                 cid = eslesme.get("campaign_id") if eslesme else None
                 kayit["campaign_id"] = int(cid) if cid is not None else None
