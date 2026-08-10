@@ -14,6 +14,23 @@ Uçlar:
   POST /chat            {"question": "..."}
   POST /extract         {"text": "...", "bank": "..."}   (tek metin canlı çıkarım)
   GET  /contradictions
+  GET  /refresh/preview?bank=<slug>      (tazeleme ön izlemesi — ağa çıkmaz)
+  POST /refresh         {"bank": "..."}  (operatör eylemi: tek bankayı ağdan tazele)
+  GET  /refresh/status[/{job_id}]        (ilerleme + sonuç sayaçları)
+  POST /refresh/cancel/{job_id}
+
+## `/refresh*` — sistemin ağa çıkabilen TEK yüzeyi
+
+Kullanıcı sorusu yolu (sohbet, kıyas, çelişki, canlı çıkarım) internete
+ÇIKMAZ ve bu değişmez (CLAUDE.md §1, §11): 4 dakikalık sunumda canlı toplama
+donma riskidir. Tazeleme bu yüzden bir operatör eylemidir; arayüzde yalnız
+jüri modunda görünür, basılmadan önce ne yapacağını (kaç istek, kaba süre,
+internet gerektiği) söyler ve arka planda koşar.
+
+Bu uçlar `repo`'ya DOKUNMAZ. Toplanan belgeler yalnız `data/raw/<slug>/live/`
+altına yazılır; kıyas ve sohbet önceden doldurulmuş veri tabanından okumaya
+devam eder. Ham arşivden veri tabanına geçiş ayrı ve çevrimdışı bir adımdır.
+Gerekçenin tamamı `src/scraping/tazeleme.py` modül başlığındadır.
 
 ## Veri kaynağı: HAM SQL DEĞİL, depo sözleşmesi (`src/db/base.py`)
 
@@ -136,6 +153,8 @@ from ..normalization.normalize import collapse_degenerate_range
 from ..pipeline import run_pipeline
 from ..preprocessing.blocks import cerceve_cumleler, gorunum_araliklari
 from ..preprocessing.clean import normalize_text
+from ..scraping.tazeleme import TazelemeMesgul, TazelemeYoneticisi
+from ..scraping.tazeleme import onizleme as tazeleme_onizleme
 from ..summarize.ozet import OZET_KAYNAK_LLM
 
 logger = logging.getLogger(__name__)
@@ -360,6 +379,16 @@ try:  # pragma: no cover - pydantic yokluğu build_app()'te raporlanır
 
         text: str
         bank: str = "bilinmeyen"
+
+    class RefreshReq(BaseModel):
+        """`POST /refresh` gövdesi — tek bankayı ağdan tazeleyen operatör eylemi.
+
+        Yalnız banka slug'ı alınır. Gecikme, azami belge sayısı ve robots.txt
+        uyumu İSTEMCİDEN AYARLANAMAZ: etik toplama kısıtları (CLAUDE.md §14)
+        bir istemci tercihi değildir ve arayüzden gevşetilebilir olmamalıdır.
+        """
+
+        bank: str
 
 except ModuleNotFoundError:  # pragma: no cover
     BaseModel = None  # type: ignore[assignment]
@@ -1513,6 +1542,102 @@ def build_app():
                 for k in detect_contradictions(c)
             ],
         }
+
+    # ----------------------------------------------------------------- #
+    # Veri tazeleme — TEK internete çıkan yol, operatör eylemi
+    # ----------------------------------------------------------------- #
+    # Bu dört uç, sistemin ağa çıkabilen tek yüzeyidir ve kullanıcı sorusu
+    # yolundan (sohbet, kıyas, çelişki, canlı çıkarım) tamamen ayrıktır.
+    # Hiçbiri `repo`'ya dokunmaz: tazeleme yalnız ham arşive yazar, kıyas ve
+    # sohbet önceden doldurulmuş veri tabanından okumaya devam eder
+    # (CLAUDE.md §11 — canlı toplamaya bağlı demo yasak).
+    #
+    # Gerekçe `src/scraping/tazeleme.py` modül başlığında; burada yalnız
+    # HTTP yüzeyi var.
+    tazeleme = TazelemeYoneticisi(RAW_DIR)
+    # Yönetici uygulama durumuna asılır: testler gerçek toplama katmanını
+    # sahte bir işle değiştirebilsin diye. Kapanış (closure) içinden
+    # erişilemeyen bir nesne, ancak ağa çıkılarak sınanabilirdi.
+    app.state.tazeleme = tazeleme
+
+    def _banka_bul(slug: str):
+        """`banks.yaml`'dan banka kaydını çeker; yoksa 404."""
+        try:
+            from ..scraping.config import load_banks
+            kayitlar = {b.slug: b for b in load_banks(CONFIG)}
+        except Exception as exc:  # config okunamıyorsa tazeleme yapılamaz
+            logger.warning("banks.yaml okunamadı; tazeleme reddedildi",
+                           exc_info=True)
+            raise HTTPException(
+                status_code=503,
+                detail="Banka tanım dosyası okunamadı; tazeleme başlatılamıyor."
+            ) from exc
+        bank = kayitlar.get(slug)
+        if bank is None:
+            raise HTTPException(status_code=404,
+                                detail=f"Tanımlı olmayan banka: {slug}")
+        return bank
+
+    @app.get("/refresh/preview")
+    def refresh_preview(bank: str):
+        """Düğmeye basılmadan önce ne olacağı — bu uç AĞA ÇIKMAZ.
+
+        Kaç istek atılacağı, kabaca ne kadar süreceği ve nereye yazılacağı
+        `banks.yaml` ile sabitlerden türetilir. Ön izlemenin kendisi ağ
+        gerektirseydi, "internet var mı" sorusunu sormanın maliyeti yine
+        internet olurdu.
+        """
+        return tazeleme_onizleme(_banka_bul(bank), raw_dir=RAW_DIR,
+                                 azami_belge=tazeleme.azami_belge,
+                                 gecikme_sn=tazeleme.gecikme_sn)
+
+    @app.post("/refresh", status_code=202)
+    def refresh_start(req: RefreshReq):
+        """Tazelemeyi arka planda başlatır ve iş kaydını döndürür.
+
+        SENKRON DEĞİL, bilerek: alan başına 2–5 saniye gecikmeyle 25 belge
+        çekmek dakikalar sürer. Senkron bir uç hem tarayıcıyı hem sunucunun
+        iş parçacığını kilitlerdi; ilerleme de görünmezdi.
+
+        Koşan bir iş varken ikinci istek 409 ile reddedilir — sıraya alınmaz,
+        çünkü sessiz bir kuyruk operatöre yanlış bir "başladı" izlenimi verir.
+        """
+        bank = _banka_bul(req.bank)
+        try:
+            return tazeleme.baslat(bank)
+        except TazelemeMesgul as exc:
+            raise HTTPException(
+                status_code=409,
+                detail=f"Şu anda {exc.calisan_banka} tazeleniyor. "
+                       "Aynı anda tek tazeleme çalışır; bitmesini bekleyin "
+                       "ya da durdurun.") from exc
+
+    @app.get("/refresh/status")
+    def refresh_last_status():
+        """En son başlatılan işin durumu — hiç iş yoksa `null`."""
+        return tazeleme.son_is()
+
+    @app.get("/refresh/status/{job_id}")
+    def refresh_status(job_id: str):
+        """Bir işin anlık durumu (ilerleme + sayaçlar + hatalar)."""
+        kayit = tazeleme.durum(job_id)
+        if kayit is None:
+            raise HTTPException(status_code=404,
+                                detail="Böyle bir tazeleme işi yok.")
+        return kayit
+
+    @app.post("/refresh/cancel/{job_id}")
+    def refresh_cancel(job_id: str):
+        """Durdurma ister. İş sıradaki belge sınırında durur.
+
+        Çekim evresi diske hiçbir şey yazmadığı için durdurulan bir iş ham
+        arşivde yarım belge bırakmaz.
+        """
+        kayit = tazeleme.iptal_et(job_id)
+        if kayit is None:
+            raise HTTPException(status_code=404,
+                                detail="Böyle bir tazeleme işi yok.")
+        return kayit
 
     @app.get("/contradictions")
     def contradictions():
