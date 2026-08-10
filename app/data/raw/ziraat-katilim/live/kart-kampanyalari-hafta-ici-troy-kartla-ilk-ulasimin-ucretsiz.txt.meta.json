@@ -9,5 +9,17 @@
   "raw_bytes": 490347,
   "text_chars": 2727,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "İçi TROY Kart'la İlk Ulaşımın Ücretsiz! Kampanya 26-05-2026 Tarihinde Sona Ermiştir. Hafta içi her gün ilk ulaşımın TROY kartla ücretsiz! Adana",
+    "span_start": 445,
+    "span_end": 468,
+    "end_date": "2026-05-26",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

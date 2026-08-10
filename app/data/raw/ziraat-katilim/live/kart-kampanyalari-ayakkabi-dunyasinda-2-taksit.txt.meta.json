@@ -9,5 +9,17 @@
   "raw_bytes": 488232,
   "text_chars": 1947,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "uar Arşiv Ayakkabı Dünyası'nda 2 Taksit Kampanya 31-10-2025 Tarihinde Sona Ermiştir. Sektör: Giyim ve Aksesuar Ziraat Katılım Bankkart kredi ka",
+    "span_start": 413,
+    "span_end": 436,
+    "end_date": "2025-10-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

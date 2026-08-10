@@ -9,5 +9,17 @@
   "raw_bytes": 139254,
   "text_chars": 1862,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "nyalar Tiktak'ta 600 TL İndirim! Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları Görüntülü görüşme ile müşteri olanlara ö",
+    "span_start": 213,
+    "span_end": 238,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

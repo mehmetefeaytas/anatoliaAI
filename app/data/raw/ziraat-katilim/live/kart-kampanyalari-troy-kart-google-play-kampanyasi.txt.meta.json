@@ -9,5 +9,17 @@
   "raw_bytes": 489819,
   "text_chars": 2579,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "rşiv TROY Kart & Google Play Kampanyası Kampanya 15-09-2025 Tarihinde Sona Ermiştir. Sektör: Diğer Ziraat Katılım Bankkart TROY Kart & Google P",
+    "span_start": 423,
+    "span_end": 446,
+    "end_date": "2025-09-15",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

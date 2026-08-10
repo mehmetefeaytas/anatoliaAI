@@ -9,5 +9,17 @@
   "raw_bytes": 488693,
   "text_chars": 1798,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "v MTV'de 4 Taksit Fırsatını Kaçırmayın! Kampanya 06-08-2025 Tarihinde Sona Ermiştir. Sektör: Kamu ve Vergi Ödemeleri Kampanya Koşulları: Ziraat",
+    "span_start": 429,
+    "span_end": 452,
+    "end_date": "2025-08-06",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

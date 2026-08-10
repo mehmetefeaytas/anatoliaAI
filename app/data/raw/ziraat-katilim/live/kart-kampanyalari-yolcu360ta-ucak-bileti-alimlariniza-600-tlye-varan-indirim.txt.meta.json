@@ -9,5 +9,17 @@
   "raw_bytes": 490383,
   "text_chars": 2926,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "i Alımlarınıza 600 TL'ye Varan İndirim! Kampanya 31-03-2026 Tarihinde Sona Ermiştir. Sektör: Seyahat Kampanya Koşulları: Ziraat Katılım Bankkar",
+    "span_start": 477,
+    "span_end": 500,
+    "end_date": "2026-03-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

@@ -9,5 +9,17 @@
   "raw_bytes": 485088,
   "text_chars": 1773,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "Aksesuar Arşiv Atasun Optik'te 3 Taksit Kampanya 30-11-2025 Tarihinde Sona Ermiştir. Sektör: Optik Atasun Optik 'ten yapacağınız güneş gözlüğü",
+    "span_start": 403,
+    "span_end": 426,
+    "end_date": "2025-11-30",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

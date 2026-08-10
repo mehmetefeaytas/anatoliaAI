@@ -9,5 +9,17 @@
   "raw_bytes": 492112,
   "text_chars": 4213,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "larınıza 450 TL'ye varan Bankkart Lira! Kampanya 16-03-2026 Tarihinde Sona Ermiştir. Ziraat Katılım Bankkart kredi kartınız ile 16 Şubat– 16 Ma",
+    "span_start": 491,
+    "span_end": 514,
+    "end_date": "2026-03-16",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

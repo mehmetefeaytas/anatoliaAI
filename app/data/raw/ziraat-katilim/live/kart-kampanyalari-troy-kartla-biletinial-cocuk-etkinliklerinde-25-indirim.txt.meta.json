@@ -9,5 +9,17 @@
   "raw_bytes": 492265,
   "text_chars": 4141,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "nial Çocuk Etkinliklerinde %25 indirim! Kampanya 31-05-2026 Tarihinde Sona Ermiştir. TROY'dan tüm çocuklara ve ailelerine Biletinial Kids kateg",
+    "span_start": 471,
+    "span_end": 494,
+    "end_date": "2026-05-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

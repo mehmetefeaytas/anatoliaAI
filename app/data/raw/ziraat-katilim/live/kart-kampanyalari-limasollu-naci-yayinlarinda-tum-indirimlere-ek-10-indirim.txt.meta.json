@@ -9,5 +9,17 @@
   "raw_bytes": 483702,
   "text_chars": 1588,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "arı'nda Tüm İndirimlere Ek %10 İndirim! Kampanya 31-01-2026 Tarihinde Sona Ermiştir. Sektör: Eğitim Kampanya Koşulları: Kampanya 31 Ocak 2026 t",
+    "span_start": 475,
+    "span_end": 498,
+    "end_date": "2026-01-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

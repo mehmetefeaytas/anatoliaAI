@@ -9,5 +9,17 @@
   "raw_bytes": 491486,
   "text_chars": 3681,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "la İdefix'te 1.000 TL'ye varan indirim! Kampanya 23-04-2026 Tarihinde Sona Ermiştir. TROY Kartla İdefix'te 1.000 TL'ye varan indirim! 1.000 TL",
+    "span_start": 453,
+    "span_end": 476,
+    "end_date": "2026-04-23",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

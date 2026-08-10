@@ -9,5 +9,17 @@
   "raw_bytes": 492911,
   "text_chars": 4828,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "+ Premium Yıllık Paketinde %50 İndirim! Kampanya 15-05-2026 Tarihinde Sona Ermiştir. Kampanyaya Nasıl Katılabilirim? TV+'a Üye Ol. (Yeni hesap",
+    "span_start": 451,
+    "span_end": 474,
+    "end_date": "2026-05-15",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

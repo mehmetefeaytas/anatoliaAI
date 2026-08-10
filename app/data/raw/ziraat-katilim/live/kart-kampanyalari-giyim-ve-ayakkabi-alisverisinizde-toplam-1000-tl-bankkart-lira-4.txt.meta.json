@@ -9,5 +9,17 @@
   "raw_bytes": 489775,
   "text_chars": 2651,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "işinizde Toplam 1.000 TL Bankkart Lira! Kampanya 08-05-2026 Tarihinde Sona Ermiştir. Kampanya Koşulları: 8 Nisan 2026 - 8 Mayıs 2026 tarihleri",
+    "span_start": 483,
+    "span_end": 506,
+    "end_date": "2026-05-08",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

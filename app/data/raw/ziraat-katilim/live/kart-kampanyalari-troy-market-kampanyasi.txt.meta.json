@@ -9,5 +9,17 @@
   "raw_bytes": 487205,
   "text_chars": 2012,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "e Aksesuar Arşiv TROY Market Kampanyası Kampanya 31-10-2025 Tarihinde Sona Ermiştir. Sektör: Market ve Gıda TROY kart sahipleri market alışveri",
+    "span_start": 399,
+    "span_end": 422,
+    "end_date": "2025-10-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

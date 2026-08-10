@@ -9,5 +9,17 @@
   "raw_bytes": 491617,
   "text_chars": 3535,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "Kredi Kartınıza 5.000 TL Bankkart Lira! Kampanya 08-06-2026 Tarihinde Sona Ermiştir. 8 Mayıs - 8 Haziran 2026 tarihleri arasında ilk defa Birey",
+    "span_start": 459,
+    "span_end": 482,
+    "end_date": "2026-06-08",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

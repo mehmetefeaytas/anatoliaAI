@@ -9,5 +9,17 @@
   "raw_bytes": 489198,
   "text_chars": 2209,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "Arşiv Size Özel! Banka Kartı Kampanyası Kampanya 21-09-2025 Tarihinde Sona Ermiştir. Size Özel Banka Kartı Kampanyası 21.08.2025 – 21.09.2025 t",
+    "span_start": 421,
+    "span_end": 444,
+    "end_date": "2025-09-21",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

@@ -9,5 +9,17 @@
   "raw_bytes": 489283,
   "text_chars": 2429,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "Arşiv TROY Gaziantep Ulaşım Kampanyası Kampanya 27-10-2025 Tarihinde Sona Ermiştir. Sektör: Diğer TROY Gaziantep Ulaşım Kampanyası 29 Eylül –",
+    "span_start": 419,
+    "span_end": 442,
+    "end_date": "2025-10-27",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

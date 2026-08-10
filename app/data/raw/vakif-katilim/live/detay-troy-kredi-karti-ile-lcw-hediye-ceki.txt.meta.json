@@ -9,5 +9,17 @@
   "raw_bytes": 140784,
   "text_chars": 3193,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "Kredi Kartı ile LCW Hediye Çeki Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları 11 Ağustos - 30 Eylül 2025 tarihleri ara",
+    "span_start": 224,
+    "span_end": 249,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

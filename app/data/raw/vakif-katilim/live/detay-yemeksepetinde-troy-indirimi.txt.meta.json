@@ -9,5 +9,17 @@
   "raw_bytes": 139814,
   "text_chars": 2433,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "r Yemeksepeti'nde TROY İndirimi! Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları TROY logolu Vakıf Katılım Banka veya Kre",
+    "span_start": 218,
+    "span_end": 243,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

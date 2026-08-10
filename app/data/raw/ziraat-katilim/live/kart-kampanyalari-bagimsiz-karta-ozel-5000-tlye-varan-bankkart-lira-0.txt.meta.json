@@ -9,5 +9,17 @@
   "raw_bytes": 491013,
   "text_chars": 2948,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "a Özel 5.000 TL'ye varan Bankkart Lira! Kampanya 09-07-2026 Tarihinde Sona Ermiştir. 9 Haziran – 9 Temmuz 2026 tarihleri arasında Ziraat Katılı",
+    "span_start": 461,
+    "span_end": 484,
+    "end_date": "2026-07-09",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

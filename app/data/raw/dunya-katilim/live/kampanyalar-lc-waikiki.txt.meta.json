@@ -9,5 +9,17 @@
   "raw_bytes": 507524,
   "text_chars": 11181,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Sona erdi Bitiş Tarihi",
+    "quote": "şullarını değiştirme hakkını saklı tutar. Kart Kampanyaları Sona erdi Bitiş Tarihi: 15 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
+    "span_start": 2391,
+    "span_end": 2413,
+    "end_date": "2026-07-15",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

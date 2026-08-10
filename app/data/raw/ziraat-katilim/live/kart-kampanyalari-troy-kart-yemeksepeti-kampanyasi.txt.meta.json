@@ -9,5 +9,17 @@
   "raw_bytes": 489714,
   "text_chars": 3982,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "rşiv TROY Kart & Yemeksepeti Kampanyası Kampanya 30-11-2025 Tarihinde Sona Ermiştir. Sektör: Market ve Gıda Kampanya Koşulları Yemeksepeti mobi",
+    "span_start": 423,
+    "span_end": 446,
+    "end_date": "2025-11-30",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

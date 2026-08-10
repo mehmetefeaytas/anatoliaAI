@@ -9,5 +9,17 @@
   "raw_bytes": 487844,
   "text_chars": 1893,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "iyim ve Aksesuar Arşiv Avva'da 2 Taksit Kampanya 31-07-2026 Tarihinde Sona Ermiştir. Sektör: Giyim ve Aksesuar Ziraat Katılım Bankkart kredi ka",
+    "span_start": 387,
+    "span_end": 410,
+    "end_date": "2026-07-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

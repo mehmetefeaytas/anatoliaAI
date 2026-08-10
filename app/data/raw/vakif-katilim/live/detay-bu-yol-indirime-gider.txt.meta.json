@@ -9,5 +9,17 @@
   "raw_bytes": 139894,
   "text_chars": 2503,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "mpanyalar Bu Yol İndirime Gider! Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları Yolcu360'ta Vakıf Katılım Kredi Kartınız",
+    "span_start": 210,
+    "span_end": 235,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

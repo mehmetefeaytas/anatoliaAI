@@ -9,5 +9,17 @@
   "raw_bytes": 488197,
   "text_chars": 1942,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "im ve Aksesuar Arşiv Evidea'da 2 Taksit Kampanya 28-02-2026 Tarihinde Sona Ermiştir. Sektör: Mobilya ve Dekorasyon Ziraat Katılım Bankkart kred",
+    "span_start": 391,
+    "span_end": 414,
+    "end_date": "2026-02-28",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

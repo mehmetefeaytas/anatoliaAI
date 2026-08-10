@@ -9,5 +9,17 @@
   "raw_bytes": 489951,
   "text_chars": 3054,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "Alışverişinize 1.500 TL Bankkart Lira! Kampanya 09-07-2026 Tarihinde Sona Ermiştir. Kampanya Koşulları: Ziraat Katılım Bankkart kredi kartınız",
+    "span_start": 447,
+    "span_end": 470,
+    "end_date": "2026-07-09",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

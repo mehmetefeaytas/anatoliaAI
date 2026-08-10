@@ -9,5 +9,17 @@
   "raw_bytes": 139156,
   "text_chars": 1755,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "Açık, Biletiniz İndirimli Olsun! Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları Siz sadece olmak istediğiniz yeri seçin.",
+    "span_start": 238,
+    "span_end": 263,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

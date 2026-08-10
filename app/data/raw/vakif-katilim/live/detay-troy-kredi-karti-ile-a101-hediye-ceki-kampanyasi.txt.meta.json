@@ -9,5 +9,17 @@
   "raw_bytes": 140086,
   "text_chars": 2570,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "ile A101 Hediye Çeki Kampanyası Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları 2-30 Haziran 2025 tarihleri arasında TRO",
+    "span_start": 236,
+    "span_end": 261,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

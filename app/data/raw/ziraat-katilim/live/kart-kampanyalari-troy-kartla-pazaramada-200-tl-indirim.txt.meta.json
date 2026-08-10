@@ -9,5 +9,17 @@
   "raw_bytes": 493541,
   "text_chars": 5076,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "TROY Kartla Pazarama'da 200 TL İndirim! Kampanya 30-06-2026 Tarihinde Sona Ermiştir. Pazarama'da kayıtlı veya yeni kaydedeceğin TROY kartınla 1",
+    "span_start": 433,
+    "span_end": 456,
+    "end_date": "2026-06-30",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

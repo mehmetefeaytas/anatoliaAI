@@ -9,5 +9,17 @@
   "raw_bytes": 139569,
   "text_chars": 2081,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Kampanya Süresi Dolmuştur",
+    "quote": "Y Kredi Kartı ile %50'si Bizden! Kampanya Geçerlilik Tarihi Kampanya Süresi Dolmuştur Kampanya Detayları Bankamızdan daha önce kredi kartı almamı",
+    "span_start": 223,
+    "span_end": 248,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

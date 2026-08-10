@@ -9,5 +9,17 @@
   "raw_bytes": 488352,
   "text_chars": 2103,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "im ve Aksesuar Arşiv Chakra'da 6 Taksit Kampanya 30-09-2025 Tarihinde Sona Ermiştir. Sektör: Mobilya ve Dekorasyon Ziraat Katılım Bankkart kred",
+    "span_start": 391,
+    "span_end": 414,
+    "end_date": "2025-09-30",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

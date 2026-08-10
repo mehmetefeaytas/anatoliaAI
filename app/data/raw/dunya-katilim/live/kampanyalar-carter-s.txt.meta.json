@@ -9,5 +9,17 @@
   "raw_bytes": 504913,
   "text_chars": 9485,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Sona erdi Bitiş Tarihi",
+    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 30 Haziran 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretç",
+    "span_start": 694,
+    "span_end": 716,
+    "end_date": "2026-06-30",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }

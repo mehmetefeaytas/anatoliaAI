@@ -9,5 +9,17 @@
   "raw_bytes": 488315,
   "text_chars": 2096,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_result": "degisim_yok",
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "Aksesuar Arşiv Modanisa'da %15 İndirim Kampanya 31-12-2025 Tarihinde Sona Ermiştir. Sektör: Giyim ve Aksesuar Kampanya Koşulları: Ziraat Katıl",
+    "span_start": 401,
+    "span_end": 424,
+    "end_date": "2025-12-31",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-10T10:45:44+00:00"
+  }
 }
