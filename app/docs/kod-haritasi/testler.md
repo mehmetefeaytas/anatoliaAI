@@ -1100,12 +1100,15 @@ doğru cevabımızı ("sukuk tahvil değildir") bloklar ve **K2 politikası
 - **CLAUDE.md §3, 2026-08-08 ölçümü:** teslim edilen sistem **3 değil 2
   katman**; `Extractor.NER` hiçbir kod yolunda üretilmiyor, GLiNER2 projeye
   hiç girmedi, BERTurk kabul kapısından geçemedi.
-- **TODO(G) — hâlâ AÇIK kusur** (`test_api_sozlesme.py::test_suzme_bayragi_
+- **TODO(G) — KAPANDI (2026-08-10)** (`test_api_sozlesme.py::test_suzme_bayragi_
   sozlesmeden_okunur`): kıyas yolunda belge türü (sözleşme/akit) süzmesi
   **uygulanmıyor**. Test `inspect.signature(repo.query_fields)` yoklar,
   `sozlesme_dahil` yoksa `skipTest` — *"sessiz geçmez, yalnızca RAPORLAR."*
 - **`test_masraf_precision.TestBilinenSinir`** ters kapıdır: bugünkü *yanlış*
   davranışı kayıt altına alır; düzeltilirse test güncellenmelidir.
+
+> **GÜNCELLEME (2026-08-10):** Bu kusur KAPANDI. `sozlesme_dahil` ve `set_ozet` dört yüzeyin dördünde de uygulanmış durumda; ölü yetenek yoklamaları ve `TODO(G)` metinleri kaldırıldı (commit `9b02152`). Aşağıdaki tarif ölçüldüğü ANIN kaydıdır.
+
 
 ---
 

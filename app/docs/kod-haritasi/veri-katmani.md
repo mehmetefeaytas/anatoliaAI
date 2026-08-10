@@ -625,6 +625,9 @@ başlangıcıdır").
     sarmalayıcı `*args/**kwargs` kullanmaya başlarsa **sessizce** süzmeyi
     kapatır.
 
+> **GÜNCELLEME (2026-08-10):** Bu kusur KAPANDI. `sozlesme_dahil` ve `set_ozet` dört yüzeyin dördünde de uygulanmış durumda; ölü yetenek yoklamaları ve `TODO(G)` metinleri kaldırıldı (commit `9b02152`). Aşağıdaki tarif ölçüldüğü ANIN kaydıdır.
+
+
 18. **Ölçüm çelişkisi: 43 mü 41 mi?** Aynı olgu iki farklı sayıyla yazılı:
     `src/db/base.py:44`, `src/db/repository.py:238`, `src/db/schema.sql:35`
     → *"113'ün **43'ü** kıyaslanabilir alan taşıyor"*;

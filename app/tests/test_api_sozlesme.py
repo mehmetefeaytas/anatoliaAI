@@ -20,6 +20,7 @@ yakalar. Üç iddia kilitleniyor:
 from __future__ import annotations
 
 import sys
+import inspect
 import unittest
 from pathlib import Path
 
@@ -255,16 +256,23 @@ class TestCompareSuzmesi(ApiSozlesmeTestBase):
             self.assertIn("source_url", s)
 
     def test_suzme_bayragi_sozlesmeden_okunur(self) -> None:
-        """`_field_rows` depo imzasını yoklar; iddia uydurulmaz."""
-        import inspect
+        """Kıyas yolu akitleri eliyor — süzme artık UYGULANIYOR.
+
+        Bu test eskiden `sozlesme_dahil` imzada yoksa `skipTest` ile
+        çekiliyordu: sözleşme henüz uygulanmamıştı ve test durumu yalnızca
+        RAPORLUYORDU. O dal 2026-08-10'da KALDIRILDI çünkü artık hiç
+        çalışamaz — `sozlesme_dahil` dört yüzeyin dördünde de var
+        (`RepositoryProtocol`, `ThreadSafeRepository`, SQLite, Postgres).
+
+        Atlanabilir bir test, atlandığında yeşil görünür; koşul kalıcı olarak
+        sağlandığında o dal bir korumaya değil, okuyanı yanıltan bir nota
+        dönüşür. Şart artık ATLAMA değil, İDDİA.
+        """
         params = inspect.signature(self.repo.query_fields).parameters
-        # TODO(G): sözleşme uygulandığında bu koşul True olur ve kıyas yolu
-        # akitleri kendiliğinden eler. O ana kadar süzme YAPILAMIYOR ve bu
-        # test durumu yalnızca RAPORLAR — sessiz geçmez.
-        if "sozlesme_dahil" not in params:
-            self.skipTest(
-                "TODO(G): repo.query_fields(..., sozlesme_dahil=) henüz yok — "
-                "kıyas yolunda belge türü süzmesi UYGULANMIYOR")
+        self.assertIn(
+            "sozlesme_dahil", params,
+            "depo sözleşmesi `sozlesme_dahil` parametresini kaybetti — "
+            "kıyas yolunda akitler elenemez")
         r = self.client.get("/compare", params={"field": "kar_payi_orani"})
         self.assertEqual(r.status_code, 200)
 

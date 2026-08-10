@@ -731,6 +731,9 @@ eski `TODO(G)` "campaign_text() henüz c.ozet sütununu SELECT etmiyor" diyordu 
 teşhisi yanlış yere saptırıyordu; gerçek sebepler arayüzdeydi (tanımsız
 `.summary-box` CSS'i) ve veri kapsamındaydı.
 
+> **GÜNCELLEME (2026-08-10):** Bu kusur KAPANDI. `sozlesme_dahil` ve `set_ozet` dört yüzeyin dördünde de uygulanmış durumda; ölü yetenek yoklamaları ve `TODO(G)` metinleri kaldırıldı (commit `9b02152`). Aşağıdaki tarif ölçüldüğü ANIN kaydıdır.
+
+
 `ozet` istek anında **üretilmez** — 4 dakikalık sunumda canlı model çağrısı
 donma riskidir. Özet yoksa `ozet` ve `ozet_kaynak` **null**'dır; kural tabanlı
 sahte bir özet (ilk N cümle) asla basılmaz. `ozet_kaynak` bir **sütun değildir**,
