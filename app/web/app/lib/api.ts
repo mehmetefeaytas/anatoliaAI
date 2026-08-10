@@ -375,6 +375,60 @@ export type ChatVerbalize = {
   reason?: string | null;
 };
 
+/** Tek bir güvenlik kapısının bu cevaptaki durumu. */
+export type ChatGate = {
+  /** Kapı kimliği — sunucudaki sabitle aynı dize (`terminoloji`, …). */
+  id: string;
+  /** Kullanıcıya gösterilecek Türkçe ad. */
+  label: string;
+  /** Kapının ne yaptığını anlatan tek cümle. */
+  aciklama: string;
+  /** Bu cevapta ateşlendi mi. */
+  fired: boolean;
+};
+
+/**
+ * Talimat devralma işareti taşıdığı için DÜŞÜRÜLEN bir kaynak belge.
+ *
+ * Belgenin metni BİLEREK taşınmaz: karantinanın gerekçesi "içine talimat
+ * gömülmüş bir sayfanın geri kalanına da güvenilmez"dir. Yalnız kimliği
+ * (banka, kampanya, bağlantı) ve yakalanan işaret gelir; işaret sunucuda
+ * kırpılıp çıktı süzgecinden geçirilmiştir.
+ */
+export type ChatQuarantine = {
+  bank?: string | null;
+  campaign_id?: number | null;
+  source_url?: string | null;
+  /** Belgede yakalanan talimat devralma parçası. */
+  isaret?: string | null;
+};
+
+/**
+ * Bir cevabın güvenlik denetim kaydı (bkz. src/api/main.py `_guvenlik_ozeti`).
+ *
+ * `gates` ateşlenmeyen kapıları da içerir — liste "hangi kapılar var"
+ * sorusuna da cevap vermek zorunda. Gürültüyü arayüz yönetir: ayrıntı jüri
+ * modunda açılır, normal modda yalnız SESSİZ gerçekleşen olaylar
+ * (karantina, yeniden yazılan terim) görünür.
+ */
+export type ChatSafety = {
+  gates: ChatGate[];
+  /** Yalnız ateşlenen kapıların kimlikleri, sunucudaki sırayla. */
+  fired: string[];
+  /** Cevabı hazır politika yanıtıyla DURDURAN kapı — yoksa `null`. */
+  blocked_gate?: string | null;
+  /** Kaynak/kapsam yokluğu nedeniyle değer üretilmedi mi. */
+  abstained?: boolean;
+  /**
+   * Çıktı süzgecinin doğru karşılığıyla değiştirdiği terim sayısı.
+   *
+   * Terimin KENDİSİ gelmez ve bu bilinçlidir: az önce ekrandan silinen dizeyi
+   * denetim kutusunda geri basmak, kapının işini geri almak olurdu.
+   */
+  rewritten_terms?: number;
+  quarantined: ChatQuarantine[];
+};
+
 export type ChatResp = {
   answer: string;
   handler: "structured" | "rag" | string;
@@ -383,6 +437,7 @@ export type ChatResp = {
   context?: ChatContext | null;
   inherited?: ChatInherited[];
   verbalize?: ChatVerbalize;
+  safety?: ChatSafety;
 };
 
 /** Kullanıcıya gösterilebilir, Türkçe API hatası. */

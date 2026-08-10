@@ -904,6 +904,127 @@ ol.steps span {
   color: var(--fg-dim);
 }
 
+/* --- içerik karantinası: düşürülen kaynak belgeler (ChatPanel) ---
+ *
+ * Cevabın ÜSTÜNDE ve tehlike renginde durur. Bu bir "bilgi notu" değil,
+ * korpusta talimat gömülü bir belge bulunduğunun bildirimidir: cevabın
+ * dayanağı eksilmiştir ve bunu metinden okumak imkânsızdır. `.notice-error`
+ * ile aynı token çiftini (--bad / --bad-wash) kullanır; kontrast kapısı o
+ * çifti zaten ölçüyor (tests/test_kontrast.py). */
+.karantina {
+  border: 1px solid var(--bad);
+  border-left: 3px solid var(--bad);
+  border-radius: var(--radius-md);
+  background: var(--bad-wash);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+.karantina-baslik {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--bad);
+}
+/* Gerekçe metni doygun tehlike renginde DEĞİL: uzun açıklamayı kırmızıyla
+ * basmak okunurluğu düşürüyor (`.notice > p` ile aynı karar). */
+.karantina-gerekce {
+  margin: var(--sp-1) 0 0;
+  color: var(--fg);
+  line-height: var(--lh-relaxed);
+}
+.karantina-liste {
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--sp-2);
+}
+.karantina-kayit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+  font-size: var(--fs-xs);
+}
+.karantina-banka {
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+}
+/* Yakalanan işaret saldırganın yazdığı dizedir: tek aralıklı yazı ve tırnak
+ * onu bizim cümlemizden görsel olarak ayırır — sistem mesajı sanılmamalı. */
+.karantina-isaret {
+  font-family: var(--font-mono);
+  color: var(--fg-dim);
+  word-break: break-word;
+}
+.karantina-baglanti {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-left: auto;
+}
+
+/* --- güvenlik kapıları tablosu (yalnız jüri modu, ChatPanel) ---
+ * Katlanmış durur: açıldığında ateşlenen ve ateşlenmeyen kapıların tamamı
+ * görünür. Ateşlenmeyen satır soluklaştırılır ama GİZLENMEZ. */
+.guvenlik-panel {
+  margin-top: var(--sp-4);
+  border-top: 1px solid var(--line-soft);
+  padding-top: var(--sp-2);
+}
+.guvenlik-panel > summary {
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-wide);
+  color: var(--accent-soft);
+}
+.guvenlik-panel > summary:hover {
+  color: var(--accent);
+}
+.guvenlik-ozet {
+  margin: var(--sp-2) 0 0;
+  line-height: var(--lh-relaxed);
+}
+.kapi-listesi {
+  margin: var(--sp-2) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: var(--sp-1);
+}
+.kapi-satiri {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--sp-1) var(--sp-2);
+  padding: var(--sp-1) 0;
+  border-top: 1px solid var(--line-soft);
+  color: var(--fg-faint);
+}
+.kapi-satiri:first-child {
+  border-top: 0;
+}
+.kapi-atesli {
+  color: var(--fg);
+}
+/* Durum işareti tek başına renk taşımaz: dolu/boş daire biçim farkıdır,
+ * yani renk körlüğünde de okunur. `aria-hidden` — anlamı yandaki metinde. */
+.kapi-durum {
+  grid-row: span 2;
+  font-size: var(--fs-xs);
+  line-height: var(--lh-relaxed);
+}
+.kapi-ad {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+}
+.kapi-etiket {
+  font-weight: var(--fw-regular);
+}
+.kapi-aciklama {
+  grid-column: 2;
+  line-height: var(--lh-relaxed);
+}
+
 /* Yükleniyor iskeleti — "bir şey oluyor mu" belirsizliğini kaldırır.
  * `prefers-reduced-motion` altında nabız durur (base.css). */
 .skeleton {

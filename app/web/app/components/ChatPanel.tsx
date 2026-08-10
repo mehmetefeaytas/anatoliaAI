@@ -79,12 +79,36 @@
  *    kaybolmaz, «Yeni sohbet» ile temizlenir. Hidrasyon uyuşmazlığı
  *    `juryMode.tsx` deseniyle önlenir: okuma render sırasında değil,
  *    `useEffect` içinde yapılır.
+ *
+ * ## Güvenlik kapılarının görünürlüğü (bu tur)
+ *
+ * Sunucu her cevapta beş kapı + içerik karantinası koşturuyor ama bunun
+ * ARAYÜZDE hiçbir izi yoktu: düzeltme notu ve feragatname cevabın gövdesine
+ * karışıyor, düşürülen belge ise tamamen sessiz kalıyordu. "Kapılar gerçekten
+ * çalışıyor mu" sorusunun cevabı ekranda kurulamıyordu.
+ *
+ * Gösterim üç kademeli ve kademeler bir kurala dayanıyor: **kullanıcı
+ * cevabın metninden okuyamayacağı bir şey olduysa görünür.**
+ *
+ *  1. **Karantina — HER ZAMAN, jüri modu beklemez.** Korpustan bir belgenin
+ *     talimat devralma işareti yüzünden düşürülmesi bir güvenlik OLAYIDIR;
+ *     cevabın dayanağını değiştirir ve metinden okunamaz. Uyarı cevabın
+ *     ÜSTÜNDE durur, çünkü cevabın neden daha az kaynağa dayandığını açıklar.
+ *  2. **Sessiz yeniden yazma — HER ZAMAN.** Çıktı süzgeci bir terimi doğru
+ *     karşılığıyla değiştirdiyse ekrandaki cümle artık modelin/belgenin
+ *     yazdığı cümle değildir; bunu söylememek sessiz bir düzenleme olurdu.
+ *  3. **Tam kapı tablosu — YALNIZ jüri modunda** (`?juri=1`, bkz.
+ *     ../lib/juryMode.tsx). Terminoloji ve garanti kapıları neredeyse her
+ *     oran sorusunda ateşlenir ve etkileri zaten cevabın içinde yazılıdır;
+ *     her cevaba altı satırlık bir kapı tablosu basmak bilgi değil gürültü
+ *     üretirdi. Jürinin ihtiyacı ise tam tersi: ateşlenmeyenleri de görmek.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api";
-import type { ChatResp, ChatSource } from "../lib/api";
+import type { ChatResp, ChatSafety, ChatSource } from "../lib/api";
 import { formatValue, trNum } from "../lib/format";
+import { useJuryMode } from "../lib/juryMode";
 import {
   baglamListesi,
   oku as oturumOku,
@@ -309,6 +333,7 @@ function TurGorunumu({
   tur: Tur;
   onInspect?: (campaignId: number) => void;
 }) {
+  const { jury } = useJuryMode();
   const bekliyor = !tur.cevap && !tur.hata;
 
   return (
@@ -353,14 +378,180 @@ function TurGorunumu({
               </span>
             ))}
             <SozellestirmeRozeti bilgi={tur.cevap.verbalize} />
+            <YenidenYazmaRozeti guvenlik={tur.cevap.safety} />
           </div>
+
+          {/* Karantina cevabın ÜSTÜNDE: cevabı okumadan önce, dayanağının
+              eksildiğini bilmek gerekir. */}
+          <KarantinaUyarisi
+            guvenlik={tur.cevap.safety}
+            onInspect={onInspect}
+          />
 
           <Markdown metin={tur.cevap.answer} />
 
           <Kaynaklar cevap={tur.cevap} onInspect={onInspect} />
+
+          {jury && <GuvenlikKapilari guvenlik={tur.cevap.safety} />}
         </div>
       )}
     </div>
+  );
+}
+
+/**
+ * Çıktı süzgecinin bir terimi SESSİZCE değiştirdiğini söyleyen rozet.
+ *
+ * Neden jüri modunu beklemiyor: ekrandaki cümle artık kaynağın yazdığı cümle
+ * değildir. Bunu söylememek, kullanıcıya düzenlenmiş bir metni ham metin gibi
+ * göstermek olurdu. Terimin kendisi BASILMAZ (sunucu da göndermez) — onu geri
+ * yazmak, kapının az önce yaptığı işi geri almak demektir.
+ *
+ * Ateşlenmeyen kapılar burada gürültü üretmez: sayı sıfırsa rozet yoktur.
+ */
+function YenidenYazmaRozeti({ guvenlik }: { guvenlik?: ChatSafety }) {
+  const adet = guvenlik?.rewritten_terms ?? 0;
+  if (adet <= 0) return null;
+  return (
+    <span
+      className="badge badge-warn"
+      title="Katılım bankacılığında karşılığı olmayan terim, cevap basılmadan önce doğru karşılığıyla değiştirildi"
+    >
+      terminoloji düzeltildi ({trNum(adet)})
+    </span>
+  );
+}
+
+/**
+ * KARANTİNA — düşürülen kaynak belgeler.
+ *
+ * Bu blok jüri modundan bağımsız görünür. Gerekçe: burada olan şey bir
+ * güvenlik olayıdır — üçüncü taraf bir banka sayfasına gömülmüş talimat
+ * cümlesi yakalanmış ve belge tümüyle kaynak kümesinden çıkarılmıştır. Cevap
+ * o belgeye dayanmıyor; bunu söylememek, kullanıcıya eksik bir dayanağı tam
+ * gibi göstermek olurdu.
+ *
+ * Belgenin METNİ gösterilmez, yalnız yakalanan işaret ve belgeye giden
+ * denetim bağlantısı. Metni basmak, az önce düşürdüğümüz içeriği ekrana geri
+ * koymak olurdu; incelemek isteyen belgeye gider.
+ */
+function KarantinaUyarisi({
+  guvenlik,
+  onInspect,
+}: {
+  guvenlik?: ChatSafety;
+  onInspect?: (campaignId: number) => void;
+}) {
+  const kayitlar = guvenlik?.quarantined ?? [];
+  if (kayitlar.length === 0) return null;
+
+  return (
+    <div className="karantina" role="alert">
+      <p className="karantina-baslik">
+        İçerik karantinası: {trNum(kayitlar.length)} belge cevabın dışında
+        bırakıldı
+      </p>
+      <p className="karantina-gerekce small">
+        Bu belgelerde, asistanın kurallarını devralmaya çalışan bir talimat
+        metni bulundu. Kaynaklar bankaların kendi sayfalarından toplanır ve
+        içerikleri bizim denetimimizde değildir; işaret taşıyan belge satır
+        ayıklanarak değil, TÜMÜYLE düşürülür. Aşağıdaki cevap bu belgelere
+        dayanmıyor.
+      </p>
+      <ul className="karantina-liste">
+        {kayitlar.map((k, i) => (
+          <li key={i} className="karantina-kayit">
+            <span className="karantina-banka">{k.bank || "banka bilinmiyor"}</span>
+            {k.isaret && (
+              <span className="karantina-isaret" title="Belgede yakalanan parça">
+                “{k.isaret}”
+              </span>
+            )}
+            <span className="karantina-baglanti">
+              {typeof k.source_url === "string" && k.source_url.trim() && (
+                <a
+                  className="btn-link"
+                  href={k.source_url}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  title={k.source_url}
+                >
+                  banka sayfası ↗
+                </a>
+              )}
+              {typeof k.campaign_id === "number" && onInspect && (
+                <button
+                  type="button"
+                  className="btn-link"
+                  onClick={() => onInspect(k.campaign_id as number)}
+                >
+                  belgeye git (#{k.campaign_id})
+                </button>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/**
+ * Tam kapı tablosu — YALNIZ jüri modunda.
+ *
+ * Ateşlenmeyen kapılar da listelenir; bu listenin işi "hangi kapı ateşlendi"
+ * kadar "hangi kapılar var" sorusuna da cevap vermektir. Yalnız ateşlenenleri
+ * göstermek, sessiz kalan kapıların varlığını gizlerdi ve tam da o sessizlik
+ * kanıtlanmak istenen şeydir.
+ */
+function GuvenlikKapilari({ guvenlik }: { guvenlik?: ChatSafety }) {
+  if (!guvenlik?.gates?.length) return null;
+
+  const atesli = guvenlik.gates.filter((g) => g.fired).length;
+  const durduran = guvenlik.blocked_gate
+    ? guvenlik.gates.find((g) => g.id === guvenlik.blocked_gate)
+    : undefined;
+
+  return (
+    <details className="guvenlik-panel">
+      <summary>
+        Güvenlik kapıları — {trNum(atesli)}/{trNum(guvenlik.gates.length)}{" "}
+        ateşlendi
+      </summary>
+      <p className="small muted guvenlik-ozet">
+        Her kapı her soruda koşar. Ateşlenmeyen kapı da burada listelenir:
+        sessiz kalması, çalışmaması demek değildir.
+        {durduran && (
+          <>
+            {" "}
+            Bu cevap <strong>{durduran.label}</strong> kapısında durduruldu ve
+            veri sorgusu hiç yapılmadı.
+          </>
+        )}
+        {guvenlik.abstained && !durduran && (
+          <> Kaynak bulunamadığı için değer üretilmedi.</>
+        )}
+      </p>
+      <ul className="kapi-listesi">
+        {guvenlik.gates.map((g) => (
+          <li
+            key={g.id}
+            className={g.fired ? "kapi-satiri kapi-atesli" : "kapi-satiri"}
+          >
+            <span className="kapi-durum" aria-hidden="true">
+              {g.fired ? "●" : "○"}
+            </span>
+            <span className="kapi-ad">
+              {g.label}
+              <span className="kapi-etiket small faint">
+                {g.fired ? " ateşlendi" : " ateşlenmedi"}
+              </span>
+            </span>
+            <span className="kapi-aciklama small muted">{g.aciklama}</span>
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }
 
