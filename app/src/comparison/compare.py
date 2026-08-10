@@ -134,15 +134,103 @@ _HIGHER_IS_BETTER = {
 BILINMEYEN_TUR = "Sınıflandırılamadı"
 
 
+# --------------------------------------------------------------------------- #
+# Güven kapısı — çıkarımın KENDİ belirsizliği sıralamaya girer
+# --------------------------------------------------------------------------- #
+#
+# Çıkarıcı her alana bir `confidence` yazıyor (`extracted_fields.confidence`)
+# ve sıralama bu sayıya BAKMIYORDU. Yani sistem kendi belirsizliğini ölçüyor,
+# sonra sıralama adımında çöpe atıyordu. Ekranda görünen sonuç şuydu:
+#
+#     Yeni müşteri taşıt finansmanı → "Dünya Katılım: 0 TRY"
+#     kanıt penceresi: "…Belirleyeceğim Aylık Taksit Tutarı 0 TL Ödenecek
+#                       Toplam Tutar 0 TL Aylık Kâr Oranı %0 Ödeme Planı…"
+#
+# Bu, DOLDURULMAMIŞ bir hesaplama aracının varsayılan değeridir; ürünün
+# finansman tutarı değildir. Çıkarıcı bunu zaten 0,37–0,40 güvenle
+# işaretlemişti — bilgi vardı, kullanılmıyordu.
+#
+# ## Eşik neden 0,65
+#
+# ÖLÇÜLDÜ (`data/gold/gold.v2.json`'un 48 belgesi `data/demo.db` ile birebir
+# eşleşiyor; sayısal alanlar altın değerle karşılaştırıldı):
+#
+#     güven          doğru   yanlış   aşırı-üretim   doğruluk
+#     0,45–0,55        0       2           5            %0
+#     0,72–0,85       11       2           6           %58
+#
+# Eşiğin ALTINDA kalan 7 çıkarımın 7'si de hatalı. Kanıt pencereleri hatanın
+# tek bir sınıftan geldiğini söylüyor — hepsi belgenin KAMPANYA OLMAYAN
+# bölümlerinden:
+#
+#     "…çerezdir. 1 yıl 5.Kişisel Veri Sahibi…"      → vade_ay = 12
+#     "Hesap açılışı için minimum tutar 50.000 TL"   → finansman_tutari
+#     "ATM Bakiye/Limit/Borç Sorgulama 0.27 TL"      → finansman_tutari
+#     "Talimat alt limiti 10 TL'dir"                 → finansman_tutari
+#
+# Korpus dağılımı da aynı yerden ayrılıyor: güven değerleri {0,15 … 0,55} ve
+# {0,65 … 0,95} diye iki kümede toplanıyor ve 0,55 ile 0,65 arasında hiçbir
+# kayıt yok. Eşik bu boşluğa oturuyor — ölçümden okundu, seçilmedi.
+#
+# ## Neden "kıyas dışı", neden "sil" değil
+#
+# Üç seçenek vardı: (a) satırı düşür, (b) sırala ama işaretle, (c) kıyas dışı
+# bırak + gerekçeyi göster. **(c)** seçildi.
+#
+#   * (a) bilgiyi SAKLAR. Zayıf bir değeri silmek, kullanıcıya "bu bankada
+#     böyle bir veri yok" demektir; oysa veri var, güvenilmez. Bu ayrım bu
+#     projenin `FairnessNotice` şeridinde açıkça vaat ediliyor.
+#   * (b) sıralamanın tepesini düzeltmez: 0 TL hâlâ "en düşük"tür ve rozet
+#     okunmadan tablo yanlış okunur.
+#   * (c) mevcut "doğrudan kıyaslanamaz" desenini kullanır — aralık ve farklı
+#     para birimi için zaten yerleşik olan yol. Değer GÖRÜNÜR kalır, gerekçesi
+#     yanındadır, sıralamaya girmez.
+#
+# ## Neden meşru sıfırlar zarar görmez
+#
+# Korpustaki 614 sıfır değerin büyük kısmı GERÇEKTİR ve eşik onlara dokunmaz
+# (ölçüldü): `masraf_durumu` 543 sıfır ("masrafsız"), `tahsis_ucreti` 7,
+# `kar_payi_orani` 8 (gerçek %0 kampanyaları) — üçünün de güveni 0,95.
+# Eşiğin düşürdüğü 48 sıfırın 47'si `finansman_tutari`, yani tam da
+# hesaplama aracı kalıbı. Çözüm "sıfırı ele" DEĞİLDİR ve öyle davranmaz.
+ASGARI_GUVEN = 0.65
+
+
+def _guven_notu(confidence: Optional[float]) -> Optional[str]:
+    """Güveni eşiğin altında kalan satırın kullanıcıya dönük gerekçesi.
+
+    Eşiğin kendisi de metne yazılır: kullanıcı satırın neden elendiğini
+    görebilmeli, "kıyaslanamaz" damgası kapalı bir kutu olmamalı.
+    """
+    if confidence is None or confidence >= ASGARI_GUVEN:
+        return None
+    olculen = f"{confidence:.2f}".replace(".", ",")
+    esik = f"{ASGARI_GUVEN:.2f}".replace(".", ",")
+    return (f"düşük çıkarım güveni ({olculen} < {esik}) — "
+            f"doğrudan kıyaslanamaz")
+
+
 def rank(rows: list[dict], field_name: str) -> list[RankRow]:
     """query_fields() çıktısını alıp adil sıralama döndürür.
 
-    rows: [{"bank","bank_name","canonical_value","source_span",...}]
+    rows: [{"bank","bank_name","canonical_value","source_span","confidence",...}]
     Yalnız comparable=True satırlar sıralanır; kıyaslanamazlar sona, not'la eklenir.
+
+    `confidence` taşınmışsa `ASGARI_GUVEN` kapısı uygulanır: eşiğin altındaki
+    satır sayıya indirgenebilse bile `comparable=False` olur ve notunda neden
+    yazar. Alanı taşımayan çağıranlar (eski sözlükler, testler) aynen çalışır —
+    güven bilinmiyorsa kapı ateşlenmez, çünkü "bilinmiyor" ile "düşük" aynı şey
+    değildir ve olmayan bir belirsizlik iddia edilmez.
     """
     built: list[RankRow] = []
     for r in rows:
         sk, comparable, note = _numeric_key(field_name, r.get("canonical_value"))
+        # Güven kapısı sayısallaştırmadan SONRA uygulanır: zaten kıyaslanamayan
+        # bir satırın (aralık, farklı para birimi) notunu güvenle değiştirmek
+        # daha bilgilendirici olmaz, yalnız asıl nedeni gizlerdi.
+        guven_notu = _guven_notu(r.get("confidence"))
+        if guven_notu is not None and comparable:
+            comparable, note = False, guven_notu
         built.append(RankRow(
             bank=r.get("bank"),
             bank_name=r.get("bank_name"),
@@ -492,13 +580,21 @@ def rank_advantageous(rows: Iterable[dict],
 
         {"bank": "kuveyt-turk", "bank_name": "Kuveyt Türk",
          "campaign_id": 12,
-         "fields": {"kar_payi_orani": 1.89, "vade_ay": 120, ...}}
+         "fields": {"kar_payi_orani": 1.89, "vade_ay": 120, ...},
+         "field_confidence": {"kar_payi_orani": 0.95, "vade_ay": 0.45}}
+
+    `field_confidence` isteğe bağlıdır; verilmişse `ASGARI_GUVEN` kapısı tek
+    alanlı `rank()` ile AYNI eşikte uygulanır. İki yüzeyin aynı değeri biri
+    kıyaslanabilir biri değil sayması, bu depoda beş kez pahalıya mal olmuş
+    "aynı karar iki yerde" hatasının bileşik skordaki karşılığı olurdu.
 
     Yöntem (docstring'de olması istendi):
 
     1. **Sayısallaştırma** — her kanonik değer `_composite_numeric()` ile tek
        sayıya indirgenir; indirgenemiyorsa alan SKORLANMAZ ve nedeni not olarak
-       taşınır. Değer asla uydurulmaz.
+       taşınır. Değer asla uydurulmaz. Güveni eşiğin altında kalan alan da
+       burada düşer: skoru olmayan bir alan `coverage`'ı düşürür, kampanyayı
+       CEZALANDIRMAZ — eksik ölçüt "sıfır puan" değildir.
     2. **Normalizasyon** — her alan KENDİ dağılımında sıralama tabanlı olarak
        0..1'e indirgenir (1 = popülasyonun en iyisi), yön `_LOWER_IS_BETTER` /
        `_HIGHER_IS_BETTER` sözlüklerinden gelir. Böylece %1,89'luk oran ile
@@ -528,6 +624,10 @@ def rank_advantageous(rows: Iterable[dict],
         for r in rows:
             raw = (r.get("fields") or {}).get(fname)
             num, note = _composite_numeric(fname, raw)
+            # Güven kapısı: `rank()` ile aynı eşik, aynı gerekçe metni.
+            guven_notu = _guven_notu((r.get("field_confidence") or {}).get(fname))
+            if guven_notu is not None and num is not None:
+                num, note = None, guven_notu
             col_v.append(num)
             col_n.append(note)
         numeric[fname] = col_v

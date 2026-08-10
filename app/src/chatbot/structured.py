@@ -98,11 +98,12 @@ def answer(repo: Repository, r: Route) -> StructuredAnswer:
         if len(gruplar) <= 1:
             top = _grup_kazanani(tekil)
             if top is None:
-                return StructuredAnswer(_KIYASLANAMAZ, tekil, r.field, r.intent)
+                return StructuredAnswer(_kiyaslanamaz_metni(r.field, tekil),
+                                        tekil, r.field, r.intent)
             return StructuredAnswer(_phrase_superlative(r.field, r.intent, top),
                                     tekil, r.field, r.intent)
-        kazananlar = [(tur, _grup_kazanani(grup)) for tur, grup in gruplar]
-        gosterilen = [k for _, k in kazananlar if k is not None]
+        kazananlar = [(tur, _grup_kazanani(grup), grup) for tur, grup in gruplar]
+        gosterilen = [k for _, k, _g in kazananlar if k is not None]
         if not gosterilen:
             return StructuredAnswer(_KIYASLANAMAZ, tekil, r.field, r.intent)
         return StructuredAnswer(
@@ -196,9 +197,39 @@ def _fmt_value(field: str, value) -> str:
     return str(value)
 
 
-#: Hiçbir satır kıyaslanabilir değilken basılan cevap.
-_KIYASLANAMAZ = ("Karşılaştırılabilir veri bulunamadı (değerler aralık veya "
-                 "farklı birimde olabilir).")
+#: Hiçbir satır kıyaslanabilir değilken basılan cevabın ilk cümlesi.
+#: Gerekçe cümlenin ARDINDAN gelir (`_kiyaslanamaz_metni`): "veri bulunamadı"
+#: demek yetmez, çünkü veri çoğu zaman VAR — kıyasa girecek nitelikte değil.
+_KIYASLANAMAZ = "Karşılaştırılabilir veri bulunamadı."
+
+
+def _kiyaslanamaz_metni(field: str, ranked: list[RankRow]) -> str:
+    """Kıyaslanabilir satır yokken NEDENİNİ de söyleyen cevap.
+
+    Eskiden tek bir sabit cümle basılıyordu ve elenen değer ekranda hiç
+    görünmüyordu. Kullanıcı için bu, "bu bankalarda böyle bir veri yok"
+    demekle aynı şeydi — oysa veri var, kıyasa girecek nitelikte değil.
+    İkisini tek görüntüde toplamak, arayüzün adil kıyas şeridinde açıkça
+    uyardığı karışıklığın ta kendisi.
+
+    Elenen satırlar notlarıyla listelenir; kaç satırın hangi sebeple
+    düştüğü sayılır.
+    """
+    if not ranked:
+        return _KIYASLANAMAZ
+    label = _FIELD_LABEL.get(field, field)
+    sebepler: dict[str, int] = {}
+    for x in ranked:
+        if x.note:
+            sebepler[x.note] = sebepler.get(x.note, 0) + 1
+    lines = [f"{_KIYASLANAMAZ} {label} alanında bulunan "
+             f"{len(ranked)} kaydın hiçbiri doğrudan kıyaslanamıyor:"]
+    for sebep, adet in sorted(sebepler.items(), key=lambda kv: -kv[1]):
+        lines.append(f"- {sebep} ({adet} kayıt)")
+    lines.append("")
+    lines.append("_Değerler silinmedi; kıyas dışı bırakıldı. Aşağıdaki "
+                 "kaynaklardan ham kayda ulaşabilirsiniz._")
+    return "\n".join(lines)
 
 #: Kıyasın ürün ailesi içinde yapıldığını söyleyen dipnot. Kullanıcı ekranda
 #: neden tek bir kazanan görmediğini bilmeli; aksi hâlde gruplu cevap
@@ -218,19 +249,34 @@ def _phrase_superlative(field: str, intent: str, row: RankRow) -> str:
 
 def _phrase_superlative_by_type(
         field: str, intent: str,
-        kazananlar: list[tuple[str, Optional[RankRow]]]) -> str:
+        kazananlar: list[tuple[str, Optional[RankRow], list[RankRow]]]) -> str:
     """Aile başına tek kazanan — aileler arası kıyas YAPILMADAN.
 
-    Kazananı olmayan aile de satırıyla görünür ("kıyaslanabilir veri yok"):
-    bir ailenin listeden düşmesi ile o ailede veri olmaması farklı şeylerdir
-    ve ikisini tek görüntüde toplamak, olmayan bir kapsama iddia etmektir.
+    Kazananı olmayan aile de satırıyla görünür: bir ailenin listeden düşmesi
+    ile o ailede veri olmaması farklı şeylerdir ve ikisini tek görüntüde
+    toplamak, olmayan bir kapsama iddia etmektir.
+
+    Kazananı olmayan ailede artık SEBEP de yazılır. "Kıyaslanabilir veri yok"
+    tek başına, elenmiş bir değeri hiç var olmamış gibi gösteriyordu — bu,
+    zayıf değeri silmenin cümle hâli. Ailede bulunan ilk kayıt değeriyle ve
+    notuyla basılır; kullanıcı hem neyin bulunduğunu hem neden sıralanmadığını
+    görür.
     """
     label = _FIELD_LABEL.get(field, field)
     sup = "en düşük" if intent == "lowest" else "en yüksek"
     lines = [f"{sup} {label} — her ürün ailesinde ayrı ayrı:"]
-    for tur, k in kazananlar:
+    for tur, k, grup in kazananlar:
         if k is None:
-            lines.append(f"- {tur}: kıyaslanabilir veri yok")
+            gerekce = next((x for x in grup if x.note), None)
+            if gerekce is not None:
+                lines.append(
+                    f"- {tur}: sıralanabilir kayıt yok — "
+                    f"{gerekce.bank_name or gerekce.bank} "
+                    f"{_fmt_value(field, gerekce.value)} "
+                    f"_({gerekce.note})_"
+                    + (f", +{len(grup) - 1} kayıt daha" if len(grup) > 1 else ""))
+            else:
+                lines.append(f"- {tur}: kıyaslanabilir veri yok")
             continue
         lines.append(f"- {tur}: **{k.bank_name or k.bank}** "
                      f"({_fmt_value(field, k.value)})")

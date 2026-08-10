@@ -114,6 +114,7 @@ from ..chatbot.safety import (
 from ..comparison.compare import (
     _HIGHER_IS_BETTER,
     _LOWER_IS_BETTER,
+    ASGARI_GUVEN,
     DEFAULT_WEIGHTS,
     MIN_COVERAGE,
     MIN_GROUP_SIZE,
@@ -954,6 +955,11 @@ def build_app():
                 "source_span": r["source_span"],
                 "campaign_id": r["campaign_id"],
                 "campaign_type": r["campaign_type"],
+                # Çıkarımın KENDİ güveni sıralamaya girer (`compare.rank()`
+                # `ASGARI_GUVEN` kapısı). Alan taşınmazsa kapı sessizce
+                # kapalı kalırdı ve tablo, çıkarıcının zaten zayıf
+                # işaretlediği bir değeri "en düşük" diye basardı.
+                "confidence": r.get("confidence"),
             })
 
         # Sıralama → istenen yön → banka × ürün ailesi başına tek satır.
@@ -1135,7 +1141,11 @@ def build_app():
                     {"bank": f"{i}{_ROW_TOKEN_SEP}{r['bank']}",
                      "bank_name": r["bank_name"],
                      "canonical_value": r["canonical_value"],
-                     "source_span": r["source_span"]}
+                     "source_span": r["source_span"],
+                     # Güven kapısı burada da geçerli: delta paneli
+                     # `comparable` bayrağına bakıyor ve düşük güvenli bir
+                     # değerle fark hesaplamak, o farkı uydurmak olurdu.
+                     "confidence": r.get("confidence")}
                     for i, r in enumerate(aile_satirlari)
                 ], alan)
 
@@ -1255,11 +1265,21 @@ def build_app():
                  "detail": "compare._numeric_key(): sayı→kendisi, para→value, "
                            "masraf→amount (yoksa 0), aralık→min ve "
                            "comparable=False."},
-                {"no": 3, "name": "Adil kıyas kapısı",
+                {"no": 3, "name": "Güven kapısı",
+                 "detail": (
+                     f"Çıkarım güveni {ASGARI_GUVEN:.2f}".replace(".", ",")
+                     + " altında kalan değer sıralamaya GİRMEZ; "
+                     "comparable=false olur ve notunda ölçülen güven yazar. "
+                     "Değer silinmez, gerekçesiyle görünür kalır. Eşik altın "
+                     "kümede ölçüldü: bu bandın altındaki çıkarımların hepsi "
+                     "hatalıydı ve kanıt pencereleri belgenin kampanya olmayan "
+                     "bölümlerinden (hesaplama aracı varsayılanı, çerez "
+                     "metni, ücret tarifesi) geliyordu.")},
+                {"no": 4, "name": "Adil kıyas kapısı",
                  "detail": "Yalnız comparable=True satırlar sıralanır. Aralık, "
                            "farklı para birimi, sayısal olmayan ve boş değerler "
                            "not'uyla sona alınır."},
-                {"no": 4, "name": "Yön",
+                {"no": 5, "name": "Yön",
                  "detail": f"{field} → {direction} ({direction_label}). Kaynak: "
                            "compare._LOWER_IS_BETTER / _HIGHER_IS_BETTER."},
             ],
@@ -1320,11 +1340,16 @@ def build_app():
                     "campaign_type": r.get("campaign_type"),
                     "source_url": r.get("source_url"),
                     "fields": {},
+                    "field_confidence": {},
                 })
                 # Aynı alan aynı kampanyada birden çok kez çıkabilir; İLK
                 # satır tutulur (`query_fields` `ORDER BY f.id` ile gelir,
                 # yani sıra iki backend'de de aynıdır).
                 kayit["fields"].setdefault(alan, r.get("canonical_value"))
+                # Değerle güveni AYNI satırdan al: `setdefault` ikisinde de
+                # çağrılıyor, yani seçilen değer ile taşınan güven her zaman
+                # aynı kayda aittir.
+                kayit["field_confidence"].setdefault(alan, r.get("confidence"))
 
         satirlar = list(by_campaign.values())
         if type:
@@ -1339,7 +1364,10 @@ def build_app():
                 "Sıralama kampanya TÜRÜ İÇİNDE yapılır; türler arası "
                 "karşılaştırma yapılmaz. Alanı olmayan "
                 "kampanya CEZALANDIRILMAZ, kıyas dışı bırakılır — 0 puan "
-                "'ürün yok' demektir, 'kötü' demek değil."),
+                "'ürün yok' demektir, 'kötü' demek değil. Çıkarım güveni "
+                + f"{ASGARI_GUVEN:.2f}".replace(".", ",")
+                + " altında kalan alan da skorlanmaz; nedeni o alanın "
+                "not'unda yazar ve kampanyanın veri kapsamasını düşürür."),
             "types": {
                 tur: {
                     "count": bilgi["count"],
