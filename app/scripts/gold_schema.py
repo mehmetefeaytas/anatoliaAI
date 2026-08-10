@@ -24,6 +24,26 @@ dışında bırakılır.
 `load_gold()` bunu sessizce v1'e taşır: `hard: true` -> `hard_tags: ["legacy"]`.
 Yazarken `to_dict()` eski `hard` anahtarını da üretir, böylece `eval/run_eval.py`
 (dokunulmadı) gold.v1.json'u okumaya devam eder.
+
+## Neden `field_spans` BURADA tanımlı — iki gold hattının ayrışması
+
+`merge_gold_v2.py` bir **kanıt kapısı** işletiyordu: gold'daki her değerin
+`field_spans` içinde, belge metninde birebir geçen bir alıntısı olmalı. Ama
+kapının dayandığı anahtar bu şemada TANIMLI DEĞİLDİ; `GoldRecord` onu ne
+okuyordu ne yazıyordu. Sonuç ölçüldü (2026-08-10):
+
+    gold.v2.json (merge_gold_v2 hattı)   112/112 alan kanıtlı
+    gold.v1.json (build_gold hattı)        0/65  alan kanıtlı
+
+Yani iki hat aynı gold'u üretiyormuş gibi görünürken **kanıt sözleşmesinden
+yalnızca biri haberdardı**; v1 hattının çıktısı v2 kapısından her alanda
+"değer var, kanıt YOK" ile düşerdi. Bu, projede üçüncü kez görülen "iki yol
+aynı semantiği taşımalı ama biri kilitli, diğeri serbest" kusurudur
+(öncekiler: gold `id` kuralı, `merge_gold_v2` `content_hash` ayrıklık kapısı).
+
+Kür: kapının KENDİSİ buraya taşındı (`span_supports`, `evidence_errors`) ve
+`field_spans` şemanın birinci sınıf alanı oldu. Kapıyı işleten her araç aynı
+fonksiyonu çağırır; kopyalar ayrışamaz çünkü kopya yoktur.
 """
 
 from __future__ import annotations
@@ -270,6 +290,73 @@ def assert_canonical(name: str, value: Any) -> None:
 
 
 # --------------------------------------------------------------------------- #
+# Kanıt kapısı — "her bulgu kaynağa dayanır" iddiasının makine tarafı
+# --------------------------------------------------------------------------- #
+# İKİ AYRI KUSUR, İKİ AYRI AĞIRLIK. Eski kapı ikisini tek listede topluyordu ve
+# bu, "yakalanmış uydurma" ile "henüz kanıtlanmamış" arasındaki farkı siliyordu:
+#
+#   UYDURMA (`fabrication_errors`) — alıntı var ama metinde YOK. İspatlanmış
+#     kusur: değer ya uydurulmuş ya parafraz edilmiş. Gold'u zehirler. Hiçbir
+#     araçta, hiçbir bayrakla gevşetilmez.
+#   KANITSIZ (`uncovered_fields`) — değer var, alıntı yok. Kanıtın YOKLUĞU;
+#     değerin yanlışlığının kanıtı DEĞİL. Bu bir sayıdır: raporlanır, sayılır,
+#     görünür kalır. Sıfırlanması hedeftir, gizlenmesi değil.
+#
+# Bu ayrım olmadan kapı tek bir seçim dayatıyordu: ya kanıtsız değeri "hata"
+# sayıp tüm gold'u reddet, ya kapıyı kaldır. İkisi de yanlış — ilki v1 hattını
+# tamamen bloke eder, ikincisi iddiayı çöpe atar.
+_WHITESPACE_RE = re.compile(r"\s+")
+
+
+def collapse_whitespace(text: str) -> str:
+    """Ardışık boşlukları teke indirir (kopyalama gürültüsü toleransı)."""
+    return _WHITESPACE_RE.sub(" ", text or "").strip()
+
+
+def span_supports(text: str, quote: Any) -> bool:
+    """`quote` belgede birebir geçiyor mu? Kanıtın TEK tanımı budur.
+
+    Alıntı önce ham metinde aranır; bulunamazsa **boşluk sadeleştirilmiş**
+    biçimde bir kez daha aranır. Sebep: anotatör metinden kopyalarken satır
+    sonu/çift boşluk kaybı olabiliyor ve bu bir uydurma değil, kopyalama
+    gürültüsüdür. Bunun ötesinde esneme YOKTUR — büyük/küçük harf katlaması
+    ya da kısmi eşleşme kabul edilmez, çünkü ikisi de "yaklaşık aynı şeyi
+    diyor" savunmasına kapı açar ve kapının varlık sebebi tam olarak o
+    savunmayı reddetmektir.
+    """
+    if not isinstance(quote, str) or not quote.strip():
+        return False
+    if quote in (text or ""):
+        return True
+    return collapse_whitespace(quote) in collapse_whitespace(text)
+
+
+def fabrication_errors(records: list["GoldRecord"]) -> list[str]:
+    """İSPATLANMIŞ kusurlar: metinde geçmeyen ya da boş alıntılar."""
+    errors: list[str] = []
+    for record in records:
+        for name, quote in sorted(record.field_spans.items()):
+            if not isinstance(quote, str) or not quote.strip():
+                errors.append(f"{record.id} / {name}: alıntı boş")
+            elif not span_supports(record.text, quote):
+                errors.append(f"{record.id} / {name}: alıntı metinde YOK -> "
+                              f"{quote[:80]!r}")
+    return errors
+
+
+def uncovered_fields(records: list["GoldRecord"]) -> list[tuple[str, str]]:
+    """Kanıtsız (belge, alan) çiftleri — değer var, alıntı yok.
+
+    Hata metni değil ÇİFT döner: çağıran taraf bunu hem sayı olarak raporlar
+    hem de kapatılacak iş listesi olarak kullanır.
+    """
+    return [(record.id, name)
+            for record in records
+            for name in sorted(record.fields)
+            if name not in record.field_spans]
+
+
+# --------------------------------------------------------------------------- #
 # İnsan girdisi -> kanonik değer
 # --------------------------------------------------------------------------- #
 def _try_json(raw: str) -> tuple[bool, Any]:
@@ -424,14 +511,22 @@ class GoldRecord:
     """Tek bir anotasyonlu belge (gold şema v1).
 
     fields         : doğrulanmış DEĞERLER (alan -> kanonik değer)
+    field_spans    : alan -> değerin dayandığı, `text`te BİREBİR geçen alıntı
     absent_fields  : "kontrol ettim, bu belgede YOK" (precision'ın tanımı)
     unclear_fields : anotatör karar veremedi -> metrik dışı, hakemliğe düşer
     hard_tags      : çok etiketli zor-vaka kategorileri (HARD_TAGS)
+
+    `field_spans` YALNIZCA `fields` için anlamlıdır: yokluğun (absent) ya da
+    belirsizliğin (unclear) alıntısı olmaz — gösterilecek bir şey yoktur.
+    Bir alanın `fields`'ta olup `field_spans`'te olmaması kusurdur ama
+    UYDURMA değildir; ayrımı `fabrication_errors` / `uncovered_fields`
+    tutar (bkz. modül başlığı).
     """
 
     id: str
     text: str
     fields: dict[str, Any] = dc_field(default_factory=dict)
+    field_spans: dict[str, str] = dc_field(default_factory=dict)
     absent_fields: list[str] = dc_field(default_factory=list)
     hard_tags: list[str] = dc_field(default_factory=list)
     bank_slug: Optional[str] = None
@@ -459,6 +554,11 @@ class GoldRecord:
             "text": self.text,
             "campaign_type": self.campaign_type,
             "fields": self.fields,
+            # KOŞULSUZ yazılır. Boş sözlük "bu kayıtta hiçbir değerin kanıtı
+            # yok" demektir ve bu, anahtarın hiç görünmemesinden çok daha
+            # okunur bir eksiklik bildirimidir — kapının kör kaldığı hâl tam
+            # olarak anahtarın sessizce yok olmasıydı.
+            "field_spans": dict(self.field_spans),
             "absent_fields": sorted(self.absent_fields),
             "hard_tags": sorted(self.hard_tags),
             "annotators": list(self.annotators),
@@ -509,6 +609,18 @@ class GoldRecord:
         if clash2:
             errors.append(f"{self.id}: {clash2} hem fields hem unclear_fields içinde.")
 
+        # Kanıtı olup değeri olmayan alan: kapıyı yanıltır. `uncovered_fields`
+        # sadece `fields`ı tarar, dolayısıyla böyle bir alıntı hiç denetlenmez
+        # ve "kanıt sayısı" şişer. Şema düzeyinde reddedilir.
+        orphan = sorted(set(self.field_spans) - set(self.fields))
+        if orphan:
+            errors.append(f"{self.id}: {orphan} field_spans içinde ama fields "
+                          f"içinde değil. Yokluğun/belirsizliğin alıntısı olmaz.")
+        for name, quote in sorted(self.field_spans.items()):
+            if not isinstance(quote, str) or not quote.strip():
+                errors.append(f"{self.id}: field_spans[{name!r}] boş olmayan "
+                              f"metin olmalı; {quote!r} geldi.")
+
         return errors
 
     def coverage(self) -> int:
@@ -540,6 +652,7 @@ def record_from_dict(item: dict) -> GoldRecord:
         id=item.get("id") or _legacy_id(text),
         text=text,
         fields=dict(item.get("fields") or {}),
+        field_spans=dict(item.get("field_spans") or {}),
         absent_fields=list(item.get("absent_fields") or []),
         hard_tags=hard_tags,
         bank_slug=item.get("bank_slug"),

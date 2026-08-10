@@ -20,13 +20,27 @@ kapı vardır ve hiçbiri atlanamaz:
 Kapılardan biri düşerse betik yazmaz ve **gürültülü** başarısız olur.
 "Kısmen geçerli gold" diye bir şey yoktur.
 
-## Kanıt kapısının gevşetilmiş hâli — ve neden
+## Kanıt kapısı NEREDE tanımlı — ve neden burada değil
 
-Alıntı, metinde birebir aranır. Bulunamazsa **boşluk sadeleştirilmiş**
-biçimde bir kez daha aranır (`\\s+` -> tek boşluk). Sebep: anotatör
-metinden kopyalarken satır sonu/çift boşluk kaybı olabiliyor ve bu bir
-uydurma değil, kopyalama gürültüsüdür. Bunun ötesinde esneme YOKTUR —
-büyük/küçük harf katlaması ya da kısmi eşleşme kabul edilmez.
+Kapının kendisi `gold_schema.span_supports` / `fabrication_errors` /
+`uncovered_fields` içindedir, bu dosyada değil. Sebep ölçüldü (2026-08-10):
+kapı burada yaşarken `gold_schema.GoldRecord` `field_spans` anahtarını
+tanımlamıyordu ve `build_gold.py` onu üretmiyordu. İki gold hattı sessizce
+ayrıştı — gold.v2'nin 112/112 alanı kanıtlıyken gold.v1'in **0/65**'i
+kanıtlıydı; v1 hattının çıktısı bu kapıdan her alanda düşerdi.
+
+Kapı şemaya taşındığında ayrışma yapısal olarak imkânsızlaştı: `build_gold`
+zaten `gold_schema`yı içe aktarıyor, dolayısıyla aynı tanımı kullanmaktan
+kaçamaz.
+
+## Bu betikte kapı GEVŞEMEZ
+
+`merge_gold_v2` hattı (dört anotatörün elle yazdığı alıntılar) hem uydurmayı
+hem kanıtsızlığı ÖLÜMCÜL sayar; davranış değişmedi. `build_gold` hattı
+kanıtsızlığı sayar ve raporlar, ölümcül saymaz (bkz. o dosyanın başlığı) —
+çünkü orada kanıtın kaynağı anotatörün kalemi değil, çıkarıcının kaydettiği
+konumdur ve `fix` kararlarında böyle bir kayıt YOKTUR. Uydurma her iki
+hatta da ölümcüldür.
 
 ## Kullanım
 
@@ -40,7 +54,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -49,38 +62,29 @@ KOK = Path(__file__).resolve().parents[1]
 if str(KOK) not in sys.path:
     sys.path.insert(0, str(KOK))
 
-from scripts.gold_schema import record_from_dict, validate_gold
+from scripts.gold_schema import (
+    GoldRecord,
+    fabrication_errors,
+    record_from_dict,
+    uncovered_fields,
+    validate_gold,
+)
 
 VARSAYILAN_PARCA = "data/gold/parca"
 VARSAYILAN_OUT = "data/gold/gold.v2.json"
 VARSAYILAN_V1 = "data/gold/gold.v1.json"
 
-_BOSLUK = re.compile(r"\s+")
 
+def kanit_kapisi(kayitlar: list[GoldRecord]) -> list[str]:
+    """Bu hatta kanıt kapısı iki kusuru da ölümcül sayar.
 
-def _sadelestir(s: str) -> str:
-    return _BOSLUK.sub(" ", s).strip()
-
-
-def kanit_kapisi(kayitlar: list[dict]) -> list[str]:
-    """Her `field_spans` alıntısı belgede birebir geçiyor mu?"""
-    hatalar: list[str] = []
-    for k in kayitlar:
-        metin = k.get("text") or ""
-        sade = _sadelestir(metin)
-        for alan, alinti in (k.get("field_spans") or {}).items():
-            if not isinstance(alinti, str) or not alinti.strip():
-                hatalar.append(f"{k.get('id')} / {alan}: alıntı boş")
-                continue
-            if alinti in metin or _sadelestir(alinti) in sade:
-                continue
-            hatalar.append(
-                f"{k.get('id')} / {alan}: alıntı metinde YOK -> "
-                f"{alinti[:80]!r}")
-        # Değeri olan ama kanıtı olmayan alanlar da kusurdur.
-        for alan in (k.get("fields") or {}):
-            if alan not in (k.get("field_spans") or {}):
-                hatalar.append(f"{k.get('id')} / {alan}: değer var, kanıt YOK")
+    Ayrımı yine de koruruz: uydurma "yakalandı", kanıtsızlık "eksik". İkisi
+    aynı listeye girse bile mesajları ayrı okunur, yoksa anotatöre neyi
+    düzelteceği anlaşılmaz — biri alıntıyı düzeltmeli, diğeri alıntı YAZMALI.
+    """
+    hatalar = list(fabrication_errors(kayitlar))
+    hatalar += [f"{kimlik} / {alan}: değer var, kanıt YOK"
+                for kimlik, alan in uncovered_fields(kayitlar)]
     return hatalar
 
 
@@ -178,10 +182,13 @@ def main(argv: list[str] | None = None) -> int:
 
     hatalar: list[str] = []
     try:
-        hatalar += validate_gold([record_from_dict(k) for k in kayitlar])
+        sema_kayitlari = [record_from_dict(k) for k in kayitlar]
     except (ValueError, KeyError, TypeError) as e:
         hatalar.append(f"şema okunamadı: {e}")
-    hatalar += kanit_kapisi(kayitlar)
+        sema_kayitlari = []
+    else:
+        hatalar += validate_gold(sema_kayitlari)
+        hatalar += kanit_kapisi(sema_kayitlari)
     hatalar += ayriklik_kapisi(kayitlar, args.v1)
 
     if hatalar:
