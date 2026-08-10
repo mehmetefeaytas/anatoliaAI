@@ -453,6 +453,91 @@ export type ChatResp = {
   safety?: ChatSafety;
 };
 
+/**
+ * Veri tazeleme ön izlemesi — düğmeye BASILMADAN önce ne olacağını söyler.
+ *
+ * Bu uç ağa çıkmaz; sayılar banka tanım dosyasından türetilir. Ön izlemenin
+ * kendisi internet isteseydi, "internet var mı" sorusunun bedeli yine
+ * internet olurdu.
+ */
+export type RefreshPreview = {
+  bank: string;
+  bank_name: string;
+  website_url: string | null;
+  scrape_mode: string;
+  /** Kaç liste/site haritası sayfasından başlanacak. */
+  giris_sayfasi: number;
+  azami_belge: number;
+  /** Alan başına bekleme (saniye) — etik toplama kısıtı, 2–5 aralığında. */
+  gecikme_sn: number;
+  tahmini_istek_alt: number;
+  tahmini_istek_ust: number;
+  tahmini_sure_alt_sn: number;
+  tahmini_sure_ust_sn: number;
+  /** Bu bankanın ham arşivinde şu an duran belge sayısı. */
+  arsivdeki_belge: number;
+  hedef_dizin: string;
+  internet_gerekir: boolean;
+  /** Her zaman `false`: tazeleme veri tabanına yazmaz. */
+  veri_tabani_etkilenir: boolean;
+  robots_uyumu: boolean;
+  user_agent: string;
+};
+
+/** Tazeleme işinin yaşam döngüsü. */
+export type RefreshDurum =
+  | "bekliyor"
+  | "kesif"
+  | "cekiliyor"
+  | "yaziliyor"
+  | "tamam"
+  | "hata"
+  | "iptal";
+
+/** Tek bir belgenin diskteki hâline göre durumu. */
+export type RefreshBelge = {
+  source_url: string;
+  title: string | null;
+  durum: "yeni" | "degisen" | "ayni";
+  karakter: number;
+  onceki_karakter: number | null;
+};
+
+/** Alınamayan bir adres ve gerekçesi. */
+export type RefreshHata = {
+  url: string;
+  reason: string;
+  detail?: string;
+};
+
+export type RefreshJob = {
+  is_id: string;
+  bank: string;
+  bank_name: string;
+  durum: RefreshDurum;
+  /** Kullanıcıya gösterilen anlık aşama cümlesi. */
+  asama: string;
+  baslangic: string;
+  bitis: string | null;
+  tamamlanan: number;
+  toplam: number;
+  cekilen: number;
+  yeni: number;
+  degisen: number;
+  ayni: number;
+  hata: number;
+  yazilan_dosya: number;
+  iptal_istendi: boolean;
+  hatalar: RefreshHata[];
+  hata_tamami: number;
+  belgeler: RefreshBelge[];
+  notlar: string[];
+  robots_ozet: string | null;
+  mesaj: string | null;
+  hedef_dizin: string | null;
+  bitti: boolean;
+};
+
 /** Kullanıcıya gösterilebilir, Türkçe API hatası. */
 export class ApiError extends Error {
   readonly status: number;
@@ -569,6 +654,28 @@ export const api = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, context }),
+    }),
+
+  /**
+   * Veri tazeleme — sistemin ağa çıkabilen TEK yolu, ayrı bir operatör
+   * eylemidir. Soru-cevap yolu (kıyas, sohbet, çelişki) buraya hiç uğramaz
+   * ve önceden hazırlanmış veri tabanından okumaya devam eder.
+   */
+  refreshPreview: (bank: string) =>
+    request<RefreshPreview>(
+      `/api/refresh/preview?${new URLSearchParams({ bank }).toString()}`,
+    ),
+  refreshStart: (bank: string) =>
+    request<RefreshJob>("/api/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bank }),
+    }),
+  refreshStatus: (jobId: string) =>
+    request<RefreshJob>(`/api/refresh/status/${encodeURIComponent(jobId)}`),
+  refreshCancel: (jobId: string) =>
+    request<RefreshJob>(`/api/refresh/cancel/${encodeURIComponent(jobId)}`, {
+      method: "POST",
     }),
 };
 

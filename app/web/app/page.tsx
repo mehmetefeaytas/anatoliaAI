@@ -18,7 +18,7 @@
  * `aria-controls` eşlemesi ve ok tuşu navigasyonu taşıyor (bkz. ui/Tabs.tsx).
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AdvantageousPanel from "./components/AdvantageousPanel";
 import AuditPanel from "./components/AuditPanel";
 import BankDeltaPanel from "./components/BankDeltaPanel";
@@ -29,9 +29,10 @@ import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
 import JuryModeToggle from "./components/JuryModeToggle";
 import SummaryCoverage from "./components/SummaryCoverage";
+import TazelemePanel from "./components/TazelemePanel";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
 import { api } from "./lib/api";
-import { JuryModeProvider } from "./lib/juryMode";
+import { JuryModeProvider, useJuryMode } from "./lib/juryMode";
 import { useTabState } from "./lib/tabState";
 import { useAsync } from "./lib/useAsync";
 
@@ -42,7 +43,8 @@ type TabKey =
   | "audit"
   | "contradictions"
   | "extract"
-  | "chat";
+  | "chat"
+  | "tazele";
 
 /**
  * Sıra kasıtlı: tek alanlı kıyastan çok alanlı bileşik skora, oradan banka
@@ -61,7 +63,20 @@ const TABS: readonly SekmeTanimi<TabKey>[] = [
   { key: "chat", label: "Chatbot" },
 ] as const;
 
+/**
+ * Jüri modunda EK sekme: veri tazeleme.
+ *
+ * Ağa çıkan tek yüzey olduğu için ürün ekranında yeri yok, denetim ekranında
+ * var. İki dizi de modül düzeyinde SABİT: her render'da yeniden oluşan bir
+ * dizi `useTabState`'in efektlerini sonsuz döngüye sokardı.
+ */
+const TABS_JURI: readonly SekmeTanimi<TabKey>[] = [
+  ...TABS,
+  { key: "tazele", label: "Veri Tazeleme" },
+] as const;
+
 const TAB_KEYS = TABS.map((t) => t.key);
+const TAB_KEYS_JURI = TABS_JURI.map((t) => t.key);
 
 /** Jüri modu tüm sekmeleri sarar; ComparePanel içeriden okur. */
 export default function Home() {
@@ -73,8 +88,19 @@ export default function Home() {
 }
 
 function Dashboard() {
-  const { sekme, setSekme } = useTabState<TabKey>(TAB_KEYS, "compare");
+  const { jury } = useJuryMode();
+  const sekmeler = jury ? TABS_JURI : TABS;
+  const { sekme, setSekme } = useTabState<TabKey>(
+    jury ? TAB_KEYS_JURI : TAB_KEYS,
+    "compare",
+  );
   const [auditTarget, setAuditTarget] = useState<number | null>(null);
+
+  // Jüri modu kapatılınca tazeleme sekmesinde kalmak boş bir panel bırakırdı;
+  // görünmeyen bir sekmede durmak yerine varsayılana dönülür.
+  useEffect(() => {
+    if (!jury && sekme === "tazele") setSekme("compare");
+  }, [jury, sekme, setSekme]);
 
   const fields = useAsync(() => api.fields(), []);
   const campaigns = useAsync(() => api.campaigns(), []);
@@ -104,7 +130,7 @@ function Dashboard() {
       )}
 
       <Tabs
-        sekmeler={TABS}
+        sekmeler={sekmeler}
         aktif={sekme}
         onDegis={setSekme}
         etiket="Panel bölümleri"
@@ -152,6 +178,9 @@ function Dashboard() {
         {sekme === "extract" && <ExtractLive />}
 
         {sekme === "chat" && <ChatPanel onInspect={inspect} />}
+
+        {/* Ağa çıkan tek yüzey — yalnız jüri modunda erişilebilir. */}
+        {sekme === "tazele" && jury && <TazelemePanel />}
       </TabPanel>
     </main>
   );

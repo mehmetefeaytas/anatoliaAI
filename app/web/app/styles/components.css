@@ -1065,6 +1065,89 @@ ol.steps span {
 }
 
 /* ===================================================================
+ * VERİ TAZELEME (jüri modu — ağa çıkan tek yüzey)
+ *
+ * Bu blok bilerek "denetim" diliyle yazıldı: banka listesi bir ürün kartı
+ * değil, bir operatör kontrol listesidir. Vurgu düğmede değil, işlemin
+ * sonucunda (ilerleme + sayaçlar) durur.
+ * =================================================================== */
+
+/* Banka satırları: ad solda, eylem sağda. Liste işaretleri kaldırılır —
+ * satırlar bir metin listesi değil, birer kontrol satırıdır. */
+.tazele-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-2);
+}
+.tazele-satir {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg);
+}
+
+/* Başlatmadan önceki koşul listesi. Madde işareti korunur: burada okunan şey
+ * gerçekten bir liste — kabul edilen şartlar. */
+.tazele-kosullar {
+  margin: var(--sp-3) 0;
+  padding-left: var(--sp-5);
+  color: var(--fg-dim);
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.tazele-ilerleme {
+  display: grid;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+}
+.tazele-ilerleme-cubuk {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--line-soft);
+  overflow: hidden;
+}
+.tazele-ilerleme-dolgu {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+/* Toplam adres sayısı henüz bilinmiyorken (keşif evresi) çubuk %0'da
+ * donmuş görünürdü — "çalışmıyor" izlenimi verir. Belirsiz durum ayrı
+ * gösterilir: dar bir şerit gidip gelir, bir oran İDDİA ETMEZ. */
+.tazele-ilerleme-dolgu.belirsiz {
+  width: 35%;
+  animation: tazele-belirsiz 1.4s ease-in-out infinite;
+}
+@keyframes tazele-belirsiz {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(286%);
+  }
+}
+
+/* Hareketi azaltma tercihi olan kullanıcıda şerit sabit durur. */
+@media (prefers-reduced-motion: reduce) {
+  .tazele-ilerleme-dolgu.belirsiz {
+    animation: none;
+  }
+  .tazele-ilerleme-dolgu {
+    transition: none;
+  }
+}
+
+/* ===================================================================
  * KIRILIMLAR
  *
  * Bileşen kırılımları BURADA, temel kurallarının ARDINDAN durur. `base.css`
@@ -1172,5 +1255,13 @@ ol.steps span {
 
   .source-text {
     max-height: none; /* mobilde sabit yükseklik ekranı hapsediyordu */
+  }
+
+  /* Banka adı + düğme yan yana sığmıyor; düğme alta iner ve tam genişler. */
+  .tazele-satir {
+    flex-wrap: wrap;
+  }
+  .tazele-satir .btn {
+    width: 100%;
   }
 }
