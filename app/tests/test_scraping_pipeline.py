@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from src.comparison.compare import rank
 from src.db.repository import Repository
 from src.pipeline import build_demo_repo, make_chatbot, run_pipeline
 from src.scraping.collector import collect
@@ -109,11 +110,54 @@ class TestPipeline(unittest.TestCase):
         repo.close()
 
     def test_demo_repo_and_chatbot(self):
+        """Uçtan uca: hasat -> depo -> chatbot -> YAPISAL cevap.
+
+        ## Beklenen kazanan DEĞİŞTİ (2026-08-11) — ve değişmesi gerekiyordu
+
+        Bu test eskiden `assertIn("Kuveyt", a.text)` diyordu. Fikstürdeki iki
+        konut satırının kanıtları şöyle:
+
+            kuveyt-turk  "kâr payı oranı %1,89'DAN BAŞLAYAN oranlarla…"
+            albaraka     "kâr payı oranı %2,49, 96 aya kadar vade"
+
+        Kuveyt'in %1,89'u bir ALT SINIRDIR, o bankanın vereceği oran değil;
+        Albaraka'nınki ise sabit bir orandır. Koşul kapısı
+        (`compare._kosul_notu`) eklendiğinde taban oran sıralamadan çıktı ve
+        "en düşük" cevabı Albaraka'ya geçti.
+
+        Testin eski hâli, kullanıcının ekranda şikâyet ettiği davranışın ta
+        kendisini savunuyordu: bir alt sınırın, sabit bir teklifin üstünde
+        görünmesi. İddia bu yüzden düzeltildi, gevşetilmedi.
+
+        Değer GİZLENMİYOR: liste yolunda (`rank`) Kuveyt satırı %1,89 değeriyle
+        ve "koşullu oran — doğrudan kıyaslanamaz" notuyla duruyor. Burada
+        sınanan yol superlatif cevabıdır ve o yol yalnız kazananı yazar.
+        """
         repo = build_demo_repo(CONFIG, RAW)
         bot = make_chatbot(repo)
         a = bot.ask("Hangi bankada en düşük kâr payı oranı var?")
         self.assertEqual(a.handler, "structured")
-        self.assertIn("Kuveyt", a.text)
+        self.assertIn("Albaraka", a.text,
+                      "sabit oran, taban orana karşı kazanmalı")
+        self.assertNotIn("Kuveyt", a.text,
+                         "taban oran ('…dan başlayan') superlatif cevabında "
+                         "kazanan gibi görünMEMELİ")
+        repo.close()
+
+    def test_taban_oran_kiyas_disi_ama_GORUNUR(self):
+        """Kapı bilgiyi saklamaz: değer duruyor, gerekçesi yanında.
+
+        Süre ve güven kapılarının aynı vaadi; koşul kapısı da onu tutmalı.
+        Aksi hâlde kullanıcıya "bu bankada böyle bir oran yok" demiş olurduk —
+        oysa oran var, koşullu.
+        """
+        repo = build_demo_repo(CONFIG, RAW)
+        satirlar = {r.bank: r for r in
+                    rank(repo.query_fields("kar_payi_orani"), "kar_payi_orani")}
+        kt = satirlar["kuveyt-turk"]
+        self.assertEqual(kt.value, 1.89, "değer GİZLENMEMELİ")
+        self.assertFalse(kt.comparable)
+        self.assertIn("koşullu", (kt.note or "").lower())
         repo.close()
 
     def test_tasit_classified(self):

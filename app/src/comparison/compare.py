@@ -19,6 +19,7 @@ sıralamada aralığın alt sınırı (en iyi senaryo) kullanılır ve flag veri
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, replace
 from dataclasses import field as dc_field
 from typing import Any, Iterable, Optional
@@ -325,6 +326,111 @@ def _durum_notu(campaign_status: Optional[str]) -> Optional[str]:
     return NOT_SURESI_DOLMUS
 
 
+# --------------------------------------------------------------------------- #
+# Koşul kapısı — koşula bağlı oran, koşulsuz oranla aynı kolonda sıralanmaz
+# --------------------------------------------------------------------------- #
+#
+# CLAUDE.md §6 "zaman-koşullu oran (ilk 6 ay %0)"u mimarinin merkezindeki zor
+# vakalar arasında sayıyor; §17 ise koşullar farklıysa "doğrudan kıyaslanamaz"
+# işaretlenmesini şart koşuyor. Bu kapı o şartı uygular.
+#
+# ## Ölçülen kusur (2026-08-11, `data/demo.db`)
+#
+# "En düşük kâr payı oranı" sıralamasının ilk DÖRT satırı **%0**'dı ve dördü de
+# `comparable=True` idi. Değerler uydurma değil, metinde gerçekten yazıyor —
+# ama hiçbiri koşulsuz bir ürün oranı değil:
+#
+#     "Mobilden yeni müşterilere özel %0 kâr payı ile 50.000 TL'ye varan…"
+#     "Albaraka Mobil'den müşteri olanlar, %0 kâr payı ile…"
+#
+# Bu satırlar, herkese açık %1,69'luk bir konut finansmanının ÜSTÜNDE
+# duruyordu. Kullanıcı "en düşük oran" ekranında, yalnız belirli bir kanaldan
+# gelen yeni müşterinin alabileceği bir promosyonu, genel bir teklif sanıyordu.
+#
+# Taban oranlar da aynı kovada: "%1,89'**dan başlayan**" bir ALT SINIRDIR, o
+# bankanın vereceği oran değil. Sabit bir oranla yan yana sıralamak, alt sınırı
+# gerçek teklif gibi göstermektir.
+#
+# ## Neden yön ve cümle sınırı — YANLIŞ POZİTİF ÖLÇÜLDÜ
+#
+# İlk denemede koşul sözcüğü kanıt penceresinde ARANDI ve 11 satır işaretlendi.
+# Dördü yanlıştı, çünkü koşul sözcüğü orana değil BAŞKA bir şeye bağlıydı:
+#
+#     "…tüm vadelerde sabit %4.09 kâr payı oranı, 3 ay erteleme fırsatı ve
+#      YENİ MÜŞTERİLERE ÖZEL dosya masrafsızlık avantajı…"   -> masrafsızlık
+#     "…%1,99 - %2,49 arasında, 48 aya kadar vade. İLK 3 AY ödemesiz."  -> ödeme
+#
+# İlkinde oran açıkça "sabit" diye niteleniyor. Bu satırları kıyas dışı bırakmak
+# gerçek bir teklifi ekrandan silmek olurdu. Kapı bu yüzden koşulun orana
+# BAĞLI olmasını arar: dar bir pencere, yön ayrımı (koşul ifadeleri oranın
+# ÖNÜNDE, taban ifadeleri ARKASINDA durur) ve cümle sınırı — nokta, koşulu
+# orandan koparır.
+#
+# Ölçüm: 54 satırın 7'si işaretlendi, dördü de yanlış pozitif elendi.
+#
+# ## Neden yalnız kâr payı oranı
+#
+# `vade_ay`da "120 aya kadar" bir TAVANDIR ve tavanları kıyaslamak anlamlıdır
+# ("120'ye kadar" > "36'ya kadar"). Korpusta vade satırlarının %40'ı böyle bir
+# ifade taşıyor; hepsini kıyas dışı bırakmak vade karşılaştırmasını yok ederdi.
+# Oranda ise durum tersidir: alt sınır, gerçek maliyet hakkında yanıltır.
+
+#: Oranın ÖNÜNDE duran koşul ifadeleri — kimin, hangi kanaldan alabileceği.
+_KOSUL_ONCE_RE = re.compile(
+    r"yeni\s+müşteri\w*|müşteri\s+olanlar\w*|ilk\s+kez\s+müşteri"
+    r"|mobilden|mobil\s*(?:uygulama|şube)\w*|dijital(?:den)?\s+başvur\w*"
+    r"|internet\s+şubesi|uygulama\s+üzerinden"
+    r"|ilk\s+\d+\s*(?:ay|gün|hafta)\b|ilk\s+(?:üç|iki|bir|altı|alti)\s*ay\b",
+    re.IGNORECASE)
+
+#: Oranın ARKASINDA duran taban ifadeleri — "…'dan başlayan".
+_KOSUL_SONRA_RE = re.compile(
+    r"['’]?d[ae]n\s+başlayan|başlayan\s+oran|['’]?d[ae]n\s+itibaren|başlar",
+    re.IGNORECASE)
+
+#: Pencere genişlikleri. Ölçümle seçildi: 45/22 ile 7 doğru pozitifin hepsi
+#: yakalanıyor ve 4 yanlış pozitifin hiçbiri girmiyor.
+_KOSUL_ONCE_PENCERE = 45
+_KOSUL_SONRA_PENCERE = 22
+
+#: Kapının yalnız uygulandığı alan. Gerekçe yukarıda ("neden yalnız kâr payı").
+_KOSUL_ALANLARI = frozenset({"kar_payi_orani"})
+
+#: Diğer notlarla AYNI biçim: "not:" öneki YOK (arayüz onu kendisi ekliyor)
+#: ve cümle "doğrudan kıyaslanamaz" ile bitiyor — dördüncü bir gerekçeye
+#: dördüncü bir dil uydurmak, aynı kararı farklı biçimde anlatmak olurdu.
+NOT_KOSULLU = "koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz"
+
+
+def _kosul_notu(field_name: str, raw_value: Optional[str],
+                source_span: Optional[str]) -> Optional[str]:
+    """Oran bir koşula BAĞLIYSA kullanıcıya dönük gerekçe; değilse `None`.
+
+    Koşulun orana bağlı olduğunu, kanıt penceresinde oranın konumuna göre
+    arayarak doğrular; gerekçe ve ölçüm yukarıdaki blokta.
+    """
+    if field_name not in _KOSUL_ALANLARI:
+        return None
+    ham = (raw_value or "").strip()
+    pencere = source_span or ""
+    if not ham or not pencere:
+        return None
+    i = pencere.find(ham)
+    if i < 0:
+        return None
+    j = i + len(ham)
+    onc = pencere[max(0, i - _KOSUL_ONCE_PENCERE):i]
+    son = pencere[j:j + _KOSUL_SONRA_PENCERE]
+    # Cümle sınırı koşulu orandan KOPARIR (ölçülen yanlış pozitif #853).
+    if "." in onc:
+        onc = onc[onc.rfind(".") + 1:]
+    if "." in son:
+        son = son[:son.find(".")]
+    if _KOSUL_ONCE_RE.search(onc) or _KOSUL_SONRA_RE.search(son):
+        return NOT_KOSULLU
+    return None
+
+
 def rank(rows: list[dict], field_name: str) -> list[RankRow]:
     """query_fields() çıktısını alıp adil sıralama döndürür.
 
@@ -352,6 +458,14 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
         durum_notu = _durum_notu(r.get("campaign_status"))
         if durum_notu is not None and comparable:
             comparable, note = False, durum_notu
+        # Koşul kapısı, güven kapısından ÖNCE ve süre kapısından SONRA:
+        # süresi dolmuşluk ürünün varlığıyla, koşulluluk ürünün kendisiyle,
+        # düşük güven ise bizim ÖLÇÜMÜMÜZLE ilgilidir. Kullanıcıya gösterilecek
+        # tek not, en temel eleme sebebi olmalı ve sıra bunu kurar.
+        kosul_notu = _kosul_notu(field_name, r.get("raw_value"),
+                                 r.get("source_span"))
+        if kosul_notu is not None and comparable:
+            comparable, note = False, kosul_notu
         # Güven kapısı sayısallaştırmadan SONRA uygulanır: zaten kıyaslanamayan
         # bir satırın (aralık, farklı para birimi) notunu güvenle değiştirmek
         # daha bilgilendirici olmaz, yalnız asıl nedeni gizlerdi.
