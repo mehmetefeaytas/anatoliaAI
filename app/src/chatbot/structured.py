@@ -86,7 +86,8 @@ from ..comparison.compare import (
     yon_zorla,
 )
 from ..db.repository import Repository
-from .router import BANK_DISPLAY, Route
+from ..normalization.normalize import bicimle_tr_sayi
+from .router import BANK_DISPLAY, FIELD_DISPLAY, Route
 
 #: Kullanıcı ürün ailesini SÖYLEMEDİĞİNDE tam listelenen aile sayısı.
 #:
@@ -232,25 +233,80 @@ def _apply_filters(repo: Repository, rows: list[dict], filters: dict) -> list[di
     return out
 
 
-_FIELD_LABEL = {
-    "kar_payi_orani": "kâr payı oranı",
-    "vade_ay": "vade",
-    "finansman_tutari": "finansman tutarı",
-    "tahsis_ucreti": "tahsis ücreti",
-    "masraf_durumu": "masraf durumu",
-    "taksit_sayisi": "taksit sayısı",
-}
+#: Alan → ekran etiketi. Sözlük `router.FIELD_DISPLAY`'in TA KENDİSİDİR.
+#:
+#: Eskiden burada ayrı bir kopya duruyordu ve çoktan ayrışmıştı: router
+#: `alisveris_puani`, `odul_miktari`, `indirim_orani` için etiket biliyordu,
+#: bu kopya bilmiyordu. Sonuç kullanıcının ekranında görünüyordu — o üç alan
+#: sorulduğunda cevabın başlığı ham sütun adıyla ("alisveris_puani (uygun
+#: kampanyalar):") basılıyordu.
+_FIELD_LABEL = FIELD_DISPLAY
+
+
+# --------------------------------------------------------------------------- #
+# Sayı ve para gösterimi — SUNUCU TARAFINDAKİ TEK YER
+# --------------------------------------------------------------------------- #
+# Kusur tarayıcıda görüldü:
+#
+#     Konut Finansmanı: Ziraat Katılım (1.25e+06 TRY)
+#     Finansman: Kuveyt Türk (5e+06 TRY)
+#
+# Sebep `%g` biçimlendiricisiydi: altı anlamlı basamağı aşan sayıyı bilimsel
+# gösterime düşürür. 1,25 milyon TL'lik bir finansman tutarı, katılım
+# bankacılığı sorusunun tam merkezindeki sayıdır ve "1.25e+06" olarak
+# okunamaz.
+#
+# Binlik/ondalık ayıraç kuralı BURAYA YENİDEN YAZILMAZ: gövde
+# `normalization.bicimle_tr_sayi`'dan gelir (aynı kural, aynı yer). Bu
+# dosyanın eklediği tek şey bir GÖSTERİM kararıdır — gereksiz ondalık sıfırlar
+# atılır, çünkü belgede "%2,5" yazan oran ekranda "%2,50" diye okunmamalıdır.
+#
+# Arayüz tarafı (`web/app/lib/format.ts`) ayrı bir çalışma zamanıdır ve ortak
+# kod paylaşamaz; ama çıktı biçimi birebir aynıdır: "1.250.000 TL", "%2,5",
+# "120 ay", "masrafsız".
+
+
+#: Yüzde olarak okunan alanlar — değerin başına `%` gelir.
+_ORAN_ALANLARI = frozenset({"kar_payi_orani", "indirim_orani"})
+
+#: Sayının birimi. Burada olmayan sayısal alan (ör. `alisveris_puani`) çıplak
+#: basılır: uydurma birim yazmaktansa birimsiz yazmak dürüsttür.
+_SAYI_BIRIMI = {"vade_ay": "ay", "taksit_sayisi": "taksit"}
+
+
+def _tr_sayi(x: float) -> str:
+    """Sayının Türkçe gösterimi: binlik `.`, ondalık `,`, sonda sıfır yok."""
+    metin = bicimle_tr_sayi(float(x))
+    return metin.rstrip("0").rstrip(",") if "," in metin else metin
+
+
+def _tr_para(tutar: float, currency: Optional[str] = "TRY") -> str:
+    """Parayı Türkçe yazar: `1250000.0` → `1.250.000 TL`.
+
+    `TRY` kodu kullanıcıya `TL` olarak gösterilir (arayüzle aynı karar);
+    tanınmayan para birimi kodu OLDUĞU GİBİ basılır — bilinmeyen bir birimi
+    TL'ye çevirmek, olmayan bir dönüşüm iddia etmek olurdu.
+    """
+    birim = "TL" if (currency or "TRY") == "TRY" else str(currency)
+    return f"{_tr_sayi(tutar)} {birim}".strip()
 
 
 def _fmt_value(field: str, value) -> str:
-    if field == "kar_payi_orani" and isinstance(value, (int, float)):
-        return f"%{value:g}".replace(".", ",")
-    if field == "vade_ay" and isinstance(value, (int, float)):
-        return f"{int(value)} ay"
+    """Kanonik değeri kullanıcıya gösterilecek Türkçe metne çevirir."""
+    # Alışveriş puanı iki BİRİMDE ilan edilir ve kanonik değer hangisi
+    # olduğunu söyler (`{"kind": "points"|"rate"}`). Bu dal olmadan puan
+    # değeri para dalına düşüyor ve "500 TRY" diye basılıyordu — 500 puan ile
+    # 500 lira aynı şey değildir.
+    if isinstance(value, dict) and value.get("kind") in ("points", "rate") \
+            and isinstance(value.get("value"), (int, float)):
+        if value["kind"] == "rate":
+            return f"%{_tr_sayi(value['value'])}"
+        return f"{_tr_sayi(value['value'])} puan"
     if isinstance(value, dict) and "value" in value:
-        return f"{value['value']:g} {value.get('currency', 'TRY')}"
+        return _tr_para(value["value"], value.get("currency", "TRY"))
     if isinstance(value, dict) and "min" in value:
-        return f"%{value['min']:g}–%{value['max']:g}".replace(".", ",")
+        onek = "%" if field in _ORAN_ALANLARI else ""
+        return f"{onek}{_tr_sayi(value['min'])}–{onek}{_tr_sayi(value['max'])}"
     # Masraf durumu üç ayrı DURUMDUR ve üçü farklı cümle gerektirir. Bu dal
     # olmadan kullanıcıya ham sözlük gidiyordu — ölçüldü, demonun manşet
     # sorusunda görünüyordu:
@@ -264,8 +320,17 @@ def _fmt_value(field: str, value) -> str:
         amount = value.get("amount")
         if amount is None:
             return "ücret var, tutarı belirtilmemiş"
-        return f"{amount:g} TRY masraf"
-    return str(value)
+        return f"{_tr_para(amount, value.get('currency', 'TRY'))} masraf"
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return str(value)
+    # Sayısal alanlar — birimi olanın birimi yazılır, olmayan çıplak basılır.
+    # Son dal eskiden `str(value)` idi ve alan sözlüğünde yeri olmayan her
+    # sayıyı Python gösterimiyle yazıyordu: taksit sayısı ekranda "12.0",
+    # alışveriş puanı "1500.0" olarak görünüyordu.
+    if field in _ORAN_ALANLARI:
+        return f"%{_tr_sayi(value)}"
+    birim = _SAYI_BIRIMI.get(field)
+    return f"{_tr_sayi(value)} {birim}" if birim else _tr_sayi(value)
 
 
 # =========================================================================== #
@@ -359,7 +424,13 @@ def _tarih_tr(iso: Optional[str]) -> Optional[str]:
     return f"{gun.zfill(2)}.{ay.zfill(2)}.{yil}"
 
 
-def _sayi_tr(x: float) -> str:
+def _guven_tr(x: float) -> str:
+    """Güven skorunun gösterimi — iki basamak SABİT (0,60 ≠ 0,6).
+
+    `_tr_sayi`'dan bilerek ayrıdır: orada sondaki sıfır atılır, burada
+    atılmaz. Eşikle karşılaştırılan iki sayının aynı basamak sayısıyla
+    yazılması, "0,58 < 0,6" cümlesinin okunurluğu için gerekli.
+    """
     return f"{x:.2f}".replace(".", ",")
 
 
@@ -525,8 +596,8 @@ def _ayrinti_cumlesi(field: str, ranked: list[RankRow], baskin: str,
         guvenler = [x.confidence for x in ilgili if x.confidence is not None]
         if not guvenler:
             return None
-        return (f"Ölçülen en yüksek çıkarım güveni {_sayi_tr(max(guvenler))}, "
-                f"eşik {_sayi_tr(ASGARI_GUVEN)}.")
+        return (f"Ölçülen en yüksek çıkarım güveni {_guven_tr(max(guvenler))}, "
+                f"eşik {_guven_tr(ASGARI_GUVEN)}.")
     if baskin == ELEME_ARALIK:
         ornek = ilgili[0]
         return (f"Değerler tek sayı değil aralık — örneğin "

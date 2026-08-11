@@ -228,7 +228,10 @@ class TestSohbetteGerekceGORUNUR(unittest.TestCase):
         ]
         ranked = rank(rows, "finansman_tutari")
         metin = structured._phrase_list("finansman_tutari", ranked, {})
-        self.assertIn("0 TRY", metin, "elenen değer cevaptan silinmiş")
+        # Birim `TRY` değil `TL`: kullanıcıya dönük metinde para birimi Türkçe
+        # yazılır (bkz. structured._tr_para). Testin iddiası değişmedi —
+        # elenen değerin cevapta GÖRÜNMESİ.
+        self.assertIn("0 TL", metin, "elenen değer cevaptan silinmiş")
         self.assertIn("düşük çıkarım güveni", metin)
 
     def test_hicbir_satir_kiyaslanamazsa_SEBEP_yazilir(self):
