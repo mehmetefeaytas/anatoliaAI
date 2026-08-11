@@ -53,6 +53,23 @@ docker-compose up        # postgres + vllm/ollama + api + web
 pip install -r requirements.txt   # geliştirme ortamı
 ```
 
+### Geliştirme kurulumu — canlı toplama için tarayıcı
+
+Bankaların **4'ü** (Adil Katılım, Hayat Finans, T.O.M., Türkiye Finans)
+sayfalarını JavaScript ile üretiyor; onları toplamak için Playwright'ın
+tarayıcı bileşeni gerekir. `pip install` yalnız Python paketini kurar,
+tarayıcı ikilisini **indirmez**:
+
+```bash
+python -m playwright install chromium   # ~95 MB, internet gerektirir
+```
+
+**Bu adım TESLİM EDİLEN SİSTEMİN çalışması için gerekli DEĞİLDİR.** Demo
+önceden doldurulmuş veri tabanından okur; kıyas, sohbet ve pano ekranları
+tarayıcı olmadan da tam çalışır. Tarayıcı yalnız *yeni veri toplarken*
+gerekir ve eksikse sistem o bankayı Türkçe bir açıklamayla atlar, diğerlerini
+toplamayı sürdürür.
+
 ## Komutlar
 ```bash
 python -m src.scraping.run --config config/banks.yaml   # scraping (demo/fixture)
