@@ -362,8 +362,15 @@ def collect_live(bank: BankConfig, scraped_at: Optional[str] = None,
     if not fetcher.available:
         reason = getattr(fetcher, "unavailable_reason", None) or \
             f"'{bank.scrape_mode}' modu icin bagimlilik yok"
+        # `skipped_code` sonlu bir koddur ve kullanıcıya dönük cümleyi ONDAN
+        # kuran taraf üst katmandır (`tazeleme.py`). `skipped_reason` yalnız
+        # tanılama satırıdır; ham istisna metni buraya HİÇ ulaşmaz — çekici
+        # onu kendi `unavailable_detail`inde tutar ve günlüğe yazar
+        # (bkz. `fetcher.BrowserFetcher._yok`).
         diag["notes"].append(f"{bank.slug}: {reason} — atlandi")
         diag["skipped_reason"] = reason
+        diag["skipped_code"] = getattr(fetcher, "unavailable_code", None)
+        # Bu banka atlanır; TOPLU hasatta döngü diğer bankalarla devam eder.
         if owns_bundle:
             bundle.close()
         return []

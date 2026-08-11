@@ -12,13 +12,54 @@ Her ikisi de `FetchResult` döner; `collection_method` alanı provenance'a taş�
 
 from __future__ import annotations
 
+import logging
+import re
 import time
 from dataclasses import dataclass, field
 from typing import Optional
 from urllib.parse import urlsplit
 
+logger = logging.getLogger(__name__)
+
 DEFAULT_USER_AGENT = "AnatoliaAI-Research/1.0 (+TEKNOFEST 2026; arastirma amacli)"
 DEFAULT_DELAY_S = 3.0
+
+# --------------------------------------------------------------------------- #
+# Tarayıcı yokluğu: KOD üret, ham istisna metni ÜRETME
+# --------------------------------------------------------------------------- #
+# Playwright'in başlatma hatası tam dosya yolu taşır:
+#
+#   Error: BrowserType.launch: Executable doesn't exist at
+#   /Users/<kullanici>/Library/Caches/ms-playwright/chromium_headless_shell-.../...
+#
+# Bu metin `collect_live` tanılamasına, oradan da tazeleme ekranına düşüyordu:
+# operatör Türkçe bir arayüzde İngilizce bir yığın izi ve makinedeki mutlak bir
+# dosya yolu (kullanıcı adı dahil) görüyordu. Hem okunmaz hem gereksiz ifşa.
+#
+# Ayrım şudur: KOD dışarı çıkar, AYRINTI günlüğe yazılır. Kod sonlu ve
+# kararlıdır; üst katman ondan Türkçe, eyleme dönük bir cümle kurar. Ham metin
+# `unavailable_detail`de durur ve yalnız günlükten okunur.
+
+#: Playwright paketi hiç kurulu değil.
+KOD_SURUCU_YOK = "surucu_yok"
+#: Paket kurulu ama tarayıcı ikilisi indirilmemiş — en sık görülen durum.
+KOD_IKILI_YOK = "ikili_yok"
+#: Tarayıcı başka bir sebeple açılmadı (sandbox, bellek, izin…).
+KOD_BASLATILAMADI = "baslatilamadi"
+
+#: Rapor/günlük için kısa Türkçe karşılıklar. Kullanıcıya gösterilen tam
+#: cümleyi üst katman kurar (`tazeleme.py`); burada duran, tanılama satırıdır.
+TARAYICI_KOD_METNI: dict[str, str] = {
+    KOD_SURUCU_YOK: "tarayıcı sürücüsü kurulu değil",
+    KOD_IKILI_YOK: "tarayıcı bileşeni indirilmemiş",
+    KOD_BASLATILAMADI: "tarayıcı başlatılamadı",
+}
+
+#: "İkili yok" imzası. Playwright bu durumda hem yolu hem de kurulum komutunu
+#: yazar; iki ayrı ipucuna bakmak sürüm metni değişse de kodu ayakta tutar.
+_IKILI_YOK_RE = re.compile(
+    r"executable doesn'?t exist|please run the following command|"
+    r"playwright install", re.IGNORECASE)
 
 
 @dataclass
@@ -153,7 +194,10 @@ class BrowserFetcher:
     """Playwright tabanlı çekici (scrape_mode: js).
 
     Playwright ya da tarayıcı ikilisi yoksa `available` False döner; çağıran
-    tarafı bunu rapora yazar ve bankayı manuel toplamaya bırakır.
+    tarafı bunu rapora yazar ve bankayı manuel toplamaya bırakır. Yokluk
+    SESSİZ değildir ama HAM da değildir: dışarı `unavailable_code` (sonlu bir
+    kod) ve `unavailable_reason` (kısa Türkçe) çıkar; istisnanın kendisi
+    yalnız `unavailable_detail`de durur ve günlüğe yazılır (modül başlığı).
     """
 
     method = "browser"
@@ -164,6 +208,10 @@ class BrowserFetcher:
         self.timeout_ms = timeout_ms
         self.limiter = limiter or RateLimiter()
         self.unavailable_reason: Optional[str] = None
+        self.unavailable_code: Optional[str] = None
+        #: Ham istisna metni — YALNIZ günlük ve hata ayıklama için. Kullanıcıya
+        #: dönük hiçbir metne karışmaz (dosya yolu ve kullanıcı adı taşır).
+        self.unavailable_detail: Optional[str] = None
         self._pw = None
         self._browser = None
         self._context = None
@@ -172,8 +220,20 @@ class BrowserFetcher:
     def available(self) -> bool:
         return self._ensure() is None
 
+    def _yok(self, kod: str, detay: Optional[str] = None) -> str:
+        """Yokluk durumunu kaydeder ve kısa Türkçe karşılığını döndürür."""
+        self.unavailable_code = kod
+        self.unavailable_detail = (detay or "")[:400] or None
+        self.unavailable_reason = TARAYICI_KOD_METNI.get(
+            kod, TARAYICI_KOD_METNI[KOD_BASLATILAMADI])
+        if detay:
+            logger.warning("tarayıcı hazırlanamadı (%s): %s", kod, detay)
+        else:
+            logger.warning("tarayıcı hazırlanamadı (%s)", kod)
+        return self.unavailable_reason
+
     def _ensure(self) -> Optional[str]:
-        """Tarayıcıyı bir kez başlatır. Hata mesajı döner (None = hazır)."""
+        """Tarayıcıyı bir kez başlatır. Kısa Türkçe sebep döner (None = hazır)."""
         if self._context is not None:
             return None
         if self.unavailable_reason is not None:
@@ -181,8 +241,7 @@ class BrowserFetcher:
         try:
             from playwright.sync_api import sync_playwright  # type: ignore
         except ModuleNotFoundError:
-            self.unavailable_reason = "playwright kurulu degil"
-            return self.unavailable_reason
+            return self._yok(KOD_SURUCU_YOK)
         try:
             self._pw = sync_playwright().start()
             self._browser = self._pw.chromium.launch(headless=True)
@@ -191,9 +250,14 @@ class BrowserFetcher:
                 viewport={"width": 1440, "height": 900},
             )
         except Exception as exc:
-            self.unavailable_reason = f"tarayici baslatilamadi: {type(exc).__name__}: {exc}"[:200]
+            detay = f"{type(exc).__name__}: {exc}"
+            # "İkili indirilmemiş" ile "tarayıcı açılmadı" ayrı kodlardır:
+            # birincisinin çözümü tek komut, ikincisininki değil. Tek mesaja
+            # indirmek operatöre yapılacak işi söylemez.
+            kod = KOD_IKILI_YOK if _IKILI_YOK_RE.search(detay) else KOD_BASLATILAMADI
+            sebep = self._yok(kod, detay)
             self._close_quiet()
-            return self.unavailable_reason
+            return sebep
         return None
 
     def fetch(self, url: str, wait_selector: Optional[str] = None) -> FetchResult:

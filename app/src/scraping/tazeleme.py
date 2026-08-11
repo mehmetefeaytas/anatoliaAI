@@ -69,7 +69,15 @@ from .collector import (
     utc_now_iso,
 )
 from .config import BankConfig
-from .fetcher import BrowserFetcher, FetcherBundle, RateLimiter, StaticFetcher
+from .fetcher import (
+    KOD_BASLATILAMADI,
+    KOD_IKILI_YOK,
+    KOD_SURUCU_YOK,
+    BrowserFetcher,
+    FetcherBundle,
+    RateLimiter,
+    StaticFetcher,
+)
 from .robots import DEFAULT_USER_AGENT, RobotsCache
 
 logger = logging.getLogger(__name__)
@@ -105,6 +113,70 @@ DURUM_IPTAL = "iptal"
 BELGE_YENI = "yeni"
 BELGE_DEGISEN = "degisen"
 BELGE_AYNI = "ayni"
+
+
+# --------------------------------------------------------------------------- #
+# Toplama katmanı eksikse: Türkçe, kısa, EYLEME DÖNÜK mesaj
+# --------------------------------------------------------------------------- #
+# Ekranda görülen eski mesaj şuydu:
+#
+#   Bu banka için toplama katmanı hazır değil: tarayici baslatilamadi:
+#   Error: BrowserType.launch: Executable doesn't exist at
+#   /Users/<kullanici>/Library/Caches/ms-playwright/chromium_headless_shell-…
+#
+# İki ayrı kusur: (1) operatöre ne yapacağını söylemiyor, (2) makinedeki mutlak
+# bir dosya yolunu — kullanıcı adı dahil — arayüze taşıyor. Ham istisna metni
+# bu yoldan artık HİÇ geçmez: çekici sonlu bir kod üretir (`fetcher.py`),
+# ayrıntıyı kendi içinde tutup günlüğe yazar, buradaki eşleme koddan Türkçe
+# cümleyi kurar. Bilinmeyen kod için de ham metne DÜŞÜLMEZ; genel cümle
+# kullanılır, çünkü "bilinmeyen" tam olarak ham metnin sızdığı yerdir.
+#
+# Kurulum komutu gösterilir ama ÇALIŞTIRILMAZ: `playwright install chromium`
+# internetten indirme yapar ve sistemin çevrimdışı çalışma iddiası (CLAUDE.md
+# §1) gereği bu kararı operatör verir.
+
+_KURULUM_KOMUTU = "playwright install chromium"
+
+TARAYICI_MESAJLARI: dict[str, str] = {
+    KOD_SURUCU_YOK: (
+        "Bu bankanın sayfaları tarayıcıyla açılmayı gerektiriyor, tarayıcı "
+        "sürücüsü ise bu makinede kurulu değil. Kurmak için önce "
+        "`pip install playwright`, ardından `" + _KURULUM_KOMUTU + "` "
+        "komutunu çalıştırın; ikisi de internet gerektirir."
+    ),
+    KOD_IKILI_YOK: (
+        "Bu bankanın sayfaları tarayıcıyla açılmayı gerektiriyor. Tarayıcı "
+        "sürücüsü kurulu ancak tarayıcı bileşeni indirilmemiş. Kurmak için "
+        "`" + _KURULUM_KOMUTU + "` komutunu çalıştırın; bu komut internet "
+        "gerektirir."
+    ),
+    KOD_BASLATILAMADI: (
+        "Bu bankanın sayfaları tarayıcıyla açılmayı gerektiriyor, tarayıcı "
+        "ise bu makinede başlatılamadı. Ayrıntı sunucu günlüğüne yazıldı."
+    ),
+}
+
+_TARAYICI_SONU = (
+    " Bu banka atlandı; diğer bankaların toplanması ve önceden hazırlanmış "
+    "veri tabanından okuyan kıyas, sohbet ve pano ekranları bundan "
+    "etkilenmez."
+)
+
+_GENEL_MESAJ = ("Bu banka için toplama katmanı hazır değil, bu yüzden banka "
+                "atlandı. Ayrıntı sunucu günlüğüne yazıldı. Diğer bankaların "
+                "toplanması ve önceden hazırlanmış veri tabanından okuyan "
+                "ekranlar bundan etkilenmez.")
+
+
+def toplama_katmani_mesaji(kod: Optional[str]) -> str:
+    """Toplama katmanı eksikliğinin operatöre dönük Türkçe karşılığı.
+
+    Ham istisna metni ARGÜMAN OLARAK BİLE alınmaz: alınsaydı "bilinmeyen kod"
+    dalında ona düşmek cazip olurdu ve sızıntı ilk beklenmedik hatada geri
+    gelirdi. Bilinmeyen kod = genel cümle.
+    """
+    mesaj = TARAYICI_MESAJLARI.get(kod or "")
+    return (mesaj + _TARAYICI_SONU) if mesaj else _GENEL_MESAJ
 
 
 class TazelemeMesgul(RuntimeError):
@@ -428,12 +500,15 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
         docs = collect_live(bank, bundle=sayacli, robots=robots,
                             max_docs=azami_belge, report=tani,
                             ilerleme=ilerleme, iptal=iptal)
-    except Exception as exc:  # ağ katmanı çökse bile uç ayakta kalmalı
+    except Exception:  # ağ katmanı çökse bile uç ayakta kalmalı
         logger.exception("tazeleme çekim evresinde düştü: %s", bank.slug)
+        # Ham istisna metni EKRANA GEÇMEZ: yığın izini `logger.exception`
+        # zaten günlüğe tam hâliyle yazdı ve o metin dosya yolu taşıyabilir.
         yaz(durum=DURUM_HATA, bitis=utc_now_iso(),
             asama="Tazeleme tamamlanamadı.",
-            mesaj=f"Toplama katmanı beklenmedik bir hata verdi: "
-                  f"{type(exc).__name__}.")
+            mesaj="Toplama katmanı beklenmedik bir hata verdi ve tazeleme "
+                  "tamamlanamadı. Ham arşive hiçbir belge yazılmadı; ayrıntı "
+                  "sunucu günlüğüne kaydedildi.")
         return durum
     finally:
         if kendi_bundle:
@@ -466,8 +541,7 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
             mesaj = ("Hiçbir belge alınamadı: site istekleri reddetti ya da "
                      "sayfalar erişime kapalı. Ayrıntılar aşağıdaki listede.")
         elif tani.get("skipped_reason"):
-            mesaj = (f"Bu banka için toplama katmanı hazır değil: "
-                     f"{tani['skipped_reason']}.")
+            mesaj = toplama_katmani_mesaji(tani.get("skipped_code"))
         else:
             mesaj = ("Site erişilebilir ancak yeni belge bulunamadı. Ham arşiv "
                      "değişmedi.")
@@ -488,11 +562,16 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
 
     try:
         yazilan = save_docs(docs, raw_dir)
-    except OSError as exc:
+    except OSError:
+        # `str(exc)` mutlak dosya yolu taşır ("[Errno 13] Permission denied:
+        # /Users/…"). Yol günlüğe gider, ekrana değil.
+        logger.exception("ham arşive yazma başarısız: %s", bank.slug)
         yaz(durum=DURUM_HATA, bitis=utc_now_iso(),
             asama="Yazma başarısız.",
             belgeler=belgeler, yeni=yeni, degisen=degisen, ayni=ayni,
-            mesaj=f"Belgeler diske yazılamadı: {exc}.")
+            mesaj="Belgeler ham arşive yazılamadı; disk dolu ya da hedef "
+                  "dizine yazma izni yok olabilir. Ayrıntı sunucu günlüğüne "
+                  "kaydedildi.")
         return durum
 
     yaz(durum=DURUM_TAMAM, bitis=utc_now_iso(), asama="Tazeleme tamamlandı.",
