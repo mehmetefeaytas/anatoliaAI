@@ -76,6 +76,42 @@ _SUPERLATIVE_HIGH = ["en yüksek", "en fazla", "en uzun", "en çok", "maksimum",
 _LIST_INTENT = ["hangi banka", "hangi bankalar", "listele", "göster", "var mı",
                 "veren", "sunan", "olanlar"]
 
+# İKİ BANKAYI KIYASLAMA NİYETİ — alan söylenmemiş olabilir.
+#
+# ## Ölçülen kusur (2026-08-11)
+#
+# "Türkiye Finans Bankası mı daha avantajlı, Albaraka Bankası mı?" sorusu
+# RAG'e düşüyordu. Alan çıkarılamadığı için yapısal sorgu kurulamıyor, RAG ise
+# anahtar-kelime örtüşmesiyle Findeks kredi notu ve altın hesabı belgelerini
+# getiriyordu. LLM bu alakasız bağlamdan cevap üretemeyince KENDİ genel
+# bilgisinden yazıyordu: *"her iki bankanın web sitelerini ziyaret edip veya
+# şubelerine danışmak daha uygun olacaktır"* — oysa istenen kıyas verisi
+# sistemin elindeydi ve iki banka da soruda ADIYLA geçiyordu.
+#
+# Aynı sorunun "daha **iyi**" ile sorulan biçimi DOĞRU çalışıyordu, çünkü
+# "daha iyi" tavsiye kapısının (safety.KAPI 3) sözlüğünde var ve o kapı soruyu
+# yapısal kıyasa çeviriyor. Yani mekanizma zaten kuruluydu; ona ulaşan ifade
+# kümesi eksikti.
+#
+# Bu liste tavsiye sözlüğüne EKLENMEDİ, ayrı durur. Sebep: "karşılaştır"
+# tavsiye istemez, olgu ister. Onu tavsiye kapısına koymak, nötr bir soruda
+# jüriye "yatırım tavsiyesi kapısı ateşlendi" diye YANLIŞ bir kapı raporu
+# gösterirdi. Kapı raporunun doğruluğu bu projenin iddiası.
+_KIYAS_ISARETLERI = [
+    "karşılaştır", "kıyasla", "kıyaslar", "karşılaştırma",
+    "daha avantajlı", "avantajlı mı", "daha uygun", "daha ucuz",
+    "daha düşük mü", "hangisi daha", "hangisi avantajlı", "farkı ne",
+    "arasındaki fark", "hangisini", " vs ",
+]
+
+#: Alan söylenmeden kıyas istendiğinde kullanılacak alan.
+#:
+#: Kâr payı oranı seçildi: senaryonun kalbi (CLAUDE.md §5) ve kullanıcının
+#: "avantajlı" derken en sık kastettiği boyut. Seçim GİZLENMEZ — cevabın
+#: başlığı hangi alanın kıyaslandığını yazar ve `structured.answer` çok
+#: boyutlu soruya tek boyutlu cevap verildiğini ayrıca not eder.
+VARSAYILAN_KIYAS_ALANI = "kar_payi_orani"
+
 # Kullanıcı sorusu ALL-CAPS veya diakritiksiz gelebilir ("EN DÜŞÜK KÂR PAYI",
 # "en dusuk kar payi"). Eşleşme tr_fold_ascii üzerinden yapılır; anahtar
 # kelimeler de modül yüklenirken aynı forma indirgenir.
@@ -85,6 +121,7 @@ _FOLDED_FIELD_KEYWORDS = {k: [_F(v) for v in vals]
 _FOLDED_SUP_LOW = [_F(s) for s in _SUPERLATIVE_LOW]
 _FOLDED_SUP_HIGH = [_F(s) for s in _SUPERLATIVE_HIGH]
 _FOLDED_LIST_INTENT = [_F(s) for s in _LIST_INTENT]
+_FOLDED_KIYAS = [_F(s) for s in _KIYAS_ISARETLERI]
 
 # Kampanya türü filtresi: soru içindeki ipucu → 8 sınıftan biri.
 # Kullanıcı ürün adını değil GÜNLÜK KELİMEYİ kullanır: "araba alımında en
@@ -318,6 +355,10 @@ class Route:
     #: Önceki turlardan devralınan boyutlar — kullanıcıya gösterilir.
     #: [{"kind": "field", "label": "kâr payı oranı"}, ...]
     inherited: list[dict] = dc_field(default_factory=list)
+    #: Alan kullanıcı tarafından SÖYLENMEDİ, kıyas niyetinden varsayıldı mı.
+    #: Cevaba "çok boyutlu soruya tek boyutlu cevap" notu bu bayrakla eklenir;
+    #: bayrak taşınmazsa varsayım kullanıcıya görünmez olurdu.
+    alan_varsayildi: bool = False
 
 
 def route(question: str, context: Optional[ChatContext] = None) -> Route:
@@ -344,6 +385,16 @@ def route(question: str, context: Optional[ChatContext] = None) -> Route:
                 field = alan
                 break
 
+    # Kıyas niyeti var ama alan söylenmemiş: "A mı daha avantajlı, B mi?".
+    # Bu kapı OLMADAN soru RAG'e düşüyordu ve anahtar-kelime araması sorunun
+    # yalnız yaygın sözcükleriyle örtüşen belgeler getiriyordu — iki banka da
+    # soruda adıyla geçtiği hâlde. Gerekçenin tamamı `_KIYAS_ISARETLERI`'nde.
+    alan_varsayildi = False
+    if field is None and _kiyas_niyeti(q, filters):
+        field = VARSAYILAN_KIYAS_ALANI
+        intent = intent or "list"
+        alan_varsayildi = True
+
     # Sohbet bağlamı — sorunun EKSİK boyutlarını önceki turlardan devral.
     # Kapıların (safety.screen_input) ÇOK SONRASINDA değil, çok ÖNCESİNDE
     # değil: kapılar `bot.Chatbot.ask` içinde ham soru üzerinde zaten koştu.
@@ -355,12 +406,31 @@ def route(question: str, context: Optional[ChatContext] = None) -> Route:
 
     # sayısal/karşılaştırmalı sinyal varsa yapısal sorgu
     if field and (intent or filters):
-        return Route("structured", field, intent or "list", filters, inherited)
+        return Route("structured", field, intent or "list", filters, inherited,
+                     alan_varsayildi)
     # sadece superlatif + alan
     if field and intent in ("lowest", "highest"):
-        return Route("structured", field, intent, filters, inherited)
+        return Route("structured", field, intent, filters, inherited,
+                     alan_varsayildi)
     # aksi halde RAG (açıklama/koşul soruları)
-    return Route("rag", field, intent, filters, inherited)
+    return Route("rag", field, intent, filters, inherited, alan_varsayildi)
+
+
+def _kiyas_niyeti(q: str, filters: dict) -> bool:
+    """Soru bir KIYAS istiyor mu (alan söylenmemiş olsa bile).
+
+    İki bağımsız sinyal; biri yeterli:
+
+    * Açık kıyas ifadesi ("karşılaştır", "daha avantajlı", "farkı ne").
+    * İki banka adı + iki soru edatı: "Türkiye Finans **mı** …, Albaraka
+      **mı**?" Tek edat yetmez — "Albaraka mı kâr payı veriyor?" bir kıyas
+      değil, tek bankaya sorulmuş bir sorudur.
+    """
+    if any(s in q for s in _FOLDED_KIYAS):
+        return True
+    if len(filters.get("banks") or []) < 2:
+        return False
+    return len(re.findall(r"\b(?:mi|mu)\b", q)) >= 2
 
 
 def _devral(field: Optional[str], intent: Optional[str], filters: dict,

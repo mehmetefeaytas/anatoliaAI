@@ -47,6 +47,7 @@ from typing import Any, Optional
 from ..db.repository import Repository
 from ..preprocessing.clean import tr_fold
 from . import safety
+from .dayanak import dayanaksiz_sayilar
 
 logger = logging.getLogger(__name__)
 
@@ -506,7 +507,7 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
     """
     retriever = retriever or KeywordRetriever(repo)
     used = getattr(retriever, "retriever_name", "keyword")
-    passages = retriever.retrieve(question)
+    passages = _bankaya_suz(retriever, question)
     if not passages:
         return RagAnswer("İlgili bir kampanya metni bulunamadı.", [], used)
 
@@ -529,14 +530,100 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
                 f"Bağlam:\n{context}\n\nSoru: {question}",
                 {"type": "object", "properties": {"cevap": {"type": "string"}}},
             )
-            return RagAnswer(resp.get("cevap", ""), passages, used,
-                             quarantined=karantina)
+            metin = (resp.get("cevap") or "").strip()
+            gerekce = _dayanak_kusuru(metin, context)
+            if gerekce is None:
+                return RagAnswer(metin, passages, used, quarantined=karantina)
+            logger.warning("RAG cevabı dayanak kapısından geçemedi (%s); "
+                           "çıkarımsal yedeğe düşülüyor", gerekce)
         except Exception:
             pass
 
     # LLM yok → extractive: en alakalı pasajı kaynağıyla döndür
     return RagAnswer(_cikarimsal_cevap(passages[0]), passages, used,
                      quarantined=karantina)
+
+
+#: Banka süzmesi yapılacaksa kaç aday üzerinden süzüleceği.
+#:
+#: Süzme, ilk 3 adayın ÜZERİNDE yapılamaz: sorulan bankanın belgesi 4. sırada
+#: olabilir ve o zaman süzgeç, var olan bir cevabı yok gösterirdi. Aday havuzu
+#: geniş tutulup süzmeden SONRA 3'e inilir.
+_BANKA_ADAY_SAYISI = 24
+
+#: Süzme sonrası döndürülecek pasaj sayısı — süzgeçsiz yoldaki `k` ile aynı.
+_PASAJ_SAYISI = 3
+
+
+def _bankaya_suz(retriever: Any, question: str) -> list[dict]:
+    """Soruda banka adı geçiyorsa pasajları O BANKALARA sınırlar.
+
+    ## Ölçülen kusur (2026-08-11)
+
+    "Vakıf Katılım kart kampanyasında ne var?" sorusuna sistem **Kuveyt
+    Türk**'ün makine finansmanı belgesini getiriyor ve ekranda "İlgili kampanya
+    (Kuveyt Türk)" diye sunuyordu. Sorulmayan bankanın belgesi, sorulan bankanın
+    cevabı gibi görünüyordu.
+
+    Aynı kusur yapısal yolda ZATEN kapalıydı (`structured._apply_filters` banka
+    süzgecini uyguluyor); RAG yolunda hiç yoktu. İki yolun aynı soruya farklı
+    dürüstlük standardı uygulaması, kusuru bulmayı da zorlaştırıyordu.
+
+    ## Sonuç boş kalırsa cevap da BOŞ kalır — bilerek
+
+    Sorulan bankanın eşiği geçen belgesi yoksa hiç pasaj dönmez ve çekimserlik
+    kapısı (`safety.guard_output` KAPI 5) "bu bilgi verimde yok" der. Alternatif,
+    başka bankanın belgesini göstermekti; o da sessiz halüsinasyonun ta kendisi.
+
+    Banka adı geçmeyen sorularda davranış BİREBİR eskisi gibi kalır.
+    """
+    bankalar = safety.detect_banks(question)
+    if not bankalar:
+        return retriever.retrieve(question)
+    adaylar = retriever.retrieve(question, k=_BANKA_ADAY_SAYISI)
+    suzulmus = [p for p in adaylar if p.get("bank_slug") in bankalar]
+    return suzulmus[:_PASAJ_SAYISI]
+
+
+def _dayanak_kusuru(metin: str, baglam: str) -> Optional[str]:
+    """LLM cevabı kaynağa dayanıyor mu — dayanmıyorsa gerekçe, dayanıyorsa None.
+
+    ## Neden bu kapı var — ÖLÇÜLDÜ (2026-08-11, `data/demo.db`, 5 soru)
+
+    Yönerge modele zaten *"sadece verilen bağlamdan"* diyor. Model uymuyor:
+
+    * **2/5** cevap BOŞ dizeydi. Boş gövde kaynaklarla birlikte ekrana
+      gidiyordu — çekimserlik kapısı (`safety.guard_output` KAPI 5) yalnız
+      kaynak YOKKEN ateşlenir, burada kaynak vardı. Kullanıcı üç kaynak satırı
+      ve hiçbir cevap görüyordu.
+    * **1/5** cevap bağlamda GEÇMEYEN bir sayı taşıyordu ("%50 indirim").
+      Ekranda o sayının altında, onu doğrulamayan kaynaklar duruyordu.
+
+    Bir başka ölçülmüş biçim de şuydu: kullanıcının "hangisi daha avantajlı"
+    sorusuna model, bağlamı hiç kullanmadan kendi genel bilgisinden
+    *"bankaların web sitelerini ziyaret edin"* diye cevap verdi. O soru artık
+    yapısal yola gidiyor (`router._kiyas_niyeti`), ama aynı davranış başka
+    sorularda tekrar edebilir.
+
+    ## Neden yalnız SAYI ve BOŞLUK
+
+    Kapı dar tutuldu ve "anlamca uyuyor mu" gibi bir yargı VERMİYOR: öyle bir
+    kapı ya çok gevşek olur (hiçbir şey yakalamaz) ya da doğru cevapları eler.
+    Sayı ise bu sistemde uydurulduğunda en pahalı şeydir — kullanıcı kararını
+    orana, vadeye ve tutara göre verir.
+
+    ## Kapıya takılan cevap SİLİNMEZ, YERİNE geçilir
+
+    Cevap atılıp boş bırakılmaz: çıkarımsal yedek (`_cikarimsal_cevap`) devreye
+    girer ve en alakalı pasajı KAYNAĞIYLA alıntılar. Yani kullanıcı yine bir
+    cevap alır; farkı, o cevabın her kelimesinin belgede durmasıdır.
+    """
+    if not metin:
+        return "boş cevap"
+    uydurma = dayanaksiz_sayilar(metin, baglam)
+    if uydurma:
+        return f"kaynakta geçmeyen sayı: {', '.join(uydurma[:5])}"
+    return None
 
 
 def _cikarimsal_cevap(top: dict) -> str:

@@ -39,7 +39,6 @@ from __future__ import annotations
 
 import logging
 import os
-import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as _Zamanasimi
@@ -49,6 +48,11 @@ from typing import Optional
 
 from ..db.repository import Repository
 from . import rag, safety, structured
+
+# Sayı denetimi RAG yolunda da gerekiyor; tek tanım `dayanak.py`de.
+# Buradan yeniden dışa veriliyor: `sayilari_ayikla` bu modülden içe
+# aktarılıyordu (testler dâhil) ve o yol kırılmamalı.
+from .dayanak import sayilari_ayikla
 from .router import ChatContext, Route, route
 
 logger = logging.getLogger(__name__)
@@ -113,8 +117,17 @@ _VARSAYILAN_SURE = 12.0
 #: karşılaştırma işlevini kaybeder.
 _AZAMI_KARAKTER = 400
 
-#: Sayı belirteci — TR biçimi dâhil (`1.500,00`, `%1,79`, `120`).
-_SAYI = re.compile(r"\d+(?:[.,]\d+)*")
+#: Alan söylenmeden kıyas istendiğinde cevabın sonuna eklenen kapsam notu.
+#:
+#: "Hangisi daha avantajlı?" tek bir alana indirgenemez: vade, tahsis ücreti,
+#: masraf durumu ve kampanya koşulları da avantajın parçasıdır. Sistem kâr payı
+#: oranı üzerinden cevaplıyor (`router.VARSAYILAN_KIYAS_ALANI`) ve bunu
+#: SÖYLÜYOR — söylemeseydi, seçilmiş tek bir boyutu tam cevap gibi sunardı.
+_KIYAS_KAPSAM_NOTU = (
+    "_Not: «Daha avantajlı» tek bir sayıya indirgenemez. Yukarıdaki kıyas "
+    "**kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve "
+    "kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._"
+)
 
 _SOZ_SISTEM = (
     "Sen bir katılım bankacılığı asistanısın. Görevin, sana verilen HAZIR "
@@ -162,15 +175,6 @@ def _sozellestirme_suresi() -> float:
     except ValueError:
         return _VARSAYILAN_SURE
     return deger if deger > 0 else _VARSAYILAN_SURE
-
-
-def sayilari_ayikla(metin: str) -> list[str]:
-    """Metindeki sayı belirteçleri — sondaki noktalama ayıklanmış hâlde.
-
-    `"(%1,79)."` → `["1,79"]`. Cümle sonu noktası ondalık ayırıcı sanılırsa
-    doğrulama kapısı yanlış yere düşerdi.
-    """
-    return [m.group(0).rstrip(".,") for m in _SAYI.finditer(metin or "")]
 
 
 def _sozellestirme_gecerli(sablon: str, aday: str) -> Optional[str]:
@@ -369,6 +373,14 @@ class Chatbot:
             has_rate = (r.field == "kar_payi_orani"
                         or safety.contains_rate(ans.text))
             govde, soz = self._sozellestir(ans.text, bool(sources))
+            # Alan kullanıcı tarafından söylenmediyse VARSAYIM görünür olmalı.
+            # "Hangisi daha avantajlı?" çok boyutlu bir sorudur; tek alan
+            # üzerinden verilen cevabı sanki tam cevapmış gibi sunmak, kapsamı
+            # sessizce daraltmaktır. Not gövdeye burada eklenir, `_sozellestir`
+            # SONRASINDA: LLM'in yeniden ifade ederken notu yutması ya da
+            # anlamını kaydırması mümkün olmasın.
+            if r.alan_varsayildi and sources:
+                govde = f"{govde}\n\n{_KIYAS_KAPSAM_NOTU}"
             return _Dagitim("structured", r.field, govde, sources, has_rate,
                             r, soz, list(ans.rows))
         ans = rag.answer(self.repo, question, llm=self.llm,

@@ -580,6 +580,119 @@ def is_in_scope(question: str) -> bool:
     return _any_keyword(_F(question or ""), _genis_kapsam()) is not None
 
 
+#: Yazım hatası toleransının uygulanacağı en kısa sözcük uzunluğu.
+#:
+#: 5 seçildi ve sınırın kendisi kritik: 4 harfli takma adlarda ("adil", "tom")
+#: bir harflik uzaklık, alakasız bir sözcüğü bankaya çevirir — "adil" ile
+#: "adet", "tom" ile "tam". Bu bankalarda tolerans HİÇ uygulanmaz; kısa adın
+#: yanlış eşleşme maliyeti, yazım hatasını affetmenin faydasından yüksektir.
+_YAZIM_ASGARI_UZUNLUK = 5
+
+#: Bir sözcükte affedilen en fazla harf farkı. 1'de kalır: 2'ye çıkarmak
+#: "finans" ile "finansman"ı (uzaklık 4 değil ama benzer aileden başkalarını)
+#: ve "ziraat" ile "sirket"i birbirine yaklaştırır.
+_YAZIM_AZAMI_UZAKLIK = 1
+
+
+def _uzaklik_bir_mi(a: str, b: str) -> bool:
+    """`a` ile `b` arasında en fazla BİR düzenleme farkı var mı.
+
+    Tam Levenshtein matrisi kurulmaz: yalnız "0 ya da 1" sorusunu
+    cevaplıyoruz ve uzunluk farkı 1'i aşan çift zaten elenir. Bu, her soru
+    için 17 takma ad × sözcük sayısı kadar koşan bir yol; ucuz kalması gerek.
+    """
+    if a == b:
+        return True
+    fark = len(a) - len(b)
+    if abs(fark) > _YAZIM_AZAMI_UZAKLIK:
+        return False
+    if fark == 0:                      # yer değiştirme: tek fark olmalı
+        return sum(1 for x, y in zip(a, b, strict=True) if x != y) == 1
+    uzun, kisa = (a, b) if fark > 0 else (b, a)
+    for i in range(len(uzun)):         # tek ekleme/silme
+        if uzun[:i] + uzun[i + 1:] == kisa:
+            return True
+    return False
+
+
+def _yazim_toleransli_bankalar(folded: str) -> list[str]:
+    """Yazım hatalı banka adlarını yakalar — YALNIZ tam eşleşme yokken.
+
+    ## Neden gerekli — ÖLÇÜLDÜ (2026-08-11)
+
+    Kullanıcı "Türkiye **Finas** Bankası'nın konut finansmanı oranı ne?" diye
+    sordu (bir harf eksik). Tam eşleşme tutmadı, banka süzgeci kurulmadı ve
+    sistem DÖRT bankanın oranını birden listeledi: tek bir bankaya sorulmuş
+    soruya, sorulmayan bankaların cevabı verildi. Aynı soru doğru yazımla
+    sorulduğunda yalnız Türkiye Finans dönüyordu — yani süzgeç çalışıyordu,
+    ona ulaşılamıyordu.
+
+    Jüri sunumunda tek harflik bir tuş hatası aynı sonucu verirdi.
+
+    ## Neden bu kadar dar
+
+    Tolerans üç kapıdan geçer ve üçü de yanlış eşleşmeyi pahalı bulur:
+
+    1. **Yalnız tam eşleşme YOKKEN** koşar. Doğru yazılmış bir soruda bu kod
+       hiç çalışmaz; mevcut davranış birebir korunur.
+    2. **Sözcük sözcük** karşılaştırır ve takma adın sözcük sayısı kadar
+       pencere kaydırır. "turkiye finans" iki sözcüktür; sorudaki tek bir
+       "finansman" sözcüğü onu tetikleyemez.
+    3. **Belirsizlik = eşleşme yok.** Bir pencere birden çok bankaya bir
+       harf uzaklıktaysa hiçbiri seçilmez. Yanlış bankayı seçmektense
+       süzgeçsiz kalmak yeğdir: süzgeçsiz cevap fazla bilgi verir, yanlış
+       süzgeç YANLIŞ bilgi verir.
+
+    Ayrıca en az bir sözcük TAM eşleşmelidir (tek sözcüklü adlar hariç):
+    "turkiye finans"ı yakalamak için "turkiye" tam tutmalı, yalnız ikinci
+    sözcüğün yazımı affedilir.
+    """
+    sozcukler = re.findall(r"[a-z0-9]+", folded)
+    if not sozcukler:
+        return []
+    # (pencere başlangıcı, pencere uzunluğu) -> o pencereye uyan slug'lar.
+    # Pencere bazında toplanır ki BELİRSİZLİK görülebilsin: aynı sözcük
+    # dizisi iki farklı bankaya bir harf uzaklıktaysa hiçbiri seçilmez.
+    pencere_eslesmeleri: dict[tuple[int, int], set[str]] = {}
+    for ad, slug in BANK_NAME_TO_SLUG.items():
+        parcalar = ad.split()
+        if all(len(p) < _YAZIM_ASGARI_UZUNLUK for p in parcalar):
+            continue                   # kısa adda tolerans YOK (bkz. sabit)
+        n = len(parcalar)
+        for i in range(len(sozcukler) - n + 1):
+            if _pencere_uyuyor(parcalar, sozcukler[i:i + n]):
+                pencere_eslesmeleri.setdefault((i, n), set()).add(slug)
+
+    bulunan: list[str] = []
+    for _pencere, slugler in sorted(pencere_eslesmeleri.items()):
+        if len(slugler) != 1:
+            continue                   # belirsiz pencere ELENİR
+        slug = next(iter(slugler))
+        if slug not in bulunan:
+            bulunan.append(slug)
+    return bulunan
+
+
+def _pencere_uyuyor(parcalar: list[str], pencere: list[str]) -> bool:
+    """Takma adın sözcükleri, pencereye en fazla bir harf hatasıyla uyuyor mu."""
+    tam = 0
+    hatali = 0
+    for beklenen, gorulen in zip(parcalar, pencere, strict=True):
+        if beklenen == gorulen:
+            tam += 1
+            continue
+        if len(beklenen) < _YAZIM_ASGARI_UZUNLUK:
+            return False               # kısa sözcükte hata affedilmez
+        if not _uzaklik_bir_mi(beklenen, gorulen):
+            return False
+        hatali += 1
+    # Tek sözcüklü adlarda ("albaraka") tam eşleşme şartı aranamaz; çok
+    # sözcüklülerde en az biri tam tutmalı ve yalnız BİR sözcükte hata olur.
+    if len(parcalar) == 1:
+        return hatali <= 1
+    return tam >= 1 and hatali == 1
+
+
 def detect_banks(question: str) -> list[str]:
     """Soruda geçen TÜM bankaları slug olarak döndürür.
 
@@ -587,6 +700,9 @@ def detect_banks(question: str) -> list[str]:
     sorusunda tek bankaya filtrelemek karşılaştırmayı yok eder. Uzun ad önce
     denenir ki 'türkiye emlak katılım' ile 'türkiye finans' karışmasın; aynı
     bankanın iki takma adı ('ziraat' / 'ziraat katılım') set ile tekilleşir.
+
+    Tam eşleşme hiçbir banka bulamazsa yazım hatası toleransı denenir
+    (`_yazim_toleransli_bankalar`); gerekçe ve sınırları orada.
     """
     folded = _F(question or "")
     found: list[str] = []
@@ -595,7 +711,7 @@ def detect_banks(question: str) -> list[str]:
             slug = BANK_NAME_TO_SLUG[name]
             if slug not in found:
                 found.append(slug)
-    return found
+    return found or _yazim_toleransli_bankalar(folded)
 
 
 def detect_bank(question: str) -> Optional[str]:
