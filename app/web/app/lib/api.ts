@@ -503,6 +503,84 @@ export type RefreshBelge = {
   onceki_karakter: number | null;
 };
 
+/**
+ * Özet kapsamı — dört kova KESİŞMEZ ve toplamı `toplam`'a eşittir.
+ *
+ * `icerik_yok` ile `denenmemis` ayrımı ekrandaki cümlenin doğruluğunu taşır:
+ * "özetlenecek içerik yok" yalnız denenmiş ve içeriği çıkmamış belgeler için
+ * söylenebilir. Yeni toplanmış bir belge `denenmemis` kovasındadır.
+ */
+export type OzetKapsam = {
+  toplam: number;
+  ozetli: number;
+  /** Denendi, belgede özetlenecek içerik çıkmadı (tekrar denemek anlamsız). */
+  icerik_yok: number;
+  /** Denendi, koşuya ait bir sebeple üretilemedi (tekrar denenebilir). */
+  basarisiz: number;
+  /** Hiç denenmedi — düğmenin asıl hedefi. */
+  denenmemis: number;
+  /** Düğmeye basılınca işlenecek belge sayısı (`denenmemis + basarisiz`). */
+  hedef: number;
+  sebepler: Record<string, number>;
+  llm_acik: boolean;
+  /** LLM kapalıysa neden üretilemeyeceğini anlatan cümle; açıksa null. */
+  llm_notu: string | null;
+  /** Koşan iş varsa kimliği. */
+  calisan_is: string | null;
+};
+
+export type OzetIsiDurum =
+  | "bekliyor"
+  | "uretiliyor"
+  | "tamam"
+  | "hata"
+  | "iptal";
+
+/** Özet üretim işinin anlık durumu. */
+export type OzetIsi = {
+  is_id: string;
+  durum: OzetIsiDurum;
+  asama: string;
+  baslangic: string;
+  bitis: string | null;
+  hedef: number;
+  islenen: number;
+  uretilen: number;
+  yazilan: number;
+  uretilemeyen: Record<string, number>;
+  korpus_belge: number;
+  iptal_istendi: boolean;
+  mesaj: string | null;
+  bitti: boolean;
+};
+
+/** Gelecek faz ucunun bir gövde alanı. */
+export type AdminAlan = {
+  ad: string;
+  tip: string;
+  zorunlu: boolean;
+  aciklama: string;
+};
+
+export type AdminUc = {
+  yol: string;
+  yontem: string;
+  baslik: string;
+  ozet: string;
+  alanlar: AdminAlan[];
+};
+
+/**
+ * Gelecek faz sözleşmesi. `acik: false` ve uçlar 501 döner — sözleşme
+ * tanımlıdır, davranış değil.
+ */
+export type AdminPlan = {
+  acik: boolean;
+  sebep: string;
+  bugunku_yol: string;
+  uclar: AdminUc[];
+};
+
 /** Alınamayan bir adres ve gerekçesi. */
 export type RefreshHata = {
   url: string;
@@ -677,6 +755,27 @@ export const api = {
     request<RefreshJob>(`/api/refresh/cancel/${encodeURIComponent(jobId)}`, {
       method: "POST",
     }),
+
+  /**
+   * Özet kapsam sayaçları. Model ÇAĞIRMAZ, ağa çıkmaz.
+   *
+   * Sayaç eskiden `/campaigns` yanıtından istemcide hesaplanıyordu. Artık
+   * sunucudan geliyor çünkü kovaların ayrımı ("içerik yok" / "üretilemedi" /
+   * "denenmedi") `ozet_sebep` etiketlerinin sınıflandırmasına dayanıyor ve o
+   * kural özet katmanına ait — TSX'e kopyalansaydı iki yerde yaşardı.
+   */
+  summaryCoverage: () => request<OzetKapsam>("/api/summaries/coverage"),
+  summaryBuild: () =>
+    request<OzetIsi>("/api/summaries/build", { method: "POST" }),
+  summaryStatus: (jobId: string) =>
+    request<OzetIsi>(`/api/summaries/status/${encodeURIComponent(jobId)}`),
+  summaryCancel: (jobId: string) =>
+    request<OzetIsi>(`/api/summaries/cancel/${encodeURIComponent(jobId)}`, {
+      method: "POST",
+    }),
+
+  /** Gelecek faz uçlarının sözleşmesi — Ayarlar ekranı bunu çizer. */
+  adminPlan: () => request<AdminPlan>("/api/admin/plan"),
 };
 
 /** ApiError olmayan hataları da kullanıcıya gösterilebilir hale getirir. */

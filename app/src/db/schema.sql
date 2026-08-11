@@ -58,7 +58,16 @@ CREATE TABLE IF NOT EXISTS campaigns (
     -- LLM üretimi kısa özet. Sütun burada AÇILIR; dolduran taraf ayrıdır
     -- (depo sözleşmesindeki yol: `set_ozet()`). Boş kalması normaldir —
     -- özet üretilmediyse uydurulmaz, NULL kalır (CLAUDE.md §19).
-    ozet          TEXT
+    ozet          TEXT,
+    -- Özet NEDEN yok: `icerik_yok` | `yabanci_alfabe` | `llm_kapali` | …
+    -- (`src/summarize/ozet.py` üretir, `set_ozet_sebep()` yazar).
+    --
+    -- Boş `ozet` tek başına iki ayrı durumu birbirine karıştırır: "denendi,
+    -- özetlenecek içerik çıkmadı" ile "henüz hiç denenmedi". Ekrandaki kapsam
+    -- sayacı bu ayrımı yapamadığı sürece, yeni toplanmış bir belge için
+    -- "özetlenecek içerik yok" diye YANLIŞ bir cümle kurardı. Sütun o cümleyi
+    -- ölçülebilir kılar: sebebi NULL olan belge denenmemiştir.
+    ozet_sebep    TEXT
 );
 
 CREATE TABLE IF NOT EXISTS extracted_fields (

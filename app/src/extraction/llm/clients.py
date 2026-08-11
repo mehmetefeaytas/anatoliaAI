@@ -348,6 +348,10 @@ class VLLMClient:
         return LLMResponse(text=text or "", mode=mode,
                            logprobs=_extract_logprobs(choice), raw=raw)
 
+    def sicaklikla(self, temperature: float) -> "VLLMClient":
+        """Yalnız sıcaklığı farklı bir KOPYA döndürür (bkz. `OllamaClient`)."""
+        return _sicaklik_kopyasi(self, temperature)
+
     def generate_json(self, system: str, user: str, schema: dict) -> dict:
         """Geriye uyumlu kısayol: çağır + ayrıştır (hata olursa yükselt)."""
         from .parse import parse_llm_json
@@ -499,6 +503,23 @@ class OllamaClient:
         return LLMResponse(text=text or "", mode=self.structured_mode,
                            logprobs=[], raw=raw)
 
+    def sicaklikla(self, temperature: float) -> "OllamaClient":
+        """Yalnız sıcaklığı farklı bir KOPYA döndürür.
+
+        ## Neden kopya, neden yerinde değiştirme değil
+
+        Çağıran taraf (`src/summarize/ozet.py`) alfabe kapısına takılan bir
+        özeti yeniden denerken sıcaklığı yükseltiyor. `self.temperature`'ı
+        geçici olarak değiştirip geri koymak çok daha kısa olurdu — ve YANLIŞ
+        olurdu: API'de bu istemci nesnesi sohbet, canlı çıkarım ve özet
+        yollarının ORTAK nesnesidir. Özet işi sıcaklığı 0,7'ye çekerken aynı
+        anda koşan bir alan çıkarımı o sıcaklıkta cevap alırdı; ölçülen bir
+        yol, ölçülmemiş bir ayarla koşmuş olurdu ve iz bırakmazdı.
+
+        Kopya sığdır: taşıma (transport) paylaşılır, yalnız ayar farklıdır.
+        """
+        return _sicaklik_kopyasi(self, temperature)
+
     def generate_json(self, system: str, user: str, schema: dict) -> dict:
         from .parse import parse_llm_json
 
@@ -507,3 +528,12 @@ class OllamaClient:
         if obj is None:
             raise LLMError(f"cikti ayristirilamadi ({err}); ham={resp.text[:300]!r}")
         return obj
+
+
+def _sicaklik_kopyasi(istemci: Any, temperature: float) -> Any:
+    """Sığ kopya + yeni sıcaklık. İki istemci sınıfı için ortak."""
+    import copy
+
+    kopya = copy.copy(istemci)
+    kopya.temperature = float(temperature)
+    return kopya

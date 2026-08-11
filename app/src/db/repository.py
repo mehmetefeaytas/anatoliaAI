@@ -56,7 +56,12 @@ CREATE TABLE IF NOT EXISTS campaigns (
     -- gerekçesi görünür kalır (`compare.rank` içindeki durum kapısı).
     campaign_status TEXT,
     -- LLM üretimi kısa özet. Sütun burada AÇILIR, bu modül DOLDURMAZ.
-    ozet TEXT
+    ozet TEXT,
+    -- Özet NEDEN yok. Gerekçenin tamamı `schema.sql`'deki ikiz sütundadır:
+    -- boş `ozet`, "denendi ve içerik çıkmadı" ile "hiç denenmedi"yi ayırt
+    -- edemez; sebep sütunu olmadan kapsam sayacı yeni belgeler için yanlış
+    -- cümle kurar.
+    ozet_sebep TEXT
 );
 CREATE TABLE IF NOT EXISTS extracted_fields (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -120,6 +125,11 @@ _SONRADAN_EKLENEN = (
     # tamamı, süresi dolmuş kampanyalar yüzünden değil GÖÇ EKSİĞİ yüzünden
     # boşalırdı.
     ("campaigns", "campaign_status", "TEXT"),
+    # 11 Ağu 2026: özet yokluğunun sebebi. Bu satır olmadan, sütun eklenmeden
+    # ÖNCE kurulmuş bir `data/demo.db` açıldığında `all_campaigns()`
+    # `no such column: ozet_sebep` ile ölürdü — yani kampanya listesinin
+    # TAMAMI, tek bir açıklama sütunu yüzünden boşalırdı.
+    ("campaigns", "ozet_sebep", "TEXT"),
 )
 
 
@@ -277,14 +287,54 @@ class Repository:
         bozuk bir kod çözme (decode) NUL üretebilir. Denetim yalnız Postgres'te
         yaşasaydı, offline üretilmiş bir özet kümesi üretime göç ederken
         düşerdi — bkz. `base.nul_denetle()`.
+
+        ## Dolu özet, `ozet_sebep`i AYNI ifadede temizler
+
+        "Özet var" ile "özet şu sebeple yok" aynı satırda birlikte duramaz;
+        dursaydı kapsam sayacı aynı belgeyi iki kez sayardı. Daha önce
+        `icerik_yok` diye işaretlenmiş bir belge, metni değişip sonraki koşuda
+        özetlenebilir — sebebi ayrı bir çağrıya bırakmak, o çağrı atlandığında
+        çelişkiyi kalıcı kılardı. Bu yüzden temizlik burada, tek `UPDATE`
+        içinde yapılır.
+
+        Ters yön (özet `None`'a çekilir) sebebi ELLEMEZ: özeti silen tarafın
+        gerekçesi kendisine aittir ve `set_ozet_sebep()` ile yazılır.
         """
         baglam = "ozet yazımı"
         temiz = [(self._text(v, "ozet", baglam), k)
                  for k, v in atamalar.items()]
         if not temiz:
             return 0
+        dolu = [(v, k) for v, k in temiz if (v or "").strip()]
+        bos = [(v, k) for v, k in temiz if not (v or "").strip()]
+        n = 0
+        if dolu:
+            n += self.conn.executemany(
+                "UPDATE campaigns SET ozet=?, ozet_sebep=NULL WHERE id=?",
+                dolu).rowcount
+        if bos:
+            n += self.conn.executemany(
+                "UPDATE campaigns SET ozet=? WHERE id=?", bos).rowcount
+        self.conn.commit()
+        return n
+
+    def set_ozet_sebep(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        """Kampanya id → özetin ÜRETİLEMEME sebebi. Dönen: güncellenen satır.
+
+        Sebep serbest metin değil, `src/summarize/ozet.py`'nin ürettiği sonlu
+        bir etikettir (`icerik_yok`, `yabanci_alfabe`, `llm_kapali` …). Burada
+        bir beyaz liste ile doğrulanMAZ: liste özet katmanına aittir ve iki
+        yerde yaşasaydı yeni bir sebep eklendiğinde depo onu sessizce reddederdi
+        — bu projede altı kez tekrarlayan "aynı bilgi iki yerde" kusuru.
+        Depo yalnızca metin sağlığını (NUL) denetler.
+        """
+        baglam = "ozet sebebi yazımı"
+        temiz = [(self._text(v, "ozet_sebep", baglam), k)
+                 for k, v in atamalar.items()]
+        if not temiz:
+            return 0
         cur = self.conn.executemany(
-            "UPDATE campaigns SET ozet=? WHERE id=?", temiz)
+            "UPDATE campaigns SET ozet_sebep=? WHERE id=?", temiz)
         self.conn.commit()
         return cur.rowcount
 
@@ -468,7 +518,7 @@ class Repository:
         belge_turu = belge_turu_dogrula(belge_turu)
         sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
                "c.campaign_type, c.belge_turu, c.campaign_status, c.ozet, "
-               "c.raw_text, c.source_url, c.scraped_at "
+               "c.ozet_sebep, c.raw_text, c.source_url, c.scraped_at "
                "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
         params: tuple = ()
         if belge_turu is not None:

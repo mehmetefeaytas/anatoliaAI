@@ -1,6 +1,12 @@
 """Korpus için LLM özetlerini ÖNCEDEN üretir ve `campaigns.ozet`'e yazar.
 
-İlgili: ../src/summarize/ozet.py, ../src/preprocessing/blocks.py
+**Bu dosya ince bir kabuktur.** Üretim döngüsünün gövdesi
+`src/summarize/toplu.py` içindedir; arayüzdeki «LLM ile özet üret» düğmesi de
+aynı gövdeyi çağırır (`src/summarize/ozet_isi.py`). Buradan yeniden dışa
+verilen adlar geriye uyum içindir.
+
+İlgili: ../src/summarize/toplu.py (gövde), ../src/summarize/ozet.py,
+        ../src/preprocessing/blocks.py
         ../src/api/main.py (`GET /campaigns/{id}/text` -> `ozet`, `ozet_kaynak`)
         CLAUDE.md §11 (demo doldurulmuş DB'den okur)
 
@@ -45,148 +51,24 @@ import argparse
 import json
 import os
 import sys
-import time
 from typing import Optional
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from src.comparison.compare import _HIGHER_IS_BETTER, _LOWER_IS_BETTER
-from src.db.repository import Repository
 from src.extraction.llm.extractor import default_extractor
-from src.summarize.ozet import MAKS_GIRDI_KARAKTER, OzetSonucu, llm_hazir, ozetle
+from src.summarize.ozet import MAKS_GIRDI_KARAKTER, llm_hazir
 
-#: Kıyas tablosunu besleyen alanlar — `compare.py`'nin kendi kümeleri.
-#: Burada liste KOPYALANMAZ; ayrışırsa kapsam sessizce kayardı.
-KIYAS_ALANLARI: tuple[str, ...] = tuple(sorted(_LOWER_IS_BETTER | _HIGHER_IS_BETTER))
-
-KAPSAMLAR = ("kiyas", "hepsi")
-
-
-def kiyas_kampanyalari(repo: Repository) -> set[int]:
-    """Kıyaslanabilir bir alanı çıkarılmış kampanya kimlikleri.
-
-    `query_fields()` kullanılır, ham SQL değil: depo sözleşmesi tek yoldur ve
-    aynı çağrı iki backend'de de çalışır. Sözleşme/akit belgelerinin elenmesi
-    de bu metodun kendi işidir (`belge_turu` süzmesi, bkz. `src/db/base.py`).
-    """
-    ids: set[int] = set()
-    for alan in KIYAS_ALANLARI:
-        for satir in repo.query_fields(alan):
-            cid = satir.get("campaign_id")
-            if cid is not None:
-                ids.add(int(cid))
-    return ids
-
-
-def hedef_kampanyalar(repo: Repository, *, kapsam: str, devam: bool,
-                      limit: Optional[int]) -> tuple[list[dict], int]:
-    """(işlenecek kampanyalar, korpustaki toplam belge sayısı)."""
-    hepsi = repo.all_campaigns()
-    toplam = len(hepsi)
-
-    if kapsam == "kiyas":
-        secili = kiyas_kampanyalari(repo)
-        hepsi = [c for c in hepsi if int(c["id"]) in secili]
-    if devam:
-        hepsi = [c for c in hepsi if not (c.get("ozet") or "").strip()]
-    if limit is not None:
-        hepsi = hepsi[:limit]
-    return hepsi, toplam
-
-
-def _yaz(repo: Repository, atamalar: dict[int, str]) -> int:
-    """Özetleri depoya yazar — `set_ozet()` sözleşme metodu üzerinden.
-
-    Ham SQL yazılmaz: betik tek bir backend'e bağlanmamalı.
-
-    ## `getattr` yoklaması KALDIRILDI (2026-08-10)
-
-    Burada `getattr(repo, "set_ozet", None)` ile metodun varlığı yoklanıyor,
-    yoksa "bu backend'de henüz uygulanmamış" diyen bir `AttributeError`
-    atılıyordu (ve `main()` onu 4 çıkış koduna çeviriyordu). O metin artık
-    GERÇEK DEĞİL: `set_ozet()` hem `RepositoryProtocol`te hem
-    `ThreadSafeRepository`de hem iki backend'de de (`db/repository.py`,
-    `db/postgres.py`) uygulanmış durumda.
-
-    Üstelik bu betikte depo dışarıdan geçirilmiyor — `calistir()` onu
-    `Repository(db_yolu)` ile kendisi kuruyor, yani soyut bir "başka backend"
-    ihtimali yok. Dal ölüydü ve okuyana olmayan bir eksiklik gösteriyordu.
-    """
-    if not atamalar:
-        return 0
-    return int(repo.set_ozet(atamalar))
-
-
-#: Kaç belgede bir depoya yazılacağı. Tam korpus koşusu ~1400 belge ve belge
-#: başına ~6 sn, yani ~2,5 saat. Tek seferde sonda yazmak, o 2,5 saatin
-#: TAMAMINI tek bir kesintiye (Ctrl-C, uyku, OOM) bağlar: yazılmamış özetler
-#: kaybolur ve `--devam` sıfırdan başlar çünkü DB'de hiçbir iz yoktur.
-#: Parçalı yazma ile kayıp en fazla bir parçadır ve `--devam` gerçekten
-#: kaldığı yerden devam eder.
-YAZMA_PARCASI = 25
-
-
-def calistir(db_yolu: str, *, kapsam: str = "kiyas", devam: bool = False,
-             limit: Optional[int] = None, kuru: bool = False,
-             maks_karakter: int = MAKS_GIRDI_KARAKTER,
-             llm=None, parca: int = YAZMA_PARCASI,
-             ilerleme=None) -> dict:
-    """Toplu özet üretimi. Rapor sözlüğü döndürür (JSON'a yazılabilir).
-
-    Özetler `parca` belgede bir depoya YAZILIR (bkz. `YAZMA_PARCASI`).
-    `ilerleme` verilirse her parçadan sonra `(islenen, hedef, yazilan)` ile
-    çağrılır — uzun koşuda ilerlemeyi görünür kılar.
-    """
-    llm = llm if llm is not None else default_extractor()
-    repo = Repository(db_yolu)
-    try:
-        hedefler, toplam = hedef_kampanyalar(repo, kapsam=kapsam, devam=devam,
-                                             limit=limit)
-        basladi = time.time()
-        bekleyen: dict[int, str] = {}
-        sebepler: dict[str, int] = {}
-        kirpilan = 0
-        ozetlenen = 0
-        yazilan = 0
-
-        def bosalt() -> None:
-            nonlocal bekleyen, yazilan
-            if kuru or not bekleyen:
-                return
-            yazilan += _yaz(repo, bekleyen)
-            bekleyen = {}
-
-        for i, camp in enumerate(hedefler, start=1):
-            sonuc: OzetSonucu = ozetle(camp.get("raw_text") or "", llm,
-                                       maks_karakter=maks_karakter)
-            kirpilan += 1 if sonuc.kirpildi else 0
-            if sonuc.uretildi and sonuc.ozet:
-                bekleyen[int(camp["id"])] = sonuc.ozet
-                ozetlenen += 1
-            else:
-                anahtar = sonuc.sebep or "bilinmiyor"
-                sebepler[anahtar] = sebepler.get(anahtar, 0) + 1
-            if parca > 0 and i % parca == 0:
-                bosalt()
-                if ilerleme is not None:
-                    ilerleme(i, len(hedefler), yazilan)
-
-        bosalt()
-        return {
-            "db": db_yolu,
-            "kapsam": kapsam,
-            "korpus_belge": toplam,
-            "hedef_belge": len(hedefler),
-            "ozetlenen": ozetlenen,
-            "yazilan": yazilan,
-            "kuru": kuru,
-            "kirpilan_girdi": kirpilan,
-            "uretilemeyen": sebepler,
-            "sure_sn": round(time.time() - basladi, 2),
-            "llm_acik": llm_hazir(llm),
-        }
-    finally:
-        repo.close()
+# Gövde `src/summarize/toplu.py`de. Buradan yeniden dışa veriliyor: eski
+# çağrı yolu (`scripts.build_summaries.calistir`) kırılmasın diye — testler ve
+# belgelenmiş komutlar onu kullanıyor.
+from src.summarize.toplu import (  # noqa: F401  (yeniden dışa verim)
+    KAPSAMLAR,
+    KIYAS_ALANLARI,
+    YAZMA_PARCASI,
+    calistir,
+    hedef_kampanyalar,
+    kiyas_kampanyalari,
+)
 
 
 def _rapor_bas(rapor: dict) -> None:
@@ -214,6 +96,10 @@ def main(argv: Optional[list[str]] = None) -> int:
                     help="kiyas = kıyas tablosunda görünen belgeler (öntanım)")
     ap.add_argument("--devam", action="store_true",
                     help="özeti zaten olan belgeleri atla (tekrar koşulabilir)")
+    ap.add_argument("--kalici-atla", action="store_true",
+                    help="özetlenecek içeriği olmadığı ÖLÇÜLMÜŞ belgeleri de "
+                         "atla (sebebi `metin_bos` olanlar); tekrar denemek "
+                         "aynı sonucu verir")
     ap.add_argument("--limit", type=int, default=None,
                     help="en fazla kaç belge işlensin")
     ap.add_argument("--kuru", action="store_true",
@@ -256,7 +142,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     # (depoda `set_ozet()` yok) artık oluşamaz — gerekçe `_yaz()` içinde.
     rapor = calistir(a.db, kapsam=a.kapsam, devam=a.devam, limit=a.limit,
                      kuru=a.kuru, maks_karakter=a.maks_karakter, llm=llm,
-                     parca=a.parca, ilerleme=_ilerleme)
+                     parca=a.parca, kalici_atla=a.kalici_atla,
+                     ilerleme=_ilerleme)
 
     _rapor_bas(rapor)
     if a.json_report:

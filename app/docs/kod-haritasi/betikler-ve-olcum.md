@@ -76,7 +76,7 @@ Sütunlar: ne yapar · ne zaman koşulur · çıktısı nereye gider.
 | `tcmb_capraz_analiz.py` (217) | TCMB ile katılım sözlüğünü karşılaştırır (kapsama/çatışma/sahte-dost) | Terminoloji raporu yazılırken | ∅ |
 | `build_demo_db.py` (452) | Tüm korpusu `mode="corpus"` ile çıkarımdan geçirip kalıcı SQLite üretir | Demo öncesi / korpus değişince | → `data/demo.db` |
 | `check_demo_db.py` (122) | DB korpusla güncel mi — sessiz bayatlama kapısı | CI + demo öncesi | ∅ (exit 1) |
-| `build_summaries.py` (266) | LLM özetlerini **önceden** üretip `campaigns.ozet`'e yazar | Demo öncesi (LLM açıkken) | → `data/demo.db` (`ozet` sütunu) |
+| `build_summaries.py` (157) | İnce CLI kabuğu; gövde `src/summarize/toplu.py`'de. LLM özetlerini **önceden** üretip `campaigns.ozet` + `ozet_sebep`'e yazar | Demo öncesi (LLM açıkken) — aynı gövdeyi arayüzdeki «AI özeti üret» düğmesi de çağırır (`/summaries/build`) | → `data/demo.db` (`ozet`, `ozet_sebep`) |
 
 ### 2.4 `scripts/` — kalite kapıları ve ölçüm betikleri
 

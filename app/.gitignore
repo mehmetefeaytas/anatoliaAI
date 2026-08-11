@@ -84,6 +84,8 @@ models/
 web/node_modules/
 web/.next/
 web/out/
+# `tsc --noEmit` artığı; makineye özgü mutlak yollar taşır, depoya girmemeli.
+web/tsconfig.tsbuildinfo
 
 # ortam
 .env

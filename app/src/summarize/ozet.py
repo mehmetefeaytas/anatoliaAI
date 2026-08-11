@@ -71,6 +71,34 @@ baştan sona ilkesi aynı: **sahte özet basmaktansa özet olmaması yeğdir.**
 
 Kapının eşiği ölçümle kalibre edildi: aynı korpusta Latin dışına taşmayan 1684
 özetin hiçbiri reddedilmiyor (yanlış pozitif = 0).
+
+## Kapıya takılan çıktı için SICAKLIK MERDİVENİ
+
+Kapı tek başına yetmiyordu ve eksik ölçüldüğünde görünür oldu: arayüze «AI
+özeti üret» düğmesi eklenince, 35 özetsiz belgenin 12'si her koşuda alfabe
+kapısına takıldı. Sebep basit ve tuzağın adı var — **deterministik tekrar
+denemesi**: `OllamaClient` sıcaklığı 0,0 ve aynı girdi aynı çıktıyı BİREBİR
+üretir. Yani "tekrar dene" düğmesi o 12 belge için sonsuza kadar kısır
+döngüydü; kullanıcı bekler, sonuç hep 0 çıkardı.
+
+Ölçüldü (2026-08-11, kapıya takılan 3 belge, `qwen2.5:7b-instruct`):
+
+    sıcaklık 0,00   0/3 temiz     (üç belgede de aynı kayma, tekrarlanabilir)
+    sıcaklık 0,35   2/3 temiz
+    sıcaklık 0,70   2/3 temiz     (0,35'te düşen belge burada kurtuldu)
+    merdiven        3/3 temiz
+
+Merdiven bu yüzden **yalnız alfabe kapısına takılan** çıktı için tırmanır.
+İki şey bilinçli olarak DIŞARIDA:
+
+* **Boş çıktı zorlanmaz.** Model "özetlenecek bir şey yok" diyorsa sıcaklığı
+  yükseltmek, olmayan içeriği uydurmaya zorlamaktır (CLAUDE.md §19).
+* **İlk deneme hep 0,0'dır.** Belgelerin ezici çoğunluğu ilk basamakta geçiyor;
+  merdiven varsayılan yolu yavaşlatmaz, yalnız düşen belgeye ek çağrı yapar.
+
+Kapının kendisi GEVŞETİLMEDİ: üç basamak da kapıdan geçemezse özet yine
+üretilmez. Değişen şey, kirli çıktının kabul edilmesi değil, temiz çıktının
+elde edilmesine bir şans daha verilmesidir.
 """
 
 from __future__ import annotations
@@ -114,6 +142,36 @@ SISTEM_PROMPT = (
 #: `sebep` alanının kapıya ait değeri — toplu raporlar bunu sayarak
 #: "kaç özet alfabe kaymasından düştü" sorusunu cevaplar.
 SEBEP_YABANCI_ALFABE = "yabanci_alfabe"
+
+#: Katlama sonrası geriye özetlenecek metin kalmadı — belge baştan sona çerçeve
+#: (çerez bildirimi, form listesi, gezinme, yasal uyarı).
+SEBEP_METIN_BOS = "metin_bos"
+
+#: LLM hiç çağrılmadı: arka uç kapalı. Belgeyle ilgili DEĞİL, sistemle ilgili.
+SEBEP_LLM_KAPALI = "llm_kapali"
+
+#: Alfabe kapısına takılan çıktı için denenecek sıcaklıklar, sırayla.
+#: İlk basamak 0,0'dır: varsayılan yol değişmez ve belgelerin çoğu orada geçer.
+#: Değerler ölçümle seçildi (modül başlığındaki tablo); merdiven yalnız kapıya
+#: takıldığında tırmanır, boş çıktıda tırmanMAZ.
+SICAKLIK_MERDIVENI: tuple[float, ...] = (0.0, 0.35, 0.7)
+
+#: Belgenin KENDİSİNE ait, tekrar denemekle değişmeyecek sebepler.
+#:
+#: Ayrım neden gerekli: kapsam sayacı "kalan belgelerde özetlenecek içerik yok"
+#: diyor. Bu cümle yalnız `metin_bos` için doğrudur ve o karar LLM'e hiç
+#: gitmeden, katlanmış metnin boş çıkmasıyla verilir — yani deterministiktir,
+#: tekrar koşmak aynı sonucu verir. Diğer sebepler (model boş döndü, alfabe
+#: kaydı, arka uç kapalı, çağrı hatası) KOŞUYA aittir: aynı belge sonraki
+#: koşuda özetlenebilir. İkisini tek "özet yok" kutusuna koymak, tekrar
+#: denenebilir belgeleri kalıcı olarak kayıp göstermek olurdu.
+KALICI_SEBEPLER: frozenset[str] = frozenset({SEBEP_METIN_BOS})
+
+
+def kalici_sebep(sebep: Optional[str]) -> bool:
+    """Bu sebep belgenin kendisine mi ait (tekrar denemek anlamsız mı)."""
+    return (sebep or "") in KALICI_SEBEPLER
+
 
 #: Türkçe bir özetin kullanabileceği Unicode aralıkları (kapsayıcı sınırlar).
 #: Bunların DIŞINDA tek karakter = üretim ortasında dil kayması.
@@ -217,35 +275,60 @@ def ozetle(text: str, llm: Any, *, cerceve: Optional[set[str]] = None,
     boş dize döndürürse bu bir hata değil, geçerli bir "özetlenecek bir şey
     yok" cevabıdır ve yine `None` olarak saklanır — arayüzde boş bir özet
     kutusu göstermek yerine hiç göstermemek doğrudur.
+
+    Alfabe kapısına takılan çıktı için sıcaklık merdiveni denenir
+    (`SICAKLIK_MERDIVENI`); gerekçe modül başlığındadır.
     """
     if not llm_hazir(llm):
-        return OzetSonucu(None, None, sebep="llm_kapali")
+        return OzetSonucu(None, None, sebep=SEBEP_LLM_KAPALI)
 
     girdi = katlanmis_metin(text, cerceve, terimler=terimler)
     if not girdi:
-        return OzetSonucu(None, None, sebep="metin_bos")
+        return OzetSonucu(None, None, sebep=SEBEP_METIN_BOS)
 
     kirpildi = len(girdi) > maks_karakter
     if kirpildi:
         girdi = girdi[:maks_karakter]
 
-    try:
-        cevap = llm.client.generate_json(
-            SISTEM_PROMPT, f"Belge metni:\n{girdi}", SEMA)
-    except Exception as exc:  # pragma: no cover - ağ/servis hatası
-        return OzetSonucu(None, None, sebep=f"llm_hatasi: {type(exc).__name__}",
-                          kirpildi=kirpildi, girdi_karakter=len(girdi))
+    son = OzetSonucu(None, None, sebep=SEBEP_YABANCI_ALFABE,
+                     kirpildi=kirpildi, girdi_karakter=len(girdi))
+    for basamak, sicaklik in enumerate(SICAKLIK_MERDIVENI):
+        istemci = llm.client if basamak == 0 else _sicaklikla(llm.client, sicaklik)
+        if istemci is None:
+            break                       # bu istemci sıcaklık kopyası veremiyor
+        try:
+            cevap = istemci.generate_json(
+                SISTEM_PROMPT, f"Belge metni:\n{girdi}", SEMA)
+        except Exception as exc:  # pragma: no cover - ağ/servis hatası
+            return OzetSonucu(None, None,
+                              sebep=f"llm_hatasi: {type(exc).__name__}",
+                              kirpildi=kirpildi, girdi_karakter=len(girdi))
 
-    ham = cevap.get("ozet") if isinstance(cevap, dict) else None
-    ozet = " ".join(str(ham).split()) if ham else ""
-    if not ozet:
-        return OzetSonucu(None, None, sebep="bos_cikti", kirpildi=kirpildi,
-                          girdi_karakter=len(girdi))
-    # ALFABE KAPISI — kirli özet DÜZELTİLMEZ, reddedilir (modül docstring'i).
-    # Kaymış karakterleri ayıklayıp kalanı yazmak, modelin üretmediği bir
-    # metni "AI özeti" etiketiyle sunmak olurdu.
-    if not turkce_alfabede_mi(ozet):
-        return OzetSonucu(None, None, sebep=SEBEP_YABANCI_ALFABE,
-                          kirpildi=kirpildi, girdi_karakter=len(girdi))
-    return OzetSonucu(ozet, OZET_KAYNAK_LLM, kirpildi=kirpildi,
-                      girdi_karakter=len(girdi))
+        ham = cevap.get("ozet") if isinstance(cevap, dict) else None
+        ozet = " ".join(str(ham).split()) if ham else ""
+        if not ozet:
+            # Boş çıktı geçerli bir cevaptır ("özetlenecek bir şey yok") ve
+            # sıcaklık yükselterek zorlanMAZ: zorlamak, modele olmayan bir
+            # içeriği uydurtmaya çalışmak olurdu.
+            return OzetSonucu(None, None, sebep="bos_cikti", kirpildi=kirpildi,
+                              girdi_karakter=len(girdi))
+        # ALFABE KAPISI — kirli özet DÜZELTİLMEZ, reddedilir (modül
+        # docstring'i). Kaymış karakterleri ayıklayıp kalanı yazmak, modelin
+        # üretmediği bir metni "AI özeti" etiketiyle sunmak olurdu.
+        if turkce_alfabede_mi(ozet):
+            return OzetSonucu(ozet, OZET_KAYNAK_LLM, kirpildi=kirpildi,
+                              girdi_karakter=len(girdi))
+    return son
+
+
+def _sicaklikla(istemci: Any, sicaklik: float) -> Optional[Any]:
+    """Sıcaklığı farklı bir istemci KOPYASI; istemci desteklemiyorsa `None`.
+
+    `getattr` ile yoklanır çünkü `LLMClient` protokolü (`extraction/llm/
+    extractor.py`) bu metodu ZORUNLU KILMAZ: kılsaydı, suit boyunca kullanılan
+    onlarca sahte istemcinin hepsi onu uygulamak zorunda kalırdı ve merdiven
+    bir davranış değil, bir tip zorlaması olurdu. Desteklemeyen istemcide
+    merdiven sessizce tek basamağa iner — ilk denemenin sonucu neyse o.
+    """
+    yap = getattr(istemci, "sicaklikla", None)
+    return yap(sicaklik) if callable(yap) else None

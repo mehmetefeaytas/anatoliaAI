@@ -635,6 +635,32 @@ table.data tbody tr.group-head:not(:first-child) td {
 }
 
 /* ===================================================================
+ * ÖZET KAPSAMI (sayaç + «LLM ile özet üret» düğmesi)
+ * =================================================================== */
+/* Sayaç cümlesi, eylem ve ilerleme tek bir dikey yığın oluşturur; aralarındaki
+ * boşluk kapsayıcıya ait çünkü parçalar duruma göre görünüp kayboluyor
+ * (düğme koşu sırasında gider, ilerleme koşu bitince gider) ve her parçanın
+ * kendi kenar boşluğunu taşıması bazı durumlarda çift boşluk bırakırdı. */
+.ozet-kapsam {
+  display: grid;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+/* Düğme + açıklama aynı satırda; dar ekranda açıklama alta iner. Düğmenin
+ * yanındaki cümle "internet gerektirmez" diyor ve düğmeden koparılmamalı:
+ * kararın gerekçesi kararın yanında durur. */
+.ozet-kapsam-eylem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+.ozet-kapsam-eylem > .small {
+  flex: 1 1 20rem;
+}
+
+/* ===================================================================
  * ÜST ARAÇ ŞERİDİ (jüri modu + tema seçici)
  * =================================================================== */
 /* İki anahtar yan yana durur, dar ekranda alt alta iner. Alt kenar boşluğu
@@ -1199,10 +1225,18 @@ ol.steps span {
   gap: var(--sp-1);
 }
 
+/* Aynı ilerleme çubuğu özet üretiminde de kullanılır (`SummaryCoverage`):
+ * iki iş de "sıradaki n / toplam" ilerlemesi olan arka plan işleri ve ikinci
+ * bir çubuk çizmek aynı görsel dili iki kez tanımlamak olurdu. */
 .tazele-ilerleme {
   display: grid;
   gap: var(--sp-2);
   margin-top: var(--sp-4);
+}
+/* Özet kapsamı şeridinde çubuk bir kartın içinde değil, sayacın hemen
+ * altında duruyor; oradaki üst boşluğu kapsayıcı (`.ozet-kapsam`) veriyor. */
+.ozet-kapsam .tazele-ilerleme {
+  margin-top: 0;
 }
 .tazele-ilerleme-cubuk {
   height: 8px;

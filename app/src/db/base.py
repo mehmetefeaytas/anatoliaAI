@@ -282,6 +282,8 @@ class RepositoryProtocol(Protocol):
 
     def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int: ...
 
+    def set_ozet_sebep(self, atamalar: Mapping[int, Optional[str]]) -> int: ...
+
     def field_value(self, campaign_id: int, field_name: str) -> Any: ...
 
     def query_fields(self, field_name: str, *,
@@ -416,6 +418,10 @@ class ThreadSafeRepository:
     def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int:
         with self.lock:
             return self._inner.set_ozet(atamalar)
+
+    def set_ozet_sebep(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        with self.lock:
+            return self._inner.set_ozet_sebep(atamalar)
 
     def field_value(self, campaign_id: int, field_name: str) -> Any:
         with self.lock:

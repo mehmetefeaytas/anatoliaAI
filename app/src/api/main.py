@@ -18,6 +18,27 @@ Uçlar:
   POST /refresh         {"bank": "..."}  (operatör eylemi: tek bankayı ağdan tazele)
   GET  /refresh/status[/{job_id}]        (ilerleme + sonuç sayaçları)
   POST /refresh/cancel/{job_id}
+  GET  /summaries/coverage               (özet kapsam sayaçları — model çağırmaz)
+  POST /summaries/build                  (eksik özetleri yerel modelle üret)
+  GET  /summaries/status[/{job_id}]
+  POST /summaries/cancel/{job_id}
+  GET  /admin/plan                       (gelecek faz: tanımlı ama KAPALI uçlar)
+  POST /admin/banks | /admin/banks/{slug}/campaigns | …/products   -> 501
+
+## `/summaries/*` — eksik özetleri üretir, AĞA ÇIKMAZ
+
+Özetler yerel modelle üretilir ve `campaigns.ozet`'e yazılır. `/refresh` ham
+arşive yeni belge indirdiğinde o belgeler özetsiz kalır; bu uçlar aradaki
+boşluğu kapatır ve operatörü sunucuda betik koşturmaktan kurtarır. Model
+yereldir, internet gerekmez. Gerekçenin tamamı `src/summarize/ozet_isi.py`
+modül başlığındadır.
+
+## `/admin/*` — gelecek faz, BİLEREK 501
+
+Banka/kampanya/ürün ekleme uçları TANIMLIDIR ama açık değildir ve sahte bir
+başarı DÖNDÜRMEZ: 501 ile birlikte neden kapalı olduklarını yazarlar. Sözleşme
+`src/api/gelecek.py` içinde tek yerde durur; arayüz onu `/admin/plan`'dan okur,
+kendi içinde tekrarlamaz. Gerekçe o dosyanın başlığındadır.
 
 ## `/refresh*` — sistemin ağa çıkabilen TEK yüzeyi
 
@@ -156,6 +177,8 @@ from ..preprocessing.clean import normalize_text
 from ..scraping.tazeleme import TazelemeMesgul, TazelemeYoneticisi
 from ..scraping.tazeleme import onizleme as tazeleme_onizleme
 from ..summarize.ozet import OZET_KAYNAK_LLM
+from ..summarize.ozet_isi import LlmKapali, OzetMesgul, OzetYoneticisi
+from . import gelecek
 
 logger = logging.getLogger(__name__)
 
@@ -1638,6 +1661,102 @@ def build_app():
             raise HTTPException(status_code=404,
                                 detail="Böyle bir tazeleme işi yok.")
         return kayit
+
+    # ----------------------------------------------------------------- #
+    # Özet üretimi — yerel model, AĞA ÇIKMAZ, veri tabanına YAZAR
+    # ----------------------------------------------------------------- #
+    # Tazelemeden farkı bilinçli: o ağa çıkar ve DB'ye dokunmaz, bu ağa
+    # çıkmaz ve tam da DB'ye yazar. İkisi aynı anda koşabilir; kaynakları
+    # ayrık. Gerekçe `src/summarize/ozet_isi.py` modül başlığında.
+    ozet_isi = OzetYoneticisi(lambda: repo)
+    # Testler sahte bir iş geçirebilsin diye uygulama durumuna asılır —
+    # tazelemedeki aynı gerekçe.
+    app.state.ozet_isi = ozet_isi
+
+    @app.get("/summaries/coverage")
+    def summaries_coverage():
+        """Özet kapsam sayaçları + LLM durumu. Model ÇAĞIRMAZ, ağa çıkmaz.
+
+        Sayaç arayüzde de hesaplanabilirdi (`/campaigns` `ozet`i taşıyor) ama
+        `ozet_sebep` kovalarının ayrımı (`icerik_yok` / `basarisiz` /
+        `denenmemis`) özet katmanının kuralıdır; onu TSX'e kopyalamak, kuralın
+        iki yerde yaşaması demekti.
+        """
+        return app.state.ozet_isi.sayim()
+
+    @app.post("/summaries/build", status_code=202)
+    def summaries_build():
+        """Eksik özetleri arka planda üretir ve iş kaydını döndürür.
+
+        SENKRON DEĞİL: belge başına ~6 saniye. Koşan bir iş varken ikinci
+        istek 409 ile reddedilir — sessiz bir kuyruk operatöre yanlış bir
+        "başladı" izlenimi verirdi.
+        """
+        try:
+            return app.state.ozet_isi.baslat()
+        except LlmKapali as exc:
+            # 503: sunucunun geçici bir yeteneği kapalı. 400 olsaydı istemcinin
+            # gönderdiği bir şeyin hatalı olduğunu söylerdi — değil.
+            raise HTTPException(status_code=503, detail=str(exc)) from exc
+        except OzetMesgul as exc:
+            raise HTTPException(
+                status_code=409,
+                detail="Şu anda bir özet üretimi çalışıyor. Aynı anda tek iş "
+                       "koşar; bitmesini bekleyin ya da durdurun.") from exc
+
+    @app.get("/summaries/status")
+    def summaries_last_status():
+        """En son başlatılan özet işinin durumu — hiç iş yoksa `null`."""
+        return app.state.ozet_isi.son_is()
+
+    @app.get("/summaries/status/{job_id}")
+    def summaries_status(job_id: str):
+        """Bir özet işinin anlık durumu (ilerleme + sayaçlar)."""
+        kayit = app.state.ozet_isi.durum(job_id)
+        if kayit is None:
+            raise HTTPException(status_code=404,
+                                detail="Böyle bir özet işi yok.")
+        return kayit
+
+    @app.post("/summaries/cancel/{job_id}")
+    def summaries_cancel(job_id: str):
+        """Durdurma ister. O ana kadar yazılmış özetler KORUNUR."""
+        kayit = app.state.ozet_isi.iptal_et(job_id)
+        if kayit is None:
+            raise HTTPException(status_code=404,
+                                detail="Böyle bir özet işi yok.")
+        return kayit
+
+    # ----------------------------------------------------------------- #
+    # Gelecek faz — tanımlı ama KAPALI uçlar
+    # ----------------------------------------------------------------- #
+    # Sözleşme `src/api/gelecek.py` içinde; burada yalnız HTTP yüzeyi var.
+    # Uçlar sahte başarı DÖNDÜRMEZ: 501 + gerekçe + bugünkü alternatif.
+    def _kapali() -> None:
+        raise HTTPException(status_code=501, detail={
+            "sebep": gelecek.KAPALI_SEBEBI,
+            "bugunku_yol": gelecek.BUGUNKU_YOL,
+        })
+
+    @app.get("/admin/plan")
+    def admin_plan():
+        """Gelecek faz uçlarının sözleşmesi — arayüz bunu çizer."""
+        return gelecek.plan()
+
+    @app.post("/admin/banks")
+    def admin_bank_ekle():
+        """Gelecek faz: banka ekleme. Bu sürümde KAPALI (501)."""
+        _kapali()
+
+    @app.post("/admin/banks/{slug}/campaigns")
+    def admin_kampanya_ekle(slug: str):
+        """Gelecek faz: kampanya ekleme. Bu sürümde KAPALI (501)."""
+        _kapali()
+
+    @app.post("/admin/banks/{slug}/products")
+    def admin_urun_ekle(slug: str):
+        """Gelecek faz: finansal ürün ekleme. Bu sürümde KAPALI (501)."""
+        _kapali()
 
     @app.get("/contradictions")
     def contradictions():

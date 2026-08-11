@@ -29,6 +29,7 @@ import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
 import JuryModeToggle from "./components/JuryModeToggle";
 import SummaryCoverage from "./components/SummaryCoverage";
+import AyarlarPanel from "./components/AyarlarPanel";
 import TazelemePanel from "./components/TazelemePanel";
 import TemaSecici from "./components/TemaSecici";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
@@ -46,7 +47,8 @@ type TabKey =
   | "contradictions"
   | "extract"
   | "chat"
-  | "tazele";
+  | "tazele"
+  | "ayarlar";
 
 /**
  * Sıra kasıtlı: tek alanlı kıyastan çok alanlı bileşik skora, oradan banka
@@ -66,15 +68,19 @@ const TABS: readonly SekmeTanimi<TabKey>[] = [
 ] as const;
 
 /**
- * Jüri modunda EK sekme: veri tazeleme.
+ * Jüri modunda EK sekmeler: veri tazeleme ve ayarlar.
  *
- * Ağa çıkan tek yüzey olduğu için ürün ekranında yeri yok, denetim ekranında
- * var. İki dizi de modül düzeyinde SABİT: her render'da yeniden oluşan bir
- * dizi `useTabState`'in efektlerini sonsuz döngüye sokardı.
+ * Tazeleme ağa çıkan tek yüzey olduğu için ürün ekranında yeri yok, denetim
+ * ekranında var. Ayarlar da operatör yüzeyidir: gelecek faz uçlarının
+ * sözleşmesini gösterir, ürün akışının parçası değildir.
+ *
+ * İki dizi de modül düzeyinde SABİT: her render'da yeniden oluşan bir dizi
+ * `useTabState`'in efektlerini sonsuz döngüye sokardı.
  */
 const TABS_JURI: readonly SekmeTanimi<TabKey>[] = [
   ...TABS,
   { key: "tazele", label: "Veri Tazeleme" },
+  { key: "ayarlar", label: "Ayarlar" },
 ] as const;
 
 const TAB_KEYS = TABS.map((t) => t.key);
@@ -110,7 +116,7 @@ function Dashboard() {
   // Jüri modu kapatılınca tazeleme sekmesinde kalmak boş bir panel bırakırdı;
   // görünmeyen bir sekmede durmak yerine varsayılana dönülür.
   useEffect(() => {
-    if (!jury && sekme === "tazele") setSekme("compare");
+    if (!jury && (sekme === "tazele" || sekme === "ayarlar")) setSekme("compare");
   }, [jury, sekme, setSekme]);
 
   const fields = useAsync(() => api.fields(), []);
@@ -120,10 +126,6 @@ function Dashboard() {
   const campaignTypes = Array.from(
     new Set(rows.map((c) => c.campaign_type).filter(Boolean)),
   ) as string[];
-  const ozetli = rows.filter(
-    (c) => typeof c.ozet === "string" && c.ozet.trim() !== "",
-  ).length;
-
   const inspect = useCallback(
     (campaignId: number) => {
       setAuditTarget(campaignId);
@@ -141,9 +143,10 @@ function Dashboard() {
         <TemaSecici />
       </div>
 
-      {!campaigns.loading && rows.length > 0 && (
-        <SummaryCoverage toplam={rows.length} ozetli={ozetli} />
-      )}
+      {/* Kapsam sayacı artık kendi verisini `/summaries/coverage`'tan okur:
+          "özet var mı" istemcide sayılabilirdi, "özet neden yok" sayılamazdı
+          (gerekçe bileşenin başlığında). */}
+      <SummaryCoverage />
 
       <Tabs
         sekmeler={sekmeler}
@@ -197,6 +200,10 @@ function Dashboard() {
 
         {/* Ağa çıkan tek yüzey — yalnız jüri modunda erişilebilir. */}
         {sekme === "tazele" && jury && <TazelemePanel />}
+
+        {/* Gelecek faz uçlarının sözleşmesi. Operatör yüzeyi olduğu için
+            tazeleme ile aynı yerde: jüri modunda. */}
+        {sekme === "ayarlar" && jury && <AyarlarPanel />}
       </TabPanel>
     </main>
   );

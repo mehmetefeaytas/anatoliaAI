@@ -134,6 +134,10 @@ _LATER_COLUMNS = (
     # SQLite tarafındaki `repository._SONRADAN_EKLENEN` ile AYNI kalmak
     # ZORUNDA; ayrışmayı `tests/test_goc_listesi_paritesi.py` kapıda tutar.
     ("campaigns", "campaign_status", "TEXT"),
+    # 11 Ağu 2026: özet yokluğunun sebebi. SQLite tarafındaki
+    # `repository._SONRADAN_EKLENEN` ile AYNI kalmak ZORUNDA; ayrışmayı
+    # `tests/test_goc_listesi_paritesi.py` kapıda tutar.
+    ("campaigns", "ozet_sebep", "TEXT"),
 )
 
 
@@ -330,13 +334,41 @@ class PostgresRepository:
         return n
 
     def set_ozet(self, atamalar: Mapping[int, Optional[str]]) -> int:
-        """Kampanya id → LLM üretimi özet. Bu modül özet ÜRETMEZ."""
+        """Kampanya id → LLM üretimi özet. Bu modül özet ÜRETMEZ.
+
+        Dolu özet `ozet_sebep`i aynı ifadede temizler; gerekçe SQLite
+        yolundaki eşdeğerde yazılı ("özet var" ile "şu sebeple yok" bir arada
+        duramaz).
+        """
         baglam = "ozet yazımı"
         temiz = [(self._text(v, "ozet", baglam), k) for k, v in atamalar.items()]
         if not temiz:
             return 0
+        dolu = [(v, k) for v, k in temiz if (v or "").strip()]
+        bos = [(v, k) for v, k in temiz if not (v or "").strip()]
+        n = 0
         with self.conn.cursor() as cur:
-            cur.executemany("UPDATE campaigns SET ozet=%s WHERE id=%s", temiz)
+            if dolu:
+                cur.executemany(
+                    "UPDATE campaigns SET ozet=%s, ozet_sebep=NULL WHERE id=%s",
+                    dolu)
+                n += cur.rowcount
+            if bos:
+                cur.executemany("UPDATE campaigns SET ozet=%s WHERE id=%s", bos)
+                n += cur.rowcount
+        self.conn.commit()
+        return n
+
+    def set_ozet_sebep(self, atamalar: Mapping[int, Optional[str]]) -> int:
+        """Kampanya id → özetin üretilememe sebebi. Gerekçe SQLite yolunda."""
+        baglam = "ozet sebebi yazımı"
+        temiz = [(self._text(v, "ozet_sebep", baglam), k)
+                 for k, v in atamalar.items()]
+        if not temiz:
+            return 0
+        with self.conn.cursor() as cur:
+            cur.executemany("UPDATE campaigns SET ozet_sebep=%s WHERE id=%s",
+                            temiz)
             n = cur.rowcount
         self.conn.commit()
         return n
@@ -486,7 +518,7 @@ class PostgresRepository:
         belge_turu = belge_turu_dogrula(belge_turu)
         sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
                "c.campaign_type, c.belge_turu, c.campaign_status, c.ozet, "
-               "c.raw_text, c.source_url, "
+               "c.ozet_sebep, c.raw_text, c.source_url, "
                f"{_SCRAPED_AT_ISO} AS scraped_at "
                "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
         params: tuple = ()
