@@ -104,6 +104,44 @@ class TestYanlisPozitifYok(unittest.TestCase):
         self.assertIsNone(_kosul_notu(ALAN, "%2,49", kanit))
 
 
+class TestUcuncuTarafKosulu(unittest.TestCase):
+    """"LCW'de %0" — oran bir ORTAĞA bağlı; bankanın kendi adı sayılmaz.
+
+    Desen korpusta 115 yerde geçiyor ama oran alanının kanıtında yalnız BİR
+    kez; gerisi indirim kampanyaları ("Civil'de %25 İndirim") ve onlar bu
+    kapının kapsamında değil.
+    """
+
+    KANIT = ("olarak değişiklik gösterebilir LCW'de %0 kar payıyla "
+             "kullanılmak üzere finansman API'ları")
+
+    def test_ortak_kosulu_isaretleniyor(self) -> None:
+        self.assertEqual(
+            _kosul_notu(ALAN, "%0", self.KANIT, "Kuveyt Türk"), NOT_KOSULLU)
+
+    def test_bankanin_KENDI_adi_kosul_DEGIL(self) -> None:
+        """"Albaraka'da %2,49" bankanın kendi teklifidir, üçüncü taraf değil.
+
+        Dışlama olmadan bu desen meşru bir oranı sessizce kıyas dışı
+        bırakırdı — bir teklifi sessizce silmek, bir promosyonu fazla iyimser
+        göstermekten kötüdür.
+        """
+        kanit = "Albaraka'da %2,49 kâr payı oranı ile konut finansmanı"
+        self.assertIsNone(_kosul_notu(ALAN, "%2,49", kanit, "Albaraka Türk"))
+
+    def test_iki_sozcuklu_banka_adi_da_dislaniyor(self) -> None:
+        kanit = "Kuveyt Türk'te %1,89 kâr payı oranı sunulur"
+        self.assertIsNone(_kosul_notu(ALAN, "%1,89", kanit, "Kuveyt Türk"))
+
+    def test_banka_adi_bilinmiyorsa_ortak_sayilir(self) -> None:
+        """Ad taşınmazsa dışlama yapılamaz; kapı yine de ateşlenir.
+
+        Bu yön bilinçli: bilinmeyen bir adı "kendi bankası" saymak, kapıyı
+        sessizce kapatmak olurdu.
+        """
+        self.assertEqual(_kosul_notu(ALAN, "%0", self.KANIT, None), NOT_KOSULLU)
+
+
 class TestKapsam(unittest.TestCase):
     """Kapı YALNIZ kâr payı oranına uygulanır."""
 

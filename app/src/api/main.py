@@ -1041,6 +1041,18 @@ def build_app():
                 # kalır ve kapanmış bir kampanya, bugün başvurulabilecek
                 # tekliflerin ÜSTÜNDE görünür.
                 "campaign_status": r.get("campaign_status"),
+                # Ham değer (`compare.rank()` KOŞUL kapısı). Kapı, koşulun
+                # orana bağlı olup olmadığını ham değerin kanıt penceresindeki
+                # KONUMUNA bakarak anlar; alan taşınmazsa konum bilinemez ve
+                # kapı sessizce kapalı kalır.
+                #
+                # ÖLÇÜLDÜ (2026-08-11): tam olarak bu oldu. Kapı eklendi,
+                # testleri geçti, `rank()` doğrudan çağrıldığında çalıştı — ama
+                # `/compare` yanıtında "Mobilden yeni müşterilere özel %0"
+                # satırları hâlâ `comparable=True` dönüyordu. Yukarıdaki iki
+                # yorum aynı tuzağı zaten iki kez anlatıyordu; üçüncüsü de
+                # aynı biçimde düştü.
+                "raw_value": r.get("raw_value"),
             })
 
         # Sıralama → istenen yön → banka × ürün ailesi başına tek satır.
@@ -1234,7 +1246,11 @@ def build_app():
                      # Süre kapısı da geçerli, aynı gerekçeyle: kapanmış bir
                      # kampanyayla "rakipten %10 daha iyisiniz" demek, artık
                      # kimseye verilmeyen bir teklife dayanan bir iddiadır.
-                     "campaign_status": r.get("campaign_status")}
+                     "campaign_status": r.get("campaign_status"),
+                     # Koşul kapısı da geçerli: "mobilden yeni müşterilere
+                     # özel %0" ile hesaplanmış bir delta, herkesin
+                     # alamayacağı bir orana dayanan bir farktır.
+                     "raw_value": r.get("raw_value")}
                     for i, r in enumerate(aile_satirlari)
                 ], alan)
 

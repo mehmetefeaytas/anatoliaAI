@@ -388,6 +388,19 @@ _KOSUL_SONRA_RE = re.compile(
     r"['’]?d[ae]n\s+başlayan|başlayan\s+oran|['’]?d[ae]n\s+itibaren|başlar",
     re.IGNORECASE)
 
+#: ÜÇÜNCÜ TARAFA bağlı oran: "LCW'**de** %0 kar payıyla kullanılmak üzere".
+#:
+#: Özel ad + bulunma hâli, hemen oranın önünde. Ölçüldü (`data/demo.db`): desen
+#: korpusta 115 yerde geçiyor ama oran alanının kanıtında YALNIZ BİR kez —
+#: gerisi indirim kampanyaları ("Civil'de %25 İndirim") ve onlar bu kapının
+#: kapsamında değil (`_KOSUL_ALANLARI`).
+#:
+#: Bankanın KENDİ adı dışlanır: "Albaraka'da %2,49 kâr payı" bir üçüncü taraf
+#: koşulu değil, bankanın kendi teklifidir. Dışlama olmadan bu desen ileride
+#: meşru bir oranı sessizce kıyas dışı bırakabilirdi — ve sessizce bir teklifi
+#: silmek, bir promosyonu fazla iyimser göstermekten kötüdür.
+_KOSUL_ORTAK_RE = re.compile(r"([A-ZÇĞİÖŞÜ][\wçğıöşü]{1,})['’]d[ae]\b")
+
 #: Pencere genişlikleri. Ölçümle seçildi: 45/22 ile 7 doğru pozitifin hepsi
 #: yakalanıyor ve 4 yanlış pozitifin hiçbiri girmiyor.
 _KOSUL_ONCE_PENCERE = 45
@@ -402,8 +415,21 @@ _KOSUL_ALANLARI = frozenset({"kar_payi_orani"})
 NOT_KOSULLU = "koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz"
 
 
+def _ortak_kosulu(onc: str, bank_name: Optional[str]) -> bool:
+    """Oran üçüncü bir tarafa mı bağlı ("LCW'de %0")? Banka kendi adı sayılmaz."""
+    m = _KOSUL_ORTAK_RE.search(onc)
+    if m is None:
+        return False
+    ad = m.group(1).casefold()
+    kendi = (bank_name or "").casefold()
+    # "Kuveyt Türk'te" -> `ad` = "Türk"; bankanın adının HERHANGİ bir sözcüğüne
+    # eşitse üçüncü taraf değildir.
+    return ad not in {p.casefold() for p in kendi.split()}
+
+
 def _kosul_notu(field_name: str, raw_value: Optional[str],
-                source_span: Optional[str]) -> Optional[str]:
+                source_span: Optional[str],
+                bank_name: Optional[str] = None) -> Optional[str]:
     """Oran bir koşula BAĞLIYSA kullanıcıya dönük gerekçe; değilse `None`.
 
     Koşulun orana bağlı olduğunu, kanıt penceresinde oranın konumuna göre
@@ -426,9 +452,27 @@ def _kosul_notu(field_name: str, raw_value: Optional[str],
         onc = onc[onc.rfind(".") + 1:]
     if "." in son:
         son = son[:son.find(".")]
-    if _KOSUL_ONCE_RE.search(onc) or _KOSUL_SONRA_RE.search(son):
+    if (_KOSUL_ONCE_RE.search(onc) or _KOSUL_SONRA_RE.search(son)
+            or _ortak_kosulu(onc, bank_name)):
         return NOT_KOSULLU
     return None
+
+
+#: `rank()` kapılarının girdi sözlüğünden OKUDUĞU alanlar.
+#:
+#: Kapılar eksik alanda sessizce kapanır ve bu bilinçlidir ("bilinmiyor" ile
+#: "düşük" aynı şey değildir). Ama aynı tasarım, alanı taşımayı unutan
+#: çağıranı da sessizce ödüllendirir: kapı hiç ateşlenmez, testler yeşil kalır,
+#: ekran yanlış sıralar. `src/api/main.py` bu tuzağa ÜÇ KEZ düştü (güven, süre,
+#: koşul alanları). `tests/test_rank_girdi_paritesi.py` bu listeyi çağrı
+#: yerlerine karşı denetler.
+RANK_KAPI_ALANLARI: frozenset[str] = frozenset({
+    "canonical_value",    # birim / aralık kapısı
+    "confidence",         # güven kapısı
+    "campaign_status",    # süre kapısı
+    "raw_value",          # koşul kapısı — orana göre konum
+    "bank_name",          # koşul kapısı — bankanın kendi adını dışlar
+})
 
 
 def rank(rows: list[dict], field_name: str) -> list[RankRow]:
@@ -463,7 +507,7 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
         # düşük güven ise bizim ÖLÇÜMÜMÜZLE ilgilidir. Kullanıcıya gösterilecek
         # tek not, en temel eleme sebebi olmalı ve sıra bunu kurar.
         kosul_notu = _kosul_notu(field_name, r.get("raw_value"),
-                                 r.get("source_span"))
+                                 r.get("source_span"), r.get("bank_name"))
         if kosul_notu is not None and comparable:
             comparable, note = False, kosul_notu
         # Güven kapısı sayısallaştırmadan SONRA uygulanır: zaten kıyaslanamayan
