@@ -17,14 +17,31 @@
  *     bir demoda yeniden başlatma sık olur. İstemcideki hafıza ise sayfa
  *     yenilemesine bile dayanır — kullanıcının asıl şikâyeti buydu.
  *
- * ## Kapsam: TEK oturum, adlandırma YOK
+ * ## Kapsam: İKİ göz, adlandırma YOK
  *
- * Birden çok adlandırılmış oturum (sol kenarda sohbet listesi, yeniden
- * adlandırma, silme) BİLEREK yapılmadı. Maliyeti bir kenar çubuğu, ad
- * düzenleme akışı ve oturum başına depolama kotası yönetimi; faydası ise
- * 4 dakikalık tek akışlı bir sunumda sıfıra yakın. Kullanıcının gerçek
- * ihtiyacı iki tanedir ve ikisi de karşılanır: sohbet yenilemede
- * KAYBOLMASIN, ve istendiğinde TEMİZLENEBİLSİN («Yeni sohbet»).
+ * Depo iki sohbet tutar: yürüyen sohbet ve ondan bir önceki. Sınırsız,
+ * adlandırılmış oturum listesi (sol kenarda sohbet dizini, yeniden adlandırma,
+ * tek tek silme) BİLEREK yapılmadı; maliyeti bir kenar çubuğu, ad düzenleme
+ * akışı ve oturum başına kota yönetimi, faydası ise tek akışlı kısa bir
+ * sunumda sıfıra yakın.
+ *
+ * İki göz ise üç ihtiyacın üçünü birden karşılıyor:
+ *
+ *  1. Sohbet sayfa yenilemesinde KAYBOLMASIN.
+ *  2. «Yeni sohbet» temiz bir sayfa açsın — bağlam devralması da sıfırlansın.
+ *  3. Yeni sohbet açmak, eskisini YOK ETMESİN. Eski sohbet, kullanıcı onu
+ *     açıkça temizleyene kadar ikinci gözde bekler ve geri alınabilir.
+ *
+ * Üçüncü madde, «Yeni sohbet»i geri alınamaz bir silme olmaktan çıkarır.
+ * Geri alınamaz olan tek işlem `temizle()`'dir ve arayüz onu onaya bağlar.
+ *
+ * ## Kayıt biçimi neden sürüm ATLAMADI
+ *
+ * İkinci göz kayda İSTEĞE BAĞLI bir alan olarak eklendi (`onceki`), yani eski
+ * kayıt yeni kodda eksiksiz okunur ve ikinci gözü boş olan yeni kayıt eski
+ * kodda da okunur. Şekil hem geriye hem ileriye uyumlu olduğu için sürüm
+ * numarasını artırmak, hiçbir uyumsuzluğu engellemeden herkesin sohbetini
+ * silmek olurdu.
  *
  * ## Hidrasyon
  *
@@ -67,9 +84,15 @@ export type Tur = {
   hata: unknown;
 };
 
+/** Kayda yazılan tur — bekleyen/hatalı turlar buraya hiç girmez. */
+type KayitliTur = { id: number; soru: string; cevap: ChatResp };
+
 type Kayit = {
   v: number;
-  turlar: { id: number; soru: string; cevap: ChatResp }[];
+  /** Yürüyen sohbet. */
+  turlar: KayitliTur[];
+  /** Bir önceki sohbet. Yoksa alan hiç yazılmaz (bkz. dosya başlığı). */
+  onceki?: KayitliTur[];
 };
 
 function depo(): Storage | null {
@@ -100,27 +123,56 @@ function turGecerli(x: unknown): x is { id: number; soru: string; cevap: ChatRes
   return Array.isArray(c.sources);
 }
 
-/** Saklanan sohbeti okur. Kayıt yoksa/bozuksa boş liste (hata değil). */
-export function oku(): Tur[] {
+/** Ham kaydı çözer. Kayıt yoksa/bozuksa/tanınmayan sürümdeyse `null`. */
+function kaydiCoz(): Kayit | null {
   const d = depo();
-  if (!d) return [];
+  if (!d) return null;
   let ham: string | null;
   try {
     ham = d.getItem(KAYIT_ANAHTARI);
   } catch {
-    return [];
+    return null;
   }
-  if (!ham) return [];
+  if (!ham) return null;
   try {
     const kayit = JSON.parse(ham) as Kayit;
-    if (!kayit || kayit.v !== SURUM || !Array.isArray(kayit.turlar)) return [];
-    return kayit.turlar
-      .filter(turGecerli)
-      .slice(-AZAMI_TUR)
-      .map((t) => ({ id: t.id, soru: t.soru, cevap: t.cevap, hata: null }));
+    if (!kayit || kayit.v !== SURUM || !Array.isArray(kayit.turlar)) return null;
+    return kayit;
   } catch {
-    return [];
+    return null;
   }
+}
+
+/** Kayıttan gelen ham listeyi ekranda kullanılabilir turlara çevirir. */
+function turleriCoz(ham: unknown): Tur[] {
+  if (!Array.isArray(ham)) return [];
+  return ham
+    .filter(turGecerli)
+    .slice(-AZAMI_TUR)
+    .map((t) => ({ id: t.id, soru: t.soru, cevap: t.cevap, hata: null }));
+}
+
+/** Yürüyen sohbeti okur. Kayıt yoksa/bozuksa boş liste (hata değil). */
+export function oku(): Tur[] {
+  return turleriCoz(kaydiCoz()?.turlar);
+}
+
+/**
+ * Bir önceki sohbeti okur — «Yeni sohbet» ile kenara alınan turlar.
+ *
+ * Eski kayıtlarda bu alan hiç yoktur ve bu bir hata değildir: o kayıt, ikinci
+ * gözün eklenmesinden önce yazılmıştır ve boş bir önceki sohbetle okunur.
+ */
+export function okuOnceki(): Tur[] {
+  return turleriCoz(kaydiCoz()?.onceki);
+}
+
+/** Ekran turlarını kayıt turlarına indirger (cevabı olmayanlar düşer). */
+function saklanabilir(turlar: Tur[]): KayitliTur[] {
+  return turlar
+    .filter((t) => t.cevap)
+    .slice(-AZAMI_TUR)
+    .map((t) => ({ id: t.id, soru: t.soru, cevap: t.cevap as ChatResp }));
 }
 
 /**
@@ -130,24 +182,35 @@ export function oku(): Tur[] {
  * hatalı tur da yazılmaz (`Error` nesnesi JSON'a düzgün serileşmez ve
  * yenilemeden sonra bir hatayı yeniden göstermek bilgi taşımaz).
  *
- * Kota dolduğunda (`QuotaExceededError`) yazma BAŞARISIZ olmaz: geçmişin
- * yarısı atılıp yeniden denenir. Alternatif — kaynak metinlerini kırpmak —
- * denetlenebilirliği bozardı; eski turu tamamen unutmak, yeni turun kaynağını
- * sakatlamaktan iyidir.
+ * `onceki` VERİLMEZSE kayıttaki ikinci göze dokunulmaz. Bu, her tur sonrası
+ * koşan sıradan yazmanın kenara alınmış sohbeti sessizce silmesini önler;
+ * ikinci göz yalnız onu açıkça değiştiren işlemlerde (yeni sohbet, geri dönme,
+ * temizleme) yazılır.
+ *
+ * Kota dolduğunda (`QuotaExceededError`) yazma BAŞARISIZ olmaz. Feda sırası
+ * bilinçlidir: ÖNCE ikinci göz atılır, sonra yürüyen sohbetin yarısı. Kenara
+ * alınmış sohbet kullanıcının bakmadığı sohbettir; yürüyen sohbeti onun için
+ * kırpmak yanlış tarafı korumak olurdu. Kaynak metinlerini kırpmak ise hiç
+ * seçenek değil — denetlenebilirlik kotaya feda edilmez.
  */
-export function yaz(turlar: Tur[]): void {
+export function yaz(turlar: Tur[], onceki?: Tur[]): void {
   const d = depo();
   if (!d) return;
-  let liste = turlar
-    .filter((t) => t.cevap)
-    .slice(-AZAMI_TUR)
-    .map((t) => ({ id: t.id, soru: t.soru, cevap: t.cevap as ChatResp }));
+  let liste = saklanabilir(turlar);
+  let arsiv =
+    onceki === undefined ? (kaydiCoz()?.onceki ?? []) : saklanabilir(onceki);
 
   for (;;) {
+    const kayit: Kayit = { v: SURUM, turlar: liste };
+    if (arsiv.length) kayit.onceki = arsiv;
     try {
-      d.setItem(KAYIT_ANAHTARI, JSON.stringify({ v: SURUM, turlar: liste }));
+      d.setItem(KAYIT_ANAHTARI, JSON.stringify(kayit));
       return;
     } catch {
+      if (arsiv.length) {
+        arsiv = [];
+        continue;
+      }
       if (liste.length <= 1) {
         try {
           d.removeItem(KAYIT_ANAHTARI);
@@ -161,7 +224,12 @@ export function yaz(turlar: Tur[]): void {
   }
 }
 
-/** Saklanan sohbeti siler («Yeni sohbet»). */
+/**
+ * HER İKİ sohbeti de siler («Sohbeti temizle»).
+ *
+ * Geri alınamaz olan tek işlem budur; arayüz bu yüzden onay ister. «Yeni
+ * sohbet» buraya uğramaz — o yalnız yürüyen sohbeti ikinci göze taşır.
+ */
 export function temizle(): void {
   const d = depo();
   if (!d) return;
@@ -197,7 +265,14 @@ export function baglamListesi(
   return out;
 }
 
-/** Kayıttan gelen turlardan sonra kullanılacak ilk tur kimliği. */
+/**
+ * Kayıttan gelen turlardan sonra kullanılacak ilk tur kimliği.
+ *
+ * Çağıran HER İKİ gözü birleştirip verir: kullanıcı önceki sohbete geri
+ * döndüğünde o turlar yeniden ekrana gelir ve kimlikleri React listesinde
+ * anahtar olarak kullanılır; yalnız yürüyen sohbete bakan bir sayaç, geri
+ * dönüşten sonra çakışan kimlik üretirdi.
+ */
 export function sonrakiKimlik(turlar: Tur[]): number {
   return turlar.reduce((en, t) => Math.max(en, t.id), 0) + 1;
 }

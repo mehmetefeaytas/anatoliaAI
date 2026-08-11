@@ -76,9 +76,33 @@
  *    görmeden bağlam devralmak, sessiz bir varsayım olurdu.
  *
  * g) **OTURUM KALICILIĞI.** Sohbet `localStorage`'ta yaşar; sayfa yenilenince
- *    kaybolmaz, «Yeni sohbet» ile temizlenir. Hidrasyon uyuşmazlığı
- *    `juryMode.tsx` deseniyle önlenir: okuma render sırasında değil,
- *    `useEffect` içinde yapılır.
+ *    kaybolmaz. Hidrasyon uyuşmazlığı `juryMode.tsx` deseniyle önlenir: okuma
+ *    render sırasında değil, `useEffect` içinde yapılır.
+ *
+ * ## Sohbeti kapatmanın İKİ ayrı yolu (bu tur)
+ *
+ * Eskiden tek bir «Yeni sohbet» düğmesi vardı ve tek yaptığı şey geçmişi
+ * geri dönülemez biçimde SİLMEKTİ. İki ayrı ihtiyacı tek düğmeye bindiriyordu
+ * ve ikisini de kötü karşılıyordu: temiz bir sayfa isteyen kullanıcı önceki
+ * sohbetini kaybediyor, gerçekten silmek isteyen kullanıcı ise yanlışlıkla
+ * basma riskine karşı hiçbir koruma bulamıyordu.
+ *
+ * Artık iki düğme var ve ayrım tek cümleyle kurulur — **biri taşır, öteki
+ * siler**:
+ *
+ *  - **«Yeni sohbet»** yürüyen sohbeti ikinci göze taşır ve boş bir sayfa
+ *    açar. Hiçbir şey kaybolmaz: kenara alınan sohbet bir şeritte durur ve
+ *    «Önceki sohbete dön» ile geri gelir (dönüş bir TAKASTIR, o an ekranda
+ *    olan sohbet ikinci göze geçer — yani gidiş de dönüş de kayıpsızdır).
+ *  - **«Sohbeti temizle»** her iki gözü de siler. Geri alınamaz tek işlem
+ *    budur, bu yüzden yerinde bir onay adımı ister. Onay `window.confirm`
+ *    ile değil, kartın içinde sorulur: tarayıcı diyaloğu sayfayı dondurur,
+ *    stil taşımaz ve otomatik doğrulanamaz.
+ *
+ * Sohbet HAFIZASI da bu ayrımı izler: sunucuya gönderilen bağlam yalnız
+ * ekrandaki turlardan üretilir (`baglamListesi`), kenara alınan sohbetten
+ * DEĞİL. Yeni sohbet bu yüzden gerçekten yeni başlar — takip sorusu eski
+ * sohbetin öznesini devralmaz.
  *
  * ## Güvenlik kapılarının görünürlüğü (bu tur)
  *
@@ -112,6 +136,7 @@ import { useJuryMode } from "../lib/juryMode";
 import {
   baglamListesi,
   oku as oturumOku,
+  okuOnceki as oturumOkuOnceki,
   sonrakiKimlik,
   temizle as oturumTemizle,
   yaz as oturumYaz,
@@ -165,6 +190,12 @@ type Props = {
 export default function ChatPanel({ onInspect }: Props) {
   const [q, setQ] = useState("");
   const [turlar, setTurlar] = useState<Tur[]>([]);
+  // Kenara alınmış sohbet. Ekrana basılmaz, bağlama da girmez; yalnız şeritte
+  // sayısıyla durur ve istendiğinde geri çağrılır.
+  const [onceki, setOnceki] = useState<Tur[]>([]);
+  // Temizleme onayı beklerken açık. Onay adımı olmadan tek tıkla iki sohbet
+  // birden silinirdi.
+  const [onayBekliyor, setOnayBekliyor] = useState(false);
   const [busy, setBusy] = useState(false);
   // Saklanan sohbet OKUNDU mu. Okunmadan yazmak, ilk render'daki boş listeyi
   // diske basıp geçmişi silerdi.
@@ -184,14 +215,18 @@ export default function ChatPanel({ onInspect }: Props) {
   // değer mount sonrası okunur (juryMode.tsx ile aynı desen).
   useEffect(() => {
     const kayitli = oturumOku();
-    sayacRef.current = sonrakiKimlik(kayitli) - 1;
+    const kenara = oturumOkuOnceki();
+    // Sayaç HER İKİ gözün üstünden geçer: önceki sohbete dönüldüğünde o
+    // turlar yeniden listelenir ve kimlikleri çakışmamalıdır.
+    sayacRef.current = sonrakiKimlik([...kayitli, ...kenara]) - 1;
     setTurlar(kayitli);
+    setOnceki(kenara);
     setHazir(true);
   }, []);
 
   useEffect(() => {
-    if (hazir) oturumYaz(turlar);
-  }, [turlar, hazir]);
+    if (hazir) oturumYaz(turlar, onceki);
+  }, [turlar, onceki, hazir]);
 
   const ask = useCallback(
     async (question: string) => {
@@ -225,10 +260,44 @@ export default function ChatPanel({ onInspect }: Props) {
     [busy, turlar],
   );
 
+  /**
+   * Yürüyen sohbeti ikinci göze taşır ve boş sayfa açar.
+   *
+   * Kenara alınan sohbet SİLİNMEZ; ikinci gözde zaten bir sohbet varsa onun
+   * yerini alır ve bu, şeritte tek bir sohbetin beklediği söylendiği için
+   * sürpriz değildir. Boş bir sohbeti kenara almak anlamsız olurdu — düğme o
+   * durumda zaten kapalıdır.
+   */
   const yeniSohbet = useCallback(() => {
-    oturumTemizle();
+    setOnceki(turlar);
     setTurlar([]);
     setQ("");
+    setOnayBekliyor(false);
+    alanRef.current?.focus();
+  }, [turlar]);
+
+  /**
+   * İki sohbetin yerini DEĞİŞTİRİR.
+   *
+   * Geri dönüş bir takastır, bir geri yükleme değil: ekrandaki sohbet ikinci
+   * göze geçer. Böylece kullanıcı ileri geri gidip gelebilir ve hiçbir yönde
+   * veri kaybetmez.
+   */
+  const oncekineDon = useCallback(() => {
+    setTurlar(onceki);
+    setOnceki(turlar);
+    setQ("");
+    setOnayBekliyor(false);
+    alanRef.current?.focus();
+  }, [onceki, turlar]);
+
+  /** Onaylanmış temizleme: her iki göz de silinir. */
+  const temizle = useCallback(() => {
+    oturumTemizle();
+    setTurlar([]);
+    setOnceki([]);
+    setQ("");
+    setOnayBekliyor(false);
     alanRef.current?.focus();
   }, []);
 
@@ -288,16 +357,72 @@ export default function ChatPanel({ onInspect }: Props) {
         <p id="chat-ipucu" className="small faint" style={{ margin: 0 }}>
           Enter gönderir · Shift+Enter yeni satır · en yeni cevap en üstte
         </p>
-        <button
-          type="button"
-          className="btn-link"
-          onClick={yeniSohbet}
-          disabled={busy || turlar.length === 0}
-          title="Sohbeti temizler ve bağlam devralmayı sıfırlar"
-        >
-          Yeni sohbet
-        </button>
+        <div className="row-tight">
+          <button
+            type="button"
+            className="btn-link"
+            onClick={yeniSohbet}
+            disabled={busy || turlar.length === 0}
+            title="Bu sohbeti kenara alır, boş bir sayfa açar ve bağlam devralmayı sıfırlar; kenara alınan sohbet silinmez"
+          >
+            Yeni sohbet
+          </button>
+          <button
+            type="button"
+            className="btn-link"
+            onClick={() => setOnayBekliyor(true)}
+            disabled={busy || (turlar.length === 0 && onceki.length === 0)}
+            title="Bu tarayıcıda saklanan sohbetlerin tamamını siler"
+          >
+            Sohbeti temizle
+          </button>
+        </div>
       </div>
+
+      {/* Onay yerinde sorulur. `window.confirm` sayfayı dondurur, ekranın
+          stilini taşımaz ve otomatik olarak doğrulanamaz. */}
+      {onayBekliyor && (
+        <div className="sohbet-onay" role="alert">
+          <p className="sohbet-onay-metin">
+            {onceki.length > 0
+              ? "Yürüyen sohbet ve kenara alınan sohbet birlikte silinecek."
+              : "Bu tarayıcıda saklanan sohbet silinecek."}{" "}
+            İşlem geri alınamaz.
+          </p>
+          <div className="row-tight">
+            <button type="button" className="btn btn-tehlike" onClick={temizle}>
+              Evet, temizle
+            </button>
+            <button
+              type="button"
+              className="btn-link"
+              onClick={() => setOnayBekliyor(false)}
+            >
+              Vazgeç
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Kenara alınan sohbetin varlığı GÖRÜNÜR olmalı: görünmeyen bir yedek,
+          kullanıcı açısından silinmiş sayılır. */}
+      {onceki.length > 0 && (
+        <div className="sohbet-arsiv">
+          <span>
+            Kenara alınan sohbet: {trNum(onceki.length)} tur. Siz temizleyene
+            kadar burada bekler ve cevaplara bağlam olarak karışmaz.
+          </span>
+          <button
+            type="button"
+            className="btn-link"
+            onClick={oncekineDon}
+            disabled={busy}
+            title="İki sohbetin yerini değiştirir; hiçbiri silinmez"
+          >
+            Önceki sohbete dön
+          </button>
+        </div>
+      )}
 
       {/* Durum satırı ekran okuyucu içindir. Turlar ters sırada basıldığı için
           «yeni bir şey eklendi» bilgisi tek başına konumdan okunamaz; durum

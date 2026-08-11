@@ -178,6 +178,19 @@
   border-color: var(--accent);
   filter: none;
 }
+/* Geri alınamaz işlemin onay düğmesi.
+ *
+ * Dolu kırmızı bir zemin YERİNE yıkama + kenarlık kullanılır. İki sebep:
+ * `--bad` üstündeki beyaz metin paletin ölçülen çiftlerinden biri değildir
+ * (yani AA'sı kanıtlanmamış olurdu), ve tehlike sinyali burada rengin tek
+ * başına taşıdığı bir bilgi değildir — düğmenin metni de «Evet, temizle»
+ * yazar, üstündeki satır işlemin geri alınamadığını söyler. */
+.btn-tehlike {
+  background: var(--bad-wash);
+  color: var(--bad);
+  border: 1px solid var(--bad);
+}
+
 .btn-link {
   background: none;
   border: none;
@@ -791,6 +804,45 @@ ol.steps span {
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+/* Temizleme onayı — kartın içinde, soru kutusunun hemen altında.
+ * Sol şerit tehlike rengini taşır; gövde zemini ölçülü çift olan
+ * `--fg` / `--bg` ikilisinde kalır. */
+.sohbet-onay {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--bad);
+  border-radius: var(--radius-md);
+}
+.sohbet-onay-metin {
+  margin: 0;
+  flex: 1 1 20ch;
+  font-size: var(--fs-sm);
+  color: var(--fg);
+}
+
+/* Kenara alınan sohbetin şeridi. Sohbet listesinin ÜSTÜNDE durur: hangi
+ * sohbete baktığını bilmeyen kullanıcı, gelen cevabı yanlış sohbete yazar. */
+.sohbet-arsiv {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--bg);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
 }
 
 .chat-bos {
