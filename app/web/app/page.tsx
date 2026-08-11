@@ -30,9 +30,11 @@ import ExtractLive from "./components/ExtractLive";
 import JuryModeToggle from "./components/JuryModeToggle";
 import SummaryCoverage from "./components/SummaryCoverage";
 import TazelemePanel from "./components/TazelemePanel";
+import TemaSecici from "./components/TemaSecici";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
 import { api } from "./lib/api";
 import { JuryModeProvider, useJuryMode } from "./lib/juryMode";
+import { TemaProvider } from "./lib/tema";
 import { useTabState } from "./lib/tabState";
 import { useAsync } from "./lib/useAsync";
 
@@ -78,12 +80,21 @@ const TABS_JURI: readonly SekmeTanimi<TabKey>[] = [
 const TAB_KEYS = TABS.map((t) => t.key);
 const TAB_KEYS_JURI = TABS_JURI.map((t) => t.key);
 
-/** Jüri modu tüm sekmeleri sarar; ComparePanel içeriden okur. */
+/**
+ * Jüri modu tüm sekmeleri sarar; ComparePanel içeriden okur.
+ *
+ * Tema sağlayıcısı da buradadır, kök yerleşimde değil: seçim `localStorage`'a
+ * ve `document`e dokunur, yani istemci tarafı bir işlemdir. Kök yerleşim ise
+ * sunucu bileşenidir ve öyle kalması, sayfanın kabuğunun sunucuda üretilmeye
+ * devam etmesi demektir.
+ */
 export default function Home() {
   return (
-    <JuryModeProvider>
-      <Dashboard />
-    </JuryModeProvider>
+    <TemaProvider>
+      <JuryModeProvider>
+        <Dashboard />
+      </JuryModeProvider>
+    </TemaProvider>
   );
 }
 
@@ -123,7 +134,12 @@ function Dashboard() {
 
   return (
     <main>
-      <JuryModeToggle />
+      {/* İki anahtar tek şeritte: ikisi de panelin tamamını etkiler ve
+          ikisi de sekmelerden bağımsızdır. */}
+      <div className="arac-cubugu">
+        <JuryModeToggle />
+        <TemaSecici />
+      </div>
 
       {!campaigns.loading && rows.length > 0 && (
         <SummaryCoverage toplam={rows.length} ozetli={ozetli} />

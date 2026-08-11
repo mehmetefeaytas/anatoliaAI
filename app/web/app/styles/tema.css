@@ -1,0 +1,111 @@
+/* Anatolia AI — KULLANICININ SEÇTİĞİ tema.
+ *
+ * İlgili: tokens.css (paletin tek doğruluk kaynağı), ../lib/tema.tsx,
+ *         ../components/TemaSecici.tsx, tests/test_tema_paleti.py
+ *
+ * ## Neden ayrı bir katman
+ *
+ * `tokens.css` iki paleti tanımlar ve aralarındaki seçimi İŞLETİM SİSTEMİNE
+ * bırakır (`prefers-color-scheme`). Bu iyi bir varsayılandır ama tek seçenek
+ * olduğunda bir kısıttır: sunum makinesinin sistem teması projektörde okunmaz
+ * çıkabilir ve kullanıcının onu düzeltmek için işletim sistemi ayarlarına
+ * gitmesi gerekir.
+ *
+ * Bu dosya ÜÇÜNCÜ hâli ekler: kullanıcı açıkça seçtiyse sistem ezilir.
+ * Seçim `:root` üzerindeki `data-tema` niteliğiyle taşınır.
+ *
+ *   nitelik yok            → sistem karar verir (varsayılan)
+ *   data-tema="acik"       → her hâlde açık palet
+ *   data-tema="koyu"       → her hâlde koyu palet
+ *
+ * Özgüllük seçimi zaten kazandırır: `:root[data-tema="…"]` (0,2,0) medya
+ * sorgusu içindeki `:root`'tan (0,1,0) yüksektir — medya sorgusu özgüllük
+ * eklemez. Bu yüzden `tokens.css`'e DOKUNULMADI ve dosya sırası bir şey
+ * değiştirmez.
+ *
+ * ## Neden renkler burada TEKRARLANIYOR
+ *
+ * Aynı paleti iki yerde yazmak istenmez; ama saf CSS'te bir bildirim kümesi
+ * hem medya sorgusunun içine hem dışına aynı anda konamaz. Ara token
+ * (`--koyu-bg` gibi) tekrarı kaldırırdı, fakat kontrast kapısı düz `hex`
+ * değer okur; `var(...)` gören kapı o paleti ölçemez ve sessizce "temiz"
+ * derdi. Ölçülemeyen bir palet, ölçülmüş bir tekrarın yerini tutmaz.
+ *
+ * Kopyanın kayması bu yüzden teste bağlandı: `tests/test_tema_paleti.py`
+ * buradaki her değerin `tokens.css`'teki karşılığıyla BİREBİR aynı olmasını
+ * şart koşar. Kopya kayarsa kapı düşer.
+ *
+ * ## color-scheme
+ *
+ * Yalnız bizim renklerimiz değil, tarayıcının kendi çizdikleri de (kaydırma
+ * çubuğu, form denetimleri, otomatik doldurma) temaya uymalı. Varsayılan
+ * `light dark`, seçim yapıldığında tek değere sabitlenir.
+ */
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-tema="acik"] {
+  color-scheme: light;
+
+  --bg: #fbfbfd;
+  --bg-2: #ffffff;
+  --bg-3: #eeeef2;
+
+  --line: #d6d6dc;
+  --line-soft: #e9e9ee;
+
+  --fg: #1d1d1f;
+  --fg-dim: #5f5f66;
+  --fg-faint: #6c6c78;
+  --on-accent: #ffffff;
+
+  --accent: #0071e3;
+  --accent-soft: #0062c4;
+
+  --ok: #1d7a54;
+  --warn: #a8480a;
+  --bad: #b3261e;
+
+  --accent-wash: #e8f1fd;
+  --ok-wash: #e6f4ee;
+  --warn-wash: #fdf0e6;
+  --bad-wash: #fceceb;
+  --mark-ring: #ffeb8a;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+:root[data-tema="koyu"] {
+  color-scheme: dark;
+
+  --bg: #0b0b0f;
+  --bg-2: #16161c;
+  --bg-3: #26262e;
+
+  --line: #2f2f38;
+  --line-soft: #23232b;
+
+  --fg: #f5f5f7;
+  --fg-dim: #98989d;
+  --fg-faint: #8a8a93;
+
+  --accent: #2e8fff;
+  --accent-soft: #5aa9ff;
+  --on-accent: #06213d;
+
+  --ok: #34c77b;
+  --warn: #f5a524;
+  --bad: #ff6b60;
+
+  --accent-wash: #12243a;
+  --ok-wash: #10281e;
+  --warn-wash: #2e2211;
+  --bad-wash: #33191a;
+  --mark-ring: #6b5a06;
+
+  --shadow-sm: none;
+  --shadow-md: none;
+}

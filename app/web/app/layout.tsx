@@ -1,19 +1,23 @@
 import type { ReactNode } from "react";
 import "./styles/tokens.css";
+import "./styles/tema.css";
 import "./styles/base.css";
 import "./styles/components.css";
 
 /**
  * Kök yerleşim.
  *
- * Stiller ÜÇ katmandan gelir ve sıra önemlidir: token → taban → bileşen.
- * Eskiden tek `globals.css` vardı (471 satır, `docs/archive/globals-v1.css`);
- * 16 tokenının 14'ü renkti, boşluk/tipografi/gölge için token yoktu ve
- * `@media` sorgusu hiç bulunmuyordu. Ayrıntılı gerekçe: `styles/tokens.css`.
+ * Stiller DÖRT katmandan gelir ve sıra önemlidir: token → tema seçimi →
+ * taban → bileşen. Eskiden tek `globals.css` vardı (471 satır,
+ * `docs/archive/globals-v1.css`); 16 tokenının 14'ü renkti, boşluk/tipografi/
+ * gölge için token yoktu ve `@media` sorgusu hiç bulunmuyordu. Ayrıntılı
+ * gerekçe: `styles/tokens.css`.
  *
- * Tema seçilmez, DEVRALINIR: açık palet `:root`'ta, koyu palet
- * `prefers-color-scheme` altında tanımlıdır. Sunucu ve istemci aynı HTML'i
- * üretir, hidrasyon uyuşmazlığı olmaz.
+ * Tema VARSAYILAN olarak devralınır: açık palet `:root`'ta, koyu palet
+ * `prefers-color-scheme` altında tanımlıdır. Kullanıcı açıkça seçerse
+ * `styles/tema.css` işletim sistemini ezer (bkz. `lib/tema.tsx`). Sunucu
+ * çıktısı her hâlde aynıdır — seçim `:root` niteliğiyle, mount sonrası
+ * uygulanır — yani hidrasyon uyuşmazlığı olmaz.
  *
  * Harici font/CDN çağrısı YOKTUR — sistem yazı tipleri kullanılır (offline kısıtı).
  */

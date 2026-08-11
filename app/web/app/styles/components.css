@@ -635,6 +635,52 @@ table.data tbody tr.group-head:not(:first-child) td {
 }
 
 /* ===================================================================
+ * ÜST ARAÇ ŞERİDİ (jüri modu + tema seçici)
+ * =================================================================== */
+/* İki anahtar yan yana durur, dar ekranda alt alta iner. Alt kenar boşluğu
+ * şeridin kendisine aittir; iki çocuğun ayrı ayrı boşluk taşıması, biri
+ * gizlendiğinde düzensiz bir aralık bırakırdı. */
+.arac-cubugu {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+.arac-cubugu > .jury-bar {
+  margin-bottom: 0;
+  flex: 1 1 auto;
+}
+
+/* Tema seçici, jüri şeridiyle aynı kapsül biçimini taşır: ikisi eş düzey
+ * anahtardır ve farklı görünmeleri birini ötekinden önemli gösterirdi. */
+.tema-secici {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1);
+  flex: none;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--bg-2);
+}
+.tema-etiket {
+  margin-right: var(--sp-1);
+}
+/* Çipin kendi zemini `--bg-2`; kapsül de `--bg-2` olduğu için seçili hâl
+ * genel kuralla görünmez kalırdı (bkz. `.jury-toggle` aynı sebep). */
+.tema-dugmesi {
+  padding: var(--sp-1) var(--sp-3);
+}
+.tema-dugmesi[aria-pressed="true"],
+.tema-dugmesi.on {
+  background: var(--accent-wash);
+  color: var(--fg);
+  box-shadow: none;
+}
+
+/* ===================================================================
  * JÜRİ MODU
  * =================================================================== */
 .jury-bar {
