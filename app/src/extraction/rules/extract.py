@@ -799,9 +799,34 @@ _ILK_SAYISAL_RE = re.compile(
     re.IGNORECASE,
 )
 
-_ORAN_IFADESI = (r"binde\s*\d[\d.,]*|y[üu]zde\s*\d[\d.,]*|"
-                 r"%\s*\d[\d.,]*|\d[\d.,]*\s*%")
-_PARA_IFADESI = r"\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])"
+# SAYININ ORTASINDAN BAŞLAMA YASAĞI.
+#
+# ## Ölçülen kusur (2026-08-11, `data/demo.db`)
+#
+# `odul_miktari`'nda **7 çıkarım** sayının başı kesilerek üretilmişti ve
+# yedisi de güven kapısını (0,65) geçip kıyas tablosuna girmişti:
+#
+#     "…Özel 5000 TL'lik Harcamaya…"        -> ham '000 TL'  -> 0 TL
+#     "…yapılacak 5,000 TL ve üzeri…"       -> ham  '00 TL'  -> 0 TL
+#     "…toplamda 12.500 TL harcamadan…"     -> ham   '0 TL'  -> 0 TL
+#
+# Ekranda "en düşük ödül" sıralamasının ilk dört satırı **0 TL** görünüyordu ve
+# dördü de gerçekte 1.000–12.500 TL'lik ödüllerdi. Kullanıcının bildirdiği
+# "0 TL" şikâyetinin kaynağı buydu.
+#
+# Kök neden desen değil, ÇAĞIRAN taraftı: tetikleyicinin çevresinden 30
+# karakterlik bir dilim alınıp desen O DİLİMDE aranıyordu. Dilimin sol kenarı
+# sayının ortasına düşünce, desenin gördüğü ilk karakter zaten "0" oluyordu.
+# Çağrı yerleri artık dilim almıyor (`search(text, pos, endpos)`), ama desenin
+# kendisi de yapısal olarak korunuyor: iki kapı birden.
+#
+# `:` de yasaklı — "06.02.2026 00:00:00 TL" satırında saat bileşeni tutar
+# sanılıyordu (tablo kolonundaki `TL` bir sonraki hücreye aitti).
+_SAYI_BASI = r"(?<![\d.,:])"
+
+_ORAN_IFADESI = (rf"binde\s*{_SAYI_BASI}\d[\d.,]*|y[üu]zde\s*{_SAYI_BASI}\d[\d.,]*|"
+                 rf"%\s*{_SAYI_BASI}\d[\d.,]*|{_SAYI_BASI}\d[\d.,]*\s*%")
+_PARA_IFADESI = rf"{_SAYI_BASI}\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])"
 
 # A) TABAN SAYIYLA BİTİŞİK: "100.000 TL'nin %2,5'i", "50.000 TL üzerinden %1".
 # İyelik eki ZORUNLU. Opsiyonel bırakılırsa tablo satırındaki komşu kolon
@@ -1413,26 +1438,31 @@ def extract_odul_miktari(text: str) -> Optional[ExtractedField]:
         r"kazan\w*|ödül)",
         re.IGNORECASE,
     )
-    money = re.compile(r"\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])", re.IGNORECASE)
+    money = re.compile(_PARA_IFADESI, re.IGNORECASE)
 
     best = None
     for rm in reward.finditer(text):
+        # Arama METNİN KENDİSİNDE, konum sınırlarıyla yapılır — dilim ALINMAZ.
+        #
+        # `text[a:b]` alıp desende aramak, sayının ortasından başlayan bir
+        # eşleşmeye kapı açıyordu: dilimin sol kenarı "5000" içinde kalınca
+        # desen "000 TL" görüyor ve ödül 0 TL'ye düşüyordu (7 belgede ölçüldü,
+        # bkz. `_SAYI_BASI`). `search(text, pos, endpos)` ile geriye-bakış
+        # (lookbehind) `pos`tan ÖNCEKİ gerçek karakterleri görür, dolayısıyla
+        # kesik eşleşme yapısal olarak imkânsız hâle gelir.
+        bas = max(0, rm.start() - 30)
         # ödül sözcüğünün ÖNCESİNDEKİ 30 karakterde tutar ara ("50 TL hediye")
-        back = text[max(0, rm.start() - 30): rm.start()]
-        cands = list(money.finditer(back))
+        cands = [m for m in money.finditer(text, bas, rm.start())]
         if cands:
             mm = cands[-1]           # ödül sözcüğüne en yakın olan
-            s = max(0, rm.start() - 30) + mm.start()
-            e = max(0, rm.start() - 30) + mm.end()
+            s, e = mm.start(), mm.end()
             dist = rm.start() - e
         else:
             # sonrasında ara ("hediye 50 TL")
-            fwd_off = rm.end()
-            fwd = text[fwd_off: fwd_off + 30]
-            mm = money.search(fwd)
+            mm = money.search(text, rm.end(), min(len(text), rm.end() + 30))
             if not mm:
                 continue
-            s, e = fwd_off + mm.start(), fwd_off + mm.end()
+            s, e = mm.start(), mm.end()
             dist = s - rm.end()
         if best is None or dist < best[2]:
             best = (s, e, dist)
@@ -1502,9 +1532,14 @@ _PUAN_KROM_RE = re.compile(
 # yiyor ve madde numarası 24 puanlık bir ödül sanılıyordu. Rakamla bitme şartı
 # `1.500 TL` gibi binlik ayıraçlı tutarları bozmaz — orada nokta sayının içinde.
 _PUAN_SAYI_RE = re.compile(
-    r"(\d[\d.,]*\d|\d)\s*(?:adet\s*)?"
+    rf"{_SAYI_BASI}(\d[\d.,]*\d|\d)\s*(?:adet\s*)?"
     r"(?:chip[\s-]*para|parafpara|maximiles|worldpuan|puan|tl|₺)",
     re.IGNORECASE)
+
+#: Puan bağlamındaki oran deseni. `_SAYI_BASI` ile sayının ortasından
+#: başlayamaz; modül düzeyinde derlenir çünkü belge başına onlarca kez koşar.
+_PUAN_ORAN_RE = re.compile(
+    rf"%\s*{_SAYI_BASI}(\d[\d.,]*)|{_SAYI_BASI}(\d[\d.,]*)\s*%")
 
 
 def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
@@ -1532,13 +1567,18 @@ def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
         if _PUAN_KROM_RE.search(cevre):
             continue
 
+        # Arama METNİN KENDİSİNDE, konum sınırlarıyla — dilim ALINMAZ.
+        # Gerekçe `extract_odul_miktari` içinde ve `_SAYI_BASI` yorumunda:
+        # dilimin sol kenarı bir sayının ortasına düştüğünde desen sayının
+        # kuyruğunu eşleştiriyor ("5000" -> "000") ve değer sessizce çöküyor.
+        # Burada henüz ölçülmüş bir vaka yok; kusur LATENT ve aynı kalıptan.
         ctx_s = max(0, tm.start() - 30)
-        ctx = text[ctx_s: min(len(text), tm.end() + 30)]
+        ctx_e = min(len(text), tm.end() + 30)
 
-        rate = re.search(r"%\s*(\d[\d.,]*)|(\d[\d.,]*)\s*%", ctx)
+        rate = _PUAN_ORAN_RE.search(text, ctx_s, ctx_e)
         if rate:
-            off = ctx_s + (rate.start(1) if rate.group(1) else rate.start(2))
-            end = ctx_s + (rate.end(1) if rate.group(1) else rate.end(2))
+            off = rate.start(1) if rate.group(1) else rate.start(2)
+            end = rate.end(1) if rate.group(1) else rate.end(2)
             val = N.parse_tr_number(text[off:end])
             if val is None:
                 continue
@@ -1547,10 +1587,10 @@ def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
             # Sayı tetikleyiciye KOMŞU olmak zorunda. Eskiden birim grubu
             # opsiyoneldi (`(?:chip|puan)?`), yani ±30 karakterdeki herhangi bir
             # sayı kabul ediliyordu — halüsinasyonun ikinci mekanizması buydu.
-            num = _PUAN_SAYI_RE.search(ctx)
+            num = _PUAN_SAYI_RE.search(text, ctx_s, ctx_e)
             if not num:
                 continue
-            off, end = ctx_s + num.start(1), ctx_s + num.end(1)
+            off, end = num.start(1), num.end(1)
             val = N.parse_tr_number(text[off:end])
             if val is None:
                 continue
