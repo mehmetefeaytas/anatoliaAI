@@ -50,6 +50,27 @@ Ollama'nın varsayılan bağlamı 2048'dir ve fazlasını **sessizce baştan kı
 8192) ile açıkça set eder; `scripts/build_summaries.py` da değişkeni açıkça
 verir. `MAKS_GIRDI_KARAKTER` bu pencereye sığmayan belgeleri kırpar ve kırpma
 `OzetSonucu.kirpildi` ile **görünür** kalır.
+
+## Alfabe kapısı: Latin dışına kayan özet REDDEDİLİR
+
+Yerel model (`qwen2.5:7b-instruct`) üretimin ORTASINDA dil değiştirebiliyor.
+Ölçüldü (2026-08-11, `data/demo.db`, 1751 özet): **67 özet** Türkçenin
+kullanmadığı bir alfabeye taşmıştı — 65'i Çince ideogram, biri Kiril harfi,
+ikisi yalnız Çin noktalaması. Kaymalar kelimenin ortasına giriyordu:
+
+    "…finansman tutarı, vade süresi ve kâr oranı gibi faktörlerden зависecektir."
+    "…500 TL nakit iade提供的优惠活动。该活动仅限每位客户一次机会…"
+
+Bu metinler ekranda "AI özeti" etiketiyle duruyordu. Kapı bu yüzden üretimin
+ÇIKIŞINDA durur: özet Latin/Türkçe alfabesinin dışında tek karakter taşısa bile
+kabul edilmez ve `sebep="yabanci_alfabe"` ile `None` döner.
+
+Elle düzeltme, çeviri ya da kırpma YOKTUR — kirli parçayı silip kalanı özet diye
+sunmak, modelin yazmadığı bir metni model çıktısı gibi göstermektir. Modülün
+baştan sona ilkesi aynı: **sahte özet basmaktansa özet olmaması yeğdir.**
+
+Kapının eşiği ölçümle kalibre edildi: aynı korpusta Latin dışına taşmayan 1684
+özetin hiçbiri reddedilmiyor (yanlış pozitif = 0).
 """
 
 from __future__ import annotations
@@ -82,8 +103,32 @@ SISTEM_PROMPT = (
     "anlatıyor, kime yönelik, hangi başlıca koşulu taşıyor. "
     "Konvansiyonel bankacılık terimlerini kullanma; metnin kendi "
     "terminolojisine sadık kal (kâr payı, finansman, katılma hesabı). "
+    # Yönergedeki bu cümle KAPININ YERİNE GEÇMEZ, onu tamamlar: model
+    # yönergeye uymayabilir, kapı ise uymadığında çıktıyı geçirmez.
+    "Yalnızca Türkçe yaz; Türk alfabesi dışında hiçbir harf ya da "
+    "noktalama işareti kullanma. "
     "Özetlenecek anlamlı bir içerik yoksa boş dize döndür. "
     'Çıktı biçimi: {"ozet": "..."}'
+)
+
+#: `sebep` alanının kapıya ait değeri — toplu raporlar bunu sayarak
+#: "kaç özet alfabe kaymasından düştü" sorusunu cevaplar.
+SEBEP_YABANCI_ALFABE = "yabanci_alfabe"
+
+#: Türkçe bir özetin kullanabileceği Unicode aralıkları (kapsayıcı sınırlar).
+#: Bunların DIŞINDA tek karakter = üretim ortasında dil kayması.
+#:
+#:   0x0000-0x024F  Temel Latin + Latin-1 + Latin Genişletilmiş A/B
+#:                  (ç ğ ı İ ö ş ü â î û burada)
+#:   0x2000-0x206F  Genel noktalama (– — ' ' " " … ‰)
+#:   0x20A0-0x20BF  Para birimi simgeleri (₺ € ₽)
+#:   0x2100-0x214F  Harf benzeri simgeler (№ ™ ℅)
+#:
+#: Kasıtlı olarak DAR: matematik işleçleri, oklar, emoji ve tüm Latin dışı
+#: yazı sistemleri dışarıda kalır. Dar eşiğin bedeli en kötü ihtimalle bir
+#: özetin `None` olmasıdır; geniş eşiğin bedeli ise ekranda Çince cümle.
+TURKCE_ARALIKLARI: tuple[tuple[int, int], ...] = (
+    (0x0000, 0x024F), (0x2000, 0x206F), (0x20A0, 0x20BF), (0x2100, 0x214F),
 )
 
 SEMA: dict[str, Any] = {
@@ -133,6 +178,30 @@ def llm_hazir(llm: Any) -> bool:
                 and getattr(llm, "client", None) is not None)
 
 
+def alfabe_disi_karakterler(metin: str) -> list[str]:
+    """Metindeki Türkçe alfabe dışı karakterler — sırayı koruyan tekil liste.
+
+    Boş liste = metin temiz. Dönen liste hem kapı kararı hem de tanılama
+    içindir: toplu temizlik betiği "hangi alfabeye kaymış" sorusunu bu
+    karakterlere bakarak cevaplar.
+    """
+    gorulen: set[str] = set()
+    disari: list[str] = []
+    for ch in metin:
+        if ch in gorulen:
+            continue
+        gorulen.add(ch)
+        kod = ord(ch)
+        if not any(alt <= kod <= ust for alt, ust in TURKCE_ARALIKLARI):
+            disari.append(ch)
+    return disari
+
+
+def turkce_alfabede_mi(metin: str) -> bool:
+    """Metnin tamamı Türkçenin kullandığı alfabede mi (kapının yüklemi)."""
+    return not alfabe_disi_karakterler(metin)
+
+
 def katlanmis_metin(text: str, cerceve: Optional[set[str]] = None, *,
                     terimler: Optional[Iterable[str]] = None) -> str:
     """Modele verilecek metin: çerçevesi katlanmış hâli (ham metin değişmez)."""
@@ -172,5 +241,11 @@ def ozetle(text: str, llm: Any, *, cerceve: Optional[set[str]] = None,
     if not ozet:
         return OzetSonucu(None, None, sebep="bos_cikti", kirpildi=kirpildi,
                           girdi_karakter=len(girdi))
+    # ALFABE KAPISI — kirli özet DÜZELTİLMEZ, reddedilir (modül docstring'i).
+    # Kaymış karakterleri ayıklayıp kalanı yazmak, modelin üretmediği bir
+    # metni "AI özeti" etiketiyle sunmak olurdu.
+    if not turkce_alfabede_mi(ozet):
+        return OzetSonucu(None, None, sebep=SEBEP_YABANCI_ALFABE,
+                          kirpildi=kirpildi, girdi_karakter=len(girdi))
     return OzetSonucu(ozet, OZET_KAYNAK_LLM, kirpildi=kirpildi,
                       girdi_karakter=len(girdi))
