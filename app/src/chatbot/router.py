@@ -22,6 +22,21 @@ boyutlarını (alan / niyet / süzgeç) önceki turdan devralır. Devralma
 görünürdür: `Route.inherited` neyin nereden geldiğini Türkçe etiketleriyle
 taşır ve arayüz bunu rozet olarak basar.
 
+### Devralma YALNIZ eksik soruya yardım eder
+
+Bir cümlelik kural: **soru kendi başına yapısal sorgu kurabiliyorsa hiçbir şey
+devralmaz.** Ölçüldü (tarayıcı, çok turlu oturum) — kural bundan önce "alan +
+niyet"ti ve şu cevabı üretiyordu:
+
+    — "Yeni müşterilere verilen EV finansman tutarı ne kadar?"
+    — "önceki sorudan: kampanya türü Taşıt Finansmanı / asgari vade 36 ay /
+       Vakıf Katılım → Taşıt Finansmanı — finansman tutarı …"
+
+Kullanıcı EV sordu, sistem TAŞIT cevapladı. İki ayrı sebep vardı ve ikisi de
+kapatıldı: (1) yalın "ev" hiçbir tür ipucuna eşlenmiyordu, (2) niyeti olmayan
+ama süzgeci olan soru "eksik" sayılıp üç ayrı turdan üç süzgeç birden
+devralıyordu. Kuralların tamamı `_devral` docstring'indedir.
+
 ### Bağlam kanalı neden SERBEST METİN TAŞIMAZ
 
 Sunucu durumsuzdur; bağlamı istemci gönderir, yani bağlam **saldırgan
@@ -77,13 +92,30 @@ _FOLDED_LIST_INTENT = [_F(s) for s in _LIST_INTENT]
 # filtresi hiç kurulmuyordu.
 _FOLDED_TYPE_MAP = {_F(k): v for k, v in {
     "konut": "Konut Finansmanı", "ev alım": "Konut Finansmanı",
-    "mortgage": "Konut Finansmanı",
+    "mortgage": "Konut Finansmanı", "mesken": "Konut Finansmanı",
     "taşıt": "Taşıt Finansmanı", "araba": "Taşıt Finansmanı",
     "araç": "Taşıt Finansmanı", "otomobil": "Taşıt Finansmanı",
-    "sıfır km": "Taşıt Finansmanı",
+    "sıfır km": "Taşıt Finansmanı", "binek": "Taşıt Finansmanı",
     "ihtiyaç": "İhtiyaç Finansmanı", "kart": "Kart",
     "yatırım": "Yatırım Ürünü",
 }.items()}
+
+# Yalın "ev" — SÖZCÜK SINIRIYLA eşleşir, alt dize olarak DEĞİL.
+#
+# Ölçüldü (tarayıcı, çok turlu oturum): "Yeni müşterilere verilen EV finansman
+# tutarı ne kadar?" sorusunda hiçbir tür ipucu bulunamıyordu — yukarıdaki
+# sözlükte "ev alım" var ama yalın "ev" yok. Tür bulunamayınca soru kendi
+# sinyalsiz sayılıyor ve önceki turun TAŞIT süzgeci yapışıyordu.
+#
+# Bu ipucu neden alt dize olarak eklenemez: katlanmış metinde "ev" sayısız
+# sözcüğün İÇİNDE geçer — "seviye", "evrak", "devlet", "güvence". Alt dize
+# eşlemesi "taşıt evrakları" sorusunu Konut Finansmanı'na yollardı. Sözcük
+# sınırı bunu imkânsız kılar; çekim ekleri sayılıdır ve tek tek yazılır
+# (`ev\w*` deseni yine "evrak"ı yakalardı).
+_TUR_SOZCUK_DESENLERI: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"\bev(?:i|im|imiz|e|in|den|ler|leri)?\b"), "Konut Finansmanı"),
+    (re.compile(r"\boto\b"), "Taşıt Finansmanı"),
+]
 
 # SUPERLATİF VARSA alan bulunamadığında başvurulan gevşek eşleme.
 # Sadece "en yüksek/en düşük" gibi açık bir sıralama niyeti varken devreye
@@ -151,7 +183,8 @@ BANK_DISPLAY: dict[str, str] = {
 }
 
 #: Bağlamda taşınabilen kampanya türleri — router'ın kendi üretebildikleri.
-CAMPAIGN_TYPES: frozenset[str] = frozenset(_FOLDED_TYPE_MAP.values())
+CAMPAIGN_TYPES: frozenset[str] = frozenset(_FOLDED_TYPE_MAP.values()) | {
+    tur for _desen, tur in _TUR_SOZCUK_DESENLERI}
 
 #: Bir istekte incelenecek AZAMİ geçmiş tur sayısı. Sınır sunucudadır:
 #: istemci daha uzun bir liste gönderse de hafıza penceresi büyümez.
@@ -251,11 +284,18 @@ def baglam_birlestir(kayitlar: Any,
     değer kazanır. Böylece "hafıza" tek turla sınırlı kalmaz: kullanıcı üç tur
     önce kampanya türünü söyleyip aradaki turlarda başka şey sorduysa tür
     süzgeci hâlâ yaşar.
+
+    **Özne bunun İSTİSNASIDIR ve yalnız EN SON turdan alınır.** "Peki vade?"
+    sorusunun anlamı "az önce söylediğin bankanın vadesi"dir; üç tur önceki bir
+    cevabın öznesi o cümlenin öznesi değildir. Ölçüldü (tarayıcı): son cevap
+    çok bankalı bir liste olduğunda özne iki tur geriden geliyor ve kullanıcı,
+    o turda hiç anmadığı bir bankanın cevabını alıyordu. Son turun öznesi
+    yoksa devralınacak özne de yoktur.
     """
     if not isinstance(kayitlar, (list, tuple)):
         return ChatContext()
     birlesik = ChatContext()
-    for ham in list(kayitlar)[:max(0, sinir)]:
+    for sira, ham in enumerate(list(kayitlar)[:max(0, sinir)]):
         tur = ChatContext.dogrula(ham)
         if birlesik.field is None:
             birlesik.field = tur.field
@@ -263,7 +303,7 @@ def baglam_birlestir(kayitlar: Any,
             birlesik.intent = tur.intent
         for k, v in tur.filters.items():
             birlesik.filters.setdefault(k, v)
-        if not birlesik.subject_banks:
+        if sira == 0:
             birlesik.subject_banks = tur.subject_banks
     return birlesik
 
@@ -328,29 +368,67 @@ def _devral(field: Optional[str], intent: Optional[str], filters: dict,
             ) -> tuple[Optional[str], Optional[str], dict, list[dict]]:
     """Eksik boyutları bağlamdan tamamlar; ne devralındığını da döndürür.
 
-    Üç kural, üçü de "kullanıcının SÖYLEDİĞİ her zaman kazanır" ilkesine tabi:
+    Devralma bir TAMAMLAMA aracıdır, bir varsayılan değil: yalnızca sorunun
+    kendi başına yapısal sorgu kuramadığı hâllerde çalışır. Üç kural, üçü de
+    "kullanıcının SÖYLEDİĞİ her zaman kazanır" ilkesine tabi:
 
-    1. **Kendi başına eksiksiz soru bağlam devralmaz.** Alan ve niyet birlikte
-       çıktıysa soru zaten yapısal sorguya gidiyordur; oraya üç tur önceki bir
-       süzgeci sessizce eklemek, kullanıcının sormadığı bir soruyu
-       cevaplamak olurdu.
-    2. **Özne devralma** — kullanıcı YENİ bir alan söyleyip hiçbir sıralama
-       niyeti belirtmediyse ("Peki vade?"), sorduğu şey önceki CEVABIN
-       öznesinin o alandaki değeridir. Bu yüzden özne banka süzgece çevrilir.
-    3. **Kalıp devralma** — kullanıcı yeni bir özne/süzgeç verip alanı
-       söylemediyse ("Peki ya Albaraka?"), aynı kalıp yeni özne üzerinde
-       tekrarlanır: alan ve niyet önceki turdan gelir.
+    1. **Kendi başına yeterli soru HİÇBİR ŞEY devralmaz.** Yeterlilik ölçütü
+       `route()`'un yapısal sorgu ölçütüyle aynıdır: alan + (niyet ya da
+       süzgeç). Ölçüt eskiden "alan + niyet"ti ve kusur tam oradan çıktı —
+       ölçüldü (tarayıcı, çok turlu oturum):
+
+           — "Vakıf Katılım'ın taşıt kâr payı oranı nedir?"   (alan + süzgeç)
+           — "Yeni müşterilere verilen EV finansman tutarı ne kadar?"
+             → cevap: **Taşıt Finansmanı**, Vakıf Katılım, 36 ay
+
+       Niyeti olmayan ama süzgeci olan soru "eksik" sayılıyor, üç ayrı turdan
+       üç süzgeç birden yapışıyor ve kullanıcının SORDUĞU tür (konut) hiç
+       görünmüyordu.
+
+    2. **Özne devralma (tek gerekçe)** — kullanıcı YENİ bir alan söyleyip
+       başka hiçbir şey söylemediyse ("Peki vade?"), sorduğu şey önceki
+       CEVABIN öznesinin o alandaki değeridir. Devralınan tek şey o öznedir;
+       önceki SORUNUN süzgeçleri (tür, vade eşiği, banka) buraya taşınmaz.
+       Yeni bir alan, yeni bir sorudur; eski sorunun kapsamı onun kapsamı
+       değildir.
+
+    3. **Kalıp devralma (tek gerekçe)** — kullanıcı yeni bir özne/süzgeç verip
+       alanı söylemediyse ("Peki ya Albaraka?"), aynı kalıp yeni özne üzerinde
+       tekrarlanır: alan, niyet ve bu turda BELİRTİLMEYEN süzgeçler önceki
+       turdan gelir. Burada süzgeçlerin taşınması tutarlıdır — soru zaten
+       öncekinin aynısıdır, yalnız öznesi değişmiştir.
+
+    Bir turda kural 2 ile kural 3 BİRLİKTE çalışmaz: devralmanın her zaman tek
+    bir gerekçesi olur. Önceki sorunun süzgeci ile önceki cevabın öznesini aynı
+    cevapta toplamak, kullanıcının hiç sormadığı bir soruyu kurmaktır.
 
     Devralınacak bir şey yoksa hiçbir şey uydurulmaz: soru bugünkü davranışına
     (çoğunlukla RAG, gerekirse çekimserlik) düşer.
     """
     inherited: list[dict] = []
-    if field is not None and intent is not None:
+
+    # KURAL 1 — soru kendi sinyaliyle yapısal sorgu kurabiliyor.
+    if field is not None and (intent is not None or filters):
         return field, intent, filters, inherited
 
-    kullanicinin_alani = field is not None
+    # KURAL 2 — kullanıcı yeni bir ALAN söyledi, başka hiçbir şey söylemedi.
+    if field is not None:
+        if ctx.subject_banks:
+            filters["banks"] = list(ctx.subject_banks)
+            inherited.append({"kind": "subject_banks",
+                              "value": list(ctx.subject_banks),
+                              "label": _bankalar_etiketi(ctx.subject_banks)})
+            return field, "list", filters, inherited
+        # Önceki cevabın öznesi yoksa (ör. on bankalı bir liste) devralınacak
+        # özne de yoktur; yalnız sorunun KALIBI (sıralama niyeti) taşınır.
+        if ctx.intent:
+            intent = ctx.intent
+            inherited.append({"kind": "intent", "value": intent,
+                              "label": INTENT_DISPLAY[intent]})
+        return field, intent, filters, inherited
 
-    if field is None and ctx.field:
+    # KURAL 3 — alan söylenmedi: önceki sorunun kalıbı yeni özneyle tekrarlanır.
+    if ctx.field:
         field = ctx.field
         inherited.append({"kind": "field", "value": field,
                           "label": FIELD_DISPLAY[field]})
@@ -363,17 +441,10 @@ def _devral(field: Optional[str], intent: Optional[str], filters: dict,
         inherited.append({"kind": f"filter:{anahtar}", "value": deger,
                           "label": _suzgec_etiketi(anahtar, deger)})
 
-    if intent is None:
-        if kullanicinin_alani and ctx.subject_banks and "banks" not in filters:
-            filters["banks"] = list(ctx.subject_banks)
-            intent = "list"
-            inherited.append({"kind": "subject_banks",
-                              "value": list(ctx.subject_banks),
-                              "label": _bankalar_etiketi(ctx.subject_banks)})
-        elif ctx.intent:
-            intent = ctx.intent
-            inherited.append({"kind": "intent", "value": intent,
-                              "label": INTENT_DISPLAY[intent]})
+    if intent is None and ctx.intent:
+        intent = ctx.intent
+        inherited.append({"kind": "intent", "value": intent,
+                          "label": INTENT_DISPLAY[intent]})
 
     return field, intent, filters, inherited
 
@@ -389,6 +460,17 @@ def _suzgec_etiketi(anahtar: str, deger: Any) -> str:
     if anahtar == "vade_ay_min":
         return f"{ad}: {deger} ay"
     return f"{ad}: {deger}"
+
+
+def _tur_ipucu(q: str) -> Optional[str]:
+    """Katlanmış sorudan kampanya türü ipucu; yoksa `None`."""
+    for kw, label in _FOLDED_TYPE_MAP.items():
+        if kw in q:
+            return label
+    for desen, label in _TUR_SOZCUK_DESENLERI:
+        if desen.search(q):
+            return label
+    return None
 
 
 def _detect_field(q: str) -> Optional[str]:
@@ -415,11 +497,12 @@ def _detect_filters(q: str) -> dict:
     # q katlanmış (ascii) geldiği için eşik sözcükleri de katlanmış yazılır.
     if m and any(s in q for s in ("veren", "uzeri", "ve uzeri", "en az")):
         filters["vade_ay_min"] = int(m.group(1))
-    # kampanya türü filtresi
-    for kw, label in _FOLDED_TYPE_MAP.items():
-        if kw in q:
-            filters["campaign_type"] = label
-            break
+    # kampanya türü filtresi — önce alt dize sözlüğü, sonra sözcük desenleri.
+    # Sıra önemli: "taşıt evrakları" sorusunda "taşıt" önce eşleşir ve yalın
+    # "ev" deseni hiç denenmez.
+    tur = _tur_ipucu(q)
+    if tur:
+        filters["campaign_type"] = tur
     # banka filtresi — "Ziraat Katılım'ın konut kâr payı oranı nedir?" sorusu
     # BAŞKA bankaların satırlarıyla cevaplanmamalı. Banka verimizde yoksa
     # sonuç boş kalır ve çekimserlik kapısı (KAPI 5) devreye girer.
