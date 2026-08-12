@@ -1,0 +1,186 @@
+/* Anatolia AI — sohbet çekmecesi ve konu sınırı stilleri.
+ *
+ * İlgili: tokens.css, components.css (CHATBOT bölümü),
+ *         ../components/SohbetCekmecesi.tsx, ../components/ChatPanel.tsx
+ *
+ * `components.css` chatbot'un TAM SAYFA hâlini zaten stilliyor. Burada yalnız
+ * çekmece kabuğu ve konu sınırı var; aynı bileşenin iki yerleşimi olduğu için
+ * ayrı dosya, iki yerleşimi karıştırmamayı kolaylaştırıyor.
+ *
+ * Literal renk/boşluk YOK. Kırılımlar dosyanın SONUNDA (base.css:140-149'un
+ * belgelediği aynı-özgüllük ezilme tuzağı).
+ */
+
+/* ===================================================================
+ * YÜZEN DÜĞME
+ * ================================================================ */
+
+.sohbet-dugme {
+  position: fixed;
+  right: var(--sp-5);
+  bottom: var(--sp-5);
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-sans);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.sohbet-dugme:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+/* Etiket dar ekranda GİZLENMEZ. Yalnız simgeli yuvarlak bir düğme ne olduğunu
+ * tahmine bırakır; bu ekranda soru sormak ikincil bir eylem değil, ürünün iki
+ * yüzeyinden biri. Yer kazanmak için anlam feda edilmiyor. */
+.sohbet-dugme-etiket {
+  white-space: nowrap;
+}
+
+/* ===================================================================
+ * ÇEKMECE
+ * ================================================================ */
+
+.sohbet-cekmece {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 100vw);
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+}
+
+.sohbet-cekmece-bas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.sohbet-cekmece-govde {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--sp-4);
+}
+
+/* Çekmece içindeki panel kart değil: kartın kenarlığı, gölgesi ve dolgusu
+ * çekmecenin kendi kabuğuyla ikileme yaratırdı. */
+.sohbet-dar {
+  display: block;
+}
+
+/* --- KAYNAK TABLOSU TUZAĞI ---
+ *
+ * `table.data.stackable` kart yığınına yalnız `@media (max-width: 900px)`
+ * altında dönüyor — yani GÖRÜNÜM genişliğine bakıyor, kapsayıcıya değil.
+ * 1440px'lik bir ekranda 420px'lik çekmecede o sorgu tetiklenmez ve dört
+ * sütunlu kaynak tablosu ezilir.
+ *
+ * `@container` daha zarif olurdu ama projenin `color-mix()`'i reddettiği
+ * uyumluluk çıtasına fazla yakın (bkz. tokens.css başlığı). Bunun yerine
+ * çekmece içindeki tablolar KOŞULSUZ yığın moduna alınıyor: kural aynı,
+ * yalnız tetikleyicisi genişlik değil, kapsayıcının kimliği.
+ *
+ * Satır/sütun semantiği bozulmuyor — başlık satırı gizlenmiyor, GÖRSEL olarak
+ * kırpılıyor ve her hücre kendi etiketini `data-label` üzerinden taşıyor.
+ */
+.sohbet-cekmece table.data.stackable thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sohbet-cekmece table.data.stackable tbody tr {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3) 0;
+  border-top: 1px solid var(--line);
+}
+
+.sohbet-cekmece table.data.stackable tbody td {
+  display: grid;
+  grid-template-columns: minmax(80px, 32%) 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-1) 0;
+  min-width: 0;
+}
+
+.sohbet-cekmece table.data.stackable tbody td::before {
+  content: attr(data-label);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+}
+
+/* ===================================================================
+ * KONU SINIRI
+ * ================================================================ */
+
+/* Basıldı ama henüz sorulmadı. Görünür bir iz olmasaydı kullanıcı düğmeye
+ * basıp basmadığını bilemezdi. */
+.sohbet-konu-bekliyor {
+  margin: var(--sp-2) 0 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 2px solid var(--accent);
+  background: var(--accent-wash);
+  color: var(--fg);
+}
+
+/* Akıştaki ayırıcı: botun bağlamı yönettiğini görsel olarak kanıtlayan tek
+ * işaret. Yazı ortada, çizgi iki yanda. */
+.sohbet-konu-ayirici {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: var(--sp-4) 0;
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+}
+
+.sohbet-konu-ayirici::before,
+.sohbet-konu-ayirici::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA
+ * ================================================================ */
+
+@media (max-width: 600px) {
+  /* Dar ekranda «yan» çekmece yok; tam sayfa örter. Yüzen düğme de kenara
+   * yaklaşır — 24px boşluk 375px'te ekranın %13'ü. */
+  .sohbet-cekmece {
+    width: 100%;
+    left: 0;
+  }
+
+  .sohbet-dugme {
+    right: var(--sp-3);
+    bottom: var(--sp-3);
+  }
+}

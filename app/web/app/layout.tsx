@@ -4,15 +4,17 @@ import "./styles/tema.css";
 import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/grafik.css";
+import "./styles/sohbet.css";
 
 /**
  * Kök yerleşim.
  *
- * Stiller BEŞ katmandan gelir ve sıra önemlidir: token → tema seçimi →
- * taban → bileşen → grafik. Sonuncusu ayrı dosyadır çünkü `components.css`
- * zaten 1365 satır ve on bileşen ailesi taşıyor; grafik katmanı yeni bir aile
- * olarak tek seferde geldi (bkz. `styles/grafik.css` başlığı). Denetim betiği
- * `styles/*.css`'in tamamını tarar, yani ayrılık kapıdan kaçmak değildir.
+ * Stiller ALTI katmandan gelir ve sıra önemlidir: token → tema seçimi →
+ * taban → bileşen → grafik → sohbet. Son ikisi ayrı dosyadır çünkü
+ * `components.css` zaten 1365 satır ve on bileşen ailesi taşıyor; grafik
+ * katmanı ile sohbet çekmecesi yeni aileler olarak tek seferde geldi.
+ * Denetim betiği `styles/*.css`'in tamamını tarar (`css_sinif_denetimi.py:69`),
+ * yani ayrılık kapıdan kaçmak değildir.
  * Eskiden tek `globals.css` vardı (471 satır,
  * `docs/archive/globals-v1.css`); 16 tokenının 14'ü renkti, boşluk/tipografi/
  * gölge için token yoktu ve `@media` sorgusu hiç bulunmuyordu. Ayrıntılı

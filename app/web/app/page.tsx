@@ -39,6 +39,9 @@ import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
 import JuryModeToggle from "./components/JuryModeToggle";
+import SohbetCekmecesi, {
+  type SohbetBaglami,
+} from "./components/SohbetCekmecesi";
 import SummaryCoverage from "./components/SummaryCoverage";
 import AyarlarPanel from "./components/AyarlarPanel";
 import TazelemePanel from "./components/TazelemePanel";
@@ -225,8 +228,42 @@ function Dashboard() {
             tazeleme ile aynı yerde: jüri modunda. */}
         {sekme === "ayarlar" && jury && <AyarlarPanel />}
       </TabPanel>
+
+      {/* Sohbet SEKMENİN DIŞINDA da duruyor: kullanıcı bir tabloya bakarken
+          aklına soru geldiğinde sekme değiştirmek, baktığı tabloyu terk etmek
+          demekti — oysa sorular tam da o tablodan doğuyor. Çekmece ekranı
+          terk ettirmiyor.
+
+          Sekme KALDIRILMADI: geniş kaynak tablosu 420px'lik çekmecede
+          okunmuyor ve jüri kanıt tablosunu tam genişlikte görmek istiyor.
+          İki yerleşim, tek bileşen (`ChatPanel` `genis` prop'u).
+
+          Çekmece açıldığı ekranı biliyor ve hazır soruları ona göre veriyor;
+          sabit liste her ekranda aynı altı soruyu gösteriyordu. */}
+      <SohbetCekmecesi baglam={sohbetBaglami(sekme)} onInspect={inspect} />
     </main>
   );
+}
+
+/**
+ * Sekme anahtarını sohbet bağlamına çevirir.
+ *
+ * Çoğu birebir eşleşiyor; eşleşmeyenler («chat» — zaten sohbetin kendisi,
+ * «tazele» ve «ayarlar» — operatör yüzeyleri, korpus hakkında soru sorulacak
+ * yer değil) genel kümeye düşüyor.
+ */
+function sohbetBaglami(sekme: TabKey): SohbetBaglami {
+  switch (sekme) {
+    case "compare":
+    case "advantageous":
+    case "delta":
+    case "audit":
+    case "contradictions":
+    case "extract":
+      return sekme;
+    default:
+      return "genel";
+  }
 }
 
 function AlanListesiBos({ ek }: { ek?: string }) {
