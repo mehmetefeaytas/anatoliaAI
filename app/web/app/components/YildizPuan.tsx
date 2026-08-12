@@ -1,135 +1,161 @@
 "use client";
 
 /**
- * Yıldızlı puan — yalnız KAMPANYA TÜRÜ İÇİNDE, yalnız kapsamasıyla birlikte.
+ * Yıldızlı puan — TÜR İÇİNDE, ve yanında KAPSAMA olmadan asla.
  *
- * İlgili: ../lib/api.ts (CompositeScore), ./AdvantageousPanel.tsx,
- *         src/comparison/compare.py (CompositeScore, MIN_GROUP_SIZE),
- *         CLAUDE.md §17 (adil kıyas garantisi)
+ * İlgili: ./BankaSayfasi.tsx, ../styles/banka.css, ../lib/api.ts (CompositeScore),
+ *         src/comparison/compare.py (CompositeScore, MIN_GROUP_SIZE=3,
+ *         MIN_COVERAGE=0.5), CLAUDE.md §17 (adil kıyas garantisi)
  *
- * ## Neden bu bileşen bu kadar çok şeyi reddediyor
+ * ## Bileşenin tek işi: yıldızı ölçüme bağlamak
  *
  * Yıldız istendi ve yapıldı. Ama beş yıldızlı bir rozet, taşımadığı bir
  * kesinlik izlenimi verir ve bu proje tam olarak o izlenime karşı kurulmuştur.
- * Üç somut sınır ölçüldü ve koda gömüldü:
+ * Bileşen bu yüzden üç sert kural ZORLAR — çağıran tarafın iyi niyetine
+ * bırakılmaz, çünkü bırakıldığında bir gün unutulur:
  *
- * 1. **Banka başına puan YOKTUR ve hesaplanamaz.** `/advantageous` bileşik
- *    skoru kampanya başına ve KAMPANYA TÜRÜ İÇİNDE üretir. Normalizasyon grup
- *    içi rank tabanlıdır, yani farklı türlerden gelen skorların ortalaması
- *    matematiksel olarak anlamsızdır — ayrıca türler arası kıyas §17'nin
- *    açıkça yasakladığı şeydir. Bu yüzden bileşen `tur` parametresini ZORUNLU
- *    alır ve türü ekranda yazar: türsüz bir yıldız, tanımsız bir iddiadır.
+ * 1. **Türsüz yıldız basılmaz.** `tur` zorunlu bir alandır. `/advantageous`
+ *    bileşik skoru kampanya başına ve KAMPANYA TÜRÜ İÇİNDE üretir;
+ *    normalizasyon grup içi rank tabanlıdır, yani farklı türlerden gelen
+ *    skorların ortalaması matematiksel olarak tanımsızdır (§17). Türü
+ *    yazılmayan bir yıldız, neyin içinde ölçüldüğü bilinmeyen bir yargıdır.
  *
- * 2. **Az veri, kötü ürün demek değildir.** Bir bankanın tüm kampanyalarını
- *    ortalamak, kazıma kapsamasını kaliteye çevirirdi: az belge toplanabilmiş
- *    bir banka, ürünü kötü olduğu için değil verisi az olduğu için az yıldız
- *    alırdı. Bu yüzden yıldız hiçbir yerde YALNIZ görünmez — yanında her zaman
- *    kapsama etiketi durur.
+ * 2. **Kapsamasız yıldız basılmaz.** `belge` bilinmiyorsa (`null`) ya da 0 ise
+ *    yıldız DÖNDÜRÜLMEZ. Az veri, kötü ürün demek değildir: bir bankanın
+ *    kampanyalarını ortalamak, kazıma kapsamasını sessizce kaliteye çevirir —
+ *    az belge toplanabilmiş banka, ürünü kötü olduğu için değil verisi az
+ *    olduğu için az yıldız alır. Kapsama, yıldızı bir yargıdan bir ölçüme
+ *    çeviren tek şeydir; o yüzden aynı satırda ve KALIN basılır.
  *
- * 3. **Kapsama yetmiyorsa yıldız yoktur.** Sunucu zaten `min_group_size` ve
- *    `min_coverage` kapılarını uyguluyor ve `score`u `null` bırakıyor. Bileşen
- *    o hâlde yıldız çizmez; gerekçeyi yazar. Boş beş yıldız «çok kötü» gibi
- *    okunurdu — oysa söylenen şey «ölçemedik».
+ * 3. **BOŞ YILDIZ BASILMAZ.** Skor yoksa `☆☆☆☆☆` çizmek "çok kötü" demektir.
+ *    Söylenen ise "ölçemedik". İkisi aynı ekranda birbirine benzemesin diye
+ *    ölçülemeyen tür yıldız yerine kesikli çerçeveli mono `ölçülemedi`
+ *    etiketini alır (bkz. ../styles/banka.css `.tur-olculemedi`).
  *
  * `ComparePanel.tsx` aynı hatayı zaten adıyla anıyor: «kalibre edilmemiş bir
  * skoru kalite iddiası gibi göstermek yanıltıcıdır.»
  *
  * ## Erişilebilirlik
  *
- * Yıldızlar dekoratiftir (`aria-hidden`); asıl bilgi metin olarak da yazılır.
- * Renk tek sinyal değildir: dolu yıldız hem doludur hem sayısı yazılıdır.
+ * Yıldız dizisi tek bir `aria-hidden` düğümdür; ekran okuyucu onu hiç görmez.
+ * Gerçek değer ÜÇÜNCÜ SÜTUNDAKİ metinde okunur (`3 / 5 · 12 belge.`), yani
+ * bilgi renkten ve şekilden bağımsız olarak yazıyla mevcuttur. Bu, "renk tek
+ * sinyal değil" kuralının bu bileşendeki karşılığıdır.
  */
 
+import type { ReactNode } from "react";
 import type { CompositeScore } from "../lib/api";
+
+/** Yıldız ölçeği. Yarım yıldız YOK — gerekçesi `yildizSayisi()` içinde. */
+const AZAMI_YILDIZ = 5;
 
 type Props = {
   skor: CompositeScore;
-  /** Kıyasın yapıldığı kampanya türü. ZORUNLU — türsüz yıldız tanımsızdır. */
+  /**
+   * Kıyasın yapıldığı kampanya türü. ZORUNLU — türsüz yıldız tanımsızdır.
+   * Ölçülemeyen türler tek satırda toplandığında birleşik ad taşır
+   * («İhtiyaç Fin. · Finansman · …»).
+   */
   tur: string;
-  /** Bu bankadan bu türde kaç belge toplandı. */
-  belge?: number;
-  /** Kaç alan çıkarılabildi (12 üzerinden). */
-  alan?: number;
-  /** Grup içi sıra ve grup büyüklüğü — «2/7» olarak yazılır. */
+  /**
+   * Bu bankada BU TÜRDE kaç belge toplandı — yıldızın paydası.
+   * `null` = henüz bilinmiyor (belge listesi gelmedi). `0` = ölçülemedi.
+   * İkisi de yıldızı engeller ama farklı cümle yazdırır: "bilmiyoruz" ile
+   * "ölçtük, yok" aynı şey değildir.
+   */
+  belge: number | null;
+  /** Grup içi sıra ve grup büyüklüğü — «tür içinde 2/7» olarak yazılır. */
   sira?: number | null;
   grupBuyuklugu?: number;
+  /**
+   * Üçüncü sütunun açıklama cümlesi: hangi ölçütler doldu, neden ölçülemedi.
+   * Çağıran verir çünkü gerekçe VERİDEN türetilir (skorun bileşenleri, belge
+   * sayısı); bileşen onu uyduramaz. Verilmezse bileşen kendi asgari
+   * gerekçesini basar.
+   */
+  gerekce?: ReactNode;
 };
-
-const AZAMI_YILDIZ = 5;
-/** 12 alan — CLAUDE.md §9 veri modeli. */
-const ALAN_SAYISI = 12;
 
 /**
  * 0..1 skoru yıldıza çevirir.
  *
  * Yarım yıldız YOK: yarım yıldız, kalibre edilmemiş bir skorda var olmayan bir
- * çözünürlük iddia eder. Tam yıldıza yuvarlanır ve gerçek sayı zaten yanında
- * yüzde olarak yazılır — yıldız özet, sayı kaynaktır.
+ * çözünürlük iddia eder. Tam yıldıza yuvarlanır ve gerçek kesir zaten yanında
+ * yazılır — yıldız özet, sayı kaynaktır.
+ *
+ * Alt sınır 1: sıralamaya GİREBİLMİŞ bir kampanyaya sıfır yıldız vermek, onu
+ * ölçülemeyen türle aynı görsele düşürürdü (bkz. kural 3).
  */
 function yildizSayisi(score: number): number {
-  return Math.max(1, Math.round(score * AZAMI_YILDIZ));
+  return Math.max(1, Math.min(AZAMI_YILDIZ, Math.round(score * AZAMI_YILDIZ)));
 }
 
 export default function YildizPuan({
   skor,
   tur,
   belge,
-  alan,
   sira,
   grupBuyuklugu,
+  gerekce,
 }: Props) {
-  const kapsamaEtiketi =
-    belge !== undefined || alan !== undefined
-      ? `veri kapsamı: ${belge ?? "?"} belge / ${alan ?? "?"} alan`
-      : null;
+  // Üç kapı, tek koşulda: skor yok / kıyas dışı / kapsama yok → YILDIZ YOK.
+  // Sırası önemli değil, hepsi aynı sonuca çıkar; önemli olan hiçbirinin
+  // atlanamaması.
+  const olculdu =
+    skor.score !== null && skor.comparable && belge !== null && belge > 0;
 
-  // Skor yoksa yıldız da yok. Boş yıldız «kötü» diye okunur; söylenen «ölçemedik».
-  if (skor.score === null || !skor.comparable) {
+  if (!olculdu) {
     return (
-      <div className="yildiz-satir">
-        <span className="yildiz-tur">{tur}</span>
-        <span className="yildiz-yok small">
-          {skor.note || "yetersiz kapsama — sıralanmadı"}
+      <div className="tur-satir">
+        <span className="tur-ad tur-ad-solgun">{tur}</span>
+        {/* Yıldız YERİNE etiket. `aria-hidden` DEĞİL: bu metin bilginin
+            kendisidir, dekor değil. */}
+        <span className="tur-olculemedi">ölçülemedi</span>
+        <span className="tur-kapsama">
+          {gerekce ?? (
+            <>
+              {belge === null ? (
+                <>Bu türdeki belge sayısı henüz okunmadı.</>
+              ) : belge === 0 ? (
+                <>Bu türde hiç belge toplanamadı.</>
+              ) : (
+                <>
+                  <b className="tur-kapsama-sayi">{belge} belge.</b>{" "}
+                  {skor.note || "yetersiz kapsama — bu türde sıralama yapılmadı"}
+                </>
+              )}
+            </>
+          )}
         </span>
-        {kapsamaEtiketi && <span className="yildiz-kapsam small muted">{kapsamaEtiketi}</span>}
       </div>
     );
   }
 
-  const dolu = yildizSayisi(skor.score);
-  // Kapsama düşükse yıldızlar soluk: rozet aynı ama iddiası zayıf.
-  const zayif = skor.coverage < 0.75;
+  const dolu = yildizSayisi(skor.score as number);
 
   return (
-    <div className="yildiz-satir">
-      <span className="yildiz-tur">{tur}</span>
+    <div className="tur-satir">
+      <span className="tur-ad">{tur}</span>
 
-      <span
-        className={zayif ? "yildizlar yildizlar-zayif" : "yildizlar"}
-        aria-hidden="true"
-      >
-        {Array.from({ length: AZAMI_YILDIZ }, (_, i) => (
-          <span key={i} className={i < dolu ? "yildiz yildiz-dolu" : "yildiz"}>
-            ★
-          </span>
-        ))}
+      {/* Tek düğüm, tek `aria-hidden`: dolu ve boş yıldızlar aynı dizedir,
+          böylece ekran okuyucu beş ayrı «yıldız» sözcüğü okumaz. */}
+      <span className="tur-yildizlar" aria-hidden="true">
+        {"★".repeat(dolu)}
+        {"☆".repeat(AZAMI_YILDIZ - dolu)}
       </span>
 
-      {/* Yıldızın metin karşılığı — ekran okuyucu ve renk körlüğü için. */}
-      <span className="yildiz-deger small mono">
-        {dolu}/{AZAMI_YILDIZ}
-        {sira != null && grupBuyuklugu
-          ? ` · tür içinde ${sira}/${grupBuyuklugu}`
-          : ""}
+      <span className="tur-kapsama">
+        {/* Yıldızın METİN karşılığı + PAYDASI. Yıldız buradan ayrı basılamaz. */}
+        <b className="tur-kapsama-sayi">
+          {dolu} / {AZAMI_YILDIZ} · {belge} belge.
+        </b>{" "}
+        {sira != null && grupBuyuklugu ? (
+          <>
+            Tür içinde {sira}/{grupBuyuklugu}.{" "}
+          </>
+        ) : null}
+        {gerekce}
       </span>
-
-      {kapsamaEtiketi && (
-        <span className="yildiz-kapsam small muted">
-          {kapsamaEtiketi}
-          {alan !== undefined && alan < ALAN_SAYISI ? ` (${ALAN_SAYISI} alandan)` : ""}
-          {zayif ? " · düşük kapsama" : ""}
-        </span>
-      )}
     </div>
   );
 }
