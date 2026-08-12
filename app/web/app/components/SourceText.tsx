@@ -18,6 +18,19 @@
  *    olsa bile otomatik açılır ve neden açıldığı yazılır.
  *  - Katlanan blok SİLİNMEZ; kaç blok, hangi gerekçeyle katlandığı yazılır ve
  *    tek tıkla açılır.
+ *
+ * ## ÜÇ KATMAN (styles/kanit.css)
+ *
+ * `mark.hit`      sarı + halka  → değerin ÇIKARILDIĞI ifade
+ * `.ctx`          mavi yıkama   → kuralın GÖRDÜĞÜ cümle bağlamı; span'i kapsar
+ * `.kanit-dis`    soluk         → kapsam dışı metin
+ *
+ * Üçüncü katman 2026-08-12'de eklendi. Öncesinde kapsam dışı metin gövdenin
+ * tam rengiyle basılıyordu ve iki vurgulu bölge 3.812 karakterlik bir serif
+ * bloğun içinde kayboluyordu: göz vurguyu ARAYARAK buluyordu. Soluk metin
+ * bilgi SAKLAMAZ — `--fg-faint` her iki temada da AA'yı geçer — yalnız
+ * hiyerarşiyi kurar. Ve yalnız ekranda gerçekten bir vurgu VARSA uygulanır;
+ * vurgusuz metinde her satır eşit sesle okunur.
  */
 
 import { useMemo, useState, type ReactNode } from "react";
@@ -239,7 +252,8 @@ function renderBlocks(args: {
 
 /**
  * `[a, b)` aralığını vurgu katmanlarına bölerek basar.
- * Katmanlar: düz metin → bağlam penceresi (.ctx) → tam isabet (mark.hit).
+ * Katmanlar: kapsam dışı (.kanit-dis) → bağlam penceresi (.ctx) → tam isabet
+ * (mark.hit). Kapsam dışı sınıfı YALNIZ ekranda bir vurgu varken basılır.
  */
 function renderRange(
   text: string,
@@ -256,6 +270,9 @@ function renderRange(
     hitStart !== null && hitEnd !== null && pos >= hitStart && pos < hitEnd;
   const inCtx = (pos: number) =>
     ctxStart !== null && ctxEnd !== null && pos >= ctxStart && pos < ctxEnd;
+  /* Vurgu yoksa hiçbir şey soluklaştırılmaz: karşılaştırılacak bir «içeride»
+   * olmadan «dışarıda» diye bir şey yoktur. */
+  const vurguVar = hitStart !== null || ctxStart !== null;
 
   // Sınır noktaları: aralığı vurgu kenarlarından böleriz. Sıralı ve tekil.
   const bounds = Array.from(
@@ -286,7 +303,11 @@ function renderRange(
         </span>,
       );
     } else {
-      parts.push(<span key={`p-${s}`}>{body}</span>);
+      parts.push(
+        <span key={`p-${s}`} className={vurguVar ? "kanit-dis" : undefined}>
+          {body}
+        </span>,
+      );
     }
   }
   return <>{parts}</>;

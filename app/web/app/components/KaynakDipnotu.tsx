@@ -26,6 +26,18 @@
  *
  * Belge metni AÇILDIĞINDA çekilir, tabloyla birlikte değil. 1.774 belgenin
  * metnini önden yüklemek, kapatılan yükün (10,3 MB) aynısını geri getirirdi.
+ *
+ * ## Rozetin üstünde neden ARALIK yazıyor
+ *
+ * Eskiden `¶ #1284`, yani belge numarası yazıyordu — düğmenin açtığı şeyin
+ * belge OLDUĞUNU söylüyor, ama nereye götürdüğünü söylemiyordu. Artık span
+ * varsa `¶ 1284–1298`, yani KARAKTER ARALIĞI yazıyor: bu ürünün tezi «her
+ * sayı bir aralığa bağlıdır» ve düğmenin yüzü de tam olarak onu basıyor.
+ * Aralık yoksa belge numarasına düşülür; uydurulmuş bir aralık basılmaz.
+ *
+ * Panelin `aria-label`'ı ve başlığı BELGE NUMARASINI korur: rozetin yüzü
+ * değişse de açılan şey hâlâ bir belgedir ve ekran okuyucuya «Belge
+ * 1284–1298» demek yanlış olurdu.
  */
 
 import { useEffect, useRef, useState } from "react";
@@ -90,7 +102,14 @@ export default function KaynakDipnotu({
     if (acik) panelRef.current?.focus();
   }, [acik]);
 
-  const baslik = etiket ?? `#${campaignId}`;
+  /** Panelin ve ekran okuyucunun gördüğü ad — her zaman belge numarası. */
+  const belgeAdi = `#${campaignId}`;
+  /** Rozetin yüzü: dışarıdan verilen etiket → karakter aralığı → belge no. */
+  const aralik =
+    span && span.span_start !== null && span.span_end !== null
+      ? `${span.span_start}–${span.span_end}`
+      : null;
+  const yuz = etiket ?? aralik ?? belgeAdi;
 
   return (
     <>
@@ -99,23 +118,29 @@ export default function KaynakDipnotu({
         type="button"
         className="kaynak-dipnot"
         aria-expanded={acik}
+        title="Kaynak cümleyi ve karakter aralığını aç"
         onClick={() => setAcik((a) => !a)}
       >
         <span aria-hidden="true">¶</span>
-        <span className="kaynak-dipnot-etiket">{baslik}</span>
-        <span className="gorunmez"> — kaynağı göster</span>
+        <span className="kaynak-dipnot-etiket">{yuz}</span>
+        {/* Ekran okuyucu için düğmenin ne YAPTIĞI; gözle görünen yüz bir
+            koordinat olduğu için tek başına eylemi anlatmıyor. */}
+        <span className="gorunmez">
+          {" "}
+          — belge {belgeAdi} kaynak cümlesini göster
+        </span>
       </button>
 
       {acik && (
         <div
           className="kaynak-panel"
           role="dialog"
-          aria-label={`Belge ${baslik} kaynak metni`}
+          aria-label={`Belge ${belgeAdi} kaynak metni`}
           ref={panelRef}
           tabIndex={-1}
         >
           <div className="kaynak-panel-bas">
-            <strong>Belge {baslik}</strong>
+            <strong>Belge {belgeAdi}</strong>
             <button
               type="button"
               className="btn-ghost"
