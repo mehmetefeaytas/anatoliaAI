@@ -1,0 +1,229 @@
+/* Anatolia AI — grafik, yıldız ve kaynak dipnotu stilleri.
+ *
+ * İlgili: tokens.css (tek renk/boşluk kaynağı), components.css,
+ *         ../components/grafik/*, ../components/YildizPuan.tsx,
+ *         ../components/KaynakDipnotu.tsx
+ *         CLAUDE.md §7, scripts/css_sinif_denetimi.py
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` 1365 satır ve on bileşen ailesini taşıyor. Grafik katmanı
+ * yeni bir aile ve tek seferde geldi; onu o dosyanın sonuna eklemek, zaten
+ * uzun bir dosyayı okunmaz kılardı. Denetim betiği `styles/*.css`'in tamamını
+ * tarar (`css_sinif_denetimi.py:69`), yani ayrı dosya kapıdan kaçmak değildir.
+ *
+ * ## Kırılım noktaları burada, dosyanın SONUNDA
+ *
+ * `base.css:140-149`'un belgelediği tuzak aynen geçerli: aynı özgüllükteki bir
+ * medya kuralı, kendisinden SONRA gelen temel kural tarafından sessizce
+ * eziliyor. Bu dosyanın kırılımları da en altta.
+ *
+ * Literal renk/boşluk YOK — hepsi tokens.css'ten. Tek istisna hairline
+ * kalınlıkları (1px/2px) ve medya sorgusu genişlikleri (CSS değişkeni
+ * kullanılamıyor).
+ */
+
+/* ===================================================================
+ * GRAFİK ÇERÇEVESİ
+ * ================================================================ */
+
+.grafik {
+  margin: var(--sp-5) 0;
+  /* `figure` varsayılan yan boşluğu tarayıcıdan gelir; token dışı kalmasın. */
+  padding: 0;
+}
+
+.grafik-baslik {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+  margin-bottom: var(--sp-3);
+}
+
+/* Chart.js tuvali kapsayıcıdan ölçü alır; yüksekliği bileşen satır sayısına
+ * göre satır içinde verir, genişliği buradan gelir. */
+.grafik-tuval {
+  position: relative;
+  width: 100%;
+  min-height: 120px;
+}
+
+/* Radar kare olmak ister; serbest bırakılırsa geniş ekranda ezilir. */
+.grafik-tuval-radar {
+  height: 340px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* --- grafiğin erişilebilir eşi ---
+ * Canvas erişilebilirlik ağacında YOKTUR (bkz. lib/grafikPaleti.ts). Bu liste
+ * bir yedek değil, aynı bilginin metin hâlidir: ekran okuyucu, renk körlüğü ve
+ * siyah-beyaz baskı bu listeyi okur. */
+.grafik-liste {
+  list-style: none;
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.grafik-liste li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  padding: var(--sp-1) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.grafik-liste-ad {
+  flex: 1;
+  min-width: 0;
+  color: var(--fg);
+}
+
+/* ===================================================================
+ * YILDIZLI PUAN
+ * ================================================================ */
+
+.yildiz-satir {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.yildiz-tur {
+  min-width: 160px;
+  font-weight: var(--fw-medium);
+  color: var(--fg);
+}
+
+.yildizlar {
+  letter-spacing: 0.08em;
+  color: var(--line);
+  white-space: nowrap;
+}
+
+.yildiz-dolu {
+  color: var(--accent);
+}
+
+/* Kapsama düşükken rozet aynı ama iddiası zayıf: yıldızlar soluk çizilir.
+ * Solukluk TEK sinyal değildir — «düşük kapsama» ayrıca yazıyla söylenir. */
+.yildizlar-zayif .yildiz-dolu {
+  color: var(--fg-faint);
+}
+
+.yildiz-deger {
+  color: var(--fg-dim);
+}
+
+.yildiz-kapsam {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Skor yokken yıldız da yok: boş beş yıldız «çok kötü» diye okunurdu, oysa
+ * söylenen «ölçemedik». Uyarı rengi değil, nötr — bu bir hata değil. */
+.yildiz-yok {
+  color: var(--fg-dim);
+  font-style: italic;
+}
+
+/* ===================================================================
+ * KAYNAK DİPNOTU + YAN PANEL
+ * ================================================================ */
+
+.kaynak-dipnot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 0 var(--sp-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.kaynak-dipnot:hover,
+.kaynak-dipnot[aria-expanded="true"] {
+  background: var(--accent-wash);
+  border-color: var(--accent-soft);
+}
+
+.kaynak-dipnot-etiket {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ekran okuyucuya görünür, göze görünmez. `display:none` KULLANILMAZ — o,
+ * içeriği erişilebilirlik ağacından da siler. */
+.gorunmez {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Yan panel: tabloyu yerinde bırakır, iddia ile kanıtı aynı ekranda tutar.
+ * Dar ekranda yan panel diye bir şey yok — aşağıdaki kırılımda tam genişliğe
+ * döner. */
+.kaynak-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(520px, 92vw);
+  z-index: 40;
+  overflow-y: auto;
+  padding: var(--sp-4);
+  background: var(--bg-2);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+}
+
+.kaynak-panel-bas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA (bkz. dosya başlığı)
+ * ================================================================ */
+
+@media (max-width: 900px) {
+  .grafik-tuval-radar {
+    height: 300px;
+  }
+
+  .yildiz-tur {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Dar ekranda «yan» panel yoktur; tam sayfa örter. */
+  .kaynak-panel {
+    width: 100%;
+    left: 0;
+  }
+
+  .grafik-liste li {
+    flex-wrap: wrap;
+  }
+}
