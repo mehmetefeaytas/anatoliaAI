@@ -5,6 +5,22 @@
 *.pdf
 raw/**/*.pdf
 
+# raw/ altındaki sembolik linkler MAKİNEYE ÖZELDİR, repoya girmez.
+#
+# CLAUDE.md INGEST akışı ham kaynağı `raw/` altına `ln -s` ile bağlamayı
+# söylüyor. O linkler mutlak/göreli yol taşır ve başka bir klonda ya kırık
+# olur ya da yanlış dosyayı gösterir — commit edilirlerse kasa taşınabilir
+# olmaktan çıkar. Zaten `raw/` altında izlenen tek şey `.gitkeep`.
+#
+# Kaybolan bir şey yok: bağlanan hedefler `app/docs/` altında izleniyor ve
+# ingest ÖZETLERİ `sources/` altında commit'li. Repoda duran, kalıcı olan
+# taraftır; link yalnızca yerel bir görüntü.
+raw/**/*.md
+
+# Rakip analizi — bilinçli olarak push dışında (e05d004).
+# Yarışma stratejisi içerir; ölçüm ya da kod değildir.
+_plan-rakip-ustunluk.md
+
 # Dahili Claude oturum dökümü (proje dosyası değil)
 _oturum-devir.md
 
