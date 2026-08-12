@@ -100,6 +100,25 @@ const HAZIR_SORULAR: Record<SohbetBaglami, readonly string[]> = {
   genel: GENEL,
 };
 
+/**
+ * Ekran → çekmecenin başlığında basılan bağlam adı.
+ *
+ * Çekmece hangi ekranda açıldığını BİLİR ve söyler. Gerekçe: hazır sorular
+ * ekrana göre değişiyor (`HAZIR_SORULAR`) ama kullanıcı bunu göremiyordu —
+ * aynı düğme her ekranda farklı üç soru açıyordu ve değişimin sebebi görünmez
+ * kalıyordu. Bağlam satırı o sebebi mono sesle (MAKİNE verisi: hangi ekranın
+ * kümesi yüklü) tek satırda yazıyor.
+ */
+const BAGLAM_ADI: Record<SohbetBaglami, string> = {
+  compare: "karşılaştırma",
+  advantageous: "en avantajlı",
+  delta: "banka içi delta",
+  audit: "kanıt · denetim",
+  contradictions: "çelişki tespiti",
+  extract: "canlı çıkarım",
+  genel: "genel",
+};
+
 type Props = {
   baglam?: SohbetBaglami;
   onInspect?: (campaignId: number) => void;
@@ -132,18 +151,41 @@ export default function SohbetCekmecesi({ baglam = "genel", onInspect }: Props) 
 
   return (
     <>
+      {/* 56×56 daire, her ekranda AYNI yerde ve boyutta. Metin etiketi
+          `aria-label` + `title` üzerinden geliyor: ekran okuyucu ve fare
+          kullanıcısı aynı cümleyi alıyor, ama genişliği metne göre değişen bir
+          kapsül artık sağ alt köşede kimi ekranda grafiği kimi ekranda tabloyu
+          örtmüyor. Gerekçenin tamamı sohbet.css'te.
+
+          Emoji yerine inline SVG: emoji font'a bağlıdır ve jüri makinesinde
+          hangi biçimde çizileceği bilinmiyor — üstelik `--on-accent` rengini
+          almıyor, kendi rengiyle basılıyordu. SVG `currentColor` taşıyor,
+          yani tema tokenına uyuyor. Harici ikon paketi yok (offline kısıtı). */}
       <button
         ref={dugmeRef}
         type="button"
-        className="sohbet-dugme"
+        className="sohbet-fab"
         aria-expanded={acik}
         aria-controls="sohbet-cekmece"
+        aria-label={acik ? "Sohbeti kapat" : "Sohbeti aç"}
+        title={acik ? "Sohbeti kapat" : "Soru sor"}
         onClick={() => setAcik((a) => !a)}
       >
-        {/* Simge dekoratif; anlamı yandaki metin taşıyor. Yalnız simgeli bir
-            düğme, ne olduğunu tahmine bırakırdı. */}
-        <span aria-hidden="true">💬</span>
-        <span className="sohbet-dugme-etiket">Soru sor</span>
+        <svg
+          width="26"
+          height="26"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M4 5.5h16v11H9l-5 4z" />
+          <path d="M8 9h8" />
+          <path d="M8 12.5h5" />
+        </svg>
       </button>
 
       {acik && (
@@ -151,18 +193,39 @@ export default function SohbetCekmecesi({ baglam = "genel", onInspect }: Props) 
           id="sohbet-cekmece"
           className="sohbet-cekmece"
           role="dialog"
-          aria-label="Chatbot"
+          aria-label="Sohbet"
           ref={panelRef}
           tabIndex={-1}
         >
           <div className="sohbet-cekmece-bas">
-            <strong>Chatbot</strong>
-            <button type="button" className="btn-ghost" onClick={kapat}>
-              Kapat
+            <span className="sohbet-cekmece-kimlik">
+              <span className="sohbet-cekmece-ad">Sohbet</span>
+              {/* MAKİNE sesi: hangi ekranın hazır soru kümesi yüklü. */}
+              <span className="sohbet-cekmece-baglam">
+                bağlam: {BAGLAM_ADI[baglam] ?? BAGLAM_ADI.genel}
+              </span>
+            </span>
+            <button
+              type="button"
+              className="sohbet-kapat"
+              onClick={kapat}
+              aria-label="Sohbeti kapat"
+            >
+              ×
             </button>
           </div>
 
           <div className="sohbet-cekmece-govde">
+            {/* Panelin sözleşmesi, cevaptan ÖNCE okunur. Bir chatbot'un
+                uydurmadığına dair sözü, uydurma riski doğduktan sonra
+                verilirse geç kalır. Provenans şeridi (3px sol kenar) bu
+                cümleyi panelin diğer kanıt bloklarıyla aynı aileye koyuyor. */}
+            <p className="sohbet-sozlesme">
+              Yalnız korpustaki belgelerden cevap veriyorum. Cevabın her sayısı
+              bir dipnot rozeti taşır; taşımıyorsa o sayıyı ben uydurmuşumdur ve
+              öyle bir cevap üretmem.
+            </p>
+
             <ChatPanel
               genis={false}
               presets={HAZIR_SORULAR[baglam] ?? GENEL}

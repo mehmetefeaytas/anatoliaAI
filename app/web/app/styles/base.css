@@ -37,22 +37,95 @@ body {
   padding: var(--sp-6) var(--sp-4) var(--sp-10);
 }
 
-/* --- başlık --- */
+/* --- başlık ---
+ *
+ * v2 «kanıt defteri» tasarımı başlığı üç parçaya ayırıyor ve sıra anlam taşıyor:
+ * ad → ne olduğu (mono göz-üstü) → TEZ (düz cümle). Eskiden yalnız ad ve bir
+ * tanım cümlesi vardı; tanım ürünün ne YAPTIĞINI söylüyordu, tezi söylemiyordu.
+ *
+ * `h1` 34px'ten 28px'e indi. ÖLÇÜLDÜ: altındaki panel yoğun (kapsama cetveli 11
+ * satır + yedi sütunlu denetim tablosu) ve 34px başlık o yoğunluğun üstünde
+ * ikinci bir ağırlık merkezi kuruyordu. Tasarımın kendi kabuğu da 28px basıyor;
+ * 34px (`--fs-3xl`) skalada DURUYOR ama artık yalnız tek başına duran
+ * değerlerin boyutu.
+ */
 .site-header {
   margin-bottom: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+/* Ad ve göz-üstü aynı taban çizgisinde: ikisi tek bir künye satırıdır. */
+.site-header-ad {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
 }
 .site-header h1 {
   margin: 0;
-  font-size: var(--fs-3xl);
+  font-size: var(--fs-2xl);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--track-tight);
   line-height: var(--lh-tight);
 }
-.site-header p {
-  margin: var(--sp-2) 0 0;
+/* MAKİNE sesi + BÜYÜK HARF: bu, ürünün adı değil, TÜRÜ. Büyük harf yalnız
+ * mono'ya aittir (bkz. tokens.css, "ÜÇ SES"). */
+.site-header-tur {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
   color: var(--fg-dim);
-  font-size: var(--fs-sm);
+}
+/* Tez. `--fs-sm` değil `--fs-base`: bu cümle bir dipnot değil, panelin
+ * sözleşmesi — gövde ağırlığında okunmalı. */
+.site-header p {
+  margin: 0;
+  color: var(--fg-dim);
+  font-size: var(--fs-base);
   max-width: var(--measure);
+}
+
+/* --- korpus künyesi ---
+ *
+ * Panelin ölçeğini ve kapsamasını her ekranda okunur tutar. Tasarımın kuralı:
+ * kapsama sayısı ÖVÜNME değil, sınır bildirimi — bu yüzden künyenin son çipi
+ * kasıtlı olarak en zayıf alanı söyler (`kâr payı: 6/11 bankada`) ve uyarı
+ * rengini giyer. Panelin ölçeğini söyleyip kapsamasını gizlemek, tam olarak
+ * bu ürünün reddettiği şey.
+ *
+ * Değerler `/stats`ten gelir; sabit yazılmaz (bkz. ../page.tsx).
+ */
+.kunye {
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.kunye-cip {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--sp-2);
+  white-space: nowrap;
+}
+/* Sınır çipi. Renk TEK sinyal değil: metnin kendisi kesri söylüyor. */
+.kunye-cip-sinir {
+  color: var(--warn);
+  background: var(--warn-wash);
+  border-color: var(--warn);
+}
+/* Ölçü henüz okunmadıysa çip kesikli kalır — «yükleniyor» ile «sıfır» aynı
+ * şey değil; boşluğun kendi biçimi var (tasarımın dört kapsama hâli aynı
+ * mantık: bkz. cetvel.css). */
+.kunye-cip-bekliyor {
+  border-style: dashed;
+  color: var(--fg-faint);
 }
 
 /* --- tipografi yardımcıları ---
@@ -159,14 +232,18 @@ textarea,
   .shell {
     padding: var(--sp-5) var(--sp-3) var(--sp-8);
   }
-  /* 34px başlık dar kabukta satırı kırıyor; bir kademe iner. */
-  .site-header h1 {
-    font-size: var(--fs-2xl);
-  }
 }
 
 @media (max-width: 600px) {
+  /* Başlık artık 28px'ten başlıyor; dar kabukta tek kademe iner. */
   .site-header h1 {
     font-size: var(--fs-xl);
+  }
+  /* Göz-üstü etiketi adın ALTINA geçer: 375px'te ikisi aynı satırda
+   * sığmıyor ve `flex-wrap` onu kırınca taban çizgisi hizası anlamsızlaşıyor. */
+  .site-header-ad {
+    flex-direction: column;
+    gap: var(--sp-1);
+    align-items: flex-start;
   }
 }

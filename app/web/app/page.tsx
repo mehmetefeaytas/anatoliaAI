@@ -50,7 +50,8 @@ import AyarlarPanel from "./components/AyarlarPanel";
 import TazelemePanel from "./components/TazelemePanel";
 import TemaSecici from "./components/TemaSecici";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
-import { api } from "./lib/api";
+import { api, type Stats } from "./lib/api";
+import { trNum } from "./lib/format";
 import { JuryModeProvider, useJuryMode } from "./lib/juryMode";
 import { SaglikProvider, useSaglik } from "./lib/saglik";
 import { TemaProvider } from "./lib/tema";
@@ -195,6 +196,15 @@ function Dashboard() {
 
   return (
     <main>
+      {/* Korpus künyesi başlığın hemen altında: kabuk (layout.tsx) TEZİ
+          söylüyor, künye onun SAYISAL karşılığını veriyor. Sunucu bileşeni
+          olan kabukta duramaz çünkü değerler `/stats` ve `/fields`ten iner. */}
+      <KorpusKunyesi
+        stats={stats.data}
+        alanSayisi={fields.data?.length ?? null}
+        yukleniyor={stats.loading || fields.loading}
+      />
+
       {/* İki anahtar tek şeritte: ikisi de panelin tamamını etkiler ve
           ikisi de sekmelerden bağımsızdır. */}
       <div className="arac-cubugu">
@@ -359,6 +369,79 @@ function sohbetBaglami(sekme: TabKey): SohbetBaglami {
     default:
       return "genel";
   }
+}
+
+/**
+ * Korpus künyesi — panelin ölçeği ve SINIRI, her ekranda.
+ *
+ * İlgili: styles/base.css (`.kunye`), lib/api.ts (`Stats`), lib/format.ts
+ *
+ * Tasarımın kuralı: ölçeği söyleyip kapsamayı gizlemek, tam olarak bu ürünün
+ * reddettiği şey. Bu yüzden künyenin son çipi kasıtlı olarak en zayıf alanı
+ * söyler ve uyarı rengini giyer — övünme değil, sınır bildirimi.
+ *
+ * ## Neden BELGE kesri, banka kesri değil
+ *
+ * v2 tasarımı bu çipe «kâr payı: 6/11 bankada» yazıyor. `/stats` o sayıyı
+ * VERMİYOR: `alan_kapsami` alan → BELGE sayısı eşlemesidir, alan → kaç ayrı
+ * bankada geçtiği değil. İki sayı farklı sorguların cevabı ve ikincisi
+ * `extracted_fields`i `campaigns.bank_id` üzerinden tekilleştirmeyi gerektirir.
+ *
+ * Elimizde olmayan kesri yazmak, panelin tek kuralını ilk satırda çiğnemek
+ * olurdu (CLAUDE.md §19 — bilgi yoksa uydurma). Bu yüzden çip ÖLÇÜLEN kesri
+ * basıyor: alan → belge. Banka kesri istenirse `/stats`e `alan_banka_kapsami`
+ * eklenmesi gerekir; API tarafı bir sonraki iş.
+ *
+ * ## Yükleniyor ≠ sıfır
+ *
+ * Ölçü okunmadan önce çip KESİKLİ çerçeveyle boş durur; sayı basılmaz. Panelin
+ * dört kapsama hâliyle aynı mantık: boşluğun kendi biçimi var, sıfırla
+ * karıştırılmaz.
+ */
+function KorpusKunyesi({
+  stats,
+  alanSayisi,
+  yukleniyor,
+}: {
+  stats: Stats | null;
+  alanSayisi: number | null;
+  yukleniyor: boolean;
+}) {
+  // Sınır çipi: en DÜŞÜK kapsamalı alan değil, HABERİ olan alan. `kar_payi_orani`
+  // senaryonun ana ölçütü (CLAUDE.md §12) ve kapsaması en çok yanlış anlaşılan
+  // sayı — «6 bankada var» ile «11 bankanın hepsinde kıyaslanabilir» arasındaki
+  // fark bu panelin varlık sebebi.
+  const anaAlan = "kar_payi_orani";
+  const anaAlanKapsami = stats?.alan_kapsami?.[anaAlan] ?? null;
+  const belge = stats?.korpus.campaigns ?? null;
+
+  const cip = (deger: number | null, birim: string) =>
+    deger === null ? (
+      <span className="kunye-cip kunye-cip-bekliyor">{birim} · ölçülüyor</span>
+    ) : (
+      <span className="kunye-cip">
+        {trNum(deger)} {birim}
+      </span>
+    );
+
+  return (
+    <div className="kunye" aria-busy={yukleniyor}>
+      {cip(belge, "belge")}
+      {cip(stats?.korpus.banks ?? null, "banka")}
+      {cip(stats?.campaign_types.length ?? null, "kampanya türü")}
+      {cip(alanSayisi, "çıkarım alanı")}
+      {/* Sınır çipi. Renk tek sinyal değil: kesrin kendisi sınırı söylüyor. */}
+      {anaAlanKapsami !== null && belge !== null ? (
+        <span className="kunye-cip kunye-cip-sinir">
+          kâr payı oranı · {trNum(anaAlanKapsami)} / {trNum(belge)} belgede
+        </span>
+      ) : (
+        <span className="kunye-cip kunye-cip-bekliyor">
+          kâr payı oranı · kapsama ölçülüyor
+        </span>
+      )}
+    </div>
+  );
 }
 
 function AlanListesiBos({ ek }: { ek?: string }) {

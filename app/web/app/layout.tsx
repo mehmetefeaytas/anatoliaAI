@@ -6,6 +6,8 @@ import "./styles/components.css";
 import "./styles/arama.css";
 import "./styles/durum.css";
 import "./styles/grafik.css";
+import "./styles/cetvel.css";
+import "./styles/kanit.css";
 import "./styles/banka.css";
 import "./styles/sohbet.css";
 import "./styles/baski.css";
@@ -45,11 +47,21 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="tr">
       <body>
         <div className="shell">
+          {/* Başlık üç parça: ad → tür (mono göz-üstü) → TEZ.
+              Eski tanım cümlesi ürünün ne YAPTIĞINI söylüyordu ("bilgi çıkarımı
+              & karşılaştırma"); tezi söylemiyordu. Tez, panelin sözleşmesidir:
+              ekrandaki her sayı bir cümleye zincirli ve ölçülemeyen alan
+              gizlenmiyor, sayılıyor. Korpus künyesi bunun SAYISAL karşılığıdır
+              ve veriden geldiği için istemcide basılır (bkz. page.tsx). */}
           <header className="site-header">
-            <h1>Anatolia AI</h1>
+            <div className="site-header-ad">
+              <h1>Anatolia AI</h1>
+              <span className="site-header-tur">kanıt defteri</span>
+            </div>
             <p>
-              Katılım Bankacılığı Kampanya Bilgi Çıkarımı &amp; Karşılaştırma —
-              her değer kaynağına, güvenine ve onu üreten katmana bağlıdır.
+              Ekranda bir sayı görüyorsan, o sayının çıkarıldığı cümle ve
+              karakter aralığı da bir tık uzakta. Ölçülemeyen alan boş bırakılır
+              ve boşluğun kendisi sayılır.
             </p>
           </header>
           {children}

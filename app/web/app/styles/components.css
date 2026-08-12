@@ -81,6 +81,14 @@
 /* ===================================================================
  * SEKMELER — tek parça segment denetimi görünümü
  * =================================================================== */
+/* Bu kabuk (bg-3 şerit, radius-md, seçilide bg-2 + shadow-sm) v2 «kanıt
+ * defteri» tasarımının pill şeridiyle ZATEN birebir aynı — v2 denetiminde
+ * ölçüldü, değiştirilecek bir şey çıkmadı. Eklenen tek şey aşağıdaki hover.
+ *
+ * Odak halkası şeridin İÇİNDE kalmalı: `base.css`'teki global `:focus-visible`
+ * 2px outline + 2px offset basıyor, şerit dolgusu `--sp-1` (4px) olduğu için
+ * halka tam sığar — ama 600px altındaki kaydırmalı şeritte (bu dosyanın
+ * sonundaki kırılım, `overflow-x: auto`) uçtaki sekmenin halkası kırpılıyordu. */
 .tabs {
   display: flex;
   flex-wrap: wrap;
@@ -89,6 +97,24 @@
   padding: var(--sp-1);
   background: var(--bg-3);
   border-radius: var(--radius-md);
+  scroll-padding-inline: var(--sp-1);
+}
+
+/* Seçili OLMAYAN sekme hover'da yüzeye çıkar. Eskiden yalnız metin rengi
+ * değişiyordu (`--fg-dim` → `--fg`), yani fare bir sekmenin üzerindeyken
+ * hedefin SINIRLARI görünmüyordu. Hover seçili hâlin ZEMİNİNİ ödünç alır,
+ * gölgesini almaz — «üzerindeyim» ile «seçiliyim» böylece karışmaz.
+ *
+ * Seçili hâl üç sinyal taşır ve hiçbiri tek başına renk değildir: yüzey
+ * (bg-3 şerit içinde bg-2 pil — iki temada da lightness farkı, ton farkı
+ * değil), yükseklik (`--shadow-sm`) ve ARIA (`aria-selected`, ui/Tabs.tsx).
+ *
+ * Bu kural sohbet.css'ten BURAYA taşındı: `.tabs` bu dosyada tanımlıdır ve
+ * base.css'in belgelediği kural geçerli — bir sınıfın davranışı, tanımlandığı
+ * dosyada yaşar. Sekme şeridinin sohbet çekmecesiyle ilgisi yok. */
+.tabs > .chip:hover {
+  background: var(--bg-2);
+  color: var(--fg);
 }
 
 /* ===================================================================
