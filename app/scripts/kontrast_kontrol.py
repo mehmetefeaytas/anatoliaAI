@@ -68,6 +68,15 @@ CIFTLER: tuple[tuple[str, str, str], ...] = (
     ("--fg-faint", "--bg-3", "mono göz-üstü etiketi, dolgu zemininde"),
     ("--accent-soft", "--bg", "bağlantı, girintili yüzeyde"),
     ("--accent-soft", "--bg-2", "bağlantı, kart içinde"),
+    # v2'de `--accent` artık yalnız DOLGU değil, METİN rengi olarak da basılıyor:
+    # arama eşleşmesinin vurgusu (`.arama-vurgu`), komut paletinde seçili satırın
+    # başlığı, kapsama sayacının kesri. Eşleşme vurgusu için `--mark` KULLANILMADI
+    # — vurgu sarısı yalnız kaynak span'ine ait — ve bu karar `--accent`i metin
+    # rengi yaptı. Üç çift de geçiyor ama kapıda olmadıkları için sessizce
+    # bozulabilirlerdi.
+    ("--accent", "--bg", "arama vurgusu / kesir, girintili yüzeyde"),
+    ("--accent", "--bg-2", "arama vurgusu / kesir, kart içinde"),
+    ("--accent", "--accent-wash", "komut paletinde seçili satırın başlığı"),
     ("--on-accent", "--accent", "birincil düğme metni"),
     ("--on-mark", "--mark", "span vurgusu"),
     ("--ok", "--bg", "rozet: kural katmanı"),

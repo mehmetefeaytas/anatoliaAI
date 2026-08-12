@@ -51,7 +51,11 @@
 
     --fg: #1d1d1f;
     --fg-dim: #5f5f66;
-    --fg-faint: #6c6c78;
+    /* Gerekçe tokens.css'te (dolgu zemininde AA + üç kademeli hiyerarşi).
+     * Bu paletin ÜÇÜNCÜ kopyası ve kaymayı yakalayan tek şey
+     * `tests/test_tema_paleti.py` oldu: kontrast kapısı yalnız tokens.css
+     * okuduğu için değer burada eskirken kapı yeşil kalıyordu. */
+    --fg-faint: #6a6a76;
     --on-accent: #ffffff;
 
     --accent: #2f3f9e;
