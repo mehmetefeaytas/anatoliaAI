@@ -143,9 +143,23 @@ jobs:
     # "Atlandi" CI ciktisinda yesil gorunur. Bir yuzeyi sinamamak ile onu
     # sinayip gecmek arasindaki farki gizleyen tek sey buydu.
     #
-    # Bu is o farki kapatir: bagimliliklari kurar ve AYNI test paketini
-    # kosar. Atlama sayisi burada ~0 olmali; olmuyorsa bir bagimlilik
-    # requirements-api.txt'te eksik demektir ve bu da bir bulgudur.
+    # Bu is o farki kapatir: bagimliliklari kurar ve AYNI test paketini kosar.
+    #
+    # OLCULEN SONUC (kosu 31643710122): atlama 210 -> 128, yani 82 test
+    # gercekten kostu ve `API ayakta, 34 yol kayitli` dogrulandi.
+    #
+    # 128 NEDEN SIFIR DEGIL -- ikisi de mesru, ucuncusu bir bulgu:
+    #   ~53  Postgres yok ("ANATOLIA_TEST_DATABASE_URL tanimli degil").
+    #        Canli sunucu gerekiyor; compose'da `db-check` servisi var ama
+    #        hicbir is onu ayaga kaldirmiyor. Postgres yolu bu yuzden hala
+    #        yalnizca 3 fixture belgesiyle dogrulanmis durumda -- ACIK BULGU.
+    #   ~75  playwright / transformers / trafilatura. Bunlar teslim edilen
+    #        CALISMA ZAMANI kumesinde BILEREK yok (ince imaj + lisans
+    #        gerekcesi, bkz. Dockerfile.api). Kurulmadiklari icin degil,
+    #        kurulmamalari gerektigi icin atlaniyorlar.
+    #
+    # Yani bu is "her sey kostu" demiyor; "API yuzeyi artik gercekten
+    # sinaniyor" diyor. Farki yazmak, sayiyi yuvarlamaktan iyidir.
     name: Testler (bagimliliklar kurulu) + API gercekten ayaga kalkiyor
     runs-on: ubuntu-latest
     steps:
