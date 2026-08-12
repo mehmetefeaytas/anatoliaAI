@@ -476,6 +476,30 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     low = tr_fold(text)
     vade_pos = [mm.start() for mm in re.finditer(r"vade", low)]
 
+    # TETİKLEYİCİ ŞARTI — "vade" sözcüğü metinde HİÇ geçmiyorsa değer
+    # üretilmez. Eskiden `dist` yalnızca SIRALAMA ölçütüydü (`default=10**6`),
+    # yani tetikleyici yokken de "en baştaki sayı" seçilip vade sanılıyordu.
+    #
+    # Ölçüldü — gold.v2 (48 kayıt): tetikleyicisiz **4 vakanın 4'ü de**
+    # halüsinasyon; tüm doğru çıkarımlarda "vade" en az bir kez geçiyor.
+    # Ölçüldü — demo.db (1774 belge): `vade_ay` üreten 652 belgenin 210'u
+    # (%32) tetikleyicisiz. Bu 210 elle sınıflandırıldı:
+    #
+    #   177 (%84)  açık halüsinasyon — ödül/üyelik süresi ("1 Aylık TOD
+    #              taraftar paketi"), promosyon dönemi ("3 ay boyunca
+    #              ücretsiz"), çerez saklama süresi ("çerezdir. 1 yıl")
+    #    30 (%14)  "12 Aya varan taksit" — bu ifade `taksit_sayisi` alanına
+    #              aittir, `vade_ay`'a değil (alan karışması)
+    #     3  (%1)  "60 aya kadar taksitlendirebilirsiniz" — meşru sayılabilir
+    #
+    # Yani %98'i hatalı. Üç meşru vakayı kaybetmek, 207 yanlış değeri
+    # üretmeye yeğdir (CLAUDE.md §19: bilgi yoksa `null`).
+    #
+    # Tablolu belgeler ETKİLENMEZ: oran tablosunun başlığı zaten "Vade ..."
+    # ile başlar ve `_TABLO_YEDEK_ALANLARI` yolu devrede kalır.
+    if not vade_pos:
+        return None
+
     def score(m):
         # "ilk N ay" gibi promosyon dönemleri gerçek vade değildir → geri it
         pre = low[max(0, m.start() - 8): m.start()]
@@ -1278,7 +1302,18 @@ def parse_rate_table(text: str) -> list[RateRow]:
     # Genel çözüm: vade adayını bul, ONDAN SONRAKİ ilk yüzdeyi kâr payı say.
     # (?![\d.,]) ZORUNLU: bu olmadan "30.000,00 ₺ 12 Ay" ifadesinden "30"
     # kapılıp vade 30 sanılıyordu (doğrusu 12). Sayının tamamı tüketilmeli.
-    vade_re = re.compile(r"\b(\d{1,3})(?![\d.,])\s*(?:ay\b)?", re.IGNORECASE)
+    # (?<![\d.,]) ZORUNLU — ölçülmüş hata (2026-08-12, gold.v2 albaraka TOGG):
+    # `\b(\d{1,3})` deseni bir YÜZDENİN ONDALIK KISMINI vade sanıyordu.
+    # "T10F V2 48 1.700.000 2,99%" satırında "," ile "9" arasında kelime
+    # sınırı bulunduğu için "99" yakalanıyor, `(?![\d.,])` de "%" önünde
+    # sağlanıyordu. Sonuç: satır listesi [(48,2.99), (48,2.99), (99,2.99),
+    # (4,2.99)] ve `max(...)` = **99 ay**. Gold değeri 48.
+    #
+    # Aynı sınır koruması 2026-08-11'de `_ORAN_IFADESI` ve `_PARA_IFADESI`'ne
+    # uygulanmıştı ("5000 TL" -> "000 TL" kesilmesi); bu desen o taramadan
+    # atlanmıştı.
+    vade_re = re.compile(r"(?<![\d.,])(\d{1,3})(?![\d.,])\s*(?:ay\b)?",
+                         re.IGNORECASE)
     yuzde_re = re.compile(yuzde)
 
     yuzdeler = [(m.start(), m.end(), m.group(0))
@@ -1814,7 +1849,19 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
 
 # Oran tablosundan gelen ama tekil çıkarıcıya ÖNCELİK bırakan alanlar.
 # Gerekçe `extract_all` içinde, uygulandığı yerde.
-_TABLO_YEDEK_ALANLARI = frozenset({"masraf_durumu"})
+#
+# `vade_ay` buraya 2026-08-12'de EKLENDİ — ölçüldü (gold.v2, 48 kayıt):
+# tablodan gelen vade, tablonun kendi DİLİMİ olduğu için kampanyanın vadesi
+# değildi ve `extract_vade`'nin doğru cevabını 0,95 güvenle eziyordu:
+#
+#   turkiye-finans avantaj  tablo "1-3 0,00% ..." -> 3    | extract_vade 36 ✓
+#   albaraka TOGG           tablo max            -> 99   | extract_vade 48 ✓
+#
+# İkisinde de gold, `extract_vade`'nin değeriyle birebir uyuşuyor. Tablo
+# satırındaki vade `RateRow` içinde KALIR (kâr payını vadeye bağlamak için
+# gerekli), yalnız `vade_ay` ALANI olarak dışa verilmesi yedeğe düşer —
+# `extract_vade` sustuğunda yine devreye girer, yani bilgi kaybı yok.
+_TABLO_YEDEK_ALANLARI = frozenset({"masraf_durumu", "vade_ay"})
 
 # Tüm kural çıkarıcılar — sırayla denenir.
 _EXTRACTORS = [
