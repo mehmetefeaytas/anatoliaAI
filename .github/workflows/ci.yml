@@ -71,6 +71,27 @@ jobs:
       - name: Degerlendirme hatti duman testi
         run: python -m eval.run_eval --gold data/gold/gold.sample.json
 
+      # REGRESYON KAPISI (plan G1.5). Duman testinden farki: o, hattin
+      # CALISTIGINI dogrular; bu, SONUCUN GERILEMEDIGINI.
+      #
+      # FAZ 1'de uc alan olculerek duzeltildi (vade_ay 0,133 -> 0,545,
+      # kar_payi_orani 0,500 -> 0,800, indirim_orani 0,000 -> 0,400). Bir
+      # regex'i gevsetmek baska bir alani bozabilir ve kimse fark etmeyebilir;
+      # kapi tam olarak bunu yakalar. Alan bazinda F1, yapisal mikro-F1 ve
+      # halusinasyon oraninin UST siniri birlikte korunur.
+      #
+      # Esikler gold.v2.json uzerinde olculdu. Gold buyudugunde (plan G3.1)
+      # sayilar dogal olarak degisir; eval/esikler.json BILEREK ve gerekcesi
+      # commit mesajina yazilarak guncellenir. Sessizce dusurmek kapinin
+      # varlik sebebini ortadan kaldirir.
+      #
+      # --no-bootstrap: guven araligi kapiyi ilgilendirmez, kosumu hizlandirir.
+      # Sabit komut; disaridan gelen hicbir girdi kullanilmaz.
+      - name: Eval regresyon kapisi
+        run: |
+          python -m eval.run_eval --gold data/gold/gold.v2.json \
+            --matcher strict --no-bootstrap --esikler eval/esikler.json
+
       # Demo DB korpusla ayrisirsa chatbot/dashboard/RAG korpusun bir kismini
       # SESSIZCE gormez. Bir kez yasandi: DB 31 Temmuz'da 849 belgeyle
       # kuruldu, korpus 3 Agustos'ta 1761'e cikti, bir hafta boyunca hicbir

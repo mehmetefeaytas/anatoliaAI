@@ -1,0 +1,46 @@
+{
+  "_aciklama": "Alan başına asgari F1 — CI regresyon kapısı (plan G1.5).",
+  "_nasil_okunur": [
+    "Bu dosya bir HEDEF listesi DEĞİL, bir GERİLEME kapısıdır. Değerler",
+    "ölçülmüş mevcut başarımın hemen altındadır; amaç 'daha iyisini yap'",
+    "demek değil, 'bugünkünü kaybetme' demektir.",
+    "Kapı `python -m eval.run_eval --gold ... --esikler eval/esikler.json`",
+    "ile çalışır ve ihlal varsa çıkış kodu 1 döndürür."
+  ],
+  "_neden_tolerans_var": [
+    "Gold sabit ve kural katmanı deterministiktir, yani aynı kod aynı sayıyı",
+    "üretir. Yine de 0,01'lik pay bırakıldı: eşleştirici eşiklerinde veya",
+    "kayan nokta toplama sırasında yapılacak zararsız bir değişiklik CI'yı",
+    "kırmasın. Gerçek bir gerileme bu payın çok üzerindedir."
+  ],
+  "_gold_surumu_onemli": [
+    "Eşikler gold.v2.json (48 kayıt) üzerinde ölçüldü. Gold BÜYÜDÜĞÜNDE",
+    "(plan G3.1: 48 -> 70) bu sayılar doğal olarak değişir ve düşebilir —",
+    "bu bir gerileme DEĞİL, gerçek genelleme ölçümüdür. O noktada dosya",
+    "BİLEREK ve gerekçesi commit mesajına yazılarak güncellenir.",
+    "Sessizce düşürmek, kapının varlık sebebini ortadan kaldırır."
+  ],
+  "gold": "data/gold/gold.v2.json",
+  "olculdu": "2026-08-12",
+  "matcher": "strict",
+  "split": "all",
+  "tolerans": 0.01,
+  "mikro_yapisal": 0.619,
+  "halusinasyon_ust_sinir": 0.08,
+  "alanlar": {
+    "kar_payi_orani": 0.800,
+    "vade_ay": 0.545,
+    "taksit_sayisi": 0.714,
+    "kampanya_suresi": 0.936,
+    "finansman_tutari": 0.571,
+    "alisveris_puani": 0.667,
+    "odul_miktari": 0.500,
+    "masraf_durumu": 0.476,
+    "indirim_orani": 0.400,
+    "hedef_kitle": 0.267
+  },
+  "_esigi_olmayan_alanlar": {
+    "tahsis_ucreti": "gold.v2'de 0 pozitif örnek (47 kayıtta absent). F1 tanımsız; eşik konamaz. Gold büyüyünce (G3.1) eklenmeli.",
+    "kampanya_kosullari": "serbest metin — span/jeton F1'i metodolojik olarak anlamsız (bkz. run_eval.yapisal_kesit). Kalem düzeyi ölçütle ayrı raporlanır."
+  }
+}

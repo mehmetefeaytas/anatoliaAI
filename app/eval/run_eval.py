@@ -49,6 +49,7 @@ mikro raporlamak zayıf alanları gizlemek olurdu.
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
@@ -285,6 +286,57 @@ def yapisal_kesit(table: dict[str, Counts]) -> dict[str, Counts]:
 def micro_f1_yapisal_of(docs: Sequence[DocScore]) -> float:
     """Bootstrap'ın çağırdığı istatistik: belge listesi -> yapısal mikro-F1."""
     return micro(yapisal_kesit(aggregate(docs))).f1()
+
+
+def esik_ihlalleri(table: dict[str, Counts], esikler: dict) -> list[str]:
+    """Eşik dosyasına göre GERİLEME listesi; boş liste = kapı açık.
+
+    ## Neden bu kapı var (plan G1.5)
+
+    FAZ 1'de üç alan ölçülerek düzeltildi (`vade_ay` 0,133 -> 0,545,
+    `kar_payi_orani` 0,500 -> 0,800, `indirim_orani` 0,000 -> 0,400). Gold
+    büyüyeceği (G3.1: 48 -> 70) ve kural katmanı gelişmeye devam edeceği için
+    bu kazanımların sessizce geri gitme riski gerçektir: bir regex'i
+    gevşetmek başka bir alanı bozabilir ve kimse fark etmeyebilir.
+
+    Kapı ÜÇ şeyi birden korur — alan bazında F1, yapısal mikro-F1 ve
+    halüsinasyon oranının ÜST sınırı. Sonuncusu ters yönlüdür: halüsinasyon
+    ARTARSA kapı kapanır, çünkü bu projede uydurmak kaçırmaktan pahalıdır
+    (CLAUDE.md §19).
+    """
+    tol = float(esikler.get("tolerans", 0.0))
+    ihlaller: list[str] = []
+
+    for alan, asgari in sorted(esikler.get("alanlar", {}).items()):
+        c = table.get(alan)
+        if c is None:
+            ihlaller.append(
+                f"{alan}: eşik dosyasında var ama ölçümde YOK "
+                f"(alan kaldırıldı mı?)")
+            continue
+        f1 = c.f1()
+        if f1 < float(asgari) - tol:
+            ihlaller.append(
+                f"{alan}: F1 {f1:.3f} < eşik {float(asgari):.3f} "
+                f"(tolerans {tol})")
+
+    asgari_yapisal = esikler.get("mikro_yapisal")
+    if asgari_yapisal is not None:
+        ym = micro(yapisal_kesit(table)).f1()
+        if ym < float(asgari_yapisal) - tol:
+            ihlaller.append(
+                f"MİKRO (yapısal): {ym:.3f} < eşik "
+                f"{float(asgari_yapisal):.3f} (tolerans {tol})")
+
+    ust = esikler.get("halusinasyon_ust_sinir")
+    if ust is not None:
+        oran = micro(table).hallucination_rate()
+        if oran is not None and oran > float(ust) + tol:
+            ihlaller.append(
+                f"halüsinasyon oranı: {oran:.3f} > üst sınır "
+                f"{float(ust):.3f} (tolerans {tol})")
+
+    return ihlaller
 
 
 def score_document(record: GoldRecord, preds: dict[str, Any],
@@ -935,6 +987,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
                     help=f"rapor kök dizini (varsayılan: {report_mod.DEFAULT_OUT_DIR})")
     ap.add_argument("--no-write", action="store_true",
                     help="diske yazma (yalnız konsol)")
+    ap.add_argument("--esikler", metavar="JSON",
+                    help="regresyon kapısı: alan başına asgari F1 dosyası "
+                         "(bkz. eval/esikler.json). İhlal varsa çıkış kodu 1.")
     ap.add_argument("--seed", type=int, default=DEFAULT_SEED,
                     help=f"bootstrap çekirdeği (varsayılan: {DEFAULT_SEED})")
     ap.add_argument("--resamples", type=int, default=DEFAULT_RESAMPLES,
@@ -1000,9 +1055,42 @@ def main(argv: list[str] | None = None) -> int:
     for result in results:
         print("\n" + format_result(result, predictor))
 
+    # REGRESYON KAPISI — rapor yazılmadan ÖNCE değerlendirilir ama çıkış
+    # koduna en sonda dönüşür: kapı kapansa bile rapor diske yazılmalı,
+    # yoksa CI kırmızı olur ve NEDEN kırmızı olduğunun kanıtı kaybolur.
+    kapi_ihlalleri: list[str] = []
+    if args.esikler:
+        esik_yolu = Path(args.esikler)
+        if not esik_yolu.is_file():
+            print(f"HATA: eşik dosyası bulunamadı: {esik_yolu}", file=sys.stderr)
+            return 2
+        esikler = json.loads(esik_yolu.read_text(encoding="utf-8"))
+        # Kapı, eşik dosyasında ilan edilen eşleştirici üzerinden ölçülür.
+        # Bir başkasının sayısıyla karşılaştırmak sessizce yanlış olurdu.
+        istenen = esikler.get("matcher", "strict")
+        hedef = next((r for r in results if r.matcher == istenen), None)
+        if hedef is None:
+            print(f"HATA: eşik dosyası '{istenen}' eşleştiricisini istiyor ama "
+                  f"bu koşumda yok ({', '.join(matcher_names)}). "
+                  f"`--matcher {istenen}` ile koşun.", file=sys.stderr)
+            return 2
+        kapi_ihlalleri = esik_ihlalleri(hedef.table, esikler)
+        print(f"\n=== REGRESYON KAPISI ({esik_yolu}) ===")
+        if kapi_ihlalleri:
+            print(f"KAPALI — {len(kapi_ihlalleri)} gerileme:")
+            for i in kapi_ihlalleri:
+                print(f"  ✗ {i}")
+            print("\nGerileme gerçekse düzeltin. Gold değiştiği için "
+                  "beklenen bir düşüşse eval/esikler.json'ı BİLEREK güncelleyin "
+                  "ve gerekçeyi commit mesajına yazın.")
+        else:
+            n = len(esikler.get("alanlar", {}))
+            print(f"AÇIK — {n} alan + yapısal mikro-F1 + halüsinasyon "
+                  f"üst sınırı korunuyor.")
+
     if args.no_write:
         print("\n(--no-write verildi: diske yazılmadı)")
-        return 0
+        return 1 if kapi_ihlalleri else 0
 
     env = report_mod.build_env(
         config=predictor.name, gold_path=str(gold_path),
@@ -1033,7 +1121,9 @@ def main(argv: list[str] | None = None) -> int:
         decision_rows=decision_rows(results),
         decision_columns=report_mod.DECISION_COLUMNS)
     print("\n" + written.summary())
-    return 0
+    # Rapor yazıldıktan SONRA kapıyı çıkış koduna dönüştür: CI kırmızıysa
+    # nedeninin kanıtı (per_field.csv, decisions.csv) diskte durmalı.
+    return 1 if kapi_ihlalleri else 0
 
 
 if __name__ == "__main__":
