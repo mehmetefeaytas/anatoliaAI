@@ -1556,12 +1556,24 @@ def extract_indirim_orani(text: str) -> Optional[ExtractedField]:
     TUZAK: "%5 puan iadesi" bir indirim değil `alisveris_puani`'dır; bu yüzden
     'puan/iade' bağlamındaki oranlar dışlanır.
     """
+    # ARALIK — "%10 ila %50 arasında indirim". Üçüncü grup aralığın ÜST
+    # sınırıdır ve opsiyoneldir.
+    #
+    # 2026-08-12'de eklendi; öncesinde aralığın yalnız ALT sınırı alınıyordu:
+    # Hayat Finans GastroClub belgesinde gold `{min: 10, max: 50}` iken çıkarım
+    # `10.0` idi — yani kampanyanın en iyi tarafı sessizce düşüyordu.
+    #
+    # `extract_kar_payi` "ile|ila"yı zaten aralık ayırıcı sayıyordu; bu desen
+    # o taramadan atlanmıştı (aynı sınıftan tutarsızlık için bkz.
+    # `_KAR_PAYI_ETIKET`).
     pat = re.compile(
         r"(?:%\s*(\d[\d.,]*)|(\d[\d.,]*)\s*%)"
+        r"(?:\s*(?:-|–|ile|ila)\s*%?\s*(\d[\d.,]*)(?![\d.,])\s*%?)?"
         r"(?:[^.;\n]{0,20}?)\bindirim",
         re.IGNORECASE,
     )
     m = pat.search(text)
+    ust_ham = None
     if m is None:
         pat2 = re.compile(r"indirim\s*(?:oran[ıi])?[^%\d]{0,12}"
                           r"(%\s*\d[\d.,]*|\d[\d.,]*\s*%)", re.IGNORECASE)
@@ -1571,6 +1583,7 @@ def extract_indirim_orani(text: str) -> Optional[ExtractedField]:
         s, e = m.span(1)
     else:
         s, e = (m.span(1) if m.group(1) else m.span(2))
+        ust_ham = m.group(3)
 
     # 'puan iadesi' bağlamıysa bu indirim değil, alışveriş puanıdır
     ctx = text[max(0, s - 25): min(len(text), e + 25)]
@@ -1579,6 +1592,16 @@ def extract_indirim_orani(text: str) -> Optional[ExtractedField]:
 
     raw = text[s:e]
     canon = N.normalize_rate(raw)
+    if ust_ham is not None:
+        ust = N.normalize_rate(ust_ham)
+        # Bozuk aralık (üst < alt) sessizce yazılmaz: tek değere düşülür.
+        # Aksi hâlde kıyas tablosu ters bir aralık gösterirdi.
+        if isinstance(canon, (int, float)) and isinstance(ust, (int, float)) \
+                and ust > canon:
+            canon = N.collapse_degenerate_range({"min": canon, "max": ust})
+            raw = text[s:m.end(3)]
+            e = m.end(3)
+
     return _field("indirim_orani", raw, canon, _window(text, s, e),
                   span_start=s, span_end=e, trigger_distance=0)
 
