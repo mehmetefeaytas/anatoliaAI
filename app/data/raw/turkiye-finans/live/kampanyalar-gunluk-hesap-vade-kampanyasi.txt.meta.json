@@ -1,13 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/gunluk-hesap-vade-kampanyasi.aspx",
-  "scraped_at": "2026-07-30T18:37:38+00:00",
-  "content_hash": "8a0b11d14435c374b609696f31bda41673e907a8d158f19d585d62b2f33a56a0",
-  "collection_method": "live",
+  "scraped_at": "2026-08-11T16:16:42+00:00",
+  "content_hash": "d7f7a7bcf7da70924f36ef08dc81eb38c967b834912bfc3cfe74c224015ae784",
+  "collection_method": "browser",
   "title": "Günlük Hesap’la İhtiyaç Anında Vadeni Bozma! | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 97412,
-  "text_chars": 7934,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 208824,
+  "text_chars": 9082
 }

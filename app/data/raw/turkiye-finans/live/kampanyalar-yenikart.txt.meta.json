@@ -1,8 +1,8 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/yenikart.aspx",
-  "scraped_at": "2026-08-04T21:02:56+00:00",
-  "content_hash": "01d3c891ceff1ab7a7f97b895e2d76b3eb4af1c6d1e9e5d70cea784a3adcf460",
+  "scraped_at": "2026-08-11T16:16:10+00:00",
+  "content_hash": "792bed035be16ff68ba3cb80f23b463e921aa74c9704378cd09cacb53d7232fd",
   "collection_method": "browser",
   "title": "Happy Kredi Kartı ile 2.500 TL Bonus kazanın!",
   "http_status": 200,

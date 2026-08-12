@@ -1,13 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/tum-market-harcamalarinda-secimini-yap-5-iade-kazan",
-  "scraped_at": "2026-07-30T18:44:36+00:00",
-  "content_hash": "708e65a09e4c0656a5dd111748bc4741fb3d59046a4bef718367af352a99f9ed",
+  "scraped_at": "2026-08-12T08:37:36+00:00",
+  "content_hash": "375884f38bf49f41ba41621464845486d040d945875f2f4f4a0ca5bca3bb1365",
   "collection_method": "browser",
-  "title": "Tüm market harcamalarında %5 iade kazan! Üstelik Çok kazananlar Kulübü’ne özel %10 iade! | TOM Bank Hadi",
+  "title": "Tüm market harcamalarında seçimini yap %5 iade kazan! Çok kazananlar Kulübü Üyelerine Özel %10 İade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 103034,
-  "text_chars": 4908,
-  "recovered_from": "eb67e65",
-  "recovery_note": "2026-08-03 yeniden hasadi bu sayfada kabuk dondurdu (306 krkt); metin ve provenance Temmuz surumunden birlikte geri alindi"
+  "raw_bytes": 102217,
+  "text_chars": 3812
 }

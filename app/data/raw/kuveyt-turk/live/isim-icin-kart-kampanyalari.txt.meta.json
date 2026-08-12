@@ -1,13 +1,11 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari",
-  "scraped_at": "2026-08-03T16:29:04+00:00",
-  "content_hash": "d7d794e86c8fd8005001ebe4072e3d709f7a4c3c2945e64207400a39b7050fa6",
+  "scraped_at": "2026-08-12T08:32:45+00:00",
+  "content_hash": "cc04b5ab1ab6a841a15def788b6d2672f00b9b31e65ef7d5ce6d5e992214fb2f",
   "collection_method": "live",
   "title": "Kart Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 151130,
-  "text_chars": 2956,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 151394,
+  "text_chars": 2893
 }

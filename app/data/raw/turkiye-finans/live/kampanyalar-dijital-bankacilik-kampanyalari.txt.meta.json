@@ -1,13 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/dijital-bankacilik-kampanyalari.aspx",
-  "scraped_at": "2026-08-03T16:38:17+00:00",
-  "content_hash": "c7aa643ef9cf251c8e0bd5f6b853c83a82d5887c355f629cbe57102f307adba1",
-  "collection_method": "live",
+  "scraped_at": "2026-08-11T16:16:29+00:00",
+  "content_hash": "8d27ac27cb39d24d9ae198c1ce8a430c5b1a32743bbb8e5228fee43080e1aaf2",
+  "collection_method": "browser",
   "title": "Dijital Bankacılık Kampanyaları | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 104054,
-  "text_chars": 6852,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 213208,
+  "text_chars": 7665
 }

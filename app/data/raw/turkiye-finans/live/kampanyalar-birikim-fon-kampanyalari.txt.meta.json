@@ -1,13 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/birikim-fon-kampanyalari.aspx",
-  "scraped_at": "2026-08-03T16:38:29+00:00",
-  "content_hash": "54ee5f953d68187a6d39244c16495617befc2a6b3ee25a963dd76d2ad5c32dd2",
-  "collection_method": "live",
+  "scraped_at": "2026-08-11T16:16:20+00:00",
+  "content_hash": "d1e2b0d37cd5a334f8b575f6185f72823a8d32473e2532463e1b32bc8bd2cd9e",
+  "collection_method": "browser",
   "title": "Birikim / Fon Kampanyaları | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 94303,
-  "text_chars": 5814,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 207669,
+  "text_chars": 7088
 }

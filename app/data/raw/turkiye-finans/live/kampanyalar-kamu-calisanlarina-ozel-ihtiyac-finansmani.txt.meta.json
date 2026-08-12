@@ -1,13 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/kamu-calisanlarina-ozel-ihtiyac-finansmani.aspx",
-  "scraped_at": "2026-08-03T16:38:50+00:00",
-  "content_hash": "39589e1ec24d9c6a7697ec6e5bedbd7ef0ec13012c3c8f9f2108c806bfa1e6f1",
-  "collection_method": "live",
+  "scraped_at": "2026-08-11T16:16:47+00:00",
+  "content_hash": "87f7d7044610fa47fa1043ea3b92fe9cc50bef6a319e9e4163acb238792e7670",
+  "collection_method": "browser",
   "title": "Kamu Çalışanlarına Özel İhtiyaç Finansmanı* | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 103922,
-  "text_chars": 12014,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 215532,
+  "text_chars": 13026
 }

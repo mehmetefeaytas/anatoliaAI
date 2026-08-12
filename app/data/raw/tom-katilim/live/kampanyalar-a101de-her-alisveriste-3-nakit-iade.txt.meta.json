@@ -1,13 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/a101de-her-alisveriste-3-nakit-iade",
-  "scraped_at": "2026-08-03T17:00:41+00:00",
-  "content_hash": "86e17feb8328456deb036a8b75f66c2f62527617cfaec550db508f9597eafc90",
+  "scraped_at": "2026-08-12T08:37:09+00:00",
+  "content_hash": "d07dce936f3b9a535323e1b333925eb126578321b8e8045eb88e1f9bc3942440",
   "collection_method": "browser",
   "title": "A101’de her alışverişte %3'e varan nakit iade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 99521,
-  "text_chars": 2093,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 99555,
+  "text_chars": 2050
 }

@@ -1,13 +1,11 @@
 {
   "bank_slug": "adil-katilim",
   "source_url": "https://www.adilkatilim.com.tr/katilim-bankaciligi/urun-ve-hizmetler",
-  "scraped_at": "2026-08-03T17:05:18+00:00",
-  "content_hash": "bcf2d5e856acde118b6673bece5ec2e7b4826c5f3a522d1fe0d3742c98ea6411",
+  "scraped_at": "2026-08-12T08:36:19+00:00",
+  "content_hash": "16a9136f38df208f0b5fb41c9ed0821e7fe38a4450dd9e1fe3dd73593b70771c",
   "collection_method": "browser",
   "title": "Katılım Bankacılığı Ürün ve Hizmetleri | Adil Katılım",
   "http_status": 200,
   "raw_bytes": 911196,
-  "text_chars": 1552,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 1552
 }

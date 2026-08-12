@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/pegasus-davet-koduyla-tom-bank-hadi-musterisi-ol-pegasus-harcamalarindan-3-500-tlye-varan-iade-kazan",
+  "scraped_at": "2026-08-12T08:37:30+00:00",
+  "content_hash": "461a2fb9c4826e8d434134ab5fc84c97d1b84328914087e6e30dcae2e46756aa",
+  "collection_method": "browser",
+  "title": "PEGASUS Koduyla TOM Bank Hadi Müşterisi Ol, Pegasus harcamalarından 3.500 TL’ye varan iade kazan! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 105159,
+  "text_chars": 5951
+}
