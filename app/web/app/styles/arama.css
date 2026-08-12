@@ -1,0 +1,335 @@
+/**
+ * Arama yüzeyleri — komut paleti (⌘K) ve belge seçici.
+ *
+ * İlgili: ../components/KomutPaleti.tsx, ../components/BelgeSecici.tsx,
+ *         ./tokens.css (renk/boşluk/tipografi tokenları), ./components.css
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` zaten on bileşen ailesi taşıyor. Arama yeni ve BÜTÜN bir
+ * aile: örtü, palet, gruplu liste, seçenek satırı, süzgeç çipleri, sayfa
+ * altı. `grafik.css` ve `sohbet.css` aynı gerekçeyle ayrılmıştı. Denetim
+ * betiği `styles/*.css`in tamamını tarar, yani ayrılık kapıdan kaçmak değil.
+ *
+ * Renk ve boşluk tokendan gelir. Tek yerel tanım perdedir (`--komut-perde`)
+ * ve gerekçesi tanımın yanındadır.
+ */
+
+/* --------------------------------------------------------------------- */
+/* Komut paleti                                                          */
+/* --------------------------------------------------------------------- */
+
+/* Perde (scrim) — bu dosyaya AİT yerel token.
+ *
+ * `tokens.css`e konmadı çünkü bir YÜZEY rengi değil: iki temada da aynı işi
+ * yapar (arkayı karartır) ve tema paletiyle birlikte dönmemesi gerekir. Koyu
+ * temada bir tık daha koyudur; oradaki zemin zaten koyu olduğu için aynı
+ * saydamlık paleti yeterince ayırmıyor. */
+:root {
+  --komut-perde: rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --komut-perde: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Örtü: paletin arkasındaki sayfayı görünür ama erişilemez kılar.
+ * Palet üstte değil, ÜST BEŞTE BİRDE durur (`padding-top`): göz ekranın
+ * ortasını değil üst şeridini tarar ve liste aşağı doğru büyür. */
+.komut-ortu {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--sp-10) var(--sp-4) var(--sp-4);
+  background: var(--komut-perde);
+}
+
+.komut-paleti {
+  width: 100%;
+  max-width: 640px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.komut-bas {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* Kutu kendi kenarlığını taşımaz: paletin kenarı zaten var, ikinci bir
+ * çerçeve kutuyu paletin içinde ayrı bir nesne gibi gösterirdi. */
+.komut-girdi {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-normal);
+  padding: var(--sp-2) 0;
+}
+
+.komut-girdi:focus {
+  outline: none;
+}
+
+.komut-girdi::placeholder {
+  color: var(--fg-faint);
+}
+
+.komut-ipucu {
+  flex: none;
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-wide);
+  white-space: nowrap;
+}
+
+.komut-durum {
+  padding: var(--sp-4);
+  margin: 0;
+}
+
+.komut-liste {
+  overflow-y: auto;
+  padding: var(--sp-2) 0;
+}
+
+.komut-grup-baslik {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-2) var(--sp-4);
+  color: var(--fg-faint);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+/* Grup başlığındaki sayı, KIRPILMAMIŞ toplamdır: listede 20 satır görünürken
+ * gerçekte 37 sonuç olduğunu söyleyen tek yer burasıdır. */
+.komut-sayac {
+  padding: 0 var(--sp-2);
+  border-radius: var(--radius-full);
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+}
+
+.komut-secenek {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-4);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+
+/* Seçili satır YALNIZ renkle anlatılmaz: sol kenardaki şerit, renk ayrımını
+ * zor gören kullanıcıda da imlecin nerede olduğunu söyler. */
+.komut-secenek[aria-selected="true"] {
+  background: var(--accent-wash);
+  border-left-color: var(--accent);
+}
+
+.komut-secenek-bas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  color: var(--fg);
+  font-size: var(--fs-base);
+}
+
+.komut-secenek-alt {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+/* Eşleşme parçası tek satırda kalır: liste bir gezinme aracıdır, okuma
+ * yüzeyi değil. Tamamı belgenin kendisinde. */
+.komut-eslesme-parca {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.komut-belge-no {
+  color: var(--fg-faint);
+  font-size: var(--fs-sm);
+}
+
+/* Eşleşmenin HANGİ alandan geldiği. Kanıtın kaynağını adlandırır. */
+.komut-eslesme-alan {
+  flex: none;
+  padding: 0 var(--sp-1);
+  border-radius: var(--radius-sm);
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+}
+
+.komut-alt {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border-top: 1px solid var(--line-soft);
+}
+
+/* --------------------------------------------------------------------- */
+/* Belge seçici                                                          */
+/* --------------------------------------------------------------------- */
+
+.belge-secici {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.belge-secici-arama {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.belge-secici-suzgecler {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--sp-4);
+}
+
+.belge-secici-cipler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+
+.belge-secici-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+}
+
+.belge-secici-liste > li + li {
+  border-top: 1px solid var(--line-soft);
+}
+
+.belge-secici-satir {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  width: 100%;
+  text-align: start;
+  padding: var(--sp-3) var(--sp-4);
+  background: transparent;
+  border: 0;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--fg);
+}
+
+.belge-secici-satir:hover {
+  background: var(--bg);
+}
+
+/* Seçili belge, komut paletiyle AYNI dille işaretlenir (sol şerit + yıkama):
+ * iki yüzey aynı jesti öğretiyorsa aynı görünmeli. */
+.belge-secici-satir[aria-current="true"] {
+  background: var(--accent-wash);
+  border-left-color: var(--accent);
+}
+
+.belge-secici-bas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-size: var(--fs-base);
+}
+
+.belge-secici-no {
+  color: var(--fg-faint);
+  font-size: var(--fs-sm);
+}
+
+.belge-secici-ozet {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.belge-secici-alt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.belge-secici-alt > p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------- */
+/* Ortak                                                                 */
+/* --------------------------------------------------------------------- */
+
+/* Belgenin ne olduğunu söyleyen rozet — kampanya mı, akit mi.
+ * `badge-expired` (geçerlilik) ile KARIŞTIRILMAMALI: biri belgenin TÜRÜNÜ,
+ * öteki kampanyanın hâlâ geçerli olup olmadığını söyler. İki ayrı soru,
+ * iki ayrı renk. */
+.badge-sozlesme {
+  background: var(--bg-3);
+  color: var(--fg-dim);
+}
+
+/* Eşleşen harfler. Vurgu sarısı bu üründe kaynak-span rengidir ve arama da
+ * bir kaynak gösterme jestidir — aynı anlam, aynı renk. */
+.komut-secenek mark,
+.belge-secici-satir mark {
+  background: var(--mark);
+  color: var(--on-mark);
+  border-radius: var(--radius-sm);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .komut-paleti {
+    animation: komut-acil var(--dur-fast) var(--ease);
+  }
+}
+
+@keyframes komut-acil {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--sp-2)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

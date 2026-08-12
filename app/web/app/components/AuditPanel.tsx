@@ -25,6 +25,7 @@ import {
   formatValue,
 } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
+import BelgeSecici from "./BelgeSecici";
 import BelgeyiIndir from "./BelgeyiIndir";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
@@ -77,25 +78,17 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
         </p>
 
         <div className="row-tight">
-          <label className="small muted" htmlFor="audit-doc">
-            Belge
-          </label>
-          <select
-            id="audit-doc"
-            className="select"
-            value={id ?? ""}
-            onChange={(e) => {
-              setId(Number(e.target.value));
+          {/* Belge seçimi 1.774 seçenekli çıplak bir <select>'ti — arayüzdeki
+              en büyük gezinme boşluğu. Aranamayan bir liste, içindeki 126
+              sözleşmeyi ve 458 süresi dolmuş belgeyi de bulunamaz kılıyordu.
+              Seçici artık arama ve yön çipleri taşıyor; süzme sunucuda. */}
+          <BelgeSecici
+            seciliId={id}
+            onSec={(yeni) => {
+              setId(yeni);
               setActive(null);
             }}
-          >
-            {campaigns.map((c) => (
-              <option key={c.id} value={c.id}>
-                #{c.id} — {c.bank_name || c.bank}
-                {c.campaign_type ? ` · ${c.campaign_type}` : ""}
-              </option>
-            ))}
-          </select>
+          />
 
           {/* Uzun belgeyi ekranda uzun uzun göstermek yerine kâğıda/PDF'e
               taşıma yolu. Tarayıcının kendi yazdırma yolu kullanılıyor;

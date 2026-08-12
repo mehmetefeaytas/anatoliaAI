@@ -1,0 +1,36 @@
+{
+  "aciklama": "Sunucu (src/preprocessing/clean.tr_fold_ascii) ile istemcinin (web/app/lib/arama.ts trKatla) AYNI katlamayı ürettiğini kanıtlayan ortak fikstür. İki test de BU dosyayı okur; beklenen değerler iki dilde ayrı ayrı yazılsaydı biri güncellenip diğeri unutulduğunda arama sessizce ayrışırdı (sunucu bulur, istemci bulmaz).",
+  "kosanlar": [
+    "tests/test_arama_ucu.py",
+    "web/tests/arama.test.ts"
+  ],
+  "ornekler": [
+    { "girdi": "İhtiyaç Finansmanı", "katli": "ihtiyac finansmani" },
+    { "girdi": "IŞIK", "katli": "isik" },
+    { "girdi": "Kâr Payı Oranı", "katli": "kar payi orani" },
+    { "girdi": "KONUT FİNANSMANI", "katli": "konut finansmani" },
+    { "girdi": "Taşıt", "katli": "tasit" },
+    { "girdi": "ihtiyac", "katli": "ihtiyac" },
+    { "girdi": "Kuveyt Türk", "katli": "kuveyt turk" },
+    { "girdi": "Türkiye Emlak Katılım", "katli": "turkiye emlak katilim" },
+    { "girdi": "Vakıf Katılım", "katli": "vakif katilim" },
+    { "girdi": "ÖZEL CARİ HESAP", "katli": "ozel cari hesap" },
+    { "girdi": "Ödül", "katli": "odul" },
+    { "girdi": "çğıöşü", "katli": "cgiosu" },
+    { "girdi": "ÇĞIÖŞÜ", "katli": "cgiosu" },
+    { "girdi": "MÜŞAREKE", "katli": "musareke" },
+    { "girdi": "murâbaha", "katli": "murabaha" },
+    { "girdi": "30.000 TL", "katli": "30.000 tl" },
+    { "girdi": "%1,79", "katli": "%1,79" },
+    {
+      "girdi": "https://www.kuveytturk.com.tr/kampanyalar",
+      "katli": "https://www.kuveytturk.com.tr/kampanyalar"
+    },
+    { "girdi": "Alışveriş Puanı", "katli": "alisveris puani" },
+    { "girdi": "Yeni Müşteri", "katli": "yeni musteri" },
+    { "girdi": "İİİ", "katli": "iii" },
+    { "girdi": "ıIiİ", "katli": "iiii" },
+    { "girdi": "Sükûk", "katli": "sukuk" },
+    { "girdi": "", "katli": "" }
+  ]
+}

@@ -263,6 +263,53 @@ export type CampaignParams = {
   govde?: boolean;
 };
 
+/**
+ * `GET /search` — bir sonucun NEDEN eşleştiği.
+ *
+ * `alan` sunucudaki sütun adıdır (bir sınıf etiketi, kullanıcıya dönük metin
+ * değil); ekranda okunacak karşılığı `lib/arama.ts` içindeki `alanEtiketi()`
+ * ile üretilir. `parca` eşleşmenin ÖZGÜN yazımıyla, bağlamı içinde kesilmiş
+ * hâlidir — kırpılan uçlarda '…' bulunur.
+ */
+export type AramaEslesmesi = {
+  alan: string;
+  parca: string;
+};
+
+export type AramaBankasi = {
+  slug: string;
+  name: string;
+  /**
+   * Bu bankanın KORPUSTAKİ TOPLAM belge sayısı — eşleşen belge sayısı DEĞİL.
+   * Grup bir gezinme hedefidir ("bu bankaya git"), bir sonuç sayacı değil.
+   */
+  campaign_count: number;
+};
+
+export type AramaBelgesi = {
+  id: number;
+  bank: string;
+  bank_name: string | null;
+  campaign_type: string | null;
+  belge_turu: BelgeTuru | null;
+  campaign_status: CampaignStatus | null;
+  eslesme: AramaEslesmesi;
+};
+
+/**
+ * Gruplu arama sonucu.
+ *
+ * `toplam` süzgeç sonrası GERÇEK sayıları taşır; listeler `limit` ile
+ * kırpılmıştır. İkisini karıştırmak "başka sonuç yok" izlenimi verirdi.
+ */
+export type AramaSonucu = {
+  sorgu: string;
+  banks: AramaBankasi[];
+  campaigns: AramaBelgesi[];
+  types: string[];
+  toplam: { banks: number; campaigns: number; types: number };
+};
+
 /** Bir bankanın veri kapsamı: kaç belge, kaç ÇEŞİT alan. */
 export type BankaKapsami = {
   belge: number;
@@ -752,7 +799,20 @@ async function readError(res: Response): Promise<string> {
   return `Sunucu ${res.status} döndü.`;
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+/**
+ * Süzgeç sonrası TOPLAM kayıt sayısını taşıyan yanıt başlığı.
+ *
+ * Sunucu `GET /campaigns` gövdesini çıplak liste olarak KORUR (zarfa sarmak
+ * her çağıranı aynı anda kırardı) ve toplamı bu başlığa yazar. Belge seçici
+ * "1774 belgeden 50'si" diyebilmek için tam olarak bu sayıya muhtaç: dilim
+ * alındıktan sonra toplam gövdeden geri getirilemez.
+ */
+const TOPLAM_BASLIK = "X-Toplam-Kayit";
+
+/** Gövde + sayfalama üstverisi. `toplam` başlık yoksa `null` (uydurulmaz). */
+export type Sayfa<T> = { kayitlar: T; toplam: number | null };
+
+async function istek<T>(path: string, init?: RequestInit): Promise<Sayfa<T>> {
   let res: Response;
   try {
     res = await fetch(path, init);
@@ -768,12 +828,20 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
         ? `API'ye ulaşılamıyor ya da sunucu hata verdi. ${OFFLINE_HINT}`
         : "İstek reddedildi (geçersiz parametre olabilir).");
   }
+  let veri: T;
   try {
-    return (await res.json()) as T;
+    veri = (await res.json()) as T;
   } catch {
     throw new ApiError("Yanıt JSON olarak ayrıştırılamadı.", res.status,
       "Proxy doğru uca bağlı mı? (next.config.js /api/* yönlendirmesi)");
   }
+  const ham = res.headers.get(TOPLAM_BASLIK);
+  const sayi = ham === null ? Number.NaN : Number.parseInt(ham, 10);
+  return { kayitlar: veri, toplam: Number.isFinite(sayi) ? sayi : null };
+}
+
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  return (await istek<T>(path, init)).kayitlar;
 }
 
 export const api = {
@@ -795,6 +863,40 @@ export const api = {
     }
     const q = p.toString();
     return request<CampaignSummary[]>(`/api/campaigns${q ? `?${q}` : ""}`);
+  },
+  /**
+   * `campaigns()` ile AYNI uç, ama süzgeç sonrası TOPLAMI da döndürür
+   * (`X-Toplam-Kayit` başlığı).
+   *
+   * Ayrı bir metot çünkü toplam çağıranların çoğunu ilgilendirmiyor ve
+   * `campaigns()`in dönüş tipini değiştirmek her çağıranı kırardı. Belge
+   * seçici bu sayıya muhtaç: "1774 belgeden 50'si gösteriliyor" cümlesi,
+   * kullanıcının listeyi tam sanmasını engelleyen tek şey.
+   */
+  campaignsSayfa: (params: CampaignParams = {}) => {
+    const p = new URLSearchParams();
+    for (const [ad, deger] of Object.entries(params)) {
+      if (deger !== undefined && deger !== null && deger !== "") {
+        p.set(ad, String(deger));
+      }
+    }
+    const q = p.toString();
+    return istek<CampaignSummary[]>(`/api/campaigns${q ? `?${q}` : ""}`);
+  },
+  /**
+   * Gruplu arama — bankalar, belgeler, kampanya türleri tek istekte.
+   *
+   * Eşleştirme SUNUCUDA yapılır: Türkçe katlama kuralı (`tr_fold_ascii`) veri
+   * katmanına aittir ve TSX'e kopyalansaydı iki yerde yaşardı. İstemcideki
+   * `lib/arama.ts` aynı katlamayı YALNIZCA vurgulama ve yerinde daraltma için
+   * uygular; ikisinin aynı sonucu verdiği ortak bir fikstürle kanıtlanır.
+   *
+   * Boş sorgu boş sonuç döndürür — uç, tuş başına çağrılıyor.
+   */
+  search: (q: string, limit?: number) => {
+    const p = new URLSearchParams({ q });
+    if (limit !== undefined) p.set("limit", String(limit));
+    return request<AramaSonucu>(`/api/search?${p.toString()}`);
   },
   /**
    * Korpusun sayısal özeti. Kampanya türü listesi buradan gelir — eskiden

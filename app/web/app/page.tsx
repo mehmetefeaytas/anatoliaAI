@@ -40,6 +40,7 @@ import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
 import JuryModeToggle from "./components/JuryModeToggle";
+import KomutPaleti from "./components/KomutPaleti";
 import SohbetCekmecesi, {
   type SohbetBaglami,
 } from "./components/SohbetCekmecesi";
@@ -137,6 +138,9 @@ function Dashboard() {
   // Banka sayfasının öznesi. `auditTarget` ile aynı desen: bir ekran başka bir
   // ekranın konusunu belirleyebilmeli, kullanıcı seçimi elle tekrarlamamalı.
   const [bankaTarget, setBankaTarget] = useState<string | null>(null);
+  // Komut paletinden seçilen kampanya türü. Tür bir ekran değil süzgeç;
+  // kıyas paneline başlangıç değeri olarak geçiyor.
+  const [turSuzgeci, setTurSuzgeci] = useState<string | null>(null);
 
   // Jüri modu kapatılınca tazeleme sekmesinde kalmak boş bir panel bırakırdı;
   // görünmeyen bir sekmede durmak yerine varsayılana dönülür.
@@ -220,7 +224,11 @@ function Dashboard() {
           (fields.loading ? (
             <Loading label="Alan listesi yükleniyor…" />
           ) : fields.data && fields.data.length > 0 ? (
-            <ComparePanel fields={fields.data} campaignTypes={campaignTypes} />
+            <ComparePanel
+              fields={fields.data}
+              campaignTypes={campaignTypes}
+              baslangicTuru={turSuzgeci}
+            />
           ) : !fields.error ? (
             <AlanListesiBos />
           ) : null)}
@@ -281,6 +289,25 @@ function Dashboard() {
           Çekmece açıldığı ekranı biliyor ve hazır soruları ona göre veriyor;
           sabit liste her ekranda aynı altı soruyu gösteriyordu. */}
       <SohbetCekmecesi baglam={sohbetBaglami(sekme)} onInspect={inspect} />
+
+      {/* Komut paleti (⌘K / Ctrl+K) — uygulamada hiç arama yoktu.
+          1.774 belge tek bir <select> içindeydi ve bankaya, türe ya da
+          belgeye gitmenin başka yolu yoktu. Palet kendi açılma durumunu ve
+          klavye dinleyicisini taşıyor; buradaki tek iş, seçimin hangi ekrana
+          düştüğünü söylemek. */}
+      <KomutPaleti
+        onSec={(secim) => {
+          if (secim.tur === "banka") bankaAc(secim.slug);
+          else if (secim.tur === "belge") inspect(secim.id);
+          else {
+            // Kampanya türü bir SÜZGEÇ, bir ekran değil: kıyas ekranına
+            // götürüp türü oraya taşımak, kullanıcıyı aradığı şeyin
+            // kıyaslandığı yere bırakır.
+            setTurSuzgeci(secim.ad);
+            setSekme("compare");
+          }
+        }}
+      />
     </main>
   );
 }

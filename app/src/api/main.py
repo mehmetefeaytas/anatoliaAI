@@ -9,6 +9,7 @@ Uçlar:
   GET  /banks
   GET  /campaigns?govde=&q=&bank=&type=&belge_turu=&status=&limit=&offset=
                                          (belge listesi — ham gövde OPSİYONEL)
+  GET  /search?q=&limit=                 (gruplu arama — banka / belge / tür)
   GET  /stats                            (korpusun sayısal özeti — tek istek)
   GET  /campaigns/{campaign_id}/text     (kaynak metin + alan offset'leri — vurgulama)
   GET  /compare?field=kar_payi_orani&intent=lowest&type=Konut+Finansmanı
@@ -178,7 +179,12 @@ from ..comparison.compare import (
     yon_zorla,
 )
 from ..comparison.contradiction import detect as detect_contradictions
-from ..db.base import belge_turu_dogrula, kampanya_durumu_dogrula
+from ..db.base import (
+    ARAMA_AZAMI_LIMIT,
+    ARAMA_VARSAYILAN_LIMIT,
+    belge_turu_dogrula,
+    kampanya_durumu_dogrula,
+)
 from ..db.factory import create_repository
 from ..extraction.llm.extractor import default_extractor
 from ..extraction.llm.schema import EXTRACTION_FIELDS
@@ -959,6 +965,84 @@ def build_app():
         if limit is None:
             return rows[offset:]
         return rows[offset:offset + limit]
+
+    @app.get("/search")
+    def search(q: str = "", limit: int = ARAMA_VARSAYILAN_LIMIT):
+        """Gruplu arama: bankalar, belgeler, kampanya türleri — tek istekte.
+
+        ## Neden ayrı bir uç, `/campaigns?q=` yetmiyor mu
+
+        Yetmiyor, iki sebeple:
+
+        1. **Gruplama.** Kullanıcı 'kuveyt' yazdığında aradığı şey bazen bir
+           banka, bazen bir belge, bazen bir kampanya türüdür. Düz bir belge
+           listesi bu üç niyeti tek kovaya sıkıştırır ve en sık istenen
+           (bankaya git) en pahalı yol olur.
+        2. **`eslesme` — NEDEN eşleşti.** Yanıttaki her belge, hangi alanın
+           hangi bağlamda eşleştiğini taşır. Bu ürünün her yüzeyinde bir iddia
+           kaynağını gösterir; arama bir istisna olmamalı. Kanıtsız bir arama
+           kutusu, kullanıcının sonucu doğrulayamadığı bir kutudur.
+
+        ## Maliyet
+
+        Yalnız KISA sütunlar taranır (`db.base.ARAMA_ALANLARI`): banka adı,
+        kampanya türü, özet, adres. Ham gövde **taranmaz** — korpusta ~10 MB
+        ve bu uç tuş başına çağrılıyor. Belge içinde arama `/chat` yoludur.
+
+        ## Sayılar
+
+        `toplam` süzgeç sonrası GERÇEK sayıları bildirir; `limit` yalnız
+        gösterilen listeleri kırpar. Kırpılmış bir listeyi tam sanmak, komut
+        paletinde 'başka sonuç yok' izlenimi verirdi.
+
+        `banks[].campaign_count` o bankanın KORPUSTAKİ TOPLAM belge sayısıdır,
+        eşleşen belge sayısı değil: grup bir gezinme hedefidir ('bu bankaya
+        git'), bir sonuç sayacı değil. İki sayıyı aynı adla basmamak için fark
+        burada yazılıdır.
+
+        Otorite kaynakları (TKBB gibi sektör kuruluşları) `banks` grubundan
+        SÜZÜLÜR — `/banks` ile aynı gerekçe: kaynak olmak banka olmak değildir.
+        Belgeleri `campaigns` grubunda GÖRÜNMEYE devam eder; süzme gizleme
+        değildir.
+        """
+        if limit < 0:
+            raise HTTPException(
+                status_code=400, detail=f"limit negatif olamaz (limit={limit}).")
+        limit = min(limit, ARAMA_AZAMI_LIMIT)
+
+        kayitlar = repo.search_campaigns(q)
+        otorite = _otorite_kaynak_sluglari()
+        banka_sayilari = repo.campaigns_per_bank()
+
+        gorulen: dict[str, Optional[str]] = {}
+        turler: set[str] = set()
+        for r in kayitlar:
+            gorulen.setdefault(r["bank"], r.get("bank_name"))
+            if r.get("campaign_type"):
+                turler.add(r["campaign_type"])
+
+        banks = sorted(
+            ({"slug": slug, "name": ad or slug,
+              "campaign_count": banka_sayilari.get(slug, 0)}
+             for slug, ad in gorulen.items() if slug not in otorite),
+            key=lambda b: (-b["campaign_count"], b["slug"]))
+        types = sorted(turler)
+        campaigns = [
+            {"id": r["id"], "bank": r["bank"], "bank_name": r.get("bank_name"),
+             "campaign_type": r.get("campaign_type"),
+             "belge_turu": r.get("belge_turu"),
+             "campaign_status": r.get("campaign_status"),
+             "eslesme": r["eslesme"]}
+            for r in kayitlar[:limit]]
+
+        return {
+            "sorgu": q,
+            "banks": banks[:limit],
+            "campaigns": campaigns,
+            "types": types[:limit],
+            "toplam": {"banks": len(banks), "campaigns": len(kayitlar),
+                       "types": len(types)},
+        }
 
     @app.get("/stats")
     def stats():

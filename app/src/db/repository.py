@@ -28,6 +28,9 @@ from .base import (
     BELGE_TURLERI,
     KAMPANYA_DURUMLARI,
     KAMPANYA_DURUMU_DAMGASIZ,
+    arama_sutunlari,
+    arama_suz,
+    arama_where,
     belge_turu_dogrula,
     extractor_dogrula,
     finalize_campaign_text,
@@ -604,6 +607,30 @@ class Repository:
                + where + "ORDER BY c.id")
         rows = self.conn.execute(sql, tuple(params)).fetchall()
         return kampanya_metin_suz([dict(r) for r in rows], q)
+
+    def search_campaigns(self, q: Optional[str], *,
+                         bank: Optional[str] = None,
+                         campaign_type: Optional[str] = None,
+                         belge_turu: Optional[str] = None,
+                         status: Optional[str] = None) -> list[dict]:
+        """Serbest arama — eşleşen satırlar + **neden eşleştikleri**.
+
+        `all_campaigns(q=...)`ten iki farkı var: sütun listesi kısadır
+        (`arama_sutunlari()`, ham gövde hiç seçilmez) ve her satır bir
+        `eslesme` alanı taşır. Boş sorgu BOŞ liste döndürür — gerekçe
+        `base.arama_suz()` docstring'inde.
+
+        Süzgeç metni ve eşleşme mantığı `base.py`den gelir; burada yalnız
+        yer tutucu (`?`) ve bağlantı yolu farklıdır.
+        """
+        where, params = arama_where(
+            yer_tutucu="?", bank=bank, campaign_type=campaign_type,
+            belge_turu=belge_turu, status=status)
+        sql = ("SELECT " + arama_sutunlari()
+               + " FROM campaigns c JOIN banks b ON b.id=c.bank_id "
+               + where + "ORDER BY c.id")
+        rows = self.conn.execute(sql, tuple(params)).fetchall()
+        return arama_suz([dict(r) for r in rows], q)
 
     def close(self):
         self.conn.close()

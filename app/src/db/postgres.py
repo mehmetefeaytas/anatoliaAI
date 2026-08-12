@@ -83,6 +83,9 @@ from .base import (
     KAMPANYA_DURUMU_DAMGASIZ,
     ON_NUL_MODES,
     NulByteInText,
+    arama_sutunlari,
+    arama_suz,
+    arama_where,
     belge_turu_dogrula,
     extractor_dogrula,
     finalize_campaign_text,
@@ -577,6 +580,33 @@ class PostgresRepository:
             cur.execute(sql, tuple(params))
             rows = [dict(r) for r in cur.fetchall()]
         return kampanya_metin_suz(rows, q)
+
+    def search_campaigns(self, q: Optional[str], *,
+                         bank: Optional[str] = None,
+                         campaign_type: Optional[str] = None,
+                         belge_turu: Optional[str] = None,
+                         status: Optional[str] = None) -> list[dict]:
+        """Serbest arama — eşleşen satırlar + **neden eşleştikleri**.
+
+        Sütun listesi (`arama_sutunlari()`), kapsam süzgeci (`arama_where()`)
+        ve eşleşme mantığı (`arama_suz()`) `base.py`den gelir; SQLite
+        yolundan TEK farkı yer tutucudur (`%s` vs `?`). Gerekçe ve semantik
+        o dosyadaki eşdeğerde yazılı.
+
+        `arama_sutunlari()` `scraped_at` SEÇMEZ, bu yüzden burada
+        `_SCRAPED_AT_ISO` dönüşümü de gerekmez — iki backend'in ayrışabildiği
+        tek sütun sorgunun dışında kalır.
+        """
+        where, params = arama_where(
+            yer_tutucu="%s", bank=bank, campaign_type=campaign_type,
+            belge_turu=belge_turu, status=status)
+        sql = ("SELECT " + arama_sutunlari()
+               + " FROM campaigns c JOIN banks b ON b.id=c.bank_id "
+               + where + "ORDER BY c.id")
+        with self._read() as cur:
+            cur.execute(sql, tuple(params))
+            rows = [dict(r) for r in cur.fetchall()]
+        return arama_suz(rows, q)
 
     def close(self) -> None:
         self.conn.close()

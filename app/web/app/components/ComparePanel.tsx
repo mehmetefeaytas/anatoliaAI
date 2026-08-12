@@ -67,7 +67,7 @@
  * başlığında.
  */
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { api } from "../lib/api";
 import type { CompareRow, FieldMeta, PerBank } from "../lib/api";
 import { extractorClass, extractorLabel, formatValue } from "../lib/format";
@@ -93,6 +93,16 @@ const INTENTS: { key: Intent; label: string }[] = [
 type Props = {
   fields: FieldMeta[];
   campaignTypes: string[];
+  /**
+   * Dışarıdan gelen kampanya türü süzgeci — komut paletinden bir tür
+   * seçildiğinde kullanılır.
+   *
+   * Tür bir EKRAN değil bir SÜZGEÇTİR: palette «Konut Finansmanı» seçen
+   * kullanıcıyı ayrı bir sayfaya götürmek yerine, aradığı şeyin kıyaslandığı
+   * yere bırakıp süzgeci onun adına ayarlamak doğru olan. Değer değişince
+   * yerel duruma yazılır; sonrasında kullanıcı süzgeci serbestçe değiştirir.
+   */
+  baslangicTuru?: string | null;
 };
 
 /** Türü boş gelen satırların bölüm başlığı. */
@@ -130,10 +140,21 @@ function turlereBol(
   });
 }
 
-export default function ComparePanel({ fields, campaignTypes }: Props) {
+export default function ComparePanel({
+  fields,
+  campaignTypes,
+  baslangicTuru,
+}: Props) {
   const [field, setField] = useState(fields[0]?.field ?? "kar_payi_orani");
   const [intent, setIntent] = useState<Intent>("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState(baslangicTuru ?? "");
+
+  // Palet açıkken kullanıcı ikinci kez tür seçebilir; o zaman bileşen zaten
+  // takılı olduğu için `useState` başlangıcı yeniden çalışmaz. Değer
+  // değiştiğinde süzgeç güncellenir — sonrası yine kullanıcının.
+  useEffect(() => {
+    if (baslangicTuru) setType(baslangicTuru);
+  }, [baslangicTuru]);
   const [perBank, setPerBank] = useState<PerBank>("best");
   const { jury } = useJuryMode();
 
