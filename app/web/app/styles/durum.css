@@ -1,0 +1,477 @@
+/* Anatolia AI — DURUMLAR: şerit, tek bant, boşluk, iskelet, ayrım.
+ *
+ * İlgili: tokens.css, ../components/DurumSeridi.tsx,
+ *         ../components/ErrorNotice.tsx, ../components/SummaryCoverage.tsx,
+ *         ../lib/saglik.tsx
+ *
+ * ## Neden durumlar kendi dosyasında ve kendi biçim dilinde
+ *
+ * Bu panelin tezi «ölçülemeyen alan boş bırakılır ve boşluğun kendisi sayılır».
+ * O tez, ancak boşluğun GÖRSEL BİR BİÇİMİ varsa okunur. Eskiden dört ayrı
+ * durum — API kapalı, alan boş, yükleniyor, değer sıfır — tek bir kalıba
+ * düşüyordu: `.notice` kutusu. Sonuç ölçüldü, sunumda görüldü: sunucu düşünce
+ * ekranda BEŞ ayrı kırmızı kutu belirdi ve hepsi aynı tek olayı anlatıyordu.
+ *
+ * Buradaki sınıflar dört durumu birbirinden AYIRIR:
+ *
+ *   .durum-serit   kalıcı şerit — her ekranda okunur, hiç kırmızı kutuya dönmez
+ *   .durum-bant    sunucu düştüğünde TEK sakin bant (uyarı, çökme değil)
+ *   .durum-bos     boş ≠ hata — nötr çerçeve + kesik taban çizgisi + kesir
+ *   .durum-iskelet yükleniyor — yapı hemen basılır, yalnız değerler bekler
+ *   .durum-ayrim   `null` ile `%0` asla aynı çubuğa çizilmez
+ *
+ * ## Renk TEK sinyal değil (WCAG 1.4.1)
+ *
+ * Her durum en az üç yolla söylenir: bir BİÇİM (nokta / kesik çizgi / dolgu),
+ * bir CÜMLE ve bir mono İŞARET (`✓` / `—`). Renk yalnız dördüncü tekrardır.
+ *
+ * ## Kırmızı yerine turuncu
+ *
+ * Sunucunun düşmesi bir çökme değil, dereceli bir bozulmadır: panel son okunan
+ * veriyi göstermeye ve kaynak metinleri açmaya devam eder. Bant bu yüzden
+ * `--warn` giyer, `--bad` giymez — kırmızı paniktir, turuncu durumdur. `--bad`
+ * gerçekten arızalı tek bir isteğe ayrılmıştır (`.notice-error`).
+ *
+ * Literal renk/boşluk YOK; grafik ÖLÇÜLERİ (8px nokta, 3px mürekkep işareti,
+ * 12px çubuk yüksekliği) literaldir çünkü onlar boşluk değil çizimdir.
+ * Kırılımlar dosyanın SONUNDA.
+ */
+
+/* ===================================================================
+ * 1. KALICI ŞERİT — API · depo · yerel model · korpus
+ *
+ * Araç çubuğunun sağ ucunda tek satır. Dar ekranda alta iner ve sarar;
+ * gizlenmez — sunumda sunucu düştüğünde okunacak ilk şey burası.
+ *
+ * Şerit MONO ve `--fs-xs`: bu satır verinin kendisi değil, verinin
+ * DURUMUDUR. Sağlıklı hâlde sakin (`--fg-dim`), bozukken `--warn`.
+ * ================================================================ */
+
+.durum-serit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+}
+
+.durum-cip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  white-space: nowrap;
+}
+
+/* `✓` / `—`: durumu renkten bağımsız taşıyan İKİNCİ sinyal. Ekran okuyucuya
+ * düşmez (`aria-hidden`) çünkü çipte durum ayrıca yazılı — iki kez okunması
+ * bilgi değil gürültü olurdu. */
+.durum-isaret {
+  font-family: var(--font-mono);
+  color: inherit;
+}
+
+/* Sayılar tabloyla aynı ritmi tutsun: değişen rakam satırı oynatmasın. */
+.durum-korpus {
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+}
+
+/* Nokta durumu TEKRAR ediyor, taşımıyor — her çipte durum ayrıca yazılı ve
+ * nokta aria-hidden. Renk tek sinyal olmamalı (WCAG 1.4.1). */
+.durum-nokta {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--ok);
+}
+
+/* ESKİDEN `--bad` idi. Şerit bir arıza tablosu değil, bir durum satırı: API'nin
+ * yanıt vermemesi panelin okunmasını bitirmiyor. Kırmızı, gerçekten arızalı
+ * tek bir isteğe ayrıldı. */
+.durum-kapali {
+  color: var(--warn);
+}
+
+.durum-kapali .durum-nokta {
+  background: var(--warn);
+}
+
+/* ===================================================================
+ * 2. TEK SAKİN BANT — sunucu düştüğünde
+ *
+ * Beş panelin beş ayrı kırmızı kutusu yok: olay tek, bant tek. Nokta,
+ * başlık cümlesi ve mono durum listesi aynı şeyi ÜÇ ayrı yolla söyler.
+ * ================================================================ */
+
+.durum-bant {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  border: 1px solid var(--warn);
+  /* PROVENANS ŞERİDİ: sol kenardaki 3px, olayın kaynağını söyler —
+   * `.rail-dikkat` ile aynı sözcük (geçerlilik/durum uyarısı). */
+  border-left: 3px solid var(--warn);
+  border-radius: var(--radius-md);
+  background: var(--warn-wash);
+  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-4);
+}
+
+.durum-bant-nokta {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: var(--radius-full);
+  background: var(--warn);
+}
+
+/* `32ch`: bant sarmadan önce başlık cümlesinin sığabildiği en küçük ölçü.
+ * `min-width: 0` olmadan uzun cümle mono listeyi taşırıyordu. */
+.durum-bant-govde {
+  flex: 1 1 32ch;
+  min-width: 0;
+}
+
+.durum-bant-baslik {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--fg);
+}
+
+/* Açıklama durum renginde DEĞİL, normal metin renginde okunur: uzun cümleyi
+ * doygun turuncuda basmak okunurluğu düşürüyordu (`.notice > p` ile aynı
+ * karar). */
+.durum-bant-aciklama {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+  max-width: var(--measure);
+}
+
+.durum-bant-saat {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Mono durum listesi: `api — · depo SQLite ✓ · yerel model ✓`. Sarmaz —
+ * ikiye bölünmüş bir durum listesi iki ayrı olay gibi okunur. */
+.durum-bant-liste {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--warn);
+  white-space: nowrap;
+}
+
+/* Bandın ALTINDAKİ panel hatası: kutu değil, tek satır atıf. API topluca
+ * kapalıyken her panelin kendi kırmızı kutusunu basması, tek olayı beş arıza
+ * gibi gösteriyordu. */
+.durum-atif {
+  margin: 0;
+  border-left: 3px solid var(--line);
+  padding-left: var(--sp-3);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+}
+
+/* ===================================================================
+ * 3. BOŞ ≠ HATA
+ *
+ * Nötr renk, uyarı rengi DEĞİL: boşluk bir hata değildir. Kutunun altındaki
+ * kesik taban çizgisi + mono kesir, boşluğa KENDİ görsel biçimini verir —
+ * «burada bir satır var ve içi ölçülemedi» der.
+ * ================================================================ */
+
+.durum-bos {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-4);
+}
+
+.durum-bos-baslik {
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+  color: var(--fg);
+}
+
+.durum-bos-govde {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+  max-width: var(--measure);
+}
+
+/* Çağıranın kendi açıklaması (eski `EmptyNotice` çocukları). Gövdeden sonra
+ * gelir: önce sistemin cümlesi, sonra panelin cümlesi. */
+.durum-bos-ek {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+}
+
+/* Şema adı MAKİNE verisidir: mono. */
+.durum-alan {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+
+.durum-bos-taban {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+/* Boşluğun İMZASI: kesik taban çizgisi. Dolu bir çubuk «ölçüldü» der, kesik
+ * çizgi «satır duruyor, değer yok» der. İkisi asla aynı biçim değildir. */
+.durum-bos-cizgi {
+  flex: 1;
+  border-bottom: 2px dotted var(--fg-faint);
+}
+
+.durum-bos-kesir {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+  white-space: nowrap;
+}
+
+/* ===================================================================
+ * 4. YÜKLENİYOR — cetvel önce çizilir
+ *
+ * Yapı hemen basılır, yalnız değerler bekler. Yükleme sırasında hiçbir sayı,
+ * hiçbir sıra numarası ve hiçbir animasyonlu sayaç görünmez: bir sayaç
+ * dönerken okunan sayı, hiç okunmamış bir sayıdır.
+ * ================================================================ */
+
+.durum-yukleniyor {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.durum-yukleniyor-etiket {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+.durum-iskelet {
+  display: grid;
+}
+
+/* İlk sütun genişliği tokenla türetildi (2 × --sp-10 = 128px): etiket sütunu
+ * bir BOŞLUK değil, bir cetvel ölçüsüdür ama gözle seçilmiş bir literal de
+ * olmamalı. */
+.durum-iskelet-satir {
+  display: grid;
+  grid-template-columns: calc(var(--sp-10) * 2) 1fr;
+  gap: var(--sp-4);
+  align-items: center;
+  min-height: var(--sp-6);
+  border-top: 1px solid var(--line-soft);
+}
+
+.durum-iskelet-satir:last-child {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.durum-iskelet-ad,
+.durum-iskelet-cubuk {
+  height: 12px;
+  background: var(--bg-3);
+}
+
+/* Ad sütunu tam genişlikte dolmaz: gerçek banka adları farklı uzunluktadır ve
+ * tam blok, yerini alacağı metinden daha «dolu» görünüyordu. */
+.durum-iskelet-ad {
+  width: 70%;
+}
+
+/* Tek satırlık şerit iskeleti (özet kapsamı sayacı): satır cetveli yok, ölçüsü
+ * kabuğun tamamı. */
+.durum-iskelet-genis {
+  display: block;
+  width: 100%;
+  height: 12px;
+  background: var(--bg-3);
+}
+
+.durum-iskelet-not {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--fg-faint);
+  max-width: var(--measure);
+}
+
+/* Nabız YALNIZ «bekliyor» der; bir oran, bir sayı ya da bir ilerleme İDDİA
+ * ETMEZ. `prefers-reduced-motion` altında kapanır (dosya sonu). */
+.durum-iskelet-ad,
+.durum-iskelet-cubuk,
+.durum-iskelet-genis {
+  animation: durum-nabiz 1600ms var(--ease) infinite;
+}
+
+@keyframes durum-nabiz {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* ===================================================================
+ * 5. `veri yok` ≠ `değer sıfır`
+ *
+ * Ürünün dürüstlük iddiasının çekirdeği. `null` ölçülemedi demektir; `%0`
+ * gerçek bir üründür ve alanın EN AVANTAJLI ucudur. İkisi aynı çubuğa
+ * çizilirse ölçülemeyen alan, en iyi teklif gibi sıralanır.
+ * ================================================================ */
+
+.durum-ayrim-kutu {
+  margin-top: var(--sp-3);
+}
+
+/* Katlanan başlık göz-üstü etiket biçimindedir: bu, verinin kendisi değil
+ * verinin ETİKETİ. */
+.durum-goz-ustu {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+.durum-ayrim-basi {
+  cursor: pointer;
+}
+
+.durum-ayrim {
+  display: grid;
+  gap: var(--sp-3);
+  margin-top: var(--sp-3);
+}
+
+.durum-ayrim-satir {
+  display: grid;
+  grid-template-columns: calc(var(--sp-10) * 2) 1fr;
+  gap: var(--sp-4);
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3);
+}
+
+/* İşaret hücresi: iki hâlin BİÇİM ayrımı burada yaşar. */
+.durum-ayrim-isaret {
+  display: flex;
+  align-items: center;
+  height: 12px;
+}
+
+/* `null` → kesik çizgi. Genişliği var, mürekkebi yok. */
+.durum-ayrim-kesik {
+  width: 100%;
+  border-bottom: 2px dotted var(--fg-faint);
+}
+
+/* `%0` → sıfır genişlikli ama GÖRÜNÜR mürekkep işareti. Çubuk boyu sıfırdır,
+ * varlığı değil: ölçülmüş bir değer ekranda iz bırakmak zorundadır. */
+.durum-ayrim-murekkep {
+  width: 3px;
+  height: 12px;
+  background: var(--accent);
+}
+
+.durum-ayrim-null {
+  border-color: var(--line);
+}
+
+.durum-ayrim-sifir {
+  border-color: var(--ok);
+  background: var(--ok-wash);
+}
+
+.durum-ayrim-etiket {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg);
+}
+
+.durum-ayrim-metin {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+}
+
+/* Sıfır hâli ölçülmüş bir olgudur; metni soluk değil TAM renkte okunur. */
+.durum-ayrim-sifir .durum-ayrim-metin {
+  color: var(--fg);
+}
+
+.durum-ayrim-metin b {
+  font-weight: var(--fw-medium);
+}
+
+.durum-ayrim-not {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--fg-faint);
+  max-width: var(--measure);
+}
+
+/* ===================================================================
+ * 6. ÖZET KAPSAMI — yükleme hâli
+ * ================================================================ */
+
+.ozet-kapsam-iskelet {
+  display: grid;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+
+/* ===================================================================
+ * KIRILIMLAR + HAREKET TERCİHİ — dosyanın SONUNDA
+ * ================================================================ */
+
+@media (max-width: 600px) {
+  .durum-serit {
+    /* Dar ekranda araç çubuğunun altına tam satır olarak iner. */
+    flex-basis: 100%;
+  }
+
+  /* Bant dar ekranda sarar; mono liste kendi satırına düşer ama SİLİNMEZ —
+   * üç sinyalden birini dar ekranda kaybetmek, renge geri dönmek olurdu. */
+  .durum-bant-liste {
+    flex-basis: 100%;
+  }
+
+  /* İskelet ve ayrım satırları tek sütuna iner: 128px etiket sütunu telefon
+   * genişliğinde metni 8-10 karaktere sıkıştırıyordu. */
+  .durum-iskelet-satir,
+  .durum-ayrim-satir {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .durum-iskelet-ad,
+  .durum-iskelet-cubuk,
+  .durum-iskelet-genis {
+    animation: none;
+  }
+}

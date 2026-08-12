@@ -6,9 +6,10 @@
 
 ## Ne için var
 
-Sistemin bir sonraki fazında bankaların kampanyaları ve finansal ürünleri
-arayüzden eklenebilecek. Bu dosya o uçların adreslerini, gövde alanlarını ve
-kapalı olma gerekçelerini TEK YERDE tanımlar; `main.py` uçları buradan kurar ve
+Sistemin bir sonraki fazında — **yakın dönem, bir iş birliği durumunda** —
+bankaların kampanyaları ve finansal ürünleri arayüzden eklenebilecek. Bu dosya
+o uçların adreslerini, gövde alanlarını, ZAMAN ÇERÇEVESİNİ ve kapalı olma
+gerekçelerini TEK YERDE tanımlar; `main.py` uçları buradan kurar ve
 `AyarlarPanel` listeyi `/admin/plan`'dan okur.
 
 Sözleşmeyi arayüzde ikinci kez yazmak, bu projede altı kez tekrarlayan «aynı
@@ -52,11 +53,32 @@ from __future__ import annotations
 
 from typing import Any
 
+#: NE ZAMAN açılacağı — ekranın en üstünde, kaçırılamayacak bir ağırlıkla
+#: duran cümle. Eskiden hiçbir yerde yazmıyordu: ekran yalnızca "gelecek faz"
+#: diyordu ve "gelecek faz" bir takvim değil, bir erteleme gibi okunuyordu.
+#: Bu uçlar bir ürün yol haritası maddesi değil, bir İŞ BİRLİĞİ koşuludur —
+#: bankanın kendi verisini girmesi ancak o ilişki kurulduğunda anlamlıdır.
+ZAMAN_CERCEVESI = "Yakın dönem / iş birliği durumunda"
+
+#: Ekranın en büyük punto cümlesi — takvimi söyler. Arayüzde SABİT YAZILMAZ,
+#: buradan okunur: başlık ile gerekçe iki ayrı yerde yaşasaydı, biri
+#: değiştiğinde diğeri eski ifadeyi göstermeye devam ederdi (bu depoda altı
+#: kez tekrarlayan kusur).
+KAPALI_BASLIK = f"{ZAMAN_CERCEVESI} açılacak"
+
+#: Başlığın üstündeki küçük durum etiketi. Takvim ile DURUM ayrı iki bilgidir:
+#: "ne zaman" büyük puntoda, "şu an ne" küçük puntoda.
+KAPALI_DURUM_ETIKETI = "Bu sürümde kapalı"
+
 #: Ekranda ve `/admin/plan` yanıtında görünen tek gerekçe metni. `main.py`'nin
 #: 501 gövdesi de bunu kullanır — iki metin ayrışırsa ekran ile sunucu farklı
 #: sebep söyler.
 KAPALI_SEBEBI = (
-    "Bu uç gelecek faz için TANIMLI, ancak bu sürümde kapalı. Arayüzden elle "
+    # Vurgu büyük harfle YAPILMAZ: "YAKIN" harf katlamada (casefold) "yakin"
+    # olur — Türkçe İ/ı tuzağı — ve cümleyi arayan denetim/arama yolları
+    # ıskalar. Aynı ders korpus tarafında da ölçülmüştü (ALL-CAPS başlıklar).
+    "Bu uç yakın dönem için tanımlı ve bir iş birliği durumunda açılacak; "
+    "bu sürümde kapalı. Arayüzden elle "
     "girilen bir kayıt, korpustaki her belgenin taşıdığı kaynak zincirini "
     "(ham sayfa + toplama zamanı + kaynak adresi + karakter aralığı) "
     "taşımadığı için ölçüm yollarına giremez. Bugün banka ve kampanya ekleme "
@@ -134,6 +156,8 @@ def plan() -> dict[str, Any]:
     """`/admin/plan` yanıtı — arayüzün çizdiği sözleşmenin tamamı."""
     return {
         "acik": False,
+        "baslik": KAPALI_BASLIK,
+        "durum_etiketi": KAPALI_DURUM_ETIKETI,
         "sebep": KAPALI_SEBEBI,
         "bugunku_yol": BUGUNKU_YOL,
         "uclar": [

@@ -59,19 +59,45 @@ CIFTLER: tuple[tuple[str, str, str], ...] = (
     ("--fg-dim", "--bg-3", "çip üzerindeki ikincil etiket"),
     ("--fg-faint", "--bg", "üçüncül not, sayfa zemininde"),
     ("--fg-faint", "--bg-2", "üçüncül not, kart içinde"),
+    # v2 tasarımda mono göz-üstü etiketi (`--fg-faint`) çip ve dolgu zemininde
+    # (`--bg-3`) de basılıyor: kapsama cetvelinin `veri yok · N belge` etiketi,
+    # ısı haritasının `belgesiz` hücresi, alan çipleri. Çift bugüne kadar
+    # ölçülmemişti ve KOYU temada 4,39:1 ile eşiğin ALTINDAYDI — bu yüzden
+    # `--fg-faint` koyu değeri `#8a8a93` → `#8e8e97` yapıldı (gerekçe:
+    # web/app/styles/tokens.css).
+    ("--fg-faint", "--bg-3", "mono göz-üstü etiketi, dolgu zemininde"),
     ("--accent-soft", "--bg", "bağlantı, girintili yüzeyde"),
     ("--accent-soft", "--bg-2", "bağlantı, kart içinde"),
+    # v2'de `--accent` artık yalnız DOLGU değil, METİN rengi olarak da basılıyor:
+    # arama eşleşmesinin vurgusu (`.arama-vurgu`), komut paletinde seçili satırın
+    # başlığı, kapsama sayacının kesri. Eşleşme vurgusu için `--mark` KULLANILMADI
+    # — vurgu sarısı yalnız kaynak span'ine ait — ve bu karar `--accent`i metin
+    # rengi yaptı. Üç çift de geçiyor ama kapıda olmadıkları için sessizce
+    # bozulabilirlerdi.
+    ("--accent", "--bg", "arama vurgusu / kesir, girintili yüzeyde"),
+    ("--accent", "--bg-2", "arama vurgusu / kesir, kart içinde"),
+    ("--accent", "--accent-wash", "komut paletinde seçili satırın başlığı"),
     ("--on-accent", "--accent", "birincil düğme metni"),
     ("--on-mark", "--mark", "span vurgusu"),
     ("--ok", "--bg", "rozet: kural katmanı"),
     ("--ok", "--bg-2", "rozet: kural katmanı, kart içinde"),
     ("--ok", "--ok-wash", "başarı bildirimi"),
-    ("--warn", "--bg", "rozet: LLM katmanı"),
-    ("--warn", "--bg-2", "rozet: LLM katmanı, kart içinde"),
+    ("--warn", "--bg", "rozet: uyarı"),
+    ("--warn", "--bg-2", "rozet: uyarı, kart içinde"),
     ("--warn", "--warn-wash", "uyarı bildirimi"),
     ("--bad", "--bg", "rozet: düşük güven"),
     ("--bad", "--bg-2", "rozet: düşük güven, kart içinde"),
     ("--bad", "--bad-wash", "hata bildirimi"),
+    # `--llm` bu paletin en yeni rengi ve KENDİ çiftlerini getirir: eskiden
+    # `.badge-llm` `--warn` ödünç alıyordu, yani ölçülen çift zaten vardı.
+    # Ödünç bitti; ölçüm de kendi adına yapılır.
+    ("--llm", "--bg", "rozet: LLM katmanı (üretilmiş)"),
+    ("--llm", "--bg-2", "rozet: LLM katmanı, kart içinde"),
+    ("--llm", "--llm-wash", "üretilmiş içerik şeridi / etiketi"),
+    # Karantina kaydında banka adı `--fg`, gerekçesi `--fg-dim`: "bir güçlü
+    # satır + bir fısıltı". Fısıltı `--bad-wash` zemininde okunuyor ve o çift
+    # bugüne kadar ölçülmemişti.
+    ("--fg-dim", "--bad-wash", "karantina kaydının fısıltı satırı"),
 )
 
 _HEX = re.compile(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")

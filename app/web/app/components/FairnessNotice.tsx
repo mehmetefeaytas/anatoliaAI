@@ -1,5 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
+
 /**
  * Adil kıyas şeridi — kıyas tablosunun ve delta ekranının KALICI notu.
  *
@@ -34,11 +36,72 @@
  * OLDUĞUNU kullanıcıya bir kez açıkça yazan tek yerdir — 8 sınıf sayılır ve
  * «neden yalnız tür içinde sıralanır» gerekçesi verilir.
  *
- * Kapatılabilir DEĞİLDİR (dismiss düğmesi yoktur): jüri ekranı ilk açtığında
- * görüp kapattıysa, demonun geri kalanında bu bilgi ekranda kalmalıdır.
+ * ## İki varyant — neden katlandı (2026-08-11)
+ *
+ * ÖLÇÜLDÜ: varsayılan ekranda ilk veri satırından ÖNCE ~400 kelime basılıyordu
+ * ve bunun en büyük tek parçası bu bileşendi — dört yoğun blok, ~250 kelime,
+ * 1120px kabuğun tamamını kullandığı için satır başına ~150 karakter. İlk
+ * ekranın kabaca %60'ını kaplıyor, kıyas tablosunu katlamanın altına itiyordu.
+ * Üstelik bileşen ÜÇ yüzeyde birden basılıyordu (kıyas paneli, banka içi delta,
+ * en avantajlı) — yani kullanıcı aynı 250 kelimeyi sekme değiştirdikçe yeniden
+ * görüyordu.
+ *
+ * Çözüm metni KISALTMAK değil KATLAMAK: `varyant="serit"` tek satırlık bir özet
+ * basar, kuralların tamamı aynı yerde açılır (`<details>`), gezinme yok. Bu
+ * kademeli açığa çıkarma (progressive disclosure) kuralı ekranda DAHA
+ * güvenilir tutar: kimsenin okumadığı bir duvar, okunan bir satırdan az bilgi
+ * taşır.
+ *
+ * Kapatılabilir DEĞİLDİR (dismiss düğmesi yoktur) — bu kural sürüyor. Katlama
+ * kapatma DEĞİLDİR: `<summary>` satırı her hâlde ekranda kalır, `[open]`
+ * durumundan bağımsız olarak. Jüri ekranı ilk açtığında görüp «×» ile
+ * kapatabildiği bir uyarı, demonun geri kalanında yok sayılırdı; katlanmış bir
+ * kural ise tek tıkla geri gelir ve özeti hiç kaybolmaz.
  */
 
-export default function FairnessNotice() {
+type Varyant = "tam" | "serit";
+
+type Props = {
+  /**
+   * `"tam"` — dört blok açıkta (varsayılan; kavramın tanımının yaşadığı hâl).
+   * `"serit"` — tek satır özet + yerinde açılan tam metin. Kıyas tablosu basan
+   * her yüzeyde bu kullanılır.
+   */
+  varyant?: Varyant;
+  /**
+   * Yüzeye ÖZEL ek kural (ör. `/advantageous` ucunun `fairness_note` alanı).
+   * Genel kuralların yanına, açıldığında görünen bloğun sonuna eklenir.
+   * Sunucudan gelen bu metin eskiden panelin kendi kutusunda ayrıca
+   * basılıyordu; aynı kuralın iki ayrı kutuda görünmesi ekranın üstünü
+   * şişiren tekrarın ta kendisiydi.
+   */
+  ek?: ReactNode;
+};
+
+export default function FairnessNotice({ varyant = "tam", ek }: Props) {
+  const bloklar = <TamBloklar ek={ek} />;
+
+  if (varyant === "tam") return bloklar;
+
+  return (
+    <details className="fairness-serit">
+      <summary className="fairness-ozet">
+        <span>
+          <b>Adil kıyas:</b> yalnız aynı birime normalize edilmiş,{" "}
+          <b>aynı kampanya türü</b> içindeki değerler kıyaslanır ·{" "}
+          <span className="mono">0</span> bir ceza değil, üründür · süresi
+          dolmuş kampanya sıralamaya girmez
+        </span>
+        <span className="fairness-ac">kuralların tamamı</span>
+      </summary>
+      {bloklar}
+    </details>
+  );
+}
+
+/** Kuralların tam metni. İki varyant da AYNI bloğu basar; ayrım yalnız
+ *  görünürlüktedir — «serit»te katlanmış, «tam»da açık. */
+function TamBloklar({ ek }: { ek?: ReactNode }) {
   return (
     <div className="fairness" role="note" aria-label="Adil kıyas kuralları">
       <div className="fairness-item">
@@ -103,6 +166,12 @@ export default function FairnessNotice() {
           şişirilmiş bir tablodan iyidir.</b>
         </p>
       </div>
+      {ek && (
+        <div className="fairness-item">
+          <strong>Bu ekranın ek kuralı</strong>
+          <p>{ek}</p>
+        </div>
+      )}
     </div>
   );
 }

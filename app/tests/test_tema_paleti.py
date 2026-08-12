@@ -38,6 +38,7 @@ from pathlib import Path
 _KOK = Path(__file__).resolve().parents[1]
 TOKENS_CSS = _KOK / "web" / "app" / "styles" / "tokens.css"
 TEMA_CSS = _KOK / "web" / "app" / "styles" / "tema.css"
+BASKI_CSS = _KOK / "web" / "app" / "styles" / "baski.css"
 
 _BILDIRIM = re.compile(r"(--[a-z0-9-]+)\s*:\s*([^;]+);")
 _KOYU_MEDYA = re.compile(
@@ -139,6 +140,79 @@ class TestTemaPaleti(unittest.TestCase):
                     self.assertIn(
                         token, palet, f"{token} yalnız tema.css'te tanımlı"
                     )
+
+
+class TestBaskiPaleti(unittest.TestCase):
+    """Baskı paleti, paletin ÜÇÜNCÜ kopyasıdır ve o da kayabilir.
+
+    `styles/baski.css` koyu temayı baskıda zorla açık palete çevirir: koyu bir
+    PDF okunmaz ve toner yakar. Ama bu, aynı hex değerlerinin depoda üçüncü kez
+    yazılması demek — `tema.css`'in başlığında açıklanan aynı çıkmaz geçerli:
+    saf CSS'te bir bildirim kümesi hem `@media print` içine hem dışına aynı
+    anda konamaz, ve ara token kullanmak kontrast kapısını kör ederdi (kapı düz
+    `hex` okur, `var(...)` göreni ölçemez).
+
+    O yüzden kopya teste bağlanır. `tema.css` için kurulan emsalin aynısı:
+    kopya kayarsa kapı düşer, sessizce sapmaz.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        tokens = TOKENS_CSS.read_text(encoding="utf-8")
+        baski = BASKI_CSS.read_text(encoding="utf-8")
+
+        cls.acik_kaynak = _bildirimler(_KOYU_MEDYA.sub("", tokens))
+        koyu = _KOYU_MEDYA.search(tokens)
+        assert koyu, "tokens.css'te koyu blok yok"
+        cls.koyu_kaynak = _bildirimler(koyu.group(1))
+        # Baskı bloğu üç seçiciyi birden hedefler; gövde tektir.
+        cls.baski = _bildirimler(
+            _secici_govdesi(baski, ':root[data-tema="koyu"]')
+        )
+
+    def test_baski_bloguu_COZULDU(self) -> None:
+        self.assertGreater(len(self.baski), 10, "baskı paleti boş çözüldü")
+
+    def test_baski_paleti_ACIK_PALETIN_AYNISI(self) -> None:
+        """Baskıda basılan her renk, ölçülmüş açık paletten gelmeli.
+
+        Kapsam koyu bloğun yeniden tanımladığı tokenlardır: koyu temada açılan
+        bir sayfa yazdırıldığında EZİLMESİ GEREKEN tokenlar tam olarak
+        bunlardır. Gölge dışarıda — kâğıtta yükseklik anlamsız, `none` bilinçli
+        bir sapmadır.
+        """
+        for ad in self.koyu_kaynak:
+            if ad.startswith("--shadow"):
+                continue
+            if ad not in self.baski:
+                continue
+            with self.subTest(token=ad):
+                self.assertEqual(
+                    self.baski[ad],
+                    self.acik_kaynak.get(ad),
+                    f"{ad}: baskı paleti, ölçülen açık paletten sapıyor",
+                )
+
+    def test_koyu_blogun_EZDIGI_her_RENK_baskida_da_var(self) -> None:
+        """Eksik bir token, koyu temada yazdırılan sayfada karışık palet demek.
+
+        Örneğin `--fg` ezilip `--bg` unutulursa kâğıda koyu zemin üstüne koyu
+        metin basılır — ekranda hiç görünmeyen, yalnız çıktıda ortaya çıkan bir
+        kusur.
+        """
+        for ad in self.koyu_kaynak:
+            if ad.startswith("--shadow"):
+                continue
+            with self.subTest(token=ad):
+                self.assertIn(ad, self.baski, f"{ad} baskı paletinde tanımsız")
+
+    def test_baski_tanimsiz_token_UYDURMAZ(self) -> None:
+        palet = set(self.acik_kaynak) | set(self.koyu_kaynak)
+        for token in self.baski:
+            with self.subTest(token=token):
+                self.assertIn(
+                    token, palet, f"{token} yalnız baski.css'te tanımlı"
+                )
 
 
 if __name__ == "__main__":

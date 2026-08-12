@@ -1,0 +1,380 @@
+"use client";
+
+/**
+ * Isı haritası — banka × kampanya türü KAPSAMA haritası, gerçek `<table>`.
+ *
+ * İlgili: ../../lib/api.ts (CampaignSummary, CompareRow), ../../styles/grafik.css
+ *         ../../lib/format.ts (trNum)
+ *         CLAUDE.md §13 (bankalar), §12 (8 kampanya türü), §17 (adil kıyas)
+ *
+ * ## Yoğunluk haritasıydı, KAPSAMA haritası oldu
+ *
+ * Önceki hâli bir doluluk yoğunluğu ızgarasıydı: hücreye o banka-tür ikilisinde
+ * toplanan BELGE SAYISI basılıyordu ve dolgu kare kök ölçekle koyulaşıyordu.
+ * Ölçüldü ve sorun şudur: o grafik «Kuveyt Türk'ten 533, TKBB'den 2 belge
+ * toplandı» diyordu, yani zaten `/stats` sayfasında yazan şeyi tekrar ediyordu.
+ * Panelin sorduğu soru ise başkadır — «bu alanı 88 hücrenin kaçında GERÇEKTEN
+ * ölçebildik».
+ *
+ * Bu yüzden hücre artık bir sayı değil, dört KATEGORİK hâlden biri:
+ *
+ *   dolu      değer çıkarıldı ve kıyaslanabilir      dolu mürekkep
+ *   kosullu   değer var, doğrudan kıyaslanamaz       kesikli çerçeve + 135° tarama
+ *   bos       belge var, bu alanda değer yok         kesik (dotted) taban çizgisi
+ *   belgesiz  bu türde hiç belge yok                 düz gri kutu
+ *
+ * Dört hâlin dördü ayrı BİÇİM taşır; renk hiçbirinde tek sinyal değildir
+ * (WCAG 1.4.1). Ayrıca her hücrenin `title` + `aria-label`'ı hâli Türkçe
+ * yazıyla söyler, yani siyah-beyaz baskıda ve ekran okuyucuda da okunur kalır.
+ *
+ * ## Neden SVG değil, gerçek tablo
+ *
+ * Eski sürüm elle SVG çiziyordu ve gerekçesi «88 dikdörtgen için ölçek sistemi
+ * gerekmez»di. Doğruydu ama artık hücrede ölçek YOK: veri iki eksenli bir
+ * kategori tablosudur ve HTML'in bu iş için tam olarak bir öğesi var. Gerçek
+ * tabloya geçmenin ölçülebilir kazancı:
+ *
+ *  1. `<th scope="col">` / `<th scope="row">` sayesinde ekran okuyucu hücreyi
+ *     okurken banka ve tür adını KENDİSİ söyler; SVG'de bunu her `<title>`
+ *     içinde elle tekrar etmek gerekiyordu.
+ *  2. Tablo kaydırılabilir, seçilebilir, kopyalanabilir; `viewBox` ile
+ *     ölçeklenen SVG dar ekranda okunmaz boyuta iniyordu.
+ *  3. Hücre biçimleri (kesikli/kesik/tarama) CSS'te yaşar, yani tema ile birlikte
+ *     bedelsiz dönüşür — SVG nitelikleri için aynı şeyi JS'te kurmak gerekiyordu.
+ *
+ * ## Sütun ve satır DÜŞMEZ
+ *
+ * `turler` verildiğinde liste OLDUĞU GİBİ çizilir; korpusta karşılığı olmayan
+ * tür süzülmez. Eski kod `turSirasi.filter((t) => turSeti.has(t))` yapıyordu ve
+ * bu, haritanın anlattığı şeyi sessizce yok ediyordu: kapsaması sıfır olan bir
+ * tür, haritadan silinerek değil, sekiz sütunun biri olarak boş çizilerek
+ * görünür olur. Aynısı `bankalar` için de geçerli — 11 satırın 11'i her zaman
+ * çizilir.
+ *
+ * ## `kapsama` ZORUNLU bir prop
+ *
+ * Kapsama satırları (`/compare`) verilmeden dört hâl ayırt edilemez; opsiyonel
+ * olsaydı çağıran onu atladığında harita sessizce «hiçbir yerde değer yok»
+ * derdi — yani ölçmediğimiz bir şeyi ölçmüş gibi gösterirdi. Bu yüzden prop
+ * zorunludur ve eksikliği derleme zamanında yakalanır.
+ */
+
+import { useMemo } from "react";
+import { trNum } from "../../lib/format";
+
+/** Belge VARLIĞINI besleyen en küçük kayıt — `CampaignSummary`'nin alt kümesi. */
+export type IsiKaydi = {
+  bank_name?: string | null;
+  bank?: string | null;
+  campaign_type?: string | null;
+};
+
+/**
+ * Alan DEĞERİNİ besleyen kayıt — `CompareRow`'un alt kümesi.
+ *
+ * `value` kanonik (normalize edilmiş) değerdir; `raw_value` bankanın kendi
+ * yazımıdır. İkisi ayrı taşınıyor çünkü «ham değer var ama kanona
+ * çevrilemedi» gerçek bir durumdur ve `kosullu` hânesine düşer, `bos`'a değil.
+ */
+export type IsiKapsamaKaydi = IsiKaydi & {
+  value?: unknown;
+  raw_value?: string | null;
+  comparable?: boolean;
+};
+
+/** Bir hücrenin dört hâli. Sıralı değil, KATEGORİK. */
+export type IsiHal = "dolu" | "kosullu" | "bos" | "belgesiz";
+
+/**
+ * Hâllerin Türkçe karşılığı — hem göstergede hem her hücrenin
+ * `title`/`aria-label`'ında AYNI cümle geçer. İki ayrı sözlük tutulsaydı biri
+ * güncellenip diğeri geride kalırdı.
+ */
+const HAL_BASLIK: Record<IsiHal, string> = {
+  dolu: "değer çıkarıldı",
+  kosullu: "değer var, doğrudan kıyaslanamaz",
+  bos: "belge var, bu alanda değer yok",
+  belgesiz: "bu türde hiç belge yok",
+};
+
+const HAL_SINIF: Record<IsiHal, string> = {
+  dolu: "isi-hucre-dolu",
+  kosullu: "isi-hucre-kosullu",
+  bos: "isi-hucre-bos",
+  belgesiz: "isi-hucre-belgesiz",
+};
+
+/** Gösterge sırası: en çok bilgi taşıyan hâlden en az taşıyana. */
+const GOSTERGE: readonly IsiHal[] = ["dolu", "kosullu", "bos", "belgesiz"];
+
+/** Türü boş gelen belgelerin sütun adı. Kendi sütununu hak ediyor: «tür yok» bir bilgidir. */
+const TURSUZ = "Türü belirlenemedi";
+
+type Props = {
+  /** Belge üstverisi — hücrenin `bos` mu `belgesiz` mi olduğunu bu belirler. */
+  kayitlar: IsiKaydi[];
+  /**
+   * Haritanın konusu olan alanın kapsama satırları (`/compare?field=…`).
+   * `dolu` / `kosullu` ayrımı yalnız buradan çıkar.
+   */
+  kapsama: IsiKapsamaKaydi[];
+  /**
+   * Alanın cümle içinde geçen küçük harfli etiketi (ör. «kâr payı oranı»).
+   * Başlıkta ilk harfi Türkçe kurala göre büyütülür.
+   */
+  alanEtiketi: string;
+  /** Sütun sırası — §12'deki sekiz sınıfın resmî sırası. Verilirse SÜZÜLMEZ. */
+  turler?: string[];
+  /** Satır sırası — verilirse belgesi olmayan banka da satırını korur. */
+  bankalar?: string[];
+  /** Varsayılan: «<Alan> kapsaması». */
+  baslik?: string;
+};
+
+type Hucre = { tur: string; hal: IsiHal; belge: number };
+type Satir = { banka: string; belge: number; hucreler: Hucre[] };
+
+type Izgara = {
+  satirlar: Satir[];
+  turler: string[];
+  sayim: Record<IsiHal, number>;
+  toplamHucre: number;
+};
+
+function bankaAdi(k: IsiKaydi): string {
+  return (k.bank_name || k.bank || "").trim();
+}
+
+function turAdi(k: IsiKaydi): string {
+  return (k.campaign_type || "").trim() || TURSUZ;
+}
+
+/**
+ * Hücre anahtarı: banka + tür.
+ *
+ * Ayırıcı BOŞLUK DEĞİL, birim ayırıcı (U+001F). Hem banka hem tür adları
+ * boşluk içeriyor; boşlukla birleştirilen anahtarda «Kuveyt» + «Türk Kart»
+ * ile «Kuveyt Türk» + «Kart» aynı dizeye düşer. Korpusta bugün böyle bir
+ * çift yok ama `config/banks.yaml` tek satırla büyüyen bir dosya (§13) ve
+ * sessizce birleşen iki hücre, tam da bu haritanın anlattığı şeyi bozar.
+ */
+function anahtar(banka: string, tur: string): string {
+  return `${banka}\u001f${tur}`;
+}
+
+/** Sırayı bozmadan tekrarları atar. */
+function tekrarsiz(liste: string[]): string[] {
+  const gorulen = new Set<string>();
+  const cikti: string[] = [];
+  for (const x of liste) {
+    if (gorulen.has(x)) continue;
+    gorulen.add(x);
+    cikti.push(x);
+  }
+  return cikti;
+}
+
+/**
+ * Kayıtlardan haritayı kurar.
+ *
+ * Satır sırası dışarıdan gelmediyse toplam belge sayısına göredir: en çok
+ * belgesi olan üstte. Alfabetik sıra burada bilgi taşımazdı; yoğunluk sırası
+ * haritanın anlattığı şeyin (kapsama) kendisidir.
+ */
+function izgaraKur(
+  kayitlar: IsiKaydi[],
+  kapsama: IsiKapsamaKaydi[],
+  turSirasi?: string[],
+  bankaSirasi?: string[],
+): Izgara {
+  const belgeHucre = new Map<string, number>();
+  const bankaToplam = new Map<string, number>();
+  const turSeti = new Set<string>();
+
+  for (const k of kayitlar) {
+    const banka = bankaAdi(k);
+    if (!banka) continue;
+    const tur = turAdi(k);
+    turSeti.add(tur);
+    const a = anahtar(banka, tur);
+    belgeHucre.set(a, (belgeHucre.get(a) ?? 0) + 1);
+    bankaToplam.set(banka, (bankaToplam.get(banka) ?? 0) + 1);
+  }
+
+  // Değeri olan hücreler. `dolu` bir kez görüldüyse `kosullu` onu EZMEZ:
+  // aynı banka-tür ikilisinde kıyaslanabilir bir değer bulunduysa hücrenin
+  // hâli odur; yanındaki kıyaslanamaz kayıt onu geri almaz.
+  const degerHucre = new Map<string, IsiHal>();
+  for (const k of kapsama) {
+    const banka = bankaAdi(k);
+    if (!banka) continue;
+    const kanonikVar = k.value !== null && k.value !== undefined;
+    const hamVar = typeof k.raw_value === "string" && k.raw_value.trim() !== "";
+    if (!kanonikVar && !hamVar) continue;
+    const a = anahtar(banka, turAdi(k));
+    const hal: IsiHal = kanonikVar && k.comparable !== false ? "dolu" : "kosullu";
+    if (hal === "dolu") degerHucre.set(a, "dolu");
+    else if (!degerHucre.has(a)) degerHucre.set(a, "kosullu");
+  }
+
+  const veridekiTurler = Array.from(turSeti).sort((a, b) =>
+    a === TURSUZ ? 1 : b === TURSUZ ? -1 : a.localeCompare(b, "tr"),
+  );
+  // Dışarıdan gelen sıra SÜZÜLMEZ; korpusta olup listede olmayan tür ise
+  // gizlenmez, sona eklenir. İki yönde de bilgi kaybı yok.
+  const turler = turSirasi
+    ? tekrarsiz([...turSirasi, ...veridekiTurler])
+    : veridekiTurler;
+
+  const veridekiBankalar = Array.from(bankaToplam.keys()).sort(
+    (a, b) => (bankaToplam.get(b) ?? 0) - (bankaToplam.get(a) ?? 0),
+  );
+  const bankalar = bankaSirasi
+    ? tekrarsiz([...bankaSirasi, ...veridekiBankalar])
+    : veridekiBankalar;
+
+  const sayim: Record<IsiHal, number> = { dolu: 0, kosullu: 0, bos: 0, belgesiz: 0 };
+  const satirlar: Satir[] = bankalar.map((banka) => ({
+    banka,
+    belge: bankaToplam.get(banka) ?? 0,
+    hucreler: turler.map((tur) => {
+      const a = anahtar(banka, tur);
+      const belge = belgeHucre.get(a) ?? 0;
+      // Değer varsa belge de vardır: kapsama satırı bir belgeden çıkmıştır.
+      // Bu yüzden `degerHucre` belge sayacını EZER, tersi değil.
+      const hal: IsiHal = degerHucre.get(a) ?? (belge > 0 ? "bos" : "belgesiz");
+      sayim[hal] += 1;
+      return { tur, hal, belge };
+    }),
+  }));
+
+  return {
+    satirlar,
+    turler,
+    sayim,
+    toplamHucre: satirlar.length * turler.length,
+  };
+}
+
+/** İlk harfi Türkçe kurala göre büyütür (`i → İ`). */
+function basHarfBuyuk(s: string): string {
+  if (!s) return s;
+  return s.slice(0, 1).toLocaleUpperCase("tr") + s.slice(1);
+}
+
+export default function IsiHaritasi({
+  kayitlar,
+  kapsama,
+  alanEtiketi,
+  turler: turSirasi,
+  bankalar: bankaSirasi,
+  baslik,
+}: Props) {
+  const izgara = useMemo(
+    () => izgaraKur(kayitlar, kapsama, turSirasi, bankaSirasi),
+    [kayitlar, kapsama, turSirasi, bankaSirasi],
+  );
+  const { satirlar, turler, sayim, toplamHucre } = izgara;
+
+  if (satirlar.length === 0 || turler.length === 0) return null;
+
+  const baslikMetni = baslik ?? `${basHarfBuyuk(alanEtiketi)} kapsaması`;
+  // «Hiç geçmiyor» = değeri OLMAYAN hücreler. `kosullu` bunun içinde DEĞİL:
+  // orada değer var, kıyaslanabilirliği yok.
+  const degersiz = sayim.bos + sayim.belgesiz;
+
+  return (
+    <figure className="grafik isi">
+      <figcaption className="isi-bas">
+        <span className="isi-bas-blok">
+          <span className="isi-baslik">{baslikMetni}</span>
+          <span className="grafik-fisilti">
+            {`${trNum(satirlar.length)} banka × ${trNum(turler.length)} kampanya türü · ${trNum(toplamHucre)} hücre`}
+          </span>
+        </span>
+        {/* Provenans şeridi: her ekranda tek bir kesir basar ve o kesir
+            GERÇEK veriden gelir. */}
+        <span className="isi-sayac">
+          <span className="isi-sayac-etiket">dolu hücre</span>
+          <span className="isi-sayac-kesir">
+            {trNum(sayim.dolu)} / {trNum(toplamHucre)}
+          </span>
+        </span>
+      </figcaption>
+
+      {/* Gösterge tablodan ÖNCE gelir: sözlük okunmadan harita okunmaz. */}
+      <ul className="isi-gosterge">
+        {GOSTERGE.map((hal) => (
+          <li key={hal} className="isi-gosterge-oge">
+            <span aria-hidden="true" className={`isi-ornek ${HAL_SINIF[hal]}`} />
+            {HAL_BASLIK[hal]}
+          </li>
+        ))}
+      </ul>
+
+      <div className="isi-sarmal">
+        <table className="isi-tablo">
+          <caption className="gorunmez">
+            {`${baslikMetni}. Satırlar banka, sütunlar kampanya türü. Her hücre dört hâlden ` +
+              `birini taşır: ${GOSTERGE.map((h) => HAL_BASLIK[h]).join("; ")}. ` +
+              `Son sütun o bankadan toplanan belge sayısıdır.`}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col" className="isi-th-kose">
+                banka
+              </th>
+              {turler.map((tur) => (
+                <th key={tur} scope="col" className="isi-th-dikey">
+                  {/* Dikey yazım İÇ blokta: `<th>` üzerinde verildiğinde bant
+                      uzun tür adını kırpıyor (bkz. grafik.css). */}
+                  <span className="isi-th-dikey-ic">{tur}</span>
+                </th>
+              ))}
+              <th scope="col" className="isi-th-belge">
+                belge
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {satirlar.map((s) => (
+              <tr key={s.banka}>
+                <th scope="row" className="isi-th-satir">
+                  {s.banka}
+                </th>
+                {s.hucreler.map((h) => {
+                  const metin =
+                    `${s.banka} · ${h.tur} — ${HAL_BASLIK[h.hal]}` +
+                    (h.belge > 0 ? ` (${trNum(h.belge)} belge)` : "");
+                  return (
+                    <td key={h.tur} className="isi-td">
+                      {/* Boş bir kutunun erişilebilirlik ağacında görünmesi
+                          için rol gerekir; `aria-label` tek başına yetmez. */}
+                      <span
+                        role="img"
+                        aria-label={metin}
+                        title={metin}
+                        className={`isi-hucre ${HAL_SINIF[h.hal]}`}
+                      />
+                    </td>
+                  );
+                })}
+                <td className="isi-belge">{trNum(s.belge)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="isi-gerekce">
+        Boş hücre buranın en dürüst yeri: {trNum(toplamHucre)} hücrenin{" "}
+        {trNum(degersiz)} tanesinde {alanEtiketi} hiç geçmiyor. Bu bir{" "}
+        <b>model kısıtı değil, veri gerçeğidir</b> — bankalar bu alanı kampanya
+        sayfalarında büyük ölçüde yayımlamıyor. Dökümü: {trNum(sayim.dolu)} hücrede
+        değer çıkarıldı, {trNum(sayim.kosullu)} hücrede değer var ama doğrudan
+        kıyaslanamıyor, {trNum(sayim.bos)} hücrede belge var ama bu alanda değer
+        yok, {trNum(sayim.belgesiz)} hücrede o türde hiç belge yok.
+      </p>
+    </figure>
+  );
+}

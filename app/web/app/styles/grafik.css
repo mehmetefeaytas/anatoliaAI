@@ -1,0 +1,569 @@
+/* Anatolia AI — grafik, yıldız ve kaynak dipnotu stilleri.
+ *
+ * İlgili: tokens.css (tek renk/boşluk kaynağı), components.css,
+ *         ../components/grafik/*, ../components/YildizPuan.tsx,
+ *         ../components/KaynakDipnotu.tsx
+ *         CLAUDE.md §7, scripts/css_sinif_denetimi.py
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` 1365 satır ve on bileşen ailesini taşıyor. Grafik katmanı
+ * yeni bir aile ve tek seferde geldi; onu o dosyanın sonuna eklemek, zaten
+ * uzun bir dosyayı okunmaz kılardı. Denetim betiği `styles/*.css`'in tamamını
+ * tarar (`css_sinif_denetimi.py:69`), yani ayrı dosya kapıdan kaçmak değildir.
+ *
+ * ## Kırılım noktaları burada, dosyanın SONUNDA
+ *
+ * `base.css:140-149`'un belgelediği tuzak aynen geçerli: aynı özgüllükteki bir
+ * medya kuralı, kendisinden SONRA gelen temel kural tarafından sessizce
+ * eziliyor. Bu dosyanın kırılımları da en altta.
+ *
+ * Literal renk/boşluk YOK — hepsi tokens.css'ten. Tek istisna hairline
+ * kalınlıkları (1px/2px) ve medya sorgusu genişlikleri (CSS değişkeni
+ * kullanılamıyor).
+ */
+
+/* ===================================================================
+ * GRAFİK ÇERÇEVESİ
+ * ================================================================ */
+
+.grafik {
+  margin: var(--sp-5) 0;
+  /* `figure` varsayılan yan boşluğu tarayıcıdan gelir; token dışı kalmasın. */
+  padding: 0;
+}
+
+/* Grafik başlığı SİSTEMİN sesidir (bir cümle kurar), o yüzden sans kalır ve
+ * büyük harfe çıkmaz — büyük harf yalnız mono göz-üstü etiketine aittir
+ * (tokens.css "ÜÇ SES"). Alt satırdaki mono fısıltı için `.grafik-gozustu`. */
+.grafik-baslik {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+  line-height: var(--lh-tight);
+  margin-bottom: var(--sp-3);
+}
+
+/* MAKİNE fısıltısı: ölçü, birim, sayaç, alan/tür adı. Mono, çünkü verinin
+ * kendisidir; BÜYÜK HARF DEĞİL, çünkü büyük harf «bu, verinin ETİKETİ» demek
+ * (tokens.css "ÜÇ SES") ve «Konut Finansmanı» bir etiket değil, bir değerdir.
+ * Etiketler için `.isi-sayac-etiket` / `.isi-th-kose` gibi caps'li sınıflar var. */
+.grafik-fisilti {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Chart.js tuvali kapsayıcıdan ölçü alır; yüksekliği bileşen satır sayısına
+ * göre satır içinde verir, genişliği buradan gelir. */
+.grafik-tuval {
+  position: relative;
+  width: 100%;
+  min-height: 120px;
+}
+
+/* Radar kare olmak ister; serbest bırakılırsa geniş ekranda ezilir. */
+.grafik-tuval-radar {
+  height: 340px;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+/* --- grafiğin erişilebilir eşi ---
+ * Canvas erişilebilirlik ağacında YOKTUR (bkz. lib/grafikPaleti.ts). Bu liste
+ * bir yedek değil, aynı bilginin metin hâlidir: ekran okuyucu, renk körlüğü ve
+ * siyah-beyaz baskı bu listeyi okur. */
+.grafik-liste {
+  list-style: none;
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.grafik-liste li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  padding: var(--sp-1) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.grafik-liste-ad {
+  flex: 1;
+  min-width: 0;
+  color: var(--fg);
+}
+
+/* Listedeki sayısal hücre: mono ve TABULAR — sütun sütun hizalanmayan rakamlar
+ * göz için gürültüdür. */
+.grafik-liste-deger {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Grafiğin altındaki gerekçe: düz metin, `--measure` ile sınırlı. Kabuğun
+ * tamamını kullanınca satır başına ~150 karaktere çıkıyor ve göz satır
+ * sonundan satır başına dönerken yerini kaybediyor (bkz. tokens.css). */
+.grafik-gerekce {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-faint);
+  max-width: var(--measure);
+}
+
+/* --- palet çözülene kadar yer tutan iskelet ---
+ * Canvas grafikleri mount öncesi çizilemez (bkz. lib/grafikPaleti.ts). Bu kutu
+ * o boşluğu önden ayırır; yoksa grafik bir kare sonra belirdiğinde altındaki
+ * tablo aşağı sıçrar ve kullanıcı okuduğu satırı kaybeder.
+ *
+ * İçi boş ve `aria-hidden`: bir yükleme göstergesi DEĞİL — veri çoktan geldi,
+ * bekleyen yalnız renk. Nabız/parıltı animasyonu da yok; süresi ölçülemeyecek
+ * kadar kısa bir bekleme için hareket, dikkati asıl içerikten çalar. */
+.grafik-iskelet {
+  margin: var(--sp-5) 0;
+  border: 1px dashed var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--bg-3);
+}
+
+/* --- delta ekseninin nötr şeridi ---
+ * `kiyaslanamaz` / `eksik_veri` / `eksik_urun` / `rakip_yok` alanları eksende
+ * sıfır uzunlukta çizilseydi «eşit» diye okunurdu. Kendi şeritlerinde,
+ * eksenden görsel olarak AYRI dururlar: sol kenarlık o ayrımı taşır. */
+.delta-notr {
+  margin-top: var(--sp-4);
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--line);
+}
+
+/* ===================================================================
+ * ISI HARİTASI — dört hâl, dört BİÇİM
+ *
+ * İlgili: ../components/grafik/IsiHaritasi.tsx
+ *
+ * Renk burada TEK sinyal olamaz, çünkü hücrenin içinde yazı yoktur: 88 hücreye
+ * 88 rakam basmak haritayı tabloya çevirirdi. Sinyal bu yüzden BİÇİMDE taşınır —
+ * dolu mürekkep / kesikli çerçeve + 135° tarama / kesik (dotted) taban çizgisi /
+ * düz gri kutu. Dördü siyah-beyaz baskıda da ayırt edilir (WCAG 1.4.1).
+ *
+ * Hücre ölçüleri (34×26, 3px aralık, 118px başlık bandı, 780px asgari genişlik)
+ * `--sp-*` skalasında DEĞİL ve olmamalı: bunlar boşluk değil, bir ızgaranın
+ * ölçüsü. Global tokena çıkarmak yerine `.isi` kapsamında yerel değişken olarak
+ * yaşıyorlar — tek yerde durur, tokens.css'i kirletmez.
+ * ================================================================ */
+
+.isi {
+  display: grid;
+  gap: var(--sp-4);
+
+  /* 34×26: sekiz sütun + banka adı + belge sayacı 780px'e sığar; hücre kare
+   * OLMAMALI, çünkü satırlar (11 banka) sütunlardan (8 tür) fazla ve kare
+   * hücre tabloyu gereksiz uzatıyor. */
+  --isi-hucre-g: 34px;
+  --isi-hucre-y: 26px;
+  /* Hücreler arası nefes. Kenarlıklar birleşmesin: `kosullu`nun kesikli
+   * çerçevesi komşusuna yapışınca tarama dokusu okunmaz oluyor. */
+  --isi-aralik: 3px;
+  /* Dikey sütun başlığı bandı. Bir ASGARİ ölçüdür (tablo hücresinde `height`
+   * öyle davranır): «İhtiyaç Finansmanı» sığmazsa bant kırpmaz, büyür. */
+  --isi-bant: 118px;
+  --isi-asgari: 780px;
+}
+
+.isi-bas {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--sp-5);
+  flex-wrap: wrap;
+}
+
+.isi-bas-blok {
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.isi-baslik {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+  color: var(--fg);
+}
+
+/* --- provenans şeridi ---
+ * Kanıt bloklarının ve kapsama sayaçlarının solunda AYNI 3px'lik mürekkep
+ * çizgisi durur. Şerit bir süs değil, bir sözdür: solunda çizgi olan her sayı
+ * ölçülmüş bir kesirdir, tahmin değil. */
+.isi-sayac {
+  display: grid;
+  gap: var(--sp-1);
+  justify-items: end;
+  border-left: 3px solid var(--accent);
+  padding-left: var(--sp-3);
+}
+
+.isi-sayac-etiket {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+.isi-sayac-kesir {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-tight);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- gösterge --- */
+.isi-gosterge {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+.isi-gosterge-oge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* Gösterge örneği hücrenin KENDİ biçimini taşır, küçültülmüş hâlini: aynı
+ * sınıflar, farklı ölçü. İki ayrı biçim tanımı olsaydı biri güncellenip
+ * diğeri geride kalırdı. */
+.isi-ornek {
+  flex: none;
+  width: var(--sp-4);
+  height: var(--sp-4);
+}
+
+/* --- tablo ---
+ * Yatay kayma SARMALIN içinde kalır; sayfa gövdesi asla yatay kaymaz. */
+.isi-sarmal {
+  overflow-x: auto;
+}
+
+.isi-tablo {
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+  min-width: var(--isi-asgari);
+}
+
+/* Sütun başlıkları MAKİNE verisidir: alanın adını söyler, cümle kurmaz. */
+.isi-th-kose,
+.isi-th-belge {
+  padding: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  white-space: nowrap;
+  border-bottom: 1px solid var(--line);
+  /* Dikey tür adlarıyla AYNI hizada oturur: bandın tepesine yapışmış bir
+   * «BANKA» etiketi, sütun başlıklarının bittiği yerden 100px yukarıda
+   * kalıyordu. */
+  vertical-align: bottom;
+}
+
+.isi-th-kose {
+  text-align: left;
+}
+
+.isi-th-belge {
+  text-align: right;
+}
+
+/* Tür adları DİKEY. Yatay yazılsalar sekiz sütun 1.100px'e çıkardı; kısaltmak
+ * ise jüriye tanımadığı bir kısaltma öğretmek olurdu, o yüzden ad TAM kalır ve
+ * 90° döner.
+ *
+ * ÖLÇÜLDÜ (tarayıcıda): `writing-mode` + `height` DOĞRUDAN `<th>` üzerinde
+ * verilince bant büyümüyor, uzun ad bandı taşıp ilk veri satırının hücrelerinin
+ * ÜSTÜNE biniyordu — tablo hücresinin `height`i içeriğe göre büyümesi gereken
+ * yerde onu kırpıyor. Çözüm: dikey yazım İÇ bloğa taşındı. `inline-block`
+ * yüksekliğini metnin uzunluğundan alır, `min-height` de tasarımın 118px'lik
+ * tabanını korur — kısa adlar bandı daraltmaz, uzun adlar kırpılmaz. */
+.isi-th-dikey {
+  padding: var(--sp-2) var(--sp-1);
+  border-bottom: 1px solid var(--line);
+  vertical-align: bottom;
+  text-align: left;
+}
+
+.isi-th-dikey-ic {
+  display: inline-block;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  min-height: var(--isi-bant);
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--fg-dim);
+}
+
+.isi-tablo tbody tr {
+  border-top: 1px solid var(--line-soft);
+}
+
+/* Satır başlığı BANKA ADIDIR — bir kimlik, bir etiket değil: sans kalır,
+ * büyük harfe çıkmaz. */
+.isi-th-satir {
+  padding: var(--sp-1) var(--sp-2);
+  text-align: left;
+  font-weight: var(--fw-regular);
+  color: var(--fg);
+  white-space: nowrap;
+}
+
+.isi-td {
+  padding: var(--isi-aralik);
+}
+
+.isi-hucre {
+  display: block;
+  width: var(--isi-hucre-g);
+  height: var(--isi-hucre-y);
+}
+
+/* dolu — değer çıkarıldı, kıyaslanabilir. Dolu mürekkep. */
+.isi-hucre-dolu {
+  background: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+/* kosullu — değer var, doğrudan kıyaslanamaz (§17). Kesikli çerçeve, çünkü
+ * çerçevenin kendisi «bu değerin sınırı belirsiz» diyor; tarama dokusu ise
+ * yüzeyi dolu mürekkepten kesin biçimde ayırıyor. Gradyan durakları boşluk
+ * DEĞİL doku ölçüsüdür, ama 4/8px zaten skalanın üstünde oturuyor. */
+.isi-hucre-kosullu {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--warn-wash) 0 var(--sp-1),
+    var(--bg-2) var(--sp-1) var(--sp-2)
+  );
+  border: 1px dashed var(--warn);
+}
+
+/* bos — belge var, bu alanda değer yok. Kesik TABAN çizgisi: kutu duruyor
+ * (belge var), zemini eksik (değer yok). */
+.isi-hucre-bos {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-bottom: 2px dotted var(--fg-faint);
+}
+
+/* belgesiz — bu türde hiç belge yok. Düz gri kutu: hiçbir iddia taşımıyor. */
+.isi-hucre-belgesiz {
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+}
+
+.isi-belge {
+  padding: var(--sp-1) var(--sp-2);
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.isi-gerekce {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-faint);
+  max-width: var(--measure);
+}
+
+/* ===================================================================
+ * YILDIZLI PUAN
+ * ================================================================ */
+
+.yildiz-satir {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  padding: var(--sp-2) 0;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.yildiz-tur {
+  min-width: 160px;
+  font-weight: var(--fw-medium);
+  color: var(--fg);
+}
+
+.yildizlar {
+  letter-spacing: 0.08em;
+  color: var(--line);
+  white-space: nowrap;
+}
+
+.yildiz-dolu {
+  color: var(--accent);
+}
+
+/* Kapsama düşükken rozet aynı ama iddiası zayıf: yıldızlar soluk çizilir.
+ * Solukluk TEK sinyal değildir — «düşük kapsama» ayrıca yazıyla söylenir. */
+.yildizlar-zayif .yildiz-dolu {
+  color: var(--fg-faint);
+}
+
+.yildiz-deger {
+  color: var(--fg-dim);
+}
+
+.yildiz-kapsam {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Skor yokken yıldız da yok: boş beş yıldız «çok kötü» diye okunurdu, oysa
+ * söylenen «ölçemedik». Uyarı rengi değil, nötr — bu bir hata değil. */
+.yildiz-yok {
+  color: var(--fg-dim);
+  font-style: italic;
+}
+
+/* ===================================================================
+ * KAYNAK DİPNOTU + YAN PANEL
+ * ================================================================ */
+
+.kaynak-dipnot {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 0 var(--sp-1);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--accent-soft);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.kaynak-dipnot:hover,
+.kaynak-dipnot[aria-expanded="true"] {
+  background: var(--accent-wash);
+  border-color: var(--accent-soft);
+}
+
+.kaynak-dipnot-etiket {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ekran okuyucuya görünür, göze görünmez. `display:none` KULLANILMAZ — o,
+ * içeriği erişilebilirlik ağacından da siler. */
+.gorunmez {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Yan panel: tabloyu yerinde bırakır, iddia ile kanıtı aynı ekranda tutar.
+ * Dar ekranda yan panel diye bir şey yok — aşağıdaki kırılımda tam genişliğe
+ * döner. */
+.kaynak-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(520px, 92vw);
+  z-index: 40;
+  overflow-y: auto;
+  padding: var(--sp-4);
+  background: var(--bg-2);
+  border-left: 1px solid var(--line);
+  box-shadow: var(--shadow-md);
+}
+
+.kaynak-panel-bas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA (bkz. dosya başlığı)
+ * ================================================================ */
+
+@media (max-width: 900px) {
+  .grafik-tuval-radar {
+    height: 300px;
+  }
+
+  .yildiz-tur {
+    min-width: 0;
+    flex-basis: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Dar ekranda «yan» panel yoktur; tam sayfa örter. */
+  .kaynak-panel {
+    width: 100%;
+    left: 0;
+  }
+
+  .grafik-liste li {
+    flex-wrap: wrap;
+  }
+
+  /* Sayaç başlığın SAĞINDAN altına iner. Şerit hâlâ solda: kesirin ölçülmüş
+   * olduğunu söyleyen şey konumu değil, o çizgi. */
+  .isi-sayac {
+    justify-items: start;
+  }
+
+  /* Hücre daralır ama SIFIRLANMAZ: 88 hücrenin hepsi çizilmeye devam eder,
+   * tablo `.isi-sarmal` içinde yatay kayar. */
+  .isi {
+    --isi-hucre-g: 28px;
+    --isi-asgari: 640px;
+  }
+}
+
+/* --- kâğıt ---
+ * `baski.css` `.table-wrap`ın kaydırmasını açıyor ama ısı haritası kendi
+ * sarmalını kullanıyor; burada aynı şey onun için yapılıyor. Kaydırmalı kutu
+ * kâğıtta kaydırılamaz, kırpılan içerik KAYBOLUR. 780px asgari genişlik A4'ün
+ * yazı alanına sığar. */
+@media print {
+  .isi-sarmal {
+    overflow: visible;
+  }
+
+  /* Satır sayfa ortasından ikiye bölünürse hücrelerin hâli okunmaz olur. */
+  .isi-tablo tr {
+    break-inside: avoid;
+  }
+}

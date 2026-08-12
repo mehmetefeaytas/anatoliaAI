@@ -184,6 +184,69 @@ describe("baglamListesi", () => {
     );
   });
 
+  /* --- konu sınırı («Yeni konu» düğmesi) ---
+   *
+   * Bağlam sızması bildirildi: kullanıcı konut finansmanı sordu, taşıt
+   * finansmanı cevabı aldı. «Yeni konu» bunun kullanıcı tarafındaki emniyet
+   * valfi. Sınırın YERİ önemli: işaretli tur yeni konunun İLKİDİR, yani
+   * kendisi bağlama girer, ondan öncesi girmez. Bir eksik bir fazla, valfi
+   * ya işlevsiz ya da fazla agresif yapar. */
+  const konuTur = (id: number, soru: string, context: unknown) =>
+    ({ ...(tur(id, soru, context) as object), konuBasi: true }) as never;
+
+  it("konu sınırından ÖNCESİNİ devralmaz", () => {
+    const liste = baglamListesi([
+      tur(1, "konut", ctx("kar_payi_orani")),
+      tur(2, "vade", ctx("vade_ay")),
+      konuTur(3, "yeni konu: taşıt", ctx("finansman_tutari")),
+    ]);
+    assert.deepEqual(
+      liste.map((c) => c.field),
+      ["finansman_tutari"],
+    );
+  });
+
+  it("konu sınırı taşıyan turun KENDİSİ bağlama girer", () => {
+    const liste = baglamListesi([konuTur(1, "yeni konu", ctx("vade_ay"))]);
+    assert.equal(liste.length, 1);
+    assert.equal(liste[0].field, "vade_ay");
+  });
+
+  it("sınırdan SONRAKİ turlar normal devralınır", () => {
+    const liste = baglamListesi([
+      tur(1, "eski konu", ctx("kar_payi_orani")),
+      konuTur(2, "yeni konu", ctx("vade_ay")),
+      tur(3, "takip", ctx("finansman_tutari")),
+    ]);
+    assert.deepEqual(
+      liste.map((c) => c.field),
+      ["finansman_tutari", "vade_ay"],
+    );
+  });
+
+  it("BOŞ bağlamlı bir tur da sınır taşıyabilir", () => {
+    // Sınır kontrolü döngünün sonunda olmalı: boş bağlam `continue` ile
+    // atlanırsa sınır da atlanır ve valf sessizce çalışmaz.
+    const bos = { field: null, intent: null, filters: {}, subject_banks: [] };
+    const liste = baglamListesi([
+      tur(1, "eski", ctx("kar_payi_orani")),
+      konuTur(2, "engellendi ama yeni konu", bos),
+      tur(3, "takip", ctx("vade_ay")),
+    ]);
+    assert.deepEqual(
+      liste.map((c) => c.field),
+      ["vade_ay"],
+    );
+  });
+
+  it("işaretsiz sohbet (eski kayıt) eskisi gibi devralır", () => {
+    const liste = baglamListesi([
+      tur(1, "a", ctx("kar_payi_orani")),
+      tur(2, "b", ctx("vade_ay")),
+    ]);
+    assert.equal(liste.length, 2);
+  });
+
   it("pencere boyutunu aşmaz", () => {
     const turlar = Array.from({ length: 8 }, (_, i) =>
       tur(i + 1, `s${i}`, ctx("vade_ay")),

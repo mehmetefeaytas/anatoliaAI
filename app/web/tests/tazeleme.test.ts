@@ -13,6 +13,10 @@
  *     0 hata" cümlesi yanlış bir tamamlanma izlenimi yaratır.
  *  3. **HAM GEREKÇE KODU EKRANA ÇIKMAMALI.** `robots disallow` jüriye hiçbir
  *     şey anlatmaz; Türkçe karşılığı gerekir.
+ *  4. **ÇÖZÜMÜ OLMAYAN HATA İÇİN "TEKRAR DENE" DENMEMELİ.** Kapalı bir tarama
+ *     kuralı, kurulu olmayan tarayıcı bileşeni ya da dolu bir disk her
+ *     denemede aynı sonucu verir; açık duran bir düğme tutulamayacak bir söz
+ *     verir. Aynı ayrımın ölçülmüş hâli için bkz. `src/summarize/ozet.py`.
  *
  * Hiçbir test ağa çıkmaz: yardımcılar saf, girdileri elden yazılmış kayıtlar.
  */
@@ -27,11 +31,15 @@ import {
   durumBildirimSinifi,
   durumEtiketi,
   hataGerekcesi,
+  hataTekrarlanabilir,
   ilerlemeOrani,
+  isCikmazi,
+  kaliciGerekce,
   sonucOzeti,
   sureMetni,
   tahminiIstek,
   tahminiSure,
+  yoklamaBirakmaNotu,
 } from "../app/lib/tazeleme.ts";
 
 function is(ek: Partial<RefreshJob> = {}): RefreshJob {
@@ -208,5 +216,200 @@ describe("hataGerekcesi", () => {
 
   it("tanımadığı gerekçeyi olduğu gibi geçirir — bilgi yutulmaz", () => {
     assert.equal(hataGerekcesi("bilinmeyen"), "bilinmeyen");
+  });
+});
+
+// --------------------------------------------------------------------------- //
+// Çıkmaz hatalar
+// --------------------------------------------------------------------------- //
+
+//: Sunucunun gerçekten ürettiği bitiş cümleleri (src/scraping/tazeleme.py).
+//: Testler bu metinleri BİREBİR taşır: eşleşme metne dayandığı için, sunucu
+//: cümlesi değişirse kırılması gereken yer burasıdır.
+const MESAJ_TARAYICI =
+  "Bu bankanın sayfaları tarayıcıyla açılmayı gerektiriyor. Tarayıcı " +
+  "sürücüsü kurulu ancak tarayıcı bileşeni indirilmemiş. Kurmak için " +
+  "`playwright install chromium` komutunu çalıştırın; bu komut internet " +
+  "gerektirir. Bu banka atlandı; diğer bankaların toplanması ve önceden " +
+  "hazırlanmış veri tabanından okuyan kıyas, sohbet ve pano ekranları " +
+  "bundan etkilenmez.";
+const MESAJ_YAZMA =
+  "Belgeler ham arşive yazılamadı; disk dolu ya da hedef dizine yazma izni " +
+  "yok olabilir. Ayrıntı sunucu günlüğüne kaydedildi.";
+const MESAJ_AG_YOK =
+  "Ağ bağlantısı kurulamadı. Bu eylem internet gerektirir; sistemin geri " +
+  "kalanı çevrimdışı çalışmaya devam ediyor.";
+const MESAJ_BELIRSIZ =
+  "Toplama katmanı beklenmedik bir hata verdi ve tazeleme tamamlanamadı.";
+const MESAJ_HEPSI_REDDEDILDI =
+  "Hiçbir belge alınamadı: site istekleri reddetti ya da sayfalar erişime " +
+  "kapalı. Ayrıntılar aşağıdaki listede.";
+
+/** Başarısız bitmiş iş kaydı — çıkmaz sınamalarının ortak zemini. */
+function dusenIs(ek: Partial<RefreshJob> = {}): RefreshJob {
+  return is({ durum: "hata", bitti: true, ...ek });
+}
+
+describe("kaliciGerekce", () => {
+  it("tarama kuralı reddi kalıcıdır — aynı robots.txt aynı cevabı verir", () => {
+    assert.equal(kaliciGerekce("robots disallow"), true);
+  });
+
+  it("403/404/410 kalıcı, 429 ve 5xx değil", () => {
+    assert.equal(kaliciGerekce("HTTP 403"), true);
+    assert.equal(kaliciGerekce("HTTP 404"), true);
+    assert.equal(kaliciGerekce("HTTP 410"), true);
+    assert.equal(kaliciGerekce("HTTP 429"), false);
+    assert.equal(kaliciGerekce("HTTP 500"), false);
+    assert.equal(kaliciGerekce("HTTP 503"), false);
+  });
+
+  it("bağlantı hatası ve tanınmayan gerekçe TEKRARLANABİLİR sayılır", () => {
+    // Asimetri bilinçli: yanlış "tekrarlanabilir" bir boşa denemeye,
+    // yanlış "çıkmaz" ise işe yarayacak bir eylemin engellenmesine mal olur.
+    assert.equal(kaliciGerekce("baglanti hatasi"), false);
+    assert.equal(kaliciGerekce("PDF metni cikarilamadi"), false);
+    assert.equal(kaliciGerekce("bilinmeyen"), false);
+  });
+});
+
+describe("isCikmazi", () => {
+  it("başarısız olmayan iş çıkmaz değildir", () => {
+    assert.equal(isCikmazi(is({ durum: "cekiliyor" })), null);
+    assert.equal(isCikmazi(is({ durum: "tamam", bitti: true })), null);
+    assert.equal(isCikmazi(is({ durum: "iptal", bitti: true })), null);
+  });
+
+  it("tarayıcı bileşeni eksikken düğme söz veremez", () => {
+    const c = isCikmazi(dusenIs({ mesaj: MESAJ_TARAYICI }));
+    assert.ok(c, "tarayıcı eksikliği çıkmaz sayılmalı");
+    assert.match(c.neOldu, /tarayıcı/);
+    assert.ok(c.neYapilabilir.length > 0);
+  });
+
+  it("yazma hatası çıkmazdır — toplamayı tekrarlamak diski boşaltmaz", () => {
+    const c = isCikmazi(dusenIs({ mesaj: MESAJ_YAZMA }));
+    assert.ok(c);
+    assert.match(c.neOldu, /yazılamadı/);
+  });
+
+  it("ağ yokluğu çıkmazdır — sistem çevrimdışı çalışmak üzere kurulu", () => {
+    const c = isCikmazi(dusenIs({ mesaj: MESAJ_AG_YOK }));
+    assert.ok(c);
+    assert.match(c.neOldu, /Ağ bağlantısı/);
+  });
+
+  it("belirsiz toplama hatası düğmeyi KİLİTLEMEZ", () => {
+    assert.equal(isCikmazi(dusenIs({ mesaj: MESAJ_BELIRSIZ })), null);
+    assert.equal(isCikmazi(dusenIs({ mesaj: null })), null);
+  });
+
+  it("adreslerin tümü tarama kuralıyla kapalıysa çıkmazdır", () => {
+    const c = isCikmazi(
+      dusenIs({
+        mesaj: MESAJ_HEPSI_REDDEDILDI,
+        hatalar: [
+          { url: "https://ornek.example/a", reason: "robots disallow" },
+          { url: "https://ornek.example/b", reason: "robots disallow" },
+        ],
+        hata_tamami: 2,
+        hata: 2,
+      }),
+    );
+    assert.ok(c);
+    assert.match(c.neOldu, /tarama kuralları/);
+  });
+
+  it("tümü kalıcı ama karışıksa ayrı bir çıkış yolu anlatılır", () => {
+    const c = isCikmazi(
+      dusenIs({
+        mesaj: MESAJ_HEPSI_REDDEDILDI,
+        hatalar: [
+          { url: "https://ornek.example/a", reason: "robots disallow" },
+          { url: "https://ornek.example/b", reason: "HTTP 404" },
+        ],
+        hata_tamami: 2,
+        hata: 2,
+      }),
+    );
+    assert.ok(c);
+    assert.match(c.neYapilabilir, /adresler/);
+  });
+
+  it("tek bir tekrarlanabilir adres bile düğmeyi AÇIK bırakır", () => {
+    assert.equal(
+      isCikmazi(
+        dusenIs({
+          mesaj: MESAJ_HEPSI_REDDEDILDI,
+          hatalar: [
+            { url: "https://ornek.example/a", reason: "robots disallow" },
+            { url: "https://ornek.example/b", reason: "HTTP 503" },
+          ],
+          hata_tamami: 2,
+          hata: 2,
+        }),
+      ),
+      null,
+    );
+  });
+
+  it("liste KIRPILMIŞSA yargı verilmez — görülmeyen kayıt geçici olabilir", () => {
+    assert.equal(
+      isCikmazi(
+        dusenIs({
+          mesaj: MESAJ_HEPSI_REDDEDILDI,
+          hatalar: [{ url: "https://ornek.example/a", reason: "robots disallow" }],
+          hata_tamami: 40, // liste kırpıldı
+          hata: 40,
+        }),
+      ),
+      null,
+    );
+  });
+
+  it("belge çekilmişse kısmi başarıdır, çıkmaz değildir", () => {
+    assert.equal(
+      isCikmazi(
+        dusenIs({
+          cekilen: 3,
+          hatalar: [{ url: "https://ornek.example/a", reason: "HTTP 403" }],
+          hata_tamami: 1,
+          hata: 1,
+        }),
+      ),
+      null,
+    );
+  });
+});
+
+describe("hataTekrarlanabilir", () => {
+  it("API'ye hiç ulaşılamaması ve 409 tekrar denenebilir", () => {
+    // 0 = istek hiç gitmedi (API ayakta değil), 409 = başka bir tazeleme
+    // koşuyor. İkisi de bekleyip yeniden basmakla düzelir.
+    assert.equal(hataTekrarlanabilir(0), true);
+    assert.equal(hataTekrarlanabilir(409), true);
+    assert.equal(hataTekrarlanabilir(429), true);
+    assert.equal(hataTekrarlanabilir(500), true);
+    assert.equal(hataTekrarlanabilir(504), true);
+  });
+
+  it("kalıcı istemci hataları tekrar denenmez", () => {
+    assert.equal(hataTekrarlanabilir(400), false);
+    assert.equal(hataTekrarlanabilir(403), false);
+    assert.equal(hataTekrarlanabilir(404), false);
+  });
+});
+
+describe("yoklamaBirakmaNotu", () => {
+  it("geçici arızada yeniden sormayı önerir", () => {
+    const not = yoklamaBirakmaNotu(5, true);
+    assert.match(not, /5 kez/);
+    assert.match(not, /Tekrar dene/);
+  });
+
+  it("kalıcı yoklukta tekrar sormayı ÖNERMEZ", () => {
+    const not = yoklamaBirakmaNotu(1, false);
+    assert.doesNotMatch(not, /Tekrar dene/);
+    assert.match(not, /bulunamadı/);
   });
 });

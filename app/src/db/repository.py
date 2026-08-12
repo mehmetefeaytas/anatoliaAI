@@ -26,9 +26,17 @@ from typing import Any, Optional
 from ..schemas import Campaign
 from .base import (
     BELGE_TURLERI,
+    KAMPANYA_DURUMLARI,
+    KAMPANYA_DURUMU_DAMGASIZ,
+    arama_sutunlari,
+    arama_suz,
+    arama_where,
     belge_turu_dogrula,
     extractor_dogrula,
     finalize_campaign_text,
+    kampanya_metin_suz,
+    kampanya_sutunlari,
+    kampanya_where,
     kiyas_where,
     nul_denetle,
     on_nul_dogrula,
@@ -451,6 +459,32 @@ class Repository:
             out[r["belge_turu"] or "bilinmeyen"] += int(r["n"])
         return out
 
+    def campaign_status_counts(self) -> dict[str, int]:
+        """Geçerlilik damgası → kampanya sayısı. Damgasızlar `'damgasiz'` altında.
+
+        Anahtar kümesi `belge_turu_counts()` ile AYNI disiplinde SABİTTİR
+        (`active`, `expired`, `damgasiz`) ve sıfırlar da yazılır: damgalama hiç
+        koşmamış bir korpusta `{"active": 0, "expired": 0, "damgasiz": 1774}`
+        döner. Eksik anahtar döndürmek, raporu okuyanın `0` ile "ölçülmedi"
+        arasındaki farkı görememesi demek olurdu.
+
+        `NULL` üçüncü bir kovadır, `active`'e KATILMAZ: gerekçe
+        `base.KAMPANYA_DURUMU_DAMGASIZ` yorumunda (korpusun %74'ü damgasız ve
+        onları "aktif" saymak doğrulanmamış bir iddia uydurmaktır).
+
+        Sütunda beklenmeyen bir değer varsa (elle yazılmış eski bir DB)
+        anahtar olarak OLDUĞU GİBİ eklenir — sessizce bir kovaya atmak, veri
+        hatasını gizlerdi.
+        """
+        rows = self.conn.execute(
+            "SELECT campaign_status, COUNT(*) AS n FROM campaigns "
+            "GROUP BY campaign_status").fetchall()
+        out = dict.fromkeys(KAMPANYA_DURUMLARI, 0)
+        for r in rows:
+            anahtar = r["campaign_status"] or KAMPANYA_DURUMU_DAMGASIZ
+            out[anahtar] = out.get(anahtar, 0) + int(r["n"])
+        return out
+
     def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]:
         """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı.
 
@@ -501,31 +535,102 @@ class Repository:
             "GROUP BY b.slug ORDER BY n DESC, b.slug").fetchall()
         return {r["slug"]: int(r["n"]) for r in rows}
 
-    def all_campaigns(self, *, belge_turu: Optional[str] = None) -> list[dict]:
-        """Tüm kampanyalar, `id` sırasında.
+    def bank_field_coverage(self) -> dict[str, dict[str, int]]:
+        """Banka slug → {'belge': kampanya sayısı, 'alan': FARKLI alan sayısı}.
+
+        `field_coverage()` bunu VEREMEZ: orada banka boyutu yoktur, "kâr payı
+        oranı 56 belgeden çıktı" der ama hangi bankalardan çıktığını söylemez.
+        Arayüzdeki "veri kapsamı: 3 belge / 12 alan" etiketi tam olarak o
+        eksik boyutu gösterir — bir bankanın çok belgesi olup az alanı
+        çıkmışsa, kıyas tablosundaki zayıflığın sebebi görünür olur.
+
+        `alan` **FARKLI alan adı** sayar (`COUNT(DISTINCT f.field_name)`), satır
+        değil: aynı bankanın 500 belgesinde kâr payı oranı 500 kez çıkmış
+        olabilir; "12 alan" ise o bankada kaç ÇEŞİT bilgi bulunduğunu söyler ve
+        üst sınırı 12'dir (`EXTRACTION_FIELDS`). Satır saymak, kapsamı belge
+        sayısıyla karıştıran anlamsız bir sayı üretirdi.
+
+        Anahtar kümesi SABİTTİR: `LEFT JOIN` sayesinde hiç belgesi olmayan banka
+        da `{"belge": 0, "alan": 0}` ile görünür (`campaigns_per_bank()` ile
+        aynı gerekçe — eksik anahtar "ölçülmedi" ile "sıfır"ı karıştırır).
+        """
+        rows = self.conn.execute(
+            "SELECT b.slug AS slug, COUNT(DISTINCT c.id) AS belge, "
+            "COUNT(DISTINCT f.field_name) AS alan FROM banks b "
+            "LEFT JOIN campaigns c ON c.bank_id=b.id "
+            "LEFT JOIN extracted_fields f ON f.campaign_id=c.id "
+            # İkincil `b.slug` sıralaması Postgres yolundaki ile aynı olmalı;
+            # yoksa eşit belgeli bankalar iki backend'de farklı sırada gelir.
+            "GROUP BY b.slug ORDER BY belge DESC, b.slug").fetchall()
+        return {r["slug"]: {"belge": int(r["belge"]), "alan": int(r["alan"])}
+                for r in rows}
+
+    def all_campaigns(self, *, belge_turu: Optional[str] = None,
+                      bank: Optional[str] = None,
+                      campaign_type: Optional[str] = None,
+                      status: Optional[str] = None,
+                      q: Optional[str] = None,
+                      govde: bool = True) -> list[dict]:
+        """Kampanyalar, `id` sırasında; isteğe bağlı süzgeçlerle.
 
         `ORDER BY c.id` EKSİKTİ; Postgres yolunda vardı. Sırasız SELECT'in
         dönüş sırası garantili değildir, yani iki backend aynı korpusta farklı
         sıralı liste verebilirdi — `GET /campaigns` de bu metoda dayandığı için
         arayüzdeki kampanya sırası backend'e göre değişirdi.
 
-        `belge_turu` **kesin eşleşmeli** bir seçicidir, varsayılanı `None` =
-        süzme yok (geriye tam uyumlu; `GET /campaigns` bugünkü listeyi verir).
-        `'sozlesme'` geçildiğinde YALNIZ akitler döner — chatbot'un "hangi
-        sözleşmeler var" sorusunun yolu budur. Burada `kiyas_where()`
+        ## `govde=False` — 10,3 MB'lık yükün asıl sebebi
+
+        `raw_text` SELECT listesinden ÇIKAR. Ölçüm (2026-08-11): süzgeçsiz
+        `GET /campaigns` 10.339.015 bayttı ve neredeyse tamamı ham gövdeydi;
+        arayüz o alanı hiçbir yerde okumuyordu. Varsayılan yine de **True**:
+        bu metodun depo içi çağıranları (RAG indeksi, gömme üretimi, toplu
+        özetleme) gövdeye MUHTAÇTIR ve varsayılanı `False` yapmak onları
+        sessizce boş metinle çalıştırırdı. Kararı veren taraf uçtur.
+
+        ## Süzgeçler
+
+        Hepsi **kesin eşleşmelidir** ve varsayılanları `None` = süzme yok
+        (geriye tam uyumlu). Süzgeç metni `base.kampanya_where()` ile ÜRETİLİR,
+        burada tekrar yazılmaz; `q` ise SQL'de değil `base.kampanya_metin_suz()`
+        ile Python'da uygulanır (gerekçe: `LOWER()` iki backend'de aynı şeyi
+        yapmıyor — o fonksiyonun docstring'i).
+
+        `belge_turu='sozlesme'` geçildiğinde YALNIZ akitler döner — chatbot'un
+        "hangi sözleşmeler var" sorusunun yolu budur. Burada `kiyas_where()`
         kullanılmaz: bu bir listeleme seçicisidir, kıyas güvenliği değil.
         """
-        belge_turu = belge_turu_dogrula(belge_turu)
-        sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
-               "c.campaign_type, c.belge_turu, c.campaign_status, c.ozet, "
-               "c.ozet_sebep, c.raw_text, c.source_url, c.scraped_at "
-               "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
-        params: tuple = ()
-        if belge_turu is not None:
-            sql += "WHERE c.belge_turu=? "
-            params = (belge_turu,)
-        rows = self.conn.execute(sql + "ORDER BY c.id", params).fetchall()
-        return [dict(r) for r in rows]
+        where, params = kampanya_where(
+            yer_tutucu="?", bank=bank, campaign_type=campaign_type,
+            belge_turu=belge_turu, status=status)
+        sql = ("SELECT " + kampanya_sutunlari(govde=govde)
+               + " FROM campaigns c JOIN banks b ON b.id=c.bank_id "
+               + where + "ORDER BY c.id")
+        rows = self.conn.execute(sql, tuple(params)).fetchall()
+        return kampanya_metin_suz([dict(r) for r in rows], q)
+
+    def search_campaigns(self, q: Optional[str], *,
+                         bank: Optional[str] = None,
+                         campaign_type: Optional[str] = None,
+                         belge_turu: Optional[str] = None,
+                         status: Optional[str] = None) -> list[dict]:
+        """Serbest arama — eşleşen satırlar + **neden eşleştikleri**.
+
+        `all_campaigns(q=...)`ten iki farkı var: sütun listesi kısadır
+        (`arama_sutunlari()`, ham gövde hiç seçilmez) ve her satır bir
+        `eslesme` alanı taşır. Boş sorgu BOŞ liste döndürür — gerekçe
+        `base.arama_suz()` docstring'inde.
+
+        Süzgeç metni ve eşleşme mantığı `base.py`den gelir; burada yalnız
+        yer tutucu (`?`) ve bağlantı yolu farklıdır.
+        """
+        where, params = arama_where(
+            yer_tutucu="?", bank=bank, campaign_type=campaign_type,
+            belge_turu=belge_turu, status=status)
+        sql = ("SELECT " + arama_sutunlari()
+               + " FROM campaigns c JOIN banks b ON b.id=c.bank_id "
+               + where + "ORDER BY c.id")
+        rows = self.conn.execute(sql, tuple(params)).fetchall()
+        return arama_suz([dict(r) for r in rows], q)
 
     def close(self):
         self.conn.close()

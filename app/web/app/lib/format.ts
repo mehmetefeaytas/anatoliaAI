@@ -104,10 +104,33 @@ export function extractorClass(e: Extractor | null): string {
   return e ? `badge badge-${e}` : "badge";
 }
 
-/** Çelişki türü → Türkçe başlık. */
+/**
+ * Çelişki türü → Türkçe başlık.
+ *
+ * ÖLÇÜLDÜ (2026-08-12): sözlükte yalnız iki giriş vardı ama
+ * `src/comparison/contradiction.py` YEDİ tür üretiyor. Eksik olanlar için
+ * `contradictionLabel` ham kodu basıyordu, yani jüri ekranında
+ * `suresi_dolmus_kampanya` yazıyordu — ölçülen canlı dağılımın 10/16'sı tam
+ * olarak o tür. Çelişki tespiti CLAUDE.md §18-2'de yenilikçilik hedefi; en
+ * güçlü kartın etiketi makine kodu olarak görünmemeli.
+ *
+ * Başlıklar UYDURULMADI, her biri kuralın kendi `detail` cümlesinden türetildi
+ * (satır numaraları o dosyada): 496 çelişen tutar bandı, 588 aynı belgede iki
+ * bitiş tarihi, 624 süresi dolmuş ama yayında, 765 kesişmeyen kâr payı, 829 iki
+ * sayfada farklı bitiş.
+ *
+ * AYNI BELGE ile İKİ SAYFA ayrımı başlıkta korunuyor: birincisi belgenin kendi
+ * içinde tutarsız, ikincisi iki ayrı sayfanın birbirini tutmaması. Sistem
+ * hangisinin doğru olduğunu söylemez, nerede durduklarını söyler.
+ */
 export const CONTRADICTION_LABELS: Record<string, string> = {
   masrafsiz_ama_ucret: "«Masrafsız» denmiş ama tahsis ücreti var",
   masrafsiz_ama_tutar: "«Masrafsız» denmiş ama masraf tutarı var",
+  celisen_tutar_bandi: "Aynı belgede çelişen tutar bandı",
+  celisen_kampanya_bitisi: "Aynı belgede iki farklı kampanya bitiş tarihi",
+  suresi_dolmus_kampanya: "Kampanya süresi dolmuş ama sayfa hâlâ sunuyor",
+  capraz_kar_payi_uyusmazligi: "İki sayfada kesişmeyen kâr payı oranı",
+  capraz_kampanya_bitisi: "İki sayfada farklı kampanya bitiş tarihi",
 };
 
 export function contradictionLabel(kind: string): string {

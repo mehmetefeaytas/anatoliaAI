@@ -34,6 +34,19 @@
  * İş arka planda koşar; ekran 1,5 saniyede bir durum sorar. Belge başına ~6
  * saniye sürdüğü için ilerleme belge bazında raporlanır — parça bazında
  * olsaydı ekran dakikalarca donmuş görünürdü.
+ *
+ * ## Yükleme: cetvel önce çizilir
+ *
+ * Sayaç ilk isteği beklerken şerit eskiden HİÇ basılmıyordu ve sonra aniden
+ * beliriyordu; kabuğun yüksekliği zıplıyor, üstelik o an ekranda «özet
+ * kapsamı» diye bir şeyin var olduğu bile bilinmiyordu. Şimdi etiket ve şeridin
+ * yapısı hemen basılıyor, yalnız SAYILAR bekliyor: yükleme sırasında hiçbir
+ * sayı, hiçbir oran ve hiçbir animasyonlu sayaç görünmez. Nabız yalnız
+ * «bekliyor» der ve `prefers-reduced-motion` altında durur.
+ *
+ * İskelet sonsuza kalmaz: kapsam isteği düşerse (`kapsamYukle` hatayı bilerek
+ * yutuyor) `denendi` bayrağı iskeleti kaldırır — sonu olmayan bir bekleyiş,
+ * bozuk bir sayaçtan daha kötü okunur.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -50,6 +63,8 @@ export default function SummaryCoverage() {
   const [is, setIs] = useState<OzetIsi | null>(null);
   const [hata, setHata] = useState<unknown>(null);
   const [mesgul, setMesgul] = useState(false);
+  /** İlk kapsam isteği tamamlandı mı (başarılı ya da başarısız). */
+  const [denendi, setDenendi] = useState(false);
 
   const zamanlayici = useRef<ReturnType<typeof setTimeout> | null>(null);
   const canli = useRef(true);
@@ -70,6 +85,10 @@ export default function SummaryCoverage() {
       // Kapsam sayacı yardımcı bir göstergedir; alınamazsa panelin geri
       // kalanını hata kutusuyla boğmuyoruz. Düğmenin kendi hatası ayrı
       // gösterilir.
+    } finally {
+      // İstek BİTTİ bilgisi hatadan bağımsız: iskelet yalnız «henüz
+      // sorulmadı» hâlini anlatır, «hiç gelmeyecek» hâlini anlatmaz.
+      if (canli.current) setDenendi(true);
     }
   }, []);
 
@@ -135,7 +154,26 @@ export default function SummaryCoverage() {
     }
   }
 
-  if (!kapsam || kapsam.toplam <= 0) return null;
+  if (!kapsam) {
+    if (denendi) return null;
+    return (
+      <div
+        className="ozet-kapsam-iskelet"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="durum-goz-ustu">özet kapsamı</span>
+        <span className="durum-iskelet-genis" aria-hidden="true" />
+        <p className="durum-iskelet-not">
+          Kapsam sayısı sunucudan okunuyor. Yapı hemen basılır, yalnız değerler
+          bekler — dönen bir sayaç bir oran iddia etmez.
+        </p>
+      </div>
+    );
+  }
+
+  if (kapsam.toplam <= 0) return null;
 
   const oran = Math.round((kapsam.ozetli / kapsam.toplam) * 100);
   const kosuyor = !!is && !is.bitti;
@@ -148,14 +186,30 @@ export default function SummaryCoverage() {
       : null;
 
   return (
-    <div className="ozet-kapsam">
-      <p className="small muted" style={{ margin: 0 }}>
+    // İş KOŞARKEN katlama zorla açık: arkada ilerleyen bir üretimi katlanmış
+    // bir kutunun içinde saklamak, kullanıcının onu durdurabileceğini de
+    // saklardı. `open` yalnız o hâlde veriliyor; aksi hâlde nitelik hiç
+    // yazılmaz ve kullanıcı kutuyu serbestçe açıp kapatabilir.
+    <details className="ozet-kapsam" {...(kosuyor ? { open: true } : {})}>
+      {/* KATLANDI (2026-08-12). Bu blok, adil kıyas notu katlandıktan sonra
+          katlanan üstünün en büyük tek tüketicisi hâline gelmişti: üç satırlık
+          bir paragraf ARTI bir operatör düğmesi, hem de sekmelerden önce ve her
+          ekranda. Canlı ekranda ölçüldü — kıyas tablosu yine katlamanın altında
+          kalıyordu, yalnız sebebi değişmişti.
+
+          Özet: her zaman görünen tek satır. Gerekçeler ve üretim düğmesi
+          açılınca geliyor. Kapatma DEĞİL, katlama: sayı hiç kaybolmuyor. */}
+      <summary className="ozet-kapsam-ozet small muted">
         <span className="badge badge-llm">özet kapsamı</span>{" "}
         <b>{trNum(kapsam.ozetli)}</b> / {trNum(kapsam.toplam)} kampanyada{" "}
         {/* "AI özeti" TEK parçada kalmalı: JSX satır kırılması ifadeyi ikiye
             böldüğünde `test_ozet_gorunurluk` kapısı düşer — ve haklı olarak,
             çünkü kullanıcıya dönük etiketin bütünlüğünü ölçüyor. */}
-        <span>AI özeti</span> var (%{trNum(oran)}).{" "}
+        <span>AI özeti</span> var (%{trNum(oran)})
+        {kapsam.hedef > 0 ? ` · ${trNum(kapsam.hedef)} belge bekliyor` : ""}
+      </summary>
+
+      <p className="small muted ozet-kapsam-govde">
         {kapsam.icerik_yok > 0 && (
           <>
             {trNum(kapsam.icerik_yok)} belgede{" "}
@@ -262,6 +316,6 @@ export default function SummaryCoverage() {
           <ErrorNotice error={hata} />
         </div>
       )}
-    </div>
+    </details>
   );
 }

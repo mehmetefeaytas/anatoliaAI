@@ -11,6 +11,22 @@
  *
  * ## Neden «LLM» değil «AI»
  *
+ * ## Etiketin üçüncü hâli: «üretilmiş» (v2 tasarım, 2026-08-12)
+ *
+ * Etiket iki kez değişti ve ikinci değişiklik burada GERİ ALINMIYOR, ileriye
+ * taşınıyor. 2026-08-09'daki gerekçe şuydu: «LLM» bir kısaltma ve jargon
+ * (`scripts/jargon_lint.py`). Gerekçe doğruydu, çözümü yarımdı — «AI» da bir
+ * kısaltma. v2 tasarımı kısaltmayı tümden atıyor: rozet tek bir Türkçe sözcük,
+ * «üretilmiş», ve okuyana asıl ayrımı söylüyor — bu metin ALINTILANMADI, ÜRETİLDİ.
+ *
+ * Yanındaki cümle «AI tarafından» yerine «Yerel model» diyor ve bu daha
+ * kesindir: model bu makinede çalıştı, bir servise gitmedi (CLAUDE.md §2
+ * on-prem kısıtı). «Kaynak metin aşağıda tam hâliyle duruyor» ise özetin neyin
+ * yerine geçMEDİĞİNİ söylüyor.
+ *
+ * Rozetin rengi `--llm`, `--warn` değil: «üretilmiş» bir uyarı değildir.
+ *
+ * Eski gerekçe kaydı:
  * Görünen etiket 2026-08-09'da «LLM özeti»nden «AI özeti»ne çevrildi. «LLM»
  * bir mimari adıdır ve panelin okuyucusuna (jüri, banka kullanıcısı) hiçbir
  * şey söylemez; «AI» aynı iddiayı taşır ama anlaşılır. Yumuşatma değil:
@@ -33,7 +49,21 @@
  *
  * `ExtractLive` LLM kapalıyken açıkça uyarı basıyor; bu, aynı dürüstlük
  * sinyalinin özet yolundaki karşılığıdır.
+ *
+ * ## `veri yok ≠ değer sıfır` neden BU yüzeyde
+ *
+ * Bu bileşen tek bir yerden çağrılıyor: belge denetim ekranı, hem de çıkarılan
+ * alanlar tablosunun hemen ardından. O tablonun bazı hücreleri `—` basıyor ve
+ * o çizgi iki bambaşka şey demek olabilir: alan metinde geçmiyor (`null`) ya da
+ * değer ölçüldü ve sıfır (`%0` — masrafsız, ilk 6 ay ödemesiz). İkincisi
+ * gerçek bir üründür ve alanın EN AVANTAJLI ucudur.
+ *
+ * Ayrımın okuma anahtarı, ayrımın okunduğu ekranda durmalı. Kutunun kendi
+ * gövdesi büyümüyor: anahtar katlanmış bir göz-üstü etiketi olarak geliyor
+ * (`VeriYokSifirDegil`, ./ErrorNotice.tsx) ve isteyen açıyor.
  */
+
+import { VeriYokSifirDegil } from "./ErrorNotice";
 
 type Props = {
   ozet?: string | null;
@@ -44,6 +74,14 @@ type Props = {
    * altına not basmak gürültü olurdu.
    */
   bosluguAcikla?: boolean;
+  /**
+   * `null` ile `%0` ayrımının okuma anahtarını bas.
+   *
+   * Varsayılan AÇIK: bu bileşenin bulunduğu tek yer, alan tablosunun altıdır
+   * ve anahtar oraya aittir. Özetin listede tek satır olarak göründüğü bir
+   * yüzeye taşınırsa kapatılmalı — orada anlatacağı bir tablo yoktur.
+   */
+  sifirAyrimi?: boolean;
 };
 
 /**
@@ -66,38 +104,55 @@ export default function SummaryNotice({
   ozet,
   ozetKaynak,
   bosluguAcikla = true,
+  sifirAyrimi = true,
 }: Props) {
   const metin = typeof ozet === "string" ? ozet.trim() : "";
 
   if (!metin) {
     if (!bosluguAcikla) return null;
     return (
-      <div className="summary-box summary-empty">
-        <div className="summary-label">
-          <span className="badge">özet yok</span>
-          <span className="summary-note">Bu belgede özetlenecek içerik yok.</span>
+      <>
+        <div className="summary-box summary-empty">
+          <div className="summary-label">
+            <span className="badge">özet yok</span>
+            <span className="summary-note">Bu belgede özetlenecek içerik yok.</span>
+          </div>
+          <p className="summary-body">
+            Sayfanın tamamı çerçeve metni (form listesi, gezinme, yasal
+            bildirim). Uydurma özet basılmaz — kaynak metin aşağıda tam
+            hâliyle durur.
+          </p>
         </div>
-        <p className="summary-body">
-          Sayfanın tamamı çerçeve metni (form listesi, gezinme, yasal
-          bildirim). Uydurma özet basılmaz — kaynak metin aşağıda tam
-          hâliyle durur.
-        </p>
-      </div>
+        {sifirAyrimi && <VeriYokSifirDegil />}
+      </>
     );
   }
 
   const kaynak = ozetKaynak ? KAYNAK_ETIKET[ozetKaynak] ?? ozetKaynak : null;
 
   return (
-    <div className="summary-box">
-      <div className="summary-label">
-        <span className="badge badge-llm">AI özeti</span>
-        <span className="summary-note">
-          AI tarafından üretilmiştir — kaynak metin aşağıdadır.
-          {kaynak ? ` (üreten: ${kaynak})` : ""}
-        </span>
+    <>
+      <div className="summary-box">
+        <div className="summary-label">
+          {/* Rozet metni "AI özeti" OLARAK KALMALI — tek parçada.
+              Sistemin geri kalanı bu adı kullanıyor: `rag.py` chatbot
+              cevabında "AI Özeti:", SummaryCoverage kapsama çubuğunda
+              "AI özeti var (%N)", ChatPanel ve components.css aynı ad.
+              Bir yüzeyde "üretilmiş" demek, kullanıcının iki ekranda aynı
+              şeyi farklı iki adla görmesine yol açıyordu
+              (tests/test_ozet_gorunurluk.py bunu yakaladı).
+              "LLM" jargonu ise kullanıcıya dönük metinde YASAK; şema
+              adları (`llm:`, `.badge-llm`) veri sözleşmesi olarak kalır. */}
+          <span className="badge badge-llm">AI özeti</span>
+          <span className="summary-note">
+            Yerel model üretti, internet gerektirmez. Kaynak metin aşağıda
+            tam hâliyle duruyor.
+            {kaynak ? ` (üreten: ${kaynak})` : ""}
+          </span>
+        </div>
+        <p className="summary-body">{metin}</p>
       </div>
-      <p className="summary-body">{metin}</p>
-    </div>
+      {sifirAyrimi && <VeriYokSifirDegil />}
+    </>
   );
 }

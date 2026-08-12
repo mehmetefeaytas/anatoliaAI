@@ -28,5 +28,15 @@ COPY --from=build /app/.next ./.next
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/next.config.js ./next.config.js
+# `public/` ÇALIŞMA AŞAMASINA DA KOPYALANIR. Next bu dizini derlemede
+# `.next` içine gömmez, çalışma zamanında diskten servis eder; satır
+# eksikken `public/` altına konan her dosya (yazı tipi, logo, favicon)
+# yerelde çalışıp teslim edilen imajda 404 verirdi — üstelik derleme
+# geçtiği için CI de yakalayamazdı.
+#
+# Dizin bugün boştur ve `.gitkeep` ile ayakta durur: `COPY` var olmayan
+# kaynakta imajı kırar, yani boş dizin burada bir yer tutucu değil, satırın
+# ön koşuludur.
+COPY --from=build /app/public ./public
 EXPOSE 3000
 CMD ["npm", "start"]

@@ -8,6 +8,18 @@
  * Gizli bir mod, açık unutulduğunda ticari ekranı denetim ekranına çevirir ve
  * kimse fark etmez. Bu yüzden mod açıkken düğmenin yanında ayrıca bir şerit
  * durur: neyin değiştiğini tek cümleyle söyler.
+ *
+ * Anahtarın durumu ÜÇ sinyal taşır ve hiçbiri tek başına renk değildir: durum
+ * noktası (`.jury-dot`), düğmenin kendi metni («açık» / «kapalı») ve
+ * `aria-pressed`.
+ *
+ * ## Neden mono bir altyazı eklendi
+ *
+ * «Kıyas tablosunda güven skorları görünür» cümlesi modun GÖRÜNEN sonucunu
+ * anlatıyor ama en somut sonucunu atlıyordu: sekme şeridi iki sekme uzuyor.
+ * Kullanıcı anahtarı açıp ekranın üstünde iki yeni sekmenin belirdiğini
+ * görüyor ve bunun anahtarla ilgisini kendi kuruyordu. Altyazı mono, çünkü
+ * söylediği şey bir gerekçe değil, ölçülebilir bir SAYIM: `+2 sekme`.
  */
 
 import { useJuryMode } from "../lib/juryMode";
@@ -28,11 +40,16 @@ export default function JuryModeToggle() {
         Jüri modu: {ready && jury ? "açık" : "kapalı"}
       </button>
       {jury && (
-        <span className="small muted">
-          Kıyas tablosunda güven skorları görünür. Denetim ekranları (Jüri Audit
-          Paneli, Canlı Çıkarım, Şeffaf Skorlama) bu moddan bağımsız olarak
-          skorları her hâlde gösterir.
-        </span>
+        <>
+          <span className="small mono faint">
+            +2 sekme: veri tazeleme, ayarlar
+          </span>
+          <span className="small muted">
+            Kıyas tablosunda güven skorları görünür. Denetim ekranları (Jüri
+            Audit Paneli, Canlı Çıkarım, Şeffaf Skorlama) bu moddan bağımsız
+            olarak skorları her hâlde gösterir.
+          </span>
+        </>
       )}
     </div>
   );

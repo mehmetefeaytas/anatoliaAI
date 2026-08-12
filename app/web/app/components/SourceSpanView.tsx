@@ -17,10 +17,23 @@
  * Çerçeve katlaması `SourceText`e devredilmiştir. Bu bileşenin sözleşmesi
  * DEĞİŞMEDİ: tüm offsetler hâlâ HAM metne göredir; katlama yalnız hangi
  * karakterlerin ekrana basıldığını etkiler, hesabı değil.
+ *
+ * ## İKİ KATMANIN YAZILI KARŞILIĞI (styles/kanit.css)
+ *
+ * Metnin ALTINDA duran not iki katmanı ADIYLA ve OFSETİYLE söyler: sarı =
+ * değerin çıkarıldığı ifade, mavi yıkama = kuralın gördüğü cümle bağlamı.
+ * Gerekçe erişilebilirlik: renk tek sinyal olamaz, iki vurgunun farkı yalnız
+ * tondan okunuyorsa renk körü bir denetçi için tek vurgu vardır.
+ *
+ * Mavi katman satırı YALNIZ pencere aralığı gerçekten span'den genişse
+ * basılır. `window_*` alanları span ile aynı olduğunda ekranda görünür bir
+ * yıkama yoktur ve olmayan bir katmanı tarif etmek, uydurmanın kibar hâli
+ * olurdu. Ofsetlerin tamamı API'den gelir; hiçbiri burada sabit yazılmaz.
  */
 
 import { useMemo, useState } from "react";
 import type { SpanInfo, TextBlock } from "../lib/api";
+import { trNum } from "../lib/format";
 import SourceText from "./SourceText";
 
 type Props = {
@@ -78,6 +91,15 @@ export default function SourceSpanView({
 
   const truncated = sliceFrom > 0 || sliceTo < text.length;
 
+  /* Mavi yıkama ekranda GÖRÜNÜR mü: pencere aralığı span'i gerçekten aşıyor
+   * mu. Aşmıyorsa katman çizilmemiştir ve tarif edilmez. */
+  const baglamGorunur =
+    start !== null &&
+    end !== null &&
+    ctxStart !== null &&
+    ctxEnd !== null &&
+    (ctxStart < start || ctxEnd > end);
+
   return (
     <div>
       {start === null || end === null ? (
@@ -88,19 +110,16 @@ export default function SourceSpanView({
           <span className="mono">source_span</span> metni saklı.)
         </div>
       ) : (
+        /* Metnin ÜSTÜNDE vurgunun NİTELİĞİ durur (doğrulandı mı, yalnız çevre
+           mi, birden çok eşleşme mi): okumaya başlamadan önce bilinmesi
+           gereken şey budur. Ofsetlerin kendisi metnin ALTINDAKİ katman
+           notunda — orada renklerin yanında dururlar. */
         <p className="offset-note">
-          Vurgulanan aralık:{" "}
-          <span className="mono">
-            [{start}, {end})
-          </span>{" "}
-          · {end - start} karakter
           {rawValue ? (
             <>
-              {" "}
-              · ham ifade: <span className="mono">«{rawValue}»</span>
+              ham ifade: <span className="mono">«{rawValue}»</span> ·{" "}
             </>
-          ) : null}{" "}
-          ·{" "}
+          ) : null}
           <span className={span.span_verified ? "badge badge-ok" : "badge badge-warn"}>
             {span.span_verified ? "offset doğrulandı" : "offset doğrulanamadı"}
           </span>
@@ -136,8 +155,23 @@ export default function SourceSpanView({
         trailingEllipsis={sliceTo < text.length}
       />
 
+      {start !== null && end !== null && (
+        <p className="kanit-katman-notu">
+          <span className="kanit-orn kanit-orn-mark">sarı</span>: değerin
+          çıkarıldığı ifade [{start}, {end}) · {end - start} karakter
+          {baglamGorunur && (
+            <>
+              {" · "}
+              <span className="kanit-orn kanit-orn-ctx">mavi yıkama</span>:
+              kuralın gördüğü cümle bağlamı [{ctxStart}, {ctxEnd})
+            </>
+          )}
+        </p>
+      )}
+
       <p className="offset-note">
-        Belge uzunluğu: <span className="mono">{text.length}</span> karakter
+        Belge uzunluğu: <span className="mono">{trNum(text.length)}</span>{" "}
+        karakter
         {truncated && (
           <>
             {" · "}

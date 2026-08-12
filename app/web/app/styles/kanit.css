@@ -1,0 +1,411 @@
+/* Kanıt / denetim ekranı — «bir sayı ve onu doğuran cümle, yan yana».
+ *
+ * İlgili: ../components/AuditPanel.tsx, ../components/SourceSpanView.tsx,
+ *         ../components/SourceText.tsx, ../components/KaynakDipnotu.tsx,
+ *         ../components/ConfidenceBadge.tsx, tokens.css, components.css
+ *         CLAUDE.md §18-1 (güven skoru + kaynak vurgulama)
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` 51 KB ve paylaşımlı. Bu ekranın kendine ait YERLEŞİM
+ * kuralları (iki kolon, künye ızgarası, provenans şeridi) başka hiçbir yerde
+ * kullanılmıyor; ortak dosyaya girseler her ekranın yükü olurlardı. Buradaki
+ * kurallar ortak sınıfları SİLMEZ, yalnız bu ekranın kapsamında kalarak
+ * üstüne yazar.
+ *
+ * ## Neden sağ kolon daha geniş
+ *
+ * `minmax(0, 1fr)` / `minmax(0, 1.15fr)`. Kasıtlı: bu ekranın öznesi çıkarılan
+ * değer değil, değerin ÇIKARILDIĞI CÜMLEDİR. Sol kolon bir künye (kısa satırlar,
+ * sabit etiket sütunu), sağ kolon okunacak metin. Eşit bölünme sağdaki serif
+ * gövdeyi satır başına ~40 karaktere düşürüyordu; göz her satırda geri dönüyor.
+ *
+ * ## İki katmanlı vurgu — biçim de sinyal taşır
+ *
+ * `mark.hit` (sarı, halkalı) = değerin ÇIKARILDIĞI ifade.
+ * `.ctx` (mavi yıkama)       = kuralın GÖRDÜĞÜ cümle bağlamı; span'i kapsar.
+ * `.kanit-dis` (soluk)       = kapsam dışı metin — okunur ama geri çekilmiş.
+ * Vurgu sarısı ekrandaki tek doygun renktir ve İKİ TEMADA DA AYNIDIR
+ * (`--mark`); tema değişince yalnız halka rengi değişir (`--mark-ring`).
+ * Bu yüzden burada hiçbir hex yok, hepsi tokendan gelir.
+ *
+ * ## `--warn` neden yok
+ *
+ * «Yerel model bu alanı doldurdu» bir UYARI DEĞİLDİR; kendi rengi var
+ * (`--llm`) ve kendi biçimi var (KESİKLİ sol şerit — kanıt bloklarının düz
+ * şeridinden bakışta ayrılır). Renk tek sinyal değil, biçim de sinyal.
+ */
+
+/* ===================================================================
+ * İKİ KOLON
+ * ================================================================ */
+
+.kanit-ikili {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: var(--sp-5);
+  align-items: start;
+}
+
+/* `.card + .card` üst boşluğu bu ızgarada YANLIŞ: iki kart kardeş ama yan
+ * yana; dikey boşluk sağ kolonu aşağı kaydırıyordu. Boşluğu `gap` yönetir. */
+.kanit-ikili > .card + .card {
+  margin-top: 0;
+}
+
+.kanit-kunye,
+.kanit-kaynak {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.kanit-kaynak {
+  gap: var(--sp-3);
+}
+
+/* Kart başlıklarının varsayılan üst boşluğu burada fazladan bir kademe
+ * ekliyor; kolonların üst hizası bozuluyordu. */
+.kanit-kunye > div > h2,
+.kanit-kaynak .kanit-kaynak-bas > h3 {
+  margin: 0;
+}
+
+.kanit-kunye > div > h2 {
+  margin-bottom: var(--sp-1);
+}
+
+/* Belge künyesi: banka/yol makine verisidir, başlığın altında fısıldar. */
+.kanit-belge-kunye {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  word-break: break-all;
+}
+
+/* ===================================================================
+ * SOL KOLON — çıkarılan değer künyesi
+ *
+ * Etiket sütunu SABİT (148px): etiketler mono büyük harf ve değişken
+ * genişlikte bir sütun, değerleri her satırda başka yerden başlatıyordu.
+ * Hizalanmayan bir künye, okunmayan bir künyedir.
+ * ================================================================ */
+
+.kanit-alan {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  gap: var(--sp-3) var(--sp-4);
+  align-items: baseline;
+  border-top: 1px solid var(--line-soft);
+  padding-top: var(--sp-4);
+  margin: 0;
+}
+
+/* Etiket = «bu, verinin kendisi değil, verinin ETİKETİ» (bkz. tokens.css,
+ * ÜÇ SES). Büyük harf yalnız mono'ya ait. */
+.kanit-alan > dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+.kanit-alan > dd {
+  margin: 0;
+  min-width: 0;
+}
+
+/* Alan adı DB sütun adıdır (`kar_payi_orani`), bir başlık değil. */
+.kanit-alan-adi {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  word-break: break-all;
+}
+
+/* Ekranın en güçlü satırı: normalize edilmiş değer. Tek başına 600 ağırlık
+ * taşıyan iki şeyden biri (öbürü kart başlığı). */
+.kanit-deger {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+}
+
+/* UZUN değer — ölçüldü (2026-08-12, tarayıcı, belge #1 `kampanya_kosullari`).
+ *
+ * 12 çıkarım alanının ikisi (`kampanya_kosullari`, `hedef_kitle`) sayı değil
+ * LİSTE döndürüyor ve normalize değer 1.100 karaktere çıkabiliyor. 28px/600
+ * ölçüsü bunu bir başlığa çeviriyordu: sol kolon 1.400px'e uzuyor, sağdaki
+ * kaynak metnin üst hizası ekranın dışına çıkıyordu. Sayı ölçüsü SAYIYA aittir;
+ * paragraf uzunluğunda bir değer gövde ölçüsünde okunur ve kendi kaydırma
+ * kutusunda kalır. Eşik `AuditPanel` içinde, karakter sayısıyla ölçülüyor.
+ *
+ * Kutu ÇERÇEVELİ: kaydırma kutusunun kesilen son satırı, çerçevesiz bir metinde
+ * bir çizim hatası gibi okunuyordu. Çerçeve + girintili zemin, `.source-text`
+ * ile aynı dili konuşur ve «bu bir kaydırma kutusu» der. Metin KIRPILMIYOR,
+ * sadece kaydırılıyor — kanıt gizlenmez. */
+.kanit-deger-uzun {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  letter-spacing: normal;
+  line-height: var(--lh-normal);
+  max-height: calc(var(--sp-10) * 4);
+  overflow-y: auto;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-2) var(--sp-3);
+}
+
+/* Ham ifade BANKANIN sesidir: tırnaklı yazı bir süs değil, bir beyandır —
+ * bu sözcükleri biz seçmedik. */
+.kanit-ham {
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  line-height: var(--lh-relaxed);
+}
+
+.kanit-katman,
+.kanit-aralik {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* Rozetin yanındaki açıklama SİSTEMİN sesi — sans, normal, küçük. */
+.kanit-katman-not {
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+/* Güven göstergesi tabloda TEK SATIR kalmak için `white-space: nowrap` taşıyor
+ * (satır yüksekliği sabit kalsın diye). Künyede o kural yanlış: kaynak etiketi
+ * «kanıt tabanlı (kural sinyalleri)» kadar uzayabiliyor ve 148px'lik etiket
+ * sütununun yanında kartın dışına taşıyordu. Burada sarılmasına izin verilir —
+ * künyede satır yüksekliği serbest, taşma değil. */
+.kanit-alan .conf {
+  flex-wrap: wrap;
+  white-space: normal;
+}
+
+.kanit-aralik-no {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ölçülemeyen künye satırı. Satır DÜŞMEZ, boşluğun kendisi sayılır:
+ * «kaydedilmedi» ile «yok» aynı şey değildir. */
+.kanit-yok {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  word-break: break-all;
+}
+
+/* --- ÜRETİLMİŞ içerik bloğu ---
+ * `SummaryNotice` zaten kesikli `--llm` şeridini ve kutu biçimini taşıyor
+ * (components.css `.summary-box`); burada yalnız ROZET tasarımdaki hâline
+ * getirilir: `--llm-wash` zemin, `--llm` kenarlık, mono BÜYÜK HARF.
+ * Bileşenin kendisine dokunulmadı — sahibi bu akış değil. */
+.kanit-kunye .summary-box {
+  margin-top: auto;
+}
+
+.kanit-kunye .summary-label .badge-llm {
+  background: var(--llm-wash);
+  color: var(--llm);
+  border-color: var(--llm);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+/* ===================================================================
+ * SAĞ KOLON — kaynak metin
+ * ================================================================ */
+
+.kanit-kaynak-bas {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.kanit-sayac {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Gövde ölçüsü tasarımda 14px/1.85 — `--fs-sm` (13) ile `--fs-base` (15)
+ * ARASINDA bir ara kademe. Skalaya yeni bir token eklemek paylaşımlı
+ * `tokens.css`'e dokunmak olurdu (sahibi bu akış değil), o yüzden ara değer
+ * burada, kapsamı bu ekran olan yerel bir değişkende yaşıyor ve gerekçesi
+ * yazılı. Kalıcı çözüm, tipografi skalasına 14px'lik bir ara kademe tokenı
+ * eklemektir; istek raporda koordinatöre bırakıldı.
+ *
+ * (Bu yorumda bir token ADI ile hex/değer yan yana YAZILMAZ: kontrast kapısının
+ * ayrıştırıcısı deseni yorumun içinde de yakalıyor ve hemen altındaki gerçek
+ * bildirimi yutuyor — token sessizce paletten düşüyor.)
+ *
+ * Yükseklik: 420px'lik tasarım kutusunun token karşılığı
+ * `--sp-10 * 6 + --sp-6` = 416px. Kaydırma kutusu ekranın değil metnin
+ * içindedir; künye kolonu asla kaymaz. */
+.kanit-kaynak .source-text {
+  --kanit-fs-kaynak: 14px;
+  font-size: var(--kanit-fs-kaynak);
+  line-height: var(--lh-relaxed);
+  max-height: calc(var(--sp-10) * 6 + var(--sp-6));
+}
+
+/* Kapsam dışı metin geri çekilir ama SİLİNMEZ ve okunur kalır: `--fg-faint`
+ * her iki temada da AA'yı geçer (bkz. scripts/kontrast_kontrol.py). Yalnız
+ * ekranda bir vurgu VARSA uygulanır — vurgusuz metinde her şey eşit sesle
+ * okunur, soluk bir gövde sebepsiz bir hiyerarşi kurmuş olurdu. */
+.source-text .kanit-dis {
+  color: var(--fg-faint);
+}
+
+/* --- iki katmanın yazılı karşılığı ---
+ * Renk asla tek sinyal değil: hangi rengin ne demek olduğu ve HANGİ
+ * OFSETLERİ kapsadığı metinle de yazılır. Ofsetler gerçek veriden gelir. */
+.kanit-katman-notu {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--lh-normal);
+}
+
+.kanit-katman-notu .kanit-orn {
+  display: inline-block;
+  border-radius: var(--radius-sm);
+  padding: 0 var(--sp-1);
+}
+
+.kanit-katman-notu .kanit-orn-mark {
+  background: var(--mark);
+  color: var(--on-mark);
+  font-weight: var(--fw-semibold);
+  box-shadow: var(--ring-mark);
+}
+
+.kanit-katman-notu .kanit-orn-ctx {
+  background: var(--accent-wash);
+  color: var(--fg);
+}
+
+/* --- provenans şeridi ---
+ * Belgenin nereden geldiği kartın DİBİNDE, çip dizisi hâlinde durur: kaynak
+ * adresi, ham belgeye giden yol, toplanma zamanı. Hepsi mono — bunlar
+ * cümleler değil, koordinatlar. */
+.kanit-provenans {
+  border-top: 1px solid var(--line-soft);
+  padding-top: var(--sp-3);
+  display: flex;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.kanit-cip,
+.kanit-provenans .btn-ghost {
+  display: inline-block;
+  max-width: 100%;
+  background: var(--bg);
+  color: var(--fg-dim);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.kanit-cip {
+  color: var(--accent-soft);
+  text-decoration: none;
+}
+
+a.kanit-cip:hover,
+a.kanit-cip:focus-visible {
+  background: var(--accent-wash);
+  border-color: var(--accent-soft);
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.kanit-provenans .btn-ghost {
+  cursor: pointer;
+}
+
+.kanit-provenans .btn-ghost:hover:not(:disabled) {
+  background: var(--accent-wash);
+  border-color: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ===================================================================
+ * KAYNAK DİPNOTU — panelin tekrar eden ATOMU
+ *
+ * `¶ 1284–1298`. Bu düğme kıyas tablosunda, sohbet kaynaklarında, delta
+ * panelinde ve burada AYNI jesti verir; o yüzden biçimi de aynı olmak
+ * zorunda. Eskiden nötr bir çerçeve taşıyordu (`--line` + `--bg`) ve
+ * tıklanabilir olduğu ancak imleç üstüne gelince anlaşılıyordu; artık
+ * duruyorken de bir eylem gibi görünür (`--accent-wash` zemin), hover'da
+ * tamamen ters çevrilir.
+ *
+ * Seçici `button.` ile yazıldı: kural `grafik.css`'teki tanımı yükleme
+ * SIRASINDAN BAĞIMSIZ olarak ezmeli, yoksa import sırası bir görünüm
+ * kararını sessizce belirlerdi.
+ * ================================================================ */
+
+button.kaynak-dipnot {
+  background: var(--accent-wash);
+  border-color: var(--accent-soft);
+  color: var(--accent);
+}
+
+button.kaynak-dipnot:hover,
+button.kaynak-dipnot:focus-visible,
+button.kaynak-dipnot[aria-expanded="true"] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA
+ * ================================================================ */
+
+@media (max-width: 1000px) {
+  /* Tek kolona düşerken sıra korunur: künye üstte, kaynak metin altta.
+   * Ters sıra, «değeri gör → cümlesini oku» okuma yönünü bozardı. */
+  .kanit-ikili {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  /* 148px'lik etiket sütunu bu genişlikte değere yer bırakmıyor; etiket
+   * kendi satırına çıkar ama BÜYÜK HARF mono kalır — etiket olduğu bilgisi
+   * yerleşimden değil tipografiden gelir. */
+  .kanit-alan {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-1) 0;
+  }
+
+  .kanit-alan > dd {
+    margin-bottom: var(--sp-3);
+  }
+}

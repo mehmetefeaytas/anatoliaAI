@@ -32,6 +32,24 @@
  * göstermektir; formül tür bilmez. Değişen, kapsamın artık YAZILMASI. Adil
  * sıralama için okuyucu kıyas tablosuna ya da «En Avantajlı» sekmesine
  * yönlendirilir.
+ *
+ * ## AMACIN YENİDEN TANIMI (2026-08-12) — «neden toplanmadı» da burada anlatılır
+ *
+ * Banka sayfası artık bileşik bir BANKA skoru basmıyor ve basmama gerekçesini
+ * tek cümleyle veriyor («sekiz kampanya türü birbirinin alternatifi değil»).
+ * Ama o cümle bir iddiadır ve iddianın dayanağı bu ekrandaydı: ağırlıklar,
+ * bileşenler, kapsama eşiği. Gerekçe bir yerde, dayanağı başka bir yerde
+ * durursa, jüri ikisini birleştirmek zorunda kalır.
+ *
+ * Bu yüzden bileşenin yüzeyi genişledi (kapsamı DEĞİL): tek alanın formülünü
+ * göstermeye DEVAM eder, üstüne iki şey ekler — (1) tür içi bileşik puanın
+ * hangi ağırlıklarla hesaplandığı, (2) o puanın neden ne bankalar arasında ne
+ * türler arasında TOPLANMADIĞI. Ağırlıklar sunucudan gelir
+ * (`composite_weights`, `compare.py::DEFAULT_WEIGHTS`); arayüz hiçbir ağırlığı
+ * kendi yazmaz — yazsaydı formülün iki sürümü olurdu.
+ *
+ * Bileşen SİLİNMEDİ ve silinemezdi: «en avantajlı» iddiasının denetlenebilir
+ * olduğu tek yüzey burasıdır.
  */
 
 import { api } from "../lib/api";
@@ -39,6 +57,47 @@ import { extractorClass, extractorLabel, formatValue } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { ErrorNotice, Loading } from "./ErrorNotice";
+
+/** Bir ağırlık satırı + GEREKÇESİ (`compare.py::WEIGHT_RATIONALE`). */
+type AgirlikSatiri = { alan: string; agirlik: number; gerekce: string | null };
+
+/**
+ * `composite_weights` alanını iki OLASI biçimden de okur.
+ *
+ * ÖLÇÜLDÜ (2026-08-12): `lib/api.ts` bu alanı `Record<string, number> | null`
+ * diye tanımlıyor ama `GET /scoring` gerçekte bir LİSTE döndürüyor —
+ * `[{field_name, weight, rationale, direction}, …]`, yani
+ * `compare.py::weight_manifest()` çıktısı. Tipe güvenip `Object.entries()`
+ * çağırmak, dizinin elemanlarını React'e çocuk olarak vermeye çalışıyor ve
+ * sayfa «Objects are not valid as a React child» ile çöküyordu.
+ *
+ * Tip düzeltmesi `lib/api.ts`'e ait ve o dosya bu akışın sahipliğinde değil;
+ * o yüzden düzeltme İSTENDİ (rapora yazıldı) ve burada iki biçim de okunuyor.
+ * Bileşen tipe değil TELDEN GELENE bakıyor: uç yarın sözleşmeye dönerse de
+ * çalışmaya devam eder, dönmezse de.
+ */
+function agirlikSatirlari(ham: unknown): AgirlikSatiri[] {
+  if (Array.isArray(ham)) {
+    return ham.flatMap((s) => {
+      if (!s || typeof s !== "object") return [];
+      const r = s as Record<string, unknown>;
+      const alan = typeof r.field_name === "string" ? r.field_name : null;
+      const agirlik = typeof r.weight === "number" ? r.weight : null;
+      if (alan === null || agirlik === null) return [];
+      return [{
+        alan,
+        agirlik,
+        gerekce: typeof r.rationale === "string" ? r.rationale : null,
+      }];
+    });
+  }
+  if (ham && typeof ham === "object") {
+    return Object.entries(ham as Record<string, unknown>).flatMap(([alan, w]) =>
+      typeof w === "number" ? [{ alan, agirlik: w, gerekce: null }] : [],
+    );
+  }
+  return [];
+}
 
 export default function ScoringExplainer({
   field,
@@ -98,6 +157,42 @@ export default function ScoringExplainer({
           <div className="notice notice-info" style={{ marginTop: "var(--sp-4)" }}>
             <strong>Bu tablo TEK alanı açıklar</strong>
             <div className="notice-body">{s.data.composite_note}</div>
+          </div>
+
+          {/* Tür İÇİ bileşik puanın ağırlıkları — banka sayfasındaki yıldızın
+              formülü. Ağırlıklar sunucudan gelir; gelmiyorsa hiçbir şey
+              basılmaz (uydurma formül göstermektense sessiz kalmak). */}
+          {agirlikSatirlari(s.data.composite_weights).length > 0 && (
+            <>
+              <h3 className="banka-gozustu">tür içi bileşik puanın ağırlıkları</h3>
+              <div className="alan-seridi">
+                {agirlikSatirlari(s.data.composite_weights).map((a) => (
+                  <span
+                    key={a.alan}
+                    className="alan-cip alan-cip-dolu"
+                    /* Ağırlık bir ÜRÜN KARARIDIR, ölçümden türetilmiş bir
+                       sabit değil (compare.py:693). Gerekçesi sunucudan
+                       geliyorsa çipin üstünde okunabilir olmalı. */
+                    title={a.gerekce ?? undefined}
+                  >
+                    {a.alan} · {a.agirlik}
+                  </span>
+                ))}
+              </div>
+            </>
+          )}
+
+          {/* KURAL: puan tür içinde kalır. Gerekçe, dayanağının hemen yanında. */}
+          <div className="banka-serit" role="note">
+            Banka sayfasındaki yıldız bu ağırlıklarla ve <b>yalnız bir kampanya
+            türünün içinde</b> hesaplanır; normalizasyon grup içi sıralama
+            tabanlıdır. Bu yüzden tek bir «banka puanı» üretilmez: farklı
+            türlerden gelen puanlar farklı popülasyonlarda ölçülmüş sıralardır,
+            ortalamaları tanımsızdır — ve hepsini tek sayıya toplamak, sistemin
+            reddettiği türler arası sıralamayı arka kapıdan geri getirirdi.
+            Bankanın kampanyalarını ortalamak ayrıca toplama kapsamasını
+            sessizce kaliteye çevirirdi: az belge toplanabilmiş banka, ürünü
+            kötü olduğu için değil verisi az olduğu için düşük puan alırdı.
           </div>
 
           <h3>Bankaların aldığı ara değerler</h3>

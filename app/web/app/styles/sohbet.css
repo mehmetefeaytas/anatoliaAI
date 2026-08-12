@@ -1,0 +1,451 @@
+/* Anatolia AI — sohbet çekmecesi, yüzen yuvarlak düğme (FAB), dipnot rozeti
+ * ve konu sınırı stilleri.
+ *
+ * İlgili: tokens.css, components.css (CHATBOT + SEKMELER bölümleri),
+ *         ../components/SohbetCekmecesi.tsx, ../components/ChatPanel.tsx
+ *
+ * `components.css` chatbot'un TAM SAYFA hâlini zaten stilliyor. Burada yalnız
+ * ÇEKMECE kabuğu, FAB, dipnot rozeti ve konu sınırı var; aynı bileşenin iki
+ * yerleşimi olduğu için ayrı dosya, ikisini karıştırmamayı kolaylaştırıyor.
+ *
+ * SEKME ŞERİDİ BURADA DEĞİL: `.tabs` `components.css`'te tanımlıdır ve
+ * base.css'in belgelediği kural geçerli — bir sınıfın davranışı, tanımlandığı
+ * dosyada yaşar. Sekme şeridinin sohbet çekmecesiyle ilgisi yok.
+ *
+ * Yükleme sırası: `layout.tsx` bu dosyayı `components.css`'ten SONRA alır, yani
+ * buradaki aynı-özgüllükteki kural kazanır. Bu bilinçli — `components.css`
+ * paylaşımlı katman olduğu için çekmeceye özgü kararlar oraya yazılmadı.
+ *
+ * Literal renk/boşluk YOK. İki istisna açıkça yazıldı: `1px` kenarlık
+ * kalınlıkları ve `--sohbet-genislik` (aşağıda gerekçesi var). Kırılımlar
+ * dosyanın SONUNDA (base.css:140-149'un belgelediği aynı-özgüllük tuzağı).
+ */
+
+/* ===================================================================
+ * YÜZEN YUVARLAK DÜĞME (FAB)
+ * ================================================================ */
+
+/* `--radius-full` burada MEŞRU (tokens.css:119-124): bu gerçekten yuvarlak bir
+ * şey. Kartlar keskin kalır — bu bir defter.
+ *
+ * ## Etiket neden gitti
+ *
+ * Eski düğme «💬 Soru sor» yazıyordu ve dosya başlığı bunun pazarlık dışı
+ * olduğunu savunuyordu: "yalnız simgeli yuvarlak bir düğme ne olduğunu tahmine
+ * bırakır". Gerekçe metinsel etiketin GEREKLİLİĞİ konusunda haklıydı, taşıyıcısı
+ * konusunda değil — etiket artık `aria-label` + `title` üzerinden geliyor, yani
+ * ekran okuyucu ve fare kullanıcısı aynı cümleyi duyuyor/görüyor. Kazanılan şey
+ * yer değil, sabitlik: 56×56 daire her ekranda AYNI yerde ve aynı boyutta
+ * durur; genişliği metne göre değişen bir kapsül, sağ alt köşede kimi ekranda
+ * grafiği, kimi ekranda tabloyu örtüyordu. */
+.sohbet-fab {
+  position: fixed;
+  right: var(--sp-5);
+  bottom: var(--sp-5);
+  /* Çekmece 40, FAB 41: düğme çekmecenin ÜSTÜNDE kalır, yoksa açık çekmecede
+   * kapatma hedefi kendi açtığı panelin altında kaybolurdu. */
+  z-index: 41;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--sp-10) - var(--sp-2));
+  height: calc(var(--sp-10) - var(--sp-2));
+  padding: 0;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.sohbet-fab:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+/* İkon `stroke: currentColor` ile çizilir: koyu temada `--on-accent` koyu
+ * lacivere döner ve konuşma balonu onunla birlikte döner. Sabit bir beyaz
+ * `stroke`, koyu temada parlak zemin üstünde 1,4:1 kalırdı. */
+.sohbet-fab svg {
+  display: block;
+}
+
+/* ===================================================================
+ * ÇEKMECE
+ * ================================================================ */
+
+/* Genişlik neden tokensız bir literal: `396px` bir BOŞLUK değil, bir ÖLÇÜ —
+ * kaynak tablosunun yığın hâlinde okunabildiği en dar sütun (bkz. aşağıdaki
+ * "kaynak tablosu tuzağı"). Boşluk skalası (4px tabanlı) bir yüzey genişliğini
+ * anlatmak için yapılmadı; `--measure` gibi bu da yerel bir tipografi/ölçü
+ * kararıdır ve tek yerde yaşar. */
+.sohbet-cekmece {
+  --sohbet-genislik: 396px;
+  /* Çekmecenin FAB'a bıraktığı pay: 56px düğme + iki tarafında --sp-5. */
+  --sohbet-fab-payi: calc(var(--sp-10) + var(--sp-6));
+
+  position: fixed;
+  right: var(--sp-5);
+  bottom: var(--sohbet-fab-payi);
+  z-index: 40;
+  width: var(--sohbet-genislik);
+  max-width: calc(100vw - var(--sp-8));
+  max-height: calc(100vh - (var(--sohbet-fab-payi) + var(--sp-8)));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: sohbet-acilis var(--dur-base) var(--ease);
+}
+
+/* Açılış yalnız KONUM ve saydamlıkta; düzen animasyonu yok (tokens.css:181 —
+ * geçişler renk/gölge üzerinde, yeniden akış maliyetinden kaçınılıyor). */
+@keyframes sohbet-acilis {
+  from {
+    opacity: 0;
+    transform: translateY(var(--sp-2));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sohbet-cekmece-bas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.sohbet-cekmece-kimlik {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.sohbet-cekmece-ad {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  color: var(--fg);
+}
+
+/* MAKİNE verisi: çekmecenin hangi ekranda açıldığı. Mono, küçük harf — bu bir
+ * ETİKET değil, bir DEĞER (büyük harf yalnız etikete ait, tokens.css:49). */
+.sohbet-cekmece-baglam {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sohbet-kapat {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--sp-5) + var(--sp-1));
+  height: calc(var(--sp-5) + var(--sp-1));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--fg-dim);
+  font: inherit;
+  font-size: var(--fs-base);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.sohbet-kapat:hover {
+  border-color: var(--accent);
+  color: var(--fg);
+}
+
+.sohbet-cekmece-govde {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+}
+
+/* Çekmece içindeki panel kart değil: kartın kenarlığı, gölgesi ve dolgusu
+ * çekmecenin kendi kabuğuyla ikileme yaratırdı. */
+.sohbet-dar {
+  display: block;
+}
+
+/* ===================================================================
+ * ÜRÜNÜN SÖZLEŞMESİ — provenans şeridi taşıyan not
+ * ================================================================ */
+
+/* Çekmecenin ilk söylediği şey ne yapabildiği değil, NE YAPMAYACAĞI. Sol
+ * kenardaki 3px `--accent` şeridi, panelin her yerinde aynı anlamı taşır:
+ * "buradan aşağısı kanıta bağlıdır" (BRIEF §provenans şeridi). */
+.sohbet-sozlesme {
+  margin: 0;
+  padding: var(--sp-3);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+}
+
+/* ===================================================================
+ * HAZIR SORULAR
+ * ================================================================ */
+
+.sohbet-hazir {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin: 0 0 var(--sp-3);
+}
+
+/* MONO BÜYÜK HARF: bu, verinin kendisi değil verinin etiketi (tokens.css:49). */
+.sohbet-hazir-etiket {
+  flex: 1 0 100%;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+/* Soru bir CÜMLEDİR: sola yaslı ve sarabilir. Eskiden `.chip` giyiyordu ve
+ * `white-space: nowrap` yüzünden uzun soru çekmecede yatay kaydırma açıyordu. */
+.sohbet-hazir-dugme {
+  text-align: left;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+
+.sohbet-hazir-dugme:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+
+.sohbet-hazir-dugme:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Dar hâlde sorular alt alta ve tam genişlikte: 396px'lik bir sütunda yan yana
+ * iki soru düğmesi, ikisini de iki kelimeye kırpardı. */
+.sohbet-dar .sohbet-hazir {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* ===================================================================
+ * BESLEYİCİ — soru kutusu + Sor
+ * ================================================================ */
+
+/* Şerit çekmecede YAPIŞIK durur (`sticky`). Sebep DOM sırasıdır: cevap günlüğü
+ * kutunun ALTINDA ve en yeni tur en üstte basılıyor (ChatPanel §e); kutu
+ * sıradan bir blok olsaydı üçüncü cevaptan sonra yukarı kayıp giderdi.
+ *
+ * Tasarım maketi şeridi çekmecenin DİBİNE koyuyor. Burada üstte: kutuyu görsel
+ * olarak sona almak, DOM sırasını tersine çevirmek (klavye Tab sırası ekranda
+ * gördüğü sıradan ayrılırdı) ya da CSS `order` ile görsel/DOM sırasını
+ * ayırmak demekti. Şerit iki yerde de aynı işi yapıyor; erişilebilirlik
+ * ayrımı yapmıyor. */
+.sohbet-besleyici {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-2);
+  padding: var(--sp-3) 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+.sohbet-dar .sohbet-besleyici {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  /* Kaydırılan içerik şeridin ARKASINDAN geçmemeli: zemin opak, alt kenarlık
+   * şeridi aşağıdaki günlükten ayırır. */
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* ===================================================================
+ * DİPNOT ROZETİ — sayının yanındaki kanıt bağlantısı
+ * ================================================================ */
+
+/* Ürünün sözleşmesinin görünür yarısı: cevaptaki her sayı, çıkarıldığı belgeye
+ * giden bir rozet taşır. Rozet yoksa sayı da yoktur — bu yüzden rozet
+ * bağlantısı OLMAYAN bir satırda hiç basılmaz (ChatPanel `SohbetDipnotu`),
+ * uydurma bir hedefe götürmek kanıt iddiasını tersine çevirirdi. */
+.sohbet-dipnot {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px var(--sp-2);
+  border: 1px solid var(--accent-soft);
+  border-radius: var(--radius-sm);
+  background: var(--accent-wash);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+/* Hover'da TERS basar: rozet dolu mürekkebe döner. */
+.sohbet-dipnot:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Değer + rozet aynı taban çizgisinde durur; sayı sağa yaslı sütunda kalır. */
+.sohbet-deger {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+/* --- KAYNAK TABLOSU TUZAĞI ---
+ *
+ * `table.data.stackable` kart yığınına yalnız `@media (max-width: 900px)`
+ * altında dönüyor — yani GÖRÜNÜM genişliğine bakıyor, kapsayıcıya değil.
+ * 1440px'lik bir ekranda 396px'lik çekmecede o sorgu tetiklenmez ve dört
+ * sütunlu kaynak tablosu ezilir.
+ *
+ * `@container` daha zarif olurdu ama projenin `color-mix()`'i reddettiği
+ * uyumluluk çıtasına fazla yakın (bkz. tokens.css başlığı). Bunun yerine
+ * çekmece içindeki tablolar KOŞULSUZ yığın moduna alınıyor: kural aynı,
+ * yalnız tetikleyicisi genişlik değil, kapsayıcının kimliği.
+ *
+ * Satır/sütun semantiği bozulmuyor — başlık satırı gizlenmiyor, GÖRSEL olarak
+ * kırpılıyor ve her hücre kendi etiketini `data-label` üzerinden taşıyor.
+ */
+.sohbet-cekmece table.data.stackable thead {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sohbet-cekmece table.data.stackable tbody tr {
+  display: grid;
+  gap: var(--sp-1);
+  padding: var(--sp-3) 0;
+  border-top: 1px solid var(--line);
+}
+
+.sohbet-cekmece table.data.stackable tbody td {
+  display: grid;
+  grid-template-columns: minmax(80px, 32%) 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-1) 0;
+  min-width: 0;
+}
+
+.sohbet-cekmece table.data.stackable tbody td::before {
+  content: attr(data-label);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+}
+
+/* ===================================================================
+ * KONU SINIRI
+ * ================================================================ */
+
+/* Basıldı ama henüz sorulmadı. Görünür bir iz olmasaydı kullanıcı düğmeye
+ * basıp basmadığını bilemezdi. */
+.sohbet-konu-bekliyor {
+  margin: var(--sp-2) 0 0;
+  padding: var(--sp-2) var(--sp-3);
+  border-left: 2px solid var(--accent);
+  background: var(--accent-wash);
+  color: var(--fg);
+}
+
+/* Akıştaki ayırıcı: botun bağlamı yönettiğini görsel olarak kanıtlayan tek
+ * işaret. Yazı ortada, çizgi iki yanda. */
+.sohbet-konu-ayirici {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin: var(--sp-4) 0;
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  font-family: var(--font-mono);
+}
+
+.sohbet-konu-ayirici::before,
+.sohbet-konu-ayirici::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ===================================================================
+ * KIRILIMLAR + HAREKET TERCİHİ — dosyanın SONUNDA
+ * ================================================================ */
+
+/* Hareket kapatıldığında çekmece AÇILMAYA devam eder, sadece kayarak gelmez.
+ * `animation: none` yerine süreyi kısaltmak yetmezdi: `transform` tetikleyen
+ * bir açılış, vestibüler duyarlılığı olan kullanıcı için asıl sorundur. */
+@media (prefers-reduced-motion: reduce) {
+  .sohbet-cekmece {
+    animation: none;
+  }
+
+  .sohbet-fab,
+  .sohbet-hazir-dugme,
+  .sohbet-dipnot {
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Dar ekranda çekmece iki kenara yayılır; 396px sabit genişlik 375px'lik bir
+   * ekranda `max-width` sayesinde daralıyordu ama sağa yapışık kalıyordu.
+   * FAB'a bırakılan dikey pay da küçülür — 24px boşluk 375px'te ekranın %13'ü. */
+  .sohbet-cekmece {
+    --sohbet-fab-payi: calc(var(--sp-10) + var(--sp-4));
+
+    left: var(--sp-3);
+    right: var(--sp-3);
+    width: auto;
+    max-width: none;
+  }
+
+  .sohbet-fab {
+    right: var(--sp-3);
+    bottom: var(--sp-3);
+  }
+}

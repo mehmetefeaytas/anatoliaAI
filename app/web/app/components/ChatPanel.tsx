@@ -128,7 +128,7 @@
  *     üretirdi. Jürinin ihtiyacı ise tam tersi: ateşlenmeyenleri de görmek.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api";
 import type { ChatResp, ChatSafety, ChatSource } from "../lib/api";
 import { formatValue, trNum } from "../lib/format";
@@ -185,9 +185,29 @@ function kirp(metin: string, sinir: number): string {
 type Props = {
   /** Belgeyi Jüri Audit Paneli'nde açar (page.tsx `inspect` deseni). */
   onInspect?: (campaignId: number) => void;
+  /**
+   * Ekrana özel hazır sorular.
+   *
+   * Sabit bir liste her ekranda aynı altı soruyu gösteriyordu; oysa kullanıcı
+   * «En Avantajlı» ekranındayken bileşik skoru, banka sayfasındayken o
+   * bankayı sormak istiyor. Çekmece açıldığı rotayı bilir ve listeyi ona göre
+   * verir (bkz. ./SohbetCekmecesi.tsx `HAZIR_SORULAR`).
+   */
+  presets?: readonly string[];
+  /**
+   * Geniş yerleşim (tam sayfa) mı, dar mı (sağ çekmece).
+   *
+   * Dar hâlde başlık ve açıklama basılmaz — çekmecenin kendi başlığı var ve
+   * 420px'de dört satırlık bir lede, sorulacak kutuyu katlamanın altına iter.
+   */
+  genis?: boolean;
 };
 
-export default function ChatPanel({ onInspect }: Props) {
+export default function ChatPanel({
+  onInspect,
+  presets = PRESETS,
+  genis = true,
+}: Props) {
   const [q, setQ] = useState("");
   const [turlar, setTurlar] = useState<Tur[]>([]);
   // Kenara alınmış sohbet. Ekrana basılmaz, bağlama da girmez; yalnız şeritte
@@ -196,6 +216,9 @@ export default function ChatPanel({ onInspect }: Props) {
   // Temizleme onayı beklerken açık. Onay adımı olmadan tek tıkla iki sohbet
   // birden silinirdi.
   const [onayBekliyor, setOnayBekliyor] = useState(false);
+  // «Yeni konu»ya basıldı ama henüz soru sorulmadı. Bayrak bir SONRAKİ tura
+  // yazılır ve orada tüketilir.
+  const [konuBasiBekliyor, setKonuBasiBekliyor] = useState(false);
   const [busy, setBusy] = useState(false);
   // Saklanan sohbet OKUNDU mu. Okunmadan yazmak, ilk render'daki boş listeyi
   // diske basıp geçmişi silerdi.
@@ -246,7 +269,14 @@ export default function ChatPanel({ onInspect }: Props) {
       // ekledikten sonra okumak, cevabı henüz gelmemiş turu da listeye
       // sokardı (bağlamı boş, faydası yok, gövdesi şişik).
       const baglam = baglamListesi(turlar);
-      setTurlar((t) => [...t, { id, soru: text, cevap: null, hata: null }]);
+      setTurlar((t) => [
+        ...t,
+        // Konu sınırı bir SONRAKİ soruya yazılır: «Yeni konu»ya basmak
+        // geçmişi değiştirmez, yalnız bundan sonrasının neyi devralacağını
+        // belirler. Bayrak tüketilir — sınır tek turluktur.
+        { id, soru: text, cevap: null, hata: null, konuBasi: konuBasiBekliyor },
+      ]);
+      if (konuBasiBekliyor) setKonuBasiBekliyor(false);
 
       try {
         const cevap = await api.chat(text, baglam);
@@ -257,8 +287,27 @@ export default function ChatPanel({ onInspect }: Props) {
         setBusy(false);
       }
     },
-    [busy, turlar],
+    [busy, turlar, konuBasiBekliyor],
   );
+
+  /**
+   * Bağlam devralmayı keser — geçmişi SİLMEDEN.
+   *
+   * «Yeni sohbet»ten farkı burada: o, sohbeti kenara alıp ekranı boşaltır.
+   * Konu değiştirmek geçmişi silmeyi gerektirmiyor — kullanıcı önceki
+   * soruları okumaya devam edebilmeli ama bot onları devralmamalı.
+   *
+   * Bağlam sızması bildirildi (konut finansmanı soruldu, taşıt finansmanı
+   * cevabı geldi) ve bu düğme onun kullanıcı tarafındaki emniyet valfi: kod
+   * tarafındaki devralma mantığı düzelene kadar bile işe yarar.
+   *
+   * Bayrak SONRAKİ soruya yazılır, o anki geçmişe değil: basmak yazılmış bir
+   * şeyi değiştirmez, yalnız bundan sonrasını etkiler.
+   */
+  const yeniKonu = useCallback(() => {
+    setKonuBasiBekliyor(true);
+    alanRef.current?.focus();
+  }, []);
 
   /**
    * Yürüyen sohbeti ikinci göze taşır ve boş sayfa açar.
@@ -308,17 +357,25 @@ export default function ChatPanel({ onInspect }: Props) {
   const sonCevap = turlar.length ? turlar[turlar.length - 1] : null;
 
   return (
-    <section className="card">
-      <h2>Chatbot</h2>
-      <p className="lede">
-        Sayısal/karşılaştırmalı sorular yapısal sorguya, koşul/açıklama soruları
-        RAG&apos;e yönlendirilir. Hangi yolun kullanıldığı cevabın yanında yazar.
-        Takip sorusu sorabilirsiniz: önceki turun alanı, süzgeci ve öznesi
-        devralınır ve devralınan bağlam cevabın yanında rozet olarak yazar.
-      </p>
+    <section className={genis ? "card" : "sohbet-dar"}>
+      {/* Dar hâlde başlık ve lede basılmaz: çekmecenin kendi başlığı var ve
+          420px'de dört satırlık bir açıklama, soru kutusunu katlamanın altına
+          iter — düzeltilen kusurun aynısını çekmecede tekrarlardı. */}
+      {genis && (
+        <>
+          <h2>Chatbot</h2>
+          <p className="lede">
+            Sayısal/karşılaştırmalı sorular yapısal sorguya, koşul/açıklama
+            soruları RAG&apos;e yönlendirilir. Hangi yolun kullanıldığı cevabın
+            yanında yazar. Takip sorusu sorabilirsiniz: önceki turun alanı,
+            süzgeci ve öznesi devralınır ve devralınan bağlam cevabın yanında
+            rozet olarak yazar.
+          </p>
+        </>
+      )}
 
       <div className="row" style={{ marginBottom: "var(--sp-3)" }}>
-        {PRESETS.map((p) => (
+        {presets.map((p) => (
           <button
             key={p}
             type="button"
@@ -358,6 +415,19 @@ export default function ChatPanel({ onInspect }: Props) {
           Enter gönderir · Shift+Enter yeni satır · en yeni cevap en üstte
         </p>
         <div className="row-tight">
+          {/* «Yeni konu» ile «Yeni sohbet» BİLEREK ayrı: ilki bağlamı keser
+              ve geçmişi ekranda bırakır, ikincisi sohbeti kenara alır. Tek
+              düğmeye indirmek, konu değiştirmek isteyen kullanıcıyı geçmişini
+              kaybetmeye zorlardı. */}
+          <button
+            type="button"
+            className="btn-link"
+            onClick={yeniKonu}
+            disabled={busy || turlar.length === 0 || konuBasiBekliyor}
+            title="Sonraki soru önceki turların alanını, süzgecini ve öznesini devralmaz; geçmiş ekranda kalır"
+          >
+            Yeni konu
+          </button>
           <button
             type="button"
             className="btn-link"
@@ -435,9 +505,29 @@ export default function ChatPanel({ onInspect }: Props) {
             : ""}
       </p>
 
+      {/* «Yeni konu»ya basıldı, soru henüz sorulmadı. Basmanın ekranda
+          hiçbir izi olmasaydı kullanıcı basıp basmadığını bilemezdi. */}
+      {konuBasiBekliyor && (
+        <p className="sohbet-konu-bekliyor small" role="status">
+          Sonraki soru yeni bir konu olarak sorulacak — önceki turların alanı,
+          süzgeci ve öznesi devralınmayacak.
+        </p>
+      )}
+
       <div className="chat-log" aria-live="polite" aria-busy={busy}>
         {gorunum.map((t) => (
-          <TurGorunumu key={t.id} tur={t} onInspect={onInspect} />
+          <Fragment key={t.id}>
+            <TurGorunumu tur={t} onInspect={onInspect} />
+            {/* Ayırıcı turun ALTINA basılır çünkü liste ters sıralı: işaretli
+                tur yeni konunun ilkidir, yani ekranda ondan AŞAĞIDA kalanlar
+                eski konudur. Bu, botun bağlamı yönettiğini jüriye görsel
+                olarak kanıtlayan tek işaret. */}
+            {t.konuBasi && (
+              <div className="sohbet-konu-ayirici" role="separator">
+                <span>yeni konu{t.cevap?.field ? `: ${t.cevap.field}` : ""}</span>
+              </div>
+            )}
+          </Fragment>
         ))}
       </div>
 

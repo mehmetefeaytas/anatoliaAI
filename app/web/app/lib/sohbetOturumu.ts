@@ -82,10 +82,36 @@ export type Tur = {
   soru: string;
   cevap: ChatResp | null;
   hata: unknown;
+  /**
+   * Bu tur YENİ BİR KONUNUN ilk turu mu.
+   *
+   * «Yeni konu» düğmesi bunu işaretler. `baglamListesi` geriye yürürken
+   * işaretli turu ALIR ve orada DURUR — yani önceki konunun alanı, süzgeci ve
+   * öznesi devralınmaz.
+   *
+   * Bu, «Yeni sohbet»ten farklıdır: o, sohbeti kenara alıp ekranı boşaltır.
+   * Konu değiştirmek geçmişi silmeyi gerektirmiyor; kullanıcı önceki soruları
+   * okumaya devam edebilmeli ama bot onları devralmamalı. Bağlam sızması
+   * bildirildiğinde kullanıcının elinde bir emniyet valfi olmalı — kod tarafı
+   * düzelene kadar bile işe yarar.
+   */
+  konuBasi?: boolean;
 };
 
-/** Kayda yazılan tur — bekleyen/hatalı turlar buraya hiç girmez. */
-type KayitliTur = { id: number; soru: string; cevap: ChatResp };
+/**
+ * Kayda yazılan tur — bekleyen/hatalı turlar buraya hiç girmez.
+ *
+ * `konuBasi` İSTEĞE BAĞLI eklendi, tıpkı `onceki` gibi: eski kayıt yeni kodda
+ * eksiksiz okunur, alanı taşımayan yeni kayıt eski kodda okunur. Şekil iki
+ * yönde de uyumlu olduğu için `SURUM` artmadı — artırmak, hiçbir uyumsuzluğu
+ * engellemeden herkesin sohbetini silmek olurdu.
+ */
+type KayitliTur = {
+  id: number;
+  soru: string;
+  cevap: ChatResp;
+  konuBasi?: boolean;
+};
 
 type Kayit = {
   v: number;
@@ -112,7 +138,9 @@ function depo(): Storage | null {
  * atılır — ama bu sadece arayüzün çökmemesi içindir: bağlamın asıl güvenlik
  * denetimi sunucuda, izin listesiyle yapılır (src/chatbot/router.py).
  */
-function turGecerli(x: unknown): x is { id: number; soru: string; cevap: ChatResp } {
+function turGecerli(
+  x: unknown,
+): x is { id: number; soru: string; cevap: ChatResp; konuBasi?: boolean } {
   if (!x || typeof x !== "object") return false;
   const t = x as Record<string, unknown>;
   if (typeof t.soru !== "string" || !t.soru) return false;
@@ -149,7 +177,15 @@ function turleriCoz(ham: unknown): Tur[] {
   return ham
     .filter(turGecerli)
     .slice(-AZAMI_TUR)
-    .map((t) => ({ id: t.id, soru: t.soru, cevap: t.cevap, hata: null }));
+    .map((t) => ({
+      id: t.id,
+      soru: t.soru,
+      cevap: t.cevap,
+      hata: null,
+      // Eski kayıtta bu alan yok; `undefined` kalması doğru davranış — o
+      // sohbette konu sınırı hiç işaretlenmemiştir.
+      konuBasi: t.konuBasi === true ? true : undefined,
+    }));
 }
 
 /** Yürüyen sohbeti okur. Kayıt yoksa/bozuksa boş liste (hata değil). */
@@ -172,7 +208,12 @@ function saklanabilir(turlar: Tur[]): KayitliTur[] {
   return turlar
     .filter((t) => t.cevap)
     .slice(-AZAMI_TUR)
-    .map((t) => ({ id: t.id, soru: t.soru, cevap: t.cevap as ChatResp }));
+    .map((t) => ({
+      id: t.id,
+      soru: t.soru,
+      cevap: t.cevap as ChatResp,
+      ...(t.konuBasi ? { konuBasi: true as const } : {}),
+    }));
 }
 
 /**
@@ -253,14 +294,20 @@ export function baglamListesi(
 ): ChatContext[] {
   const out: ChatContext[] = [];
   for (let i = turlar.length - 1; i >= 0 && out.length < pencere; i -= 1) {
-    const c = turlar[i].cevap?.context;
-    if (!c) continue;
-    const dolu =
-      c.field ||
-      c.intent ||
-      (c.subject_banks && c.subject_banks.length) ||
-      (c.filters && Object.keys(c.filters).length);
-    if (dolu) out.push(c);
+    const tur = turlar[i];
+    const c = tur.cevap?.context;
+    if (c) {
+      const dolu =
+        c.field ||
+        c.intent ||
+        (c.subject_banks && c.subject_banks.length) ||
+        (c.filters && Object.keys(c.filters).length);
+      if (dolu) out.push(c);
+    }
+    // KONU SINIRI. İşaretli tur yeni konunun İLKİ olduğu için kendisi bağlama
+    // girer, ondan öncesi girmez. Kontrol döngünün sonunda: `continue` ile
+    // atlanan boş bağlamlı bir tur da sınır taşıyabilir.
+    if (tur.konuBasi) break;
   }
   return out;
 }

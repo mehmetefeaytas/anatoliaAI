@@ -1,0 +1,344 @@
+/* Anatolia AI — banka sayfası: künye, veri kapsamı, TÜR İÇİNDE yıldız cetveli.
+ *
+ * İlgili: tokens.css (tek renk/boşluk kaynağı), ../components/BankaSayfasi.tsx,
+ *         ../components/YildizPuan.tsx, ../components/FieldChips.tsx,
+ *         ../components/ScoringExplainer.tsx, scripts/css_sinif_denetimi.py
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` zaten on bileşen ailesini taşıyor ve uzun; banka sayfası tek
+ * seferde gelen yeni bir yüzey. Denetim betiği `styles/*.css`'in tamamını tarar
+ * (`css_sinif_denetimi.py:69`), yani ayrı dosya kapıdan kaçmak değildir.
+ *
+ * DİKKAT: dosya `layout.tsx`'te import edilmiş olmalı (satır 9); import olmadan
+ * sayfa stilsiz render olur ve denetim betiği bunu YAKALAMAZ — o import değil
+ * dosya tarar.
+ *
+ * ## Yıldız cetveli neden `grafik.css`'teki `.yildiz-*` ailesini kullanmıyor
+ *
+ * Eski aile esnek (flex) bir satırdı: tür adı, yıldızlar, sayı ve kapsama
+ * etiketi aynı akışta sarılıyor, dolayısıyla yıldızlar her satırda BAŞKA bir
+ * yatay konumda başlıyordu. Yıldız bir ölçüm işareti; sütunu kaymışsa iki
+ * satır göz kararıyla kıyaslanamaz. Yeni cetvel üç SABİT sütundur
+ * (`200px 132px 1fr`): tür · işaret · kapsama. Üçüncü sütun zorunludur ve
+ * boyu değişkendir, çünkü asıl bilgi orada yazılıdır.
+ *
+ * `grafik.css`'teki `.yildiz-*` kuralları bu değişiklikle KULLANILMAZ hâle
+ * geldi. Silinmedi: o dosya bu akışın sahipliğinde değil ve "ölü CSS" denetim
+ * betiğinin bilerek kusur saymadığı tek durumdur (betiğin başlığı) — kaldırma
+ * kararı koordinatörde.
+ *
+ * ## Marka varlığı YOK — bilerek
+ *
+ * `/banks` ucu yalnız `slug`, `name`, `website_url`, `bddk_active` döndürür;
+ * logo da marka rengi de yoktur ve `public/` boştur. Amblem bu yüzden bankanın
+ * ADINDAN türetilen bir baş harf monogramıdır ve rengini tema vurgusundan alır.
+ * Marka rengi uydurmak hem görsel bir yalan hem de marka hakkı sorunudur; bir
+ * KARŞILAŞTIRMA aracının taraflardan birinin yeşilini/turkuazını giymesi örtük
+ * taraf tutmaktır (tokens.css `--accent` gerekçesi).
+ *
+ * Literal renk/boşluk YOK — hepsi tokens.css'ten. Tek istisna hairline
+ * kalınlıkları (1px/2px/3px), harf aralığı ve medya sorgusu genişlikleri
+ * (CSS değişkeni kullanılamaz).
+ */
+
+/* ===================================================================
+ * KÜNYE — solda ad, sağda VERİ KAPSAMI
+ * ================================================================ */
+
+.banka-bas {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-5);
+}
+
+/* Baş harf monogramı — dekoratif (`aria-hidden`): bankanın adı hemen yanında
+ * yazılı olduğu için amblem hiçbir bilgiyi TEK BAŞINA taşımaz. */
+.banka-amblem {
+  flex: none;
+  width: var(--sp-8);
+  height: var(--sp-8);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background: var(--accent-wash);
+  color: var(--accent-soft);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-wide);
+}
+
+.banka-kimlik {
+  /* Uzun banka adının taşmasını değil sarmasını istiyoruz. */
+  flex: 1 1 24ch;
+  min-width: 0;
+}
+
+.banka-ad {
+  margin: 0 0 var(--sp-1);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+}
+
+/* `adil-katilim · son toplama 2026-08-10` — MAKİNE verisi: kimlik ve damga.
+ * Mono olması bir süs değil, sınıflandırma: bunlar bankanın yazdığı bir cümle
+ * değil, sistemin tuttuğu kayıt (tokens.css "ÜÇ SES"). */
+.banka-altyazi {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+}
+
+.banka-etiketler {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+/* Banka seçici künyenin sağ ucunda: sayfanın öznesi burada değişir. */
+.banka-secim {
+  flex: none;
+}
+
+/* --- veri kapsamı kutusu ---
+ *
+ * Sayfadaki her işaretin PAYDASI. Kutu iki hâlde basılır ve hâli renkten önce
+ * METİNDEN okunur ("kapsama dar" / "kapsama yeterli"); renk tek sinyal değil.
+ * Eşiğin gerekçesi BankaSayfasi.tsx içinde yazılı. */
+.banka-kapsam-kutu {
+  flex: 0 1 420px;
+  /* Kabuk 1180px'e çıktı; kutu onunla birlikte büyümemeli. Kapsama metni bir
+   * paragraftır ve 420px'in üstünde satır uzunluğu okunmaz hâle gelir. */
+  max-width: 420px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.banka-kapsam-kutu-dar {
+  border-color: var(--warn);
+  background: var(--warn-wash);
+}
+
+/* Mono BÜYÜK HARF göz-üstü etiketi: "bu, verinin kendisi değil ETİKETİ". */
+.banka-kapsam-etiket {
+  display: block;
+  margin-bottom: var(--sp-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+.banka-kapsam-kutu-dar .banka-kapsam-etiket {
+  color: var(--warn);
+}
+
+.banka-kapsam-sayi {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.banka-kapsam-not {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+}
+
+/* ===================================================================
+ * PROVENANS ŞERİDİ — gerekçenin yaşadığı yer
+ *
+ * Sol kenarındaki 3px mürekkep çizgisi bu üründe TEK bir şey söyler: "burada
+ * yazan cümle bir tasarım süsü değil, bir ölçümün gerekçesi". Kutu düz metin
+ * ölçüsüyle (`--measure`) sınırlı, çünkü içindeki şey okunmak için var.
+ * ================================================================ */
+
+.banka-serit {
+  margin-top: var(--sp-5);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-3) var(--sp-4);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+  max-width: var(--measure);
+}
+
+/* Mono BÜYÜK HARF bölüm başlığı ("kampanya türü başına", "12 alanın durumu").
+ * `h3` olarak basılır ama başlık ağırlığı taşımaz: bir ETİKETTİR. */
+.banka-gozustu {
+  margin: var(--sp-5) 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+/* ===================================================================
+ * TÜR İÇİNDE YILDIZ CETVELİ
+ * ================================================================ */
+
+.tur-cetveli {
+  display: grid;
+  gap: 0;
+}
+
+.tur-satir {
+  display: grid;
+  grid-template-columns: 200px 132px 1fr;
+  gap: var(--sp-4);
+  align-items: center;
+  padding: var(--sp-3) 0;
+  border-top: 1px solid var(--line-soft);
+}
+
+/* Cetvelin alt kenarı: son satırın çizgisi kutunun kendi kenarıyla
+ * çakışmasın diye kartın çizgisinden bir ton koyu. */
+.tur-cetveli .tur-satir:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.tur-ad {
+  font-weight: var(--fw-medium);
+  color: var(--fg);
+}
+
+/* Ölçülemeyen türün adı solgun: satır listede DURUR (eksik gizlenmez) ama
+ * ölçülmüş satırlarla aynı sesle konuşmaz. */
+.tur-ad-solgun {
+  font-weight: var(--fw-regular);
+  color: var(--fg-dim);
+}
+
+/* Yıldız dizisi. `aria-hidden` — gerçek değer üçüncü sütunda YAZIYLA okunur.
+ * Renk `--warn`: ekranda vurgu laciverti "ölçülmüş kanıt" için ayrılmıştır,
+ * yıldız ise bir ÖZETTİR ve kendi kapsamasıyla birlikte okunmak zorundadır. */
+.tur-yildizlar {
+  letter-spacing: 0.12em;
+  color: var(--warn);
+  font-size: var(--fs-lg);
+  white-space: nowrap;
+}
+
+/* Ölçülemeyen tür: yıldız YERİNE kesikli çerçeveli mono etiket.
+ * `☆☆☆☆☆` basmak "çok kötü" demekti; oysa söylenen "ölçemedik". Kesikli
+ * çerçeve boşluğun kendi biçimidir — renk tek sinyal değil. */
+.tur-olculemedi {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--sp-2);
+  text-align: center;
+}
+
+.tur-kapsama {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+}
+
+/* Kapsama sayısı — yıldızın ölçüme dönüştüğü yer. Kalın ve tam metin
+ * renginde: satırdaki en yüksek kontrastlı şey yıldız değil, PAYDA olsun. */
+.tur-kapsama-sayi {
+  font-weight: var(--fw-medium);
+  color: var(--fg);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===================================================================
+ * 12 ALANIN DURUMU — çip şeridi (FieldChips, durum kipi)
+ * ================================================================ */
+
+.alan-seridi {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.alan-cip {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  border-radius: var(--radius-sm);
+  padding: 2px var(--sp-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* DOLU: değer çıkarıldı — dolu çerçeve + mürekkep yıkaması. */
+.alan-cip-dolu {
+  border: 1px solid var(--accent);
+  background: var(--accent-wash);
+  color: var(--accent);
+}
+
+/* BOŞ: bu bankada bu alan hiç çıkmadı. Kesikli çerçeve + `null`.
+ * Gizlenmez: 12 alanın 12'si her zaman basılır. */
+.alan-cip-bos {
+  border: 1px dashed var(--line);
+  background: transparent;
+  color: var(--fg-faint);
+}
+
+/* BİLİNMİYOR: alanın bu bankadaki durumu hiçbir uçtan gelmiyor. `bos` ile
+ * AYNI ŞEY DEĞİL — biri "ölçtük, yok", diğeri "ölçemedik". Ayrımı taşıyan
+ * biçim: kesikli çerçeve + dolgulu zemin + `?` metni. */
+.alan-cip-bilinmiyor {
+  border: 1px dashed var(--line);
+  background: var(--bg-3);
+  color: var(--fg-faint);
+}
+
+.alan-seridi-not {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+  max-width: var(--measure);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA (bkz. grafik.css dosya başlığı)
+ * ================================================================ */
+
+@media (max-width: 860px) {
+  /* Dar ekranda üç sabit sütun sığmaz. Sütun sırası KORUNUR (tür · işaret ·
+   * kapsama) ama işaret ile kapsama alt alta iner; yıldız hiçbir hâlde
+   * kapsamasından ayrı düşmez. */
+  .tur-satir {
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+  }
+
+  .tur-yildizlar,
+  .tur-olculemedi {
+    justify-self: start;
+  }
+}
+
+@media (max-width: 700px) {
+  /* Seçici sağa yaslanmaz; kimliğin altına tam genişlikte iner. */
+  .banka-secim {
+    width: 100%;
+  }
+
+  .banka-kapsam-kutu {
+    flex-basis: 100%;
+  }
+}

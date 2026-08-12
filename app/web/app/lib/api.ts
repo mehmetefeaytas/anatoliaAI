@@ -199,20 +199,162 @@ export type CampaignText = {
   ozet_kaynak?: string | null;
 };
 
+/**
+ * Belgenin NE OLDUĞU: kampanya sayfası mı, akit/tarife metni mi.
+ *
+ * `campaign_type` ile KARIŞTIRMA — o, 8 kampanya TÜRÜ sınıflandırmasıdır
+ * (Konut Finansmanı, Kart…). `null` "bilinmiyor" demektir; sınıflandırılamayan
+ * belgeye tür uydurulmaz.
+ */
+export type BelgeTuru = "kampanya" | "sozlesme";
+
+/**
+ * `GET /campaigns` yanıtının bir satırı — **ÜSTVERİ, ham gövde değil**.
+ *
+ * `raw_text` bu tipten KALDIRILDI ve uç onu artık varsayılan olarak
+ * göndermiyor. Ölçüm (2026-08-11): yanıt 10.339.015 bayttı ve neredeyse
+ * tamamı o alandı; `web/app` içinde tek geçtiği yer de tam olarak burasıydı —
+ * yani hiç okunmayan 10 MB her sayfa açılışında indiriliyordu. Ham metin
+ * gerçekten gerektiğinde `campaignText(id)` çağrılır: tek belge, offsetleri
+ * ve blokları ile birlikte.
+ */
 export type CampaignSummary = {
   id: number;
   bank: string;
   bank_name: string | null;
   campaign_type: string | null;
-  raw_text: string;
   source_url: string | null;
   scraped_at?: string | null;
+  /**
+   * Üç alan da tel üzerinde ZATEN vardı; bu tip onları tanımlamadığı için
+   * liste ekranı veriyi göremiyordu (`ozet` ile aynı hikâye).
+   */
+  belge_turu?: BelgeTuru | null;
+  /** `null` = damgasız. "Geçerli" DEMEK DEĞİLDİR — bkz. `CampaignStatus`. */
+  campaign_status?: CampaignStatus | null;
   /**
    * Üretilmiş özet. API bu alanı ZATEN döndürüyordu (`repository.py` SELECT'i
    * `c.ozet` içeriyor) ama bu tip onu tanımlamıyordu, dolayısıyla liste ekranı
    * veriyi göremiyordu. Kapsam sayacı buradan hesaplanır — ek uç gerekmez.
    */
   ozet?: string | null;
+  /**
+   * Özetin NEDEN yok olduğu (`icerik_yok`, `llm_kapali` …). Boş `ozet` tek
+   * başına "denendi ve çıkmadı" ile "hiç denenmedi"yi ayırt edemez.
+   */
+  ozet_sebep?: string | null;
+};
+
+/** `GET /campaigns` süzgeçleri. Hepsi opsiyonel; hiçbiri verilmezse tam liste. */
+export type CampaignParams = {
+  /** Serbest metin — banka, tür, özet ve adreste arar (ham gövdede DEĞİL). */
+  q?: string;
+  bank?: string;
+  type?: string;
+  belge_turu?: BelgeTuru;
+  /** `"damgasiz"` üçüncü kovadır: `campaign_status IS NULL`. */
+  status?: CampaignStatus | "damgasiz";
+  limit?: number;
+  offset?: number;
+  /**
+   * Ham metni de iste. Arayüz bunu KULLANMAZ — 10 MB'lık yükün sebebi buydu.
+   * Sözleşmede duruyor ki uç geri açılabilir kalsın.
+   */
+  govde?: boolean;
+};
+
+/**
+ * `GET /search` — bir sonucun NEDEN eşleştiği.
+ *
+ * `alan` sunucudaki sütun adıdır (bir sınıf etiketi, kullanıcıya dönük metin
+ * değil); ekranda okunacak karşılığı `lib/arama.ts` içindeki `alanEtiketi()`
+ * ile üretilir. `parca` eşleşmenin ÖZGÜN yazımıyla, bağlamı içinde kesilmiş
+ * hâlidir — kırpılan uçlarda '…' bulunur.
+ */
+export type AramaEslesmesi = {
+  alan: string;
+  parca: string;
+};
+
+export type AramaBankasi = {
+  slug: string;
+  name: string;
+  /**
+   * Bu bankanın KORPUSTAKİ TOPLAM belge sayısı — eşleşen belge sayısı DEĞİL.
+   * Grup bir gezinme hedefidir ("bu bankaya git"), bir sonuç sayacı değil.
+   */
+  campaign_count: number;
+};
+
+export type AramaBelgesi = {
+  id: number;
+  bank: string;
+  bank_name: string | null;
+  campaign_type: string | null;
+  belge_turu: BelgeTuru | null;
+  campaign_status: CampaignStatus | null;
+  eslesme: AramaEslesmesi;
+};
+
+/**
+ * Gruplu arama sonucu.
+ *
+ * `toplam` süzgeç sonrası GERÇEK sayıları taşır; listeler `limit` ile
+ * kırpılmıştır. İkisini karıştırmak "başka sonuç yok" izlenimi verirdi.
+ */
+export type AramaSonucu = {
+  sorgu: string;
+  banks: AramaBankasi[];
+  campaigns: AramaBelgesi[];
+  types: string[];
+  toplam: { banks: number; campaigns: number; types: number };
+};
+
+/** Bir bankanın veri kapsamı: kaç belge, kaç ÇEŞİT alan. */
+export type BankaKapsami = {
+  belge: number;
+  /** FARKLI alan adı sayısı (satır değil) — üst sınırı `/fields` uzunluğudur. */
+  alan: number;
+};
+
+/**
+ * `GET /stats` — korpusun sayısal özeti, TEK istekte.
+ *
+ * Bu sayılar eskiden `/campaigns` yanıtından istemcide sayılıyordu ve bunun
+ * bedeli 10 MB'lık bir istekti. Üstelik istemcide sayılabilen tek şey "kaç
+ * satır var"dı: alan kapsamı, katman dağılımı ve banka başına alan çeşidi
+ * `extracted_fields` tablosunu gerektiriyor.
+ *
+ * Anahtar kümeleri SABİTTİR: sıfır değerler de yazılır, böylece `0` ile
+ * "ölçülmedi" karışmaz.
+ */
+export type Stats = {
+  korpus: {
+    /** KORPUS KAYNAĞI sayısı — `/banks`'ten farklı olabilir (o, otorite
+     *  kaynaklarını süzer). İki sayı farklı soruların cevabıdır. */
+    banks: number;
+    banks_with_campaigns: number;
+    campaigns: number;
+    fields: number;
+    campaigns_with_fields: number;
+  };
+  /** `kampanya` / `sozlesme` / `bilinmeyen`. */
+  belge_turu: Record<string, number>;
+  /** `active` / `expired` / `damgasiz` — damgasız AKTİF DEĞİLDİR. */
+  campaign_status: Record<string, number>;
+  /** Banka slug → kampanya sayısı. */
+  banka_basina: Record<string, number>;
+  /** Banka slug → "3 belge / 12 alan" etiketinin verisi. */
+  banka_kapsami: Record<string, BankaKapsami>;
+  /** Korpusta geçen kampanya türleri, alfabetik ve tekrarsız. */
+  campaign_types: string[];
+  /** Alan adı → o alanın çıkarıldığı belge sayısı. */
+  alan_kapsami: Record<string, number>;
+  /** Çıkarıcı katman (`rule` / `ner` / `llm`) → üretilen alan sayısı. */
+  katman: Record<string, number>;
+  llm: { acik: boolean };
+  /** `"sqlite"` | `"postgres"` — hangi veri tabanına bağlıyız. */
+  backend: string;
 };
 
 /** Bileşik skorun tek bir ölçüt bileşeni (`GET /advantageous`). */
@@ -283,7 +425,20 @@ export type Scoring = {
   direction_label: string;
   formula_source: string;
   steps: ScoringStep[];
-  composite_weights: Record<string, number> | null;
+  /**
+   * ÖLÇÜLDÜ (2026-08-12): bu alan `Record<string, number>` DEĞİL.
+   *
+   * `src/api/main.py:1624` onu `weight_manifest()` ile dolduruyor ve o fonksiyon
+   * (`src/comparison/compare.py:1106`) `list[dict]` döndürüyor — her satırda
+   * `field_name`, `weight`, `rationale`, `direction`. Yani şekli `WeightRow[]`,
+   * `Advantageous.weights` ile aynı.
+   *
+   * Yanlış tip sessiz değildi: `ScoringExplainer` bir nesneyi React çocuğu
+   * olarak basmaya çalışıyor ve «Objects are not valid as a React child» ile
+   * BANKA SAYFASININ TAMAMINI düşürüyordu. Tip sistemi burada koruma değil,
+   * tuzaktı — derleyici doğruladığı için kimse uca bakmamıştı.
+   */
+  composite_weights: WeightRow[] | null;
   composite_note: string;
   rows: ScoringRow[];
 };
@@ -325,6 +480,8 @@ export type ExtractResult = {
   fields: ExtractField[];
   missing_fields: { field: string; label: string }[];
   contradictions: Contradiction[];
+  /** İstek `gold_id` taşıdıysa altın küme karşılaştırması; yoksa `null`. */
+  gold: GoldKarsilastirma | null;
 };
 
 export type ChatSource = {
@@ -576,6 +733,14 @@ export type AdminUc = {
  */
 export type AdminPlan = {
   acik: boolean;
+  /**
+   * Ekranın en üstündeki büyük başlık — uçların NE ZAMAN açılacağını söyler
+   * ("Yakın dönem / iş birliği durumunda…"). Sunucudan gelir, ekranda sabit
+   * yazılmaz.
+   */
+  baslik: string;
+  /** Başlığın üstündeki küçük durum etiketi ("Bu sürümde kapalı"). */
+  durum_etiketi: string;
   sebep: string;
   bugunku_yol: string;
   uclar: AdminUc[];
@@ -647,7 +812,20 @@ async function readError(res: Response): Promise<string> {
   return `Sunucu ${res.status} döndü.`;
 }
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+/**
+ * Süzgeç sonrası TOPLAM kayıt sayısını taşıyan yanıt başlığı.
+ *
+ * Sunucu `GET /campaigns` gövdesini çıplak liste olarak KORUR (zarfa sarmak
+ * her çağıranı aynı anda kırardı) ve toplamı bu başlığa yazar. Belge seçici
+ * "1774 belgeden 50'si" diyebilmek için tam olarak bu sayıya muhtaç: dilim
+ * alındıktan sonra toplam gövdeden geri getirilemez.
+ */
+const TOPLAM_BASLIK = "X-Toplam-Kayit";
+
+/** Gövde + sayfalama üstverisi. `toplam` başlık yoksa `null` (uydurulmaz). */
+export type Sayfa<T> = { kayitlar: T; toplam: number | null };
+
+async function istek<T>(path: string, init?: RequestInit): Promise<Sayfa<T>> {
   let res: Response;
   try {
     res = await fetch(path, init);
@@ -663,17 +841,106 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
         ? `API'ye ulaşılamıyor ya da sunucu hata verdi. ${OFFLINE_HINT}`
         : "İstek reddedildi (geçersiz parametre olabilir).");
   }
+  let veri: T;
   try {
-    return (await res.json()) as T;
+    veri = (await res.json()) as T;
   } catch {
     throw new ApiError("Yanıt JSON olarak ayrıştırılamadı.", res.status,
       "Proxy doğru uca bağlı mı? (next.config.js /api/* yönlendirmesi)");
   }
+  const ham = res.headers.get(TOPLAM_BASLIK);
+  const sayi = ham === null ? Number.NaN : Number.parseInt(ham, 10);
+  return { kayitlar: veri, toplam: Number.isFinite(sayi) ? sayi : null };
 }
 
+async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  return (await istek<T>(path, init)).kayitlar;
+}
+
+/**
+ * `/health` yanıtı — sunucunun kendi hakkında söyledikleri.
+ *
+ * Uç en baştan beri vardı ve bu üç alanı döndürüyordu; İSTEMCİ METODU HİÇ
+ * YOKTU. Sonuç: API'nin ayakta olup olmadığı, hangi veritabanına baktığı ve
+ * yerel modelin açık olup olmadığı ancak bir panel çökünce ya da bir düğme
+ * devre dışı kalınca anlaşılıyordu.
+ */
+export type Health = {
+  status: string;
+  /** Yerel model açık mı. Kapalıyken sistem cevap vermeye DEVAM eder. */
+  llm: boolean;
+  /** Hangi depo: `sqlite` | `postgres`. «Hangi veritabanındayız» hata sınıfı. */
+  backend: string;
+};
+
 export const api = {
+  /**
+   * Sağlık yoklaması.
+   *
+   * Diğer çağrılardan farklı olarak hatası YUTULMAZ ama beklenendir: bu ucun
+   * başarısız olması da bir bilgidir ve arayüz onu «API kapalı» olarak
+   * gösterir (bkz. lib/saglik.tsx).
+   */
+  health: () => request<Health>("/api/health"),
   fields: () => request<FieldMeta[]>("/api/fields"),
-  campaigns: () => request<CampaignSummary[]>("/api/campaigns"),
+  /**
+   * Belge listesi — ÜSTVERİ. Ham gövde gelmez (`govde` sözleşmede duruyor ama
+   * arayüz kullanmıyor); gerekçe `CampaignSummary` tipinde.
+   *
+   * Süzgeçler sunucuda uygulanır, istemcide değil: `status` ve `belge_turu`
+   * kovalarının anlamı (özellikle `damgasiz` = `NULL`) veri katmanının
+   * kuralıdır ve TSX'e kopyalansaydı iki yerde yaşardı.
+   */
+  campaigns: (params: CampaignParams = {}) => {
+    const p = new URLSearchParams();
+    for (const [ad, deger] of Object.entries(params)) {
+      if (deger !== undefined && deger !== null && deger !== "") {
+        p.set(ad, String(deger));
+      }
+    }
+    const q = p.toString();
+    return request<CampaignSummary[]>(`/api/campaigns${q ? `?${q}` : ""}`);
+  },
+  /**
+   * `campaigns()` ile AYNI uç, ama süzgeç sonrası TOPLAMI da döndürür
+   * (`X-Toplam-Kayit` başlığı).
+   *
+   * Ayrı bir metot çünkü toplam çağıranların çoğunu ilgilendirmiyor ve
+   * `campaigns()`in dönüş tipini değiştirmek her çağıranı kırardı. Belge
+   * seçici bu sayıya muhtaç: "1774 belgeden 50'si gösteriliyor" cümlesi,
+   * kullanıcının listeyi tam sanmasını engelleyen tek şey.
+   */
+  campaignsSayfa: (params: CampaignParams = {}) => {
+    const p = new URLSearchParams();
+    for (const [ad, deger] of Object.entries(params)) {
+      if (deger !== undefined && deger !== null && deger !== "") {
+        p.set(ad, String(deger));
+      }
+    }
+    const q = p.toString();
+    return istek<CampaignSummary[]>(`/api/campaigns${q ? `?${q}` : ""}`);
+  },
+  /**
+   * Gruplu arama — bankalar, belgeler, kampanya türleri tek istekte.
+   *
+   * Eşleştirme SUNUCUDA yapılır: Türkçe katlama kuralı (`tr_fold_ascii`) veri
+   * katmanına aittir ve TSX'e kopyalansaydı iki yerde yaşardı. İstemcideki
+   * `lib/arama.ts` aynı katlamayı YALNIZCA vurgulama ve yerinde daraltma için
+   * uygular; ikisinin aynı sonucu verdiği ortak bir fikstürle kanıtlanır.
+   *
+   * Boş sorgu boş sonuç döndürür — uç, tuş başına çağrılıyor.
+   */
+  search: (q: string, limit?: number) => {
+    const p = new URLSearchParams({ q });
+    if (limit !== undefined) p.set("limit", String(limit));
+    return request<AramaSonucu>(`/api/search?${p.toString()}`);
+  },
+  /**
+   * Korpusun sayısal özeti. Kampanya türü listesi buradan gelir — eskiden
+   * `/campaigns` yanıtından türetiliyordu ve bu, sırf bir `<select>` doldurmak
+   * için 10 MB indirmek demekti.
+   */
+  stats: () => request<Stats>("/api/stats"),
   /**
    * Banka kataloğu. Delta paneli bunu kullanır — `/campaigns`'ten türetmek,
    * hiç kampanyası toplanmamış bankayı listeden düşürüyordu; oysa "bende hiç
@@ -714,11 +981,16 @@ export const api = {
   contradictions: () => request<ContradictionRow[]>("/api/contradictions"),
   contradictionSummary: () =>
     request<ContradictionSummary>("/api/contradictions/summary"),
-  extract: (text: string, bank: string) =>
+  /**
+   * `goldId` verilirse yanıt bir `gold` bloğu kazanır: aynı belgenin altın
+   * değerleri ve alan alan karşılaştırma kararı. Çıkarım yine GÖNDERİLEN
+   * metin üzerinde koşar; sunucu altın kümeden yalnız referans okur.
+   */
+  extract: (text: string, bank: string, goldId?: string) =>
     request<ExtractResult>("/api/extract", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, bank }),
+      body: JSON.stringify({ text, bank, gold_id: goldId ?? null }),
     }),
   /**
    * `context` = son turların durum kayıtları, YENİDEN ESKİYE sıralı.
@@ -776,6 +1048,13 @@ export const api = {
 
   /** Gelecek faz uçlarının sözleşmesi — Ayarlar ekranı bunu çizer. */
   adminPlan: () => request<AdminPlan>("/api/admin/plan"),
+
+  /**
+   * Altın kümedeki ZOR belgeler. Metin listeyle birlikte gelir: seçilen
+   * vakayı ikinci bir çağrıyla çekmek jüriye her tıklamada bir ağ turu daha
+   * bekletirdi.
+   */
+  zorVakalar: () => request<ZorVakaListesi>("/api/zor-vakalar"),
 };
 
 /** ApiError olmayan hataları da kullanıcıya gösterilebilir hale getirir. */
@@ -784,3 +1063,88 @@ export function toDisplayError(e: unknown): { message: string; hint: string } {
   if (e instanceof Error) return { message: e.message, hint: "" };
   return { message: "Bilinmeyen hata.", hint: "" };
 }
+
+/* ------------------------------------------------------------------ *
+ * Zor vaka tezgâhı — altın kümedeki zor belgeler ve karşılaştırma
+ * ------------------------------------------------------------------ */
+
+/** Zor-vaka etiketi + belge sayısı. Sıra sunucudan gelir, sayımdan değil. */
+export type ZorEtiket = {
+  etiket: string;
+  ad: string;
+  aciklama: string;
+  adet: number;
+};
+
+export type ZorVaka = {
+  id: string;
+  banka: string;
+  banka_adi: string;
+  kaynak_adresi: string | null;
+  kampanya_turu: string | null;
+  zor_etiketler: string[];
+  metin: string;
+  metin_uzunlugu: number;
+  onizleme: string;
+  altin_alan_sayisi: number;
+  altinda_yok_sayisi: number;
+  belirsiz_alanlar: { field: string; label: string }[];
+  kanitli_alanlar: string[];
+};
+
+export type ZorVakaListesi = {
+  /** Altın küme dosyası okunabildi mi — okunamadıysa ekran bunu söyler. */
+  kaynak_var: boolean;
+  toplam_belge: number;
+  zor_belge: number;
+  etiketler: ZorEtiket[];
+  vakalar: ZorVaka[];
+};
+
+/**
+ * Bir alanın altın küme karşısındaki durumu.
+ *
+ * `fabricated` ayrı tutulur: altın küme o alan için "kontrol ettim, YOK"
+ * diyorsa üretilen değer yanlış bir değer değil, bir uydurmadır.
+ * `out_of_scope` metrik dışıdır — referans olmayan yerde doğru/yanlış
+ * denemez.
+ */
+export type GoldDurum =
+  | "match"
+  | "equivalent"
+  | "mismatch"
+  | "missed"
+  | "fabricated"
+  | "correct_absence"
+  | "unclear"
+  | "out_of_scope";
+
+export type GoldAlan = {
+  field: string;
+  label: string;
+  gold_value: unknown;
+  gold_present: boolean;
+  gold_absent: boolean;
+  /**
+   * Altın değerin belgede birebir geçen dayanağı.
+   *
+   * Anotatör notları burada YOKTUR: iç yazışma dilinde yazılmışlar (kılavuz
+   * bölüm numaraları, ham alan adları) ve ekrana basılsalardı ürünün içinden
+   * geliştirme notu sızardı.
+   */
+  gold_span: string | null;
+  status: GoldDurum;
+  reason: string;
+};
+
+export type GoldKarsilastirma = {
+  id: string;
+  bank: string | null;
+  source_url: string | null;
+  campaign_type: string | null;
+  hard_tags: string[];
+  /** Çıkarımın koştuğu metin altın belgeyle aynı mı (elle değiştirildi mi). */
+  text_matches: boolean;
+  fields: GoldAlan[];
+  summary: Record<GoldDurum, number>;
+};

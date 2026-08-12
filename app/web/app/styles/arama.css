@@ -1,0 +1,412 @@
+/**
+ * Arama yüzeyleri — komut paleti (⌘K) ve belge seçici.
+ *
+ * İlgili: ../components/KomutPaleti.tsx, ../components/BelgeSecici.tsx,
+ *         ./tokens.css (renk/boşluk/tipografi tokenları), ./components.css
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` zaten on bileşen ailesi taşıyor. Arama yeni ve BÜTÜN bir
+ * aile: örtü, palet, gruplu liste, seçenek satırı, süzgeç çipleri, sayfa
+ * altı. `grafik.css` ve `sohbet.css` aynı gerekçeyle ayrılmıştı. Denetim
+ * betiği `styles/*.css`in tamamını tarar, yani ayrılık kapıdan kaçmak değil.
+ *
+ * Renk ve boşluk tokendan gelir. Tek yerel tanım perdedir (`--komut-perde`)
+ * ve gerekçesi tanımın yanındadır.
+ *
+ * ## v2 «kanıt defteri» hizalaması (2026-08-12)
+ *
+ * Üç şey değişti, üçü de tasarımın kuralından türedi:
+ *
+ * 1. **Eşleşen harfler artık vurgu sarısı DEĞİL.** `--mark` bu üründe tek bir
+ *    şey söyler: «değerin çıkarıldığı kaynak span'i». Arama kutusundaki harf
+ *    eşleşmesi bir kaynak gösterme jesti değil, bir GEZİNME ipucudur; ikisi
+ *    aynı sarıyı giyerse ekrandaki en doygun renk anlamını kaybeder. Eşleşme
+ *    artık `--accent` + 600 ağırlık (`.arama-vurgu`) ile yazılıyor. ÖLÇÜLDÜ:
+ *    `--accent`/`--bg-2` 9,03:1 açık · 6,95:1 koyu; seçili satırın yıkaması
+ *    üstünde (`--accent`/`--accent-wash`) 7,56:1 · 6,46:1.
+ * 2. **Sol şerit 2px → 3px.** Provenans şeridi bu üründe her yerde 3px; seçili
+ *    satır da aynı jesti kullanıyorsa aynı kalınlıkta olmalı.
+ * 3. **Satır yüksekliği en az 44px.** Dokunma hedefi (WCAG 2.5.8); önceki
+ *    dolgu 13px'lik alt satır olmayan bir sonuçta 36px'e düşüyordu.
+ */
+
+/* --------------------------------------------------------------------- */
+/* Komut paleti                                                          */
+/* --------------------------------------------------------------------- */
+
+/* Perde (scrim) — bu dosyaya AİT yerel token.
+ *
+ * `tokens.css`e konmadı çünkü bir YÜZEY rengi değil: iki temada da aynı işi
+ * yapar (arkayı karartır) ve tema paletiyle birlikte dönmemesi gerekir. Koyu
+ * temada bir tık daha koyudur; oradaki zemin zaten koyu olduğu için aynı
+ * saydamlık paleti yeterince ayırmıyor. */
+:root {
+  --komut-perde: rgba(0, 0, 0, 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --komut-perde: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Örtü: paletin arkasındaki sayfayı görünür ama erişilemez kılar.
+ * Palet üstte değil, ÜST BEŞTE BİRDE durur (`padding-top`): göz ekranın
+ * ortasını değil üst şeridini tarar ve liste aşağı doğru büyür. */
+.komut-ortu {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: var(--sp-10) var(--sp-4) var(--sp-4);
+  background: var(--komut-perde);
+}
+
+.komut-paleti {
+  width: 100%;
+  max-width: 640px;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.komut-bas {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+/* Kutu kendi kenarlığını taşımaz: paletin kenarı zaten var, ikinci bir
+ * çerçeve kutuyu paletin içinde ayrı bir nesne gibi gösterirdi. */
+.komut-girdi {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  font-size: var(--fs-lg);
+  line-height: var(--lh-normal);
+  padding: var(--sp-2) 0;
+}
+
+.komut-girdi:focus {
+  outline: none;
+}
+
+.komut-girdi::placeholder {
+  color: var(--fg-faint);
+}
+
+.komut-ipucu {
+  flex: none;
+  color: var(--fg-faint);
+  font-size: var(--fs-xs);
+  letter-spacing: var(--track-wide);
+  white-space: nowrap;
+}
+
+.komut-durum {
+  padding: var(--sp-4);
+  margin: 0;
+}
+
+.komut-liste {
+  overflow-y: auto;
+  padding: var(--sp-2) 0;
+}
+
+/* Grup başlığı MAKİNE sesidir: `bankalar` / `belgeler` / `kampanya türleri`
+ * birer başlık değil, birer BÖLME ETİKETİDİR. `--fg-dim` (fısıltı değil,
+ * ikincil): altındaki satırların künyesi `--fg-faint` ile yazılıyor ve iki
+ * kademe birbirinden ayrışmalı. */
+.komut-grup-baslik {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-2) var(--sp-4);
+  color: var(--fg-dim);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+/* Grup başlığındaki sayı, KIRPILMAMIŞ toplamdır: listede 20 satır görünürken
+ * gerçekte 37 sonuç olduğunu söyleyen tek yer burasıdır. */
+.komut-sayac {
+  padding: 0 var(--sp-2);
+  border-radius: var(--radius-full);
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+}
+
+/* `min-height`: dokunma hedefi 44px (WCAG 2.5.8). Skalada 44 yok; 48 − 4
+ * tokenlardan kuruluyor, çünkü bu bir boşluk RİTMİ değil erişilebilirlik
+ * eşiğidir ve literal px bırakmamak dosyanın kuralı. */
+.komut-secenek {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-1);
+  min-height: calc(var(--sp-8) - var(--sp-1));
+  padding: var(--sp-2) var(--sp-4);
+  cursor: pointer;
+  border-left: 3px solid transparent;
+}
+
+/* Seçili satır YALNIZ renkle anlatılmaz: sol kenardaki şerit, renk ayrımını
+ * zor gören kullanıcıda da imlecin nerede olduğunu söyler. */
+.komut-secenek[aria-selected="true"] {
+  background: var(--accent-wash);
+  border-left-color: var(--accent);
+}
+
+/* Üçüncü sinyal: satırın BAŞLIĞI mürekkep rengine geçer. Alt satır (künye)
+ * geçmez — o bir fısıltıdır ve seçili olmak onu yükseltmez. */
+.komut-secenek[aria-selected="true"] .komut-secenek-bas {
+  color: var(--accent);
+}
+
+.komut-secenek-bas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  color: var(--fg);
+  font-size: var(--fs-base);
+}
+
+.komut-secenek-alt {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+/* Eşleşme parçası tek satırda kalır: liste bir gezinme aracıdır, okuma
+ * yüzeyi değil. Tamamı belgenin kendisinde. */
+.komut-eslesme-parca {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.komut-belge-no {
+  color: var(--fg-faint);
+  font-size: var(--fs-sm);
+}
+
+/* Bankanın belge sayısı: makine verisi, cümle değil. Mono + `--fg-faint` —
+ * satırın adı sans ve `--fg` ile okunur, sayı onun yanında fısıldar. */
+.komut-belge-sayisi {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+}
+
+/* Boş sonucun ÖLÇÜSÜ: «eşleşme yok» tek başına bir arıza gibi okunur; taranan
+ * kümenin büyüklüğü onu bir gözleme çevirir. Hata rengi YOK — arama koştu ve
+ * yanıt verdi. Sayılar `/stats`ten gelir, sabit yazılmaz. */
+.komut-tarama {
+  display: block;
+  margin-top: var(--sp-1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+}
+
+/* Eşleşmenin HANGİ alandan geldiği. Kanıtın kaynağını adlandırır. */
+.komut-eslesme-alan {
+  flex: none;
+  padding: 0 var(--sp-1);
+  border-radius: var(--radius-sm);
+  background: var(--bg-3);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+}
+
+.komut-alt {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border-top: 1px solid var(--line-soft);
+}
+
+/* --------------------------------------------------------------------- */
+/* Belge seçici                                                          */
+/* --------------------------------------------------------------------- */
+
+/* `min-width: 0` ZORUNLU ve gerekçesi ölçüldü (2026-08-12).
+ *
+ * Seçicinin süzgeç ızgarası `repeat(auto-fit, minmax(220px, 1fr))` kullanıyor.
+ * Bu iyi bir kural — ama BELİRSİZ genişlikte (min-içerik ölçümünde) `auto-fit`
+ * kolonları daraltmaz, her öğe için ayrı bir 220px kolon açar. Sekiz süzgeç
+ * grubu 1.900px'lik bir min-içerik genişliği demek.
+ *
+ * Seçici bir flex ya da grid öğesi olarak yerleştirildiğinde varsayılan
+ * `min-width: auto` onu o min-içerik genişliğinin altına inmeye BIRAKMAZ ve
+ * bileşen kabuğu taşırır: Jüri Audit Paneli'nde ölçüldü — 1.900px seçici,
+ * 1.148px kabuk, 638px yatay sayfa taşması.
+ *
+ * `base.css` aynı dersi `.stack > *` için zaten öğrenmişti; bu bileşen o
+ * korumanın dışındaki bir yere de konabildiği için korumayı kendisi taşıyor. */
+.belge-secici {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--sp-4);
+}
+
+.belge-secici-arama {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.belge-secici-suzgecler {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--sp-4);
+}
+
+.belge-secici-cipler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+
+.belge-secici-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 420px;
+  overflow-y: auto;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+}
+
+.belge-secici-liste > li + li {
+  border-top: 1px solid var(--line-soft);
+}
+
+.belge-secici-satir {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--sp-1);
+  width: 100%;
+  min-height: calc(var(--sp-8) - var(--sp-1));
+  text-align: start;
+  padding: var(--sp-3) var(--sp-4);
+  background: transparent;
+  border: 0;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--fg);
+}
+
+.belge-secici-satir:hover {
+  background: var(--bg);
+}
+
+/* Seçili belge, komut paletiyle AYNI dille işaretlenir (sol şerit + yıkama):
+ * iki yüzey aynı jesti öğretiyorsa aynı görünmeli. */
+.belge-secici-satir[aria-current="true"] {
+  background: var(--accent-wash);
+  border-left-color: var(--accent);
+}
+
+.belge-secici-satir[aria-current="true"] .belge-secici-bas {
+  color: var(--accent);
+}
+
+.belge-secici-bas {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  font-size: var(--fs-base);
+}
+
+.belge-secici-no {
+  color: var(--fg-faint);
+  font-size: var(--fs-sm);
+}
+
+.belge-secici-ozet {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.belge-secici-alt {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.belge-secici-alt > p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------- */
+/* Ortak                                                                 */
+/* --------------------------------------------------------------------- */
+
+/* Belgenin ne olduğunu söyleyen rozet — kampanya mı, akit mi.
+ * `badge-expired` (geçerlilik) ile KARIŞTIRILMAMALI: biri belgenin TÜRÜNÜ,
+ * öteki kampanyanın hâlâ geçerli olup olmadığını söyler. İki ayrı soru,
+ * iki ayrı renk. */
+.badge-sozlesme {
+  background: var(--bg-3);
+  color: var(--fg-dim);
+}
+
+/* Eşleşen harfler — ZEMİNSİZ.
+ *
+ * Eskiden `<mark>` ve vurgu sarısıydı; gerekçe «arama da bir kaynak gösterme
+ * jestidir» diyordu ve bu YANLIŞTI: `--mark` bu üründe tek bir cümleyi
+ * işaretler, değerin çıkarıldığı karakter aralığını. Bir gezinme kutusundaki
+ * harf eşleşmesi o söze ortak olamaz. Ayrım artık mürekkep rengi + 600
+ * ağırlıkla kuruluyor: iki sinyal, sıfır zemin. */
+.arama-vurgu {
+  color: var(--accent);
+  font-weight: var(--fw-semibold);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .komut-paleti {
+    animation: komut-acil var(--dur-fast) var(--ease);
+  }
+}
+
+@keyframes komut-acil {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--sp-2)));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
