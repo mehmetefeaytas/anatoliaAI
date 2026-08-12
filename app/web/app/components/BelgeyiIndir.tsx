@@ -23,6 +23,21 @@
  * türetir. Bu yüzden başlık çağrıdan önce geçici olarak değiştirilip sonra
  * geri konuyor: kullanıcıya «anatolia-ai-belge-1421.pdf» önerilir,
  * «localhost:3000» değil.
+ *
+ * ## Neden PROVENANS ÇİPİ görünümünde
+ *
+ * Düğme, belgenin nereden geldiğini söyleyen çip dizisinin üyesidir:
+ * `source_url ↗` · `ham belgeyi yazdır · PDF` · `scraped_at: …`. Üçü aynı
+ * soruyu cevaplıyorsa üçü aynı görünmeli — mono `--fs-xs`, `1px solid
+ * var(--line)`, `--radius-sm`, `var(--bg)` zemin, `--fg-dim` metin. Bu biçim
+ * `styles/kanit.css` içindeki `.kanit-cip` ailesinde ZATEN tanımlıdır ve
+ * ikinci bir kopyası yazılmadı; sınıf buradan da giyiliyor ki düğme provenans
+ * şeridinin DIŞINDA kullanıldığında da aileden düşmesin.
+ *
+ * `btn-ghost` korunuyor: imleç, `:hover` ve `:focus-visible` davranışı ondan
+ * geliyor ve bir çip görünümü bir düğmenin dokunma/klavye davranışını
+ * üstlenmez. Şeridin içinde `.kanit-provenans .btn-ghost` daha özgüldür ve
+ * aynı değerleri basar; iki yol da aynı yere çıkar.
  */
 
 import { useCallback } from "react";
@@ -66,8 +81,15 @@ export default function BelgeyiIndir({ ad, etiket }: Props) {
   }, [ad]);
 
   return (
-    <button type="button" className="btn-ghost baski-gizle" onClick={yazdir}>
-      {etiket ?? "Yazdır / PDF olarak kaydet"}
+    <button
+      type="button"
+      className="btn-ghost kanit-cip baski-gizle"
+      // Çip ailesi bir metin işaretidir; imleç ipucu düğmeden gelmeli.
+      style={{ cursor: "pointer" }}
+      onClick={yazdir}
+      title="Tarayıcının yazdırma penceresini açar; oradan «PDF olarak kaydet» seçilir"
+    >
+      {etiket ?? "ham belgeyi yazdır · PDF"}
     </button>
   );
 }

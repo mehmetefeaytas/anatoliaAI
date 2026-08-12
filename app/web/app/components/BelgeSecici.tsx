@@ -38,6 +38,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api } from "../lib/api";
 import type { CampaignParams } from "../lib/api";
 import { aramaTerimleri, vurgulariBul } from "../lib/arama";
+import { trNum } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 
@@ -74,7 +75,14 @@ const DURUMLAR = [
   { deger: "damgasiz", etiket: "damgasız" },
 ] as const;
 
-/** Eşleşen harfleri boyar. */
+/**
+ * Eşleşen harfleri işaretler.
+ *
+ * Vurgu sarısı (`--mark`) KULLANILMAZ: o renk bu üründe yalnız değerin
+ * çıkarıldığı kaynak span'ine ayrılmıştır. Arama eşleşmesi mürekkep rengi +
+ * 600 ağırlıkla yazılır — komut paletiyle aynı sınıf, aynı jest
+ * (`.arama-vurgu`, bkz. ../styles/arama.css).
+ */
 function Vurgulu({ metin, terimler }: { metin: string; terimler: string[] }) {
   const parcalar = useMemo(
     () => vurgulariBul(metin, terimler),
@@ -84,7 +92,9 @@ function Vurgulu({ metin, terimler }: { metin: string; terimler: string[] }) {
     <>
       {parcalar.map((p, i) =>
         p.vurgulu ? (
-          <mark key={i}>{metin.slice(p.bas, p.son)}</mark>
+          <span key={i} className="arama-vurgu">
+            {metin.slice(p.bas, p.son)}
+          </span>
         ) : (
           <span key={i}>{metin.slice(p.bas, p.son)}</span>
         ),
@@ -178,6 +188,8 @@ export default function BelgeSecici({
   const terimler = useMemo(() => aramaTerimleri(gecikmeli), [gecikmeli]);
   const kayitlar = liste.data?.kayitlar ?? [];
   const toplam = liste.data?.toplam ?? null;
+  /** Korpusun tamamı — boş sonucun kesrinde payda olarak yazılır. */
+  const korpusBelge = istatistik.data?.korpus.campaigns ?? null;
 
   const bankaSecenekleri = (bankalar.data ?? []).map((b) => ({
     deger: b.slug,
@@ -235,8 +247,17 @@ export default function BelgeSecici({
       {liste.loading && <Loading label="Belgeler getiriliyor…" />}
       {!!liste.error && <ErrorNotice error={liste.error} />}
 
+      {/* Boş süzgeç sonucu bir HATA DEĞİL: kesir boşluğun ölçüsünü basar ve
+          taranan kümenin büyüklüğü korpustan gelir (sabit yazılmaz). */}
       {liste.data && kayitlar.length === 0 && (
-        <EmptyNotice title="Bu süzgeçlerle belge yok">
+        <EmptyNotice
+          title="Bu süzgeçlerle belge yok"
+          kesir={
+            korpusBelge === null
+              ? undefined
+              : `0 / ${trNum(korpusBelge)} belge`
+          }
+        >
           Süzgeçlerden birini gevşetin ya da aramayı kısaltın. Belgenin tam
           metninde arama yapılmaz; aranan alanlar banka adı, kampanya türü,
           özet ve adrestir.
@@ -287,8 +308,10 @@ export default function BelgeSecici({
         <div className="belge-secici-alt">
           <p className="small muted" role="status">
             {toplam === null
-              ? `${kayitlar.length} belge gösteriliyor.`
-              : `${toplam} belgeden ${kayitlar.length} tanesi gösteriliyor.`}
+              ? `${trNum(kayitlar.length)} belge gösteriliyor.`
+              : `${trNum(toplam)} belgeden ${trNum(
+                  kayitlar.length,
+                )} tanesi gösteriliyor.`}
           </p>
           {toplam !== null && kayitlar.length < toplam && (
             <button

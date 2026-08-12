@@ -1,0 +1,253 @@
+/* ===================================================================
+ * ÇELİŞKİ TESPİTİ — iki iddia, tek belge, sıfır yargı
+ *
+ * İlgili: ../components/ContradictionAlert.tsx,
+ *         ../../src/comparison/contradiction.py, ../../src/api/main.py
+ *         (`GET /contradictions`, `/contradictions/summary`),
+ *         ./tokens.css, ./kanit.css (`.kanit-cip` provenans çipi ailesi)
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` on bileşen ailesi taşıyor ve sahibi bu akış değil; çelişki
+ * ekranı ise bütün bir aile: kapsam şeridi, çelişki kartı, iki taraflı alıntı
+ * ızgarası, kaynağı kayıtlı olmayan taraf için kesikli çip. `zorvaka.css`,
+ * `kanit.css` ve `cetvel.css` aynı gerekçeyle ayrılmıştı; denetim betiği
+ * (`scripts/css_sinif_denetimi.py`) `styles/*.css`in tamamını tarar, yani
+ * ayrılık kapıdan kaçmak değildir.
+ *
+ * Dosya `ContradictionAlert.tsx` içinden import edilir (aynı desen:
+ * `zorvaka.css` → `ExtractLive.tsx`), çünkü `layout.tsx` koordinatöre aittir.
+ *
+ * ## Renk sözleşmesi: --warn, --bad DEĞİL
+ *
+ * Çelişki bir ÇÖKME değil, bir GÖZLEMDİR: sistem çalışmıştır, belgeyi okumuş
+ * ve aynı belgede birbirini tutmayan iki ifade bulmuştur. `--bad` (kırmızı)
+ * bu üründe arıza rengidir — `ErrorNotice`, düşük güven, uydurma değer. Onu
+ * buraya taşımak, bankanın metnini bir sistem arızası gibi göstermek olurdu.
+ *
+ * Renk TEK sinyal de değil: her kart ayrıca mono BÜYÜK HARF bir damga
+ * (`çelişki`), bir sol şerit ve tam bir açıklama cümlesi taşır.
+ *
+ * ## Sistem yargı bildirmez
+ *
+ * Bu ekranda «banka yanlış söylüyor» diyen bir biçim yok: iki ifade de
+ * BANKANIN sesiyle (serif, tırnak içinde) ve eşit ağırlıkta basılır, ikisinin
+ * de kendi `¶ ofset` düğmesi olur. Sistemin kendi sesi (sans) yalnız neyin
+ * çeliştiğini söyler, hangisinin doğru olduğunu söylemez.
+ * =================================================================== */
+
+/* --------------------------------------------------------------------- */
+/* Kapsam şeridi — her ekranda TEK kesir                                 */
+/* --------------------------------------------------------------------- */
+
+/* Provenans şeridi: bu ekranın kesri «kaç belgede çelişki bulundu»dur.
+ * Şerit `--accent` — kesrin kendisi bir uyarı değil, bir ölçüdür. */
+.celiski-kapsam {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-4);
+  border-left: 3px solid var(--accent);
+  padding-left: var(--sp-3);
+  margin-bottom: var(--sp-4);
+}
+
+.celiski-kapsam-etiket {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+.celiski-kapsam-kesir {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-tight);
+  line-height: var(--lh-tight);
+}
+
+/* Taramanın geri kalanı: makine verisi, cümle değil. */
+.celiski-kapsam-not {
+  flex: 1 1 24ch;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+  line-height: var(--lh-normal);
+}
+
+/* --------------------------------------------------------------------- */
+/* Çelişki kartı                                                         */
+/* --------------------------------------------------------------------- */
+
+.celiski-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.celiski-kart {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  /* Provenans şeridi. `--warn`: gözlem, arıza değil (bkz. dosya başlığı). */
+  border-left: 3px solid var(--warn);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.celiski-bas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+/* Damga: rengin YANINDA duran ikinci sinyal. Mono büyük harf, çünkü bu bir
+ * cümle değil bir sınıf etiketidir. */
+.celiski-damga {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--warn);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+.celiski-tur {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-tight);
+}
+
+/* Sözlükte karşılığı olmayan çelişki kodu SANS cümle gibi basılmaz: o hâliyle
+ * makine verisidir ve sesi de makinenin olmalı. Kod uydurma bir Türkçe
+ * başlığa çevrilmez (bkz. lib/format.ts `contradictionLabel`). */
+.celiski-tur-kod {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+/* Sistemin kendi sesi: NE çeliştiğini söyler, kimin haklı olduğunu söylemez. */
+.celiski-gerekce {
+  margin: 0;
+  max-width: var(--measure);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+}
+
+.celiski-kunye {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+}
+
+/* --------------------------------------------------------------------- */
+/* İki taraf — bankanın kendi cümleleri                                  */
+/* --------------------------------------------------------------------- */
+
+/* Katlanmış durur: alıntılar belge metnini gerektiriyor ve o istek yalnız
+ * kullanıcı sorduğunda atılır (1.774 belgenin metnini önden çekmemenin
+ * gerekçesi: KaynakDipnotu.tsx başlığı). */
+.celiski-taraflar > summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+.celiski-taraflar > summary:hover {
+  color: var(--fg);
+}
+
+.celiski-taraflar[open] > summary {
+  margin-bottom: var(--sp-3);
+  color: var(--fg);
+}
+
+/* İki taraf YAN YANA ve EŞİT genişlikte: biri öne çıkarsa ekran taraf tutmuş
+ * olur. Dar görünümde alt alta düşerler, sıra korunur. */
+.celiski-taraf-izgara {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--sp-3);
+}
+
+.celiski-taraf {
+  display: grid;
+  gap: var(--sp-2);
+  align-content: start;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-3);
+}
+
+.celiski-taraf-alan {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+/* BANKANIN sesi: alıntılanan kaynak metin. Tırnak işaretleri metnin içinde
+ * yazılır — bu cümleyi biz yazmadık. */
+.celiski-taraf-soz {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: var(--fs-base);
+  line-height: var(--lh-relaxed);
+  color: var(--fg);
+}
+
+/* Kanonik değer — kıyaslanan şey. Makine verisi, tabular. */
+.celiski-taraf-deger {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-dim);
+}
+
+/* Ham ifadesi kayıtlı OLMAYAN taraf. Boş bırakılır, uydurulmaz: kesikli
+ * çerçeve + soluk mono, kapsama cetvelinin `bos` hâliyle aynı dil. */
+.celiski-taraf-yok {
+  justify-self: start;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+}
+
+.celiski-taraf-eylem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+/* Ekranın doktrin cümlesi: sistem hangisinin geçerli olduğunu SÖYLEMEZ. */
+.celiski-doktrin {
+  margin: 0;
+  max-width: var(--measure);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+}

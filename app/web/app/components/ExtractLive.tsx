@@ -33,6 +33,28 @@
  * Kaldırılmadı: jüri üyesi kendi metnini yapıştırmak isteyebilir ve bu yol
  * sistemin gerçekten canlı koştuğunun en doğrudan kanıtıdır. Ama varsayılan
  * olamaz, çünkü referanssızdır — doğruluğu hakkında hiçbir şey söylemez.
+ *
+ * ## v2 «kanıt defteri» hizalaması (2026-08-12)
+ *
+ * Ekran zaten doğru İSKELETE sahipti; değişen şey sesler ve renk sözleşmesi:
+ *
+ * - **Ham ifade artık serif.** Bankanın kendi yazdığı ibare (`raw_value`) ve
+ *   altın kümenin dayanağı (`gold_span`) mono basılıyordu, yani MAKİNE sesiyle.
+ *   İkisi de bir bankanın cümlesidir; üç sesin kuralı (tokens.css başlığı)
+ *   onları serife yazar. Normalize değer ve karakter aralığı mono kalır.
+ * - **Karakter aralığı düğmesi `¶` dipnotu oldu.** Aynı jest panelin her
+ *   yerinde aynı görünmeli (`button.kaynak-dipnot`, styles/kanit.css); burada
+ *   yan panel değil aşağıdaki kaynak vurgulaması açılıyor, ama açtığı şey
+ *   aynı: değerin çıkarıldığı karakter aralığı.
+ * - **Çelişki `--warn`, `--bad` DEĞİL.** Belge içi çelişki bir arıza değil bir
+ *   gözlemdir (gerekçe: ContradictionAlert.tsx başlığı). Sıfır çelişki de
+ *   yeşile boyanmaz: aranan şey bulunamamış olabilir.
+ * - **Çıkarılamayan alanlar HER ZAMAN listelenir**, altın küme karşılaştırması
+ *   varken de. `null` ile `%0` ayrımı (`VeriYokSifirDegil`) hemen altında
+ *   duruyor: bu ekranın asıl iddiası ölçülemeyen alanın boş kalması.
+ * - **Yükleniyor: iskelet, sayaç değil.** Çıkarım koşarken yapı basılır ve
+ *   hiçbir sayı görünmez; parıltı `prefers-reduced-motion` altında durur
+ *   (`durum.css`).
  */
 
 import { useMemo, useState } from "react";
@@ -53,7 +75,12 @@ import {
   formatValue,
 } from "../lib/format";
 import ConfidenceBadge from "./ConfidenceBadge";
-import { ErrorNotice, Loading } from "./ErrorNotice";
+import {
+  EmptyNotice,
+  ErrorNotice,
+  Loading,
+  VeriYokSifirDegil,
+} from "./ErrorNotice";
 import SourceSpanView from "./SourceSpanView";
 import { useAsync } from "../lib/useAsync";
 import "../styles/zorvaka.css";
@@ -216,13 +243,14 @@ export default function ExtractLive() {
         {liste.loading && <Loading label="Zor vakalar yükleniyor…" />}
         {!!liste.error && <ErrorNotice error={liste.error} />}
 
+        {/* Altın küme dosyasının yokluğu bir ARIZA değil, bu kurulumun
+            kapsamıdır: uyarı rengi yerine nötr çerçeve. */}
         {liste.data && !liste.data.kaynak_var && (
-          <div className="notice notice-warn">
-            <strong>Zor vaka kümesi bu kurulumda yok</strong>
+          <EmptyNotice title="Zor vaka kümesi bu kurulumda yok">
             Anotasyonlu altın küme dosyası bulunamadı. Aşağıdaki serbest metin
-            yolu çalışmaya devam eder, ama karşılaştırılacak bir referans
-            olmaz.
-          </div>
+            yolu çalışmaya devam eder, ama karşılaştırılacak bir referans olmaz —
+            sonuç doğruluk hakkında bir şey söylemez.
+          </EmptyNotice>
         )}
 
         {liste.data && liste.data.kaynak_var && (
@@ -359,6 +387,10 @@ export default function ExtractLive() {
             </span>
           </div>
 
+          {/* Cetvel önce çizilir: yapı hemen basılır, YALNIZ değerler bekler.
+              Hiçbir sayı, hiçbir animasyonlu sayaç görünmez. */}
+          {mesgul && <Loading label="Çıkarım koşuyor…" satir={4} />}
+
           {!!hata && (
             <div className="zv-hata">
               <ErrorNotice error={hata} />
@@ -441,11 +473,13 @@ export default function ExtractLive() {
                   </span>
                 </div>
               </div>
+              {/* Çelişki bir GÖZLEM: bulgu varsa `--warn`, yoksa NÖTR. Sıfır
+                  çelişki yeşile boyanmaz — aranan şey bulunamamış olabilir. */}
               <div className="stat">
                 <div className="k">Çelişki</div>
                 <div
                   className={
-                    sonuc.contradictions.length ? "v zv-kotu" : "v zv-iyi"
+                    sonuc.contradictions.length ? "v zv-uyari" : "v"
                   }
                 >
                   {sonuc.contradictions.length}
@@ -471,14 +505,20 @@ export default function ExtractLive() {
             {sonuc.contradictions.length > 0 && (
               <div className="zv-celiskiler">
                 {sonuc.contradictions.map((c, i) => (
-                  <div key={i} className="notice notice-error">
+                  <div key={i} className="notice notice-warn">
+                    <span className="zv-celiski-damga">çelişki</span>
                     <strong>{contradictionLabel(c.kind)}</strong>
                     {c.detail}
                     <div className="small mono zv-celiski-alan">
-                      {c.fields.join(", ")}
+                      {c.fields.join(" ↔ ")}
                     </div>
                   </div>
                 ))}
+                <p className="small muted zv-celiski-not">
+                  İki taraf da bankanın kendi metninden okundu. Sistem hangisinin
+                  geçerli olduğunu söylemez; ikisini yan yana koyar ve karakter
+                  aralıklarını verir.
+                </p>
               </div>
             )}
 
@@ -505,8 +545,10 @@ export default function ExtractLive() {
                             <div className="zv-deger">
                               {formatValue(s.model.value, s.field)}
                             </div>
+                            {/* BANKANIN sesi: ibare olduğu gibi, serifle ve
+                                tırnak içinde — bu cümleyi biz yazmadık. */}
                             {s.model.raw_value && (
-                              <div className="small mono zv-ham">
+                              <div className="zv-ham serif">
                                 «{s.model.raw_value.trim()}»
                               </div>
                             )}
@@ -524,16 +566,30 @@ export default function ExtractLive() {
                                 </span>
                               ) : (
                                 <>
+                                  {/* Aynı jest panelin her yerinde aynı yüz:
+                                      `¶` + karakter aralığı. Açtığı şey burada
+                                      yan panel değil, aşağıdaki kaynak
+                                      vurgulaması. */}
                                   <button
                                     type="button"
-                                    className="btn-link mono"
+                                    className="kaynak-dipnot"
+                                    aria-expanded={aktifAlan === s.field}
+                                    title="Değerin çıkarıldığı karakter aralığını göster"
                                     onClick={() =>
                                       setAktifAlan(
                                         aktifAlan === s.field ? null : s.field,
                                       )
                                     }
                                   >
-                                    [{s.model.span_start}, {s.model.span_end})
+                                    <span aria-hidden="true">¶</span>
+                                    <span className="kaynak-dipnot-etiket">
+                                      {s.model.span_start}–{s.model.span_end}
+                                    </span>
+                                    <span className="gorunmez">
+                                      {" "}
+                                      — {s.label} alanının kaynak aralığını
+                                      göster
+                                    </span>
                                   </button>
                                   <span
                                     className={
@@ -576,12 +632,23 @@ export default function ExtractLive() {
               </table>
             </div>
 
-            {!sonuc.gold && sonuc.missing_fields.length > 0 && (
+            {/* Çıkarılamayan alanlar HER ZAMAN listelenir — altın küme
+                karşılaştırması varken de. Hiçbir satır düşmez: 12 alanın
+                12'si ekranda kalır, ölçülemeyen olanı kesikli çerçeveli mono
+                çip olarak. Boşluğun kendisi sayılır. */}
+            {sonuc.missing_fields.length > 0 && (
               <>
-                <h3>Bulunamayan alanlar ({sonuc.missing_fields.length})</h3>
-                <p className="small muted zv-sikis">
-                  Bu alanlar metinde geçmiyor. Sistem boş bırakır —{" "}
-                  <b>değer uydurmaz</b>.
+                <h3>Değer çıkarılamayan alanlar</h3>
+                <p className="zv-sikis">
+                  <span className="zv-kesir">
+                    {sonuc.missing_fields.length} /{" "}
+                    {sonuc.fields.length + sonuc.missing_fields.length} alan
+                  </span>{" "}
+                  <span className="small muted">
+                    Bu alanlar metinde geçmiyor. Satır silinmez, değer{" "}
+                    <b>uydurulmaz</b>: alan <span className="mono">null</span>
+                    {" "}kalır.
+                  </span>
                 </p>
                 <div className="field-list">
                   {sonuc.missing_fields.map((m) => (
@@ -590,6 +657,7 @@ export default function ExtractLive() {
                     </span>
                   ))}
                 </div>
+                <VeriYokSifirDegil />
               </>
             )}
           </section>

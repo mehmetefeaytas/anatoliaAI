@@ -23,6 +23,21 @@
  * arama kutusunun bir istisna olması için sebep yok. Eşleşen harfler ayrıca
  * vurgulanır, böylece kullanıcı sonucu gözüyle doğrular.
  *
+ * ## Eşleşme vurgusu neden SARI DEĞİL
+ *
+ * `--mark` (vurgu sarısı) bu üründe tek bir şeye ayrılmıştır: değerin
+ * çıkarıldığı karakter aralığı. Arama kutusundaki harf eşleşmesi bir kaynak
+ * göstermez, bir gezinme ipucudur — ikisi aynı sarıyı giyerse ekrandaki tek
+ * doygun renk anlamını kaybeder. Vurgu artık mürekkep rengi + 600 ağırlık
+ * (`.arama-vurgu`, bkz. ../styles/arama.css).
+ *
+ * ## Boş sonucun ÖLÇÜSÜ var
+ *
+ * «Sonuç bulunamadı» tek başına bir arıza gibi okunur. Altında taranan kümenin
+ * büyüklüğü yazar (`/stats` → korpus belge ve banka sayısı) ve bu sayılar
+ * SABİT DEĞİL, sunucudan gelir. İstek yalnız palet AÇILDIĞINDA atılır: kapalı
+ * bir palet ağa çıkmaz.
+ *
  * ## Gecikme (debounce) elle yazıldı
  *
  * Yeni bağımlılık yok (offline kısıtı + lisans denetimi) — `useAsync.ts`
@@ -41,8 +56,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../lib/api";
 import type { AramaBelgesi, AramaSonucu } from "../lib/api";
 import { alanEtiketi, aramaTerimleri, vurgulariBul } from "../lib/arama";
+import { trNum } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
-import { ErrorNotice } from "./ErrorNotice";
+import { ErrorNotice, Loading } from "./ErrorNotice";
 
 /** Kullanıcının seçtiği şey. Üç niyet, üç ayrı biçim. */
 export type AramaSecimi =
@@ -66,7 +82,10 @@ type Oge = {
   secim: AramaSecimi;
 };
 
-/** Eşleşen harfleri `<mark>` ile boyar; eşleşme yoksa metni olduğu gibi basar. */
+/**
+ * Eşleşen harfleri mürekkep rengi + kalın ile işaretler; eşleşme yoksa metni
+ * olduğu gibi basar. `<mark>` KULLANILMAZ — gerekçesi dosya başlığında.
+ */
 function Vurgulu({ metin, terimler }: { metin: string; terimler: string[] }) {
   const parcalar = useMemo(
     () => vurgulariBul(metin, terimler),
@@ -76,7 +95,9 @@ function Vurgulu({ metin, terimler }: { metin: string; terimler: string[] }) {
     <>
       {parcalar.map((p, i) =>
         p.vurgulu ? (
-          <mark key={i}>{metin.slice(p.bas, p.son)}</mark>
+          <span key={i} className="arama-vurgu">
+            {metin.slice(p.bas, p.son)}
+          </span>
         ) : (
           <span key={i}>{metin.slice(p.bas, p.son)}</span>
         ),
@@ -160,6 +181,14 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
         : Promise.resolve(null),
     [acik, gecikmeli, limit],
   );
+
+  // Taranan kümenin büyüklüğü. Palet AÇIKKEN bir kez okunur; boş sonucun
+  // ölçüsünü yazmak için gerekiyor ve sabit yazılmaz.
+  const kapsam = useAsync(
+    () => (acik ? api.stats() : Promise.resolve(null)),
+    [acik],
+  );
+  const korpus = kapsam.data?.korpus ?? null;
 
   const terimler = useMemo(() => aramaTerimleri(gecikmeli), [gecikmeli]);
   const veri = sonuc.data;
@@ -303,16 +332,25 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
           </p>
         )}
 
+        {/* Yükleniyor: iskelet YAPI basılır, hiçbir sayı görünmez. */}
         {gecikmeli && sonuc.loading && (
-          <p className="komut-durum small muted" role="status">
-            Aranıyor…
-          </p>
+          <div className="komut-durum">
+            <Loading label="Aranıyor…" satir={3} />
+          </div>
         )}
 
         {gecikmeli && !sonuc.loading && veri && ogeler.length === 0 && (
           <p className="komut-durum small muted" role="status">
-            «{gecikmeli}» için sonuç bulunamadı. Belgenin içindeki bir ifadeyi
-            arıyorsanız sohbet ekranını deneyin.
+            «{gecikmeli}» için eşleşme yok. Bu bir arıza değil: arama koştu ve
+            yanıt verdi. Belgenin içindeki bir ifadeyi arıyorsanız sohbet
+            ekranını deneyin — orada belgenin tam metni taranır.
+            {korpus && (
+              <span className="komut-tarama">
+                taranan küme: {trNum(korpus.campaigns)} belge ·{" "}
+                {trNum(korpus.banks)} banka · alanlar: banka adı, kampanya türü,
+                özet, adres
+              </span>
+            )}
           </p>
         )}
 
@@ -326,7 +364,7 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
           {veri && veri.banks.length > 0 && (
             <div role="group" aria-labelledby="komut-grup-banka">
               <p id="komut-grup-banka" className="komut-grup-baslik">
-                Bankalar
+                bankalar
                 <span className="komut-sayac">{veri.toplam.banks}</span>
               </p>
               {veri.banks.map((b) => {
@@ -346,8 +384,10 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
                     <span className="komut-secenek-bas">
                       <Vurgulu metin={b.name} terimler={terimler} />
                     </span>
-                    <span className="komut-secenek-alt small muted">
-                      {b.campaign_count} belge
+                    <span className="komut-secenek-alt">
+                      <span className="komut-belge-sayisi">
+                        {trNum(b.campaign_count)} belge
+                      </span>
                     </span>
                   </div>
                 );
@@ -358,7 +398,7 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
           {veri && veri.campaigns.length > 0 && (
             <div role="group" aria-labelledby="komut-grup-belge">
               <p id="komut-grup-belge" className="komut-grup-baslik">
-                Belgeler
+                belgeler
                 <span className="komut-sayac">{veri.toplam.campaigns}</span>
               </p>
               {veri.campaigns.map((k) => {
@@ -408,7 +448,7 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
           {veri && veri.types.length > 0 && (
             <div role="group" aria-labelledby="komut-grup-tur">
               <p id="komut-grup-tur" className="komut-grup-baslik">
-                Kampanya türleri
+                kampanya türleri
                 <span className="komut-sayac">{veri.toplam.types}</span>
               </p>
               {veri.types.map((t) => {
