@@ -128,13 +128,24 @@
   margin-top: var(--sp-5);
   border-top: 1px solid var(--line);
   padding-top: var(--sp-4);
+
+  /* Değer kolonu 132px'ten 152px'e çıktı. ÖLÇÜLDÜ (1280px, tarayıcı): kolonun
+   * ölçüsünü belirleyen en uzun içerik sayı değil, BOŞLUK etiketi —
+   * «veri yok · 291 belge», mono 12px'te ~144px. 132px'te iki satıra kırılıyor
+   * ve cümle ortadan bölünüyordu. Cetvelin en dürüst satırı, sığmadığı için
+   * bozulan satır olmamalı; kolon ona göre ölçülendi.
+   *
+   * Ray payı: 1180px kabuk − 2×24px kart dolgusu − 190px ad − 152px değer −
+   * 2×16px boşluk = 758px. Denetim tablosunun yedi sütunu hâlâ kaydırmasız
+   * sığıyor (ölçüldü). */
+  --cetvel-deger: 152px;
 }
 
 .cetvel-bas,
 .cetvel-satir,
 .cetvel-ayirici {
   display: grid;
-  grid-template-columns: 190px 1fr 132px;
+  grid-template-columns: 190px 1fr var(--cetvel-deger);
   grid-template-areas: "ad ray deger";
   gap: 0 var(--sp-4);
   align-items: center;
@@ -357,7 +368,13 @@
 }
 
 /* «veri yok · 291 belge» — boşluğun kendisi SAYILIR. Belge sayısı olmadan bu
- * satır «hiç bakmadık» diye okunurdu; oysa 291 belge tarandı ve alan geçmedi. */
+ * satır «hiç bakmadık» diye okunurdu; oysa 291 belge tarandı ve alan geçmedi.
+ *
+ * `nowrap` ÖLÇÜLDÜ (1280px, tarayıcı): etiket 132px'lik değer kolonunda iki
+ * satıra kırılıyordu — «veri yok · 291» üstte, «belge» altta. Kırılan etiket
+ * cümleyi ikiye bölüp ikinci satırı bağlamsız bırakıyor ve altı boş satır
+ * üst üste gelince cetvelin dikey ritmi bozuluyordu. Sarılmak yerine tek satır
+ * kalır; kolon `--cetvel-deger` ile bu etikete göre ölçülendi. */
 .cetvel-yok {
   grid-area: deger;
   font-family: var(--font-mono);
@@ -365,6 +382,7 @@
   color: var(--fg-faint);
   text-align: right;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
 /* --- ayırıcı: ölçülenler ile ölçülemeyenler arasındaki eşik --- */

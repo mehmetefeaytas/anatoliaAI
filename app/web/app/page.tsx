@@ -174,6 +174,10 @@ function Dashboard() {
   const fields = useAsync(() => api.fields(), []);
   const stats = useAsync(() => api.stats(), []);
   const campaigns = useAsync(() => api.campaigns(), []);
+  // Banka KATALOĞU — künyedeki «banka» sayısı buradan gelir, `/stats`ten değil.
+  // İki uç iki farklı soruyu yanıtlıyor ve sayıları farklı: gerekçe
+  // `KorpusKunyesi` başlığında.
+  const banks = useAsync(() => api.banks(), []);
 
   const rows = campaigns.data ?? [];
   // Kampanya türleri artık `/stats`ten geliyor, `/campaigns` yanıtından
@@ -212,7 +216,8 @@ function Dashboard() {
       <KorpusKunyesi
         stats={stats.data}
         alanSayisi={fields.data?.length ?? null}
-        yukleniyor={stats.loading || fields.loading}
+        bankaSayisi={banks.data?.length ?? null}
+        yukleniyor={stats.loading || fields.loading || banks.loading}
       />
 
       {/* İki anahtar tek şeritte: ikisi de panelin tamamını etkiler ve
@@ -425,6 +430,21 @@ function sohbetBaglami(sekme: TabKey): SohbetBaglami {
  * basıyor: alan → belge. Banka kesri istenirse `/stats`e `alan_banka_kapsami`
  * eklenmesi gerekir; API tarafı bir sonraki iş.
  *
+ * ## «Banka» sayısı `/banks`ten gelir, `/stats`ten DEĞİL
+ *
+ * ÖLÇÜLDÜ (2026-08-12): `/stats` `korpus.banks = 11`, `/banks` ise 10 satır
+ * döndürüyor. Fark `tkbb` — Türkiye Katılım Bankaları Birliği, yani bankaların
+ * BİRLİĞİ; bir banka değil, bir otorite kaynağı.
+ *
+ * Künye ilk hâlinde `korpus.banks`i okuyup «11 banka» yazıyordu ve bu, aynı
+ * ekranda kendisiyle çelişiyordu: kapsama cetveli paydayı `/banks`ten aldığı
+ * için «4 / 10 banka» basıyordu. Üstelik yanlıştı — TKBB'yi banka saymak, tam
+ * olarak bu panelin reddettiği türden bir kategori hatası.
+ *
+ * v2 tasarım dosyası da «11 banka» yazıyor ve ısı haritası fikstüründe TKBB'yi
+ * banka satırı olarak listeliyor. Tasarımın sayısı alınmadı: iki uç iki farklı
+ * sorunun cevabı ve künye artık ikisini de basıyor — kaç BANKA, kaç KAYNAK.
+ *
  * ## Yükleniyor ≠ sıfır
  *
  * Ölçü okunmadan önce çip KESİKLİ çerçeveyle boş durur; sayı basılmaz. Panelin
@@ -434,10 +454,12 @@ function sohbetBaglami(sekme: TabKey): SohbetBaglami {
 function KorpusKunyesi({
   stats,
   alanSayisi,
+  bankaSayisi,
   yukleniyor,
 }: {
   stats: Stats | null;
   alanSayisi: number | null;
+  bankaSayisi: number | null;
   yukleniyor: boolean;
 }) {
   // Sınır çipi: en DÜŞÜK kapsamalı alan değil, HABERİ olan alan. `kar_payi_orani`
@@ -460,7 +482,19 @@ function KorpusKunyesi({
   return (
     <div className="kunye" aria-busy={yukleniyor}>
       {cip(belge, "belge")}
-      {cip(stats?.korpus.banks ?? null, "banka")}
+      {cip(bankaSayisi, "banka")}
+      {/* Kaynak sayısı bankadan FAZLA olduğunda basılır ve farkı söyler:
+          korpusta banka olmayan kaynaklar var (TKBB gibi otorite yayınları) ve
+          onların belgeleri de sayılıyor. Fark yoksa çip hiç görünmez — okuyucuya
+          anlamsız bir eşitlik göstermek yerine sessiz kalır. */}
+      {stats && bankaSayisi !== null && stats.korpus.banks > bankaSayisi ? (
+        <span
+          className="kunye-cip"
+          title="Korpusta banka olmayan kaynaklar da var — bankaların birliği gibi otorite yayınları. Onların belgeleri sayılır ama bankalar arası kıyasa girmez."
+        >
+          {trNum(stats.korpus.banks)} kaynak
+        </span>
+      ) : null}
       {cip(stats?.campaign_types.length ?? null, "kampanya türü")}
       {cip(alanSayisi, "çıkarım alanı")}
       {/* Sınır çipi. Renk tek sinyal değil: kesrin kendisi sınırı söylüyor. */}
