@@ -43,7 +43,7 @@ tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
 | RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
 | Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
 | Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
-| Test | **2.607** | `python -m pytest` |
+| Test | **2.631** | `python -m pytest` |
 | CI regresyon kapısı | **var** (alan F1 + halüsinasyon tavanı) | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 
 ### İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz

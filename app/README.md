@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-2607%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-2631%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1774%20belge%20%C2%B7%201%20ihlal-yellow.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -150,7 +150,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** 148 dosyada **2.607** birim/entegrasyon testi, tamamı offline yeşil
+**Test:** 152 dosyada **2.631** birim/entegrasyon testi, tamamı offline yeşil
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`)
 (`python3 -m unittest discover -s tests`).
@@ -162,7 +162,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **2.607 test yeşil**, ağ gerektirmeden koşuyor (bağımlılıksız koşuda 205'i atlanır — API yüzeyi `test-with-deps` işinde sınanır) |
+| Testler | ✅ **2.631 test yeşil**, ağ gerektirmeden koşuyor (bağımlılıksız koşuda 205'i atlanır — API yüzeyi `test-with-deps` işinde sınanır) |
 | Değişmez (invariant) denetimi | ⚠️ **1.782 belgede 1 ihlal** (`P4_cumle_sirasi`, kapsam %91,3) — etiketsiz veride otomatik hata avı (`python -m eval.properties`). Eski "849 belgede 0 ihlal" rozeti korpus büyüyünce geçersizleşti |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
