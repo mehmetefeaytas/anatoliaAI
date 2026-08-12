@@ -28,7 +28,7 @@
  * IsiHaritasi'ndaki gerekçenin aynısı (bkz. o dosyanın başlığı) burada da
  * geçerli ve bir tanesi ekleniyor:
  *
- *  1. Satır içi SVG DOM'da yaşar; `fill="var(--ok)"` DOĞRUDAN çalışır. Canvas'ın
+ *  1. Satır içi SVG DOM'da yaşar; `fill="var(--accent)"` DOĞRUDAN çalışır. Canvas'ın
  *     CSS özel niteliklerini okuyamaması sorunu (bkz. lib/grafikPaleti.ts)
  *     tümüyle ortadan kalkar — tema değişimi bedava, palet çözme adımı yok.
  *  2. `<title>` taşıyan `rect`'ler erişilebilirlik ağacında görünür.
@@ -52,16 +52,35 @@
  * durum kendi NÖTR ŞERİDİNE düşer, adıyla ve gerekçesiyle.
  *
  * `esit` ise gerçekten sıfırdır ve eksende kalır — ama görünmez olmasın diye
- * çizgi üstünde nötr renkli bir tırnakla ve «eşit» yazısıyla işaretlenir.
+ * çizgi üstünde KESİK (dotted) bir taban çizgisiyle ve «eşit» yazısıyla
+ * işaretlenir. Dolu bir tırnak, ölçüsü olmayan bir şeye ölçü verirdi.
  *
  * ## Renk tek sinyal değil
  *
  * WCAG 1.4.1: yön ayrıca KONUMLA (çizginin üstü/altı), OKLA (▲/▼) ve yazıyla
  * verilir; her çubuğun değeri ucuna basılır ve grafiğin altındaki liste aynı
  * bilgiyi metin olarak taşır.
+ *
+ * ## ÜÇ BİÇİM — ve `--warn` artık tek şey söylüyor
+ *
+ * Çubuklar eskiden yönü RENKLE anlatıyordu: `--ok` yeşil «daha iyi», `--warn`
+ * turuncu «daha kötü». Panelin geri kalanında ise `--warn` başka bir şeyin
+ * rengi: «ölçülemedi / doğrudan kıyaslanamaz» (§17). Aynı turuncu iki ayrı şeyi
+ * söyleyince ikisi de okunmaz oluyordu — kapsama cetvelinde kesikli turuncu
+ * «kıyaslanamaz» demek, burada dolu turuncu «geride» demek.
+ *
+ * Ayrım biçime taşındı ve renk tekilleşti:
+ *
+ *   dolu mürekkep (`--accent`)        ölçeklenmiş çubuk — yön belli, oran belli
+ *   kesikli çerçeve + 135° tarama     yön belli, ORAN HESAPLANAMADI (`--warn`)
+ *   kesik (dotted) taban çizgisi      gerçekten eşit — uzunluğu sıfır
+ *
+ * Yön kaybolmuyor: konumla (eksenin üstü/altı), her çubuğun ucundaki OKLA
+ * (▲/▼) ve yazıyla üç kez veriliyor. Renkten çıkan tek şey, renge zaten
+ * yüklenemeyecek olan ikinci anlamdı.
  */
 
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import type { DeltaField, DeltaKind } from "../../lib/api";
 import { trNum } from "../../lib/format";
 
@@ -148,6 +167,12 @@ function cubuklariKur(alanlar: DeltaField[]): {
 
 export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props) {
   const { cubuklar, notr } = useMemo(() => cubuklariKur(alanlar), [alanlar]);
+  // Desen kimliği belge genelinde tekil olmalı: aynı sayfada iki delta ekseni
+  // (iki farklı ürün ailesi) yan yana çizilebiliyor ve sabit bir `id` ikincisini
+  // birincinin desenine bağlardı. `useId()` çıktısındaki iki nokta üst üste
+  // temizleniyor — `url(#…)` başvurusunda tarayıcıya göre sorun çıkarabiliyor.
+  const kimlik = useId().replace(/[^a-zA-Z0-9]/g, "");
+  const desenId = `delta-tarama-${kimlik}`;
 
   if (cubuklar.length === 0 && notr.length === 0) return null;
 
@@ -167,10 +192,12 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
   return (
     <figure className="grafik">
       <figcaption className="grafik-baslik">
-        {bankName} — nerede önde, nerede geride
-        <span className="small muted">
-          {" "}
-          — {tur ? `kampanya türü: ${tur}` : "türü belirlenemeyen belgeler"}
+        {bankName} — nerede önde, nerede geride{" "}
+        {/* Kampanya türü MAKİNE verisidir (§17: kıyas TÜR İÇİNDE yapılır), bir
+            cümle değil — mono. Büyük harfe ÇIKMAZ: büyük harf «bu bir etiket»
+            demektir, oysa «Konut Finansmanı» bir değerdir. */}
+        <span className="grafik-fisilti">
+          {tur ? `tür: ${tur}` : "türü belirlenemeyen belgeler"}
         </span>
       </figcaption>
 
@@ -187,6 +214,22 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
             }
             style={{ maxWidth: genislik, height: "auto" }}
           >
+            {/* 135° tarama dokusu — «yön belli, oran hesaplanamadı» çubuğunun
+                yüzeyi. Kapsama haritasındaki `kosullu` hücreyle AYNI doku ve
+                aynı açı; iki ekranda aynı şeyi söylüyorlar. */}
+            <defs>
+              <pattern
+                id={desenId}
+                patternUnits="userSpaceOnUse"
+                width="8"
+                height="8"
+                patternTransform="rotate(135)"
+              >
+                <rect width="8" height="8" fill="var(--bg-2)" />
+                <rect width="4" height="8" fill="var(--warn-wash)" />
+              </pattern>
+            </defs>
+
             {/* Sıfır çizgisi = seçilen bankanın kendisi. Grafiğin öznesi bir
                 çubuk değil, EKSENDİR. */}
             <line
@@ -207,13 +250,15 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
             >
               {bankName}
             </text>
-            {/* Yön yazıyla ve okla da veriliyor; renk tek sinyal değil. */}
+            {/* Yön yazıyla ve okla veriliyor. Bu iki etiket artık RENK
+                TAŞIMIYOR: yeşil/turuncu ayrımı çubuklardan kalktığı için
+                göstergede kalması yanlış bir eşleme öğretirdi. */}
             <text
               x={SOL - 14}
               y={16}
               fontSize="12"
               fontFamily="var(--font-sans)"
-              fill="var(--ok)"
+              fill="var(--fg-dim)"
               textAnchor="end"
             >
               ▲ daha iyi
@@ -223,7 +268,7 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
               y={UST + ALT - 6}
               fontSize="12"
               fontFamily="var(--font-sans)"
-              fill="var(--warn)"
+              fill="var(--fg-dim)"
               textAnchor="end"
             >
               ▼ daha kötü
@@ -238,38 +283,44 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
                 : c.oran === null || enBuyuk <= 0
                   ? EN_KISA
                   : Math.max(EN_KISA, (c.oran / enBuyuk) * EN_UZUN);
-              const renk = c.yon === 1 ? "var(--ok)" : "var(--warn)";
               const y = c.yon === 1 ? eksenY - boy : eksenY;
               const yaziY = c.yon === 1 ? eksenY - boy - 7 : eksenY + boy + 15;
+              const ok = c.yon === 1 ? "▲" : "▼";
 
               return (
                 <g key={c.alan}>
                   {c.yon === 0 ? (
-                    // Gerçekten eşit: eksende kalır ama görünmez olmasın diye
-                    // nötr bir tırnak alır. Ölçüsü sıfırdır, iddiası da.
-                    <rect
-                      x={x}
-                      y={eksenY - 2}
-                      width={CUBUK_W}
-                      height="4"
-                      rx="2"
-                      fill="var(--line)"
+                    // Gerçekten eşit: eksende kalır, uzunluğu sıfırdır. Görünmez
+                    // olmasın diye KESİK (dotted) bir taban çizgisi alır — dolu
+                    // bir tırnak, ölçüsü olmayan bir şeye ölçü verirdi.
+                    <line
+                      x1={x}
+                      y1={eksenY}
+                      x2={x + CUBUK_W}
+                      y2={eksenY}
+                      stroke="var(--fg-faint)"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeDasharray="1 3"
                     >
                       <title>{`${c.etiket}: eşit`}</title>
-                    </rect>
+                    </line>
                   ) : (
                     <rect
                       x={x}
                       y={y}
                       width={CUBUK_W}
                       height={boy}
-                      rx="2"
-                      fill={olceksiz ? "none" : renk}
-                      stroke={renk}
+                      /* Köşe: mürekkep çubuğu bir işarettir, kart değil —
+                         `--radius-sm` ölçüsünde (4px) kalır. */
+                      rx="4"
+                      /* Ölçeklenmiş çubuk DOLU MÜREKKEP; ölçeksiz çubuk
+                         kesikli çerçeve + 135° tarama. Rakibin değeri 0 olduğu
+                         için göreli fark hesaplanmadı: yön belli, büyüklük
+                         değil — ve yüzey bunu söylüyor. */
+                      fill={olceksiz ? `url(#${desenId})` : "var(--accent)"}
+                      stroke={olceksiz ? "var(--warn)" : "none"}
                       strokeWidth={olceksiz ? 1 : 0}
-                      /* Kesikli = ölçeğe göre çizilmedi. Rakibin değeri 0
-                         olduğu için göreli fark hesaplanmadı; yön belli,
-                         büyüklük değil. */
                       strokeDasharray={olceksiz ? "3 3" : undefined}
                     >
                       <title>
@@ -280,6 +331,9 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
                       </title>
                     </rect>
                   )}
+                  {/* Değerin yanındaki ok: yön ARTIK RENKTE DEĞİL, o yüzden her
+                      çubuk kendi yönünü kendi taşımalı — göstergeye bakmak
+                      zorunda kalmadan. */}
                   <text
                     x={orta}
                     y={c.yon === 0 ? eksenY - 8 : yaziY}
@@ -289,7 +343,7 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
                     textAnchor="middle"
                     aria-hidden="true"
                   >
-                    {c.metin}
+                    {c.yon === 0 ? c.metin : `${ok} ${c.metin}`}
                   </text>
                   {/* Alan adları eğik: «Kâr payı oranı» 82px'e sığmıyor ve
                       kısaltmak jüriye tanımadığı bir kısaltma öğretmek olurdu.
@@ -325,22 +379,24 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
               <span>
                 {c.yon === 1 ? "daha iyi" : c.yon === -1 ? "daha kötü" : "eşit"}
               </span>
-              <span className="mono">{c.metin}</span>
+              <span className="grafik-liste-deger">{c.metin}</span>
             </li>
           ))}
         </ul>
       )}
 
-      <p className="small muted">
+      <p className="grafik-gerekce">
         Çubuğun boyu <b>göreli farktır</b> (%), mutlak fark değil: puan, ay ve TL
         aynı eksene konamaz. Mutlak farklar aşağıdaki tabloda alan alan durur.
-        Kesikli çubuk «yön belli, oran hesaplanamadı» demektir — rakibin değeri
-        sıfır olduğunda göreli fark tanımsızdır.
+        Dolu mürekkep çubuk ölçülmüş bir oranı gösterir; <b>kesikli ve taramalı</b>{" "}
+        çubuk «yön belli, oran hesaplanamadı» demektir — rakibin değeri sıfır
+        olduğunda göreli fark tanımsızdır. <b>Kesik taban çizgisi</b> ise gerçek
+        bir eşitliktir: uzunluğu sıfırdır çünkü fark sıfırdır.
       </p>
 
       {notr.length > 0 && (
         <div className="delta-notr">
-          <p className="small muted">
+          <p className="grafik-gerekce">
             Aşağıdaki alanlar <b>eksene yerleştirilmez</b>. Sıfır uzunlukta bir
             çubuk «eşit» diye okunurdu; oysa burada söylenen «ölçülemedi».
           </p>
