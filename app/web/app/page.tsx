@@ -39,6 +39,7 @@ import ComparePanel from "./components/ComparePanel";
 import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
+import IsiPanel from "./components/IsiPanel";
 import DurumSeridi, { ApiKapaliUyarisi } from "./components/DurumSeridi";
 import JuryModeToggle from "./components/JuryModeToggle";
 import KomutPaleti from "./components/KomutPaleti";
@@ -60,6 +61,7 @@ import { useAsync } from "./lib/useAsync";
 
 type TabKey =
   | "compare"
+  | "isi"
   | "advantageous"
   | "banka"
   | "delta"
@@ -84,6 +86,10 @@ type TabKey =
  */
 const TABS: readonly SekmeTanimi<TabKey>[] = [
   { key: "compare", label: "Karşılaştırma" },
+  // Isı haritası kıyasın HEMEN ARDINDA: kıyas «kim daha avantajlı» der, harita
+  // «bunu nerede ölçebiliyoruz» der. İkincisi birincinin okunma koşulu — bir
+  // sıralamaya bakan kişinin ilk sorusu o sıralamanın kaç bankayı kapsadığı.
+  { key: "isi", label: "Isı Haritası" },
   { key: "advantageous", label: "En Avantajlı" },
   { key: "banka", label: "Banka Sayfası" },
   { key: "delta", label: "Banka İçi Delta" },
@@ -154,6 +160,10 @@ function Dashboard() {
   // Komut paletinden seçilen kampanya türü. Tür bir ekran değil süzgeç;
   // kıyas paneline başlangıç değeri olarak geçiyor.
   const [turSuzgeci, setTurSuzgeci] = useState<string | null>(null);
+  // Isı haritasının konusu olan alan. `null` iken bileşen alan listesinin ilk
+  // öğesine düşer — sabit bir alan adı yazmak, `/fields` sırası değiştiğinde
+  // sessizce var olmayan bir alanı sorardı.
+  const [isiAlani, setIsiAlani] = useState<string | null>(null);
 
   // Jüri modu kapatılınca tazeleme sekmesinde kalmak boş bir panel bırakırdı;
   // görünmeyen bir sekmede durmak yerine varsayılana dönülür.
@@ -264,6 +274,23 @@ function Dashboard() {
             <AlanListesiBos />
           ) : null)}
 
+        {/* Isı haritası alan listesini bekler: seçicisi ondan doluyor ve
+            haritanın başlığı alanın etiketini taşıyor. */}
+        {sekme === "isi" &&
+          (fields.loading ? (
+            <Loading label="Alan listesi yükleniyor…" />
+          ) : fields.data && fields.data.length > 0 ? (
+            <IsiPanel
+              fields={fields.data}
+              kayitlar={rows}
+              kayitlarYukleniyor={campaigns.loading}
+              alan={isiAlani ?? fields.data[0].field}
+              onAlanDegis={setIsiAlani}
+            />
+          ) : !fields.error ? (
+            <AlanListesiBos />
+          ) : null)}
+
         {sekme === "advantageous" && (
           <AdvantageousPanel campaignTypes={campaignTypes} onInspect={inspect} />
         )}
@@ -359,6 +386,12 @@ function sohbetBaglami(sekme: TabKey): SohbetBaglami {
   switch (sekme) {
     case "banka":
       return "delta";
+    // Isı haritasının kendi hazır soru kümesi yok; kıyas kümesine düşüyor
+    // çünkü oradaki sorulardan biri («kâr payı oranı hangi bankalarda hiç
+    // geçmiyor») tam olarak haritanın konusu. Genel kümeye düşürmek, tek bir
+    // alanın kapsamasına bakan kişiye korpus geneli sorular göstermek olurdu.
+    case "isi":
+      return "compare";
     case "compare":
     case "advantageous":
     case "delta":
