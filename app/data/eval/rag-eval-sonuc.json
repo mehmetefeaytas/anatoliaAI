@@ -1,0 +1,62 @@
+{
+  "kosumlar": [
+    {
+      "retriever": "keyword",
+      "k": 5,
+      "olcutler": [
+        {
+          "ad": "terim kapsama",
+          "soru": 15,
+          "isabet": 13,
+          "recall_at_1": 0.8667,
+          "recall_at_k": 0.8667,
+          "mrr": 0.8667,
+          "kaynak_orani": 1.0
+        },
+        {
+          "ad": "banka hedefleme",
+          "soru": 10,
+          "isabet": 6,
+          "recall_at_1": 0.5,
+          "recall_at_k": 0.6,
+          "mrr": 0.5333,
+          "kaynak_orani": 1.0
+        }
+      ],
+      "cekimserlik": {
+        "dogru": 30,
+        "toplam": 30,
+        "dogruluk": 1.0
+      }
+    },
+    {
+      "retriever": "bm25",
+      "k": 5,
+      "olcutler": [
+        {
+          "ad": "terim kapsama",
+          "soru": 15,
+          "isabet": 13,
+          "recall_at_1": 0.8667,
+          "recall_at_k": 0.8667,
+          "mrr": 0.8667,
+          "kaynak_orani": 1.0
+        },
+        {
+          "ad": "banka hedefleme",
+          "soru": 10,
+          "isabet": 8,
+          "recall_at_1": 0.8,
+          "recall_at_k": 0.8,
+          "mrr": 0.8,
+          "kaynak_orani": 1.0
+        }
+      ],
+      "cekimserlik": {
+        "dogru": 30,
+        "toplam": 30,
+        "dogruluk": 1.0
+      }
+    }
+  ]
+}
