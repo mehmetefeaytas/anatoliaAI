@@ -1,0 +1,158 @@
+/* Anatolia AI — BASKI (ve «PDF olarak kaydet») katmanı.
+ *
+ * İlgili: tokens.css, tema.css (paletin üçüncü hâli), tests/test_tema_paleti.py
+ *         ../components/BelgeyiIndir.tsx
+ *
+ * ## Neden kütüphane değil, tarayıcının kendi yolu
+ *
+ * Uzun belgeleri ekranda uzun uzun göstermek yerine indirilebilir olmaları
+ * istendi. Aday kütüphaneler ölçüldü ve üçü de aynı duvara çarpıyor:
+ *
+ *   jspdf      — MIT ama README'si açıkça yazıyor: «standart 14 font ASCII ile
+ *                sınırlı; UTF-8 için özel font entegre etmelisiniz». Türkçe
+ *                metin (ş ç ğ ı İ ö ü) varsayılan olarak BOZUK çıkar. Düzeltmek
+ *                için bir TTF gömmek ve onun lisansını da denetlemek gerekir.
+ *   pdfmake    — çalışıyor ama 15,3 MB ve yine bir font blob'u taşıyor.
+ *   html2pdf   — `dompurify` üzerinden (MPL-2.0 OR Apache-2.0) getiriyor, yani
+ *                §20 beyaz listesinde kalmak için NOTICE'ta açık bir seçim
+ *                gerektirir; ayrıca `html2canvas` DOM'u kendi kısmi CSS
+ *                uyarlamasıyla yeniden rasterize eder — bulanık ve SEÇİLEMEYEN
+ *                metin üretir. Türkçe rapor okuyan bir jüri için en kötü çıktı.
+ *
+ * `window.print()` bu sorunu tamamen atlıyor: tarayıcı metni ZATEN doğru
+ * fontla çiziyor, biz yalnız ne basılacağını söylüyoruz. Üstelik seçilebilir
+ * metin, gerçek sayfa sonu ve çalışan bağlantılar bedava geliyor. Sıfır
+ * bağımlılık, sıfır font gömme, sıfır lisans denetimi.
+ *
+ * ## Palet burada ÜÇÜNCÜ kez yazılıyor
+ *
+ * Koyu tema bir PDF'te okunmaz ve toner yakar. Baskıda açık palet ZORLANIR.
+ * `tema.css`'in kurduğu emsal aynen geçerli: saf CSS'te aynı bildirim kümesi
+ * hem `@media print` içine hem dışına konamaz, ve ara token kullanmak kontrast
+ * kapısını kör ederdi (kapı düz `hex` okur, `var(...)` göreni ölçemez).
+ *
+ * Kopyanın kayması `tests/test_tema_paleti.py` ile teste bağlıdır — buradaki
+ * her değer `tokens.css`'teki karşılığıyla BİREBİR aynı olmak zorunda.
+ */
+
+@media print {
+  /* --- açık palet, koşulsuz --- */
+  :root,
+  :root[data-tema="acik"],
+  :root[data-tema="koyu"] {
+    color-scheme: light;
+
+    --bg: #fbfbfd;
+    --bg-2: #ffffff;
+    --bg-3: #eeeef2;
+
+    --line: #d6d6dc;
+    --line-soft: #e9e9ee;
+
+    --fg: #1d1d1f;
+    --fg-dim: #5f5f66;
+    --fg-faint: #6c6c78;
+    --on-accent: #ffffff;
+
+    --accent: #0071e3;
+    --accent-soft: #0062c4;
+
+    --ok: #1d7a54;
+    --warn: #a8480a;
+    --bad: #b3261e;
+
+    --accent-wash: #e8f1fd;
+    --ok-wash: #e6f4ee;
+    --warn-wash: #fdf0e6;
+    --bad-wash: #fceceb;
+    --mark-ring: #ffeb8a;
+
+    /* Gölge kâğıtta gri bir bulanıklığa dönüşür; yükseklik baskıda anlamsız. */
+    --shadow-sm: none;
+    --shadow-md: none;
+  }
+
+  @page {
+    size: A4;
+    margin: 18mm 15mm;
+  }
+
+  /* Tarayıcılar zemin renklerini varsayılan olarak ATAR (toner tasarrufu).
+   * Burada zemin dekorasyon değil BİLGİ: ısı haritası hücresinin dolgusu,
+   * rozetin yıkaması ve span vurgusu anlam taşıyor. */
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  body {
+    background: #ffffff;
+    font-size: 11pt;
+  }
+
+  /* --- basılmayanlar ---
+   * Etkileşim yüzeyleri kâğıtta işe yaramaz ve yer kaplar. Sekmeler,
+   * araç şeridi, yüzen sohbet düğmesi ve çekmeceler dışarıda kalır. */
+  .tabs,
+  .arac-cubugu,
+  .sohbet-dugme,
+  .sohbet-cekmece,
+  .kaynak-panel,
+  .baski-gizle {
+    display: none !important;
+  }
+
+  /* Kabuk genişliği ekran içindi; kâğıtta kenar boşluğunu @page veriyor. */
+  .shell {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* --- sayfa sonu disiplini ---
+   * Ortasından bölünmüş bir kart ya da başlığından kopmuş bir tablo, kâğıtta
+   * ekrandan daha pahalı bir kusur: geri kaydırma yok. */
+  .card,
+  .grafik,
+  .notice,
+  .fairness,
+  .source-text {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  table.data {
+    break-inside: auto;
+  }
+
+  table.data tr {
+    break-inside: avoid;
+  }
+
+  /* Tablo başlığı her sayfada tekrarlanır — ikinci sayfadaki sütunlar
+   * başlıksız kalırsa tablo okunmaz olur. */
+  table.data thead {
+    display: table-header-group;
+  }
+
+  /* Kaydırmalı kutular kâğıtta kaydırılamaz; kırpılan içerik KAYBOLUR. */
+  .table-wrap,
+  .source-text,
+  .sohbet-cekmece-govde {
+    overflow: visible;
+    max-height: none;
+  }
+
+  /* Bağlantının nereye gittiği kâğıtta görünmez. Belge kaynağı bu projenin
+   * tezi olduğu için adres metne açılır. */
+  .kaynak-baglanti[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #5f5f66;
+  }
+}

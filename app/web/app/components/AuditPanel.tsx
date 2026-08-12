@@ -25,6 +25,7 @@ import {
   formatValue,
 } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
+import BelgeyiIndir from "./BelgeyiIndir";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import SourceSpanView from "./SourceSpanView";
@@ -95,6 +96,14 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
               </option>
             ))}
           </select>
+
+          {/* Uzun belgeyi ekranda uzun uzun göstermek yerine kâğıda/PDF'e
+              taşıma yolu. Tarayıcının kendi yazdırma yolu kullanılıyor;
+              gerekçesi styles/baski.css başlığında (Türkçe diakritikler
+              jsPDF'in standart fontlarında bozuluyor). */}
+          {doc.data && (
+            <BelgeyiIndir ad={`belge-${doc.data.campaign_id ?? id}`} />
+          )}
         </div>
 
         {doc.loading && <Loading />}
@@ -112,7 +121,23 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
               <dt>Kampanya türü</dt>
               <dd>{doc.data.campaign_type ?? "—"}</dd>
               <dt>Kaynak URL</dt>
-              <dd className="mono">{doc.data.source_url ?? "—"}</dd>
+              <dd className="mono">
+                {doc.data.source_url ? (
+                  // Sınıf baskı içindir: kâğıtta bağlantının nereye gittiği
+                  // görünmez, `baski.css` adresi metne açar. Belge kaynağı bu
+                  // projenin tezi olduğu için çıktıda da izlenebilir kalmalı.
+                  <a
+                    className="kaynak-baglanti"
+                    href={doc.data.source_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {doc.data.source_url}
+                  </a>
+                ) : (
+                  "—"
+                )}
+              </dd>
               <dt>Toplanma zamanı</dt>
               <dd className="mono">{doc.data.scraped_at ?? "kaydedilmedi"}</dd>
               <dt>Belge uzunluğu</dt>

@@ -5,6 +5,7 @@ import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/grafik.css";
 import "./styles/sohbet.css";
+import "./styles/baski.css";
 
 /**
  * Kök yerleşim.
