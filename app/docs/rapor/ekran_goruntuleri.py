@@ -120,24 +120,33 @@ def main() -> int:
         settle(page)
         shot(page, "04-celiski-korpus.png")
 
-        # ---- 4) Canlı çıkarım: zor vaka ve çelişkili örnek --------------
-        print("→ 05/06 Canlı çıkarım")
+        # ---- 4) Zor vaka tezgâhı: model çıktısı ↔ altın küme -------------
+        # Ekran artık elle yazılmış örnek metinlerle değil, altın kümenin ZOR
+        # işaretli belgeleriyle çalışıyor: zorluk çipiyle süz, ilk vakayı seç,
+        # çıkarımı koştur. Vaka kartları `button.zv-vaka`; ada göre seçmek
+        # kırılgan olurdu çünkü kart başlığı korpustan gelir ve korpus
+        # tazelendiğinde değişebilir.
+        print("→ 05/06 Zor vaka tezgâhı")
         tab(page, "Canlı Çıkarım")
-        settle(page)
+        settle(page, "Zor Vaka Tezgâhı")
 
-        page.get_by_role("button", name="Zor vaka (aralık + zaman-koşullu)").click()
-        page.wait_for_timeout(400)
-        page.get_by_role("button", name="Çıkar", exact=False).first.click()
-        page.wait_for_timeout(2_500)
-        page.wait_for_load_state("networkidle")
-        shot(page, "05-canli-cikarim-zor-vaka.png")
-
-        page.get_by_role("button", name="Çelişkili örnek (masrafsız + ücret)").click()
-        page.wait_for_timeout(400)
-        page.get_by_role("button", name="Çıkar", exact=False).first.click()
-        page.wait_for_timeout(2_500)
-        page.wait_for_load_state("networkidle")
-        shot(page, "06-canli-cikarim-celiski.png")
+        # Dosya adları KORUNUYOR: rapor ve sunum taslağı bu adlarla bağ
+        # kuruyor, yeniden adlandırmak o bağları sessizce koparırdı.
+        for isim, dosya in (
+            ("Koşullu / aralıklı", "05-canli-cikarim-zor-vaka.png"),
+            ("Çelişkili metin", "06-canli-cikarim-celiski.png"),
+        ):
+            # Çip şeridiyle sınırlı seçim: aynı metin vaka kartlarının
+            # içindeki etiket rozetlerinde de geçiyor ve rol bazlı arama
+            # kartları da yakalardı.
+            page.locator("button.chip").filter(has_text=isim).first.click()
+            page.wait_for_timeout(400)
+            page.locator("button.zv-vaka").first.click()
+            page.wait_for_timeout(400)
+            page.get_by_role("button", name="Çıkarımı çalıştır").click()
+            page.wait_for_timeout(2_500)
+            page.wait_for_load_state("networkidle")
+            shot(page, dosya)
 
         # ---- 5) Chatbot: iki yol + iki güvenlik kapısı ------------------
         print("→ 07-10 Chatbot ve güvenlik kapıları")

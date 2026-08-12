@@ -420,6 +420,8 @@ export type ExtractResult = {
   fields: ExtractField[];
   missing_fields: { field: string; label: string }[];
   contradictions: Contradiction[];
+  /** İstek `gold_id` taşıdıysa altın küme karşılaştırması; yoksa `null`. */
+  gold: GoldKarsilastirma | null;
 };
 
 export type ChatSource = {
@@ -671,6 +673,14 @@ export type AdminUc = {
  */
 export type AdminPlan = {
   acik: boolean;
+  /**
+   * Ekranın en üstündeki büyük başlık — uçların NE ZAMAN açılacağını söyler
+   * ("Yakın dönem / iş birliği durumunda…"). Sunucudan gelir, ekranda sabit
+   * yazılmaz.
+   */
+  baslik: string;
+  /** Başlığın üstündeki küçük durum etiketi ("Bu sürümde kapalı"). */
+  durum_etiketi: string;
   sebep: string;
   bugunku_yol: string;
   uclar: AdminUc[];
@@ -832,11 +842,16 @@ export const api = {
   contradictions: () => request<ContradictionRow[]>("/api/contradictions"),
   contradictionSummary: () =>
     request<ContradictionSummary>("/api/contradictions/summary"),
-  extract: (text: string, bank: string) =>
+  /**
+   * `goldId` verilirse yanıt bir `gold` bloğu kazanır: aynı belgenin altın
+   * değerleri ve alan alan karşılaştırma kararı. Çıkarım yine GÖNDERİLEN
+   * metin üzerinde koşar; sunucu altın kümeden yalnız referans okur.
+   */
+  extract: (text: string, bank: string, goldId?: string) =>
     request<ExtractResult>("/api/extract", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text, bank }),
+      body: JSON.stringify({ text, bank, gold_id: goldId ?? null }),
     }),
   /**
    * `context` = son turların durum kayıtları, YENİDEN ESKİYE sıralı.
@@ -894,6 +909,13 @@ export const api = {
 
   /** Gelecek faz uçlarının sözleşmesi — Ayarlar ekranı bunu çizer. */
   adminPlan: () => request<AdminPlan>("/api/admin/plan"),
+
+  /**
+   * Altın kümedeki ZOR belgeler. Metin listeyle birlikte gelir: seçilen
+   * vakayı ikinci bir çağrıyla çekmek jüriye her tıklamada bir ağ turu daha
+   * bekletirdi.
+   */
+  zorVakalar: () => request<ZorVakaListesi>("/api/zor-vakalar"),
 };
 
 /** ApiError olmayan hataları da kullanıcıya gösterilebilir hale getirir. */
@@ -902,3 +924,88 @@ export function toDisplayError(e: unknown): { message: string; hint: string } {
   if (e instanceof Error) return { message: e.message, hint: "" };
   return { message: "Bilinmeyen hata.", hint: "" };
 }
+
+/* ------------------------------------------------------------------ *
+ * Zor vaka tezgâhı — altın kümedeki zor belgeler ve karşılaştırma
+ * ------------------------------------------------------------------ */
+
+/** Zor-vaka etiketi + belge sayısı. Sıra sunucudan gelir, sayımdan değil. */
+export type ZorEtiket = {
+  etiket: string;
+  ad: string;
+  aciklama: string;
+  adet: number;
+};
+
+export type ZorVaka = {
+  id: string;
+  banka: string;
+  banka_adi: string;
+  kaynak_adresi: string | null;
+  kampanya_turu: string | null;
+  zor_etiketler: string[];
+  metin: string;
+  metin_uzunlugu: number;
+  onizleme: string;
+  altin_alan_sayisi: number;
+  altinda_yok_sayisi: number;
+  belirsiz_alanlar: { field: string; label: string }[];
+  kanitli_alanlar: string[];
+};
+
+export type ZorVakaListesi = {
+  /** Altın küme dosyası okunabildi mi — okunamadıysa ekran bunu söyler. */
+  kaynak_var: boolean;
+  toplam_belge: number;
+  zor_belge: number;
+  etiketler: ZorEtiket[];
+  vakalar: ZorVaka[];
+};
+
+/**
+ * Bir alanın altın küme karşısındaki durumu.
+ *
+ * `fabricated` ayrı tutulur: altın küme o alan için "kontrol ettim, YOK"
+ * diyorsa üretilen değer yanlış bir değer değil, bir uydurmadır.
+ * `out_of_scope` metrik dışıdır — referans olmayan yerde doğru/yanlış
+ * denemez.
+ */
+export type GoldDurum =
+  | "match"
+  | "equivalent"
+  | "mismatch"
+  | "missed"
+  | "fabricated"
+  | "correct_absence"
+  | "unclear"
+  | "out_of_scope";
+
+export type GoldAlan = {
+  field: string;
+  label: string;
+  gold_value: unknown;
+  gold_present: boolean;
+  gold_absent: boolean;
+  /**
+   * Altın değerin belgede birebir geçen dayanağı.
+   *
+   * Anotatör notları burada YOKTUR: iç yazışma dilinde yazılmışlar (kılavuz
+   * bölüm numaraları, ham alan adları) ve ekrana basılsalardı ürünün içinden
+   * geliştirme notu sızardı.
+   */
+  gold_span: string | null;
+  status: GoldDurum;
+  reason: string;
+};
+
+export type GoldKarsilastirma = {
+  id: string;
+  bank: string | null;
+  source_url: string | null;
+  campaign_type: string | null;
+  hard_tags: string[];
+  /** Çıkarımın koştuğu metin altın belgeyle aynı mı (elle değiştirildi mi). */
+  text_matches: boolean;
+  fields: GoldAlan[];
+  summary: Record<GoldDurum, number>;
+};

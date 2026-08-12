@@ -1,0 +1,265 @@
+/* ===================================================================
+ * ZOR VAKA TEZGÂHI
+ *
+ * İlgili: ../components/ExtractLive.tsx, ../../src/api/zor_vaka.py
+ *
+ * Ayrı dosya, çünkü `components.css` zaten 40 KB ve on bileşen ailesi
+ * taşıyor; bu ekran tek seferde gelen yeni bir aile. Denetim betiği
+ * `styles/*.css`'in tamamını tarar, yani ayrılık kapıdan kaçmak değildir.
+ *
+ * Renk TEK sinyal DEĞİLDİR: her karar rozeti sözel etiketini de yazar
+ * ("Uydurma", "Doğru boşluk"), tablo satırı ayrıca gerekçeyi taşır. Yalnız
+ * renge dayanan bir karar sütunu, renk körü bir jüri üyesi için okunmazdı.
+ * Tüm renkler tokenlardan gelir — kontrast kapısı (tests/test_kontrast.py)
+ * paleti tokens.css üzerinden ölçüyor, buraya literal renk girmez.
+ * =================================================================== */
+
+/* --- üst sayaç şeridi ve seçili durum çipleri --- */
+.zv-ozet {
+  margin-bottom: var(--sp-4);
+}
+.zv-etiket-aciklama {
+  margin: var(--sp-2) 0 0;
+}
+
+/* --- vaka listesi ---
+ * Kırk belge tek sütunda uzun bir kaydırma olurdu; kart ızgarası jürinin
+ * etikete göre süzülmüş kümeyi tek bakışta görmesini sağlar. */
+.zv-liste {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+.zv-vaka {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  text-align: left;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: var(--fs-sm);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.zv-vaka:hover {
+  border-color: var(--accent);
+}
+/* Seçili vaka yalnız renkle değil, kalın kenarlıkla da işaretlenir; ayrıca
+ * `aria-pressed` ekran okuyucuya aynı bilgiyi taşır. */
+.zv-vaka[aria-pressed="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+  background: var(--accent-wash);
+}
+.zv-vaka-ust {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+}
+.zv-vaka-etiketler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+.zv-vaka-onizleme {
+  color: var(--fg-dim);
+  line-height: var(--lh-normal);
+}
+
+/* --- seçili vakanın tam metni ---
+ * Kaydırma kutusu ZORUNLU: korpustaki en uzun zor belge 16 bin karakter ve
+ * düğme ekranın altına düşerdi. */
+.zv-metin {
+  max-height: 260px;
+  overflow-y: auto;
+  margin: var(--sp-3) 0;
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--bg);
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: var(--fg-dim);
+  white-space: pre-wrap;
+}
+.zv-eylem {
+  margin-top: var(--sp-3);
+}
+.zv-hata {
+  margin-top: var(--sp-3);
+}
+.zv-celiskiler {
+  display: grid;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-4);
+}
+.zv-celiski-alan {
+  margin-top: var(--sp-1);
+}
+.zv-sikis {
+  margin-top: 0;
+}
+.zv-v-orta {
+  font-size: var(--fs-lg);
+}
+.zv-iyi {
+  color: var(--ok);
+}
+.zv-kotu {
+  color: var(--bad);
+}
+/* Sıfırdan büyük bir uydurma sayacı ekranın en kötü haberidir; kutusu
+ * kendini belli etmeli. */
+.zv-stat-uyari {
+  border-color: var(--bad);
+  background: var(--bad-wash);
+}
+
+/* --- yan yana karşılaştırma hücreleri --- */
+.zv-model,
+.zv-altin {
+  vertical-align: top;
+  min-width: 180px;
+}
+.zv-deger {
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+.zv-ham {
+  color: var(--fg-faint);
+  margin-top: var(--sp-1);
+}
+.zv-rozetler {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+/* Altın değerin belgede birebir geçen dayanağı. Alıntı olduğu görsel olarak
+ * ayrışmalı: değerin kendisi değil, değerin KANITI. */
+.zv-kanit {
+  margin-top: var(--sp-1);
+  padding-left: var(--sp-2);
+  border-left: 2px solid var(--line);
+  color: var(--fg-faint);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  line-height: var(--lh-normal);
+}
+/* "altında yok" boş hücre DEĞİLDİR: anotatör kontrol etmiş ve yokluğu
+ * kaydetmiştir. Boş bırakmak uyuşmazlık gibi okunurdu. */
+.zv-yok {
+  color: var(--fg-dim);
+  font-style: italic;
+}
+.zv-gerekce {
+  margin-top: var(--sp-1);
+  max-width: 26em;
+}
+
+/* --- karar rozetleri --- */
+.zv-durum {
+  display: inline-block;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 1px var(--sp-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+.zv-durum-match {
+  color: var(--ok);
+  border-color: var(--ok);
+  background: var(--ok-wash);
+}
+.zv-durum-equivalent {
+  color: var(--ok);
+  border-color: var(--line);
+  background: var(--ok-wash);
+}
+.zv-durum-mismatch {
+  color: var(--bad);
+  border-color: var(--bad);
+  background: var(--bad-wash);
+}
+.zv-durum-missed {
+  color: var(--warn);
+  border-color: var(--warn);
+  background: var(--warn-wash);
+}
+/* Uydurma, uyuşmazlıktan DAHA AĞIR bir bulgudur: dolu zemin + kalın kenarlık. */
+.zv-durum-fabricated {
+  color: var(--bad);
+  border-color: var(--bad);
+  background: var(--bad-wash);
+  font-weight: var(--fw-semibold);
+}
+.zv-durum-absence {
+  color: var(--ok);
+  border-color: var(--line);
+}
+/* Ölçüm dışı durumlar (belirsiz / referans yok) sessiz kalır: ne başarı ne
+ * hata; iddiası olmayan bir hücre görsel ağırlık taşımamalı. */
+.zv-durum-nazik {
+  color: var(--fg-faint);
+  border-style: dashed;
+}
+
+/* --- ikincil serbest metin yolu ---
+ * Katlanmış durur: varsayılan olamaz çünkü referanssızdır. */
+.zv-serbest > summary {
+  cursor: pointer;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--fg-dim);
+}
+.zv-serbest > summary:hover {
+  color: var(--fg);
+}
+.zv-serbest[open] > summary {
+  margin-bottom: var(--sp-3);
+  color: var(--fg);
+}
+
+/* ===================================================================
+ * ZAMAN ÇERÇEVESİ ŞERİDİ (AyarlarPanel)
+ *
+ * İlgili: ../components/AyarlarPanel.tsx, ../../src/api/gelecek.py
+ *
+ * Kapalılık bilgisi eskiden sözleşme kartının içinde küçük bir uyarıydı ve
+ * "gelecek faz" diyordu — bir takvim değil, bir erteleme gibi okunuyordu.
+ * Şerit ekranın EN ÜSTÜNDE ve kart ölçeğinde durur: aşağıdaki uç tablolarını
+ * uygulanmış bir özellik sanarak okumaya başlamak mümkün olmasın.
+ * =================================================================== */
+.zaman-serit {
+  border-left: 4px solid var(--warn);
+}
+.zaman-kapali {
+  background: var(--warn-wash);
+}
+.zaman-etiket {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--track-wide);
+  color: var(--warn);
+}
+.zaman-baslik {
+  margin: var(--sp-1) 0 var(--sp-2);
+}
+.zaman-gerekce {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg);
+  max-width: 62ch;
+}

@@ -24,6 +24,13 @@ yasaklamak değil, sessizce alınmasını engellemek.
 Üçüncü kapı ekran içindir: `AyarlarPanel` sözleşmeyi kendi içinde
 TEKRARLAMAMALI, `/admin/plan`'dan okumalı. Bu projede altı kez tekrarlayan
 kusur tam olarak buydu.
+
+Dördüncü kapı ZAMAN ÇERÇEVESİ içindir (2026-08-12'de eklendi). Ekran eskiden
+"gelecek faz" diyordu ve bu bir takvim değil, bir erteleme gibi okunuyordu:
+uçların NE ZAMAN açılacağı hiçbir yerde yazmıyordu. Doğru cümle "yakın dönem,
+iş birliği durumunda" ve o cümle sunucuda yaşamalı — ekranda sabit yazılsaydı
+sözleşme değiştiğinde ikisi ayrışırdı. Aşağıdaki testler cümlenin hem sunucu
+yanıtında hem de ekranda (sabit yazılmadan) bulunmasını kilitler.
 """
 
 from __future__ import annotations
@@ -86,6 +93,22 @@ class TestSozlesme(_ApiTemel):
         self.assertTrue(veri["sebep"].strip())
         self.assertTrue(veri["bugunku_yol"].strip())
         self.assertGreaterEqual(len(veri["uclar"]), 3)
+
+    def test_zaman_cercevesi_YANITTA(self) -> None:
+        """"Ne zaman açılacak" sorusunun cevabı sözleşmenin parçasıdır."""
+        veri = self.istemci().get("/admin/plan").json()
+        baslik = veri["baslik"].casefold()
+        self.assertIn("yakın dönem", baslik)
+        self.assertIn("iş birliği", baslik)
+        self.assertIn(gelecek.ZAMAN_CERCEVESI, veri["baslik"],
+                      "başlık zaman çerçevesini taşımalı")
+        self.assertTrue(veri["durum_etiketi"].strip())
+
+    def test_gerekce_de_zaman_cercevesini_soyler(self) -> None:
+        """501 gövdesini gören biri de takvimi görmeli, yalnız ekran değil."""
+        sebep = gelecek.KAPALI_SEBEBI.casefold()
+        self.assertIn("yakın dönem", sebep)
+        self.assertIn("iş birliği", sebep)
 
     def test_her_ucun_alanlari_tam(self) -> None:
         for uc in gelecek.plan()["uclar"]:
@@ -155,6 +178,22 @@ class TestEkranSozlesmeyiTekrarlamiyor(unittest.TestCase):
                              f"{uc['yol']} ekranda SABİT yazılmış — sunucu "
                              "sözleşmeyi değiştirdiğinde ekran eskisini "
                              "göstermeye devam eder")
+
+    def test_zaman_cercevesi_EKRANDA_ama_SABIT_DEGIL(self) -> None:
+        """Cümle görünür olmalı; ama kaynağı sunucu olmalı.
+
+        İki kapı birlikte: panel `baslik` ile `durum_etiketi` alanlarını
+        ÇİZMELİ, ve cümlenin kendisini kendi içinde yazmamalı.
+        """
+        panel = (KOK / "web" / "app" / "components"
+                 / "AyarlarPanel.tsx").read_text(encoding="utf-8")
+        for alan in ("durum_etiketi", "baslik"):
+            self.assertIn(alan, panel, f"panel {alan} alanını çizmeli")
+        self.assertNotIn(gelecek.ZAMAN_CERCEVESI, panel,
+                         "zaman çerçevesi ekranda SABİT yazılmış — sunucu "
+                         "cümleyi değiştirdiğinde ekran eskisini gösterir")
+        self.assertNotIn("Gelecek faz", panel,
+                         "eski, takvimsiz ifade geri gelmiş")
 
     def test_panelde_gonderilebilir_form_yok(self) -> None:
         """Çalışmayan bir uca form koymak, çalışacağını vaat etmektir."""

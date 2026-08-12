@@ -192,7 +192,7 @@ from ..scraping.tazeleme import TazelemeMesgul, TazelemeYoneticisi
 from ..scraping.tazeleme import onizleme as tazeleme_onizleme
 from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import LlmKapali, OzetMesgul, OzetYoneticisi
-from . import gelecek
+from . import gelecek, zor_vaka
 
 logger = logging.getLogger(__name__)
 
@@ -412,10 +412,19 @@ try:  # pragma: no cover - pydantic yokluğu build_app()'te raporlanır
         context: list[dict] = []
 
     class ExtractReq(BaseModel):
-        """`POST /extract` gövdesi (canlı çıkarım — CLAUDE.md §11)."""
+        """`POST /extract` gövdesi (canlı çıkarım — CLAUDE.md §11).
+
+        `gold_id` verilirse yanıt bir `gold` bloğu kazanır: aynı belgenin
+        altın değerleri ve alan alan karşılaştırma sonucu. Çıkarım YİNE
+        gövdedeki `text` üzerinde koşar — sunucu altın kümeden metin
+        okumaz, yalnızca REFERANS okur. Aksi hâlde ekran, model çıktısı
+        yerine gold'un kendisini gösteriyor olabilirdi ve bunu kimse
+        ayırt edemezdi.
+        """
 
         text: str
         bank: str = "bilinmeyen"
+        gold_id: Optional[str] = None
 
     class RefreshReq(BaseModel):
         """`POST /refresh` gövdesi — tek bankayı ağdan tazeleyen operatör eylemi.
@@ -1677,6 +1686,27 @@ def build_app():
                 "safety": _guvenlik_ozeti(a.safety_report, a.gates,
                                           getattr(a, "quarantined", []))}
 
+    # ----------------------------------------------------------------- #
+    # Zor vaka tezgâhı — canlı yolun ÜZERİNE referans koyar
+    # ----------------------------------------------------------------- #
+    # Gerekçe `src/api/zor_vaka.py` modül başlığında; burada yalnız HTTP
+    # yüzeyi ve banka adı çözümü var.
+    _banka_adlari: dict[str, str] = {}
+
+    def _banka_adi_haritasi() -> dict[str, str]:
+        """slug → görünen ad. Bir kez kurulur; katalog koşu boyunca değişmez."""
+        if not _banka_adlari:
+            for b in repo.all_banks():
+                slug = b.get("slug")
+                if slug:
+                    _banka_adlari[slug] = b.get("name") or slug
+        return _banka_adlari
+
+    @app.get("/zor-vakalar")
+    def zor_vakalar():
+        """Altın kümedeki ZOR belgeler + altın değerleri (CLAUDE.md §6, §16)."""
+        return zor_vaka.liste(FIELD_LABELS, _banka_adi_haritasi())
+
     @app.post("/extract")
     def extract(req: ExtractReq):
         """Canlı çıkarım (CLAUDE.md §11 "canlı çıkarım butonu").
@@ -1688,7 +1718,22 @@ def build_app():
         ctype, ctype_conf = clf.classify(text)
         c = build_campaign(text, bank_slug=req.bank, llm=llm, campaign_type=ctype)
         by_name = {f.field_name: f for f in c.fields}
+        # Altın karşılaştırma İSTEĞE BAĞLI: `gold_id` yoksa yanıt eskisiyle
+        # birebir aynıdır (serbest metin yolu bozulmaz). Bilinmeyen bir kimlik
+        # 404 DEĞİL `null` döner — çıkarım gerçekleşti, yalnız referans
+        # bulunamadı; isteği tümüyle reddetmek çalışan bir sonucu çöpe atardı.
+        gold = None
+        if req.gold_id:
+            kayit = zor_vaka.kayit(req.gold_id)
+            if kayit is not None:
+                gold = zor_vaka.karsilastir(
+                    kayit,
+                    {f.field_name: f.canonical_value for f in c.fields},
+                    FIELD_LABELS, list(EXTRACTION_FIELDS),
+                    metin_ayni=normalize_text(kayit.get("text") or "") == text,
+                )
         return {
+            "gold": gold,
             "bank": c.bank_slug,
             "campaign_type": c.campaign_type,
             "campaign_type_confidence": ctype_conf,

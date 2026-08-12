@@ -20,12 +20,23 @@
  * Uçlar 501 döndüğü için o vaat tutulamaz; jüri ekranında "ekle"ye basıp
  * hiçbir şeyin olmadığını görmek, hiç form olmamasından kötüdür. Ekran
  * sözleşmeyi ve gerekçeyi gösterir; bugün işleyen yolu da adıyla söyler.
+ *
+ * ## Neden zaman çerçevesi EN ÜSTTE
+ *
+ * Kapalılık bilgisi eskiden sözleşme kartının İÇİNDEydi ve "gelecek faz"
+ * diyordu — bir takvim değil, bir erteleme gibi okunuyordu. Uçların ne zaman
+ * açılacağı ("yakın dönem, iş birliği durumunda") ekranı okuyan kişinin ilk
+ * gördüğü şey olmalı: aşağıdaki tabloları uygulanmış bir özellik sanarak
+ * okumaya başlamamalı. Cümlenin kendisi burada YAZILMAZ, `/admin/plan`'dan
+ * gelir — başlık ile gerekçe ayrı yerlerde yaşasa biri değiştiğinde diğeri
+ * eskisini göstermeye devam ederdi.
  */
 
 import { api } from "../lib/api";
 import type { AdminPlan } from "../lib/api";
 import { ErrorNotice, Loading } from "./ErrorNotice";
 import { useAsync } from "../lib/useAsync";
+import "../styles/zorvaka.css";
 
 export default function AyarlarPanel() {
   const plan = useAsync<AdminPlan>(() => api.adminPlan(), []);
@@ -34,33 +45,35 @@ export default function AyarlarPanel() {
   if (plan.error) return <ErrorNotice error={plan.error} />;
   if (!plan.data) return null;
 
-  const { acik, sebep, bugunku_yol, uclar } = plan.data;
+  const { acik, baslik, durum_etiketi, sebep, bugunku_yol, uclar } = plan.data;
 
   return (
     <section>
+      <div className={`card zaman-serit${acik ? "" : " zaman-kapali"}`}>
+        <p className="zaman-etiket">{durum_etiketi}</p>
+        <h2 className="zaman-baslik">{baslik}</h2>
+        <p className="zaman-gerekce">{sebep}</p>
+        <p className="small">
+          Bugün geçerli yol: <code>{bugunku_yol}</code>
+        </p>
+      </div>
+
       <div className="card">
         <h2>Veri ekleme uçları</h2>
         <p className="small muted">
           Bankaların kampanyalarını ve finansal ürünlerini arayüzden eklemek
           için tasarlanan uçların sözleşmesi. Aşağıdaki tanım{" "}
           <b>sunucudan okunur</b>, bu ekranda sabit yazılmaz — uçlar
-          değiştiğinde ekran da değişir.
+          değiştiğinde ekran da değişir. Uçlar bugün <b>kapalı</b>; tablolar
+          uygulanmış bir özelliği değil, tanımlanmış bir sözleşmeyi anlatır.
         </p>
-
-        <div className={`notice ${acik ? "notice-ok" : "notice-warn"}`}>
-          <b>{acik ? "Açık" : "Gelecek faz — bu sürümde kapalı"}</b>
-          <p className="small" style={{ margin: "var(--sp-2) 0 0" }}>
-            {sebep}
-          </p>
-          <p className="small" style={{ margin: "var(--sp-2) 0 0" }}>
-            Bugün geçerli yol: <code>{bugunku_yol}</code>
-          </p>
-        </div>
       </div>
 
       {uclar.map((uc) => (
         <div key={`${uc.yontem} ${uc.yol}`} className="card">
-          <div className="chip-group">
+          {/* `row` (yatay) — `chip-group` DEĞİL: o sınıf dikey bir sütun ve
+              rozetleri kart genişliğine yayıyordu. */}
+          <div className="row">
             <span className="badge badge-baglam">{uc.yontem}</span>
             <code>{uc.yol}</code>
             {!acik && <span className="badge badge-warn">501</span>}
