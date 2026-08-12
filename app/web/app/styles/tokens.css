@@ -31,6 +31,32 @@
  * Metin/zemin çiftlerinin tamamı WCAG AA (≥ 4,5:1) sağlar ve bu göz kararı
  * değil, ÖLÇÜLMÜŞTÜR: `scripts/kontrast_kontrol.py` bu dosyayı okuyup oranları
  * hesaplar, `tests/test_kontrast.py` onu kapıya bağlar.
+ *
+ * ## ÜÇ SES — tipografi bir sınıflandırmadır, süs değil
+ *
+ * Bu ürünün tezi şudur: her sayı, bir bankanın gerçekten yazdığı bir cümleye
+ * bağlıdır (CLAUDE.md §18-1; `src/extraction/reconcile.py` alan uyduramaz,
+ * `null` döndürür). Arayüz bunu SÖYLEMEKLE kalmaz, GÖSTERİR — metnin kimin
+ * ağzından çıktığı yazı tipinden okunur:
+ *
+ *   --font-sans   SİSTEMİN kendi sesi: başlık, açıklama, gerekçe, düğme.
+ *   --font-serif  BANKANIN sesi: alıntılanan kaynak metin, ham değer, RAG
+ *                 pasajı. Tırnak işareti yerine geçer — bu cümleyi biz yazmadık.
+ *   --font-mono   MAKİNE verisi: kimlik, ofset, alan adı, adres, tablo sütun
+ *                 başlığı, göz-üstü etiketi.
+ *
+ * BÜYÜK HARF yalnız mono'ya aittir. Eskiden `.card h3`, `table.data th`,
+ * `.stat .k`, `.summary-label` ve `.group-head` birbiriyle ilgisiz beş şeydi ve
+ * beşi de aynı sans-büyük-harf-aralıklı biçimi giyiyordu; bu yüzden her kart
+ * aynı ağırlıkta okunuyordu. Artık büyük harf tek bir şey söyler: "bu, verinin
+ * kendisi değil, verinin ETİKETİDİR".
+ *
+ * ### Neden depoya font GÖMÜLMEDİ
+ *
+ * IBM Plex (Sans + Serif + Mono) tartışıldı ve ERTELENDİ: depoya ikili font
+ * dosyaları girmesi ve lisans denetimi (CLAUDE.md §20) gerektiriyor, üç sesin
+ * ayrımı ise sistem yazı tipleriyle bugün zaten kuruluyor. Karar, ayrım
+ * çalışmadığı için değil, bedeli şu an gereksiz olduğu için ertelendi.
  */
 
 :root {
@@ -56,28 +82,49 @@
    * yeniden tanımlar. */
   --on-accent: #ffffff;
 
-  /* --- vurgu --- */
-  --accent: #0071e3;
-  --accent-soft: #0062c4; /* bağlantı/odak: beyaz üstünde AA gerektirir */
+  /* --- vurgu: MÜREKKEP LACİVERTİ ---
+   *
+   * Eski değer `#0071e3` idi — Apple'ın sistem mavisi. Yeni değer marka değil,
+   * mürekkep: Türkiye'deki her katılım bankası bir renge sahiptir (Kuveyt Türk
+   * / Ziraat / Albaraka yeşili, Vakıf / Türkiye Finans turkuazı, Emlak bordosu)
+   * ve bir KARŞILAŞTIRMA aracının bunlardan birini giymesi, örtük olarak taraf
+   * tutmaktır. Lacivert hiçbir hedef bankaya ait değildir (CLAUDE.md §13).
+   *
+   * Ekrandaki tek DOYGUN renk `--mark` (vurgu sarısı) olarak bırakıldı: kaynak
+   * span'i bu ürünün asıl konusudur, gözü çekmesi gereken tek şey odur. */
+  --accent: #2f3f9e;
+  --accent-soft: #3b4bbf; /* bağlantı/odak: beyaz üstünde AA gerektirir */
 
   /* --- durum --- */
   --ok: #1d7a54;
   --warn: #a8480a;
   --bad: #b3261e;
+  /* ÜRETİLMİŞ içerik (LLM katmanı). Kendi rengi vardır çünkü "LLM üretti"
+   * bir UYARI DEĞİLDİR: `.badge-llm` eskiden `--warn` ödünç alıyordu ve
+   * "yerel model bu alanı doldurdu" ile "dikkat" aynı turuncuyla basılıyordu.
+   * İki ayrı şey, iki ayrı renk (CLAUDE.md §3 — kural birincil, LLM boşluk
+   * dolduran; ikisi ayırt edilebilmeli). */
+  --llm: #6d3a9e;
   --mark: #ffd60a; /* ZEMİN rengidir, metin değil — üstüne --on-mark gelir */
   --on-mark: #1a1400;
 
   /* --- yıkamalar (alfa yerine düz renk; bkz. dosya başlığı) --- */
-  --accent-wash: #e8f1fd;
+  --accent-wash: #e9eaf8;
   --ok-wash: #e6f4ee;
   --warn-wash: #fdf0e6;
   --bad-wash: #fceceb;
+  --llm-wash: #f2e9fa;
   --mark-ring: #ffeb8a;
 
-  /* --- köşe --- */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  /* --- köşe ---
+   * ÖLÇÜLDÜ (panel.png): 18px kart + tam yuvarlak (999px) düğme/çip bileşimi,
+   * ekran görüntüsündeki en güçlü "tüketici uygulaması" sinyaliydi. Bu bir
+   * defter; köşeler kâğıt köşesi kadar keskin. `--radius-full` tokenı DURUYOR
+   * ama yalnız gerçekten yuvarlak olan şeylerde kalır: güven çubuğu, ilerleme
+   * çubuğu, durum noktası. */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
   --radius-full: 999px;
 
   /* --- gölge ---
@@ -103,6 +150,9 @@
    * sistem yazı tipleri; eskiden bu liste iki ayrı yerde literal tekrarlanıyordu. */
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, sans-serif;
+  /* BANKANIN sesi (bkz. dosya başlığı, "ÜÇ SES"). Sistem tırnaklı yığını —
+   * depoya font gömülmedi, gerekçesi başlıkta. */
+  --font-serif: Georgia, "Times New Roman", serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --fs-xs: 12px;
@@ -111,6 +161,7 @@
   --fs-lg: 17px;
   --fs-xl: 21px;
   --fs-2xl: 28px;
+  --fs-3xl: 34px;
 
   --lh-tight: 1.25;
   --lh-normal: 1.5;
@@ -121,15 +172,26 @@
   --fw-semibold: 600;
 
   --track-tight: -0.015em; /* büyük başlıklarda optik sıkılaştırma */
-  --track-wide: 0.04em; /* küçük büyük-harf etiketlerde nefes */
+  --track-wide: 0.04em; /* küçük etiketlerde nefes (büyük harf ŞART DEĞİL) */
+  /* MONO büyük-harf göz-üstü etiketi. Tek aralıklı yazı büyük harfe çıkınca
+   * harfler birbirine yapışır; `--track-wide` sans için ölçülmüştü, mono için
+   * dar kalıyor. Büyük harf yalnız buraya aittir. */
+  --track-caps: 0.08em;
 
   /* --- hareket --- */
   --dur-fast: 120ms;
   --dur-base: 200ms;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* --- ölçü --- */
+  /* --- ölçü ---
+   * `--measure`: düz metnin satır uzunluğu sınırı. ÖLÇÜLDÜ — adil kıyas notu
+   * kabuğun tamamını kullanınca satır başına ~150 karaktere çıkıyordu ve göz
+   * satır sonundan satır başına dönerken yerini kaybediyor. Rahat okuma
+   * aralığı 45–75 karakter, 68ch onun ortasıdır. `ch` birimi yazı tipine
+   * göreli olduğu için değer px'e çevrilemez; ölçü bir bileşen ayrıntısı
+   * değil TİPOGRAFİ kararıdır, o yüzden burada yaşar. */
   --shell-max: 1120px;
+  --measure: 68ch;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -145,19 +207,21 @@
     --fg-dim: #98989d;
     --fg-faint: #8a8a93;
 
-    --accent: #2e8fff;
-    --accent-soft: #5aa9ff;
-    /* Parlak mavi zeminde koyu metin — beyaz burada AA'yı geçmiyor. */
-    --on-accent: #06213d;
+    --accent: #7f9cff;
+    --accent-soft: #9db3ff;
+    /* Parlak lacivert zeminde koyu metin — beyaz burada AA'yı geçmiyor. */
+    --on-accent: #10163a;
 
     --ok: #34c77b;
     --warn: #f5a524;
     --bad: #ff6b60;
+    --llm: #c79bf0;
 
-    --accent-wash: #12243a;
+    --accent-wash: #171b3a;
     --ok-wash: #10281e;
     --warn-wash: #2e2211;
     --bad-wash: #33191a;
+    --llm-wash: #2a1c3d;
     --mark-ring: #6b5a06;
 
     /* Koyu zeminde gölge görünmez; yükseklik kenarlıkla anlatılır. */

@@ -43,7 +43,7 @@ body {
 }
 .site-header h1 {
   margin: 0;
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-3xl);
   font-weight: var(--fw-semibold);
   letter-spacing: var(--track-tight);
   line-height: var(--lh-tight);
@@ -52,10 +52,12 @@ body {
   margin: var(--sp-2) 0 0;
   color: var(--fg-dim);
   font-size: var(--fs-sm);
-  max-width: 68ch; /* okuma satırı; ch birimi yazı tipine göreli, token değil */
+  max-width: var(--measure);
 }
 
-/* --- tipografi yardımcıları --- */
+/* --- tipografi yardımcıları ---
+ * `.mono` ve `.serif` yalnız birer boyut/aile ayarı değildir: hangi SESİN
+ * konuştuğunu söylerler (bkz. tokens.css başlığı, "ÜÇ SES"). */
 .muted {
   color: var(--fg-dim);
 }
@@ -68,6 +70,11 @@ body {
 .mono {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
+}
+/* BANKANIN sesi. Boyut ayarlamaz — tırnaklı yazı, içinde bulunduğu satırın
+ * ölçüsünü korumalı; değiştirdiği şey ton, hiyerarşi değil. */
+.serif {
+  font-family: var(--font-serif);
 }
 .nowrap {
   white-space: nowrap;
@@ -151,6 +158,10 @@ textarea,
 @media (max-width: 900px) {
   .shell {
     padding: var(--sp-5) var(--sp-3) var(--sp-8);
+  }
+  /* 34px başlık dar kabukta satırı kırıyor; bir kademe iner. */
+  .site-header h1 {
+    font-size: var(--fs-2xl);
   }
 }
 

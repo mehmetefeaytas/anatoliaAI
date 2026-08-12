@@ -148,14 +148,30 @@ export default function SummaryCoverage() {
       : null;
 
   return (
-    <div className="ozet-kapsam">
-      <p className="small muted" style={{ margin: 0 }}>
+    // İş KOŞARKEN katlama zorla açık: arkada ilerleyen bir üretimi katlanmış
+    // bir kutunun içinde saklamak, kullanıcının onu durdurabileceğini de
+    // saklardı. `open` yalnız o hâlde veriliyor; aksi hâlde nitelik hiç
+    // yazılmaz ve kullanıcı kutuyu serbestçe açıp kapatabilir.
+    <details className="ozet-kapsam" {...(kosuyor ? { open: true } : {})}>
+      {/* KATLANDI (2026-08-12). Bu blok, adil kıyas notu katlandıktan sonra
+          katlanan üstünün en büyük tek tüketicisi hâline gelmişti: üç satırlık
+          bir paragraf ARTI bir operatör düğmesi, hem de sekmelerden önce ve her
+          ekranda. Canlı ekranda ölçüldü — kıyas tablosu yine katlamanın altında
+          kalıyordu, yalnız sebebi değişmişti.
+
+          Özet: her zaman görünen tek satır. Gerekçeler ve üretim düğmesi
+          açılınca geliyor. Kapatma DEĞİL, katlama: sayı hiç kaybolmuyor. */}
+      <summary className="ozet-kapsam-ozet small muted">
         <span className="badge badge-llm">özet kapsamı</span>{" "}
         <b>{trNum(kapsam.ozetli)}</b> / {trNum(kapsam.toplam)} kampanyada{" "}
         {/* "AI özeti" TEK parçada kalmalı: JSX satır kırılması ifadeyi ikiye
             böldüğünde `test_ozet_gorunurluk` kapısı düşer — ve haklı olarak,
             çünkü kullanıcıya dönük etiketin bütünlüğünü ölçüyor. */}
-        <span>AI özeti</span> var (%{trNum(oran)}).{" "}
+        <span>AI özeti</span> var (%{trNum(oran)})
+        {kapsam.hedef > 0 ? ` · ${trNum(kapsam.hedef)} belge bekliyor` : ""}
+      </summary>
+
+      <p className="small muted ozet-kapsam-govde">
         {kapsam.icerik_yok > 0 && (
           <>
             {trNum(kapsam.icerik_yok)} belgede{" "}
@@ -262,6 +278,6 @@ export default function SummaryCoverage() {
           <ErrorNotice error={hata} />
         </div>
       )}
-    </div>
+    </details>
   );
 }

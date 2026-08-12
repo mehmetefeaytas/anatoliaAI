@@ -54,14 +54,18 @@
     --fg-faint: #6c6c78;
     --on-accent: #ffffff;
 
-    --accent: #0071e3;
-    --accent-soft: #0062c4;
+    --accent: #2f3f9e;
+    --accent-soft: #3b4bbf;
 
     --ok: #1d7a54;
     --warn: #a8480a;
     --bad: #b3261e;
+    /* Üretim katmanı kendi rengini taşır. Eskiden `--warn` ödünç alınıyordu,
+     * yani «bunu LLM üretti» ile «uyarı» kâğıtta da aynı turuncuydu. */
+    --llm: #6d3a9e;
 
-    --accent-wash: #e8f1fd;
+    --accent-wash: #e9eaf8;
+    --llm-wash: #f2e9fa;
     --ok-wash: #e6f4ee;
     --warn-wash: #fdf0e6;
     --bad-wash: #fceceb;

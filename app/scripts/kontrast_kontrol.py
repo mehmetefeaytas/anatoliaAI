@@ -66,12 +66,22 @@ CIFTLER: tuple[tuple[str, str, str], ...] = (
     ("--ok", "--bg", "rozet: kural katmanı"),
     ("--ok", "--bg-2", "rozet: kural katmanı, kart içinde"),
     ("--ok", "--ok-wash", "başarı bildirimi"),
-    ("--warn", "--bg", "rozet: LLM katmanı"),
-    ("--warn", "--bg-2", "rozet: LLM katmanı, kart içinde"),
+    ("--warn", "--bg", "rozet: uyarı"),
+    ("--warn", "--bg-2", "rozet: uyarı, kart içinde"),
     ("--warn", "--warn-wash", "uyarı bildirimi"),
     ("--bad", "--bg", "rozet: düşük güven"),
     ("--bad", "--bg-2", "rozet: düşük güven, kart içinde"),
     ("--bad", "--bad-wash", "hata bildirimi"),
+    # `--llm` bu paletin en yeni rengi ve KENDİ çiftlerini getirir: eskiden
+    # `.badge-llm` `--warn` ödünç alıyordu, yani ölçülen çift zaten vardı.
+    # Ödünç bitti; ölçüm de kendi adına yapılır.
+    ("--llm", "--bg", "rozet: LLM katmanı (üretilmiş)"),
+    ("--llm", "--bg-2", "rozet: LLM katmanı, kart içinde"),
+    ("--llm", "--llm-wash", "üretilmiş içerik şeridi / etiketi"),
+    # Karantina kaydında banka adı `--fg`, gerekçesi `--fg-dim`: "bir güçlü
+    # satır + bir fısıltı". Fısıltı `--bad-wash` zemininde okunuyor ve o çift
+    # bugüne kadar ölçülmemişti.
+    ("--fg-dim", "--bad-wash", "karantina kaydının fısıltı satırı"),
 )
 
 _HEX = re.compile(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6})$")
