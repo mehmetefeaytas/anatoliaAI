@@ -75,7 +75,18 @@
   /* --- metin --- */
   --fg: #1d1d1f;
   --fg-dim: #5f5f66;
-  --fg-faint: #6c6c78;
+  /* ÖLÇÜLDÜ (v2 tasarım denetimi, 2026-08-12). Eski `#6c6c78` dolgu zemininde
+   * (`--bg-3` #eeeef2) 4,48:1 veriyordu — eşiğin 0,02 altında, yani kılpayı
+   * ihlal. `#6a6a76` üç zeminde en düşük 4,61:1 ve `--fg-dim`'den 1,187:1
+   * ayrık (eski ayrım 1,223:1 idi; kademe korunuyor). Koyu temadaki kardeş
+   * karar (`#8e8e97`) ile simetrik.
+   *
+   * NOT — yoruma `--token` ADI ve İKİ NOKTA yan yana YAZILMAZ: kontrast
+   * kapısının ayrıştırıcısı (`scripts/kontrast_kontrol.py:95`) `--ad: değer;`
+   * desenini `;`'e kadar açgözlü arar ve yorumdaki bir eşleşme hemen altındaki
+   * GERÇEK bildirimi yutar; token sessizce paletten düşer. Hex'i ada
+   * bağlamadan, tek başına yaz. */
+  --fg-faint: #6a6a76;
   /* Vurgu zemini üstündeki metin. Açık temada beyaz (mavi yeterince koyu),
    * KOYU temada koyu lacivert: oradaki vurgu parlak bir mavidir ve üstündeki
    * beyaz metin ÖLÇÜLDÜ — 3,24:1, AA eşiğinin altında. Koyu tema bu tokenı
@@ -190,7 +201,12 @@
    * aralığı 45–75 karakter, 68ch onun ortasıdır. `ch` birimi yazı tipine
    * göreli olduğu için değer px'e çevrilemez; ölçü bir bileşen ayrıntısı
    * değil TİPOGRAFİ kararıdır, o yüzden burada yaşar. */
-  --shell-max: 1120px;
+  /* `--shell-max` 1120px → 1180px (v2 tasarım). Kapsama cetveli üç sabit kolon
+   * taşıyor (190px banka · esnek çubuk rayı · 132px değer); 1120px'te çubuk
+   * rayına 1120 − 190 − 132 − 2×16 boşluk − 2×24 kart dolgusu = 718px kalıyordu
+   * ve denetlenebilir tablonun yedi sütunu yatay kaydırmaya düşüyordu. 1180px
+   * rayı 778px'e çıkarıyor ve tablo kaydırmasız sığıyor. */
+  --shell-max: 1180px;
   --measure: 68ch;
 }
 
@@ -205,7 +221,18 @@
 
     --fg: #f5f5f7;
     --fg-dim: #98989d;
-    --fg-faint: #8a8a93;
+    /* ÖLÇÜLDÜ (v2 tasarım denetimi, 2026-08-12). Eski değer `#8a8a93` idi ve
+     * dolgu zemininde (`--bg-3` #26262e) 4,39:1 veriyordu — AA eşiğinin ALTINDA.
+     * Kapı bunu yakalamıyordu çünkü `--fg-faint`/`--bg-3` çifti CIFTLER
+     * listesinde yoktu; çift artık eklendi (`scripts/kontrast_kontrol.py`).
+     *
+     * v2 tasarım dosyası buraya `#98989d` yazıyor ve o değer üç zeminde de
+     * geçiyor — ama `--fg-dim` ile BİREBİR AYNI. Bu, koyu temada üç kademeli
+     * metin hiyerarşisini ikiye düşürürdü; oysa aynı tasarımın tipografi
+     * bölümü üç kademeyi açıkça istiyor (gövde · ikincil · mono fısıltı).
+     * `#8e8e97` ikisini birlikte çözer: üç zeminde en düşük 4,62:1 ve
+     * `--fg-dim`'den 1,131:1 ayrık — açık temanın 1,223:1 ayrımına yakın. */
+    --fg-faint: #8e8e97;
 
     --accent: #7f9cff;
     --accent-soft: #9db3ff;

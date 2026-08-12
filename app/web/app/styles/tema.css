@@ -58,7 +58,9 @@
 
   --fg: #1d1d1f;
   --fg-dim: #5f5f66;
-  --fg-faint: #6c6c78;
+  /* Gerekçe tokens.css'te (dolgu zemininde AA + üç kademeli hiyerarşi).
+   * Bu kopya `tests/test_tema_paleti.py` ile birebir bağlı. */
+  --fg-faint: #6a6a76;
   --on-accent: #ffffff;
 
   --accent: #2f3f9e;
@@ -92,7 +94,9 @@
 
   --fg: #f5f5f7;
   --fg-dim: #98989d;
-  --fg-faint: #8a8a93;
+  /* Gerekçe tokens.css'te (dolgu zemininde AA + üç kademeli hiyerarşi).
+   * Bu kopya `tests/test_tema_paleti.py` ile birebir bağlı. */
+  --fg-faint: #8e8e97;
 
   --accent: #7f9cff;
   --accent-soft: #9db3ff;
