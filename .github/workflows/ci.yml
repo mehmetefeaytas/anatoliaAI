@@ -109,16 +109,55 @@ jobs:
         run: ruff check .
 
   web:
-    name: Frontend derlemesi
+    # Bu is sadece derliyordu: `npm run build` gecerse yesil yaniyordu.
+    # `package.json` ise 20 kumede 70 test tanimliyor ve HICBIRI CI'da
+    # kosmuyordu — yani frontend yardimcilari (sure/ilerleme/hata gerekcesi)
+    # yalnizca yerelde, biri hatirlarsa sinaniyordu. Derleme bir tip hatasini
+    # yakalar, yanlis Turkce etiketi yakalamaz.
+    name: Frontend testleri + derlemesi
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # Node 20 DEGIL, ve bu surum secimi testlerin ON KOSULU:
+      # `npm test` .ts dosyalarini dogrudan kosuyor (yeni test bagimliligi
+      # eklenmedi — offline + lisans kisiti). Bunun icin gereken tip siyirma
+      # (type stripping) Node'a 22.18'de bayraksiz girdi. Node 20'de ayni
+      # komut "unknown file extension .ts" ile duser; yani testleri eski bir
+      # kosucuyla eklemek, kapiyi kirik takmak olurdu.
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
+
       - name: Bagimliliklari kur
         working-directory: app/web
         run: npm install
+
+      # Derlemeden ONCE kosar: kirik bir yardimci, derlemenin bitmesini
+      # beklemeden gorunur olsun.
+      - name: Birim testleri
+        working-directory: app/web
+        run: npm test
+
       - name: Derle
         working-directory: app/web
         run: npm run build
+
+      # `npm run lint` (= `next lint`) BILEREK EKLENMEDI — bu dosyanin
+      # "sahte yesil olmaz" ilkesinin kardesi: kirik kapi da takilmaz.
+      #
+      # Olculdu (2026-08-12, `npx next lint`): komut denetim yapmiyor, kurulum
+      # sihirbazi aciyor ve TTY olmayan ortamda cikis kodu 1 veriyor:
+      #
+      #   ? How would you like to configure ESLint?
+      #   > Strict (recommended) / Base / Cancel
+      #
+      # Sebep: `eslint` ve `eslint-config-next` `package.json`'da YOK ve
+      # `web/` altinda hicbir eslint yapilandirmasi yok. Bu adim bugun
+      # eklenseydi her kosuda kirmizi yanar, kimse bakmaz hale gelirdi —
+      # ruff isindeki 479 bulgulu donemin aynisi.
+      #
+      # Kapi olmasi icin once su ikisi inmeli (bagimlilik eklemek CLAUDE.md
+      # §22 geregi ayri bir onay ister): devDependencies'e `eslint` +
+      # `eslint-config-next`, ve `web/.eslintrc.json`. Ikisi indiginde buraya
+      # `run: npm run lint` adimi eklenir.
