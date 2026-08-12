@@ -7,8 +7,19 @@
  *
  * Eskiden bu dosya 191 satırlık tek bileşendi: tip tanımları, biçimlendirici,
  * sayfa mantığı ve 11 inline stil objesi bir aradaydı. Artık her sorumluluk
- * kendi dosyasında; burada kalan tek iş sekmeler ve iki ortak istek
- * (`/fields`, `/campaigns`).
+ * kendi dosyasında; burada kalan tek iş sekmeler ve üç ortak istek
+ * (`/fields`, `/stats`, `/campaigns`).
+ *
+ * ## Kampanya türleri `/stats`ten geliyor, `/campaigns`ten türetilmiyor
+ *
+ * Bu sayfa `<select>`i doldurmak için tüm kampanya listesini indirip
+ * `campaign_type` alanlarını tekilleştiriyordu. Ölçüldü (2026-08-11): o istek
+ * ham gövdelerle birlikte **10.339.015 bayttı** ve gövdeleri hiçbir bileşen
+ * okumuyordu. Liste artık üstveri olarak geliyor (uç `raw_text`i varsayılan
+ * göndermiyor) ve tür listesi sunucudan hazır alınıyor.
+ *
+ * `/campaigns` isteği KALDI: Jüri Audit Paneli belge seçicisini ondan besliyor.
+ * Ama artık üstveri ölçeğinde — sayfanın açılışta indirdiği veri değil.
  *
  * ## Sekme durumu artık URL'de
  *
@@ -120,12 +131,16 @@ function Dashboard() {
   }, [jury, sekme, setSekme]);
 
   const fields = useAsync(() => api.fields(), []);
+  const stats = useAsync(() => api.stats(), []);
   const campaigns = useAsync(() => api.campaigns(), []);
 
   const rows = campaigns.data ?? [];
-  const campaignTypes = Array.from(
-    new Set(rows.map((c) => c.campaign_type).filter(Boolean)),
-  ) as string[];
+  // Kampanya türleri artık `/stats`ten geliyor, `/campaigns` yanıtından
+  // türetilmiyor. Türetme ölçülen bir maliyetti: liste yanıtı ham gövdelerle
+  // birlikte 10,3 MB'tı ve tek amacı bir `<select>` doldurmaktı. `/stats` aynı
+  // listeyi sunucuda, `extracted_fields` sayaçlarıyla birlikte tek istekte
+  // verir; üstelik sıralı ve tekrarsız.
+  const campaignTypes = stats.data?.campaign_types ?? [];
   const inspect = useCallback(
     (campaignId: number) => {
       setAuditTarget(campaignId);
@@ -161,7 +176,12 @@ function Dashboard() {
           <ErrorNotice error={fields.error} />
         </div>
       )}
-      {!!campaigns.error && !fields.error && (
+      {!!stats.error && !fields.error && (
+        <div style={{ marginBottom: "var(--sp-4)" }}>
+          <ErrorNotice error={stats.error} />
+        </div>
+      )}
+      {!!campaigns.error && !fields.error && !stats.error && (
         <div style={{ marginBottom: "var(--sp-4)" }}>
           <ErrorNotice error={campaigns.error} />
         </div>

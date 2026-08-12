@@ -199,20 +199,115 @@ export type CampaignText = {
   ozet_kaynak?: string | null;
 };
 
+/**
+ * Belgenin NE OLDUĞU: kampanya sayfası mı, akit/tarife metni mi.
+ *
+ * `campaign_type` ile KARIŞTIRMA — o, 8 kampanya TÜRÜ sınıflandırmasıdır
+ * (Konut Finansmanı, Kart…). `null` "bilinmiyor" demektir; sınıflandırılamayan
+ * belgeye tür uydurulmaz.
+ */
+export type BelgeTuru = "kampanya" | "sozlesme";
+
+/**
+ * `GET /campaigns` yanıtının bir satırı — **ÜSTVERİ, ham gövde değil**.
+ *
+ * `raw_text` bu tipten KALDIRILDI ve uç onu artık varsayılan olarak
+ * göndermiyor. Ölçüm (2026-08-11): yanıt 10.339.015 bayttı ve neredeyse
+ * tamamı o alandı; `web/app` içinde tek geçtiği yer de tam olarak burasıydı —
+ * yani hiç okunmayan 10 MB her sayfa açılışında indiriliyordu. Ham metin
+ * gerçekten gerektiğinde `campaignText(id)` çağrılır: tek belge, offsetleri
+ * ve blokları ile birlikte.
+ */
 export type CampaignSummary = {
   id: number;
   bank: string;
   bank_name: string | null;
   campaign_type: string | null;
-  raw_text: string;
   source_url: string | null;
   scraped_at?: string | null;
+  /**
+   * Üç alan da tel üzerinde ZATEN vardı; bu tip onları tanımlamadığı için
+   * liste ekranı veriyi göremiyordu (`ozet` ile aynı hikâye).
+   */
+  belge_turu?: BelgeTuru | null;
+  /** `null` = damgasız. "Geçerli" DEMEK DEĞİLDİR — bkz. `CampaignStatus`. */
+  campaign_status?: CampaignStatus | null;
   /**
    * Üretilmiş özet. API bu alanı ZATEN döndürüyordu (`repository.py` SELECT'i
    * `c.ozet` içeriyor) ama bu tip onu tanımlamıyordu, dolayısıyla liste ekranı
    * veriyi göremiyordu. Kapsam sayacı buradan hesaplanır — ek uç gerekmez.
    */
   ozet?: string | null;
+  /**
+   * Özetin NEDEN yok olduğu (`icerik_yok`, `llm_kapali` …). Boş `ozet` tek
+   * başına "denendi ve çıkmadı" ile "hiç denenmedi"yi ayırt edemez.
+   */
+  ozet_sebep?: string | null;
+};
+
+/** `GET /campaigns` süzgeçleri. Hepsi opsiyonel; hiçbiri verilmezse tam liste. */
+export type CampaignParams = {
+  /** Serbest metin — banka, tür, özet ve adreste arar (ham gövdede DEĞİL). */
+  q?: string;
+  bank?: string;
+  type?: string;
+  belge_turu?: BelgeTuru;
+  /** `"damgasiz"` üçüncü kovadır: `campaign_status IS NULL`. */
+  status?: CampaignStatus | "damgasiz";
+  limit?: number;
+  offset?: number;
+  /**
+   * Ham metni de iste. Arayüz bunu KULLANMAZ — 10 MB'lık yükün sebebi buydu.
+   * Sözleşmede duruyor ki uç geri açılabilir kalsın.
+   */
+  govde?: boolean;
+};
+
+/** Bir bankanın veri kapsamı: kaç belge, kaç ÇEŞİT alan. */
+export type BankaKapsami = {
+  belge: number;
+  /** FARKLI alan adı sayısı (satır değil) — üst sınırı `/fields` uzunluğudur. */
+  alan: number;
+};
+
+/**
+ * `GET /stats` — korpusun sayısal özeti, TEK istekte.
+ *
+ * Bu sayılar eskiden `/campaigns` yanıtından istemcide sayılıyordu ve bunun
+ * bedeli 10 MB'lık bir istekti. Üstelik istemcide sayılabilen tek şey "kaç
+ * satır var"dı: alan kapsamı, katman dağılımı ve banka başına alan çeşidi
+ * `extracted_fields` tablosunu gerektiriyor.
+ *
+ * Anahtar kümeleri SABİTTİR: sıfır değerler de yazılır, böylece `0` ile
+ * "ölçülmedi" karışmaz.
+ */
+export type Stats = {
+  korpus: {
+    /** KORPUS KAYNAĞI sayısı — `/banks`'ten farklı olabilir (o, otorite
+     *  kaynaklarını süzer). İki sayı farklı soruların cevabıdır. */
+    banks: number;
+    banks_with_campaigns: number;
+    campaigns: number;
+    fields: number;
+    campaigns_with_fields: number;
+  };
+  /** `kampanya` / `sozlesme` / `bilinmeyen`. */
+  belge_turu: Record<string, number>;
+  /** `active` / `expired` / `damgasiz` — damgasız AKTİF DEĞİLDİR. */
+  campaign_status: Record<string, number>;
+  /** Banka slug → kampanya sayısı. */
+  banka_basina: Record<string, number>;
+  /** Banka slug → "3 belge / 12 alan" etiketinin verisi. */
+  banka_kapsami: Record<string, BankaKapsami>;
+  /** Korpusta geçen kampanya türleri, alfabetik ve tekrarsız. */
+  campaign_types: string[];
+  /** Alan adı → o alanın çıkarıldığı belge sayısı. */
+  alan_kapsami: Record<string, number>;
+  /** Çıkarıcı katman (`rule` / `ner` / `llm`) → üretilen alan sayısı. */
+  katman: Record<string, number>;
+  llm: { acik: boolean };
+  /** `"sqlite"` | `"postgres"` — hangi veri tabanına bağlıyız. */
+  backend: string;
 };
 
 /** Bileşik skorun tek bir ölçüt bileşeni (`GET /advantageous`). */
@@ -673,7 +768,30 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   fields: () => request<FieldMeta[]>("/api/fields"),
-  campaigns: () => request<CampaignSummary[]>("/api/campaigns"),
+  /**
+   * Belge listesi — ÜSTVERİ. Ham gövde gelmez (`govde` sözleşmede duruyor ama
+   * arayüz kullanmıyor); gerekçe `CampaignSummary` tipinde.
+   *
+   * Süzgeçler sunucuda uygulanır, istemcide değil: `status` ve `belge_turu`
+   * kovalarının anlamı (özellikle `damgasiz` = `NULL`) veri katmanının
+   * kuralıdır ve TSX'e kopyalansaydı iki yerde yaşardı.
+   */
+  campaigns: (params: CampaignParams = {}) => {
+    const p = new URLSearchParams();
+    for (const [ad, deger] of Object.entries(params)) {
+      if (deger !== undefined && deger !== null && deger !== "") {
+        p.set(ad, String(deger));
+      }
+    }
+    const q = p.toString();
+    return request<CampaignSummary[]>(`/api/campaigns${q ? `?${q}` : ""}`);
+  },
+  /**
+   * Korpusun sayısal özeti. Kampanya türü listesi buradan gelir — eskiden
+   * `/campaigns` yanıtından türetiliyordu ve bu, sırf bir `<select>` doldurmak
+   * için 10 MB indirmek demekti.
+   */
+  stats: () => request<Stats>("/api/stats"),
   /**
    * Banka kataloğu. Delta paneli bunu kullanır — `/campaigns`'ten türetmek,
    * hiç kampanyası toplanmamış bankayı listeden düşürüyordu; oysa "bende hiç

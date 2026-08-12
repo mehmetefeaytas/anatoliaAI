@@ -7,7 +7,9 @@
 Uçlar:
   GET  /health
   GET  /banks
-  GET  /campaigns
+  GET  /campaigns?govde=&q=&bank=&type=&belge_turu=&status=&limit=&offset=
+                                         (belge listesi — ham gövde OPSİYONEL)
+  GET  /stats                            (korpusun sayısal özeti — tek istek)
   GET  /campaigns/{campaign_id}/text     (kaynak metin + alan offset'leri — vurgulama)
   GET  /compare?field=kar_payi_orani&intent=lowest&type=Konut+Finansmanı
   GET  /scoring?field=kar_payi_orani     (şeffaf skorlama: formül + adımlar)
@@ -70,6 +72,17 @@ düşerdi. Beş çağrının hepsi sözleşme metotlarına çevrildi (`campaign_
 `query_fields`, `all_banks`, `all_campaigns`) ve `rows()` kaçış kapısı
 KALDIRILDI. Kural: bu dosyada SQL yazılmaz; eksik bir sorgu varsa
 `RepositoryProtocol`'e metot eklenir ve İKİ backend'de de uygulanır.
+
+## `GET /campaigns` ham gövdeyi ARTIK VARSAYILAN OLARAK GÖNDERMEZ
+
+Ölçüldü (2026-08-11): uç 1774 satırı `raw_text` ile döndürüyordu ve yanıt
+**10.339.015 bayttı**. Arayüz o alanı hiçbir yerde okumuyordu — `web/app`
+içinde tek geçtiği yer bir tip tanımıydı. Gövde `?govde=true` ile geri gelir;
+gerçekten metin isteyen yol ise `GET /campaigns/{id}/text`tir (tek belge).
+
+Yanıt **çıplak liste** olarak KALDI, zarfa sarılmadı: süzgeç sonrası toplam
+kayıt sayısı `X-Toplam-Kayit` yanıt başlığına yazılır. Gövde biçimini
+değiştirmek her çağıranı aynı anda kırardı.
 
 ## Kaynak-span (offset) — birincil yol DB, yedek yol yeniden hesaplama
 
@@ -165,6 +178,7 @@ from ..comparison.compare import (
     yon_zorla,
 )
 from ..comparison.contradiction import detect as detect_contradictions
+from ..db.base import belge_turu_dogrula, kampanya_durumu_dogrula
 from ..db.factory import create_repository
 from ..extraction.llm.extractor import default_extractor
 from ..extraction.llm.schema import EXTRACTION_FIELDS
@@ -415,6 +429,16 @@ try:  # pragma: no cover - pydantic yokluğu build_app()'te raporlanır
 
 except ModuleNotFoundError:  # pragma: no cover
     BaseModel = None  # type: ignore[assignment]
+
+# `Response` de AYNI SEBEPLE modül seviyesinde: `GET /campaigns` yanıt
+# başlığına (`X-Toplam-Kayit`) yazabilmek için imzasında `response: Response`
+# taşır. `build_app()` içinde import edilseydi ad modül global'lerinde
+# bulunmaz, FastAPI onu çözemediği için bir QUERY parametresi sanardı ve uç
+# her istekte 422 verirdi — yukarıdaki `ChatReq` hatasının birebir aynısı.
+try:  # pragma: no cover - fastapi yokluğu build_app()'te raporlanır
+    from fastapi import Response
+except ModuleNotFoundError:  # pragma: no cover
+    Response = None  # type: ignore[assignment]
 
 # `rank()` girdiye eklenen ek alanları (extractor, confidence, campaign_id...)
 # RankRow'a taşımaz. Sıralama mantığını KOPYALAMADAN satırları geri eşlemek için
@@ -860,8 +884,121 @@ def build_app():
         return [b for b in rows if b.get("slug") not in otorite]
 
     @app.get("/campaigns")
-    def campaigns():
-        return repo.all_campaigns()
+    def campaigns(response: Response, govde: bool = False,
+                  q: Optional[str] = None, bank: Optional[str] = None,
+                  type: Optional[str] = None,
+                  belge_turu: Optional[str] = None,
+                  status: Optional[str] = None,
+                  limit: Optional[int] = None, offset: int = 0):
+        """Belge listesi — ÜSTVERİ. Ham gövde yalnızca `?govde=true` ile gelir.
+
+        ## `govde=False` varsayılanı bir hata düzeltmesidir
+
+        Ölçüldü (2026-08-11): `curl -s localhost:8000/campaigns | wc -c` =
+        **10.339.015 bayt**. Uç 1774 satırı `raw_text` ile birlikte
+        döndürüyordu ve arayüz o alanı HİÇBİR YERDE okumuyordu — `web/app`
+        içinde tek geçtiği yer `lib/api.ts`'deki tip tanımıydı. Yani yükün
+        neredeyse tamamı, hiç kimsenin bakmadığı bir alandı ve dashboard her
+        açılışta onu indiriyordu.
+
+        Alan SİLİNMEDİ, kapatıldı: `?govde=true` bugünkü yanıtı birebir geri
+        verir. Ham metne gerçekten ihtiyaç duyan yol
+        `GET /campaigns/{id}/text`tir (metin + offsetler + bloklar) ve o uç
+        tek belge döndürür.
+
+        ## Yanıt ÇIPLAK BİR LİSTEDİR — zarf (envelope) yok
+
+        Toplam kayıt sayısı gövdeye DEĞİL `X-Toplam-Kayit` başlığına yazılır.
+        Gövdeyi `{"toplam": n, "kayitlar": [...]}` biçimine sokmak her
+        çağıranı aynı anda kırardı; başlık, süzgeç uygulanmış toplamı
+        sayfalamadan bağımsız taşır ve eski istemciler onu görmezden gelir.
+
+        ## Süzgeçler
+
+        `q` serbest metin (üstveride arar — gerekçe:
+        `db.base.kampanya_metin_suz()`), `bank` / `type` / `belge_turu` /
+        `status` kesin eşleşmeli. Süzme DEPO KATMANINDA yapılır, burada değil:
+        iki backend de aynı kümeyi görmek zorunda (`db.base.kampanya_where()`).
+
+        `status='damgasiz'` üçüncü bir kovadır: `campaign_status IS NULL`
+        "geçerli" demek DEĞİLDİR, "damgasız" demektir ve korpusun %74'ü bu
+        durumdadır. `active` ile birleştirmek, doğrulanmamış 1316 belge için
+        doğrulanmış bir iddia uydurmak olurdu.
+
+        `limit`/`offset` **depoya değil, burada** uygulanır: `X-Toplam-Kayit`
+        süzgeç sonrası toplamı bildirmek zorunda ve sayfa dilimi alındıktan
+        sonra o sayı geri getirilemezdi (ikinci bir COUNT sorgusu, iki
+        backend'de tutarlı tutulması gereken ikinci bir sorgu demekti).
+        `limit` varsayılanı `None` = sayfalama yok; süzgeçsiz çağrı bugünkü
+        tam listeyi verir.
+        """
+        try:
+            belge_turu_dogrula(belge_turu)
+            kampanya_durumu_dogrula(status)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+        if offset < 0 or (limit is not None and limit < 0):
+            raise HTTPException(
+                status_code=400,
+                detail="limit ve offset negatif olamaz "
+                       f"(limit={limit}, offset={offset}).")
+
+        rows = repo.all_campaigns(bank=bank, campaign_type=type,
+                                  belge_turu=belge_turu, status=status, q=q,
+                                  govde=govde)
+        response.headers["X-Toplam-Kayit"] = str(len(rows))
+        if limit is None:
+            return rows[offset:]
+        return rows[offset:offset + limit]
+
+    @app.get("/stats")
+    def stats():
+        """Korpusun tek bakışta sayısal özeti — depo metotlarının BİLEŞİMİ.
+
+        ## Neden ayrı bir uç
+
+        Arayüz bu sayıları eskiden `/campaigns` yanıtından kendi sayıyordu ve
+        bunun bedeli 10,3 MB'lık bir istekti (bkz. `campaigns()`); üstelik
+        istemcide sayılabilen şey yalnızca "kaç satır var"dı — alan kapsamı,
+        katman dağılımı ve banka başına ÇEŞİT sayısı `extracted_fields`
+        tablosunu gerektiriyor ve oraya arayüzün hiç erişimi yok.
+
+        ## Burada YENİ SQL YOK
+
+        Her sayı zaten sözleşmede olan ve ayrı ayrı test edilen depo
+        metotlarından gelir. Yeni olan tek şey iki metodun kendisidir
+        (`campaign_status_counts`, `bank_field_coverage`) ve ikisi de İKİ
+        backend'de birden yazıldı. Bu uç hiçbir sayıyı kendi hesaplamaz —
+        hesaplasaydı aynı bilgi hem depoda hem burada yaşardı.
+
+        `campaign_types` `all_campaigns()`ten türetilir ve **gövdesiz** okur:
+        listenin kendisi zaten üstveridir, ham metne gerek yok.
+
+        ## `korpus.banks` ile `GET /banks` neden farklı sayabilir
+
+        Buradaki sayı KORPUS KAYNAĞI sayısıdır ve TKBB gibi sektör
+        otoritelerini de içerir (`/banks` onları süzer — o ucun docstring'i).
+        İki sayı farklı soruların cevabıdır: "korpus kaç kaynaktan beslendi"
+        ve "kaç BANKA kıyaslanıyor". Aynı isimle iki farklı sayı basmamak için
+        fark burada yazılıdır.
+        """
+        turler = sorted({c.get("campaign_type")
+                         for c in repo.all_campaigns(govde=False)
+                         if c.get("campaign_type")})
+        return {
+            "korpus": repo.counts(),
+            "belge_turu": repo.belge_turu_counts(),
+            "campaign_status": repo.campaign_status_counts(),
+            "banka_basina": repo.campaigns_per_bank(),
+            "banka_kapsami": repo.bank_field_coverage(),
+            "campaign_types": turler,
+            "alan_kapsami": repo.field_coverage(),
+            "katman": repo.fields_by_extractor(),
+            # `llm.available` `/health` ile AYNI kaynaktan okunur; arayüz
+            # "LLM kapalı" rozetini iki ayrı uçtan farklı öğrenmemeli.
+            "llm": {"acik": llm.available},
+            "backend": repo.backend,
+        }
 
     @app.get("/fields")
     def fields():
@@ -1182,8 +1319,11 @@ def build_app():
 
         # Bankanın kendi belgelerinin bulunduğu aileler — "ürün yok" ile "veri
         # yok" ayrımı buna dayanır.
+        # `govde=False`: burada yalnız banka + tür sayılıyor, ham metin
+        # okunmuyor. Gövdeyi çekmek 1774 belgelik korpusta her istekte
+        # onlarca MB'lık boş bir okuma demekti.
         kendi_belgeleri: dict[Any, int] = {}
-        for c in repo.all_campaigns():
+        for c in repo.all_campaigns(govde=False):
             if c.get("bank") != bank:
                 continue
             tur = c.get("campaign_type")
@@ -1796,7 +1936,8 @@ def build_app():
     @app.get("/contradictions/summary")
     def contradictions_summary():
         """Çelişki taramasının kapsamı — "kaç belgede kaç bulgu" anlatısı."""
-        camps = repo.all_campaigns()
+        # Yalnız sayım yapılıyor; ham gövdeye gerek yok (`govde=False`).
+        camps = repo.all_campaigns(govde=False)
         found = contradictions()
         by_kind: dict[str, int] = {}
         for c in found:

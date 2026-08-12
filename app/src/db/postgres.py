@@ -79,11 +79,16 @@ from typing import Any, Optional
 from ..schemas import Campaign
 from .base import (
     BELGE_TURLERI,
+    KAMPANYA_DURUMLARI,
+    KAMPANYA_DURUMU_DAMGASIZ,
     ON_NUL_MODES,
     NulByteInText,
     belge_turu_dogrula,
     extractor_dogrula,
     finalize_campaign_text,
+    kampanya_metin_suz,
+    kampanya_sutunlari,
+    kampanya_where,
     kiyas_where,
     nul_denetle,
     on_nul_dogrula,
@@ -471,6 +476,22 @@ class PostgresRepository:
             out[r["belge_turu"] or "bilinmeyen"] += int(r["n"])
         return out
 
+    def campaign_status_counts(self) -> dict[str, int]:
+        """Geçerlilik damgası → kampanya sayısı. Anahtar kümesi SQLite ile aynı.
+
+        `NULL` üçüncü bir kovadır (`damgasiz`), `active`'e katılmaz; gerekçe
+        SQLite yolundaki eşdeğerde ve `base.KAMPANYA_DURUMU_DAMGASIZ`'da.
+        """
+        with self._read() as cur:
+            cur.execute("SELECT campaign_status, COUNT(*) AS n FROM campaigns "
+                        "GROUP BY campaign_status")
+            rows = cur.fetchall()
+        out = dict.fromkeys(KAMPANYA_DURUMLARI, 0)
+        for r in rows:
+            anahtar = r["campaign_status"] or KAMPANYA_DURUMU_DAMGASIZ
+            out[anahtar] = out.get(anahtar, 0) + int(r["n"])
+        return out
+
     def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]:
         """Alan adı → o alanın çıkarıldığı KAMPANYA sayısı (satır değil).
 
@@ -509,25 +530,53 @@ class PostgresRepository:
             rows = cur.fetchall()
         return {r["slug"]: int(r["n"]) for r in rows}
 
-    def all_campaigns(self, *, belge_turu: Optional[str] = None) -> list[dict]:
-        """Tüm kampanyalar, `id` sırasında. `belge_turu` kesin eşleşmeli seçici.
+    def bank_field_coverage(self) -> dict[str, dict[str, int]]:
+        """Banka slug → {'belge': kampanya sayısı, 'alan': FARKLI alan sayısı}.
 
-        Varsayılan `None` = süzme yok (geriye tam uyumlu); gerekçe ve
-        `'sozlesme'` kullanımı SQLite yolundaki eşdeğerde yazılı.
+        `field_coverage()`in taşımadığı banka boyutu; gerekçe ve `alan`ın neden
+        satır değil FARKLI alan adı saydığı SQLite yolundaki eşdeğerde yazılı.
+        Sorgu metni ve sıralama ikisinde de aynı olmak ZORUNDA.
         """
-        belge_turu = belge_turu_dogrula(belge_turu)
-        sql = ("SELECT c.id, b.slug AS bank, b.name AS bank_name, "
-               "c.campaign_type, c.belge_turu, c.campaign_status, c.ozet, "
-               "c.ozet_sebep, c.raw_text, c.source_url, "
-               f"{_SCRAPED_AT_ISO} AS scraped_at "
-               "FROM campaigns c JOIN banks b ON b.id=c.bank_id ")
-        params: tuple = ()
-        if belge_turu is not None:
-            sql += "WHERE c.belge_turu=%s "
-            params = (belge_turu,)
         with self._read() as cur:
-            cur.execute(sql + "ORDER BY c.id", params)
-            return [dict(r) for r in cur.fetchall()]
+            cur.execute(
+                "SELECT b.slug AS slug, COUNT(DISTINCT c.id) AS belge, "
+                "COUNT(DISTINCT f.field_name) AS alan FROM banks b "
+                "LEFT JOIN campaigns c ON c.bank_id=b.id "
+                "LEFT JOIN extracted_fields f ON f.campaign_id=c.id "
+                "GROUP BY b.slug ORDER BY belge DESC, b.slug")
+            rows = cur.fetchall()
+        return {r["slug"]: {"belge": int(r["belge"]), "alan": int(r["alan"])}
+                for r in rows}
+
+    def all_campaigns(self, *, belge_turu: Optional[str] = None,
+                      bank: Optional[str] = None,
+                      campaign_type: Optional[str] = None,
+                      status: Optional[str] = None,
+                      q: Optional[str] = None,
+                      govde: bool = True) -> list[dict]:
+        """Kampanyalar, `id` sırasında; isteğe bağlı süzgeçlerle.
+
+        `govde=False` `raw_text`i SELECT listesinden çıkarır — 10,3 MB'lık
+        `GET /campaigns` yükünün asıl sebebi. Varsayılanı **True** tutmanın
+        gerekçesi (depo içi çağıranlar gövdeye muhtaç) ve süzgeç semantiği
+        SQLite yolundaki eşdeğerde yazılı.
+
+        Süzgeç metni `base.kampanya_where()` ile ÜRETİLİR, burada tekrar
+        yazılmaz; tek fark yer tutucudur (`%s` vs `?`). Sütun listesi de
+        `base.kampanya_sutunlari()`ndan gelir — `raw_text`i dışarıda bırakma
+        kararı iki backend'de ayrışamaz.
+        """
+        where, params = kampanya_where(
+            yer_tutucu="%s", bank=bank, campaign_type=campaign_type,
+            belge_turu=belge_turu, status=status)
+        sql = ("SELECT "
+               + kampanya_sutunlari(govde=govde, scraped_at=_SCRAPED_AT_ISO)
+               + " FROM campaigns c JOIN banks b ON b.id=c.bank_id "
+               + where + "ORDER BY c.id")
+        with self._read() as cur:
+            cur.execute(sql, tuple(params))
+            rows = [dict(r) for r in cur.fetchall()]
+        return kampanya_metin_suz(rows, q)
 
     def close(self) -> None:
         self.conn.close()

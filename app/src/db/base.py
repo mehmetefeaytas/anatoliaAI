@@ -33,6 +33,7 @@ import threading
 from collections.abc import Mapping
 from typing import Any, Optional, Protocol, runtime_checkable
 
+from ..preprocessing.clean import tr_fold_ascii
 from ..schemas import Campaign, Extractor
 
 logger = logging.getLogger(__name__)
@@ -133,6 +134,157 @@ def suresi_dolmus_mu(durum: Optional[str]) -> bool:
     işaretsiz 1316 belgenin çoğu süresi dolmuş değil, sadece damgasız.
     """
     return durum == KAMPANYA_DURUMU_SURESI_DOLMUS
+
+
+# `campaign_status` sütununda YAZILI bir değer DEĞİL, damgasızlığın SÜZGEÇ
+# ADIDIR. `GET /campaigns?status=` ve `GET /stats` üçüncü bir kova olarak
+# damgasız belgeleri sayar; SQL'de karşılığı `IS NULL`'dır.
+#
+# Neden `active` ile aynı kovaya konmuyor: `null` "geçerli" DEMEK DEĞİLDİR,
+# "damgasız" demektir (bkz. `suresi_dolmus_mu()`). Korpusun %74'ü (1774'ün
+# 1316'sı, ölçüldü 2026-08-10) bu durumdadır ve onları "aktif" diye saymak,
+# hiç doğrulanmamış 1316 belge için doğrulanmış bir iddia uydurmak olurdu.
+KAMPANYA_DURUMU_DAMGASIZ = "damgasiz"
+
+#: `status` süzgecinin kabul ettiği değerler (sütundaki iki değer + damgasız).
+KAMPANYA_DURUMLARI = (KAMPANYA_DURUMU_AKTIF, KAMPANYA_DURUMU_SURESI_DOLMUS,
+                      KAMPANYA_DURUMU_DAMGASIZ)
+
+
+def kampanya_durumu_dogrula(deger: Optional[str]) -> Optional[str]:
+    """`status` süzgeç değerini doğrular; `None` = süzme yok.
+
+    `belge_turu_dogrula()` ile aynı gerekçe (tek doğrulama noktası, iki
+    backend de buradan geçer) ve aynı biçimde bilinçli olarak `None`'a izin
+    verir — ama burada `None` "bilinmiyor" değil "süzme yok" demektir; süzgeç
+    bir SORU parametresidir, saklanan bir değer değil.
+    """
+    if deger is None or deger in KAMPANYA_DURUMLARI:
+        return deger
+    raise ValueError(
+        f"status={deger!r} geçersiz. Geçerli: "
+        f"{', '.join(repr(d) for d in KAMPANYA_DURUMLARI)} veya None "
+        "(süzme yok).")
+
+
+# --------------------------------------------------------------------------- #
+# Kampanya listeleme süzgeci — `GET /campaigns`, iki backend için ORTAK
+# --------------------------------------------------------------------------- #
+#
+# Ölçülmüş sorun (2026-08-11): `GET /campaigns` 1774 satırı ham metinleriyle
+# birlikte, süzgeçsiz döndürüyordu — `curl -s localhost:8000/campaigns | wc -c`
+# = 10.339.015 bayt. Yükün tamamına yakını `raw_text`ti ve arayüz o alanı
+# HİÇBİR YERDE okumuyordu (`web/app` içinde tek geçtiği yer tip tanımıydı).
+#
+# Süzgeç parçaları `kiyas_where()` ile aynı sebeple burada yaşar: iki backend
+# ayrışırsa aynı istek hangi veri tabanına bağlı olduğuna göre farklı satır
+# kümesi döndürür. `kiyas_where()`ten TEK farkı, buradaki değerlerin KULLANICI
+# GİRDİSİ olmasıdır — bu yüzden SQL metnine gömülmez, yer tutucuyla bağlanır ve
+# yer tutucu dizgesi (`?` SQLite / `%s` psycopg) çağırandan alınır. Modül
+# başlığındaki `?` vs `%s` tuzağı tam olarak budur.
+
+
+def kampanya_sutunlari(*, govde: bool,
+                       scraped_at: str = "c.scraped_at") -> str:
+    """`all_campaigns()` SELECT listesi. `govde=False` iken `raw_text` YOKTUR.
+
+    Sütun listesi iki backend'de KOPYALANMAZ: `raw_text`i dışarıda bırakma
+    kararı tek bir yerde durmalı, yoksa bir backend 10 MB'lık gövdeyi
+    göndermeye devam ederken diğeri göndermez ve `tests/test_api_backend.py`
+    parite kapısı ancak şansa yakalar.
+
+    `scraped_at` ifadesi dışarıdan gelir: SQLite sütunu metin olarak saklar,
+    Postgres `TIMESTAMPTZ` sütununu ISO-8601 UTC metnine çevirmek zorundadır
+    (`postgres._SCRAPED_AT_ISO`). Fark KASITLIDIR ve o dosyanın başlığında
+    yazılıdır.
+    """
+    sutunlar = ["c.id", "b.slug AS bank", "b.name AS bank_name",
+                "c.campaign_type", "c.belge_turu", "c.campaign_status",
+                "c.ozet", "c.ozet_sebep"]
+    if govde:
+        sutunlar.append("c.raw_text")
+    sutunlar += ["c.source_url", f"{scraped_at} AS scraped_at"]
+    return ", ".join(sutunlar)
+
+
+def kampanya_where(*, yer_tutucu: str, bank: Optional[str] = None,
+                   campaign_type: Optional[str] = None,
+                   belge_turu: Optional[str] = None,
+                   status: Optional[str] = None) -> tuple[str, list[Any]]:
+    """`all_campaigns()` WHERE parçası + parametreleri. **İki backend için ORTAK.**
+
+    `yer_tutucu` `'?'` (sqlite3) veya `'%s'` (psycopg) olur; başka hiçbir fark
+    yoktur ve bu yüzden ikisi de aynı satır kümesini görür.
+
+    Süzgeçlerin hepsi **kesin eşleşmelidir**, `kiyas_where()` gibi "bilinmeyeni
+    de al" gevşekliği YOKTUR: burada kullanıcı açıkça bir kova seçiyor.
+    `status='damgasiz'` bu yüzden `IS NULL`'a çevrilir — `= 'damgasiz'`
+    hiçbir satır döndürmezdi, çünkü o dizge sütunda hiç yazılı değildir.
+
+    `q` (serbest metin) bilinçli olarak BURADA DEĞİL: gerekçe
+    `kampanya_metin_suz()` docstring'inde.
+    """
+    belge_turu = belge_turu_dogrula(belge_turu)
+    status = kampanya_durumu_dogrula(status)
+    kosullar: list[str] = []
+    params: list[Any] = []
+    if bank is not None:
+        kosullar.append(f"b.slug={yer_tutucu}")
+        params.append(bank)
+    if campaign_type is not None:
+        kosullar.append(f"c.campaign_type={yer_tutucu}")
+        params.append(campaign_type)
+    if belge_turu is not None:
+        kosullar.append(f"c.belge_turu={yer_tutucu}")
+        params.append(belge_turu)
+    if status == KAMPANYA_DURUMU_DAMGASIZ:
+        kosullar.append("c.campaign_status IS NULL")
+    elif status is not None:
+        kosullar.append(f"c.campaign_status={yer_tutucu}")
+        params.append(status)
+    if not kosullar:
+        return "", []
+    return "WHERE " + " AND ".join(kosullar) + " ", params
+
+
+#: `q` süzgecinin taradığı alanlar — hepsi zaten yanıtta olan ÜSTVERİ.
+KAMPANYA_Q_ALANLARI = ("bank", "bank_name", "campaign_type", "ozet",
+                       "source_url")
+
+
+def kampanya_metin_suz(rows: list[dict], q: Optional[str]) -> list[dict]:
+    """`q` serbest metin süzgeci — SQL'de DEĞİL, Python'da. **İki backend ORTAK.**
+
+    ## Neden SQL'de değil
+
+    `LOWER()` iki backend'de AYNI ŞEYİ YAPMAZ: SQLite'ın gömülü `lower()`
+    yalnızca ASCII harfleri katlar (belgelenmiş sınır), PostgreSQL'inki
+    Unicode/locale duyarlıdır. Yani `LOWER(c.campaign_type) LIKE ...` ile
+    yazılmış bir süzgeç 'İHTİYAÇ FİNANSMANI' satırını Postgres'te bulur,
+    SQLite'ta bulamazdı — hem de sessizce. Bu, bu depo katmanının varlık
+    sebebi olan paritenin tam ihlali olurdu.
+
+    Üstelik SQL'deki `lower()` Türkçe için ZATEN yanlıştır (`'IŞIK'.lower()`
+    → `'ışık'` değil `'isik'` beklenir); projenin doğru katlayıcısı
+    `preprocessing.clean.tr_fold_ascii`'dir ve o bir Python fonksiyonudur.
+    Süzgeci Python'a almak hem pariteyi hem Türkçe doğruluğunu bir arada verir:
+    'kar payi' araması 'Kâr Payı'yı bulur.
+
+    ## Neden `raw_text` taranmıyor
+
+    Aranan alanlar (`KAMPANYA_Q_ALANLARI`) yanıtta ZATEN bulunan üstverdir.
+    Ham gövdede arama bilinçli olarak yoktur: bu uçtan 10 MB'lık gövdeyi
+    kaldırmanın hemen ardından aynı gövdeyi her tuş vuruşunda taramak
+    olurdu. Belge İÇİNDE arama `/chat` (RAG + text-to-SQL) yoludur.
+    """
+    if q is None or not q.strip():
+        return list(rows)
+    aranan = tr_fold_ascii(q).strip()
+    if not aranan:
+        return list(rows)
+    return [r for r in rows
+            if any(aranan in tr_fold_ascii(str(r.get(alan) or ""))
+                   for alan in KAMPANYA_Q_ALANLARI)]
 
 
 # --------------------------------------------------------------------------- #
@@ -297,15 +449,23 @@ class RepositoryProtocol(Protocol):
 
     def belge_turu_counts(self) -> dict[str, int]: ...
 
+    def campaign_status_counts(self) -> dict[str, int]: ...
+
     def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]: ...
+
+    def bank_field_coverage(self) -> dict[str, dict[str, int]]: ...
 
     def campaigns_per_bank(self) -> dict[str, int]: ...
 
     def fields_by_extractor(self, *,
                             sozlesme_dahil: bool = True) -> dict[str, int]: ...
 
-    def all_campaigns(self, *,
-                      belge_turu: Optional[str] = None) -> list[dict]: ...
+    def all_campaigns(self, *, belge_turu: Optional[str] = None,
+                      bank: Optional[str] = None,
+                      campaign_type: Optional[str] = None,
+                      status: Optional[str] = None,
+                      q: Optional[str] = None,
+                      govde: bool = True) -> list[dict]: ...
 
     def close(self) -> None: ...
 
@@ -441,9 +601,16 @@ class ThreadSafeRepository:
         with self.lock:
             return self._inner.all_banks()
 
-    def all_campaigns(self, *, belge_turu: Optional[str] = None) -> list[dict]:
+    def all_campaigns(self, *, belge_turu: Optional[str] = None,
+                      bank: Optional[str] = None,
+                      campaign_type: Optional[str] = None,
+                      status: Optional[str] = None,
+                      q: Optional[str] = None,
+                      govde: bool = True) -> list[dict]:
         with self.lock:
-            return self._inner.all_campaigns(belge_turu=belge_turu)
+            return self._inner.all_campaigns(
+                belge_turu=belge_turu, bank=bank, campaign_type=campaign_type,
+                status=status, q=q, govde=govde)
 
     def counts(self) -> dict[str, int]:
         with self.lock:
@@ -453,9 +620,17 @@ class ThreadSafeRepository:
         with self.lock:
             return self._inner.belge_turu_counts()
 
+    def campaign_status_counts(self) -> dict[str, int]:
+        with self.lock:
+            return self._inner.campaign_status_counts()
+
     def field_coverage(self, *, sozlesme_dahil: bool = True) -> dict[str, int]:
         with self.lock:
             return self._inner.field_coverage(sozlesme_dahil=sozlesme_dahil)
+
+    def bank_field_coverage(self) -> dict[str, dict[str, int]]:
+        with self.lock:
+            return self._inner.bank_field_coverage()
 
     def fields_by_extractor(self, *,
                             sozlesme_dahil: bool = True) -> dict[str, int]:
