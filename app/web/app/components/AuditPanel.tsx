@@ -164,19 +164,29 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
           kaynağı, hangi katmanın ürettiği ve çelişki durumu.
         </p>
 
-        <div className="row-tight">
-          {/* Belge seçimi 1.774 seçenekli çıplak bir <select>'ti — arayüzdeki
-              en büyük gezinme boşluğu. Aranamayan bir liste, içindeki 126
-              sözleşmeyi ve 458 süresi dolmuş belgeyi de bulunamaz kılıyordu.
-              Seçici artık arama ve yön çipleri taşıyor; süzme sunucuda. */}
-          <BelgeSecici
-            seciliId={id}
-            onSec={(yeni) => {
-              setId(yeni);
-              setActive(null);
-            }}
-          />
-        </div>
+        {/* Belge seçimi 1.774 seçenekli çıplak bir <select>'ti — arayüzdeki en
+            büyük gezinme boşluğu. Aranamayan bir liste, içindeki 126 sözleşmeyi
+            ve 458 süresi dolmuş belgeyi de bulunamaz kılıyordu. Seçici artık
+            arama ve yön çipleri taşıyor; süzme sunucuda.
+
+            SARMALAYICI KALDIRILDI. Seçici bir `.row-tight` içindeydi ve o sınıf
+            SARMALANMAYAN bir flex satırı — küçük satır içi denetimler (etiket +
+            açılır liste) için. Blok genişliğinde bir panel oraya konduğunda
+            flex öğesi oluyor, `min-width: auto` ile min-içerik genişliğinin
+            altına inemiyor ve içindeki `auto-fit` süzgeç ızgarası belirsiz
+            genişlikte her süzgeç için ayrı bir 220px kolon açıyordu.
+
+            ÖLÇÜLDÜ (2026-08-12, tarayıcı): seçici 1.900px'e çıkıyor, kabuk
+            1.148px ve sayfa 638px yatay taşıyordu — sıralama listesi ve
+            süzgeçler sağa doğru ekrandan çıkıyordu. Seçici artık kartın
+            doğrudan blok çocuğu. */}
+        <BelgeSecici
+          seciliId={id}
+          onSec={(yeni) => {
+            setId(yeni);
+            setActive(null);
+          }}
+        />
 
         {doc.loading && <Loading />}
         {!!doc.error && (

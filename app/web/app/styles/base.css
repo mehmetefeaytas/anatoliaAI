@@ -69,14 +69,27 @@ body {
   letter-spacing: var(--track-tight);
   line-height: var(--lh-tight);
 }
-/* MAKİNE sesi + BÜYÜK HARF: bu, ürünün adı değil, TÜRÜ. Büyük harf yalnız
- * mono'ya aittir (bkz. tokens.css, "ÜÇ SES"). */
+/* MAKİNE sesi + BÜYÜK HARF: bu, ürünün adı değil künye bilgisi — hangi
+ * yarışma için yapıldığı. Büyük harf yalnız mono'ya aittir (bkz. tokens.css,
+ * "ÜÇ SES").
+ *
+ * `line-height` burada `--lh-tight` DEĞİL, daha da sıkı: etiket üç satıra
+ * bölünüyor (`<br>`) ve mono büyük harf zaten yüksek bir x-yüksekliği taşıyor;
+ * 1,25'te üç satır adın kendisinden uzun bir blok kuruyor ve göz-üstü etiketi
+ * başlığa baskın geliyordu. 1,15 üç satırı adın gövdesi içinde tutuyor.
+ *
+ * `align-self: center` — `.site-header-ad` taban çizgisi hizalıyor ve tek
+ * satırlık bir etiket için doğruydu; üç satırlıkta ilk satır ada hizalanıp
+ * kalan ikisi aşağı taşıyor ve blok sağa doğru sarkıyor. Orta hizalama üç
+ * satırı adın optik merkezine oturtuyor. */
 .site-header-tur {
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: var(--track-caps);
   color: var(--fg-dim);
+  line-height: 1.15;
+  align-self: center;
 }
 /* Tez. `--fs-sm` değil `--fs-base`: bu cümle bir dipnot değil, panelin
  * sözleşmesi — gövde ağırlığında okunmalı. */

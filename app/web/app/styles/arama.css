@@ -252,9 +252,24 @@
 /* Belge seçici                                                          */
 /* --------------------------------------------------------------------- */
 
+/* `min-width: 0` ZORUNLU ve gerekçesi ölçüldü (2026-08-12).
+ *
+ * Seçicinin süzgeç ızgarası `repeat(auto-fit, minmax(220px, 1fr))` kullanıyor.
+ * Bu iyi bir kural — ama BELİRSİZ genişlikte (min-içerik ölçümünde) `auto-fit`
+ * kolonları daraltmaz, her öğe için ayrı bir 220px kolon açar. Sekiz süzgeç
+ * grubu 1.900px'lik bir min-içerik genişliği demek.
+ *
+ * Seçici bir flex ya da grid öğesi olarak yerleştirildiğinde varsayılan
+ * `min-width: auto` onu o min-içerik genişliğinin altına inmeye BIRAKMAZ ve
+ * bileşen kabuğu taşırır: Jüri Audit Paneli'nde ölçüldü — 1.900px seçici,
+ * 1.148px kabuk, 638px yatay sayfa taşması.
+ *
+ * `base.css` aynı dersi `.stack > *` için zaten öğrenmişti; bu bileşen o
+ * korumanın dışındaki bir yere de konabildiği için korumayı kendisi taşıyor. */
 .belge-secici {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   gap: var(--sp-4);
 }
 

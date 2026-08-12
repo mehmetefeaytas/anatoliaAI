@@ -184,7 +184,25 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
   const genislik = SOL + cubuklar.length * ALAN_W;
   const yukseklik = UST + ALT + ETIKET_H;
   const eksenY = UST;
-  const etiketY = yukseklik - 8;
+  /**
+   * Eğik alan etiketlerinin çapa noktası — etiket bandının ÜSTÜ, dibi değil.
+   *
+   * ÖLÇÜLDÜ (2026-08-12, tarayıcı): etiketler kırpılıyordu ve ekranda «Vade
+   * (ay)» yerine yalnız «ay)», «Tahsis Ücreti» yerine «eti» görünüyordu.
+   *
+   * Sebep geometrik. Etiket `rotate(-38)` ve `textAnchor="end"` taşıyor; SVG'de
+   * negatif açı saat yönünün TERSİ olduğu için yazının okuma yönü yukarı-sağa
+   * bakar, `end` çapası ise yazıyı çapadan geriye, yani AŞAĞI-SOLA doğru
+   * uzatır. Çapa `yukseklik - 8` ile bandın dibine konmuştu (y=308, band
+   * 208–316), dolayısıyla yazının uzanacağı yer viewBox'ın ALTINDA kalıyor ve
+   * kırpılıyordu; ayakta kalan tek şey çapaya en yakın son üç harfti.
+   *
+   * Çapa bandın üstüne alındı. En uzun etiket («Finansman Tutarı», 12px sans,
+   * ~100px) 38°'de 0,616 × 100 ≈ 62px aşağı iniyor: 222 + 62 = 284 < 316.
+   * Sola uzanma 0,788 × 100 ≈ 79px ve ilk çubuğun ortası 165, yani x ≈ 86 —
+   * viewBox içinde. `ETIKET_H` (108) bu hesapla yeterli, büyütmeye gerek yok.
+   */
+  const etiketY = UST + ALT + 14;
 
   const ondekiler = cubuklar.filter((c) => c.yon === 1).length;
   const gerideler = cubuklar.filter((c) => c.yon === -1).length;
@@ -345,12 +363,12 @@ export default function DeltaEkseni({ alanlar, bankName, tur, durumlar }: Props)
                   >
                     {c.yon === 0 ? c.metin : `${ok} ${c.metin}`}
                   </text>
-                  {/* Alan adları eğik: «Kâr payı oranı» 82px'e sığmıyor ve
+                  {/* Alan adları eğik: «Kâr Payı Oranı» 82px'e sığmıyor ve
                       kısaltmak jüriye tanımadığı bir kısaltma öğretmek olurdu.
-                      Taban çizgisi etiket bandının EN ALTINDA: -38° döndürülmüş
-                      ve sonu hizalanmış bir yazı yukarı-sola uzanır, yani
-                      taban yukarıda olsaydı aşağı inen çubukların üstüne
-                      binerdi. */}
+                      Çapa etiket bandının ÜSTÜNDE: -38° döndürülmüş ve sonu
+                      hizalanmış bir yazı çapadan AŞAĞI-SOLA uzanır (gerekçe
+                      ve ölçüm `etiketY` tanımında). Eskiden çapa bandın
+                      dibindeydi ve yazı viewBox'ın altına düşüp kırpılıyordu. */}
                   <text
                     x={orta}
                     y={etiketY}

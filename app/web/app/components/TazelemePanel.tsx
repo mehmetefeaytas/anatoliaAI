@@ -127,13 +127,27 @@ function bantSinifi(durum: RefreshDurum): string {
  * Tasarımın durum bandı (`api · depo ✓ · yerel model ✓`) ile aynı sözcük:
  * olayın ölçülebilir kısmı, renkten bağımsız okunabilir olmalı. Sayılar her
  * hâlde basılır; sıfır bir boşluk değil, ölçülmüş bir sonuçtur.
+ *
+ * ## `hata` sayacı listede YOK
+ *
+ * Üç sayaç işin ÜRÜNÜNÜ ölçüyor: kaç adres çekildi, kaçı yeni, kaçı değişti.
+ * `hata` bunlarla aynı cinsten değil — bir çıktı değil, bir olay. Listeye
+ * girdiğinde iki sorun çıkıyordu: (1) `hata 0` her koşuda basılıyor ve olmayan
+ * bir sorunu her seferinde gündeme getiriyordu; (2) `hata 3` ise tek bir sayı
+ * olarak, hangi bankada ne olduğunu söylemeden bir alarm kuruyordu — oysa şerit
+ * bir özet satırı, bir olay kaydı değil.
+ *
+ * Hata bilgisi KAYBOLMUYOR, yerine gidiyor: gerçek bir hata varsa bandın kendi
+ * durumu `hata`ya düşüyor (`bantSinifi`), başlık cümlesi bunu yazıyor ve iş
+ * günlüğü hangi adreste ne olduğunu satır satır veriyor. Bir sayı yerine bir
+ * cümle ve bir kayıt — CLAUDE.md §19'un «kaynağa dayandır» kuralının durum
+ * şeridindeki karşılığı.
  */
 function monoDurumListesi(is: RefreshJob): string {
   return [
     `çekilen ${is.cekilen}`,
     `yeni ${is.yeni}`,
     `değişen ${is.degisen}`,
-    `hata ${is.hata}`,
   ].join(" · ");
 }
 

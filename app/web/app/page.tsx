@@ -93,27 +93,53 @@ const TABS: readonly SekmeTanimi<TabKey>[] = [
   { key: "advantageous", label: "En Avantajlı" },
   { key: "banka", label: "Banka Sayfası" },
   { key: "delta", label: "Banka İçi Delta" },
-  { key: "audit", label: "Jüri Audit Paneli" },
   { key: "contradictions", label: "Çelişki Tespiti" },
-  { key: "extract", label: "Canlı Çıkarım" },
-  { key: "chat", label: "Chatbot" },
 ] as const;
 
 /**
- * Jüri modunda EK sekmeler: veri tazeleme ve ayarlar.
+ * Jüri modunda EK sekmeler — DENETİM ve OPERATÖR yüzeyleri.
  *
- * Tazeleme ağa çıkan tek yüzey olduğu için ürün ekranında yeri yok, denetim
- * ekranında var. Ayarlar da operatör yüzeyidir: gelecek faz uçlarının
- * sözleşmesini gösterir, ürün akışının parçası değildir.
+ * Ayrımın ölçütü şu: bir ekran KAMPANYA hakkında bir soru mu yanıtlıyor, yoksa
+ * SİSTEM hakkında mı? Ürün şeridinde kalan altı sekme birincisini yapıyor
+ * («hangi banka daha avantajlı», «bu alan nerede ölçülebiliyor», «bu banka
+ * nerede geride»). Buradaki dördü ikincisini:
+ *
+ *   audit    belge → çıkarılan alan → kaynak span zinciri; denetim yüzeyi
+ *   extract  «sistem gerçekten çalışıyor» ispatı (CLAUDE.md §11), ürün akışı değil
+ *   tazele   ağa çıkan TEK yüzey; offline demo akışının parçası değil
+ *   ayarlar  gelecek faz uçlarının sözleşmesi
+ *
+ * `chat` de buraya taşındı ama SOHBETİN KENDİSİ HER EKRANDA DURUYOR: sağ alttaki
+ * yüzen düğme ve çekmecesi jüri modundan bağımsız. Kalkan yalnız sekme, yani tam
+ * sayfa yerleşim. Gerekçe: çekmece 396px ve kaynak tablosunu daraltıyor, tam
+ * sayfa hâli o tabloyu tam genişlikte isteyen denetleyici için var — ürün
+ * kullanıcısı için değil. Sohbete erişim hiçbir hâlde kaybolmuyor
+ * (bkz. aşağıda `SohbetCekmecesi`, `TabPanel`in DIŞINDA).
  *
  * İki dizi de modül düzeyinde SABİT: her render'da yeniden oluşan bir dizi
  * `useTabState`'in efektlerini sonsuz döngüye sokardı.
  */
 const TABS_JURI: readonly SekmeTanimi<TabKey>[] = [
   ...TABS,
+  { key: "audit", label: "Jüri Audit Paneli" },
+  { key: "extract", label: "Canlı Çıkarım" },
+  { key: "chat", label: "Chatbot" },
   { key: "tazele", label: "Veri Tazeleme" },
   { key: "ayarlar", label: "Ayarlar" },
 ] as const;
+
+/**
+ * Jüri modu kapanınca terk edilmesi gereken sekmeler.
+ *
+ * Görünmeyen bir sekmede kalmak boş bir panel bırakır. Liste `TABS_JURI`'den
+ * TÜRETİLİYOR, elle yazılmıyor: yeni bir jüri sekmesi eklendiğinde bu koruma
+ * kendiliğinden kapsıyor. Elle yazılmış bir liste, eklenen sekmeyi sessizce
+ * dışarıda bırakırdı — `audit` ve `extract` ürün şeridinden buraya taşınırken
+ * eski koruma tam olarak bunu yapıyordu (yalnız `tazele`/`ayarlar` sayılıydı).
+ */
+const JURI_SEKMELERI: ReadonlySet<TabKey> = new Set(
+  TABS_JURI.filter((t) => !TABS.some((u) => u.key === t.key)).map((t) => t.key),
+);
 
 const TAB_KEYS = TABS.map((t) => t.key);
 const TAB_KEYS_JURI = TABS_JURI.map((t) => t.key);
@@ -142,7 +168,7 @@ export default function Home() {
 }
 
 function Dashboard() {
-  const { jury } = useJuryMode();
+  const { jury, setJury } = useJuryMode();
   // API kapalıyken ortak veri hataları BASTIRILIR: üçü de aynı tek olayı
   // anlatıyor ve kabuktaki bant onu zaten açıklıyor. Üstelik o kutuların
   // ipucu metni operatöre yazılmış (`uvicorn … çalışıyor mu?`) — jüri
@@ -165,10 +191,11 @@ function Dashboard() {
   // sessizce var olmayan bir alanı sorardı.
   const [isiAlani, setIsiAlani] = useState<string | null>(null);
 
-  // Jüri modu kapatılınca tazeleme sekmesinde kalmak boş bir panel bırakırdı;
-  // görünmeyen bir sekmede durmak yerine varsayılana dönülür.
+  // Jüri modu kapatılınca jüri sekmesinde kalmak boş bir panel bırakırdı;
+  // görünmeyen bir sekmede durmak yerine varsayılana dönülür. Koruma artık
+  // `JURI_SEKMELERI` üzerinden — sekme adları elle sayılmıyor.
   useEffect(() => {
-    if (!jury && (sekme === "tazele" || sekme === "ayarlar")) setSekme("compare");
+    if (!jury && JURI_SEKMELERI.has(sekme)) setSekme("compare");
   }, [jury, sekme, setSekme]);
 
   const fields = useAsync(() => api.fields(), []);
@@ -186,12 +213,30 @@ function Dashboard() {
   // listeyi sunucuda, `extracted_fields` sayaçlarıyla birlikte tek istekte
   // verir; üstelik sıralı ve tekrarsız.
   const campaignTypes = stats.data?.campaign_types ?? [];
+  /**
+   * Bir belgenin kanıt zincirine sıçrama — `¶` kaynak dipnotunun hedefi.
+   *
+   * ## Neden jüri modunu AÇIYOR
+   *
+   * Denetim paneli artık jüri modu sekmesi. Ama `¶` düğmesi ürünün TEZİ ve ürün
+   * ekranlarının her yerinde duruyor: kıyas cetvelinde, denetim tablosunda,
+   * çelişki kartlarında, sohbet cevaplarında. «Ekranda bir sayı görüyorsan, o
+   * sayının çıkarıldığı cümle bir tık uzakta» diyen bir panelde o tık sessizce
+   * boşa düşemez.
+   *
+   * Üç seçenek vardı ve ikisi kötüydü: (a) `¶`yi ürün modunda gizlemek — tezi
+   * ekrandan silmek; (b) görünmeyen bir sekmeye gitmek — hiçbir sekmenin seçili
+   * görünmediği bir panel bırakmak. Seçilen (c): kanıta gitmek denetim yüzeyini
+   * AÇAR. Anahtar görünür biçimde devrilir, sekme şeridi genişler ve kullanıcı
+   * neden değiştiğini görür. Sessiz bir kip değişikliği değil, okunan bir sonuç.
+   */
   const inspect = useCallback(
     (campaignId: number) => {
       setAuditTarget(campaignId);
+      if (!jury) setJury(true);
       setSekme("audit");
     },
-    [setSekme],
+    [jury, setJury, setSekme],
   );
   /**
    * Banka adından banka sayfasına sıçrama — `inspect`in banka karşılığı.
@@ -319,7 +364,11 @@ function Dashboard() {
           />
         )}
 
+        {/* Denetim yüzeyi — jüri modunda. `¶` kaynak dipnotu buraya sıçrarken
+            kipi kendisi açıyor (bkz. `inspect`), yani ürün modunda tıklanan bir
+            dipnot boşa düşmüyor. */}
         {sekme === "audit" &&
+          jury &&
           (campaigns.loading ? (
             <Loading label="Belgeler yükleniyor…" />
           ) : (
@@ -328,9 +377,14 @@ function Dashboard() {
 
         {sekme === "contradictions" && <ContradictionAlert onInspect={inspect} />}
 
-        {sekme === "extract" && <ExtractLive />}
+        {/* «Sistem gerçekten çalışıyor» ispatı (CLAUDE.md §11) — bir kampanya
+            sorusunu değil, sistemin kendisini konu alıyor. Denetim yüzeyi. */}
+        {sekme === "extract" && jury && <ExtractLive />}
 
-        {sekme === "chat" && <ChatPanel onInspect={inspect} />}
+        {/* Sohbetin TAM SAYFA hâli. Çekmece (sağ altta, her ekranda) bundan
+            bağımsız ve jüri modu kapalıyken de duruyor; kalkan yalnız geniş
+            yerleşim. Gerekçe `TABS_JURI` başlığında. */}
+        {sekme === "chat" && jury && <ChatPanel onInspect={inspect} />}
 
         {/* Ağa çıkan tek yüzey — yalnız jüri modunda erişilebilir. */}
         {sekme === "tazele" && jury && <TazelemePanel />}

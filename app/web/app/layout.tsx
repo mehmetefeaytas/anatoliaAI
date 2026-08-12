@@ -56,7 +56,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <header className="site-header">
             <div className="site-header-ad">
               <h1>Anatolia AI</h1>
-              <span className="site-header-tur">kanıt defteri</span>
+              {/* Göz-üstü etiketi artık ürünün TÜRÜNÜ değil, yarışmayı söylüyor.
+                  Üç satıra bölünüyor ve bölünme yeri kasıtlı: «YAPAY ZEKA DİL /
+                  AJANLARI / YARIŞMASI» — «dil ajanları» tek kavram olduğu için
+                  ilk kırılma ondan ÖNCE değil, sonra olamazdı; ikinci satır
+                  kavramı tamamlıyor. Mono ve büyük harf kalıyor: bu bir başlık
+                  değil, künye bilgisi. */}
+              <span className="site-header-tur">
+                Yapay Zeka Dil
+                <br />
+                Ajanları
+                <br />
+                Yarışması
+              </span>
             </div>
             <p>
               Ekranda bir sayı görüyorsan, o sayının çıkarıldığı cümle ve
