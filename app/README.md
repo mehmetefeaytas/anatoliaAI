@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-1977%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-2607%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1774%20belge%20%C2%B7%201%20ihlal-yellow.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -150,7 +150,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** 102 dosyada **1.977** birim/entegrasyon testi, tamamı offline yeşil
+**Test:** 148 dosyada **2.607** birim/entegrasyon testi, tamamı offline yeşil
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`)
 (`python3 -m unittest discover -s tests`).
@@ -161,9 +161,9 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 
 | Kalem | Durum |
 |---|---|
-| Korpus | **1.774 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **1.615 test yeşil**, ağ gerektirmeden koşuyor |
-| Değişmez (invariant) denetimi | ⚠️ **1.774 belgede 1 ihlal** (`P4_cumle_sirasi`, kapsam %91,3) — etiketsiz veride otomatik hata avı (`python -m eval.properties`). Eski "849 belgede 0 ihlal" rozeti korpus büyüyünce geçersizleşti |
+| Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
+| Testler | ✅ **2.607 test yeşil**, ağ gerektirmeden koşuyor (bağımlılıksız koşuda 205'i atlanır — API yüzeyi `test-with-deps` işinde sınanır) |
+| Değişmez (invariant) denetimi | ⚠️ **1.782 belgede 1 ihlal** (`P4_cumle_sirasi`, kapsam %91,3) — etiketsiz veride otomatik hata avı (`python -m eval.properties`). Eski "849 belgede 0 ihlal" rozeti korpus büyüyünce geçersizleşti |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
@@ -177,10 +177,17 @@ belge düzeyi bootstrap 2000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| mikro-F1 | **0,389** [%95 GA 0,331–0,443] |
-| makro-F1 | 0,409 |
-| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,099** [44/444] |
-| kaçırma | 21 · yanlış çıkarım 43 |
+| **yapılandırılmış alan mikro-F1** (11 alan) | **0,646** |
+| 12-alan mikro-F1 | **0,452** [%95 GA 0,384–0,512] |
+| makro-F1 | 0,556 [%95 GA 0,412–0,650] |
+| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,059** [26/444] |
+| kaçırma | 20 · yanlış çıkarım 40 |
+
+**İki mikro-F1 neden veriliyor:** `kampanya_kosullari` serbest cümle listesi
+döndürür; span/jeton eşleşmesiyle F1 ölçmek metodolojik olarak yanlıştır (aynı
+koşulu farklı sözcüklerle yazan iki anotatör bile birbirini "yanlış" bulurdu).
+Alan **gizlenmiyor**, kalem düzeyi ölçütle ayrı raporlanıyor; iki sayı yan yana
+duruyor. Ayrıntı: kök [`README.md`](../README.md#-ölçülebilir-durum).
 
 #### Gold setin statüsü — iki set, iki farklı güvenilirlik
 
@@ -191,7 +198,7 @@ Bu ayrım metriklerden önce gelir ve **birleştirilerek sunulmaz**:
 | `gold.v1` | 20 | **insan** anotatör | ✅ geçti (2 kayıt düzeltildi) |
 | `gold.v2` | 48 | **makine** anotatör (M1–M4), her belge birebir alıntı kanıtıyla | ❌ **insan hakemliği bekliyor** (`adjudicated: false`) |
 
-Yukarıdaki 0,389 **gold.v2 üzerinde** ölçüldü, yani **insan hakemliğinden
+Yukarıdaki 0,452 **gold.v2 üzerinde** ölçüldü, yani **insan hakemliğinden
 geçmemiş** bir sette. Bunu gizlemek yerine yazıyoruz çünkü alternatifi
 (0,677'yi manşete koymak) daha kötü — o da modele çapalı bir protokolden
 geliyor. İkisi de kısıtlıdır ve ikisi de kısıtıyla birlikte sunulur.
@@ -268,7 +275,7 @@ sıfır ve κ tanımsız. Bu, şartname §16'nın karşılanmayan tek kalemidir.
   boş bekliyor (`data/gold/review/round0_kalibrasyon_v2_*.csv`). Dolunca
   `python -m scripts.report_iaa <dosyalar>` tek komutla Fleiss κ +
   Krippendorff α üretir. §16'nın kapanmayan tek kalemi bu.
-- **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve 0,389 nokta
+- **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve 0,452 nokta
   tahmini savunulabilir hâle gelir.
 - **`kampanya_kosullari` ve `vade_ay`** — ikisi mikro-F1'in en büyük tek
   kaldıracı; eşleştirici sertliği mi tanım sorunu mu ayrıştırılmalı.

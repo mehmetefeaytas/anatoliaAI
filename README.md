@@ -35,14 +35,14 @@ tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
 | Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
 | AI özeti kapsaması | **1.759** üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold seti | **48 kayıt** (40'ı zor vaka) | `data/gold/gold.v2.json` |
-| **Yapılandırılmış alan mikro-F1** | **0,619** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
-| 12-alan mikro-F1 | 0,439 | *(aynı komut — farkı aşağıda açıklıyoruz)* |
-| Halüsinasyon oranı | **0,074** (yapısal kesitte 0,063) | *(aynı komut)* |
+| **Yapılandırılmış alan mikro-F1** | **0,646** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
+| 12-alan mikro-F1 | 0,452 [%95 GA 0,384–0,512] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
+| Halüsinasyon oranı | **0,059** (yapısal kesitte **0,047**) | *(aynı komut)* |
 | RAG — terim kapsama R@5 | **0,867** | `python -m eval.rag_eval --db data/demo.db` |
 | RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
 | Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
 | Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
-| Test | **2.393** | `python -m pytest` |
+| Test | **2.607** | `python -m pytest` |
 | CI regresyon kapısı | **var** (alan F1 + halüsinasyon tavanı) | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 
 ### İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz
@@ -50,7 +50,7 @@ tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
 `kampanya_kosullari` **serbest cümle listesi** döndüren bir alandır ("Kampanyaya
 dahil olmak için X gerekir"). Span/jeton eşleşmesiyle F1 ölçmek bu alanda
 metodolojik olarak yanlıştır: aynı koşulu farklı sözcüklerle yazan iki anotatör
-bile birbirini "yanlış" bulurdu. Bu tek alan mikro-F1'i **0,619'dan 0,439'a**
+bile birbirini "yanlış" bulurdu. Bu tek alan mikro-F1'i **0,646'dan 0,452'ye**
 çekiyor.
 
 Alanı **gizlemiyoruz**: ana tabloda satırı duruyor, kendi bölümünde kalem düzeyi
