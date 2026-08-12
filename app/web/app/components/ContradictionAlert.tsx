@@ -93,9 +93,14 @@ export default function ContradictionAlert({
             {trNum(sum.data.affected_campaigns)} /{" "}
             {trNum(sum.data.scanned_campaigns)}
           </span>
+          {/* `scanned_banks` BANKA değil KAYNAK sayar: uç onu belgelerin
+              tekil `bank` alanından hesaplıyor (src/api/main.py:2076) ve
+              içinde `tkbb` var — bankaların birliği, banka değil. Kabuk künyesi
+              «10 banka» yazarken burada «11 banka» yazmak aynı ekranda iki
+              farklı sayı demekti. Gerekçe ../page.tsx `KorpusKunyesi`'nde. */}
           <span className="celiski-kapsam-not">
             taranan: {trNum(sum.data.scanned_campaigns)} belge ·{" "}
-            {trNum(sum.data.scanned_banks)} banka · bulgu:{" "}
+            {trNum(sum.data.scanned_banks)} kaynak · bulgu:{" "}
             {trNum(sum.data.contradiction_count)}
           </span>
         </div>

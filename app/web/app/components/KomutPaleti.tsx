@@ -345,10 +345,12 @@ export default function KomutPaleti({ onSec, limit = 20 }: Props) {
             yanıt verdi. Belgenin içindeki bir ifadeyi arıyorsanız sohbet
             ekranını deneyin — orada belgenin tam metni taranır.
             {korpus && (
+              // `korpus.banks` BANKA değil KAYNAK sayar (`tkbb` dahil);
+              // gerekçe ../page.tsx `KorpusKunyesi` başlığında.
               <span className="komut-tarama">
                 taranan küme: {trNum(korpus.campaigns)} belge ·{" "}
-                {trNum(korpus.banks)} banka · alanlar: banka adı, kampanya türü,
-                özet, adres
+                {trNum(korpus.banks)} kaynak · alanlar: banka adı, kampanya
+                türü, özet, adres
               </span>
             )}
           </p>

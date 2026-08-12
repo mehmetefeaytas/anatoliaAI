@@ -92,8 +92,12 @@ export default function DurumSeridi() {
       )}
 
       {korpus && (
+        // `korpus.banks` BANKA değil KAYNAK sayar: içinde `tkbb` var, yani
+        // bankaların birliği. Şerit «11 banka» yazarken kabuk künyesi «10 banka»
+        // yazıyordu ve ikisi aynı ekranda görünüyordu. Gerekçenin tamamı
+        // ../page.tsx `KorpusKunyesi` başlığında.
         <span className="durum-cip durum-korpus">
-          {trNum(korpus.campaigns)} belge · {trNum(korpus.banks)} banka
+          {trNum(korpus.campaigns)} belge · {trNum(korpus.banks)} kaynak
         </span>
       )}
     </div>
