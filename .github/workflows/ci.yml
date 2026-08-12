@@ -162,6 +162,20 @@ jobs:
         working-directory: app
         run: pip install -r requirements-api.txt
 
+      # SADECE TEST ARACI — `requirements-api.txt`e EKLENMEDI.
+      #
+      # `fastapi.testclient.TestClient` starlette uzerinden `httpx2` istiyor
+      # (starlette 1.6'da `httpx` -> `httpx2` oldu). Bu bir CALISMA ZAMANI
+      # bagimliligi degil: API uretimde uvicorn ile kosuyor, TestClient'a
+      # dokunmuyor. Teslim edilen imajin bagimlilik kumesini test araciyla
+      # sismanlatmak, `Dockerfile.api`da trafilatura'nin lisans gerekcesiyle
+      # DISARIDA birakildigi ince-imaj disiplinini bozardi.
+      #
+      # Olculdu (kosu 31642385024): bu paket olmadan fastapi kurulu olsa bile
+      # 17 test HATA veriyordu ve is kirmizi yaniyordu.
+      - name: Test araci bagimliligi (yalniz CI)
+        run: pip install httpx2
+
       - name: Birim ve entegrasyon testleri (atlama ~0 olmali)
         working-directory: app
         run: python -m unittest discover -s tests

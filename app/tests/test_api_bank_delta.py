@@ -41,7 +41,13 @@ if str(_ROOT) not in sys.path:
 try:  # pragma: no cover - ortama bağlı
     from fastapi.testclient import TestClient
     FASTAPI_VAR = True
-except ModuleNotFoundError:  # pragma: no cover
+except (ImportError, RuntimeError):  # pragma: no cover
+    # RuntimeError de yakalanır: starlette 1.6 `TestClient` için `httpx2`
+    # istiyor ve yokluğunda ModuleNotFoundError DEĞİL RuntimeError atıyor
+    # ("The starlette.testclient module requires the httpx2 package").
+    # 12 Ağu CI koşusu 31642385024 tam buna düştü: fastapi kuruluydu,
+    # test istemcisinin bağımlılığı değildi ve koruma ATLAMA yerine
+    # HATA üretti. Test aracının yokluğu, sınanan kodun kusuru değildir.
     TestClient = None  # type: ignore[assignment,misc]
     FASTAPI_VAR = False
 

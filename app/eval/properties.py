@@ -36,6 +36,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from src.comparison import contradiction as contradiction_modulu
 from src.comparison.contradiction import detect
 from src.extraction.rules.extract import extract_all
 from src.preprocessing.clean import split_sentences, tr_fold_ascii, tr_upper
@@ -198,6 +199,33 @@ def check_irrelevant_insertion(text: str, doc_id: str = "?") -> list[Violation]:
 # --------------------------------------------------------------------------- #
 # P4 — Cümle sırası değişmezliği (çelişki tespiti)
 # --------------------------------------------------------------------------- #
+def _celiski_turleri(text: str) -> set[str]:
+    """Metinden çıkan çelişki TÜRLERİ (değerler değil)."""
+    return {c.kind for c in
+            detect(Campaign(bank_slug="?", raw_text=text,
+                            fields=extract_all(text)))}
+
+
+def kapsam_etkisi_mi(text: str, reversed_text: str) -> bool:
+    """İki sıralama arasındaki fark YALNIZCA yakınlık kapısından mı geliyor?
+
+    Ayrım tahminle değil ölçümle yapılır: aynı iki metin, `_in_same_scope`
+    kapısı DEVRE DIŞI bırakılarak yeniden değerlendirilir. Kapı kapalıyken
+    kümeler eşitleniyorsa farkı yalnız kapsam üretmiştir.
+
+    Belge adına göre muafiyet listesi (allowlist) BİLEREK yazılmadı: liste
+    kuralın neden esnediğini değil hangi belgenin affedildiğini kaydeder ve
+    yeni bir belge aynı desene girdiğinde CI sessizce kırmızı yanar.
+    """
+    onceki = contradiction_modulu.MAX_SCOPE_CHARS
+    try:
+        # Pratikte sınırsız: korpusun en uzun belgesi 178.825 karakter.
+        contradiction_modulu.MAX_SCOPE_CHARS = 10 ** 9
+        return _celiski_turleri(text) == _celiski_turleri(reversed_text)
+    finally:
+        contradiction_modulu.MAX_SCOPE_CHARS = onceki
+
+
 def check_sentence_order_invariance(text: str, doc_id: str = "?") -> list[Violation]:
     """Cümleleri ters çevirmek ÇELİŞKİ tespitini değiştirmemeli.
 
@@ -205,22 +233,47 @@ def check_sentence_order_invariance(text: str, doc_id: str = "?") -> list[Violat
     ters sırası kaçırıyordu. Not: bu değişmez yalnız çelişki KÜMESİ için
     geçerlidir — alan değerleri sıraya bağlı olabilir (ör. ilk eşleşme
     seçimi), bu yüzden burada değerler karşılaştırılmaz.
+
+    ## YAKINLIK KANITININ KAYBI, SIRA BAĞIMLILIĞI DEĞİLDİR (2026-08-12)
+
+    Bu denetim 1.782 belgede 1 ihlal veriyordu ve BLOKLAYICI olduğu için
+    CI'yı kırmızı tutuyordu (koşu 31642385024). Ölçüldü — ihlal bir hata
+    değil, iki ölçülmüş kararın çatışmasıydı:
+
+        kuveyt-turk/docs/medium-bireysel-finansman-...-4012-pdf.txt
+        düz  : masraf@1641  tahsis bitiş@1294  -> mesafe  347  < 400  yakalandı
+        ters : masraf@6942  tahsis bitiş@2753  -> mesafe 4189  > 400  yakalanmadı
+
+    `contradiction._in_same_scope` iki alanın `MAX_SCOPE_CHARS = 400`
+    içinde olmasını şart koşar. O şart keyfi değil: onsuz 849 belgedeki 4
+    adayın DÖRDÜ DE hayaletti ve mesafeleri 2.176–6.916 karakterdi; gerçek
+    çelişkiler 20–55 karakter aralığında durur. Ters metindeki 4.189
+    karakter tam olarak hayalet profilidir, yani çelişkinin kaybolması
+    kuralın DOĞRU davranışıdır.
+
+    Bir *yakınlık* kuralından sıra değişmezliği istemek, kuralın kendi
+    kanıtını yok saymasını istemektir. Bu yüzden fark kapsamla
+    açıklanıyorsa ihlal bildirilmez (bkz. `kapsam_etkisi_mi`).
+
+    **Değişmezin dişleri korunuyor:** H2 vakasında iki span KOMŞU
+    cümlelerdedir; ters çevirmek onları komşu bırakır, mesafe küçük kalır
+    ve kapsam kapısı farkı AÇIKLAMAZ — o hâlde P4 ihlali bildirmeye devam
+    eder. Muafiyet yalnız spanlar birbirinden uzaklaştığında devreye girer.
+    Kilidi: `tests/test_p4_kapsam_etkisi.py`.
     """
     sents = split_sentences(text)
     if len(sents) < 2:
         return []
     reversed_text = " ".join(reversed(sents))
 
-    def kinds(t: str) -> set[str]:
-        return {c.kind for c in
-                detect(Campaign(bank_slug="?", raw_text=t, fields=extract_all(t)))}
-
-    a, b = kinds(text), kinds(reversed_text)
-    if a != b:
-        return [Violation("P4_cumle_sirasi", doc_id, None,
-                          "cümle sırası çelişki sonucunu değiştirdi",
-                          before=sorted(a), after=sorted(b))]
-    return []
+    a, b = _celiski_turleri(text), _celiski_turleri(reversed_text)
+    if a == b:
+        return []
+    if kapsam_etkisi_mi(text, reversed_text):
+        return []
+    return [Violation("P4_cumle_sirasi", doc_id, None,
+                      "cümle sırası çelişki sonucunu değiştirdi",
+                      before=sorted(a), after=sorted(b))]
 
 
 # --------------------------------------------------------------------------- #
