@@ -55,11 +55,13 @@
   text-transform: uppercase;
   letter-spacing: var(--track-wide);
 }
+/* Ölçü sınırı (`max-width`) burada DEĞİL, `.lede` temel kuralında yaşıyor:
+ * ikisi aynı anda yazılıydı ve daha özgül olan bu seçici, sonradan eklenen
+ * ortak ölçü kuralını sessizce eziyordu. */
 .card > .lede {
   margin: 0 0 var(--sp-4);
   color: var(--fg-dim);
   font-size: var(--fs-sm);
-  max-width: 72ch;
 }
 
 /* ===================================================================
@@ -574,6 +576,87 @@ table.data tbody tr.group-head:not(:first-child) td {
 .tur-listesi {
   color: var(--fg);
   font-weight: var(--fw-medium);
+}
+
+/* --- adil kıyas ŞERİDİ (FairnessNotice varyant="serit") ---
+ *
+ * ÖLÇÜLDÜ: dört bloklu tam metin ~250 kelime tutuyor ve bu kutu kabuğun
+ * tamamına (1120px) yayıldığı için satır başına ~150 karaktere çıkıyordu.
+ * Varsayılan ekranda ilk veri satırından önce basılan ~400 kelimenin en büyük
+ * parçası buydu; ilk ekranın kabaca %60'ını kaplayıp kıyas tablosunu katlamanın
+ * altına itiyordu. Metin kısaltılmadı, KATLANDI: `<summary>` satırı her hâlde
+ * görünür, tamamı yerinde açılır. Katlama bir kapatma (dismiss) DEĞİLDİR —
+ * özet hiçbir durumda ekrandan çıkmaz.
+ *
+ * Şerit kapalıyken tek satır göründüğü için dikey boşluk `.fairness`ten dar
+ * tutuldu; açıldığında iç kutu kendi çerçevesini bırakır ve şeridin çerçevesini
+ * paylaşır, aksi hâlde kutu içinde kutu görünürdü. */
+.fairness-serit {
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+.fairness-ozet {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-2);
+  cursor: pointer;
+  /* Varsayılan üçgen imleci gizlenir: kendi imlecimiz «kuralların tamamı»
+   * bağlantısının yanında duruyor, satırın başında değil — göz önce KURALI,
+   * sonra açma eylemini okumalı. */
+  list-style: none;
+}
+.fairness-ozet::-webkit-details-marker {
+  display: none;
+}
+/* Özet metni serbest kalan alanı alır; açma bağlantısı sağda, bölünmeden. */
+.fairness-ozet > span:first-child {
+  flex: 1 1 32ch;
+  min-width: 0;
+}
+.fairness-ozet b {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+}
+.fairness-ac {
+  color: var(--accent-soft);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+.fairness-ac::after {
+  content: "▸";
+  display: inline-block;
+  margin-left: var(--sp-1);
+  transition: transform 0.15s ease;
+}
+.fairness-serit[open] .fairness-ac::after {
+  transform: rotate(90deg);
+}
+.fairness-serit > .fairness {
+  border: 0;
+  border-radius: 0;
+  background: none;
+  padding: var(--sp-3) 0 var(--sp-1);
+}
+
+/* --- ÖLÇÜ (measure) sınırı ---
+ *
+ * ÖLÇÜLDÜ: adil kıyas notu kabuğun tamamını kullanıyordu ve satır başına ~150
+ * karaktere ulaşıyordu; göz satır sonundan satır başına dönerken yerini
+ * kaybediyor. Rahat okuma aralığı 45–75 karakterdir, 68ch onun ortasıdır.
+ *
+ * TODO: bu değer `tokens.css` içinde `--measure` olarak yaşamalı; ölçü bir
+ * bileşen ayrıntısı değil, tipografi kararıdır. Token dosyası bu değişikliğin
+ * sahiplik alanı dışında olduğu için sabit şimdilik burada duruyor. */
+.lede,
+.fairness p,
+.notice > p {
+  max-width: 68ch;
 }
 
 /* ===================================================================
@@ -1366,6 +1449,17 @@ ol.steps span {
   .headline {
     grid-template-columns: 1fr;
     gap: var(--sp-1);
+  }
+
+  /* Şeritte özet ile açma bağlantısı dar ekranda yan yana sığmıyor: bağlantı
+   * alt satıra iner ve dokunma hedefi olarak satırın tamamını kaplar.
+   * Bu kural `components.css`'in SONUNDA, `.fairness-ozet` temel kuralının
+   * ARDINDA duruyor — aynı özgüllükte yazıldığı için sırası belirleyici. */
+  .fairness-ozet > span:first-child {
+    flex: 1 1 100%;
+  }
+  .fairness-ac {
+    flex: 1 1 100%;
   }
 
   .stats {

@@ -216,7 +216,10 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
           </div>
         </div>
 
-        <FairnessNotice />
+        {/* Şerit varyantı (2026-08-11): tam metin bu panelde de basılıyordu ve
+            kullanıcı aynı ~250 kelimeyi her sekmede yeniden görüyordu. Kural
+            silinmedi, katlandı — özet satırı her hâlde ekranda. */}
+        <FairnessNotice varyant="serit" />
 
         {(banks.loading || delta.loading) && (
           <Loading label="Kampanya türleri karşılaştırılıyor…" />

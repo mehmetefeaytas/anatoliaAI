@@ -31,6 +31,7 @@ import { api } from "../lib/api";
 import type { AdvantageousGroup, CompositeScore, WeightRow } from "../lib/api";
 import { formatValue, trNum } from "../lib/format";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
+import FairnessNotice from "./FairnessNotice";
 import { useAsync } from "../lib/useAsync";
 
 type Props = {
@@ -51,13 +52,14 @@ export default function AdvantageousPanel({ campaignTypes, onInspect }: Props) {
   return (
     <section className="card">
       <h2>En Avantajlı Kampanya</h2>
+      {/* Kampanya türünün TANIMI (sekiz sınıfın sayılması + «birbirinin
+          alternatifi değildir» gerekçesi) buradan çıkarıldı: tanım tek yerde,
+          adil kıyas şeridinin açılan gövdesinde yaşıyor. Üç panelde üç kez
+          yazılmış olması, ilk ekranı dolduran tekrarın kaynağıydı. Burada
+          yalnız bu panele özgü olan kalıyor: skorun bileşik olduğu. */}
       <p className="lede">
         Tek alan değil, <b>ağırlıklı bileşik skor</b>. Sıralama her zaman{" "}
-        <b>kampanya türü içinde</b> yapılır — kampanya türü, belgenin ait olduğu
-        ürün sınıfıdır (Konut Finansmanı, Taşıt Finansmanı, Kart … sekiz sınıf).
-        Bir kart kampanyası ile bir konut finansmanı birbirinin alternatifi
-        değildir, aralarında «hangisi daha avantajlı» sorusu iyi tanımlı
-        değildir.
+        <b>kampanya türü içinde</b> yapılır.
       </p>
 
       <div className="row" style={{ marginBottom: "var(--sp-4)" }}>
@@ -85,12 +87,14 @@ export default function AdvantageousPanel({ campaignTypes, onInspect }: Props) {
 
       {veri.data && (
         <>
-          <div className="fairness" role="note" aria-label="Adil kıyas kuralı">
-            <div className="fairness-item">
-              <strong>Tür içinde sıralama</strong>
-              <p>{veri.data.fairness_note}</p>
-            </div>
-          </div>
+          {/* Eskiden burada `FairnessNotice`'ın elle kopyalanmış bir varyantı
+              vardı: aynı `.fairness` kabuğu, içinde yalnız sunucunun
+              `fairness_note` metni. Üç yüzeyde üç ayrı adil-kıyas kutusu
+              demekti bu. Artık ortak şerit basılıyor; sunucunun bu ekrana ÖZEL
+              kuralı (kapsama eşiği, skorlanmayan alanın cezalandırılmaması)
+              kaybolmuyor — şerit açıldığında genel kuralların sonunda
+              görünüyor. */}
+          <FairnessNotice varyant="serit" ek={veri.data.fairness_note} />
 
           <Agirliklar rows={veri.data.weights} />
 

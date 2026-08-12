@@ -126,12 +126,14 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
     <div className="stack">
       <section className="card">
         <h2>Karşılaştırma Paneli</h2>
-        <p className="lede">
-          Yalnızca aynı birime normalize edilmiş değerler kıyaslanır. Kıyaslanamayan
-          değerler silinmez — gerekçesiyle listenin sonunda kalır.
-        </p>
+        {/* Buradaki `lede` KALDIRILDI (2026-08-11). İki cümlesi de — «yalnız
+            aynı birime normalize edilmiş değerler kıyaslanır» ve
+            «kıyaslanamayan değer silinmez» — adil kıyas şeridinin ilk
+            satırında zaten yazıyor. Ölçüm: ilk veri satırından önce basılan
+            ~400 kelimeyi düşürmek için önce TEKRARLAR atıldı; aynı kuralı iki
+            kez okumak kimseye bir şey öğretmiyordu. */}
 
-        <FairnessNotice />
+        <FairnessNotice varyant="serit" />
 
         <FieldChips fields={fields} value={field} onChange={setField} />
 
@@ -219,12 +221,15 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                     paddingTop: "var(--sp-2)",
                   }}
                 >
+                  {/* «Türler arasında sıralama yapılmaz» cümlesi buradan
+                      çıkarıldı: adil kıyas şeridi onu tablodan ÖNCE zaten
+                      söylüyor. Kalan iki bilgi şeritte yok ve tabloya özgü —
+                      bağlantının ne yaptığı, ve sütun ile süzgecin aynı adı
+                      taşıyıp farklı iş yapması. */}
                   Bir satırdaki «Kaynağı gör» bağlantısı, değerin kaynak metindeki
-                  karakter aralığını vurgular. Sıra numaraları <b>kampanya türü
-                  içinde</b> verilir; türler arasında sıralama yapılmaz —
-                  «Kampanya türü» sütunu her satırın hangi türe ait olduğunu
-                  gösterir, yukarıdaki «Kampanya türü» süzgeci ise listeyi tek
-                  türe indirir.
+                  karakter aralığını vurgular. Sıra numaraları tür içinde
+                  verilir; «Kampanya türü» sütunu satırın türünü gösterir,
+                  üstteki aynı adlı süzgeç ise listeyi tek türe indirir.
                 </caption>
                 <thead>
                   <tr>
