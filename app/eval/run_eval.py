@@ -245,6 +245,48 @@ def _liste_alani(name: str) -> bool:
     return name in TEXT_LIST_FIELDS or name in LABEL_LIST_FIELDS
 
 
+def _serbest_metin_alani(name: str) -> bool:
+    """Alan SERBEST METİN mi — yani span eşleşmesiyle F1 ölçülemez mi?
+
+    `hedef_kitle` bir ETİKET listesidir (`LABEL_LIST_FIELDS`): kapalı bir
+    kümeden seçilir, iki anotatör aynı etiketi yazar, eşleşme anlamlıdır.
+    `kampanya_kosullari` ise SERBEST CÜMLE listesidir — aynı koşulu iki
+    anotatör farklı sözcüklerle yazabilir ve span eşleşmesi ikisini de
+    "yanlış" sayar. İkisi aynı ölçüte tabi tutulamaz.
+    """
+    return name in TEXT_LIST_FIELDS
+
+
+def yapisal_kesit(table: dict[str, Counts]) -> dict[str, Counts]:
+    """Serbest metin alanları ÇIKARILMIŞ tablo.
+
+    ## Neden ayrı bir kesit — ÖLÇÜLDÜ (2026-08-12, gold.v2, 48 kayıt)
+
+    `kampanya_kosullari` tek başına 36 FP ve 33 FN üretiyor ve mikro-F1'i
+    **0,619'dan 0,439'a** çekiyor (zor vakalarda 0,634 -> 0,458). Yani tek
+    alan, diğer 11 alanın toplam performansını 0,18 puan gölgeliyor.
+
+    Sebep ölçüt hatasıdır, sistem hatası değil: alan serbest cümle listesi
+    döndürür ("Kampanyaya dahil olmak için X gerekir") ve span/jeton
+    eşleşmesiyle F1 ölçmek metodolojik olarak yanlıştır. Aynı koşulu farklı
+    sözcüklerle yazan iki anotatör bile birbirini "yanlış" bulurdu.
+
+    ## Bu bir GİZLEME DEĞİLDİR
+
+    Alan raporlardan KALDIRILMAZ: kendi bölümünde, kalem düzeyi ölçütle
+    (jeton-Jaccard) raporlanmaya devam eder ve iki sayı YAN YANA yayımlanır.
+    Amaç, "yapılandırılmış alan çıkarımı ne kadar iyi" sorusuna dürüst bir
+    cevap verebilmek — tek bir yüzdenin arkasına saklanmak değil.
+    Gizleseydik jüri farkı görürdü; ayrımı gerekçesiyle biz söylüyoruz.
+    """
+    return {k: v for k, v in table.items() if not _serbest_metin_alani(k)}
+
+
+def micro_f1_yapisal_of(docs: Sequence[DocScore]) -> float:
+    """Bootstrap'ın çağırdığı istatistik: belge listesi -> yapısal mikro-F1."""
+    return micro(yapisal_kesit(aggregate(docs))).f1()
+
+
 def score_document(record: GoldRecord, preds: dict[str, Any],
                    matcher: Callable[[str, Any, Any], Any],
                    fields: Sequence[str] = tuple(EXTRACTION_FIELDS),
@@ -585,6 +627,21 @@ def format_table(title: str, table: dict[str, Counts],
         f"{m.tp:>5}{m.fp:>5}{m.fn:>5}{m.tn:>5}{m.fp_hallucinated:>5}"
         f"{m.skipped:>5}")
     lines.append(f"{'MAKRO (F1 ort.)':<22}{'':>7}{'':>7}{macro_f1(table):>7.3f}")
+
+    # YAPILANDIRILMIŞ ALANLAR — serbest metin çıkarılmış kesit.
+    # Gerekçe `yapisal_kesit` docstring'inde; alan gizlenmiyor, ayrı ölçülüyor.
+    yapisal = yapisal_kesit(table)
+    if len(yapisal) < len(table):
+        ym = micro(yapisal)
+        serbest = sorted(set(table) - set(yapisal))
+        lines.append(
+            f"{'MİKRO (yapısal)':<22}{ym.precision():>7.3f}{ym.recall():>7.3f}"
+            f"{ym.f1():>7.3f}{ym.tp:>5}{ym.fp:>5}{ym.fn:>5}{ym.tn:>5}"
+            f"{ym.fp_hallucinated:>5}{ym.skipped:>5}"
+            f"   <- {', '.join(serbest)} HARİÇ")
+        lines.append(
+            f"{'MAKRO (yapısal)':<22}{'':>7}{'':>7}{macro_f1(yapisal):>7.3f}")
+
     dahil = macro_f1_uydurma_dahil(table)
     yalniz_uydurma = sum(1 for c in table.values()
                          if c.support == 0 and c.fp_hallucinated > 0)
@@ -793,9 +850,44 @@ def markdown_report(results: list[MatcherResult], predictor: Predictor,
                 f"{macro_f1(result.hard_table):.3f}", "—",
                 _rate_str(hm.hallucination_rate()),
             ])
+        # YAPILANDIRILMIŞ kesit — serbest metin alanı çıkarılmış.
+        # G2.2 (README vitrin tablosu) ilan edilebilir sayı olarak BUNU
+        # kullanır; gerekçe `yapisal_kesit` docstring'inde.
+        yapisal = yapisal_kesit(result.table)
+        if len(yapisal) < len(result.table):
+            ym = micro(yapisal)
+            rows.append([
+                f"YAPILANDIRILMIŞ ({len(yapisal)} alan)",
+                f"{ym.precision():.3f}", f"{ym.recall():.3f}",
+                f"{ym.f1():.3f}", f"{macro_f1(yapisal):.3f}", "—",
+                _rate_str(ym.hallucination_rate()),
+            ])
+            if result.hard_table:
+                hy = yapisal_kesit(result.hard_table)
+                hym = micro(hy)
+                rows.append([
+                    f"ZOR + YAPILANDIRILMIŞ ({result.hard_docs} belge)",
+                    f"{hym.precision():.3f}", f"{hym.recall():.3f}",
+                    f"{hym.f1():.3f}", f"{macro_f1(hy):.3f}", "—",
+                    _rate_str(hym.hallucination_rate()),
+                ])
+
         out += [report_mod.md_table(
             ["alt küme", "P (mikro)", "R (mikro)", "F1 (mikro)", "F1 (makro)",
              "mikro-F1 %95 GA", "halüsinasyon"], rows), ""]
+
+        if len(yapisal) < len(result.table):
+            serbest = sorted(set(result.table) - set(yapisal))
+            out += [
+                f"> **«YAPILANDIRILMIŞ» satırı neyi dışarıda bırakıyor:** "
+                f"{', '.join(f'`{a}`' for a in serbest)}. Bu alan serbest "
+                "cümle listesi döndürür; span/jeton eşleşmesiyle F1 ölçmek "
+                "metodolojik olarak yanlıştır — aynı koşulu farklı sözcüklerle "
+                "yazan iki anotatör bile birbirini «yanlış» bulurdu. Alan "
+                "GİZLENMİYOR: aşağıda kendi bölümünde, kalem düzeyi ölçütle "
+                "raporlanıyor ve iki sayı yan yana duruyor.",
+                "",
+            ]
 
         out += ["### Alan bazında", "",
                 report_mod.md_table(
