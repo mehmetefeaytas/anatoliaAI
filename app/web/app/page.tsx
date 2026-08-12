@@ -39,6 +39,7 @@ import ComparePanel from "./components/ComparePanel";
 import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
+import DurumSeridi, { ApiKapaliUyarisi } from "./components/DurumSeridi";
 import JuryModeToggle from "./components/JuryModeToggle";
 import KomutPaleti from "./components/KomutPaleti";
 import SohbetCekmecesi, {
@@ -51,6 +52,7 @@ import TemaSecici from "./components/TemaSecici";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
 import { api } from "./lib/api";
 import { JuryModeProvider, useJuryMode } from "./lib/juryMode";
+import { SaglikProvider, useSaglik } from "./lib/saglik";
 import { TemaProvider } from "./lib/tema";
 import { useTabState } from "./lib/tabState";
 import { useAsync } from "./lib/useAsync";
@@ -121,7 +123,12 @@ export default function Home() {
   return (
     <TemaProvider>
       <JuryModeProvider>
-        <Dashboard />
+        {/* Sağlık en dışta değil, en içte: tema ve jüri modu kullanıcı
+            tercihleri, sağlık ise sunucu olgusu — ikisi birbirine bağlı
+            değil ve sağlık yoklaması ilk ikisinin okunmasını beklemiyor. */}
+        <SaglikProvider>
+          <Dashboard />
+        </SaglikProvider>
       </JuryModeProvider>
     </TemaProvider>
   );
@@ -129,6 +136,11 @@ export default function Home() {
 
 function Dashboard() {
   const { jury } = useJuryMode();
+  // API kapalıyken ortak veri hataları BASTIRILIR: üçü de aynı tek olayı
+  // anlatıyor ve kabuktaki bant onu zaten açıklıyor. Üstelik o kutuların
+  // ipucu metni operatöre yazılmış (`uvicorn … çalışıyor mu?`) — jüri
+  // ekranında geliştirici talimatı görünmemeli.
+  const { kapali: apiKapali } = useSaglik();
   const sekmeler = jury ? TABS_JURI : TABS;
   const { sekme, setSekme } = useTabState<TabKey>(
     jury ? TAB_KEYS_JURI : TAB_KEYS,
@@ -188,7 +200,15 @@ function Dashboard() {
       <div className="arac-cubugu">
         <JuryModeToggle />
         <TemaSecici />
+        {/* Sunumda sunucu düştü ve arayüz bunu ancak paneller çökünce
+            söyledi. Şerit artık kalıcı: API, depo, yerel model ve korpus
+            ölçeği her ekranda okunuyor. */}
+        <DurumSeridi />
       </div>
+
+      {/* Ölü API bugüne kadar beş panelde beş ayrı kırmızı kutu olarak
+          görünüyordu; hepsi aynı tek olayı anlatıyordu. Tek bant. */}
+      <ApiKapaliUyarisi />
 
       {/* Kapsam sayacı artık kendi verisini `/summaries/coverage`'tan okur:
           "özet var mı" istemcide sayılabilirdi, "özet neden yok" sayılamazdı
@@ -202,18 +222,19 @@ function Dashboard() {
         etiket="Panel bölümleri"
       />
 
-      {/* Ortak veri hataları sekmelerden bağımsız gösterilir. */}
-      {!!fields.error && (
+      {/* Ortak veri hataları sekmelerden bağımsız gösterilir — ama yalnız
+          API AYAKTAYKEN. Kapalıyken hepsinin sebebi tektir ve bant söyler. */}
+      {!apiKapali && !!fields.error && (
         <div style={{ marginBottom: "var(--sp-4)" }}>
           <ErrorNotice error={fields.error} />
         </div>
       )}
-      {!!stats.error && !fields.error && (
+      {!apiKapali && !!stats.error && !fields.error && (
         <div style={{ marginBottom: "var(--sp-4)" }}>
           <ErrorNotice error={stats.error} />
         </div>
       )}
-      {!!campaigns.error && !fields.error && !stats.error && (
+      {!apiKapali && !!campaigns.error && !fields.error && !stats.error && (
         <div style={{ marginBottom: "var(--sp-4)" }}>
           <ErrorNotice error={campaigns.error} />
         </div>

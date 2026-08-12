@@ -1,0 +1,59 @@
+/* Anatolia AI — durum şeridi.
+ *
+ * İlgili: tokens.css, ../components/DurumSeridi.tsx, ../lib/saglik.tsx
+ *
+ * Şerit araç çubuğunun sağ ucunda tek satır. Dar ekranda alta iner ve sarar;
+ * gizlenmez — sunumda sunucu düştüğünde okunacak ilk şey burası.
+ *
+ * Literal renk/boşluk YOK. Kırılımlar dosyanın SONUNDA.
+ */
+
+.durum-serit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-3);
+  color: var(--fg-dim);
+}
+
+.durum-cip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  white-space: nowrap;
+}
+
+/* Sayılar tabloyla aynı ritmi tutsun: değişen rakam satırı oynatmasın. */
+.durum-korpus {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-faint);
+}
+
+/* Nokta durumu TEKRAR ediyor, taşımıyor — her çipte durum ayrıca yazılı ve
+ * nokta aria-hidden. Renk tek sinyal olmamalı (WCAG 1.4.1). */
+.durum-nokta {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--ok);
+}
+
+.durum-kapali {
+  color: var(--bad);
+}
+
+.durum-kapali .durum-nokta {
+  background: var(--bad);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA
+ * ================================================================ */
+
+@media (max-width: 600px) {
+  .durum-serit {
+    /* Dar ekranda araç çubuğunun altına tam satır olarak iner. */
+    flex-basis: 100%;
+  }
+}

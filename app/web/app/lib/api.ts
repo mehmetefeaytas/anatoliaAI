@@ -844,7 +844,31 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return (await istek<T>(path, init)).kayitlar;
 }
 
+/**
+ * `/health` yanıtı — sunucunun kendi hakkında söyledikleri.
+ *
+ * Uç en baştan beri vardı ve bu üç alanı döndürüyordu; İSTEMCİ METODU HİÇ
+ * YOKTU. Sonuç: API'nin ayakta olup olmadığı, hangi veritabanına baktığı ve
+ * yerel modelin açık olup olmadığı ancak bir panel çökünce ya da bir düğme
+ * devre dışı kalınca anlaşılıyordu.
+ */
+export type Health = {
+  status: string;
+  /** Yerel model açık mı. Kapalıyken sistem cevap vermeye DEVAM eder. */
+  llm: boolean;
+  /** Hangi depo: `sqlite` | `postgres`. «Hangi veritabanındayız» hata sınıfı. */
+  backend: string;
+};
+
 export const api = {
+  /**
+   * Sağlık yoklaması.
+   *
+   * Diğer çağrılardan farklı olarak hatası YUTULMAZ ama beklenendir: bu ucun
+   * başarısız olması da bir bilgidir ve arayüz onu «API kapalı» olarak
+   * gösterir (bkz. lib/saglik.tsx).
+   */
+  health: () => request<Health>("/api/health"),
   fields: () => request<FieldMeta[]>("/api/fields"),
   /**
    * Belge listesi — ÜSTVERİ. Ham gövde gelmez (`govde` sözleşmede duruyor ama
