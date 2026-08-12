@@ -4,11 +4,35 @@
  * Yatay kıyas çubukları — tek ölçütte banka sıralaması.
  *
  * İlgili: ../../lib/grafikPaleti.ts, ../../lib/api.ts (CompareRow),
- *         ../../lib/format.ts, ../ComparePanel.tsx, CLAUDE.md §17 (adil kıyas)
+ *         ../../lib/format.ts, ./KapsamaCetveli.tsx, CLAUDE.md §17 (adil kıyas)
  *
  * Jürinin en hızlı okuyacağı format budur: «en düşük tahsis ücreti kimde»
  * sorusunun cevabı tek bakışta çıkar. Yatay seçildi çünkü etiketler banka
  * adlarıdır — dikey çubukta eğik yazılmak zorunda kalırlardı.
+ *
+ * ## ARTIK BİRİNCİL DEĞİL — yerine kapsama cetveli geldi (2026-08-12)
+ *
+ * Karşılaştırma ekranının taşıyıcı görselleştirmesi bu tuval DEĞİL,
+ * `KapsamaCetveli` (saf DOM + CSS grid). Bileşen silinmedi; gerekçe, tuvalin
+ * üç ayrı kısıtı:
+ *
+ *  1. **Canvas erişilebilirlik ağacında yoktur.** Aşağıdaki `.grafik-liste`
+ *     tam olarak bu yüzden var: grafiğin metin eşi. Yani aynı bilgi iki kez
+ *     çiziliyor ve ekran okuyucu kullanıcısı grafiği hiç görmüyor, yalnız onun
+ *     kopyasını okuyor.
+ *  2. **Dört kapsama hâli AYRI BİÇİM taşıyamıyor.** Tuvalde elde renk ve
+ *     uzunluk var; kesikli çerçeve, 135° tarama dokusu, kesik taban çizgisi ve
+ *     eksende konumlu aralık kutusu yok. Aşağıda görüleceği gibi «veri yok»
+ *     hâli ancak `transparent` dolgu + `--line` kenarlıkla anlatılabiliyor,
+ *     yani boş çubuk ile ince bir çubuk birbirine yakın okunuyor. Renk TEK
+ *     sinyal olamaz (WCAG 1.4.1).
+ *  3. **`aria-label` / `title` taşıyamıyor.** Bir çubuğun «%1,69,
+ *     kıyaslanabilir» olduğu ancak tuvalin dışında yazılabiliyordu.
+ *
+ * Bileşen kaldırılmadı çünkü kısıtları tuvale ait, kodu değil: başka bir
+ * yüzeyde (tek türde hızlı bakış, baskı önizlemesi) hâlâ doğru araç olabilir.
+ * Kullanılmaz kalırsa kaldırma kararı ayrı verilir — sessizce silinen bir
+ * bileşen, gerekçesini de silmiş olur.
  *
  * ## Veri olmayan banka LİSTEDEN DÜŞMEZ
  *

@@ -43,11 +43,11 @@
  *
  * ## GRAFİK ÖNCE, TABLO SONRA (2026-08-12)
  *
- * Ekran grafik ağırlıklı hâle getirildi: `KiyasCubuklari` tablonun ÜSTÜNDE,
- * tablo altında denetlenebilir ayrıntı olarak kalıyor. Grafik `/banks`ten gelen
- * TAM banka listesini de alıyor; verisi olmayan banka boş çubuk olarak çizilip
- * listede kalıyor (ölçüldü: `kar_payi_orani` 1.774 belgenin 56'sında, 11
- * bankanın 6'sında var — grafiği yalnız `/compare` satırlarıyla çizmek beş
+ * Ekran grafik ağırlıklı hâle getirildi: kapsama cetveli tablonun ÜSTÜNDE,
+ * tablo altında denetlenebilir ayrıntı olarak kalıyor. Cetvel `/banks`ten gelen
+ * TAM banka listesini de alıyor; verisi olmayan banka kesik taban çizgisiyle
+ * çizilip listede kalıyor (ölçüldü: `kar_payi_orani` 1.774 belgenin 56'sında,
+ * 11 bankanın 6'sında var — grafiği yalnız `/compare` satırlarıyla çizmek beş
  * bankayı sessizce yok ederdi).
  *
  * **Grafik TEK kampanya türü çizer.** Türler arası sıralama yasak (§17) ve bir
@@ -57,6 +57,25 @@
  * ~2.600 piksel; bu «grafik ağırlıklı» değil, grafik yığınıdır. Grafik seçili
  * türü çizer; «Tümü» seçiliyken EN ÇOK BANKANIN veri taşıdığı türü alır ve
  * hangi türü çizdiğini başlıkta yazar. Kalan türler tabloda bölüm bölüm durur.
+ *
+ * ## CANVAS ÇIKTI, KAPSAMA CETVELİ GİRDİ (2026-08-12)
+ *
+ * Birincil görselleştirme artık `KiyasCubuklari` (Chart.js tuvali) değil,
+ * `KapsamaCetveli` (saf DOM + CSS grid). Tuval üç şeyi birden yapamıyordu:
+ * erişilebilirlik ağacında yoktu (altına ayrıca metin liste basılıyordu, yani
+ * aynı bilgi iki kez), dört kapsama hâlini ayrı BİÇİMLERLE anlatamıyordu
+ * (elde yalnız renk + uzunluk vardı; renk TEK sinyal olamaz, WCAG 1.4.1) ve
+ * çubuk başına `aria-label` taşıyamıyordu. Cetvel üçünü de çözüyor.
+ * `KiyasCubuklari` silinmedi; gerekçesi kendi dosya başlığında.
+ *
+ * ## EKRANIN TEK KESRİ: KAPSAMA SAYACI (2026-08-12)
+ *
+ * Başlığın sağında provenans şeridiyle (`.rail .rail-doktrin`) tek bir kesir
+ * durur: «4 / 11 banka», altında kırılımı. Bu, ekranın iddiasını değiştiren
+ * bir öğedir — soru «kim kazandı» değil, «neyi ne kadar biliyoruz». Kesir
+ * GERÇEK veriden hesaplanır (`/compare` satırları + `/banks` kataloğu) ve
+ * kırılımı cetvelin çubuk biçimleriyle AYNI kuraldan gelir
+ * (`KapsamaCetveli.kapsamaOzeti`) — iki yerde hesaplanan bir sayı ayrışır.
  *
  * ## KAYNAK JESTİ TEK (2026-08-12)
  *
@@ -69,8 +88,19 @@
 
 import { Fragment, useEffect, useState } from "react";
 import { api } from "../lib/api";
-import type { CompareRow, FieldMeta, PerBank } from "../lib/api";
-import { extractorClass, extractorLabel, formatValue } from "../lib/format";
+import type {
+  Bank,
+  BankaKapsami,
+  CompareRow,
+  FieldMeta,
+  PerBank,
+} from "../lib/api";
+import {
+  extractorClass,
+  extractorLabel,
+  formatValue,
+  trNum,
+} from "../lib/format";
 import { useJuryMode } from "../lib/juryMode";
 import { useAsync } from "../lib/useAsync";
 import ConfidenceBadge from "./ConfidenceBadge";
@@ -78,7 +108,10 @@ import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
 import FieldChips from "./FieldChips";
 import GrafikIskeleti from "./grafik/GrafikIskeleti";
-import KiyasCubuklari from "./grafik/KiyasCubuklari";
+import KapsamaCetveli, {
+  kapsamaOzeti,
+  satirHali,
+} from "./grafik/KapsamaCetveli";
 import KaynakDipnotu from "./KaynakDipnotu";
 import ScoringExplainer from "./ScoringExplainer";
 
@@ -103,6 +136,18 @@ type Props = {
    * yerel duruma yazılır; sonrasında kullanıcı süzgeci serbestçe değiştirir.
    */
   baslangicTuru?: string | null;
+  /**
+   * Banka slug → belge/alan kapsamı (`/stats` → `banka_kapsami`).
+   *
+   * Cetveldeki «veri yok · 291 belge» etiketi bundan yazılır: belge sayısı
+   * olmadan o satır «hiç bakmadık» diye okunurdu, oysa 291 belge tarandı ve
+   * alan geçmedi. `BankaSayfasi` aynı veriyi aynı biçimde alıyor.
+   *
+   * `undefined` = çağıran bu veriyi HİÇ bağlamadı; bileşen `/stats`i kendisi
+   * okur (yedek yol). `null` = çağıran bağladı ama veri henüz yok/alınamadı;
+   * o hâlde sayı UYDURULMAZ, yalnız «veri yok» yazılır.
+   */
+  kapsam?: Record<string, BankaKapsami> | null;
 };
 
 /** Türü boş gelen satırların bölüm başlığı. */
@@ -140,10 +185,26 @@ function turlereBol(
   });
 }
 
+/**
+ * Bir bölümde değeri ÇIKARILAMAYAN bankalar.
+ *
+ * Cetvel bunları kesik taban çizgisiyle çiziyor; tablonun da aynı satırları
+ * göstermesi gerekiyor, yoksa «aynı 11 satır» iddiası tabloda tutmaz.
+ */
+function eksikBankalar(
+  satirlar: { row: CompareRow }[],
+  bankalar: Bank[] | null,
+): Bank[] {
+  if (!bankalar) return [];
+  const gorulen = new Set(satirlar.map(({ row }) => row.bank));
+  return bankalar.filter((b) => !gorulen.has(b.slug));
+}
+
 export default function ComparePanel({
   fields,
   campaignTypes,
   baslangicTuru,
+  kapsam,
 }: Props) {
   const [field, setField] = useState(fields[0]?.field ?? "kar_payi_orani");
   const [intent, setIntent] = useState<Intent>("");
@@ -162,12 +223,21 @@ export default function ComparePanel({
     () => api.compare(field, intent || undefined, type || undefined, perBank),
     [field, intent, type, perBank],
   );
-  // Banka kataloğu grafiğin «veri yok» çubukları için; `/compare` yalnız değer
+  // Banka kataloğu cetvelin «veri yok» satırları için; `/compare` yalnız değer
   // TAŞIYAN satırları döndürdüğü için eksik bankalar ancak buradan bilinir.
   const banks = useAsync(() => api.banks(), []);
+  // Belge sayaçları için YEDEK yol: `kapsam` propu hiç bağlanmadıysa (undefined)
+  // `/stats` buradan okunur. Prop bağlıysa istek HİÇ atılmaz — sayfa o çağrıyı
+  // zaten yapıyor ve ikinci bir tur boşuna olurdu (bkz. `Props.kapsam`).
+  const kapsamYok = kapsam === undefined;
+  const stats = useAsync(
+    () => (kapsamYok ? api.stats() : Promise.resolve(null)),
+    [kapsamYok],
+  );
+  const bankaKapsami = kapsam ?? stats.data?.banka_kapsami ?? null;
   const meta = fields.find((f) => f.field === field);
   const bolumler = turlereBol(rows.data ?? []);
-  // Sütun sayısı: Sıra, Banka, Kampanya türü, Değer, [Güven], Katman, Durum,
+  // Sütun sayısı: Sıra, Banka, Değer, Ham ifade, [Güven], Katman, Durum,
   // Kaynak.
   const sutunSayisi = jury ? 8 : 7;
 
@@ -179,18 +249,80 @@ export default function ComparePanel({
       ? null
       : bolumler.reduce((en, b) => (b.satirlar.length > en.satirlar.length ? b : en));
 
+  // Kapsama kesri GERÇEK veriden gelir, sabit yazılmaz: pay `/compare`
+  // satırlarındaki tekrarsız banka sayısı, payda `/banks` kataloğunun boyu.
+  // Katalog okunamadıysa payda UYDURULMAZ — kesir hiç basılmaz.
+  const ozet = grafikBolumu ? kapsamaOzeti(grafikBolumu.satirlar) : null;
+  const toplamBanka = banks.data?.length ?? null;
+
   return (
     <div className="stack">
       <section className="card">
-        <h2>Karşılaştırma Paneli</h2>
+        {/* Başlık artık «Karşılaştırma Paneli» değil: sekme adı bunu zaten
+            söylüyordu ve başlığın taşıyabileceği en değerli iki bilgi —
+            HANGİ ALAN ve HANGİ TÜR kıyaslanıyor — hiçbir yerde yazmıyordu. */}
+        <div className="cetvel-kabuk">
+          <div className="cetvel-ust">
+            <h2>
+              {meta?.label ?? field}
+              {grafikBolumu ? ` · ${grafikBolumu.tur}` : ""}
+            </h2>
+            {/* Alan adı ve sıralama yönü MAKİNE verisidir: birincisi
+                `extracted_fields.field_name` sütununun değeri, ikincisi
+                `compare.py`nin `_LOWER_IS_BETTER` / `_HIGHER_IS_BETTER`
+                kümelerinden geliyor. Türkçe bir cümle değil, bir etiket. */}
+            <span
+              className="cetvel-alan"
+              title="Kaynak: compare.py _LOWER_IS_BETTER / _HIGHER_IS_BETTER"
+            >
+              alan: {field}
+              {meta ? ` · yön: ${meta.direction_label}` : ""}
+            </span>
+          </div>
+
+          {ozet && toplamBanka !== null && (
+            <div className="kapsama-sayaci rail rail-doktrin">
+              <span className="kapsama-etiket">kapsama</span>
+              <span className="kapsama-kesir">
+                {trNum(ozet.kapsanan)} / {trNum(toplamBanka)} banka
+              </span>
+              {/* Kapsanan 4 bankanın hepsi aynı şey değildir: biri sıralamaya
+                  girer, üçü gerekçesiyle listede kalır. Kesir tek başına bu
+                  ayrımı gizlerdi. */}
+              <span className="kapsama-kirilim">
+                kıyaslanabilir: {trNum(ozet.kiyaslanabilir)} · aralık:{" "}
+                {trNum(ozet.aralik)} · koşullu: {trNum(ozet.kosullu)}
+              </span>
+            </div>
+          )}
+        </div>
+
         {/* Buradaki `lede` KALDIRILDI (2026-08-11). İki cümlesi de — «yalnız
             aynı birime normalize edilmiş değerler kıyaslanır» ve
             «kıyaslanamayan değer silinmez» — adil kıyas şeridinin ilk
             satırında zaten yazıyor. Ölçüm: ilk veri satırından önce basılan
             ~400 kelimeyi düşürmek için önce TEKRARLAR atıldı; aynı kuralı iki
-            kez okumak kimseye bir şey öğretmiyordu. */}
+            kez okumak kimseye bir şey öğretmiyordu.
 
-        <FairnessNotice varyant="serit" />
+            Aynı gerekçeyle, cetvelin «adil kıyas gerekçesi» katlaması AYRI bir
+            `<details>` olarak yazılmadı: v2 tasarımının üç paragrafından ikisi
+            (%0 ceza değil / türler arası sıralama üretilmez) bu şeridin
+            açılınca gösterdiği metnin ta kendisi. Üçüncüsü — verisi olmayan
+            banka listeden düşmez — şeritte YOKTU ve bu yüzeye özgü; `ek`
+            olarak eklendi. Kural cetvelde ayrıca GÖRÜNÜR biçimde de
+            duruyor: «ölçülemedi · N banka» ayırıcı satırı. */}
+        <FairnessNotice
+          varyant="serit"
+          ek={
+            <>
+              <b>Verisi olmayan banka listeden düşmez.</b> Onbir satırın onbiri
+              her zaman çizilir; ölçülemeyen satır kesik taban çizgisi ve{" "}
+              <span className="mono">veri yok</span> etiketiyle yerini korur.
+              Boşluk gizlenmiyor, sayılıyor — cetvelin başındaki kapsama kesri
+              tam olarak bunu ölçer.
+            </>
+          }
+        />
 
         <FieldChips fields={fields} value={field} onChange={setField} />
 
@@ -250,15 +382,25 @@ export default function ComparePanel({
               <option value="all">Tüm kampanyaları göster</option>
             </select>
           </div>
-          {meta && (
-            <span className="badge" title="Kaynak: compare.py _LOWER_IS_BETTER / _HIGHER_IS_BETTER">
-              {meta.direction_label}
-            </span>
-          )}
+          {/* Yön rozeti KALDIRILDI: aynı bilgi başlığın altındaki makine
+              satırında («yön: düşük daha avantajlı») zaten yazıyor ve süzgeç
+              şeridinin sonunda ikinci kez basılması, süzgeç gibi görünen ama
+              tıklanmayan bir öğe üretiyordu. */}
         </div>
 
         <div style={{ marginTop: "var(--sp-4)" }}>
-          {rows.loading && <Loading />}
+          {/* YÜKLENİYOR: banka adları ve satır sayısı hemen basılır, yalnız
+              çubuklar bekler. Hiçbir sayı, hiçbir sıra numarası, hiçbir
+              animasyonlu sayaç görünmez — gerekçe GrafikIskeleti başlığında. */}
+          {rows.loading && (
+            <>
+              <Loading label="Kıyas satırları yükleniyor…" />
+              <GrafikIskeleti
+                bankalar={banks.data?.map((b) => b.name)}
+                yukseklik={(banks.data?.length ?? 8) * 32 + 32}
+              />
+            </>
+          )}
           {!!rows.error && <ErrorNotice error={rows.error} />}
           {!rows.loading && !rows.error && rows.data?.length === 0 && (
             <EmptyNotice title="Bu alan için kayıt bulunamadı">
@@ -267,41 +409,32 @@ export default function ComparePanel({
               hata değil: alan metinlerde geçmiyorsa sistem değer UYDURMAZ.
             </EmptyNotice>
           )}
-          {/* GRAFİK ÖNCE — ekranın taşıyıcı öğesi bu. Tablo altında kalır ve
+          {/* CETVEL ÖNCE — ekranın taşıyıcı öğesi bu. Tablo altında kalır ve
               denetlenebilir ayrıntıyı verir. */}
           {rows.data && rows.data.length > 0 && grafikBolumu && (
             <>
-              <GrafikIskeleti
-                yukseklik={
-                  Math.max(
-                    banks.data?.length ?? 0,
-                    grafikBolumu.satirlar.length,
-                  ) *
-                    30 +
-                  48
-                }
-              />
-              <KiyasCubuklari
-                rows={grafikBolumu.satirlar.map((s) => s.row)}
+              <KapsamaCetveli
+                satirlar={grafikBolumu.satirlar}
                 bankalar={banks.data ?? undefined}
                 alan={field}
-                baslik={`${meta?.label ?? field} — kampanya türü: ${grafikBolumu.tur}`}
+                kapsam={bankaKapsami}
               />
               {bolumler.length > 1 && (
                 <p className="small muted">
-                  Grafik yalnız <b>{grafikBolumu.tur}</b> türünü çizer: en çok
+                  Cetvel yalnız <b>{grafikBolumu.tur}</b> türünü çizer: en çok
                   bankanın bu alanda veri taşıdığı tür. Farklı türler tek eksene
                   konmaz — yan yana duran çubuklar, sistemin reddettiği türler
                   arası sıralamayı ima ederdi. Diğer {bolumler.length - 1} tür
-                  aşağıdaki tabloda bölüm bölüm durur; grafiği başka bir türe
+                  aşağıdaki tabloda bölüm bölüm durur; cetveli başka bir türe
                   almak için üstteki «Kampanya türü süzgeci»ni kullanın.
                 </p>
               )}
               {!!banks.error && (
                 <p className="small muted">
                   Banka kataloğu (<span className="mono">/banks</span>)
-                  okunamadı; grafikte yalnız değer taşıyan bankalar var. Verisi
-                  olmayan bankaların boş çubukları bu turda çizilemedi.
+                  okunamadı; cetvelde yalnız değer taşıyan bankalar var. Verisi
+                  olmayan bankaların satırları ve kapsama kesri bu turda
+                  çizilemedi — kesir uydurulmuyor, hiç basılmıyor.
                 </p>
               )}
             </>
@@ -320,21 +453,23 @@ export default function ComparePanel({
                 >
                   {/* «Türler arasında sıralama yapılmaz» cümlesi buradan
                       çıkarıldı: adil kıyas şeridi onu tablodan ÖNCE zaten
-                      söylüyor. Kalan iki bilgi şeritte yok ve tabloya özgü —
-                      bağlantının ne yaptığı, ve sütun ile süzgecin aynı adı
-                      taşıyıp farklı iş yapması. */}
-                  Kaynak sütunundaki ¶ rozetine basınca belge yandan açılır ve
-                  değerin kaynak metindeki karakter aralığı vurgulanır; tablo
-                  yerinde kalır. Sıra numaraları tür içinde verilir; «Kampanya
-                  türü» sütunu satırın türünü gösterir, üstteki aynı adlı süzgeç
-                  ise listeyi tek türe indirir.
+                      söylüyor. Kalan bilgiler şeritte yok ve tabloya özgü. */}
+                  Cetveldeki AYNI satırlar, denetlenebilir hâlde.{" "}
+                  <span className="mono">¶</span> rozetine basınca belge yandan
+                  açılır ve değerin kaynak metindeki karakter aralığı
+                  vurgulanır; tablo yerinde kalır. Rozetteki sayı o aralığın
+                  kendisidir. «Ham ifade» sütunu bankanın kendi yazdığı metni
+                  tırnaklı yazıyla verir — normalize edilmiş değerin nereden
+                  geldiği orada okunur. Satırın kampanya türü bölüm başlığında
+                  yazar; üstteki «Kampanya türü süzgeci» listeyi tek türe
+                  indirir.
                 </caption>
                 <thead>
                   <tr>
                     <th scope="col">Sıra</th>
                     <th scope="col">Banka</th>
-                    <th scope="col">Kampanya türü</th>
                     <th scope="col">Değer</th>
+                    <th scope="col">Ham ifade</th>
                     {jury && <th scope="col">Güven</th>}
                     <th scope="col">Katman</th>
                     <th scope="col">Durum</th>
@@ -342,32 +477,88 @@ export default function ComparePanel({
                   </tr>
                 </thead>
                 <tbody>
-                  {bolumler.map((bolum) => (
-                    <Fragment key={bolum.tur}>
-                      {/* Bölüm başlığı yalnız birden fazla tür varsa gerekli;
-                          tek tür seçiliyken gereksiz bir katman olurdu.
-                          «Kampanya türü:» öneki bilinçli: başlıkta çıplak bir
-                          ürün adı görünce kullanıcı onu bir banka ürünü
-                          zannediyordu, oysa bir SINIF adıdır. */}
-                      {bolumler.length > 1 && (
-                        <tr className="group-head">
-                          <td colSpan={sutunSayisi}>
-                            Kampanya türü: {bolum.tur} · {bolum.satirlar.length}{" "}
-                            banka
-                          </td>
-                        </tr>
-                      )}
-                      {bolum.satirlar.map(({ row, sira }, i) => (
-                        <Satir
-                          key={`${row.campaign_id}-${bolum.tur}-${i}`}
-                          row={row}
-                          sira={sira}
-                          field={field}
-                          jury={jury}
-                        />
-                      ))}
-                    </Fragment>
-                  ))}
+                  {bolumler.map((bolum) => {
+                    const eksik = eksikBankalar(bolum.satirlar, banks.data);
+                    return (
+                      <Fragment key={bolum.tur}>
+                        {/* Bölüm başlığı yalnız birden fazla tür varsa gerekli;
+                            tek tür seçiliyken gereksiz bir katman olurdu.
+                            «Kampanya türü:» öneki bilinçli: başlıkta çıplak bir
+                            ürün adı görünce kullanıcı onu bir banka ürünü
+                            zannediyordu, oysa bir SINIF adıdır. */}
+                        {bolumler.length > 1 && (
+                          <tr className="group-head">
+                            <td colSpan={sutunSayisi}>
+                              Kampanya türü: {bolum.tur} ·{" "}
+                              {bolum.satirlar.length} banka
+                            </td>
+                          </tr>
+                        )}
+                        {bolum.satirlar.map(({ row, sira }, i) => (
+                          <Satir
+                            key={`${row.campaign_id}-${bolum.tur}-${i}`}
+                            row={row}
+                            sira={sira}
+                            field={field}
+                            jury={jury}
+                          />
+                        ))}
+                        {/* Değer çıkarılamayan bankalar TABLODA da durur.
+                            Cetvel onları kesik taban çizgisiyle çiziyor; tablo
+                            atlarsa «aynı 11 satır» iddiası tabloda tutmaz.
+                            Toplu tek satır seçildi çünkü onbir satırın yedisi
+                            aynı şeyi söylüyor ve yedi kez boş satır basmak
+                            tablonun okunabilirliğini bilgi eklemeden düşürür —
+                            satır SAYISI değil, satırların KENDİSİ korunuyor. */}
+                        {eksik.length > 0 && (
+                          <>
+                            <tr>
+                              <td
+                                colSpan={sutunSayisi}
+                                className="cetvel-tablo-ayirici"
+                              >
+                                değer çıkarılamadı · {eksik.length} banka ·
+                                satırlar silinmedi
+                              </td>
+                            </tr>
+                            <tr>
+                              <td data-label="Sıra" className="faint">
+                                —
+                              </td>
+                              <td data-label="Banka" className="muted">
+                                {eksik.map((b) => b.name).join(" · ")}
+                              </td>
+                              <td data-label="Değer" className="mono faint">
+                                null
+                              </td>
+                              <td data-label="Ham ifade" className="mono faint">
+                                —
+                              </td>
+                              {jury && (
+                                <td data-label="Güven" className="mono faint">
+                                  —
+                                </td>
+                              )}
+                              <td data-label="Katman" className="mono faint">
+                                —
+                              </td>
+                              <td data-label="Durum">
+                                {/* Kesikli çerçeve: bu bir uyarı DEĞİL, bir
+                                    yokluk bildirimi. `.pill` tam bunun için
+                                    tanımlı (mono + kesik + nötr renk). */}
+                                <span className="pill">
+                                  alan metinde geçmiyor
+                                </span>
+                              </td>
+                              <td data-label="Kaynak" className="mono faint">
+                                dipnot yok
+                              </td>
+                            </tr>
+                          </>
+                        )}
+                      </Fragment>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -411,15 +602,21 @@ function Satir({
             </div>
           )}
         </td>
-        <td data-label="Kampanya türü" className="small muted">
-          {row.campaign_type || <span className="faint">belirlenemedi</span>}
-        </td>
         <td data-label="Değer" className="num">
           <strong>{formatValue(row.value, field)}</strong>
-          {row.raw_value && (
-            <div className="small faint mono" title="Kaynak metindeki ham ifade">
-              «{row.raw_value.trim()}»
-            </div>
+        </td>
+        {/* HAM İFADE kendi sütununa çıktı ve TIRNAKLI yazıya geçti.
+            Önceden değerin altında mono fısıltı olarak duruyordu, yani
+            bankanın kendi cümlesi makine verisiyle aynı sesle basılıyordu.
+            Oysa üç sesin ayrımı bu ürünün tezinin görsel karşılığı: mono
+            makine, tırnaklı yazı BANKA (bkz. tokens.css, "ÜÇ SES"). Sütun
+            olması ayrıca kıyası mümkün kılıyor — «Vade Kar Oranı» ile
+            «vade ve kar oranı» aynı alanı doldurup farklı yazılmış. */}
+        <td data-label="Ham ifade" className="cetvel-ham">
+          {row.raw_value ? (
+            `«${row.raw_value.trim()}»`
+          ) : (
+            <span className="mono faint">ham ifade kaydedilmemiş</span>
           )}
         </td>
         {jury && (
@@ -437,8 +634,15 @@ function Satir({
           {row.comparable ? (
             <span className="badge badge-ok">kıyaslanabilir</span>
           ) : (
+            /* Gerekçe SUNUCUNUN sözüdür (`compare.py` → `note`); istemci onu
+               yeniden yazmaz. Yalnız `note` hiç gelmediğinde satırın hâline
+               göre bir gerekçe basılır — «kıyaslanamaz» tek başına neden
+               kıyaslanamadığını söylemiyordu. */
             <span className="badge badge-warn" title={row.note ?? ""}>
-              {row.note ?? "kıyaslanamaz"}
+              {row.note ??
+                (satirHali(row) === "aralik"
+                  ? "aralık — doğrudan kıyaslanamaz"
+                  : "koşullu oran (kanal/müşteri/taban)")}
             </span>
           )}
           {row.campaign_status === "expired" && (
@@ -468,6 +672,9 @@ function Satir({
             span={row}
             rawValue={row.raw_value}
           />
+          {/* Karakter aralığı rozetin YÜZÜNDE zaten yazıyor (`¶ 1284–1298`):
+              `KaynakDipnotu` etiket verilmediğinde span'i basıyor. Buraya
+              ikinci bir ofset satırı eklemek aynı sayıyı iki kez basmaktı. */}
         </td>
       </tr>
     </>

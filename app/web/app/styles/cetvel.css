@@ -1,0 +1,519 @@
+/* Anatolia AI — KAPSAMA CETVELİ + kapsama sayacı + denetlenebilir tablo eki.
+ *
+ * İlgili: tokens.css (tek renk/boşluk kaynağı), components.css (`.rank-pill`,
+ *         `.badge`, `.pill`, `.rail*`, `table.data`), grafik.css (canvas ailesi),
+ *         ../components/grafik/KapsamaCetveli.tsx,
+ *         ../components/grafik/GrafikIskeleti.tsx,
+ *         ../components/ComparePanel.tsx
+ *         CLAUDE.md §17 (adil kıyas), §18-1 (kaynak vurgulama)
+ *
+ * ## Neden ayrı dosya — ve neden CANVAS DEĞİL
+ *
+ * Karşılaştırma ekranının birincil görselleştirmesi Chart.js tuvaliydi
+ * (`KiyasCubuklari`). Tuval üç şeyi birden yapamıyor:
+ *
+ *  1. Erişilebilirlik ağacında YOKTUR. `<canvas>` içine çizilen çubuk ekran
+ *     okuyucuya hiçbir şey söylemez; bu yüzden altına ayrıca metin liste
+ *     basmak zorundaydık, yani aynı bilgi iki kez çiziliyordu.
+ *  2. Dört kapsama hâlini AYRI BİÇİMLERLE anlatamıyor. Tuvalde elimizde renk
+ *     ve uzunluk var; kesikli çerçeve, 135° tarama dokusu, kesik taban çizgisi
+ *     ve konumlu aralık kutusu ya hiç yok ya da eklenti gerektiriyor. Renk TEK
+ *     sinyal olamaz (WCAG 1.4.1) — dördü ayrı biçim taşımak zorunda.
+ *  3. `aria-label` / `title` taşıyamıyor. Bir çubuğun «%1,69, kıyaslanabilir»
+ *     olduğu ancak tuvalin DIŞINDA yazılabiliyordu.
+ *
+ * Cetvel saf DOM + CSS gridtir: her satır bir liste öğesi, her çubuk kendi
+ * `aria-label`ını taşır, dört hâl dört ayrı biçimdir. Bedeli birkaç yüz satır
+ * CSS; kazancı, grafiğin kendisinin erişilebilir olması.
+ *
+ * `components.css` 1500+ satır ve on bileşen ailesi taşıyor; cetvel yeni bir
+ * aile ve tek seferde geldi. Denetim betiği `styles/*.css`'in tamamını tarar
+ * (`scripts/css_sinif_denetimi.py:69`), yani ayrı dosya kapıdan kaçmak değildir.
+ *
+ * ## Devralınan sınıflar YENİDEN YAZILMAZ
+ *
+ * Sıra rozeti (`.rank-pill` / `.rank-pill.first`), kaynak dipnotu
+ * (`.kaynak-dipnot`), kesikli çerçeveli nötr etiket (`.pill`) ve provenans
+ * şeridi (`.rail` + `.rail-doktrin`) zaten tanımlı. Cetvel onları OLDUĞU GİBİ
+ * kullanır: aynı işi yapan ikinci bir sınıf, iki ayrı yerde bakım demek.
+ *
+ * Literal renk/boşluk YOK — hepsi tokens.css'ten. Tek istisna hairline
+ * kalınlıkları (1px/2px/3px), çubuk yükseklikleri ve medya sorgusu genişlikleri
+ * (CSS değişkeni medya sorgusunda kullanılamaz).
+ *
+ * ## Kırılım noktaları dosyanın SONUNDA
+ *
+ * `base.css:147-156`'nın belgelediği tuzak burada da geçerli: aynı özgüllükteki
+ * bir medya kuralı, kendisinden SONRA gelen temel kural tarafından sessizce
+ * ezilir. Bu dosyanın kırılımları en altta.
+ */
+
+/* ===================================================================
+ * KAPSAMA SAYACI — ekranın tek kesri
+ *
+ * «4 / 11 banka» bu ekranın asıl iddiasıdır: soru «kim kazandı» değil, «neyi
+ * ne kadar biliyoruz». Sayaç provenans şeridiyle (`.rail .rail-doktrin`)
+ * çizilir çünkü söylediği şey sistemin KENDİ doktrinidir (CLAUDE.md §17), bir
+ * bankanın beyanı değil.
+ * ================================================================ */
+
+.cetvel-kabuk {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--sp-5);
+}
+
+/* Sol blok: alan başlığı + makine satırı. */
+.cetvel-ust {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+
+/* Alan adı ve yön MAKİNE verisidir: `extracted_fields.field_name` sütununun
+ * değeri ve `compare.py`nin sıralama yönü. Türkçe bir cümle değil, bir etiket. */
+.cetvel-alan {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+}
+
+.kapsama-sayaci {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  /* Sol kenarlık ve iç boşluk `.rail`den gelir; burada yalnız hizalama var. */
+  text-align: right;
+}
+
+.kapsama-etiket {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+/* Kesir bir DEĞERDİR — başlık ölçüsünde ve tabular basılır ki alan
+ * değiştikçe rakamlar yerinden kaymasın. */
+.kapsama-kesir {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-tight);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--lh-tight);
+}
+
+/* Kırılım: kesrin İÇİNDEKİ dağılım. Kapsanan 4 bankanın hepsi aynı şey
+ * değildir — biri sıralamaya girer, üçü gerekçesiyle listede kalır. */
+.kapsama-kirilim {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===================================================================
+ * CETVEL — üç kolon: banka · ray · değer
+ *
+ * Kolon ölçüleri sabit çünkü ray ORTAK bir eksendir: satırlar arasında aynı
+ * yüzde aynı piksele düşmezse cetvel bir cetvel değildir.
+ * ================================================================ */
+
+.cetvel {
+  margin-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-4);
+}
+
+.cetvel-bas,
+.cetvel-satir,
+.cetvel-ayirici {
+  display: grid;
+  grid-template-columns: 190px 1fr 132px;
+  grid-template-areas: "ad ray deger";
+  gap: 0 var(--sp-4);
+  align-items: center;
+}
+
+.cetvel-bas {
+  padding-bottom: var(--sp-2);
+}
+
+/* Göz-üstü etiket: BÜYÜK HARF yalnız mono'ya aittir (bkz. tokens.css, "ÜÇ
+ * SES") ve tek şey söyler — bu, verinin kendisi değil, verinin ETİKETİ. */
+.cetvel-bas-etiket {
+  grid-area: ad;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+}
+
+.cetvel-bas-deger {
+  grid-area: deger;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-dim);
+  text-align: right;
+}
+
+/* Eksen ölçeği. `tabular-nums` şart: değişken genişlikli rakamlarla işaretler
+ * eşit aralıklı görünmez ve göz ölçeği yanlış okur. */
+.cetvel-eksen {
+  grid-area: ray;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.cetvel-liste {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 44px dokunma hedefi (WCAG 2.5.8 / 2.5.5): satır tıklanabilir bir kaynak
+ * düğmesi taşıyor ve dar bir satırda o düğme parmakla vurulamaz. */
+.cetvel-satir {
+  min-height: 44px;
+  border-top: 1px solid var(--line-soft);
+}
+
+/* Ölçülemeyen satır bir kademe kısadır ama SİLİNMEZ: onbir satırın onbiri her
+ * zaman çizilir. Yükseklik farkı bir hiyerarşi işaretidir, bir eleme değil. */
+.cetvel-satir-bos {
+  min-height: 36px;
+}
+
+.cetvel-liste-bos > .cetvel-satir-bos:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+/* --- banka kolonu --- */
+
+.cetvel-banka {
+  grid-area: ad;
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+  min-width: 0;
+}
+
+.cetvel-banka-ad {
+  min-width: 0;
+}
+
+/* Ölçülemeyen satırda sıra rozeti YOKTUR (numara verilse sıralamaya girmiş
+ * gibi okunurdu); ad, rozetin bıraktığı boşluk kadar içeriden başlar ki
+ * yukarıdaki adlarla aynı hizada dursun. */
+.cetvel-banka-bos {
+  grid-area: ad;
+  color: var(--fg-dim);
+  padding-left: var(--sp-6);
+}
+
+/* --- ray + dört hâlin BİÇİMLERİ ---
+ *
+ * | hâl      | biçim                                                        |
+ * |----------|--------------------------------------------------------------|
+ * | dolu     | dolu mürekkep çubuk `--accent`                               |
+ * | kosullu  | kesikli çerçeve `--warn` + 135° tarama dokusu                 |
+ * | aralik   | konumlu kutu, kalın sol/sağ kenar, `--warn-wash` zemin        |
+ * | bos      | kesik taban çizgisi `2px dotted --fg-faint`                   |
+ * | belgesiz | düz gri kutu `--bg-3` + `1px solid --line`                    |
+ *
+ * Dördü de renkten BAĞIMSIZ ayırt edilebilir: dolu/kesikli/taramalı/noktalı.
+ * Gri basılmış bir çıktıda ve renk körlüğünde de okunur. */
+
+.cetvel-ray {
+  grid-area: ray;
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.cetvel-ray-bos {
+  grid-area: ray;
+  height: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.cetvel-cubuk {
+  height: 12px;
+  background: var(--accent);
+}
+
+/* %0 ≠ null. `%0` ya da «masrafsız» GERÇEK bir üründür ve alanın en avantajlı
+ * ucudur; sıfır genişlikli çizilse ekranda hiç görünmez ve boş satırla
+ * karışırdı. Bu yüzden sıfır, sıfır genişlikli ama GÖRÜNÜR bir mürekkep
+ * işaretidir — kesik çizgiyle asla karıştırılmaz (CLAUDE.md §6, negasyon). */
+.cetvel-cubuk-sifir {
+  width: 3px;
+  height: 12px;
+  background: var(--accent);
+}
+
+/* Değer okundu ama doğrudan kıyaslanamaz: çerçeve KESİK (süreksiz dayanak),
+ * zemin taramalı. Dolgu değil doku olması bilinçli — dolu bir çubukla yan yana
+ * durduğunda «aynı cinsten değil» ilk bakışta okunur. */
+.cetvel-cubuk-kosullu {
+  height: 12px;
+  border: 1px dashed var(--warn);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--warn-wash) 0 4px,
+    var(--bg-2) 4px 8px
+  );
+}
+
+/* Aralık bir NOKTA değil, bir aralıktır: eksende kendi başlangıç ve bitişiyle
+ * durur. Kalın sol/sağ kenar iki UCU işaretler; ortası zayıf zeminle dolu.
+ * `min-width` çok dar aralığın (ör. %3,85–%3,95) tümden kaybolmasını önler. */
+.cetvel-cubuk-aralik {
+  position: absolute;
+  height: 12px;
+  min-width: 6px;
+  border: 1px solid var(--warn);
+  border-left-width: 2px;
+  border-right-width: 2px;
+  background: var(--warn-wash);
+}
+
+/* Belge var, bu alanda değer yok. Çubuk değil ÇİZGİ: uzunluk bir büyüklük
+ * iddiasıdır ve burada iddia edilecek bir büyüklük yoktur. */
+.cetvel-cizgi {
+  width: 100%;
+  border-bottom: 2px dotted var(--fg-faint);
+}
+
+/* Bu türde hiç belge yok — «ölçtük, bulamadık» değil, «hiç bakılamadı».
+ * Kesik çizgiden AYRI bir biçim taşır: nötr, doygunluğu olmayan bir kutu. */
+.cetvel-kutu-belgesiz {
+  width: 100%;
+  height: 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+}
+
+/* --- değer kolonu --- */
+
+.cetvel-deger {
+  grid-area: deger;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+}
+
+.cetvel-deger-satir {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+
+/* Sıralamaya giren değer TAM sesle okunur. Aralık ve koşullu oran bir kademe
+ * küçük ve soluk: sayı doğru okunmuştur ama bir sıra iddiası taşımaz. */
+.cetvel-deger-sayi {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.cetvel-deger-sayi-kisik {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-dim);
+}
+
+.cetvel-durum {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+.cetvel-durum-ok {
+  color: var(--ok);
+}
+
+.cetvel-durum-uyari {
+  color: var(--warn);
+}
+
+/* «veri yok · 291 belge» — boşluğun kendisi SAYILIR. Belge sayısı olmadan bu
+ * satır «hiç bakmadık» diye okunurdu; oysa 291 belge tarandı ve alan geçmedi. */
+.cetvel-yok {
+  grid-area: deger;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-faint);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- ayırıcı: ölçülenler ile ölçülemeyenler arasındaki eşik --- */
+
+.cetvel-ayirici {
+  padding: var(--sp-3) 0 var(--sp-1);
+  border-top: 1px solid var(--line);
+  margin-top: var(--sp-1);
+}
+
+.cetvel-ayirici-etiket {
+  grid-area: ad;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--warn);
+}
+
+/* Gerekçe cümlesi ray ve değer kolonlarını birlikte kullanır: bir kolona
+ * sıkıştırıldığında dört satıra bölünüyordu. */
+.cetvel-ayirici-not {
+  grid-column: 2 / span 2;
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+/* Cetvelin alt notu: üç biçimin NE DEDİĞİNİ bir cümlede söyler. Efsane
+ * (legend) yerine cümle — bir renk kutusu listesi, biçimlerin anlamını
+ * anlatmaz. */
+.cetvel-not {
+  margin: var(--sp-4) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--fg-faint);
+  max-width: var(--measure);
+}
+
+/* ===================================================================
+ * YÜKLENİYOR — cetvel ÖNCE çizilir
+ *
+ * Banka adları ve satır sayısı hemen basılır; yalnız çubuklar bekler. Yükleme
+ * sırasında hiçbir sayı, hiçbir sıra numarası ve hiçbir animasyonlu sayaç
+ * görünmez: yükleme anında ekranda duran bir rakam, bir sonraki karede
+ * değişecek demektir ve okunmuş bir yanlış, okunmamış bir doğrudan kötüdür.
+ *
+ * Nabız/parıltı animasyonu da yok — süresi ölçülemeyecek kadar kısa bir
+ * bekleme için hareket, dikkati asıl içerikten çalar (grafik.css'teki
+ * `.grafik-iskelet` ile aynı karar).
+ * ================================================================ */
+
+.cetvel-iskelet {
+  margin-top: var(--sp-5);
+  border-top: 1px solid var(--line);
+  padding-top: var(--sp-4);
+}
+
+.cetvel-iskelet-satir {
+  display: grid;
+  grid-template-columns: 190px 1fr;
+  gap: 0 var(--sp-4);
+  align-items: center;
+  min-height: 32px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.cetvel-iskelet-satir:last-of-type {
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.cetvel-iskelet-ad {
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+/* Çubuğun YERİ ayrılır, çubuk çizilmez. Yer tutucu bir değer taklidi değil:
+ * dolgusu nötr, ucu yok, uzunluğu her satırda aynı. */
+.cetvel-iskelet-ray {
+  height: 12px;
+  background: var(--bg-3);
+}
+
+/* ===================================================================
+ * DENETLENEBİLİR TABLO EKİ — cetvelin altındaki aynı satırlar
+ *
+ * `table.data` çerçevesi components.css'te; burada yalnız cetvele ÖZGÜ iki
+ * hücre biçimi var.
+ * ================================================================ */
+
+/* Ham ifade BANKANIN sesidir (bkz. tokens.css, "ÜÇ SES"): tırnaklı yazı,
+ * tırnak işaretinin yerine geçer — bu cümleyi biz yazmadık. */
+.cetvel-ham {
+  font-family: var(--font-serif);
+  color: var(--fg-dim);
+}
+
+/* Değer çıkarılamayan bankaların toplu satırı. Uyarı rengindedir ama bir hata
+ * değildir: satırların silinmediğini ilan eder. */
+.cetvel-tablo-ayirici {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--warn);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA (bkz. dosya başlığı)
+ * ================================================================ */
+
+@media (max-width: 860px) {
+  /* Dar ekranda üç kolon yan yana sığmaz. Ray ALT SATIRA iner ve tam genişliği
+   * alır; ad ile değer üstte karşı karşıya durur. Adlandırılmış alanlar
+   * sayesinde DOM sırası değişmeden yerleşim yeniden kurulur — yani ekran
+   * okuyucunun duyduğu sıra sabit kalır. */
+  .cetvel-bas,
+  .cetvel-satir,
+  .cetvel-ayirici {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "ad deger"
+      "ray ray";
+    gap: var(--sp-1) var(--sp-3);
+  }
+
+  .cetvel-ayirici-not {
+    grid-area: ray;
+    grid-column: 1 / -1;
+  }
+
+  .cetvel-banka-bos {
+    padding-left: 0;
+  }
+
+  .cetvel-iskelet-satir {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--sp-1);
+    padding: var(--sp-1) 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .cetvel-kabuk {
+    gap: var(--sp-3);
+  }
+
+  /* Sayaç dar ekranda sağa yapışık kalırsa şeridi (sol kenarlık) ekranın
+   * ortasında asılı durur; sola hizalanır ve şerit metnin başına döner. */
+  .kapsama-sayaci {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
