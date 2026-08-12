@@ -425,7 +425,20 @@ export type Scoring = {
   direction_label: string;
   formula_source: string;
   steps: ScoringStep[];
-  composite_weights: Record<string, number> | null;
+  /**
+   * ÖLÇÜLDÜ (2026-08-12): bu alan `Record<string, number>` DEĞİL.
+   *
+   * `src/api/main.py:1624` onu `weight_manifest()` ile dolduruyor ve o fonksiyon
+   * (`src/comparison/compare.py:1106`) `list[dict]` döndürüyor — her satırda
+   * `field_name`, `weight`, `rationale`, `direction`. Yani şekli `WeightRow[]`,
+   * `Advantageous.weights` ile aynı.
+   *
+   * Yanlış tip sessiz değildi: `ScoringExplainer` bir nesneyi React çocuğu
+   * olarak basmaya çalışıyor ve «Objects are not valid as a React child» ile
+   * BANKA SAYFASININ TAMAMINI düşürüyordu. Tip sistemi burada koruma değil,
+   * tuzaktı — derleyici doğruladığı için kimse uca bakmamıştı.
+   */
+  composite_weights: WeightRow[] | null;
   composite_note: string;
   rows: ScoringRow[];
 };

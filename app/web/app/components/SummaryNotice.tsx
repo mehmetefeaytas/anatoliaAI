@@ -11,6 +11,22 @@
  *
  * ## Neden «LLM» değil «AI»
  *
+ * ## Etiketin üçüncü hâli: «üretilmiş» (v2 tasarım, 2026-08-12)
+ *
+ * Etiket iki kez değişti ve ikinci değişiklik burada GERİ ALINMIYOR, ileriye
+ * taşınıyor. 2026-08-09'daki gerekçe şuydu: «LLM» bir kısaltma ve jargon
+ * (`scripts/jargon_lint.py`). Gerekçe doğruydu, çözümü yarımdı — «AI» da bir
+ * kısaltma. v2 tasarımı kısaltmayı tümden atıyor: rozet tek bir Türkçe sözcük,
+ * «üretilmiş», ve okuyana asıl ayrımı söylüyor — bu metin ALINTILANMADI, ÜRETİLDİ.
+ *
+ * Yanındaki cümle «AI tarafından» yerine «Yerel model» diyor ve bu daha
+ * kesindir: model bu makinede çalıştı, bir servise gitmedi (CLAUDE.md §2
+ * on-prem kısıtı). «Kaynak metin aşağıda tam hâliyle duruyor» ise özetin neyin
+ * yerine geçMEDİĞİNİ söylüyor.
+ *
+ * Rozetin rengi `--llm`, `--warn` değil: «üretilmiş» bir uyarı değildir.
+ *
+ * Eski gerekçe kaydı:
  * Görünen etiket 2026-08-09'da «LLM özeti»nden «AI özeti»ne çevrildi. «LLM»
  * bir mimari adıdır ve panelin okuyucusuna (jüri, banka kullanıcısı) hiçbir
  * şey söylemez; «AI» aynı iddiayı taşır ama anlaşılır. Yumuşatma değil:
@@ -118,9 +134,9 @@ export default function SummaryNotice({
     <>
       <div className="summary-box">
         <div className="summary-label">
-          <span className="badge badge-llm">AI özeti</span>
+          <span className="badge badge-llm">üretilmiş</span>
           <span className="summary-note">
-            AI tarafından üretilmiştir — kaynak metin aşağıdadır.
+            Yerel model özeti. Kaynak metin aşağıda tam hâliyle duruyor.
             {kaynak ? ` (üreten: ${kaynak})` : ""}
           </span>
         </div>
