@@ -28,7 +28,7 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { api, toDisplayError } from "../lib/api";
+import { api, ApiError } from "../lib/api";
 import type { Bank, RefreshJob, RefreshPreview } from "../lib/api";
 import {
   belgeDurumEtiketi,
@@ -36,11 +36,14 @@ import {
   durumBildirimSinifi,
   durumEtiketi,
   hataGerekcesi,
+  hataTekrarlanabilir,
   ilerlemeOrani,
+  isCikmazi,
   sonucOzeti,
   sureMetni,
   tahminiIstek,
   tahminiSure,
+  yoklamaBirakmaNotu,
 } from "../lib/tazeleme";
 import { ErrorNotice, Loading } from "./ErrorNotice";
 import { useAsync } from "../lib/useAsync";
@@ -48,17 +51,55 @@ import { useAsync } from "../lib/useAsync";
 /** Durum yoklama aralığı. Daha sık sormak sunucuya değer katmıyor. */
 const YOKLAMA_MS = 1500;
 
+/**
+ * Durum sorgusu üst üste bu kadar düşerse yoklama BIRAKILIR.
+ *
+ * Sınırsız yoklama gerçek bir kusurdu: 404 almış bir iş kimliği (sunucu
+ * yeniden başlamış, kayıt düşmüş) hiçbir denemede geri gelmez, oysa arayüz
+ * 3 saniyede bir aynı hatayı tazeleyip kapatılamayan bir bildirim üretiyordu.
+ * Beş deneme, geçici bir sunucu sarsıntısını atlatmaya yeter; kalıcı bir
+ * yokluğu ise ısrar etmeden görünür kılar.
+ */
+const YOKLAMA_AZAMI_HATA = 5;
+
+/** Ekrandaki hata + yalnız GERÇEKTEN geçiciyse bir tekrar deneme yolu. */
+type EkranHatasi = {
+  hata: unknown;
+  /** `null` = bu hata için tekrar dene düğmesi BASILMAZ. */
+  tekrar: (() => void) | null;
+  /** Hatanın yanına eklenen ek açıklama (ör. yoklama neden bırakıldı). */
+  not: string | null;
+  /**
+   * Hatayı kimin ürettiği. Başarılı bir yoklama YALNIZ kendi bildirimini
+   * siler: aksi halde düşen bir «durdur» isteğinin hatası, 1,5 saniye sonra
+   * gelen ilk sağlıklı durum cevabıyla ekrandan silinirdi.
+   */
+  kaynak: "yoklama" | "eylem";
+};
+
+/** Hatanın HTTP durumu — ApiError değilse 0 (bilinmiyor = tekrarlanabilir). */
+function hataDurumu(e: unknown): number {
+  return e instanceof ApiError ? e.status : 0;
+}
+
 export default function TazelemePanel() {
   const banks = useAsync(() => api.banks(), []);
   const [onizleme, setOnizleme] = useState<RefreshPreview | null>(null);
   const [is, setIs] = useState<RefreshJob | null>(null);
-  const [hata, setHata] = useState<unknown>(null);
+  const [hata, setHata] = useState<EkranHatasi | null>(null);
   const [mesgul, setMesgul] = useState(false);
+  // Yoklama bırakıldı mı. Bitmemiş bir iş kaydı ekranda asılı kalırsa
+  // `calisiyor` sonsuza kadar doğru kalır ve TÜM banka düğmeleri kilitlenir;
+  // bu bayrak o kilide açık bir çıkış yolu takar.
+  const [yoklamaBirakildi, setYoklamaBirakildi] = useState(false);
 
   // Yoklama zamanlayıcısı bileşen kaldırılınca mutlaka durmalı; aksi halde
   // sekme değiştikçe arka planda birikir.
   const zamanlayici = useRef<ReturnType<typeof setTimeout> | null>(null);
   const canli = useRef(true);
+  // ARDIŞIK düşüş sayacı: araya giren tek bir başarılı sorgu bunu sıfırlar,
+  // çünkü o an sunucu cevap veriyor demektir.
+  const yoklamaHatasi = useRef(0);
 
   useEffect(() => {
     canli.current = true;
@@ -68,10 +109,26 @@ export default function TazelemePanel() {
     };
   }, []);
 
+  /**
+   * Hatayı ekrana koyar. `tekrar` YALNIZCA durum kodu gerçekten geçici bir
+   * arızaya işaret ediyorsa düğmeye dönüşür; aksi halde sessizce düşürülür.
+   */
+  const hataBildir = useCallback((e: unknown, tekrar?: () => void) => {
+    setHata({
+      hata: e,
+      tekrar: tekrar && hataTekrarlanabilir(hataDurumu(e)) ? tekrar : null,
+      not: null,
+      kaynak: "eylem",
+    });
+  }, []);
+
   const yokla = useCallback(async (jobId: string) => {
     try {
       const durum = await api.refreshStatus(jobId);
       if (!canli.current) return;
+      yoklamaHatasi.current = 0;
+      setYoklamaBirakildi(false);
+      setHata((onceki) => (onceki?.kaynak === "yoklama" ? null : onceki));
       setIs(durum);
       if (!durum.bitti) {
         zamanlayici.current = setTimeout(() => void yokla(jobId), YOKLAMA_MS);
@@ -79,9 +136,38 @@ export default function TazelemePanel() {
     } catch (e) {
       if (!canli.current) return;
       // Durum sorgusu düşerse iş yine de koşuyor olabilir; sonucu kaybetmemek
-      // için yoklamayı bırakmıyoruz ama hatayı da gizlemiyoruz.
-      setHata(e);
-      zamanlayici.current = setTimeout(() => void yokla(jobId), YOKLAMA_MS * 2);
+      // için tek düşüşte yoklamayı bırakmıyoruz ama hatayı da gizlemiyoruz.
+      yoklamaHatasi.current += 1;
+      const deneme = yoklamaHatasi.current;
+      const gecici = hataTekrarlanabilir(hataDurumu(e));
+
+      // Kalıcı bir durum kodunda (ör. 404: böyle bir iş kaydı yok) beklemenin
+      // anlamı yok — ilk düşüşte bırakılır.
+      if (gecici && deneme < YOKLAMA_AZAMI_HATA) {
+        setHata({
+          hata: e,
+          tekrar: null,
+          not: `Durum sorgusu düştü; yeniden sorulacak (${deneme}/${YOKLAMA_AZAMI_HATA}).`,
+          kaynak: "yoklama",
+        });
+        zamanlayici.current = setTimeout(() => void yokla(jobId), YOKLAMA_MS * 2);
+        return;
+      }
+
+      setYoklamaBirakildi(true);
+      setHata({
+        hata: e,
+        tekrar: gecici
+          ? () => {
+              yoklamaHatasi.current = 0;
+              setYoklamaBirakildi(false);
+              setHata(null);
+              void yokla(jobId);
+            }
+          : null,
+        not: yoklamaBirakmaNotu(deneme, gecici),
+        kaynak: "yoklama",
+      });
     }
   }, []);
 
@@ -92,7 +178,7 @@ export default function TazelemePanel() {
     try {
       setOnizleme(await api.refreshPreview(bank.slug));
     } catch (e) {
-      setHata(e);
+      hataBildir(e, () => void onizlemeAc(bank));
     } finally {
       setMesgul(false);
     }
@@ -104,10 +190,14 @@ export default function TazelemePanel() {
     try {
       const kayit = await api.refreshStart(slug);
       setOnizleme(null);
+      yoklamaHatasi.current = 0;
+      setYoklamaBirakildi(false);
       setIs(kayit);
       void yokla(kayit.is_id);
     } catch (e) {
-      setHata(e);
+      // 409 = başka bir tazeleme koşuyor. O iş bitince aynı düğme çalışır,
+      // dolayısıyla burada «tekrar dene» gerçek bir söz verir.
+      hataBildir(e, () => void baslat(slug));
     } finally {
       setMesgul(false);
     }
@@ -118,7 +208,7 @@ export default function TazelemePanel() {
     try {
       setIs(await api.refreshCancel(jobId));
     } catch (e) {
-      setHata(e);
+      hataBildir(e, () => void durdur(jobId));
     }
   }
 
@@ -154,10 +244,12 @@ export default function TazelemePanel() {
         </p>
       </section>
 
-      {!!hata && (
+      {hata && (
         <section className="card">
-          <ErrorNotice error={hata} />
-          <p className="small muted">{toDisplayError(hata).hint}</p>
+          {/* `hint` ikinci kez BASILMAZ: `ErrorNotice` onu zaten yazıyordu ve
+              aynı cümle üst üste iki kez görünüyordu. */}
+          <ErrorNotice error={hata.hata} onRetry={hata.tekrar ?? undefined} />
+          {hata.not && <p className="small muted">{hata.not}</p>}
         </section>
       )}
 
@@ -172,7 +264,35 @@ export default function TazelemePanel() {
             {is.mesaj ? <div className="notice-body">{is.mesaj}</div> : null}
           </div>
 
-          {calisiyor && (
+          {calisiyor && yoklamaBirakildi && (
+            // İlerleme çubuğu BASILMAZ: artık durum sorulmadığı için çubuk
+            // hareket etmez ve donmuş bir çubuk "iş takıldı" der — oysa iş
+            // sunucuda pekâlâ sürüyor olabilir. Söylenen şey, bilinen şey:
+            // izleme durdu, kaydı kapatmak listeyi serbest bırakır.
+            <div className="notice notice-warn">
+              <strong>İlerleme izleme durduruldu</strong>
+              <div className="notice-body">
+                Tazeleme sunucuda sürüyor olabilir; bu ekran artık durum
+                sormuyor. Kaydı kapatmak banka listesini yeniden kullanılabilir
+                yapar ve sunucudaki işe dokunmaz.
+              </div>
+              <div className="row" style={{ marginTop: "var(--sp-3)" }}>
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={() => {
+                    setIs(null);
+                    setYoklamaBirakildi(false);
+                    setHata(null);
+                  }}
+                >
+                  Kaydı kapat
+                </button>
+              </div>
+            </div>
+          )}
+
+          {calisiyor && !yoklamaBirakildi && (
             <div className="tazele-ilerleme" aria-live="polite">
               <div
                 className="tazele-ilerleme-cubuk"
@@ -395,24 +515,59 @@ export default function TazelemePanel() {
           <ErrorNotice error={banks.error} />
         ) : (
           <ul className="tazele-liste">
-            {(banks.data ?? []).map((b) => (
-              <li key={b.slug} className="tazele-satir">
-                <div className="grow">
-                  <div>
-                    <b>{b.name}</b>
+            {(banks.data ?? []).map((b) => {
+              // Çıkmaz YALNIZ kendi bankasını bağlar: bir bankanın kapalı
+              // tarama kuralı, diğerlerinin düğmesini kilitlemez.
+              const cikmaz = is && is.bank === b.slug ? isCikmazi(is) : null;
+              const cikmazId = `tazele-cikmaz-${b.slug}`;
+              return (
+                <li key={b.slug} className="tazele-satir">
+                  <div className="grow">
+                    <div>
+                      <b>{b.name}</b>
+                    </div>
+                    <div className="small faint mono">{b.website_url ?? "—"}</div>
+                    {cikmaz && (
+                      <div className="small muted" id={cikmazId}>
+                        <b>{cikmaz.neOldu}</b> {cikmaz.neYapilabilir}
+                      </div>
+                    )}
                   </div>
-                  <div className="small faint mono">{b.website_url ?? "—"}</div>
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-ghost"
-                  disabled={mesgul || calisiyor}
-                  onClick={() => void onizlemeAc(b)}
-                >
-                  Şimdi tazele
-                </button>
-              </li>
-            ))}
+                  {cikmaz ? (
+                    // Düğme kapalı ama GÖRÜNÜR: kaybolsaydı operatör eylemin
+                    // hiç var olmadığını sanırdı. Yanındaki çıkış yolu bilinçli
+                    // olarak bir "tekrar dene" değil — gerekçenin giderildiğini
+                    // operatörün açıkça beyan etmesini ister.
+                    <div className="row-tight">
+                      <button
+                        type="button"
+                        className="btn btn-ghost"
+                        disabled
+                        aria-describedby={cikmazId}
+                      >
+                        Şimdi tazele
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-link"
+                        onClick={() => setIs(null)}
+                      >
+                        Gerekçe giderildi, düğmeyi aç
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      className="btn btn-ghost"
+                      disabled={mesgul || calisiyor}
+                      onClick={() => void onizlemeAc(b)}
+                    >
+                      Şimdi tazele
+                    </button>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         )}
         {calisiyor && (
