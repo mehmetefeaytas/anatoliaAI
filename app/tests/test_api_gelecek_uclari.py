@@ -46,9 +46,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.api import gelecek
 from src.db.repository import Repository
 
+# fastapi YARDIMCI FONKSİYON İÇİNDE import ediliyordu; bu, modül yüklemesini
+# kurtarır ama `unittest`e test BAŞINA hata verdirir — atlama değil. 12 Ağu
+# CI koşusunda bu dosya tek başına 6 hata üretti. Probe modül seviyesine
+# alındı ki karar bir kez verilsin. Desen: `test_api_startup.py:37-41`.
+try:  # pragma: no cover - ortama bağlı
+    import fastapi  # noqa: F401
+    FASTAPI_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    FASTAPI_VAR = False
+
 KOK = Path(__file__).resolve().parents[1]
 
 
+@unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
 class _ApiTemel(unittest.TestCase):
     """Kendi geçici veri tabanıyla uygulama kurar.
 

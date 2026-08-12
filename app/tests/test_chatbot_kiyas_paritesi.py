@@ -50,6 +50,16 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
+# fastapi yardımcı içinde import ediliyordu: modül yüklenir ama test HATA
+# verir, atlanmaz. Koruma yalnız `ComparePariteKapisi`na konur — `_DepoluTest`
+# aile testleri saf Python'la koşar ve bağımlılıksız koşuda KOŞMAYA DEVAM
+# ETMELİ. Desen: `test_api_startup.py:37-41`.
+try:  # pragma: no cover - ortama bağlı
+    import fastapi  # noqa: F401
+    FASTAPI_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    FASTAPI_VAR = False
+
 from src.chatbot import structured
 from src.chatbot.router import Route
 from src.comparison.compare import rank, tekil_banka_urun
@@ -309,6 +319,7 @@ class SiralamaYonu(_DepoluTest):
 # 4. `/compare` ile parite
 # --------------------------------------------------------------------------- #
 
+@unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
 class ComparePariteKapisi(unittest.TestCase):
     """Panel ile sohbet AYNI tekilleştirmeyi uygulamak zorundadır.
 

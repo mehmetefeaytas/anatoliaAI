@@ -31,6 +31,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+# fastapi `setUp` içinde import ediliyordu: modül yüklenir ama her test HATA
+# verir, atlanmaz. 12 Ağu CI koşusunda bu dosya 4 hata üretti. Probe modül
+# seviyesine alındı. Desen: `test_api_startup.py:37-41`.
+try:  # pragma: no cover - ortama bağlı
+    import fastapi  # noqa: F401
+    FASTAPI_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    FASTAPI_VAR = False
+
 
 def _db_kur(yol: Path) -> None:
     conn = sqlite3.connect(yol)
@@ -55,6 +64,7 @@ def _db_kur(yol: Path) -> None:
     conn.close()
 
 
+@unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
 class TestOzetOnbellegi(unittest.TestCase):
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()

@@ -12,6 +12,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+# `_extract_main_text` çerçeve/form ayıklamasını `bs4` ile yapıyor
+# (`src/scraping/collector.py:216`). Paket yoksa fonksiyon `normalize_text(html)`
+# yedeğine düşüyor — Dockerfile.api yorumunda ölçülen fark: belge başına
+# 6232 vs 4317 karakter. Yani bu testler bs4 olmadan YANLIŞ ŞEYİ ölçer.
+# CI'daki `test` işi hiçbir şey kurmuyor (bkz. ci.yml); bu iki test orada
+# ATLANIR, `test-with-deps` işinde gerçekten koşar.
+# Desen: `test_api_startup.py:37-41`.
+try:  # pragma: no cover - ortama bağlı
+    import bs4  # noqa: F401
+    BS4_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    BS4_VAR = False
+
 from src.scraping import collector
 from src.scraping import discover as disc
 from src.scraping.collector import (
@@ -521,6 +534,7 @@ if __name__ == "__main__":
     unittest.main()
 
 
+@unittest.skipUnless(BS4_VAR, "beautifulsoup4 kurulu değil — çerçeve ayıklama atlanıyor")
 class TestFormIcerikliSayfaMetinCikarimi(unittest.TestCase):
     """`<form>` sarmalı sayfalarda içerik atılmamalı.
 

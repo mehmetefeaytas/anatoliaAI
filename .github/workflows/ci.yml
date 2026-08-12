@@ -47,7 +47,23 @@ jobs:
           echo "Kurulu ucuncu parti paketler (bos olmali):"
           pip list --format=freeze | grep -v -E "^(pip|setuptools|wheel)==" || true
 
-      # 16 dosyada 345 test. Yerelde 0,078 sn — saf stdlib oldugu icin.
+      # 2.586 test. Saf stdlib oldugu icin ~15 sn.
+      #
+      # Bu adim 4-12 Agustos arasi BES KOSU boyunca KIRMIZIYDI ve kimse
+      # gormedi; kirmizi bir kapi, olmayan bir kapiyla ayni seydir. Iki kok
+      # neden vardi, ikisi de "bagimlilik yok" ilkesinin kendisi degil,
+      # ilkeye uymayan test dosyalariydi:
+      #
+      #   (a) 17 hata: fastapi KORUMASIZ import ediliyordu. Uc dosyada modul
+      #       seviyesinde (unittest.loader._FailedTest), dort dosyada yardimci
+      #       fonksiyon icinde (test basina hata, atlama DEGIL).
+      #   (b) 8 basarisizlik + 3 hata: bs4 yokken HTML tablo ayristirmasi
+      #       sessizce bos donuyor, test de dusuyordu.
+      #
+      # Cozum: `test_api_startup.py:37-41` deseni (probe + skipUnless).
+      # Atlanan test SAYISI onemlidir: bagimliliksiz kosuda 205 test atlanir,
+      # yani API yuzeyi burada SINANMAZ. Onu asagidaki `test-with-deps` isi
+      # sinar. Iki is birlikte anlamli; yalniz biri yaniltir.
       - name: Birim ve entegrasyon testleri
         run: python -m unittest discover -s tests
 
@@ -100,8 +116,71 @@ jobs:
       - name: Demo DB tazeligi
         run: python -m scripts.check_demo_db --db-yoksa-gec
 
-      - name: API import guvenligi
-        run: python -c "from src.api.main import app; print('API import OK')"
+      # Bu adim BOS YESILDI ve tam olarak bu dosyanin reddettigi seydi.
+      # `src/api/main.py` sonunda `try: app = build_app() / except RuntimeError:
+      # app = None` var. `build_app()` fastapi yoksa RuntimeError atiyor; bu
+      # isde fastapi HIC kurulmadigi icin istisna HER ZAMAN yakalaniyor,
+      # `app` None oluyor ve adim "API import OK" basiyordu. Yani adim
+      # `build_app()` tamamen silinse bile gecerdi.
+      #
+      # Dogru yer `test-with-deps`: orada fastapi gercekten kurulu, dolayisiyla
+      # `build_app()` gercekten cagriliyor ve dondurdugu sey dogrulanabiliyor.
+      # Burada yalnizca modulun SOZDIZIMSEL olarak yuklenebildigi sinanir --
+      # iddia bu kadar oldugu icin adin da bu kadarini soylemesi gerekir.
+      - name: API modulu bagimliliksiz da YUKLENEBILIYOR
+        run: python -c "import src.api.main; print('modul yuklendi (app=None beklenir)')"
+
+  test-with-deps:
+    # NEDEN IKINCI BIR TEST ISI VAR.
+    #
+    # Yukaridaki `test` isi hicbir paket kurmuyor ve bu bilincli: cekirdegin
+    # saf stdlib ile kostugu, on-prem iddiasinin olculebilir parcasi. Ama o
+    # ilkenin bir yan etkisi olcusuz kalmisti: bagimliliksiz kosuda 205 test
+    # ATLANIYOR. Atlananlarin icinde 18 FastAPI test dosyasinin TAMAMI var --
+    # yani API yuzeyi (28 uc, dogrulama, 404/409/501/503 sozlesmeleri, ozet
+    # onbellegi, banka-delta, per-bank kiyas) CI'da hic kosmuyordu.
+    #
+    # "Atlandi" CI ciktisinda yesil gorunur. Bir yuzeyi sinamamak ile onu
+    # sinayip gecmek arasindaki farki gizleyen tek sey buydu.
+    #
+    # Bu is o farki kapatir: bagimliliklari kurar ve AYNI test paketini
+    # kosar. Atlama sayisi burada ~0 olmali; olmuyorsa bir bagimlilik
+    # requirements-api.txt'te eksik demektir ve bu da bir bulgudur.
+    name: Testler (bagimliliklar kurulu) + API gercekten ayaga kalkiyor
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # Teslim edilen imajin kurdugu kume (Dockerfile.api ile ayni dosya).
+      # Gelistirme kumesi (requirements.txt) BILEREK kurulmuyor: burada
+      # sinanan sey, KOSAN sistemin bagimliliklariyla testlerin gectigidir.
+      - name: Calisma zamani bagimliliklarini kur
+        working-directory: app
+        run: pip install -r requirements-api.txt
+
+      - name: Birim ve entegrasyon testleri (atlama ~0 olmali)
+        working-directory: app
+        run: python -m unittest discover -s tests
+
+      # `test` isindeki kardes adimin BOS YESIL olmasinin sebebi burada yok:
+      # fastapi kurulu, dolayisiyla `build_app()` gercekten cagriliyor ve
+      # None DONMEDIGI dogrulaniyor. Adim, var olma sebebi icin dusebilir.
+      - name: API gercekten kuruluyor (build_app None donmuyor)
+        working-directory: app
+        run: |
+          python -c "
+          from src.api.main import build_app
+          app = build_app()
+          assert app is not None, 'build_app() None dondu'
+          yollar = {r.path for r in app.routes}
+          for uc in ('/health', '/banks', '/campaigns', '/compare', '/chat'):
+              assert uc in yollar, f'uc kayboldu: {uc}'
+          print(f'API ayakta, {len(yollar)} yol kayitli')
+          "
 
   lint:
     # ARTIK KAPI (31 Tem 2026 aksami).

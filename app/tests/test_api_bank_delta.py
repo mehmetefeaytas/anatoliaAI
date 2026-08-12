@@ -30,7 +30,20 @@ _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from fastapi.testclient import TestClient
+# Çekirdek paket SIFIR üçüncü parti bağımlılıkla koşar; CI'daki `test` işi
+# bilinçli olarak hiçbir şey kurmuyor (bkz. ci.yml). Bu import KORUMASIZ
+# olduğu için modül yükleme aşamasında patlıyor ve `unittest` bunu ATLAMA
+# değil HATA sayıyordu: 12 Ağu CI koşusunda `unittest.loader._FailedTest`.
+# Desen `test_api_startup.py:37-41`den alındı.
+#
+# Koruma yalnız `_DepoluTest`e konur: `DeltaAritmetigi` saf aritmetiktir,
+# TestClient'a hiç dokunmaz ve bağımlılıksız koşuda KOŞMAYA DEVAM ETMELİ.
+try:  # pragma: no cover - ortama bağlı
+    from fastapi.testclient import TestClient
+    FASTAPI_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    TestClient = None  # type: ignore[assignment,misc]
+    FASTAPI_VAR = False
 
 from src.db.repository import Repository
 from src.extraction.reconcile import build_campaign
@@ -46,6 +59,7 @@ def _app(path: str):
         api_main.DB_PATH = onceki
 
 
+@unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
 class _DepoluTest(unittest.TestCase):
 
     def setUp(self):

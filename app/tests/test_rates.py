@@ -26,6 +26,19 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+# `TurkiyeFinansTableAdapter` HTML tablosunu `bs4` ile ayrıştırıyor
+# (`src/scraping/rates.py:903`). Paket yoksa üretim kodu SESSİZCE değer
+# üretmiyor ve tanıya "beautifulsoup4 yok — tablo ayristirilamadi" yazıyor;
+# test de doğal olarak düşüyor. CI'daki `test` işi bilinçli olarak hiçbir
+# şey kurmadığı için (bkz. ci.yml) bu 9 test bağımlılıksız koşuda ATLANIR,
+# BAŞARISIZ OLMAZ — bağımlılığın kurulu olduğu `test-with-deps` işinde
+# gerçekten koşar. Desen: `test_api_startup.py:37-41`.
+try:  # pragma: no cover - ortama bağlı
+    import bs4  # noqa: F401
+    BS4_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    BS4_VAR = False
+
 from src.scraping.rates import (
     KIND_FINANCING,
     KIND_PROFIT_SHARE,
@@ -448,6 +461,7 @@ class TestEnglishNumberParsing(unittest.TestCase):
         self.assertIsNone(_num_en("-"))
 
 
+@unittest.skipUnless(BS4_VAR, "beautifulsoup4 kurulu değil — tablo ayrıştırma atlanıyor")
 class TestTurkiyeFinansTableAdapter(unittest.TestCase):
     def _adapter(self, page: str = TF_PAGE, robots=_AllowAll):
         pages = {TurkiyeFinansTableAdapter.BASE + p: page

@@ -30,6 +30,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+# fastapi yardımcı içinde import ediliyordu: modül yüklenir ama testler HATA
+# verir, atlanmaz. 12 Ağu CI koşusunda bu dosya 3 hata üretti. Koruma yalnız
+# `TestUclar`a konur — `TestLlmKapali` ve `TestUretim` sahte istemciyle koşar
+# ve bağımlılıksız koşuda KOŞMAYA DEVAM ETMELİ.
+# Desen: `test_api_startup.py:37-41`.
+try:  # pragma: no cover - ortama bağlı
+    import fastapi  # noqa: F401
+    FASTAPI_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    FASTAPI_VAR = False
+
 from src.db.repository import Repository
 from src.schemas import Campaign
 from src.summarize.ozet_isi import (
@@ -224,6 +235,7 @@ class TestUretim(unittest.TestCase):
             repo.close()
 
 
+@unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
 class TestUclar(unittest.TestCase):
     """HTTP yüzeyi — durum kodları sözleşmenin parçası.
 
