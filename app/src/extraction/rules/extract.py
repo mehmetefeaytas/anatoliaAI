@@ -798,6 +798,71 @@ def _truncate_at_next_column(window: str) -> str:
     return window[:m.start()] if m else window
 
 
+# Cümle sınırı. Ondalık/binlik noktayı sınır SAYMAZ — `_ORAN_IFADESI`'ndeki
+# lookaround ile aynı gerekçe: "1.500,00" içindeki nokta cümle bitirmez.
+_CUMLE_SINIRI_RE = re.compile(r"(?<!\d)[.;!?](?!\d)|\n")
+
+
+def _cumle_kapsami(text: str, bas: int, son: int) -> str:
+    """Eşleşmeyi içeren cümle — iki yanı da cümle sınırında kesilir.
+
+    `extract_masraf`'ın mevcut ileri penceresi (`m.end() + 40`) yalnız SAĞA
+    bakıyor; öznenin nerede olduğunu görmek için SOLA da bakmak gerekiyor
+    ("Katılım SMS'i ücretsiz" — özne solda).
+    """
+    sol = 0
+    for m in _CUMLE_SINIRI_RE.finditer(text, 0, bas):
+        sol = m.end()
+    sag_m = _CUMLE_SINIRI_RE.search(text, son)
+    sag = sag_m.start() if sag_m else len(text)
+    return text[sol:sag]
+
+
+# ALAN-DIŞI ÖZNE: "ücretsiz"in nitelediği şey ÜRÜN DEĞİL.
+#
+# ## Ölçülen kusur (2026-08-12, `data/gold/gold.v2.json`)
+#
+# `masraf_durumu` 10 yanlış pozitifin **9'unda değer UYDURUYORDU** (gold
+# "YOK" diyor). Dokuzun yedisi n>=3'lük iki aileydi ve ikisinde de bedava
+# olan şey kampanyanın ürünü değildi:
+#
+#   4x  "Katılım SMS'i ücretsiz olup; ... Turkcell, Vodafone ..."   -> KANAL
+#   3x  "Talebiniz ... otuz (30) gün içinde ücretsiz olarak
+#        sonuçlandırılmaktadır."                                    -> YASAL TALEP
+#
+# Alan bileşik avantaj skorunda ikinci en yüksek ağırlığa sahip (0,20,
+# `comparison/compare.py:697`), yani uydurma "masrafsız" doğrudan "En
+# Avantajlı" sıralamasına giriyordu.
+#
+# ## Neden bu kapı meşru iddiayı elemiyor (ölçüldü)
+#
+# Aynı yordam gold'daki 6 MEŞRU çıkarıma da uygulandı: SMS ailesi 4/4
+# halüsinasyonda, **0/6** meşruda; talep ailesi 3/3'e karşı **0/6**.
+# Mesafeyle de ayrık: halüsinasyonlarda "SMS" jetonu span'dan 3 karakter
+# geride, en yakın meşru vakada 5.222 karakter.
+#
+# ## Kapsam dışı bırakılan 2 vaka (bilerek)
+#
+# "TOD ayrıcalığını ücretsiz yaşa" (n=1) — yapısal ikizi gold'da MEŞRU
+# ("GastroClub üyeliği ... ücretsiz"); iki vaka çelişiyor, n=1 üzerinde
+# kural yazılmaz. "Ücretsiz İSPARK Otopark Kampanyası" (n=1) — anotatör
+# BELGE düzeyinde gerekçelendirmiş (liste sayfası), çözümü cümle kapısı değil.
+#
+# `preprocessing/blocks.py` bu sorun için yazılmış ve docstring'i "KVKK'daki
+# ücretsiz" örneğini anıyor; iki sebeple yetmedi: (1) `extract_all` ona hiç
+# danışmıyor, (2) danışsaydı da bölge yayılımı (`YAYILIM_BLOK=6`) KVKK
+# cümlesinden tam bir blok önce sönüyor. Paylaşılan sabiti değiştirmek
+# özet/görünürlük yollarını 1.782 belgede etkileyeceği için burada CÜMLE
+# kapsamlı yerel bir kapı seçildi.
+_ALAN_DISI_OZNE_RE = re.compile(
+    # Kanal: katılım/işlem SMS'inin bedeli ürünün masrafı değildir.
+    r"\bsms\b|k[ıi]sa\s*mesaj"
+    # Yasal talep: KVKK m.13 başvurusunun ücretsiz sonuçlandırılması.
+    r"|(?:talebiniz|talep|ba[sş]vurunuz|ba[sş]vuru)[^.]{0,80}sonu[cç]land[ıi]r",
+    re.IGNORECASE,
+)
+
+
 def extract_masraf(text: str) -> Optional[ExtractedField]:
     """Masraf durumu — negasyon farkında ('masrafsız' = 0, bilgi yok değil).
 
@@ -819,6 +884,16 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
                      re.IGNORECASE)
     first_positive = None
     for m in pat.finditer(text):
+        # ALAN-DIŞI ÖZNE KAPISI (bkz. `_ALAN_DISI_OZNE_RE`).
+        #
+        # `continue` bilinçli: eşleşme ATLANIR, tarama BİTMEZ. `break` ya da
+        # erken `return None` olsaydı, alan-dışı bir cümle belgenin gerçek
+        # masraf iddiasını gölgeleyebilirdi — halüsinasyonu susturup bilgi
+        # kaybı üretmek kazanç değil takas olurdu. Kilidi:
+        # `tests/test_masraf_alan_disi.py::test_ayni_belgede_alan_disi_
+        # cumle_MESRU_iddiayi_gizlemez`.
+        if _ALAN_DISI_OZNE_RE.search(_cumle_kapsami(text, m.start(), m.end())):
+            continue
         # tutar keyword'den SONRA gelir ("tahsis ücreti 500 TL") → ileri pencere.
         # Pencere CÜMLE SINIRINDA kesilir: aksi halde sonraki cümledeki bir sayı
         # ("... alınmaz. Kampanya 31 Aralık 2026") 31 TL'lik hayali bir ücret
