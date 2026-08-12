@@ -4,7 +4,7 @@
  * Durum şeridi — API, depo, yerel model ve korpus tek satırda.
  *
  * İlgili: ../lib/saglik.tsx, ../lib/api.ts (`Stats`), ../styles/durum.css
- *         CLAUDE.md §2 (on-prem), §11 (demo stratejisi)
+ *         ../components/ErrorNotice.tsx (bandın altındaki tek satır atıf)
  *
  * ## Neden kalıcı kabukta
  *
@@ -23,12 +23,19 @@
  * kusur gibi değil, durum gibi yazıyor; sunumda söylenecek cümle de bu:
  * «kapalıyken de cevap veriyor, uydurmuyor».
  *
- * ## Renk tek sinyal değil
+ * ## Renk TEK sinyal değil — üç kat tekrar
  *
- * Noktanın rengi durumu tekrar ediyor, TAŞIMIYOR: her çipte durum ayrıca
- * yazılı. Nokta `aria-hidden`.
+ * Her çip durumu üç yolla söyler: bir NOKTA (biçim), bir CÜMLE (metin) ve bir
+ * mono İŞARET (`✓` / `—`). Renk yalnız dördüncü tekrardır. Nokta ve işaret
+ * `aria-hidden`: durum çipte yazılı olduğu için ekran okuyucuya iki kez
+ * düşmesi bilgi değil gürültü olurdu.
+ *
+ * Şerit MONO ve `--fs-xs`: bu satır verinin kendisi değil, verinin DURUMU.
+ * Sağlıklı hâlde sakin (`--fg-dim`), bozukken `--warn` — ve hiçbir hâlde
+ * kırmızı kutu yığınına dönüşmez.
  */
 
+import { useEffect, useRef } from "react";
 import { api } from "../lib/api";
 import { useSaglik } from "../lib/saglik";
 import { trNum } from "../lib/format";
@@ -38,6 +45,10 @@ const DEPO_ADI: Record<string, string> = {
   sqlite: "SQLite",
   postgres: "PostgreSQL",
 };
+
+/** `✓` = açık/okundu, `—` = yok/okunamadı. Renkten bağımsız ikinci sinyal. */
+const VAR = "✓";
+const YOK = "—";
 
 export default function DurumSeridi() {
   const { saglik, kapali, hazir } = useSaglik();
@@ -50,19 +61,32 @@ export default function DurumSeridi() {
   const korpus = stats.data?.korpus;
 
   return (
-    <div className="durum-serit small" role="status">
+    <div className="durum-serit" role="status">
       <span className={kapali ? "durum-cip durum-kapali" : "durum-cip"}>
         <span className="durum-nokta" aria-hidden="true" />
-        {kapali ? "API'ye ulaşılamıyor" : "API açık"}
+        {kapali ? "api yanıt vermiyor" : "api açık"}
+        <span className="durum-isaret" aria-hidden="true">
+          {kapali ? YOK : VAR}
+        </span>
       </span>
 
+      {/* Depo ve model YALNIZ API ayaktayken yazılır: ikisi de o uçtan
+          okunuyor ve sunucu düşmüşken «✓» basmak, ölçülmemiş bir şeyi
+          ölçülmüş göstermek olurdu. Son okunan durum bandın mono
+          listesinde, açıkça «son okuma» olarak duruyor. */}
       {!kapali && saglik && (
         <>
           <span className="durum-cip">
-            {DEPO_ADI[saglik.backend] ?? saglik.backend}
+            depo {DEPO_ADI[saglik.backend] ?? saglik.backend}
+            <span className="durum-isaret" aria-hidden="true">
+              {VAR}
+            </span>
           </span>
           <span className="durum-cip">
-            {saglik.llm ? "yerel model açık" : "yerel model kapalı"}
+            yerel model {saglik.llm ? "açık" : "kapalı"}
+            <span className="durum-isaret" aria-hidden="true">
+              {saglik.llm ? VAR : YOK}
+            </span>
           </span>
         </>
       )}
@@ -76,28 +100,100 @@ export default function DurumSeridi() {
   );
 }
 
+/** `2026-08-10 04:12` — mono, yerel saat, saniye yok. */
+function saatDamgasi(ms: number): string {
+  const d = new Date(ms);
+  const iki = (n: number) => String(n).padStart(2, "0");
+  return (
+    `${d.getFullYear()}-${iki(d.getMonth() + 1)}-${iki(d.getDate())} ` +
+    `${iki(d.getHours())}:${iki(d.getMinutes())}`
+  );
+}
+
 /**
- * API kapalıyken kabukta duran TEK bant.
+ * API kapalıyken kabukta duran TEK SAKİN BANT.
  *
  * Paneller kendi hata kutularını bastırmıyor (bu, her panele dokunmayı
  * gerektirirdi); bunun yerine bant onların ÜSTÜNDE duruyor ve olayı bir kez
- * açıklıyor: beş kırmızı kutu görülse bile hepsinin tek sebebi burada yazılı.
+ * açıklıyor. `ErrorNotice` da aynı anda susuyor ve kendini bu banda bağlıyor:
+ * beş panel, beş kırmızı kutu değil, bir bant.
  *
- * Önbellek tarihi uydurulmuyor: korpus tarihi `scraped_at` alanından gelir ve
- * o alan yoksa cümle de kurulmaz.
+ * ## Neden `--warn`, neden `--bad` değil
+ *
+ * Bu bir çökme değil, dereceli bir bozulmadır: yeni sorgu çalışmıyor ama
+ * panel son okunan veriyi göstermeye, kaynak metinler ve dipnotlar açılmaya
+ * devam ediyor. Kırmızı paniktir, turuncu durumdur.
+ *
+ * ## Okuma zamanı UYDURULMUYOR
+ *
+ * Damga, sağlık yoklamasının en son BAŞARILI olduğu andan gelir ve `ref`te
+ * tutulur — durum olarak tutulsaydı ayakta olan bir sistemde 15 saniyede bir
+ * gereksiz render tetiklerdi. Hiç başarılı okuma olmadıysa (panel kapalı bir
+ * sunucuya açıldıysa) tarih cümlesi hiç kurulmaz: olmayan bir okumaya saat
+ * yazmak, tam olarak bu panelin yapmamaya söz verdiği şeydir.
+ *
+ * `role="status"` + `aria-live="polite"`: jüri ekranında sesli okuyucuya da
+ * düşsün, ama okumayı kesmeden.
  */
 export function ApiKapaliUyarisi() {
-  const { kapali, hazir } = useSaglik();
+  const { saglik, kapali, hazir } = useSaglik();
+  const sonOkuma = useRef<number | null>(null);
+
+  useEffect(() => {
+    // `saglik` her başarılı yoklamada yeni bir nesnedir; etki o yüzden her
+    // turda yeniden koşar ve damga tazelenir.
+    if (hazir && !kapali) sonOkuma.current = Date.now();
+  }, [hazir, kapali, saglik]);
+
   if (!hazir || !kapali) return null;
 
+  const okundu = sonOkuma.current;
+
+  // Mono durum listesi — üçüncü sinyal. `api` işaretsiz değil, açıkça `—`.
+  const parcalar = [`api ${YOK}`];
+  if (saglik) {
+    parcalar.push(
+      `depo ${DEPO_ADI[saglik.backend] ?? saglik.backend} ${VAR}`,
+      `yerel model ${saglik.llm ? VAR : YOK}`,
+    );
+  }
+
   return (
-    <div className="notice notice-warn rail rail-dikkat" role="alert">
-      <strong>API&apos;ye ulaşılamıyor</strong>
-      <div className="notice-body">
-        Aşağıdaki panellerin hepsi aynı sebeple boş — beş ayrı arıza değil, tek
-        bir bağlantı sorunu. Sistemin kritik yolu çevrimdışıdır ve veri yereldeki
-        korpustan okunur; sunucu yeniden başladığında ekran kendiliğinden dolar.
+    <div className="durum-bant" role="status" aria-live="polite">
+      <span className="durum-bant-nokta" aria-hidden="true" />
+
+      <div className="durum-bant-govde">
+        <div className="durum-bant-baslik">
+          API yanıt vermiyor — panel son okunan veriyi gösteriyor
+        </div>
+        <div className="durum-bant-aciklama">
+          {okundu === null ? (
+            <>
+              Panel bu oturumda sunucudan hiç veri okuyamadı; bu yüzden bir
+              okuma zamanı yazılmıyor. Bağlantı kurulduğunda ekran kendiliğinden
+              dolar.
+            </>
+          ) : (
+            <>
+              Ekrandaki sayılar son başarılı okumadan geliyor (
+              <span className="durum-bant-saat">{saatDamgasi(okundu)}</span>).
+              Yeni sorgu çalışmıyor; kaynak metinler ve dipnotlar açılmaya devam
+              ediyor.
+            </>
+          )}
+        </div>
       </div>
+
+      <span
+        className="durum-bant-liste"
+        title={
+          saglik
+            ? "depo ve yerel model durumu son başarılı okumadan geliyor"
+            : "sunucudan henüz durum okunmadı"
+        }
+      >
+        {parcalar.join(" · ")}
+      </span>
     </div>
   );
 }
