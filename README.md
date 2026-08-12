@@ -32,7 +32,8 @@ tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **1.774 belge** (ham arşivde 1.782 — 8'i DB'ye işlenmeyi bekliyor) | `python -m scripts.check_demo_db` |
+| Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
+| AI özeti kapsaması | **1.759** üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold seti | **48 kayıt** (40'ı zor vaka) | `data/gold/gold.v2.json` |
 | **Yapılandırılmış alan mikro-F1** | **0,619** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
 | 12-alan mikro-F1 | 0,439 | *(aynı komut — farkı aşağıda açıklıyoruz)* |
@@ -75,10 +76,11 @@ sistemin Recall@5'iyle **doğrudan kıyaslanamaz**.
 Bir vitrin tablosunun en kolay yalanı, eksiği yazmamaktır. Ölçüm sırasında
 çıkan ve **henüz kapatılmamış** üç açık:
 
-- **`demo.db` bayat.** Ham arşiv 11 Ağustos'ta tazelendi (1.782 belge), veri
-  tabanı 1.774'te kaldı; 8 belgeyi chatbot/dashboard **hiç görmüyor**.
-  `python -m scripts.check_demo_db` bunu kapı olarak raporlar. Yeniden inşa
-  özet sütununu sıfırlayacağı için bilinçli olarak ertelendi.
+- **Korpusta çoğaltılmış bir kaynak var.** Albaraka sağlık kampanyası aynı
+  `source_url` altında hem `manual/` hem `live/` kopyası taşıyor (3 dosya,
+  2 farklı içerik). `check_demo_db` bunu içerik kapısında raporlar ve rapor
+  bilerek kırmızı kalır: `raw/` değişmez olduğu için düzeltmesi bir korpus
+  politikası kararıdır, sessizce tolere edilecek bir gürültü değil.
 - **`tahsis_ucreti` ölçülemiyor.** Gold'da 0 pozitif örnek var (47 kayıtta
   `absent`); sistem hiç değer üretmiyor ve gold da beklemiyor, yani F1
   tanımsız. Bu "hiç çalışmıyor" değil, "ölçülemiyor" demektir ve çelişki
