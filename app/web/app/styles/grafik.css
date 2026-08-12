@@ -81,6 +81,31 @@
   color: var(--fg);
 }
 
+/* --- palet çözülene kadar yer tutan iskelet ---
+ * Canvas grafikleri mount öncesi çizilemez (bkz. lib/grafikPaleti.ts). Bu kutu
+ * o boşluğu önden ayırır; yoksa grafik bir kare sonra belirdiğinde altındaki
+ * tablo aşağı sıçrar ve kullanıcı okuduğu satırı kaybeder.
+ *
+ * İçi boş ve `aria-hidden`: bir yükleme göstergesi DEĞİL — veri çoktan geldi,
+ * bekleyen yalnız renk. Nabız/parıltı animasyonu da yok; süresi ölçülemeyecek
+ * kadar kısa bir bekleme için hareket, dikkati asıl içerikten çalar. */
+.grafik-iskelet {
+  margin: var(--sp-5) 0;
+  border: 1px dashed var(--line-soft);
+  border-radius: var(--radius-md);
+  background: var(--bg-3);
+}
+
+/* --- delta ekseninin nötr şeridi ---
+ * `kiyaslanamaz` / `eksik_veri` / `eksik_urun` / `rakip_yok` alanları eksende
+ * sıfır uzunlukta çizilseydi «eşit» diye okunurdu. Kendi şeritlerinde,
+ * eksenden görsel olarak AYRI dururlar: sol kenarlık o ayrımı taşır. */
+.delta-notr {
+  margin-top: var(--sp-4);
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--line);
+}
+
 /* ===================================================================
  * YILDIZLI PUAN
  * ================================================================ */

@@ -47,6 +47,15 @@
  * HESAPLANMAYAN DURUM korundu: taraflardan biri `comparable = false` ise
  * (aralık, zaman-koşullu oran, farklı para birimi) delta **boş bırakılır**.
  * Yaklaşık bir fark üretmek, tam da §17'nin yasakladığı uydurma sıralamadır.
+ *
+ * ## KIYAS YATAY, DELTA DİKEY (2026-08-12)
+ *
+ * Toplantıda açık kalan soru kapandı: iki ekran aynı veriyi okuyor ama iki ayrı
+ * soruya cevap veriyor ve bunu görsel dilbilgisiyle söylüyorlar. Kıyas ekranı
+ * bankaları yan yana koyar (yatay çubuk, sıralama okunur); delta ekranı TEK
+ * bankayı ortalar ve artı/eksi bir eksende nerede önde nerede geride olduğunu
+ * gösterir (dikey çubuk, denge okunur). Grafik `grafik/DeltaEkseni.tsx`;
+ * gerekçenin tamamı orada.
  */
 
 import { useEffect, useState } from "react";
@@ -57,6 +66,7 @@ import { useAsync } from "../lib/useAsync";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
+import DeltaEkseni from "./grafik/DeltaEkseni";
 
 type Props = {
   campaignTypes: string[];
@@ -311,6 +321,10 @@ function TurBolumu({
           ))}
         </div>
       )}
+
+      {/* Grafik tablodan ÖNCE: eksen «nerede öndeyim» sorusunu tek bakışta
+          cevaplar, tablo altında denetlenebilir ayrıntıyı verir. */}
+      <DeltaEkseni alanlar={fields} bankName={bankName} tur={tur} durumlar={KINDS} />
 
       <h3>Alan alan delta</h3>
       <div className="table-wrap">

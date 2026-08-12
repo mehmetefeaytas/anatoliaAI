@@ -40,6 +40,31 @@
  * ayrı süzgeç sandı. Kavram tektir: `campaign_type`, 8 sınıf. Arayüzün
  * tamamında adı **kampanya türü**dür. Tanımı `FairnessNotice`'ta bir kez
  * yazılır; buradaki tablo notu ona atıf yapar, kavramı yeniden tanımlamaz.
+ *
+ * ## GRAFİK ÖNCE, TABLO SONRA (2026-08-12)
+ *
+ * Ekran grafik ağırlıklı hâle getirildi: `KiyasCubuklari` tablonun ÜSTÜNDE,
+ * tablo altında denetlenebilir ayrıntı olarak kalıyor. Grafik `/banks`ten gelen
+ * TAM banka listesini de alıyor; verisi olmayan banka boş çubuk olarak çizilip
+ * listede kalıyor (ölçüldü: `kar_payi_orani` 1.774 belgenin 56'sında, 11
+ * bankanın 6'sında var — grafiği yalnız `/compare` satırlarıyla çizmek beş
+ * bankayı sessizce yok ederdi).
+ *
+ * **Grafik TEK kampanya türü çizer.** Türler arası sıralama yasak (§17) ve bir
+ * ekseni paylaşan çubuklar tam da o sıralamayı ima eder. Seçenekler ikisiydi:
+ * bölüm başına bir grafik, ya da seçili tür. Bölüm başına grafik seçilmedi —
+ * «Tümü» hâlinde 8 tür × 11 banka ≈ 88 çubuk, yani ilk veri satırından önce
+ * ~2.600 piksel; bu «grafik ağırlıklı» değil, grafik yığınıdır. Grafik seçili
+ * türü çizer; «Tümü» seçiliyken EN ÇOK BANKANIN veri taşıdığı türü alır ve
+ * hangi türü çizdiğini başlıkta yazar. Kalan türler tabloda bölüm bölüm durur.
+ *
+ * ## KAYNAK JESTİ TEK (2026-08-12)
+ *
+ * Satır içi kaynak çekmecesi (`openRow` + `SourceDrawer`) kaldırıldı; yerine
+ * her yüzeyde aynı olan `KaynakDipnotu` geldi. Çekmece tabloyu iterek açılıyor
+ * ve kullanıcı okuduğu satırı kaybediyordu; yan panel tabloyu yerinde bırakıp
+ * iddia ile kanıtı aynı ekranda tutuyor. Gerekçenin tamamı KaynakDipnotu.tsx
+ * başlığında.
  */
 
 import { Fragment, useState } from "react";
@@ -52,9 +77,10 @@ import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
 import FieldChips from "./FieldChips";
+import GrafikIskeleti from "./grafik/GrafikIskeleti";
+import KiyasCubuklari from "./grafik/KiyasCubuklari";
+import KaynakDipnotu from "./KaynakDipnotu";
 import ScoringExplainer from "./ScoringExplainer";
-import SourceSpanView from "./SourceSpanView";
-import SummaryNotice from "./SummaryNotice";
 
 type Intent = "" | "lowest" | "highest";
 
@@ -109,18 +135,28 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
   const [intent, setIntent] = useState<Intent>("");
   const [type, setType] = useState("");
   const [perBank, setPerBank] = useState<PerBank>("best");
-  const [openRow, setOpenRow] = useState<string | null>(null);
   const { jury } = useJuryMode();
 
   const rows = useAsync(
     () => api.compare(field, intent || undefined, type || undefined, perBank),
     [field, intent, type, perBank],
   );
+  // Banka kataloğu grafiğin «veri yok» çubukları için; `/compare` yalnız değer
+  // TAŞIYAN satırları döndürdüğü için eksik bankalar ancak buradan bilinir.
+  const banks = useAsync(() => api.banks(), []);
   const meta = fields.find((f) => f.field === field);
   const bolumler = turlereBol(rows.data ?? []);
   // Sütun sayısı: Sıra, Banka, Kampanya türü, Değer, [Güven], Katman, Durum,
   // Kaynak.
   const sutunSayisi = jury ? 8 : 7;
+
+  // Grafiğe giden bölüm: tek tür seçiliyse o, «Tümü» ise en çok bankanın veri
+  // taşıdığı tür (gerekçe dosya başlığında). Eşitlikte ilk gelen kazanır —
+  // sunucunun sırası korunur, burada yeniden sıralama yapılmaz.
+  const grafikBolumu =
+    bolumler.length === 0
+      ? null
+      : bolumler.reduce((en, b) => (b.satirlar.length > en.satirlar.length ? b : en));
 
   return (
     <div className="stack">
@@ -210,6 +246,46 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
               hata değil: alan metinlerde geçmiyorsa sistem değer UYDURMAZ.
             </EmptyNotice>
           )}
+          {/* GRAFİK ÖNCE — ekranın taşıyıcı öğesi bu. Tablo altında kalır ve
+              denetlenebilir ayrıntıyı verir. */}
+          {rows.data && rows.data.length > 0 && grafikBolumu && (
+            <>
+              <GrafikIskeleti
+                yukseklik={
+                  Math.max(
+                    banks.data?.length ?? 0,
+                    grafikBolumu.satirlar.length,
+                  ) *
+                    30 +
+                  48
+                }
+              />
+              <KiyasCubuklari
+                rows={grafikBolumu.satirlar.map((s) => s.row)}
+                bankalar={banks.data ?? undefined}
+                alan={field}
+                baslik={`${meta?.label ?? field} — kampanya türü: ${grafikBolumu.tur}`}
+              />
+              {bolumler.length > 1 && (
+                <p className="small muted">
+                  Grafik yalnız <b>{grafikBolumu.tur}</b> türünü çizer: en çok
+                  bankanın bu alanda veri taşıdığı tür. Farklı türler tek eksene
+                  konmaz — yan yana duran çubuklar, sistemin reddettiği türler
+                  arası sıralamayı ima ederdi. Diğer {bolumler.length - 1} tür
+                  aşağıdaki tabloda bölüm bölüm durur; grafiği başka bir türe
+                  almak için üstteki «Kampanya türü süzgeci»ni kullanın.
+                </p>
+              )}
+              {!!banks.error && (
+                <p className="small muted">
+                  Banka kataloğu (<span className="mono">/banks</span>)
+                  okunamadı; grafikte yalnız değer taşıyan bankalar var. Verisi
+                  olmayan bankaların boş çubukları bu turda çizilemedi.
+                </p>
+              )}
+            </>
+          )}
+
           {rows.data && rows.data.length > 0 && (
             <div className="table-wrap">
               <table className="data stackable">
@@ -226,10 +302,11 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                       söylüyor. Kalan iki bilgi şeritte yok ve tabloya özgü —
                       bağlantının ne yaptığı, ve sütun ile süzgecin aynı adı
                       taşıyıp farklı iş yapması. */}
-                  Bir satırdaki «Kaynağı gör» bağlantısı, değerin kaynak metindeki
-                  karakter aralığını vurgular. Sıra numaraları tür içinde
-                  verilir; «Kampanya türü» sütunu satırın türünü gösterir,
-                  üstteki aynı adlı süzgeç ise listeyi tek türe indirir.
+                  Kaynak sütunundaki ¶ rozetine basınca belge yandan açılır ve
+                  değerin kaynak metindeki karakter aralığı vurgulanır; tablo
+                  yerinde kalır. Sıra numaraları tür içinde verilir; «Kampanya
+                  türü» sütunu satırın türünü gösterir, üstteki aynı adlı süzgeç
+                  ise listeyi tek türe indirir.
                 </caption>
                 <thead>
                   <tr>
@@ -259,22 +336,15 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
                           </td>
                         </tr>
                       )}
-                      {bolum.satirlar.map(({ row, sira }, i) => {
-                        const key = `${row.campaign_id}-${bolum.tur}-${i}`;
-                        const open = openRow === key;
-                        return (
-                          <RowPair
-                            key={key}
-                            row={row}
-                            sira={sira}
-                            field={field}
-                            open={open}
-                            jury={jury}
-                            sutunSayisi={sutunSayisi}
-                            onToggle={() => setOpenRow(open ? null : key)}
-                          />
-                        );
-                      })}
+                      {bolum.satirlar.map(({ row, sira }, i) => (
+                        <Satir
+                          key={`${row.campaign_id}-${bolum.tur}-${i}`}
+                          row={row}
+                          sira={sira}
+                          field={field}
+                          jury={jury}
+                        />
+                      ))}
                     </Fragment>
                   ))}
                 </tbody>
@@ -289,28 +359,22 @@ export default function ComparePanel({ fields, campaignTypes }: Props) {
   );
 }
 
-function RowPair({
+function Satir({
   row,
   sira,
   field,
-  open,
   jury,
-  sutunSayisi,
-  onToggle,
 }: {
   row: CompareRow;
   /** Kampanya türü İÇİNDEKİ sıra; kıyaslanamaz satırlarda null. */
   sira: number | null;
   field: string;
-  open: boolean;
   /** Jüri modu — güven sütunu yalnız açıkken basılır. */
   jury: boolean;
-  sutunSayisi: number;
-  onToggle: () => void;
 }) {
   return (
     <>
-      <tr className={open ? "selected" : undefined}>
+      <tr>
         <td data-label="Sıra" className="num">
           <span className={`rank-pill${sira === 1 ? " first" : ""}`}>
             {sira ?? "—"}
@@ -375,23 +439,16 @@ function RowPair({
           )}
         </td>
         <td data-label="Kaynak">
-          <button
-            type="button"
-            className="btn-link"
-            aria-expanded={open}
-            onClick={onToggle}
-          >
-            {open ? "kapat" : "Kaynağı gör"}
-          </button>
+          {/* Her yüzeydeki AYNI jest: rozete bas, belge yandan açılsın, değerin
+              aralığı vurgulu olsun. `CompareRow` zaten `SpanInfo`'yu taşıdığı
+              için satırın kendisi span olarak geçilebiliyor. */}
+          <KaynakDipnotu
+            campaignId={row.campaign_id}
+            span={row}
+            rawValue={row.raw_value}
+          />
         </td>
       </tr>
-      {open && (
-        <tr className="selected">
-          <td colSpan={sutunSayisi}>
-            <SourceDrawer row={row} />
-          </td>
-        </tr>
-      )}
     </>
   );
 }
@@ -405,39 +462,4 @@ function labelOf(src: string): string {
     self_reported: "model beyanı",
   };
   return map[src] ?? src;
-}
-
-/** Satır açıldığında kaynak metni çekip span'i vurgular. */
-function SourceDrawer({ row }: { row: CompareRow }) {
-  const doc = useAsync(() => api.campaignText(row.campaign_id), [row.campaign_id]);
-
-  return (
-    <div className="stack" style={{ gap: 10 }}>
-      {doc.loading && <Loading label="Kaynak metin getiriliyor…" />}
-      {!!doc.error && <ErrorNotice error={doc.error} />}
-      {doc.data && (
-        <>
-          <dl className="kv">
-            <dt>Kaynak URL</dt>
-            <dd className="mono">{doc.data.source_url ?? "—"}</dd>
-            <dt>Belge no</dt>
-            <dd className="mono">#{doc.data.campaign_id}</dd>
-            {doc.data.scraped_at && (
-              <>
-                <dt>Toplanma</dt>
-                <dd className="mono">{doc.data.scraped_at}</dd>
-              </>
-            )}
-          </dl>
-          <SummaryNotice ozet={doc.data.ozet} ozetKaynak={doc.data.ozet_kaynak} />
-          <SourceSpanView
-            text={doc.data.text}
-            span={row}
-            rawValue={row.raw_value}
-            blocks={doc.data.bloklar}
-          />
-        </>
-      )}
-    </div>
-  );
 }

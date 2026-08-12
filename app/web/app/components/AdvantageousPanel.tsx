@@ -24,14 +24,32 @@
  * kampanya olduğu ve neden sıralanmadığı yazılır. Kapsama eşiğini geçemeyen
  * kampanya `comparable=false` döner ve nedeni `note`'ta durur. Sayıya
  * indirgenemeyen alan skorlanmaz; değer asla uydurulmaz (CLAUDE.md §19).
+ *
+ * ## İKİ BANKA KIYASI (2026-08-12)
+ *
+ * Tablo bir sıralama verir ama «bu iki banka neden farklı sıradalar» sorusuna
+ * cevap vermez: skoru üreten beş ölçüt ancak satır açılırsa, o da sayı sayı
+ * görünür. Her kampanya türünün başına bir radar konuldu — aynı türden iki
+ * banka seçilir, ölçüt ölçüt profilleri üst üste çizilir.
+ *
+ * **Eksenler uydurulmuyor:** `/advantageous` ucunun döndürdüğü `weights`
+ * listesinden geliyorlar ve her birinin yazılı gerekçesi zaten bu ekranda
+ * («Ağırlıklar ve gerekçeleri»). Radar grafiklerinin klasik kusuru eksenlerin
+ * tasarımcı tarafından seçilip hiçbir yerde savunulmamasıdır; burada eksen
+ * listesi sunucunun sözleşmesidir, arayüzün tercihi değil.
+ *
+ * Kıyas her zaman TÜR İÇİNDEDİR: radar bir türün bölümünde yaşar ve başlığında
+ * hangi kampanya türünde olduğunu yazar (§17).
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { api } from "../lib/api";
 import type { AdvantageousGroup, CompositeScore, WeightRow } from "../lib/api";
 import { formatValue, trNum } from "../lib/format";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
+import GrafikIskeleti from "./grafik/GrafikIskeleti";
+import RadarKiyas from "./grafik/RadarKiyas";
 import { useAsync } from "../lib/useAsync";
 
 type Props = {
@@ -48,6 +66,16 @@ function yuzde(v: number | null): string {
 export default function AdvantageousPanel({ campaignTypes, onInspect }: Props) {
   const [tur, setTur] = useState("");
   const veri = useAsync(() => api.advantageous(tur || undefined), [tur]);
+
+  // Radar eksenlerinin insan etiketleri `/fields`ten gelir; `weights` yalnız
+  // alan ADINI taşır ve eksende `kar_payi_orani` yazması jüriye kod okutmaktır.
+  // Uç okunamazsa etiket yerine alan adı görünür — grafik yine çizilir.
+  const alanlar = useAsync(() => api.fields(), []);
+  const etiketler = useMemo(
+    () =>
+      Object.fromEntries((alanlar.data ?? []).map((f) => [f.field, f.label])),
+    [alanlar.data],
+  );
 
   return (
     <section className="card">
@@ -103,12 +131,15 @@ export default function AdvantageousPanel({ campaignTypes, onInspect }: Props) {
               Seçilen türde skorlanabilir alan taşıyan kampanya yok.
             </EmptyNotice>
           ) : (
-            Object.entries(veri.data.types).map(([ad, grup]) => (
+            Object.entries(veri.data.types).map(([ad, grup], i) => (
               <TurBolumu
                 key={ad}
                 ad={ad}
+                sira={i}
                 grup={grup}
                 minGrup={veri.data!.min_group_size}
+                agirliklar={veri.data!.weights}
+                etiketler={etiketler}
                 onInspect={onInspect}
               />
             ))
@@ -178,13 +209,20 @@ function Agirliklar({ rows }: { rows: WeightRow[] }) {
 
 function TurBolumu({
   ad,
+  sira,
   grup,
   minGrup,
+  agirliklar,
+  etiketler,
   onInspect,
 }: {
   ad: string;
+  /** Bölümün ekrandaki sırası — form alanı kimliklerini benzersiz kılar. */
+  sira: number;
   grup: AdvantageousGroup;
   minGrup: number;
+  agirliklar: WeightRow[];
+  etiketler: Record<string, string>;
   onInspect?: (campaignId: number) => void;
 }) {
   return (
@@ -192,6 +230,14 @@ function TurBolumu({
       <h3>
         Kampanya türü: {ad} · {grup.count} kampanya
       </h3>
+
+      <IkiBankaRadari
+        ad={ad}
+        sira={sira}
+        ranked={grup.ranked}
+        agirliklar={agirliklar}
+        etiketler={etiketler}
+      />
 
       {/* Küçük grup GİZLENMEZ: kaç kampanya olduğu ve neden sıralanmadığı yazılır. */}
       {grup.note && (
@@ -233,6 +279,107 @@ function TurBolumu({
             </tbody>
           </table>
         </div>
+      )}
+    </div>
+  );
+}
+
+/** `CompositeScore` üzerindeki görünür banka adı. */
+function bankaAdi(c: CompositeScore): string {
+  return c.bank_name ?? c.bank ?? "—";
+}
+
+/**
+ * Bir kampanya türü içinde iki bankanın ölçüt ölçüt profili.
+ *
+ * Yalnız `comparable` kayıtlar seçilebilir: kıyas dışı bırakılmış bir kaydı
+ * radara koymak, tablonun az önce reddettiği kıyası grafikte geri getirmek
+ * olurdu. İki kayıttan azı varsa bölüm hiç basılmaz — tek çokgen bir kıyas
+ * değildir.
+ *
+ * Varsayılan seçim tablonun ilk iki sırası: jüri sunumu dört dakika ve grafiğin
+ * görünmesi için önce iki açılır liste doldurmak gerekmemeli.
+ */
+function IkiBankaRadari({
+  ad,
+  sira,
+  ranked,
+  agirliklar,
+  etiketler,
+}: {
+  ad: string;
+  sira: number;
+  ranked: CompositeScore[];
+  agirliklar: WeightRow[];
+  etiketler: Record<string, string>;
+}) {
+  const secilebilir = useMemo(() => ranked.filter((c) => c.comparable), [ranked]);
+  const [birinci, setBirinci] = useState(0);
+  const [ikinci, setIkinci] = useState(1);
+
+  if (secilebilir.length < 2 || agirliklar.length === 0) return null;
+
+  // Süzgeç değişince liste kısalabilir; seçim durumu bölümle birlikte
+  // taşındığı için sınır dışına düşebilir. Kırpma render sırasında yapılır.
+  const ia = Math.min(birinci, secilebilir.length - 1);
+  const ib = Math.min(ikinci, secilebilir.length - 1);
+
+  return (
+    <div className="stack" style={{ marginBottom: "var(--sp-4)" }}>
+      <div className="row">
+        <div className="row-tight">
+          <label className="small muted" htmlFor={`radar-a-${sira}`}>
+            Grafikteki birinci banka
+          </label>
+          <select
+            id={`radar-a-${sira}`}
+            className="select"
+            style={{ width: "auto" }}
+            value={ia}
+            onChange={(e) => setBirinci(Number(e.target.value))}
+          >
+            {secilebilir.map((c, i) => (
+              <option key={`${c.campaign_id ?? i}`} value={i}>
+                {bankaAdi(c)}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="row-tight">
+          <label className="small muted" htmlFor={`radar-b-${sira}`}>
+            İkinci banka
+          </label>
+          <select
+            id={`radar-b-${sira}`}
+            className="select"
+            style={{ width: "auto" }}
+            value={ib}
+            onChange={(e) => setIkinci(Number(e.target.value))}
+          >
+            {secilebilir.map((c, i) => (
+              <option key={`${c.campaign_id ?? i}`} value={i}>
+                {bankaAdi(c)}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      {ia === ib ? (
+        <p className="small muted">
+          İki farklı banka seçin: bir bankayı kendisiyle kıyaslamak bilgi
+          taşımaz.
+        </p>
+      ) : (
+        <>
+          <GrafikIskeleti yukseklik={340} />
+          <RadarKiyas
+            skorlar={[secilebilir[ia], secilebilir[ib]]}
+            agirliklar={agirliklar}
+            tur={ad}
+            etiketler={etiketler}
+          />
+        </>
       )}
     </div>
   );
