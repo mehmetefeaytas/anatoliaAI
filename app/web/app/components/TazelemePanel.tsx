@@ -25,15 +25,37 @@
  *
  * İş arka planda koşar; arayüz 1,5 saniyede bir durum sorar. Böylece ekran
  * donmaz, sekme değiştirilebilir ve "durdur" her an basılabilir.
+ *
+ * ## v2 «kanıt defteri» görsel dili — bu ekranda ne değişti
+ *
+ * Tasarım dosyasında bu yüzeyin birebir karşılığı yok; dilinin ÜÇ deseni
+ * taşındı:
+ *
+ *  1. **Provenans şeridi** (`.tz-etik`, sol kenarda 3px). Eskiden burada
+ *     `.notice-warn` vardı — on ekranda geçen genel bir uyarı kutusu, yani
+ *     "bir şey ters gitti" diyen bir biçim. Bu blok ters giden bir şey
+ *     bildirmiyor, bir SINIRI bildiriyor: ağa çıkan tek yüzey burasıdır.
+ *  2. **Tek sakin bant** (`.durum-bant`, durum.css'ten ödünç). Eskiden iş
+ *     durumu bir bildirim kutusu, ilerleme başka bir kutu, sayaçlar üçüncü
+ *     bir küme, yoklama uyarısı dördüncü bir kutuydu — dört kutu, tek olay.
+ *     Artık nokta + başlık cümlesi + mono durum listesi aynı bandın içinde ve
+ *     renk TEK sinyal değil.
+ *  3. **Yazılı oran.** İlerleme çubuğunun yanında mono `tabular-nums` bir
+ *     sayı durur ve TOPLAM BİLİNMESE BİLE bir cümle basar. Bir çubuğun
+ *     uzunluğu okunabilir bir sayı değildir.
+ *
+ * Ayrıca etik kısıt (CLAUDE.md §14) artık ön izlemenin içinde saklı değil:
+ * `.tz-taahhut` listesi robots.txt uyumunu, domain başına bekleme süresini ve
+ * provenans kaydını ekranın üstünde, her hâlde yazar. Etik kısıt bir ayar
+ * değil, okunan bir taahhüttür.
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../lib/api";
-import type { Bank, RefreshJob, RefreshPreview } from "../lib/api";
+import type { Bank, RefreshDurum, RefreshJob, RefreshPreview } from "../lib/api";
 import {
   belgeDurumEtiketi,
   belgeDurumSinifi,
-  durumBildirimSinifi,
   durumEtiketi,
   hataGerekcesi,
   hataTekrarlanabilir,
@@ -45,8 +67,9 @@ import {
   tahminiSure,
   yoklamaBirakmaNotu,
 } from "../lib/tazeleme";
-import { ErrorNotice, Loading } from "./ErrorNotice";
+import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import { useAsync } from "../lib/useAsync";
+import "../styles/zorvaka.css";
 
 /** Durum yoklama aralığı. Daha sık sormak sunucuya değer katmıyor. */
 const YOKLAMA_MS = 1500;
@@ -80,6 +103,52 @@ type EkranHatasi = {
 /** Hatanın HTTP durumu — ApiError değilse 0 (bilinmiyor = tekrarlanabilir). */
 function hataDurumu(e: unknown): number {
   return e instanceof ApiError ? e.status : 0;
+}
+
+/**
+ * İş durumunun BANT rengi sınıfı.
+ *
+ * `lib/tazeleme.ts`'teki `durumBildirimSinifi` bildirim KUTUSU sınıfı döndürür
+ * (`notice notice-ok`); bant ayrı bir yerleşimdir ve yalnız durum rengini
+ * ödünç alır, kutu çerçevesini almaz. İki eşleme bilerek ayrı: kutu dili bu
+ * ekranda artık kullanılmıyor ama fonksiyon başka bir yüzeyde işe yarayabilir
+ * ve silme kararı bu akışa ait değil.
+ */
+function bantSinifi(durum: RefreshDurum): string {
+  if (durum === "tamam") return "tz-bant-ok";
+  if (durum === "hata") return "tz-bant-hata";
+  if (durum === "iptal") return "tz-bant-durdu";
+  return "tz-bant-calisiyor";
+}
+
+/**
+ * Bandın sağındaki MONO durum listesi — rengin üçüncü yedeği.
+ *
+ * Tasarımın durum bandı (`api · depo ✓ · yerel model ✓`) ile aynı sözcük:
+ * olayın ölçülebilir kısmı, renkten bağımsız okunabilir olmalı. Sayılar her
+ * hâlde basılır; sıfır bir boşluk değil, ölçülmüş bir sonuçtur.
+ */
+function monoDurumListesi(is: RefreshJob): string {
+  return [
+    `çekilen ${is.cekilen}`,
+    `yeni ${is.yeni}`,
+    `değişen ${is.degisen}`,
+    `hata ${is.hata}`,
+  ].join(" · ");
+}
+
+/**
+ * İlerlemenin YAZILI hâli. Çubuk uzunluğu ve rengi tek sinyal olamaz.
+ *
+ * Toplam henüz bilinmiyorken (keşif evresi) bir yüzde İDDİA EDİLMEZ: o an
+ * bilinen tek şey kaç adresin işlendiğidir ve cümle bunu söyler. Uydurma bir
+ * `%0` ile gerçek bir `%0` aynı metne düşmez.
+ */
+function oranMetni(is: RefreshJob, oran: number | null): string {
+  if (oran === null) {
+    return `${is.tamamlanan} adres işlendi · toplam henüz bilinmiyor`;
+  }
+  return `${is.tamamlanan} / ${is.toplam} adres · %${Math.round(oran * 100)}`;
 }
 
 export default function TazelemePanel() {
@@ -225,23 +294,57 @@ export default function TazelemePanel() {
           operatör eylemi. Sistemin ağa çıkabildiği tek yol burasıdır.
         </p>
 
-        <div className="notice notice-warn">
-          <strong>Bu eylem internet bağlantısı gerektirir</strong>
-          <div className="notice-body">
+        {/* PROVENANS ŞERİDİ: bir arıza değil, bir SINIR bildirir. */}
+        <div className="tz-etik">
+          <strong className="tz-etik-baslik">
+            Bu yüzey ağa çıkar — panelin tek istisnası
+          </strong>
+          <p className="tz-etik-govde">
             Karşılaştırma, çelişki tespiti ve sohbet ekranları internete{" "}
             <b>hiçbir koşulda çıkmaz</b>; önceden hazırlanmış veri tabanından
-            okumaya devam ederler. Tazeleme yalnızca ham belge arşivine yazar,
-            veri tabanına dokunmaz — bu yüzden yarıda kalan bir tazeleme
-            gösterilen hiçbir sonucu bozamaz. Ağ yoksa ya da site istekleri
-            reddederse işlem açık bir hata ile biter.
-          </div>
+            okumaya devam ederler. Yalnız bu yüzey bankanın resmî sitesine
+            istek gönderir ve yalnız jüri modunda erişilebilir. Tazeleme ham
+            belge arşivine yazar, veri tabanına dokunmaz — bu yüzden yarıda
+            kalan bir tazeleme gösterilen hiçbir sonucu bozamaz. Ağ yoksa ya da
+            site istekleri reddederse işlem açık bir hata ile biter.
+          </p>
         </div>
 
-        <p className="small muted">
-          Toplama, sitenin tarama kurallarına (robots.txt) uyar, alan başına
-          birkaç saniye bekler, kendini tanıtan bir istemci adı kullanır ve her
-          belgeyi kaynak adresi + zaman damgasıyla saklar.
-        </p>
+        <h3>toplama taahhüdü</h3>
+        {/* Etik kısıt bir AYAR DEĞİL: değiştirilebilir bir kutu değil, okunan
+            bir taahhüt (CLAUDE.md §14). Değerler sistemin kendi kısıtlarıdır;
+            bankaya özgü kesin bekleme süresi ön izlemede tek tek yazılır. */}
+        <ul className="tz-taahhut">
+          <li>
+            <span className="tz-taahhut-ad">robots.txt</span>
+            <span className="tz-taahhut-deger">
+              Sitenin tarama kurallarına uyulur. Kurallar bir adresi kapsam dışı
+              bırakıyorsa o adres alınmaz ve gerekçesi listelenir.
+            </span>
+          </li>
+          <li>
+            <span className="tz-taahhut-ad">bekleme</span>
+            <span className="tz-taahhut-deger">
+              Domain başına <span className="mono">2–5 saniye</span>: her istek
+              arasında beklenir, eşzamanlı istek gönderilmez. Bankaya özgü kesin
+              değer başlatmadan önceki ön izlemede yazılıdır.
+            </span>
+          </li>
+          <li>
+            <span className="tz-taahhut-ad">istemci adı</span>
+            <span className="tz-taahhut-deger">
+              İstekler kendini tanıtan bir istemci adıyla gider; tarayıcı
+              taklidi yapılmaz.
+            </span>
+          </li>
+          <li>
+            <span className="tz-taahhut-ad">provenans</span>
+            <span className="tz-taahhut-deger">
+              Her belge kaynak adresi ve zaman damgasıyla saklanır. Kaynağı
+              olmayan hiçbir metin arşive girmez.
+            </span>
+          </li>
+        </ul>
       </section>
 
       {hata && (
@@ -255,13 +358,25 @@ export default function TazelemePanel() {
 
       {is && (
         <section className="card">
-          <h2>
-            {is.bank_name} — {durumEtiketi(is.durum)}
-          </h2>
+          <h2>{is.bank_name}</h2>
 
-          <div className={durumBildirimSinifi(is.durum)}>
-            <strong>{is.asama}</strong>
-            {is.mesaj ? <div className="notice-body">{is.mesaj}</div> : null}
+          {/* TEK SAKİN BANT. Dört ayrı kutu (durum + ilerleme + sayaçlar +
+              yoklama uyarısı) yerine tek bant: olay tek. Renk tek sinyal
+              değil — nokta, başlık cümlesi ve mono durum listesi aynı şeyi üç
+              ayrı yolla söyler. */}
+          <div
+            className={`durum-bant ${bantSinifi(is.durum)}`}
+            aria-live="polite"
+          >
+            <span aria-hidden="true" className="durum-bant-nokta" />
+            <div className="durum-bant-govde">
+              <div className="durum-bant-baslik">{durumEtiketi(is.durum)}</div>
+              <div className="durum-bant-aciklama">
+                {is.asama}
+                {is.mesaj ? ` — ${is.mesaj}` : ""}
+              </div>
+            </div>
+            <span className="durum-bant-liste">{monoDurumListesi(is)}</span>
           </div>
 
           {calisiyor && yoklamaBirakildi && (
@@ -294,25 +409,27 @@ export default function TazelemePanel() {
 
           {calisiyor && !yoklamaBirakildi && (
             <div className="tazele-ilerleme" aria-live="polite">
-              <div
-                className="tazele-ilerleme-cubuk"
-                role="progressbar"
-                aria-valuemin={0}
-                aria-valuemax={100}
-                aria-valuenow={oran === null ? undefined : Math.round(oran * 100)}
-                aria-label="Tazeleme ilerlemesi"
-              >
-                <span
-                  className={`tazele-ilerleme-dolgu${oran === null ? " belirsiz" : ""}`}
-                  style={oran === null ? undefined : { width: `${oran * 100}%` }}
-                />
+              {/* Çubuk + YANINDA yazılı oran. Çubuğun uzunluğu okunabilir bir
+                  sayı değildir; sayı her hâlde metin olarak da basılır. */}
+              <div className="tz-oran">
+                <div
+                  className="tazele-ilerleme-cubuk"
+                  role="progressbar"
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={
+                    oran === null ? undefined : Math.round(oran * 100)
+                  }
+                  aria-label="Tazeleme ilerlemesi"
+                >
+                  <span
+                    className={`tazele-ilerleme-dolgu${oran === null ? " belirsiz" : ""}`}
+                    style={oran === null ? undefined : { width: `${oran * 100}%` }}
+                  />
+                </div>
+                <span className="tz-oran-sayi">{oranMetni(is, oran)}</span>
               </div>
               <div className="row">
-                <span className="small muted">
-                  {is.toplam
-                    ? `${is.tamamlanan} / ${is.toplam} adres`
-                    : "Adresler aranıyor…"}
-                </span>
                 <span className="grow" />
                 <button
                   type="button"
@@ -330,34 +447,9 @@ export default function TazelemePanel() {
             </div>
           )}
 
-          <div className="stats" style={{ marginTop: "var(--sp-4)" }}>
-            <div className="stat">
-              <div className="k">Çekilen belge</div>
-              <div className="v">{is.cekilen}</div>
-            </div>
-            <div className="stat">
-              <div className="k">Yeni</div>
-              <div className="v">{is.yeni}</div>
-            </div>
-            <div className="stat">
-              <div className="k">Değişen</div>
-              <div className="v">{is.degisen}</div>
-            </div>
-            <div className="stat">
-              <div className="k">Aynı kalan</div>
-              <div className="v">{is.ayni}</div>
-            </div>
-            <div className="stat">
-              <div className="k">Hata</div>
-              <div
-                className="v"
-                style={{ color: is.hata ? "var(--bad)" : "var(--ok)" }}
-              >
-                {is.hata}
-              </div>
-            </div>
-          </div>
-
+          {/* Beş ayrı sayaç kutusu KALDIRILDI. Aynı beş sayı bandın mono
+              listesinde ve — iş bittiğinde — tek cümlelik özette zaten var;
+              üç yerde basmak bir olayı üç olay gibi gösteriyordu. */}
           {ozet && <p className="small muted">{ozet}</p>}
 
           {is.robots_ozet && (
@@ -366,9 +458,31 @@ export default function TazelemePanel() {
             </p>
           )}
 
+          {is.notlar.length > 0 && (
+            <>
+              <h3>iş günlüğü</h3>
+              {/* Makine çıktısı: mono, en küçük ölçü, sınırlı yükseklik +
+                  kendi kaydırması. `tabIndex` klavyeyle kaydırma için ZORUNLU:
+                  fareyle kaydırılıp klavyeyle kaydırılamayan bir kutu
+                  erişilemez bir kutudur. */}
+              <div
+                className="tz-gunluk"
+                role="log"
+                tabIndex={0}
+                aria-label="Tazeleme iş günlüğü"
+              >
+                {is.notlar.map((not, i) => (
+                  <div key={`${i}-${not}`} className="tz-gunluk-satir">
+                    {not}
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+
           {is.belgeler.length > 0 && (
             <>
-              <h3>Belgeler ({is.belgeler.length})</h3>
+              <h3>belgeler · {is.belgeler.length}</h3>
               <div className="table-wrap">
                 <table className="data">
                   <thead>
@@ -413,7 +527,7 @@ export default function TazelemePanel() {
 
           {is.hatalar.length > 0 && (
             <>
-              <h3>Alınamayan adresler ({is.hata_tamami})</h3>
+              <h3>alınamayan adresler · {is.hata_tamami}</h3>
               <div className="table-wrap">
                 <table className="data">
                   <thead>
@@ -445,45 +559,63 @@ export default function TazelemePanel() {
       {onizleme && (
         <section className="card">
           <h2>Başlatmadan önce: {onizleme.bank_name}</h2>
-          <div className="notice notice-info">
-            <strong>Bu düğmeye basınca ne olacak</strong>
-            <div className="notice-body">
+          {/* Nötr not: burada henüz bir şey OLMADI, bir şey olacağı söylendi.
+              Uyarı rengi bu bloğa ait değil — karar hâlâ operatörde. */}
+          <div className="uc-not">
+            <strong className="uc-not-baslik">
+              Bu düğmeye basınca ne olacak
+            </strong>
+            <p className="uc-not-govde">
               {onizleme.bank_name} sitesine yaklaşık{" "}
               <b>{tahminiIstek(onizleme)}</b> gönderilecek ve işlem kabaca{" "}
-              <b>{tahminiSure(onizleme)}</b> sürecek. Her istek arasında{" "}
-              {sureMetni(onizleme.gecikme_sn)} beklenir; sitenin tarama
-              kurallarına uyulur. En çok {onizleme.azami_belge} belge alınır.
-            </div>
+              <b>{tahminiSure(onizleme)}</b> sürecek. En çok{" "}
+              {onizleme.azami_belge} belge alınır; şu an arşivde{" "}
+              {onizleme.arsivdeki_belge} belge duruyor ve{" "}
+              {onizleme.giris_sayfasi} liste sayfasından başlanır.
+            </p>
           </div>
 
-          <div className="stats">
-            <div className="stat">
-              <div className="k">Başlangıç sayfası</div>
-              <div className="v">{onizleme.giris_sayfasi}</div>
-            </div>
-            <div className="stat">
-              <div className="k">Azami belge</div>
-              <div className="v">{onizleme.azami_belge}</div>
-            </div>
-            <div className="stat">
-              <div className="k">İstek arası bekleme</div>
-              <div className="v">{sureMetni(onizleme.gecikme_sn)}</div>
-            </div>
-            <div className="stat">
-              <div className="k">Arşivdeki belge</div>
-              <div className="v">{onizleme.arsivdeki_belge}</div>
-            </div>
-          </div>
-
-          <ul className="tazele-kosullar small">
-            <li>İnternet bağlantısı gerekir.</li>
+          <h3>bu banka için etik kısıt</h3>
+          {/* Bekleme süresi bu ekranın en önemli sayısıdır ve ön izlemede
+              BANKAYA ÖZGÜ kesin değeriyle basılır: yukarıdaki taahhüt listesi
+              sistemin aralığını söylüyor, burası uygulanacak değeri. */}
+          <ul className="tz-taahhut">
             <li>
-              Yazım yeri yalnızca ham belge arşividir:{" "}
-              <span className="mono">{onizleme.hedef_dizin}</span>
+              <span className="tz-taahhut-ad">bekleme</span>
+              <span className="tz-taahhut-deger">
+                Her istek arasında{" "}
+                <span className="mono">{sureMetni(onizleme.gecikme_sn)}</span>{" "}
+                beklenir.
+              </span>
             </li>
-            <li>Veri tabanı değişmez; kıyas ve sohbet sonuçları aynı kalır.</li>
             <li>
-              İstemci adı: <span className="mono">{onizleme.user_agent}</span>
+              <span className="tz-taahhut-ad">robots.txt</span>
+              <span className="tz-taahhut-deger">
+                {onizleme.robots_uyumu
+                  ? "Sitenin tarama kuralları okunur ve uygulanır."
+                  : "Bu banka için tarama kuralı okunamadı; kapsam dışı adres varsayılamaz."}
+              </span>
+            </li>
+            <li>
+              <span className="tz-taahhut-ad">istemci adı</span>
+              <span className="tz-taahhut-deger">
+                <span className="mono">{onizleme.user_agent}</span>
+              </span>
+            </li>
+            <li>
+              <span className="tz-taahhut-ad">yazım yeri</span>
+              <span className="tz-taahhut-deger">
+                Yalnız ham belge arşivi:{" "}
+                <span className="mono">{onizleme.hedef_dizin}</span>. Veri
+                tabanı değişmez; kıyas ve sohbet sonuçları aynı kalır.
+              </span>
+            </li>
+            <li>
+              <span className="tz-taahhut-ad">ağ</span>
+              <span className="tz-taahhut-deger">
+                İnternet bağlantısı gerekir; bağlantı yoksa işlem açık bir hata
+                ile biter.
+              </span>
             </li>
           </ul>
 
@@ -510,9 +642,25 @@ export default function TazelemePanel() {
       <section className="card">
         <h2>Bankalar</h2>
         {banks.loading ? (
-          <Loading label="Banka listesi yükleniyor…" />
+          /* İSKELET, animasyonlu sayaç DEĞİL: yapı hemen basılır, yalnız
+             değerler bekler. Dönen bir sayaçtan okunan sayı, hiç okunmamış bir
+             sayıdır. İskeleti `durum.css` çiziyor ve `prefers-reduced-motion`
+             uyumu orada tanımlı.
+             `satir={11}` bir DEĞER İDDİASI DEĞİL, bir yerleşim beklentisi:
+             hedef banka kümesi 11 satır (CLAUDE.md §13) ve iskelet o kadar
+             satır çizince liste geldiğinde kart yüksekliği zıplamaz. Ekran
+             okuyucudan gizli — okunacak şey etikettir. */
+          <Loading label="Banka listesi yükleniyor…" satir={11} />
         ) : banks.error ? (
           <ErrorNotice error={banks.error} />
+        ) : (banks.data ?? []).length === 0 ? (
+          /* BOŞ ≠ HATA: istek çalıştı, liste gerçekten boş. Sahte bir banka
+             satırı basmak, boş bir liste göstermekten kötüdür. */
+          <EmptyNotice title="Tanımlı banka yok" kesir="0 banka">
+            Banka listesi <span className="mono">config/banks.yaml</span>{" "}
+            dosyasından okunur. Dosyaya bir satır eklenip sunucu yeniden
+            başlatıldığında bu liste kendiliğinden dolar.
+          </EmptyNotice>
         ) : (
           <ul className="tazele-liste">
             {(banks.data ?? []).map((b) => {

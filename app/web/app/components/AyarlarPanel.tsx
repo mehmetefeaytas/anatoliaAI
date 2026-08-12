@@ -30,6 +30,25 @@
  * okumaya başlamamalı. Cümlenin kendisi burada YAZILMAZ, `/admin/plan`'dan
  * gelir — başlık ile gerekçe ayrı yerlerde yaşasa biri değiştiğinde diğeri
  * eskisini göstermeye devam ederdi.
+ *
+ * ## v2 «kanıt defteri» görsel dili — bu ekranda ne değişti
+ *
+ * Ekranın ADI «Ayarlar» ama içeriği bir ayar değil, bir SÖZLEŞME. Eskiden bu
+ * ikilik yalnız açıklama paragrafında yazılıydı; biçim onu söylemiyordu:
+ * uçlar rozetli birer kart başlığıydı ve `501` rozeti bir uyarı gibi
+ * duruyordu. Üç şey değişti:
+ *
+ *  1. **Nötr not en üstte** (`.uc-not`, sol kenarda 3px `--line`). Bu panelin
+ *     ne OLMADIĞINI söyler. Şerit uyarı renginde değil: uyarı rengi «bir şey
+ *     ters gitti» der, oysa burada ters giden bir şey yok — tanım var,
+ *     davranış yok.
+ *  2. **Uç satırı** (`.uc-satir`): mono metot + yol solda, sans açıklama
+ *     ortada, durum rozeti sağda. Hangisinin makine verisi olduğu yazı
+ *     tipinden okunur (tokens.css, «ÜÇ SES»).
+ *  3. **Kesikli çerçeveli rozet** (`.uc-durum-yok`): kesikli çerçeve bu
+ *     panelde boşluğun biçimidir ve kapsama cetvelinin `bos` hâliyle aynı
+ *     sözcüğü kullanır. Renk tek sinyal değil — rozetin metni de durumu
+ *     söylüyor («gelecek faz · 501»).
  */
 
 import { api } from "../lib/api";
@@ -60,34 +79,62 @@ export default function AyarlarPanel() {
 
       <div className="card">
         <h2>Veri ekleme uçları</h2>
-        <p className="small muted">
-          Bankaların kampanyalarını ve finansal ürünlerini arayüzden eklemek
-          için tasarlanan uçların sözleşmesi. Aşağıdaki tanım{" "}
-          <b>sunucudan okunur</b>, bu ekranda sabit yazılmaz — uçlar
-          değiştiğinde ekran da değişir. Uçlar bugün <b>kapalı</b>; tablolar
-          uygulanmış bir özelliği değil, tanımlanmış bir sözleşmeyi anlatır.
-        </p>
+
+        {/* Bu panelin ne OLMADIĞINI söyleyen NÖTR not. Uyarı değil: tanım var,
+            davranış yok. */}
+        <div className="uc-not">
+          <strong className="uc-not-baslik">
+            Bu bir ayar ekranı değil, bir sözleşme belgesi
+          </strong>
+          {/* Cümle `acik` durumuna BAĞLI: uçlar açıldığı gün «form yok, çünkü
+              çalışmıyor» gerekçesi kendiliğinden yanlışa döner ve ekran
+              eskisini söylemeye devam ederdi. */}
+          <p className="uc-not-govde">
+            {acik ? (
+              <>
+                Uçlar açık; aşağıdaki satırlar artık çalışan bir davranışı
+                anlatıyor. Yine de bu ekran bir form taşımaz — veri ekleme yolu
+                istemci tarafında değil, ucun kendisindedir.
+              </>
+            ) : (
+              <>
+                Doldurulup gönderilebilen hiçbir alan yok ve bilerek yok:
+                doldurulabilen bir form, doldurulunca çalışacağını vaat eder.
+                Uçlar bugün <b>501</b> döndüğü için o vaat tutulamaz.
+              </>
+            )}{" "}
+            Aşağıdaki tanım <b>sunucudan okunur</b>, bu ekranda sabit yazılmaz —
+            sözleşme değiştiğinde ekran da değişir.
+          </p>
+        </div>
       </div>
 
       {uclar.map((uc) => (
         <div key={`${uc.yontem} ${uc.yol}`} className="card">
-          {/* `row` (yatay) — `chip-group` DEĞİL: o sınıf dikey bir sütun ve
-              rozetleri kart genişliğine yayıyordu. */}
-          <div className="row">
-            <span className="badge badge-baglam">{uc.yontem}</span>
-            <code>{uc.yol}</code>
-            {!acik && <span className="badge badge-warn">501</span>}
-          </div>
-          <h3>{uc.baslik}</h3>
-          <p className="small muted">{uc.ozet}</p>
+          <h2>{uc.baslik}</h2>
 
+          {/* Mono adres + sans açıklama + durum rozeti. Sıra korunur: önce
+              makinenin söylediği, sonra sistemin söylediği, sonra durum. */}
+          <div className="uc-satir">
+            <code className="uc-adres">
+              <span className="uc-yontem">{uc.yontem}</span>
+              {uc.yol}
+            </code>
+            <p className="uc-ozet">{uc.ozet}</p>
+            <span className={`uc-durum ${acik ? "uc-durum-var" : "uc-durum-yok"}`}>
+              {acik ? "uygulandı" : "gelecek faz · 501"}
+            </span>
+          </div>
+
+          <h3>gövde alanları</h3>
           <div className="table-wrap">
             <table className="data stackable">
               <caption
                 className="small muted"
                 style={{ captionSide: "bottom", textAlign: "left" }}
               >
-                {uc.baslik} ucunun gövde alanları.
+                {uc.baslik} ucunun gövde alanları — tanımlı şema, çalışan bir
+                form değil.
               </caption>
               <thead>
                 <tr>
