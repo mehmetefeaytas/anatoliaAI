@@ -33,6 +33,7 @@ import { useCallback, useEffect, useState } from "react";
 import AdvantageousPanel from "./components/AdvantageousPanel";
 import AuditPanel from "./components/AuditPanel";
 import BankDeltaPanel from "./components/BankDeltaPanel";
+import BankaSayfasi from "./components/BankaSayfasi";
 import ChatPanel from "./components/ChatPanel";
 import ComparePanel from "./components/ComparePanel";
 import ContradictionAlert from "./components/ContradictionAlert";
@@ -56,6 +57,7 @@ import { useAsync } from "./lib/useAsync";
 type TabKey =
   | "compare"
   | "advantageous"
+  | "banka"
   | "delta"
   | "audit"
   | "contradictions"
@@ -68,12 +70,18 @@ type TabKey =
  * Sıra kasıtlı: tek alanlı kıyastan çok alanlı bileşik skora, oradan banka
  * özeline; denetim yüzeyleri sonra gelir.
  *
+ * Banka sayfası deltadan ÖNCE geliyor çünkü ikisi de tek bankayı konu alıyor
+ * ama sayfa künyeyi ve kampanya türü içindeki puanı da taşıyor; delta ise o
+ * bankanın tek bir sorusunu («nerede geriyim») ayrıntılandırıyor ve sayfanın
+ * içinde de duruyor.
+ *
  * Modül düzeyinde sabit — `useTabState` bunu bağımlılık olarak alıyor, her
  * render'da yeniden oluşan bir dizi olsaydı efektler sonsuz döngüye girerdi.
  */
 const TABS: readonly SekmeTanimi<TabKey>[] = [
   { key: "compare", label: "Karşılaştırma" },
   { key: "advantageous", label: "En Avantajlı" },
+  { key: "banka", label: "Banka Sayfası" },
   { key: "delta", label: "Banka İçi Delta" },
   { key: "audit", label: "Jüri Audit Paneli" },
   { key: "contradictions", label: "Çelişki Tespiti" },
@@ -126,6 +134,9 @@ function Dashboard() {
     "compare",
   );
   const [auditTarget, setAuditTarget] = useState<number | null>(null);
+  // Banka sayfasının öznesi. `auditTarget` ile aynı desen: bir ekran başka bir
+  // ekranın konusunu belirleyebilmeli, kullanıcı seçimi elle tekrarlamamalı.
+  const [bankaTarget, setBankaTarget] = useState<string | null>(null);
 
   // Jüri modu kapatılınca tazeleme sekmesinde kalmak boş bir panel bırakırdı;
   // görünmeyen bir sekmede durmak yerine varsayılana dönülür.
@@ -148,6 +159,20 @@ function Dashboard() {
     (campaignId: number) => {
       setAuditTarget(campaignId);
       setSekme("audit");
+    },
+    [setSekme],
+  );
+  /**
+   * Banka adından banka sayfasına sıçrama — `inspect`in banka karşılığı.
+   *
+   * Ekranlar arasında öznenin taşınması elle kurulduğunda kayboluyordu:
+   * kullanıcı delta ekranında bir bankayı seçip sayfasına bakmak istediğinde
+   * sekme değiştirip aynı bankayı bir kez daha seçmek zorundaydı.
+   */
+  const bankaAc = useCallback(
+    (slug: string) => {
+      setBankaTarget(slug);
+      setSekme("banka");
     },
     [setSekme],
   );
@@ -204,8 +229,23 @@ function Dashboard() {
           <AdvantageousPanel campaignTypes={campaignTypes} onInspect={inspect} />
         )}
 
+        {/* Kapsama etiketi `/stats`ten iner: bu sayfa o isteği zaten atıyor,
+            banka sayfasının ikinci bir kez atması boşuna bir tur olurdu. */}
+        {sekme === "banka" && (
+          <BankaSayfasi
+            campaignTypes={campaignTypes}
+            kapsam={stats.data?.banka_kapsami ?? null}
+            secili={bankaTarget}
+            onInspect={inspect}
+          />
+        )}
+
         {sekme === "delta" && (
-          <BankDeltaPanel campaignTypes={campaignTypes} onInspect={inspect} />
+          <BankDeltaPanel
+            campaignTypes={campaignTypes}
+            onInspect={inspect}
+            onBankaAc={bankaAc}
+          />
         )}
 
         {sekme === "audit" &&
@@ -251,9 +291,16 @@ function Dashboard() {
  * Çoğu birebir eşleşiyor; eşleşmeyenler («chat» — zaten sohbetin kendisi,
  * «tazele» ve «ayarlar» — operatör yüzeyleri, korpus hakkında soru sorulacak
  * yer değil) genel kümeye düşüyor.
+ *
+ * «banka»nın kendi hazır soru kümesi henüz yok; en yakın küme «delta»dır ve
+ * seçim savunulabilir: banka sayfası delta görünümünü de taşıyor, yani oradaki
+ * sorular bu ekranda da cevabını buluyor. Genel kümeye düşürmek, tek bankayı
+ * konu alan bir ekranda korpus geneli sorular göstermek olurdu.
  */
 function sohbetBaglami(sekme: TabKey): SohbetBaglami {
   switch (sekme) {
+    case "banka":
+      return "delta";
     case "compare":
     case "advantageous":
     case "delta":

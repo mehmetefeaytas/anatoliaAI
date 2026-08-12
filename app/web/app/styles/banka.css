@@ -1,0 +1,118 @@
+/* Anatolia AI — banka sayfası (künye + kampanya türü içinde yıldız satırları).
+ *
+ * İlgili: tokens.css (tek renk/boşluk kaynağı), grafik.css (.yildiz-* ailesi),
+ *         ../components/BankaSayfasi.tsx, scripts/css_sinif_denetimi.py
+ *
+ * ## Neden ayrı dosya
+ *
+ * `components.css` zaten on bileşen ailesini taşıyor ve uzun; banka sayfası tek
+ * seferde gelen yeni bir yüzey. Denetim betiği `styles/*.css`'in tamamını tarar
+ * (`css_sinif_denetimi.py:69`), yani ayrı dosya kapıdan kaçmak değildir.
+ *
+ * DİKKAT: bu dosyanın `layout.tsx` içinde import edilmesi gerekir; import
+ * satırı olmadan sayfa stilsiz render olur (denetim betiği yine de geçer,
+ * çünkü o import değil dosya tarar).
+ *
+ * ## Marka varlığı YOK — bilerek
+ *
+ * `/banks` ucu yalnız `slug`, `name`, `website_url`, `bddk_active` döndürür;
+ * logo da marka rengi de yoktur ve `public/` boştur. Amblem bu yüzden bankanın
+ * ADINDAN türetilen bir baş harf monogramıdır ve rengini tema vurgusundan alır.
+ * Marka rengi uydurmak hem görsel bir yalan hem de marka hakkı sorunudur.
+ *
+ * Literal renk/boşluk YOK — hepsi tokens.css'ten. Tek istisna hairline
+ * kalınlıkları (1px) ve medya sorgusu genişlikleri (CSS değişkeni kullanılamaz).
+ */
+
+/* ===================================================================
+ * KÜNYE
+ * ================================================================ */
+
+.banka-bas {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-3);
+}
+
+/* Baş harf monogramı — dekoratif (`aria-hidden`): bankanın adı hemen yanında
+ * yazılı olduğu için amblem hiçbir bilgiyi TEK BAŞINA taşımaz. */
+.banka-amblem {
+  flex: none;
+  width: var(--sp-8);
+  height: var(--sp-8);
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-md);
+  background: var(--accent-wash);
+  color: var(--accent-soft);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--track-wide);
+}
+
+.banka-kimlik {
+  flex: 1;
+  /* Uzun banka adının taşmasını değil sarmasını istiyoruz. */
+  min-width: 0;
+}
+
+.banka-ad {
+  margin: 0;
+}
+
+.banka-etiketler {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+/* «veri kapsamı: 3 belge / 12 alan» — eksiği RAPORLAYAN etiket.
+ * Uyarı rengi değil nötr: az veri bir hata değil, ölçülmüş bir sınırdır. */
+.banka-kapsam {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--sp-1);
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--bg);
+  color: var(--fg-dim);
+  font-size: var(--fs-xs);
+  line-height: 1.8;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Banka seçici künyenin sağ ucunda: sayfanın öznesi burada değişir. */
+.banka-secim {
+  flex: none;
+  margin-left: auto;
+}
+
+/* ===================================================================
+ * KAMPANYA TÜRÜ İÇİNDE PUAN
+ * ================================================================ */
+
+.banka-turler {
+  margin-top: var(--sp-3);
+}
+
+/* Son satırın alt çizgisi kutunun kenarıyla çakışıyordu — çift çizgi. */
+.banka-turler .yildiz-satir:last-child {
+  border-bottom: none;
+}
+
+/* ===================================================================
+ * KIRILIMLAR — dosyanın SONUNDA (bkz. grafik.css dosya başlığı)
+ * ================================================================ */
+
+@media (max-width: 700px) {
+  /* Dar ekranda seçici sağa yaslanmaz; kimliğin altına tam genişlikte iner. */
+  .banka-secim {
+    margin-left: 0;
+    width: 100%;
+  }
+}

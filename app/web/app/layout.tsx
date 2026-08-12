@@ -4,6 +4,7 @@ import "./styles/tema.css";
 import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/grafik.css";
+import "./styles/banka.css";
 import "./styles/sohbet.css";
 import "./styles/baski.css";
 

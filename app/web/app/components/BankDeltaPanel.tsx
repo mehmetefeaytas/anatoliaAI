@@ -72,6 +72,17 @@ type Props = {
   campaignTypes: string[];
   /** Belgeyi Jüri Audit Paneli'nde açar (page.tsx `inspect` deseni). */
   onInspect: (campaignId: number) => void;
+  /**
+   * Öznesi dışarıdan sabitlenen banka (banka sayfası).
+   *
+   * Verilirse panel KENDİ banka seçicisini basmaz: banka sayfasında özneyi
+   * seçen tek bir yer vardır (künye) ve aynı sayfada iki banka seçici,
+   * hangisinin sayfayı yönettiğini belirsiz bırakırdı. Rakip ve kampanya türü
+   * seçicileri kalır — onlar bu panelin kendi soruları.
+   */
+  sabitBanka?: string;
+  /** Banka sayfasına sıçrama (page.tsx `bankaAc` deseni). */
+  onBankaAc?: (slug: string) => void;
 };
 
 /**
@@ -110,19 +121,31 @@ function formatDelta(diff: number, field: string): string {
   return unit ? `${n} ${unit}` : n;
 }
 
-export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
+export default function BankDeltaPanel({
+  campaignTypes,
+  onInspect,
+  sabitBanka,
+  onBankaAc,
+}: Props) {
   // Banka listesi kataloğundan gelir, kampanyalardan DEĞİL: hiç kampanyası
   // toplanmamış banka da seçilebilmeli.
   const banks = useAsync(() => api.banks(), []);
-  const [bank, setBank] = useState("");
+  const [bank, setBank] = useState(sabitBanka ?? "");
   const [type, setType] = useState("");
   const [rival, setRival] = useState("");
 
   const liste = banks.data ?? [];
   useEffect(() => {
+    // Özne dışarıdan sabitlenmişse liste hiç beklenmez: banka sayfası özneyi
+    // zaten seçmiştir ve katalog gelene kadar boş bir banka ile istek atmak,
+    // sayfayı bir tur boşa yükletirdi.
+    if (sabitBanka) {
+      if (sabitBanka !== bank) setBank(sabitBanka);
+      return;
+    }
     if (liste.length === 0) return;
     if (!bank || !liste.some((b) => b.slug === bank)) setBank(liste[0].slug);
-  }, [liste, bank]);
+  }, [liste, bank, sabitBanka]);
 
   // Rakip seçimi seçilen bankanın kendisi olamaz.
   useEffect(() => {
@@ -159,31 +182,58 @@ export default function BankDeltaPanel({ campaignTypes, onInspect }: Props) {
     <div className="stack">
       <section className="card">
         <h2>Banka İçi Delta — bende ne eksik, rakipte ne var?</h2>
+        {/* Özne dışarıdan geldiğinde «bir banka seçin» diye başlayan cümle
+            olmayan bir seçiciye işaret ederdi; banka sayfasında özne zaten
+            künyede yazılı. */}
         <p className="lede">
-          Bir banka seçin: her <b>kampanya türünde</b>, her alanda o bankanın en
-          iyi kaydı ile rakip kayıt yan yana konur. Fark yalnız aynı kampanya
-          türü içinde hesaplanır.
+          {sabitBanka ? (
+            <>
+              Her <b>kampanya türünde</b>, her alanda {bankName} bankasının en
+              iyi kaydı ile rakip kayıt yan yana konur.
+            </>
+          ) : (
+            <>
+              Bir banka seçin: her <b>kampanya türünde</b>, her alanda o
+              bankanın en iyi kaydı ile rakip kayıt yan yana konur.
+            </>
+          )}{" "}
+          Fark yalnız aynı kampanya türü içinde hesaplanır.
         </p>
 
         <div className="row">
-          <div className="row-tight">
-            <label className="small muted" htmlFor="delta-bank">
-              Banka
-            </label>
-            <select
-              id="delta-bank"
-              className="select"
-              style={{ width: "auto" }}
-              value={bank}
-              onChange={(e) => setBank(e.target.value)}
-            >
-              {liste.map((b) => (
-                <option key={b.slug} value={b.slug}>
-                  {b.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          {/* Özne dışarıdan sabitlenmişse seçici basılmaz — gerekçe `Props`ta. */}
+          {!sabitBanka && (
+            <div className="row-tight">
+              <label className="small muted" htmlFor="delta-bank">
+                Banka
+              </label>
+              <select
+                id="delta-bank"
+                className="select"
+                style={{ width: "auto" }}
+                value={bank}
+                onChange={(e) => setBank(e.target.value)}
+              >
+                {liste.map((b) => (
+                  <option key={b.slug} value={b.slug}>
+                    {b.name}
+                  </option>
+                ))}
+              </select>
+              {/* Seçili bankanın kendi sayfasına sıçrama: delta tek bir soruyu
+                  cevaplar («nerede geriyim»), banka sayfası ise künyeyi ve
+                  kampanya türü içindeki puanı da taşır. */}
+              {onBankaAc && bank && (
+                <button
+                  type="button"
+                  className="btn-link"
+                  onClick={() => onBankaAc(bank)}
+                >
+                  banka sayfasını aç
+                </button>
+              )}
+            </div>
+          )}
           <div className="row-tight">
             <label className="small muted" htmlFor="delta-rival">
               Rakip
