@@ -200,8 +200,26 @@ def _paylasim_ciftinin_parcasi(text: str, s: int, e: int) -> bool:
                for bas, son in paylasim_cifti_araliklari(text))
 
 
+#: "kâr payı" / "kâr oranı" / "kâr payı oranı" — üçü de aynı şeyi adlandırır.
+#:
+#: "payı" 2026-08-12'de OPSİYONEL yapıldı. Gerekçe ölçülmüş bir kaçırmaydı:
+#: Dünya Katılım Enerya belgesinde "Enerya ihtiyaç Finansmanı **kâr oranı**
+#: aylık %3,99'dur" cümlesi hiç yakalanmıyordu (gold 3.99, çıkarım `None`).
+#:
+#: Bu tutarsızlık dosyanın İÇİNDEydi: `_ORAN_TABLOSU_BASLIK_RE` "payı"yı
+#: zaten opsiyonel yapmış ("Bankalar farklı etiket kullanıyor"), ama düz
+#: cümle desenleri katı kalmıştı. Aynı belgede tablo başlığı kabul edilen
+#: bir terim, cümle içinde reddediliyordu.
+#:
+#: "payı" ve "oranı"ndan EN AZ BİRİ zorunludur — ikisi birden opsiyonel
+#: olamaz. Yalnız "kâr" serbest bırakılsaydı "%20 kâr elde edin" gibi
+#: pazarlama cümleleri finansman kâr payı oranı sanılırdı. Alternatifler
+#: uzundan kısaya sıralı: regex ilk eşleşeni alır, "kâr payı oranı"
+#: bütünüyle tüketilmelidir.
+_KAR_PAYI_ETIKET = r"(?:kâr|kar)\s*(?:pay[ıi]\s*oran[ıi]|pay[ıi]|oran[ıi])"
+
 _KAR_PAYI_ONCE_RE = re.compile(
-    r"(%\s*\d[\d.,]*)\s{0,3}(?:kâr|kar)\s*pay[ıi](?:\s*oran[ıi])?",
+    rf"(%\s*\d[\d.,]*)\s{{0,3}}{_KAR_PAYI_ETIKET}",
     re.IGNORECASE,
 )
 
@@ -381,8 +399,13 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
     #   "...kâr payı ödemelerini ... 1 aylık, 3 aylık"  -> 1.0  (PERİYOT)
     # İkisi de oran değil. `(?![\d.,])` burada da şart: onsuz regex geri
     # izleyip "36"dan yalnız "3"ü alarak birim kontrolünü atlatır.
+    # `()` BOŞ YER TUTUCU — silmeyin. Aşağıdaki gövde değeri `group(3)` /
+    # `span(3)` ile okur; etiket tek gruba indiğinde ("kâr|kar" + "oranı"
+    # ayrı gruplardı) değer 3'ten 2'ye kayardı ve `raw` etiketin kendisi
+    # olurdu. Grup numarasını sabit tutmak, çağrı yerlerini değiştirmekten
+    # daha az riskli.
     pat = re.compile(
-        r"(kâr|kar)\s*pay[ıi]\s*(oran[ıi])?[^%\d]{0,15}"
+        rf"({_KAR_PAYI_ETIKET})()[^%\d]{{0,15}}"
         r"(%?\s*\d[\d.,]*(?![\d.,])\s*%?"
         r"(?:\s*(?:-|–|ile|ila)\s*%?\s*"
         r"\d[\d.,]*(?![\d.,])\s*%?"
@@ -404,6 +427,20 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
             continue
         raw = m.group(3)
         canon = N.normalize_rate(raw)
+        # İŞARETSİZ değer makul bandın dışındaysa oran DEĞİLDİR.
+        #
+        # Bu desende `%` opsiyoneldir ("kâr oranı 3,99") ve tablo
+        # başlıklarında etiketten hemen sonra veri satırı gelir; ilk sayı
+        # etiketin değeri sanılır. Ölçüldü (2026-08-12, demo.db):
+        #
+        #   "Finansman Tutarı Vade Aylık Kar Oranı 250-TL-40.000-TL"
+        #        -> 250   (bir TUTAR aralığının başlangıcı, oran değil)
+        #
+        # `%` taşıyan değer bu kapıya girmez: işaretin kendisi zaten oran
+        # olduğunu söyler ve "%0 kâr payı" gibi meşru sıfırlar korunur
+        # (bant zaten 0'ı içerir, ama işaretsiz sıfır da elenmemeli).
+        if "%" not in raw and C.is_plausible("kar_payi_orani", canon) is False:
+            continue
         return _field(
             "kar_payi_orani", raw, canon, _window(text, m.start(), m.end()),
             span_start=s, span_end=e,
