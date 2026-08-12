@@ -89,6 +89,24 @@ MIN_OVERLAP = 2
 BM25_K1 = 1.2
 BM25_B = 0.75
 
+#: Bu süreçte kaç RAG sentezi istisnayla düştü.
+#:
+#: Sayaç, `logger.exception` ile birlikte var: günlük satırı bir OLAYı
+#: anlatır, sayaç ise "bu koşumda sentez gerçekten çalıştı mı" sorusuna
+#: cevap verir. `eval_injection.py` raporu "SENTEZ DAHİL (LLM açık)" derken
+#: modelin sıfır token üretmiş olabileceğini ayırt edememişti; ölçüm
+#: katmanının bu ayrımı okuyabilmesi gerekiyor.
+#:
+#: Sözlük (skaler değil) bilinçli: modül düzeyi bir `int`i fonksiyon içinden
+#: artırmak `global` gerektirir; sözlük mutasyonu o bildirimi gereksiz kılar
+#: ve sayacın tek bir yerde tanımlı kalmasını sağlar.
+_SENTEZ_HATALARI: dict[str, int] = {"sayi": 0}
+
+
+def sentez_hata_sayisi() -> int:
+    """Bu süreçte istisnayla düşen RAG sentezi sayısı (ölçüm katmanı için)."""
+    return _SENTEZ_HATALARI["sayi"]
+
 # ...ama eşik MUTLAK sayı olarak uygulanamaz: soru tek anlamlı sözcükten
 # ibaretse (`Sukuk nedir?` -> {'sukuk'}) 2 örtüşme MATEMATİKSEL OLARAK
 # imkânsızdır ve terim soruları yapısal olarak cevapsız kalır. Ölçüldü
@@ -571,7 +589,8 @@ def build_retriever(repo: Repository, mode: Optional[str] = None,
     return retriever
 
 
-def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnswer:
+def answer(repo: Repository, question: str, llm=None, retriever=None, *,
+           soru_karantinada: bool = False) -> RagAnswer:
     """Soru için pasaj getirir; LLM varsa sentezler, yoksa alıntılar.
 
     `retriever` GEÇİLMEZSE her çağrıda yeni bir dizin kurulur — soru başına
@@ -597,7 +616,21 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
             "belgede talimat devralma işareti var. Uydurmak yerine cevap "
             "vermiyorum.", [], used, quarantined=karantina)
 
-    if llm is not None and getattr(llm, "available", False):
+    # SORU KARANTİNADA — sentez atlanır, çıkarımsal yedeğe düşülür.
+    #
+    # `safety.screen_input` sorunun kendisinde talimat devralma işareti
+    # bulduysa (KAPI 6, girdi tarafı) soru sentez prompt'una GİRMEZ. Eskiden
+    # `f"...Soru: {question}"` ile birebir giriyordu; "router regex'tir, ikna
+    # edilemez" gerekçesi router için doğru ama sentez LLM'i için değildi.
+    #
+    # Kullanıcı REDDEDİLMİYOR: çıkarımsal cevap yapısı gereği zeminlidir
+    # (belgeden alıntı), yani talimatın etkileyebileceği bir üretim adımı
+    # kalmaz. Aşırı red ölçütü (0/6) bu yüzden bozulmuyor.
+    if soru_karantinada:
+        logger.warning(
+            "soru karantinada (talimat devralma işareti): sentez atlandı, "
+            "çıkarımsal yedeğe düşüldü")
+    elif llm is not None and getattr(llm, "available", False):
         context = "\n---\n".join(f"[{p['bank']}] {p['text']}" for p in passages)
         try:
             resp = llm.client.generate_json(
@@ -613,7 +646,27 @@ def answer(repo: Repository, question: str, llm=None, retriever=None) -> RagAnsw
             logger.warning("RAG cevabı dayanak kapısından geçemedi (%s); "
                            "çıkarımsal yedeğe düşülüyor", gerekce)
         except Exception:
-            pass
+            # SESSİZ YUTMA KALDIRILDI (2026-08-12).
+            #
+            # Burada `pass` vardı ve tüm LLM sentez hatalarını KAYITSIZ
+            # siliyordu. Tam olarak `extraction/llm/extractor.py:8-23`'ün
+            # kaldırılmak için yeniden yazıldığı desen: "bu tek satır
+            # sessizce yalan söyleyebiliyordu".
+            #
+            # Somut zarar: `scripts/eval_injection.py` raporu "SENTEZ DAHİL
+            # (LLM açık)" başlığını basarken model sıfır token üretmiş
+            # olabilirdi ve rapor bunu ayırt edemezdi — yani bir güvenlik
+            # ölçümü, ölçtüğünü sandığı şeyi ölçmemiş olurdu.
+            #
+            # İstisna YUTULMAYA devam ediyor (çıkarımsal yedek doğru
+            # davranıştır: LLM çökerse kullanıcı kaynaklı bir cevap almalı),
+            # ama artık SESSİZ değil. `exception()` yığın izini de yazar;
+            # tipin kendisi teşhis için yeterli değil (bağlantı hatası mı,
+            # şema hatası mı, zaman aşımı mı).
+            _SENTEZ_HATALARI["sayi"] += 1
+            logger.exception(
+                "RAG sentezi istisnayla düştü; çıkarımsal yedeğe düşülüyor "
+                "(bu koşumdaki sentez hatası: %d)", _SENTEZ_HATALARI["sayi"])
 
     # LLM yok → extractive: en alakalı pasajı kaynağıyla döndür
     return RagAnswer(_cikarimsal_cevap(passages[0]), passages, used,

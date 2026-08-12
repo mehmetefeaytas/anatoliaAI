@@ -384,7 +384,12 @@ class Chatbot:
             return _Dagitim("structured", r.field, govde, sources, has_rate,
                             r, soz, list(ans.rows))
         ans = rag.answer(self.repo, question, llm=self.llm,
-                         retriever=self._ensure_retriever())
+                         retriever=self._ensure_retriever(),
+                         # Soruda talimat devralma işareti varsa sentez
+                         # atlanır (safety KAPI 6, girdi tarafı). Bayrak
+                         # `screen_input`ten geliyor; burada yeniden
+                         # tespit YAPILMAZ ki iki yerde ayrışmasın.
+                         soru_karantinada=bool(scr.injection))
         # RAG yolu ZATEN LLM'den geçiyor (`rag.answer` bağlamdan cevap
         # sentezliyor). Orada bir kez daha sözelleştirmek hem ikinci bir
         # gecikme ekler hem de LLM çıktısını LLM'e yeniden yazdırmak olur:
