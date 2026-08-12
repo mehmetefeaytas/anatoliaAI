@@ -386,9 +386,32 @@ _FOLDED_FREE_TOKENS = frozenset(tr_fold_ascii(t) for t in _FREE_TOKENS)
 # üstelik cümle sonrası tarihten ("31 Aralık") 31 TL'lik hayali bir tutar
 # üretiliyordu. Tek doğruluk kaynağı burasıdır; synonyms.py bunu yeniden ihraç
 # eder, böylece çıkarım ve normalizasyon katmanları aynı deseni kullanır.
+#
+# `-mAmAktAdIr` EKLENDİ (2026-08-12). Desen `-mAz` ve `-mIyor` biçimlerini
+# tutuyordu ama resmî bankacılık metninin baskın olumsuz geniş zaman biçimi
+# `-mAmAktAdIr`'dır ve desende YOKTU; yalnız TEK bir fiil (`bulunmamaktadır`)
+# elle listelenmişti. Sessizce düşen gerçek korpus cümleleri:
+#
+#     "hesap işletim ücreti alınmamaktadır"     -> None
+#     "dosya masrafı tahsil edilmemektedir"     -> None
+#     "komisyon ücreti yansıtılmamaktadır"      -> None
+#
+# Üçü de "masraf sıfır" diyor; kılavuzun `masraf_durumu` bölümü ("NEGASYON
+# KRİTİK") bunu `absent` saymayı açıkça yasaklıyor. Korpusta masraf/ücret
+# ismiyle aynı cümlede bu biçimi taşıyan **35 belge** var.
+#
+# FİİL ÇAPASI KORUNDU, genel `\w*mamaktad[ıi]r` soneki KULLANILMADI: bu desen
+# `extract_tahsis_ucreti`de de tüketiliyor (`extract.py:1126`) ve orada
+# tetikleyiciden sonraki 60 karakterlik cümlecikte eşleşen HERHANGİ bir
+# `-mAmAktAdIr` yüklemi ücreti sıfırlardı ("... ile birlikte
+# kullanılmamaktadır" gibi ilgisiz bir yüklem dâhil). Mevcut desen de
+# fiilleri tek tek sayıyor; aynı özgüllük sürdürüldü.
 NEGATION_RE = (
-    r"(?:al[ıi]nma[zy]\w*|al[ıi]nm[ıi]yor|tahsil\s+edilme[zy]\w*|"
-    r"talep\s+edilme[zy]\w*|yans[ıi]t[ıi]lma[zy]\w*|yoktur|yok\b|"
+    r"(?:al[ıi]nma[zy]\w*|al[ıi]nm[ıi]yor|al[ıi]nmamaktad[ıi]r|"
+    r"tahsil\s+edilme[zy]\w*|tahsil\s+edilmemektedir|"
+    r"talep\s+edilme[zy]\w*|talep\s+edilmemektedir|"
+    r"yans[ıi]t[ıi]lma[zy]\w*|yans[ıi]t[ıi]lmamaktad[ıi]r|"
+    r"uygulanmamaktad[ıi]r|yoktur|yok\b|"
     r"bulunmamaktad[ıi]r|muaf|s[ıi]f[ıi]r|bedelsiz)"
 )
 
@@ -426,7 +449,44 @@ _CHARGE_VERB_RE = (
 )
 
 # Oran biçimi de ücretin olumlu kanıtıdır: "tahsis ücreti %0,5".
-_RATE_EVIDENCE_RE = r"(?:%\s*\d|\d[\d.,]*\s*%)"
+#
+# `binde`/`yüzde` SONRADAN eklendi: desen yalnız `%` işaretini tanıyordu,
+# dolayısıyla "tahsis ücreti binde 5" oran sayılmıyor ve aşağıdaki tutar
+# yoluna düşüp **5,0 TL** üretiyordu.
+_RATE_EVIDENCE_RE = (
+    r"(?:%\s*\d|\d[\d.,]*\s*%|binde\s*\d|y[üu]zde\s*\d)"
+)
+
+# AÇIK PARA BİRİMİ İŞARETİ — yalnız konum kıyası için.
+#
+# ## Ölçülen kusur (2026-08-12, `data/raw`, 1.780 belge)
+#
+# `normalize_fee_status` TUTARI ORANDAN ÖNCE deniyordu:
+#
+#     money = normalize_money(text)      # once bu
+#     if money: return {...}
+#     if re.search(_RATE_EVIDENCE_RE...)  # oran ancak buraya kalırsa
+#
+# `normalize_money("%0,5")` ise 0,5'i körü körüne TL sayıyor. Sonuç:
+# fonksiyon KENDİ DOCSTRING'İNDEKİ sözleşmeyi ihlal ediyordu
+# ("tahsis ücreti %0,5" -> amount None sözü verilmiş, 0.5 dönüyordu).
+#
+# Korpusta `masraf_durumu` için 0<tutar<100 üreten **15 belge** ölçüldü:
+#
+#     "İhtiyaç Kart kullanımında tahsis ücreti (%0,5)"  -> 0,5 TL
+#     "komisyon ücreti yıllık %1'dir"                   -> 1,0 TL
+#     "Aylık Brüt Asgari Ücretin (ABAÜ) %8,5'ine"       -> 8,5 TL
+#
+# 100.000 TL'lik bir finansmanda binde 5 = 500 TL'dir; 0,5 TL yazmak ~1000
+# kat yanlış ve alan bileşik skorda 0,20 ağırlıkla "neredeyse masrafsız"
+# okunuyor. Aynı hata sınıfı `extract.py`'de `_ILK_SAYISAL_RE` ile ölçülüp
+# kapatılmıştı ("~400 kat yanlış bir değer"); bu KATMANDA kapatılmamıştı.
+#
+# Kural, `_ILK_SAYISAL_RE`'nin ölçülmüş kuralıyla aynı: **cümlecikte ÖNCE
+# geçen işaret kazanır.** Oranla verilen ücrette oran önce gelir ("Tahsis
+# Ücreti TL %0,25"); tutarla verilen tabloda tutar önce gelir ("Tahsis
+# Ücreti 30.000,00 ₺ 12 Ay 1,69%"). Sıra tek başına ayırt edicidir.
+_PARA_ISARETI_RE = r"\d[\d.,]*\s*(?:tl\b|₺|try\b|türk\s*liras[ıi])"
 
 
 def normalize_fee_status(text: str) -> Optional[dict]:
@@ -454,12 +514,45 @@ def normalize_fee_status(text: str) -> Optional[dict]:
         # Fiil negasyonu: "ücret alınmaz" = ücret SIFIR, bilgi yok değil.
         if re.search(NEGATION_RE, low):
             return {"has_fee": False, "amount": 0.0}
-        money = normalize_money(text)
-        if money:
-            return {"has_fee": True, "amount": money["value"]}
-        # Tutar yok — oran ya da tahsil fiili olumlu kanıt sayılır.
-        if re.search(_RATE_EVIDENCE_RE, text):
+        # ORAN mı TUTAR mı — ÖNCE geçen kazanır (bkz. `_PARA_ISARETI_RE`).
+        # Konum kıyası KATLANMAMIŞ metinde yapılır: `tr_fold_ascii` uzunluk
+        # korumayabilir ve iki desenin ofsetleri kıyaslanamaz hale gelirdi.
+        oran_m = re.search(_RATE_EVIDENCE_RE, text, re.IGNORECASE)
+        para_m = re.search(_PARA_ISARETI_RE, text, re.IGNORECASE)
+        if oran_m is not None and (para_m is None
+                                   or oran_m.start() < para_m.start()):
+            # Oranla ilan edilmiş ücret: VARDIR ama TL tutarı metinde yok.
+            # Finansman tutarıyla çarpıp TL yazmak çıkarım değil türetmedir
+            # (kılavuz: "Hesaplamayın").
             return {"has_fee": True, "amount": None}
+        # AÇIK PARA BİRİMİ ŞART (kardeş alan `extract_tahsis_ucreti`de zaten
+        # böyleydi; `masraf_durumu` o taramadan atlanmıştı).
+        #
+        # ## Ölçülen kusur (2026-08-12, `data/raw`, 1.780 belge)
+        #
+        # `normalize_money` pencerede bulduğu ÇIPLAK sayıyı TL sayıyor.
+        # `masraf_durumu` pozitif tutar üreten 30 belgenin 14'ünde span'da
+        # para birimi işareti YOKTU ve **14'ünün 14'ü** parasal olmayan bir
+        # sayıydı:
+        #
+        #     "Yönetici Ortağın Ücreti Madde 23-"        -> 23,00 TL   madde no
+        #     "ÜCRETLERİN GEÇERLİLİK SÜRESİ: 31 Aralık"  -> 31,00 TL   tarih
+        #     "4789 NAKLİYAT SERVİSLERİ"                 -> 4.789 TL   MCC kodu
+        #     "masraflarınızı 12 aya kadar"              -> 12,00 TL   vade
+        #
+        # Alan bileşik skorda 0,20 ağırlıkla kullanıldığı için "23 TL masraf"
+        # ekranda neredeyse masrafsız okunuyordu.
+        #
+        # Gold bu kusuru göstermez: 48 kaydın hiçbirinde `masraf_durumu` için
+        # pozitif tutar yok (beşi 0.0, biri None). Kapı bu yüzden hiçbir gold
+        # TP'sini düşürmez; kazanç korpus düzeyindedir.
+        #
+        # Tutar düşse bile ücretin VARLIĞI kaybolmuyor: aşağıdaki tahsil
+        # fiili yolu `{has_fee: True, amount: None}` döndürür.
+        if para_m is not None:
+            money = normalize_money(text)
+            if money:
+                return {"has_fee": True, "amount": money["value"]}
         if re.search(_CHARGE_VERB_RE, low):
             return {"has_fee": True, "amount": None}
         # Çıplak isim bahsi ("Ücret Tarifesi", "tahsis politikaları").
