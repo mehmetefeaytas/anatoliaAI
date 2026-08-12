@@ -24,6 +24,78 @@ chatbot** ile sunan; **tamamen açık kaynak (Apache-2.0)**, **on-premise** ve
 
 ---
 
+## 📊 Ölçülebilir Durum
+
+Bu tablodaki her sayı, yanındaki komutla **yeniden üretilebilir**. Ölçüm
+tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
+
+| Ne | Değer | Üreten komut |
+|---|---|---|
+| Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
+| Korpus | **1.774 belge** (ham arşivde 1.782 — 8'i DB'ye işlenmeyi bekliyor) | `python -m scripts.check_demo_db` |
+| Gold seti | **48 kayıt** (40'ı zor vaka) | `data/gold/gold.v2.json` |
+| **Yapılandırılmış alan mikro-F1** | **0,619** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
+| 12-alan mikro-F1 | 0,439 | *(aynı komut — farkı aşağıda açıklıyoruz)* |
+| Halüsinasyon oranı | **0,074** (yapısal kesitte 0,063) | *(aynı komut)* |
+| RAG — terim kapsama R@5 | **0,867** | `python -m eval.rag_eval --db data/demo.db` |
+| RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
+| Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
+| Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
+| Test | **2.393** | `python -m pytest` |
+| CI regresyon kapısı | **var** (alan F1 + halüsinasyon tavanı) | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
+
+### İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz
+
+`kampanya_kosullari` **serbest cümle listesi** döndüren bir alandır ("Kampanyaya
+dahil olmak için X gerekir"). Span/jeton eşleşmesiyle F1 ölçmek bu alanda
+metodolojik olarak yanlıştır: aynı koşulu farklı sözcüklerle yazan iki anotatör
+bile birbirini "yanlış" bulurdu. Bu tek alan mikro-F1'i **0,619'dan 0,439'a**
+çekiyor.
+
+Alanı **gizlemiyoruz**: ana tabloda satırı duruyor, kendi bölümünde kalem düzeyi
+ölçütle (jeton-Jaccard) raporlanıyor ve iki sayı yan yana yayımlanıyor. Ayrımı
+jüri fark etmeden **biz** söylüyoruz.
+
+Aynı dürüstlükle: gold setimizin **40/48'i kasten zor vakadır** (koşullu aralık,
+format varyantı, çelişki, terminoloji), **12 alan** ölçüyoruz ve halüsinasyonu
+**ayrı paydayla** sayıyoruz. Tek bir parlak yüzde vermiyoruz, çünkü *bir alanı
+kaçırmak ile uydurmak aynı hata değildir* — kaçırma bilgi eksikliğidir,
+uydurma ise kullanıcıyı yanlış yönlendirir.
+
+### RAG Recall@5 burada ne demek
+
+Klasik bilgi erişiminde bir sorgunun "ilgili belge kümesi" bilinir; bizde
+bilinmiyor. Bu yüzden ölçülen şey **kanıtlanabilir isabet**: ilk 5 sonuç
+arasında şartı sağlayan (terimi gerçekten içeren / doğru bankaya ait) en az bir
+belge var mı. Tanım `eval/rag_eval.py` başlığında yazılıdır ve başka bir
+sistemin Recall@5'iyle **doğrudan kıyaslanamaz**.
+
+### Bilinen açıklar — biz söylüyoruz
+
+Bir vitrin tablosunun en kolay yalanı, eksiği yazmamaktır. Ölçüm sırasında
+çıkan ve **henüz kapatılmamış** üç açık:
+
+- **`demo.db` bayat.** Ham arşiv 11 Ağustos'ta tazelendi (1.782 belge), veri
+  tabanı 1.774'te kaldı; 8 belgeyi chatbot/dashboard **hiç görmüyor**.
+  `python -m scripts.check_demo_db` bunu kapı olarak raporlar. Yeniden inşa
+  özet sütununu sıfırlayacağı için bilinçli olarak ertelendi.
+- **`tahsis_ucreti` ölçülemiyor.** Gold'da 0 pozitif örnek var (47 kayıtta
+  `absent`); sistem hiç değer üretmiyor ve gold da beklemiyor, yani F1
+  tanımsız. Bu "hiç çalışmıyor" değil, "ölçülemiyor" demektir ve çelişki
+  tespiti kartı buna bağlıdır.
+- **Banka hedefleme R@5 = 0,600.** "Vakıf Katılım kampanyaları" gibi
+  sorularda 10 bankanın 4'ü ilk 5 sonuca giremiyor. Sebebi ölçüldü: mevcut
+  sıralayıcı ikili örtüşme kullanıyor ve uzun belgeleri kayırıyor
+  (korpus ortalamasının 1,7 katı). BM25 aynı ölçütte 0,800 veriyor
+  (`python -m eval.rag_eval --db data/demo.db --kiyas`) ama üretim yolu
+  **bilerek değiştirilmedi**: eşik kalibrasyonu ve 54 soruluk regresyon
+  seti yenilenmeden değiştirmek, ölçülmemiş bir davranışı demoya koymak olur.
+
+Ölçüm metodolojisi: [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
+[gold anotasyon kılavuzu](app/data/gold/ANNOTATION_GUIDE.md)
+
+---
+
 ## 🎯 Proje Tanımı
 
 Katılım bankacılığında bilgiler doğal dilde, dağınık ve birbiriyle kıyaslanması zor
