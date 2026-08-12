@@ -5,6 +5,17 @@
 *.pdf
 raw/**/*.pdf
 
+# İSTİSNA: panel ekran görüntüleri PDF'i BİZİM çıktımız, telifli kaynak değil.
+# Yukarıdaki `*.pdf` kuralı başkasının belgesini repodan uzak tutmak için var;
+# kendi kanıtımızı dışarıda bırakmak o kuralın amacı değildi.
+!docs-ekran/anatolia-ai-panel-ekranlari.pdf
+
+# Ham ekran görüntüleri PDF'in İÇİNDE zaten var — ikisini birden tutmak
+# aynı kanıtı iki kez, 36 MB olarak taşımak olurdu. PNG'ler `ekran_cek.py`
+# ile yeniden üretilebilir; PDF ise teslim edilen biçimdir.
+docs-ekran/ss/
+/*.png
+
 # raw/ altındaki sembolik linkler MAKİNEYE ÖZELDİR, repoya girmez.
 #
 # CLAUDE.md INGEST akışı ham kaynağı `raw/` altına `ln -s` ile bağlamayı

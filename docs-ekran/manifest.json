@@ -1,0 +1,212 @@
+[
+  {
+    "dosya": "01-genel-bakis.png",
+    "baslik": "Panel açılış ekranı — tez, künye, durum ve kıyas cetveli",
+    "aciklama": "Kabuk panelin TEZİNİ söyleyerek açılıyor: «Ekranda bir sayı görüyorsan, o sayının çıkarıldığı cümle ve karakter aralığı da bir tık uzakta. Ölçülemeyen alan boş bırakılır ve boşluğun kendisi sayılır.» Hemen altında bu tezin sayısal karşılığı — korpus künyesi — sonra durum şeridi ve AI özet kapsamı gelir. Ürün şeridi altı sekmedir: Karşılaştırma, Isı Haritası, En Avantajlı, Banka Sayfası, Banka İçi Delta, Çelişki Tespiti. Denetim ve operatör yüzeyleri (Jüri Audit Paneli, Canlı Çıkarım, Chatbot, Veri Tazeleme, Ayarlar) jüri modu anahtarıyla açılır. Sağ altta her ekranda duran sohbet düğmesi vardır; sekme durumu URL'de tutulur."
+  },
+  {
+    "dosya": "02-korpus-kunyesi.png",
+    "baslik": "Korpus künyesi",
+    "aciklama": "Panelin ölçeği tek satırda: 1.774 belge · 10 banka · 11 kaynak · 8 kampanya türü · 12 çıkarım alanı. Banka ile kaynak sayısı kasıtlı olarak AYRI: onbirinci kaynak Türkiye Katılım Bankaları Birliği'dir ve bir banka değildir; aynı ekranda iki farklı sayı görünmesin diye künye ikisini ayrı adlandırır. Sondaki turuncu rozet o an bakılan alanın kapsamasını gösterir — «kâr payı oranı · 56 / 1.774 belgede» — yani sıralamanın hangi tabana oturduğu, sıralamaya bakılmadan önce okunur. Değerler /stats, /fields ve /banks uçlarından iner; hiçbiri arayüzde sabit yazılmaz."
+  },
+  {
+    "dosya": "03-durum-seridi.png",
+    "baslik": "Durum şeridi — api, depo, yerel model, korpus",
+    "aciklama": "Dört bilgi kalıcı olarak kabukta durur: API açık mı, hangi depo kullanılıyor (SQLite / PostgreSQL), yerel dil modeli açık mı ve korpusun ölçeği. Bunlar bugüne kadar ancak bir şey BOZULUNCA öğreniliyordu — API kapalıysa panel çökünce, model kapalıysa bir düğme devre dışı kalınca, hangi veri tabanına bakıldığı ise hiç. Üçü de sunumda söylenmesi gereken şeyler ve ikisi doğrudan puanlanan ölçütlere bakar: «depo SQLite» ve «yerel model açık» satırı on-prem iddiasının görsel kanıtıdır. «LLM kapalı» bir kusur değil bir güçtür ve şerit onu da aynı yerde, aynı dille yazar."
+  },
+  {
+    "dosya": "04-ozet-kapsam.png",
+    "baslik": "AI özet kapsam şeridi",
+    "aciklama": "Panelin doğal dilde özet vaadinin ne kadarının karşılandığı: 1.774 kampanyanın 1.750'sinde AI özeti var (%99), 1 belge bekliyor. Sayı istemcide tahmin edilmez, GET /summaries/coverage ucundan okunur — böylece «özet var mı» değil «özet neden yok» sorusu da cevaplanır (içeriği boş belge, LLM hatası, hiç denenmemiş). Eksik varsa aynı şeritten yerel modelle çalışan bir arka plan işi başlatılabilir; internet gerekmez. Kaynak metin her belgede tam hâliyle durur ve uydurma özet basılmaz."
+  },
+  {
+    "dosya": "05-kiyas-cetveli.png",
+    "baslik": "Kıyas cetveli — imza öğesi",
+    "aciklama": "Kıyas artık bir tablo değil, ölçekli bir cetvel. Yatay eksen alanın gerçek birimidir (burada %0–%5) ve her banka o eksende çizilir: DOLU çubuk sıralamaya giren tek değer, KESİK çerçeve zaman/kanal koşuluna bağlı oran, İÇİ BOŞ dikdörtgen ise bir ARALIK (%3,85–%3,95 gibi) — genişliği aralığın kendisidir. Başlıkta alanın adı, teknik anahtarı ve yönü, sağında ise KAPSAMA durur: «4 / 10 banka · kıyaslanabilir: 1 · aralık: 2 · koşullu: 1». Altta «ÖLÇÜLEMEDİ» bölümü gelir: verisi olmayan banka listeden DÜŞMEZ, kesik taban çizgisi ve «veri yok · N belge» etiketiyle yerini korur. Boşluk gizlenmiyor, sayılıyor."
+  },
+  {
+    "dosya": "06-adil-kiyas-notu.png",
+    "baslik": "Adil kıyas kuralları — katlanmış şerit, açılmış hâli",
+    "aciklama": "Şerit her ekranda tek satır olarak durur; «kuralların tamamı» ile beş blok açılır. (1) 0 = ürün yok, ceza değil: katılım bankacılığında %0 ya da «masrafsız» eksik bilgi değil, gerçek bir üründür ve sıralamanın en avantajlı ucudur; bilgi gerçekten yoksa hücre «–» gösterir ve satır «kıyaslanamaz» işaretlenir — ikisi karıştırılmaz. (2) Adil kıyas garantisi: aralık, zaman-koşullu oran ve farklı para birimi sıralamaya alınmaz, gerekçesiyle listede kalır; uydurma sıra verilmez. (3) Kampanya türü tanımı ve neden yalnız tür içinde sıralandığı: 120 aylık bir konut finansmanının 36 aylık bir ihtiyaç finansmanını «yenmesi» bir bilgi değil, bir ölçüm hatasıdır. (4) Tablo neden seyrek: üç kapı (belge türü, çıkarım güveni, kampanya süresi) satırları eler ama hiçbirini silmez. (5) Bu ekranın ek kuralı: onbir satırın onbiri her zaman çizilir."
+  },
+  {
+    "dosya": "07-kiyas-tablosu.png",
+    "baslik": "Kıyas cetvelinin gövdesi — değer, dipnot, durum",
+    "aciklama": "Cetvel kampanya türü başlıklarına bölünür ve sıra numarası yalnız tür içinde verilir. Her satırda kanonik değer, yanında ¶ kaynak dipnotu (değerin çıkarıldığı karakter aralığı ve belge numarası) ve altında satırın sıralamaya girip girmediğini söyleyen durum etiketi durur: «kıyaslanabilir», «koşullu oran», «aralık», «süresi dolmuş». Alan seçimi 12 rozetle yapılır; sıralama yönü, kampanya türü süzgeci ve «en iyi kampanya (tek satır) / tüm kampanyalar» kırılımı üç açılır listeden ayarlanır. Sıralamadan dışlanan hiçbir satır gizlenmez."
+  },
+  {
+    "dosya": "08-kaynak-dipnotu.png",
+    "baslik": "¶ kaynak dipnotu — belge yandan açılır, iki katmanlı vurgu",
+    "aciklama": "Ekrandaki her sayının yanındaki ¶ rozetine basıldığında belge SAĞDAN açılır; tabloyu iterek değil, üstüne binerek — okunan satır yerinde kalır. Panel belge numarasını, ham ifadeyi ve «offset doğrulandı» damgasını taşır. Vurgu İKİ KATMANLIDIR ve altında açıkça adlandırılır: SARI, değerin çıkarıldığı ifadenin tam karakter aralığı (ör. [8071, 8085] · 14 karakter); MAVİ YIKAMA, kuralın o değeri görürken baktığı cümle bağlamı (ör. [8031, 8125]). Böylece «değer nereden geldi» ile «hangi bağlamda okundu» ayrı ayrı denetlenebilir. Altta belge uzunluğu, tam metne geçiş ve bankanın kendi sayfasına bağlantı durur. Aynı jest panelin her yerinde aynıdır: kıyas cetvelinde, delta tablosunda, çelişki kartlarında, sohbet cevaplarında."
+  },
+  {
+    "dosya": "09-seffaf-skorlama.png",
+    "baslik": "Şeffaf skorlama — sıralamanın formülü ve ara değerleri",
+    "aciklama": "«En avantajlı» iddiasının nasıl üretildiği gizlenmez (GET /scoring) ve formülün kaynak dosyası adıyla verilir. Beş adım sırayla yazılır: kanonik değer, sıralama anahtarı, güven kapısı (0,65 altındaki çıkarım sıralamaya girmez ama silinmez — gerekçesiyle görünür kalır), adil kıyas kapısı ve alanın yönü. Ardından her bankanın aldığı ara değer, kıyas kapısından geçip geçmediği, güven skoru ve üreten katman tablo hâlinde listelenir. Ekran ayrıca kapsamının hangi kampanya türü olduğunu ve bu tablonun TEK alanı açıkladığını söyler; çok alanlı ağırlıklı skor «En Avantajlı» sekmesindedir."
+  },
+  {
+    "dosya": "10-isi-haritasi.png",
+    "baslik": "Isı Haritası — «bu alanı korpusun neresinde ölçebiliyoruz?»",
+    "aciklama": "Kıyas «kim daha avantajlı» der; harita «bunu nerede ölçebiliyoruz» der ve ikincisi birincinin okunma koşuludur. Seçilen alan için 11 kaynak × 9 kampanya türü = 99 hücrenin her biri dört hâlden birini alır ve gösterge bunları adlandırır: değer çıkarıldı · değer var ama doğrudan kıyaslanamaz · belge var ama bu alanda değer yok · bu türde hiç belge yok. Sağ üstte dolu hücre sayısı durur (kâr payı oranı için 6/99). Altındaki not haritanın en dürüst yeridir: 99 hücrenin 83'ünde kâr payı oranı hiç geçmiyor ve bu bir MODEL KISITI DEĞİL, VERİ GERÇEĞİDİR — bankalar bu alanı kampanya sayfalarında büyük ölçüde yayımlamıyor. Dökümü dört hâl için tek tek verilir. Harita sıralama yapmaz; dolu hücre bir üstünlük değil, bir ölçümdür."
+  },
+  {
+    "dosya": "11-isi-haritasi-masraf.png",
+    "baslik": "Isı Haritası — alan değiştirildiğinde kapsama da değişir",
+    "aciklama": "Haritanın konusu tek bir açılır listeyle değiştirilir; burada alan «Masraf Durumu». Aynı korpus, farklı bir alan için tamamen farklı bir kapsama deseni verir — bazı alanlar (masraf durumu, vade) bankaların kampanya metinlerinde sık geçer, bazıları (kâr payı oranı, tahsis ücreti) neredeyse yalnız sözleşme ve tarife belgelerinde bulunur. Bu ekran, «modelimiz şu alanı çıkaramıyor» ile «bankalar şu alanı yayımlamıyor» ayrımını tek bakışta yapılabilir kılar."
+  },
+  {
+    "dosya": "12-en-avantajli.png",
+    "baslik": "En Avantajlı — kampanya türü İÇİNDE ağırlıklı bileşik skor",
+    "aciklama": "Tek alan yerine birden çok alanı ağırlıklandırarak sıralar (GET /advantageous) ve sıralama HER ZAMAN kampanya türü içindedir; türler arası karşılaştırma hiç üretilmez, çünkü bir kart kampanyası ile bir konut finansmanı arasında «hangisi daha avantajlı» sorusu iyi tanımlı değildir. Her tür kendi bölümünde belge sayısıyla listelenir. Satırda bileşik skorun yanında KAPSAMA ve «2/2 ölçüt» bağlantısı durur: skorun hangi alanlardan oluştuğu açılır. Alanı olmayan kampanya cezalandırılmaz, kıyas dışı bırakılır — 0 puan «ürün yok» demektir, «kötü» demek değil. Güveni eşiğin altında kalan alan skorlanmaz ve kampanyanın veri kapsamasını düşürür."
+  },
+  {
+    "dosya": "13-agirlik-gerekceleri.png",
+    "baslik": "Ağırlıklar ve gerekçeleri — her katsayı bir cümleyle savunulur",
+    "aciklama": "Bileşik skorun ağırlıkları bir ÜRÜN KARARIDIR, ölçümden türetilmiş sabitler değil — ve ekran bunu saklamak yerine her katsayının gerekçesini yazar. Kâr payı oranı 0,4 (küçük iyi): «100.000 TL / 36 ay sepetinde korpustaki oran aralığı ~75.850 TL fark yaratıyor; bu yüzden en yüksek ağırlık.» Masraf durumu 0,2: tutarı küçük ama peşin ödenir ve şartname onu ayrı bir ölçüt sayar. Ödül miktarı 0,15, vade 0,15 (esneklik ölçütü, maliyet ölçütü değil), finansman tutarı 0,1 (üst limit nadiren bağlayıcı). Altında kampanya türü içindeki bileşik skorlar 0–1 ekseninde çubuk olarak çizilir."
+  },
+  {
+    "dosya": "14-banka-sayfasi.png",
+    "baslik": "Banka Sayfası — tek bankanın künyesi ve veri kapsamı",
+    "aciklama": "Her bankanın kendi sayfası var; ama sayfada tek bir «banka puanı» HİÇ BASILMAZ, çünkü hesaplanamaz: bileşik skor kampanya başına ve kampanya türü içinde üretilir, normalizasyon grup içi sıralama tabanlıdır, dolayısıyla farklı türlerden gelen skorların ortalaması matematiksel olarak tanımsızdır. Sayfa bunun yerine gerekçesini ve ölçülebilen her şeyi basar: künye, veri kapsamı, kampanya türü başına puan ve 12 alanın durumu. Banka seçimi tek bir açılır listeyle yapılır; delta görünümü de aynı sayfanın içinde durur."
+  },
+  {
+    "dosya": "15-banka-yildiz.png",
+    "baslik": "Kampanya türü başına yıldız — ve yanında her zaman kapsama",
+    "aciklama": "Yıldız yalnız TÜR İÇİNDE basılır ve asla tek başına: her satırda yıldızın ne anlama geldiği yazılır — «5/5 · 17 belge. Tür içinde 1/17. Dolu ölçütler: Masraf Durumu. Bu belgelerde geçmeyen: Ödül Miktarı.» Beş yıldızlı bir rozet, taşımadığı bir kesinlik izlenimi verir; bu proje tam olarak o izlenime karşı kurulduğu için bileşen üç sert kuralı ZORLAR: türsüz yıldız basılmaz, kapsamasız yıldız basılmaz, kapsama eşiğin altındaysa yıldız hiç basılmaz. Son üç satır bunun sonucudur: yıldız yerine «ölçülemedi» ve gerekçesi durur — «38 belge. veri kapsaması düşük (%22) — doğrudan kıyaslanamaz.»"
+  },
+  {
+    "dosya": "16-banka-alan-durumu.png",
+    "baslik": "12 alanın durumu — boş olan gizlenmez",
+    "aciklama": "Bankanın 12 çıkarım alanının her biri için tek bir rozet: alan dolu mu, boş mu. Alanların 12 tanesi HER HÂLDE basılır; boş olan listeden düşmez. Bu, panelin genel kuralının banka ölçeğindeki karşılığıdır — bir alanın yokluğu da bir ölçüm sonucudur ve gizlenmesi, sayfayı olduğundan zengin gösterirdi. Altında adil kıyas şeridi bu sayfada da tekrar eder, çünkü aynı kurallar burada da geçerlidir."
+  },
+  {
+    "dosya": "17-banka-ici-delta.png",
+    "baslik": "Banka İçi Delta — «bende ne eksik, rakipte ne var?»",
+    "aciklama": "Diğer ekranlar müşterinin sorusunu yanıtlar; bu ekran bankanın sorusunu. Bir banka ve bir rakip seçilir (ya da «en iyi rakip» otomatik bulunur), fark yalnız aynı kampanya türü içinde hesaplanır (GET /bank-delta). Her tür bölümünde beş sayaç durur: ÜRÜN BULUNAMADI, VERİ ÇIKARILAMADI, DAHA KÖTÜ, DAHA İYİ, EŞİT — «eksik ürün» ile «eksik veri» kasıtlı olarak ayrı sayılır, ikisi aynı şey değildir ve bir bankaya «bu üründe geridesiniz» demekle «bu ürünü ölçemedik» demek arasındaki fark, iddianın tamamıdır. Satırlardan bankanın kendi sayfasına ve belgenin kanıt defterine geçilebilir."
+  },
+  {
+    "dosya": "18-delta-ekseni.png",
+    "baslik": "Alan alan delta — uydurma fark üretilmez",
+    "aciklama": "Tablo altı kolonludur: ALAN · seçilen banka · RAKİP · FARK · KONUM · DURUM. Rakip tarafındaki her değer kendi kanıtını taşır — ham ifade, üreten katman, güven skoru, belgeye ve banka sayfasına bağlantı. Durum kolonu neyin ölçülemediğini adıyla söyler: «rakip kaydı yok», «ürün bulunamadı». Altındaki not sınırı yazar: fark yalnız İKİ TARAFIN DA kıyaslanabilir olduğu satırlarda hesaplanır, aksi hâlde hücre boş bırakılır — uydurma delta yok. Oran alanlarında farkın yüzde değil YÜZDE PUANI olduğu da ayrıca belirtilir."
+  },
+  {
+    "dosya": "19-celiski-tespiti.png",
+    "baslik": "Çelişki Tespiti — tarama kapsamı önce, bulgu sonra",
+    "aciklama": "Bir belge kendi içinde tutarsızsa yakalanır; en güçlü örnek «masrafsız» denip aynı metinde tahsis ücreti belirtilmesidir (GET /contradictions). Anlatı sırası kasıtlı: önce TARAMA KAPSAMI gösterilir — çelişki bulunan belge 14/1.774, taranan 1.774 belge · 11 kaynak · bulgu 16 — çünkü bulgu sayısı kapsam olmadan okunamaz ve sıfır bulgu «tarama çalışmadı» ile karıştırılmamalıdır. Ekranın doktrini de yazılıdır: çelişkinin iki tarafı da bankanın kendi cümlesidir; sistem hangisinin geçerli olduğunu SÖYLEMEZ, ikisini yan yana koyar, karakter aralıklarını verir ve kararı okuyana bırakır. Yakalanan türler: masrafsızlık ↔ ücret, süresi dolmuş ama hâlâ sunulan kampanya, aynı belgede çelişen tutar bandı."
+  },
+  {
+    "dosya": "20-celiski-iki-alinti.png",
+    "baslik": "Çelişki kartı — iki alıntı yan yana",
+    "aciklama": "«Bankanın kendi ifadesi» açıldığında çelişkinin iki tarafı yan yana gelir. Solda MASRAF DURUMU: bankanın «… Ücretsiz İşlem Başına …» cümlesi, çıkarılan değer «masrafsız», üreten katman kural, karakter aralığı ¶1641–1649. Sağda TAHSİS ÜCRETİ: «… Tahsis Ücreti Limitin Anaparasının %0,5'i Bir Defa …» cümlesi, çıkarılan değer 50 TL ve türetimin kendisi de görünür — [hesap: 10.000 TL × %0,50 = 50 TL]. Kartın altındaki cümle iddiayı sınırlar: bu ifadelerin hepsi bankanın kendi metninden, yazıldığı hâliyle okundu; aynı belge aynı konuda birden fazla şey söylüyor ve sistem hangisinin geçerli olduğunu değil, her ifadenin metnin neresinde durduğunu bildirir."
+  },
+  {
+    "dosya": "21-sohbet-cekmecesi.png",
+    "baslik": "Sohbet çekmecesi — her ekranda, bağlamı bilerek",
+    "aciklama": "Chatbot artık sekmelerden biri değil: sağ alttaki yuvarlak düğme her ekranda durur ve çekmece bakılan tabloyu terk ettirmeden açılır — çünkü sorular tam da o tablodan doğuyor («bu bankada neden veri yok», «en düşük olan hangisiydi»). Çekmece açıldığı ekranı BİLİR: başlıkta «bağlam: çelişki tespiti» yazar ve hazır sorular o ekrana göre değişir; sabit bir liste her ekranda aynı altı soruyu gösteriyordu. Üstteki çerçeve sohbetin taahhüdüdür: «Yalnız korpustaki belgelerden cevap veriyorum. Cevabın her sayısı bir dipnot rozeti taşır; taşımıyorsa o sayıyı ben uydurmuşumdur ve öyle bir cevap üretmem.» Sohbetin tam sayfa hâli jüri modunda ayrı bir sekme olarak durur — geniş kaynak tablosu 420 piksellik çekmecede okunmadığı için."
+  },
+  {
+    "dosya": "22-komut-paleti.png",
+    "baslik": "Komut paleti (⌘K / Ctrl+K) — 1.774 belgede arama",
+    "aciklama": "Arayüzde hiç arama yoktu; bir belgeye ulaşmanın tek yolu 1.774 seçenekli bir açılır listeyi kaydırmaktı. Palet üç farklı niyeti tek kutuda karşılar ve hangisinin arandığını kullanıcıya sormaz — sonuçları gruplayarak gösterir: BANKALAR (belge sayılarıyla), BELGELER (belge numarası, banka, kampanya türü, eşleşen parçanın vurgusu ve «süresi dolmuş» gibi rozetler) ve kampanya türleri. Süzme sunucuda yapılır (GET /search); alt satır kesmeyi açıkça söyler: «188 belgeden ilk 20 tanesi gösteriliyor. Daraltmak için sorguya kelime ekleyin.» Klavye deseni üstte yazılıdır: ↑↓ gez · ↵ aç · Esc kapat. Seçim niyete göre doğru ekrana düşer — banka sayfası, kanıt defteri ya da kıyas ekranı."
+  },
+  {
+    "dosya": "23-juri-modu.png",
+    "baslik": "Jüri modu — denetim ve operatör yüzeyleri",
+    "aciklama": "Ayrımın ölçütü şu: bir ekran KAMPANYA hakkında bir soru mu yanıtlıyor, yoksa SİSTEM hakkında mı? Ürün şeridindeki altı sekme birincisini yapar; mod açıldığında beşi ikincisini yapmak üzere eklenir: Jüri Audit Paneli (belge → çıkarılan alan → kaynak span zinciri), Canlı Çıkarım («sistem gerçekten çalışıyor» ispatı), Chatbot'un tam sayfa hâli, Veri Tazeleme (ağa çıkan tek yüzey) ve Ayarlar. Şerit neyin değiştiğini tek cümleyle yazar — «+2 sekme: veri tazeleme, ayarlar» ve kıyas tablosunda güven skorlarının görünür olacağı. Gizli bir mod açık unutulursa ticari ekranı denetim ekranına çevirir ve kimse fark etmez; bu yüzden mod açıkken şerit kalıcıdır. Denetim ekranları güven skorlarını bu moddan bağımsız olarak her hâlde gösterir."
+  },
+  {
+    "dosya": "24-kanit-defteri.png",
+    "baslik": "Kanıt defteri — belge seçimi artık arama ve süzgeçle",
+    "aciklama": "Jüri Audit Paneli'nin yeni adı ve yeni girişi. Belge seçimi eskiden korpusun tamamını içeren tek bir açılır listeydi; kaydırmaktan başka yol yoktu ve 126 sözleşme/tarife belgesi ile 458 süresi dolmuş kampanya o listede AYIRT EDİLEMİYORDU. İkisi de veride vardı, ekranda yoktu. Artık arama kutusu ve dört süzgeç ekseni var: banka · kampanya türü · belge türü (kampanya / sözleşme) · geçerlilik (geçerli / süresi dolmuş / damgasız). Süzme sunucuda yapılır. Sonuç listesinde her belge numarası, bankası, türü, durum rozeti ve AI özetinin ilk satırıyla görünür — jüri neyi açtığını açmadan önce bilir."
+  },
+  {
+    "dosya": "25-belge-secici.png",
+    "baslik": "Belge seçici — dört süzgeç ekseni",
+    "aciklama": "Süzgeçler rozet olarak durur ve hepsi aynı anda görünür; hangi eksenlerin var olduğunu keşfetmek için menü açmak gerekmez. «Belge türü» ekseni panelin en önemli dürüstlük kapılarından birini görünür kılar: bir sözleşme ya da ücret tarifesindeki oran, bir KAMPANYA TEKLİFİ değildir ve kıyasa girmemelidir — bu ayrım veride vardı ama ekranda yoktu. «Geçerlilik» ekseni de aynı türden: süresi dolmuş bir kampanya bugünkü tekliflerin üstünde görünemez, «damgasız» ise tarihi okunamamış belgedir ve üçüncü bir hâl olarak ayrı sayılır."
+  },
+  {
+    "dosya": "26-kanit-cikarilan-deger.png",
+    "baslik": "Kanıt sayfası — bir sayı ve onu doğuran cümle, yan yana",
+    "aciklama": "Ekran ikiye bölünür. SOLDA çıkarılan değerin künyesi: alan adı, normalize değer, ham ifade, üreten katman ve o katmanın ne yaptığı («Deterministik kural çıkardı; yerel model bu alana dokunmadı»), güven skoru ve güvenin KAYNAĞI («kanıt tabanlı — kural sinyalleri»), karakter aralığı ve «doğrulandı» damgası, içerik özeti ile toplanma zamanı. Yerel modelle üretilmiş özet ayrı bir çerçevede ve «ÜRETİLMİŞ» etiketiyle durur — özet asla ham metnin yerine geçmez. SAĞDA bankanın kendi cümlesi, iki katmanlı vurguyla ve belgenin uzunluğuyla. Altta ham belgeyi yazdırma (PDF olarak kaydetme) düğmesi, kaynak adresi ve scraped_at zaman damgası bulunur."
+  },
+  {
+    "dosya": "27-kanit-kaynak-cumle.png",
+    "baslik": "Kaynak metin — bankanın kendi cümlesi",
+    "aciklama": "Sağ kolonun yakın planı. Başlıkta belgenin uzunluğu, altında «offset doğrulandı» damgası durur: kayıtlı bir işaret okunmuyor, karakter aralığı o anda metin üzerinde yeniden ölçülüyor. Vurgu iki katmanlıdır ve altında adlandırılır — sarı, değerin çıkarıldığı ifade; mavi yıkama, kuralın gördüğü cümle bağlamı. Ham belgeyi yazdırma yolu tarayıcının kendi yazdırma penceresini açar; bir PDF kütüphanesi kullanılmadı çünkü hazır kütüphanelerin standart fontları Türkçe metni bozuyor ya da seçilemeyen bulanık bir raster üretiyor. Etiket bu yüzden «indir» değil «yazdır» diyor — düğme dosya indirmiyor."
+  },
+  {
+    "dosya": "28-zor-vaka-tezgahi.png",
+    "baslik": "Zor Vaka Tezgâhı — boş bir metin kutusu değil, kürlenmiş zor belgeler",
+    "aciklama": "Canlı Çıkarım artık serbest bir metin alanı değil: altın kümenin «zor» işaretli 40 belgesi, gerçek banka metniyle önünüzde duruyor (48 zor belgeden 40'ı). Zorluk türleri sayılarıyla listelenir ve süzgeç olarak çalışır: Terminoloji 12, Biçim varyantı 25, Eksik bilgi 9, Çelişkili metin 4, Koşullu / aralıklı 12. Her kart bankayı, kampanya türünü, zorluk etiketlerini, metnin ilk satırlarını ve «1553 karakter · altında 4 değer, 8 'yok' kaydı» gibi altın küme künyesini taşır. Ekranın sözleşmesi başlıkta yazılıdır: soldaki her şey siz düğmeye bastığınızda üretilir, sağdaki değerler önceden elle anotasyonlanmış referanstır. Kaynak doğrulaması da o anda hesaplanır."
+  },
+  {
+    "dosya": "29-zor-vaka-celiskili-kume.png",
+    "baslik": "Zorluk türüne göre süzme — «çelişkili metin» kümesi",
+    "aciklama": "Bir zorluk türü seçildiğinde o kümenin tanımı da yazılır: «Belge kendi içinde çelişiyor — masrafsızlık iddiası ile tahsil edilen bir ücret aynı sayfada.» Kartlar birden fazla zorluk etiketi taşıyabilir (bir belge hem çelişkili hem koşullu hem biçim varyantı olabilir) ve etiketler kartın üstünde tek tek görünür. Seçilen vakanın tam metni aşağıda olduğu gibi durur; «Çıkarımı çalıştır» düğmesinin yanındaki not sınırı söyler: metin olduğu gibi gönderilir, sonuç altın değerlerle yan yana çizilir. Ayrıca «Kendi metninizi deneyin (referanssız)» yolu da açıktır — ama referanssız olduğu adıyla belirtilir."
+  },
+  {
+    "dosya": "30-zor-vaka-sonuc.png",
+    "baslik": "Model çıktısı ↔ altın küme — sistemin kendini denetlediği ekran",
+    "aciklama": "Panelin en iddialı ekranı: üç kolon yan yana. MODEL ÇIKTISI (CANLI) — o anda üretilen değer, ham ifade, güven skoru, üreten katman, karakter aralığı ve «doğrulandı» damgası. ALTIN KÜME (REFERANS) — önceden elle anotasyonlanmış değer ve anotatörün dayandığı cümle. KARAR — dördü de ayrı ayrı adlandırılır: «Eşleşti» (kanonik biçimde birebir aynı), «Uyuşmadı» (gerekçesiyle: «tutar farklı: 125000.0 != 400000.0»), «Doğru boşluk» (altın kümede yok, model de üretmedi — yani boşluğu doğru bilmek de başarıdır), «Belirsiz» (anotatör karar veremedi; bu alan ölçüm dışında). Üstteki sayaçlar turun künyesini verir: kampanya türü, tür güveni, bulunan alan sayısı, çelişki sayısı ve yerel modelin açık olup olmadığı. Sistem burada kendi hatasını jüriden önce ve jüriye göstererek buluyor."
+  },
+  {
+    "dosya": "31-zor-vaka-altin-kume.png",
+    "baslik": "Kanonik biçim ve boşluk kararları",
+    "aciklama": "Karşılaştırmanın alt kısmı normalizasyonun ne işe yaradığını gösterir: kanonik biçim aynıysa iki taraf farklı yazılmış olsa bile «Eşleşti» sayılır — «36 ay» ile «Finansman tutarının 125.000 TL'ye kadar olması durumunda maksimum 36 ay» aynı değere indirgenir; «2026-08-31» ile «31 Ağustos 2026» aynı ISO tarihe. Boşluklar da karara bağlanır: model üretmedi ve altın kümede de yok ise «Doğru boşluk», çünkü halüsinasyon yasağının ölçülebilir hâli budur. Uzun metin alanlarında (kampanya koşulları) fark listenin uzunluğundan doğar ve gerekçe de bunu söyler."
+  },
+  {
+    "dosya": "32-chatbot-bos.png",
+    "baslik": "Hibrit Chatbot — tam sayfa hâli",
+    "aciklama": "Senaryonun kalbi karşılaştırmadır ve bunlar toplama/sıralama sorularıdır; saf semantik RAG bunlara zayıf cevap verir. Bu yüzden bir ROUTER soruyu sınıflandırır: sayısal / karşılaştırmalı sorular extracted_fields üzerinde YAPISAL SORGUYA, koşul / açıklama soruları RAG'e gider (POST /chat) ve hangi yolun kullanıldığı cevabın yanında rozet olarak yazar. Altı hazır soru router'ın iki yolunu da kapsar. Sohbet yönetimi üç ayrı eylemdir ve üçü farklı şey yapar: «Yeni konu» bağlam devrini keser, «Yeni sohbet» turu kenara alır (silmez), «Sohbeti temizle» geçmişi boşaltır. Bu tam sayfa yerleşim, geniş kaynak tablosunu tam genişlikte görmek isteyen denetleyici için var; ürün kullanıcısı aynı sohbete her ekrandaki çekmeceden erişir."
+  },
+  {
+    "dosya": "33-chatbot-yapisal-sorgu.png",
+    "baslik": "Chatbot — yapısal sorgu (text-to-SQL) yolu",
+    "aciklama": "«Hangi bankada en düşük kâr payı oranı var?» router tarafından sayısal/karşılaştırmalı olarak sınıflandırılır ve RAG'e düşürülmeden yapısal sorguya çevrilir; rozetler kullanılan yolu ve alanı yazar. Cevap her ÜRÜN AİLESİNDE ayrı ayrı verilir — konut, taşıt, kart, ihtiyaç… — çünkü farklı aileler birbirinin alternatifi değildir; sıralanabilir kaydı olmayan aile için de neden sıralanmadığı söylenir («kampanya süresi dolmuş», «koşullu oran»). Sonda katılım bankacılığına özgü uyarı durur: kâr payı beklenen/gerçekleşmiş bir orandır, taahhüt edilmiş getiri değildir; katılma hesapları kâr ve zarara ortak olur. En altta «Güvenlik kapıları — 1/6 ateşlendi» satırı, cevap üretilirken hangi kapıların devreye girdiğini açar."
+  },
+  {
+    "dosya": "34-chatbot-kaynaklar.png",
+    "baslik": "Chatbot kaynakları — her satır belgeye götürür",
+    "aciklama": "Kaynaklar ham JSON dökümü değil okunur bir tablodur: banka, çıkarılan değer, AI özeti / kaynak metin parçası ve iki bağlantı — bankanın kendi resmî sayfası ve belgenin kanıt defteri. Uzun belgelerde önce AI özeti gösterilir, ham metnin tamamı satırın içinde açılır. Jüri profili banka görevlisidir ve en çok test edeceği şey budur; «bu bilgiyi nereden aldın?» sorusu tek tıkla ispat edilebilsin diye kaynak metin parçasının tek başına yeterli olmadığına karar verildi."
+  },
+  {
+    "dosya": "35-chatbot-takip.png",
+    "baslik": "Chatbot — takip sorusu ve devralınan bağlam",
+    "aciklama": "Aynı sohbette sorulan ikinci soru sıfırdan başlamaz: önceki turun alanı, süzgeci ve öznesi DEVRALINIR ve devralınan her parça cevabın yanında ayrı bir rozet olarak yazılır — «önceki sorudan: kâr payı oranı», «önceki sorudan: en düşük». Böylece kullanıcı kısa bir takip sorusu sorabilir, ama neyin varsayıldığını da görür; sessiz bir bağlam devri, cevabı doğru ama denetlenemez yapardı. «LLM ile sözelleştirildi» rozeti de ayrı durur: sayılar yapısal sorgudan gelir, yerel model yalnız onları tek bir Türkçe cümleye çevirir — sayıyı üretmez."
+  },
+  {
+    "dosya": "35b-chatbot-rag.png",
+    "baslik": "Chatbot — RAG (anlamsal arama) yolu",
+    "aciklama": "Sıfırdan bir sohbette sorulan «Konut finansmanı kampanyasının koşulları neler?» bir toplama sorusu değil, serbest metinden açıklama isteğidir; router bunu RAG yoluna gönderir ve rozet «RAG (anlamsal arama)» yazar — yapısal sorgu rozeti hiç görünmez. Belgeler cümle sınırlarına saygılı biçimde parçalanır, geri getirilir ve yanıt yalnız getirilen parçalara dayanarak üretilir; kaynak tablosunda getirilen belgelerin özetleri ve uzunlukları durur. Aynı sorunun devralınan bağlamla yapısal yola gidebildiği de görülür (önceki kare): yolu belirleyen yalnız sorunun kelimeleri değil, sohbetin durumudur."
+  },
+  {
+    "dosya": "36-veri-tazeleme.png",
+    "baslik": "Veri Tazeleme — ağa çıkan tek yüzey",
+    "aciklama": "Sistem internetsiz çalışmak zorunda ve demo hazır veri tabanından okur; canlı toplamaya bağlanmış bir sunum donma riskidir. Bu panel o kuralı bozmaz, GÖRÜNÜR kılar: ağa çıkan tek yol burasıdır, yalnız jüri modunda erişilir ve ayrı bir açık onaya bağlıdır. Turuncu şerit sınırı yazar — kıyas, çelişki tespiti ve sohbet ekranları internete hiçbir koşulda çıkmaz; tazeleme yalnızca ham belge arşivine yazar, veri tabanına dokunmaz, bu yüzden yarıda kalan bir tazeleme gösterilen hiçbir sonucu bozmaz. Altta BDDK listesindeki 10 katılım bankası ve resmî adresleri, her biri için «Şimdi tazele» eylemiyle listelenir."
+  },
+  {
+    "dosya": "37-toplama-taahhudu.png",
+    "baslik": "Toplama taahhüdü — etik kısıt ekranda okunur",
+    "aciklama": "Scraping kuralları koda gömülü bir ayrıntı değil, ekranda okunan bir taahhüt. Dört satır: ROBOTS.TXT — sitenin tarama kurallarına uyulur, bir adres kapsam dışıysa alınmaz ve gerekçesi listelenir. BEKLEME — domain başına 2–5 saniye, eşzamanlı istek gönderilmez; bankaya özgü kesin değer başlatmadan önceki ön izlemede yazılır. İSTEMCİ ADI — istekler kendini tanıtan bir istemci adıyla gider, tarayıcı taklidi yapılmaz. PROVENANS — her belge kaynak adresi ve zaman damgasıyla saklanır; kaynağı olmayan hiçbir metin arşive girmez."
+  },
+  {
+    "dosya": "38-tazeleme-onizleme.png",
+    "baslik": "Önce ön izleme, sonra ayrı onay",
+    "aciklama": "Düğmeye basmak dakikalarca sürecek bir ağ işi başlatır, bu yüzden ilk tıklama hiçbir şey başlatmaz (GET /refresh/preview): kaç istek atılacağı, kabaca ne kadar süreceği, başlangıç sayfası, azami belge sayısı, istekler arası bekleme, arşivde hâlihazırda kaç belge bulunduğu, internet gerektiği, yazımın yalnız ham arşive yapılacağı, veri tabanının değişmeyeceği ve kullanılacak istemci adı tek tek yazılır. İşi ancak ikinci ve ayrı bir onay başlatır; koşan iş ilerleme çubuğuyla izlenir ve iptal edilebilir."
+  },
+  {
+    "dosya": "39-ayarlar.png",
+    "baslik": "Ayarlar — gelecek faz uçlarının sözleşmesi",
+    "aciklama": "Yeni banka / kampanya / finansal ürün ekleme uçları bugün 501 döndürüyor. Ekran o sözleşmeyi ve kapalı olma gerekçesini GET /admin/plan'dan okur — aynı liste arayüzde ikinci kez kodlanmadığı için sunucu sözleşmeyi değiştirdiğinde ekran eskisini göstermeye devam etmez. Her uç için gövde alanları tek tek listelenir, böylece iş birliği durumunda entegrasyon yazacak taraf ne göndereceğini bilir. Burada bilinçli olarak FORM YOKTUR: doldurulabilen bir form çalışacağını vaat eder, uçlar 501 döndüğü için o vaat tutulamaz — jüri ekranında «ekle»ye basıp hiçbir şeyin olmadığını görmek, hiç form olmamasından kötüdür. Ekran bugün işleyen yolu da adıyla söyler: Veri Tazeleme."
+  },
+  {
+    "dosya": "40-koyu-tema.png",
+    "baslik": "Koyu tema",
+    "aciklama": "Tema seçici üç hâlli tek bir gruptur: sistem / açık / koyu. Seçenekler aynı anda görünür, çünkü dönüşümlü tek düğme kullanıcıya kaç hâl olduğunu ancak deneyerek öğretirdi. Seçili hâl yalnız renkle anlatılmaz; aria-pressed aynı bilgiyi ekran okuyucuya taşır. Sunucu render'ı seçimi bilemediği için ilk karede hiçbir düğme seçili basılmaz — koyu temayı seçmiş kullanıcıya bir an «Sistem» göstermek yanlış bilgi olurdu. Renkler tek bir token dosyasından gelir ve cetvelin dört hâli (dolu · kesik · aralık · ölçülemedi) koyu temada da birbirinden ayırt edilebilir kalır; kontrast oranları depodaki bir betikle denetlenir."
+  },
+  {
+    "dosya": "41-api-dokumani.png",
+    "baslik": "FastAPI otomatik API dokümanı (/docs)",
+    "aciklama": "Panelin arkasındaki uçlar OpenAPI şemasından otomatik dokümante edilir: /banks, /campaigns, /fields, /stats, /search, /compare, /advantageous, /bank-delta, /scoring, /contradictions, /chat, /extract, /refresh*, /summaries* ve /admin/plan. Arayüz bu uçların tüketicisidir; aynı veriye komut satırından da erişilebilir ve her ekran görüntüsü bu uçlarla yeniden üretilebilir. /health ucu hangi depo arka ucunun ve LLM'in açık olduğunu bildirir — bu koşumda SQLite + yerel Ollama (qwen2.5:7b-instruct); hiçbir ücretli servis ya da API anahtarı kullanılmaz."
+  }
+]
