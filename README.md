@@ -39,6 +39,7 @@ tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
 | 12-alan mikro-F1 | 0,452 [%95 GA 0,384–0,512] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
 | Halüsinasyon oranı | **0,059** (yapısal kesitte **0,047**) | *(aynı komut)* |
 | RAG — terim kapsama R@5 | **0,867** | `python -m eval.rag_eval --db data/demo.db` |
+| RAG — banka hedefleme R@5 | **0,800** (BM25 sıralama) | *(aynı komut)* |
 | RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
 | Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
 | Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
@@ -85,13 +86,13 @@ Bir vitrin tablosunun en kolay yalanı, eksiği yazmamaktır. Ölçüm sırasın
   `absent`); sistem hiç değer üretmiyor ve gold da beklemiyor, yani F1
   tanımsız. Bu "hiç çalışmıyor" değil, "ölçülemiyor" demektir ve çelişki
   tespiti kartı buna bağlıdır.
-- **Banka hedefleme R@5 = 0,600.** "Vakıf Katılım kampanyaları" gibi
-  sorularda 10 bankanın 4'ü ilk 5 sonuca giremiyor. Sebebi ölçüldü: mevcut
-  sıralayıcı ikili örtüşme kullanıyor ve uzun belgeleri kayırıyor
-  (korpus ortalamasının 1,7 katı). BM25 aynı ölçütte 0,800 veriyor
-  (`python -m eval.rag_eval --db data/demo.db --kiyas`) ama üretim yolu
-  **bilerek değiştirilmedi**: eşik kalibrasyonu ve 54 soruluk regresyon
-  seti yenilenmeden değiştirmek, ölçülmemiş bir davranışı demoya koymak olur.
+- **Banka hedefleme R@5 = 0,800** (önceki açık 0,600 KAPATILDI). Sebep
+  ölçülmüştü: ikili örtüşme skoru uzun belgeleri kayırıyordu (korpus
+  ortalamasının 1,7 katı, 935 vs 538 token). Sıralama BM25'e geçirildi
+  (K1=1,2 · B=0,75); banka hedefleme R@1 0,500→0,800, MRR 0,533→0,800,
+  toplam R@5 0,760→0,840. **Eşik BM25'e bağlanmadı**: `min_overlap` kapısı
+  örtüşme sayımında kaldı, bu yüzden reddetme kararı doğruluğu 30/30'da
+  korundu. Kalan 2 isabetsiz soru: Dünya Katılım, T.O.M. Katılım.
 
 Ölçüm metodolojisi: [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
 [gold anotasyon kılavuzu](app/data/gold/ANNOTATION_GUIDE.md)

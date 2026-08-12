@@ -9,6 +9,7 @@ aynı sorularla karşılaştırılır: sıralama, skor, pasaj sayısı, eşik da
 İlgili: src/chatbot/rag.py, tests/test_safety.py (KAPI 5 kanıt eşiği)
 """
 
+import math
 import sys
 import unittest
 from pathlib import Path
@@ -97,6 +98,20 @@ class UnindexedRetriever:
         qtok = set(rag._tokenize(query))
         esik = (min(self.min_overlap, len(qtok)) if qtok and self.min_overlap > 0
                 else self.min_overlap)
+
+        # Korpus istatistikleri her soruda BAŞTAN hesaplanır (O(n)). Üretim
+        # bunları kurulumda bir kez hesaplıyor; eşdeğerliğin sınadığı şey tam
+        # olarak "bir kez hesaplamak sonucu değiştirmiyor" iddiasıdır.
+        # BM25 burada da ELDEN yazılır, üretimden import EDİLMEZ.
+        tokenler = [rag._tokenize(d.get("raw_text", "")) for d in self._docs]
+        dolu = [i for i, toks in enumerate(tokenler) if toks]
+        N = len(dolu)
+        avgdl = (sum(len(tokenler[i]) for i in dolu) / N) if N else 1.0
+        df: dict[str, int] = {}
+        for i in dolu:
+            for t in set(tokenler[i]):
+                df[t] = df.get(t, 0) + 1
+
         scored = []
         for d in self._docs:
             dtok = set(rag._tokenize(d.get("raw_text", "")))
@@ -105,7 +120,24 @@ class UnindexedRetriever:
             overlap = len(qtok & dtok)
             if overlap < esik:
                 continue
-            score = overlap / (len(qtok) ** 0.5 + 1)
+            # BM25: kapı örtüşmede kalır, SIRALAMA bu formülden gelir.
+            toks = rag._tokenize(d.get("raw_text", ""))
+            dl = len(toks) or 1
+            tf_map: dict[str, int] = {}
+            for t in toks:
+                tf_map[t] = tf_map.get(t, 0) + 1
+            score = 0.0
+            for t in qtok:
+                n_t = df.get(t)
+                if not n_t:
+                    continue
+                tf = tf_map.get(t, 0)
+                if tf == 0:
+                    continue
+                idf = math.log(1 + (N - n_t + 0.5) / (n_t + 0.5))
+                score += idf * (tf * (rag.BM25_K1 + 1)) / (
+                    tf + rag.BM25_K1 * (1 - rag.BM25_B
+                                        + rag.BM25_B * dl / avgdl))
             cid = d.get("id")
             # Alan kümesi üretimdekiyle BİREBİR aynı olmak zorunda; `bank_slug`
             # ve `campaign_id` denetim alanları olarak eklendiğinde bu referans
@@ -121,6 +153,7 @@ class UnindexedRetriever:
                 "text": d.get("raw_text"),
                 "ozet": ozet or None,
                 "score": round(score, 3),
+                "overlap": overlap,
             })
         scored.sort(key=lambda x: x["score"], reverse=True)
         return scored[:k]

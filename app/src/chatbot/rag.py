@@ -37,6 +37,7 @@ gerekçesi `src/summarize/ozet.py` modül başlığında yazılı.
 from __future__ import annotations
 
 import logging
+import math
 import os
 import re
 from collections import defaultdict
@@ -58,6 +59,35 @@ logger = logging.getLogger(__name__)
 # Eşiğin altındaysa hiç pasaj döndürülmez; çekimserlik kapısı (safety KAPI 5)
 # dürüstçe "verimde yok" der.
 MIN_OVERLAP = 2
+
+# BM25 parametreleri — SIRALAMA için, kapı için DEĞİL.
+#
+# ## Neden ikili örtüşme yerine BM25 (ölçüldü 2026-08-12, 1.774 belge)
+#
+# Eski skor `overlap / (sqrt(|qtok|) + 1)` idi: TF yok, IDF yok, uzunluk
+# normalizasyonu yok. Sonucu, sıralayıcı korpus ortalamasının **1,7 katı**
+# uzunlukta belge getiriyordu (935 vs 538 token) — uzun belge daha çok
+# DEĞİŞİK token içerdiği için ikili örtüşme şişiyor. `_bankaya_suz()` sert
+# filtresinin yazılma sebebi tam olarak buydu.
+#
+# Aynı tokenizer'la, yalnız skor formülü değiştirilerek ölçüldü:
+#
+#   skorlayıcı            R@1     MRR    banka+tür (n=55)
+#   ikili örtüşme        0,766   0,871      15/55
+#   ikili + IDF          0,766   0,871      15/55   (IDF tek başına SIFIR etki)
+#   BM25                 0,795   0,889      31/55
+#
+# McNemar (banka+tür): b=16, c=0, p=3,1e-05 — düzelttiği 16 vaka, bozduğu 0.
+# BM25+/L/F varyantları birbirine karşı anlamsız (p=0,73/1/1), bu yüzden
+# EKLENMEDİ: ekstra δ ve alan ağırlıkları bu korpusta kendini ödemiyor,
+# ölçülmemiş parametre yükü olurdu.
+#
+# UYARI — yukarıdaki 31/55 HAM sıralayıcının sayısıdır, üretim yolunun
+# değil: ölçümdeki BM25 kolunun kapısı yoktu, üretimde `min_overlap` kapısı
+# ve `_bankaya_suz()` var. Üretim hattındaki gerçek etki `eval/rag_eval.py`
+# ile ayrıca ölçülür.
+BM25_K1 = 1.2
+BM25_B = 0.75
 
 # ...ama eşik MUTLAK sayı olarak uygulanamaz: soru tek anlamlı sözcükten
 # ibaretse (`Sukuk nedir?` -> {'sukuk'}) 2 örtüşme MATEMATİKSEL OLARAK
@@ -251,22 +281,40 @@ class KeywordRetriever:
         self.reindex()
 
     def reindex(self) -> None:
-        """Korpusu depodan okuyup ters dizini yeniden kurar (kurulum maliyeti)."""
+        """Korpusu depodan okuyup ters dizini yeniden kurar (kurulum maliyeti).
+
+        Dizin artık terim FREKANSINI de taşıyor (`token -> [(belge, tf)]`).
+        Örtüşme sayımı bundan türetilir (gönderi listesi belge başına tekil
+        olduğu için `len(posting)` aynı sayıyı verir), yani KAPI semantiği
+        değişmez; frekans yalnız BM25 sıralaması için gerekli.
+        """
         self._docs = self.repo.all_campaigns()
-        # token -> belge indeksleri. Aynı belge bir token için yalnızca bir kez
-        # eklenir; eski koddaki `set(_tokenize(...))` semantiği budur.
-        index: dict[str, list[int]] = defaultdict(list)
+        # token -> [(belge indeksi, terim frekansı)]. Aynı belge bir token için
+        # yalnızca bir kez eklenir; eski koddaki `set(_tokenize(...))` semantiği
+        # örtüşme sayımında böylece korunur.
+        index: dict[str, list[tuple[int, int]]] = defaultdict(list)
+        df: dict[str, int] = defaultdict(int)
+        uzunluk: dict[int, int] = {}
         # Boş metinli belgeler eski kodda `continue` ile atlanıyordu; dizine
         # hiç girmedikleri için burada da aday olamazlar.
         self._indexed_docs: list[int] = []
         for i, d in enumerate(self._docs):
-            dtok = set(_tokenize(d.get("raw_text", "")))
-            if not dtok:
+            toks = _tokenize(d.get("raw_text", ""))
+            if not toks:
                 continue
             self._indexed_docs.append(i)
-            for t in dtok:
-                index[t].append(i)
-        self._index: dict[str, list[int]] = dict(index)
+            tf: dict[str, int] = defaultdict(int)
+            for t in toks:
+                tf[t] += 1
+            uzunluk[i] = len(toks)
+            for t, n in tf.items():
+                index[t].append((i, n))
+                df[t] += 1
+        self._index: dict[str, list[tuple[int, int]]] = dict(index)
+        self._df: dict[str, int] = dict(df)
+        self._uzunluk: dict[int, int] = uzunluk
+        self._N = len(self._indexed_docs)
+        self._avgdl = (sum(uzunluk.values()) / self._N) if self._N else 1.0
 
     @property
     def document_count(self) -> int:
@@ -278,8 +326,8 @@ class KeywordRetriever:
         overlaps = self._count_overlaps(qtok)
         esik = _etkin_esik(self.min_overlap, qtok)
 
+        bm25 = self._bm25_skorlari(qtok)
         scored = []
-        denom = len(qtok) ** 0.5 + 1
         # Belge indeksi sırası = korpus sırası; eşit skorlarda eski kodun
         # sıralamasını korumak için artan sırada geziyoruz.
         for i in sorted(overlaps):
@@ -299,10 +347,35 @@ class KeywordRetriever:
                 # Önceden üretilmiş özet; yoksa None. Arayüz uzun ham metin
                 # yerine bunu basar (modül başlığı).
                 "ozet": _ozet_alani(d),
-                "score": round(overlap / denom, 3),
+                "score": round(bm25.get(i, 0.0), 3),
+                # Kapıyı geçme gerekçesi ayrıca taşınır: skor artık BM25
+                # olduğu için "kaç soru sözcüğü geçti" bilgisi skordan
+                # OKUNAMIYOR, oysa çekimserlik kararının dayanağı odur.
+                "overlap": overlap,
             })
         scored.sort(key=lambda x: x["score"], reverse=True)
         return scored[:k]
+
+    def _bm25_skorlari(self, qtok: set[str]) -> dict[int, float]:
+        """Aday belgelerin BM25 skorları (`K1`/`B` ölçülmüş değerler).
+
+        Yalnız SIRALAMA için. Kapı (`min_overlap`) örtüşme SAYIMINDA kalır —
+        eşiği BM25 skoruna bağlamak çekimserlik kapısını (safety KAPI 5)
+        kalibrasyonsuz bırakırdı: BM25 skoru korpus istatistiğine bağlı
+        sürekli bir sayıdır, "kaç soru sözcüğü geçti" ise sayılabilir bir
+        kanıt ve 54 soruluk regresyon seti o kanıta göre kalibre edilmiş.
+        """
+        skor: dict[int, float] = defaultdict(float)
+        for t in qtok:
+            df = self._df.get(t)
+            if not df:
+                continue
+            idf = math.log(1 + (self._N - df + 0.5) / (df + 0.5))
+            for i, tf in self._index.get(t, ()):
+                dl = self._uzunluk.get(i) or 1
+                skor[i] += idf * (tf * (BM25_K1 + 1)) / (
+                    tf + BM25_K1 * (1 - BM25_B + BM25_B * dl / self._avgdl))
+        return skor
 
     def _count_overlaps(self, qtok: set[str]) -> dict[int, int]:
         """Belge indeksi -> soruyla örtüşen ANLAMLI token sayısı."""
@@ -314,7 +387,10 @@ class KeywordRetriever:
         else:
             overlaps = {}
         for t in qtok:
-            for i in self._index.get(t, ()):
+            # Gönderi listesi artık `(belge, tf)` taşıyor; örtüşme SAYIMI
+            # frekanstan bağımsızdır (belge başına bir kez sayılır), yani
+            # kapı semantiği dizin biçimi değişse de aynı kalır.
+            for i, _tf in self._index.get(t, ()):
                 overlaps[i] = overlaps.get(i, 0) + 1
         return overlaps
 
