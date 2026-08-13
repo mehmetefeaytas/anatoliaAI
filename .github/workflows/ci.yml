@@ -119,6 +119,14 @@ jobs:
       - name: Gold kanit zinciri
         run: python -m scripts.kanit_zinciri --gold data/gold/gold.v2.json
 
+      # Depo temizligi (izlenen .md sayisini dusurmek) linkleri SESSIZCE kirar:
+      # `git rm --cached` dosyayi diskte birakir, bu yuzden temizligi yapanin
+      # makinesinde her link calismaya devam eder. Kiriklik yalniz temiz bir
+      # klonda gorunur — yani ilk fark eden juri olur. Bu adim `git ls-files`
+      # uzerinden gider, yani depodaki gercegi olcer.
+      - name: Markdown link denetimi
+        run: python -m scripts.link_denetimi
+
       # Demo DB korpusla ayrisirsa chatbot/dashboard/RAG korpusun bir kismini
       # SESSIZCE gormez. Bir kez yasandi: DB 31 Temmuz'da 849 belgeyle
       # kuruldu, korpus 3 Agustos'ta 1761'e cikti, bir hafta boyunca hicbir
