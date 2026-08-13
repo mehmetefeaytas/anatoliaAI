@@ -619,6 +619,89 @@ def _baska_belgeye_ait(target_dir: Path, stem: str, source_url: str) -> bool:
     return bool(kayitli) and bool(source_url) and kayitli != source_url
 
 
+# --------------------------------------------------------------------------- #
+# Sidecar birleştirme — `provenance()`in ÜRETMEDİĞİ alanlar kaybolmasın
+# --------------------------------------------------------------------------- #
+# ÖLÇÜLMÜŞ KAYIP (2026-08-13): tek bir tazeleme koşusu (albaraka, 20 belge)
+# 19 sidecar'dan `reextracted_at` ve `extraction_result` alanlarını SİLDİ.
+# Sebep buradaydı: diske `doc.provenance()` — yani her çağrıda SIFIRDAN
+# kurulan bir sözlük — yazılıyordu ve o sözlüğün üretmediği her anahtar
+# sessizce kayboluyordu. `reextracted_at` / `extraction_result` /
+# `content_status` sidecar'a sonradan, başka bir betik tarafından ekleniyor
+# (`scripts/reextract_raw.py:apply_changes`).
+#
+# Kayıp gerçek bilgi kaybıydı: o 20 belgenin 19'unda ÇIKARILMIŞ METİN birebir
+# aynı kalmıştı — `content_hash` ham HTML'i özetliyor ve Albaraka'nın HTML'i
+# her çekimde oynuyor. Yani silinen alanlar hâlâ doğruydu.
+#
+# `save_docs`'un docstring'i dosya ADI için idempotentlikle övünüyordu; sidecar
+# ALANLARI için aynı garanti yoktu. Bu blok o boşluğu kapatır.
+#
+# ## Kural: koru, ama YALAN da söyleme
+#
+# `reextracted_at` "bu METİN şu tarihte yeniden çıkarıldı" iddiasıdır. Metin
+# değiştiyse alan artık dosyayı tarif etmez; körü körüne taşımak yapılmamış bir
+# yeniden-çıkarımı iddia etmek olurdu. Bu yüzden:
+#
+#   1. `provenance()`in ÜRETTİĞİ anahtarlarda TAZE değer kazanır.
+#   2. `provenance()`in üretmediği EK anahtarlar YALNIZ metin aynıysa korunur.
+#   3. Metin değiştiyse ek anahtarlar düşer ve düşüşleri GÖRÜNÜR olur
+#      (`extraction_invalidated_at` + `extraction_invalidated_keys`).
+#
+# Sessiz kayıp da (1'den önceki hâl) sessiz yalan da (2'yi koşulsuz yapmak)
+# yasak; kural ikisinin arasındaki tek dürüst noktadır.
+#
+# Kural anahtar ADINA BAKMAZ — bilinen alan listesi yoktur. Sidecar'a yarın
+# başka bir alan eklenecekse aynı korumayı bedavaya almalı, aynı dürüstlük
+# kapısından da geçmeli. Liste tutulsaydı, yeni alan sessizce korumasız kalırdı.
+#
+# "Aynı metin" ölçüsü `text_key()`'dir (boşluk-normalize sha256), ham bayt
+# eşitliği değil: tazelemenin `ayni` / `degisen` ayrımı da bu ölçüyle yapılıyor
+# (`tazeleme._belgeleri_kiyasla`). İki katman ayrı ölçü kullansaydı, tazelemenin
+# "aynı" dediği bir belgede burada geçersizleme damgası belirirdi.
+
+#: Bu bloğun KENDİ ürettiği işaret anahtarları. Kayıt tutmak için varlar, veri
+#: değiller: metin ikinci kez değişirse "geçersizlenen alanlar" listesinde
+#: kendilerini göstermeleri okuyanı yanıltırdı.
+_GECERSIZLEME_ANAHTARLARI = ("extraction_invalidated_at",
+                             "extraction_invalidated_keys")
+
+
+def _ayni_metin(txt_path: Path, yeni_metin: str) -> bool:
+    """Diskteki metin ile yeni metin aynı belgeyi mi anlatıyor.
+
+    Dosya yoksa ya da okunamıyorsa `False` döner: aynılığı DOĞRULAYAMADIĞIMIZ
+    durumda "aynı" demek, ek alanların hâlâ geçerli olduğunu kanıtsız iddia
+    etmek olurdu. Doğrulanamayan iddia korunmaz.
+    """
+    try:
+        eski = txt_path.read_text(encoding="utf-8", errors="ignore")
+    except OSError:
+        return False
+    return text_key(eski) == text_key(yeni_metin)
+
+
+def _birlesik_sidecar(txt_path: Path, doc: RawDoc) -> dict[str, Any]:
+    """Diskteki sidecar ile taze provenance'ın birleşimi (yukarıdaki kural)."""
+    taze = doc.provenance()
+    eski = _read_sidecar(txt_path)
+    ek = {k: v for k, v in eski.items() if k not in taze}
+    if not ek:
+        return taze
+    if _ayni_metin(txt_path, doc.clean_text):
+        birlesik = dict(ek)
+        birlesik.update(taze)  # üretilen anahtarlarda taze değer kazanır
+        return birlesik
+    # Metin değişti: ek alanlar artık bu dosyayı tarif etmiyor.
+    dusen = sorted(k for k in ek if k not in _GECERSIZLEME_ANAHTARLARI)
+    if not dusen:
+        return taze
+    out = dict(taze)
+    out["extraction_invalidated_at"] = doc.scraped_at or utc_now_iso()
+    out["extraction_invalidated_keys"] = dusen
+    return out
+
+
 def save_docs(docs: list[RawDoc], raw_dir: str | Path,
               subdir: str = LIVE_SUBDIR) -> list[Path]:
     """Belgeleri data/raw/<slug>/<subdir>/ altına yazar + `.meta.json` koyar.
@@ -634,6 +717,11 @@ def save_docs(docs: list[RawDoc], raw_dir: str | Path,
     Aynı URL yeniden hasat edilirse dosya adı DEĞİŞMEZ (idempotent). Bu şart:
     anotasyonun `doc_id` eşleşmesi dosya adına dayanıyor ve bir turda dosya adı
     değişmesi 32 belgenin 10'unu geçersiz kılmıştı.
+
+    Sidecar **ezilmez, birleştirilir**: `provenance()`in üretmediği alanlar
+    (`reextracted_at`, `extraction_result`, `content_status` …) metin aynı
+    kaldığı sürece korunur, metin değiştiğinde ise görünür bir damgayla düşer.
+    Gerekçe `_birlesik_sidecar` üstündeki blokta.
     """
     written: list[Path] = []
     used: set[str] = set()
@@ -658,11 +746,15 @@ def save_docs(docs: list[RawDoc], raw_dir: str | Path,
             pdf_path.write_bytes(doc.raw_bytes_blob)
             written.append(pdf_path)
         txt_path = target_dir / f"{candidate}.txt"
+        # Birleşim METİN YAZILMADAN ÖNCE hesaplanır: `_ayni_metin` diskteki
+        # ESKİ metni okur, üzerine yazdıktan sonra bakılsaydı her belge "aynı"
+        # çıkar ve geçersizleme dalı hiç koşmazdı.
+        meta = _birlesik_sidecar(txt_path, doc)
         txt_path.write_text(doc.clean_text, encoding="utf-8")
         written.append(txt_path)
         meta_path = target_dir / f"{candidate}.txt.meta.json"
         meta_path.write_text(
-            json.dumps(doc.provenance(), ensure_ascii=False, indent=2) + "\n",
+            json.dumps(meta, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8")
     return written
 

@@ -51,10 +51,16 @@ donma riskidir. Tazeleme bu yüzden bir operatör eylemidir; arayüzde yalnız
 jüri modunda görünür, basılmadan önce ne yapacağını (kaç istek, kaba süre,
 internet gerektiği) söyler ve arka planda koşar.
 
-Bu uçlar `repo`'ya DOKUNMAZ. Toplanan belgeler yalnız `data/raw/<slug>/live/`
-altına yazılır; kıyas ve sohbet önceden doldurulmuş veri tabanından okumaya
-devam eder. Ham arşivden veri tabanına geçiş ayrı ve çevrimdışı bir adımdır.
-Gerekçenin tamamı `src/scraping/tazeleme.py` modül başlığındadır.
+Toplanan belgeler yalnız `data/raw/<slug>/live/` altına yazılır; kıyas ve
+sohbet önceden doldurulmuş veri tabanından okumaya devam eder. Ham arşivden
+veri tabanına geçiş ayrı ve çevrimdışı bir adımdır. Gerekçenin tamamı
+`src/scraping/tazeleme.py` modül başlığındadır.
+
+`repo`'ya tek dokunuş alt akıştır: metni DEĞİŞEN belgenin bayat AI özeti
+düşürülür (`ozet=NULL`, `ozet_sebep='kaynak_degisti'`), çünkü artık var olmayan
+bir metni tarif eden özet panelde sessizce duramaz. Kampanya kayıtları,
+çıkarılmış alanlar ve değişmeyen belgeler ellenmez; kapsamın neden bu kadar dar
+olduğu `src/tazeleme_sonrasi.py` başlığındadır.
 
 ## Veri kaynağı: HAM SQL DEĞİL, depo sözleşmesi (`src/db/base.py`)
 
@@ -198,6 +204,7 @@ from ..scraping.tazeleme import TazelemeMesgul, TazelemeYoneticisi
 from ..scraping.tazeleme import onizleme as tazeleme_onizleme
 from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import LlmKapali, OzetMesgul, OzetYoneticisi
+from ..tazeleme_sonrasi import alt_akis_kur
 from . import gelecek, zor_vaka
 
 logger = logging.getLogger(__name__)
@@ -1856,13 +1863,29 @@ def build_app():
     # ----------------------------------------------------------------- #
     # Bu dört uç, sistemin ağa çıkabilen tek yüzeyidir ve kullanıcı sorusu
     # yolundan (sohbet, kıyas, çelişki, canlı çıkarım) tamamen ayrıktır.
-    # Hiçbiri `repo`'ya dokunmaz: tazeleme yalnız ham arşive yazar, kıyas ve
-    # sohbet önceden doldurulmuş veri tabanından okumaya devam eder
-    # (CLAUDE.md §11 — canlı toplamaya bağlı demo yasak).
+    # Tazeleme kampanya kayıtlarını, çıkarılmış alanları ve gömme vektörlerini
+    # ELLEMEZ; kıyas ve sohbet önceden doldurulmuş veri tabanından okumaya
+    # devam eder (CLAUDE.md §11 — canlı toplamaya bağlı demo yasak).
+    #
+    # TEK istisna alt akıştır: metni değişen belgenin bayat AI özeti düşürülür.
+    # Kapsamının neden bu kadar dar tutulduğu ve özet üretiminin neden otomatik
+    # zincirlenmediği `src/tazeleme_sonrasi.py` başlığında yazılı.
     #
     # Gerekçe `src/scraping/tazeleme.py` modül başlığında; burada yalnız
-    # HTTP yüzeyi var.
-    tazeleme = TazelemeYoneticisi(RAW_DIR)
+    # HTTP yüzeyi ve bağlama var.
+    def _ozet_onbellegini_dus(kampanya_idleri: list[int]) -> None:
+        """Özeti düşürülen kayıtları görünüm önbelleğinden atar.
+
+        Şart: `_campaign_view` yalnız özeti OLMAYAN kaydı tazeliyor
+        (`_ozeti_var`). Özet veri tabanından silindiğinde önbellekteki kopya
+        hâlâ ESKİ özeti taşıdığı için taze sayılır ve panel, veri tabanında
+        artık bulunmayan bayat özeti göstermeye devam ederdi.
+        """
+        for cid in kampanya_idleri:
+            _view_cache.pop(cid, None)
+
+    tazeleme = TazelemeYoneticisi(
+        RAW_DIR, alt_akis=alt_akis_kur(lambda: repo, unut=_ozet_onbellegini_dus))
     # Yönetici uygulama durumuna asılır: testler gerçek toplama katmanını
     # sahte bir işle değiştirebilsin diye. Kapanış (closure) içinden
     # erişilemeyen bir nesne, ancak ağa çıkılarak sınanabilirdi.
@@ -1903,9 +1926,11 @@ def build_app():
     def refresh_start(req: RefreshReq):
         """Tazelemeyi arka planda başlatır ve iş kaydını döndürür.
 
-        SENKRON DEĞİL, bilerek: alan başına 2–5 saniye gecikmeyle 25 belge
+        SENKRON DEĞİL, bilerek: alan başına 2–5 saniye gecikmeyle 35 belge
         çekmek dakikalar sürer. Senkron bir uç hem tarayıcıyı hem sunucunun
-        iş parçacığını kilitlerdi; ilerleme de görünmezdi.
+        iş parçacığını kilitlerdi; ilerleme de görünmezdi. Tazeleme bittiğinde
+        aynı iş parçacığında koşan alt akış (bayat özet düşürme) saniyenin
+        altında biter; kendi işi olacak kadar büyük değildir.
 
         Koşan bir iş varken ikinci istek 409 ile reddedilir — sıraya alınmaz,
         çünkü sessiz bir kuyruk operatöre yanlış bir "başladı" izlenimi verir.

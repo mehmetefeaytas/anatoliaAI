@@ -8,7 +8,9 @@
    sürer, internet gerekir" cevabı çevrimdışı verilebilmeli.
 2. **Kritik yol tazelemeden etkilenmez.** Tazeleme koşarken de bittikten
    sonra da `/campaigns`, `/compare` ve `/chat` aynı veri tabanından okumaya
-   devam eder; tazeleme kampanya sayısını değiştirmez.
+   devam eder; tazeleme kampanya sayısını değiştirmez. Aşağı akışa tek
+   dokunuşu, metni DEĞİŞEN belgenin bayat özetini düşürmektir
+   (`src/tazeleme_sonrasi.py`) — kayıt silmez, metin/alan yazmaz.
 3. **Aynı anda tek iş.** İkinci istek 409 ile reddedilir, sessizce sıraya
    alınmaz.
 4. **Bilinmeyen banka 404.** İstemciden gelen slug ile dosya sistemine
@@ -60,7 +62,12 @@ class TestOnizlemeUcu(unittest.TestCase):
         veri = r.json()
         self.assertEqual(veri["bank"], "kuveyt-turk")
         self.assertTrue(veri["internet_gerekir"])
-        self.assertFalse(veri["veri_tabani_etkilenir"])
+        # 2026-08-13'e kadar `False` bekleniyordu. Beklenti DAVRANIŞ değiştiği
+        # için döndü: tazeleme artık metni değişen belgelerin bayat AI özetini
+        # düşürüyor (`src/tazeleme_sonrasi.py`). Kapsam dar ve cümleyle
+        # anlatılıyor; bayrağı `False` bırakmak ön izlemeyi yalancı yapardı.
+        self.assertTrue(veri["veri_tabani_etkilenir"])
+        self.assertIn("özet", veri["veri_tabani_etkisi"])
         self.assertTrue(veri["robots_uyumu"])
         self.assertGreaterEqual(veri["gecikme_sn"], 2.0)
         self.assertLessEqual(veri["gecikme_sn"], 5.0)
@@ -158,6 +165,57 @@ class TestTazelemeUcu(unittest.TestCase):
         self.birak.set()
         self._bitene_kadar(is_id)
         self.assertEqual(len(self.client.get("/campaigns").json()), once)
+
+
+@requires_api
+class TestAltAkisBagli(unittest.TestCase):
+    """Alt akış gerçekten BAĞLI mı — sahte depo değil, uygulamanın kendi deposu.
+
+    Birim testleri (`test_tazeleme_sonrasi.py`) uzlaştırma mantığını kendi
+    kurduğu depoda ölçüyor. Burada ölçülen başka bir şey: `build_app()` geri
+    çağrıyı kurdu mu ve o geri çağrı UYGULAMANIN deposunda gerçek kayıtlarla
+    eşleşiyor mu. Eşleşme anahtarı belgenin metni; ham dosya metni ile veri
+    tabanındaki metin arasındaki normalizasyon farkı bu bağı sessizce koparan
+    tek şeydi, ve o ancak gerçek korpusla ölçülebilir.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.app = _app()
+        cls.client = TestClient(cls.app)
+
+    def _ornek_kampanya(self) -> tuple[str, str]:
+        for kayit in self.client.get("/campaigns").json():
+            if not kayit.get("source_url"):
+                continue
+            metin = self.client.get(
+                f"/campaigns/{kayit['id']}/text").json().get("text") or ""
+            if metin.strip():
+                return kayit["source_url"], metin
+        raise unittest.SkipTest("korpusta adresli belge yok")
+
+    def test_alt_akis_kurulmus(self) -> None:
+        self.assertIsNotNone(self.app.state.tazeleme._alt_akis,
+                             "tazeleme yöneticisine alt akış bağlanmamış")
+
+    def test_gercek_belge_veri_tabaninda_eslesir(self) -> None:
+        url, metin = self._ornek_kampanya()
+        rapor = self.app.state.tazeleme._alt_akis(
+            [{"source_url": url, "onceki_metin": metin}])
+        self.assertEqual(rapor["eslesmeyen_belge"], 0,
+                         "değişen belge veri tabanındaki kaydıyla eşleşmedi — "
+                         "alt akış sessizce hiçbir şey yapmaz hâle gelir")
+        self.assertEqual(rapor["degisen_belge"], 1)
+
+    def test_baska_belgeye_dokunulmaz(self) -> None:
+        """Korpusta olmayan bir adres hiçbir satırı etkilemez."""
+        once = self.client.get("/summaries/coverage").json()
+        rapor = self.app.state.tazeleme._alt_akis(
+            [{"source_url": "https://yok.example/hic", "onceki_metin": "x" * 50}])
+        self.assertEqual(rapor["gecersizlenen_ozet"], 0)
+        self.assertEqual(rapor["eslesmeyen_belge"], 1)
+        self.assertEqual(self.client.get("/summaries/coverage").json()["ozetli"],
+                         once["ozetli"])
 
 
 @requires_api

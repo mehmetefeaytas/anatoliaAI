@@ -5,7 +5,9 @@
 ## Bu dosyanın koruduğu değişmezler
 
 1. **Kritik yol çevrimdışı kalır.** Tazeleme yalnız `data/raw` altına yazar;
-   veri tabanına hiç dokunmaz.
+   veri tabanı katmanını içe bile aktarmaz. Aşağı akışa tek bağ enjekte
+   edilen `alt_akis` geri çağrısıdır ve YALNIZ metni değişen belgeler için
+   koşar — değişmeyen belgeye dokunulmaz.
 2. **Etik kısıtlar gevşetilemez.** robots.txt denetimini kapatan bir yol
    yoktur; gecikme 2–5 saniye aralığına kırpılır; User-Agent açıklayıcıdır;
    her belge provenance sidecar'ıyla yazılır.
@@ -43,6 +45,7 @@ from src.scraping.tazeleme import (
     DURUM_TAMAM,
     GECIKME_ALT_SN,
     GECIKME_UST_SN,
+    VARSAYILAN_AZAMI_BELGE,
     TazelemeDurumu,
     TazelemeMesgul,
     TazelemeYoneticisi,
@@ -141,11 +144,44 @@ class TestOnizleme(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             bilgi = onizleme(BANKA, raw_dir=tmp, azami_belge=25)
         self.assertTrue(bilgi["internet_gerekir"])
-        self.assertFalse(bilgi["veri_tabani_etkilenir"])
         self.assertTrue(bilgi["robots_uyumu"])
         self.assertGreater(bilgi["tahmini_istek_ust"], bilgi["tahmini_istek_alt"])
         self.assertGreater(bilgi["tahmini_sure_ust_sn"], 0)
         self.assertIn("AnatoliaAI", bilgi["user_agent"])
+
+    def test_onizleme_veri_tabani_etkisini_dogru_soyler(self) -> None:
+        """Bu beklenti 2026-08-13'te `False`'tan `True`'ya DÖNDÜ.
+
+        Beklenti değişti çünkü DAVRANIŞ değişti: tazeleme artık bittiğinde
+        metni değişen belgelerin bayat AI özetini düşürüyor
+        (`src/tazeleme_sonrasi.py`). `False` bırakmak, ön izlemeyi — yani
+        "basmadan önce ne olacak" sorusunun tek cevabını — yalancı yapardı.
+
+        Bayrağın tek başına verdiği izlenim ("veri tabanı yeniden kuruluyor")
+        yanlış olacağı için kapsamı taşıyan cümle de aranıyor.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            bilgi = onizleme(BANKA, raw_dir=tmp)
+        self.assertTrue(bilgi["veri_tabani_etkilenir"])
+        self.assertIn("özet", bilgi["veri_tabani_etkisi"])
+        self.assertIn("DEĞİŞEN", bilgi["veri_tabani_etkisi"])
+
+    def test_azami_belge_varsayilani_otuz_bes(self) -> None:
+        """Sınır 25 → 35: ölçülmüş süreye dayanır, tahmine değil.
+
+        25 URL'lik gerçek koşu ~90 sn sürdü (belge başına ~3,6 sn); 35 belge
+        aynı hızda ~2 dakikadır, yani sabitin gerekçesi ("operatör eylemi
+        dakikalar sürmeli, saatler değil") hâlâ karşılanıyor.
+
+        Ön izlemedeki istek üst sınırı sabiti TAKİP ETMELİ: iki sayı ayrışırsa
+        operatöre söylenen süre ile gerçekte atılan istek sayısı ayrışır.
+        """
+        self.assertEqual(VARSAYILAN_AZAMI_BELGE, 35)
+        with tempfile.TemporaryDirectory() as tmp:
+            bilgi = onizleme(BANKA, raw_dir=tmp)
+        self.assertEqual(bilgi["azami_belge"], 35)
+        giris = len(BANKA.campaign_paths) + len(BANKA.sitemap_urls)
+        self.assertEqual(bilgi["tahmini_istek_ust"], 1 + giris + 35)
 
     def test_onizleme_arsivdeki_belgeyi_sayar(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -277,6 +313,94 @@ class TestTazeleAkisi(unittest.TestCase):
             self.assertIn(b["durum"], (BELGE_YENI, BELGE_DEGISEN, BELGE_AYNI))
 
 
+class TestAltAkis(unittest.TestCase):
+    """Alt akış geri çağrısı — YALNIZ metni değişen belge için koşar.
+
+    Kural: değişmeyen belgeye dokunulmaz. Geri çağrı aşağı akışta veri tabanı
+    yazıyor (`src/tazeleme_sonrasi.py`); gereksiz tetiklenmesi, hiç değişmemiş
+    bir belgenin sağlam özetini düşürmek demekti.
+    """
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.raw = self._tmp.name
+        self.cagrilar: list[list[dict]] = []
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def _hook(self, degisenler):
+        self.cagrilar.append(degisenler)
+        return {"gecersizlenen_ozet": len(degisenler),
+                "mesaj": "Sahte alt akış koştu."}
+
+    def _kos(self, cekici: SahteCekici, alt_akis=None, **kwargs) -> TazelemeDurumu:
+        durum = TazelemeDurumu(is_id="t1", bank=BANKA.slug, bank_name=BANKA.name)
+        return tazele(BANKA, self.raw, durum, bundle=_bundle(cekici),
+                      robots=_robots(),
+                      alt_akis=self._hook if alt_akis is None else alt_akis,
+                      **kwargs)
+
+    def test_yeni_ve_ayni_belgeler_alt_akisi_tetiklemez(self) -> None:
+        ilk = self._kos(_iki_sayfali())
+        self.assertEqual(ilk.yeni, 2)
+        self.assertEqual(self.cagrilar, [], "yeni belge alt akışı tetikledi")
+        ikinci = self._kos(_iki_sayfali())
+        self.assertEqual(ikinci.ayni, 2)
+        self.assertEqual(self.cagrilar, [],
+                         "değişmeyen belge alt akışı tetikledi")
+        self.assertIsNone(ikinci.alt_akis)
+
+    def test_degisen_belge_onceki_metniyle_gecer(self) -> None:
+        self._kos(_iki_sayfali())
+        yeni = _iki_sayfali()
+        url = "https://ornek.example/kampanyalar/kampanya-bir"
+        yeni.sayfalar[url] = _sayfa("Konut Finansmanı",
+                                    "Kâr payı oranı %1,59 olarak güncellendi.")
+        durum = self._kos(yeni)
+        self.assertEqual(len(self.cagrilar), 1)
+        kayitlar = self.cagrilar[0]
+        self.assertEqual([k["source_url"] for k in kayitlar], [url],
+                         "yalnız değişen belge geçmeliydi")
+        # ÖNCEKİ metin şart: veri tabanındaki doğru satırı bulmanın anahtarı o.
+        self.assertIn("%1,89", kayitlar[0]["onceki_metin"])
+        self.assertNotIn("%1,59", kayitlar[0]["onceki_metin"])
+        self.assertEqual(durum.alt_akis["gecersizlenen_ozet"], 1)
+        self.assertIn("Sahte alt akış koştu.", durum.mesaj or "")
+
+    def test_belge_raporu_ham_metin_tasimaz(self) -> None:
+        """Durum uçları 1,5 sn'de bir sorgulanıyor; ham metin oraya girmez."""
+        self._kos(_iki_sayfali())
+        yeni = _iki_sayfali()
+        yeni.sayfalar["https://ornek.example/kampanyalar/kampanya-bir"] = _sayfa(
+            "Konut Finansmanı", "Kâr payı oranı %1,59 olarak güncellendi.")
+        durum = self._kos(yeni)
+        for b in durum.to_dict()["belgeler"]:
+            self.assertNotIn("onceki_metin", b)
+
+    def test_iptal_alt_akisi_tetiklemez(self) -> None:
+        self._kos(_iki_sayfali(), iptal=lambda: True)
+        self.assertEqual(self.cagrilar, [])
+
+    def test_alt_akis_dusse_tazeleme_hataya_donmez(self) -> None:
+        """Ham arşiv doğru yazıldı; işi HATA göstermek olmayan bir kaybı haber
+        vermek olurdu. Ama sessiz de kalınmaz: not düşülür."""
+        self._kos(_iki_sayfali())
+        yeni = _iki_sayfali()
+        yeni.sayfalar["https://ornek.example/kampanyalar/kampanya-bir"] = _sayfa(
+            "Konut Finansmanı", "Kâr payı oranı %1,59 olarak güncellendi.")
+
+        def patlayan(_degisenler):
+            raise RuntimeError("depo kapalı")
+
+        durum = self._kos(yeni, alt_akis=patlayan)
+        self.assertEqual(durum.durum, DURUM_TAMAM)
+        self.assertGreater(durum.yazilan_dosya, 0)
+        self.assertIsNone(durum.alt_akis)
+        self.assertTrue(any("geçersizlenemedi" in n for n in durum.notlar),
+                        f"alt akış düşüşü sessiz kaldı: {durum.notlar}")
+
+
 class TestVeriTabaniDokunulmaz(unittest.TestCase):
     """Tazeleme modülü veri tabanı katmanını HİÇ tanımaz.
 
@@ -358,6 +482,32 @@ class TestYonetici(unittest.TestCase):
         ikinci = y.baslat(BANKA)
         self.assertNotEqual(ilk["is_id"], ikinci["is_id"])
         self.assertEqual(y.son_is()["is_id"], ikinci["is_id"])
+
+    def test_alt_akis_ise_gecirilir(self) -> None:
+        """Yönetici geri çağrıyı işe TAŞIMALI.
+
+        Taşımasaydı bağ sessizce kopardı: `tazele` alt akışı `None` görür,
+        bayat özet düşürülmez ve hiçbir test bunu fark etmezdi — uçtan uca
+        yol yalnız burada birleşiyor.
+        """
+        gorulen: dict[str, object] = {}
+
+        def kaydeden(bank, raw_dir, durum, **kwargs):
+            gorulen["alt_akis"] = kwargs.get("alt_akis")
+            kwargs["guncelle"](durum=DURUM_TAMAM, asama="bitti")
+            return durum
+
+        def hook(degisenler):
+            return {}
+
+        y = TazelemeYoneticisi(self._tmp.name, calisma_fn=kaydeden,
+                               alt_akis=hook)
+        y.baslat(BANKA)
+        for _ in range(200):
+            if y.aktif_banka() is None:
+                break
+            time.sleep(0.01)
+        self.assertIs(gorulen.get("alt_akis"), hook)
 
     def test_bilinmeyen_is_none_doner(self) -> None:
         y = TazelemeYoneticisi(self._tmp.name)

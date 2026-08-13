@@ -150,6 +150,19 @@ SEBEP_METIN_BOS = "metin_bos"
 #: LLM hiç çağrılmadı: arka uç kapalı. Belgeyle ilgili DEĞİL, sistemle ilgili.
 SEBEP_LLM_KAPALI = "llm_kapali"
 
+#: Belgenin KAYNAK METNİ değişti; eldeki özet artık onu tarif etmiyor.
+#:
+#: Bu sebebi bu modül ÜRETMEZ — tazeleme sonrası uzlaştırma yazar
+#: (`src/tazeleme_sonrasi.py`). Yine de sözlük burada durur: sebep etiketleri
+#: sonlu bir kümedir ve o kümenin tek sahibi bu modüldür (`db.repository`
+#: kasten doğrulama yapmıyor, gerekçesi `set_ozet_sebep` docstring'inde).
+#: İkinci bir yerde tanımlansaydı, kümenin sınırı iki yere dağılırdı.
+#:
+#: KALICI DEĞİL, bilerek: ham arşivden veri tabanına aktarım koştuğunda belge
+#: metni tazelenir ve özet yeniden üretilebilir hâle gelir. Kalıcı işaretlemek
+#: belgeyi sonsuza dek özetsiz bırakırdı.
+SEBEP_KAYNAK_DEGISTI = "kaynak_degisti"
+
 #: Alfabe kapısına takılan çıktı için denenecek sıcaklıklar, sırayla.
 #: İlk basamak 0,0'dır: varsayılan yol değişmez ve belgelerin çoğu orada geçer.
 #: Değerler ölçümle seçildi (modül başlığındaki tablo); merdiven yalnız kapıya

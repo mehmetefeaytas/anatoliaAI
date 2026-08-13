@@ -9,15 +9,37 @@ Sistem internetsiz çalışmak zorunda (CLAUDE.md §1) ve 4 dakikalık sunumda c
 toplamaya bağlanmış bir demo donma riskidir (§11, §21). Bu yüzden tazeleme
 sohbet/kıyas yoluna GÖMÜLMEZ; ayrı bir uçtan, açık bir onayla, ayrı bir iş
 parçacığında koşar. Sohbet ve kıyas her hâlde önceden doldurulmuş veri
-tabanından okumaya devam eder — bu modül veri tabanına HİÇ dokunmaz.
+tabanından okumaya devam eder — bu modül veri tabanı katmanını İÇE AKTARMAZ
+(`tests/test_tazeleme.py::TestVeriTabaniDokunulmaz` bunu `ast` ile denetler).
 
-## Nereye yazar: `data/raw/<slug>/live/`, veri tabanına DEĞİL
+## Alt akış: `alt_akis` geri çağrısı — bağ VAR ama bağımlılık YOK
+
+Tazeleme ham arşive yazıp susarsa, metni değişmiş bir belgenin veri
+tabanındaki AI özeti artık o belgeyi tarif etmez ve panelde sessizce durmaya
+devam eder. "Bayat özet sessizce durmaz" kuralı gereği bu kabul edilemez.
+
+Çözüm bir geri çağrıdır: `tazele(..., alt_akis=...)` yalnız metni DEĞİŞEN
+belgeleri, yazma evresi bittikten SONRA bu çağrılabilire verir. Veri tabanına
+ne olacağını çağıran taraf (`api/main.py`) bilir; bu modül bilmez. Böylece
+bağ kurulur ama katman ters çevrilmez ve testlerde geri çağrı sahtelenebilir.
+
+Geri çağrının düşmesi tazelemeyi HATA'ya çevirmez: ham arşiv o noktada zaten
+doğru yazılmıştır ve onu "başarısız" göstermek operatörü var olmayan bir veri
+kaybına inandırırdı. Düşüş nota yazılır, sessiz kalmaz.
+
+## Nereye yazar: `data/raw/<slug>/live/` — kampanya verisine DOKUNMAZ
 
 `data/demo.db` içinde 1751 önceden üretilmiş özet ve 458 geçerlilik damgası var;
 bunlar uzun ve pahalı çevrimdışı koşuların ürünü. Canlı bir tazelemenin ortasında
 o veri tabanına yazmak, yarıda kesilen bir koşuda kampanya kayıtlarıyla özetleri
 tutarsız bırakırdı. Tazeleme bu yüzden yalnızca HAM ARŞİVE yazar; ham arşivden
 veri tabanına geçiş ayrı, çevrimdışı ve tekrarlanabilir bir adımdır.
+
+Tek istisna yukarıdaki alt akıştır ve kapsamı KASITLI olarak dar: yalnız metni
+değişen belgenin bayat özeti düşer. Kampanya kaydı, çıkarılmış alanlar, gömme
+vektörleri ve değişmemiş belgelerin özetleri ellenmez; üstelik bu adım ağ evresi
+bittikten SONRA, saniyenin altında koşar — yani "yarıda kesilme veriyi tutarsız
+bırakır" riski onun için doğmaz.
 
 Sonuç: en kötü senaryoda bile kaybedilen şey birkaç HTML dosyasıdır, demo değil.
 
@@ -95,7 +117,14 @@ VARSAYILAN_ZAMAN_ASIMI_SN = 25.0
 # Tek bir tazelemede çekilecek azami belge. `banks.yaml`'daki `max_docs`
 # (bazı bankalarda 200'ün üzerinde) BİLEREK kullanılmıyor: operatör eylemi
 # dakikalar sürmeli, saatler değil. Tam hasat CLI'ın işidir.
-VARSAYILAN_AZAMI_BELGE = 25
+#
+# 25 → 35 (2026-08-13). Sınır ölçümle yükseltildi, tahminle değil: 25 URL'lik
+# gerçek bir koşu (albaraka, 20 belge çekildi) ~90 saniye sürdü, yani belge
+# başına ~3,6 sn. 35 belge aynı hızda ~2 dakika eder ve keşif evresiyle
+# birlikte en kötü hâlde birkaç dakikada kalır — "dakikalar sürmeli, saatler
+# değil" gerekçesi hâlâ karşılanıyor. Kazanç: bankaların kampanya listesi 25
+# girdiyi aştığında kuyruktaki belgeler sessizce kesiliyordu.
+VARSAYILAN_AZAMI_BELGE = 35
 
 # Rapora yazılacak azami satır — hata listesi ekranı boğmasın.
 _AZAMI_LISTE = 40
@@ -232,7 +261,18 @@ def onizleme(bank: BankConfig, *, raw_dir: str | Path = "data/raw",
         "arsivdeki_belge": mevcut,
         "hedef_dizin": str(Path(raw_dir) / bank.slug / LIVE_SUBDIR),
         "internet_gerekir": True,
-        "veri_tabani_etkilenir": False,
+        # 2026-08-13'e kadar `False`'tu ve o gün YALAN oldu: tazeleme artık
+        # bittiğinde metni değişen belgelerin bayat AI özetini düşürüyor
+        # (`alt_akis`). Kampanya kayıtları, çıkarılmış alanlar ve değişmeyen
+        # belgelerin özetleri ellenmiyor — ama "hiç dokunulmuyor" demek artık
+        # doğru değil ve ön izlemenin görevi tam olarak ne olacağını önceden
+        # söylemek. Kapsamı `veri_tabani_etkisi` cümlesi taşır.
+        "veri_tabani_etkilenir": True,
+        "veri_tabani_etkisi": (
+            "Yalnız metni DEĞİŞEN belgelerin AI özeti düşürülür (bayat özet "
+            "panelde durmasın diye). Kampanya kayıtları, çıkarılmış alanlar ve "
+            "değişmeyen belgelerin özetleri olduğu gibi kalır."
+        ),
         "robots_uyumu": True,
         "user_agent": DEFAULT_USER_AGENT,
     }
@@ -284,14 +324,27 @@ def _diskteki_metin(hedef_dizin: Path, stem: str, source_url: str) -> Optional[s
     return None
 
 
-def _belgeleri_kiyasla(docs: list, hedef_dizin: Path) -> list[dict[str, Any]]:
+def _belgeleri_kiyasla(
+        docs: list,
+        hedef_dizin: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Her belgeyi diskteki hâliyle karşılaştırır: yeni / değişen / aynı.
 
     Karşılaştırma TEMİZ METİN üzerindendir, ham bayt özeti üzerinden değil:
     oturum simgesi ve analitik kimliği her istekte değişir, ham özet ölçülseydi
     her tazeleme "hepsi değişti" derdi ve sayı hiçbir şey anlatmazdı.
+
+    İki liste döner:
+
+    * **rapor** — arayüze giden kayıt (`durum.belgeler`). Metin TAŞIMAZ.
+    * **degisenler** — alt akış geri çağrısına giden kayıt; her biri belgenin
+      ÖNCEKİ metnini taşır. Önceki metin şart: veri tabanındaki hangi satırın
+      bu belgeye ait olduğunu güvenle bulmanın yolu odur (aynı `source_url`
+      birden fazla kayıtta geçiyor — `live/` ve `archive/` kopyaları).
+      İki liste ayrı, çünkü ham metinleri iş durumuna koymak onları HTTP
+      cevabına da koyardı: durum uçları 1,5 saniyede bir sorgulanıyor.
     """
     out: list[dict[str, Any]] = []
+    degisenler: list[dict[str, Any]] = []
     for doc in docs:
         url = doc.source_url or ""
         stem = url_to_slug(url)
@@ -302,6 +355,8 @@ def _belgeleri_kiyasla(docs: list, hedef_dizin: Path) -> list[dict[str, Any]]:
             durum = BELGE_AYNI
         else:
             durum = BELGE_DEGISEN
+            degisenler.append({"source_url": url, "title": doc.title,
+                               "onceki_metin": eski})
         out.append({
             "source_url": url,
             "title": doc.title,
@@ -309,7 +364,7 @@ def _belgeleri_kiyasla(docs: list, hedef_dizin: Path) -> list[dict[str, Any]]:
             "karakter": len(doc.clean_text),
             "onceki_karakter": len(eski) if eski is not None else None,
         })
-    return out
+    return out, degisenler
 
 
 # --------------------------------------------------------------------------- #
@@ -346,6 +401,10 @@ class TazelemeDurumu:
     robots_ozet: Optional[str] = None
     mesaj: Optional[str] = None
     hedef_dizin: Optional[str] = None
+    #: Alt akış geri çağrısının raporu (bkz. modül başlığı). `None` = alt akış
+    #: hiç koşmadı; boş sözlük değil, çünkü "koşmadı" ile "koştu, iş çıkmadı"
+    #: aynı şey değil.
+    alt_akis: Optional[dict[str, Any]] = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -372,6 +431,7 @@ class TazelemeDurumu:
             "robots_ozet": self.robots_ozet,
             "mesaj": self.mesaj,
             "hedef_dizin": self.hedef_dizin,
+            "alt_akis": self.alt_akis,
             "bitti": self.durum in (DURUM_TAMAM, DURUM_HATA, DURUM_IPTAL),
         }
 
@@ -455,12 +515,19 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
            bundle: Optional[FetcherBundle] = None,
            robots: Optional[RobotsCache] = None,
            iptal: Optional[Callable[[], bool]] = None,
+           alt_akis: Optional[Callable[[list[dict[str, Any]]],
+                                       dict[str, Any]]] = None,
            guncelle: Optional[Callable[..., None]] = None) -> TazelemeDurumu:
-    """Bir bankayı tazeler: çek → karşılaştır → yaz. `durum` yerinde güncellenir.
+    """Bir bankayı tazeler: çek → karşılaştır → yaz → alt akışı uyar.
 
     `bundle` / `robots` enjekte edilebilir — testler ağa çıkmadan koşar.
     Enjekte EDİLMEZSE robots denetimi her zaman AÇIK kurulur; bu yolda denetimi
     kapatan bir parametre bilerek yoktur.
+
+    `alt_akis` verilirse YALNIZ metni değişen belgelerle çağrılır (modül
+    başlığı). Değişmeyen ya da yeni belge için çağrılmaz: değişmeyen belgenin
+    aşağı akışta düzeltilecek bir yanı yok, yeni belgenin ise veri tabanında
+    henüz bir karşılığı yok.
     """
     gecikme = gecikmeyi_kirp(gecikme_sn)
     hedef_dizin = Path(raw_dir) / bank.slug / LIVE_SUBDIR
@@ -555,7 +622,7 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
 
     # Karşılaştırma YAZMADAN ÖNCE yapılır: yazdıktan sonra bakılsaydı diskteki
     # metin zaten yeni hâli olurdu ve "değişen" sayısı her zaman sıfır çıkardı.
-    belgeler = _belgeleri_kiyasla(docs, hedef_dizin)
+    belgeler, degisenler = _belgeleri_kiyasla(docs, hedef_dizin)
     yeni = sum(1 for b in belgeler if b["durum"] == BELGE_YENI)
     degisen = sum(1 for b in belgeler if b["durum"] == BELGE_DEGISEN)
     ayni = sum(1 for b in belgeler if b["durum"] == BELGE_AYNI)
@@ -574,12 +641,32 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
                   "kaydedildi.")
         return durum
 
+    # Alt akış YAZMADAN SONRA koşar: ham arşiv doğru hâline gelmeden veri
+    # tabanındaki özeti düşürmek, yarıda kesilen bir koşuda özeti de belgeyi
+    # de kaybettirirdi.
+    alt_rapor: Optional[dict[str, Any]] = None
+    if degisenler and alt_akis is not None:
+        yaz(asama="Değişen belgelerin bayat özetleri düşürülüyor…")
+        try:
+            alt_rapor = alt_akis(degisenler)
+        except Exception:
+            # Ham arşiv doğru yazıldı; işi HATA'ya çevirmek olmayan bir veri
+            # kaybını haber vermek olurdu. Sessiz de kalınmaz: not düşülür.
+            logger.exception("tazeleme alt akışı düştü: %s", bank.slug)
+            notlar = notlar + [
+                "Değişen belgelerin özetleri geçersizlenemedi; panelde eski "
+                "özet görünmeye devam edebilir. Ayrıntı sunucu günlüğünde."]
+            yaz(notlar=notlar)
+
+    mesaj = ("Belgeler ham arşive yazıldı. Kıyas ve sohbet ekranları önceden "
+             "hazırlanmış veri tabanından okumaya devam ediyor; bu belgeler "
+             "oraya ayrı bir çevrimdışı adımda aktarılır.")
+    if alt_rapor and alt_rapor.get("mesaj"):
+        mesaj = f"{mesaj} {alt_rapor['mesaj']}"
+
     yaz(durum=DURUM_TAMAM, bitis=utc_now_iso(), asama="Tazeleme tamamlandı.",
         belgeler=belgeler, yeni=yeni, degisen=degisen, ayni=ayni,
-        yazilan_dosya=len(yazilan),
-        mesaj=("Belgeler ham arşive yazıldı. Kıyas ve sohbet ekranları "
-               "önceden hazırlanmış veri tabanından okumaya devam ediyor; "
-               "bu belgeler oraya ayrı bir çevrimdışı adımda aktarılır."))
+        yazilan_dosya=len(yazilan), alt_akis=alt_rapor, mesaj=mesaj)
     return durum
 
 
@@ -598,9 +685,15 @@ class TazelemeYoneticisi:
     def __init__(self, raw_dir: str | Path = "data/raw", *,
                  calisma_fn: Optional[Callable[..., Any]] = None,
                  azami_belge: int = VARSAYILAN_AZAMI_BELGE,
+                 alt_akis: Optional[Callable[[list[dict[str, Any]]],
+                                             dict[str, Any]]] = None,
                  gecikme_sn: float = VARSAYILAN_GECIKME_SN) -> None:
         self.raw_dir = str(raw_dir)
         self._calisma_fn = calisma_fn or tazele
+        # Öntanım `None`: yöneticiyi alt akış olmadan kurmak GEÇERLİ bir
+        # kullanım (CLI, testler, veri tabanı olmayan ortam). Varsayılan bir
+        # depo bağlantısı kurmak, bu modülü veri tabanına bağlardı.
+        self._alt_akis = alt_akis
         self.azami_belge = azami_belge
         self.gecikme_sn = gecikmeyi_kirp(gecikme_sn)
         self._kilit = threading.Lock()
@@ -657,6 +750,7 @@ class TazelemeYoneticisi:
                 self._calisma_fn(bank, self.raw_dir, kayit,
                                  azami_belge=self.azami_belge,
                                  gecikme_sn=self.gecikme_sn,
+                                 alt_akis=self._alt_akis,
                                  iptal=iptal_mi, guncelle=guncelle)
             except Exception:  # iş parçacığı sessizce ölmemeli
                 logger.exception("tazeleme işi düştü: %s", bank.slug)

@@ -445,6 +445,97 @@ class TestProvenance(unittest.TestCase):
             self.assertIn("guncel metin",
                           (live / "kampanyalar-konut.txt").read_text("utf-8"))
 
+    # --------------------------------------------------------------- #
+    # Sidecar birleştirme — ÖLÇÜLMÜŞ KAYBIN çiti
+    # --------------------------------------------------------------- #
+    # 2026-08-13: tek bir tazeleme koşusu (albaraka, 20 belge) 19 sidecar'dan
+    # `reextracted_at` ve `extraction_result` alanlarını sildi. `save_docs`
+    # diske SIFIRDAN kurulmuş `provenance()` sözlüğünü yazıyordu; o sözlüğün
+    # üretmediği her anahtar sessizce kayboluyordu. Silinen alanlar hâlâ
+    # doğruydu: 19 belgede çıkarılmış metin birebir aynıydı.
+
+    def test_sidecar_ek_alanlari_metin_ayniysa_korunur(self):
+        url = "https://ana.test/kampanyalar/konut"
+        metin = "ayni kalan metin " * 30
+        with tempfile.TemporaryDirectory() as tmp:
+            save_docs([self._belge(url, metin, "aaa")], tmp)
+            meta_yolu = (Path(tmp) / "b" / "live"
+                         / "kampanyalar-konut.txt.meta.json")
+            meta = json.loads(meta_yolu.read_text("utf-8"))
+            # `scripts/reextract_raw.py`'nin yaptığı: sidecar'a sonradan alan
+            # ekler. `provenance()` bu anahtarları HİÇ üretmez.
+            meta["reextracted_at"] = "2026-08-12T10:00:00+00:00"
+            meta["extraction_result"] = "kurtarildi"
+            meta["content_status"] = "shell"
+            meta_yolu.write_text(json.dumps(meta, ensure_ascii=False),
+                                 encoding="utf-8")
+
+            # İkinci hasat: ham HTML/hash değişti ama ÇIKARILMIŞ METİN aynı.
+            save_docs([self._belge(url, metin, "bbb")], tmp)
+
+            yeni = json.loads(meta_yolu.read_text("utf-8"))
+        self.assertEqual(yeni["reextracted_at"], "2026-08-12T10:00:00+00:00")
+        self.assertEqual(yeni["extraction_result"], "kurtarildi")
+        self.assertEqual(yeni["content_status"], "shell")
+        # `provenance()`in ÜRETTİĞİ anahtarda taze değer kazanır.
+        self.assertEqual(yeni["content_hash"], "bbb")
+        self.assertNotIn("extraction_invalidated_at", yeni,
+                         "metin aynıyken geçersizleme damgası basıldı")
+
+    def test_sidecar_ek_alanlari_metin_degisince_gorunur_bicimde_duser(self):
+        """Korumak YALAN olurdu: `reextracted_at` "bu METİN yeniden çıkarıldı"
+        der. Metin değiştiyse alan artık dosyayı tarif etmez — ama düşüşü
+        sessiz olmamalı, yoksa kayıp yine görünmez kalır."""
+        url = "https://ana.test/kampanyalar/konut"
+        with tempfile.TemporaryDirectory() as tmp:
+            save_docs([self._belge(url, "ilk metin " * 30, "aaa")], tmp)
+            meta_yolu = (Path(tmp) / "b" / "live"
+                         / "kampanyalar-konut.txt.meta.json")
+            meta = json.loads(meta_yolu.read_text("utf-8"))
+            meta["reextracted_at"] = "2026-08-12T10:00:00+00:00"
+            meta["extraction_result"] = "kurtarildi"
+            meta_yolu.write_text(json.dumps(meta, ensure_ascii=False),
+                                 encoding="utf-8")
+
+            save_docs([self._belge(url, "bambaska bir metin " * 30, "ccc")], tmp)
+            yeni = json.loads(meta_yolu.read_text("utf-8"))
+        self.assertNotIn("reextracted_at", yeni)
+        self.assertNotIn("extraction_result", yeni)
+        self.assertTrue(yeni["extraction_invalidated_at"])
+        self.assertEqual(sorted(yeni["extraction_invalidated_keys"]),
+                         ["extraction_result", "reextracted_at"])
+
+    def test_sidecar_bosluk_gurultusu_ek_alanlari_dusurmez(self):
+        """Aynılık ölçüsü `text_key` (boşluk-normalize), ham bayt eşitliği
+        değil: tazelemenin `ayni`/`degisen` ayrımı da bu ölçüyle yapılıyor.
+        İki katman ayrışsaydı, tazelemenin "aynı" dediği belgede burada
+        geçersizleme damgası belirirdi."""
+        url = "https://ana.test/kampanyalar/konut"
+        metin = "kar payi orani yuzde bir " * 30
+        with tempfile.TemporaryDirectory() as tmp:
+            save_docs([self._belge(url, metin, "aaa")], tmp)
+            meta_yolu = (Path(tmp) / "b" / "live"
+                         / "kampanyalar-konut.txt.meta.json")
+            meta = json.loads(meta_yolu.read_text("utf-8"))
+            meta["reextracted_at"] = "2026-08-12T10:00:00+00:00"
+            meta_yolu.write_text(json.dumps(meta, ensure_ascii=False),
+                                 encoding="utf-8")
+            save_docs([self._belge(url, metin.replace(" ", "  \n"), "bbb")], tmp)
+            yeni = json.loads(meta_yolu.read_text("utf-8"))
+        self.assertEqual(yeni["reextracted_at"], "2026-08-12T10:00:00+00:00")
+
+    def test_sidecar_yoksa_bugunku_davranis_korunur(self):
+        """Diskte meta yoksa yazılan sözlük saf `provenance()` olmalı —
+        birleştirme yeni anahtar UYDURMAZ."""
+        url = "https://ana.test/kampanyalar/konut"
+        with tempfile.TemporaryDirectory() as tmp:
+            doc = self._belge(url, "yeni belge metni " * 30, "aaa")
+            save_docs([doc], tmp)
+            meta = json.loads(
+                (Path(tmp) / "b" / "live"
+                 / "kampanyalar-konut.txt.meta.json").read_text("utf-8"))
+        self.assertEqual(meta, doc.provenance())
+
     def test_manual_dir_scaffolding_and_method_tagging(self):
         banks = load_banks(CONFIG)
         with tempfile.TemporaryDirectory() as tmp:

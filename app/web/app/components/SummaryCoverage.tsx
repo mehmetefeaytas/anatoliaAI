@@ -177,6 +177,21 @@ export default function SummaryCoverage() {
 
   const oran = Math.round((kapsam.ozetli / kapsam.toplam) * 100);
   const kosuyor = !!is && !is.bitti;
+  // «Kaynağı tazelendiği için özeti düşürülen belge» ile «üretimi sonuçsuz
+  // kalan belge» AYNI KOVADA duruyor (`basarisiz`) ama aynı şey değil. Kova
+  // ayrımı özet katmanının kuralıdır ve doğrudur: ikisi de TEKRAR DENENEBİLİR,
+  // yani `hedef`e girer ve düğme ikisini de üretir (`summarize/toplu.sayim`).
+  // Yanlış olan yalnız CÜMLE: tazeleme sonrası düşürülen özet için «üretim
+  // sonuçsuz kaldı» demek, yapılmamış bir denemenin başarısızlığını iddia
+  // etmek olurdu.
+  //
+  // Çözüm uca yeni bir kova EKLEMEK değil — o, «dört kova toplamı = korpus»
+  // sözleşmesini bozardı. Uç `sebepler` sözlüğünü zaten döndürüyor; ayrım
+  // burada, yalnız anlatı düzeyinde yapılıyor. Sayılar değişmiyor.
+  const kaynakDegisti = kapsam.sebepler?.["kaynak_degisti"] ?? 0;
+  // Alt sınır 0: sebep sözlüğü ile kova sayacı bir yarış durumunda ayrışırsa
+  // ekranda negatif bir belge sayısı yazmasın.
+  const basarisiz = Math.max(0, kapsam.basarisiz - kaynakDegisti);
   // Hedef daha belli değilken (iş "hedef belgeler belirleniyor" evresinde)
   // çubuk BELİRSİZ çizilir. 0/0'ı %100 diye göstermek, hiç başlamamış bir işi
   // bitmiş gibi gösterirdi.
@@ -220,16 +235,23 @@ export default function SummaryCoverage() {
         {kapsam.denenmemis > 0 && (
           <>
             {trNum(kapsam.denenmemis)} belge <b>henüz özetlenmedi</b>
-            {kapsam.basarisiz > 0
-              ? `, ${trNum(kapsam.basarisiz)} belgede üretim sonuçsuz kaldı`
+            {basarisiz > 0
+              ? `, ${trNum(basarisiz)} belgede üretim sonuçsuz kaldı`
               : ""}
             .{" "}
           </>
         )}
-        {kapsam.denenmemis === 0 && kapsam.basarisiz > 0 && (
+        {kapsam.denenmemis === 0 && basarisiz > 0 && (
           <>
-            {trNum(kapsam.basarisiz)} belgede üretim sonuçsuz kaldı; tekrar
+            {trNum(basarisiz)} belgede üretim sonuçsuz kaldı; tekrar
             denenebilir.{" "}
+          </>
+        )}
+        {kaynakDegisti > 0 && (
+          <>
+            {trNum(kaynakDegisti)} belgenin <b>kaynak metni tazelendi</b>, eski
+            özeti bu yüzden düşürüldü — üretim başarısız olmadı, özet artık
+            metni tarif etmiyordu. Bunlar tekrar üretilecek.{" "}
           </>
         )}
         Kaynak metin her belgede tam hâliyle durur ve uydurma özet basılmaz.
