@@ -7,11 +7,56 @@ Katılım bankacılığı kampanya metinlerinden finansal bilgi çıkarımı, ka
 |---|---|
 | **Takım** | Anatolia AI |
 | **Ekip** | Mehmet Efe Aytaş (kaptan), Irmak Altay, Ayça Engindeniz, Ecegüneş Dağ |
-| **Rapor tarihi** | 3 Ağustos 2026 |
-| **Teslim tarihi** | 26 Ağustos 2026 — **kalan 23 gün** |
-| **Kod durumu** | 39 test dosyası · 890 test yeşil · ruff kapısı temiz · commit `03835ce` |
-| **Korpus** | 849 belge · 10 banka · 2.204 çıkarılmış alan |
+| **Rapor gövdesinin ölçüm tarihi** | 3 Ağustos 2026 · commit `03835ce` |
+| **Son güncelleme** | 13 Ağustos 2026 (aşağıdaki "Ölçüm künyesi" bölümü) |
+| **Teslim tarihi** | 26 Ağustos 2026 |
 | **Lisans** | Apache-2.0 |
+
+---
+
+## ⚠️ Ölçüm künyesi — hangi sayı ne zaman ölçüldü
+
+Bu raporun **A–D bölümlerindeki sayılar 3 Ağustos 2026 koşusuna aittir** ve o
+günün korpusuna (**849 belge**) çapalıdır. Korpus o tarihten sonra 1.782 belgeye
+çıktı; çıkarım kuralları ve RAG sıralaması değişti.
+
+**Eski sayılar bilerek olduğu gibi bırakıldı.** "849"u "1.782" ile değiştirmek
+tek satırlık bir iş olurdu ama o ölçümler yeniden koşulmadı: değiştirilmiş sayı,
+ölçülmüş sayı gibi görünürdü. Bu raporun tek kuralı (§ okuma kılavuzu) tam da
+bunu yasaklıyor. Aşağıdaki tablo güncel durumu **ayrı** verir; ikisi
+karıştırılmaz.
+
+| Ne | 3 Ağustos (rapor gövdesi) | 13 Ağustos (güncel, koşuldu) |
+|---|---|---|
+| Korpus | 849 belge | **1.782 satır / 1.677 farklı içerik** |
+| Banka | 10 | 10 katılım bankası + TKBB |
+| Test | 890 | **2.649 toplanan · 2.596 geçen** |
+| Gold seti | `gold.v1` (20 kayıt) | `gold.v2` (48 kayıt) · v3 turu dağıtıma hazır (+26) |
+| Yapılandırılmış alan mikro-F1 | ölçülmemişti | **0,646** |
+| 12-alan mikro-F1 | 0,400 | **0,452** [%95 GA 0,384–0,512] |
+| Halüsinasyon oranı | 0,083 | **0,059** (yapısal kesitte 0,047) |
+| RAG terim kapsama R@5 | modül yoktu | **0,867** |
+| RAG banka hedefleme R@5 | modül yoktu | **0,800** (BM25 sıralama) |
+| Reddetme kararı doğruluğu | ölçülmemişti | **30/30** |
+| Güvenlik seti | ölçülmemişti | **29/30** · aşırı red 0/6 |
+| Anotatör uyumu | ölçülmemişti | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 |
+| Güven kalibrasyonu | ölçülmemişti | ECE **0,306** · MCE 0,550 · Brier 0,316 |
+| Gold kanıt zinciri | araç yoktu | **48/48** izlenebilir (45 birebir + 3 içerik kayması) |
+
+Güncel sayıların üreten komutları kök `README.md`'nin "Ölçülebilir Durum"
+tablosunda satır satır yazılıdır. Metodoloji (hata taksonomisi, küme bootstrap,
+McNemar, κ eşik politikası, kalibrasyon) aynı dosyanın "Ölçüm metodolojisi"
+bölümündedir.
+
+### Gövdedeki hangi iddialar yeniden ölçülmeli
+
+Aşağıdakiler 849 belgeye dayanıyor ve 1.782 belgede **tekrarlanmadı**. Sayıyı
+kullanmadan önce yeniden koşun:
+
+- §A3 korpus dağılımı ve nitel-ifade sayımı (54 belge / 45'inde sayısal karşılık yok)
+- §A9 çelişki tespiti (849 belgede 1 çelişki)
+- Bölüm C değişmez kapsamı (726/849, %85,5)
+- §A5 çıkarılmış alan sayısı (2.204)
 
 ---
 
@@ -803,6 +848,46 @@ Host ölçümü (kural 1,05 / hibrit 1,67 ms) konteyner ölçümüyle neredeyse 
 
 ⚠️ Chatbot p95/p99 yayılımı ~26×. RAG kolu 1.696 kampanyalık gövdede tarama yapıyor.
 Kayıtlı performans borcu.
+
+---
+
+## A11. Mimari kararlar ve gerekçeleri
+
+Bu bölüm, projenin karar arşivinin (15 atomik karar sayfası) damıtılmış hâlidir.
+Amacı tek soruya kaynaklı cevap vermek: **"neden bu mimariyi seçtiniz?"**
+
+Kararların yarısı bir tercihle değil, **bir ölçümle** verildi. Aşağıda "ölçüm
+dayattı" işaretli satırlar, önce yapılmak istenip sonra veri yüzünden
+terk edilen yolları gösteriyor — bir projede en zor anlatılan ama jüri için en
+güçlü olan kısım budur.
+
+| # | Karar | Gerekçe | Reddedilen alternatif |
+|---|---|---|---|
+| 1 | **On-premise, tamamen açık kaynak** | Şartname kısıtı ve %20 ağırlık; ücretli API diskalifiye riski | Bulut LLM API'si |
+| 2 | **Apache-2.0 lisans** | Yalnız Apache/MIT ağırlık kullanılabilir; Gemma ve Llama community lisansları kapsam dışı | Gemma tabanlı TR modelleri (WiroAI-9b vb.) |
+| 3 | **Veri kapsamı = BDDK katılım bankaları listesi** | Kapsamın dış bir otoriteye çapalanması, "hangi banka neden var" tartışmasını kapatır | Elle seçilmiş banka listesi |
+| 4 | **Config-driven toplama (`banks.yaml`)** | Yeni banka tek satır; yenilikçilik kartlarından biri | Banka başına elle yazılmış scraper |
+| 5 | **Çıktı zorunlu yapılandırılmış format** | Serbest metin ayrıştırmak halüsinasyonu görünmez kılar; `guided_json` şart | LLM çıktısını regex ile ayrıştırmak |
+| 6 | **NER fine-tune YOK; kural + few-shot** | Anotasyon bütçesi 150–300 örnek; bu hacimde NER overfit eder. Aynı bütçe gold/eval'e giderse %30'luk kriter **ölçülebilir** olur | BERTurk/GLiNER ile alan çıkarımı ince ayarı |
+| 7 | **"Zor anlama" vakaları mimarinin merkezinde** | %30'luk kriter açıkça "farklı ifade biçimlerini doğru yorumlama" diyor; puan tam orada kazanılır | Ortalama vakaya göre optimize etmek |
+| 8 | **Chatbot hibrit: text-to-SQL + RAG** | Senaryonun kalbi kıyas ("en düşük kâr payı hangi bankada") ve bunlar toplama/sıralama sorularıdır; saf semantik RAG zayıf cevap verir | Saf RAG |
+| 9 | **Sunum katmanı = dashboard + chatbot** | Şartname ikisini de istiyor; kıyas tablosu ile doğal dil arayüzü farklı sorulara hizmet ediyor | Yalnız chatbot |
+| 10 | **Yenilikçilik 3 hedefe daraltıldı** | Ağırlık %10; dağıtılmış yarım özellik yerine tamamlanmış az özellik. Seçilenler: güven+kaynak vurgulama, çelişki tespiti, config-driven onboarding | Trend analizi, çift dil desteği |
+| 11 | **Demo önceden doldurulmuş DB'den okur** | 4 dakikalık sunumda yerel 8B LLM + canlı scraping donma riski taşır; LLM kritik yoldan çıkarıldı. Tek örnekte "canlı çıkarım" butonu kalır | Sunumda canlı scrape + canlı çıkarım |
+| 12 | **Terim sözlüğü ENJEKTE edilir, REPLACE edilmez** — *ölçüm dayattı* | Kör dize değiştirme gerçek korpusta çöküyordu: "Kâr Payı ile Faiz Arasındaki Farklar" → "Kâr Payı ile Kâr Payı Arasındaki Farklar". Sözlüğün `degildir`/`ayrim_notu` alanları bu kusurun 101 terimlik genel çözümü. Ayrıca sözlüğün tamamı (76.200 karakter) ~25.000'lik bağlama sığmıyor ve Ollama taşan bağlamı **baştan** kırpıp sistem prompt'unu yok ediyor — belgede fiilen geçen terimler seçilir | Yasak/karşılık tablosuyla otomatik değiştirme |
+| 13 | **Klasik banka korpusu ince ayar ve RAG dışı** — *ölçüm dayattı* | Klasik korpusun **%70,2'si "faiz"** içeriyor, fıkhî terim oranı pratikte sıfır (murabaha %0,0 · katılma hesabı %0,0). Bu veriyle eğitmek, modele kullanmasını **yasakladığımız** sözlüğü öğretmek olurdu | 724 belgelik klasik korpusu eğitime/RAG'e katmak |
+| 14 | **Orkestrasyonda ajanlar önerir, hakem yalnız reddeder** — *ölçüm dayattı* | Ablasyon hibrit kolun kural kolundan **daha kötü** olduğunu ölçtü (0,575 < 0,612; halüsinasyon 0,163 vs 0,102). Yetki asimetrisinin sonucu: orkestrasyonun **en kötü hâli kural-only**, yani bugünkü en iyi ölçülmüş kol. `test_EN_KOTU_HAL_kural_only` bunu sabitler | Ajanlara yazma yetkisi vermek |
+| 15 | **"Masrafsızlık çelişkisi" bir KAPSAM testidir** — *ölçüm dayattı* | Naif tasarım ("masrafsız diyor ama tarifede ücret var → çelişki") ölçümde çöktü: korpustaki 33 ilan edilmiş tahsis ücretinin **30'u tam %0,5**, yani BDDK tavanı. Ücretin *varlığı* çelişki değil; çelişki, kampanyanın hangi ücreti kapsadığını söylememesi | Ücret varlığına bakan çelişki kuralı |
+
+**Ortak desen.** 12–15 numaralı kararların dördü de aynı biçimde alındı: makul
+görünen bir tasarım önce **ölçüldü**, ölçüm onu yanlışladı, tasarım terk edildi.
+Ablasyon raporu (`ablasyon.md`) bunun en açık örneğidir — proje kendi iç
+kılavuzunun "hibridin kazandığını kanıtla" talimatını yerine getiremedi ve
+sonucu düzeltmek yerine olduğu gibi bıraktı.
+
+**Kaynak.** Kararların tam metinleri, karşı argümanları ve çapraz bağları
+`decisions/` altındaki 15 atomik sayfada; problem tanımları `sorun/` altındaki
+4 sayfada durur.
 
 ---
 

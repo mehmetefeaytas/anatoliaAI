@@ -157,6 +157,11 @@ ayırt edici, ama 82 kararın yalnız 4'ünü düşürüyor. Modül sıcaklık
 ölçekleme **uygulamaz**, yalnızca ölçer: skoru değiştirmek üretim davranışını
 değiştirir ve ayrı bir karardır.
 
+**Tam teknik rapor:** [`anatolia-ai-teknik-rapor.md`](app/docs/rapor/anatolia-ai-teknik-rapor.md)
+— mimari, veri akışı, 15 mimari kararın **gerekçesi** (§A11), karşılaşılan
+problemler ve on-prem kanıt paketi. Raporun gövdesi 3 Ağustos ölçümüne çapalıdır
+ve hangi sayının ne zaman ölçüldüğü başındaki "Ölçüm künyesi" tablosunda yazılıdır.
+
 Kaynaklar — [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
 [IAA raporu](app/data/gold/iaa_report.md) ·
 [kılavuz revizyonu](app/docs/rapor/kilavuz-revizyonu.md) ·
