@@ -19,8 +19,17 @@ etkiliyordu ve gold'da **sıfır** iz bırakıyordu (bkz.
 1. **Tabakalı**: kampanya türüne göre (8 sınıf), sonra bankaya göre.
    Sınıf başına eşit kota hedeflenir; kotayı dolduramayan sınıf eksik kalır
    ve raporda GÖRÜNÜR (sessizce başka sınıfla doldurulmaz).
-2. **Ayrık**: gold.v1'de bulunan belgeler `content_hash` ile dışlanır.
+2. **Ayrık**: mevcut gold'da bulunan belgeler `content_hash` ile dışlanır.
    Aynı belgeyi iki kez ölçmek n'i şişirir, bilgi eklemez.
+
+   Bu ilke HAVUZUN KENDİ İÇİNDE de geçerlidir — 2026-08-13'e kadar değildi.
+   Korpusta aynı belge birden çok kampanya satırı olarak durabiliyor (1.782
+   satır, 1.677 farklı içerik: 98 tekrar grubu, 105 fazladan satır). Sebepler:
+   URL'nin büyük/küçük harf varyantı (`/Sayfalar/Tasit` vs `/Sayfalar/tasit`),
+   `:443` port ekli varyant, ve JS ile gelen içeriği yakalanamamış "yardım
+   merkezi" sayfalarının hepsinin aynı menü metnini döndürmesi. Tekilleştirme
+   hem `havuz()` hem seçim döngüsünde `content_hash` üzerinden yapılır;
+   regresyon: `tests/test_sample_gold_tekillik.py`.
 3. **PDF yok**: gold.v1'in 20 belgesinin tamamı web sayfası. Sözleşme
    PDF'leri farklı bir tür (kampanya değil, akit) ve alanların çoğu orada
    yapısal olarak yoktur; karıştırmak iki seti kıyaslanamaz kılar.
@@ -97,6 +106,14 @@ def havuz(db: str, gold_yolu: str) -> list[dict]:
     haric = _gold_hashleri(gold_yolu)
     kimlikler = _korpus_kimlikleri()
     out = []
+    # Havuz İÇİ tekilleştirme anahtarı. İlke 2 ("aynı belgeyi iki kez ölçmek n'i
+    # şişirir") daha önce yalnız MEVCUT gold'a karşı uygulanıyordu; havuzun
+    # kendi içinde uygulanmıyordu. Korpusta aynı belge birden çok kampanya
+    # satırı olarak durabiliyor — Türkiye Finans taşıt sayfası iki kez toplanmış
+    # ve URL'ler yalnız BÜYÜK/küçük harfte ayrışıyor (.../Sayfalar/Tasit... vs
+    # .../Sayfalar/tasit...). `orneklendir` içindeki `a in secilen` kontrolü
+    # sözlük eşitliğine bakar; `source_url` farklı olduğu için iki kayıt "farklı"
+    # görünüyor ve AYNI belge örnekleme iki kez giriyordu.
     for c in kampanyalar:
         url = (c.get("source_url") or "")
         if ".pdf" in url.lower() or url.startswith("file://"):
@@ -122,7 +139,15 @@ def havuz(db: str, gold_yolu: str) -> list[dict]:
             "text": metin,
             "campaign_type": c.get("campaign_type"),
         })
-    return out
+    # Tekilleştirme DB sırasına bırakılmaz: aynı hash'ten `source_url`'ü
+    # sözlük sırasında en küçük olan kalır. "İlk geleni tut" DB satır sırası
+    # değişince başka bir kaydı seçerdi ve örnek tekrar üretilemez olurdu.
+    tekil: dict[str, dict] = {}
+    for a in out:
+        onceki = tekil.get(a["content_hash"])
+        if onceki is None or a["source_url"] < onceki["source_url"]:
+            tekil[a["content_hash"]] = a
+    return sorted(tekil.values(), key=lambda a: a["content_hash"])
 
 
 def _korpus_kimlikleri() -> dict[str, str]:
@@ -171,14 +196,22 @@ def orneklendir(adaylar: list[dict], n: int, tohum: int = TOHUM) -> list[dict]:
     secilen: list[dict] = []
     kullanilan_banka: defaultdict[str, int] = defaultdict(int)
 
+    # Seçilen içeriklerin hash'i. `a in secilen` YETMEZ: sözlük eşitliğine
+    # bakar ve aynı belgenin yalnız `source_url` harf durumunda ayrışan iki
+    # kaydını "farklı" sayar (bkz. tests/test_sample_gold_tekillik.py).
+    # Değişmez kural seçim katmanına aittir; havuz nereden gelirse gelsin
+    # aynı belge örneğe iki kez giremez.
+    secilen_hash: set[str] = set()
+
     def _sec(t: str, adet: int) -> None:
         # Banka çeşitliliği: her turda en az temsil edilen bankayı öne al.
         havuz_t = sorted(turlere[t], key=lambda a: kullanilan_banka[a["bank_slug"]])
         for a in havuz_t:
             if adet <= 0:
                 return
-            if a in secilen:
+            if a in secilen or a["content_hash"] in secilen_hash:
                 continue
+            secilen_hash.add(a["content_hash"])
             secilen.append(a)
             kullanilan_banka[a["bank_slug"]] += 1
             adet -= 1
