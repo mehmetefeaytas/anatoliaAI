@@ -25,8 +25,23 @@ Uçlar:
   POST /summaries/build                  (eksik özetleri yerel modelle üret)
   GET  /summaries/status[/{job_id}]
   POST /summaries/cancel/{job_id}
+  GET  /log?yalniz_yazanlar=&metot=&yol=&baslangic=&bitis=&limit=&offset=
+                                         (işlem günlüğü — denetim kaydı)
   GET  /admin/plan                       (gelecek faz: tanımlı ama KAPALI uçlar)
   POST /admin/banks | /admin/banks/{slug}/campaigns | …/products   -> 501
+
+## İşlem günlüğü — HER istek kaydedilir, yazanlar İŞARETLENİR
+
+Bir HTTP ara katmanı her isteği kalıcı, ekleme-only bir JSONL dosyasına yazar
+(zaman, metot, yol, durum, süre, yazan-mı, istemci, iş kimliği). Yazan uçlar
+(`POST`/`DELETE`) ayrıca kendi SONUÇLARINDAN türettikleri bir eylem özeti
+bildirir — hangi banka, hangi iş, kaç alan. İstek gövdeleri ve sorgu dizgeleri
+KAYDEDİLMEZ.
+
+Neden var: bir canlı tazeleme `data/raw/albaraka/live/` altına 40 dosya yazdı
+ve "kim tetikledi" sorusu sistemden cevaplanamadı. Şema, ne kaydedilmediği,
+döndürme politikası ve "günlük yazımı isteği düşürmez" değişmezi
+`src/api/gunluk.py` modül başlığındadır.
 
 ## `/summaries/*` — eksik özetleri üretir, AĞA ÇIKMAZ
 
@@ -160,6 +175,7 @@ from __future__ import annotations
 
 import logging
 import os
+import time
 from typing import Any, Optional
 
 from ..chatbot.bot import Chatbot
@@ -205,7 +221,7 @@ from ..scraping.tazeleme import onizleme as tazeleme_onizleme
 from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import LlmKapali, OzetMesgul, OzetYoneticisi
 from ..tazeleme_sonrasi import alt_akis_kur
-from . import gelecek, zor_vaka
+from . import gelecek, gunluk, zor_vaka
 
 logger = logging.getLogger(__name__)
 
@@ -452,14 +468,17 @@ try:  # pragma: no cover - pydantic yokluğu build_app()'te raporlanır
 except ModuleNotFoundError:  # pragma: no cover
     BaseModel = None  # type: ignore[assignment]
 
-# `Response` de AYNI SEBEPLE modül seviyesinde: `GET /campaigns` yanıt
-# başlığına (`X-Toplam-Kayit`) yazabilmek için imzasında `response: Response`
-# taşır. `build_app()` içinde import edilseydi ad modül global'lerinde
-# bulunmaz, FastAPI onu çözemediği için bir QUERY parametresi sanardı ve uç
-# her istekte 422 verirdi — yukarıdaki `ChatReq` hatasının birebir aynısı.
+# `Request`/`Response` de AYNI SEBEPLE modül seviyesinde: `GET /campaigns`
+# yanıt başlığına (`X-Toplam-Kayit`) yazabilmek için imzasında
+# `response: Response`, yazan uçlar da işlem günlüğüne eylem özeti bildirmek
+# için `request: Request` taşır. `build_app()` içinde import edilselerdi adlar
+# modül global'lerinde bulunmaz, FastAPI onları çözemediği için birer QUERY
+# parametresi sanardı ve uçlar her istekte 422 verirdi — yukarıdaki `ChatReq`
+# hatasının birebir aynısı.
 try:  # pragma: no cover - fastapi yokluğu build_app()'te raporlanır
-    from fastapi import Response
+    from fastapi import Request, Response
 except ModuleNotFoundError:  # pragma: no cover
+    Request = None  # type: ignore[assignment]
     Response = None  # type: ignore[assignment]
 
 # `rank()` girdiye eklenen ek alanları (extractor, confidence, campaign_id...)
@@ -572,6 +591,81 @@ def build_app():
     app = FastAPI(title="Anatolia AI — Katılım Bankacılığı Kampanya API")
     app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"],
                        allow_headers=["*"])
+
+    # ----------------------------------------------------------------- #
+    # İşlem günlüğü (audit log) — sistemde ne olduysa kaydedilir
+    # ----------------------------------------------------------------- #
+    # Neden ara katman, neden uç uç değil: 2026-08-13'te bir canlı tazeleme
+    # `data/raw/albaraka/live/` altına 40 dosya yazdı ve "bunu kim tetikledi"
+    # sorusu sistemden CEVAPLANAMADI. Uç uç eklenen bir kayıt satırı, tam da
+    # unutulduğu uçta o boşluğu geri açardı; ara katman ise yeni bir uç
+    # eklendiğinde de kaydı kendiliğinden alır.
+    #
+    # Kaydın ŞEMASI, neyin kaydedilmediği (gövde, sorgu dizgesi, başlıklar) ve
+    # döndürme politikası `src/api/gunluk.py` modül başlığındadır; burada
+    # yalnız HTTP bağlaması var.
+    gunluk_yazici = gunluk.GunlukYazici.ortamdan()
+    # Uygulama durumuna asılır: testler geçici bir dosyaya yönlendirebilsin
+    # diye — `app.state.tazeleme` / `app.state.ozet_isi` ile aynı gerekçe.
+    app.state.gunluk = gunluk_yazici
+
+    def _gunluge_dus(request, durum: int, gecen_sn: float) -> None:
+        """Tek isteği günlüğe düşürür. HİÇBİR koşulda istisna sızdırmaz.
+
+        İkinci bir `try` katmanı (yazıcının kendisi zaten yutuyor) savunma
+        değil, sözleşme: bu fonksiyon isteğin yanıt yolunda çağrılıyor ve
+        buradan çıkan bir istisna, kullanıcıya çalışan bir cevabı 500 olarak
+        gösterirdi. Değişmez şu: günlük yazımı isteği DÜŞÜRMEZ.
+        """
+        try:
+            eylem = getattr(request.state, gunluk.DURUM_ANAHTARI, None)
+            is_id = None
+            if isinstance(eylem, dict):
+                # `is_id` üst düzey bir alandır (süzülebilir olmalı); eylem
+                # özetinde ikinci bir kopyası tutulmaz.
+                eylem = dict(eylem)
+                is_id = eylem.pop("is_id", None)
+            if is_id is None:
+                # Yol parametresi olan iptal/durum uçları kimliği ZATEN yolda
+                # taşıyor; uçtan ayrıca bildirilmesini beklemek gereksiz.
+                is_id = (request.scope.get("path_params") or {}).get("job_id")
+            app.state.gunluk.istek_kaydet(
+                metot=request.method,
+                # SADECE yol: sorgu dizgesi (`?q=`) serbest kullanıcı metni
+                # taşır ve kalıcı bir denetim kaydına girmemeli (gerekçe:
+                # gunluk.py "NE KAYDEDİLMEZ").
+                yol=request.url.path,
+                durum=durum,
+                sure_ms=gecen_sn * 1000.0,
+                istemci=request.client.host if request.client else None,
+                is_id=is_id,
+                eylem=eylem,
+            )
+        except Exception:  # pragma: no cover - son savunma hattı
+            logger.warning("İşlem günlüğü ara katmanı düştü", exc_info=True)
+
+    @app.middleware("http")
+    async def islem_gunlugu_ara_katmani(request, call_next):
+        """Her isteği süresiyle birlikte işlem günlüğüne yazar.
+
+        Yazma, isteğin CEVAP YOLUNDA ve senkron yapılır (tek `open`+`write`,
+        birkaç yüz mikrosaniye). Threadpool'a atmak, yazmanın kendisinden
+        pahalı bir iş parçacığı sıçraması eklerdi.
+
+        Handler istisna atarsa kayıt `durum=500` ile YİNE düşer ve istisna
+        olduğu gibi yükselmeye devam eder: çöken bir isteğin günlükte hiç
+        görünmemesi, denetim kaydının en çok işe yarayacağı anda susması
+        demek olurdu.
+        """
+        baslangic = time.perf_counter()
+        try:
+            yanit = await call_next(request)
+        except Exception:
+            _gunluge_dus(request, 500, time.perf_counter() - baslangic)
+            raise
+        _gunluge_dus(request, yanit.status_code,
+                     time.perf_counter() - baslangic)
+        return yanit
 
     # Depo seçimi TEK YERDE: DATABASE_URL varsa Postgres, yoksa SQLite.
     # `thread_safe=True` iki backend için de zorunlu — FastAPI `def` uçlarını
@@ -1741,6 +1835,15 @@ def build_app():
         olmayan belgede sahte bir özet uydurulmaz, ham metnin kırpıldığı
         kullanıcıya söylenir.
 
+        ## İşlem günlüğüne eylem özeti BİLEREK bildirilmez
+
+        Bu uç `POST` olduğu için günlükte "yazan" olarak görünür (metot ölçütü
+        — `src/api/gunluk.py`), ama `gunluk.eylem_bildir()` ÇAĞRILMAZ. Sebep
+        tek: buradaki tek anlamlı özet kullanıcının SORUSU olurdu ve o soru
+        kişisel veri taşıyabilir ("50 bin TL kredim var…"). Kalıcı ve
+        ekleme-only bir denetim kaydına kişisel veri yazmak, günlüğün
+        çözdüğünden büyük bir sorun açar (CLAUDE.md §19).
+
         ## Sohbet hafızası (durumsuz)
 
         `req.context` istemcinin taşıdığı son turların durumudur; sunucu
@@ -1799,16 +1902,26 @@ def build_app():
         return zor_vaka.liste(FIELD_LABELS, _banka_adi_haritasi())
 
     @app.post("/extract")
-    def extract(req: ExtractReq):
+    def extract(request: Request, req: ExtractReq):
         """Canlı çıkarım (CLAUDE.md §11 "canlı çıkarım butonu").
 
         Offset'ler burada GERÇEK `ExtractedField` nesnesinden gelir ve
         `verify_span()` ile doğrulanır — DB yolundaki geri kazanıma gerek yok.
+
+        İşlem günlüğüne yalnız çıkarımın SONUCUNUN özeti düşer (banka slug'ı,
+        bulunan/eksik alan sayısı). Gövdedeki `text` KAYDEDİLMEZ: kullanıcı
+        oraya kendi sözleşmesini yapıştırabilir ve kalıcı bir denetim kaydı
+        kişisel veri deposuna dönüşemez (`src/api/gunluk.py`).
         """
         text = normalize_text(req.text)
         ctype, ctype_conf = clf.classify(text)
         c = build_campaign(text, bank_slug=req.bank, llm=llm, campaign_type=ctype)
         by_name = {f.field_name: f for f in c.fields}
+        gunluk.eylem_bildir(
+            request, banka=c.bank_slug, kampanya_turu=c.campaign_type,
+            bulunan_alan=len(c.fields),
+            eksik_alan=len([a for a in EXTRACTION_FIELDS if a not in by_name]),
+            metin_uzunlugu=len(text))
         # Altın karşılaştırma İSTEĞE BAĞLI: `gold_id` yoksa yanıt eskisiyle
         # birebir aynıdır (serbest metin yolu bozulmaz). Bilinmeyen bir kimlik
         # 404 DEĞİL `null` döner — çıkarım gerçekleşti, yalnız referans
@@ -1923,7 +2036,7 @@ def build_app():
                                  gecikme_sn=tazeleme.gecikme_sn)
 
     @app.post("/refresh", status_code=202)
-    def refresh_start(req: RefreshReq):
+    def refresh_start(request: Request, req: RefreshReq):
         """Tazelemeyi arka planda başlatır ve iş kaydını döndürür.
 
         SENKRON DEĞİL, bilerek: alan başına 2–5 saniye gecikmeyle 35 belge
@@ -1937,13 +2050,22 @@ def build_app():
         """
         bank = _banka_bul(req.bank)
         try:
-            return tazeleme.baslat(bank)
+            kayit = tazeleme.baslat(bank)
         except TazelemeMesgul as exc:
             raise HTTPException(
                 status_code=409,
                 detail=f"Şu anda {exc.calisan_banka} tazeleniyor. "
                        "Aynı anda tek tazeleme çalışır; bitmesini bekleyin "
                        "ya da durdurun.") from exc
+        # İşlem günlüğüne DÜŞEN şey burada belirlenir: hangi banka, hangi iş,
+        # nereye yazılacak. "Kaç dosya" bu anda HENÜZ BİLİNMEZ (iş arka planda
+        # yeni başladı) ve uydurulmaz; sayaçlar `is_id` ile
+        # `GET /refresh/status/{is_id}` üzerinden bağlanır. Günlüğün cevapladığı
+        # soru zaten "kim, ne zaman, neyi tetikledi"ydi.
+        gunluk.eylem_bildir(request, is_id=kayit.get("is_id"),
+                            banka=bank.slug, banka_adi=bank.name,
+                            hedef_dizin=kayit.get("hedef_dizin"))
+        return kayit
 
     @app.get("/refresh/status")
     def refresh_last_status():
@@ -1960,7 +2082,7 @@ def build_app():
         return kayit
 
     @app.post("/refresh/cancel/{job_id}")
-    def refresh_cancel(job_id: str):
+    def refresh_cancel(request: Request, job_id: str):
         """Durdurma ister. İş sıradaki belge sınırında durur.
 
         Çekim evresi diske hiçbir şey yazmadığı için durdurulan bir iş ham
@@ -1970,6 +2092,11 @@ def build_app():
         if kayit is None:
             raise HTTPException(status_code=404,
                                 detail="Böyle bir tazeleme işi yok.")
+        # `is_id` ara katman tarafından yol parametresinden ZATEN okunuyor;
+        # burada eklenen şey iptalin neye dokunduğu (banka + o anki sayaç).
+        gunluk.eylem_bildir(request, banka=kayit.get("bank"),
+                            yazilan_dosya=kayit.get("yazilan_dosya"),
+                            durum_adi=kayit.get("durum"))
         return kayit
 
     # ----------------------------------------------------------------- #
@@ -1995,7 +2122,7 @@ def build_app():
         return app.state.ozet_isi.sayim()
 
     @app.post("/summaries/build", status_code=202)
-    def summaries_build():
+    def summaries_build(request: Request):
         """Eksik özetleri arka planda üretir ve iş kaydını döndürür.
 
         SENKRON DEĞİL: belge başına ~6 saniye. Koşan bir iş varken ikinci
@@ -2003,7 +2130,7 @@ def build_app():
         "başladı" izlenimi verirdi.
         """
         try:
-            return app.state.ozet_isi.baslat()
+            kayit = app.state.ozet_isi.baslat()
         except LlmKapali as exc:
             # 503: sunucunun geçici bir yeteneği kapalı. 400 olsaydı istemcinin
             # gönderdiği bir şeyin hatalı olduğunu söylerdi — değil.
@@ -2013,6 +2140,14 @@ def build_app():
                 status_code=409,
                 detail="Şu anda bir özet üretimi çalışıyor. Aynı anda tek iş "
                        "koşar; bitmesini bekleyin ya da durdurun.") from exc
+        # Bu uç veri tabanına YAZAR (`campaigns.ozet`), yani günlükteki en ağır
+        # izlerden biri. Yine de bir SAYAÇ kaydedilmez: `hedef`/`yazilan` iş
+        # başlarken 0'dır ve gerçek değerlerini arka plan iş parçacığında
+        # alır. 0 yazmak, hiçbir şey yapılmadığını söyleyen uydurma bir değer
+        # olurdu (CLAUDE.md §21). Sayaçlar `is_id` ile
+        # `GET /summaries/status/{is_id}` üzerinden bağlanır.
+        gunluk.eylem_bildir(request, is_id=kayit.get("is_id"))
+        return kayit
 
     @app.get("/summaries/status")
     def summaries_last_status():
@@ -2029,13 +2164,78 @@ def build_app():
         return kayit
 
     @app.post("/summaries/cancel/{job_id}")
-    def summaries_cancel(job_id: str):
+    def summaries_cancel(request: Request, job_id: str):
         """Durdurma ister. O ana kadar yazılmış özetler KORUNUR."""
         kayit = app.state.ozet_isi.iptal_et(job_id)
         if kayit is None:
             raise HTTPException(status_code=404,
                                 detail="Böyle bir özet işi yok.")
+        # `is_id` yol parametresinden ara katmana zaten düşüyor; buradaki katkı
+        # iptal anına kadar veri tabanına kaç özetin YAZILMIŞ olduğudur — o
+        # sayı, iptalin neyi geri almadığını anlatan tek bilgi.
+        gunluk.eylem_bildir(request, yazilan_ozet=kayit.get("yazilan"),
+                            durum_adi=kayit.get("durum"))
         return kayit
+
+    # ----------------------------------------------------------------- #
+    # İşlem günlüğü — okuma yüzeyi
+    # ----------------------------------------------------------------- #
+    @app.get("/log")
+    def islem_gunlugu(response: Response,
+                      yalniz_yazanlar: bool = True,
+                      metot: Optional[str] = None,
+                      yol: Optional[str] = None,
+                      baslangic: Optional[str] = None,
+                      bitis: Optional[str] = None,
+                      limit: int = gunluk.VARSAYILAN_LIMIT,
+                      offset: int = 0):
+        """Denetim kaydı — süzülmüş, sayfalanmış, yeniden eskiye.
+
+        ## Ham dosya DÖKÜLMEZ
+
+        `data/gunluk/*.jsonl` olduğu gibi gönderilmez: dosya megabaytlarca
+        olabilir ve içindeki asıl bilgi (kim ne yaptı) okuma trafiğinin
+        içinde kaybolur. Bu uç süzer, sayfalar ve sıralar.
+
+        ## `yalniz_yazanlar` VARSAYILAN OLARAK AÇIK
+
+        Panel her sekmede `/compare`, `/stats`, `/advantageous` çağırıyor ve
+        iş koşarken `/refresh/status` saniyede bir yoklanıyor. Varsayılan
+        "hepsi" olsaydı, uğruna bu günlüğün yazıldığı tek satır (`POST
+        /refresh`) yüzlerce okuma satırının arasında kalırdı. Tam akış tek
+        parametre uzakta: `?yalniz_yazanlar=false`.
+
+        Günlük DÖNDÜRME kayıtları bu süzgeçte de görünür — "kayıt kayboldu mu"
+        sorusu tam olarak bu görünümde soruluyor (`src/api/gunluk.py`).
+
+        ## Yanıt ÇIPLAK LİSTEDİR
+
+        Toplam `X-Toplam-Kayit` başlığına yazılır — `GET /campaigns` ile aynı
+        sözleşme; arayüz iki uçta iki farklı biçim öğrenmek zorunda kalmasın.
+
+        `baslangic` / `bitis` ISO-8601 alır (`2026-08-13` ya da
+        `2026-08-13T09:00:00Z`). Yalnız tarih verildiğinde `bitis` o günün
+        SONUNU kapsar; aksi hâlde "13 Ağustos'a kadar" süzgeci 13 Ağustos'u
+        tümüyle dışarıda bırakır ve kullanıcı kaydın silindiğini sanırdı.
+        """
+        if limit < 1 or limit > gunluk.AZAMI_LIMIT:
+            raise HTTPException(
+                status_code=400,
+                detail=f"limit 1 ile {gunluk.AZAMI_LIMIT} arasında olmalı "
+                       f"(gelen: {limit}).")
+        if offset < 0:
+            raise HTTPException(status_code=400,
+                                detail=f"offset negatif olamaz (gelen: {offset}).")
+        try:
+            kayitlar, toplam = app.state.gunluk.oku(
+                yalniz_yazanlar=yalniz_yazanlar, metot=metot, yol=yol,
+                baslangic=baslangic, bitis=bitis, limit=limit, offset=offset)
+        except ValueError as exc:
+            # Bozuk zaman süzgeci İSTEMCİNİN hatasıdır; 400 ile ve okunur bir
+            # örnekle geri döner (`gunluk._zaman_coz`).
+            raise HTTPException(status_code=400, detail=str(exc)) from exc
+        response.headers["X-Toplam-Kayit"] = str(toplam)
+        return kayitlar
 
     # ----------------------------------------------------------------- #
     # Gelecek faz — tanımlı ama KAPALI uçlar

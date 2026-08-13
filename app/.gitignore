@@ -77,6 +77,17 @@ data/silver/trainable.jsonl
 data/silver/batch.jsonl
 data/silver/excluded.jsonl
 
+# İşlem günlüğü (audit log) — ÇALIŞMA ARTEFAKTI, depoya konmaz.
+#
+# Çalışan API her isteği buraya yazıyor (`src/api/gunluk.py`), yani dosya
+# geliştirme sırasında sürekli değişiyor ve makineye özgü: istemci adresleri,
+# yerel iş kimlikleri, o makinede tetiklenmiş operatör eylemleri. Depoya
+# girseydi her `git status` kirli olurdu ve denetim kaydı bir başkasının
+# makinesinden gelen satırlarla karışırdı.
+#
+# Döndürülmüş kuşaklar (`*.jsonl.1`, `.2`, …) de aynı dizinde.
+data/gunluk/
+
 # modeller (offline; repo'ya konmaz)
 models/
 

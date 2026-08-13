@@ -59,6 +59,44 @@ Next `/api/*` yolunu FastAPI'ye proxy'ler (`next.config.js`).
 | `POST /extract` | gövde `{text: str, bank: str = "bilinmeyen"}` | Canlı çıkarım: tür + tür güveni + 12 alan (gerçek `ExtractedField` offset'leriyle) + `missing_fields` + `contradictions` | `api.extract(text, bank)` → `ExtractLive` |
 | `GET /contradictions` | — | Tüm korpustaki çelişkiler, banka/kampanya bilgisiyle düzleştirilmiş | `api.contradictions()` → `ContradictionAlert` |
 | `GET /contradictions/summary` | — | `{scanned_campaigns, scanned_banks, contradiction_count, affected_campaigns, by_kind}` | `api.contradictionSummary()` → `ContradictionAlert` |
+| `GET /log` | `yalniz_yazanlar: bool = True`, `metot`, `yol`, `baslangic`, `bitis`, `limit = 100 (≤500)`, `offset = 0` | İşlem günlüğü kayıtları, **yeniden eskiye**; toplam `X-Toplam-Kayit` başlığında (çıplak liste, `GET /campaigns` ile aynı sözleşme). Bozuk zaman süzgeci / sınır dışı `limit` → **400** | `api.gunlukSayfa(...)` → `GunlukPanel` |
+
+### 2.1 İşlem günlüğü (audit log) — bir HTTP ara katmanı
+
+`build_app()` CORS'tan sonra bir `@app.middleware("http")` kuruyor: **her**
+istek kalıcı, ekleme-only bir JSONL dosyasına düşüyor
+(`AUDIT_LOG_PATH`, öntanım `data/gunluk/islem-gunlugu.jsonl`, `.gitignore`'da).
+Kayıt: `zaman` (UTC ISO-8601) · `olay` · `metot` · `yol` · `durum` · `sure_ms` ·
+`yazan` · `istemci` · `is_id` · `eylem`.
+
+Neden var: bir canlı tazeleme `data/raw/albaraka/live/` altına 40 dosya yazdı ve
+"kim tetikledi" sorusu sistemden **cevaplanamadı** — iş yöneticilerinin durumu
+bellekte ve yalnız son işe ait.
+
+Üç kural, üçü de `src/api/gunluk.py` modül başlığında gerekçeli:
+
+- **Günlük yazımı isteği DÜŞÜRMEZ.** Disk dolu / izin yok → uç yine cevap verir,
+  hata `logger.warning` ile ayrı kanaldan bildirilir
+  (`tests/test_api_gunluk.py::TestGunlukIstegiDusurmez`).
+- **Gövde ve sorgu dizgesi KAYDEDİLMEZ.** `POST /chat` gövdesi ve `?q=` arama
+  terimi kişisel veri taşıyabilir; kalıcı bir kayda yazılan şey geri alınamaz.
+  Yazan uçların özeti, ucun KENDİ sonucundan `gunluk.eylem_bildir(request, …)`
+  ile bildirilir (`/refresh`, `/refresh/cancel`, `/summaries/build`,
+  `/summaries/cancel`, `/extract`). `/chat` bilerek hiçbir özet bildirmez.
+- **Döndürme sessiz değil.** Dosya `AUDIT_LOG_MAX_BYTES`'ı aşınca `.1`…`.N`
+  kaydırılır (`AUDIT_LOG_KEEP`, tavan `(N+1)×azami`), ve döndürmenin kendisi
+  yeni dosyanın ilk satırına `olay: "gunluk_dondu"` olarak yazılır — kısalmış
+  bir günlüğe bakan kişi "kayıt kayboldu mu" sorusunu cevaplayabilsin diye.
+  O kayıt `yalniz_yazanlar` süzgecinde de görünür.
+
+`yazan` ölçütü **yalnız metottur** (`POST`/`PUT`/`PATCH`/`DELETE`); ikinci bir
+yol listesi tutulmaz çünkü iki doğruluk kaynağı ayrışır. `test_api_gunluk.py::
+TestYazanUclarIsaretlenir` bugünkü eylem uçlarının hepsinin yazan bir metotta
+olduğunu kilitler.
+
+Testler gerçek günlüğe yazmaz: `tests/conftest.py` oturum başında
+`AUDIT_LOG_PATH`'i geçici bir dizine çeviriyor (koruma eklenmeden önceki tek tam
+koşum gerçek dosyaya 397 kayıt yazmıştı, hepsi `istemci: "testclient"`).
 
 **İstek gövdesi şemaları modül seviyesindedir** (`ChatReq`, `ExtractReq`), yerel
 kapsamda değil. Gerekçe docstring'de yazılı: `from __future__ import annotations`
@@ -489,6 +527,7 @@ layout.tsx (RootLayout)
                            │                    └─ SourceText (alan seçili değilken)
                            ├─ contradictions→ ContradictionAlert
                            ├─ extract       → ExtractLive → SourceSpanView
+                           ├─ gunluk        → GunlukPanel (lib/gunluk.ts; jüri modu)
                            └─ chat          → ChatPanel → ui/Markdown (lib/markdown.ts)
 ```
 

@@ -893,6 +893,60 @@ export type Health = {
   backend: string;
 };
 
+/**
+ * İşlem günlüğü (audit log) kaydı — `GET /log` bir satırı.
+ *
+ * Şema `src/api/gunluk.py` modül başlığında tanımlı; burada yalnız istemci
+ * görüntüsü var. İki KAYIT TÜRÜ tek listede geliyor ve tipin bunu yansıtması
+ * şart:
+ *
+ *  - `olay: "istek"` — metot/yol/durum/süre dolu.
+ *  - `olay: "gunluk_dondu"` — dosya döndürüldü; metot, yol ve durum YOKTUR,
+ *    yerine hangi dosyaya taşındığı gelir. Bu kayıt `yalniz_yazanlar`
+ *    süzgecinde de görünür: kısalmış bir günlüğe bakan kişinin "kayıt
+ *    kayboldu mu" sorusunu cevaplayan tek satır odur.
+ *
+ * Bu yüzden istek alanları OPSİYONEL. Zorunlu yapıp döndürme kaydında sahte
+ * bir `"GET"` uydurmak, denetim kaydına yalan yazmak olurdu.
+ */
+export type GunlukKaydi = {
+  /** UTC ISO-8601. Panel de UTC gösterir (gerekçe: lib/gunluk.ts). */
+  zaman: string;
+  olay: "istek" | "gunluk_dondu" | string;
+  metot?: string;
+  yol?: string;
+  durum?: number;
+  sure_ms?: number;
+  /** `POST`/`PUT`/`PATCH`/`DELETE` — panel varsayılanı bu bayrağa dayanır. */
+  yazan?: boolean;
+  /** İsteği atan adres. Bilinmiyorsa `null` — uydurulmaz. */
+  istemci?: string | null;
+  /** Tazeleme / özet işinin kimliği; ilgili değilse `null`. */
+  is_id?: string | null;
+  /**
+   * Yazan ucun KENDİ SONUCUNDAN bildirdiği dar özet (hangi banka, kaç alan).
+   * İstek gövdesinin kopyası DEĞİLDİR ve okuma uçlarında hiç bulunmaz.
+   */
+  eylem?: Record<string, unknown> | null;
+  /** Döndürme kaydına özgü alanlar. */
+  bayt?: number;
+  azami_bayt?: number;
+  tasinan_dosya?: string | null;
+  silinen_dosya?: string | null;
+};
+
+/** `GET /log` sorgu parametreleri. Boş alanlar gönderilmez. */
+export type GunlukParams = {
+  yalniz_yazanlar?: boolean;
+  metot?: string;
+  yol?: string;
+  /** ISO-8601 (`2026-08-13` ya da `2026-08-13T09:00:00Z`). */
+  baslangic?: string;
+  bitis?: string;
+  limit?: number;
+  offset?: number;
+};
+
 export const api = {
   /**
    * Sağlık yoklaması.
@@ -1086,6 +1140,28 @@ export const api = {
 
   /** Gelecek faz uçlarının sözleşmesi — Ayarlar ekranı bunu çizer. */
   adminPlan: () => request<AdminPlan>("/api/admin/plan"),
+
+  /**
+   * İşlem günlüğü — süzülmüş, sayfalanmış denetim kaydı.
+   *
+   * `campaignsSayfa()` ile aynı gerekçeyle `istek()` kullanır: toplam kayıt
+   * sayısı gövdede değil `X-Toplam-Kayit` başlığındadır ve panel "480
+   * kayıttan 50'si" cümlesini kurabilmek için ona muhtaç. Toplamı bilmeyen
+   * bir liste, kullanıcının günlüğü tam sandığı tek yerdir.
+   *
+   * Varsayılan süzgeç sunucudadır (`yalniz_yazanlar=true`) ve buradan da
+   * tekrarlanmaz: iki yerde yaşayan bir varsayılan, bir gün ayrışır.
+   */
+  gunlukSayfa: (params: GunlukParams = {}) => {
+    const p = new URLSearchParams();
+    for (const [ad, deger] of Object.entries(params)) {
+      if (deger !== undefined && deger !== null && deger !== "") {
+        p.set(ad, String(deger));
+      }
+    }
+    const q = p.toString();
+    return istek<GunlukKaydi[]>(`/api/log${q ? `?${q}` : ""}`);
+  },
 
   /**
    * Altın kümedeki ZOR belgeler. Metin listeyle birlikte gelir: seçilen

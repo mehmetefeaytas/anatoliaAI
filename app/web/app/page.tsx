@@ -39,6 +39,7 @@ import ComparePanel from "./components/ComparePanel";
 import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
+import GunlukPanel from "./components/GunlukPanel";
 import IsiPanel from "./components/IsiPanel";
 import DurumSeridi, { ApiKapaliUyarisi } from "./components/DurumSeridi";
 import JuryModeToggle from "./components/JuryModeToggle";
@@ -70,6 +71,7 @@ type TabKey =
   | "extract"
   | "chat"
   | "tazele"
+  | "gunluk"
   | "ayarlar";
 
 /**
@@ -125,6 +127,7 @@ const TABS_JURI: readonly SekmeTanimi<TabKey>[] = [
   { key: "extract", label: "Canlı Çıkarım" },
   { key: "chat", label: "Chatbot" },
   { key: "tazele", label: "Veri Tazeleme" },
+  { key: "gunluk", label: "İşlem Günlüğü" },
   { key: "ayarlar", label: "Ayarlar" },
 ] as const;
 
@@ -388,6 +391,12 @@ function Dashboard() {
 
         {/* Ağa çıkan tek yüzey — yalnız jüri modunda erişilebilir. */}
         {sekme === "tazele" && jury && <TazelemePanel />}
+
+        {/* İşlem günlüğü — «ne oldu, ne zaman oldu, kim tetikledi».
+            Tazelemenin HEMEN ARDINDA: bu sekmenin var olma sebebi, bir
+            tazelemenin 40 dosya yazması ve kimin tetiklediğinin saatlerce
+            bulunamamasıydı. Sorunun sorulduğu ekranın yanında duruyor. */}
+        {sekme === "gunluk" && jury && <GunlukPanel />}
 
         {/* Gelecek faz uçlarının sözleşmesi. Operatör yüzeyi olduğu için
             tazeleme ile aynı yerde: jüri modunda. */}
