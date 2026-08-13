@@ -269,6 +269,25 @@ Ayrıntılı komut listesi: [`app/README.md`](app/README.md).
 
 **Herkese açık indirme bağlantısı:** _(yükleme tamamlandığında buraya eklenecektir)_
 
+Paket **tek komutla** üretilir ve her üretimde provenance kapısından geçer:
+
+```bash
+python -m scripts.veri_seti_paketi --gold data/gold/gold.v2.json \
+    --out dist/anatolia-ai-veri-seti
+```
+
+Paket içeriği: `gold.json` + `gold.csv` (alan başına satır, kanıt alıntısıyla) ·
+belge metinleri · belge başına provenance (`source_url` · `scraped_at` ·
+`http_status`) · anotasyon kılavuzu · kanıt zinciri raporu · LICENSE.
+
+Kaynağı doğrulanamayan **tek** kayıt varsa komut çıkış kodu 1 verir ve paket
+"yayımlanabilir" sayılmaz — kaynağı gösterilemeyen bir gold, veri setinin
+bütün iddiasını çürütür.
+
+**Yükleme neden bekliyor:** gold seti şu an genişletiliyor (48 → 74; anotasyon
+turu dağıtıldı). Tur bitmeden yüklenen paket, birkaç gün içinde farklı bir gold
+ile çelişir ve indirilmiş kopya yanlış kalır.
+
 > ⚠️ **NOT:** Veri seti kamuya açık bir bağlantıya (ör. Hugging Face Datasets /
 > Kaggle / Zenodo) yüklenecek ve bağlantı buraya eklenecektir. 
 
