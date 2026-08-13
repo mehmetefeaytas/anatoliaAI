@@ -108,6 +108,17 @@ jobs:
           python -m eval.run_eval --gold data/gold/gold.v2.json \
             --matcher strict --no-bootstrap --esikler eval/esikler.json
 
+      # Gold kaydinin kaynagi ham arsive kadar izlenebilmeli: cikarilmis metin
+      # -> ham HTML -> source_url + scraped_at. "Provenance var" demek yetmez,
+      # KOSULABILIR olmali; iddia ile kanit arasindaki fark budur.
+      #
+      # Kapi icerik KAYMASINDA kapanmaz (sayfa anotasyondan sonra tazelenmis
+      # olabilir; anote edilen metin gold kaydinin icinde durur). Yalnizca
+      # kaynagi hic bulunamayan ya da scraped_at/source_url'u eksik-celiskili
+      # kayit kirmizi yapar.
+      - name: Gold kanit zinciri
+        run: python -m scripts.kanit_zinciri --gold data/gold/gold.v2.json
+
       # Demo DB korpusla ayrisirsa chatbot/dashboard/RAG korpusun bir kismini
       # SESSIZCE gormez. Bir kez yasandi: DB 31 Temmuz'da 849 belgeyle
       # kuruldu, korpus 3 Agustos'ta 1761'e cikti, bir hafta boyunca hicbir
