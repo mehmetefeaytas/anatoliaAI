@@ -97,20 +97,41 @@ def icerik_bayatligi(db: str, raw_dir: str) -> tuple[int, int, int]:
     from collections import defaultdict
 
     def _sadelestir(s: str) -> str:
-        """Boşluk düzenini eşitler — ölçülmüş YANLIŞ POZİTİF kaynağı.
+        """Boşluk ve TİPOGRAFİK TIRNAK düzenini eşitler — YANLIŞ POZİTİF kaynağı.
 
         `build_demo_db` metni DB'ye yazarken satır sonlarını boşluğa
         çeviriyor ("...\\nMobil Bankacılık\\nAç\\n" -> "... Mobil Bankacılık
         Aç "). Ham karşılaştırma bunu "içerik değişti" sanıyordu ve kapı
         tazelenmiş bir DB'de bile bayat raporluyordu.
 
-        Sadeleştirme burada ELLE yapılır; `preprocessing.clean` import
-        edilmez. Gerekçe modül başlığında: denetleyeni denetlenenin
-        koduna bağlamak, ikisi birlikte bozulduğunda kapıyı kör eder.
-        Boşluk düzeni anlam taşımaz, bu yüzden eşitlemek gerçek bir
-        içerik değişikliğini gizlemez.
+        ## Tipografik tırnak — ikinci ölçülmüş yanlış pozitif (2026-08-12)
+
+        Kapı, TAM `--force` yeniden inşadan SONRA bile 1 belgeyi bayat
+        gösteriyordu ve hiçbir yeniden inşa bunu düzeltemiyordu. Fark tek
+        karakterdi:
+
+            DB   : ... "Sağlık Kampanyası" kampanyası için ...
+            disk : ... "Sağlık Kampanyası” kampanyası için ...   (U+201D)
+
+        Sebep: yazma yolu `preprocessing.clean` üzerinden geçiyor ve o modül
+        kıvrık tırnakları düzleştiriyor (`clean.py:127`:
+        `.replace("’","'").replace("“",'"').replace("”",'"')`). Denetçi ise
+        yalnız boşluğu eşitliyordu, dolayısıyla kalıcı bir yalancı bayatlık
+        raporluyordu — yani kapı, kapatılamayan bir alarm çalıyordu.
+
+        Kapatılamayan alarm, kapalı alarmla aynı sonucu verir: kimse bakmaz.
+
+        Dönüşüm burada da ELLE yazılır; `preprocessing.clean` import
+        EDİLMEZ. Gerekçe modül başlığında: denetleyeni denetlenenin koduna
+        bağlamak, ikisi birlikte bozulduğunda kapıyı kör eder. Boşluk düzeni
+        ve tırnak BİÇİMİ anlam taşımaz, bu yüzden eşitlemek gerçek bir
+        içerik değişikliğini gizlemez — oranın, tutarın, tarihin değişmesi
+        hâlâ yakalanır.
         """
-        return " ".join((s or "").split())
+        s = (s or "")
+        for kivrik, duz in (("’", "'"), ("‘", "'"), ("“", '"'), ("”", '"')):
+            s = s.replace(kivrik, duz)
+        return " ".join(s.split())
 
     db_metin: dict[str, set[str]] = defaultdict(set)
     ozetli: dict[str, bool] = {}

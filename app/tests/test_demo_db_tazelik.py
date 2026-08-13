@@ -97,3 +97,84 @@ class TestTazelikKapisi(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestIcerikBayatligi(unittest.TestCase):
+    """İçerik kapısı: BİÇİM farkı bayatlık değil, DEĞER farkı bayatlıktır.
+
+    ## Bu sınıfın varlık sebebi — ÖLÇÜLDÜ (2026-08-12)
+
+    `icerik_bayatligi` hiç test edilmemişti ve kapı, TAM `--force` yeniden
+    inşadan SONRA bile 1 belgeyi bayat gösteriyordu. Hiçbir yeniden inşa
+    bunu düzeltemiyordu çünkü fark veride değildi; tek bir karakterdeydi:
+
+        DB   : ... "Sağlık Kampanyası" kampanyası ...
+        disk : ... "Sağlık Kampanyası” kampanyası ...   (U+201D)
+
+    Yazma yolu `preprocessing.clean` üzerinden geçiyor ve o modül kıvrık
+    tırnakları düzleştiriyor (`clean.py:127`); denetçi ise yalnız boşluğu
+    eşitliyordu. Sonuç: KAPATILAMAYAN bir alarm — ve kapatılamayan alarm,
+    kapalı alarmla aynı sonucu verir, kimse bakmaz.
+    """
+
+    def _fikstur(self, db_metin: str, disk_metin: str, *, ozet: str = "özet"):
+        """Tek belgelik DB + korpus fikstürü kurar, sayıları döndürür."""
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        kok = Path(tmp.name)
+        db = kok / "demo.db"
+        conn = sqlite3.connect(db)
+        conn.execute("CREATE TABLE campaigns (id INTEGER PRIMARY KEY, "
+                     "source_url TEXT, raw_text TEXT, ozet TEXT)")
+        conn.execute("INSERT INTO campaigns(source_url, raw_text, ozet) "
+                     "VALUES (?,?,?)", ("https://x/1", db_metin, ozet))
+        conn.commit()
+        conn.close()
+
+        ham = kok / "raw" / "banka" / "live"
+        ham.mkdir(parents=True)
+        (ham / "a.txt").write_text(disk_metin, encoding="utf-8")
+        (ham / "a.txt.meta.json").write_text(
+            '{"source_url": "https://x/1"}', encoding="utf-8")
+        return C.icerik_bayatligi(str(db), str(kok / "raw"))
+
+    def test_TIPOGRAFIK_TIRNAK_bayatlik_SAYILMAZ(self) -> None:
+        """Ölçülen kalıcı yalancı bayatlığın tam vakası."""
+        degisen, _, karsilastirilan = self._fikstur(
+            'Albaraka "Sağlık Kampanyası" kampanyası için katıl.',
+            'Albaraka "Sağlık Kampanyası” kampanyası için katıl.')
+        self.assertEqual(1, karsilastirilan, "belge hiç karşılaştırılmadı")
+        self.assertEqual(
+            0, degisen,
+            "tipografik tırnak farkı hâlâ 'içerik değişti' sayılıyor — "
+            "kapı kapatılamayan alarm çalmaya devam eder")
+
+    def test_KESME_ISARETI_de_bayatlik_SAYILMAZ(self) -> None:
+        degisen, _, _ = self._fikstur(
+            "Banka'nın kampanyası", "Banka’nın kampanyası")
+        self.assertEqual(0, degisen, "kıvrık kesme işareti bayatlık sayıldı")
+
+    def test_BOSLUK_farki_bayatlik_SAYILMAZ(self) -> None:
+        """Önceden düzeltilmiş yanlış pozitif gerilemesin."""
+        degisen, _, _ = self._fikstur(
+            "Mobil Bankacılık Aç", "Mobil\nBankacılık\n  Aç\n")
+        self.assertEqual(0, degisen, "boşluk düzeni bayatlık sayıldı")
+
+    def test_GERCEK_deger_degisikligi_YAKALANIR(self) -> None:
+        """Kapının dişleri: oran değişince bayatlık bildirilmeli."""
+        degisen, ozeti_bayat, _ = self._fikstur(
+            "Kâr payı oranı %1,89'dur.", "Kâr payı oranı %2,49'dur.")
+        self.assertEqual(
+            1, degisen,
+            "oran değişmiş ama kapı görmedi — normalizasyon fazla "
+            "gevşetilmiş, gerçek bayatlık gizleniyor")
+        self.assertEqual(
+            1, ozeti_bayat,
+            "metni değişen belgenin özeti de bayat sayılmalı: sütun dolu "
+            "olduğu için arayüzde normal görünür")
+
+    def test_ozet_YOKSA_ozeti_bayat_SAYILMAZ(self) -> None:
+        degisen, ozeti_bayat, _ = self._fikstur(
+            "Kâr payı %1,89.", "Kâr payı %2,49.", ozet="")
+        self.assertEqual(1, degisen)
+        self.assertEqual(0, ozeti_bayat, "özeti olmayan belge 'özeti bayat' sayıldı")
