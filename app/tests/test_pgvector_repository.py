@@ -199,11 +199,25 @@ class TestPostgresRepositoryParity(unittest.TestCase):
         self.assertEqual(a, b)
 
     def test_nul_bayti_acik_hata_verir(self):
-        """SQLite'ın yuttuğu NUL baytı Postgres'te ANLAŞILIR hata vermeli.
+        """NUL baytı İKİ backend'de de ANLAŞILIR hata vermeli — parite.
 
         31 Tem 2026: 849 belgelik demo korpusunda bir belge (kuveyt-turk)
         352 NUL baytı içeren ikili çöptü. psycopg'nin kriptik `DataError`'ı
         hangi belgenin bozuk olduğunu söylemiyordu.
+
+        ## Bu test 2026-08-12'de GÜNCELLENDİ — davranış bilerek değişti
+
+        Eski hâli son satırda "SQLite aynı veriyi SESSİZCE kabul eder" diye
+        iddia ediyor ve `insert_campaign`in bir `int` döndürmesini bekliyordu.
+        O iddia 2026-08-10'da GEÇERSİZ kaldı: doğrulama `base.nul_denetle`
+        içinde ORTAKLAŞTIRILDI ve SQLite yolu da reddediyor. Gerekçe hatanın
+        kendi metninde yazılı — "bu depo iki backend'de AYNI veriyi kabul
+        etmek zorunda olduğu için SQLite yolu da reddeder (aksi halde hata
+        ancak Postgres'e göç anında çıkardı)".
+
+        Test bunu göremedi çünkü Postgres testleri CI'da HİÇ koşmuyordu;
+        `ANATOLIA_TEST_DATABASE_URL` yoksa dosya atlanıyor. Bayatlığı
+        ortaya çıkaran şey `postgres` CI işinin eklenmesi oldu.
         """
         from src.db.postgres import NulByteInText
         bozuk = build_campaign("metin\x00çöp", bank_slug="test-bank",
@@ -212,18 +226,28 @@ class TestPostgresRepositoryParity(unittest.TestCase):
             self.pg.insert_campaign(bozuk)
         self.assertIn("NUL", str(ctx.exception))
         self.assertIn("test-bank", str(ctx.exception))
-        # SQLite aynı veriyi SESSİZCE kabul eder — farkın kaynağı bu.
-        self.assertIsInstance(self.lite.insert_campaign(bozuk), int)
+
+        # PARİTE: SQLite yolu da AYNI istisnayı atar. Asimetri bilerek
+        # kapatıldı; sessiz kabul, hatayı göç anına erteliyordu.
+        with self.assertRaises(NulByteInText):
+            self.lite.insert_campaign(bozuk)
 
     def test_nul_strip_modu_uyarir(self):
-        """`on_nul='strip'` temizler ama SESSİZ kalmaz (offset kayması riski)."""
+        """`on_nul='strip'` temizler ama SESSİZ kalmaz (offset kayması riski).
+
+        Logger adı 2026-08-12'de düzeltildi: uyarı artık `src.db.postgres`
+        değil `src.db.base`ten geliyor, çünkü `nul_denetle` ortak katmana
+        taşındı (yukarıdaki testin gerekçesiyle aynı taşıma). Eski ad CI'da
+        hiç koşulmadığı için bayat kalmıştı.
+        """
         from src.db.postgres import PostgresRepository
         repo = PostgresRepository(_dsn(), on_nul="strip")
         try:
-            with self.assertLogs("src.db.postgres", level="WARNING"):
+            with self.assertLogs("src.db.base", level="WARNING") as kayit:
                 cid = repo.insert_campaign(
                     build_campaign("metin\x00çöp", bank_slug="strip-bank",
                                    campaign_type="Kart"))
+            self.assertIn("NUL", "\n".join(kayit.output))
             self.assertNotIn("\x00", repo.campaign_text(cid)["text"])
         finally:
             repo.close()

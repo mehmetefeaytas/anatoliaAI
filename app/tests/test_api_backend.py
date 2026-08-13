@@ -47,11 +47,24 @@ from test_repo_parity import CORPUS, _postgres_reachable, reset_pg, seed
 
 # Çekirdek paket SIFIR üçüncü parti bağımlılıkla koşar (on-prem iddiasının
 # parçası). fastapi/httpx yoksa bu dosya ATLANIR, başarısız OLMAZ.
+#
+# PROBE PAKET ADINI DEĞİL YETENEĞİ SINAR (düzeltildi 2026-08-12).
+#
+# Eski hâli ayrıca `import httpx` yapıyordu. `starlette` 1.6'da test
+# istemcisinin bağımlılığı `httpx` -> `httpx2` olarak değişti; `httpx2` kurulu
+# bir ortamda `import httpx` düşüyor ve dosya "fastapi/httpx yok" diyerek
+# **22 testi atlıyordu** — oysa TestClient tamamen çalışır durumdaydı.
+# Yeni `postgres` CI işinde tam olarak bu yaşandı (koşu 31684711227).
+#
+# `from fastapi.testclient import TestClient` zaten gereken her şeyi dolaylı
+# olarak sınıyor; ayrı bir paket adı sınamak yalnız sürüme bağımlılık ekler.
+# `RuntimeError` de yakalanır: starlette bağımlılık eksikse
+# ModuleNotFoundError DEĞİL RuntimeError atıyor.
 try:  # pragma: no cover - ortama bağlı
-    import httpx  # noqa: F401
     from fastapi.testclient import TestClient
     HAS_API = True
-except ModuleNotFoundError:  # pragma: no cover
+except (ImportError, RuntimeError):  # pragma: no cover
+    TestClient = None  # type: ignore[assignment,misc]
     HAS_API = False
 
 _PG_OK, _PG_REASON = _postgres_reachable()
