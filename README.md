@@ -43,7 +43,9 @@ tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
 | RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
 | Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
 | Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
-| Test | **2.631** | `python -m pytest` |
+| Anotatör uyumu (IAA) | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv` |
+| Güven kalibrasyonu | ECE **0,306** · MCE 0,550 · Brier 0,316 | `python -m eval.calibration --gold data/gold/gold.v2.json` |
+| Test | **2.649** toplanan · 2.596 geçti · 53 atlandı (Postgres — CI'da koşar) | `python -m pytest` |
 | CI regresyon kapısı | **var** (alan F1 + halüsinasyon tavanı) | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 
 ### İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz
@@ -75,7 +77,7 @@ sistemin Recall@5'iyle **doğrudan kıyaslanamaz**.
 ### Bilinen açıklar — biz söylüyoruz
 
 Bir vitrin tablosunun en kolay yalanı, eksiği yazmamaktır. Ölçüm sırasında
-çıkan ve **henüz kapatılmamış** üç açık:
+çıkan ve **henüz kapatılmamış** dört açık:
 
 - **Korpusta çoğaltılmış bir kaynak var.** Albaraka sağlık kampanyası aynı
   `source_url` altında hem `manual/` hem `live/` kopyası taşıyor (3 dosya,
@@ -94,8 +96,72 @@ Bir vitrin tablosunun en kolay yalanı, eksiği yazmamaktır. Ölçüm sırasın
   örtüşme sayımında kaldı, bu yüzden reddetme kararı doğruluğu 30/30'da
   korundu. Kalan 2 isabetsiz soru: Dünya Katılım, T.O.M. Katılım.
 
-Ölçüm metodolojisi: [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
-[gold anotasyon kılavuzu](app/data/gold/ANNOTATION_GUIDE.md)
+- **Kılavuz revizyonu sonrası uyum turu ölçülemedi.** κ = 0,302 ilan edilen
+  eşiğin altında kaldığı için kılavuz v1→v2 revize edildi (aşağıda §4), ama
+  revizyon sonrası tur için dağıtılan dört dosyanın
+  (`round0_kalibrasyon_v2_{A,B,C,D}.csv`) sha256'sı **birebir aynı** — hiçbiri
+  doldurulmamış. `report_iaa` bu tur için dürüstçe "ölçülemedi" diyor.
+  Kapanması insan anotasyonu gerektirir; kod ve komut hazır bekliyor.
+
+### Ölçüm metodolojisi
+
+Bu bölümdeki her ayrım **kod olarak vardır** ve komutla yeniden üretilir.
+
+**1) Hata tek tip değildir.** `eval/run_eval.py` her kararı dört kovaya ayırır:
+
+| Kova | Ne demek | Neden ayrı sayılır |
+|---|---|---|
+| **kaçırma** | bilgi metinde var, model hiçbir şey üretmedi | bilgi eksikliği |
+| **yanlış çıkarım** | bilgi metinde var, model yanlış yerden aldı | düzeltilebilir kural hatası |
+| **halüsinasyon** | bilgi metinde **yok**, model uydurdu | kullanıcıyı yanlış yönlendirir — en pahalısı |
+| **ATL (atlanan)** | gold bu alan hakkında karar vermemiş | metriğe **girmez**; paydayı şişirmemek için |
+
+CI kapısı bu yüzden yalnız F1'e değil **halüsinasyon üst sınırına** da bakar
+(`eval/esikler.json`): uydurma artarsa F1 yükselse bile kapı kapanır. Bu
+projede uydurmak, kaçırmaktan pahalıdır.
+
+**2) Güven aralığı belge düzeyinde yeniden örneklenir.** Bir belgeden 12 alan
+çıkar ve bu 12 gözlem **bağımsız değildir** (aynı metin, aynı banka şablonu,
+aynı hata kaynağı). Alan düzeyinde örneklemek GA'yı yapay olarak daraltır ve
+gerçekte anlamsız farkları anlamlı gösterir — bu bir tercih değil, istatistiksel
+bir hatadır. `stats.bootstrap_ci` örnekleme birimi olarak **belgeyi** alır
+(küme bootstrap); seçilen belgenin tüm alanları birlikte gelir. Rastgelelik
+`seed=42` üzerinden akar: seed'i raporlanmayan bir GA tekrar üretilemez,
+dolayısıyla kanıt değildir.
+
+**3) Karşılaştırmalar McNemar ile yapılır.** İki yapılandırma aynı belgelerde
+koşulduğu için eşleştirilmiş test gerekir. Sonucu şudur: **hibrit yapı kural
+katmanını geçemedi** — 0,575 < 0,612, p = 0,0117, ve halüsinasyon oranı kural
+katmanının %60 üstünde. Projenin kendi iç kılavuzu bu tablodan "hibridin
+kazandığının kanıtlanmasını" istiyordu; kanıtlanmadı, tersi ölçüldü. Rapor sonucu
+düzeltmeye çalışmıyor, **ölçüldüğü gibi bırakıyor** — LLM orkestrasyonu
+ölçülüp reddedilmiştir.
+
+**4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** 4 anotatör, 260 ortak
+satır, 0 boş hücre: Fleiss κ **0,302** · Krippendorff α (nominal) **0,620** ·
+α (oransal) **0,787**. Eşik anotasyon **başlamadan** ilan edilmişti
+(`ANNOTATION_GUIDE.md` §7) ve ilan edilen sonuç uygulandı: κ < 0,67 → zorunlu
+hakemlik + kılavuz revizyonu; kılavuz v1→v2 revize edildi ve 123 uyuşmazlık
+tek tek listelendi. Sayıya bakıp eşiği değiştirmek yasaktır. Cohen değil
+Fleiss kullanılır, çünkü Cohen κ iki anotatör içindir; burada dört var.
+
+**5) Güven skoru kalibre edildi — ve kötü çıktı.** `compare.ASGARI_GUVEN = 0,65`
+kullanıcıya **görünen** bir kapıdır; kalibre edilmemiş bir skora eşik koymak,
+eşiğin ne attığını bilmemek demektir. Ölçüldü (yapılandırılmış kesit, 82
+karar): ECE **0,306** · MCE 0,550 · Brier 0,316. En çarpıcı bulgu güvenilirlik
+tablosunda: 0,90+ bandı (42 karar) ortalama **0,949** güven ilan ediyor ama
+doğruluğu **0,452** — model en emin olduğu yerde en çok yanılıyor. Buna karşılık
+0,70–0,75 bandı (13 karar) %92 doğru, yani *yetersiz* güveniyor. Eşik analizi
+kapıyı gerekçelendirdi: eşik üstü doğruluk 0,654, altı 0,250 (ayrım +0,404) —
+ayırt edici, ama 82 kararın yalnız 4'ünü düşürüyor. Modül sıcaklık
+ölçekleme **uygulamaz**, yalnızca ölçer: skoru değiştirmek üretim davranışını
+değiştirir ve ayrı bir karardır.
+
+Kaynaklar — [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
+[IAA raporu](app/data/gold/iaa_report.md) ·
+[kılavuz revizyonu](app/docs/rapor/kilavuz-revizyonu.md) ·
+[anotasyon kılavuzu](app/data/gold/ANNOTATION_GUIDE.md)
+Kod — `eval/stats.py` · `eval/iaa.py` · `eval/calibration.py` · `eval/ablation.py`
 
 ---
 
