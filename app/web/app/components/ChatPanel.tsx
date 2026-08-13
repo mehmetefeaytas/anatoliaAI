@@ -172,6 +172,22 @@ const HANDLER_LABELS: Record<string, string> = {
  */
 const HAM_ONIZLEME_KARAKTER = 320;
 
+/**
+ * Sohbet isteğinin EMNİYET AĞI süresi (ms) — iptal düğmesinin yerine geçmez.
+ *
+ * Sunucu tarafındaki en kötü hâl kısa değil: `OLLAMA_TIMEOUT` varsayılanı
+ * 180 sn ve duvar-saati ölçütü `LLM_DEADLINE_CARPANI = 1.5` ile çarpılıyor
+ * (`src/extraction/llm/clients.py`), yani 270 sn. İstemcide bundan KISA bir
+ * süre, sunucunun gerçekten teslim edeceği cevabı keserdi ve kullanıcı
+ * çalışan bir sistemi bozuk sanırdı.
+ *
+ * Bu yüzden 300 sn: sunucu bütçesinin ÜSTÜNDE. Asıl kurtarma yolu bu değil,
+ * ekrandaki İPTAL düğmesidir — kullanıcı takıldığına kendisi karar verir.
+ * Zaman aşımı yalnız "kullanıcı ekrandan ayrıldı ve arayüz sonsuza kadar
+ * «cevap bekleniyor» hâlinde kaldı" senaryosunu kapatır.
+ */
+const SOHBET_ZAMAN_ASIMI_MS = 300_000;
+
 /** Ham metinden okunur bir önizleme — sözcük ortasından kesmez. */
 function kirp(metin: string, sinir: number): string {
   const tek = metin.replace(/\s+/g, " ").trim();
@@ -225,6 +241,8 @@ export default function ChatPanel({
   const [hazir, setHazir] = useState(false);
   const alanRef = useRef<HTMLTextAreaElement>(null);
   const sayacRef = useRef(0);
+  /** Süren `/chat` isteğinin iptal kontrolü; boşta `null`. */
+  const iptalRef = useRef<AbortController | null>(null);
 
   // Otomatik yükseklik: içerik büyüdükçe alan büyür, `max-height`e kadar.
   useEffect(() => {
@@ -278,17 +296,39 @@ export default function ChatPanel({
       ]);
       if (konuBasiBekliyor) setKonuBasiBekliyor(false);
 
+      // İPTAL EDİLEBİLİRLİK — donmuş yerel LLM kurtarılamaz arayüz bırakmasın.
+      //
+      // Eskiden istek iptal edilemiyordu: `busy` true kalıyor, her denetim
+      // devre dışı oluyor ve tek çıkış yolu SAYFAYI YENİLEMEKti — o da
+      // sohbet geçmişini ekrandan siliyordu. 4 dakikalık jüri sunumunda
+      // yerel bir modelin takılması gerçekleşebilir bir arıza (CLAUDE.md §11
+      // aynı riski LLM için zaten sayıyor).
+      const kontrol = new AbortController();
+      iptalRef.current = kontrol;
+      const zamanlayici = setTimeout(
+        () => kontrol.abort(), SOHBET_ZAMAN_ASIMI_MS);
+
       try {
-        const cevap = await api.chat(text, baglam);
+        const cevap = await api.chat(text, baglam, { signal: kontrol.signal });
         setTurlar((t) => t.map((x) => (x.id === id ? { ...x, cevap } : x)));
       } catch (e) {
         setTurlar((t) => t.map((x) => (x.id === id ? { ...x, hata: e } : x)));
       } finally {
+        clearTimeout(zamanlayici);
+        // Yalnız KENDİ kontrolünü temizle: kullanıcı iptalden hemen sonra
+        // yeni soru sorduysa `iptalRef` artık YENİ isteğe ait olur ve onu
+        // sıfırlamak yeni isteği iptal edilemez hâle getirirdi.
+        if (iptalRef.current === kontrol) iptalRef.current = null;
         setBusy(false);
       }
     },
     [busy, turlar, konuBasiBekliyor],
   );
+
+  /** Süren isteği iptal eder; `ask`in `finally`si durumu toparlar. */
+  const iptal = useCallback(() => {
+    iptalRef.current?.abort();
+  }, []);
 
   /**
    * Bağlam devralmayı keser — geçmişi SİLMEDEN.
@@ -409,6 +449,19 @@ export default function ChatPanel({
         <button type="button" className="btn" onClick={() => ask(q)} disabled={busy}>
           {busy ? "…" : "Sor"}
         </button>
+        {/*
+          İPTAL yalnız istek uçarken görünür ve `disabled` DEĞİLDİR.
+          Ekrandaki tek etkin denetim olması bilinçli: `busy` sırasında
+          diğer her şey kilitli, dolayısıyla donmuş bir yerel LLM'de bu
+          düğme kullanıcının sayfayı yenilemeden çıkabileceği TEK yol.
+          Sayfa yenilemek sohbet geçmişini ekrandan silerdi.
+        */}
+        {busy && (
+          <button type="button" className="btn btn-ghost" onClick={iptal}
+                  title="Süren isteği iptal et — sohbet geçmişi korunur">
+            İptal
+          </button>
+        )}
       </div>
       <div className="chat-araclar">
         <p id="chat-ipucu" className="small faint" style={{ margin: 0 }}>

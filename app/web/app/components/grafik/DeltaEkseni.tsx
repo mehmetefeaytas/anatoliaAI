@@ -4,7 +4,7 @@
  * Delta ekseni — TEK bankayı ortalayan, artı/eksi yönlü dikey çubuklar.
  *
  * İlgili: ../../lib/api.ts (DeltaField, DeltaKind), ../BankDeltaPanel.tsx,
- *         ./KiyasCubuklari.tsx, src/comparison/compare.py `delta_between`,
+ *         src/comparison/compare.py `delta_between`,
  *         CLAUDE.md §17 (adil kıyas garantisi)
  *
  * ## Kıyas YATAY, delta DİKEY — ve asıl mesele bu
@@ -15,7 +15,7 @@
  *
  *  - **Kıyas (yatay):** bankalar alt alta, hepsi eşit statüde, göz yukarıdan
  *    aşağı bir SIRALAMA okur. Etiketler banka adları olduğu için yatay çubuk
- *    zaten zorunluydu (bkz. KiyasCubuklari başlığı).
+ *    zaten zorunluydu (bkz. KapsamaCetveli başlığı, WCAG 1.4.1).
  *  - **Delta (dikey):** ekranda tek bir banka var, o da eksenin KENDİSİ. Sıfır
  *    çizgisi «bu banka»dır; yukarı çıkan alanlarda önde, aşağı inenlerde geride.
  *    Göz bir sıralama değil, bir DENGE okur.

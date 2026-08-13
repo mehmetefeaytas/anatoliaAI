@@ -3,8 +3,8 @@
 /**
  * Grafik iskeleti — palet çözülene kadar yer tutar.
  *
- * İlgili: ../../lib/grafikPaleti.ts, ./KapsamaCetveli.tsx, ./KiyasCubuklari.tsx,
- *         ./RadarKiyas.tsx, ../../styles/cetvel.css
+ * İlgili: ../../lib/grafikPaleti.ts, ./KapsamaCetveli.tsx,
+ *         ../../styles/cetvel.css
  *
  * Bu dosya İKİ ayrı bekleyişi karşılar ve ikisinin sebebi farklıdır.
  *

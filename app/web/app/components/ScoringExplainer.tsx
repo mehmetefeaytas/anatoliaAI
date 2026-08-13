@@ -197,7 +197,9 @@ export default function ScoringExplainer({
 
           <h3>Bankaların aldığı ara değerler</h3>
           <div className="table-wrap">
-            <table className="data">
+            {/* `stackable`: 7 kolon mobilde yatay kaymada başlıklarını
+               kaybediyordu; kardeş düzeltme AuditPanel.tsx'te. */}
+            <table className="data stackable">
               <thead>
                 <tr>
                   <th scope="col">Sıra</th>
@@ -212,17 +214,17 @@ export default function ScoringExplainer({
               <tbody>
                 {s.data.rows.map((r, i) => (
                   <tr key={`${r.bank}-${i}`}>
-                    <td className="num">
+                    <td data-label="Sıra" className="num">
                       <span className={`rank-pill${r.rank === 1 ? " first" : ""}`}>
                         {r.rank ?? "—"}
                       </span>
                     </td>
-                    <td>{r.bank_name || r.bank}</td>
-                    <td className="num">{formatValue(r.value, s.data?.field)}</td>
-                    <td className="num mono">
+                    <td data-label="Banka">{r.bank_name || r.bank}</td>
+                    <td data-label="Kanonik değer" className="num">{formatValue(r.value, s.data?.field)}</td>
+                    <td data-label="Sıralama anahtarı" className="num mono">
                       {r.sort_key === null ? "—" : r.sort_key}
                     </td>
-                    <td>
+                    <td data-label="Kıyas kapısı">
                       {r.comparable ? (
                         <span className="badge badge-ok">geçti</span>
                       ) : (
@@ -231,10 +233,10 @@ export default function ScoringExplainer({
                         </span>
                       )}
                     </td>
-                    <td>
+                    <td data-label="Güven">
                       <ConfidenceBadge value={r.confidence} />
                     </td>
-                    <td>
+                    <td data-label="Katman">
                       <span className={extractorClass(r.extractor)}>
                         {extractorLabel(r.extractor)}
                       </span>
@@ -243,7 +245,7 @@ export default function ScoringExplainer({
                 ))}
                 {s.data.rows.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="muted">
+                    <td data-label="Sıra" colSpan={7} className="muted">
                       Bu alan için sıralanacak kayıt yok.
                     </td>
                   </tr>

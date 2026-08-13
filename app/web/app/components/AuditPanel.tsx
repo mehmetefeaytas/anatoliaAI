@@ -261,7 +261,15 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
               </EmptyNotice>
             ) : (
               <div className="table-wrap">
-                <table className="data">
+                {/*
+                  `stackable`: <=900px'de thead gizlenir ve her <td>
+                  `data-label` ile kendi başlığını `::before` olarak
+                  basar (components.css). Bu tablo KANIT ekranıdır ve
+                  7 kolon taşıyor; mobilde yatay kaydırmada başlıklar
+                  görünüm dışına çıkıyor, yani hangi sayının hangi
+                  kolona ait olduğu okunamıyordu.
+                */}
+                <table className="data stackable">
                   <thead>
                     <tr>
                       <th scope="col">Alan</th>
@@ -281,25 +289,25 @@ export default function AuditPanel({ campaigns, selectedId }: Props) {
                           activeField?.field === f.field ? "selected" : undefined
                         }
                       >
-                        <td>{f.label}</td>
-                        <td className="num">
+                        <td data-label="Alan">{f.label}</td>
+                        <td data-label="Değer" className="num">
                           <strong>{formatValue(f.canonical_value, f.field)}</strong>
                         </td>
-                        <td className="mono">
+                        <td data-label="Ham ifade" className="mono">
                           {f.raw_value ? `«${f.raw_value.trim()}»` : "—"}
                         </td>
-                        <td>
+                        <td data-label="Güven">
                           <ConfidenceBadge value={f.confidence} source={f.confidence_source} />
                         </td>
-                        <td className="small muted">
+                        <td data-label="Güven kaynağı" className="small muted">
                           {confidenceSourceLabel(f.confidence_source)}
                         </td>
-                        <td>
+                        <td data-label="Katman">
                           <span className={extractorClass(f.extractor)}>
                             {extractorLabel(f.extractor)}
                           </span>
                         </td>
-                        <td>
+                        <td data-label="Kaynak span">
                           {f.span_start === null ? (
                             <span className="badge badge-warn">offset yok</span>
                           ) : (

@@ -10,7 +10,7 @@
  * ## Neden ayrı dosya — ve neden CANVAS DEĞİL
  *
  * Karşılaştırma ekranının birincil görselleştirmesi Chart.js tuvaliydi
- * (`KiyasCubuklari`). Tuval üç şeyi birden yapamıyor:
+ * (silinen `KiyasCubuklari`). Tuval üç şeyi birden yapamıyor:
  *
  *  1. Erişilebilirlik ağacında YOKTUR. `<canvas>` içine çizilen çubuk ekran
  *     okuyucuya hiçbir şey söylemez; bu yüzden altına ayrıca metin liste

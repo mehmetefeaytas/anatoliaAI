@@ -60,13 +60,14 @@
  *
  * ## CANVAS ÇIKTI, KAPSAMA CETVELİ GİRDİ (2026-08-12)
  *
- * Birincil görselleştirme artık `KiyasCubuklari` (Chart.js tuvali) değil,
+ * Birincil görselleştirme Chart.js tuvali değil,
  * `KapsamaCetveli` (saf DOM + CSS grid). Tuval üç şeyi birden yapamıyordu:
  * erişilebilirlik ağacında yoktu (altına ayrıca metin liste basılıyordu, yani
  * aynı bilgi iki kez), dört kapsama hâlini ayrı BİÇİMLERLE anlatamıyordu
  * (elde yalnız renk + uzunluk vardı; renk TEK sinyal olamaz, WCAG 1.4.1) ve
  * çubuk başına `aria-label` taşıyamıyordu. Cetvel üçünü de çözüyor.
- * `KiyasCubuklari` silinmedi; gerekçesi kendi dosya başlığında.
+ * Tuval bileşenleri (`KiyasCubuklari`, `RadarKiyas`) 2026-08-12'de silindi;
+ * gerekçe `grafik/KapsamaCetveli.tsx` başlığında.
  *
  * ## EKRANIN TEK KESRİ: KAPSAMA SAYACI (2026-08-12)
  *

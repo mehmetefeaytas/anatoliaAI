@@ -825,11 +825,31 @@ const TOPLAM_BASLIK = "X-Toplam-Kayit";
 /** Gövde + sayfalama üstverisi. `toplam` başlık yoksa `null` (uydurulmaz). */
 export type Sayfa<T> = { kayitlar: T; toplam: number | null };
 
+/**
+ * İstek İPTAL edildi mi (kullanıcı ya da zaman aşımı) — bağlantı hatası DEĞİL.
+ *
+ * Ayrım şart: iptal edilen bir isteği "Bağlantı kurulamadı" diye göstermek
+ * kullanıcıya YANLIŞ bilgi verir ve API'yi çalışmıyor sanmasına yol açar.
+ * `AbortError` tarayıcıya göre `DOMException` ya da `Error` olabilir, o
+ * yüzden ada bakılıyor.
+ */
+export const IPTAL_HINT =
+  "İstek iptal edildi. Soruyu yeniden gönderebilirsiniz.";
+
+function iptalMi(e: unknown): boolean {
+  return (
+    typeof e === "object" && e !== null && "name" in e &&
+    (e as { name?: string }).name === "AbortError"
+  );
+}
+
 async function istek<T>(path: string, init?: RequestInit): Promise<Sayfa<T>> {
   let res: Response;
   try {
     res = await fetch(path, init);
-  } catch {
+  } catch (e) {
+    // İPTAL, bağlantı hatasından AYRI raporlanır (bkz. `iptalMi`).
+    if (iptalMi(e)) throw new ApiError("İstek iptal edildi.", 0, IPTAL_HINT);
     throw new ApiError("Bağlantı kurulamadı.", 0, OFFLINE_HINT);
   }
   if (!res.ok) {
@@ -999,11 +1019,29 @@ export const api = {
    * göndermek "bu yeni bir sohbet" demektir ve bugünkü (bağlamsız)
    * davranışın aynısını verir.
    */
-  chat: (question: string, context: ChatContext[] = []) =>
+  /**
+   * `signal` İPTAL EDİLEBİLİRLİK içindir — donmuş yerel LLM kurtarılabilsin.
+   *
+   * ## Ölçülen risk
+   *
+   * Sunucu tarafındaki en kötü hâl kısa değil: `OLLAMA_TIMEOUT` varsayılanı
+   * 180 sn ve duvar-saati ölçütü `LLM_DEADLINE_CARPANI = 1.5` ile çarpılıyor
+   * (`extraction/llm/clients.py`), yani **270 sn**. İstemcide bundan KISA bir
+   * zaman aşımı, sunucunun gerçekten teslim edeceği cevabı keserdi.
+   *
+   * Bu yüzden iki ayrı mekanizma var ve ikisi farklı işe yarıyor:
+   *  - **İptal düğmesi**: kullanıcının kararı, anında, tahmine gerek yok.
+   *  - **Zaman aşımı**: yalnız EMNİYET AĞI, sunucu bütçesinin ÜSTÜNDE
+   *    (bkz. `SOHBET_ZAMAN_ASIMI_MS`). Kullanıcı ekrandan ayrılsa bile
+   *    arayüz kalıcı olarak «cevap bekleniyor» hâlinde donmasın.
+   */
+  chat: (question: string, context: ChatContext[] = [],
+         opts?: { signal?: AbortSignal }) =>
     request<ChatResp>("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ question, context }),
+      signal: opts?.signal,
     }),
 
   /**

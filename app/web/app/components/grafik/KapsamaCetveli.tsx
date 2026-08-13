@@ -5,7 +5,6 @@
  *
  * İlgili: ../../styles/cetvel.css, ../../lib/api.ts (`CompareRow`, `Bank`,
  *         `BankaKapsami`), ../../lib/format.ts, ../KaynakDipnotu.tsx,
- *         ./KiyasCubuklari.tsx (yerine geçtiği canvas grafiği),
  *         ../ComparePanel.tsx, CLAUDE.md §17 (adil kıyas), §6 (zor vakalar)
  *
  * ## Neden canvas değil, saf DOM
@@ -23,8 +22,12 @@
  *  3. **`aria-label` / `title` taşıyamıyor.** Bir çubuğun «%1,69,
  *     kıyaslanabilir» olduğu ancak tuvalin dışında yazılabiliyordu.
  *
- * `KiyasCubuklari` SİLİNMEDİ; karşılaştırma ekranının birincil
- * görselleştirmesi olmaktan çıktı (gerekçe o dosyanın başlığında da yazılı).
+ * `KiyasCubuklari` ve `RadarKiyas` 2026-08-12'de SİLİNDİ. Hiçbir kod onları
+ * import etmiyordu (yalnız yorumlar anıyordu) ve `chart.js` +
+ * `react-chartjs-2`nin TEK tüketicisiydiler: sıfır piksel karşılığında iki
+ * çalışma-zamanı bağımlılığı ve onların lisans denetimi yükü (CLAUDE.md §20
+ * yalnız Apache/MIT/BSD paket şartı koyuyor). Yukarıdaki üç maddelik gerekçe
+ * onların dosya başlığından DEĞİL buradan okunur — silinen şey kod, karar değil.
  *
  * ## Onbir satırın onbiri her zaman çizilir
  *
