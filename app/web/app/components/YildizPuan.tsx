@@ -35,16 +35,39 @@
  * `ComparePanel.tsx` aynı hatayı zaten adıyla anıyor: «kalibre edilmemiş bir
  * skoru kalite iddiası gibi göstermek yanıltıcıdır.»
  *
+ * ## Kırılım: «bu yıldız nasıl hesaplandı»
+ *
+ * Yıldız bir ÖZETTİR ve özet, taşımadığı bir kesinlik izlenimi verebilir:
+ * ölçüldü (13 Ağustos, Kuveyt Türk · Alışveriş Puanı, `campaign_id` 317) →
+ * `score` 1,00 ile BEŞ yıldız, ama o beş yıldız ağırlık tablosunun tek bir
+ * %20'lik kaleminden geliyor; tablonun %65'i o türde hiç ölçülememiş.
+ * Katlanmış `<details>` bu üç paydayı açar (hesabın kendisi ./../lib/kirilim.ts
+ * içinde, saf ve test edilmiş).
+ *
+ * Kırılım YILDIZA BAĞLIDIR: ölçülemeyen satırda hiç çizilmez (bkz. kural 3 —
+ * açılacak bir hesap yoktur) ve varsayılan KAPALI gelir; sayfada dokuz tür
+ * satırı var, hepsi açık gelirse ekran bir hesap tablosuna döner.
+ *
  * ## Erişilebilirlik
  *
  * Yıldız dizisi tek bir `aria-hidden` düğümdür; ekran okuyucu onu hiç görmez.
  * Gerçek değer ÜÇÜNCÜ SÜTUNDAKİ metinde okunur (`3 / 5 · 12 belge.`), yani
  * bilgi renkten ve şekilden bağımsız olarak yazıyla mevcuttur. Bu, "renk tek
- * sinyal değil" kuralının bu bileşendeki karşılığıdır.
+ * sinyal değil" kuralının bu bileşendeki karşılığıdır. Aynı kural kırılımda da
+ * geçerli: boş kalan ölçüt satırı yalnız solgunlaşmaz, hücresinde
+ * «ölçülemedi» YAZAR. Kırılım gerçek bir `<table>`dır — başlıklı sütunlar ve
+ * satır başlıklarıyla; div ızgarası, ekran okuyucuda sayıları başlıksız
+ * bırakırdı.
  */
 
 import type { ReactNode } from "react";
-import type { CompositeScore } from "../lib/api";
+import type { CompositeScore, WeightRow } from "../lib/api";
+import { formatValue, sayiIyelik, trNum } from "../lib/format";
+import {
+  kirilimCizilir,
+  kirilimOzetSayilari,
+  kirilimOzeti,
+} from "../lib/kirilim";
 
 /** Yıldız ölçeği. Yarım yıldız YOK — gerekçesi `yildizSayisi()` içinde. */
 const AZAMI_YILDIZ = 5;
@@ -74,7 +97,27 @@ type Props = {
    * gerekçesini basar.
    */
   gerekce?: ReactNode;
+  /**
+   * `/advantageous.weights` — ağırlık TABLOSUNUN tamamı.
+   *
+   * Bileşen listesi bu tablonun yalnız o türde AKTİF olan alt kümesidir
+   * (compare.py:935); tablonun ne kadarının hiç ölçülemediği ancak küme farkıyla
+   * görülür. Gelmemişse (yükleme/hata) kırılım o satırı BASMAZ: ölçemediğimiz
+   * bir yokluğu yokluk gibi göstermeyiz.
+   */
+  agirliklar?: WeightRow[] | null;
+  /**
+   * Alan adı → Türkçe etiket (`/fields`). Hiçbir alan adı bu dosyada sabit
+   * yazılmaz; verilmezse ham ad basılır (kod okutmak, yanlış etiket
+   * uydurmaktan iyidir).
+   */
+  etiket?: (field: string) => string;
 };
+
+/** 0..1 oranı yüzdeye çevirir (AdvantageousPanel `yuzde()` ile aynı idiom). */
+function yuzde(v: number | null): string {
+  return v === null || Number.isNaN(v) ? "—" : `%${trNum(Math.round(v * 100))}`;
+}
 
 /**
  * 0..1 skoru yıldıza çevirir.
@@ -97,6 +140,8 @@ export default function YildizPuan({
   sira,
   grupBuyuklugu,
   gerekce,
+  agirliklar,
+  etiket = (field) => field,
 }: Props) {
   // Üç kapı, tek koşulda: skor yok / kıyas dışı / kapsama yok → YILDIZ YOK.
   // Sırası önemli değil, hepsi aynı sonuca çıkar; önemli olan hiçbirinin
@@ -133,6 +178,14 @@ export default function YildizPuan({
 
   const dolu = yildizSayisi(skor.score as number);
 
+  // Kırılım kapısı yıldız kapısıyla AYNI yerden gelir (../lib/kirilim.ts).
+  // Buraya gelindiğinde koşullar zaten sağlanmış durumda; çağrı yine de
+  // yapılıyor ki «kırılım yıldıza bağlıdır» kuralı tek bir test edilebilir
+  // fonksiyonda dursun ve bileşen listesi boş bir satır hesap açmasın.
+  const ozet = kirilimCizilir(skor, belge)
+    ? kirilimOzeti(skor, agirliklar)
+    : null;
+
   return (
     <div className="tur-satir">
       <span className="tur-ad">{tur}</span>
@@ -156,6 +209,144 @@ export default function YildizPuan({
         ) : null}
         {gerekce}
       </span>
+
+      {/* Kırılım satırın DÖRDÜNCÜ ızgara çocuğudur ve tüm sütunları kaplar
+          (banka.css `.tur-kirilim`). Sarmalayıcı bir div eklenmiyor: cetvelin
+          alt çizgi kuralı (`.tur-cetveli .tur-satir:last-child`) satırın
+          cetvelin doğrudan çocuğu olmasına dayanıyor. */}
+      {ozet && (
+        <details className="tur-kirilim">
+          <summary className="tur-kirilim-ozet">
+            {/* Katlanmış hâlde de BİLGİ taşır: İKİ sayı birden — ağırlık
+                tablosundaki ölçüt sayısı ve bu kampanyada ölçülen sayı (bkz.
+                kirilimOzetSayilari). Tablo gelmediyse payda aktif ölçüt
+                sayısına düşer ve cümle bunu SÖYLER; sessizce daha küçük bir
+                paydaya geçmek kırılımı olduğundan geniş gösterirdi. */}
+            {(() => {
+              const { payda, pay, tabloyaDayali } = kirilimOzetSayilari(ozet);
+              return tabloyaDayali
+                ? `${payda} ölçütün ${sayiIyelik(pay)} bu kampanyada ölçüldü`
+                : `${payda} aktif ölçütün ${sayiIyelik(pay)} bu kampanyada ölçüldü`;
+            })()}{" "}
+            — hesabı aç
+          </summary>
+
+          <div className="tur-kirilim-govde">
+            <table className="tur-kirilim-tablo">
+              <caption className="tur-kirilim-baslik">
+                Bu yıldız nasıl hesaplandı
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">ölçüt</th>
+                  <th scope="col">ham değer</th>
+                  <th scope="col">normalize (tür içi sıra)</th>
+                  <th scope="col">ağırlık</th>
+                  <th scope="col">katkı</th>
+                  <th scope="col">not</th>
+                </tr>
+              </thead>
+              <tbody>
+                {/* Liste SUNUCUDA ağırlığa göre sıralı geldi
+                    (compare.py:996); burada yeniden sıralanmaz. */}
+                {skor.components.map((c) => {
+                  const bos = c.normalized === null || c.normalized === undefined;
+                  return (
+                    <tr
+                      key={c.field_name}
+                      className={bos ? "tur-kirilim-bos" : undefined}
+                    >
+                      <th scope="row">{etiket(c.field_name)}</th>
+                      <td>{formatValue(c.value, c.field_name)}</td>
+                      <td className="tur-kirilim-sayi">
+                        {bos ? (
+                          // Renk TEK sinyal olamaz: boşluk YAZIYLA da durur.
+                          <span className="tur-kirilim-yok">ölçülemedi</span>
+                        ) : (
+                          trNum(c.normalized as number)
+                        )}
+                      </td>
+                      <td className="tur-kirilim-sayi">{trNum(c.weight)}</td>
+                      <td className="tur-kirilim-sayi">
+                        {bos ? "—" : trNum(c.contribution ?? 0)}
+                      </td>
+                      <td>{c.note ?? ""}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+
+            {/* ÜÇ PAYDA — üçü de veriden türetilir, hiçbiri sabit değil. */}
+            <ul className="tur-kirilim-paydalar">
+              {/* 1) Ağırlık tablosu gelmemişse bu satır HİÇ basılmaz:
+                     ölçemediğimiz bir yokluğu iddia etmeyiz. */}
+              {ozet.olculemeyen !== null && ozet.tabloToplam !== null && (
+                <li className="tur-kirilim-payda">
+                  <span className="tur-kirilim-payda-etiket">
+                    türde hiç ölçülemeyen ölçütler
+                  </span>
+                  {ozet.olculemeyen.length === 0 ? (
+                    <>
+                      Ağırlık tablosundaki {ozet.tabloToplam} ölçütün tamamı bu
+                      türde aktif; ağırlığın hiçbiri baştan devre dışı kalmadı.
+                    </>
+                  ) : (
+                    <>
+                      {ozet.tabloToplam} ölçütten{" "}
+                      {sayiIyelik(ozet.olculemeyen.length)} — ağırlığın{" "}
+                      <b>{yuzde(ozet.olculemeyenPay)}</b>
+                      {"'i "}
+                      baştan devre dışı:{" "}
+                      {ozet.olculemeyen
+                        .map((o) => etiket(o.field_name))
+                        .join(" · ")}
+                      . Bu türde hiçbir kampanya bu ölçütlerde değer taşımıyor,
+                      o yüzden tabloya hiç girmiyorlar.
+                    </>
+                  )}
+                </li>
+              )}
+
+              {/* 2) Aktif ama BU kampanyada boş kalan ölçütler → kapsama. */}
+              <li className="tur-kirilim-payda">
+                <span className="tur-kirilim-payda-etiket">
+                  bu kampanyada boş kalan aktif ölçüt
+                </span>
+                {ozet.bosKalan.length === 0 ? (
+                  <>
+                    Aktif {ozet.aktif} ölçütün tamamı bu kampanyada ölçüldü →
+                    kapsama <b>{yuzde(ozet.kapsama)}</b>.
+                  </>
+                ) : (
+                  <>
+                    {ozet.bosKalan
+                      .map(
+                        (c) => `${etiket(c.field_name)} (${trNum(c.weight)})`,
+                      )
+                      .join(" · ")}{" "}
+                    → kapsama <b>{yuzde(ozet.kapsama)}</b>. Boş ölçüt skoru
+                    düşürmez, PAYDAYI daraltır.
+                  </>
+                )}
+              </li>
+
+              {/* 3) Skorun paydası: yalnız kapsanan ağırlık. */}
+              <li className="tur-kirilim-payda">
+                <span className="tur-kirilim-payda-etiket">skor</span>
+                Yalnız kapsanan ağırlık üzerinden ortalanır:{" "}
+                {trNum(ozet.katkiToplami)} / {trNum(ozet.kapsananAgirlik)} ={" "}
+                <b>
+                  {ozet.skor === null ? "—" : trNum(ozet.skor)} → {dolu} /{" "}
+                  {AZAMI_YILDIZ} yıldız
+                </b>
+                . Ölçülemeyen ölçüt bu bölmenin hiçbir yerinde geçmez; yıldız
+                bu yüzden kapsamadan AYRI okunamaz.
+              </li>
+            </ul>
+          </div>
+        </details>
+      )}
     </div>
   );
 }

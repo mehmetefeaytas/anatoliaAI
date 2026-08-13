@@ -85,6 +85,45 @@
  * ve kullanıcı okuduğu satırı kaybediyordu; yan panel tabloyu yerinde bırakıp
  * iddia ile kanıtı aynı ekranda tutuyor. Gerekçenin tamamı KaynakDipnotu.tsx
  * başlığında.
+ *
+ * ## TÜR SÜZGECİ ALANA GÖRE BUDANIR (2026-08-13)
+ *
+ * Süzgeç 8 türün tamamını her alan için basıyordu, oysa tür kapsaması alandan
+ * alana değişiyor (ölçüldü, `data/demo.db`, 1.774 belge): `kar_payi_orani` 7
+ * tür, `tahsis_ucreti` yalnız 4. `tahsis_ucreti` + `Finansman` seçen kullanıcı
+ * hiçbir uyarı olmadan boş ekran alıyordu — yani süzgeç, ekranın ölçemediği bir
+ * şeyi ölçebilirmiş gibi sunuyordu. Artık liste SEÇİLİ ALANDA veri taşıyan
+ * türlere inip alan değişince yeniden hesaplanıyor. Karar mantığı saf tutuldu
+ * (`../lib/turBudama.ts`); ayrı dosya olmasının nedeni testin `.tsx` içe
+ * alamaması, gerekçesi o dosyanın başlığında.
+ *
+ * Dört ayrıntı, dördü de bilinçli:
+ *
+ *  - **Budama sessiz değil.** Düşen türler süzgecin altında ADIYLA sayılıyor.
+ *    Bu ekranın doktrini «boşluğu gizleme, say»; budama tek başına o doktrini
+ *    ihlal ederdi, düşen türler satırı onu geri veriyor. Reddedilen seçenek —
+ *    türü listede pasif bırakmak — doktrine daha sadikti ama istenen
+ *    sadeleşmeyi vermiyordu.
+ *  - **Bağımlılık dizisi YALNIZ `field`.** Seçenek sorgusu `intent` ve `type`
+ *    almıyor: `intent` sıralamayı değiştirir, satır KÜMESİNİ değil; `per_bank`
+ *    ise `best` ve `all` hâllerinde aynı tür kümesini döndürüyor (`best`,
+ *    banka+tür çifti başına en iyi satırı tutuyor, türü düşürmüyor — ölçüldü).
+ *    `type` ile bağlamak ise kendini yiyen bir döngü olurdu: tür seçilince
+ *    liste o tek türe inerdi.
+ *  - **Tabloyu besleyen sorgu DEĞİŞMEDİ.** Süzme sunucuda kalıyor. İstemci
+ *    tarafı süzme denendi ve reddedildi: satır kümesi aynı çıkıyor ama sunucu
+ *    `rank`'i süzülmüş küme üzerinden numaralıyor (ölçüldü: `kar_payi_orani` +
+ *    `Kart`, Kuveyt Türk `rank` 3 yerine 5). `turlereBol()` sırayı bölüm içinde
+ *    zaten yeniden verdiği için ekranda fark görünmezdi — istenmemiş bir
+ *    davranış değişikliğini görünmez diye kabul etmek daha kötüsü.
+ *  - **Ölçemediğimizde budama YOK.** Seçenek sorgusu yüklenirken ya da hata
+ *    verdiğinde tam liste basılır ve seçili tür korunur. Yanıt gelmediği için
+ *    boş görünen bir küme «o tür bu alanda yok» demek değildir; ölçülemeyen bir
+ *    yokluğu yokluk gibi göstermek bu ekranın reddettiği hatanın ta kendisi.
+ *
+ * **Alan çipleri budanmaz.** `FieldChips` başlığındaki «12 alanın 12'si her
+ * hâlde basılır, boş olan gizlenmez» vaadi bağlayıcıdır: alan seçmek ölçüm
+ * yüzeyini seçmektir, tür seçmek o yüzeyi daraltmaktır.
  */
 
 import { Fragment, useEffect, useState } from "react";
@@ -103,6 +142,7 @@ import {
   trNum,
 } from "../lib/format";
 import { useJuryMode } from "../lib/juryMode";
+import { turSecenekleri } from "../lib/turBudama";
 import { useAsync } from "../lib/useAsync";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
@@ -224,6 +264,51 @@ export default function ComparePanel({
     () => api.compare(field, intent || undefined, type || undefined, perBank),
     [field, intent, type, perBank],
   );
+  // SEÇENEK LİSTESİ İÇİN İKİNCİ SORGU. Tabloyu besleyen `rows` kullanılamaz:
+  // bir tür seçiliyken o sorgu yalnız o türün satırlarını döndürür, yani liste
+  // seçime göre kendini yer. Bu sorgu süzülmemiş kümeyi okur ve YALNIZ `field`e
+  // bağlıdır (gerekçe dosya başlığında). Fazladan bir tur atıyor; alternatifi,
+  // bir süzgecin kendi seçenek kümesini kendi seçimiyle daraltmasıydı.
+  const turKaynagi = useAsync(
+    () => api.compare(field, undefined, undefined, "best"),
+    [field],
+  );
+  const turSecenek = turSecenekleri(campaignTypes, turKaynagi);
+  /**
+   * Budama yüzünden geri alınan tür adı — uyarı metni bunu yazar.
+   *
+   * Sessiz sıfırlama yasak: kullanıcı «Kart» seçiliyken başka bir alana
+   * geçtiğinde süzgecin kendi kendine «Tümü»ye dönmesi, arayüzün kullanıcının
+   * seçimini gizlice yediği izlenimini verirdi. Uyarı bir SONRAKİ kullanıcı
+   * etkileşimine kadar durur (bkz. `etkilesim`) — zamanlayıcıyla kaybolan bir
+   * bildirim, okumaya yetişemeyen kullanıcı için hiç basılmamış sayılır.
+   */
+  const [turUyarisi, setTurUyarisi] = useState<string | null>(null);
+
+  // Seçili tür budandıysa süzgeç «Tümü»ye alınır. Sıra önemli: kullanıcı alanı
+  // değiştirdiğinde `etkilesim()` uyarıyı önce siler, yanıt gelince bu etki
+  // YENİ alanın uyarısını basar — yani ekranda her zaman en son ölçümün sözü
+  // durur. Budama yapılmadıysa (yükleniyor/hata) seçim ASLA bozulmaz.
+  const listeAnahtari = turSecenek.liste.join(" ");
+  useEffect(() => {
+    if (!turSecenek.budandi) return;
+    if (!type || turSecenek.liste.includes(type)) return;
+    setType("");
+    setTurUyarisi(type);
+    // `liste` her render'da yeni bir dizi olarak kurulur; bağımlılık olarak
+    // İÇERİĞİ (`listeAnahtari`) izlenir — kimlik değişimi tek başına bu etkiyi
+    // her render'da koşturmak demekti.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [turSecenek.budandi, listeAnahtari, type]);
+
+  /**
+   * Kullanıcının süzgeçlere her dokunuşu tür uyarısını kapatır.
+   *
+   * «Sonraki etkileşime kadar durur» kuralının karşılığı burası: uyarıyı
+   * kapatmak için ayrı bir × düğmesi konmadı, çünkü kullanıcının bildirimi
+   * onayladığının en güvenilir kanıtı bir sonraki süzgeç hareketidir.
+   */
+  const etkilesim = () => setTurUyarisi(null);
   // Banka kataloğu cetvelin «veri yok» satırları için; `/compare` yalnız değer
   // TAŞIYAN satırları döndürdüğü için eksik bankalar ancak buradan bilinir.
   const banks = useAsync(() => api.banks(), []);
@@ -325,7 +410,15 @@ export default function ComparePanel({
           }
         />
 
-        <FieldChips fields={fields} value={field} onChange={setField} />
+        {/* Çipler budanmaz (bkz. dosya başlığı); yalnız tür uyarısını kapatır. */}
+        <FieldChips
+          fields={fields}
+          value={field}
+          onChange={(f) => {
+            etkilesim();
+            setField(f);
+          }}
+        />
 
         <div className="row" style={{ marginTop: 12 }}>
           <div className="row-tight">
@@ -337,7 +430,10 @@ export default function ComparePanel({
               className="select"
               style={{ width: "auto" }}
               value={intent}
-              onChange={(e) => setIntent(e.target.value as Intent)}
+              onChange={(e) => {
+                etkilesim();
+                setIntent(e.target.value as Intent);
+              }}
             >
               {INTENTS.map((i) => (
                 <option key={i.key} value={i.key}>
@@ -358,10 +454,15 @@ export default function ComparePanel({
               className="select"
               style={{ width: "auto" }}
               value={type}
-              onChange={(e) => setType(e.target.value)}
+              onChange={(e) => {
+                etkilesim();
+                setType(e.target.value);
+              }}
             >
               <option value="">Tümü (türe göre bölümlenir)</option>
-              {campaignTypes.map((t) => (
+              {/* Liste ALANA GÖRE budanmış hâlidir; sıra `campaignTypes`
+                  propunun kanonik sırasıdır, yanıttan yeniden üretilmez. */}
+              {turSecenek.liste.map((t) => (
                 <option key={t} value={t}>
                   {t}
                 </option>
@@ -377,7 +478,10 @@ export default function ComparePanel({
               className="select"
               style={{ width: "auto" }}
               value={perBank}
-              onChange={(e) => setPerBank(e.target.value as PerBank)}
+              onChange={(e) => {
+                etkilesim();
+                setPerBank(e.target.value as PerBank);
+              }}
             >
               <option value="best">En iyi kampanya (tek satır)</option>
               <option value="all">Tüm kampanyaları göster</option>
@@ -388,6 +492,26 @@ export default function ComparePanel({
               şeridinin sonunda ikinci kez basılması, süzgeç gibi görünen ama
               tıklanmayan bir öğe üretiyordu. */}
         </div>
+
+        {/* DÜŞEN TÜRLER — budamanın makbuzu. Sayı ve adlar birlikte verilir:
+            yalnız sayı «neyi kaybettim» sorusunu cevaplamaz, yalnız adlar ise
+            kaybın büyüklüğünü göstermez. Hiç tür düşmediyse satır BASILMAZ —
+            «0 tür düştü» diye bir bilgi yoktur, gürültü vardır. */}
+        {turSecenek.dusen.length > 0 && (
+          <p className="small muted" style={{ marginTop: "var(--sp-2)" }}>
+            {trNum(turSecenek.dusen.length)} tür bu alanda veri taşımıyor,
+            listeden düştü: {turSecenek.dusen.join(" · ")}
+          </p>
+        )}
+
+        {/* Geri alınan seçimin bildirimi. `role="status"` çünkü bu, kullanıcının
+            YAPMADIĞI bir değişikliktir; ekran okuyucu bunu görsel değişiklikle
+            aynı anda duymalı. */}
+        {turUyarisi && (
+          <p className="small" role="status" style={{ marginTop: "var(--sp-2)" }}>
+            «{turUyarisi}» bu alanda veri taşımıyor; süzgeç Tümü&apos;ne alındı.
+          </p>
+        )}
 
         <div style={{ marginTop: "var(--sp-4)" }}>
           {/* YÜKLENİYOR: banka adları ve satır sayısı hemen basılır, yalnız

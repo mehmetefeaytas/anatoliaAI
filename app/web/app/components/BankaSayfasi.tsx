@@ -93,6 +93,7 @@ import type {
   CompositeScore,
   FieldMeta,
 } from "../lib/api";
+import { sayiIyelik } from "../lib/format";
 import { useAsync } from "../lib/useAsync";
 
 type Props = {
@@ -126,35 +127,6 @@ function basHarfler(ad: string): string {
     .map((p) => Array.from(p)[0] ?? "")
     .join("")
     .toLocaleUpperCase("tr");
-}
-
-/**
- * «12 alandan 2'si» — sayıya 3. tekil iyelik eki.
- *
- * Türkçe ek ses uyumuna bağlıdır ve sayının OKUNUŞUNA göre değişir (2 → iki'si,
- * 3 → üç'ü, 6 → altı'sı). Bir kural yazmak yerine 0–12 aralığı sayıldı: ekranda
- * payda `/fields` uzunluğu, yani 12'dir ve pay ondan büyük olamaz. Aralık
- * dışında kalırsa ek yerine «tanesi» kullanılır — yanlış ek yazmaktansa daha
- * uzun ama doğru bir cümle.
- */
-const IYELIK: Record<number, string> = {
-  0: "0'ı",
-  1: "1'i",
-  2: "2'si",
-  3: "3'ü",
-  4: "4'ü",
-  5: "5'i",
-  6: "6'sı",
-  7: "7'si",
-  8: "8'i",
-  9: "9'u",
-  10: "10'u",
-  11: "11'i",
-  12: "12'si",
-};
-
-function sayiIyelik(n: number): string {
-  return IYELIK[n] ?? `${n} tanesi`;
 }
 
 /**
@@ -689,6 +661,13 @@ export default function BankaSayfasi({
                 sira={s.sira}
                 grupBuyuklugu={s.grupBuyuklugu}
                 gerekce={olcutCumlesi(s.skor, etiket)}
+                /* Ağırlık TABLOSU kırılımın birinci paydası için gerekli:
+                   bileşen listesi tablonun yalnız aktif alt kümesidir. Veri
+                   `avantaj` isteğinde ZATEN var, yeni istek atılmıyor. Gelmemişse
+                   `null` geçer ve o payda satırı basılmaz. Kırılım yalnız
+                   ölçülmüş satırda çizildiği için diğer dallara geçirilmiyor. */
+                agirliklar={avantaj.data?.weights ?? null}
+                etiket={etiket}
               />
             ))}
 

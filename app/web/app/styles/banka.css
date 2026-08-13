@@ -264,6 +264,134 @@
 }
 
 /* ===================================================================
+ * YILDIZIN KIRILIMI — «bu yıldız nasıl hesaplandı» (katlanmış)
+ * ================================================================ */
+
+/* Satırın DÖRDÜNCÜ ızgara çocuğu; üç sütunun tamamını kaplar. Sarmalayıcı bir
+ * div eklenmedi: cetvelin alt çizgi kuralı (`.tur-cetveli .tur-satir:last-child`)
+ * satırın cetvelin doğrudan çocuğu olmasına dayanıyor. */
+.tur-kirilim {
+  grid-column: 1 / -1;
+  margin-top: var(--sp-2);
+}
+
+/* Kapalı hâl bir DÜĞMEDİR ama bir uyarı değil: mono, küçük ve solgun durur.
+ * Yıldızın kendisinden daha yüksek kontrastlı olsaydı ekranın konusu hesap
+ * tablosu olurdu; yıldız özet, kırılım kanıttır. */
+.tur-kirilim-ozet {
+  cursor: pointer;
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  padding: 2px 0;
+}
+
+.tur-kirilim-ozet:hover {
+  color: var(--fg);
+}
+
+/* Altı sütunlu tablo dar ekranda sığmaz; KENDİ İÇİNDE yatay kayar, sayfa
+ * gövdesi kaymaz. */
+.tur-kirilim-govde {
+  margin-top: var(--sp-2);
+  overflow-x: auto;
+}
+
+.tur-kirilim-tablo {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-xs);
+  text-align: left;
+}
+
+.tur-kirilim-baslik {
+  text-align: left;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-faint);
+  padding-bottom: var(--sp-2);
+}
+
+.tur-kirilim-tablo th,
+.tur-kirilim-tablo td {
+  text-align: left;
+  vertical-align: top;
+  padding: var(--sp-1) var(--sp-2);
+  border-top: 1px solid var(--line-soft);
+}
+
+.tur-kirilim-tablo thead th {
+  color: var(--fg-dim);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.tur-kirilim-tablo tbody th {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+}
+
+.tur-kirilim-sayi {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* BOŞ KALAN ÖLÇÜT satırı. Renk TEK sinyal DEĞİL: normalize hücresinde
+ * «ölçülemedi» yazar ve satır başı kesikli kenar alır — aynı boşluk biçimi
+ * `.alan-cip-bos` ve `.tur-olculemedi` ile aynı dili konuşur. */
+.tur-kirilim-bos td {
+  color: var(--fg-faint);
+}
+
+.tur-kirilim-bos th[scope="row"] {
+  color: var(--fg-dim);
+  font-weight: var(--fw-regular);
+  border-left: 2px dashed var(--line);
+}
+
+.tur-kirilim-yok {
+  font-family: var(--font-mono);
+  color: var(--fg-faint);
+}
+
+/* ÜÇ PAYDA. Madde işareti yok; her payda kendi sol kenar çizgisiyle durur —
+ * tablonun devamı değil, tablonun OKUNMA KURALLARI. */
+.tur-kirilim-paydalar {
+  list-style: none;
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  display: grid;
+  gap: var(--sp-3);
+  max-width: var(--measure);
+}
+
+.tur-kirilim-payda {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: var(--fg-dim);
+  border-left: 2px solid var(--line-soft);
+  padding-left: var(--sp-3);
+}
+
+.tur-kirilim-payda b {
+  color: var(--fg);
+  font-weight: var(--fw-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.tur-kirilim-payda-etiket {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  color: var(--fg-faint);
+}
+
+/* ===================================================================
  * 12 ALANIN DURUMU — çip şeridi (FieldChips, durum kipi)
  * ================================================================ */
 

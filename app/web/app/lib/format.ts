@@ -11,6 +11,39 @@ const NF = new Intl.NumberFormat("tr-TR", { maximumFractionDigits: 2 });
 /** Türkçe sayı biçimlendirici (binlik `.`, ondalık `,`). */
 export const trNum = NF.format.bind(NF);
 
+/**
+ * «12 alandan 2'si», «5 ölçütün 1'i» — sayıya 3. tekil iyelik eki.
+ *
+ * Türkçe ek ses uyumuna bağlıdır ve sayının OKUNUŞUNA göre değişir (2 → iki'si,
+ * 3 → üç'ü, 6 → altı'sı). Bir kural yazmak yerine 0–12 aralığı sayıldı: ekranda
+ * bu ekin geçtiği iki yerde payda ya `/fields` uzunluğu (12) ya da ağırlık
+ * tablosunun ölçüt sayısıdır (5) ve pay ondan büyük olamaz. Aralık dışında
+ * kalırsa ek yerine «tanesi» kullanılır — yanlış ek yazmaktansa daha uzun ama
+ * doğru bir cümle.
+ *
+ * Tek yerde durur çünkü iki ekran (banka künyesi ve yıldız kırılımı) aynı eki
+ * kullanıyor; iki kopya bir gün ayrışırdı.
+ */
+const IYELIK: Record<number, string> = {
+  0: "0'ı",
+  1: "1'i",
+  2: "2'si",
+  3: "3'ü",
+  4: "4'ü",
+  5: "5'i",
+  6: "6'sı",
+  7: "7'si",
+  8: "8'i",
+  9: "9'u",
+  10: "10'u",
+  11: "11'i",
+  12: "12'si",
+};
+
+export function sayiIyelik(n: number): string {
+  return IYELIK[n] ?? `${n} tanesi`;
+}
+
 function isRec(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
