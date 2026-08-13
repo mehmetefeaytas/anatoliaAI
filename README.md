@@ -216,6 +216,11 @@ harici bağımlılık olmadan**, saf Python standart kütüphanesi ile çalış�
 
 ### A) Sıfır bağımlılık — deterministik çekirdek (en hızlı doğrulama)
 
+> ⚠️ **Python 3.11+ gerekir** (`python3 -V` ile doğrulayın). Kod `zip(..., strict=)`
+> gibi 3.10+ sözdizimi kullanıyor; macOS'un sistemle gelen `python3`'ü 3.9'dur ve
+> `TypeError: zip() takes no keyword arguments` ile düşer. Sürümünüz düşükse
+> komutlarda `python3` yerine `python3.11`/`python3.12` yazın.
+
 ```bash
 git clone https://github.com/mehmetefeaytas/anatoliaAI.git
 cd anatoliaAI/app
@@ -223,7 +228,9 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı)
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi (54 birim/entegrasyon testi, tamamı offline)
+# Tüm test paketi — temiz klonda ölçüldü (13 Ağu): 2.667 test OK, 210 atlandı.
+# Atlananlar isteğe bağlı bağımlılık isteyenlerdir (Postgres, FastAPI, model
+# indirmesi); çekirdek hiçbirine bağlı değildir ve tamamı offline koşar.
 python3 -m unittest discover -s tests
 
 # Değerlendirme: alan bazında P/R/F1 + zor-vaka alt kümesi
