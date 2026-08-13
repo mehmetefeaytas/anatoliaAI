@@ -47,6 +47,10 @@ Dördü de **aynı** belgeleri görür (kalibrasyon turu). Kendi harfinizi açı
 
 - Belge: **26** (11 banka, 9 kampanya türünde 3'er) · alan: 12 · tam kapsama
   (her belgede 12/12 alan karara bağlanır)
+- **Protokol: v2** — dosyalarda `protokol` sütunu var. Boş `verdict` "onay"
+  DEĞİL, "karar verilmedi" demektir ve gold'a girmez. Model doğruysa `ok`,
+  yanlışsa `fix` + değer, metinde yoksa `absent`, karar veremiyorsanız
+  `unclear` yazın (§3.1). Boş bırakılan satır ölçüme hiç katılmaz.
 - Belge tam metinleri: `belgeler/<doc_id>.txt`
 - Tohum: `42` — aynı komut aynı dosyaları üretir
 

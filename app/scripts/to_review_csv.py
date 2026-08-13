@@ -73,6 +73,19 @@ COLUMNS = [
     "disagreement", "snippet", "gold_value", "verdict", "note",
 ]
 
+# `protokol` sütunu YALNIZ v2 turlarında yazılır ve boş `verdict`in anlamını
+# belirler (ANNOTATION_GUIDE §3.1):
+#
+#     v1  boş = "ok" (model doğru)        -> sütun YOK
+#     v2  boş = KARAR VERİLMEDİ           -> sütun VAR, değeri "v2"
+#
+# Ayrım kozmetik değil: `report_iaa` protokolü satırdan okur ve sütun yoksa
+# dosyayı v1 sayar. v1 varsayımıyla okunan DOLDURULMAMIŞ bir tur, "dört
+# anotatör de her satırı onayladı" demektir ve κ = 1,000 verir. Bu betiğin
+# v2 turu için v1 başlığı üretmesi, ölçülmemiş bir turu mükemmel uyum gibi
+# gösterir — sessiz ve en pahalı hata biçimi.
+PROTOCOL_COLUMN = "protokol"
+
 # TR Excel varsayılanı: ayırıcı ';', kodlama UTF-8 BOM'lu.
 CSV_DELIMITER = ";"
 CSV_ENCODING = "utf-8-sig"
@@ -281,12 +294,20 @@ def has_annotations(path: str | Path) -> bool:
                for row in reader)
 
 
-def write_csv(rows: list[dict], path: str | Path) -> int:
-    """Satırları TR-Excel uyumlu CSV'ye yazar. Dönen değer: satır sayısı."""
+def write_csv(rows: list[dict], path: str | Path, protokol: str = "v1") -> int:
+    """Satırları TR-Excel uyumlu CSV'ye yazar. Dönen değer: satır sayısı.
+
+    `protokol="v2"` verilirse her satıra `protokol` sütunu eklenir; boş
+    `verdict` artık "onay" değil "karar verilmedi" anlamına gelir.
+    """
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
+    kolonlar = list(COLUMNS)
+    if protokol == "v2":
+        kolonlar.append(PROTOCOL_COLUMN)
+        rows = [{**r, PROTOCOL_COLUMN: "v2"} for r in rows]
     with target.open("w", encoding=CSV_ENCODING, newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=COLUMNS,
+        writer = csv.DictWriter(handle, fieldnames=kolonlar,
                                 delimiter=CSV_DELIMITER,
                                 lineterminator=CSV_LINETERMINATOR,
                                 extrasaction="ignore")
@@ -369,7 +390,8 @@ def balance_main(main: list[str], annotators: list[str], row_counts: dict[str, i
 def generate(pre_path: str, out_dir: str, annotators: list[str],
              calibration: int, duplicate: int, absent_docs: int, seed: int,
              low: float = LOW_CONF, high: float = HIGH_CONF,
-             pinned_calibration: Optional[set[str]] = None) -> dict[str, Any]:
+             pinned_calibration: Optional[set[str]] = None,
+             protokol: str = "v1") -> dict[str, Any]:
     """Tüm CSV'leri, belge metinlerini ve atama planını üretir.
 
     Anotasyon içeren CSV'ler ne silinir ne üzerine yazılır (bkz.
@@ -435,7 +457,7 @@ def generate(pre_path: str, out_dir: str, annotators: list[str],
         """Dosyayı yazar; anotasyonluysa DOKUNMAZ."""
         if filename in protected:
             return
-        written[filename] = write_csv(rows, out / filename)
+        written[filename] = write_csv(rows, out / filename, protokol=protokol)
 
     # 1) Kalibrasyon turu — HERKES aynı belgeleri anote eder (Fleiss kappa).
     if calib:
@@ -711,6 +733,9 @@ def main(argv: Optional[list[str]] = None) -> int:
                        help="kalibrasyon kümesini bu (anote edilmiş) CSV'nin "
                             "belgelerinden al — dört anotatör aynı belgeleri "
                             "görsün ki Fleiss kappa hesaplanabilsin")
+    parser.add_argument("--protokol", choices=("v1", "v2"), default="v1",
+                       help="v2: `protokol` sütunu yazılır, boş verdict "
+                            "'KARAR VERİLMEDİ' anlamına gelir (v1'de 'ok')")
     args = parser.parse_args(argv)
 
     pinned: Optional[set[str]] = None
@@ -720,7 +745,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     annotators = [a.strip() for a in args.annotators.split(",") if a.strip()]
     plan = generate(args.pre, args.out_dir, annotators, args.calibration,
                     args.duplicate_subset, args.absent_docs, args.seed,
-                    args.low, args.high, pinned_calibration=pinned)
+                    args.low, args.high, pinned_calibration=pinned,
+                    protokol=args.protokol)
 
     total_rows = sum(plan["files"].values())
     print(f"CSV'ler yazıldı: {args.out_dir}")

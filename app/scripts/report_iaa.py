@@ -231,17 +231,43 @@ def compute(csv_paths: list[str]) -> dict[str, Any]:
     # yoksa "hiç uyuşmazlık yok" ile "kimse bakmamış" ayırt edilemez.
     undecided = sum(1 for unit in verdict_units for v in unit if v is None)
 
+    # HİÇ DOKUNULMAMIŞ TUR KORUMASI.
+    #
+    # v1 protokolünde boş `verdict` = "ok" (onay) demektir. Dolayısıyla
+    # doldurulmamış dört dosya, "dört anotatör de her satırı onayladı" diye
+    # okunur: κ = 1,000 ve DURUM = "kabul — Gold güvenilir. Ana geçişe devam."
+    # Ölçüldü (2026-08-13): yeni üretilmiş, tek hücresi bile doldurulmamış bir
+    # tur tam olarak bunu bastı.
+    #
+    # Bu, projenin daha önce bir kez yandığı hata biçiminin aynısı: YANLIŞ
+    # ŞEYİ ÖLÇÜP DOĞRU GÖRÜNMEK. Üstelik en pahalı yönde — sıfır iş, mükemmel
+    # not. v2 protokolü bunu kendiliğinden yakalar (boş = karar yok), ama
+    # koruma protokolden BAĞIMSIZ olmalı: v1 dosyaları hâlâ okunabiliyor.
+    #
+    # Ölçüt açık işaret: en az bir satırda `verdict` ya da `gold_value` dolu.
+    # Tek bir işaret bile turu "ölçülmüş" saymaya yeter; hiç yoksa κ ölçülemez.
+    isaretli = any(
+        (row.get("verdict") or "").strip() or (row.get("gold_value") or "").strip()
+        for satirlar in shared.values() for row in satirlar.values() if row
+    )
+    if not isaretli:
+        verdict_kappa = float("nan")
+
     return {
         "annotators": annotators,
         "protocols": protocols,
         "mixed_protocols": len(set(protocols.values())) > 1,
         "undecided_cells": undecided,
+        "bos_tur": not isaretli,
         "shared_rows": len(keys),
         "verdict_metric": verdict_metric,
         "verdict_kappa": verdict_kappa,
-        "value_alpha_nominal": krippendorff_alpha(value_units, "nominal"),
+        # Alfalar da aynı korumaya tabi: boş turda değer birimleri de birebir
+        # aynı ("hepsi boş") olduğu için 1,000 çıkarlardı.
+        "value_alpha_nominal": (float("nan") if not isaretli
+                                else krippendorff_alpha(value_units, "nominal")),
         "value_alpha_ratio": (krippendorff_alpha(ratio_units, "ratio")
-                              if ratio_units else float("nan")),
+                              if ratio_units and isaretli else float("nan")),
         "ratio_units": len(ratio_units),
         "disagreements": disagreements,
         "files": list(csv_paths),
@@ -347,6 +373,11 @@ def main(argv: Optional[list[str]] = None) -> int:
     Path(args.out).write_text(render(result), encoding="utf-8")
 
     status, action = interpret_kappa(result["verdict_kappa"])
+    if result.get("bos_tur"):
+        # `interpret_kappa`'nın NaN mesajı burada yanıltıcı olurdu: satırlar
+        # PAYLAŞILMIŞ, anote edilmemiş. Sebebi doğru söyle.
+        status, action = ("olcusuz", "Hiçbir anotatör tek bir işaret bırakmamış "
+                                     "— tur DOLDURULMAMIŞ. Uyum ölçülemez.")
     protocols = "+".join(sorted(set(result["protocols"].values())))
     print(f"protokol            : {protocols}")
     if result["mixed_protocols"]:
