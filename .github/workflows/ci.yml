@@ -210,6 +210,111 @@ jobs:
           print(f'API ayakta, {len(yollar)} yol kayitli')
           "
 
+  postgres:
+    # NEDEN AYRI BIR IS VAR.
+    #
+    # `test-with-deps` isinde 53 test "Postgres yok" diye ATLANIYORDU ve
+    # atlama CI ciktisinda yesil gorunur. Sonucu somut: sistemin IKI veri
+    # tabani arka ucu var (SQLite + Postgres/pgvector), ikisinin AYNI cevabi
+    # verdigi iddiasi `tests/test_repo_parity.py` ile yazilmis ama o test
+    # CI'da hic kosmamis. `docker-compose.yml` icindeki `db-check` servisi
+    # tam bu isi yapiyor -- ama hicbir CI isi onu ayaga kaldirmiyordu.
+    #
+    # Yani "Postgres yolu calisiyor" iddiasi bugune kadar YALNIZ ELDE
+    # dogrulanmisti. compose dosyasi bunu kendisi itiraf ediyor: korpusu
+    # SQLite'tan Postgres'e tasiyan bir betik yok, tasima elle yapildi.
+    #
+    # Bu is o bosluga kapi koyar. Korpus tasima sorununu COZMEZ (o ayri bir
+    # is): sinanan sey semanin kurulabildigi, iki arka ucun ayni sozlesmeyi
+    # verdigi ve `embeddings` tablosunun `<=>` ile gercekten sorgulanabildigi.
+    name: Postgres/pgvector paritesi
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        # DIGEST SABITLI ve `docker-compose.yml`dekiyle AYNI imaj. Ayni
+        # dosyada iki farkli pgvector surumu tutmak, CI'da gecen bir seyin
+        # demoda gecmemesi anlamina gelirdi.
+        image: pgvector/pgvector:pg16@sha256:a36250871de0833b8757561c72f2477ef1ddd1101afa4e617fb552e0de514c6b
+        env:
+          POSTGRES_USER: anatolia
+          POSTGRES_PASSWORD: anatolia
+          POSTGRES_DB: anatolia
+        ports: ["5432:5432"]
+        # Kap hazir olmadan testi baslatmak yaris kosulu yaratir; testler
+        # "baglanamadim" diye ATLAR ve is yine sahte yesil yanar.
+        options: >-
+          --health-cmd "pg_isready -U anatolia -d anatolia"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Calisma zamani bagimliliklarini kur
+        working-directory: app
+        run: pip install -r requirements-api.txt
+
+      # `test_api_backend.py` ucları BILEREK `TestClient` uzerinden cagiriyor
+      # (FastAPI'nin threadpool'unda kosmasi icin), o yuzden burada da test
+      # araci gerekiyor. `requirements-api.txt`e EKLENMEZ -- gerekcesi
+      # `test-with-deps` isindeki ayni adimda yazili.
+      - name: Test araci bagimliligi (yalniz CI)
+        run: pip install httpx2
+
+      # `vector` uzantisini KOD kuruyor (`src/db/schema.sql:5`,
+      # CREATE EXTENSION IF NOT EXISTS), o yuzden burada elle kurmuyoruz --
+      # kurarsak sinanan sey semanin kendisi olmaktan cikardi.
+      - name: Postgres gercekten ayakta ve pgvector var
+        env:
+          PGPASSWORD: anatolia
+        run: |
+          python - <<'PY'
+          import psycopg
+          with psycopg.connect(
+                  "postgresql://anatolia:anatolia@localhost:5432/anatolia") as c:
+              c.execute("CREATE EXTENSION IF NOT EXISTS vector")
+              c.commit()
+              sur = c.execute("SELECT version()").fetchone()[0]
+              ext = c.execute(
+                  "SELECT extversion FROM pg_extension "
+                  "WHERE extname='vector'").fetchone()
+          print("postgres:", sur.split(",")[0])
+          print("pgvector:", ext[0] if ext else "YOK")
+          assert ext, "pgvector uzantisi kurulamadi"
+          PY
+
+      # ATLAMA SAYISI BURADA KAPIDIR. Testler on kosul yoksa kendilerini
+      # atliyor (dogru davranis) -- ama bu iste atlamak, isin var olma
+      # sebebini ortadan kaldirir. Bu yuzden atlanan test sayisi 0 olmali ve
+      # degilse is KIRILIR: sessizce "gecti" demesini engelleyen tek sey bu.
+      - name: Postgres paritesi + pgvector testleri (atlama = HATA)
+        working-directory: app
+        env:
+          ANATOLIA_TEST_DATABASE_URL: postgresql://anatolia:anatolia@localhost:5432/anatolia
+        run: |
+          python - <<'PY'
+          import sys, unittest
+          adlar = ["tests.test_pgvector_repository",
+                   "tests.test_repo_parity",
+                   "tests.test_api_backend"]
+          paket = unittest.TestLoader().loadTestsFromNames(adlar)
+          sonuc = unittest.TextTestRunner(verbosity=2).run(paket)
+          print(f"\nkosan={sonuc.testsRun} hata={len(sonuc.errors)} "
+                f"basarisiz={len(sonuc.failures)} atlanan={len(sonuc.skipped)}")
+          for test, sebep in sonuc.skipped:
+              print(f"  ATLANDI: {test} -> {sebep}")
+          if sonuc.skipped:
+              sys.exit("Postgres isinde test ATLANDI: on kosul kurulamamis, "
+                       "yani bu is bir sey dogrulamiyor.")
+          sys.exit(0 if sonuc.wasSuccessful() else 1)
+          PY
+
   lint:
     # ARTIK KAPI (31 Tem 2026 aksami).
     #
