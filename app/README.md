@@ -168,7 +168,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
 | Ablasyon + McNemar | ✅ ölçüldü — `docs/rapor/ablasyon.md` |
-| Anotatörler arası uyum (κ) | ⏳ **henüz ölçülmedi** — çift anotasyonlu veri yok (aşağıda) |
+| Anotatörler arası uyum (κ) | ✅ **Fleiss κ 0,302** · Krippendorff α 0,620/0,787 (260 ortak satır, 4 anotatör). Eşik altı → ilan edilen sonuç uygulandı (kılavuz v1→v2). v2 turu anote EDİLMEDİ, yeniden ölçüm bekliyor |
 
 ### Ölçüm sonuçları
 
@@ -259,22 +259,51 @@ sorusunun 4'ü doğru yanıtlandı** — hem kapılar tek başınayken hem RAG s
 açıkken. Kısıt: set n=26 ve sentez tarafı tek modelle (`qwen2.5:7b-instruct`)
 ölçüldü. Ayrıntı: `docs/rapor/guvenlik-llm-modu.md`.
 
-### Bilinen eksik: κ
+### κ ÖLÇÜLDÜ ve eşiğin ALTINDA — ilan edilen sonuç uygulandı
 
-Anotatörler arası uyum **hesaplanmadı**. Kod (`eval/iaa.py` — Cohen, Fleiss,
-Krippendorff), eşikler (κ≥0,80 kabul · 0,67–0,80 notla · <0,67 hakemlik,
-**önceden ilan edilmiş**) ve CSV paketi hazır; eksik olan çift anotasyonlu
-veridir. gold.v2'nin dört anotatörü **ayrık** kümelere baktığı için örtüşme
-sıfır ve κ tanımsız. Bu, şartname §16'nın karşılanmayan tek kalemidir.
+> Bu bölüm 2026-08-12'de düzeltildi. Önceki hâli "κ hesaplanmadı, şartname
+> §16'nın karşılanmayan tek kalemi" diyordu; **yanlıştı**. Ölçüm yapılmış ve
+> raporlanmıştı (`data/gold/iaa_report.md`), README güncellenmemişti.
+
+Kalibrasyon turu (v1), 4 anotatör, **260 ortak anote edilmiş satır**, karar
+bulunmayan hücre 0 — kaynak: `data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv`.
+
+| Ölçüt | Neyi ölçer | Değer |
+|---|---|---:|
+| **Fleiss κ** (karar) | aynı satırda aynı kararı mı verdiler | **0,302** |
+| Krippendorff α (nominal) | gold DEĞERİ birebir aynı mı | 0,620 |
+| Krippendorff α (ratio) | sayısal alanlarda değer yakınlığı (37 birim) | 0,787 |
+
+Üretim: `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv`
+
+**Cohen değil Fleiss:** Cohen κ iki anotatör içindir; burada dört anotatör
+var ve Fleiss onun genellemesidir. `eval/iaa.py` üçünü de içeriyor.
+
+**Eşik politikası anotasyon BAŞLAMADAN ilan edilmişti** (ANNOTATION_GUIDE §7):
+κ≥0,80 kabul · 0,67≤κ<0,80 notla kabul · κ<0,67 **zorunlu hakemlik + kılavuz
+revizyonu**. κ=0,302 üçüncü banda düştü ve ilan edilen sonuç **uygulandı**:
+kılavuz v1→v2 revize edildi (`docs/rapor/kilavuz-revizyonu.md`, 2026-08-07),
+123 uyuşmazlık tek tek listelendi.
+
+Düşük κ'yı gizlemiyoruz: serbest metin alanları (`kampanya_kosullari`)
+uyumu tek başına aşağı çekiyor ve aynı alan mikro-F1'de de ayrı raporlanıyor.
+Sayıya bakıp eşik değiştirmek yasaktı, değiştirilmedi.
+
+**Gerçek açık — v2 turu ANOTE EDİLMEDİ.** Revizyondan sonra κ'nın düzelip
+düzelmediği ölçülemedi: `round0_kalibrasyon_v2_{A,B,C,D}.csv` dağıtıldı ama
+dördünün **sha256'sı birebir aynı** (`66c7db60…`), yani hiçbiri
+doldurulmamış. `report_iaa` bu tur için dürüstçe "ölçülemedi / olcusuz"
+diyor. Kapanması insan anotasyonu gerektiriyor; kod ve komut hazır.
 
 ### Sonraki adımlar
 
 Öncelik sırasıyla, teslime kalan sürede:
 
-- **κ için çift anotasyon** — 20 belgelik kalibrasyon paketi hazır ve
-  boş bekliyor (`data/gold/review/round0_kalibrasyon_v2_*.csv`). Dolunca
-  `python -m scripts.report_iaa <dosyalar>` tek komutla Fleiss κ +
-  Krippendorff α üretir. §16'nın kapanmayan tek kalemi bu.
+- **κ v2 turunu anote et** — revizyon SONRASI κ ölçülemedi çünkü
+  `round0_kalibrasyon_v2_{A,B,C,D}.csv` dördü de aynı sha256'yı taşıyor
+  (hiç doldurulmamış). Dolunca `python -m scripts.report_iaa <dosyalar>`
+  tek komutla Fleiss κ + Krippendorff α üretir ve kılavuz revizyonunun
+  uyumu düzeltip düzeltmediği ölçülür. v1 κ'sı ZATEN ölçülmüş (0,302).
 - **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve 0,452 nokta
   tahmini savunulabilir hâle gelir.
 - **`kampanya_kosullari` ve `vade_ay`** — ikisi mikro-F1'in en büyük tek
