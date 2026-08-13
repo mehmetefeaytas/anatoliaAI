@@ -458,6 +458,32 @@ class OllamaClient:
         self.num_predict = int(num_predict if num_predict is not None
                                else os.environ.get("OLLAMA_NUM_PREDICT", 512))
         self.temperature = temperature
+        # DÜŞÜNME KİPİ KAPALI (varsayılan). Qwen3 ve sonrası "thinking" model
+        # ailesidir: cevaptan önce muhakeme token'ı üretir. Bu, yukarıdaki
+        # `num_predict` sınırıyla birleşince sessiz bir arızaya yol açıyor —
+        # bütçe muhakemeye gidiyor ve cevap HİÇ üretilmiyor.
+        #
+        # ÖLÇÜLDÜ (2026-08-13, `qwen3.5:9b-q4_K_M`, bu sınıfın gerçek
+        # ayarlarıyla: /api/chat + format şeması + num_predict=512):
+        #
+        #   think verilmedi -> 29,2 sn · 512 token · içerik BOŞ
+        #   think=False     ->  3,5 sn ·  63 token · içerik dolu
+        #
+        # Yani bayrak konmadan koşulan bir ablasyon, modeli kalitesizliğinden
+        # değil YANLIŞ ÇAĞRILDIĞI için elerdi. vLLM kolunda karşılığı zaten
+        # vardı (`chat_template_kwargs.enable_thinking = False`); Ollama kolu
+        # eksikti.
+        #
+        # Düşünmeyen modelde de GÜVENLİ: `qwen2.5:7b-instruct` bayrakla ve
+        # bayraksız aynı çıktıyı veriyor, hata dönmüyor (aynı ölçüm). Bu yüzden
+        # model adına bakan bir koşul YAZILMADI — koşul, yeni bir model ailesi
+        # geldiğinde sessizce yanlış tarafa düşerdi.
+        #
+        # `OLLAMA_THINK=1` ile açılabilir: muhakemenin çıkarım kalitesine
+        # etkisini ÖLÇMEK isteyen biri için kapı açık kalsın, ama ölçmeden
+        # açılan bir kip varsayılan olamaz.
+        self.think = (os.environ.get("OLLAMA_THINK", "").strip().lower()
+                      in {"1", "true", "evet"})
         # Ollama tek moda sahiptir; pazarlık gerekmez ama arayüz aynı olsun.
         self.structured_mode = "ollama_format"
         self.negotiation_log: list[tuple[str, str]] = [("ollama_format", "OK")]
@@ -476,6 +502,8 @@ class OllamaClient:
             "format": schema,          # Ollama yapılandırılmış çıktı
             "stream": False,
             "keep_alive": self.keep_alive,
+            # Gerekçe ve ölçüm `__init__` içinde, `self.think` yanında.
+            "think": self.think,
             "options": {
                 "temperature": self.temperature,
                 "num_ctx": self.num_ctx,

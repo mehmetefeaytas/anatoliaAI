@@ -513,6 +513,38 @@ class TestOllama(unittest.TestCase):
         self.assertEqual(ex.extract(TEXT, ["vade_ay"])[0].confidence_source,
                          SOURCE_SELF_REPORTED)
 
+    def _payload(self, **kw):
+        calls = []
+
+        def transport(url, payload, timeout):
+            calls.append(payload)
+            return {"message": {"content": GOOD_JSON}}
+
+        OllamaClient(transport=transport, **kw).generate("s", "u", SCHEMA)
+        return calls[0]
+
+    def test_dusunme_kipi_varsayilan_kapali(self):
+        """Bayrak HER İSTEKTE gider ve varsayılanı `False`'tur.
+
+        Gerekçe `OllamaClient.__init__` içinde ölçümüyle yazılı: bayrak
+        konmadığında `qwen3.5:9b-q4_K_M` `num_predict` bütçesinin tamamını
+        muhakemeye harcayıp BOŞ içerik döndürüyor. Bayrağın varlığını test
+        etmek şart, çünkü kaybolduğunda hata vermez — sessizce boş cevap
+        üretir ve bu bir ölçümde "model başarısız" diye okunur.
+        """
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("OLLAMA_THINK", None)
+            self.assertIs(self._payload()["think"], False)
+
+    def test_dusunme_kipi_ortamdan_acilabilir(self):
+        """Ölçmek isteyen açabilsin — ama açmak BİLİNÇLİ bir eylem olsun."""
+        for deger in ("1", "true", "evet"):
+            with mock.patch.dict(os.environ, {"OLLAMA_THINK": deger}):
+                self.assertIs(self._payload()["think"], True, deger)
+        for deger in ("0", "hayir", ""):
+            with mock.patch.dict(os.environ, {"OLLAMA_THINK": deger}):
+                self.assertIs(self._payload()["think"], False, deger)
+
 
 # --------------------------------------------------------------------------- #
 # 7. Uzlaştırma: doğrulama modu
