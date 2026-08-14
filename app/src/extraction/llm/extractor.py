@@ -55,6 +55,32 @@ logger = logging.getLogger(__name__)
 # Ham çıktının loga/onarım prompt'una kaç karakteri girsin.
 _RAW_PREVIEW = 400
 
+# ÇIKARIM YOLUNUN ÇIKTI TOKEN BÜTÇESİ — özet yolununkinden AYRI, çünkü ölçüm
+# ikisinin farklı sayılara ihtiyaç duyduğunu gösterdi.
+#
+# İstemcinin kendi varsayılanı (`OLLAMA_NUM_PREDICT`, 512) ÖZET işi için
+# konmuştu ve orada doğru: özet şeması tek bir sınırsız dizgedir, gramer
+# sonsuza kadar üretmeye izin verir ve kaçan üretim ölçülmüş bir arızaydı.
+# Çıkarım şeması 12 tipli nesnedir; gramerin kendisi sınırlar, tavanın işi
+# kaçağı kesmek değil çıktıyı SIĞDIRMAKTIR.
+#
+# ÖLÇÜLDÜ (2026-08-14, `qwen2.5:7b-instruct`, gerçek çıkarım yolu — few-shot
+# prompt + `format` şeması dâhil — gold.v2'nin 48 belgesinin TAMAMI, bütçe
+# bilerek 4096'ya açılarak `eval_count` okundu; 48/48 çağrı `done_reason=stop`,
+# yani hiçbiri tavana çarpmadı ve sayılar gerçek ihtiyacı gösteriyor):
+#
+#     ortanca 390 · en çok 955 token
+#     512'yi aşan: 12/48   ·   1024'ü aşan: 0/48
+#
+# Yani 512 altında her dört belgeden biri JSON'u kapatamadan kesiliyordu;
+# ablasyonun `num_predict=2048` ile elle koşulmak zorunda kalmasının sebebi
+# buydu. 1536 seçildi: ölçülen en yüksek ihtiyacın ~1,6 katı, hiçbir belgenin
+# yaklaşmadığı 1024 çizgisinin üstünde ve vLLM kolunun zaten kullandığı sayı
+# (`VLLMClient.max_tokens`) — yani iki kol aynı bütçede buluşuyor. Emniyet
+# supabı olarak da iş görür: kaçan bir üretim 180 sn'lik zaman aşımına değil
+# bu tavana çarpar.
+CIKARIM_NUM_PREDICT = 1536
+
 
 class LLMExtractionError(RuntimeError):
     """Katı (strict) modda LLM çağrısı başarısız olduğunda yükseltilir."""
@@ -104,8 +130,15 @@ class LLMExtractor:
                  strict: Optional[bool] = None, max_repairs: int = 1, *,
                  system_builder: Optional[Callable[[str], str]] = None,
                  fields: Optional[Sequence[str]] = None,
-                 role: str = "genel"):
+                 role: str = "genel",
+                 num_predict: Optional[int] = None):
         """
+        num_predict: ÇIKARIM çağrılarının çıktı token bütçesi. Gerekçe ve
+            ölçüm `CIKARIM_NUM_PREDICT` yanında. İstemci nesnesi burada
+            DEĞİŞTİRİLMEZ; her çağrıda bütçeli bir KOPYA kullanılır, çünkü
+            aynı istemciyi özet ve sohbet yolları da paylaşıyor. `None` ise
+            `LLM_EXTRACT_NUM_PREDICT` ortam değişkeni, o da yoksa ölçülmüş
+            varsayılan geçerlidir.
         system_builder: belge metnini alıp sistem prompt'u üretir. Neden
             sabit bir dize değil: terim kartları BELGEYE bağlıdır (bkz.
             domain/terminology.py) — hangi terimin enjekte edileceği ancak
@@ -125,8 +158,14 @@ class LLMExtractor:
         if not self.fields:
             self.fields = tuple(EXTRACTION_FIELDS)
         self.role = role
+        self.num_predict = int(
+            num_predict if num_predict is not None
+            else os.environ.get("LLM_EXTRACT_NUM_PREDICT", CIKARIM_NUM_PREDICT))
         self.stats = _new_stats()
         self.last_result: Optional[LLMCallResult] = None
+        # (istemci, bütçe) -> bütçeli kopya. Anahtar ikisini birden taşır:
+        # `client` veya `num_predict` sonradan değişirse kopya bayatlamasın.
+        self._butceli: Optional[tuple[Any, int, Any]] = None
 
     def _system_for(self, text: str) -> str:
         """Bu belge için sistem prompt'u."""
@@ -263,16 +302,55 @@ class LLMExtractor:
         Zengin arayüz (`generate` -> LLMResponse) varsa tercih edilir: ham metin
         ve logprob'lar ancak böyle elde edilir. Yoksa eski `generate_json`
         arayüzüne düşülür (o zaman logprob ve ham metin yoktur).
+
+        İstemci `self.client` DEĞİL, onun bütçeli kopyasıdır: çıkarım şeması
+        özet şemasından geniştir ve ortak nesnenin tavanı özet için konmuştur
+        (bkz. `CIKARIM_NUM_PREDICT`).
         """
-        gen = getattr(self.client, "generate", None)
+        istemci = self._butceli_istemci(schema)
+        gen = getattr(istemci, "generate", None)
         if callable(gen):
             resp = gen(system, user, schema)
             return (getattr(resp, "text", None),
                     list(getattr(resp, "logprobs", []) or []),
                     None)
-        obj = self.client.generate_json(system, user, schema)  # type: ignore[union-attr]
+        obj = istemci.generate_json(system, user, schema)  # type: ignore[union-attr]
         return (json.dumps(obj, ensure_ascii=False) if isinstance(obj, dict) else None,
                 [], obj if isinstance(obj, dict) else None)
+
+    def _butceli_istemci(self, schema: dict) -> Any:
+        """Çıkarım bütçesi uygulanmış istemci kopyası (bir kez kurulur).
+
+        ## Neden kopyadan ÖNCE pazarlık
+
+        `VLLMClient.negotiate()` çalışan yapılandırılmış-çıktı modunu ölçerek
+        bulur ve sonucu `self.structured_mode`'a YAZAR. Kopya sığdır: pazarlık
+        kopyada yapılırsa sonuç paylaşılan nesneye geri dönmez ve iki şey
+        birden bozulur — paylaşılan istemci her çağrıda yeniden pazarlık eder
+        (4 boş HTTP gidiş-dönüşü), `LLMExtractor.structured_mode` ise `None`
+        raporlar, yani rapor "hangi modda koştuk" sorusunu cevaplayamaz.
+        Pazarlık paylaşılan nesnede yapılıp kopya SONRA çıkarılınca cache
+        kopyaya da taşınmış olur.
+
+        Yöntemler `getattr` ile yoklanır çünkü `LLMClient` protokolü yalnız
+        `generate_json` zorunlu kılar: testlerdeki sahte istemciler ve ileride
+        eklenecek bir istemci `butceyle`/`negotiate` taşımayabilir. Taşımıyorsa
+        bütçe SESSİZCE uygulanmaz — kabul edilebilir, çünkü tavanı olmayan bir
+        istemcide kısıtlanacak bir şey de yoktur.
+        """
+        if self.client is None:
+            return None
+        pazarlik = getattr(self.client, "negotiate", None)
+        if callable(pazarlik):
+            pazarlik(schema)
+        if (self._butceli is not None
+                and self._butceli[0] is self.client
+                and self._butceli[1] == self.num_predict):
+            return self._butceli[2]
+        butceyle = getattr(self.client, "butceyle", None)
+        istemci = butceyle(self.num_predict) if callable(butceyle) else self.client
+        self._butceli = (self.client, self.num_predict, istemci)
+        return istemci
 
     # ------------------------------------------------------------------ #
     # Alan üretimi
@@ -348,12 +426,20 @@ class LLMExtractor:
         return result.fields
 
     def summary(self) -> dict[str, Any]:
-        """Rapor satırı: hangi modda, kaç çağrı, kaç hata."""
+        """Rapor satırı: hangi modda, kaç çağrı, kaç hata, hangi bütçeyle.
+
+        `num_predict` rapora bilerek giriyor. 2026-08-13 ablasyonu, çıkarımın
+        512'lik ortak tavana takılması yüzünden `OLLAMA_NUM_PREDICT=2048` ELLE
+        verilerek koşuldu ve `env.json` bunu HİÇ kaydetmedi: raporu okuyan
+        biri koşumu tekrar üretemez, tabloyu hangi ayarın mümkün kıldığını
+        göremezdi. Koşumun sonucunu belirleyen bir ayar künyeye yazılmalı.
+        """
         return {
             "available": self.available,
             "strict": self.strict,
             "structured_mode": self.structured_mode,
             "client": type(self.client).__name__ if self.client else None,
+            "num_predict": self.num_predict,
             **self.stats,
         }
 

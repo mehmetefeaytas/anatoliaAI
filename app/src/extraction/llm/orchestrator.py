@@ -113,6 +113,19 @@ def _yeni_sayaclar() -> dict[str, int]:
             "sadelestirme_degisim": 0, "sadelestirme_bozucu": 0}
 
 
+def _tek_deger(degerler: list[Any]) -> Any:
+    """Hepsi aynıysa o değer; değilse sıralı liste. Boşsa `None`.
+
+    Künyeye tekil bir sayı yazmak, ajanlar farklı ayarlarla koşarken YALAN
+    olurdu. Böyle bir durum bugün yok ama künyenin doğruluğu buna
+    bağlanmamalı.
+    """
+    tekil = set(degerler)
+    if not tekil:
+        return None
+    return degerler[0] if len(tekil) == 1 else sorted(tekil)
+
+
 #: Ücret alanları ve onlarla KARIŞAN komşu kalemler.
 #:
 #: Neden deterministik kapı, hakem prompt'u değil — ÖLÇÜLDÜ: hakem beş kontrol
@@ -203,6 +216,11 @@ class LLMOrchestrator:
             "strict": self.strict,
             "structured_mode": self.structured_mode,
             "client": type(self.client).__name__ if self.client else None,
+            # Ajanların çıktı bütçesi — hepsi aynı `LLMExtractor` varsayılanını
+            # kullanır, farklıysa tekil değer yerine liste yazılır ki künye
+            # yalan söylemesin. Neden künyede: bkz. `LLMExtractor.summary()`.
+            "num_predict": _tek_deger(
+                [a.num_predict for a in self.ajanlar.values()]),
             **toplam,
             "orkestrasyon": True,
             "hakem": self.judge,

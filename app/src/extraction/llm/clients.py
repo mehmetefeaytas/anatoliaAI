@@ -352,6 +352,14 @@ class VLLMClient:
         """Yalnız sıcaklığı farklı bir KOPYA döndürür (bkz. `OllamaClient`)."""
         return _sicaklik_kopyasi(self, temperature)
 
+    def butceyle(self, token: int) -> "VLLMClient":
+        """Yalnız çıktı token bütçesi farklı bir KOPYA (bkz. `OllamaClient`).
+
+        Ollama'da alan adı `num_predict`, burada `max_tokens`. Çağıran taraf
+        (`LLMExtractor`) bu farkı bilmesin diye iki sınıfta da aynı ad.
+        """
+        return _butce_kopyasi(self, "max_tokens", token)
+
     def generate_json(self, system: str, user: str, schema: dict) -> dict:
         """Geriye uyumlu kısayol: çağır + ayrıştır (hata olursa yükselt)."""
         from .parse import parse_llm_json
@@ -452,9 +460,21 @@ class OllamaClient:
         # 10 belgelik ölçümde 4'ü düşüyordu ve iki hang tek başına 360 sn
         # yiyordu. Sınır + durdurucu ile aynı belgeler 4-8 sn'de bitiyor.
         #
-        # 512 seçildi: özet için fazlasıyla yeterli, çıkarım şemasının en geniş
-        # çıktısını da (12 alan + span) rahat kapsıyor. Kaçan üretimin bedelini
-        # 180 sn'den ~10 sn'ye indirmek asıl kazanç.
+        # 512 ÖZET İŞİNİN sayısıdır ve orada doğrudur. ÇIKARIM İÇİN DEĞİLDİR:
+        # "12 alan + span çıktısını rahat kapsıyor" diyen eski yorum ölçümle
+        # yanlışlandı (2026-08-14, `qwen2.5:7b-instruct`, gerçek çıkarım yolu,
+        # 48 gold belgenin tamamı): ihtiyaç ortanca 390, en çok 955 token ve
+        # belgelerin 12/48'i 512'yi AŞIYOR. Yani bu varsayılan altında her
+        # dört belgeden biri JSON'u kapatamadan kesiliyordu.
+        #
+        # Ayrım şemaların şeklinden geliyor, kolaylıktan değil:
+        #   özet   -> {"ozet": <string>} — tek sınırsız dizge, gramer sonsuza
+        #             kadar üretmeye izin verir; kaçan üretim ÖLÇÜLDÜ, sıkı
+        #             tavan burada gerçek bir emniyet supabıdır.
+        #   çıkarım-> 12 tipli nesne; gramerin kendisi sınırlıyor, tavanın işi
+        #             kaçağı kesmek değil sığdırmak.
+        # Bu yüzden çıkarım yolu kendi bütçesini `LLMExtractor` üzerinden
+        # `butceyle()` ile alır; buradaki varsayılan özet yolunun sayısıdır.
         self.num_predict = int(num_predict if num_predict is not None
                                else os.environ.get("OLLAMA_NUM_PREDICT", 512))
         self.temperature = temperature
@@ -548,6 +568,17 @@ class OllamaClient:
         """
         return _sicaklik_kopyasi(self, temperature)
 
+    def butceyle(self, token: int) -> "OllamaClient":
+        """Yalnız çıktı token bütçesi farklı bir KOPYA döndürür.
+
+        `sicaklikla` ile aynı gerekçe (bkz. yukarısı): bu nesne özet, sohbet
+        ve çıkarım yollarının ORTAK nesnesidir. Çıkarım işi bütçeyi yerinde
+        büyütseydi, aynı anda koşan bir özet işi ölçülmemiş bir tavanla
+        koşardı ve kaçan üretime karşı konmuş emniyet supabı sessizce
+        gevşemiş olurdu.
+        """
+        return _butce_kopyasi(self, "num_predict", token)
+
     def generate_json(self, system: str, user: str, schema: dict) -> dict:
         from .parse import parse_llm_json
 
@@ -564,4 +595,17 @@ def _sicaklik_kopyasi(istemci: Any, temperature: float) -> Any:
 
     kopya = copy.copy(istemci)
     kopya.temperature = float(temperature)
+    return kopya
+
+
+def _butce_kopyasi(istemci: Any, alan: str, token: int) -> Any:
+    """Sığ kopya + yeni çıktı bütçesi. İki istemci sınıfı için ortak.
+
+    `alan` sınıfa göre değişir (`num_predict` / `max_tokens`); ortak olan,
+    kopya döndürülmesi ve paylaşılan nesnenin dokunulmadan kalmasıdır.
+    """
+    import copy
+
+    kopya = copy.copy(istemci)
+    setattr(kopya, alan, int(token))
     return kopya

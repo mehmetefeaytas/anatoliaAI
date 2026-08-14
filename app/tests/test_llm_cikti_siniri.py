@@ -21,15 +21,18 @@ belge başına 6,9 sn** (6,4 kat hızlanma, %0 hata).
 
 from __future__ import annotations
 
+import os
 import sys
 import unittest
 from pathlib import Path
+from unittest import mock
 
 _ROOT = Path(__file__).resolve().parents[1]
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from src.extraction.llm.clients import OllamaClient
+from src.extraction.llm.clients import OllamaClient, VLLMClient
+from src.extraction.llm.extractor import CIKARIM_NUM_PREDICT, LLMExtractor
 from src.extraction.llm.parse import parse_llm_json
 
 SEMA = {"type": "object", "properties": {"ozet": {"type": "string"}},
@@ -60,6 +63,96 @@ class CiktiSiniri(unittest.TestCase):
         p = _istemci().build_payload("s", "u", SEMA)
         self.assertEqual(p["options"]["num_ctx"], 8192)
         self.assertIn("temperature", p["options"])
+
+
+class CikarimButcesiAyri(unittest.TestCase):
+    """Çıkarım yolu, özet yolunun tavanını PAYLAŞMAZ.
+
+    512 özet işinin ölçülmüş sayısıdır (yukarıdaki sınıf). Çıkarım için
+    yetersiz olduğu 2026-08-14'te ölçüldü (gold.v2'nin 48 belgesinin tamamı,
+    bütçe 4096'ya açılıp `eval_count` okunarak): ihtiyaç ortanca 390, en çok
+    955 token; belgelerin 12/48'i 512'yi aşıyordu — yani her dört belgeden
+    biri JSON'u kapatamadan kesiliyordu. Ablasyonun `num_predict=2048` ile
+    ELLE koşulmak zorunda kalmasının sebebi buydu.
+
+    Buradaki testler iki yönlüdür: çıkarımın bütçesi büyümüş OLMALI, özet
+    yolunun paylaşılan nesnesi ise dokunulmamış KALMALI.
+    """
+
+    def _yakalayan_istemci(self, kayit: list):
+        def transport(url, payload, timeout):
+            kayit.append(payload)
+            return {"message": {"content": '{"vade_ay": null}'}}
+        return OllamaClient(transport=transport)
+
+    def test_cikarim_512den_buyuk_butce_gonderiyor(self):
+        kayit: list = []
+        LLMExtractor(self._yakalayan_istemci(kayit), strict=False).call("metin")
+        self.assertGreater(kayit[0]["options"]["num_predict"], 512,
+                           "512 ölçülerek çıkarımın yarısını kesiyor")
+        self.assertEqual(kayit[0]["options"]["num_predict"],
+                         CIKARIM_NUM_PREDICT)
+
+    def test_paylasilan_istemci_DEGISMEDEN_kaliyor(self):
+        """Özet yolu `llm.client`'ı doğrudan kullanır; tavanı gevşememeli."""
+        kayit: list = []
+        istemci = self._yakalayan_istemci(kayit)
+        LLMExtractor(istemci, strict=False).call("metin")
+        self.assertEqual(istemci.num_predict, 512)
+        self.assertEqual(
+            istemci.build_payload("s", "u", SEMA)["options"]["num_predict"], 512)
+
+    def test_ortamdan_ezilebilir(self):
+        kayit: list = []
+        with mock.patch.dict(os.environ, {"LLM_EXTRACT_NUM_PREDICT": "999"}):
+            LLMExtractor(self._yakalayan_istemci(kayit), strict=False).call("m")
+        self.assertEqual(kayit[0]["options"]["num_predict"], 999)
+
+    def test_butceyle_desteklemeyen_istemci_yine_calisiyor(self):
+        """Protokol yalnız `generate_json` zorunlu kılar — sahte istemciler düşmesin."""
+        class Sade:
+            def generate_json(self, system, user, schema):
+                return {"vade_ay": None}
+
+        sonuc = LLMExtractor(Sade(), strict=False).call("metin")
+        self.assertIsNone(sonuc.error)
+
+    def test_pazarlik_PAYLASILAN_nesnede_onbelleklenir(self):
+        """Kopya sığdır: pazarlık kopyada yapılırsa sonuç geri dönmez.
+
+        O zaman paylaşılan istemci her çağrıda yeniden pazarlık eder ve
+        `LLMExtractor.structured_mode` `None` raporlar — rapor "hangi modda
+        koştuk" sorusunu cevaplayamaz. Bu test o regresyonu tutar.
+        """
+        cagri: list = []
+
+        def transport(url, payload, timeout):
+            cagri.append(payload)
+            return {"choices": [{"message": {"content": '{"vade_ay": null}'}}]}
+
+        istemci = VLLMClient(transport=transport)
+        cikarici = LLMExtractor(istemci, strict=False)
+        cikarici.call("metin")
+        self.assertEqual(istemci.structured_mode, "json_schema",
+                         "pazarlık sonucu paylaşılan nesneye yazılmalı")
+        self.assertEqual(cikarici.structured_mode, "json_schema")
+
+        n = len(cagri)
+        cikarici.call("ikinci metin")
+        self.assertEqual(len(cagri) - n, 1,
+                         "ikinci çağrı yeniden pazarlık etmemeli")
+
+    def test_vllm_butcesi_de_uygulaniyor(self):
+        cagri: list = []
+
+        def transport(url, payload, timeout):
+            cagri.append(payload)
+            return {"choices": [{"message": {"content": '{"vade_ay": null}'}}]}
+
+        istemci = VLLMClient(transport=transport)
+        LLMExtractor(istemci, strict=False).call("metin")
+        # cagri[0] pazarlığın 1 token'lık ping'i; asıl çağrı sonuncusu.
+        self.assertEqual(cagri[-1]["max_tokens"], CIKARIM_NUM_PREDICT)
 
 
 class KapanmamisDizgeOnarimi(unittest.TestCase):

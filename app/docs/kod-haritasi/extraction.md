@@ -746,6 +746,67 @@ düşüyordu ve iki hang tek başına 360 sn yiyordu.** Sınır (`num_predict = 
 few-shot + uzun metin bunu **sessizce baştan kırpıyor**, yani sistem yönergesi
 kayboluyordu.
 
+**512 ÖZET yolunun sayısıdır; çıkarım yolu ayrı bütçe kullanır (2026-08-14).**
+Eski yorum "12 alan + span çıktısını rahat kapsıyor" diyordu; ölçüm bunu
+yanlışladı. Gerçek çıkarım yolunda (few-shot prompt + `format` şeması, bütçe
+bilerek 4096'ya açılıp `eval_count` okunarak, `qwen2.5:7b-instruct`,
+gold.v2'nin **48 belgesinin tamamı**; 48/48 çağrı `done_reason=stop`, yani
+hiçbiri tavana çarpmadı — sayılar gerçek ihtiyaç):
+
+| ihtiyaç | değer |
+|---|---|
+| ortanca | 390 token |
+| en çok | 955 token |
+| 512'yi aşan belge | 12/48 |
+| 1024'ü aşan belge | 0/48 |
+
+Yani bu varsayılan altında **her dört belgeden biri** JSON'u kapatamadan
+kesiliyordu; 2026-08-13 ablasyonunun `OLLAMA_NUM_PREDICT=2048` ile **elle**
+koşulmak zorunda kalmasının sebebi buydu.
+
+Ayrım kolaylıktan değil şemaların şeklinden geliyor:
+
+- **özet** → `{"ozet": <string>}` — tek sınırsız dizge; gramer sonsuza kadar
+  üretmeye izin verir, kaçan üretim ÖLÇÜLDÜ, sıkı tavan gerçek bir emniyet
+  supabıdır.
+- **çıkarım** → 12 tipli nesne; gramerin kendisi sınırlar, tavanın işi kaçağı
+  kesmek değil **sığdırmak**.
+
+Uygulama: `LLMExtractor.CIKARIM_NUM_PREDICT` (**1536** — ölçülen en yüksek
+ihtiyacın ~1,6 katı, hiçbir belgenin yaklaşmadığı 1024 çizgisinin üstünde ve
+`VLLMClient.max_tokens` ile aynı sayı, yani iki kol aynı bütçede buluşuyor;
+`LLM_EXTRACT_NUM_PREDICT` ile ezilebilir). Paylaşılan
+istemci nesnesi **değiştirilmez**; her çağrıda `butceyle()` ile sığ bir kopya
+kullanılır, çünkü aynı nesneyi özet ve sohbet yolları da paylaşıyor
+(`sicaklikla()` ile aynı gerekçe).
+
+> **Tuzak — pazarlık kopyadan ÖNCE yapılır.** `VLLMClient.negotiate()` çalışan
+> modu ölçüp `self.structured_mode`'a yazar. Kopya sığ olduğu için pazarlık
+> kopyada yapılırsa sonuç paylaşılan nesneye dönmez: istemci her çağrıda
+> yeniden pazarlık eder (4 boş HTTP gidiş-dönüşü) ve
+> `LLMExtractor.structured_mode` `None` raporlar — rapor "hangi modda koştuk"
+> sorusunu cevaplayamaz. Regresyon testi:
+> `test_llm_cikti_siniri.py::test_pazarlik_PAYLASILAN_nesnede_onbelleklenir`.
+
+**Uçtan uca doğrulandı (2026-08-14).** Dünkü arızanın yapılandırması aynen
+kuruldu — `LLM_BACKEND=ollama` + `default_extractor()` + `LLM_STRICT=1`,
+**hiçbir bütçe ortam değişkeni verilmeden** — ve 48 gold belgenin tamamı
+koşuldu:
+
+```
+cagri=48  ok=48  parse_error=0  http_error=0  onarim=0
+DUSEN BELGE: 0/48
+paylasilan istemci num_predict = 512   (değişmedi)
+```
+
+Dün aynı yapılandırma **ilk belgede** `dengeli JSON nesnesi kapanmamis` ile
+düşüyordu. Ablasyon artık elle `OLLAMA_NUM_PREDICT=2048` verilmeden koşulur.
+
+Koşumun künyesi de düzeltildi: `LLMExtractor.summary()` (ve orkestrasyon
+karşılığı) artık `num_predict` raporluyor, yani `eval/reports/*/env.json`
+hangi bütçeyle koşulduğunu kaydediyor. 2026-08-13 raporunda bu satır yok —
+o koşum elle verilen bir bütçeyle yapıldı ve künye bunu göstermiyordu.
+
 ### 6.10 Ollama zaman aşımı ortamdan
 > «Sabit 180 sn DEĞİL. Bu sınır boştaki makinede bol, yüklü makinede yetersiz:
 > 48 belgelik bir ablasyon, aynı anda koşan bir ince ayarla çakışınca
@@ -948,4 +1009,6 @@ hâlâ ilk geçerli eşleşmede durur.
 `VLLM_STRUCTURED_MODE`, `LLM_DEADLINE_CARPANI` (vars. 1.5), `OLLAMA_URL`,
 `OLLAMA_MODEL` (vars. `qwen2.5:7b-instruct`), `OLLAMA_TIMEOUT` (vars. 180),
 `OLLAMA_KEEP_ALIVE` (vars. `30m`), `OLLAMA_NUM_CTX` (vars. 8192),
-`OLLAMA_NUM_PREDICT` (vars. 512), `BERTURK_MODEL_DIR`.
+`OLLAMA_NUM_PREDICT` (vars. 512 — **özet yolunun** bütçesi),
+`LLM_EXTRACT_NUM_PREDICT` (vars. 1536 — **çıkarım yolunun** bütçesi, §6.9),
+`BERTURK_MODEL_DIR`.

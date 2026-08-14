@@ -169,7 +169,7 @@ Sekiz tematik küme. "Test" sütunu AST sayımıdır. "Doğduğu kusur" sütunun
 | `test_vector_retriever.py` | `VectorRetriever` boru hattı | 33 | model ağırlıkları yok; kalite ölçülmedi (beyan) |
 | `test_orchestrator.py` | `LLMOrchestrator` (ajan önerir, hakem reddeder) | 34 | K-X5 hibrit kuraldan kötüydü |
 | `test_llm_deadline.py` | duvar-saati sınırı | 5 | K-X9 18 dakikalık sessiz donma |
-| `test_llm_cikti_siniri.py` | `num_predict`, `stop` | 10 | K-X10 sınırsız çıktı → çöp döngüsü |
+| `test_llm_cikti_siniri.py` | `num_predict`, `stop`, çıkarım/özet bütçe ayrımı | 16 | K-X10 sınırsız çıktı → çöp döngüsü; K-X24 512 çıkarımın yarısını kesiyordu |
 | `test_ozet.py` | `summarize/ozet.py` sahte özet yasağı | 17 | LLM kapalıyken `None` + `sebep` |
 | `test_ozet_gorunurluk.py` | `SummaryNotice.tsx`, `SummaryCoverage.tsx` | 9 | K-X19 dört cümlelik savunma notu |
 | `test_build_summaries_parcali.py` | `build_summaries.calistir` parçalı yazma | 6 | K-X11 ~2,5 saat tek kesintiye bağlıydı |
@@ -986,6 +986,23 @@ Ollama'nın çıktı token sınırı **varsayılan olarak sınırsız**. Model
 **SONRA (`num_predict=512` + `stop=["<tool_call>"]` + dar sınırlayıcı
 onarımı): 20/20 başarılı, belge başına 6,9 sn — 6,4 kat hızlanma, %0 hata.**
 
+**K-X24 · Aynı tavan iki farklı işe konmuştu** (`test_llm_cikti_siniri.py`)
+K-X10'un çözümü olan 512, **özet** işinin ölçülmüş sayısıydı ve orada doğru.
+Ama aynı istemci nesnesini **çıkarım** yolu da kullanıyordu ve oradaki şema
+12 tipli nesne taşıyor. Koddaki yorum "12 alan + span çıktısını rahat
+kapsıyor" diyordu; **ölçüm bunu yanlışladı** (2026-08-14, gerçek çıkarım
+yolu, gold.v2'nin 48 belgesinin tamamı, bütçe 4096'ya açılıp `eval_count`
+okunarak): **ihtiyaç ortanca 390, en çok 955 token; belgelerin 12/48'i 512'yi
+aşıyor, 0/48'i 1024'ü aşıyor.**
+Yani her dört belgeden biri JSON'u kapatamadan kesiliyordu — 2026-08-13
+ablasyonunun `OLLAMA_NUM_PREDICT=2048` ile **elle** koşulmak zorunda
+kalmasının sebebi buydu.
+Çözüm: çıkarım kendi bütçesini alır (`CIKARIM_NUM_PREDICT = 1536`), paylaşılan
+nesne `butceyle()` kopyasıyla **dokunulmadan** kalır. Testler iki yönlüdür —
+çıkarımın bütçesi büyümüş olmalı **ve** özet yolunun tavanı gevşememiş olmalı.
+Ayrıca bir regresyon testi: sığ kopya pazarlık cache'ini yutmamalı
+(`test_pazarlik_PAYLASILAN_nesnede_onbelleklenir`).
+
 **K-X11 · ~2,5 saatlik iş tek kesintiye bağlıydı** (`test_build_summaries_parcali.py`)
 `calistir()` bütün özetleri bellekte biriktirip yalnız en sonda tek `set_ozet()`
 ile yazıyordu. **Tam korpus koşusu ~1400 belge, belge başına ~6 sn ⇒ ~2,5
@@ -1223,7 +1240,8 @@ mi" ayrı ayrı çitlenmiş.
 - `test_repo_parity.py::TestSkipGorunurlugu`, `test_pgvector_repository.py`
   aynısı — **atlamak ≠ geçmek**; atlama sebebi boş olamaz.
 - Sabit kilitleri: `ITEM_JACCARD_ESIK == 0.7`, `EXACT_THRESHOLD == 25`,
-  `BLOK_CUMLE == 1`, `num_predict == 512`, `num_ctx == 8192`,
+  `BLOK_CUMLE == 1`, `num_predict == 512` (özet yolu) ve
+  `CIKARIM_NUM_PREDICT > 512` (çıkarım yolu), `num_ctx == 8192`,
   `DEFAULT_VERIFY_THRESHOLD == 0.75`, `DEFAULT_CONFIG == CONFIG_KURAL`,
   `DEFAULT_CONFIG != CONFIG_ORKESTRA` (K3 kararı), `MIN_CORE_TOKENS <= 12`,
   `0.10 < SIGNAL_MIN_FRACTION <= 0.25`, `NUM_CTX >= 16384`.

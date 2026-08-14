@@ -441,6 +441,10 @@ class TestExtractor(unittest.TestCase):
         self.assertEqual(s["structured_mode"], "json_schema")
         self.assertEqual(s["client"], "VLLMClient")
         self.assertEqual(s["ok"], 1)
+        # Bütçe künyeye YAZILMALI: 2026-08-13 ablasyonu elle verilen bir
+        # `num_predict` ile koşulmuştu ve `env.json` bunu kaydetmediği için
+        # koşum tekrar üretilemiyordu (bkz. `summary()` docstring'i).
+        self.assertEqual(s["num_predict"], ex.num_predict)
 
 
 # --------------------------------------------------------------------------- #
