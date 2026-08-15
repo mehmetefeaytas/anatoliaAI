@@ -127,6 +127,16 @@ TEST_ETKILEYEN = ("app/src", "app/scripts", "app/tests", "app/eval",
                   "app/config", "app/requirements.txt",
                   "app/requirements-api.txt", "app/pyproject.toml")
 
+# Ölçüm çıktısı `app/eval/reports/` altında yaşıyor ve `app/eval` önekine
+# giriyor. Dışlanmazsa artefaktı commit'lemek onu KENDİ kuralıyla bayat
+# yapardı — kaydedilen sha ile HEAD arasında "app/eval altında bir dosya
+# değişti" görünür, oysa değişen şey artefaktın kendisidir.
+TEST_ETKILEMEYEN = (":(exclude)app/eval/reports",)
+
+
+def _yol_suzgeci() -> tuple[str, ...]:
+    return (*TEST_ETKILEYEN, *TEST_ETKILEMEYEN)
+
 
 def _test_ozeti() -> dict[str, Any]:
     """`scripts/test_ozeti.py` artefaktı — üretildiğinden beri kaynak değişmediyse.
@@ -151,7 +161,7 @@ def _test_ozeti() -> dict[str, Any]:
     try:
         fark = subprocess.run(
             ["git", "-C", str(DEPO), "diff", "--name-only", sha, "HEAD",
-             "--", *TEST_ETKILEYEN],
+             "--", *_yol_suzgeci()],
             capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.SubprocessError) as exc:
         raise KanitYok(f"git diff koşulamadı: {exc}") from exc
@@ -168,8 +178,8 @@ def _test_ozeti() -> dict[str, Any]:
     # Ağaçta commit'lenmemiş kaynak değişikliği varsa artefakt yine bayattır.
     try:
         kirli = subprocess.run(
-            ["git", "-C", str(DEPO), "status", "--porcelain", "--",
-             *TEST_ETKILEYEN],
+            ["git", "-C", str(DEPO), "status", "--porcelain",
+             "--untracked-files=all", "--", *_yol_suzgeci()],
             capture_output=True, text=True, timeout=60).stdout.strip()
     except (OSError, subprocess.SubprocessError):
         kirli = ""
@@ -332,7 +342,13 @@ def olc_metrik(gold_dosya: str, anahtar: str, matcher: str = "strict"
                ) -> Callable[[], float]:
     """Ölçüm artefaktından tek bir metrik oku.
 
-    `anahtar`: mikro_f1 · makro_f1 · halusinasyon · yapisal_mikro_f1
+    `anahtar`: mikro_f1 · makro_f1 · halusinasyon · yapisal_mikro_f1 ·
+    kalem_mikro_f1 · yapisal_halusinasyon
+
+    ⚠️ `yapisal` ile `kalem` AYNI ŞEY DEĞİLDİR ve karıştırmak yayımlanan
+    sayıyı sessizce yanlış denetler:
+      * **yapısal** = 11 alan (`kampanya_kosullari` HARİÇ), ikili ölçüt
+      * **kalem**   = 12 alan, liste alanlarında kalem başına sayım
     """
     def _olc() -> float:
         rapor = taze_rapor(gold_dosya, matcher)
@@ -342,8 +358,20 @@ def olc_metrik(gold_dosya: str, anahtar: str, matcher: str = "strict"
             return float(mikro["f1"])
         if anahtar == "makro_f1":
             return float(r["macro_f1"])
-        if anahtar == "yapisal_mikro_f1":
+        if anahtar == "kalem_mikro_f1":
             return float(r["micro_f1_kalem"])
+        if anahtar in {"yapisal_mikro_f1", "yapisal_halusinasyon"}:
+            if "micro_f1_yapisal" not in r:
+                raise KanitYok(
+                    f"{rapor.dizin.name}: yapılandırılmış kesit artefaktta yok "
+                    f"— rapor `micro_f1_yapisal` eklendikten önce üretilmiş")
+            if anahtar == "yapisal_mikro_f1":
+                return float(r["micro_f1_yapisal"])
+            y = r["yapisal"]
+            payda = float(y["fp_hallucinated"]) + float(y["tn"])
+            if payda == 0:
+                raise KanitYok("yapısal kesitte `absent` kararı yok — oran TANIMSIZ")
+            return float(y["fp_hallucinated"]) / payda
         if anahtar == "halusinasyon":
             uyd = float(mikro["fp_hallucinated"])
             payda = uyd + float(mikro["tn"])

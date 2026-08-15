@@ -600,6 +600,13 @@ class MatcherResult:
             # Süzgecin LEHE sapan kör noktasının ölçüsü — bkz. `macro_f1`
             # docstring'i. İkisi arasındaki fark, makro sayının ne kadar
             # iyimser olduğunu doğrudan verir.
+            # YAPILANDIRILMIŞ kesit (11 alan, `kampanya_kosullari` hariç).
+            # Rapor gövdesinde basılıyordu ama `metrics.json`'a YAZILMIYORDU;
+            # oysa README'nin manşet sayılarından biri bu. Artefaktta olmayan
+            # bir sayı makine tarafından denetlenemez, yani sessizce bayatlar.
+            "micro_f1_yapisal": micro(yapisal_kesit(self.table)).f1(),
+            "macro_f1_yapisal": macro_f1(yapisal_kesit(self.table)),
+            "yapisal": micro(yapisal_kesit(self.table)).as_dict(),
             "macro_f1_uydurma_dahil": macro_f1_uydurma_dahil(self.table),
             "macro_support_fields": sum(1 for c in self.table.values()
                                         if c.support > 0),
