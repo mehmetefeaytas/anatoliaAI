@@ -21,10 +21,10 @@ kesit istiyor — §K'de).
 çalışan sistemden alınır. Animasyon yalnız geçiş ve vurgu için kullanılır,
 anlatının yerine geçmez.
 
-> ⚠️ **Bu belge kurgu ve metindir; video dosyası değildir.** Çekim, ekran kaydı
-> ve montaj insan işidir. Aşağıdaki her sahne, ne kaydedileceğini ve hangi
-> komutun koşulacağını komut düzeyinde söyler — kurgu masasında karar
-> verilecek hiçbir şey bırakılmadı.
+> ✅ **VİDEO ÜRETİLDİ (2026-08-16).** Bu belge planı da, üretilenin künyesini
+> de taşıyor: `anatolia-ai-demo.mp4` (**1:55**) ve `anatolia-ai-demo-1dk.mp4`
+> (**0:59**). Aşağıdaki sahne planı korundu; ölçülen sonuç ve üretim hattı
+> belgenin sonunda. Hat tamamen betikli — tek komutla yeniden üretilebilir.
 
 ---
 
@@ -325,3 +325,70 @@ tartışılmasın diye yazılıyor:
 ## Related
 - [[sunum-ve-demo-plani]] — 4 dakikalık jüri sunumunun slayt iskeleti
 - [[SARTNAME-UYUM]] — video kalemlerinin teslim durumu (8 · 9)
+
+---
+
+## ✅ Video ÜRETİLDİ — 2026-08-16
+
+Bu belge bir plandı; artık üretilmiş videonun künyesi. Yukarıdaki sahne
+planı korunuyor (kurgu ona göre yapıldı), aşağıda ölçülen sonuç var.
+
+| | Dosya | Süre | Boyut |
+|---|---|---|---|
+| Tam sürüm | `anatolia-ai-demo.mp4` | **1:55** | 17 MB |
+| Kısa kesit | `anatolia-ai-demo-1dk.mp4` | **0:59** | 11 MB |
+
+1920×1080 · 30 fps · H.264 · AAC 48 kHz.
+
+### Nasıl üretildi — ve nasıl yeniden üretilir
+
+Hiçbir kare elle çekilmedi; hat tamamen betikli ve `docs/sunum/video-uretim/`
+altında duruyor:
+
+| Aşama | Araç | Betik |
+|---|---|---|
+| Gerçek arayüz çekimi | Playwright (video kaydı) | `cek.py` |
+| Terminal sahnesi | VHS | `terminal.tape` |
+| Başlık kartları | Playwright ekran görüntüsü | `kart.py` |
+| Türkçe seslendirme | macOS `say -v Yelda` | `ses.py` → `ses.json` |
+| Kurgu | ffmpeg (xfade + adelay/amix) | `kurgu.py` |
+
+```bash
+# ön koşul: API :8000 ve arayüz :3000 ayakta
+python docs/sunum/video-uretim/cek.py          # klipler
+vhs    docs/sunum/video-uretim/terminal.tape   # terminal
+python docs/sunum/video-uretim/kart.py         # kartlar
+python docs/sunum/video-uretim/ses.py          # seslendirme + süre ölçümü
+python docs/sunum/video-uretim/kurgu.py        # tam sürüm
+python docs/sunum/video-uretim/kurgu.py --kisa # 1 dk kesit
+```
+
+### İki tasarım kararı
+
+**İmleç enjekte edildi.** Playwright videoya imleci basmaz; sahne ölü
+görünürdü. Sayfaya saf CSS ile çizilen bir imleç enjekte ediliyor ve
+tıklamadan önce hedefe yumuşakça sürülüyor. Kayıt hâlâ gerçek arayüzün
+gerçek davranışı — yalnız imleç görünür oldu.
+
+**Ses önce, kurgu sonra.** `ses.py` her cümlenin GERÇEK süresini ölçüp
+`ses.json`a yazıyor; `kurgu.py` segment uzunluklarını o ölçüme göre
+kuruyor. Sonuç: bir cümleyi kendi sesinle yeniden kaydettiğinde yalnız o
+dosyayı değiştirmen yeterli, kurgu bozulmaz.
+
+### Çekim sırasında düzeltilen iki kusur
+
+İlk kurguda iki sahne yanlış zaman penceresini yakaladı ve bu **kontak
+baskısında görüldü, tahmin edilmedi**:
+
+- **Sohbet** segmenti boş sohbeti gösteriyordu; cevabın geldiği pencere
+  15,5–25,0 sn imiş. Düzeltildi.
+- **Çelişki tespiti** hâlâ "getiriliyor" iskeletindeydi: tarama 1.782
+  belgeyi geziyor ve 14 saniyede bitmiyor. Sabit bekleme yerine panelin
+  yüklenmesi **koşula bağlandı** (`wait_for_function`), sahne yeniden
+  çekildi. Sonuç: 13/1.782 belgede çelişki, 15 bulgu.
+
+### ⚠️ Seslendirme geçicidir
+
+Ses şu an macOS'un Türkçe sesi (Yelda). 20 cümle `ses/S01.wav` …
+`ses/S20.wav` olarak AYRI dosyalar. Kendi sesinle kaydederken aynı
+numaralandırmayı koru; `kurgu.py`yi yeniden koşmak yeterli.

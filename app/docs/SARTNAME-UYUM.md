@@ -63,8 +63,8 @@ Dosya yolları matriste depo köküne göre verilmiştir.
 | 5 | **README — veri seti indirme bağlantısı** | §9 (s.18) | ✅ | `kök$ grep -n 'huggingface' README.md` → link canlı (https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold, HTTP 200 doğrulandı) | Şartnamenin adı geçen tek zorunlu artefaktı; 2026-08-15'te yayımlandı. |
 | 6 | Veri setinin herkese açık yayını | §9 (s.18) | ✅ | https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold · üretici `app$ make veri-seti` (`scripts/veri_seti_paketle.py`) · yükleyici `scripts/veri_seti_yukle.py` | 182 kayıt (gold.round1 134 + gold.v2 48) + sızıntısız train/val/test (127/27/28). Sızıntı denetimi 0 ihlal ve testle çitli. |
 | 7 | Veri seti lisansı | §8 | ✅ | Pakette `LISANS.md` — Apache-2.0 + veri kökeni notu; HF deposunda `license: apache-2.0` künyesi | Kaynak sayfaların telif durumu ayrıca yazılı; ham HTML yeniden dağıtılmıyor, yalnız çıkarılmış metin + provenance. |
-| 8 | Demo videosu — tam sürüm (**maks. 5 dk**) | §6.2, **s.14** | ❌ | Depoda video dosyası **yok**: `kök$ find . -iname '*.mp4' -o -iname '*.mov'` → boş | Çekim listesi hazır: `app/docs/rapor/sunum-ve-demo-plani.md` §A (7 sahne, süre bütçeli). Ekran taslağı: `docs-ekran/anatolia-ai-panel-ekranlari.pdf`. **Plan ≠ teslim.** |
-| 9 | Demo videosu — kısa sürüm (**1 dk**) | §10, **s.19** | ❌ | aynı — video yok | Kesit planı hazır (`sunum-ve-demo-plani.md` §B: uzun videonun §3+§4c+§5'i, ayrı çekim yok). |
+| 8 | Demo videosu — tam sürüm (**maks. 5 dk**) | §6.2, **s.14** | ✅ | `app/docs/sunum/anatolia-ai-demo.mp4` — **1 dk 55 sn**, 1920×1080, 30 fps, Türkçe seslendirmeli | Tamamı GERÇEK arayüzden: kıyas cetveli, kanıt defteri, hibrit sohbet, çelişki tespiti ve `kanit_tazeligi` kapısının canlı koşumu. Sahte ekran yok. Üretim betikleri `docs/sunum/video-uretim/` — tek komutla yeniden üretilebilir. ⚠️ Seslendirme şu an **geçici yapay ses**; 20 cümle ayrı dosya, insan sesiyle değiştirilebilir. |
+| 9 | Demo videosu — kısa sürüm (**1 dk**) | §10, **s.19** | ✅ | `app/docs/sunum/anatolia-ai-demo-1dk.mp4` — **59 sn** | Ayrı çekim yok: uzun videonun dört sahnesinin kesiti (açılış · pano · kıyas cetveli · kanıt defteri · kapanış). |
 | — | ⚠️ **Süre çelişkisi (şartname içi, açık)** | s.14 ↔ s.19 | 🟠 | `syntheses/teslim-ve-degerlendirme-rehberi.md` §"ÇELİŞKİ: Demo videosu süresi" | s.14 *"maksimum **5 dakikalık** bir video"*, s.19 *"sunum süresi 4 dakika, demo videosu süresi ise **1 dakika**"*. Metin ikisini açıkça ayırmıyor. **Karar: her ikisi de hazırlanacak**; kesin format yarışma bilgilendirme e-postasıyla teyit edilecek. Çelişki gizlenmiyor, kayıt altında. |
 | 10 | Sunum materyali — **PDF** | §6.4 (s.14) | ❌ | Jüri sunumu PDF'i yok. (`app/docs/rapor/anatolia-ai-teknik-rapor.pdf` **teknik rapordur**, sunum değildir.) | Slayt iskeleti hazır: `sunum-ve-demo-plani.md` §C (8 slayt, 4 dk bütçeli). |
 | 11 | Sunum materyali — **PPTX** | §6.4 (s.14) | ❌ | `kök$ find . -iname '*.pptx'` → boş | Şartname PDF **ve** PPTX'in ikisini birden istiyor; ikisi de yok. |
@@ -115,8 +115,8 @@ Her satır tek bir aksiyondur. Sıra kritiklik sırasıdır.
 | ~~1~~ | ~~Veri seti indirme bağlantısı~~ | ✅ **KAPANDI (15 Ağu)** — link README'de ve canlı. |
 | ~~2~~ | ~~Veri seti yayını~~ | ✅ **KAPANDI (15 Ağu)** — Hugging Face'te herkese açık. |
 | ~~3~~ | ~~Veri seti lisansı~~ | ✅ **KAPANDI (15 Ağu)** — pakette `LISANS.md`, HF künyesinde `license: apache-2.0`. |
-| 4 | Demo videosu ≤5 dk (s.14) | `sunum-ve-demo-plani.md` §A'daki 7 sahneyi çek; her sayı karesinde o sayı **çekim günü** yeniden koşulmuş olsun. |
-| 5 | Demo videosu 1 dk (s.19) | Uzun videonun §3+§4c+§5'inden kes; ayrı çekim yapma. |
+| ~~4~~ | ~~Demo videosu ≤5 dk~~ | ✅ **KAPANDI (16 Ağu)** — 1:55, gerçek arayüzden. |
+| ~~5~~ | ~~Demo videosu 1 dk~~ | ✅ **KAPANDI (16 Ağu)** — 59 sn kesit. |
 | 6 | Sunum PDF (§6.4) | `sunum-ve-demo-plani.md` §C'deki 8 slaytı tasarla, PDF olarak dışa aktar. |
 | 7 | Sunum PPTX (§6.4) | Aynı slaytları PPTX olarak da dışa aktar — şartname ikisini birden istiyor. |
 

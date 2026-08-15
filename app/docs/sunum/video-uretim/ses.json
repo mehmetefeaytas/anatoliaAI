@@ -1,0 +1,142 @@
+[
+  {
+    "no": 1,
+    "sahne": "acilis",
+    "sure": 0.973,
+    "metin": "Anatolia AI.",
+    "dosya": "S01.wav"
+  },
+  {
+    "no": 2,
+    "sahne": "acilis",
+    "sure": 5.743,
+    "metin": "Katılım bankacılığı kampanya metinlerinden, ölçülen ve kanıtlanan bilgi çıkarımı.",
+    "dosya": "S02.wav"
+  },
+  {
+    "no": 3,
+    "sahne": "problem",
+    "sure": 3.702,
+    "metin": "Aynı bilgi, on bankada on farklı biçimde yazılıyor.",
+    "dosya": "S03.wav"
+  },
+  {
+    "no": 4,
+    "sahne": "problem",
+    "sure": 7.08,
+    "metin": "İlk altı ay masrafsız. Yüzde bir doksan dokuz ile iki kırk dokuz arası. Yüz yirmi aya kadar vade.",
+    "dosya": "S04.wav"
+  },
+  {
+    "no": 5,
+    "sahne": "problem",
+    "sure": 4.849,
+    "metin": "Hangisinin daha uygun olduğunu elle karşılaştırmak pratikte mümkün değil.",
+    "dosya": "S05.wav"
+  },
+  {
+    "no": 6,
+    "sahne": "pano",
+    "sure": 8.439,
+    "metin": "Anatolia AI on katılım bankasından bin yedi yüz seksen iki belgeyi topladı ve karşılaştırılabilir yapısal veriye dönüştürdü.",
+    "dosya": "S06.wav"
+  },
+  {
+    "no": 7,
+    "sahne": "cetvel",
+    "sure": 2.631,
+    "metin": "Karşılaştırılacak alanı seçiyoruz.",
+    "dosya": "S07.wav"
+  },
+  {
+    "no": 8,
+    "sahne": "cetvel",
+    "sure": 2.863,
+    "metin": "Sistem kâr payı oranına göre sıralıyor.",
+    "dosya": "S08.wav"
+  },
+  {
+    "no": 9,
+    "sahne": "cetvel",
+    "sure": 2.958,
+    "metin": "Ama iki kampanyayı sıralamayı reddediyor.",
+    "dosya": "S09.wav"
+  },
+  {
+    "no": 10,
+    "sahne": "cetvel",
+    "sure": 6.819,
+    "metin": "Çünkü oranları koşullu. Doğrudan kıyaslanamazlar, ve sistem bunu uydurmak yerine söylüyor.",
+    "dosya": "S10.wav"
+  },
+  {
+    "no": 11,
+    "sahne": "kanit",
+    "sure": 1.7,
+    "metin": "Peki bu değer nereden geldi?",
+    "dosya": "S11.wav"
+  },
+  {
+    "no": 12,
+    "sahne": "kanit",
+    "sure": 6.173,
+    "metin": "Kanıt defteri her alan için ham ifadeyi, güven skorunu ve üreten katmanı gösteriyor.",
+    "dosya": "S12.wav"
+  },
+  {
+    "no": 13,
+    "sahne": "kanit",
+    "sure": 6.822,
+    "metin": "Her değer, kaynak belgede bir karakter aralığına bağlı. Bu bağ programatik olarak doğrulanıyor.",
+    "dosya": "S13.wav"
+  },
+  {
+    "no": 14,
+    "sahne": "sohbet",
+    "sure": 4.186,
+    "metin": "Sohbet katmanı soruyu anlıyor ve cevabı kaynağıyla veriyor.",
+    "dosya": "S14.wav"
+  },
+  {
+    "no": 15,
+    "sahne": "sohbet",
+    "sure": 3.166,
+    "metin": "Hangi yolu seçtiğini de cevabın yanında yazıyor.",
+    "dosya": "S15.wav"
+  },
+  {
+    "no": 16,
+    "sahne": "celiski",
+    "sure": 7.053,
+    "metin": "Bir banka masrafsız derken ücret tarifesinde tahsis ücreti alıyorsa, sistem bunu yakalıyor.",
+    "dosya": "S16.wav"
+  },
+  {
+    "no": 17,
+    "sahne": "mimari",
+    "sure": 7.579,
+    "metin": "Arkada iki katman var. Kurallar birincil; dil modeli yalnızca kuralların boş bıraktığı yerleri dolduruyor.",
+    "dosya": "S17.wav"
+  },
+  {
+    "no": 18,
+    "sahne": "mimari",
+    "sure": 3.059,
+    "metin": "Bilgi metinde yoksa hiçbir değer üretilmiyor.",
+    "dosya": "S18.wav"
+  },
+  {
+    "no": 19,
+    "sahne": "olcum",
+    "sure": 8.217,
+    "metin": "Ve şu: yayımladığımız her sayı, onu üreten komutun çıktısıyla eşleşmek zorunda. Ayrışırsa yapı kırmızı yanıyor.",
+    "dosya": "S19.wav"
+  },
+  {
+    "no": 20,
+    "sahne": "kapanis",
+    "sure": 5.793,
+    "metin": "Tek bir parlak yüzde vermiyoruz. Çünkü bir alanı kaçırmak ile uydurmak aynı hata değil.",
+    "dosya": "S20.wav"
+  }
+]
