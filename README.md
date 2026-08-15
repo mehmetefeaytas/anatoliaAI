@@ -50,7 +50,7 @@ kanıtla karşılaştırır, ayrışırsa CI kırmızı yanar. Ölçüm tarihi:
 | Anotatör uyumu — round0 | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
 | Anotatör uyumu — round1 | Cohen κ **0,274** (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
 | Bağımlılık envanteri | **96 paket**, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
-| Test | **2.926** toplanan · **2.873** geçti · **53** atlandı (Postgres — CI'da koşar) | `python -m scripts.test_ozeti` |
+| Test | **2.947** toplanan · **2.894** geçti · **53** atlandı (Postgres — CI'da koşar) | `python -m scripts.test_ozeti` |
 | CI regresyon kapısı | **var** (alan F1 + halüsinasyon tavanı) | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | **var** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 
@@ -83,7 +83,7 @@ kapısı `gold.v2`'de kalıyor**: kapıyı round1'e taşımak, önceden ilan edi
 `kampanya_kosullari` **serbest cümle listesi** döndüren bir alandır ("Kampanyaya
 dahil olmak için X gerekir"). Span/jeton eşleşmesiyle F1 ölçmek bu alanda
 metodolojik olarak yanlıştır: aynı koşulu farklı sözcüklerle yazan iki anotatör
-bile birbirini "yanlış" bulurdu. Bu tek alan mikro-F1'i **0,646'dan 0,452'ye**
+bile birbirini "yanlış" bulurdu. Bu tek alan mikro-F1'i **0,671'den 0,464'e**
 çekiyor.
 
 Alanı **gizlemiyoruz**: ana tabloda satırı duruyor, kendi bölümünde kalem düzeyi
@@ -271,7 +271,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı)
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — temiz klonda ölçüldü (13 Ağu): 2.667 test OK, 210 atlandı.
+# Tüm test paketi — temiz ağaçta ölçüldü (15 Ağu): 2.894 geçti, 53 atlandı.
 # Atlananlar isteğe bağlı bağımlılık isteyenlerdir (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değildir ve tamamı offline koşar.
 python3 -m unittest discover -s tests
