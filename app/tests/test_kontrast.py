@@ -19,6 +19,7 @@ from __future__ import annotations
 import unittest
 
 from scripts import kontrast_kontrol as KK
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 
 class TestHesap(unittest.TestCase):
@@ -103,6 +104,7 @@ class TestPaletCozumu(unittest.TestCase):
             KK.olc({"açık": {"--fg": "#111111"}})
 
 
+@arayuz_gerekir
 class TestGercekPalet(unittest.TestCase):
     """Teslim edilen `tokens.css` — asıl kapı."""
 

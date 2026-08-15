@@ -41,6 +41,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src.chatbot import rag
 from src.db.repository import Repository
 from src.extraction.reconcile import build_campaign
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 _KOK = Path(__file__).resolve().parents[1]
 
@@ -167,6 +168,7 @@ class TestCikarimsalCevap(RagOzetTestBase):
         self.assertNotIn("None", metin)
 
 
+@arayuz_gerekir
 class TestArayuzEtiketi(unittest.TestCase):
     """`ChatPanel.tsx` — etiket «AI Özeti», ham metne erişim korunur."""
 

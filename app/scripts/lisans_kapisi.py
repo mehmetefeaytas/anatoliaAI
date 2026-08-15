@@ -352,6 +352,70 @@ class Istisna:
     lisans: str | None = None
 
 
+def _istisna_yaml_ayristir(metin: str) -> dict:
+    """İstisna dosyasının YAML alt kümesi — `pyyaml` olmadan.
+
+    Tanınan şema YALNIZCA bu dosyanınkidir ve bilerek dardır:
+
+        istisnalar:
+          - paket: ad
+            lisans: "..."
+            gerekce: >
+              katlanmış
+              çok satırlı metin
+
+    Genel amaçlı bir YAML ayrıştırıcısı DEĞİLDİR ve olmaya çalışmamalıdır:
+    kapsamı geniş tutmak, tanımadığı bir yapıyı sessizce yutma riskini geri
+    getirir. Tanımadığı bir şey görürse kayıt üretmez ve çağıran taraf bunu
+    (dolu dosya + sıfır kayıt) bir hata olarak raporlar.
+    """
+    kayitlar: list[dict] = []
+    aktif: dict | None = None
+    katlanan: str | None = None       # `>` ile açılmış alanın adı
+    katlanan_girinti = 0
+
+    for ham in metin.splitlines():
+        satir = ham.rstrip()
+        girinti = len(satir) - len(satir.lstrip())
+        cirit = satir.strip()
+
+        # Katlanmış blok sürüyor mu? (yorum satırları da metne dâhildir —
+        # `>` bloğunun içinde `#` bir yorum değil, sıradan bir karakterdir.)
+        if katlanan and aktif is not None:
+            if cirit and girinti > katlanan_girinti:
+                aktif[katlanan] = (aktif[katlanan] + " " + cirit).strip()
+                continue
+            if not cirit:
+                continue
+            katlanan = None            # girinti düştü → blok bitti
+
+        if not cirit or cirit.startswith("#"):
+            continue
+        if cirit == "istisnalar:":
+            continue
+
+        if cirit.startswith("- "):
+            aktif = {}
+            kayitlar.append(aktif)
+            cirit = cirit[2:].strip()
+            girinti += 2
+
+        if aktif is None or ":" not in cirit:
+            continue
+
+        anahtar, _, deger = cirit.partition(":")
+        anahtar, deger = anahtar.strip(), deger.strip()
+        if deger in {">", "|", ">-", "|-"}:
+            aktif[anahtar] = ""
+            katlanan, katlanan_girinti = anahtar, girinti
+            continue
+        if len(deger) >= 2 and deger[0] == deger[-1] and deger[0] in "\"'":
+            deger = deger[1:-1]
+        aktif[anahtar] = deger
+
+    return {"istisnalar": kayitlar}
+
+
 def istisnalari_yukle(yol: Path) -> tuple[dict[str, Istisna], list[str]]:
     """İstisna dosyasını okur.
 
@@ -370,16 +434,35 @@ def istisnalari_yukle(yol: Path) -> tuple[dict[str, Istisna], list[str]]:
             import yaml  # type: ignore[import-untyped]
             veri = yaml.safe_load(metin) or {}
         except ImportError:
-            # `pyyaml` bağımlılıksız CI işinde kurulu değildir. Kapının orada
-            # koşamaması, kapıyı en çok gerektiği yerde kapatır: teslim imajı
-            # tam da bağımlılıksız kümedir. Proje bu yüzden zaten bir stdlib
-            # ayrıştırıcı taşıyor (`config/banks.yaml` aynı yola düşüyor).
-            import sys as _sys
-            _sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-            from src.scraping.config import _mini_parse
-            veri = _mini_parse(metin) or {}
+            # `pyyaml` bağımlılıksız CI işinde ve teslim imajında kurulu
+            # DEĞİLDİR. Kapının orada koşamaması onu en çok gerektiği yerde
+            # kapatırdı, bu yüzden stdlib bir yol gerekiyor.
+            #
+            # ⚠️ İlk denemede `src.scraping.config._mini_parse` kullanıldı ve
+            # bu SESSİZ bir kusurdu: o ayrıştırıcı `banks.yaml`e özeldir
+            # (`banks:` + `- slug:` blokları), bu dosyanın şemasını hiç
+            # tanımıyor ve dolu bir dosya için `{}` döndürüyordu. Sonuç:
+            # kapı SIFIR istisnayla koşuyor, kimse fark etmiyordu. Konteyner
+            # içinde ölçüldü (2026-08-15), beş test birden düştü.
+            veri = _istisna_yaml_ayristir(metin)
     else:
         veri = json.loads(metin) if metin.strip() else {}
+
+    # KAYIT VAADEDEN bir dosyadan hiç kayıt çıkmıyorsa bu bir ayrıştırma
+    # kusurudur. Sessizce "istisna yok" saymak kapıyı gevşetmez ama YANLIŞ
+    # raporlar: gerekçeli bir muafiyet görünmez olur ve bir paketin neden
+    # reddedildiği anlaşılmaz hâle gelir.
+    #
+    # Ölçüt "dosya boş değil" DEĞİL: yalnız yorum içeren bir dosya meşru
+    # biçimde sıfır istisna taşır. Aranan şey, en az bir liste ögesi
+    # başlatan satırdır.
+    kayit_vaadi = any(s.lstrip().startswith("- ")
+                      for s in metin.splitlines()
+                      if not s.lstrip().startswith("#"))
+    if kayit_vaadi and not (veri.get("istisnalar") if isinstance(veri, dict)
+                            else veri):
+        return {}, [f"{yol}: dosya kayıt içeriyor ama hiçbiri ayrıştırılamadı "
+                    f"— biçim bozuk ya da ayrıştırıcı bu şemayı tanımıyor."]
 
     hatalar: list[str] = []
     istisnalar: dict[str, Istisna] = {}

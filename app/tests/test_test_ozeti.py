@@ -27,6 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts import test_ozeti as T
+from tests._ortam_gereksinimleri import git_gerekir
 
 RENKLI = (
     "-- Docs: https://docs.pytest.org/\n"
@@ -85,6 +86,7 @@ class TestSessizSifirYok(unittest.TestCase):
         self.assertIn("ayrıştırılamadı", str(ctx.exception))
 
 
+@git_gerekir
 class TestUctanUca(unittest.TestCase):
     def test_kos_gercekten_sayi_uretir(self) -> None:
         """Ölçülmüş kusur: `kos()` içindeki yerel `cikti` (pytest çıktısı)
@@ -116,6 +118,7 @@ class TestUctanUca(unittest.TestCase):
         self.assertRegex(str(ozet["git_sha"]), r"^[0-9a-f]{40}$")
 
 
+@git_gerekir
 class TestKirlilikOlcutu(unittest.TestCase):
     def test_yol_suzgeci_depo_kokune_gore(self) -> None:
         """`app/...` önekli yollar `app/` içinden koşulursa hiç eşleşmez."""

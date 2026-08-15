@@ -30,6 +30,7 @@ from unittest import mock
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts import kanit_tazeligi as K
+from tests._ortam_gereksinimleri import git_gerekir
 
 
 class TestTrSayi(unittest.TestCase):
@@ -264,6 +265,7 @@ if __name__ == "__main__":
     unittest.main()
 
 
+@git_gerekir
 class TestKodTazeligi(unittest.TestCase):
     """Gold'un sha'sı aynı kalsa da DEĞİŞMİŞ bir çıkarıcı başka F1 üretir.
 

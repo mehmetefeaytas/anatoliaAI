@@ -37,8 +37,13 @@ oradaki metinler önce düzeltilmelidir.
 from __future__ import annotations
 
 import re
+import sys
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 _KOK = Path(__file__).resolve().parents[1]
 _TSX = _KOK / "web" / "app"
@@ -83,6 +88,7 @@ def gorunur_metin(yol: Path) -> str:
     return _SATIR_YORUM.sub("", govde)
 
 
+@arayuz_gerekir  # `_TSX.rglob()` web/ yokken BOŞ döner: test sessizce geçerdi
 class TestEskiTerimGeriGelmez(unittest.TestCase):
     """«Ürün ailesi» hiçbir görünür dizgede olmamalı."""
 
@@ -110,6 +116,7 @@ class TestEskiTerimGeriGelmez(unittest.TestCase):
         self.assertIsNone(YASAK.search(temiz))
 
 
+@arayuz_gerekir
 class TestKanonikTerimKullaniliyor(unittest.TestCase):
     """Her kıyas yüzeyi kavrama kanonik adıyla seslenmeli."""
 
@@ -124,6 +131,7 @@ class TestKanonikTerimKullaniliyor(unittest.TestCase):
         )
 
 
+@arayuz_gerekir
 class TestTanimBirKezYazilir(unittest.TestCase):
     """Kavramın NE OLDUĞU tek yerde, sekiz sınıf sayılarak yazılmalı.
 

@@ -47,6 +47,9 @@ except (ImportError, RuntimeError):  # pragma: no cover
     FASTAPI_VAR = False
 
 
+from tests._ortam_gereksinimleri import istemci_gerekir
+
+
 def _db_kur(yol: Path) -> None:
     conn = sqlite3.connect(yol)
     conn.executescript("""
@@ -71,6 +74,7 @@ def _db_kur(yol: Path) -> None:
 
 
 @unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
+@istemci_gerekir  # setUp `TestClient` kurar: sınıfın TAMAMI ona bağlı
 class TestOzetOnbellegi(unittest.TestCase):
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()

@@ -45,6 +45,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.api import gelecek
 from src.db.repository import Repository
+from tests._ortam_gereksinimleri import arayuz_gerekir, istemci_gerekir
 
 # fastapi YARDIMCI FONKSİYON İÇİNDE import ediliyordu; bu, modül yüklemesini
 # kurtarır ama `unittest`e test BAŞINA hata verdirir — atlama değil. 12 Ağu
@@ -102,6 +103,7 @@ class _ApiTemel(unittest.TestCase):
 
 
 class TestSozlesme(_ApiTemel):
+    @istemci_gerekir
     def test_plan_ucu_sozlesmeyi_dondurur(self) -> None:
         y = self.istemci().get("/admin/plan")
         self.assertEqual(y.status_code, 200)
@@ -111,6 +113,7 @@ class TestSozlesme(_ApiTemel):
         self.assertTrue(veri["bugunku_yol"].strip())
         self.assertGreaterEqual(len(veri["uclar"]), 3)
 
+    @istemci_gerekir
     def test_zaman_cercevesi_YANITTA(self) -> None:
         """"Ne zaman açılacak" sorusunun cevabı sözleşmenin parçasıdır."""
         veri = self.istemci().get("/admin/plan").json()
@@ -141,20 +144,24 @@ class TestSozlesme(_ApiTemel):
 class TestUclarSahteBasariDondurmez(_ApiTemel):
     """Kapalı uçlar 501 döner; 2xx dönerlerse sessiz veri kaybı olur."""
 
+    @istemci_gerekir
     def test_banka_ekleme_501(self) -> None:
         y = self.istemci().post("/admin/banks", json={"slug": "x", "name": "X"})
         self.assertEqual(y.status_code, 501)
 
+    @istemci_gerekir
     def test_kampanya_ekleme_501(self) -> None:
         y = self.istemci().post("/admin/banks/ornek/campaigns",
                             json={"title": "t", "raw_text": "m"})
         self.assertEqual(y.status_code, 501)
 
+    @istemci_gerekir
     def test_urun_ekleme_501(self) -> None:
         y = self.istemci().post("/admin/banks/ornek/products",
                             json={"name": "Konut Finansmanı"})
         self.assertEqual(y.status_code, 501)
 
+    @istemci_gerekir
     def test_501_govdesi_gerekceyi_ve_bugunku_yolu_TASIR(self) -> None:
         """Kapalı bir uç, ne yapılacağını söylemeden kapanmaz."""
         detay = self.istemci().post("/admin/banks", json={}).json()["detail"]
@@ -178,6 +185,7 @@ class TestUclarSahteBasariDondurmez(_ApiTemel):
                              f"kapalı uçlar bölümünde depo yazımı var: {yasak}")
 
 
+@arayuz_gerekir
 class TestEkranSozlesmeyiTekrarlamiyor(unittest.TestCase):
     """`AyarlarPanel` uç listesini KENDİ İÇİNDE tutmamalı."""
 

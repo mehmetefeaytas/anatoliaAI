@@ -32,8 +32,13 @@ tutmaz — bu yüzden tekrar KASITLIDIR ve testle bağlanmıştır.
 from __future__ import annotations
 
 import re
+import sys
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 _KOK = Path(__file__).resolve().parents[1]
 TOKENS_CSS = _KOK / "web" / "app" / "styles" / "tokens.css"
@@ -60,6 +65,7 @@ def _secici_govdesi(css: str, secici: str) -> str:
     return css[ac + 1 : kapa]
 
 
+@arayuz_gerekir
 class TestTemaPaleti(unittest.TestCase):
     """`tema.css` ile `tokens.css` arasında değer kayması OLMAMALI."""
 
@@ -142,6 +148,7 @@ class TestTemaPaleti(unittest.TestCase):
                     )
 
 
+@arayuz_gerekir
 class TestBaskiPaleti(unittest.TestCase):
     """Baskı paleti, paletin ÜÇÜNCÜ kopyasıdır ve o da kayabilir.
 

@@ -52,6 +52,7 @@ from scripts.veri_seti_paketle import (
     paketle,
     sizinti_denetimi,
 )
+from tests._ortam_gereksinimleri import dosya_gerekir
 
 ROUND1 = _ROOT / VARSAYILAN_ROUND1
 V2 = _ROOT / VARSAYILAN_V2
@@ -378,6 +379,7 @@ class Yukleyici(unittest.TestCase):
         self.assertIn("pip install huggingface_hub", y.KURULUM_MESAJI)
         self.assertIn("requirements.txt", y.KURULUM_MESAJI)
 
+    @dosya_gerekir("requirements.txt")
     def test_huggingface_hub_requirements_disinda(self):
         """Teslim edilen sistem bu paketi kullanmaz; listeye girmesi yanlış iddia olur."""
         for ad in ("requirements.txt", "requirements-api.txt"):

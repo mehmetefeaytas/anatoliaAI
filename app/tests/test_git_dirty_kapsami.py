@@ -32,6 +32,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from eval import report as R
+from tests._ortam_gereksinimleri import git_gerekir
 
 
 def _git(kok: Path, *a: str) -> str:
@@ -39,6 +40,7 @@ def _git(kok: Path, *a: str) -> str:
                           text=True, check=True).stdout
 
 
+@git_gerekir
 class TestGitDirtyKapsami(unittest.TestCase):
     def setUp(self) -> None:
         self._tmp = tempfile.TemporaryDirectory()

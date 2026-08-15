@@ -38,6 +38,7 @@ from scripts.gold_schema import HARD_TAGS
 from src.api import zor_vaka
 from src.db.repository import Repository
 from src.extraction.llm.schema import EXTRACTION_FIELDS
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 KOK = Path(__file__).resolve().parents[1]
 
@@ -286,6 +287,7 @@ class TestUclar(unittest.TestCase):
         self.assertTrue(y.json()["fields"], "çıkarım yine de koşmalıydı")
 
 
+@arayuz_gerekir
 class TestEkranUydurmaMetne_DONMEZ(unittest.TestCase):
     """`ExtractLive` vakalarını SUNUCUDAN okumalı, kendi içinde tutmamalı."""
 

@@ -55,6 +55,7 @@ from src.db.base import (
 from src.db.repository import Repository
 from src.preprocessing.clean import tr_fold_ascii
 from src.schemas import Campaign, ExtractedField, Extractor
+from tests._ortam_gereksinimleri import arayuz_var
 
 try:  # pragma: no cover - ortama bağlı
     import httpx  # noqa: F401
@@ -195,6 +196,11 @@ class TestKatlama(unittest.TestCase):
         """İkiz test dosyası gerçekten var mı (yol bayatlamasın)."""
         for yol in self.fikstur["kosanlar"]:
             with self.subTest(yol=yol):
+                # `web/` teslim imajına kopyalanmaz; oradaki yolu bu ortamda
+                # doğrulamak imkânsız. Python tarafı yine de sınanır.
+                if yol.startswith("web/") and not arayuz_var():
+                    self.skipTest("web/ yok — arayüz ikizinin yolu CI'daki "
+                                  "`test` işinde doğrulanır")
                 self.assertTrue((_KOK / yol).exists(), yol)
 
 

@@ -71,6 +71,7 @@ from src.chatbot.router import Route
 from src.comparison.compare import rank, tekil_banka_urun
 from src.db.repository import Repository
 from src.extraction.reconcile import build_campaign
+from tests._ortam_gereksinimleri import istemci_gerekir
 
 #: Liste satırı: "- Kuveyt Türk: %1,89  _(+2 kampanya daha)_"
 _SATIR = re.compile(r"^-\s(.+?):\s")
@@ -326,6 +327,7 @@ class SiralamaYonu(_DepoluTest):
 # --------------------------------------------------------------------------- #
 
 @unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
+@istemci_gerekir  # `_uctan()` `/compare` uçuna `TestClient` ile gider
 class ComparePariteKapisi(unittest.TestCase):
     """Panel ile sohbet AYNI tekilleştirmeyi uygulamak zorundadır.
 

@@ -19,6 +19,7 @@ from __future__ import annotations
 import unittest
 
 from scripts import css_sinif_denetimi as CSD
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 
 class TestSinifCikarimi(unittest.TestCase):
@@ -93,6 +94,7 @@ class TestYakalar(unittest.TestCase):
         self.assertEqual(CSD.denetle(self.kok), {})
 
 
+@arayuz_gerekir  # `denetle()` web/ yokken BOŞ döner: kapı sessizce geçerdi
 class TestGercekArayuz(unittest.TestCase):
     """Teslim edilen arayüz — asıl kapı."""
 

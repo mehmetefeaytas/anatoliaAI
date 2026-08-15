@@ -33,6 +33,7 @@ import unittest
 from pathlib import Path
 
 from scripts import lisans_kapisi as LK
+from tests._ortam_gereksinimleri import dosya_gerekir
 
 KOK = Path(__file__).resolve().parent.parent
 
@@ -463,8 +464,14 @@ class TestGecirir(unittest.TestCase):
 # =============================================================================
 # Gerçek deponun bugünkü durumu
 # =============================================================================
+@dosya_gerekir("docs/sbom.json")
 class TestGercekDepo(unittest.TestCase):
-    """Üretilen artefaktlar var mı ve kapı bugün geçiyor mu."""
+    """Üretilen artefaktlar var mı ve kapı bugün geçiyor mu.
+
+    Teslim imajına `docs/sbom.json` KOPYALANMAZ (türetilmiş artefakt,
+    çalışma zamanında kullanılmıyor). Orada bu sınıf atlanır — eksik
+    bağımlılık ile bozuk kod aynı şey değildir.
+    """
 
     def test_sbom_dosyasi_VAR(self) -> None:
         self.assertTrue(
@@ -520,3 +527,56 @@ class TestGercekDepo(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestStdlibAyristiriciParitesi(unittest.TestCase):
+    """`pyyaml` yokken kapı SESSİZCE boş okumamalı.
+
+    Ölçülmüş kusur (2026-08-15, konteyner içinde): ilk fallback
+    `src.scraping.config._mini_parse` idi. O ayrıştırıcı `banks.yaml`e
+    özeldir (`banks:` + `- slug:` blokları) ve bu dosyanın şemasını hiç
+    tanımıyor — dolu bir dosya için `{}` döndürüyordu. Sonuç: kapı SIFIR
+    istisnayla koşuyor ve bunu hiçbir şey söylemiyordu.
+
+    Teslim imajı tam da `pyyaml`siz kümedir; yani kusur en çok teslim
+    edilen ortamda etkiliydi.
+    """
+
+    def test_stdlib_ayristirici_pyyaml_ile_AYNI_sonucu_verir(self) -> None:
+        yol = KOK / "config" / "lisans_istisnalari.yaml"
+        if not yol.exists():
+            self.skipTest("istisna dosyası yok")
+        metin = yol.read_text(encoding="utf-8")
+        bizim = LK._istisna_yaml_ayristir(metin)["istisnalar"]
+        try:
+            import yaml
+        except ImportError:
+            self.skipTest("pyyaml yok — parite bu ortamda kıyaslanamaz")
+        ref = (yaml.safe_load(metin) or {}).get("istisnalar") or []
+        self.assertEqual([k.get("paket") for k in bizim],
+                         [k.get("paket") for k in ref])
+        for a, b in zip(bizim, ref, strict=True):
+            with self.subTest(paket=a.get("paket")):
+                self.assertEqual(a.get("lisans"), b.get("lisans"))
+                # Katlanmış blokta pyyaml sondaki satır sonunu bırakır.
+                self.assertEqual((a.get("gerekce") or "").strip(),
+                                 (b.get("gerekce") or "").strip())
+
+    def test_dolu_dosyadan_SIFIR_kayit_HATA_verir(self) -> None:
+        """Sessiz boş okuma, kapıyı gevşetmez ama YANLIŞ raporlar."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            yol = Path(d) / "bozuk.yaml"
+            yol.write_text("bambaska:\n  - sey: 1\n", encoding="utf-8")
+            istisnalar, hatalar = LK.istisnalari_yukle(yol)
+            self.assertEqual(istisnalar, {})
+            self.assertTrue(hatalar, "dolu dosya + sıfır kayıt sessiz geçmemeli")
+            self.assertIn("ayrıştırılamadı", hatalar[0])
+
+    def test_bos_dosya_hata_DEGIL(self) -> None:
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            yol = Path(d) / "bos.yaml"
+            yol.write_text("# yalnız yorum\n", encoding="utf-8")
+            istisnalar, hatalar = LK.istisnalari_yukle(yol)
+            self.assertEqual((istisnalar, hatalar), ({}, []))

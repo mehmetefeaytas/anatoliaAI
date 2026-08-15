@@ -56,6 +56,7 @@ from src.summarize.ozet_isi import (
     OzetMesgul,
     OzetYoneticisi,
 )
+from tests._ortam_gereksinimleri import istemci_gerekir
 
 
 class _SahteIstemci:
@@ -242,6 +243,7 @@ class TestUretim(unittest.TestCase):
 
 
 @unittest.skipUnless(FASTAPI_VAR, "fastapi kurulu değil — API testi atlanıyor")
+@istemci_gerekir  # her test `_istemci()` üzerinden `TestClient` kurar
 class TestUclar(unittest.TestCase):
     """HTTP yüzeyi — durum kodları sözleşmenin parçası.
 

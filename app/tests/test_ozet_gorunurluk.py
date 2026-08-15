@@ -33,8 +33,13 @@ korunan şey davranış değil, ekrana basılan sabit metin.
 from __future__ import annotations
 
 import re
+import sys
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from tests._ortam_gereksinimleri import arayuz_gerekir
 
 _KOK = Path(__file__).resolve().parents[1]
 _BILESENLER = _KOK / "web" / "app" / "components"
@@ -73,6 +78,7 @@ def _sadelestir(jsx: str) -> str:
     return re.sub(r"\s+", " ", duz).strip()
 
 
+@arayuz_gerekir
 class TestBoslukNotuKisa(unittest.TestCase):
     """«Özet üretilmedi» notu ekranda yer kaplamamalı."""
 
@@ -97,6 +103,7 @@ class TestBoslukNotuKisa(unittest.TestCase):
                              f"boşluk notu {len(cumle)} cümleye çıkmış")
 
 
+@arayuz_gerekir
 class TestDurustlukKorundu(unittest.TestCase):
     """Kısaltma, sahte özet yasağını GÖRÜNMEZ kılmamalı."""
 
@@ -125,6 +132,7 @@ class TestDurustlukKorundu(unittest.TestCase):
             + self.bos_metin)
 
 
+@arayuz_gerekir
 class TestGorunenSozcukAI(unittest.TestCase):
     """Kullanıcının okuduğu etiket «AI»dır; şema adları «llm» kalır."""
 
@@ -157,6 +165,7 @@ class TestGorunenSozcukAI(unittest.TestCase):
         self.assertIn("badge-llm", COVERAGE.read_text(encoding="utf-8"))
 
 
+@arayuz_gerekir
 class TestSummaryNoteSinifi(unittest.TestCase):
     """Etiket cümlesi BÜYÜK HARFE çevrilmez — `.summary-note` bunu sağlar."""
 
