@@ -38,23 +38,48 @@ KOK = Path(__file__).resolve().parents[1]
 VARSAYILAN_CIKTI = KOK / "eval" / "reports" / "test-ozeti.json"
 
 # `2777 passed, 53 skipped, 1 warning ... in 25.35s`
-_OZET = re.compile(r"\b(\d+)\s+(passed|failed|skipped|error|errors|xfailed|xpassed)\b")
+#
+# ANSI renk kodu sayının hemen soluna `m` bırakıyor (`\x1b[32m2873 passed`).
+# Baştaki `\b` bu yüzden EŞLEŞMİYORDU — `m` ile `2` ikisi de sözcük karakteri,
+# arada sınır yok. Sessiz sonucu: her sayı 0 okunuyordu, yani kanıt artefaktı
+# "0 test geçti" diyordu ve kimse fark etmiyordu. Renk kodları önce silinir.
+_ANSI = re.compile(r"\x1b\[[0-9;]*m")
+_OZET = re.compile(r"(?<!\d)(\d+)\s+(passed|failed|skipped|errors?|xfailed|xpassed)\b")
 _TOPLANAN = re.compile(r"(\d+)\s+tests?\s+collected")
 
 
-def git_durumu() -> tuple[str, bool]:
+def git_durumu(cikti: Path | None = None) -> tuple[str, bool]:
+    """(HEAD sha, kirli mi) — artefaktın KENDİSİ kirlilik sayılmaz.
+
+    Aksi hâlde sorun özyinelemeli olur: artefakt yazılır, ağaç kirlenir,
+    bir sonraki koşu "kirli ağaçta üretildi" der ve artefakt hiçbir zaman
+    kanıt olamaz. Denetlenmek istenen şey KAYNAK durumudur, aracın kendi
+    çıktısı değil.
+    """
     def _git(*a: str) -> str:
         return subprocess.run(["git", "-C", str(KOK), *a],
                               capture_output=True, text=True,
                               check=True).stdout.strip()
-    return _git("rev-parse", "HEAD"), bool(_git("status", "--porcelain"))
+
+    hedef = (cikti or VARSAYILAN_CIKTI).resolve()
+    satirlar = []
+    for satir in _git("status", "--porcelain").splitlines():
+        yol = satir[3:].strip().strip('"')
+        if (KOK.parent / yol).resolve() == hedef:
+            continue
+        satirlar.append(satir)
+    return _git("rev-parse", "HEAD"), bool(satirlar)
 
 
-def kos() -> dict[str, object]:
+def kos(cikti: Path | None = None) -> dict[str, object]:
     proc = subprocess.run([sys.executable, "-m", "pytest", "tests/", "-q"],
                           cwd=KOK, capture_output=True, text=True)
-    cikti = proc.stdout + proc.stderr
+    cikti = _ANSI.sub("", proc.stdout + proc.stderr)
     sayilar = {ad: int(n) for n, ad in _OZET.findall(cikti)}
+    if not sayilar:
+        raise RuntimeError(
+            "pytest özet satırı ayrıştırılamadı — artefakt sıfırlarla "
+            f"yazılamaz. Çıktının sonu:\n{cikti[-500:]}")
     toplanan = _TOPLANAN.search(cikti)
 
     gecti = sayilar.get("passed", 0)
@@ -62,7 +87,7 @@ def kos() -> dict[str, object]:
     basarisiz = sayilar.get("failed", 0) + sayilar.get("error", 0) \
         + sayilar.get("errors", 0)
 
-    sha, kirli = git_durumu()
+    sha, kirli = git_durumu(cikti)
     return {
         # `collected` satırı yalnız `--collect-only`de basılır; tam koşuda
         # toplam, alt sonuçların toplamıdır. İkisi ayrışırsa kapı görsün diye
@@ -85,7 +110,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--cikti", type=Path, default=VARSAYILAN_CIKTI)
     a = p.parse_args(argv)
 
-    ozet = kos()
+    ozet = kos(a.cikti)
     a.cikti.parent.mkdir(parents=True, exist_ok=True)
     a.cikti.write_text(json.dumps(ozet, ensure_ascii=False, indent=2) + "\n",
                        encoding="utf-8")

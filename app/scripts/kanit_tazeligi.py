@@ -121,11 +121,21 @@ def sha256_dosya(yol: Path) -> str:
 TEST_OZETI = KOK / "eval" / "reports" / "test-ozeti.json"
 
 
-def _test_ozeti() -> dict[str, Any]:
-    """`scripts/test_ozeti.py` artefaktı — HEAD'de ve temiz ağaçta üretilmişse.
+# Test sonucunu değiştirebilecek yollar. Bir belge ya da rapor değiştiğinde
+# testlerin sonucu değişmez; kaynak ya da test değiştiğinde değişebilir.
+TEST_ETKILEYEN = ("app/src", "app/scripts", "app/tests", "app/eval",
+                  "app/config", "app/requirements.txt",
+                  "app/requirements-api.txt", "app/pyproject.toml")
 
-    Artefakt başka bir commit'te üretilmişse kanıt değildir: aradaki commit'ler
-    test eklemiş ya da kırmış olabilir.
+
+def _test_ozeti() -> dict[str, Any]:
+    """`scripts/test_ozeti.py` artefaktı — üretildiğinden beri kaynak değişmediyse.
+
+    Tazelik ölçütü `git_sha == HEAD` OLAMAZ: artefaktı commit'lemek HEAD'i
+    değiştirir ve artefakt daha doğduğu anda bayatlar. Anlamlı soru şudur:
+    **artefaktın üretildiği commit ile bugün arasında test sonucunu
+    değiştirebilecek bir şey değişti mi?** Belge değişikliği testleri
+    etkilemez; kaynak, test, bağımlılık değişikliği etkiler.
     """
     if not TEST_OZETI.exists():
         raise KanitYok(
@@ -134,15 +144,39 @@ def _test_ozeti() -> dict[str, Any]:
     ozet = json.loads(TEST_OZETI.read_text(encoding="utf-8"))
     if ozet.get("git_dirty"):
         raise KanitYok("test özeti kirli ağaçta üretilmiş — tekrar üretilemez")
+
+    sha = str(ozet.get("git_sha") or "")
+    if not sha:
+        raise KanitYok("test özetinde git_sha yok")
     try:
-        head = subprocess.run(["git", "-C", str(KOK), "rev-parse", "HEAD"],
-                              capture_output=True, text=True, check=True).stdout.strip()
+        fark = subprocess.run(
+            ["git", "-C", str(DEPO), "diff", "--name-only", sha, "HEAD",
+             "--", *TEST_ETKILEYEN],
+            capture_output=True, text=True, timeout=60)
     except (OSError, subprocess.SubprocessError) as exc:
-        raise KanitYok(f"git HEAD okunamadı: {exc}") from exc
-    if ozet.get("git_sha") != head:
+        raise KanitYok(f"git diff koşulamadı: {exc}") from exc
+    if fark.returncode != 0:
         raise KanitYok(
-            f"test özeti {str(ozet.get('git_sha'))[:12]}… commit'inde üretilmiş, "
-            f"HEAD {head[:12]}… — bayat")
+            f"test özetinin commit'i ({sha[:12]}…) bu geçmişte bulunamadı")
+    degisen = [s for s in fark.stdout.splitlines() if s.strip()]
+    if degisen:
+        raise KanitYok(
+            f"test özeti {sha[:12]}… commit'inde üretildi; o gün bugüne "
+            f"{len(degisen)} kaynak/test dosyası değişti (ör. {degisen[0]}) — "
+            f"`python -m scripts.test_ozeti` yeniden koşulmalı")
+
+    # Ağaçta commit'lenmemiş kaynak değişikliği varsa artefakt yine bayattır.
+    try:
+        kirli = subprocess.run(
+            ["git", "-C", str(DEPO), "status", "--porcelain", "--",
+             *TEST_ETKILEYEN],
+            capture_output=True, text=True, timeout=60).stdout.strip()
+    except (OSError, subprocess.SubprocessError):
+        kirli = ""
+    if kirli:
+        raise KanitYok(
+            "çalışma ağacında commit'lenmemiş kaynak/test değişikliği var — "
+            "test özeti onu kapsamıyor")
     return ozet
 
 
