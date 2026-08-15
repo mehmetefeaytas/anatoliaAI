@@ -27,7 +27,12 @@ DOCS    := docs
 # bir şeyi ÜRETMEK yerine seçenekleri görmeli.
 .DEFAULT_GOAL := help
 
-.PHONY: help lisanslar sbom lisans-kapisi test
+.PHONY: help lisanslar sbom lisans-kapisi test veri-seti veri-seti-yukle
+
+# Veri seti paketinin çıktı dizini. Tek yerde tanımlı ki iki hedef
+# (üretim ve yükleme) aynı dizine baksın — ayrışırlarsa yükleyici bir
+# ÖNCEKİ paketi yükler ve bunu kimse fark etmez.
+VERI_SETI := data/yayin/anatolia-ai-gold
 
 ## help: bu listeyi göster
 help:
@@ -36,6 +41,8 @@ help:
 	@echo "  make lisanslar      Bağımlılık lisans envanterini docs/LISANSLAR.md'ye yazar"
 	@echo "  make sbom           CycloneDX SBOM üretir → docs/sbom.json"
 	@echo "  make lisans-kapisi  İzin listesi dışı lisans varsa çıkış kodu 1 verir"
+	@echo "  make veri-seti      Yayın paketini üretir → $(VERI_SETI)"
+	@echo "  make veri-seti-yukle  Ne yükleneceğini LİSTELER (kuru koşu, ağa çıkmaz)"
 	@echo "  make test           Test paketini koşar"
 	@echo "  make help           Bu liste (varsayılan)"
 	@echo ""
@@ -67,6 +74,28 @@ lisans-kapisi:
 	@$(PY) -m scripts.lisans_kapisi \
 		--girdi $(DOCS)/sbom.json \
 		--istisnalar config/lisans_istisnalari.yaml
+
+## veri-seti: yayına hazır veri seti paketini üretir (JSONL + sızıntısız bölme + kart)
+# Şartname s.18 veri setini ZORUNLU teslim kalemi sayar. Paket türetilmiştir:
+# `data/gold/*.json`'dan yeniden üretilir, bu yüzden `.gitignore`'dadır
+# (istisna: dataset card izlenir — gerekçe `.gitignore` girdisinde).
+#
+# Bölmeler arası belge sızıntısı bulunursa hedef çıkış kodu 1 verir: sızıntılı
+# bir bölme, üzerinde ölçülen her sayıyı geçersiz kılar.
+veri-seti:
+	@$(PY) -m scripts.veri_seti_paketle --cikti $(VERI_SETI)
+
+## veri-seti-yukle: paketi Hugging Face'e yükler — VARSAYILAN KURU KOŞU
+# Bu hedef AĞA ÇIKMAZ. Yalnızca ne yükleneceğini listeler (dosya + boyut +
+# sha256) ve zorunlu dosyaların varlığını denetler.
+#
+# Gerçek yükleme bilerek `make` hedefi DEĞİLDİR: geri alınamaz bir işlemi
+# `make <bir şey>` kadar kolay yapmak yanlış olurdu. Token `HF_TOKEN` ortam
+# değişkeninden okunur ve betik ayrıca etkileşimli onay ister:
+#
+#     .venv/bin/python -m scripts.veri_seti_yukle --gercekten-yukle
+veri-seti-yukle:
+	@$(PY) -m scripts.veri_seti_yukle --dizin $(VERI_SETI)
 
 ## test: test paketini koşar
 test:

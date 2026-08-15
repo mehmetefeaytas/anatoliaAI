@@ -77,6 +77,30 @@ data/silver/trainable.jsonl
 data/silver/batch.jsonl
 data/silver/excluded.jsonl
 
+# Yayına hazırlanan veri seti paketi — TÜRETİLMİŞ, depoya konmaz.
+#
+# `scripts/veri_seti_paketle.py` bu dizini `data/gold/gold.round1.json` ve
+# `data/gold/gold.v2.json`'dan TEK KOMUTLA yeniden üretir (~4 MB: aynı gold
+# kayıtları JSONL olarak bir kez, sonra train/val/test bölmelerinde İKİNCİ
+# kez). Gold her değiştiğinde paket de değişir; commit edilseydi her tur
+# 4 MB'lık yeni bir kopya git geçmişine eklenirdi — `data/silver/trainable.jsonl`
+# ile aynı gerekçe, aynı karar.
+#
+# İSTİSNA — `README.md` (dataset card) İZLENİR.
+#
+# Sebep: paketin geri kalanı VERİdir, kart ise İDDİAdır. İçinde κ değerleri,
+# "insan hakemliği yapılmadı" uyarısı, iki setin kıyaslanamazlığı ve kullanım
+# sınırları yazıyor. Bu cümleler yayımlandıktan sonra geri alınamaz, dolayısıyla
+# bir PR'da okunabilmeli ve değişimi diff'lenebilmelidir. İzlenmeseydi kartın
+# metni sessizce kayabilir ve kimse fark etmezdi.
+#
+# `LISANS.md` bilerek izlenmiyor: içeriği izlenen kaynaklardan (`LICENSE`,
+# `NOTICE`, `docs/legal_notes.md`) türetiliyor, yani zaten gözden geçirilebilir
+# bir yerde duruyor. Kartın böyle bir aslı yok — asıl kart budur.
+data/yayin/**
+!data/yayin/anatolia-ai-gold/
+!data/yayin/anatolia-ai-gold/README.md
+
 # İşlem günlüğü (audit log) — ÇALIŞMA ARTEFAKTI, depoya konmaz.
 #
 # Çalışan API her isteği buraya yazıyor (`src/api/gunluk.py`), yani dosya

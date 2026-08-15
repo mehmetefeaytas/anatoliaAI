@@ -310,7 +310,21 @@ Ayrıntılı komut listesi: [`app/README.md`](app/README.md).
 
 ## 🗂️ (3) Veri Seti (Dataset)
 
-**Herkese açık indirme bağlantısı:** _(yükleme tamamlandığında buraya eklenecektir)_
+**Herkese açık indirme bağlantısı:**
+<https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold>
+
+```python
+from datasets import load_dataset
+ds = load_dataset("mehmetefeaytas/katilim-bankaciligi-kampanya-gold")   # train/validation/test
+```
+
+Paket `make veri-seti` ile tek komutla yeniden üretilir
+(`python -m scripts.veri_seti_paketle`) ve `make veri-seti-yukle` kuru koşuyla
+ne yükleneceğini dosya + sha256 olarak listeler.
+
+⚠️ **İki gold seti tek küme gibi raporlanmaz.** Her kayıt `kaynak_set` alanı
+taşır (`gold.round1` / `gold.v2`); ikisi kıyaslanamaz (gerekçe: yukarıdaki
+"İki gold seti" bölümü ve veri setinin kendi kartı).
 
 Paket **tek komutla** üretilir ve her üretimde provenance kapısından geçer:
 
