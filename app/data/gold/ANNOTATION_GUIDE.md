@@ -78,11 +78,38 @@ Dosyanız `data/gold/review/` altında; kim hangi dosyayı açacak: `_atama.md`.
 | 1 | `disagreement = EVET` | Kural ve LLM ayrışmış. **En dikkatli bakılacak yer.** |
 | 2 | Düşük/orta güven (0,50–0,90) | Model tereddütlü; kontrol edin. |
 | 3 | Çok düşük güven (< 0,50) | Muhtemelen yanlış ya da uydurma. |
-| 4 | Yüksek güven (≥ 0,90) | Genelde doğru; hızlı tarayın, **toplu `ok` yazın** (kopyala-yapıştır). |
+| 4 | Yüksek güven (≥ 0,90) | ⚠️ **Toplu `ok` YAZMAYIN** — bu band en kalibresiz banddır (aşağı bakın). Tek tek bakın. |
 | 5 | `model_value` boş | Modelin bulamadığı alanlar. Belgeyi okuyup teyit edin. |
 
 Zamanınız biterse **sondan kesin**, baştan değil. Dosyanın başındaki 100 satır,
 sonundaki 400 satırdan daha değerlidir.
+
+#### 4. satır neden değişti — ölçülmüş gerekçe
+
+Bu satır 2026-08-15'e kadar *"Genelde doğru; hızlı tarayın, toplu `ok` yazın
+(kopyala-yapıştır)"* diyordu. **Yanlıştı ve gold'a hata sokuyordu.**
+
+Round1 gold'u üzerinde ilk kez anlamlı kalibrasyon koşuldu (n = 157 karar,
+`python -m eval.calibration --gold data/gold/gold.round1.json`):
+
+| Güven kovası | Karar | Ortalama güven | **Gerçek doğruluk** | Sapma |
+|---|---:|---:|---:|---:|
+| 0,70–0,75 | 34 | 0,720 | 0,971 | yetersiz güven |
+| 0,80–0,90 | 76 | 0,844 | 0,763 | aşırı güven |
+| **0,90–1,01** | **22** | **0,948** | **0,636** | **+0,311 AŞIRI güven** |
+
+Yani en yüksek güven bandı **en kötü kalibre olan** banddır: model %95 emin
+göründüğü kararların üçte birinde yanılıyor. "Toplu `ok`" talimatı tam olarak
+o bandı gözden geçirmeden onaylatıyordu.
+
+Kök neden çıkarıcıda bulundu: `src/extraction/rules/extract.py` içinde **11
+çağrı yerinde** `trigger_distance=0` sabit yazılmış; `confidence.score()` bu
+girdiyle `BASE 0,70 + ADJACENT_BONUS 0,25 = 0,95` üretiyor. Skor o alanlarda
+gerçek bir yakınlık ölçümü değil, sabit bir sayı. Düzeltilene kadar ≥ 0,90
+bandı bir güven işareti sayılmamalıdır.
+
+Sıra hâlâ geçerlidir (dikkat en çok 1. satıra); değişen yalnız 4. satırın
+"toplu onayla" talimatıdır.
 
 ---
 

@@ -3,14 +3,14 @@
 > `scripts/build_gold.py` üretti. Elle düzenlemeyin.
 
 - Çıktı: `data/gold/gold.round1.json`
-- SHA-256: `bd6aab6d730bc09f1fd238ddadf875b6c58a104a7d63a8b8d5360f849162d37b`
+- SHA-256: `3536760b09764eeec61d71aa9367a100c9770c41442232bd5900eff95e6335a2`
 - Kayıt: **134**
 - Çift anote edilmiş kayıt: **44**
 - 12/12 alan karara bağlı (recall ÖLÇÜLEBİLİR): **0**
 - Kampanya sayılmayıp elenen belge: **10**
 - Çelişki (anotatörler ayrıştı): **11**
 - Hakemlik bekleyen kayıt: **11**
-- Kanıtlı alan (`field_spans`): **99/148** (%66.9)
+- Kanıtlı alan (`field_spans`): **129/148** (%87.2)
 
 ## Protokol künyesi
 
@@ -31,8 +31,8 @@
 
 ## Kanıt (`field_spans`)
 
-- Kanıtlı: **99/148** alan
-- Kanıtsız: **49** alan — değer var, belgede birebir geçen alıntısı yok.
+- Kanıtlı: **129/148** alan
+- Kanıtsız: **19** alan — değer var, belgede birebir geçen alıntısı yok.
 
 > Bu hattın kanıtı `merge_gold_v2` hattınınkiyle **aynı ağırlıkta değildir.** Orada alıntıyı anotatör belgeyi kör okuyarak elle yazdı; burada çıkarıcının kaydettiği konumu anotatör onayladı (`verdict=ok`). İkisi de belgede birebir geçer, ikincisi bağımsız bir gözlem değildir.
 
@@ -45,14 +45,14 @@
 | `kar_payi_orani` | 7 | 6 | 10 | 0 |
 | `finansman_tutari` | 22 | 15 | 5 | 3 |
 | `vade_ay` | 33 | 27 | 30 | 4 |
-| `taksit_sayisi` | 16 | 15 | 2 | 0 |
+| `taksit_sayisi` | 16 | 16 | 2 | 0 |
 | `tahsis_ucreti` | 0 | 0 | 0 | 0 |
 | `masraf_durumu` | 5 | 2 | 0 | 0 |
 | `odul_miktari` | 2 | 2 | 5 | 1 |
 | `indirim_orani` | 0 | 0 | 0 | 0 |
 | `alisveris_puani` | 2 | 2 | 0 | 1 |
-| `kampanya_suresi` | 52 | 23 | 6 | 0 |
-| `kampanya_kosullari` | 6 | 5 | 2 | 2 |
+| `kampanya_suresi` | 52 | 51 | 6 | 0 |
+| `kampanya_kosullari` | 6 | 6 | 2 | 2 |
 | `hedef_kitle` | 3 | 2 | 0 | 0 |
 
 ### Kanıtsız alanlar — kapatılacak iş listesi
@@ -61,53 +61,23 @@
 |---|---|
 | `albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart` | `finansman_tutari` |
 | `albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart` | `hedef_kitle` |
-| `albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart` | `kampanya_kosullari` |
-| `albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart` | `kampanya_suresi` |
 | `albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart` | `kar_payi_orani` |
 | `albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart` | `vade_ay` |
-| `albaraka--detay-saglik-harcamalarina-vade-farksiz-6-taksit-kampanyasi-1-1` | `kampanya_suresi` |
 | `albaraka--eviniz-icin-prefabrik` | `vade_ay` |
 | `albaraka--gecmis-tarihli-aracfinansmanitalep-onayveucretbilgilendirmeformu-pdf` | `masraf_durumu` |
 | `albaraka--tatiliniz-icin-devre-mulk` | `vade_ay` |
-| `albaraka--tr-urun-ve-hizmet-ucretleri` | `kampanya_suresi` |
 | `albaraka--tr-urun-ve-hizmet-ucretleri` | `masraf_durumu` |
 | `dunya-katilim--kredi-kartlari-paraf-platinum-kredi-karti` | `masraf_durumu` |
 | `hayat-finans--hesaplar-avantajli-hesap` | `finansman_tutari` |
-| `kuveyt-turk--hesaplar-katilma-hesaplari-2` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-akaryakitta-200-tlye-varan-altin-puan-firsati` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-avvada-500-tl-indirim-firsati` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-bisiklet-finansmaninda-enerji-tasarrufu-haftasina-ozel-419-kar-o` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-elektrikli-arac-sarj-unitesi-finansmaninda-enerji-tasarrufu-haft` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-firma-ortaklari-yatirim-yaparken-mil-kazaniyor-scr` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-hepsiburada-alisveris-finansmaninda-enerji-tasarrufu-haftasina-o` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-kuveyt-turk-ve-togg-is-birligi` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-kuveyt-turkandvavacars-is-birligi` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-kuveyt-turkten-esnafa-ucretsiz-cek-paketi` | `kampanya_suresi` |
-| `kuveyt-turk--kampanya-arsivi-kuveyt-turkten-turizm-sektorune-kfk-destekli-finansman` | `kampanya_suresi` |
-| `kuveyt-turk--kart-kampanyalari-dogtas-grubunda-5-aya-varan-taksit-imkani` | `kampanya_suresi` |
-| `kuveyt-turk--kart-kampanyalari-saglam-business-karttan-dev-kampanya-3-ay-erteleme-ve-349-oran` | `kampanya_suresi` |
-| `kuveyt-turk--katilma-hesaplari-birikimli-katilma-hesabi` | `kampanya_suresi` |
-| `kuveyt-turk--kendim-icin-finansman-kampanyalari` | `kampanya_suresi` |
-| `kuveyt-turk--kendim-icin-finansman-kampanyalari` | `taksit_sayisi` |
-| `kuveyt-turk--musteri-ol-kampanyalari-yakinlarini-kuveyt-turke-davet-et-toplamda-5000-tlye-var` | `kampanya_suresi` |
-| `tom-katilim--kampanyalar-akaryakit-harcamalarinda-5e-varan-iade-ustelik-cok-kazananlar-kulubu` | `kampanya_suresi` |
-| `tom-katilim--kampanyalar-giyim-alisverislerinde-kampanya` | `kampanya_suresi` |
 | `tom-katilim--urunlerimiz` | `finansman_tutari` |
 | `turkiye-emlak-katilim--katilma-hesaplari-zumrut-katilma-hesabi` | `vade_ay` |
 | `turkiye-finans--bireysel-gunluk-hesap` | `finansman_tutari` |
-| `turkiye-finans--bireysel-urun-hizmet-ucretleri` | `kampanya_suresi` |
 | `turkiye-finans--bireysel-urun-hizmet-ucretleri` | `vade_ay` |
 | `turkiye-finans--kampanyalar-turkiye-finans-avantajlariyla-mobilden-tanis` | `finansman_tutari` |
 | `turkiye-finans--kampanyalar-turkiye-finans-avantajlariyla-mobilden-tanis` | `kampanya_suresi` |
 | `turkiye-finans--katilma-hesaplari-e-katilma-hesabi` | `vade_ay` |
 | `turkiye-finans--kobi-kobi-icin-gunluk-hesap` | `finansman_tutari` |
 | `vakif-katilim--detay-igdas-finansman-kampanyasi` | `finansman_tutari` |
-| `vakif-katilim--detay-igdas-finansman-kampanyasi` | `kampanya_suresi` |
-| `vakif-katilim--detay-mastercard-kredi-kartinizla-200-tl-marti-kuponu` | `kampanya_suresi` |
-| `vakif-katilim--detay-ogretmenlerimize-vakif-katilimdan-avantajli-paket` | `kampanya_suresi` |
-| `ziraat-katilim--kart-kampanyalari-mobilya-alisverisinize-1500-tl-bankkart-lira` | `kampanya_suresi` |
-| `ziraat-katilim--kart-kampanyalari-size-ozel-banka-karti-kampanyasi` | `kampanya_suresi` |
-| `ziraat-katilim--kart-kampanyalari-troy-kartla-drda-1000-tlye-varan-indirim` | `kampanya_suresi` |
 
 ## Zor-vaka etiketleri
 

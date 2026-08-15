@@ -20,6 +20,7 @@ from ...preprocessing.clean import split_sentences, tr_fold
 from ...schemas import ExtractedField, Extractor
 from . import confidence as C
 from .ihtar import ihtar_mi
+from .kabuk import kabuk_baslangici
 from .synonyms import NEGATION_RE
 
 # Kural katmanının güveni yüksektir (deterministik); LLM'inkinden ayrışsın diye 0.95.
@@ -2085,4 +2086,13 @@ def extract_all(text: str) -> list[ExtractedField]:
     for ad, f in tablo_yedek.items():
         if ad not in out:
             out[ad] = f
+
+    # KABUK SÜZGECİ — kılavuz §4.13/8'in kod karşılığı. Tek noktada, çünkü
+    # kural 12 alanın hepsi için aynıdır ve test edilecek tek bir sınır olmalı.
+    # Değeri komşu kampanya listesinden devşiren alan bu belgeye ait değildir
+    # (`src/extraction/rules/kabuk.py` — kuyruk kümesi tanımı).
+    sinir = kabuk_baslangici(text)
+    if sinir is not None:
+        out = {ad: f for ad, f in out.items()
+               if not (isinstance(f.span_start, int) and f.span_start >= sinir)}
     return list(out.values())
