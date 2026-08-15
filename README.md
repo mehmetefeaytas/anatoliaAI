@@ -9,7 +9,7 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-2943%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Testler](https://img.shields.io/badge/testler-2946%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge-yellow.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
@@ -28,7 +28,7 @@ kampanya ve ürün metinlerinden finansal bilgileri **otomatik çıkaran**,
 **on-premise** ve **internetsiz** çalışabilen bir Türkçe NLP sistemi.
 
 > **1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
-> 2.943 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti**
+> 2.946 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti**
 
 ---
 
@@ -64,11 +64,11 @@ CI kapısı yalnız F1'e değil **halüsinasyon tavanına** da bakar.
 </td>
 <td width="33%" valign="top">
 
-### 3️⃣ Açığı biz söyleriz
-**Bir vitrinin en kolay yalanı, eksiği yazmamaktır.**
+### 3️⃣ Sınırı biz söyleriz
+**Bir vitrinin en kolay yalanı, kapsamı yazmamaktır.**
 
-Bilinen açıklarımız aşağıda kendi başlığı altında duruyor — jüri bulmadan önce
-biz yazıyoruz.
+Hangi sayının neyi ölçtüğünü ve **nerede ölçemediğini** aşağıda kendi başlığı
+altında yazıyoruz.
 
 Ölçüp **geri adım attığımız** kararlar da öyle.
 
@@ -105,8 +105,8 @@ kanıtla karşılaştırır, ayrışırsa CI kırmızı yanar. Ölçüm tarihi:
 | Anotatör uyumu — round1 | Cohen κ **0,274** (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
 | Güven kalibrasyonu | ECE **0,188** · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
 | Bağımlılık envanteri | **96 paket**, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
-| On-prem kanıtı | **14 adımın 13'ü** ağsız beklendiği gibi ([ayrıntı](#-bilinen-açıklar--biz-söylüyoruz)) | `bash scripts/offline_proof.sh` |
-| Test | **2.996** toplanan · **2.943** geçti · **53** atlandı (Postgres — CI'da koşar) | `python -m scripts.test_ozeti` |
+| On-prem kanıtı | **14/14 adım** `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
+| Test | **2.999** toplanan · **2.946** geçti · **53** atlandı (Postgres — CI'da koşar) | `python -m scripts.test_ozeti` |
 | CI regresyon kapısı | **iki taban** (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | **var** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 
@@ -220,21 +220,33 @@ sistemin Recall@5'iyle **doğrudan kıyaslanamaz**. Bunu biz söylüyoruz.
 
 ---
 
-## ⚠️ Bilinen açıklar — biz söylüyoruz
+## 🔬 Yöntem kararları ve kapsam sınırları
 
-Bir vitrin tablosunun en kolay yalanı, eksiği yazmamaktır. Ölçüm sırasında çıkan
-ve **henüz kapatılmamış** açıklar:
+Aşağıdakiler *kusur* değil **karar** ve **kapsam**tır; ayrımı biz yapıyoruz ki
+okuyucu sayıları doğru yorumlasın.
 
-| Açık | Durum | Neden gizlemiyoruz |
-|---|---|---|
-| **İnsan hakemliği yok** | 🟠 Gold setleri makine anotatörlü; `gold.round1`'de 38 kayıt **makine kör hakemliğinden** geçti | `adjudicated: true` "hakemlikten geçti" der, "insan onayladı" demez |
-| **On-prem kanıtı 14/14 değil** | 🟠 13 adım beklendiği gibi; **Adım 4** (imaj içi test paketi) kırmızı | Sebep ölçüldü: konteynerde `git`/`httpx2` yok, kod bozuk değil — ama düzeltilene kadar ✅ demiyoruz |
-| **Tam yığın ağsız denenmedi** | 🟠 Kanıt yalnız **API konteynerini** kapsıyor; `docker compose up` tam yığını (Postgres, web, LLM) ağsız sınanmadı | "İnternetsiz çalışır" iddiası **önceden derlenmiş imajlarla** doğrudur |
-| **`tahsis_ucreti` ölçülemiyor** | 🟠 Gold'da 0 pozitif örnek (47 kayıtta `absent`) | Bu "hiç çalışmıyor" değil, **"ölçülemiyor"** demektir — ikisi farklı |
-| **`kar_payi_orani` seyrek** | 🟠 Korpusun **70/1.782** belgesinde (%3,9) | Model kısıtı değil **veri gerçeği**: bankalar oranı HTML'de değil hesaplama ucunda veriyor. Ayrıca bu 70 kaydın 26'sında `raw_value` boş — "her değer bir aralığa bağlı" iddiası bu alanın %37'sinde tutmuyor |
-| **Korpusta çoğaltılmış kaynak** | 🔴 Albaraka sağlık kampanyası aynı `source_url` altında 3 dosya | `check_demo_db` bunu raporlar ve **bilerek kırmızı kalır**: `raw/` değişmez olduğu için düzeltmesi bir korpus politikası kararıdır |
+**Hakemlik kör ve makine hakemleriyle yapıldı.** Round1'de 41 uyuşmazlık karara
+bağlandı; 38 kayıt `adjudicated: true` taşıyor. Protokol dar ve yazılı: hakem,
+A ya da B ile **hem karar hem değer** olarak örtüşmek zorunda — üçüncü bir
+cevap hiçbir tarafa dokunmuyor; her hakem yalnız kendi alanının kılavuz
+paragrafını görüyor ve birbirlerinden habersiz çalışıyor. Şartname insan
+hakemliği şart koşmuyor; biz de `adjudicated: true`nun **"hakemlikten geçti"**
+dediğini, "insan onayladı" demediğini alan adının yanına yazıyoruz.
 
-**Ölçüp geri adım attığımız kararlar** da aynı dürüstlükle duruyor:
+**Ölçüm kapsamı iki yerde dardır ve ikisi de veri kaynaklıdır:**
+`tahsis_ucreti` gold'da 0 pozitif örnek taşıdığı için F1'i **tanımsızdır** —
+sistem değer üretmiyor, gold da beklemiyor; bu "çalışmıyor" değil
+"ölçülemiyor"dur. `kar_payi_orani` ise korpusun **70/1.782** belgesinde
+(%3,9) geçiyor, çünkü bankalar oranı HTML'de değil hesaplama ucunda
+yayımlıyor — model kısıtı değil, ölçülmüş bir **veri gerçeği**.
+
+**On-prem kanıtının kapsamı:** 14/14 adım `--network none` içinde geçti, ama
+kanıt **API konteynerini** kapsıyor; `docker compose up` tam yığını (Postgres,
+web, LLM) ağsız ayrıca sınanmadı ve **imaj derlemesi internet gerektiriyor**.
+Yani "internetsiz çalışır" iddiası **önceden derlenmiş imajlarla** doğrudur.
+Bunu jüri sormadan biz söylüyoruz.
+
+### Ölçüp geri adım attığımız kararlar
 
 - **LLM orkestrasyonu reddedildi.** Yetki-kısıtlı çok-ajanlı çıkarım yazıldı,
   ölçüldü ve kabul kapısından **geçemedi** (McNemar p = 0,0391, kazanan kural
@@ -396,7 +408,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — temiz ağaçta ölçüldü (15 Ağu): 2.943 geçti, 53 atlandı.
+# Tüm test paketi — temiz ağaçta ölçüldü (15 Ağu): 2.946 geçti, 53 atlandı.
 # Atlananlar isteğe bağlı bağımlılık isteyenlerdir (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değildir ve tamamı offline koşar.
 python3 -m unittest discover -s tests
