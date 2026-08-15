@@ -1829,8 +1829,11 @@ def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:
     if not found:
         return None
     s, e = first_span
+    # Birden çok etiket bulunduysa bu bir seçim kararıdır; tek etiketli
+    # vakayla aynı kesinlikte değildir.
     return _field("hedef_kitle", text[s:e], sorted(found), _window(text, s, e),
-                  span_start=s, span_end=e, trigger_distance=0)
+                  span_start=s, span_end=e, trigger_distance=0,
+                  candidate_count=len(found))
 
 
 # DİPNOT İŞARETİ. Kampanyanın GERÇEK kısıtları sayfanın altındaki yıldızlı /
@@ -1994,11 +1997,16 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
         idx, end = 0, 0
     else:
         end = idx + len(first)
+    # Seçim belirsizliği sayılır. Bu alan tek bir eşleşme değil, koşul
+    # ipucu taşıyan N cümlenin SEÇİMİDİR; N seçim kararı tek bir bitişik
+    # eşleşmeyle aynı kesinliği taşıyamaz. Ölçüldü (2026-08-15, gold.round1):
+    # kalem düzeyi kesinlik 0,556 iken skor 0,95 ilan ediliyordu.
     return _field("kampanya_kosullari", text[idx:end] if end > idx else first,
                   picked, _window(text, idx, end),
                   span_start=idx if end > idx else None,
                   span_end=end if end > idx else None,
-                  trigger_distance=0)
+                  trigger_distance=0,
+                  candidate_count=len(picked))
 
 
 # Oran tablosundan gelen ama tekil çıkarıcıya ÖNCELİK bırakan alanlar.
