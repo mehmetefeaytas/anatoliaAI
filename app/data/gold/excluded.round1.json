@@ -1,0 +1,44 @@
+[
+  {
+    "id": "albaraka--sozlesmeler-bayide-finansman-ihtiyac-aracilik-ve-garantorluk-sozlesmesi-komisyon",
+    "bank_slug": "albaraka",
+    "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/bayide-finansman-ihtiyac---aracilik-ve-garantorluk-sozlesmesi-(komisyonsuz).pdf",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "dunya-katilim--hizmetler-doviz-transferi-swift",
+    "bank_slug": "dunya-katilim",
+    "source_url": "https://dunyakatilim.com.tr/kendim-icin/odemeler-ve-hizmetler/hizmetler/doviz-transferi-swift",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "kuveyt-turk--medium-temel-bankacilik-hizmetleri-ucret-degisikliklerine-3444-pdf",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/medium/temel-bankacilik-hizmetleri-ucret-degisikliklerine-3444.pdf",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "kuveyt-turk--musteri-ol-kampanyalari-mobilden-kuveyt-turklu-olan-esnaf-ve-ciftcilere-22000-tl",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/musteri-ol-kampanyalari/mobilden-kuveyt-turklu-olan-esnaf-ve-ciftcilere-22000-tlye-varan-hediye",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "turkiye-finans--kampanyalar-biten-kampanyalar",
+    "bank_slug": "turkiye-finans",
+    "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/Biten-Kampanyalar.aspx",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "ziraat-katilim--finansman-urunleri-surdurulebilirlik-temali-bireysel-urunler",
+    "bank_slug": "ziraat-katilim",
+    "source_url": "https://www.ziraatkatilim.com.tr/bireysel/finansman-urunleri/surdurulebilirlik-temali-bireysel-urunler",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  }
+]

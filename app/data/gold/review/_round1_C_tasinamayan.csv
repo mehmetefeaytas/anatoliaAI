@@ -1,0 +1,169 @@
+﻿doc_id;field;gold_value;verdict;note;hangi_dagitimda
+albaraka--2026-kahve-keyfiniz-albarakadan;kampanya_suresi;2026-06-30;Fix;;(hiçbiri)
+albaraka--detay-dijital-katilma-hesabina-ozel-paylasim-oranlari-10;campaign_type;Katılma hesabı;Fix;;(hiçbiri)
+albaraka--detay-dijital-katilma-hesabina-ozel-paylasim-oranlari-10;kampanya_suresi;2026-12-31;Fix;;(hiçbiri)
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;campaign_type;Kart kampanyası;Fix;Metinde pratik kart kampanyasından açıkça bahsedilmektedir model konut finansmanıyla karıştırmıştır;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;finansman_tutari;"{""currency"": ""TRY"", ""value"": 150000.0}⁠";Fix;Metinde azami finansman tutarı 150.000 TL olarak belirtilmiştir model asgari olan  250 TL ile karıştırmıştır.;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;taksit_sayisi;36;Fix;Metinde ortalama yapılacak taksit sayısı 36 ay olarak belirtilmiştir;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;kampanya_suresi;2026-12-31;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--finansman-hesaplama-ihtiyac-finansmani-hesaplama;campaign_type;İhtiyaç finansmanı;Fix;;(hiçbiri)
+albaraka--finansman-hesaplama-ihtiyac-finansmani-hesaplama;finansman_tutari;"{""currency"": ""TRY"", ""value"": 11368.42}";Ok;;(hiçbiri)
+albaraka--finansmanlar-kobi-gayri-nakdi-finansman;campaign_type;Finansman;Ok;;round2_zor_vaka.csv
+albaraka--gayrimenkul-finansmani-2b-arazi-finansmani;campaign_type;Finansman;Ok;;round1_v2_A.csv | round1_v2_B.csv | round1_v2_C.csv | round1_v2_D.csv
+albaraka--ihtiyac-diger-ihtiyaclariniz-icin;campaign_type;İhtiyaç Finansmanı;Ok;;(hiçbiri)
+albaraka--ihtiyac-egitim-finansmani;campaign_type;Eğitim finansmanı;Fix;;(hiçbiri)
+albaraka--ihtiyac-hac-ve-umre-finansmani;campaign_type;İhtiyaç finansmanı;Fix;Metin hac umre hakkındadır ihtiyaç finansmanına girer model yanılmıştır;(hiçbiri)
+albaraka--ihtiyac-hac-ve-umre-finansmani;finansman_tutari;"{""currency"": ""TRY"", ""value"": 150000.0}⁠";Fix;;(hiçbiri)
+albaraka--ihtiyac-hac-ve-umre-finansmani;vade_ay;36;Fix;;(hiçbiri)
+albaraka--kredi-kartlari-eflatun-kredi-karti;campaign_type;Kart;Ok;;(hiçbiri)
+albaraka--kredi-kartlari-eflatun-kredi-karti;finansman_tutari;;Absent;Metindeki 2.500 TL ifadesi temassız işlem limitidir, finansman tutarı değildir.⁠;(hiçbiri)
+albaraka--kredi-kartlari-eflatun-kredi-karti;odul_miktari;;Absent;Metinde sayısal bi ödül miktarı yoktur model uydurmuştur;(hiçbiri)
+dunya-katilim--finansmanlar-arac-finansmanlari;campaign_type;Taşıt finansmanı;Ok;;(hiçbiri)
+dunya-katilim--finansmanlar-arac-finansmanlari;vade_ay;;Ok;;(hiçbiri)
+dunya-katilim--fiziki-altin-alimi-dijitalden-fiziki-altin-islemleri;campaign_type;Altın;Fix;Metin altın alımından bahsetmektedir ihtiyaç finansmanı değildir;round1_main_D.csv
+dunya-katilim--fiziki-altin-alimi-dijitalden-fiziki-altin-islemleri;vade_ay;;Ok;;round1_main_D.csv
+dunya-katilim--gayri-nakdi-finansman-teminat-mektuplari;campaign_type;Finansman;Ok;;(hiçbiri)
+dunya-katilim--gayri-nakdi-finansman-teminat-mektuplari;vade_ay;;Ok;;(hiçbiri)
+dunya-katilim--hayat-sigortalari-finansmana-bagli-ferdi-kaza-sigortasi;campaign_type;sigorta;Fix;;(hiçbiri)
+dunya-katilim--hayat-sigortalari-finansmana-bagli-ferdi-kaza-sigortasi;vade_ay;;Ok;;(hiçbiri)
+dunya-katilim--kampanyalar-ipekyol;campaign_type;kart;Fix;Metin ihtiyaç finansmanı değil kredi kartı alışveriş ve taksit hakkındadır;(hiçbiri)
+dunya-katilim--kampanyalar-ipekyol;vade_ay;;Ok;;(hiçbiri)
+dunya-katilim--kampanyalar-ipekyol;taksit_sayisi;4;Fix;;(hiçbiri)
+dunya-katilim--kampanyalar-ipekyol;kampanya_suresi;2026-07-31;Fix;;(hiçbiri)
+dunya-katilim--kendim-icin-yatirim-urunleri;campaign_type;Yatırım ürünü;Fix;Metin ihtiyaç finansmanını değil genel yatırım ürünleri hakkındadır;(hiçbiri)
+dunya-katilim--kendim-icin-yatirim-urunleri;vade_ay;;Ok;;(hiçbiri)
+dunya-katilim--yatirim-sermaye-piyasasi-urunleri;campaign_type;Yatırım ürünü;Fix;;(hiçbiri)
+dunya-katilim--yatirim-sermaye-piyasasi-urunleri;vade_ay;;Ok;;(hiçbiri)
+dunya-katilim--yatirim-urunleri-hazine-urunleri;campaign_type;Yatırım ürünü;Fix;;(hiçbiri)
+dunya-katilim--yatirim-urunleri-hazine-urunleri;vade_ay;;Ok;;(hiçbiri)
+hayat-finans--kampanyalar-bana-bunu-al-is-ortagim-ile-troy-magaza-firsatlari;campaign_type;Finansman;Ok;;round1_main_D.csv
+hayat-finans--kampanyalar-bana-bunu-al-is-ortagim-ile-troy-magaza-firsatlari;vade_ay;3;Fix;;round1_main_D.csv
+hayat-finans--kampanyalar-biz-kart-yemek-harcamasi-nakit-iade-kampanyasi;campaign_type;Kart kampanyası;Fix;"Kampanya sadece yeni müşterilere özel değildir; hem mevcut hem yeni müşterileri kapsayan bir Kart harcama kampanyasıdır.⁠";round1_v2_A.csv | round1_v2_B.csv | round1_v2_C.csv | round1_v2_D.csv
+hayat-finans--kampanyalar-biz-kart-yemek-harcamasi-nakit-iade-kampanyasi;kampanya_suresi;2026-07-31;Fix;;round1_v2_A.csv | round1_v2_B.csv | round1_v2_C.csv | round1_v2_D.csv
+hayat-finans--kartlar-hayat-finans-banka-karti;campaign_type;Kart;Ok;;(hiçbiri)
+hayat-finans--kartlar-hayat-finans-banka-karti;odul_miktari;;Fix;Metindeki 1.500 TL bir hediye/ödül değil, temassız/şifresiz işlem limitidir.⁠;(hiçbiri)
+hayat-finans--krediler-bana-bunu-al;campaign_type;Sigorta;Fix;Metin finansman ürünü değil ona bağlı sigorta hakkındadır;round1_main_D.csv
+hayat-finans--krediler-bana-bunu-al;finansman_tutari;"{""currency"": ""TRY"", ""value"": 50000.0}";Ok;;round1_main_D.csv
+hayat-finans--krediler-bana-bunu-al;vade_ay;18;Fix;;round1_main_D.csv
+hayat-finans--yatirim-ve-birikim-yatirim-fonlari-yatirim-ve-birikim;campaign_type;Yatırım ürünü;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+hayat-finans--yatirim-ve-birikim-yatirim-fonlari-yatirim-ve-birikim;finansman_tutari;"{""currency"": ""TRY"", ""value"": 100.0}";Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+hayat-finans--yatirim-ve-birikim-yatirimci-seviye-sistemi;campaign_type;Yatırım ürünü;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+kuveyt-turk--alisveris-finansmanlari-teknosa-alisveris-finansmani;campaign_type;Alışveriş finansmanı;Fix;Metinde kart ürünü değil alışveriş finansmanından bahsedilmekedir;round1_main_D.csv
+kuveyt-turk--alisveris-finansmanlari-teknosa-alisveris-finansmani;vade_ay;36;Fix;;round1_main_D.csv
+kuveyt-turk--alisveris-finansmanlari-teknosa-alisveris-finansmani;taksit_sayisi;12;Fix;Metinde en fazla belirtilen taksit miktarı 12 dir;round1_main_D.csv
+kuveyt-turk--biz-bize-plus-finansmanlarda-size-ozel-oranlar;campaign_type;Finansman;Fix;Metinde sadece konut değil araç ve konut içeren genel finansman hakkındadır;round2_zor_vaka.csv
+kuveyt-turk--biz-bize-plus-finansmanlarda-size-ozel-oranlar;vade_ay;;Ok;;round2_zor_vaka.csv
+kuveyt-turk--finansmanlar-surdurulebilir-finansmanlar;campaign_type;Finansman;Fix;Metinde birden fazla finansman türünden bahsedilmektedir;(hiçbiri)
+kuveyt-turk--ihtiyac-finansmanlari-egitim-finansmani;campaign_type;İhtiyaç finansmanı;Ok;;round1_main_D.csv | round2_zor_vaka.csv
+kuveyt-turk--ihtiyac-finansmanlari-tekne-tuketici-finansmani;campaign_type;İhtiyaç finansmanı;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+kuveyt-turk--kampanya-arsivi-10000-tl-degerindeki-cek-karnesi-ve-cek-tahsil-paketi-ucretsiz-s;kampanya_suresi;2024-12-31;Fix;;(hiçbiri)
+kuveyt-turk--kampanya-arsivi-50000-tlye-kadar-ertesi-gun-199-ya-da-25-gun-blokeli-0-pos;campaign_type;Kart kampanyası;Fix;;(hiçbiri)
+kuveyt-turk--kampanya-arsivi-50000-tlye-kadar-ertesi-gun-199-ya-da-25-gun-blokeli-0-pos;kampanya_suresi;2023-12-31;Fix;;(hiçbiri)
+kuveyt-turk--kampanyalar-kampanya-arsivi;campaign_type;Kart kampanyası;Fix;;(hiçbiri)
+kuveyt-turk--kampanyalar-kampanya-arsivi;vade_ay;;Ok;;(hiçbiri)
+kuveyt-turk--kampanyalar-kampanya-arsivi;kampanya_suresi;;Ok;;(hiçbiri)
+kuveyt-turk--kampanyalar-kampanya-arsivi-2;campaign_type;Kart kampanyası;Ok;;round2_zor_vaka.csv
+kuveyt-turk--kampanyalar-kampanya-arsivi-2;vade_ay;;Ok;;round2_zor_vaka.csv
+kuveyt-turk--kampanyalar-kampanya-arsivi-2;kampanya_suresi;;Ok;;round2_zor_vaka.csv
+kuveyt-turk--kampanyalar-kendim-icin;campaign_type;Kart;Ok;;(hiçbiri)
+kuveyt-turk--kampanyalar-kendim-icin;taksit_sayisi;;Ok;;(hiçbiri)
+kuveyt-turk--kampanyalar-kendim-icin;kampanya_suresi;;Ok;Kampanyadan kampanyaya tarihler değişmektedir;(hiçbiri)
+kuveyt-turk--konut-finansmanlari-2b-finansmani;campaign_type;Arsa finansmanı;Fix;Metin ev alımı değil daha çok arsa alımı için sunulan finansman hakkındadır;(hiçbiri)
+kuveyt-turk--konut-finansmanlari-konut-finansmani;campaign_type;Konut finansmanı;Ok;;(hiçbiri)
+kuveyt-turk--konut-finansmanlari-konut-finansmani;vade_ay;120;Fix;;(hiçbiri)
+tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;campaign_type;Kart kampanyası;Fix;;(hiçbiri)
+tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;finansman_tutari;;Fix;10.000 TL finansman tutarı değil katılım kulününe girmek için hesapta bulunması gereken bakiyedir;(hiçbiri)
+tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;taksit_sayisi;6;Fix;;(hiçbiri)
+turkiye-emlak-katilim--bireysel-kampanyalar;campaign_type;Kart kampanyası;Fix;Metin paran ve debit kartlara özel indirim ve puan kampanyalarını içermektedir;(hiçbiri)
+turkiye-emlak-katilim--bireysel-kampanyalar;vade_ay;;Ok;;(hiçbiri)
+turkiye-emlak-katilim--bireysel-kampanyalar;taksit_sayisi;12;Fix;;(hiçbiri)
+turkiye-emlak-katilim--finansmanlar-kentsel-donusum-finansmani;campaign_type;Konut finansmanı;Ok;;round2_zor_vaka.csv
+turkiye-emlak-katilim--finansmanlar-kentsel-donusum-finansmani;vade_ay;120;Fix;;round2_zor_vaka.csv
+turkiye-emlak-katilim--finansmanlar-tamamlayici-konut-finansmani;campaign_type;Konut finansmanı;Ok;;(hiçbiri)
+turkiye-emlak-katilim--kampanya-beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara;campaign_type;Alışveriş Puanı;Ok;;round1_main_D.csv
+turkiye-emlak-katilim--kampanya-beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara;kampanya_suresi;2026-07-31;Fix;;round1_main_D.csv
+turkiye-emlak-katilim--kampanya-paraf-ile-adv-magazalarinda-1000-tl-parafpara;campaign_type;Alışveriş Puanı;Ok;;(hiçbiri)
+turkiye-emlak-katilim--kampanya-paraf-ile-adv-magazalarinda-1000-tl-parafpara;kampanya_suresi;2026-07-31;Fix;;(hiçbiri)
+turkiye-emlak-katilim--katilma-hesaplari-biriktiren-hesaplar;campaign_type;Katılım hesabı;Fix;Metin genel bir yatırım ürünü değil, birikim yapmaya yönelik Katılma Hesabı hakkındadır.;(hiçbiri)
+turkiye-emlak-katilim--katilma-hesaplari-biriktiren-hesaplar;vade_ay;;Ok;;(hiçbiri)
+turkiye-emlak-katilim--katilma-hesaplari-ceyiz-hesabi;campaign_type;Yatırım ürünü;Ok;;(hiçbiri)
+turkiye-emlak-katilim--katilma-hesaplari-ceyiz-hesabi;vade_ay;;Ok;;(hiçbiri)
+turkiye-emlak-katilim--katilma-hesaplari-ceyiz-hesabi;kampanya_suresi;;Ok;;(hiçbiri)
+turkiye-emlak-katilim--leasing-turk-eximbank-finansal-kiralama;campaign_type;Finansman;Ok;;(hiçbiri)
+turkiye-emlak-katilim--nakdi-finansman-franchising-finansmani;campaign_type;Finansman;Fix;Metin bireysel ihtiyaçlardan değil girişimciler kobiler için sunulan finansman hakkında;(hiçbiri)
+turkiye-emlak-katilim--nakdi-finansman-franchising-finansmani;vade_ay;36;Fix;;(hiçbiri)
+turkiye-emlak-katilim--nakdi-finansman-teminata-donusen-tasarruf-finansmani;campaign_type;Finansman;Fix;;(hiçbiri)
+turkiye-finans--banka-kartlari-paratik-para-karti;campaign_type;Kart;Fix;Metin yatırım ürünü değil, doğrudan Türkiye Finans'ın Paratik banka (debit) kartı tanıtım sayfasıdır.;(hiçbiri)
+turkiye-finans--bireysel-kar-payi-oranlari;campaign_type;Yatırım ürünü;Ok;;round1_main_D.csv
+turkiye-finans--bireysel-kar-payi-oranlari;vade_ay;;Ok;;round1_main_D.csv
+turkiye-finans--default;campaign_type;Finansman;Fix;"Metin sadece ihtiyaç finansmanı değil; eğitim, taşıt, motosiklet ve genel alışveriş finansmanı seçeneklerini bir arada bulundurmaktadır";round1_v2_A.csv | round1_v2_B.csv | round1_v2_C.csv | round1_v2_D.csv
+turkiye-finans--kampanyalar-banka-calisanlarina-ozel-ihtiyac-finansmani;campaign_type;İhtiyaç finansmanı;Fix;;round1_main_D.csv | round2_zor_vaka.csv
+turkiye-finans--kampanyalar-banka-calisanlarina-ozel-ihtiyac-finansmani;finansman_tutari;"⁠{""currency"": ""TRY"", ""value"": 1000000.0}⁠";Fix;"125.000 TL vade kademesi için bir eşik değerdir; kampanyada kullandırılan azami finansman tutarı 1.000.000 TL'dir.";round1_main_D.csv | round2_zor_vaka.csv
+turkiye-finans--kampanyalar-biten-kampanyalar;campaign_type;Finansman;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+turkiye-finans--kampanyalar-biten-kampanyalar;kar_payi_orani;1959-03-01;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+turkiye-finans--kampanyalar-biten-kampanyalar;vade_ay;;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+turkiye-finans--kampanyalar-emeklilere-nakit-promosyon;finansman_tutari;"{""currency"": ""TRY"", ""value"": 5000.0}";Ok;;round1_main_D.csv
+turkiye-finans--kampanyalar-fatura-2300tl-bonus;vade_ay;;Ok;;round1_main_D.csv
+turkiye-finans--kampanyalar-fatura-2300tl-bonus;kampanya_suresi;2026-07-31;Fix;;round1_main_D.csv
+turkiye-finans--kampanyalar-finansman-kampanyalari;campaign_type;Finansman;Fix;Metin banka kamu çalışanlarına yönelik finansman içermektedir;round2_zor_vaka.csv
+turkiye-finans--kampanyalar-finansman-kampanyalari;vade_ay;;Ok;;round2_zor_vaka.csv
+turkiye-finans--katilma-hesaplari-bol-kepce-hesap;campaign_type;Katılım hesabı;Fix;;(hiçbiri)
+turkiye-finans--katilma-hesaplari-bol-kepce-hesap;finansman_tutari;;Fix;"Metinde finansman tutarı bulunmamaktadır; 2.500 TL hesap açılış alt limitidir.";(hiçbiri)
+turkiye-finans--katilma-hesaplari-bol-kepce-hesap;vade_ay;;Ok;;(hiçbiri)
+turkiye-finans--katilma-hesaplari-katilma-hesaplari;campaign_type;Katılım hesabı;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+turkiye-finans--katilma-hesaplari-katilma-hesaplari;vade_ay;;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+turkiye-finans--kobi-kobi-icin-gunluk-hesap;campaign_type;Katılım hesabı;Fix;Metin KOBİ'lere yönelik Günlük Katılma Hesabı tanıtımıdır.;round1_main_D.csv | round2_zor_vaka.csv
+turkiye-finans--kobi-kobi-icin-gunluk-hesap;finansman_tutari;;Fix;Metinde finansman tutarı bulunmamaktadır;round1_main_D.csv | round2_zor_vaka.csv
+turkiye-finans--kobi-kredileri-kobi-aninda-finansman;campaign_type;Finansman;Fix;;(hiçbiri)
+vakif-katilim--detay-eyt-finansmani;campaign_type;Finansman;Ok;;(hiçbiri)
+vakif-katilim--detay-eyt-finansmani;vade_ay;36;Fix;;(hiçbiri)
+vakif-katilim--detay-eyt-finansmani;taksit_sayisi;;Ok;;(hiçbiri)
+vakif-katilim--detay-igdas-fatura-odemelerinize-vade-farksiz-3-taksit;campaign_type;Kart;Ok;;(hiçbiri)
+vakif-katilim--detay-igdas-fatura-odemelerinize-vade-farksiz-3-taksit;taksit_sayisi;3;Fix;;(hiçbiri)
+vakif-katilim--detay-igdas-fatura-odemelerinize-vade-farksiz-3-taksit;kampanya_suresi;2026-05-31;Fix;;(hiçbiri)
+vakif-katilim--detay-igdas-finansman-kampanyasi;taksit_sayisi;;Ok;;(hiçbiri)
+vakif-katilim--finansmanlar-arsa-finansmani;campaign_type;Konut finansmanı;Ok;;(hiçbiri)
+vakif-katilim--finansmanlar-arsa-finansmani;vade_ay;60;Fix;;(hiçbiri)
+vakif-katilim--finansmanlar-kobi-destekli-finansmanlar;campaign_type;Finansman;Fix;;(hiçbiri)
+vakif-katilim--finansmanlar-motosiklet-finansmani;campaign_type;Taşıt finansmanı;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+vakif-katilim--finansmanlar-motosiklet-finansmani;vade_ay;48;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+vakif-katilim--katilma-hesaplari-ara-donem-kar-payi-odemeli-katilma-hesabi;campaign_type;Katılım hesabı;Fix;Metin ara dönem kâr payı ödemeli katılma hesabı hakkındadır;(hiçbiri)
+vakif-katilim--katilma-hesaplari-ara-donem-kar-payi-odemeli-katilma-hesabi;vade_ay;;Ok;;(hiçbiri)
+vakif-katilim--katilma-hesaplari-ara-donem-kar-payi-odemeli-katilma-hesabi-2;campaign_type;Katılım hesabı;Fix;;round1_main_D.csv
+vakif-katilim--katilma-hesaplari-ara-donem-kar-payi-odemeli-katilma-hesabi-2;kar_payi_orani;;Fix;Metinde sabit bir kâr payı oranı bulunmamaktadır;(hiçbiri)
+vakif-katilim--katilma-hesaplari-ara-donem-kar-payi-odemeli-katilma-hesabi-2;vade_ay;;Ok;;round1_main_D.csv
+vakif-katilim--kendim-icin-detay-ihtiyac-finansmani;campaign_type;İhtiyaç finansmanı;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+vakif-katilim--kendim-icin-finansmanlar;campaign_type;Finansman;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+vakif-katilim--kendim-icin-finansmanlar;vade_ay;60;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+ziraat-katilim--hesaplar-cari-hesaplar;campaign_type;Katılım hesabı;Fix;;(hiçbiri)
+ziraat-katilim--hesaplar-cari-hesaplar;kampanya_suresi;;Ok;;(hiçbiri)
+ziraat-katilim--hesaplar-katilma-hesaplari;campaign_type;Katılım hesabı;Fix;Metin ziraat katılımın bireysel katılma ve birikim hesaplarının tanıtımıyla ilgiliir;(hiçbiri)
+ziraat-katilim--hesaplar-katilma-hesaplari;vade_ay;;Ok;;(hiçbiri)
+ziraat-katilim--kampanyalar-ziraat-katilim-bankkart-babalargunu-kampanyasi;campaign_type;Kart;Ok;;(hiçbiri)
+ziraat-katilim--kampanyalar-ziraat-katilim-bankkart-babalargunu-kampanyasi;kampanya_suresi;2023-06-19;Fix;;(hiçbiri)
+ziraat-katilim--katilma-hesaplari-yuvam-hesap;campaign_type;Katılım hesabı;Fix;Metin yuvam katılma hesabıyla alakalıdır;(hiçbiri)
+ziraat-katilim--katilma-hesaplari-yuvam-hesap;vade_ay;;Ok;;(hiçbiri)
+ziraat-katilim--katilma-hesaplari-yuvam-hesap;kampanya_suresi;;Ok;;(hiçbiri)
+ziraat-katilim--ozel-bankacilik-ayricaliklari-egitim-finansman;campaign_type;Finansman;Ok;;round1_main_D.csv
+ziraat-katilim--yatirim-urunleri-yp-sukuk;campaign_type;Yatırım ürünü;Ok;;(hiçbiri)
+ziraat-katilim--yatirim-urunleri-yp-sukuk;vade_ay;;Ok;;(hiçbiri)
+albaraka--gayrimenkul-finansmani-2b-arazi-finansmani;vade_ay;60;Fix;;round1_v2_A.csv | round1_v2_B.csv | round1_v2_C.csv | round1_v2_D.csv
+albaraka--ihtiyac-egitim-finansmani;vade_ay;12;Fix;;(hiçbiri)
+albaraka--ihtiyac-hac-ve-umre-finansmani;kar_payi_orani;;Fix;Metinde belirli bir kâr oranı yoktur. 36.0 ürünün vade süresidir;(hiçbiri)
+hayat-finans--yatirim-ve-birikim-yatirim-fonlari-yatirim-ve-birikim;kampanya_suresi;;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+hayat-finans--yatirim-ve-birikim-yatirimci-seviye-sistemi;vade_ay;;Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+kuveyt-turk--ihtiyac-finansmanlari-egitim-finansmani;finansman_tutari;;Fix;Metinde finansman tutarı bulunmamaktadır. 0.0 değeri hatalıdır;round1_main_D.csv | round2_zor_vaka.csv
+kuveyt-turk--ihtiyac-finansmanlari-tekne-tuketici-finansmani;finansman_tutari;;Fix;Metinde finansman tutarı bulunmamaktadır. 0.0 değeri hatalıdır;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+kuveyt-turk--konut-finansmanlari-2b-finansmani;finansman_tutari;;Fix;Metinde finansman tutarı bulunmamaktadır. 0.0 değeri hatalıdır;(hiçbiri)
+kuveyt-turk--konut-finansmanlari-konut-finansmani;finansman_tutari;;Fix;Metinde finansman tutarı bulunmamaktadır. 0.0 değeri hatalıdır;(hiçbiri)
+turkiye-finans--kampanyalar-emeklilere-nakit-promosyon;vade_ay;;Ok;;round1_main_D.csv
+vakif-katilim--kendim-icin-detay-ihtiyac-finansmani;vade_ay;36;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv
+ziraat-katilim--hesaplar-cari-hesaplar;vade_ay;;Ok;;(hiçbiri)
+albaraka--2026-kahve-keyfiniz-albarakadan;kampanya_kosullari;"[""Kampanya Detayları: Kampanya sadece Espressolab'ın Türkiye mağazalarında; küçük boy (12 oz) aromasız kahveler (espresso, espresso macchiato, latte, cappuccino, filtre kahve, americano, flat white, cortado), türk kahvesi, karadeniz çayı ve bitki çaylarında geçerlidir."", ""Kampanyadan yararlanabilmek için sadakat segmentinizin Elmas ya da Platin olması gerekmektedir."", ""Albaraka Türk Katılım Bankası A.Ş. kampanya şartlarında önceden haber vermeksizin değişiklik yapabilme hakkını saklı tutar.""]";Ok;;(hiçbiri)
+albaraka--2026-kahve-keyfiniz-albarakadan;hedef_kitle;"[""Belirli segment""]";Fix;"Kampanya Elmas ve Platin sadakat segmentindeki müşterilere özel tanımlandığı için hedef kitle ⁠[""belirli_segment""]⁠ olmalıdır.";(hiçbiri)
+albaraka--detay-dijital-katilma-hesabina-ozel-paylasim-oranlari-10;kampanya_kosullari;"[""Kampanya yalnızca gerçek kişiler için geçerlidir."", ""Kampanya Detayları Kampanyadan yalnızca 1 Nisan 2026 - 31 Aralık 2026 tarihleri arasında Albaraka Mobil'den görüntülü görüşme ile müşterimiz olanlar yararlanabilmektedir."", ""Avantajlı kâr paylaşım oranı Albaraka Mobil üzerinden, TL cinsinden açılan Katılma Hesapları için geçerlidir."", ""Dijital Katılma Hesabı TL cinsinden minimum 250 TL ile açılmaktadır."", ""Albaraka Türk Katılım Bankası, sektör koşullarına göre değişiklik yapma, kampanyayı sonlandırma hakkını saklı tutar.""]";Ok;;(hiçbiri)
+albaraka--detay-dijital-katilma-hesabina-ozel-paylasim-oranlari-10;hedef_kitle;"[""yeni_musteri""]";Ok;;(hiçbiri)
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;kar_payi_orani;"{""max"": 3.95, ""min"": 0.0}⁠";Fix;Kampanyada 40.000 TL'ye kadar %0 kâr payı imkânı sunulduğu için asgari oran 0.0 olmalıdır.;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;vade_ay;36;Fix;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;kampanya_kosullari;"[""Pratik Finansman Kart Finansman Kampanyası Koşulları Kampanyadan 1 Ocak 2026 – 31 Aralık 2026 tarihleri arasında Albaraka Mobil'i indirip \""Müşteri Olmak İstiyorum\"" adımından ilerleyerek ilk defa Albaraka'lı olan müşterilerimiz Dijital Müşterilere özel vade farksız veya özel oranlı Pratik Finansman Kart\"" kampanyasına başvurabilecektir."", ""Kampanyamız sadece yeni müşterilerimiz için geçerli olup daha önce Albaraka müşterisi olmuş müşterilerimiz kampanyadan faydalanamaz."", ""Müşterilerimiz kampanya süresi boyunca yalnızca 1 kez kampanyadan faydalanabilecektir."", ""Kampanyadan 25 yaş ve üzerindeki müşteriler yararlanabilecek olup, ayrıca gelir şartı aranacaktır."", ""Kampanya sadece Albaraka Mobil ve İnternet üzerinden tamamlanacak Pratik Finansman Kart başvuruları için geçerlidir."", ""Bankamız uygun görmediği başvuruları reddetme, kampanya koşullarını değiştirme, gerekli görmesi halinde ek bilgi ve belge talebinde bulunma ve kampanyayı durdurma hakkını saklı tutar."", ""Pratik Finansman Kart ile asgari 250 TL, azami 150.000 TL finansman kullanılabilmektedir."", ""Sadece ihtiyaç finansmanı olan pratik kart ürünümüzde araç veya konut alıma konu olduğunda ilgili finansman kart kullanılamamaktadır.""]";Ok;;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
+albaraka--detay-dijital-musterilere-ozel-pratik-finansman-kart;hedef_kitle;"⁠[""yeni_musteri""]⁠";Fix;Metinde kampanyanın sadece yeni müşterilere özel olduğu ve mevcut müşterilerin faydalanamayacağı açıkça belirtilmiştir.;round1_A.csv | round1_A_Etiketli.csv | round1_B.csv | round2_zor_vaka.csv
