@@ -85,6 +85,37 @@ class TestSessizSifirYok(unittest.TestCase):
         self.assertIn("ayrıştırılamadı", str(ctx.exception))
 
 
+class TestUctanUca(unittest.TestCase):
+    def test_kos_gercekten_sayi_uretir(self) -> None:
+        """Ölçülmüş kusur: `kos()` içindeki yerel `cikti` (pytest çıktısı)
+        `cikti` adlı parametreyi GÖLGELİYORDU. Sonuç: `git_durumu(cikti)`
+        bir Path yerine metin alıyor ve `AttributeError` ile patlıyordu —
+        ama betik arka planda koştuğu için sessiz görünüyordu.
+
+        Doğrudan `git_durumu()` çağırmak bunu YAKALAMAZ; yalnız `kos()`
+        üzerinden geçen bir test yakalar.
+        """
+        import subprocess
+        from unittest import mock
+
+        sahte = subprocess.CompletedProcess(
+            args=[], returncode=0,
+            stdout="10 passed, 2 skipped in 1.0s\n", stderr="")
+        gercek = T.subprocess.run
+
+        def _yonlendir(cmd, *a, **k):
+            if cmd and cmd[0] == "git":
+                return gercek(cmd, *a, **k)
+            return sahte
+
+        with mock.patch.object(T.subprocess, "run", side_effect=_yonlendir):
+            ozet = T.kos()
+        self.assertEqual(ozet["gecti"], 10)
+        self.assertEqual(ozet["atlandi"], 2)
+        self.assertEqual(ozet["toplanan"], 12)
+        self.assertRegex(str(ozet["git_sha"]), r"^[0-9a-f]{40}$")
+
+
 class TestKirlilikOlcutu(unittest.TestCase):
     def test_yol_suzgeci_depo_kokune_gore(self) -> None:
         """`app/...` önekli yollar `app/` içinden koşulursa hiç eşleşmez."""

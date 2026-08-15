@@ -14,9 +14,12 @@ kullanıyor; o da yalnız **toplanan** sayısını verir. Geçen/atlanan ayrım�
 koşu ister. Çözüm ölçüm hattındakiyle aynı desen: **pahalı ölçüm bir artefakt
 üretir, kapı artefaktı okur ve tazeliğini denetler.**
 
-Tazelik ölçütü `git_sha`dır: artefakt HEAD'den başka bir commit'te
-üretilmişse kanıt değildir. Kirli ağaçta üretilen artefakt da kanıt sayılmaz —
-tekrar üretilemez.
+Tazelik ölçütü `git_sha == HEAD` OLAMAZ: artefaktı commit'lemek HEAD'i
+değiştirir ve artefakt daha doğduğu anda bayatlar. Kapı bunun yerine
+"kaydedilen commit ile bugün arasında **test sonucunu değiştirebilecek** bir
+şey değişti mi" diye sorar (`kanit_tazeligi.TEST_ETKILEYEN`). Aynı dar tanım
+buradaki `git_dirty` için de geçerli: bir README düzenlemesi testleri
+etkilemez, kaynak/test/bağımlılık değişikliği etkiler.
 
 ## Kullanım
 
@@ -93,7 +96,7 @@ def git_durumu(cikti: Path | None = None) -> tuple[str, bool]:
     return _git("rev-parse", "HEAD"), bool(satirlar)
 
 
-def kos(cikti: Path | None = None) -> dict[str, object]:
+def kos(cikti_yolu: Path | None = None) -> dict[str, object]:
     proc = subprocess.run([sys.executable, "-m", "pytest", "tests/", "-q"],
                           cwd=KOK, capture_output=True, text=True)
     cikti = _ANSI.sub("", proc.stdout + proc.stderr)
@@ -109,7 +112,7 @@ def kos(cikti: Path | None = None) -> dict[str, object]:
     basarisiz = sayilar.get("failed", 0) + sayilar.get("error", 0) \
         + sayilar.get("errors", 0)
 
-    sha, kirli = git_durumu(cikti)
+    sha, kirli = git_durumu(cikti_yolu)
     return {
         # `collected` satırı yalnız `--collect-only`de basılır; tam koşuda
         # toplam, alt sonuçların toplamıdır. İkisi ayrışırsa kapı görsün diye
