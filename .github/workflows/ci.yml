@@ -108,6 +108,24 @@ jobs:
           python -m eval.run_eval --gold data/gold/gold.v2.json \
             --matcher strict --no-bootstrap --esikler eval/esikler.json
 
+      # IKINCI KAPI, AYRI TABAN. gold.v2 ile gold.round1 ayni sistemi olcer
+      # ama AYNI SORUYU SORMAZ:
+      #   gold.v2      48 kayit ·  40'i kasten ZOR · 444 `absent` karari
+      #   gold.round1 134 kayit ·   3'u zor       ·  60 `absent` karari
+      #
+      # Tek bir esik listesi ya zor sette gevsek ya genis sette anlamsiz
+      # olurdu, bu yuzden iki dosya. `esikler-round1.json` halusinasyon
+      # tavani TANIMLAMAZ ve bu bilerekdir: round1'in `absent` kumesi
+      # dusmanca secilmis (bir hucre inceleme kuyruguna zaten model bir sey
+      # urettigi icin giriyor), oran 0,047 yerine 0,433 cikiyor. O sayiya
+      # bakip onceden ilan edilmis 0,08 tavanini gevsetmek, ANNOTATION_GUIDE
+      # §7'nin yasakladigi seyin ta kendisi olurdu. Tavan gold.v2'de KALIR.
+      # Sabit komut; disaridan gelen hicbir girdi kullanilmaz.
+      - name: Eval regresyon kapisi (round1 tabani)
+        run: |
+          python -m eval.run_eval --gold data/gold/gold.round1.json \
+            --matcher strict --no-bootstrap --esikler eval/esikler-round1.json
+
       # Gold kaydinin kaynagi ham arsive kadar izlenebilmeli: cikarilmis metin
       # -> ham HTML -> source_url + scraped_at. "Provenance var" demek yetmez,
       # KOSULABILIR olmali; iddia ile kanit arasindaki fark budur.

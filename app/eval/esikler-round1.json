@@ -1,0 +1,67 @@
+{
+  "_aciklama": "Alan başına asgari F1 — round1 gold'u için İKİNCİ regresyon kapısı.",
+  "_neden_ayri_dosya": [
+    "gold.v2 ile gold.round1 aynı sistemi ölçer ama AYNI SORUYU SORMAZ ve",
+    "eşikleri karıştırmak ikisini de anlamsız kılar:",
+    "  gold.v2      48 kayıt · 40'ı kasten ZOR · 444 `absent` kararı",
+    "  gold.round1 134 kayıt ·  3'ü zor      ·  60 `absent` kararı",
+    "Bileşim bu kadar farklıyken tek bir eşik listesi ya zor sette gevşek",
+    "ya geniş sette anlamsız olur. Bu yüzden iki kapı, iki dosya."
+  ],
+  "_halusinasyon_neden_YOK": [
+    "gold.v2 kapısı `halusinasyon_ust_sinir: 0.08` taşır; bu dosya TAŞIMAZ.",
+    "Sebep ölçülmüş bir SEÇİM ETKİSİDİR: round1'de bir hücre inceleme",
+    "kuyruğuna zaten model bir şey ürettiği için giriyor. Yani buradaki",
+    "`absent` kümesi rastgele değil, DÜŞMANCA seçilmiş bir alt kümedir;",
+    "payda 444'ten 60'a düşünce oran 0,047'den 0,433'e fırlıyor.",
+    "",
+    "Bu sayıya bakıp 0,08'i gevşetmek, önceden ilan edilmiş bir eşiği",
+    "sonuca göre değiştirmek olurdu — ANNOTATION_GUIDE §7'nin yasakladığı",
+    "şeyin ta kendisi. Doğru davranış: halüsinasyon tavanı gold.v2'de KALIR,",
+    "bu dosya onu hiç tanımlamaz. Kıyaslanamaz iki sayıdan birini seçip",
+    "manşete koymuyoruz; ikisini de yayımlıyoruz (bkz. kök README)."
+  ],
+  "_nasil_okunur": [
+    "Bu dosya bir HEDEF listesi DEĞİL, bir GERİLEME kapısıdır. Değerler",
+    "ölçülmüş mevcut başarımın hemen altındadır; amaç 'daha iyisini yap'",
+    "demek değil, 'bugünkünü kaybetme' demektir.",
+    "  python -m eval.run_eval --gold data/gold/gold.round1.json \\",
+    "      --matcher strict --esikler eval/esikler-round1.json"
+  ],
+  "_masraf_durumu_neden_0": [
+    "Ölçülen F1 gerçekten 0,000 (destek 5, TP 0). Eşiği 0,000 yazmak kapıyı",
+    "o alanda etkisiz kılar ama SESSİZ bırakmaz: alan listede durur ve",
+    "değeri okuyan herkes sıfır olduğunu görür. Alanı listeden çıkarmak,",
+    "ölçülmüş bir başarısızlığı gizlemek olurdu."
+  ],
+  "olculdu": "2026-08-15",
+  "gold": "data/gold/gold.round1.json",
+  "gold_sha256": "4d53fe6d",
+  "matcher": "strict",
+  "split": "all",
+  "tolerans": 0.01,
+  "mikro_yapisal": 0.729,
+  "alanlar": {
+    "alisveris_puani": 0.990,
+    "finansman_tutari": 0.365,
+    "hedef_kitle": 0.657,
+    "kampanya_kosullari": 0.847,
+    "kampanya_suresi": 0.925,
+    "kar_payi_orani": 0.790,
+    "masraf_durumu": 0.000,
+    "odul_miktari": 0.490,
+    "taksit_sayisi": 0.857,
+    "vade_ay": 0.639
+  },
+  "_esigi_olmayan_alanlar": {
+    "tahsis_ucreti": "round1'de destek 0 — F1 tanımsız, eşik konamaz.",
+    "indirim_orani": "round1'de destek 0 — F1 tanımsız, eşik konamaz."
+  },
+  "_dusuk_destekli_alanlar": {
+    "alisveris_puani": "destek 2 — F1 1,000 ama iki karar bir F1 taşımaz; eşik sembolik.",
+    "odul_miktari": "destek 2 — aynı uyarı.",
+    "hedef_kitle": "destek 3.",
+    "masraf_durumu": "destek 5.",
+    "kampanya_kosullari": "destek 6 · üstelik serbest metin; ikili ölçüt bu alanda metodolojik olarak zayıftır (bkz. run_eval.kalem_bolumu)."
+  }
+}

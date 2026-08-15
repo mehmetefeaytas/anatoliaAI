@@ -1188,9 +1188,21 @@ def main(argv: list[str] | None = None) -> int:
                   "beklenen bir düşüşse eval/esikler.json'ı BİLEREK güncelleyin "
                   "ve gerekçeyi commit mesajına yazın.")
         else:
-            n = len(esikler.get("alanlar", {}))
-            print(f"AÇIK — {n} alan + yapısal mikro-F1 + halüsinasyon "
-                  f"üst sınırı korunuyor.")
+            # Kapı, DENETLEDİĞİ şeyi sayar. Eşik dosyasında tanımlı olmayan
+            # bir ölçütü "korunuyor" diye yazmak, denetlenmeyen bir şeyi
+            # denetlenmiş gibi göstermektir — bu projenin kapatmaya çalıştığı
+            # hata sınıfının ta kendisi. (Ölçüldü 2026-08-15: round1 eşik
+            # dosyasında halüsinasyon tavanı YOK, mesaj yine de "korunuyor"
+            # diyordu.)
+            korunan = [f"{len(esikler.get('alanlar', {}))} alan"]
+            if "mikro_yapisal" in esikler:
+                korunan.append("yapısal mikro-F1")
+            if "halusinasyon_ust_sinir" in esikler:
+                korunan.append("halüsinasyon üst sınırı")
+            print(f"AÇIK — {' + '.join(korunan)} korunuyor.")
+            if "halusinasyon_ust_sinir" not in esikler:
+                print("  NOT: bu eşik dosyası halüsinasyon tavanı TANIMLAMIYOR; "
+                      "kapı onu denetlemedi.")
 
     if args.no_write:
         print("\n(--no-write verildi: diske yazılmadı)")
