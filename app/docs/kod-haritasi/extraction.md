@@ -145,6 +145,27 @@ Yalnız `rules/extract.py::_field()` ve `extract_all` (taban makullük kontrolü
 `scripts/kalibrasyon_hakemlik.py` (anotasyon tarafı, `IHTAR_RE`'yi doğrudan
 alıyor). `tests/test_ihtar_tek_kaynak.py` kopyaların ayrışmasını kapıda tutuyor.
 
+### `rules/kabuk.py` (78) — komşu kampanya bölgesi, §4.13/8'in kod karşılığı
+`KABUK_ISARETLERI`, `KUME_BOSLUK = 600`, `TEK_GECIS_ESIGI = 0.75`,
+`kabuk_baslangici(text)`. Tek çağıran: `rules/extract.py::extract_all`ın
+sonundaki süzgeç — kural 12 alanın hepsi için aynı olduğundan tek noktada
+uygulanır ve test edilecek tek bir sınır vardır.
+
+Kılavuz §4.13/8 bu kuralı yazıyordu ama kodda karşılığı yoktu; gümüşün kör
+kalite testi 60 hücrenin 9'unda iki insanın da komşu kampanya değerini
+ONAYLADIĞINI ölçtü.
+
+**Naif tasarım reddedildi** (ölçüldü): "işaretten metin sonuna kadar at"
+gold'da 16+5 gerçek değer öldürüyor — bu işaretler belgede medyan %8–19
+konumunda, yani üst menüde. Uygulanan tanım KUYRUK KÜMESİ: işaret ≥2 kez ve
+ardışık ikisi arası <600 karakter ise kabuk o kümede başlar; tek geçiş yalnız
+son %25'te sayılır. `Kampanyayı Paylaş` ve `Tüm Kampanyalar` ölçümle elendi.
+
+Etki (gold.v2, strict, kural): TP 52→52 (kayıp yok) · uydurma 26→21 ·
+halüsinasyon 0,059→0,047 · mikro-F1 0,452→0,464 · makro 0,556→0,601.
+Çit: `tests/test_kabuk_bolgesi.py` (10 test; kilit olan negatif tuzak
+`test_menudeki_TEK_baglanti_govdeyi_KESMEZ`).
+
 ### `rules/synonyms.py` (223) — eşanlamlılar, tetikleyiciler, §5.5 terminolojisi
 `FIELD_TRIGGERS`, `TYPE_HINTS`, `TERMINOLOGY_5_5`, `TERMINOLOGY_TRIGGERS`,
 `QUALITATIVE_RATE_CLAIMS`, `qualitative_rate_claim`, `terminology_hits`,

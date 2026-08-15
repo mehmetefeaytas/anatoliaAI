@@ -52,6 +52,9 @@ Sütunlar: ne yapar · ne zaman koşulur · çıktısı nereye gider.
 | `uyusmazlik_kalibi.py` (283) | A–B uyuşmazlıklarını kalıplara ayırır: κ kaybının ne kadarı gerçek anlam farkı | κ eşiğin altında kalınca | → `data/gold/uyusmazlik_kaliplari_round1.md` |
 | `protokol_yukselt.py` (243) | CSV'yi v1 protokolünden v2'ye taşır (damgala / taşı) | Protokol geçişinde | → CSV (+ `.yedek-v1`) |
 | `onanotasyon_tazele.py` (239) | CSV'deki `model_value`'yu bugünkü çıkarıcıyla tazeler | Çıkarıcı düzelince, anotasyondan ÖNCE | → CSV (+ `.yedek-tazeleme`), `--degisim-raporu` |
+| `onanotasyon_havuz_tazele.py` (155) | Ön-anotasyon **havuzunun** alan değerlerini tazeler; belge kümesine DOKUNMAZ, üzerine yazmaz **birleştirir** | Kanıt kapsaması düşünce | → `preannotations.v2.json` (+ `.yedek-tazeleme`) |
+| `hakemlik_uygula.py` (301) | Kör hakem kararlarını A/B'ye uygular; hakem yalnız **HAKEM SEÇER** — üçüncü cevap verirse ikisine de dokunulmaz | κ eşiğin altında, hakemlik turundan sonra | → `round1_{A,B}.csv` (+ `.yedek-hakemlik-round1`), `_hakemlik-degisim-round1.md` |
+| `sema_onarimi_uygula.py` (245) | `gold_value`'su kanonik olmayan, `build_gold`'un ATTIĞI hücrelere onarım kararı yazar; üç kapı (satır kayması / kanoniklik / tutarlılık) | Derleme hata verince | → inceleme CSV'leri (+ `.yedek-sema-onarimi-round1`), `_sema-onarimi-round1.md` |
 | `sample_gold_v2.py` (258) | gold.v2 aday havuzu — tabakalı, ayrık, deterministik örnekleme | Gold genişletmede | → `data/gold/gold.v2.aday.json`, `data/gold/parca/parca-N.json` |
 | `merge_gold_v2.py` (204) | v2 parçalarını birleştirir; **üç kapı** (şema/kanıt/ayrıklık) | v2 etiketleme bitince | → `data/gold/gold.v2.json(.sha256)` |
 | `split_gold.py` (457) | Gold'u dev/test böler ve TEST'i **dondurur** (sha256 + erişim kaydı) | Anotasyon bitince BİR KEZ | → `data/gold/splits/` (4 dosya) |
@@ -321,6 +324,8 @@ Betik **exit 0 döner** — κ bir CI kapısı değil, raporlanan bir karardır.
 |---|---|
 | `kappa_durum.py` | "κ ölçmeye daha ne kadar var?" — κ için iki koşul gerekir ve ikisi de sessizce bozulur: aynı satır kümesi + o satırlarda açık karar |
 | `onanotasyon_tazele.py` | Çıkarıcı düzeldi, CSV bayat. **Anotasyondan ÖNCE** koşulmalı; anote edilmiş dosyayı reddeder |
+| `onanotasyon_havuz_tazele.py` | Havuz bayat, kanıt türetilemiyor. `preannotate`den farkı: **örneklemez**, belge kümesi değişirse yazmayı reddeder. K5 düzeltmesinden ÖNCE riskliydi (havuz gold değerini besliyordu), sonra güvenli — ölçüldü: 30 kanıt kazandırdı, 0 karar değiştirdi |
+| `sema_onarimi_uygula.py` | `build_gold` satırı ATIYOR, anotasyon emeği gold'a hiç ulaşmıyor. Hücre `(doc_id, field)` ile doğrulanır — satır numarasına körü körüne yazmak başka belgenin kararını ezerdi |
 | `protokol_yukselt.py` | v1 → v2 geçişi; boş hücreler taşınmaz |
 | `kalibrasyon_hakemlik.py` | Kılavuz kaynaklı 7 kuralı uygular — **anotatör kararını değiştiren tek betik** |
 | `onarim_recetesi.py` | Lint hatalarını kalıba indirir; **CSV'ye YAZMAZ**, ayrı öneri dosyası üretir |
