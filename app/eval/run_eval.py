@@ -841,8 +841,84 @@ def decision_rows(results: list[MatcherResult]) -> list[dict]:
     ]
 
 
+def kalem_bolumu(result: MatcherResult, item_esik: float,
+                 duyarlilik: dict[float, dict[str, Counts]] | None = None
+                 ) -> list[str]:
+    """Serbest metin alanları için KALEM düzeyi ölçüt bölümü.
+
+    Rapor gövdesi «alan gizlenmiyor, aşağıda kendi bölümünde kalem düzeyi
+    ölçütle raporlanıyor» diye söz veriyordu; o bölüm 2026-08-15'e kadar
+    **basılmıyordu**. Vaadi tutmayan bir dürüstlük iddiası, iddianın kendisini
+    çürütür — bu yüzden bölüm koşulsuz basılır.
+
+    İki sayı YAN YANA durur ve manşet DEĞİŞMEZ: ikili ölçüt manşettir, kalem
+    düzeyi ölçüt ikinci sayıdır. Eşiği sayıya bakarak seçmek yasaktır; eşik
+    (`ITEM_JACCARD_ESIK`) anotasyondan önce ilan edilmiştir ve duyarlılığı
+    burada açıkça yayımlanır.
+    """
+    liste_alanlari = sorted(a for a in result.table if _serbest_metin_alani(a))
+    if not liste_alanlari:
+        return []
+
+    ikili, kalem = result.table, result.item_table
+    out = [
+        "### Kalem düzeyi ölçüt (serbest metin alanları)", "",
+        (f"Aşağıdaki alanlar cümle listesi döndürür. İkili ölçüt bir alanı "
+         f"**ya tamamen doğru ya tamamen yanlış** sayar: beş koşuldan dördü "
+         f"doğru çıkarılsa bile TP=0. Kalem düzeyi ölçüt her koşulu ayrı sayar "
+         f"(jeton-Jaccard ≥ {item_esik:.2f}, 1-1 açgözlü eşleştirme)."), "",
+        ("**Manşet mikro-F1 bu tablodan ETKİLENMEZ.** İkili ölçüt manşet olarak "
+         "kalır; buradaki sayı onun yerine geçmez, yanında durur."), "",
+        report_mod.md_table(
+            ["alan", "ölçüt", "P", "R", "F1", "TP", "FP", "FN"],
+            [satir
+             for ad in liste_alanlari
+             for satir in (
+                 [f"`{ad}`", "ikili",
+                  f"{ikili[ad].precision():.3f}", f"{ikili[ad].recall():.3f}",
+                  f"{ikili[ad].f1():.3f}", ikili[ad].tp, ikili[ad].fp,
+                  ikili[ad].fn],
+                 ["", "kalem",
+                  f"{kalem[ad].precision():.3f}", f"{kalem[ad].recall():.3f}",
+                  f"{kalem[ad].f1():.3f}", kalem[ad].tp, kalem[ad].fp,
+                  kalem[ad].fn],
+             )]),
+        "",
+        (f"Tüm alanlarda mikro-F1: ikili **{micro(ikili).f1():.3f}** · "
+         f"kalem **{micro(kalem).f1():.3f}**."), "",
+    ]
+
+    if duyarlilik:
+        out += [
+            "#### Eşik duyarlılığı", "",
+            ("Eşik sayıya bakılarak seçilmedi. Aşağıdaki tablo, seçilen eşiğin "
+             "sonucu ne kadar taşıdığını gösterir; taşıyorsa bunu okuyucu "
+             "bilmelidir."), "",
+            report_mod.md_table(
+                ["jaccard eşiği", "kalem mikro-F1", "TP", "FP", "FN"],
+                [[f"{e:.2f}{' ← ilan edilen' if abs(e - item_esik) < 1e-9 else ''}",
+                  f"{micro(t).f1():.3f}", micro(t).tp, micro(t).fp, micro(t).fn]
+                 for e, t in sorted(duyarlilik.items())]),
+            "",
+        ]
+        f1ler = {round(micro(t).f1(), 6) for t in duyarlilik.values()}
+        if len(f1ler) == 1 and len(duyarlilik) > 1:
+            out += [
+                ("> **Sonuç eşikten bağımsız çıktı.** Denenen eşiklerin "
+                 "hepsinde aynı sayı üretildi; yani bu korpusta kalemler ya "
+                 "neredeyse birebir örtüşüyor ya hiç örtüşmüyor, arada sınır "
+                 "vaka yok. Eşiğin sonucu taşımadığını söylemek, taşıdığını "
+                 "söylemek kadar raporlanmaya değerdir."),
+                "",
+            ]
+    return out
+
+
 def markdown_report(results: list[MatcherResult], predictor: Predictor,
-                    env: report_mod.EnvInfo) -> str:
+                    env: report_mod.EnvInfo,
+                    *, item_esik: float = ITEM_JACCARD_ESIK,
+                    kalem_duyarlilik: dict[str, dict[float, dict[str, Counts]]]
+                    | None = None) -> str:
     """`report.md` gövdesi — jüri ve ekip için insan-okur rapor."""
     out = [f"# Değerlendirme raporu — konfig `{predictor.name}`", "",
            predictor.description, "",
@@ -951,6 +1027,10 @@ def markdown_report(results: list[MatcherResult], predictor: Predictor,
                      for name, c in sorted(result.table.items())]),
                 ""]
 
+        out += kalem_bolumu(
+            result, item_esik,
+            (kalem_duyarlilik or {}).get(result.matcher))
+
         if result.per_tag:
             out += ["### Zor-vaka etiketi kırılımı", "",
                     "Etiketler çok değerlidir; tablolar ÖRTÜŞÜR.", "",
@@ -983,6 +1063,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
                           f"eşiği (varsayılan: {ITEM_JACCARD_ESIK}). ÖNCEDEN "
                           "İLAN EDİLMİŞTİR; sonuca bakıp değiştirmek yasaktır. "
                           "Duyarlılık analizi için kullanın."))
+    ap.add_argument("--kalem-duyarlilik-yok", action="store_true",
+                    help=("kalem eşiği duyarlılık tablosunu üretme (0,6/0,8'de "
+                          "yeniden puanlama atlanır — tahmin üretimi pahalıysa)"))
     ap.add_argument("--out-dir", default=report_mod.DEFAULT_OUT_DIR,
                     help=f"rapor kök dizini (varsayılan: {report_mod.DEFAULT_OUT_DIR})")
     ap.add_argument("--no-write", action="store_true",
@@ -1048,6 +1131,20 @@ def main(argv: list[str] | None = None) -> int:
                  item_esik=args.kalem_esik)
         for name in matcher_names
     ]
+
+    # Kalem düzeyi eşiğin duyarlılığı. `matchers.ITEM_JACCARD_ESIK` yorumu
+    # "duyarlılık 0,6 ve 0,8'de ayrıca yayımlanır" diyordu; yayımlanmıyordu.
+    # Yeniden puanlama tahmin üretimini tekrarlar (kural kolunda ucuz), bu
+    # yüzden `--kalem-duyarlilik-yok` ile kapatılabilir.
+    kalem_duyarlilik: dict[str, dict[float, dict[str, Counts]]] = {}
+    if not args.kalem_duyarlilik_yok:
+        for name in matcher_names:
+            matcher = get_matcher(name)
+            kalem_duyarlilik[name] = {
+                esik: aggregate_item(
+                    score_all(selected, predictor, matcher, item_esik=esik))
+                for esik in sorted({0.6, args.kalem_esik, 0.8})
+            }
 
     print(f"\nkonfig : {predictor.name} — {predictor.description}")
     print(f"gold   : {gold_path} ({len(records)} kayıt, alt küme "
@@ -1115,7 +1212,9 @@ def main(argv: list[str] | None = None) -> int:
     run_dir = report_mod.make_run_dir(args.out_dir)
     written = report_mod.write_report(
         run_dir, metrics=metrics, env=env,
-        markdown=markdown_report(results, predictor, env),
+        markdown=markdown_report(results, predictor, env,
+                                 item_esik=args.kalem_esik,
+                                 kalem_duyarlilik=kalem_duyarlilik),
         per_field_rows=per_field_rows(results, predictor.name),
         per_field_columns=PER_FIELD_COLUMNS,
         decision_rows=decision_rows(results),
