@@ -127,6 +127,36 @@ jobs:
       - name: Markdown link denetimi
         run: python -m scripts.link_denetimi
 
+      # Bu projenin tek farklilastiricisi olcum durustlugu. O yuzden en pahali
+      # hata sinifi, YAYIMLANAN bir sayinin koddan sapmasidir: juri "README
+      # 0,302 diyor ama isaret ettigi rapor 'olculemedi' diyor" derse
+      # kaybedilen o satir degil TUM olcum iddiasidir.
+      #
+      # 15 Agustos'ta olculdu: test sayisi, korpus buyuklugu, bootstrap ornek
+      # sayisi ve kar_payi_orani F1'i belgelerde yanlisti. Tek tek duzeltmek
+      # yetmez -- 12 Agustos'tan beri ucuncu kez oluyordu.
+      #
+      # --kanit-eksigi-uyari: her commit'te tam olcum artefakti beklenemez
+      # (data/demo.db git'te izlenmiyor, eval raporu her commit'te uretilmiyor).
+      # SAPMA yine de kirmizi yakar; gevseyen sey yalniz "kanit uretilemedi".
+      # Teslim oncesi `make kanit` bu bayragi KULLANMAZ.
+      # Sabit komut; disaridan gelen hicbir girdi kullanilmaz.
+      - name: Kanit tazeligi kapisi
+        run: python -m scripts.kanit_tazeligi --kanit-eksigi-uyari
+
+      # Model agirligi lisanslari denetleniyordu (NOTICE, model-license-audit),
+      # ama CALISMA ZAMANI paketleri denetlenmiyordu: 96 paketin 80'i gecisli
+      # bagimlilikti ve hicbiri goze gorunmemisti. Sartname acik kaynak sarti
+      # koyuyor; Apache-2.0 bir depoya copyleft bir bagimlilik girerse bu bir
+      # uslup tercihi degil UYUM IHLALIDIR.
+      #
+      # Kapi `docs/sbom.json` (CycloneDX) uzerinden kosar -- commit'li oldugu
+      # icin bagimliliksiz iste de calisir. UNKNOWN lisans SESSIZ GECMEZ:
+      # denetlenmemis paket, temiz paket degildir.
+      # Sabit komut; disaridan gelen hicbir girdi kullanilmaz.
+      - name: Lisans kapisi
+        run: python -m scripts.lisans_kapisi
+
       # Demo DB korpusla ayrisirsa chatbot/dashboard/RAG korpusun bir kismini
       # SESSIZCE gormez. Bir kez yasandi: DB 31 Temmuz'da 849 belgeyle
       # kuruldu, korpus 3 Agustos'ta 1761'e cikti, bir hafta boyunca hicbir

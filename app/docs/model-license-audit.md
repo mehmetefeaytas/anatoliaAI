@@ -173,6 +173,23 @@ shasum -a 256 /tmp/lic/<ad>/LICENSE
 
 Kaynak: `app/requirements.txt`, `app/requirements-api.txt`
 
+> **Bu tablo doğrudan bağımlılıkları kapsar; tam envanter için**
+> [`LISANSLAR.md`](LISANSLAR.md) **ve** [`sbom.json`](sbom.json).
+>
+> Aradaki fark büyüktür ve kasıtlı olarak gösterilir: aşağıdaki tablo elle
+> yazılmış **15 satırdır**, `sbom.json` ise kurulu ortamdaki **96 bileşeni**
+> makinenin okuduğu biçimde (CycloneDX 1.6) listeler. Elle tutulan tablo
+> yalnızca *bizim ilan ettiğimizi* bilir; SBOM *gerçekte ne kurulu olduğunu*
+> bilir — geçişli (transitive) bağımlılıklar dâhil. İkisi
+> `make lisanslar sbom lisans-kapisi` ile üretilir ve
+> [`../scripts/lisans_kapisi.py`](../scripts/lisans_kapisi.py) kapısıyla
+> denetlenir; izin listesi dışı bir lisans çıkış kodu 1 verir.
+>
+> **15 Ağu 2026 güncellemesi:** aşağıdaki `⏳ trafilatura` satırı artık açık
+> risk DEĞİLDİR — paketin kendi `PKG-INFO` ve `LICENSE` dosyaları okundu,
+> gerçek lisansı **Apache-2.0** çıktı. Ayrıntı ve kanıt:
+> [`LISANSLAR.md` § Risk kalemleri](LISANSLAR.md).
+
 | Paket | Lisans | Durum | Not |
 |---|---|---|---|
 | pydantic | MIT | ✅ | |
@@ -188,17 +205,38 @@ Kaynak: `app/requirements.txt`, `app/requirements-api.txt`
 | ruff / black / pytest | MIT | ✅ | Yalnızca geliştirme |
 | psycopg[binary] | LGPL | ✅ | Dinamik bağlı istemci kütüphanesi; Apache-2.0 uygulama ile birlikte dağıtımı sorun değil |
 | pgvector (Python) | PostgreSQL lisansı | ✅ | İzin verici |
-| **trafilatura** | **⚠️ belirsiz** | ⏳ **AÇIK RİSK** | Aşağıya bakınız |
+| **trafilatura** | **Apache-2.0** | ✅ (15 Ağu 2026'da doğrulandı) | Yorumdaki "GPLv3+" **yanlıştı**; aşağıya bakınız |
 
-### ⏳ trafilatura — açık risk kalemi
+### ✅ trafilatura — kapanan risk kalemi (15 Ağu 2026)
 
 `requirements.txt` kendi yorumunda `# GPLv3+` yazıyor. GPLv3, Apache-2.0 ile
 birlikte dağıtımda **uyumsuzluk yaratır** ve şartnamenin "yarışma bitiminde
 Apache-2.0 ile paylaşılacak" şartıyla çelişir.
 
-Bilinen: trafilatura projesi bir sürümde Apache-2.0'a geçti ve `requirements.txt`
-pinlemesi (`>=1.8`) muhtemelen o eşiğin üstünde. **Ancak bu doğrulanmadı** —
-bu ortamda paket kurulu değil ve ağ erişimiyle teyit edilmedi.
+**15 Ağu 2026 — doğrulandı, iddia yanlış çıktı.** Paketin kaynak dağıtımı
+indirilip kendi dosyaları okundu (`pip download --no-deps --no-binary :all:`):
+
+| Sürüm | `PKG-INFO` lisans alanı | `LICENSE` gövdesi |
+|---|---|---|
+| `2.2.0` (bugünkü uç) | `License-Expression: Apache-2.0` | Apache-2.0 tam metni, **sıfır** `GNU`/`GPL` geçişi |
+| `1.8.0` (pinin alt sınırı) | `License: Apache-2.0` + OSI Apache classifier | aynı |
+
+Pin `>=1.8` bir **aralık** açtığı için iki uç da ayrı ayrı ölçüldü; ikisi de
+Apache-2.0. Yani `requirements.txt` içindeki `# GPLv3+` yorumu **yanlıştır**.
+
+**Bunun sonuçları:**
+
+1. Paketi teslim imajına almanın önündeki *lisans* engeli yoktur. Almak ya da
+   almamak artık bir **mimari** karardır, lisans kararı değil.
+2. `scripts/offline_proof.sh` (11–12. adımlar) trafilatura'nın teslim imajında
+   bulunmadığını "GPLv3+ riski" gerekçesiyle kanıtlıyor. Adımlar hâlâ geçiyor
+   ama **gerekçeleri dayanaksız kaldı**; metni güncellenmelidir.
+3. `app/CLAUDE.md` §3 veri akışında `clean (trafilatura)` yazıyor, oysa
+   `src/scraping/collector.py:199` "trafilatura KULLANILMIYOR" diyor. Bu
+   doküman–kod tutarsızlığı lisanstan bağımsız olarak duruyor.
+
+*(Tarihsel not: aşağıdaki eski gerekçe kaydı, kararın nasıl alındığını
+göstermek için bırakılmıştır.)*
 
 **Risk neden düşük:** trafilatura kodda **opsiyonel**. `src/scraping/collector.py`
 içindeki `_extract_main_text`, paket yoksa `src/preprocessing/clean.py`'deki
@@ -255,7 +293,16 @@ kullanılmayan bağımlılık ilan etmek bu listeyi yanıltıcı yapar.
 - [x] **Model tablosunda `⏳` kalmadı** (31 Tem — TabiBERT hiç gündeme alınmadığı için kapsam dışı)
 - [x] **Hiçbir model zinciri Llama/Gemma/non-commercial köküne çıkmıyor** (her zincir köke kadar takip edildi)
 - [x] **`docker-compose.yml`'de kullanılan her ağırlığın burada `✅` karşılığı var**
-- [ ] `requirements.txt` = kodda gerçekten kullanılan paketler → §4'teki temizlik borcu
+- [x] `requirements.txt` = kodda gerçekten kullanılan paketler *(15 Ağu 2026'da
+      ölçüldü)* — §4'teki temizlik borcu kapandı: `gliner` ve `zeyrek` yoruma
+      alındı, `pgvector` kaldırıldı, `sentence-transformers` ve `psycopg` artık
+      gerçekten import ediliyor. Etkin olarak ilan edilen her paketin kodda
+      karşılığı var; tek istisna `uvicorn` ve o da bir **kütüphane değil süreç**
+      (`Dockerfile.api:47` `CMD ["uvicorn", ...]`), yani import edilmemesi
+      beklenen davranıştır. `trafilatura` yorumda kalmaya devam ediyor ve kodda
+      sıfır referansı var (`src/scraping/collector.py:199`) — tutarlı.
+      **Kalan borç lisans değil belge borcudur:** o satırdaki `# GPLv3+` yorumu
+      yanlıştır (gerçek lisans Apache-2.0, bkz. §2) ve düzeltilmelidir.
 - [ ] Teslim imajında GPL linklenmiş kod yok → kanıtı `OFFLINE-KANIT.md`'ye yazılacak
 - [x] Kök `LICENSE` = Apache-2.0
 - [ ] Veri seti lisansı belirtilmiş (CC-BY-4.0) + şartname s.18'in istediği **herkese açık indirme bağlantısı** README'de

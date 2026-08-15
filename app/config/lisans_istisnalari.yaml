@@ -1,0 +1,129 @@
+# Lisans kapısı istisnaları — Anatolia AI
+#
+# İlgili: ../scripts/lisans_kapisi.py, ../docs/LISANSLAR.md,
+#         ../docs/model-license-audit.md, ../Makefile (`make lisans-kapisi`)
+#
+# ## Kuralın kendisi
+#
+# Bu dosyadaki her kayıt, `scripts/lisans_kapisi.py`nin bir paketi izin listesi
+# dışında olmasına rağmen geçirmesini sağlar. Bu güçlü bir yetkidir, bu yüzden
+# bedeli vardır: **gerekçe zorunludur.** Gerekçesi olmayan ya da 30 karakterden
+# kısa gerekçesi olan kayıt istisna SAYILMAZ — kapı onu bir kusur olarak
+# raporlar ve çıkış kodu 1 verir.
+#
+# Neden bu kadar katı: gerekçesiz bir muafiyet, denetimi belgelemek değil
+# SUSTURMAKTIR. Altı ay sonra bu dosyaya bakan biri, bir satırın neden orada
+# olduğunu okuyamıyorsa, o satır artık bir karar değil bir kalıntıdır.
+#
+# ## Alanlar
+#
+#   paket    (zorunlu)  Paket adı; büyük/küçük harf duyarsız eşleşir.
+#   gerekce  (zorunlu)  Kararı savunan metin. En az 30 karakter.
+#   lisans   (isteğe)   Gözlenen lisans dizgesi. Verilirse kurulu sürümdeki
+#                       lisansla BİREBİR eşleşmelidir. Eşleşmezse istisna
+#                       "eskimiş" sayılır ve kapı düşer — çünkü paketin lisansı
+#                       değişmişse, gerekçe artık başka bir şeyi savunuyordur.
+#
+# ## Bu listeye girmenin ölçütü
+#
+# Bir kalem yalnızca şu iki koşuldan biri sağlanırsa buraya girer:
+#   (a) Lisans gerçekten izin vericidir ama izin listesinde adı geçmiyordur
+#       (ör. 0BSD, Zlib, BSL-1.0) — liste eksiktir, paket değil.
+#   (b) Lisans copyleft ailesindendir ama teslim edilen ürüne LİNKLENMEZ ya da
+#       linklenme biçimi (dinamik istemci) uyumsuzluk doğurmaz.
+#
+# Bu ikisine girmeyen bir kalem buraya yazılamaz; çözüm paketi değiştirmektir.
+
+istisnalar:
+
+  # --- (b) copyleft ama teslim edilen ürüne linklenmiyor -------------------
+
+  - paket: chardet
+    lisans: "GNU Lesser General Public License v2 or later (LGPLv2+)"
+    gerekce: >
+      LGPL-2.1+ ve teslim edilen üründe YOK. Bu paket `.venv`e yalnızca
+      lisans denetim araçlarıyla birlikte girdi: `pip show chardet` çıktısı
+      "Required-by: cyclonedx-bom" diyor, yani tek talep eden SBOM üreticisidir.
+      Ne `requirements.txt`te ne `requirements-api.txt`te (teslim edilen ince
+      API imajı) adı geçiyor. `docs/model-license-audit.md` §3'ün kurduğu ayrım
+      birebir geçerli: GPL/LGPL lisanslı ARAÇLAR (OBS, Kdenlive) sorun değildir
+      çünkü teslim edilen yazılımın parçası değil, onu üretmekte kullanılan
+      araçlardır. chardet de aynı sınıfta — denetim aletinin bir dişlisi.
+      Uyarı: bu paket bir gün gerçek bir çalışma zamanı bağımlılığı olarak
+      geri gelirse bu istisna geçersizdir ve yeniden değerlendirilmelidir.
+
+  - paket: psycopg
+    lisans: LGPL-3.0-only
+    gerekce: >
+      LGPL-3.0, dinamik olarak bağlanan bir İSTEMCİ kütüphanesi. LGPL'in
+      Apache-2.0 uygulamayla uyumsuzluk yarattığı senaryo statik linkleme ve
+      türev çalışma üretimidir; burada ikisi de yok — `src/db/postgres.py`
+      paketi standart bir Python modülü olarak import ediyor, kaynağını
+      değiştirmiyor ve kullanıcı kütüphaneyi kendi sürümüyle
+      değiştirebiliyor (LGPL'in asıl aradığı şart budur).
+      Bu karar yeni değil: `requirements.txt` (psycopg satırı) ve
+      `docs/model-license-audit.md` §2 tablosu aynı gerekçeyle bu paketi
+      31 Tem 2026'da zaten ✅ işaretlemişti. Buradaki kayıt o kararı
+      otomatik kapıya taşıyor, yeni bir muafiyet açmıyor.
+
+  - paket: psycopg-binary
+    lisans: LGPL-3.0-only
+    gerekce: >
+      `psycopg[binary]` ekstrasının getirdiği önceden derlenmiş ikili tekerlek
+      (wheel). Lisansı ve gerekçesi `psycopg` ile birebir aynıdır — ayrı bir
+      karar değil, aynı paketin dağıtım biçimidir. Ayrı satır olmasının tek
+      sebebi PyPI'da ayrı bir dağıtım adı taşıması.
+
+  # --- (a) gerçekten izin verici, ama izin listesinde adı yok --------------
+
+  - paket: numpy
+    lisans: BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0
+    gerekce: >
+      Bileşik ifadedeki beş lisanstan üçü (BSD-3-Clause, MIT, CC0-1.0) izin
+      listesinde zaten var; kapıyı düşürenler 0BSD ve Zlib. İkisi de izin
+      verici: 0BSD ("Zero-Clause BSD") atıf şartı bile olmayan BSD türevidir,
+      Zlib ise atıf ve "değiştirildiğini belirtme" dışında şart koymaz.
+      Hiçbiri copyleft değildir, ikisi de OSI onaylıdır ve Apache-2.0 teslimle
+      birlikte dağıtımı engellemez. Kaynak, paketin kendi beyanıdır:
+      `numpy-2.5.1.dist-info/METADATA` içindeki `License-Expression` satırı.
+      Not: burada eksik olan izin LİSTESİDİR, paketin lisansı değil.
+
+  - paket: regex
+    lisans: Apache-2.0 AND CNRI-Python
+    gerekce: >
+      Kapıyı düşüren atom CNRI-Python. Bu, Python dilinin kendi tarihsel
+      lisans zincirinin bir halkasıdır (CNRI, Python 1.6 döneminde) ve izin
+      vericidir — copyleft değildir, türev çalışmayı aynı lisansla yayımlamayı
+      zorunlu kılmaz. İfadenin diğer yarısı zaten Apache-2.0. Kaynak:
+      `regex-2026.7.19.dist-info/METADATA` içindeki `License-Expression`.
+      İzin listesine `Python-2.0` alınmışken onun atası olan CNRI-Python'un
+      alınmamış olması listenin eksikliğidir.
+
+  - paket: torch
+    lisans: Apache-2.0 AND Apache-2.0 AND BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND MIT
+    gerekce: >
+      Altı atomlu bileşik ifade; beşi (Apache-2.0, BSD-2-Clause, BSD-3-Clause,
+      MIT ve Apache-2.0 WITH LLVM-exception) izin listesinde. Kapıyı düşüren
+      tek atom BSL-1.0 — Boost Software License 1.0, ikili dağıtımda atıf bile
+      istemeyen, OSI onaylı, izin verici bir lisans. Copyleft değildir.
+      Kaynak: `torch-2.13.0.dist-info/METADATA` `License-Expression` satırı.
+      Not: ifadedeki "Apache-2.0" iki kez görünür çünkü biri
+      "Apache-2.0 WITH LLVM-exception"dır; kapı `WITH` ekini atar (istisna eki
+      hakları yalnızca genişletir), bu yüzden ikisi de Apache-2.0'a iner.
+
+  - paket: transformers
+    gerekce: >
+      SBOM'da lisans alanı BOŞ; bu paketin lisansı olmadığı anlamına GELMEZ,
+      `cyclonedx-py`nin okuyamadığı anlamına gelir. Paketin kendi beyanı elle
+      okundu: `.venv/lib/python3.14/site-packages/transformers-5.14.1.dist-info/
+      METADATA` içinde `License: Apache 2.0 License` yazıyor ve dizinde
+      `licenses/LICENSE` dosyası duruyor (Apache-2.0 metni).
+      Neden araç kaçırdı: transformers lisansını PEP 639 `License-Expression`
+      alanıyla ya da `Classifier:` satırıyla değil, serbest metin `License:`
+      alanıyla bildiriyor; `cyclonedx-py` bu eski alanı SPDX kimliğine
+      çeviremediği için boş bırakıyor. `pip-licenses` aynı paketi
+      "Apache 2.0 License" olarak okuyor — iki aracın çelişmesi bu kaydın
+      sebebidir. Burada `lisans` alanı BİLEREK verilmedi: gözlenen değer boş
+      dize ve ona sabitlemek anlamsız olurdu.
+      Bu kalem, kapının "UNKNOWN sessiz geçmez" kuralının işe yaradığının
+      kanıtıdır — araç körlüğü elle doğrulamayla kapatıldı.
