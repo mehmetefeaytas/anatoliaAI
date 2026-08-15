@@ -1,5 +1,12 @@
 [
   {
+    "id": "albaraka--formlar-genel-kredi-sozlesmesi-ucret-bilgilendirme-formu-pdf",
+    "bank_slug": "albaraka",
+    "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/genel-kredi-sozlesmesi-ucret-bilgilendirme-formu.pdf",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
     "id": "albaraka--sozlesmeler-bayide-finansman-ihtiyac-aracilik-ve-garantorluk-sozlesmesi-komisyon",
     "bank_slug": "albaraka",
     "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/bayide-finansman-ihtiyac---aracilik-ve-garantorluk-sozlesmesi-(komisyonsuz).pdf",
@@ -10,6 +17,20 @@
     "id": "dunya-katilim--hizmetler-doviz-transferi-swift",
     "bank_slug": "dunya-katilim",
     "source_url": "https://dunyakatilim.com.tr/kendim-icin/odemeler-ve-hizmetler/hizmetler/doviz-transferi-swift",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "hayat-finans--kampanyalar-hayatfinansla-islem-yaptikca-kazan",
+    "bank_slug": "hayat-finans",
+    "source_url": "https://hayatfinans.com.tr/kampanyalar/hayatfinansla-islem-yaptikca-kazan",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "kuveyt-turk--kampanya-arsivi-kuveyt-turkten-tahsildara-ozel-mil-kampanyasi",
+    "bank_slug": "kuveyt-turk",
+    "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/kuveyt-turkten-tahsildara-ozel-mil-kampanyasi",
     "reason": "kampanya_degil",
     "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
   },
@@ -31,6 +52,13 @@
     "id": "turkiye-finans--kampanyalar-biten-kampanyalar",
     "bank_slug": "turkiye-finans",
     "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/Biten-Kampanyalar.aspx",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  },
+  {
+    "id": "vakif-katilim--kendim-icin-finansmanlar",
+    "bank_slug": "vakif-katilim",
+    "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/finansmanlar",
     "reason": "kampanya_degil",
     "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
   },

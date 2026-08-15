@@ -10,8 +10,8 @@
 
 | Dosya | Protokol | Boş hücrenin anlamı |
 |---|---|---|
-| `data/gold/review/round1_A.csv` | **v2** | karar verilmedi — metrik dışı |
-| `data/gold/review/round1_B.csv` | **v2** | karar verilmedi — metrik dışı |
+| `/Users/mehmetefeaytas/.claude/jobs/89734536/tmp/oncesi/round1_A.csv` | **v2** | karar verilmedi — metrik dışı |
+| `/Users/mehmetefeaytas/.claude/jobs/89734536/tmp/oncesi/round1_B.csv` | **v2** | karar verilmedi — metrik dışı |
 
 ## Sonuçlar
 
@@ -20,6 +20,27 @@
 | Cohen's kappa (karar) | Aynı satırda aynı kararı mı verdiler (ok/fix/absent/unclear) | **0.274** |
 | Krippendorff α (nominal) | Ortaya çıkan gold DEĞERİ birebir aynı mı | 0.615 |
 | Krippendorff α (ratio) | Sayısal alanlarda değer yakınlığı (33 birim) | 0.848 |
+
+## Alan bazında kırılım
+
+Toplu κ bir ORTALAMADIR. Uyuşmazlıklar birkaç alanda yığılıyorsa ortalama, hem sorunun yerini hem de iyi çalışan alanları gizler.
+
+> ⚠️ Alan başına **n küçüktür**; tek bir alanın κ'sına dayanarak eşik kararı VERİLMEZ. §7 eşiği toplu κ içindir. Bu tablo nereye müdahale edileceğini söyler, kabul/ret kararını değil.
+
+| Alan | n | Uyum | κ | Uyuşmazlık | En sık ayrışma |
+|---|---:|---:|---:|---:|---|
+| `campaign_type` | 47 | %64 | 0.331 | 17 | `fix/ok` ×8 |
+| `vade_ay` | 32 | %53 | 0.242 | 15 | `absent/ok` ×8 |
+| `kampanya_kosullari` | 9 | %33 | -0.125 | 6 | `absent/ok` ×6 |
+| `masraf_durumu` | 5 | %20 | 0.091 | 4 | `absent/fix` ×2 |
+| `finansman_tutari` | 9 | %67 | 0.270 | 3 | `fix/ok` ×3 |
+| `kampanya_suresi` | 18 | %89 | 0.463 | 2 | `fix/ok` ×1 |
+| `taksit_sayisi` | 6 | %67 | 0.000 | 2 | `fix/ok` ×1 |
+| `hedef_kitle` | 3 | %67 | 0.000 | 1 | `fix/ok` ×1 |
+| `kar_payi_orani` | 9 | %89 | 0.609 | 1 | `absent/ok` ×1 |
+| `odul_miktari` | 1 | %0 | 0.000 | 1 | `absent/ok` ×1 |
+| `tahsis_ucreti` | 1 | %0 | 0.000 | 1 | `absent/fix` ×1 |
+| `alisveris_puani` | 1 | %100 | 1.000 | 0 | — |
 
 ## Karar (önceden ilan edilmiş eşik)
 
