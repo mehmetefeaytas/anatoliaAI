@@ -313,7 +313,7 @@ temiz) · Llama/Gemma tabanlı her şey
 | Kriter | Ağırlık | Durum |
 |---|---:|---|
 | Model Başarısı ve Anlamlandırma | %30 | ⏳ **altyapı hazır, sayı yok** — gold seti üretilmedi. Ölçüm hattı (bootstrap GA + McNemar + kalibrasyon) kurulu ve test edildi. |
-| Fonksiyonellik ve Senaryo Kapsamı | %20 | ⚠️ dashboard + chatbot çalışıyor; §5.7'nin 5. ölçütü eksik |
+| Fonksiyonellik ve Senaryo Kapsamı | %20 | ✅ dashboard + chatbot çalışıyor; §5.7'nin **beş ölçütü de** karşılanıyor |
 | Teknik İmplementasyon ve Mimari | %20 | ✅ 695 test, CI, değişmez denetimi; ⚠️ pgvector henüz kullanılmıyor |
 | On-Prem Uygulanabilirlik | %20 | ✅ ölçülmüş `--network none` kanıtı + negatif kontrol |
 | Yenilikçilik ve Yaratıcılık | %10 | ✅ değişmez denetimi · kaynak-span izlenebilirliği · çelişki tespiti · katılım bankacılığı güvenlik kapıları |
