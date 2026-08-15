@@ -373,6 +373,11 @@ def _istisna_yaml_ayristir(metin: str) -> dict:
     aktif: dict | None = None
     katlanan: str | None = None       # `>` ile açılmış alanın adı
     katlanan_girinti = 0
+    # `istisnalar:` görülmeden hiçbir liste ögesi kayıt sayılmaz. Bu kapı
+    # olmadan ayrıştırıcı BAŞKA bir kökün altındaki `- sey: 1` bloğunu da
+    # istisna sanıyordu; `pyyaml` varken görünmeyen, yokken ortaya çıkan
+    # bir sapma (konteynerde ölçüldü, 2026-08-15).
+    icerideyiz = False
 
     for ham in metin.splitlines():
         satir = ham.rstrip()
@@ -392,6 +397,14 @@ def _istisna_yaml_ayristir(metin: str) -> dict:
         if not cirit or cirit.startswith("#"):
             continue
         if cirit == "istisnalar:":
+            icerideyiz = True
+            continue
+        # Başka bir kök anahtar açıldıysa istisna bloğu bitmiştir.
+        if girinti == 0 and cirit.endswith(":") and cirit != "istisnalar:":
+            icerideyiz, aktif, katlanan = False, None, None
+            continue
+
+        if not icerideyiz:
             continue
 
         if cirit.startswith("- "):
