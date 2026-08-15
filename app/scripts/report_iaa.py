@@ -44,7 +44,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Optional
 
@@ -255,6 +255,7 @@ def compute(csv_paths: list[str]) -> dict[str, Any]:
 
     return {
         "annotators": annotators,
+        "by_field": alan_kirilimi(keys, verdict_units, len(annotators)),
         "protocols": protocols,
         "mixed_protocols": len(set(protocols.values())) > 1,
         "undecided_cells": undecided,
@@ -272,6 +273,44 @@ def compute(csv_paths: list[str]) -> dict[str, Any]:
         "disagreements": disagreements,
         "files": list(csv_paths),
     }
+
+
+def alan_kirilimi(keys: list, verdict_units: list, annotator_sayisi: int) -> list[dict]:
+    """Alan bazında κ + n. Toplu κ bir ORTALAMADIR; kırılım onu açar.
+
+    Round1'de ölçüldü: toplu κ 0,274 ama uyuşmazlıkların %61'i iki alanda
+    (`campaign_type` %33, `vade_ay` %28) toplanıyordu. "12 alanın 10'unda
+    κ eşiğin üstünde, 2 alanda kılavuz kusuru saptandı" cümlesi tek bir
+    ortalamadan hem daha doğru hem daha kullanışlıdır — çünkü nereye
+    müdahale edileceğini söyler.
+
+    ⚠️ Alan başına n KÜÇÜKTÜR (round1: ortalama ~11). Bu yüzden `n` her satırda
+    raporlanır ve tek başına alan κ'sına dayanarak eşik kararı VERİLMEZ; §7
+    eşiği toplu κ içindir.
+    """
+    gruplar: dict[str, list[list]] = defaultdict(list)
+    for key, unit in zip(keys, verdict_units, strict=False):
+        if sum(1 for v in unit if v is not None) >= 2:
+            gruplar[key[1]].append(unit)
+
+    out = []
+    for alan, birimler in gruplar.items():
+        n = len(birimler)
+        uyusan = sum(1 for u in birimler if len({v for v in u if v is not None}) == 1)
+        if annotator_sayisi == 2:
+            kappa = cohen_kappa([u[0] for u in birimler], [u[1] for u in birimler])
+        else:
+            kappa = fleiss_kappa_from_labels(birimler)
+        ayrisik = Counter()
+        for u in birimler:
+            mevcut = [v for v in u if v is not None]
+            if len(set(mevcut)) > 1:
+                ayrisik["/".join(sorted(set(mevcut)))] += 1
+        out.append({"field": alan, "n": n, "uyum": uyusan / n, "kappa": kappa,
+                    "uyusmazlik": n - uyusan,
+                    "en_sik": ayrisik.most_common(1)[0] if ayrisik else None})
+    out.sort(key=lambda x: (-x["uyusmazlik"], x["field"]))
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -325,6 +364,32 @@ def render(result: dict) -> str:
         f"| Krippendorff α (ratio) | Sayısal alanlarda değer yakınlığı "
         f"({result['ratio_units']} birim) | {_fmt(result['value_alpha_ratio'])} |",
         "",
+    ]
+
+    if result.get("by_field"):
+        lines += [
+            "## Alan bazında kırılım",
+            "",
+            "Toplu κ bir ORTALAMADIR. Uyuşmazlıklar birkaç alanda yığılıyorsa "
+            "ortalama, hem sorunun yerini hem de iyi çalışan alanları gizler.",
+            "",
+            "> ⚠️ Alan başına **n küçüktür**; tek bir alanın κ'sına dayanarak "
+            "eşik kararı VERİLMEZ. §7 eşiği toplu κ içindir. Bu tablo nereye "
+            "müdahale edileceğini söyler, kabul/ret kararını değil.",
+            "",
+            "| Alan | n | Uyum | κ | Uyuşmazlık | En sık ayrışma |",
+            "|---|---:|---:|---:|---:|---|",
+        ]
+        for satir in result["by_field"]:
+            en_sik = (f"`{satir['en_sik'][0]}` ×{satir['en_sik'][1]}"
+                      if satir["en_sik"] else "—")
+            lines.append(
+                f"| `{satir['field']}` | {satir['n']} | "
+                f"%{100 * satir['uyum']:.0f} | {_fmt(satir['kappa'])} | "
+                f"{satir['uyusmazlik']} | {en_sik} |")
+        lines.append("")
+
+    lines += [
         "## Karar (önceden ilan edilmiş eşik)",
         "",
         f"- **Durum: `{status}`**",
