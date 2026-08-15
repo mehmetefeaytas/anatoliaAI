@@ -1,10 +1,23 @@
 # Offline / On-Prem Kanıt Paketi
 
-**Durum:** ölçüldü — `--network none` koşusu **14/14 adım** beklendiği gibi
-**Koşu tarihi:** 2026-07-31T10:58:58Z (UTC)
+**Durum:** ölçüldü — `--network none` koşusu **14/14 adım beklendiği gibi**,
+**beklenmedik sonuç: 0 / 14**
+**Koşu tarihi:** 2026-08-15T20:32:25Z (UTC)
 **Üreten betik:** [`scripts/offline_proof.sh`](../scripts/offline_proof.sh)
-**Ham transkript:** [`docs/offline-proof/transcript-20260731-135858.log`](offline-proof/transcript-20260731-135858.log) (1254 satır, kesilmemiş)
+**Ham transkript:** [`docs/offline-proof/transcript-20260815-233225.log`](offline-proof/transcript-20260815-233225.log) (5048 satır, kesilmemiş)
+**Ham gecikme JSON:** [`docs/offline-proof/latency-20260815-233225.json`](offline-proof/latency-20260815-233225.json)
+**Koşulan commit:** `9493c29` — **temiz ağaç**
 **Sorumlu kalem:** Şartname §5.9 (dış servise bağımlı olmadan yerel çalışma), §8, §5.10
+**⚠️ Kapsam sınırı (önce okuyun):** kanıt yalnız **API konteynerini** kapsar;
+tam yığın ağsız denenmedi ve **imaj derlemesi internet ister**. Ayrıntı: **§0-b**.
+
+> **Ağaç temizliği neden burada yazıyor.** Transkript başlığındaki satır
+> `git durum : 1 degisik dosya` der. O tek dosya **koşumun kendi
+> transkriptidir**: betik `exec > >(tee "$LOG")` ile log dosyasını başlığı
+> basmadan önce açar, dolayısıyla `git status --porcelain` kendi çıktısını
+> sayar. Kaynak ağacında commit'lenmemiş değişiklik yoktu. Karşılaştırma:
+> 31 Temmuz koşumunda aynı satır **9 değişik dosya** diyordu ve o koşumun
+> kanıtı gerçekten kirli bir ağaçtan geliyordu.
 
 ---
 
@@ -32,9 +45,11 @@ işaretlidir. Ara değer, tahmin, "olması beklenen" sayı yoktur.
 | Docker | CLI 29.5.3 · daemon 29.6.1 (linux/aarch64) |
 | Konteyner | `linux/arm64`, Python 3.11.15, Linux 6.12.76-linuxkit, glibc 2.41 |
 | Taban imaj | `python:3.11-slim@sha256:db3ff2e1…53a93` (digest'e sabit) |
-| Teslim imajı | `anatolia-api:offline-proof` · ID `sha256:f234fe8d7733…` · **101 218 586 bayt (≈96,5 MiB)** |
-| Git commit | `025c1e5` |
+| Teslim imajı | `anatolia-api:offline-proof` · ID `sha256:c3348bf6a451…` · **230 642 126 bayt (≈220,0 MiB)** |
+| Git commit | `9493c29` (temiz ağaç) |
 | LLM arka ucu | **kapalı** (`LLM_BACKEND=""` → `NullLLMExtractor`) |
+| Sınıflandırıcı | `RuleHintClassifier` (BERTurk **kullanılmıyor**, bkz. §9) |
+| Depolama | `/health` → `"backend":"sqlite"` (önceden doldurulmuş yerel DB) |
 
 > ⚠️ **GPU yok.** Bu makinede GPU bulunmadığı için vLLM / Trendyol-LLM-8B-T1
 > kolu **hiç koşturulmadı**. Aşağıdaki tüm gecikme sayıları **CPU, LLM'siz**
@@ -77,7 +92,7 @@ komut    : docker run --rm anatolia-api:offline-proof python -c <prob>
 
 engellenen: 0/4   ulasilan: 4/4
 ------------------------------------------------------------------------------
-sonuc    : cikis kodu=0  sure=723 ms  -> BEKLENDIGI GIBI
+sonuc    : cikis kodu=0  sure=582 ms  -> BEKLENDIGI GIBI
 ```
 
 ### 2.2 Adım 3 — NEGATİF KONTROL, `--network none` (ham çıktı)
@@ -94,7 +109,7 @@ komut    : docker run --rm --network none ... anatolia-api:offline-proof python 
 
 engellenen: 4/4   ulasilan: 0/4
 ------------------------------------------------------------------------------
-sonuc    : cikis kodu=3  sure=228 ms  -> BEKLENDIGI GIBI
+sonuc    : cikis kodu=3  sure=210 ms  -> BEKLENDIGI GIBI
 ```
 
 Dört prob **birbirinden bağımsız katmanları** sınar: DNS çözümleme (ad
@@ -129,54 +144,94 @@ Aşağıdakilerin hepsi **ağı tamamen kapatılmış** konteynerde koştu.
 
 | # | Adım | Çıkış | Süre | Sonuç |
 |---|---|---|---|---|
-| 1 | `docker build -f Dockerfile.api` | 0 | 3 471 ms (önbellekli) | ✅ |
-| 2 | Prob doğrulama (ağ açık) | 0 | 723 ms | ✅ |
-| 3 | **NEGATİF KONTROL** (ağ kapalı) | 3 | 228 ms | ✅ |
-| 4 | Test paketi (`unittest discover`) | 0 | 509 ms | ✅ |
-| 5 | `eval.properties --raw-dir data/raw` | 0 | 15 460 ms | ✅ |
-| 6 | `eval.run_eval --gold …` | 0 | 242 ms | ✅ |
-| 7 | `eval.ablation --gold …` | 0 | 198 ms | ✅ |
-| 8 | `scripts.latency_bench --recursive` | 0 | 118 861 ms | ✅ |
-| 9 | Offline ortam değişkenleri | 0 | 201 ms | ✅ |
-| 10 | `pip list` dökümü | 0 | 330 ms | ✅ |
-| 11 | `trafilatura` yok (negatif kontrol) | 1 | 297 ms | ✅ |
-| 12 | `trafilatura` import edilemez | 0 | 168 ms | ✅ |
-| 13 | **API sunucusu ağsız ayağa kalkıyor** | 0 | 2 806 ms | ✅ |
-| 14 | İmaj künyesi | 0 | 51 ms | ✅ |
+| 1 | `docker build -f Dockerfile.api` | 0 | 660 ms (önbellekli) | ✅ |
+| 2 | Prob doğrulama (ağ açık) | 0 | 582 ms | ✅ |
+| 3 | **NEGATİF KONTROL** (ağ kapalı) | 3 | 210 ms | ✅ |
+| 4 | Test paketi (`unittest discover`) | 0 | 20 028 ms | ✅ |
+| 5 | `eval.properties --raw-dir data/raw` | 0 | 58 877 ms | ✅ |
+| 6 | `eval.run_eval --gold …` | 0 | 353 ms | ✅ |
+| 7 | `eval.ablation --gold …` | 0 | 209 ms | ✅ |
+| 8 | `scripts.latency_bench --recursive` | 0 | 160 120 ms | ✅ |
+| 9 | Offline ortam değişkenleri | 0 | 227 ms | ✅ |
+| 10 | `pip list` dökümü | 0 | 355 ms | ✅ |
+| 11 | `trafilatura` yok (negatif kontrol) | 1 | 350 ms | ✅ |
+| 12 | `trafilatura` import edilemez | 0 | 158 ms | ✅ |
+| 13 | **API sunucusu ağsız ayağa kalkıyor** | 0 | 2 914 ms | ✅ |
+| 14 | İmaj künyesi | 0 | 52 ms | ✅ |
 
 **beklenmedik sonuç: 0 / 14**
 
-> İlk derleme (soğuk, taban imaj çekilerek) **192 641 ms**'de tamamlandı;
-> tablodaki 3 471 ms önbellekli koşudur. Her ikisi de transkriptlerde.
+> Tablodaki 660 ms **önbellekli** derlemedir (yalnız `COPY scripts/` katmanı
+> yeniden koştu). Aynı gün soğuk derleme (`pip install` katmanı dahil)
+> **34 745 ms** sürdü — [`transcript-20260815-230505.log`](offline-proof/transcript-20260815-230505.log)
+> adım 1. Her iki sayı da transkriptlerdedir.
+>
+> **Derleme adımı ağsız DEĞİLDİR** — `docker build` `pip install` yapar ve
+> internet ister. Adım 1 kapsam gereği ağ açıkken koşar; ağsızlık iddiası
+> **adım 3'ten sonrasını** kapsar (bkz. §0-b kapsam sınırı).
 
 ### 3.1 Testler (ham kuyruk)
 
 ```
-Ran 607 tests in 0.240s
+Ran 2999 tests in 19.199s
 
-OK
+OK (skipped=272)
 ```
 
 > Betik test sayısını **yazmaz**. Sabit bir "345 test" ifadesi paket büyüdükçe
 > sessizce yalan olurdu; gerçek sayı her koşuda transkriptteki `Ran N tests`
-> satırındadır. Bu koşuda 607.
+> satırındadır. Bu koşuda 2 999 test toplandı, hepsi **OK**.
+
+#### 3.1.1 Atlanan 272 test — gizlenmiyor, gerekçelendiriliyor
+
+`skipped=272` bir kusur değil, **kapsam kararıdır**: teslim imajı yalnız
+`requirements-api.txt` kurar ve içinde **`git` yok, `httpx2` yok, `web/` yok**.
+O üç şeye ihtiyaç duyan testler teslim ortamında koşamaz.
+
+Gerekçeler kodda taşınır — `tests/_ortam_gereksinimleri.py`:
+
+| Prob | Ne eksik | Neden bilerek eksik |
+|---|---|---|
+| `git_var()` | `git` ikilisi | Teslim edilen sistem test aracına ihtiyaç duymaz |
+| `istemci_var()` | `starlette.testclient` → `httpx2` | Yalnız test aracı; CI'da ayrı `test-with-deps` işi kurar |
+| `arayuz_var()` | `web/app` | `Dockerfile.api` `web/` kopyalamaz; API imajı arayüzü servis etmez |
+
+Ayrım şudur: **bağımlılık yok → SKIP**, **kod yanlış → FAIL**. Bu ayrım
+ölçülmüş bir sorundan doğdu: kanıt 15 gün sonra ilk kez koşulduğunda teslim
+imajının test paketi `errors=52` ile çöktü ve hiçbiri gerçek kusur değildi —
+ama `ERROR` sayıldıkları için **gerçek bir kusur o yığının içinde
+görünmezdi**.
+
+Atlanan test sayısı **raporlanan bir iddiadır**, saklanmaz: `README.md`
+"Test" satırında yazar ve `scripts/kanit_tazeligi.py` onu denetler. Atlamayı
+"şu an geçmiyor" gerekçesiyle kullanmak kapıyı kapatmak değil **sökmek**
+olur; bu modül yalnız **ortam** probları taşır.
 
 ### 3.2 Değişmez denetimi (ham çıktı)
 
 ```
-849 belge (732 tanesinde en az bir alan çıktı; 117 boş belgede denetim hiçbir şey
-test etmiyor — kapsam 86.2%) — tüm değişmezler GEÇTİ (0 ihlal)
+1782 belge (1597 tanesinde en az bir alan çıktı; 185 boş belgede denetim hiçbir şey
+test etmiyor — kapsam 89.6%) — tüm değişmezler GEÇTİ (0 ihlal)
 ```
 
 ### 3.3 Değerlendirme ve ablasyon (ham çıktı, kısaltılmadı)
 
 ```
-konfig : kural — yalnız kural katmanı (regex + normalizasyon), LLM kapalı
+konfig : kural — yalnız kural katmanı (regex + normalizasyon), LLM kapalı — RESMÎ VARSAYILAN (K-2)
 gold   : data/gold/gold.sample.json (3 kayıt, alt küme 'all' -> 3 belge)
 
 === KURAL / strict — TÜM VAKALAR ===
 MİKRO                   1.000  1.000  1.000    9    0    0    0    0   27
 MAKRO (F1 ort.)                       1.000
+MİKRO (yapısal)         1.000  1.000  1.000    9    0    0    0    0   24   <- kampanya_kosullari HARİÇ
+MAKRO (yapısal)                       1.000
+
+=== HATA SINIFLARI ===
+çıkarım hatası (bilgi metinde VAR, doğru alınamadı): 0.000  [0/9]
+halüsinasyon (bilgi metinde YOK, değer uyduruldu): ölçülemedi (gold'da absent kararı yok)  [0/0]
+metrik dışı bırakılan (gold karar vermemiş) alan-kararı: 27  — bilinmeyen lehimize sayılmadı
+
+mikro-F1 %95 GA: 1.000 [1.000–1.000]  (belge düzeyi bootstrap, n=3 belge, 1000 örnek, seed=42)
 
 === ABLASYON — eşleştirici 'strict' ===
 konfig            F1(tüm)   makro  F1(zor)    TP    FP    FN   UYD  mikro-F1 %95 GA
@@ -184,6 +239,9 @@ kural               1.000   1.000    1.000     9     0     0     0  1.000 [1.000
 llm             ÖLÇÜLMEDİ   (bkz. NOTLAR)
 hibrit          ÖLÇÜLMEDİ   (bkz. NOTLAR)
 hibrit-verify   ÖLÇÜLMEDİ   (bkz. NOTLAR)
+
+=== İSTATİSTİKSEL KARŞILAŞTIRMA ===
+Karşılaştırılacak en az iki ÖLÇÜLEBİLEN kol yok.
 ```
 
 > **Bu tablodan doğruluk sonucu çıkarmayın.** `gold.sample.json` yalnızca **3
@@ -195,12 +253,34 @@ hibrit-verify   ÖLÇÜLMEDİ   (bkz. NOTLAR)
 ### 3.4 Offline ortam değişkenleri (ham çıktı)
 
 ```
-ANATOLIA_OFFLINE=1
+ADIM 9: Offline ortam degiskenleri (HF_HUB_OFFLINE vb.)
+komut    : docker run --rm --network none ... anatolia-api:offline-proof \
+             sh -c 'env | grep -E "OFFLINE|TELEMETRY|UPDATE_CHECK" | sort'
+------------------------------------------------------------------------------
 HF_HUB_DISABLE_TELEMETRY=1
 HF_HUB_DISABLE_UPDATE_CHECK=1
 HF_HUB_OFFLINE=1
 TRANSFORMERS_OFFLINE=1
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=227 ms  -> BEKLENDIGI GIBI
 ```
+
+> ⚠️ **`ANATOLIA_OFFLINE=1` bu listeden ÇIKARILDI — ve çıkarılması
+> düzeltmedir.** Belgenin 31 Temmuz sürümü bu bayrağı kanıt olarak
+> gösteriyordu. Bayrak 2026-08-08'de `a3c2f05` commit'iyle koddan
+> kaldırıldı; commit mesajının gerekçesi: *"repoda hiçbir yerde okunmuyordu,
+> yani offline olduğumuza dair **SAHTE** bir sinyaldi"*.
+>
+> Hiçbir kod yolunun okumadığı bir değişkeni "offline kanıtı" diye
+> göstermek, tam olarak bu belgenin var oluş sebebine aykırıdır: kanıt,
+> **etkisi olan** bir şeyi ölçmelidir. Yukarıdaki dört değişkenin dördü de
+> `huggingface_hub` / `transformers` tarafından gerçekten okunur ve ağ
+> davranışını değiştirir. Kanıt artık yalnız onlara dayanıyor.
+>
+> Bu satırın kaybı kanıtı **zayıflatmaz**: ağsızlığın asıl kanıtı ortam
+> değişkeni beyanı değil, adım 3'teki negatif kontrol ile adım 4–13'ün
+> `--network none` içinde koşmasıdır. Ortam değişkenleri yalnız "kütüphane
+> kendiliğinden ağa çıkmayı denemesin" kemeridir.
 
 ### 3.5 API sunucusu `--network none` içinde ayağa kalkıyor (adım 13)
 
@@ -211,30 +291,35 @@ iddialardır. Adım 13 ikincisini ölçer: konteyner başlatılır, HTTP istekle
 ölçülür, konteyner durdurulur.
 
 ```
-konteyner : 6a5b7c26ff37…
+konteyner : 63172698aaca…
 hazir olma suresi : ~1 sn
 
 --- /health (konteyner ICINDEN, localhost) ---
-{"status":"ok","llm":false}
+{"status":"ok","llm":false,"backend":"sqlite"}
 
 --- /banks (ilk 300 karakter) ---
-[{"slug":"kuveyt-turk","name":"Kuveyt Türk","website_url":"https://www.kuveytturk.com.tr",
-"bddk_active":1},{"slug":"albaraka","name":"Albaraka Türk", …
+[{"slug":"adil-katilim","name":"Adil Katılım","website_url":"https://www.adilkatilim.com.tr",
+"bddk_active":true},{"slug":"albaraka","name":"Albaraka Türk","website_url":
+"https://www.albaraka.com.tr","bddk_active":true},{"slug":"dunya-katilim","name":"Dünya Katili…
 
 --- calisma zamani kaynak kullanimi ---
-BELLEK=36.36MiB / 7.75GiB  CPU=0.81%  PID=2
+BELLEK=39.21MiB / 7.75GiB  CPU=0.67%  PID=2
 
 --- sunucu gunlugu ---
+INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:43900 - "GET /banks HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38256 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38260 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:38272 - "GET /banks HTTP/1.1" 200 OK
 ```
 
 Üç bulgu:
 
 1. Sunucu **~1 saniyede** hazır — demo için fazlasıyla yeterli.
-2. `/health` `llm:false` diyerek LLM'in kapalı olduğunu **dürüstçe** raporluyor.
-   Sahte bir "hazır" yok; servis neyin çalışmadığını söylüyor.
+2. `/health` `llm:false` diyerek LLM'in kapalı olduğunu **dürüstçe** raporluyor;
+   `backend:"sqlite"` diyerek de hangi depoyu kullandığını söylüyor. Sahte bir
+   "hazır" yok; servis neyin çalışmadığını söylüyor.
 3. `/banks` gerçek veri dönüyor (çıktı transkriptte **300 karakterde kesildi**,
    ilk üç banka görünüyor; `config/banks.yaml` 10 banka tanımlıyor ve
    `run_pipeline` hepsini kaydediyor).
@@ -246,6 +331,35 @@ INFO:     127.0.0.1:43900 - "GET /banks HTTP/1.1" 200 OK
 Yeşil bir koşu, harness'ın çalıştığını değil, sistemin o an sağlam olduğunu
 gösterir. Harness'ın **lastik damga olmadığını** göstermek için: ara koşulardan
 biri gerçek bir kırılmayı yakaladı ve betik 0-dışı çıktı.
+
+Bu iddianın kanıtı **iki ayrı tarihten** geliyor.
+
+### 4.1 Bugünkü koşum: ilk iki deneme KIRMIZI yandı (2026-08-15)
+
+Yetkili koşum (23:32:25) üçüncü denemeydi. Ondan önceki iki deneme aynı
+adımda beklenmedik sonuç verdi ve betik **`exit 1`** ile "kanıt paketi
+GEÇERSİZ" dedi:
+
+| Koşum | Transkript | Adım 4 | Sonuç |
+|---|---|---|---|
+| 23:05:05 | [`transcript-20260815-230505.log`](offline-proof/transcript-20260815-230505.log) | kod 1 — **BEKLENMEDIK** | 1 adım beklenmedik → GEÇERSİZ |
+| 23:25:58 | [`transcript-20260815-232558.log`](offline-proof/transcript-20260815-232558.log) | kod 1 — **BEKLENMEDIK** | 1 adım beklenmedik → GEÇERSİZ |
+| **23:32:25** | [`transcript-20260815-233225.log`](offline-proof/transcript-20260815-233225.log) | kod 0 | **14/14, 0 beklenmedik** |
+
+İkinci koşumun kalan kırığı tek bir testti:
+
+```
+FAIL: test_dolu_dosyadan_SIFIR_kayit_HATA_verir
+      (test_lisans_kapisi.TestStdlibAyristiriciParitesi.test_dolu_dosyadan_SIFIR_kayit_HATA_verir)
+Ran 2999 tests in 19.381s
+FAILED (failures=1, skipped=272)
+```
+
+Kırık düzeltildikten sonra üçüncü koşum `Ran 2999 tests … OK (skipped=272)`
+verdi. Aynı gün, aynı harness, aynı imaj — **kırmızıyken kırmızı, yeşilken
+yeşil** raporladı. Lastik damga değil.
+
+### 4.2 31 Temmuz koşumu (ilk kanıt)
 
 **Transkript:** [`transcript-20260731-134646.log`](offline-proof/transcript-20260731-134646.log)
 
@@ -288,6 +402,14 @@ gerçekten çözüldü (uydurulmadı):
 | Ollama (yedek) | `ollama/ollama:latest` | `sha256:4dea9fb511947e24a84237bb636b0203abcb2ff0d3fbc7b4ff865deb91362131` | 2 774,1 MB (4 katman) |
 | API taban imajı | `python:3.11-slim` | `sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93` | — (teslim imajına gömülü) |
 
+> `⏳ 2026-08-15 koşumunda yeniden çözülmedi — sebep: kanıt betiği digest
+> çözümlemesi yapmaz (ağ ister), yalnız API taban imajını kullanır.` Yukarıdaki
+> dört digest 2026-07-31 ölçümüdür. **API taban imajı** satırı bugünkü koşumda
+> dolaylı olarak doğrulandı: derleme günlüğü
+> `FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1…53a93` satırını
+> basıyor (transkript adım 1), yani `Dockerfile.api` hâlâ aynı digest'e sabit.
+> Diğer üç satır (Postgres, vLLM, Ollama) **tazelenmedi**.
+
 Yenilemek için:
 
 ```bash
@@ -323,17 +445,21 @@ Teslim imajının tam paket dökümü (adım 10, ham, kesilmemiş):
 
 ```
 annotated-doc==0.0.5      idna==3.18                setuptools==79.0.1
-annotated-types==0.8.0    packaging==26.2           soupsieve==2.9.1
-anyio==4.14.2             pgvector==0.5.0           starlette==1.3.1
-beautifulsoup4==4.15.0    pip==24.0                 typing-inspection==0.4.2
-click==8.4.2              psycopg-binary==3.3.4     typing_extensions==4.16.0
-fastapi==0.141.1          psycopg==3.3.4            uvicorn==0.52.0
-h11==0.16.0               pydantic==2.13.4          wheel==0.46.3
-                          pydantic_core==2.46.4
+annotated-types==0.8.0    packaging==26.2           soupsieve==2.9.2
+anyio==4.14.2             pip==24.0                 starlette==1.6.0
+beautifulsoup4==4.15.0    psycopg-binary==3.3.4     typing-inspection==0.4.4
+click==8.4.2              psycopg==3.3.4            typing_extensions==4.16.0
+fastapi==0.141.1          pydantic==2.13.4          uvicorn==0.52.3
+h11==0.16.0               pydantic_core==2.46.4     wheel==0.46.3
 ```
 
-22 paket, tamamı MIT / BSD / Apache-2.0 / PostgreSQL / LGPL(dinamik).
+**21 paket**, tamamı MIT / BSD / Apache-2.0 / PostgreSQL / LGPL(dinamik).
 **`trafilatura` listede yok.**
+
+> 31 Temmuz koşumunda 22 paket vardı; aradaki fark `pgvector==0.5.0`'ın
+> düşmesidir. Teslim imajı bu koşumda SQLite ile ayağa kalkıyor
+> (`/health` → `"backend":"sqlite"`, §3.5) — pgvector yalnız Postgres
+> koluyla gerekir ve o kol bu pakette **ölçülmedi** (§10).
 
 İki bağımsız negatif kontrol:
 
@@ -343,13 +469,13 @@ komut    : ... sh -c 'pip list --format=freeze | grep -i trafilatura'
 ------------------------------------------------------------------------------
                                     <boş — hiçbir satır eşleşmedi>
 ------------------------------------------------------------------------------
-sonuc    : cikis kodu=1  sure=297 ms  -> BEKLENDIGI GIBI
+sonuc    : cikis kodu=1  sure=350 ms  -> BEKLENDIGI GIBI
 
 ADIM 12: trafilatura import EDILEMEZ (ikinci, bagimsiz kanit)
 ------------------------------------------------------------------------------
 trafilatura find_spec: None
 ------------------------------------------------------------------------------
-sonuc    : cikis kodu=0  sure=168 ms  -> BEKLENDIGI GIBI
+sonuc    : cikis kodu=0  sure=158 ms  -> BEKLENDIGI GIBI
 ```
 
 `grep`'in boş dönmesi tek başına zayıf kanıttır (`pip` çalışmasaydı da 1
@@ -360,6 +486,12 @@ bağımsız olarak doğrular. Üçü birlikte kesin.
 > **düzenlemez**, yalnızca ölçülmüş kanıtını sağlar.
 
 ### 6.1 Yan bulgu: `bs4` sapması (düzeltildi)
+
+> 📌 **Bu bölüm 31 Temmuz koşumunun kaydıdır**; içindeki sayılar (1696 belge,
+> imaj boyutu) o günün fotoğrafıdır ve bilerek dondurulmuştur — bir düzeltmenin
+> gerekçesi, düzeltmenin yapıldığı andaki ölçümdür. Düzeltmenin **hâlâ yürürlükte
+> olduğu** bugünkü koşumdan doğrulanıyor: `beautifulsoup4==4.15.0` ve
+> `soupsieve==2.9.2` yukarıdaki 2026-08-15 paket dökümünde duruyor.
 
 Ölçüm sırasında bulundu: `src/scraping/collector._extract_main_text`,
 `beautifulsoup4` yoksa `except ModuleNotFoundError` ile **sessizce**
@@ -391,29 +523,34 @@ sistemi temsil etmiyordu.
 ## 7. Gecikme (latency) — üç yol ayrı ayrı
 
 **Ölçüm:** `python -m scripts.latency_bench --recursive --iterations 3`,
-**`--network none` konteyneri içinde**, 1696 gerçek banka belgesi
-(ortalama 4 320 karakter), toplam 7 327 700 karakter.
-Ham JSON: [`latency-20260731-135858.json`](offline-proof/latency-20260731-135858.json)
+**`--network none` konteyneri içinde**, **3 437** gerçek banka belgesi
+(ortalama **4 098** karakter), toplam **14 085 382** karakter.
+Ham JSON: [`latency-20260815-233225.json`](offline-proof/latency-20260815-233225.json)
 
 | Yol | n | p50 | p95 | p99 | max | ortalama |
 |---|---|---|---|---|---|---|
-| **(a) kural-only** `extract_all()` | 5 088 | **1,03 ms** | 4,80 ms | 6,30 ms | 37,63 ms | 1,79 ms |
-| **(b) hibrit boru hattı** `build_campaign()` | 5 088 | **1,50 ms** | 6,92 ms | 8,86 ms | 75,32 ms | 2,59 ms |
-| **(c) chatbot** `Chatbot.ask()` | 504 | **12,48 ms** | 325,02 ms | 351,36 ms | 368,53 ms | 155,11 ms |
+| **(a) kural-only** `extract_all()` | 10 311 | **1,40 ms** | 7,07 ms | 17,76 ms | 345,67 ms | 2,78 ms |
+| **(b) hibrit boru hattı** `build_campaign()` | 10 311 | **1,80 ms** | 9,53 ms | 21,03 ms | 284,93 ms | 3,48 ms |
+| **(c) chatbot** `Chatbot.ask()` | 504 | **2,74 ms** | 16,10 ms | 16,99 ms | 44,57 ms | 4,40 ms |
 
-Karşılaştırma için aynı ölçüm host'ta (macOS arm64, Python 3.14.6, konteynersiz):
-kural p50 1,05 ms · hibrit p50 1,67 ms · chatbot p50 6,47 ms
-([`latency-host-20260731.json`](offline-proof/latency-host-20260731.json)).
-**Konteyner cezası kural ve hibrit yollarında pratikte yok** — on-prem
-konteynerleştirme çıkarım hızını düşürmüyor.
+> **Konteyner-dışı (host) karşılaştırma bu koşumda tekrarlanmadı.** Elimizdeki
+> tek host ölçümü **31 Temmuz** tarihlidir
+> ([`latency-host-20260731.json`](offline-proof/latency-host-20260731.json):
+> kural p50 1,05 ms · hibrit p50 1,67 ms · chatbot p50 6,47 ms) ve o gün
+> **1 696 belgelik** bir korpusla alınmıştı. Bugünkü konteyner sayıları
+> **3 437 belgelik** korpustan geliyor; iki ölçüm farklı korpuslar olduğu için
+> yan yana konup "konteyner cezası şu kadar" denemez. O gün ölçülen konteyner
+> ↔ host farkı kural ve hibrit yollarında ihmal edilebilirdi;
+> `⏳ 2026-08-15'te yeniden ölçülmedi — sebep: host koşumu bu pakette
+> koşturulmadı.`
 
 ### 7.1 "Önce kural" mimarisi sayıyla gerekçelendi
 
 CLAUDE.md §3 "önce kural, sonra LLM" kararını ilan ediyordu ama destekleyen
-ölçüm yoktu. Artık var: **kural yolu belge başına medyan 1,03 ms**, p99 6,30 ms.
-Yerel 8B bir LLM'in tek çağrısı tipik olarak **saniyeler** mertebesindedir.
-Yüksek güvenle kuralla çıkan alanı LLM'e göndermemek, uçtan uca gecikmeyi
-**üç mertebe** düşürüyor. Karar doğrulandı.
+ölçüm yoktu. Artık var: **kural yolu belge başına medyan 1,40 ms**, p99
+17,76 ms. Yerel 8B bir LLM'in tek çağrısı tipik olarak **saniyeler**
+mertebesindedir. Yüksek güvenle kuralla çıkan alanı LLM'e göndermemek, uçtan
+uca gecikmeyi **üç mertebe** düşürüyor. Karar doğrulandı.
 
 ### 7.2 ⚠️ Bu tablonun okunma biçimi — LLM DAHİL DEĞİL
 
@@ -435,16 +572,31 @@ LLM_BACKEND=vllm VLLM_URL=http://localhost:8001 \
 Betik hangi arka ucun aktif olduğunu başlıkta basar; sahte "hibrit = kural"
 satırı üretmez.
 
-### 7.3 Bulgu: chatbot p95/p99 yüksek
+### 7.3 Kapanan bulgu: chatbot p95/p99 artık yüksek değil
 
-Chatbot p50 12,48 ms ama p95 **325,02 ms**, p99 **351,36 ms** — yaklaşık 26×
-yayılım. Sebep, router'ın iki kolunun çok farklı maliyette olması: yapısal sorgu
-(text-to-SQL) indeksli ve hızlı; RAG kolu 1696 kampanyalık gövde üzerinde
-tarama yapıyor. 4 dakikalık demoda RAG sorusu sorulursa yarım saniyelik
-duraklama görünür.
+31 Temmuz koşumunda chatbot p50 12,48 ms iken p95 **325,02 ms**, p99
+**351,36 ms** ölçülmüştü (~26× yayılım) ve bu bir **performans borcu** olarak
+kayda geçmişti: 4 dakikalık demoda RAG sorusu sorulursa yarım saniyelik
+duraklama görünürdü.
 
-Bu bir **performans borcudur**, kapsamım dışındadır (`src/chatbot/**` başka bir
-kalemin), ama ölçülmüş olarak kayda geçiriliyor.
+**2026-08-15 ölçümünde borç kapanmış görünüyor** — üstelik korpus 1 696'dan
+3 437 kampanyaya, yani iki katına çıkmışken:
+
+| Ölçüt | 2026-07-31 | 2026-08-15 |
+|---|---|---|
+| korpus | 1 696 kampanya | **3 437 kampanya** |
+| p50 | 12,48 ms | **2,74 ms** |
+| p95 | 325,02 ms | **16,10 ms** |
+| p99 | 351,36 ms | **16,99 ms** |
+| max | 368,53 ms | **44,57 ms** |
+| ortalama | 155,11 ms | **4,40 ms** |
+
+`⏳ ölçülmedi — sebep:` bu belge **hangi değişikliğin** iyileşmeyi getirdiğini
+ölçmedi. İki koşum arasında 498 commit var ve aradaki farkı ayrıştıran bir
+ablasyon koşturulmadı. Burada iddia edilen tek şey **sayıların kendisidir**:
+iki ham JSON dosyası yan yana duruyor, yorum onların üstünde değil yanında.
+
+Demoya etkisi doğrudan: RAG kolunda artık yarım saniyelik duraklama beklenmiyor.
 
 ---
 
@@ -454,45 +606,93 @@ Ayrıntılı tablo ve profil kırılımı: [`kaynak-tuketimi.md`](kaynak-tuketim
 
 Özet (hepsi `--network none` konteyner koşusundan, gerçekten ölçüldü):
 
-| Kalem | Ölçülen değer |
-|---|---|
-| Teslim imajı (API) boyutu | 101 218 586 bayt (≈96,5 MiB) |
-| API sunucusu çalışırken bellek (boşta) | **36,36 MiB**, 2 PID, %0,81 CPU |
-| API hazır olma süresi (`--network none`) | **~1 s** |
-| Tepe RSS (çıkarım süreci, 1696 belge) | **100,4 MB** |
-| Demo soğuk başlatma (`build_demo_repo`) | **5,7 ms** |
-| Tam korpus alımı (1696 belge, uçtan uca) | **4,83 s** |
-| Verim | **21 087 belge/dakika** |
-| Test paketi (607 test) | 0,240 s |
-| Değişmez denetimi (849 belge) | 15 460 ms |
+| Kalem | Ölçülen değer | Kaynak |
+|---|---|---|
+| Teslim imajı (API) boyutu | 230 642 126 bayt (≈220,0 MiB) | transkript adım 14 |
+| API sunucusu çalışırken bellek (boşta) | **39,21 MiB**, 2 PID, %0,67 CPU | transkript adım 13 |
+| API hazır olma süresi (`--network none`) | **~1 s** | transkript adım 13 |
+| Tepe RSS (çıkarım süreci, 3 437 belge) | **216,2 MB** | gecikme JSON `peak_rss_mb` |
+| Demo soğuk başlatma (`build_demo_repo`) | **22,0 ms** | gecikme JSON `cold_start` |
+| Tam korpus alımı (3 437 belge, uçtan uca) | **16,81 s** | gecikme JSON `cold_start` |
+| Verim | **12 266,3 belge/dakika** | gecikme JSON `docs_per_minute` |
+| Test paketi (2 999 test, 272 atlandı) | 19,199 s | transkript adım 4 |
+| Değişmez denetimi (1 782 belge) | 58 877 ms | transkript adım 5 |
+
+> **İki farklı belge sayısı, iki farklı kapsam — çelişki değil.** Değişmez
+> denetimi `eval.properties --raw-dir data/raw` ile **1 782** belge sayar;
+> gecikme ölçümü `latency_bench --recursive` ile **3 437** belge tarar. İlki
+> ham toplama dizinini, ikincisi özyinelemeli tüm belge ağacını gezer. Her
+> sayı kendi komutuyla birlikte verilmiştir; birbirinin yerine kullanılamaz.
+>
+> **İmaj 31 Temmuz'a göre ≈96,5 MiB'den ≈220,0 MiB'ye büyüdü.** Bu belge
+> büyümenin **hangi katmandan** geldiğini ölçmedi;
+> `⏳ ölçülmedi — sebep: katman bazlı (docker history) kırılım koşturulmadı.`
+> Ölçülmemiş bir sebebi buraya yazmıyoruz.
 
 ---
 
-## 0-b. TAZELİK UYARISI (2026-08-08)
+## 0-b. TAZELİK UYARISI → **ÇÖZÜLDÜ (2026-08-15)**
 
-Bu belgedeki koşum **31 Temmuz 2026**'da yapıldı. O tarihten bu yana depo
-136 commit ilerledi; belgedeki bazı sayılar o günün fotoğrafıdır ve
-**bugünkü sistemle örtüşmez**:
+### Uyarı ne diyordu (2026-08-08'de yazıldı)
 
-| belgede | bugün |
-|---|---|
-| 607 test | **1.977 test** |
-| 849 belge | **1.774 belge** |
-| gold 3 kayıt | **66 tekil belge** (v1 n=20 + v2 n=48, 2 örtüşme) |
-| `app/models/` yok | **var** (BERTurk, bkz. §9) |
+Belgedeki koşum **31 Temmuz 2026**'da yapılmıştı ve o gün ağaç **kirliydi**
+(transkript başlığı: `git durum : 9 degisik dosya`). Uyarı üç şey söylüyordu:
 
-**Kanıtın kendisi (14/14 adım, `--network none`, pozitif + negatif kontrol)
-geçerliliğini korur** — ölçülen şey API konteynerinin ağsız davranışıdır ve
-o katmanda mimari değişmedi. Ama sayılar güncellenmeden jüriye sunulmamalı;
-en doğrusu teslimden önce `scripts/offline_proof.sh`'i **temiz ağaçta**
-yeniden koşmaktır (o koşumda ağaç kirliydi, transkript bunu kaydediyor).
+1. sayılar o günün fotoğrafıdır, bugünkü sistemle örtüşmez;
+2. kanıtın **mantığı** (14/14 adım, `--network none`, pozitif + negatif
+   kontrol) geçerliliğini korur — ölçülen şey API konteynerinin ağsız
+   davranışıdır ve o katmanda mimari değişmedi;
+3. **en doğrusu teslimden önce `scripts/offline_proof.sh`'i temiz ağaçta
+   yeniden koşmaktır.**
 
-**Kapsam sınırı — sunumda açıkça söylenmeli:** kanıt yalnız **API
-konteynerini** kapsıyor. `docker compose up` tam yığını (Postgres, web,
-vLLM, Ollama) ağsız denenmedi. Ayrıca **imaj derlemesi internet
-gerektiriyor** (`pip install`, `npm ci`): "internetsiz çalışır" iddiası
-**önceden derlenmiş imajlarla** doğrudur. Bu boşluğu jüri kendisi bulursa
-kaybedilen bir puan değil, belgenin geri kalanına duyulan güven olur.
+Uyarının kendi tavsiyesi ayrıca bir sayıyı yanlış veriyordu: "136 commit"
+dendiği yerde gerçek **498 commit**'tir (`git rev-list --count
+743b7d5..HEAD` = 498; 31 Temmuz koşumunun kendi commit'i `025c1e5`'ten
+sayılırsa 500).
+
+### Ne değişti
+
+**Tavsiye uygulandı.** Kanıt 2026-08-15'te `9493c29` commit'inde, **temiz
+ağaçta** yeniden koşuldu ve **14 adımın 14'ü beklendiği gibi, 0 beklenmedik**
+çıktı. Yol düz değildi: aynı gün ilk iki deneme adım 4'te kırmızı yandı,
+kırık testler düzeltildi, üçüncü koşum tertemiz geçti (§4.1). Bu belgedeki
+**tüm sayılar artık o koşumdan** okunmaktadır.
+
+Bayat sayılar, düzeltilmiş halleriyle:
+
+| kalem | 31 Tem koşumu | 8 Ağu uyarısı ne diyordu | **2026-08-15 ölçümü** |
+|---|---|---|---|
+| test | 607 test | "1.977 test" | **2 999 test toplandı, OK (272 atlandı)** |
+| korpus (değişmez denetimi) | 849 belge | "1.774 belge" | **1 782 belge** |
+| korpus (gecikme, özyinelemeli) | 1 696 belge | — | **3 437 belge** |
+| commit farkı | — | "136 commit" (**yanlış**) | **498 commit** (`743b7d5..HEAD`) |
+| gold | 3 kayıt | "66 tekil belge" | **3 kayıt** (`gold.sample.json`, §3.3) |
+| `app/models/` | yok | **var** (BERTurk) | var, ama **kullanılmıyor** (§9) |
+
+> Son iki satır dikkat ister. Uyarı gold setin 66 tekil belgeye büyüdüğünü
+> söylüyordu; **kanıt koşumu hâlâ `gold.sample.json` (3 kayıt) ile koşuyor**
+> çünkü betiğin varsayılanı odur (`GOLD=data/gold/gold.sample.json`). Yani
+> §3.3'teki F1 sayıları büyümüş gold setten gelmiyor — ve zaten §3.3'ün
+> uyardığı gibi o sayılardan doğruluk sonucu çıkarılmamalı. BERTurk ağırlığı
+> diskte durur ama teslim sisteminde kullanılmaz; bu koşumda sınıflandırıcı
+> `RuleHintClassifier`'dır (gecikme JSON `environment.classifier`).
+
+### Kapsam sınırı — DEĞİŞMEDİ, sunumda açıkça söylenmeli
+
+Koşum tazelenmiş olması bu sınırları kaldırmaz. Üçü de aynen geçerlidir:
+
+1. **Kanıt yalnız API konteynerini kapsıyor.** Ölçülen şey
+   `anatolia-api:offline-proof` imajının `--network none` içindeki
+   davranışıdır.
+2. **`docker compose up` tam yığını ağsız denenmedi** — Postgres, Next.js
+   web katmanı, vLLM ve Ollama servislerinin ağsız birlikte ayağa kalkması
+   **ölçülmedi**.
+3. **İmaj derlemesi internet gerektiriyor** (`pip install`, `npm ci`).
+   Dolayısıyla *"internetsiz çalışır"* iddiası **önceden derlenmiş
+   imajlarla** doğrudur — sıfırdan derleme ağ ister (bkz. §3 tablo notu).
+
+Bu boşlukları önce **biz** söylüyoruz. Jüri kendisi bulursa kaybedilen bir
+puan değil, belgenin geri kalanına duyulan güven olur.
 
 ---
 
@@ -575,7 +775,12 @@ boşken vLLM **sessizce internete çıkmaz, başlamaz** — istenen davranış b
 | Sunucu GPU profili (A100/H100) | `⏳ ölçülmedi` | Donanım yok |
 | Model ağırlığı SHA-256 | `⏳ koşturulmadı` | §9 — ağırlıklar indirilmedi, prosedür yazıldı |
 | `docker compose up` tam yığın (postgres + api + web) | `⏳ koşturulmadı` | Bu paket **API konteynerini** kanıtladı (adım 13: sunucu ağsız ayağa kalkıyor). Postgres + Next.js web katmanının ağsız birlikte ayağa kalkması ölçülmedi |
-| pgvector / Postgres ağsız başlatma | `⏳ ölçülmedi` | İmaj çekildi mi diye bakılmadı; `docker compose` koşusu yapılmadı |
+| pgvector / Postgres ağsız başlatma | `⏳ ölçülmedi` | İmaj çekildi mi diye bakılmadı; `docker compose` koşusu yapılmadı. Teslim imajında `pgvector` paketi de yok (§6) — bu koşum SQLite koluyla ayağa kalktı |
+| **İmajın ağsız DERLENMESİ** | `⏳ ölçülmedi — ve ölçülemez` | `docker build` `pip install` yapar, ağ ister. Adım 1 bilerek ağ açıkken koşar. "İnternetsiz çalışır" iddiası **önceden derlenmiş imajlarla** doğrudur (§0-b) |
+| Host ↔ konteyner gecikme karşılaştırması | `⏳ 2026-08-15'te yenilenmedi` | Host koşumu bu pakette koşturulmadı; elimizdeki host JSON 31 Temmuz tarihli ve **farklı korpustan** (§7) |
+| Chatbot iyileşmesinin sebebi | `⏳ ölçülmedi` | p95 325 ms → 16 ms düştü ama hangi commit'in getirdiği ayrıştırılmadı; 498 commit'lik aralıkta ablasyon koşturulmadı (§7.3) |
+| İmaj boyutu artışının katman kırılımı | `⏳ ölçülmedi` | ≈96,5 → ≈220,0 MiB; `docker history` kırılımı alınmadı (§8) |
+| Postgres/vLLM/Ollama digest'lerinin tazeliği | `⏳ 2026-08-15'te yenilenmedi` | Kanıt betiği digest çözmez (ağ ister); tablo 31 Temmuz ölçümüdür (§5) |
 | Doğruluk (P/R/F1) | ölçüldü **ama anlamsız** | `gold.sample.json` = 3 kayıt (§3.3). Ağsız *koşabilirlik* kanıtı, doğruluk kanıtı değil |
 | `curl` negatif kontrolü | `atlandı, gerekçeli` | Taban imajda curl yok (§2.3); yerine stdlib probu |
 | x86_64 (amd64) mimarisi | `⏳ ölçülmedi` | Host arm64. Digest'ler çoklu-mimari indeks olduğu için amd64 çalışmalı, ama **doğrulanmadı** |
@@ -605,12 +810,18 @@ Ortam değişkenleri: `IMAGE`, `OUT_DIR`, `GOLD`, `BENCH_ITERATIONS`, `SKIP_BUIL
 
 - `raw/teknofest/2026-teknofest-tyda-sartname-2-senaryo.pdf` — §5.9, §5.10, §8
 - `app/CLAUDE.md` §2 (on-prem/Colab ayrımı), §3 (önce kural), §11 (demo), §20
-- `docs/offline-proof/transcript-20260731-135858.log` — **yetkili koşu** (14/14 yeşil)
-- `docs/offline-proof/transcript-20260731-134646.log` — harness'ın hata yakaladığı koşu
+- `docs/offline-proof/transcript-20260815-233225.log` — **YETKİLİ KOŞU** (2026-08-15, `9493c29`, temiz ağaç, 14/14, 0 beklenmedik). Bu belgedeki tüm güncel sayıların kaynağı.
+- `docs/offline-proof/latency-20260815-233225.json` — yetkili koşunun ham gecikme/kaynak ölçümü (§7, §8)
+- `docs/offline-proof/transcript-20260815-232558.log` — aynı günün 2. denemesi, adım 4 BEKLENMEDIK (§4.1)
+- `docs/offline-proof/transcript-20260815-230505.log` — aynı günün 1. denemesi, adım 4 BEKLENMEDIK + soğuk derleme süresi (§3, §4.1)
+- `docs/offline-proof/transcript-20260731-135858.log` — **önceki** yetkili koşu (2026-07-31, kirli ağaç; §0-b)
+- `docs/offline-proof/transcript-20260731-134646.log` — harness'ın hata yakaladığı koşu (§4.2)
 - `docs/offline-proof/transcript-20260731-135051.log` — ara koşu (13 adım, API adımı öncesi)
-- `docs/offline-proof/transcript-20260731-133540.log` — ilk koşu (bs4 düzeltmesi öncesi)
-- `docs/offline-proof/latency-*.json` — ham gecikme ölçümleri (konteyner + host)
+- `docs/offline-proof/transcript-20260731-133540.log` — ilk koşu (bs4 düzeltmesi öncesi, §6.1)
+- `docs/offline-proof/latency-host-20260731.json` — host (konteynersiz) gecikme ölçümü, **yenilenmedi** (§7)
+- `tests/_ortam_gereksinimleri.py` — atlanan 272 testin gerekçeleri (§3.1.1)
 - `docs/model-license-audit.md` §2 — trafilatura kararı (bu belge onu düzenlemez)
+- git `a3c2f05` (2026-08-08) — `ANATOLIA_OFFLINE` sahte bayrağının kaldırılması (§3.4)
 
 ## Related
 
