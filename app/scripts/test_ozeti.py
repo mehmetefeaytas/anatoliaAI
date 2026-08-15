@@ -34,6 +34,12 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+# Test sonucunu değiştirebilecek yollar. Kapı (`scripts/kanit_tazeligi.py`)
+# aynı listeyi kullanır ve buraya oradan gelir — iki kopya ayrışırsa artefakt
+# "taze" derken kapı "bayat" der ve ikisi de haklı görünür.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from scripts.kanit_tazeligi import TEST_ETKILEYEN
+
 KOK = Path(__file__).resolve().parents[1]
 VARSAYILAN_CIKTI = KOK / "eval" / "reports" / "test-ozeti.json"
 
@@ -49,23 +55,32 @@ _TOPLANAN = re.compile(r"(\d+)\s+tests?\s+collected")
 
 
 def git_durumu(cikti: Path | None = None) -> tuple[str, bool]:
-    """(HEAD sha, kirli mi) — artefaktın KENDİSİ kirlilik sayılmaz.
+    """(HEAD sha, KAYNAK kirli mi)
 
-    Aksi hâlde sorun özyinelemeli olur: artefakt yazılır, ağaç kirlenir,
-    bir sonraki koşu "kirli ağaçta üretildi" der ve artefakt hiçbir zaman
-    kanıt olamaz. Denetlenmek istenen şey KAYNAK durumudur, aracın kendi
-    çıktısı değil.
+    "Kirli" burada dar bir anlam taşır: **test sonucunu değiştirebilecek**
+    bir dosya commit'lenmemiş mi? Bir README düzenlemesi testleri
+    etkilemez; onu kirlilik saymak artefaktı gereksiz yere kullanılamaz
+    kılar. Kaynak, test ve bağımlılık değişikliği ise sayılır.
+
+    Artefaktın kendisi de kapsam dışıdır — aksi hâlde sorun özyinelemeli
+    olur: artefakt yazılır, ağaç kirlenir, bir sonraki koşu "kirli ağaçta
+    üretildi" der ve artefakt hiçbir zaman kanıt olamaz.
     """
+    # `TEST_ETKILEYEN` yolları DEPO KÖKÜNE göredir; git `app/` içinden
+    # koşulursa süzgeç hiçbir şeyle eşleşmez ve ağaç her zaman "temiz"
+    # görünür — yani kapı sessizce hiçbir şey denetlemez.
+    kok = KOK.parent
+
     def _git(*a: str) -> str:
-        return subprocess.run(["git", "-C", str(KOK), *a],
+        return subprocess.run(["git", "-C", str(kok), *a],
                               capture_output=True, text=True,
                               check=True).stdout.strip()
 
     hedef = (cikti or VARSAYILAN_CIKTI).resolve()
     satirlar = []
-    for satir in _git("status", "--porcelain").splitlines():
+    for satir in _git("status", "--porcelain", "--", *TEST_ETKILEYEN).splitlines():
         yol = satir[3:].strip().strip('"')
-        if (KOK.parent / yol).resolve() == hedef:
+        if (kok / yol).resolve() == hedef:
             continue
         satirlar.append(satir)
     return _git("rev-parse", "HEAD"), bool(satirlar)
