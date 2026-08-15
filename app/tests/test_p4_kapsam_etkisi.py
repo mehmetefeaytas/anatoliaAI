@@ -100,11 +100,35 @@ class KapsamEtkisiIhlalSayilmaz(unittest.TestCase):
             kapsam_etkisi_mi(self.metin, ters),
             "fark kapsamla açıklanmıyor — o hâlde muafiyet dayanaksız")
 
-    def test_kapsam_kapisi_gercekten_ETKILI(self) -> None:
-        """Belge, kapının açık/kapalı olmasına gerçekten duyarlı olmalı.
+    def test_belge_ARTIK_hic_celiski_uretmiyor_ve_SEBEBI(self) -> None:
+        """⚠️ 2026-08-15: bu çit belgesi P4'ü ARTIK ZORLAMIYOR — sebebi ölçüldü.
 
-        Duyarlı değilse yukarıdaki iki test bedava geçer ve testler bir
-        şeyi kanıtlamış gibi görünürken hiçbir şey kanıtlamaz.
+        Eskiden bu test "kapı açıkken kümeler farklı olmalı" diyordu ve
+        geçiyordu. Artık iki küme de BOŞ; yani yukarıdaki iki test bedava
+        geçiyor. Bunu gizlemek yerine kayda geçiriyoruz.
+
+        Sebep, oransal tahsis ücreti türetmesinin kaldırılmasıdır
+        (`tests/test_tahsis_oransal_turetme.py`). Bu belgede ölçüldü:
+
+            önce : tahsis_ucreti = 50,0 TL  @span 1221
+                   kaynak "Tahsis Ücreti Limitin Anaparasının %0,5'i"
+                   -> 50 TL sayısı metinde HİÇ GEÇMİYOR (uydurma)
+                   masraf @1641 -> mesafe 347 < 400 -> çelişki YAKALANDI
+
+            sonra: tahsis_ucreti = 57,5 TL  @ileride
+                   kaynak "Tahsis Ücreti : 57,5 TL" -> metinde BİREBİR yazılı
+                   masraf'a mesafe > 400 -> çelişki yakalanmıyor
+
+        Yani `masrafsiz_ama_ucret` çelişkisi UYDURMA bir değere dayanıyordu.
+        Değer düzeldi, çelişki düştü. Bu bir kayıp değil; CLAUDE.md §18/2'nin
+        (bankalar arası çelişki tespiti) sahte bir dayanaktan kurtulmasıdır.
+
+        Korpus genelinde doğrulandı: `python -m eval.properties` 1782 belgede
+        **0 ihlal** veriyor — muafiyet yolu artık hiçbir belgede tetiklenmiyor.
+        `kapsam_etkisi_mi`'nin dişleri sentetik olarak `DegismezinDisleriKORUNUYOR`
+        sınıfında test edilmeye devam ediyor.
+
+        Bu test, uydurma değer geri gelirse KIRILIR ve durumu haber verir.
         """
         ters = " ".join(reversed(split_sentences(self.metin)))
         from src.extraction.rules.extract import extract_all
@@ -114,9 +138,15 @@ class KapsamEtkisiIhlalSayilmaz(unittest.TestCase):
             return {c.kind for c in C.detect(
                 Campaign(bank_slug="?", raw_text=t, fields=extract_all(t)))}
 
-        self.assertNotEqual(
-            turler(self.metin), turler(ters),
-            "kapı AÇIKKEN kümeler zaten eşit — bu belge P4'ü hiç zorlamıyor")
+        self.assertEqual(
+            (turler(self.metin), turler(ters)), (set(), set()),
+            "belge yeniden çelişki üretiyor — oransal türetme geri gelmiş "
+            "olabilir; `tests/test_tahsis_oransal_turetme.py`'yi kontrol edin")
+
+        alan = {f.field_name: f for f in extract_all(self.metin)}["tahsis_ucreti"]
+        self.assertEqual(alan.canonical_value, {"value": 57.5, "currency": "TRY"})
+        self.assertIn("57,5 TL", self.metin,
+                      "değer metinde birebir geçmeli — türetilmiş olamaz")
 
 
 class DegismezinDisleriKORUNUYOR(unittest.TestCase):

@@ -108,19 +108,30 @@ class TestTabanBilindiginde(unittest.TestCase):
         self.assertEqual(f.canonical_value, {"value": 2500.0, "currency": "TRY"})
         self.assertIn("100.000 TL × %2,50 = 2.500 TL", f.source_span)
 
-    def test_belge_duzeyi_taban_extract_all_ile_gelir(self) -> None:
-        """Taban metinde ADLA yazılır ("finansman tutarının"), sayıyla değil.
+    def test_belge_duzeyi_taban_ARTIK_HESAPLANMAZ(self) -> None:
+        """⚠️ KARAR TERSİNE ÇEVRİLDİ (2026-08-15). Eski hâli silinmedi, altta.
 
-        `extract_all` iki alanı birlikte gördüğü için bağı kurabilir;
-        `extract_tahsis_ucreti` tek başına çağrıldığında tabanı bilmez ve
-        (doğru davranış olarak) hesap yapmaz.
+        Bu test 2026-08-07'de ters yönde yazılmıştı: taban metinde ADLA
+        anılıyorsa (`finansman tutarının binde 5'i`) `extract_all` iki alanı
+        birlikte gördüğü için çarpımı yapar ve 1.000 TL üretirdi.
+
+        Kılavuz §4.13/5 iki gün SONRA bunu yasakladı ("Hesaplamayın — finansman
+        tutarı aynı belgede geçse bile çarpmak çıkarım değil TÜRETMEDİR") ve
+        2026-08-15 ölçümü kılavuzu haklı çıkardı: 436 belgede altı kez metinde
+        HİÇ GEÇMEYEN bir TL değeri üretiliyordu; birinde taban finansman tutarı
+        bile değil bir VADE EŞİĞİYDİ.
+
+        Bedeli ölçüldü ve SIFIR: gold.v2 mikro/makro/yapısal/halüsinasyon
+        değişmedi, gold.v1'de `tahsis_ucreti` F1 0,667 korundu.
+
+        Ayrıntı ve korpus değişmezi: `tests/test_tahsis_oransal_turetme.py`.
         """
         metin = ("Finansman tutarı 200.000 TL olarak kullandırılır. "
                  "Tahsis ücreti finansman tutarının binde 5'i oranındadır")
         alanlar = {f.field_name: f for f in extract_all(metin)}
-        self.assertEqual(alanlar["tahsis_ucreti"].canonical_value,
-                         {"value": 1000.0, "currency": "TRY"})
-        self.assertIn("hesap:", alanlar["tahsis_ucreti"].source_span)
+        self.assertNotIn(
+            "tahsis_ucreti", alanlar,
+            "adla anılan taban çarpımı geri geldi — §4.13/5 ihlali")
 
     def test_metin_tabani_adlandirmiyorsa_hesap_yok(self) -> None:
         """`tom-katilim--hesaplama-araclari` — taban HARCAMA, kaydırıcı sınırı değil.

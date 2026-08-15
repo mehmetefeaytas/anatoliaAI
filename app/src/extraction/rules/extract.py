@@ -1005,16 +1005,34 @@ def _ucret_degeri(clause: str, taban: Optional[float]):
     taşımaz; uydurulmuş bir tabanla çarpmak da, oranı TL sanmak da sessizce
     yanlış değer üretir (CLAUDE.md §19).
     """
-    for desen in (_BITISIK_TABAN_RE, _ADLA_TABAN_RE):
-        m = desen.search(clause)
-        if m is None:
-            continue
-        oran = N.parse_oran_ifadesi(m.group(desen.groups))
-        yerel = taban
-        if desen is _BITISIK_TABAN_RE:
-            yerel = (N.normalize_money(m.group(1)) or {}).get("value")
+    m = _BITISIK_TABAN_RE.search(clause)
+    if m is not None:
+        oran = N.parse_oran_ifadesi(m.group(_BITISIK_TABAN_RE.groups))
+        yerel = (N.normalize_money(m.group(1)) or {}).get("value")
         hesap = N.hesapla_oransal_ucret(oran, yerel) if oran is not None else None
         return hesap if hesap is not None else (None, None)
+
+    # B) TABAN ADLA ANILIYOR ("finansman tutarının binde 5'i") -> DEĞER ÜRETİLMEZ.
+    #
+    # Bu yol 2026-08-07'de bilerek eklenmişti (mentörlük bulgusu: "yüzdeli
+    # ifadelerde hesaplama yapmıyor") ve `taban` belge düzeyindeki
+    # `finansman_tutari`ndan geliyordu. Kılavuz §4.13/5 (2026-08-09, yani
+    # SONRA) bunu birebir yasakladı: "Hesaplamayın — finansman tutarı aynı
+    # belgede geçse bile çarpmak çıkarım değil TÜRETMEDİR."
+    #
+    # Ölçüm kılavuzu haklı çıkardı (2026-08-15, 436 inceleme belgesi): altı
+    # belgede metinde HİÇ GEÇMEYEN bir TL değeri üretiliyordu. En açığı
+    # `turkiye-finans--ihtiyac-finansmani`: "Tahsis ücreti ... finansman
+    # tutarının %0,50'si" cümlesi, belgenin başka bir yerindeki 125.000 TL ile
+    # çarpılıp 625 TL yazıyordu. Oysa o 125.000 TL finansman tutarı bile
+    # değil, bir VADE EŞİĞİ ("125.000 TL'ye kadar olması durumunda 24 ayı ...
+    # aşamaz"). Yani çifte uydurma: yanlış tabanla yapılmış bir hesap.
+    #
+    # Doğru davranış kılavuzda yazılı: `tahsis_ucreti` boş kalır (anotatör
+    # `unclear` + `#oransal_ucret` yazar), masraf VARLIĞI `masraf_durumu`
+    # alanında `{"has_fee": true, "amount": null}` olarak taşınır.
+    if _ADLA_TABAN_RE.search(clause):
+        return None, None
 
     # KOMŞU SÜTUN KESİLİR — `extract_masraf` ile aynı gerekçe. Oran tablosunun
     # başlık satırında "Tahsis Ücreti"nden sonra "Aylık Toplam Maliyet ...

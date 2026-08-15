@@ -4,6 +4,10 @@
 **Son güncelleme:** 2026-07-31
 **Sorumlu kalem:** Şartname §5.10 ve §8
 
+**Ek denetim (15 Ağu 2026):** Ollama yerel ağırlıkları (`qwen2.5:7b-instruct`,
+`qwen3.5:9b-q4_K_M`) denetime alındı — bkz. §1'deki iki yeni satır, "Ollama
+yerel ağırlıkları" alt bölümü ve belge sonundaki *2026-08-15 eklemesi* notu.
+
 **Doğrulama yöntemi (31 Tem 2026):** her model için HuggingFace model kartı
 canlı çekildi; `license` alanı ve `base_model` zinciri **köküne kadar** takip
 edildi; kullanım kısıtı içeren cümleler birebir alıntılandı. Aşağıdaki
@@ -46,6 +50,8 @@ giremez.
 | **GLiNER v2.1** (`urchade/gliner_multi-v2.1`) | Tamamlayıcı NER (geri-çağırma ağı) | **Apache-2.0** | mDeBERTa-v3-base (MIT) → temiz | ✅ |
 | **NuExtract-2.0-8B** (`numind/NuExtract-2.0-8B`) | Ablasyon kolu — şablon-güdümlü çıkarım | **MIT** | `Qwen2.5-VL-7B-Instruct` (**Apache-2.0**) → temiz | ✅ |
 | **TabiBERT** | Sınıflandırıcı alternatifi | bilinmiyor | doğrulanmadı | ⏳ gündeme alınmadı |
+| **Qwen2.5-7B-Instruct** (`qwen2.5:7b-instruct`, Ollama Q4_K_M) | **Ollama kolunun ÜRETİM VARSAYILANI** (`clients.py:437`, `.env.example:56`) — ablasyon, gümüş denetleyici, özetleyici, chatbot | **Apache-2.0** | `Qwen/Qwen2.5-7B` (kök, sıfırdan eğitim) → `Qwen/Qwen2.5-7B-Instruct` → Ollama GGUF Q4_K_M — Llama/Gemma **yok** | ✅ (15 Ağu 2026) |
+| **Qwen3.5-9B** (`qwen3.5:9b-q4_K_M`, Ollama Q4_K_M) | Yalnız **ölçüm aracı** — düşünme kipi ölçümü (`clients.py:486`, `.env.example:61`, `tests/test_llm_client.py:534`); teslim edilen kod yolunda **kullanılmıyor** | **Apache-2.0** | `Qwen/Qwen3.5-9B-Base` (kök, sıfırdan eğitim) → `Qwen/Qwen3.5-9B` → Ollama GGUF Q4_K_M — Llama/Gemma **yok** | ✅ (15 Ağu 2026) |
 
 ### Trendyol-LLM-8B-T1 — ⛔ BLOKE kararının kaldırılması (31 Tem 2026)
 
@@ -68,6 +74,65 @@ kullanılmaya devam eder ve ayrıca **ablasyon kolu K2b** olarak ölçülür:
 *Türkçeye özel ayarlama finansal bilgi çıkarımında saf Qwen3-8B'ye göre kazanç
 sağlıyor mu?* İkisinin **tabanı aynı** olduğu için tek değişken Türkçe fine-tune
 — temiz kontrollü karşılaştırma.
+
+### Ollama yerel ağırlıkları — zincir doğrulaması (15 Ağu 2026)
+
+Bu iki ağırlık geliştirme makinesinde **kurulu** ve biri **üretim varsayılanı**
+olduğu halde 31 Temmuz denetimine hiç girmemişti; §5'teki *"docker-compose'da
+kullanılan her ağırlığın burada ✅ karşılığı var"* maddesi Ollama kolunu
+kapsamıyordu. Zincirler bugün köke kadar takip edildi ve **ikisi de temiz çıktı.**
+
+#### Qwen2.5-7B-Instruct (`qwen2.5:7b-instruct`) — üretim varsayılanı
+
+| Kanıt | Karşılığı |
+|---|---|
+| Yerel künye (`ollama show`) | `architecture qwen2` · `parameters 7.6B` · `context 32768` · `quantization Q4_K_M` |
+| Yerel lisans metni (`ollama show --license`) | 202 satır, **birebir Apache License 2.0**; `llama` / `gemma` / `non-commercial` / `research only` / `acceptable use` / `qwen research` kelimelerinin **hiçbiri geçmiyor** (grep ile tarandı) |
+| Ollama dağıtım künyesi | Lisans: *"Apache License Version 2.0, January 2004"* · `qwen2` · 7.62B · Q4_K_M — <https://ollama.com/library/qwen2.5:7b-instruct> |
+| Üst kaynak model kartı | `license: apache-2.0`, `base_model: Qwen/Qwen2.5-7B` — <https://huggingface.co/Qwen/Qwen2.5-7B-Instruct> |
+| **Zincirin kökü** | `Qwen/Qwen2.5-7B` — `base_model` alanı **yok**, sıfırdan ön-eğitim (*"This repo contains the base 7B Qwen2.5 model"*), `license: apache-2.0` — <https://huggingface.co/Qwen/Qwen2.5-7B> |
+| Ticari kısıt | Zincirin **hiçbir halkasında** non-commercial / research-only kısıtı yok |
+
+#### Qwen3.5-9B (`qwen3.5:9b-q4_K_M`) — yalnız ölçüm aracı
+
+Önce **ad doğrulandı**: "Qwen3.5" gerçek bir aile mi, yoksa Ollama'daki etiket
+başka bir modelin yeniden adlandırılmış hâli mi? Aile **gerçek** ve HuggingFace'te
+Qwen'in kendi hesabı altında yayımlı; yerel künye ile üst kaynak künyesi
+**birebir örtüşüyor**, yani etiket başka bir modelin takma adı değil:
+
+| Alan | Yerel (`ollama show`) | Ollama dağıtımı | Üst kaynak (HF) |
+|---|---|---|---|
+| Mimari | `qwen35` | `qwen35` | Gated Delta Networks + seyrek MoE |
+| Parametre | 9.7B | 9.65B | 9B |
+| Nicemleme / boyut | Q4_K_M / 6.6 GB | Q4_K_M / 6.6 GB | — |
+| Bağlam | 262144 | — | 262.144 (yerel) |
+| Yetenek | `vision`, `thinking` | — | *"Unified Vision-Language Foundation"* + varsayılan `<think>` kipi |
+
+| Kanıt | Karşılığı |
+|---|---|
+| Yerel lisans metni (`ollama show --license`) | 201 satır, **birebir Apache License 2.0**; kısıt kelimelerinin hiçbiri geçmiyor (grep ile tarandı) |
+| Ollama dağıtım künyesi | Lisans: *"Apache License Version 2.0, January 2004"* — <https://ollama.com/library/qwen3.5:9b> |
+| Üst kaynak model kartı | `license: apache-2.0`, `base_model: Qwen/Qwen3.5-9B-Base` — <https://huggingface.co/Qwen/Qwen3.5-9B> |
+| **Zincirin kökü** | `Qwen/Qwen3.5-9B-Base` — `base_model` alanı **yok**, sıfırdan ön-eğitim (*"pre-trained only model"*), `license: apache-2.0` — <https://huggingface.co/Qwen/Qwen3.5-9B-Base> |
+| Ticari kısıt | Zincirin hiçbir halkasında yok |
+
+**GGUF nicemleyicisinin lisansı:** her iki etikette de nicemlemeyi Ollama'nın
+kendi kütüphanesi yayımlıyor; üçüncü taraf quant sağlayıcısı yok. Nicemlenmiş
+yapıtın **içine gömülü** lisans metni (`ollama show --license`) taban modelin
+Apache-2.0'ını birebir taşıyor — yani devralma varsayılmadı, **doğrulandı**.
+
+**Kalan tek çekince (kayda geçirilir):** Ollama kütüphane sayfası kaynak
+HuggingFace deposunu **açıkça linklemiyor**; etiket→depo eşlemesi yukarıdaki
+künye örtüşmesinden çıkarıldı. Bu, lisans sonucunu değiştirmez — hem yapıta
+gömülü metin hem Ollama künyesi hem de eşlemenin **tüm** olası üst kaynakları
+(`Qwen3.5-9B` ve `Qwen3.5-9B-Base`) Apache-2.0.
+
+**Dikkat — Qwen2.5 ailesi tek tip DEĞİL:** `Qwen/Qwen2.5-3B-Instruct`
+`license: qwen-research` taşır (<https://huggingface.co/Qwen/Qwen2.5-3B-Instruct>),
+yani aynı ailede boy değiştirmek lisans değiştirebilir. Bu, NuExtract-4B
+vakasının Qwen2.5 tarafındaki karşılığıdır: **"aile Apache-2.0" diye bir şey
+yok, yalnız o depo Apache-2.0'dır.** `7b` etiketinden `3b`'ye düşülürse denetim
+**yeniden** yapılmalıdır.
 
 ### ⛔ Kullanılmayacaklar (karar verilmiş)
 
@@ -200,6 +265,43 @@ sisteme giremez. Tersi de geçerli — `⛔` bir kalem kodda kullanılıyorsa bu
 **doküman–kod tutarsızlığıdır** ve jüri için lisans ihlalinden farksız görünür.
 27–31 Temmuz arasında tam bu durumdaydık (Trendyol `⛔` işaretliyken
 `docker-compose.yml:27`'de çalışıyordu); doğrulama bunu kapattı.
+
+---
+
+## 2026-08-15 eklemesi — bu iki model denetime neden girdi
+
+**Kısa cevap: üretim varsayılanı denetimsizdi.**
+
+`qwen2.5:7b-instruct`, `src/extraction/llm/clients.py:437`'de `OllamaClient`'ın
+**varsayılan modeli**; `OLLAMA_MODEL` elle verilmediği her koşumda çalışan ağırlık
+budur (`.env.example:56`). Ayrıca ablasyon künyesinde
+(`docs/rapor/ablasyon.md §6`), LLM modu güvenlik koşumunda
+(`docs/rapor/guvenlik-llm-modu.md`), gümüş denetleyicide
+(`scripts/run_silver_verifier.py`), özetleyicide (`src/summarize/ozet.py`) ve
+chatbot ölçümünde (`src/chatbot/bot.py`) adı geçiyor. Buna rağmen 31 Temmuz
+tablosunda **hiç yer almıyordu.**
+
+Bu, belgenin kendi kuralının ihlaliydi: *"Bu tabloda `✅` olmayan hiçbir bileşen
+teslim edilen sisteme giremez."* §5'teki kontrol maddesi `docker-compose.yml`
+üzerinden yazıldığı için **Ollama kolunu görmüyordu** — oysa `app/CLAUDE.md` §2
+Ollama'yı açıkça demo yedeği olarak konumlandırıyor, yani teslim edilen sistemin
+parçası. Durum 27–31 Temmuz'daki Trendyol vakasının **aynadaki hâliydi**: orada
+`⛔` bir kalem kodda çalışıyordu, burada **hiç işaretlenmemiş** bir kalem üretim
+varsayılanıydı. İkisi de doküman–kod tutarsızlığıdır ve jüri için lisans
+ihlalinden farksız görünür.
+
+`qwen3.5:9b-q4_K_M` aynı makinede kurulu ikinci ağırlık. Teslim edilen kod
+yolunda kullanılmıyor; yalnız düşünme kipinin `num_predict` bütçesini yiyip boş
+cevap bıraktığını **ölçmek** için koşuldu (`clients.py:486`, `.env.example:61`).
+Denetime alınmasının sebebi kullanımı değil **kurulu olması**: makinede duran her
+ağırlık, ölçüm künyesine adı geçtiği anda belgelenebilir olmak zorunda.
+
+**Sonuç:** her iki zincir de köke kadar takip edildi, ikisi de Apache-2.0 kökten
+temiz çıktı, ikisi de `✅`. Denetimsizlik giderildi; **lisans riski çıkmadı.**
+Süreç dersi ise duruyor: bir bileşen **denetimden geçmediği için** değil,
+**kimse bakmadığı için** listede yoktu. §5'in `docker-compose.yml` odaklı kontrol
+maddesi, `.env.example` ve kod varsayılanlarındaki ağırlıkları da kapsayacak
+şekilde okunmalıdır.
 
 ---
 
