@@ -38,7 +38,12 @@ from pathlib import Path
 # aynı listeyi kullanır ve buraya oradan gelir — iki kopya ayrışırsa artefakt
 # "taze" derken kapı "bayat" der ve ikisi de haklı görünür.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from scripts.kanit_tazeligi import TEST_ETKILEYEN
+from scripts.kanit_tazeligi import TEST_ETKILEYEN, _yol_suzgeci
+
+# `TEST_ETKILEYEN` burada yeniden dışa verilir: testler iki modülün AYNI
+# nesneyi paylaştığını çitliyor. Ayrışırsa artefakt "taze" derken kapı
+# "bayat" der ve ikisi de haklı görünür.
+__all__ = ["TEST_ETKILEYEN", "git_durumu", "kos", "main"]
 
 KOK = Path(__file__).resolve().parents[1]
 VARSAYILAN_CIKTI = KOK / "eval" / "reports" / "test-ozeti.json"
@@ -78,7 +83,9 @@ def git_durumu(cikti: Path | None = None) -> tuple[str, bool]:
 
     hedef = (cikti or VARSAYILAN_CIKTI).resolve()
     satirlar = []
-    for satir in _git("status", "--porcelain", "--", *TEST_ETKILEYEN).splitlines():
+    durum = _git("status", "--porcelain", "--untracked-files=all",
+                 "--", *_yol_suzgeci())
+    for satir in durum.splitlines():
         yol = satir[3:].strip().strip('"')
         if (kok / yol).resolve() == hedef:
             continue

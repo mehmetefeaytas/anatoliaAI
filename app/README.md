@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-2631%20ye%C5%9Fil-brightgreen.svg)](tests/)
-[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1774%20belge%20%C2%B7%201%20ihlal-yellow.svg)](eval/properties.py)
+[![Testler](https://img.shields.io/badge/testler-2873%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge%20%C2%B7%201%20ihlal-yellow.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
 (Bilişim Vadisi). Türkiye'deki katılım bankalarının kampanya/ürün metinlerinden
@@ -150,7 +150,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** 152 dosyada **2.631** birim/entegrasyon testi, tamamı offline yeşil
+**Test:** **2.926** birim/entegrasyon testi toplanıyor, tamamı offline yeşil
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`)
 (`python3 -m unittest discover -s tests`).
@@ -162,26 +162,35 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **2.631 test yeşil**, ağ gerektirmeden koşuyor (bağımlılıksız koşuda 205'i atlanır — API yüzeyi `test-with-deps` işinde sınanır) |
+| Testler | ✅ **2.873 test yeşil** (2.926 toplanan · 0 başarısız), ağ gerektirmeden koşuyor (bağımlılıksız koşuda 53'i atlanır — API yüzeyi `test-with-deps` işinde sınanır) |
 | Değişmez (invariant) denetimi | ⚠️ **1.782 belgede 1 ihlal** (`P4_cumle_sirasi`, kapsam %91,3) — etiketsiz veride otomatik hata avı (`python -m eval.properties`). Eski "849 belgede 0 ihlal" rozeti korpus büyüyünce geçersizleşti |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
 | Ablasyon + McNemar | ✅ ölçüldü — `docs/rapor/ablasyon.md` |
-| Anotatörler arası uyum (κ) | ✅ **Fleiss κ 0,302** · Krippendorff α 0,620/0,787 (260 ortak satır, 4 anotatör). Eşik altı → ilan edilen sonuç uygulandı (kılavuz v1→v2). v2 turu anote EDİLMEDİ, yeniden ölçüm bekliyor |
+| Anotatörler arası uyum (κ) | ✅ round0: **Fleiss κ 0,302** · α 0,620/0,787 (260 ortak satır, 4 anotatör, hakemlik **sonrası**) · round1: **Cohen κ 0,274** (141 ortak karar, hakemlik **öncesi**). İkisi de eşik altı → ilan edilen sonuç uygulandı. İki sayı simetrik DEĞİLDİR, ayrıntı kök [`README.md`](../README.md) §4 |
+| Bağımlılık lisans envanteri | ✅ **96 paket** CycloneDX SBOM + CI lisans kapısı ([`docs/LISANSLAR.md`](docs/LISANSLAR.md)) |
+| Şartname uyum matrisi | ✅ madde madde, kanıt komutlarıyla ([`docs/SARTNAME-UYUM.md`](docs/SARTNAME-UYUM.md)) |
+| Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) |
 
 ### Ölçüm sonuçları
 
 Kural katmanı, `gold.v2` (n=48, **kör** etiketlenmiş), strict eşleştirici,
-belge düzeyi bootstrap 2000 örnek, tohum 42:
+belge düzeyi bootstrap 1000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| **yapılandırılmış alan mikro-F1** (11 alan) | **0,646** |
-| 12-alan mikro-F1 | **0,452** [%95 GA 0,384–0,512] |
-| makro-F1 | 0,556 [%95 GA 0,412–0,650] |
-| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,059** [26/444] |
-| kaçırma | 20 · yanlış çıkarım 40 |
+| **yapılandırılmış alan mikro-F1** (11 alan) | **0,671** |
+| 12-alan mikro-F1 | **0,464** [%95 GA 0,398–0,522] |
+| makro-F1 | **0,601** |
+| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,047** [21/444] · yapısal kesitte 0,035 |
+| kalem düzeyi mikro-F1 (12 alan) | 0,381 |
+
+> Bu sayılar 15 Ağustos ölçümüdür ve 12 Ağustos'takinden **daha iyidir**
+> (0,452 → 0,464 · halüsinasyon 0,059 → 0,047). Fark iki kural düzeltmesinden
+> geliyor: oransal tahsis ücretinde türetme kaldırıldı (§4.13/5) ve kabuk
+> bölgesi kapısı eklendi (§4.13/8). İkisi de metinde geçmeyen değer
+> üretmeyi bitirdi.
 
 **İki mikro-F1 neden veriliyor:** `kampanya_kosullari` serbest cümle listesi
 döndürür; span/jeton eşleşmesiyle F1 ölçmek metodolojik olarak yanlıştır (aynı
@@ -234,8 +243,8 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
   geliyor.
 
 > **Senaryonun kalp alanı yeterince ölçülmedi.** `kar_payi_orani` gold.v2'de
-> yalnız **3 karar** destekli (TP 1, FN 2). Oradan çıkan F1 = 0,500
-> **yorumlanamaz**. Korpusta da alan 70/1.774 belgede (%3,9) var — bu bir
+> yalnız **3 karar** destekli (TP 2, FN 1). Oradan çıkan F1 = 0,800
+> **yorumlanamaz** — üç karar bir F1 taşımaz. Korpusta da alan 70/1.782 belgede (%3,9) var — bu bir
 > model kısıtı değil, **veri gerçeği**: bankalar oranları kampanya
 > sayfalarında büyük ölçüde yayımlamıyor.
 
@@ -272,7 +281,9 @@ açıkken. Kısıt: set n=26 ve sentez tarafı tek modelle (`qwen2.5:7b-instruct
 
 > Bu bölüm 2026-08-12'de düzeltildi. Önceki hâli "κ hesaplanmadı, şartname
 > §16'nın karşılanmayan tek kalemi" diyordu; **yanlıştı**. Ölçüm yapılmış ve
-> raporlanmıştı (`data/gold/iaa_report.md`), README güncellenmemişti.
+> raporlanmıştı, README güncellenmemişti. (O rapor sonradan v2 turunun boş
+> dosyalarından yeniden üretilip ÜZERİNE YAZILMIŞTI; 15 Ağustos'ta turlar
+> ayrı dosyalara bölündü: [`iaa-raporu-round0-kalibrasyon-v1.md`](data/gold/iaa-raporu-round0-kalibrasyon-v1.md).)
 
 Kalibrasyon turu (v1), 4 anotatör, **260 ortak anote edilmiş satır**, karar
 bulunmayan hücre 0 — kaynak: `data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv`.

@@ -26,27 +26,57 @@ chatbot** ile sunan; **tamamen açık kaynak (Apache-2.0)**, **on-premise** ve
 
 ## 📊 Ölçülebilir Durum
 
-Bu tablodaki her sayı, yanındaki komutla **yeniden üretilebilir**. Ölçüm
-tarihi: **12 Ağustos 2026** · gold seti: `gold.v2.json` (48 kayıt).
+Bu tablodaki her sayı, yanındaki komutla **yeniden üretilebilir** — ve bu bir
+iddia değil, **kapı**: `python -m scripts.kanit_tazeligi` her satırı üreten
+kanıtla karşılaştırır, ayrışırsa CI kırmızı yanar. Ölçüm tarihi:
+**15 Ağustos 2026** · ölçüm kolu: `kural` (resmî varsayılan, LLM kapalı).
 
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
 | Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
 | AI özeti kapsaması | **1.759** üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
-| Gold seti | **48 kayıt** (40'ı zor vaka) | `data/gold/gold.v2.json` |
-| **Yapılandırılmış alan mikro-F1** | **0,646** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
-| 12-alan mikro-F1 | 0,452 [%95 GA 0,384–0,512] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
-| Halüsinasyon oranı | **0,059** (yapısal kesitte **0,047**) | *(aynı komut)* |
+| Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
+| Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
+| **Yapılandırılmış alan mikro-F1** (gold.v2, 11 alan) | **0,671** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
+| 12-alan mikro-F1 | 0,464 [%95 GA 0,398–0,522] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
+| makro-F1 | **0,601** | *(aynı komut)* |
+| Halüsinasyon oranı | **0,047** (21/444) · yapısal kesitte 0,035 | *(aynı komut)* |
 | RAG — terim kapsama R@5 | **0,867** | `python -m eval.rag_eval --db data/demo.db` |
 | RAG — banka hedefleme R@5 | **0,800** (BM25 sıralama) | *(aynı komut)* |
 | RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
 | Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
 | Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
-| Anotatör uyumu (IAA) | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv` |
-| Güven kalibrasyonu | ECE **0,306** · MCE 0,550 · Brier 0,316 | `python -m eval.calibration --gold data/gold/gold.v2.json` |
-| Test | **2.649** toplanan · 2.596 geçti · 53 atlandı (Postgres — CI'da koşar) | `python -m pytest` |
+| Anotatör uyumu — round0 | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
+| Anotatör uyumu — round1 | Cohen κ **0,274** (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
+| Bağımlılık envanteri | **96 paket**, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
+| Test | **2.926** toplanan · **2.873** geçti · **53** atlandı (Postgres — CI'da koşar) | `python -m scripts.test_ozeti` |
 | CI regresyon kapısı | **var** (alan F1 + halüsinasyon tavanı) | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
+| Kanıt-tazeliği kapısı | **var** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+
+### İki gold seti, iki farklı soru — ve neden birleştirmiyoruz
+
+`gold.v2` (n=48) **kasten zor** seçilmiş bir settir: 40 kaydı koşullu aralık,
+format varyantı, çelişki ya da terminoloji tuzağı taşır. `gold.round1` (n=134)
+inceleme kuyruğundan gelen **geniş** bir örneklemdir. İkisi aynı sistemi ölçer
+ama aynı soruyu sormaz, bu yüzden **manşet sayı gold.v2'dir** — zor olan.
+
+Bileşim farkı bir sayıyı doğrudan kıyaslanamaz kılıyor:
+
+| | gold.v2 | gold.round1 |
+|---|---:|---:|
+| kayıt | 48 | 134 |
+| zor vaka | 40 | 3 |
+| `absent` kararı (halüsinasyon paydası) | **444** | **60** |
+| 12-alan mikro-F1 | 0,464 | 0,744 |
+| halüsinasyon | **0,047** | **0,433** |
+
+**Round1'in 0,433'ü bir gerileme değil, seçim etkisidir** ve bunu gizlemiyoruz:
+round1'de bir hücre inceleme kuyruğuna **zaten model bir şey ürettiği için**
+giriyor. Yani o setin `absent` kümesi rastgele değil, düşmanca seçilmiş bir
+alt kümedir; payda 60'a düşünce oran şişer. Aynı sebeple **CI regresyon
+kapısı `gold.v2`'de kalıyor**: kapıyı round1'e taşımak, önceden ilan edilmiş
+0,08'lik halüsinasyon tavanını sayıya bakarak gevşetmek anlamına gelirdi.
 
 ### İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz
 
@@ -137,13 +167,23 @@ kazandığının kanıtlanmasını" istiyordu; kanıtlanmadı, tersi ölçüldü
 düzeltmeye çalışmıyor, **ölçüldüğü gibi bırakıyor** — LLM orkestrasyonu
 ölçülüp reddedilmiştir.
 
-**4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** 4 anotatör, 260 ortak
-satır, 0 boş hücre: Fleiss κ **0,302** · Krippendorff α (nominal) **0,620** ·
-α (oransal) **0,787**. Eşik anotasyon **başlamadan** ilan edilmişti
-(`ANNOTATION_GUIDE.md` §7) ve ilan edilen sonuç uygulandı: κ < 0,67 → zorunlu
-hakemlik + kılavuz revizyonu; kılavuz v1→v2 revize edildi ve 123 uyuşmazlık
-tek tek listelendi. Sayıya bakıp eşiği değiştirmek yasaktır. Cohen değil
-Fleiss kullanılır, çünkü Cohen κ iki anotatör içindir; burada dört var.
+**4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** Round0: 4 anotatör, 260
+ortak satır, 0 boş hücre: Fleiss κ **0,302** · Krippendorff α (nominal)
+**0,620** · α (oransal) **0,787**. Eşik anotasyon **başlamadan** ilan
+edilmişti (`ANNOTATION_GUIDE.md` §7) ve ilan edilen sonuç uygulandı: κ < 0,67
+→ zorunlu hakemlik + kılavuz revizyonu; kılavuz v1→v2 revize edildi ve 123
+uyuşmazlık tek tek listelendi. Sayıya bakıp eşiği değiştirmek yasaktır. Cohen
+değil Fleiss kullanılır, çünkü Cohen κ iki anotatör içindir; burada dört var.
+
+Round1: 2 anotatör, 141 ortak karar, Cohen κ **0,274** — yine eşiğin altında,
+yine zorunlu hakemlik tetiklendi ve koşuldu (41 uyuşmazlık karara bağlandı).
+
+⚠️ **İki sayı simetrik değil ve bunu yazmak zorundayız:** round0'ın 0,302'si
+**hakemlik sonrası** bir durumdur (yedekler 0,051 → 0,268 → 0,302
+ilerlemesini gösteriyor), round1'in 0,274'ü ise **hakemlik öncesidir**.
+Round1'in hakemlik sonrası tutarlılığı 0,844'tür ama bu **bağımsız uyum
+değildir** ve manşet olarak kullanılmaz. İkisini yan yana koyup "uyum
+düzeliyor" demek, ölçtüğümüz şeyi ölçmediğimizi söylemek olurdu.
 
 **5) Güven skoru kalibre edildi — ve kötü çıktı.** `compare.ASGARI_GUVEN = 0,65`
 kullanıcıya **görünen** bir kapıdır; kalibre edilmemiş bir skora eşik koymak,
@@ -163,7 +203,10 @@ problemler ve on-prem kanıt paketi. Raporun gövdesi 3 Ağustos ölçümüne ç
 ve hangi sayının ne zaman ölçüldüğü başındaki "Ölçüm künyesi" tablosunda yazılıdır.
 
 Kaynaklar — [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
-[IAA raporu](app/data/gold/iaa_report.md) ·
+[IAA raporu — round0 v1](app/data/gold/iaa-raporu-round0-kalibrasyon-v1.md) ·
+[IAA raporu — round1](app/data/gold/iaa_report_round1.md) ·
+[şartname uyum matrisi](app/docs/SARTNAME-UYUM.md) ·
+[lisans envanteri](app/docs/LISANSLAR.md) ·
 [kılavuz revizyonu](app/docs/rapor/kilavuz-revizyonu.md) ·
 [anotasyon kılavuzu](app/data/gold/ANNOTATION_GUIDE.md)
 Kod — `eval/stats.py` · `eval/iaa.py` · `eval/calibration.py` · `eval/ablation.py`
