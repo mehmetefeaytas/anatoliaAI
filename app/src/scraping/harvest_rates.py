@@ -8,10 +8,26 @@ Kullanım:
 ## Neden ayrı bir tur
 
 Aylık kâr payı oranı HTML'de YOKTUR: ürün sayfalarında yalnızca "Aylık Kâr Oranı"
-ETİKETİ bulunur, değer istemci-taraflı hesaplama aracının arkasındadır. Ölçüm
-(2026-08-03, 1684 belge): `kar_payi_orani` yalnızca 73 belgede var ve finansman
-ürün sayfalarının hiçbirinde sayısal değer yok. Oysa şartnamenin manşet örneği
-tam olarak bu alanı istiyor.
+ETİKETİ bulunur, değer istemci-taraflı hesaplama aracının arkasındadır.
+
+Ölçüm (2026-08-15, `data/demo.db` canlı sayım, **1.782 belge**):
+`kar_payi_orani` yalnızca **70 belgede** var — korpusun **%3,9'u** — ve
+finansman ürün sayfalarının hiçbirinde sayısal değer yok. Oysa şartnamenin
+manşet örneği tam olarak bu alanı istiyor.
+
+    SELECT COUNT(DISTINCT campaign_id) FROM extracted_fields
+     WHERE field_name = 'kar_payi_orani';        -- 70 / 1782
+
+Bu künye 2026-08-15'te düzeltildi: eskiden "73 / 1684" yazıyordu ve korpus
+büyürken güncellenmemişti. Aynı oran (%3,9) üç ayrı paydayla dolaştığı için
+hata yakalanmamıştı — `README.md` "70/1.774", burası "73/1684" diyordu.
+Sayı artık `scripts/kanit_tazeligi.py` kapısına bağlıdır.
+
+**Bu bir model kısıtı değil, ölçülmüş bir veri gerçeğidir**: bankalar oranı
+kampanya sayfalarında yayımlamıyor. Ek dürüstlük notu: bulunan 70 kaydın
+**26'sında** `raw_value` boş ve `span=[0,0]` (bkz. `docs/rapor/genel-denetim.md`),
+yani "her değer bir karakter aralığına bağlıdır" iddiası bu alanın **%37'sinde
+tutmuyor**.
 
 Bu tur oranı kaynağından (bankanın hesaplama ucundan) alır ve
 `data/raw/<banka>/rates/quotes.jsonl` altına provenance'lı yazar.

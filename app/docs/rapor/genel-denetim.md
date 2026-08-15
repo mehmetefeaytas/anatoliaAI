@@ -269,11 +269,16 @@ genişletilebilir; desen zaten yazılı.
 
 ### C. Ölçüm setinin kendisi dar
 
-`kar_payi_orani` gold.v2'de yalnız **3 karar** destekli (TP 1, FN 2) — oradan
-çıkan F1 yorumlanamaz. Korpusta da alan 70/1.774 belgede (%3,9). Bu bir
-model kısıtı değil **veri gerçeği**: bankalar oranları kampanya sayfalarında
-büyük ölçüde yayımlamıyor. Ama senaryonun kalp alanı bu, ve ölçülmemiş
-sayılır.
+`kar_payi_orani` gold.v2'de yalnız **3 karar** destekli — oradan çıkan F1
+yorumlanamaz. Korpusta da alan 70 belgede (%3,9) var. Bu bir model kısıtı
+değil **veri gerçeği**: bankalar oranları kampanya sayfalarında büyük ölçüde
+yayımlamıyor. Ama senaryonun kalp alanı bu, ve ölçülmemiş sayılır.
+
+> **Düzeltme (2026-08-15).** Bu paragraf "TP 1, FN 2" ve "70/1.774" diyordu;
+> ikisi de yanlıştı. Gerçek: **TP 2, FN 1** (F1 0,800, yine yorumlanamaz —
+> üç karar bir F1 taşımaz) ve payda **1.782**. Aynı %3,9 oranı üç ayrı
+> paydayla dolaştığı için (1.684 · 1.774 · 1.782) hata yakalanmamıştı. Sayı
+> artık `scripts/kanit_tazeligi.py` kapısına bağlıdır.
 
 ---
 
