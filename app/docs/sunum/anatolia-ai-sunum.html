@@ -1,0 +1,523 @@
+<title>Anatolia AI</title>
+
+<style>
+  :root{
+    --ink:#0A0E13; --ink-2:#121821; --ink-3:#1A222D;
+    --brass:#C8A15A; --brass-hi:#EBD4A0; --brass-dim:#6E5A33;
+    --slate:#8494A6; --chalk:#EEF1F5;
+    --ok:#5EA47B; --warn:#C98A3E; --stop:#B4534B;
+    --rule:rgba(200,161,90,.22);
+    --sans:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --pad:clamp(28px,6vw,110px);
+    --s1:clamp(13px,1.05vw,15px); --s2:clamp(16px,1.35vw,20px);
+    --s3:clamp(22px,2.1vw,32px); --s4:clamp(30px,3.4vw,54px);
+    --s5:clamp(40px,5.6vw,92px); --s6:clamp(56px,10vw,168px);
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+
+  body{
+    margin:0; background:var(--ink); color:var(--chalk);
+    font-family:var(--sans); font-size:var(--s2); line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    scroll-snap-type:y mandatory; overflow-y:auto; height:100vh;
+  }
+
+  .slayt{
+    min-height:100vh; scroll-snap-align:start; scroll-snap-stop:always;
+    padding:var(--pad); display:flex; flex-direction:column;
+    justify-content:center; position:relative; overflow:hidden;
+    border-top:1px solid rgba(255,255,255,.045);
+  }
+  .slayt:first-of-type{border-top:none}
+
+  /* ——— ortak öğeler ——— */
+  .goz{
+    font-family:var(--mono); font-size:var(--s1); letter-spacing:.16em;
+    text-transform:uppercase; color:var(--brass); margin:0 0 clamp(18px,2.4vw,34px);
+    display:flex; align-items:center; gap:14px;
+  }
+  .goz::after{content:""; flex:1; height:1px; background:var(--rule); max-width:180px}
+
+  h1,h2,h3{margin:0; text-wrap:balance; font-weight:600; letter-spacing:-.022em}
+  h1{font-size:var(--s5); line-height:1.02; letter-spacing:-.035em}
+  h2{font-size:var(--s4); line-height:1.08}
+  h3{font-size:var(--s3); line-height:1.2}
+
+  p{margin:0; max-width:62ch}
+  .yumusak{color:var(--slate)}
+  .buyuk{font-size:var(--s3); line-height:1.35; max-width:26ch}
+  em{color:var(--brass-hi); font-style:normal; font-weight:600}
+
+  /* kanıt satırı — bu decknin yapısal iddiası */
+  .kanit{
+    margin-top:auto; padding-top:clamp(22px,3vw,44px);
+    font-family:var(--mono); font-size:var(--s1); color:var(--slate);
+    display:flex; gap:12px; align-items:baseline; flex-wrap:wrap;
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+  .kanit b{color:var(--brass); font-weight:500; white-space:nowrap}
+  .kanit code{color:var(--chalk); opacity:.75; word-break:break-all}
+
+  .no{
+    position:absolute; top:var(--pad); right:var(--pad);
+    font-family:var(--mono); font-size:var(--s1); color:var(--brass-dim);
+    letter-spacing:.1em;
+  }
+
+  /* ——— düzen çeşitleri ——— */
+  .ikili{display:grid; grid-template-columns:repeat(12,1fr); gap:clamp(24px,4vw,72px); align-items:center}
+  .sol{grid-column:1/span 6} .sag{grid-column:8/span 5}
+  .tam{grid-column:1/span 12}
+
+  .rakam{
+    font-family:var(--mono); font-size:var(--s6); line-height:.86;
+    letter-spacing:-.05em; font-variant-numeric:tabular-nums;
+    color:var(--brass-hi); font-weight:500;
+  }
+  .rakam small{display:block; font-family:var(--sans); font-size:var(--s2);
+    letter-spacing:0; color:var(--slate); margin-top:18px; font-weight:400}
+
+  .izgara{display:grid; gap:clamp(14px,1.6vw,22px)}
+  .k4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .k3{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+  .k2{grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+
+  .kart{
+    background:var(--ink-2); border:1px solid rgba(255,255,255,.055);
+    border-radius:3px; padding:clamp(20px,2.2vw,30px);
+    display:flex; flex-direction:column; gap:10px;
+  }
+  .kart .etiket{
+    font-family:var(--mono); font-size:var(--s1); color:var(--brass);
+    letter-spacing:.12em; text-transform:uppercase;
+  }
+  .kart p{font-size:var(--s1); color:var(--slate); line-height:1.55; max-width:none}
+  .kart strong{color:var(--chalk); font-weight:600; font-size:var(--s2)}
+
+  .sayac{
+    font-family:var(--mono); font-size:clamp(32px,4.4vw,64px); line-height:1;
+    color:var(--brass-hi); font-variant-numeric:tabular-nums; font-weight:500;
+    letter-spacing:-.03em;
+  }
+
+  /* akış diyagramı */
+  .akis{display:flex; align-items:stretch; gap:0; flex-wrap:wrap; margin-top:clamp(16px,2vw,28px)}
+  .adim{
+    flex:1 1 150px; min-width:150px; padding:clamp(16px,1.8vw,24px);
+    border:1px solid rgba(255,255,255,.07); border-right:none;
+    background:linear-gradient(180deg,var(--ink-2),var(--ink));
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .adim:last-child{border-right:1px solid rgba(255,255,255,.07)}
+  .adim.vurgu{border-color:var(--rule); background:linear-gradient(180deg,rgba(200,161,90,.10),transparent)}
+  .adim .n{font-family:var(--mono); font-size:var(--s1); color:var(--brass-dim); letter-spacing:.1em}
+  .adim .b{font-weight:600; font-size:var(--s2); letter-spacing:-.01em}
+  .adim .a{font-family:var(--mono); font-size:12px; color:var(--slate); line-height:1.5}
+
+  /* karşılaştırma */
+  .kiyas{width:100%; border-collapse:collapse; font-size:var(--s1)}
+  .kiyas th,.kiyas td{padding:clamp(11px,1.2vw,17px) 14px; text-align:left; border-bottom:1px solid rgba(255,255,255,.06)}
+  .kiyas th{font-family:var(--mono); font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--brass); font-size:12px}
+  .kiyas td:not(:first-child){font-family:var(--mono); font-variant-numeric:tabular-nums; text-align:right}
+  .kiyas .biz{color:var(--brass-hi); font-weight:600}
+  .kiyas tbody tr:hover{background:rgba(255,255,255,.02)}
+  .sarma{overflow-x:auto}
+
+  /* zaman çizgisi */
+  .zaman{display:grid; gap:0; margin-top:clamp(18px,2.4vw,32px)}
+  .an{display:grid; grid-template-columns:minmax(96px,140px) 1fr; gap:clamp(18px,2.6vw,40px);
+      padding:clamp(15px,1.7vw,24px) 0; border-top:1px solid rgba(255,255,255,.06)}
+  .an:last-child{border-bottom:1px solid rgba(255,255,255,.06)}
+  .an .ne{font-family:var(--mono); font-size:var(--s1); color:var(--brass); letter-spacing:.06em}
+  .an .aciklama{color:var(--slate); font-size:var(--s1); line-height:1.55}
+  .an .aciklama b{color:var(--chalk); font-weight:600; display:block; font-size:var(--s2); margin-bottom:5px; letter-spacing:-.01em}
+
+  /* sohbet / ürün gösterimi */
+  .ekran{
+    background:var(--ink-2); border:1px solid rgba(255,255,255,.07);
+    border-radius:5px; overflow:hidden; font-size:var(--s1);
+  }
+  .ekran .cubuk{
+    padding:11px 16px; background:var(--ink-3); border-bottom:1px solid rgba(255,255,255,.06);
+    font-family:var(--mono); font-size:12px; color:var(--slate); letter-spacing:.05em;
+    display:flex; gap:8px; align-items:center;
+  }
+  .ekran .cubuk i{width:8px; height:8px; border-radius:50%; background:var(--brass-dim); display:block}
+  .ekran .govde{padding:clamp(18px,2vw,26px); display:flex; flex-direction:column; gap:14px}
+  .balon{padding:13px 16px; border-radius:4px; max-width:88%; line-height:1.55}
+  .soru{background:var(--ink-3); align-self:flex-end; color:var(--chalk)}
+  .cevap{background:rgba(200,161,90,.07); border-left:2px solid var(--brass); color:var(--chalk)}
+  .cevap .kaynak{
+    display:block; margin-top:10px; font-family:var(--mono); font-size:11px;
+    color:var(--brass); letter-spacing:.05em;
+  }
+  mark{background:rgba(200,161,90,.24); color:var(--brass-hi); padding:1px 4px; border-radius:2px}
+
+  .rozetler{display:flex; flex-wrap:wrap; gap:10px; margin-top:clamp(18px,2.2vw,30px)}
+  .rozet{
+    font-family:var(--mono); font-size:12px; letter-spacing:.08em;
+    padding:7px 13px; border:1px solid var(--rule); border-radius:2px;
+    color:var(--brass-hi); text-transform:uppercase;
+  }
+
+  .vurguc{
+    border-left:2px solid var(--brass); padding-left:clamp(18px,2vw,28px);
+    display:flex; flex-direction:column; gap:14px;
+  }
+
+  /* açılış & kapanış */
+  .sahne{align-items:flex-start; justify-content:center}
+  .marka{
+    font-family:var(--mono); font-size:var(--s1); letter-spacing:.34em;
+    text-transform:uppercase; color:var(--brass);
+  }
+  .imza{font-size:var(--s2); color:var(--slate); max-width:48ch}
+
+  /* hareket */
+  .gir{opacity:0; transform:translateY(16px); transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1)}
+  .slayt.acik .gir{opacity:1; transform:none}
+  .slayt.acik .gir:nth-child(2){transition-delay:.07s}
+  .slayt.acik .gir:nth-child(3){transition-delay:.14s}
+  .slayt.acik .gir:nth-child(4){transition-delay:.21s}
+  .slayt.acik .gir:nth-child(5){transition-delay:.28s}
+
+  @media (prefers-reduced-motion:reduce){
+    .gir{opacity:1; transform:none; transition:none}
+    body{scroll-snap-type:none}
+  }
+  @media (max-width:760px){
+    .sol,.sag,.tam{grid-column:1/span 12}
+    .adim{border-right:1px solid rgba(255,255,255,.07)}
+  }
+</style>
+
+<!-- 01 ————————————————————————————————————————————— -->
+<section class="slayt sahne">
+  <span class="no">01</span>
+  <p class="marka gir">Anatolia AI</p>
+  <h1 class="gir" style="margin:clamp(22px,3vw,40px) 0 clamp(18px,2.4vw,34px)">
+    Bir sayı yayımlamak kolaydır.<br><em>Onu savunmak</em> zordur.
+  </h1>
+  <p class="imza gir">
+    Katılım bankacılığı kampanya metinlerinden finansal bilgi çıkarımı —
+    ölçülen, kanıtlanan ve tamamen yerel çalışan bir Türkçe NLP sistemi.
+  </p>
+  <div class="rozetler gir">
+    <span class="rozet">TEKNOFEST 2026 · 2. Senaryo</span>
+    <span class="rozet">Apache-2.0</span>
+    <span class="rozet">On-premise</span>
+  </div>
+</section>
+
+<!-- 02 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">02</span>
+  <p class="goz gir">Problem</p>
+  <div class="ikili">
+    <div class="sol gir">
+      <h2>Aynı soru.<br>On farklı cevap biçimi.</h2>
+      <p class="yumusak" style="margin-top:22px">
+        "Hangi bankada en düşük kâr payı var?" sorusunun cevabı on ayrı sitede,
+        on ayrı cümle kalıbında ve çoğu zaman bir hesaplama aracının arkasında duruyor.
+      </p>
+    </div>
+    <div class="sag gir">
+      <div class="izgara k2" style="gap:12px">
+        <div class="kart"><span class="etiket">Banka A</span><strong>"İlk 6 ay masrafsız"</strong></div>
+        <div class="kart"><span class="etiket">Banka B</span><strong>"%1,99–%2,49 arası"</strong></div>
+        <div class="kart"><span class="etiket">Banka C</span><strong>"120 aya kadar vade"</strong></div>
+        <div class="kart"><span class="etiket">Banka D</span><strong>"Dosya masrafı yok*"</strong></div>
+      </div>
+    </div>
+  </div>
+  <div class="kanit"><b>ölçüldü →</b><code>1.782 belge · 10 katılım bankası · 6 tarama tarihi</code></div>
+</section>
+
+<!-- 03 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">03</span>
+  <p class="goz gir">Neden önemli</p>
+  <div class="ikili">
+    <div class="sol gir">
+      <div class="rakam">%3,9<small>Kâr payı oranı, korpusun yalnızca bu kadarında yazılı olarak geçiyor</small></div>
+    </div>
+    <div class="sag gir">
+      <h3>Senaryonun kalp alanı, sayfalarda yok.</h3>
+      <p class="yumusak" style="margin-top:16px">
+        Bankalar oranı HTML'de yayımlamıyor; değer, istemci tarafında çalışan bir
+        hesaplama aracının arkasında duruyor.
+      </p>
+      <p class="yumusak" style="margin-top:14px">
+        Bu bir model kısıtı değil — <em>ölçülmüş bir veri gerçeği</em>. Ve karşılaştırmayı
+        elle yapmayı imkânsız kılan şey tam olarak bu.
+      </p>
+    </div>
+  </div>
+  <div class="kanit"><b>kanıt →</b><code>70 / 1.782 belge · scripts.check_demo_db</code></div>
+</section>
+
+<!-- 04 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">04</span>
+  <p class="goz gir">Mevcut yaklaşımların açığı</p>
+  <h2 class="gir" style="max-width:20ch">Yüksek bir F1 ilan etmek kolaydır.</h2>
+  <div class="izgara k3 gir" style="margin-top:clamp(26px,3.4vw,48px)">
+    <div class="kart">
+      <span class="etiket">Sorun 1</span>
+      <strong>Tek parlak yüzde</strong>
+      <p>Bir alanı kaçırmak ile uydurmak aynı hata sayılıyor. Oysa biri bilgi eksikliği,
+         diğeri kullanıcıyı yanlış yönlendirme.</p>
+    </div>
+    <div class="kart">
+      <span class="etiket">Sorun 2</span>
+      <strong>Belirsizliği yazmamak</strong>
+      <p>Güven aralığı olmayan bir F1, kaç belgeyle ölçüldüğü bilinmeyen bir iddiadır.</p>
+    </div>
+    <div class="kart">
+      <span class="etiket">Sorun 3</span>
+      <strong>Bayat sayı</strong>
+      <p>Yayımlanan rakam ile onu üreten kod zamanla ayrışır ve bunu kimse fark etmez.</p>
+    </div>
+  </div>
+  <div class="kanit"><b>bizde ölçüldü →</b><code>kapı kurulduğu gün kendi belgelerimizde 8 sapma buldu</code></div>
+</section>
+
+<!-- 05 ————————————————————————————————————————————— -->
+<section class="slayt sahne">
+  <span class="no">05</span>
+  <p class="goz gir">Çözüm</p>
+  <h1 class="gir" style="max-width:17ch">
+    Ölçümü <em>kapıya</em> çeviren bir sistem.
+  </h1>
+  <p class="imza gir" style="margin-top:clamp(20px,2.6vw,34px); font-size:var(--s3); max-width:34ch; color:var(--chalk)">
+    Anatolia AI on bankanın kampanya metnini karşılaştırılabilir yapısal veriye
+    dönüştürür — ve yayımladığı her sayıyı üreten kanıtla eşleşmeye zorlar.
+  </p>
+</section>
+
+<!-- 06 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">06</span>
+  <p class="goz gir">Nasıl çalışıyor</p>
+  <h3 class="gir">Önce kural, sonra dil modeli — ve boşluk kalırsa <em>hiçbir şey</em>.</h3>
+  <div class="akis gir">
+    <div class="adim"><span class="n">01</span><span class="b">Topla</span><span class="a">config-driven · robots.txt · provenance</span></div>
+    <div class="adim"><span class="n">02</span><span class="b">Temizle</span><span class="a">TR-duyarlı ön işleme</span></div>
+    <div class="adim vurgu"><span class="n">03</span><span class="b">Çıkar</span><span class="a">kural (birincil) → LLM yalnız boşluklara</span></div>
+    <div class="adim"><span class="n">04</span><span class="b">Normalize et</span><span class="a">%1,89 → 1.89 · "12 ay" → 12</span></div>
+    <div class="adim"><span class="n">05</span><span class="b">Kıyasla</span><span class="a">adil kıyas + çelişki tespiti</span></div>
+    <div class="adim"><span class="n">06</span><span class="b">Sun</span><span class="a">pano + hibrit sohbet</span></div>
+  </div>
+  <p class="yumusak gir" style="margin-top:clamp(22px,2.6vw,34px); max-width:64ch">
+    Her değer bir <em>güven skoru</em> ve bir <em>kaynak aralığı</em> taşır.
+    Bilgi metinde yoksa sistem değer üretmez — <em>null</em> döner.
+  </p>
+  <div class="kanit"><b>kanıt →</b><code>verify_span(): text[start:end] == raw_value</code></div>
+</section>
+
+<!-- 07 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">07</span>
+  <p class="goz gir">Temel yetenekler</p>
+  <div class="izgara k4 gir">
+    <div class="kart"><span class="sayac">12</span><p><strong>alan</strong> — kâr payı, tutar, vade, taksit, tahsis ücreti, masraf, ödül, indirim, puan, süre, koşullar, hedef kitle</p></div>
+    <div class="kart"><span class="sayac">8</span><p><strong>kampanya türü</strong> — konut, taşıt, ihtiyaç finansmanı, kart, alışveriş puanı, yeni müşteri, yatırım ürünü, finansman</p></div>
+    <div class="kart"><span class="sayac">10<span style="color:var(--slate)">/10</span></span><p><strong>katılım bankası</strong> — BDDK Liste 77'nin tamamı, config'ten okunur</p></div>
+    <div class="kart"><span class="sayac">1.782</span><p><strong>gerçek belge</strong> — canlı toplandı, her biri kaynağına kadar izlenebilir</p></div>
+  </div>
+  <div class="kanit"><b>kanıt →</b><code>config/banks.yaml · kanıt zinciri CI kapısı</code></div>
+</section>
+
+<!-- 08 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">08</span>
+  <p class="goz gir">Teknik zemin</p>
+  <div class="ikili">
+    <div class="sol gir">
+      <h2>Tamamen yerel.<br>Tamamen açık.</h2>
+      <p class="yumusak" style="margin-top:20px">
+        Ücretli hiçbir API, servis ya da yazılım yok. Deterministik çekirdek
+        saf Python standart kütüphanesiyle koşar.
+      </p>
+      <div class="rozetler">
+        <span class="rozet">Apache-2.0</span>
+        <span class="rozet">Anahtarsız</span>
+        <span class="rozet">Docker Compose</span>
+      </div>
+    </div>
+    <div class="sag gir">
+      <div class="izgara" style="gap:12px">
+        <div class="kart"><span class="etiket">Ağsız kanıt</span><strong>14 / 14 adım</strong><p><code>--network none</code> içinde tüm test paketi, değerlendirme, ablasyon ve gecikme ölçümü koştu. Negatif kontrol <em>ve</em> onun pozitif kontrolü birlikte.</p></div>
+        <div class="kart"><span class="etiket">Bağımlılık envanteri</span><strong>96 paket · CycloneDX</strong><p>İzin listesi dışı ya da lisansı bilinmeyen bir paket girerse yapı düşer.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="kanit"><b>kanıt →</b><code>bash scripts/offline_proof.sh · make sbom lisans-kapisi</code></div>
+</section>
+
+<!-- 09 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">09</span>
+  <p class="goz gir">Farklılaştırıcı</p>
+  <h2 class="gir" style="max-width:22ch">Dört yenilik — dördü de <em>kod olarak</em>.</h2>
+  <div class="izgara k2 gir" style="margin-top:clamp(24px,3vw,40px)">
+    <div class="kart">
+      <span class="etiket">Yenilik 01</span><strong>Kanıt-tazeliği kapısı</strong>
+      <p>Yayımlanan her sayıyı üreten komutun çıktısıyla karşılaştırır. Ayrışırsa CI kırmızı yanar.
+         Ayrıca kanıtın <em>kendisinin</em> güncel olup olmadığını denetler — bayat bir rapordan
+         okunan bayat bir sayı, bayat bir README ile mükemmel uyum gösterir.</p>
+    </div>
+    <div class="kart">
+      <span class="etiket">Yenilik 02</span><strong>Bankalar arası çelişki tespiti</strong>
+      <p>"Masrafsız" diyen bir kampanyanın ücret tarifesinde tahsis ücreti alması gibi
+         <em>belgeler arası</em> çelişkileri yakalar.</p>
+    </div>
+    <div class="kart">
+      <span class="etiket">Yenilik 03</span><strong>Alan bazlı güven + kaynak vurgulama</strong>
+      <p>Her değer bir güven skoru ve belgede vurgulanan bir kanıt aralığı taşır.
+         Skor kalibre <em>edildi ve ölçüldü</em> — ECE 0,188.</p>
+    </div>
+    <div class="kart">
+      <span class="etiket">Yenilik 04</span><strong>Config-driven banka ekleme</strong>
+      <p>Yeni banka = tek yapılandırma bloğu. Statik, JS ve manuel toplama modları
+         aynı dosyadan okunur.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">10</span>
+  <p class="goz gir">Gerçek kullanım</p>
+  <div class="ikili">
+    <div class="sol gir">
+      <h3>Soruyu doğal dilde sorun.<br>Cevap <em>kaynağıyla</em> gelsin.</h3>
+      <p class="yumusak" style="margin-top:18px">
+        Yönlendirici, sayısal soruları yapısal sorguya, koşul sorularını belge erişimine
+        gönderir. Cevap veremediğinde <em>uydurmaz</em> — reddeder.
+      </p>
+      <div class="rozetler">
+        <span class="rozet">Reddetme doğruluğu 30/30</span>
+        <span class="rozet">Kaynak gösterme 1,000</span>
+      </div>
+    </div>
+    <div class="sag gir">
+      <div class="ekran">
+        <div class="cubuk"><i></i> anatolia · sohbet</div>
+        <div class="govde">
+          <div class="balon soru">36 ay vade veren konut finansmanlarında en düşük kâr payı hangi bankada?</div>
+          <div class="balon cevap">
+            Bu koşulu sağlayan üç kampanya var. En düşük oran <mark>%2,05</mark> —
+            ancak iki kampanya <em>doğrudan kıyaslanamaz</em>: oranları zaman koşullu.
+            <span class="kaynak">kaynak: 3 belge · güven 0,84 · kanıt vurgulandı</span>
+          </div>
+          <div class="balon soru">Bu bankanın 2027 faiz tahmini nedir?</div>
+          <div class="balon cevap">
+            Bu soruya kaynaklarımda cevap yok, bu yüzden tahmin üretmiyorum.
+            <span class="kaynak">reddedildi · eşik altı</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">11</span>
+  <p class="goz gir">Ölçülen sonuçlar</p>
+  <div class="izgara k4 gir">
+    <div class="kart"><span class="sayac">0,671</span><p><strong>yapılandırılmış alan mikro-F1</strong> — 11 alan, zor vaka setinde</p></div>
+    <div class="kart"><span class="sayac">0,047</span><p><strong>halüsinasyon oranı</strong> — 21 / 444 karar, ayrı paydayla</p></div>
+    <div class="kart"><span class="sayac">2.946</span><p><strong>yeşil test</strong> — 0 hata, ağ gerektirmeden</p></div>
+    <div class="kart"><span class="sayac">14/14</span><p><strong>ağsız kanıt adımı</strong> — temiz kaynak ağacında</p></div>
+  </div>
+  <p class="yumusak gir" style="margin-top:clamp(22px,2.8vw,36px); max-width:70ch">
+    12 alan mikro-F1'i <em>0,464</em> [%95 GA 0,398–0,522] — ve bu sayıyı düşüren alanı
+    gizlemiyoruz: serbest cümle listesi döndüren <em>kampanya koşulları</em>, span eşleşmesiyle
+    ölçülemez. İki sayıyı da yan yana yayımlıyoruz.
+  </p>
+  <div class="kanit"><b>kanıt →</b><code>python -m eval.run_eval --gold data/gold/gold.v2.json</code></div>
+</section>
+
+<!-- 12 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">12</span>
+  <p class="goz gir">Ayrıştığımız yer</p>
+  <h3 class="gir">Ölçüp <em>geri adım attığımız</em> kararlar.</h3>
+  <div class="sarma gir" style="margin-top:clamp(20px,2.4vw,32px)">
+    <table class="kiyas">
+      <thead><tr><th>Ne denendi</th><th>Ölçüm</th><th>Karar</th></tr></thead>
+      <tbody>
+        <tr><td>Çok-ajanlı LLM orkestrasyonu</td><td>0,575 &lt; 0,612 · p = 0,0117</td><td class="biz">reddedildi</td></tr>
+        <tr><td>Oransal ücretten tutar türetme</td><td>6 belgede metinde geçmeyen değer</td><td class="biz">kaldırıldı</td></tr>
+        <tr><td>BERTurk ince ayarı</td><td>kabul kapısını geçemedi</td><td class="biz">teslim edilmedi</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="yumusak gir" style="margin-top:clamp(20px,2.4vw,32px); max-width:62ch">
+    Üçü de çalıştı, üçü de ölçüldü, üçü de <em>kazanamadı</em>. Sonucu düzeltmeye
+    çalışmadık — ölçüldüğü gibi bıraktık ve karar bir testle kilitlendi.
+  </p>
+  <div class="kanit"><b>kanıt →</b><code>tests/test_orchestrator.py::test_varsayilan_hala_kural_degil_orkestra</code></div>
+</section>
+
+<!-- 13 ————————————————————————————————————————————— -->
+<section class="slayt">
+  <span class="no">13</span>
+  <p class="goz gir">Bundan sonrası</p>
+  <div class="zaman gir">
+    <div class="an"><span class="ne">yayında</span><div class="aciklama"><b>Açık altın veri seti</b>182 kayıt, sızıntısız eğitim/doğrulama/test bölmesiyle Hugging Face'te. Alanındaki ilk yayımlanmış Türkçe katılım bankacılığı altın seti.</div></div>
+    <div class="an"><span class="ne">sıradaki</span><div class="aciklama"><b>Bağımsız çapa</b>İkinci bir yerel model, hakem değil <em>çelişki avcısı</em> olarak: hiçbir etiketi değiştiremez, yalnız ayrışanları insan kuyruğuna taşır.</div></div>
+    <div class="an"><span class="ne">sonraki</span><div class="aciklama"><b>Tam yığın ağsız kanıt</b>Bugün kanıt API konteynerini kapsıyor. Hedef: Postgres, arayüz ve model servisi dâhil tüm yığının ağsız koşumu.</div></div>
+    <div class="an"><span class="ne">ölçek</span><div class="aciklama"><b>Yeni alan, tek blok</b>Config-driven yapı bankacılığın dışına da açık — sigorta ve telekom kampanyaları aynı hattan geçebilir.</div></div>
+  </div>
+</section>
+
+<!-- 14 ————————————————————————————————————————————— -->
+<section class="slayt sahne">
+  <span class="no">14</span>
+  <p class="marka gir">Anatolia AI</p>
+  <h1 class="gir" style="margin:clamp(22px,3vw,40px) 0 clamp(20px,2.6vw,36px); max-width:19ch">
+    Tek bir parlak yüzde vermiyoruz.
+  </h1>
+  <p class="buyuk gir" style="max-width:44ch; color:var(--chalk)">
+    Çünkü bir alanı <em>kaçırmak</em> ile <em>uydurmak</em> aynı hata değildir.
+  </p>
+  <div class="kanit" style="margin-top:clamp(34px,5vw,72px)">
+    <b>doğrula →</b><code>github.com/mehmetefeaytas/anatoliaAI · python -m scripts.kanit_tazeligi</code>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var slaytlar = document.querySelectorAll('.slayt');
+    if (!('IntersectionObserver' in window)) {
+      slaytlar.forEach(function (s) { s.classList.add('acik'); });
+      return;
+    }
+    var gozlemci = new IntersectionObserver(function (girisler) {
+      girisler.forEach(function (g) {
+        if (g.isIntersecting) g.target.classList.add('acik');
+      });
+    }, { threshold: 0.25 });
+    slaytlar.forEach(function (s) { gozlemci.observe(s); });
+
+    // Ok tuşlarıyla slayt geçişi — sunum sırasında klavye yeterli olsun.
+    document.addEventListener('keydown', function (e) {
+      var ileri = e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ';
+      var geri = e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp';
+      if (!ileri && !geri) return;
+      e.preventDefault();
+      var orta = window.innerHeight / 2, aktif = 0;
+      slaytlar.forEach(function (s, i) {
+        var k = s.getBoundingClientRect();
+        if (k.top <= orta && k.bottom > orta) aktif = i;
+      });
+      var hedef = Math.min(Math.max(aktif + (ileri ? 1 : -1), 0), slaytlar.length - 1);
+      slaytlar[hedef].scrollIntoView({ behavior: 'smooth' });
+    });
+  })();
+</script>
