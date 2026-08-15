@@ -144,9 +144,16 @@ def _yol_suzgeci() -> tuple[str, ...]:
 # olsaydı kapı sessizce bayat bir sayıyı onaylardı.
 OLCUM_ETKILEYEN = ("app/src", "app/eval", "app/config")
 
+# Eşik dosyaları ölçümü HESAPLAMAZ, yalnız sonucu KAPIYA sokar. Bir eşik
+# değiştiğinde ölçülen F1 aynı kalır; raporu bayat saymak, kapıyı gereksiz
+# yere ve sürekli kırmızı yakar. (Ölçüldü 2026-08-15: `esikler-round1.json`
+# eklenmesi bütün geçerli raporları geçersiz kıldı.)
+OLCUM_ETKILEMEYEN = (":(exclude)app/eval/reports",
+                     ":(exclude)app/eval/esikler*.json")
+
 
 def _olcum_suzgeci() -> tuple[str, ...]:
-    return (*OLCUM_ETKILEYEN, *TEST_ETKILEMEYEN)
+    return (*OLCUM_ETKILEYEN, *OLCUM_ETKILEMEYEN)
 
 
 def _kod_degisti_mi(sha: str) -> str | None:
