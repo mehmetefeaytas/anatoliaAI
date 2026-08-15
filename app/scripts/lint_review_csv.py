@@ -54,9 +54,11 @@ import json
 import re
 import sys
 from dataclasses import dataclass
-from typing import Any, Iterator
+from pathlib import Path
+from typing import Any, Callable, Iterator
 
 from scripts.gold_schema import (
+    CAMPAIGN_TYPE_KEY,
     PROTOCOL_V1,
     PROTOCOL_V2,
     GoldValidationError,
@@ -145,6 +147,30 @@ def _model_value(raw: str) -> tuple[Any, bool]:
         return raw, True
 
 
+def on_anotasyon_yukle(yol: str) -> dict[str, dict]:
+    """`--pre` havuzunu `doc_id -> belge` sözlüğüne çevirir.
+
+    Anahtar `build_gold.build` ile aynı olmalı (`pre["docs"]`, belge kimliği
+    `id`); ayrışırsa linter havuzda olmayan belge sanıp sessiz kalır.
+    """
+    veri = json.loads(Path(yol).read_text(encoding="utf-8"))
+    return {d["id"]: d for d in veri["docs"]}
+
+
+def _havuz_degeri(belge: dict, field: str) -> tuple[Any, bool]:
+    """Ön-anotasyon havuzunda bu alanın değeri -> (değer, üretildi mi)."""
+    if field == CAMPAIGN_TYPE_KEY:
+        deger = belge.get(CAMPAIGN_TYPE_KEY)
+        return deger, deger is not None
+    yuk = (belge.get("fields") or {}).get(field)
+    return (yuk.get("value") if yuk else None), yuk is not None
+
+
+def _jeton(deger: Any) -> str:
+    """Karşılaştırılabilir kanonik jeton — JSON anahtar sırasından bağımsız."""
+    return json.dumps(deger, sort_keys=True, ensure_ascii=False)
+
+
 def read_rows(path: str) -> tuple[list[dict], list[Finding]]:
     """CSV'yi okur. Elektronik tablodan gelen sayfa-adı satırını tespit eder.
 
@@ -182,11 +208,15 @@ def read_rows(path: str) -> tuple[list[dict], list[Finding]]:
     return rows, findings
 
 
-def check_row(row: dict, path: str, protocol: str = PROTOCOL_AUTO) -> Iterator[Finding]:
+def check_row(row: dict, path: str, protocol: str = PROTOCOL_AUTO,
+              pre: dict[str, dict] | None = None) -> Iterator[Finding]:
     """Tek satırı `build_gold` sözleşmesine göre denetler.
 
     Args:
         protocol: `v1` | `v2` | `auto`. `auto` satırın `protokol` sütununa bakar.
+        pre: `--pre` ile verilen ön-anotasyon havuzu. Verilirse `ok` satırlarında
+            CSV `model_value`'su havuzdakiyle karşılaştırılır (bayatlık ölçümü).
+            `None` ise bu kontrol atlanır — anotatörün elinde havuz olmayabilir.
     """
     line, doc_id, field = row["_line"], row.get("doc_id", ""), row.get("field", "")
     verdict = (row.get("verdict") or "").strip().casefold()
@@ -285,10 +315,57 @@ def check_row(row: dict, path: str, protocol: str = PROTOCOL_AUTO) -> Iterator[F
                 yield f(SEVERITY_ERROR,
                         f"model degeri onaylandi (bos verdict) ama kanonik degil: "
                         f"{err}")
+        # YALNIZ gerçek `ok` kararında. `effective` boş v2 satırlarını da `ok`
+        # sayar (geriye dönük v1 varsayımı) ama o satırlar gold'a hiç girmez —
+        # orada bayatlık uyarısı 95 satırlık gürültü üretiyordu (ölçüldü).
+        if verdict == "ok":
+            yield from _bayatlik(f, field, doc_id, model, has_model, pre)
+
+
+def _bayatlik(f: Callable[[str, str], Finding], field: str,
+              doc_id: str, model: Any, has_model: bool,
+              pre: dict[str, dict] | None) -> Iterator[Finding]:
+    """`ok` satırında CSV `model_value`'su ile ön-anotasyon havuzu ayrışıyor mu.
+
+    Ayrışma bir VERİ hatası değil, havuzun BAYATLADIĞININ ölçüsüdür. CSV'ler
+    `scripts/onanotasyon_tazele.py` ile güncel çıkarıcıya yenilenebiliyor;
+    havuz JSON'u yenilenmezse ikisi ayrışır.
+
+    Round1'de 59 hücrede ayrıştı (A 18 · B 19 · C 1 · D 21) ve o gün hiçbir
+    araç bunu görmedi: `build_gold` sessizce HAVUZU okuyor, anotatörün gördüğü
+    CSV'yi değil. Kod düzeltildi (`build_gold.resolve_decision`), ama ayrışmanın
+    kendisi hâlâ raporlanmalı — bir sonraki tur bayat havuzla dağıtılmasın.
+
+    Şiddet UYARI'dır, HATA değil: düzeltmeden sonra ayrışma gold'u bozmuyor.
+    HATA vermek `build_gold`'u DOĞRU veriyle durdururdu.
+    """
+    if pre is None:
+        return
+    belge = pre.get(doc_id)
+    if belge is None:      # havuzda olmayan belge — uyarı seli üretme
+        return
+    havuz, havuzda_var = _havuz_degeri(belge, field)
+    if not has_model and not havuzda_var:
+        return
+    if has_model and havuzda_var and _jeton(model) == _jeton(havuz):
+        return
+    if not has_model:
+        yield f(SEVERITY_WARN,
+                f"on-anotasyon BAYAT: `ok` satirinda CSV degeri BOS, havuzda "
+                f"{_jeton(havuz)[:40]} var. Anotator 'kontrol ettim, yok' dedi; "
+                f"gold `absent` yazar. Havuzu tazeleyin: scripts/preannotate.py")
+    else:
+        yield f(SEVERITY_WARN,
+                f"on-anotasyon BAYAT: `ok` satirinda CSV degeri "
+                f"{_jeton(model)[:40]}, havuzdaki deger "
+                f"{_jeton(havuz)[:40] if havuzda_var else '(yok)'}. Anotator "
+                f"CSV'dekini onayladi; gold CSV'yi alir "
+                f"(build_gold.resolve_decision).")
 
 
 def lint(paths: list[str], protocol: str = PROTOCOL_AUTO,
-         require_complete: bool = False) -> list[Finding]:
+         require_complete: bool = False,
+         pre: dict[str, dict] | None = None) -> list[Finding]:
     """Verilen CSV'leri denetler, bulguları döndürür.
 
     Args:
@@ -296,6 +373,7 @@ def lint(paths: list[str], protocol: str = PROTOCOL_AUTO,
         require_complete: v2 dosyalarında karar verilmemiş satır kalmışsa HATA
             üret. Anotasyon SÜRERKEN kapalıdır (uyarı yeter); `build_gold`
             öncesi KAPI olarak açılır — bkz. `--eksiksiz`.
+        pre: ön-anotasyon havuzu; verilirse bayatlık kontrolü açılır (`--pre`).
     """
     out: list[Finding] = []
     for path in paths:
@@ -304,7 +382,7 @@ def lint(paths: list[str], protocol: str = PROTOCOL_AUTO,
         if not rows:
             continue
         for row in rows:
-            out.extend(check_row(row, path, protocol))
+            out.extend(check_row(row, path, protocol, pre))
 
         unclear = sum(1 for r in rows
                       if (r.get("verdict") or "").strip().casefold() == "unclear")
@@ -366,10 +444,15 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--eksiksiz", action="store_true",
                     help="v2 dosyasinda karar verilmemis satir kalmissa HATA "
                          "ver (build_gold oncesi kapi)")
+    ap.add_argument("--pre", default=None,
+                    help="on-anotasyon JSON'u (build_gold'a verilenin AYNISI). "
+                         "Verilirse `ok` satirlarinda CSV model_value'su havuzla "
+                         "karsilastirilir ve ayrisma UYARI olarak raporlanir")
     args = ap.parse_args(argv)
 
     paths = sorted({p for pat in args.csv for p in (glob.glob(pat) or [pat])})
-    findings = lint(paths, args.protokol, args.eksiksiz)
+    pre = on_anotasyon_yukle(args.pre) if args.pre else None
+    findings = lint(paths, args.protokol, args.eksiksiz, pre)
     errors = [f for f in findings if f.severity == SEVERITY_ERROR]
     warns = [f for f in findings if f.severity == SEVERITY_WARN]
 

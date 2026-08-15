@@ -84,13 +84,13 @@ class BosHucreninAnlami(unittest.TestCase):
     """v1: boş = onay (modelin değeri gold'a girer). v2: boş = gold'a GİRMEZ."""
 
     def test_v1_bos_verdict_modelin_degerini_golda_yazar(self):
-        kind, value = build_gold.resolve_decision(_satir(), MODEL_VALUE, True)
+        kind, value = build_gold.resolve_decision(_satir())
         self.assertEqual(kind, "value")
         self.assertEqual(value, MODEL_VALUE)
 
     def test_v2_bos_verdict_golda_YAZMAZ(self):
         kind, value = build_gold.resolve_decision(
-            _satir(**{PROTOCOL_COLUMN: PROTOCOL_V2}), MODEL_VALUE, True)
+            _satir(**{PROTOCOL_COLUMN: PROTOCOL_V2}))
         self.assertEqual(
             kind, SKIPPED_DECISION,
             "v2'de boş hücre 'model doğru' sayılamaz — kılavuzun §3.1 ile "
@@ -104,8 +104,7 @@ class BosHucreninAnlami(unittest.TestCase):
         """
         self.assertNotEqual(SKIPPED_DECISION, "unclear")
         kind, _ = build_gold.resolve_decision(
-            _satir(verdict="unclear", **{PROTOCOL_COLUMN: PROTOCOL_V2}),
-            MODEL_VALUE, True)
+            _satir(verdict="unclear", **{PROTOCOL_COLUMN: PROTOCOL_V2}))
         self.assertEqual(kind, "unclear")
 
     def test_protokol_sutunu_yoksa_v1(self):
@@ -127,7 +126,7 @@ class KararYolPariteleri(unittest.TestCase):
             with self.subTest(protokol=protokol):
                 row = _satir(**{PROTOCOL_COLUMN: protokol})
 
-                kind, _ = build_gold.resolve_decision(row, MODEL_VALUE, True)
+                kind, _ = build_gold.resolve_decision(row)
                 gold_yazar = kind != SKIPPED_DECISION
 
                 iaa_karari = report_iaa.row_verdict(row)
@@ -146,7 +145,7 @@ class KararYolPariteleri(unittest.TestCase):
             for protokol in (PROTOCOL_V1, PROTOCOL_V2):
                 with self.subTest(verdict=verdict, protokol=protokol):
                     row = _satir(verdict=verdict, **{PROTOCOL_COLUMN: protokol})
-                    kind, _ = build_gold.resolve_decision(row, MODEL_VALUE, True)
+                    kind, _ = build_gold.resolve_decision(row)
                     self.assertNotEqual(kind, SKIPPED_DECISION)
                     self.assertEqual(report_iaa.row_verdict(row), verdict)
 
@@ -155,7 +154,7 @@ class KararYolPariteleri(unittest.TestCase):
         for protokol in (PROTOCOL_V1, PROTOCOL_V2):
             with self.subTest(protokol=protokol):
                 row = _satir(gold_value="36", **{PROTOCOL_COLUMN: protokol})
-                kind, value = build_gold.resolve_decision(row, MODEL_VALUE, True)
+                kind, value = build_gold.resolve_decision(row)
                 self.assertEqual(kind, "value")
                 self.assertEqual(value, 36)
                 self.assertEqual(report_iaa.row_verdict(row), "fix")

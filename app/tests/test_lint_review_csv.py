@@ -25,6 +25,7 @@ dayanıyor ve o davranış burada çitlenmiştir.
 from __future__ import annotations
 
 import csv
+import json
 import sys
 import tempfile
 import unittest
@@ -37,11 +38,12 @@ from scripts.lint_review_csv import (
     SEVERITY_WARN,
     lint,
     looks_like_range,
+    on_anotasyon_yukle,
 )
 
 COLS = ["doc_id", "bank", "field", "model_value", "model_conf",
         "confidence_source", "disagreement", "snippet", "gold_value",
-        "verdict", "note"]
+        "verdict", "note", "protokol"]
 
 
 def _write(rows: list[dict], *, sheet_name: str | None = None) -> str:
@@ -264,6 +266,103 @@ class TestGercekDosya(unittest.TestCase):
             self.skipTest("kalibrasyon A dosyası yok")
         errs = [f for f in lint([str(path)]) if f.severity == SEVERITY_ERROR]
         self.assertEqual(errs, [], f"kalibrasyon A'da hata: {errs}")
+
+
+class TestOnAnotasyonBayatligi(unittest.TestCase):
+    """`--pre`: `ok` satırında CSV değeri ile havuz ayrışıyor mu.
+
+    Round1'de 59 hücrede ayrıştı ve o gün HİÇBİR araç bunu görmedi. Sebep:
+    `build_gold` `ok` yolunda havuzu okuyordu, anotatörün gördüğü CSV'yi değil
+    (`scripts/onanotasyon_tazele.py` başlığı mekanizmayı zaten yazmıştı).
+    Kod düzeltildi; bu testler ayrışmanın SESSİZ kalmamasını çitler.
+
+    Şiddet bilerek UYARI'dır: düzeltmeden sonra ayrışma gold'u bozmuyor, HATA
+    vermek `build_gold`'u doğru veriyle durdururdu.
+    """
+
+    def _pre(self, alanlar: dict, doc_id: str = "kuveyt-turk--konut-finansmani",
+             campaign_type: str | None = None) -> str:
+        belge = {"id": doc_id, "fields": {a: {"value": d}
+                                          for a, d in alanlar.items()}}
+        if campaign_type is not None:
+            belge["campaign_type"] = campaign_type
+        tmp = tempfile.NamedTemporaryFile("w", suffix=".json", delete=False,
+                                          encoding="utf-8")
+        json.dump({"docs": [belge]}, tmp, ensure_ascii=False)
+        tmp.close()
+        return tmp.name
+
+    def _bayat(self, rows: list[dict], pre_yolu: str) -> list:
+        havuz = on_anotasyon_yukle(pre_yolu)
+        return [f for f in lint([_write(rows)], pre=havuz)
+                if "BAYAT" in f.message]
+
+    def test_pre_verilmezse_bayatlik_kontrolu_atlanir(self) -> None:
+        """`--pre` yoksa bugünkü davranış birebir korunur."""
+        rows = [_row(verdict="ok", model_value="1.89")]
+        self.assertEqual([f for f in lint([_write(rows)])
+                          if "BAYAT" in f.message], [])
+
+    def test_ok_satirinda_csv_ile_havuz_ayrisirsa_uyarir(self) -> None:
+        bulgular = self._bayat([_row(verdict="ok", model_value="1.89")],
+                               self._pre({"kar_payi_orani": 2.45}))
+        self.assertEqual(len(bulgular), 1, f"ayrışma yakalanmadı: {bulgular}")
+        self.assertEqual(bulgular[0].severity, SEVERITY_WARN)
+
+    def test_ok_satirinda_csv_bos_havuz_dolu_uyarir(self) -> None:
+        """Round1'in en zararlı kalıbı: onaylanmış YOKLUK değere çevriliyordu.
+
+        Anotatör boş hücreyi `ok` ile onaylamış = "kontrol ettim, yok".
+        Havuzda bir değer varsa gold o değeri yazardı.
+        """
+        bulgular = self._bayat([_row(verdict="ok", model_value="")],
+                               self._pre({"kar_payi_orani": 50.0}))
+        self.assertEqual(len(bulgular), 1)
+        self.assertIn("BOS", bulgular[0].message)
+
+    def test_ok_satirinda_csv_ile_havuz_ayni_ise_sessiz(self) -> None:
+        self.assertEqual(
+            self._bayat([_row(verdict="ok", model_value="1.89")],
+                        self._pre({"kar_payi_orani": 1.89})), [])
+
+    def test_bayatlik_JSON_anahtar_sirasindan_etkilenmez(self) -> None:
+        """`{"a":1,"b":2}` ile `{"b":2,"a":1}` aynı değerdir.
+
+        Sıraya duyarlı bir karşılaştırma `masraf_durumu`nun tamamını yanlış
+        pozitife çevirirdi.
+        """
+        row = _row(field="masraf_durumu", verdict="ok",
+                   model_value='{"amount": null, "has_fee": true}')
+        pre = self._pre({"masraf_durumu": {"has_fee": True, "amount": None}})
+        self.assertEqual(self._bayat([row], pre), [])
+
+    def test_fix_satirinda_bayatlik_kontrolu_yapilmaz(self) -> None:
+        """`fix`te model değeri zaten kullanılmıyor — uyarmak gürültüdür."""
+        rows = [_row(verdict="fix", model_value="1.89", gold_value="2.45")]
+        self.assertEqual(self._bayat(rows, self._pre({"kar_payi_orani": 9.9})), [])
+
+    def test_bos_verdict_v2_satirinda_kontrol_yapilmaz(self) -> None:
+        """Karar verilmemiş satır gold'a girmez; orada bayatlık ilgisizdir.
+
+        Bu kapı olmadan ölçüldü: 95 satırlık gürültü (`effective` boş v2
+        satırını da `ok` sayıyor).
+        """
+        rows = [_row(verdict="", model_value="1.89", protokol="v2")]
+        self.assertEqual(self._bayat(rows, self._pre({"kar_payi_orani": 9.9})), [])
+
+    def test_havuzda_olmayan_doc_id_sessizce_atlanir(self) -> None:
+        """Havuz eksikliği uyarı seli üretmemeli — o ayrı bir sorundur."""
+        rows = [_row(verdict="ok", model_value="1.89")]
+        pre = self._pre({"kar_payi_orani": 9.9}, doc_id="baska--belge")
+        self.assertEqual(self._bayat(rows, pre), [])
+
+    def test_bayatlik_HATA_degil_UYARI(self) -> None:
+        """Çıkış kodu 0 kalmalı: ayrışma artık gold'u bozmuyor."""
+        rows = [_row(verdict="ok", model_value="1.89")]
+        havuz = on_anotasyon_yukle(self._pre({"kar_payi_orani": 2.45}))
+        errs = [f for f in lint([_write(rows)], pre=havuz)
+                if f.severity == SEVERITY_ERROR]
+        self.assertEqual(errs, [], f"bayatlık HATA'ya yükselmiş: {errs}")
 
 
 class TestSeverityDegerleri(unittest.TestCase):

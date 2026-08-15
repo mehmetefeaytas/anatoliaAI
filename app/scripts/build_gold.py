@@ -153,8 +153,7 @@ def _clean(value: Optional[str]) -> str:
     return (value or "").strip()
 
 
-def resolve_decision(row: dict, model_value: Any, has_model_value: bool
-                     ) -> tuple[str, Any]:
+def resolve_decision(row: dict) -> tuple[str, Any]:
     """Tek satırı `(karar, değer)` ikilisine çevirir.
 
     karar: "value" | "absent" | "unclear" | "skipped"
@@ -166,8 +165,26 @@ def resolve_decision(row: dict, model_value: Any, has_model_value: bool
     (`gold_schema.row_protocol`, tek doğruluk kaynağı). Sütun yoksa v1 sayılır
     ve eski davranış korunur — geriye dönük hiçbir karar kaybolmaz.
 
+    ## `ok` kararında değer SATIRIN KENDİ `model_value`'sundan okunur
+
+    2026-08-15'e kadar bu fonksiyon ön-anotasyon havuzundan (`--pre`) gelen
+    değeri alıyordu. Sonuç ölçüldü: **59 hücrede** (A 18 · B 19 · C 1 · D 21)
+    gold'a, anotatörün EKRANDA HİÇ GÖRMEDİĞİ bir değer girdi.
+
+    Mekanizma `scripts/onanotasyon_tazele.py` başlığında zaten yazılıydı:
+    CSV'lerin `model_value` sütunu 8–9 Ağustos'ta bugünkü çıkarıcıyla tazelendi,
+    `preannotations.v2.json` ise 4 Ağustos'tan kalmaydı. 42 tarih sürüklemesinin
+    39'unda CSV bitiş tarihini (`2026-12-31`), havuz başlangıcı (`2026-01-01`)
+    tutuyordu; 14 `kar_payi_orani` hücresinin 14'ünde de CSV boştu ama havuz
+    `%50` gibi bir kâr PAYLAŞIM oranı taşıyordu (kılavuz §4.13/6 `absent` der).
+
+    Anotatörün onayı gördüğü değere aittir. `ok` "ekranda okuduğum değer doğru"
+    demektir; başka bir değeri onaylanmış saymak anotasyonu geçersiz kılar.
+    Aynı kaynağı `report_iaa.row_value_token` da kullanıyor — bu düzeltme gold'u
+    Krippendorff α ile aynı zemine oturtur.
+
     Raises:
-        BuildError: `gold_value` kanonik biçime çevrilemezse.
+        BuildError: `gold_value` ya da `model_value` kanonik biçime çevrilemezse.
     """
     verdict = _clean(row.get("verdict")).casefold()
     gold_raw = _clean(row.get("gold_value"))
@@ -206,11 +223,19 @@ def resolve_decision(row: dict, model_value: Any, has_model_value: bool
             raise BuildError(row["_file"], row["_line"], row.get("doc_id", ""),
                              field, str(exc)) from exc
 
-    # verdict == "ok"
-    if has_model_value:
-        return ("value", model_value)
-    # Model hiçbir şey üretmedi + anotatör onayladı = "kontrol ettim, YOK".
-    return ("absent", None)
+    # verdict == "ok" -> anotatörün ONAYLADIĞI değer, yani EKRANDA GÖRDÜĞÜ değer.
+    model_raw = _clean(row.get("model_value"))
+    if not model_raw:
+        # Model hiçbir şey üretmedi + anotatör onayladı = "kontrol ettim, YOK".
+        return ("absent", None)
+    try:
+        return ("value", parse_gold_value(field, model_raw))
+    except GoldValidationError as exc:
+        # `fix` kolundaki kapının ikizi. Kanonik olmayan bir `model_value`
+        # sessizce gold'a giremez; giderse ölçüm kendi çıktısını doğrular.
+        raise BuildError(row["_file"], row["_line"], row.get("doc_id", ""),
+                         field, f"verdict=ok ama model_value kanonik değil: "
+                                f"{exc}") from exc
 
 
 # --------------------------------------------------------------------------- #
@@ -289,16 +314,12 @@ def build(pre_path: str, csv_paths: list[str]) -> dict[str, Any]:
                                          f"bilinmeyen alan {field!r}"))
                 continue
 
-            if field == CAMPAIGN_TYPE_KEY:
-                model_value = docs[doc_id].get(CAMPAIGN_TYPE_KEY)
-                has_model_value = model_value is not None
-            else:
-                payload = (docs[doc_id].get("fields") or {}).get(field)
-                has_model_value = payload is not None
-                model_value = payload.get("value") if payload else None
-
+            # `--pre` havuzu burada ARTIK OKUNMUYOR: `ok` kararının değeri
+            # satırın kendi `model_value`'sundan gelir (bkz. `resolve_decision`
+            # docstring'i — 59 hücrede havuz ile CSV ayrışmıştı). Havuz yalnız
+            # belge kimliğini doğrulamak ve `kanit_alintisi` için kullanılır.
             try:
-                kind, value = resolve_decision(row, model_value, has_model_value)
+                kind, value = resolve_decision(row)
             except BuildError as exc:
                 errors.append(exc)
                 continue
