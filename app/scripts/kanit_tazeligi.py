@@ -138,6 +138,39 @@ def _yol_suzgeci() -> tuple[str, ...]:
     return (*TEST_ETKILEYEN, *TEST_ETKILEMEYEN)
 
 
+# Ölçüm SONUCUNU değiştirebilecek yollar. Gold'un sha'sını doğrulamak yetmez:
+# aynı gold, değişmiş bir çıkarıcıyla başka bir F1 üretir. 2026-08-15'te
+# yaşandı — R3 güven skorlarını değiştirdi ve eski rapor hâlâ "kanıt" sayılıyor
+# olsaydı kapı sessizce bayat bir sayıyı onaylardı.
+OLCUM_ETKILEYEN = ("app/src", "app/eval", "app/config")
+
+
+def _olcum_suzgeci() -> tuple[str, ...]:
+    return (*OLCUM_ETKILEYEN, *TEST_ETKILEMEYEN)
+
+
+def _kod_degisti_mi(sha: str) -> str | None:
+    """Rapor üretildiğinden beri çıkarım/ölçüm kodu değişti mi?
+
+    Döndürülen metin bir gerekçedir; `None` ise rapor hâlâ geçerlidir.
+    """
+    try:
+        fark = subprocess.run(
+            ["git", "-C", str(DEPO), "diff", "--name-only", sha, "HEAD",
+             "--", *_olcum_suzgeci()],
+            capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError) as exc:
+        return f"git diff koşulamadı: {exc}"
+    if fark.returncode != 0:
+        return f"raporun commit'i ({sha[:12]}…) bu geçmişte bulunamadı"
+    degisen = [s for s in fark.stdout.splitlines() if s.strip()]
+    if degisen:
+        return (f"rapor {sha[:12]}… commit'inde üretildi; o gün bugüne "
+                f"{len(degisen)} ölçüm/kaynak dosyası değişti "
+                f"(ör. {degisen[0]}) — ölçüm yeniden koşulmalı")
+    return None
+
+
 def _test_ozeti() -> dict[str, Any]:
     """`scripts/test_ozeti.py` artefaktı — üretildiğinden beri kaynak değişmediyse.
 
@@ -328,6 +361,11 @@ def taze_rapor(gold_dosya: str, matcher: str | None = None) -> OlcumRaporu:
         raise KanitYok(
             f"{taze.dizin.name}: `git_dirty=true` — kirli ağaçta üretilmiş rapor "
             f"kanıt değildir, tekrar üretilemez")
+    kod_sha = str(taze.env.get("git_sha") or "")
+    if kod_sha:
+        gerekce = _kod_degisti_mi(kod_sha)
+        if gerekce:
+            raise KanitYok(f"{taze.dizin.name}: {gerekce}")
     return taze
 
 

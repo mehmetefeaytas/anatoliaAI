@@ -262,3 +262,33 @@ class TestGercekIddiaListesi(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestKodTazeligi(unittest.TestCase):
+    """Gold'un sha'sı aynı kalsa da DEĞİŞMİŞ bir çıkarıcı başka F1 üretir.
+
+    GERÇEK depoda koşar (`_RaporTemeli` DEPO'yu geçici bir dizine yamalar ve
+    orası git deposu değildir).
+
+    2026-08-15'te yaşandı: R3 güven skorlarını değiştirdi. Bu denetim
+    olmasaydı kapı, eski koddan üretilmiş bir raporu "kanıt" sayıp bayat
+    bir sayıyı onaylayacaktı — hem de tam da bunu önlemek için var olduğu
+    hâlde.
+    """
+
+    def test_olcum_suzgeci_rapor_dizinini_dislar(self) -> None:
+        s = K._olcum_suzgeci()
+        self.assertIn("app/src", s)
+        self.assertIn("app/eval", s)
+        self.assertTrue(any(x.startswith(":(exclude)") for x in s),
+                        "eval/reports dışlanmazsa her rapor kendi kendini "
+                        "bayat yapar")
+
+    def test_bilinmeyen_commit_gerekce_dondurur(self) -> None:
+        self.assertIsNotNone(K._kod_degisti_mi("0" * 40))
+
+    def test_HEAD_ile_HEAD_arasinda_fark_yok(self) -> None:
+        import subprocess as sp
+        head = sp.run(["git", "-C", str(K.DEPO), "rev-parse", "HEAD"],
+                      capture_output=True, text=True, check=True).stdout.strip()
+        self.assertIsNone(K._kod_degisti_mi(head))
