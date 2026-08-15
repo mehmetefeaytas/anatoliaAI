@@ -254,14 +254,37 @@ def check_row(row: dict, path: str, protocol: str = PROTOCOL_AUTO) -> Iterator[F
                     "gold_value modelin degeriyle AYNI — `fix` 'bu deger "
                     "yanlis' demektir ve modeli haksiz yere yanlis gosterir. "
                     "Dogruysa bos birak, belirsizse unclear yaz.")
-    elif effective == "ok" and has_model:
-        # Boş bırakmak modelin değerini onaylamaktır; o değer kanonik değilse
-        # hata build_gold'un EN SONUNDAKİ validate_gold adımına kadar saklanır.
-        err = validate_canonical(field, model)
-        if err:
-            yield f(SEVERITY_ERROR,
-                    f"model degeri onaylandi (bos verdict) ama kanonik degil: "
-                    f"{err}")
+    elif effective == "ok":
+        if gold:
+            # `verdict=ok` + dolu `gold_value`: `row_value_token` ve `build_gold`
+            # `ok` yolunda MODEL degerini okur, yazilan gold_value'ya HIC
+            # bakmaz. Deger modelinkiyle ayniysa yalniz gurultudur; FARKLIYSA
+            # anotator bir duzeltme yazmistir ve o duzeltme sessizce yutulur.
+            # round1_B'de olculdu: 67 satirda `ok`/`absent` + dolu gold_value,
+            # 2'sinde deger modelden farkli.
+            try:
+                yazilan = parse_gold_value(field, gold)
+            except GoldValidationError:
+                yazilan = gold
+            if has_model and yazilan == model:
+                yield f(SEVERITY_WARN,
+                        "verdict=ok + dolu gold_value: deger modelinkiyle ayni, "
+                        "sistem zaten modeli okuyor. Hucreyi bos birakin — "
+                        "tekrar yazmak lint gurultusu uretir.")
+            else:
+                yield f(SEVERITY_ERROR,
+                        f"verdict=ok ama gold_value modelden FARKLI "
+                        f"({gold[:40]!r}). `ok` 'model dogru' demektir; "
+                        f"yazdiginiz deger SESSIZCE ATILIR. Duzeltmeyse "
+                        f"verdict=fix yapin, degilse hucreyi bosaltin.")
+        if has_model:
+            # Boş bırakmak modelin değerini onaylamaktır; o değer kanonik değilse
+            # hata build_gold'un EN SONUNDAKİ validate_gold adımına kadar saklanır.
+            err = validate_canonical(field, model)
+            if err:
+                yield f(SEVERITY_ERROR,
+                        f"model degeri onaylandi (bos verdict) ama kanonik degil: "
+                        f"{err}")
 
 
 def lint(paths: list[str], protocol: str = PROTOCOL_AUTO,

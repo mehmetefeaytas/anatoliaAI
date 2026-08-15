@@ -123,7 +123,10 @@ Sekiz tematik küme. "Test" sütunu AST sayımıdır. "Doğduğu kusur" sütunun
 | `test_kalem_duzeyi_puanlama.py` | `matchers.item_counts` | 13 | `kampanya_kosullari` her iki eşleştiricide 0,000 |
 | `test_kalibrasyon_hakemlik.py` | `kalibrasyon_hakemlik.py` | 26 | 472 hücreyi değiştiren araç yanlış düzeltiyordu |
 | `test_decisions_csv.py` | `decision_rows` kalıcılığı | 11 | kararlar yalnız bellekteydi |
-| `test_xlsx_to_review_csv.py` | Excel → CSV taşıması | 13 | `0.70`→`0.7`, κ hizası bozulması |
+| `test_xlsx_to_review_csv.py` | Excel → CSV taşıması | 18 | `0.70`→`0.7`, κ hizası bozulması, tarih→seri numarası |
+| `test_silver_parti.py` | Gümüş parti seçimi ve bölme | 5 | insan kararlı hücrenin partiye sızması |
+| `test_silver_birlestir.py` | Gümüş şema + alıntı kapısı | 10 | uydurma alıntının eğitim verisine girmesi |
+| `test_uyusmazlik_kalibi.py` | κ kaybının kalıp ayrımı | 8 | `24` ile `36`'yı yazım hatası sanmak |
 
 ### 2.5 Toplama ve veri katmanı (13 dosya · 231 test · 3.246 satır)
 
@@ -727,6 +730,29 @@ düzeltmek için yazıldığı hatanın aynısını üretiyordu.**
 aynı birimleri taşımaz ve **Fleiss κ hizasız** çıkar — üstelik sessizce."*
 Gerçek dosya regresyonu: `round0_kalibrasyon_B/C/D` → her birinde **tam 260
 satır**.
+
+**K-X25 · Tarih hücresi seri numarasına dönüyor** (`test_xlsx_to_review_csv.py`)
+Excel bir tarihi sayı olarak saklar; "bu bir tarihtir" bilgisi yalnız hücrenin
+BİÇİMİNDE durur. Biçime bakılmadan okunduğunda `2026-12-31` sessizce **`46387`**
+oluyordu — ayrıştırıcı sayıyı reddetmez, gold'a öyle girer. Ölçüldü
+(2026-08-15): `round1_B`'de **17**, `round1_main_D`'de **33** `kampanya_suresi`
+hücresi. Karşı test aynı derecede önemli: biçimi tarih OLMAYAN `46203` çevrilmez
+— `finansman_tutari` gerçekten 46.203 TL olabilir.
+
+**K-X26 · Gümüş etiket gold'un süzgecinden geçer** (`test_silver_birlestir.py`)
+Gümüş veri bir modeli EĞİTECEK; şema ihlali süzülmezse ihlal doğrudan modele
+öğretilir. `36-24-12` gibi çok değerli bir alan, `ok` olduğu hâlde dolu
+`gold_value`, ve **belgede birebir geçmeyen alıntı** reddedilir. Alıntı
+karşılaştırması boşluk/tırnak farkını görmezden gelir, yoksa gerçek alıntılar
+da düşerdi.
+
+**K-X27 · `24` ile `36` yazım hatası DEĞİLDİR** (`test_uyusmazlik_kalibi.py`)
+Kalıp ayrımı κ'yı hangi işin düzelteceğini söyler: `etiket-karisikligi` kılavuz
+revizyonuyla kapanır, `gercek-fark` hakemlik ister. İlk sürümde Levenshtein
+eşiği kısa değerlerde saçmalıyordu — `24` ile `36` arasındaki mesafe de 2'dir
+ve rapor 4 gerçek vade farkını "yazım hatası" saymıştı. Ayrıca `150000` ile
+`{"value": 150000, "currency": "TRY"}` aynı değerdir; `150000.0`/`150000`
+ayrışması bunları `gercek-fark` gösteriyordu.
 
 **K-ONARIM · En kritik testler ÜRETİLMEYEN önerilere ait** (`test_onarim_recetesi.py`)
 *"Linter'ı geçen ama gold'a yanlış değer sokan bir öneri, hatanın kendisinden

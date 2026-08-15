@@ -183,6 +183,36 @@ class TestVerdictSozlesmesi(unittest.TestCase):
         self.assertTrue(any("AYNI" in m for m in msgs), msgs)
 
 
+class TestOkArtiDoluGoldValue(unittest.TestCase):
+    """`verdict=ok` + dolu `gold_value` — yazılan değer SESSİZCE atılıyordu.
+
+    `row_value_token` ve `build_gold`, `ok` yolunda MODEL değerini okur;
+    hücreye yazılan gold_value'ya hiç bakmaz. Değer modelinkiyle aynıysa
+    yalnız gürültüdür, FARKLIYSA anotatörün düzeltmesi kaybolur ve kimse
+    fark etmez.
+
+    round1_B'de ölçüldü (2026-08-15): 67 satırda `ok`/`absent` + dolu
+    gold_value; 65'i modelle aynı (gürültü), 2'si farklı (kayıp).
+    """
+
+    def test_ok_ve_FARKLI_gold_value_HATA(self) -> None:
+        errs = _errors([_row(verdict="ok", gold_value="2.50")])
+        self.assertTrue(any("SESSIZCE ATILIR" in e.message for e in errs), errs)
+
+    def test_ok_ve_AYNI_gold_value_yalnizca_uyari(self) -> None:
+        msgs = _msgs([_row(verdict="ok", gold_value="1.89")])
+        self.assertTrue(any("sistem zaten modeli okuyor" in m for m in msgs), msgs)
+        self.assertEqual(_errors([_row(verdict="ok", gold_value="1.89")]), [])
+
+    def test_ok_ve_bos_gold_value_temiz(self) -> None:
+        self.assertEqual(_errors([_row(verdict="ok")]), [])
+
+    def test_model_bos_iken_ok_arti_deger_HATA(self) -> None:
+        """Model bir şey üretmediyse `ok` 'yok' demektir; değer yazmak çelişki."""
+        errs = _errors([_row(verdict="ok", model_value="", gold_value="2.05")])
+        self.assertTrue(any("SESSIZCE ATILIR" in e.message for e in errs), errs)
+
+
 class TestKanonikOnay(unittest.TestCase):
     def test_kanonik_olmayan_model_degeri_onaylanirsa_hata(self) -> None:
         """`{"rate": 0.5}` bir para değeri değil; boş verdict onu onaylıyor."""

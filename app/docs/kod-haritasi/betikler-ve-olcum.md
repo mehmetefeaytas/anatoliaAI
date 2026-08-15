@@ -1,7 +1,7 @@
 # Betikler ve Ölçüm — kod haritası
 
-> Kapsam: `scripts/` (42 `.py`, 16.082 satır + `offline_proof.sh` 397 satır) ve
-> `eval/` (9 `.py`, 3.817 satır). Hepsi okundu. Bu belge **referanstır**, öğretici
+> Kapsam: `scripts/` (54 `.py`, 19.138 satır + `offline_proof.sh` 397 satır) ve
+> `eval/` (11 `.py`, 4.895 satır). Hepsi okundu. Bu belge **referanstır**, öğretici
 > değil. Ölçülmüş sayılar kaynak dosyadaki biçimiyle aktarılmıştır; emin
 > olunmayan yerler `belirsiz` diye işaretlidir.
 >
@@ -48,7 +48,8 @@ Sütunlar: ne yapar · ne zaman koşulur · çıktısı nereye gider.
 | `lint_review_csv.py` (366) | İnceleme CSV'sini anotasyon anında denetler | Anotasyon sırasında + derleme öncesi kapı | ∅ (exit 1) |
 | `build_gold.py` (554) | Doldurulmuş CSV'ler → gold JSON + sha256 | Anotasyon bitince | → `data/gold/gold.v1.json(.sha256)`, `excluded.json`, `build_report.md` |
 | `report_iaa.py` (367) | κ + uyuşmazlık raporu (karar uyumu + değer uyumu) | Anotasyon bitince | → `data/gold/iaa_report.md` |
-| `xlsx_to_review_csv.py` (321) | Anotatörün `.xlsx`'inden **yalnız kararları** CSV'ye taşır | Anotatör dosya gönderince | → hedef CSV (+ `.yedek-xlsx-oncesi`) |
+| `xlsx_to_review_csv.py` (467) | Anotatörün `.xlsx`/`.csv`'sinden **yalnız kararları** CSV'ye taşır; tarih hücrelerini seri numarasından kurtarır | Anotatör dosya gönderince | → hedef CSV (+ `.yedek-xlsx-oncesi`) |
+| `uyusmazlik_kalibi.py` (283) | A–B uyuşmazlıklarını kalıplara ayırır: κ kaybının ne kadarı gerçek anlam farkı | κ eşiğin altında kalınca | → `data/gold/uyusmazlik_kaliplari_round1.md` |
 | `protokol_yukselt.py` (243) | CSV'yi v1 protokolünden v2'ye taşır (damgala / taşı) | Protokol geçişinde | → CSV (+ `.yedek-v1`) |
 | `onanotasyon_tazele.py` (239) | CSV'deki `model_value`'yu bugünkü çıkarıcıyla tazeler | Çıkarıcı düzelince, anotasyondan ÖNCE | → CSV (+ `.yedek-tazeleme`), `--degisim-raporu` |
 | `sample_gold_v2.py` (258) | gold.v2 aday havuzu — tabakalı, ayrık, deterministik örnekleme | Gold genişletmede | → `data/gold/gold.v2.aday.json`, `data/gold/parca/parca-N.json` |
@@ -69,6 +70,9 @@ Sütunlar: ne yapar · ne zaman koşulur · çıktısı nereye gider.
 | `boilerplate_audit.py` (908) | Çerçeve ayıklamasını yarışma korpusunda **ölçer**; değiştirmez | Mekanizmayı taşımadan önce | → `--rapor` md, `--jsonl` (varsayılan ∅) |
 | `build_silver.py` (305) | Gümüş hattı CLI: `prepare` / `prepare-verify` / `merge` / `score` | Gümüş turu | → `data/silver/{batch,silver,queue,rejected}.jsonl`, `silver_report.json` |
 | `run_silver_verifier.py` (241) | Üçüncü oyu **yerel** Ollama ile kullanır; kesintiye dayanıklı | `prepare-verify`den sonra | → `data/silver/verdicts_local.jsonl` (append) |
+| `silver_parti_hazirla.py` (154) | İnceleme CSV'lerinde **karar verilmemiş** hücrelerden gümüş parti çıkarır (12 alan; `build_silver` yalnız 8-sınıf) | Tur bitip boşluk kalınca | → `data/silver/round1_parti.jsonl` |
+| `silver_parti_bol.py` (73) | Partiyi **metin hacmine** göre dengeli kümelere böler (belge sayısına göre değil) | Paralel etiketleme öncesi | → `data/silver/parca/kume_NN.jsonl` |
+| `silver_birlestir.py` (191) | Parçaları birleştirir; her kaydı gold'un şema süzgecinden + **birebir alıntı** kapısından geçirir | Etiketleme bitince | → `data/silver/round1_silver.jsonl` (+ `.reddedilen.jsonl`) |
 | `resolve_queue.py` (329) | İnsan kuyruğunu sınıf kurallarına göre çözer; çözülemeyeni bırakır | `merge`den sonra | → `silver.jsonl` (append), `queue.jsonl`, `rejected_from_queue.jsonl` |
 | `crosscheck_rates.py` (617) | Kâr payı oranını bankanın **ilan ettiği** oranla çapraz doğrular | Anotasyon öncesi süzme | → `data/gold/rate_crosscheck.{csv,md}` |
 | `crosscheck_fees.py` (780) | "Masrafsız" iddiasını bankanın **ücret tarifesiyle** karşılaştırır | Çelişki taramasında | → `data/gold/fee_crosscheck.{csv,md}` |

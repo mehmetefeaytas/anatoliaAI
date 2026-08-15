@@ -1,4 +1,6 @@
-"""Anotatörün doldurduğu `.xlsx` dosyasından KARARLARI inceleme CSV'sine taşır.
+"""Anotatörün doldurduğu dosyadan KARARLARI inceleme CSV'sine taşır.
+
+Kaynak `.xlsx` **ya da** `.csv` olabilir; ikisi de aynı yolu izler.
 
 İlgili: scripts/protokol_yukselt.py (aynı taşıma felsefesi, farklı yön)
         scripts/to_review_csv.py (CSV üreteci — sütun sırası ve biçim oradan)
@@ -19,6 +21,13 @@ Dosyayı doğrudan CSV'ye çevirmek (Excel'in kendi "CSV olarak kaydet"i dahil)
 Üçüncüsü en tehlikelisidir: Fleiss κ dört dosyanın **birebir aynı satır
 kümesini** taşımasını şart koşar (`_atama.md`). Satır sırası kayarsa κ
 hizalanmaz ve bu hata sessizdir.
+
+Anotatör Excel'in kendi "CSV olarak kaydet"ini kullandığında dosya `.csv`
+uzantısıyla gelir ama **aynı bozulmaları taşır** — round1_A'da ölçüldü: BOM
+düştü, `gold_value` ile `verdict` arasına adsız bir sütun girdi (12 -> 13
+sütun). Böyle bir dosyayı hedefin üzerine kopyalamak üreteç sütunlarını da
+değiştirir. Bu yüzden `.csv` kaynak da `.xlsx` ile aynı kapıdan geçer: yalnız
+karar sütunları okunur, hedefin üreteç sütunlarına dokunulmaz.
 
 ## Çözüm: yalnız ANOTATÖR sütunları taşınır
 
@@ -46,11 +55,18 @@ numarası eklenir). CLAUDE.md "silme yok" kuralı burada da geçerlidir.
 ## Kullanım
 
     .venv/bin/python -m scripts.xlsx_to_review_csv \\
-        --xlsx data/gold/review/round0_kalibrasyon_B.xlsx \\
-        --csv  data/gold/review/round0_kalibrasyon_B.csv
+        --kaynak data/gold/review/round0_kalibrasyon_B.xlsx \\
+        --csv    data/gold/review/round0_kalibrasyon_B.csv
+
+    # anotatör CSV olarak kaydettiyse — aynı komut, farklı uzantı
+    .venv/bin/python -m scripts.xlsx_to_review_csv \\
+        --kaynak data/gold/review/round1_A_Etiketli.csv \\
+        --csv    data/gold/review/round1_A.csv
 
     # yazmadan ne olacağını gör
-    .venv/bin/python -m scripts.xlsx_to_review_csv --kuru --xlsx ... --csv ...
+    .venv/bin/python -m scripts.xlsx_to_review_csv --kuru --kaynak ... --csv ...
+
+`--xlsx` eski adıyla çalışmayı sürdürür (`--kaynak` ile eşanlamlı).
 
 Çıkış kodu: 0 taşındı · 1 satır kümesi uyuşmuyor / dosya okunamadı.
 """
@@ -63,7 +79,9 @@ import re
 import shutil
 import sys
 import zipfile
+from datetime import date, timedelta
 from pathlib import Path
+from typing import Optional
 from xml.etree import ElementTree as ET
 
 _ROOT = Path(__file__).resolve().parents[1]
@@ -78,6 +96,15 @@ from scripts.to_review_csv import (
 
 #: SpreadsheetML ad alanı.
 _NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
+
+#: Excel tarih başlangıcı. 1900 artık-yıl hatası yüzünden 1899-12-30'dur.
+_EXCEL_EPOCH = date(1899, 12, 30)
+
+#: Yerleşik tarih/saat biçim kimlikleri (ECMA-376 §18.8.30). Bunların dışında
+#: kalan özel biçimler `formatCode` içinde yıl (`yy`) arayarak tanınır.
+_YERLESIK_TARIH_BICIMLERI = frozenset(
+    {14, 15, 16, 17, 18, 19, 20, 21, 22, *range(27, 37), 45, 46, 47, *range(50, 59)}
+)
 
 #: Anotatörün doldurduğu sütunlar — YALNIZ bunlar `.xlsx`'ten alınır.
 KARAR_SUTUNLARI = ("gold_value", "verdict", "note")
@@ -100,6 +127,56 @@ def _sutun_indeksi(adres: str) -> int:
     return n - 1
 
 
+def _tarih_stilleri(z: zipfile.ZipFile) -> set[int]:
+    """Hangi stil indeksleri TARİH biçimlidir — `xl/styles.xml`'den okunur.
+
+    Excel bir tarihi sayı olarak saklar; "bu sayı bir tarihtir" bilgisi yalnız
+    hücrenin biçiminde durur. Biçime bakmadan okunursa `2026-12-31` sessizce
+    `46387` olur ve gold'a öyle girer (round1_B'de 17, round1_main_D'de 33
+    hücrede oldu).
+    """
+    if "xl/styles.xml" not in z.namelist():
+        return set()
+    kok = ET.fromstring(z.read("xl/styles.xml"))
+
+    ozel_tarih: set[int] = set()
+    for nf in kok.iter(f"{_NS}numFmt"):
+        kod = (nf.get("formatCode") or "").lower()
+        kimlik = nf.get("numFmtId")
+        # Köşeli parantezli bölümler renk/koşuldur (`[Red]`), biçim değil.
+        govde = re.sub(r"\[[^\]]*\]", "", kod)
+        if kimlik and "y" in govde:
+            ozel_tarih.add(int(kimlik))
+
+    stiller: set[int] = set()
+    xfs = kok.find(f"{_NS}cellXfs")
+    if xfs is None:
+        return stiller
+    for i, xf in enumerate(xfs.findall(f"{_NS}xf")):
+        kimlik = xf.get("numFmtId")
+        if kimlik is None:
+            continue
+        n = int(kimlik)
+        if n in _YERLESIK_TARIH_BICIMLERI or n in ozel_tarih:
+            stiller.add(i)
+    return stiller
+
+
+def _seri_tarihten_iso(ham: str) -> Optional[str]:
+    """Excel seri numarasını `YYYY-MM-DD`ye çevirir; çeviremezse `None`.
+
+    Saat bileşeni (ondalık kısım) ATILIR: inceleme CSV'lerinde tarih alanları
+    gün çözünürlüğündedir (`ANNOTATION_GUIDE` §4 — ISO-8601 tarih).
+    """
+    try:
+        gun = float(ham)
+    except (TypeError, ValueError):
+        return None
+    if not 1 <= gun <= 2_958_465:  # 1900-01-01 .. 9999-12-31
+        return None
+    return (_EXCEL_EPOCH + timedelta(days=int(gun))).isoformat()
+
+
 def xlsx_satirlari(yol: Path) -> list[list[str]]:
     """`.xlsx`'in ilk sayfasını satır listesi olarak döndürür.
 
@@ -114,6 +191,8 @@ def xlsx_satirlari(yol: Path) -> list[list[str]]:
             kok = ET.fromstring(z.read("xl/sharedStrings.xml"))
             for si in kok.findall(f"{_NS}si"):
                 paylasilan.append("".join(t.text or "" for t in si.iter(f"{_NS}t")))
+
+        tarih_stilleri = _tarih_stilleri(z)
 
         sayfalar = sorted(
             n for n in adlar if re.match(r"xl/worksheets/sheet\d+\.xml$", n)
@@ -137,6 +216,14 @@ def xlsx_satirlari(yol: Path) -> list[list[str]]:
             else:
                 v = c.find(f"{_NS}v")
                 deger = v.text if v is not None and v.text is not None else ""
+                # Hücre TARİH biçimliyse saklanan sayı bir seri numarasıdır.
+                # Ham okunursa `2026-12-31` yerine `46387` taşınır ve bu hata
+                # sessizdir — ayrıştırıcı sayıyı sorunsuz kabul eder.
+                stil = c.get("s")
+                if deger and stil is not None and int(stil) in tarih_stilleri:
+                    iso = _seri_tarihten_iso(deger)
+                    if iso is not None:
+                        deger = iso
             hucreler[idx] = deger
         if not hucreler:
             satirlar.append([])
@@ -177,6 +264,37 @@ def xlsx_kararlari(yol: Path) -> dict[tuple[str, str], dict[str, str]]:
     return kararlar
 
 
+def csv_kararlari(yol: Path) -> dict[tuple[str, str], dict[str, str]]:
+    """`(doc_id, field)` -> anotatör kararları — kaynak bir `.csv` olduğunda.
+
+    `xlsx_kararlari` ile aynı sözleşme. Sütunlar ADLARIYLA bulunur, sırayla
+    değil: Excel'den geçmiş bir CSV'de adsız bir sütun belirmiş olabilir
+    (round1_A'da oldu) ve indekse güvenmek kararları bir sütun kaydırır.
+    """
+    baslik, satirlar = _csv_oku(yol)
+    eksik = [a for a in (*ANAHTAR, *KARAR_SUTUNLARI) if a not in baslik]
+    if eksik:
+        raise ValueError(f"{yol}: başlıkta eksik sütun: {', '.join(eksik)}")
+
+    kararlar: dict[tuple[str, str], dict[str, str]] = {}
+    for satir in satirlar:
+        anahtar = (satir.get("doc_id", "").strip(), satir.get("field", "").strip())
+        if not anahtar[0]:
+            continue
+        kararlar[anahtar] = {s: (satir.get(s) or "").strip()
+                             for s in KARAR_SUTUNLARI}
+    return kararlar
+
+
+def kaynak_kararlari(yol: Path) -> dict[tuple[str, str], dict[str, str]]:
+    """Uzantıya göre `.xlsx` ya da `.csv` okuyucusuna yönlendirir."""
+    if yol.suffix.lower() == ".xlsx":
+        return xlsx_kararlari(yol)
+    if yol.suffix.lower() == ".csv":
+        return csv_kararlari(yol)
+    raise ValueError(f"{yol}: desteklenmeyen uzantı (.xlsx ya da .csv bekleniyor)")
+
+
 def _csv_oku(yol: Path) -> tuple[list[str], list[dict]]:
     with yol.open(encoding=CSV_ENCODING, newline="") as fh:
         okuyucu = csv.DictReader(fh, delimiter=CSV_DELIMITER)
@@ -199,13 +317,20 @@ def _yedekle(yol: Path) -> Path:
     return hedef
 
 
-def tasi(xlsx: Path, hedef_csv: Path, kuru: bool = False) -> dict:
-    """`.xlsx` kararlarını CSV'ye taşır; rapor sözlüğü döndürür.
+def tasi(xlsx: Path, hedef_csv: Path, kuru: bool = False,
+         kismi: bool = False) -> dict:
+    """Kaynak (`.xlsx` ya da `.csv`) kararlarını CSV'ye taşır; rapor döndürür.
 
     Satır kümesi ayrışıyorsa (anotatör satır silmiş/eklemiş) taşıma YAPILMAZ:
     eksik satırlar κ birimlerini hizasız bırakır ve bu hata sessizdir.
+
+    `kismi=True` bu kapıyı **bilerek** açar: yalnız kesişen satırlar taşınır,
+    dışarıda kalanlar raporda sayılır. Yalnız κ'ya girmeyecek bir dosya için
+    kullanılır — round1_main_C'de anotatör kendi dağıtımı yerine derlediği bir
+    kümeyi doldurdu ve 201 kararının 33'ü hedefte karşılık buldu. Hizasız bir
+    dosyayı κ'ya sokmak sayıyı anlamsız kılar; emeği çöpe atmak da gereksiz.
     """
-    kararlar = xlsx_kararlari(xlsx)
+    kararlar = kaynak_kararlari(xlsx)
     baslik, satirlar = _csv_oku(hedef_csv)
 
     csv_anahtarlari = {(r.get("doc_id", ""), r.get("field", "")) for r in satirlar}
@@ -224,9 +349,17 @@ def tasi(xlsx: Path, hedef_csv: Path, kuru: bool = False) -> dict:
         "note_dolu": 0,
         "ustune_yazilan": [],
         "yedek": None,
+        "kismi": kismi,
+        "disarida_kalan_dolu": 0,
     }
-    if rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]:
+    if (rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]) and not kismi:
         return rapor
+
+    if kismi:
+        # Hedefte karşılığı olmayan DOLU kararlar — taşınamayanın ölçüsü.
+        rapor["disarida_kalan_dolu"] = sum(
+            1 for a in (xlsx_anahtarlari - csv_anahtarlari)
+            if any(kararlar[a].get(s) for s in KARAR_SUTUNLARI))
 
     for satir in satirlar:
         anahtar = (satir.get("doc_id", ""), satir.get("field", ""))
@@ -269,7 +402,13 @@ def tasi(xlsx: Path, hedef_csv: Path, kuru: bool = False) -> dict:
 
 def _yazdir(rapor: dict) -> None:
     print(f"  {Path(rapor['xlsx']).name} -> {Path(rapor['csv']).name}")
-    if rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]:
+    if (rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]) and rapor.get("kismi"):
+        print("  KISMİ TAŞIMA — satır kümesi uyuşmuyor, yalnız kesişim taşındı.")
+        print(f"    kaynakta var, hedefte yok : {len(rapor['csvde_olmayan'])} satır")
+        print(f"      bunlardan DOLU olan     : {rapor['disarida_kalan_dolu']} karar "
+              f"(TAŞINMADI)")
+        print(f"    hedefte var, kaynakta yok : {len(rapor['xlsxte_olmayan'])} satır")
+    elif rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]:
         print("  SATIR KÜMESİ UYUŞMUYOR — taşıma YAPILMADI.")
         for etiket, anahtar in (("xlsx'te var, CSV'de yok", "csvde_olmayan"),
                                 ("CSV'de var, xlsx'te yok", "xlsxte_olmayan")):
@@ -297,20 +436,27 @@ def _yazdir(rapor: dict) -> None:
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("--xlsx", required=True, help="anotatörün gönderdiği .xlsx")
+    ap.add_argument("--kaynak", "--xlsx", dest="kaynak", required=True,
+                    help="anotatörün gönderdiği .xlsx ya da .csv")
     ap.add_argument("--csv", required=True, help="hedef inceleme CSV'si")
     ap.add_argument("--kuru", action="store_true", help="yazmadan dene")
+    ap.add_argument("--kismi", action="store_true",
+                    help="satır kümesi uyuşmasa da kesişimi taşı — κ'ya "
+                         "GİRMEYECEK dosyalar için")
     args = ap.parse_args(argv)
 
-    xlsx, hedef = Path(args.xlsx), Path(args.csv)
+    xlsx, hedef = Path(args.kaynak), Path(args.csv)
+    if xlsx.resolve() == hedef.resolve():
+        print("HATA: kaynak ve hedef aynı dosya", file=sys.stderr)
+        return 1
     for p in (xlsx, hedef):
         if not p.exists():
             print(f"HATA: dosya yok: {p}", file=sys.stderr)
             return 1
 
-    rapor = tasi(xlsx, hedef, kuru=args.kuru)
+    rapor = tasi(xlsx, hedef, kuru=args.kuru, kismi=args.kismi)
     _yazdir(rapor)
-    if rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]:
+    if (rapor["csvde_olmayan"] or rapor["xlsxte_olmayan"]) and not args.kismi:
         return 1
     if args.kuru:
         print("  (kuru koşu — dosya YAZILMADI)")

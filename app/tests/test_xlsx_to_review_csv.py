@@ -240,6 +240,140 @@ class TestBozukGirdi(_Temel):
         self.assertEqual(X._sutun_indeksi("AB12"), 27)
 
 
+def _xlsx_tarihli_yaz(yol: Path, baslik: list[str], satirlar: list[list],
+                      tarih_sutunlari: set[int]) -> None:
+    """Belirtilen sütunları TARİH biçimli sayı hücresi olarak yazan `.xlsx`.
+
+    Excel bir tarihi böyle saklar: değer bir seri numarasıdır, "bu bir tarihtir"
+    bilgisi yalnız hücrenin stilinde durur.
+    """
+    ns = "http://schemas.openxmlformats.org/spreadsheetml/2006/main"
+    dizgeler: list[str] = []
+    yer: dict[str, int] = {}
+
+    def idx(s: str) -> int:
+        if s not in yer:
+            yer[s] = len(dizgeler)
+            dizgeler.append(s)
+        return yer[s]
+
+    govde = []
+    for r, satir in enumerate([baslik, *satirlar], start=1):
+        hucreler = []
+        for c, deger in enumerate(satir):
+            if deger == "":
+                continue
+            ad = chr(ord("A") + c) + str(r)
+            if r > 1 and c in tarih_sutunlari:
+                # stil 1 -> cellXfs[1] -> numFmtId=14 (yerleşik tarih)
+                hucreler.append(f'<c r="{ad}" s="1"><v>{deger}</v></c>')
+            else:
+                hucreler.append(f'<c r="{ad}" t="s"><v>{idx(str(deger))}</v></c>')
+        govde.append(f'<row r="{r}">{"".join(hucreler)}</row>')
+
+    sheet = (f'<?xml version="1.0"?><worksheet xmlns="{ns}"><sheetData>'
+             f'{"".join(govde)}</sheetData></worksheet>')
+    ss_govde = "".join(f"<si><t>{s}</t></si>" for s in dizgeler)
+    ss = (f'<?xml version="1.0"?><sst xmlns="{ns}" count="{len(dizgeler)}" '
+          f'uniqueCount="{len(dizgeler)}">{ss_govde}</sst>')
+    styles = (f'<?xml version="1.0"?><styleSheet xmlns="{ns}"><cellXfs count="2">'
+              f'<xf numFmtId="0"/><xf numFmtId="14"/></cellXfs></styleSheet>')
+
+    with zipfile.ZipFile(yol, "w") as z:
+        z.writestr("xl/worksheets/sheet1.xml", sheet)
+        z.writestr("xl/sharedStrings.xml", ss)
+        z.writestr("xl/styles.xml", styles)
+
+
+class TestExcelSeriTarihi(_Temel):
+    """Tarih hücresi seri numarası olarak taşınırsa gold sessizce bozulur.
+
+    Ölçüldü (2026-08-15): `round1_B.xlsx`'te 17, `round1_main_D`'de 33
+    `kampanya_suresi` hücresi `2026-12-31` yerine `46387` olarak taşınmıştı.
+    Ayrıştırıcı sayıyı reddetmez — hata sessizdir.
+    """
+
+    def test_tarih_bicimli_hucre_ISO_tarihe_cevrilir(self) -> None:
+        _csv_yaz(self.csv, [_satir("d1", "kampanya_suresi")])
+        _xlsx_tarihli_yaz(
+            self.xlsx, BASLIK,
+            [["d1", "test", "kampanya_suresi", "12", "0.70", "rule", "",
+              "…metin…", 46387, "fix", ""]],
+            tarih_sutunlari={8},   # gold_value
+        )
+        X.tasi(self.xlsx, self.csv)
+        self.assertEqual(_csv_oku(self.csv)[0]["gold_value"], "2026-12-31")
+
+    def test_tarih_bicimsiz_sayi_OLDUGU_GIBI_kalir(self) -> None:
+        """Biçimi tarih olmayan sayı çevrilmez — `finansman_tutari` 46203 olabilir."""
+        _csv_yaz(self.csv, [_satir("d1", "finansman_tutari")])
+        _xlsx_tarihli_yaz(
+            self.xlsx, BASLIK,
+            [["d1", "test", "finansman_tutari", "12", "0.70", "rule", "",
+              "…metin…", 46203, "fix", ""]],
+            tarih_sutunlari=set(),
+        )
+        X.tasi(self.xlsx, self.csv)
+        self.assertEqual(_csv_oku(self.csv)[0]["gold_value"], "46203")
+
+
+class TestCsvKaynak(_Temel):
+    """Anotatör Excel'den CSV kaydettiğinde de yalnız KARAR sütunları taşınır.
+
+    round1_A'da ölçüldü: BOM düştü ve `gold_value` ile `verdict` arasına adsız
+    bir sütun girdi (12 -> 13 sütun). Dosyayı hedefin üzerine kopyalamak üreteç
+    sütunlarını da değiştirirdi.
+    """
+
+    def test_adsiz_sutunlu_CSV_kararlari_dogru_sutuna_duser(self) -> None:
+        _csv_yaz(self.csv, [_satir("d1", "vade_ay"), _satir("d2", "vade_ay")])
+        kaynak = self.d / "round0_X_Etiketli.csv"
+        # BOM yok + gold_value ile verdict arasında ADSIZ sütun
+        bozuk = ["doc_id;bank;field;model_value;model_conf;confidence_source;"
+                 "disagreement;snippet;gold_value;;verdict;note",
+                 "d1;test;vade_ay;12;0.7;rule;;…metin…;36;;fix;dikkat",
+                 "d2;test;vade_ay;12;0.7;rule;;…metin…;;;ok;"]
+        kaynak.write_text("\r\n".join(bozuk) + "\r\n", encoding="utf-8")
+
+        X.tasi(kaynak, self.csv)
+        satirlar = {r["doc_id"]: r for r in _csv_oku(self.csv)}
+        self.assertEqual(satirlar["d1"]["verdict"], "fix")
+        self.assertEqual(satirlar["d1"]["gold_value"], "36")
+        self.assertEqual(satirlar["d1"]["note"], "dikkat")
+        self.assertEqual(satirlar["d2"]["verdict"], "ok")
+        # Üreteç sütunu Excel'in bozduğu değerle DEĞİŞMEZ.
+        self.assertEqual(satirlar["d1"]["model_conf"], "0.70")
+
+
+class TestKismiTasima(_Temel):
+    """`--kismi` yalnız κ'ya GİRMEYECEK dosyalar için kapıyı açar."""
+
+    def _hizasiz_kur(self) -> None:
+        _csv_yaz(self.csv, [_satir("d1", "vade_ay"), _satir("d2", "vade_ay")])
+        _xlsx_yaz(self.xlsx, [
+            BASLIK,
+            ["d1", "test", "vade_ay", "12", "0.7", "rule", "", "…", "36", "fix", ""],
+            # d9 hedefte YOK -> satır kümesi ayrışıyor
+            ["d9", "test", "vade_ay", "12", "0.7", "rule", "", "…", "48", "fix", ""],
+        ])
+
+    def test_kismi_OLMADAN_tasima_yapilmaz(self) -> None:
+        self._hizasiz_kur()
+        rapor = X.tasi(self.xlsx, self.csv)
+        self.assertTrue(rapor["csvde_olmayan"])
+        self.assertEqual(rapor["yazilan"], 0)
+        self.assertEqual(_csv_oku(self.csv)[0]["verdict"], "")
+
+    def test_kismi_ILE_kesisim_tasinir_disarida_kalan_SAYILIR(self) -> None:
+        self._hizasiz_kur()
+        rapor = X.tasi(self.xlsx, self.csv, kismi=True)
+        self.assertEqual(rapor["yazilan"], 1)
+        self.assertEqual(rapor["disarida_kalan_dolu"], 1)
+        satirlar = {r["doc_id"]: r for r in _csv_oku(self.csv)}
+        self.assertEqual(satirlar["d1"]["gold_value"], "36")
+        self.assertEqual(satirlar["d2"]["verdict"], "")
+
+
 class TestGercekDosyalar(unittest.TestCase):
     """Ekipten gelen gerçek `.xlsx` dosyaları hâlâ okunabiliyor mu."""
 
