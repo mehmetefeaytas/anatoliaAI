@@ -89,20 +89,48 @@ def git_sha(repo_root: Path | None = None) -> str | None:
     return sha or None
 
 
+# Ölçümün KENDİ çıktısı. Bunlar türetilmiş veridir: değişmeleri, raporlanan
+# sayının tekrar üretilebilirliğini etkilemez.
+TURETILMIS_YOLLAR = ("app/eval/reports/",)
+
+
 def git_dirty(repo_root: Path | None = None) -> bool | None:
-    """Çalışma ağacında commit'lenmemiş değişiklik var mı?
+    """Çalışma ağacında commit'lenmemiş **kaynak** değişikliği var mı?
 
     `True` ise raporlanan sayı bir commit'e karşılık GELMEZ; sha tek başına
     yeterli değildir ve bu bilgi gizlenmemeli.
+
+    Ölçümün kendi çıktısı (`eval/reports/`) hesaba KATILMAZ ve bu bir
+    gevşetme değil, düzeltmedir: her koşu o dizine yazdığı için bayrak
+    özyinelemeli olarak `True`ya kilitleniyordu — bir koşu kirli olmasa bile
+    bir öncekinin çıktısı yüzünden kirli görünüyordu. Ölçülmüş sonucu:
+    2026-08-12 tarihli gold.v2 raporu `git_dirty=true` ile damgalandı ve
+    kanıt-tazeliği kapısı onu haklı olarak reddetti — oysa kusur o koşumda
+    değil, bu bayraktaydı.
+
+    Kaynak, test ve yapılandırma değişikliği ise SAYILIR; onlar sayının
+    tekrar üretilebilirliğini gerçekten bozar.
     """
     root = repo_root or Path(__file__).resolve().parents[2]
     try:
+        # `--untracked-files=all`: git izlenmeyen bir DİZİNİ tek satıra
+        # toplar (`?? app/eval/`). Önek eşleşmesi o satırı kaçırır ve
+        # türetilmiş çıktı kirlilik sayılır. Dosya bazında listelemek bu
+        # belirsizliği kaldırır.
         out = subprocess.run(
-            ["git", "status", "--porcelain"], cwd=str(root),
-            capture_output=True, text=True, check=True, timeout=10)
+            ["git", "status", "--porcelain", "--untracked-files=all"],
+            cwd=str(root),
+            capture_output=True, text=True, check=True, timeout=30)
     except (OSError, subprocess.SubprocessError):
         return None
-    return bool(out.stdout.strip())
+    for satir in out.stdout.splitlines():
+        yol = satir[3:].strip().strip('"')
+        if not yol:
+            continue
+        if any(yol.startswith(t) for t in TURETILMIS_YOLLAR):
+            continue
+        return True
+    return False
 
 
 def sha256_file(path: str | Path) -> str | None:

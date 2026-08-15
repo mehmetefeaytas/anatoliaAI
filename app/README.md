@@ -196,12 +196,21 @@ Bu ayrım metriklerden önce gelir ve **birleştirilerek sunulmaz**:
 | set | n | kim etiketledi | hakemlik |
 |---|---|---|---|
 | `gold.v1` | 20 | **insan** anotatör | ✅ geçti (2 kayıt düzeltildi) |
-| `gold.v2` | 48 | **makine** anotatör (M1–M4), her belge birebir alıntı kanıtıyla | ❌ **insan hakemliği bekliyor** (`adjudicated: false`) |
+| `gold.v2` | 48 | **makine** anotatör (M1–M4), her belge birebir alıntı kanıtıyla | ❌ hakemlik yok (`adjudicated: false`) |
+| `gold.round1` | 134 | **makine** anotatör (A–D), protokol v2 | 🟠 **makine kör hakem** — 38 kayıt (`adjudicated: true`); insan hakemliği YOK |
 
 Yukarıdaki 0,452 **gold.v2 üzerinde** ölçüldü, yani **insan hakemliğinden
 geçmemiş** bir sette. Bunu gizlemek yerine yazıyoruz çünkü alternatifi
 (0,677'yi manşete koymak) daha kötü — o da modele çapalı bir protokolden
 geliyor. İkisi de kısıtlıdır ve ikisi de kısıtıyla birlikte sunulur.
+
+**`gold.round1`'deki hakemlik makine hakemliğidir.** 41 uyuşmazlık, yalnız
+kendi alanının kılavuz paragrafını gören ve birbirinden habersiz çalışan
+kör hakemlerce karara bağlandı; 18 hücre şema onarımından geçti. Bu
+protokol, hakemin A ya da B ile **hem karar hem değer** olarak örtüşmesini
+şart koşuyor — üçüncü bir cevap hiçbir tarafa dokunmuyor. Yine de **insan
+hakemliğinin yerine geçmez** ve öyle sunulmuyor: `adjudicated: true`
+bayrağı "hakemlikten geçti" der, "insan onayladı" demez.
 
 **Bu, kapatılması gereken en öncelikli açıktır.** Anotasyon kanıt kapılıydı
 (her değer metinde birebir geçen bir alıntıya bağlı, programatik
