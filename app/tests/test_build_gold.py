@@ -36,7 +36,14 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from scripts import build_gold
-from scripts.gold_schema import PROTOCOL_COLUMN, PROTOCOL_V2, SKIPPED_DECISION
+from scripts.gold_schema import (
+    CAMPAIGN_TYPE_KEY,
+    PROTOCOL_COLUMN,
+    PROTOCOL_V2,
+    SKIPPED_DECISION,
+)
+from scripts.hakemlik_uygula import DAMGA as HAKEMLIK_DAMGASI
+from scripts.sema_onarimi_uygula import DAMGA as SEMA_ONARIMI_DAMGASI
 
 
 def _satir(**kwargs) -> dict:
@@ -98,6 +105,112 @@ class OkKarariCSVdenOkunur(unittest.TestCase):
             _satir(verdict="", model_value="36"))
         self.assertEqual(kind, SKIPPED_DECISION)
         self.assertIsNone(value)
+
+
+def _kayit(**alanlar_ve_notlar: str):
+    """Tek belgelik `_assemble` koşusu -> üretilen GoldRecord.
+
+    `alanlar_ve_notlar`: alan adı -> o hücrenin `note`'u. Değer hep aynı;
+    ölçülen şey NOT'un bayrağa etkisi.
+    """
+    doc_id = "albaraka--ornek"
+    docs = {doc_id: {"id": doc_id, "text": "36 ay vade", "fields": {}}}
+    decisions = {
+        (doc_id, alan): [("A", "value", 36, not_)]
+        for alan, not_ in alanlar_ve_notlar.items()
+    }
+    records, _, _ = build_gold._assemble(docs, decisions, {doc_id: ["A"]})
+    return records[0]
+
+
+class HakemlikDamgasiAdjudicatedYazar(unittest.TestCase):
+    """`adjudicated` gerçeği söylemeli — 2026-08-15'e kadar HİÇ set edilmiyordu.
+
+    `gold.round1.json`'un 134/134 kaydı "hakemlik yapılmadı" diyordu; oysa
+    round1'de 41 uyuşmazlık üçüncü bir gözden geçmişti ve izi `notes`ta
+    duruyordu. Bayrak o izden okunur.
+    """
+
+    def test_damga_tek_dogruluk_kaynagindan_gelir(self) -> None:
+        """Sabit KOPYALANMAZ, damgayı yazan betiklerden içe aktarılır.
+
+        Kopya bir sabit ayrışırsa bayrak sessizce yanlış olur ve kimse fark
+        etmez — bu depoda ölçülmüş bir hata sınıfı (bkz. `report_iaa` başlığı).
+        """
+        self.assertEqual(
+            build_gold.hakemlik_damgalari(),
+            (HAKEMLIK_DAMGASI, SEMA_ONARIMI_DAMGASI))
+
+    def test_hakemlik_damgali_hucre_adjudicated_yapar(self) -> None:
+        record = _kayit(vade_ay=f"{HAKEMLIK_DAMGASI} B->A (kor hakem onayi)")
+        self.assertTrue(record.adjudicated)
+
+    def test_sema_onarimi_damgasi_da_adjudicated_yapar(self) -> None:
+        record = _kayit(vade_ay=f"{SEMA_ONARIMI_DAMGASI} taksonomi disi deger")
+        self.assertTrue(record.adjudicated)
+
+    def test_damgasiz_kayit_adjudicated_DEGIL(self) -> None:
+        """Varsayılan `False` bir iddiadır ve doğru olmak zorundadır."""
+        record = _kayit(vade_ay="anotatör notu, damga yok")
+        self.assertFalse(record.adjudicated)
+
+    def test_bos_notlu_kayit_adjudicated_DEGIL(self) -> None:
+        record = _kayit(vade_ay="")
+        self.assertFalse(record.adjudicated)
+
+    def test_tek_damgali_hucre_kaydin_tamamini_isaretler(self) -> None:
+        """Bayrak KAYIT düzeyindedir: bir hücre yetiyor, hepsi gerekmiyor."""
+        record = _kayit(
+            vade_ay="",
+            taksit_sayisi=f"{HAKEMLIK_DAMGASI} A->B (kor hakem onayi)",
+        )
+        self.assertTrue(record.adjudicated)
+
+    def test_campaign_type_hucresindeki_damga_da_sayilir(self) -> None:
+        """`campaign_type` en kalabalık uyuşmazlık alanıydı (n=47, 17 uyuşmazlık).
+
+        O hücre `_assemble`'da `pop`lanıyor ve notu hiçbir yere yazılmıyor;
+        bayrak popdan sonra hesaplanırsa oradaki hakemlik görünmez olur.
+        """
+        doc_id = "albaraka--ornek"
+        docs = {doc_id: {"id": doc_id, "text": "36 ay vade", "fields": {}}}
+        decisions = {
+            (doc_id, CAMPAIGN_TYPE_KEY): [
+                ("A", "value", "Konut Finansmanı",
+                 f"{HAKEMLIK_DAMGASI} B->A (kor hakem onayi)")],
+            (doc_id, "vade_ay"): [("A", "value", 36, "")],
+        }
+        records, _, _ = build_gold._assemble(docs, decisions, {doc_id: ["A"]})
+        self.assertTrue(records[0].adjudicated)
+
+
+class DamgaKismiEslesmeyleTetiklenmez(unittest.TestCase):
+    """Çıplak alt-dize araması `#hakemlik-round10`'u da yakalardı."""
+
+    def test_uzun_tur_numarasi_eslesmez(self) -> None:
+        self.assertFalse(
+            build_gold.hakemlik_damgali(f"{HAKEMLIK_DAMGASI}0 baska bir tur"))
+
+    def test_damganin_uzatilmis_hali_eslesmez(self) -> None:
+        self.assertFalse(
+            build_gold.hakemlik_damgali(f"{SEMA_ONARIMI_DAMGASI}-taslak"))
+        self.assertFalse(
+            build_gold.hakemlik_damgali(f"{HAKEMLIK_DAMGASI}_eski"))
+
+    def test_baska_etiketin_ortasina_dusen_dize_eslesmez(self) -> None:
+        self.assertFalse(
+            build_gold.hakemlik_damgali(f"#on{HAKEMLIK_DAMGASI}"))
+
+    def test_kismi_eslesme_kayda_adjudicated_YAZMAZ(self) -> None:
+        record = _kayit(vade_ay=f"{HAKEMLIK_DAMGASI}0 baska bir tur")
+        self.assertFalse(record.adjudicated)
+
+    def test_gercek_damga_metnin_icinde_de_yakalanir(self) -> None:
+        """Damga notun başına da sonuna da düşebilir (`onceki_not | damga`)."""
+        self.assertTrue(
+            build_gold.hakemlik_damgali(f"anotatör notu | {HAKEMLIK_DAMGASI}"))
+        self.assertTrue(
+            build_gold.hakemlik_damgali(f"{HAKEMLIK_DAMGASI} B->A · ek not"))
 
 
 if __name__ == "__main__":

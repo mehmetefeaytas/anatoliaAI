@@ -3,13 +3,14 @@
 > `scripts/build_gold.py` üretti. Elle düzenlemeyin.
 
 - Çıktı: `data/gold/gold.round1.recall.json`
-- SHA-256: `fe554ef76760b099dff2e944cbeec470691c04ae9d189049ccf145416695dc20`
+- SHA-256: `a27d4ac1fe8183f6de77ec13041d604c937317bdca18373d6792cd82f8cc87bf`
 - Kayıt: **134**
 - Çift anote edilmiş kayıt: **46**
 - 12/12 alan karara bağlı (recall ÖLÇÜLEBİLİR): **5**
 - Kampanya sayılmayıp elenen belge: **10**
 - Çelişki (anotatörler ayrıştı): **11**
 - Hakemlik bekleyen kayıt: **13**
+- Hakemlikten/şema onarımından geçmiş kayıt (`adjudicated`): **38** — damgalar: `#hakemlik-round1`, `#sema-onarimi-round1`
 - Kanıtlı alan (`field_spans`): **133/157** (%84.7)
 
 ## Protokol künyesi

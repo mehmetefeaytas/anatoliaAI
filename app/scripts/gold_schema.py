@@ -515,6 +515,12 @@ class GoldRecord:
     absent_fields  : "kontrol ettim, bu belgede YOK" (precision'ın tanımı)
     unclear_fields : anotatör karar veremedi -> metrik dışı, hakemliğe düşer
     hard_tags      : çok etiketli zor-vaka kategorileri (HARD_TAGS)
+    adjudicated    : bu kaydın EN AZ BİR hücresi hakemlikten ya da şema
+                     onarımından geçti. `build_gold` bunu `notes`taki damgadan
+                     okur (`build_gold.hakemlik_damgali`); damgayı yazan
+                     `hakemlik_uygula` (kör MAKİNE hakemi) ve
+                     `sema_onarimi_uygula`dır — insan hakemliği DEĞİLDİR.
+                     Kimin ne yaptığı `notes`ta olduğu gibi durur.
 
     `field_spans` YALNIZCA `fields` için anlamlıdır: yokluğun (absent) ya da
     belirsizliğin (unclear) alıntısı olmaz — gösterilecek bir şey yoktur.

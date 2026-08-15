@@ -70,6 +70,7 @@ import json
 import re
 import sys
 from collections import Counter, defaultdict
+from functools import lru_cache
 from pathlib import Path
 from typing import Any, Optional
 
@@ -102,6 +103,53 @@ DEFAULT_REPORT = "data/gold/build_report.md"
 DEFAULT_EXCLUDED = "data/gold/excluded.json"
 
 _ANNOTATOR_RE = re.compile(r"^round\d*_(?:main_|kalibrasyon_)?(.+)$", re.IGNORECASE)
+
+
+# --------------------------------------------------------------------------- #
+# Hakemlik damgası -> `adjudicated`
+# --------------------------------------------------------------------------- #
+# `adjudicated` 2026-08-15'e kadar HİÇ set edilmiyordu: `gold.round1.json`'un
+# 134/134 kaydı "hakemlik yapılmadı" diyordu, oysa round1'de 41 uyuşmazlık
+# üçüncü bir gözden geçmişti. Bayrağın tek dürüst kaynağı, o geçişi hücreye
+# yazan damgadır (`note` sütunu).
+#
+# Damga KİMİN karar verdiğini gizlemez: `hakemlik_uygula` kör MAKİNE hakemliği,
+# `sema_onarimi_uygula` şema onarımıdır; ikisi de insan hakemliği DEĞİLDİR ve
+# `notes` alanı gold'da olduğu gibi durur, okuyan ayırt edebilir.
+
+
+@lru_cache(maxsize=1)
+def hakemlik_damgalari() -> tuple[str, ...]:
+    """Hakemlik/onarım damgalarının tek doğruluk kaynağı — damgayı YAZAN betikler.
+
+    İçe aktarma neden gövdede: `hakemlik_uygula` -> `report_iaa` -> `build_gold`
+    döngüsü var; modül başında import etmek `build_gold`u yarı kurulmuş hâlde
+    yakalar ve `report_iaa`nın `infer_annotator` importu patlar. Sabiti buraya
+    KOPYALAMAK da çözüm değil: bu depoda "aynı sabitin iki kopyası ayrışır"
+    ölçülmüş bir hata sınıfıdır (bkz. `report_iaa` modül başlığı).
+    """
+    from scripts.hakemlik_uygula import DAMGA as HAKEMLIK_DAMGASI
+    from scripts.sema_onarimi_uygula import DAMGA as SEMA_ONARIMI_DAMGASI
+
+    return (HAKEMLIK_DAMGASI, SEMA_ONARIMI_DAMGASI)
+
+
+@lru_cache(maxsize=1)
+def _damga_re() -> re.Pattern[str]:
+    """Damgaları TAM etiket olarak arayan desen.
+
+    Kenarlıklar şart: `#hakemlik-round1` deseni çıplak arandığında
+    `#hakemlik-round10` ya da `#hakemlik-round1-taslak` de eşleşir ve gold'a
+    yanlış bayrak yazılır. Etiketin bittiği yerde harf/rakam/`_`/`-` olamaz;
+    başladığı yerde de bir etiketin ortasına düşmüş olamaz.
+    """
+    govde = "|".join(re.escape(d) for d in hakemlik_damgalari())
+    return re.compile(rf"(?<![\w#-])(?:{govde})(?![\w-])")
+
+
+def hakemlik_damgali(note: Optional[str]) -> bool:
+    """Not bir hakemlik/şema-onarımı damgası taşıyor mu?"""
+    return bool(note) and _damga_re().search(note) is not None
 
 
 def infer_annotator(path: str | Path) -> str:
@@ -399,6 +447,16 @@ def _assemble(docs: dict[str, dict],
         doc = docs[doc_id]
         per_field = by_doc[doc_id]
 
+        # 0) Hakemlik izi — `campaign_type` DAHİL her hücrenin notuna bakılır.
+        # `campaign_type` az sonra `pop`lanıyor ve notu hiçbir yere yazılmıyor;
+        # bayrağı popdan SONRA hesaplamak, round1'in en kalabalık uyuşmazlık
+        # alanındaki (n=47, 17 uyuşmazlık) hakemliği görünmez kılardı.
+        adjudicated = any(
+            hakemlik_damgali(note)
+            for entries in per_field.values()
+            for *_, note in entries
+        )
+
         # 1) Kampanya türü — `absent` = "bu belge bir kampanya DEĞİL".
         campaign_type = None
         type_entries = per_field.pop(CAMPAIGN_TYPE_KEY, None)
@@ -428,6 +486,7 @@ def _assemble(docs: dict[str, dict],
             content_hash=doc.get("content_hash"),
             campaign_type=campaign_type,
             annotators=sorted(doc_annotators.get(doc_id, [])),
+            adjudicated=adjudicated,
         )
 
         hard_tags: list[str] = []
@@ -505,6 +564,9 @@ def write_report(path: str | Path, result: dict, records: list[GoldRecord],
         f"- Çelişki (anotatörler ayrıştı): **{len(result['conflicts'])}**",
         f"- Hakemlik bekleyen kayıt: "
         f"**{sum(1 for r in records if r.needs_adjudication)}**",
+        f"- Hakemlikten/şema onarımından geçmiş kayıt (`adjudicated`): "
+        f"**{sum(1 for r in records if r.adjudicated)}** "
+        f"— damgalar: {', '.join('`' + d + '`' for d in hakemlik_damgalari())}",
         f"- Kanıtlı alan (`field_spans`): **{kanitli}/{deger_sayisi}**"
         + (f" (%{100 * kanitli / deger_sayisi:.1f})" if deger_sayisi else ""),
         "",

@@ -68,6 +68,16 @@ from scripts.to_review_csv import (
 KARAR_SUTUNLARI = ("gold_value", "verdict", "note")
 VARSAYILAN_RAPOR = "data/gold/review/_hakemlik-degisim-round1.md"
 
+# Damga — bu betiğin dokunduğu her hücrenin `note`'una düşer ve gold'da
+# `adjudicated: true` bayrağını tetikleyen İZDİR (bkz. `build_gold`).
+# Kardeş sabit: `sema_onarimi_uygula.DAMGA`.
+#
+# Modül düzeyinde duruyor ki tüketiciler (build_gold, testler) KOPYALAMAK
+# yerine içe aktarsın: bu depoda "aynı sabitin iki kopyası ayrışır" ölçülmüş
+# bir hata sınıfıdır (bkz. `report_iaa` modül başlığı, `tests/
+# test_protokol_paritesi.py`).
+DAMGA = "#hakemlik-round1"
+
 
 def _oku(yol: Path) -> tuple[list[str], list[dict]]:
     with yol.open(encoding=CSV_ENCODING, newline="") as fh:
@@ -178,7 +188,7 @@ def uygula(a_yolu: Path, b_yolu: Path, hakem_yolu: Path,
         for sutun in ("gold_value", "verdict"):
             hedef[sutun] = kaynak.get(sutun, "")
         onceki_not = (hedef.get("note") or "").strip()
-        damga = f"#hakemlik-round1 {kaybeden}->{kazanan} (kor hakem onayi)"
+        damga = f"{DAMGA} {kaybeden}->{kazanan} (kor hakem onayi)"
         hedef["note"] = f"{onceki_not} | {damga}" if onceki_not else damga
 
         rapor["degisiklik"].append({

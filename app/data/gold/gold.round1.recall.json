@@ -50,7 +50,7 @@
       "B",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kar_payi_orani": "Metinde %0 (vade farksız) ile başlayan ve vade/tutar dilimlerine göre %3,95'e kadar değişen kâr oranları bulunmaktadır.",
@@ -114,7 +114,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "hedef_kitle": "Metin KOBİ Dış Ticaret bölümünde yer almakta olup, hedef kitle yurt dışı ticaret yapan KOBİ / işletme müşterileridir."
@@ -143,7 +143,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "Farklı tutarlarda farklı vade oranları var | #hakemlik-round1 A->B (kor hakem onayi) | Metinde Finansman tutarı 50.000 TL'ye kadar olan ödemelerinizi 36 aya, 50.000 TL üstünde ise 24 aya kadar vadelendirebilir ifadesi geçtiği için gold value tek değer alabildiğinden 36"
@@ -189,7 +189,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -223,7 +223,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kar_payi_orani": "Kampanya dışı | #hakemlik-round1 A->B (kor hakem onayi) | Model  kar_payi_orani alanını doğru şekilde boş bırakmış. Metinde kar_payi_orani bulunmuyor.",
@@ -394,7 +394,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kampanya_kosullari": "Metin Albaraka Tarım Bankacılığı ürün tanıtım sayfasıdır, kampanya koşulu içermemektedir. Model ürün özelliklerini kampanya koşulu olarak hatalı üretmiştir. | #hakemlik-round1 B->A (kor hakem onayi)",
@@ -441,7 +441,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -488,7 +488,7 @@
       "B",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kar_payi_orani": "Model  kar_payi_orani alanını doğru şekilde boş bırakmış. Metinde kar_payi_orani bulunmuyor.",
@@ -542,7 +542,7 @@
     "annotators": [
       "D"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "model, vade_ay değerine 12 yazarak hata yapmıştır. Doğru değer veri metninde de yazdığı gibi vadesiz anlamına gelen {\"has_fee\": false,\"amount\": 0} olacaktır. | #sema-onarimi-round1 Model 12 üretti; kaynak, çerez aydınlatma metnindeki _ga çerezinin '1 yıl' saklama süresidir - kampanya/ürün vadesi değil. Sayfadaki hesapların hepsi vadesiz cari hesaptır, dolayısıyla vade_ay yok. Anotatörün yazdığı {has_fee/amount} masraf_durumu biçimidir, vade_ay pozitif tamsayı alır; o biçim bu alana yazılamaz."
@@ -648,7 +648,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "12 ay olarak gözüken kısım aslında kvkk metni | Metinde vade süresi ile ilgili bir bilgi yer almamaktadır",
@@ -767,7 +767,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "finansman_tutari": "Metindeki 10000 TL finansman tutarı değil katılım hesabı açılış limitidir | #sema-onarimi-round1 Anotatörün gerekçesi doğru ama kararı yanlış kodlanmış: fix + boş gold_value derlemeyi durdurur. Belge bir katılma hesabını anlatıyor, finansman kullandırımı yok; modelin gösterdiği 10.000 TL 'Minimum Açılış Tutarı'dır. Model dolu değer üretti, kampanyaya ait finansman tutarı yok -> absent.",
@@ -898,7 +898,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false
   },
   {
@@ -970,7 +970,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "Kampanya dışı | Metin yatırımcı seviyeleri ve işlem hacimlerini anlatmaktadır. Belirtilen 3 aylık süre vade süresi değil, hacim hesaplama ve seviye koruma periyodudur."
@@ -996,7 +996,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "finansman_tutari": "Metinde finansman tutarı bulunmamaktadır. 0.0 değeri hatalıdır | #sema-onarimi-round1 Model 0.0 TRY üretti; kaynağı hesaplama aracının boş widget alanı (0,00 TL). Metinde ürünün ilan ettiği bir finansman tutarı/tavanı yok: 10.000 TL açıkça örnek hesaplama, 20.000 TL ise cep telefonunda taksit sayısı eşiğidir. Anotatörün gerekçesi doğru, etiketi absent olmalı.",
@@ -1092,7 +1092,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false
   },
   {
@@ -1177,7 +1177,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false
   },
   {
@@ -1202,7 +1202,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "odul_miktari": "Metindeki 1.000 TL bir ödül miktarı değil, Günlük Kazançlı Katılma Hesabı açılış bakiyesidir. | #sema-onarimi-round1 Model 1000 TRY üretti; metindeki 1000 TL Günlük Kazançlı Katılma Hesabı'nın minimum açılış bakiyesidir, ödül değildir. Belgede hiçbir ödül/hediye tutarı yok -> onaylanmış halüsinasyon. Anotatörün niyeti doğruydu ama 'fix' + boş gold_value derlemeyi durdurur; doğru etiket absent."
@@ -1258,7 +1258,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "finansman_tutari": "Metinde finansman tutarı bulunmamaktadır. 0.0 değeri hatalıdır | #sema-onarimi-round1 Model 0.0 TRY üretti; değer hesaplama aracının boş alanından (0,00 TL) geliyor. Belgede ilan edilmiş finansman tutarı yok; tablodaki 10.000 TL 'örnek maliyet tablosu' verisidir, kampanyaya ait tutar değildir. fix + boş gold_value yerine absent."
@@ -1524,7 +1524,7 @@
       "B",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -1678,7 +1678,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "#hakemlik-round1 A->B (kor hakem onayi) | Metin kredi kartı taksit kampanyasıdır. Belirtilen 5 aylık süre finansman vadesi değil, alışveriş taksit sayısıdır; metinde vade bilgisi bulunmamaktadır.",
@@ -1722,7 +1722,7 @@
       "B",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -1760,7 +1760,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -1811,7 +1811,7 @@
       "B",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [
@@ -1943,7 +1943,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "Kampanya dışı | 12 ay yalnızca EK-2'deki hesaplama örneğinde yer alıyor. Ana formda ürün vadesi belirtilmemiş.Model halüsinasyon görmüştür.",
@@ -2071,7 +2071,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "vade_ay": "#hakemlik-round1 A->B (kor hakem onayi) | #terminoloji 6 sayısı taksit adedidir, vade değildir.",
@@ -2365,7 +2365,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kampanya_suresi": "#hakemlik-round1 A->B (kor hakem onayi) | Metin kredi kartı ürün bilgileri ve akdi kâr payı oranları sayfasıdır. Belirtilen 01.01.2026 tarihi kampanya süresi değil, oranların güncelleme/yürürlük tarihidir."
@@ -2390,7 +2390,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "vade_ay": "#hakemlik-round1 A->B (kor hakem onayi) | #kosullu_aralik Aylık, 3 aylık, 6 aylık ve Yıllık seçenekleri var, en uzun vade alındı."
@@ -2481,7 +2481,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kar_payi_orani": "Kampanya dışı | Metinde kâr payı oranına dair sayısal bir değer geçmiyor (oranların başka bir formda yer aldığı belirtilmiş). Model 7 değerini uydurmuş.",
@@ -2666,7 +2666,7 @@
       "C",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "kar_payi_orani": "#recall-opus5 Model 4.25 uretti ama kaynak Yedek Hesap tarife satiri (Kar Orani %4.25) - ucret tarifesi sayfasinin bir satiri, belgenin anlattigi tek bir ozneye ait degil (4.13/1). #kampanya_disi",
@@ -2885,7 +2885,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "vade_ay": "#hakemlik-round1 A->B (kor hakem onayi) | #kosullu_aralik Metinde vade 32-450 gün arası verilmiş (en uzun vade 15 ay). Model stopaj tablosundaki \"6 aya kadar\" örneğini yanlışlıkla vade olarak almış."
@@ -2928,7 +2928,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false
   },
   {
@@ -2974,7 +2974,7 @@
     "annotators": [
       "C"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false
   },
   {
@@ -2992,7 +2992,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false
   },
   {
@@ -3143,7 +3143,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "Metinde farklı fiyat aralıkları için farklı vade seçenekleri mevcut(36,24,12)"
@@ -3206,7 +3206,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "Metinde ihtiyaç finansmanı vade süreleri tutar aralıklarına göre kademeli olarak (125.000 TL altı 36 ay, 125.000-250.000 TL arası 24 ay, 250.000 TL üstü 12 ay) belirtilmiştir. | #hakemlik-round1 B->A (kor hakem onayi)"
@@ -3229,7 +3229,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "vade_ay": "#hakemlik-round1 A->B (kor hakem onayi) | Metindeki \"3 yıl\" ibaresi geri ödeme vadesi değil, destek programından yararlanma süresidir. Metinde vade bilgisi bulunmamaktadır."
@@ -3375,7 +3375,7 @@
       "A",
       "B"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "notes": {
       "taksit_sayisi": "#hakemlik-round1 A->B (kor hakem onayi) | Ana kampanyada taksit imkânı bulunmamaktadır. Model sayfanın altındaki yönlendirme linklerinden (Mondihome'da 5 Taksit) alakasız bir veriyi çekmiştir.",
@@ -3493,7 +3493,7 @@
       "B",
       "recall_opus"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
     "needs_adjudication": true,
     "unclear_fields": [

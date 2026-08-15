@@ -61,6 +61,10 @@ from scripts.to_review_csv import (
     CSV_LINETERMINATOR,
 )
 
+# Damga — dokunulan her hücrenin `note`'una düşer ve gold'da
+# `adjudicated: true` bayrağını tetikler (bkz. `build_gold`). Tek doğruluk
+# kaynağı burasıdır; tüketiciler kopyalamaz, içe aktarır.
+# Kardeş sabit: `hakemlik_uygula.DAMGA`.
 DAMGA = "#sema-onarimi-round1"
 GECERLI = ("ok", "fix", "absent", "unclear")
 VARSAYILAN_RAPOR = "data/gold/review/_sema-onarimi-round1.md"

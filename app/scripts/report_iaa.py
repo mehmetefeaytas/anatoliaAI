@@ -38,11 +38,35 @@ kaybolmaz — ama yeni paketlerde "bakılmamış satır" uyuma katılmaz.
 
 Bu ayrım kozmetik değil: v1'de bakılmamış satırlar hem gold'a hem κ'ya "tam
 uyum" olarak girer ve ikisini de olduğundan iyi gösterir (ANNOTATION_GUIDE §11).
+
+## Çıktı adı TURU İÇERİR — ölçülmüş bir kaza
+
+2026-08-15'te ölçüldü: `data/gold/iaa_report.md` "Fleiss κ ölçülemedi" diyordu,
+kök README dâhil altı belge ise κ = **0,302** ilan edip kanıt diye tam da bu
+dosyayı gösteriyordu. Sebep basit ve bu betiğindi: çıktı adı **hep aynıydı**.
+
+    round0_kalibrasyon_{A,B,C,D}.csv     -> iaa_report.md   κ 0,302  (v1 turu)
+    round0_kalibrasyon_v2_{A,B,C,D}.csv  -> iaa_report.md   ölçülemedi (v2, 0 karar)
+
+İkinci koşu birincinin raporunu sessizce EZDİ. İki sayı da doğruydu; kaybolan
+şey hangisinin hangi tura ait olduğuydu — yani rapor kanıt olmaktan çıktı.
+
+İki kapı birden konuldu:
+
+  1. Varsayılan çıktı adı girdi CSV'lerinden TÜRETİLİR (`tur_adi`) ya da
+     `--tur` ile açıkça verilir: iki farklı tur aynı ada yazamaz.
+  2. Hedef dosya varsa ve içeriği FARKLIYSA, `--uzerine-yaz` olmadan yazma
+     **hata** verir. Aynı içerik ise koşu idempotenttir, sessizce geçer.
+
+Eski `iaa_report.md` silinmedi (HARD RULE: silme yok); yerinde bir yönlendirme
+bıraktı, içeriği tur adlı dosyalara taşındı.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
+import re
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -69,14 +93,23 @@ from scripts.gold_schema import (
 )
 
 ABSENT_TOKEN = "__YOK__"
-DEFAULT_REPORT = "data/gold/iaa_report.md"
+
+RAPOR_KLASORU = "data/gold"
+RAPOR_ONEKI = "iaa-raporu"
+
+# ARTIK YAZILMAZ. Turu olmayan tek ad, iki turun raporunu üst üste bindirmişti;
+# dosya yerinde duruyor ama içeriği yönlendirmedir (modül başlığı).
+ESKI_TURSUZ_RAPOR = "data/gold/iaa_report.md"
+
+_SLUG_TEMIZ_RE = re.compile(r"[^a-z0-9]+")
 
 # `PROTOCOL_*` ve `row_protocol` burada YENİDEN TANIMLANMAZ; tek doğruluk
 # kaynağı `gold_schema`dır. Üç tüketici (bu dosya, `build_gold`,
 # `lint_review_csv`) aynı cevabı vermek zorunda — kopyalar ayrışırsa κ dürüst,
 # gold çapalı kalır ve kimse fark etmez.
 __all__ = ["PROTOCOL_COLUMN", "PROTOCOL_V1", "PROTOCOL_V2", "row_protocol",
-           "row_verdict", "row_value_token", "compute", "render", "main"]
+           "row_verdict", "row_value_token", "compute", "render", "main",
+           "CiktiCakismasi", "tur_adi", "rapor_yolu", "raporu_yaz"]
 
 
 def _clean(value: Optional[str]) -> str:
@@ -320,8 +353,11 @@ def _fmt(value: float) -> str:
     return "ölçülemedi" if value != value else f"{value:.3f}"
 
 
-def render(result: dict) -> str:
+def render(result: dict, tur: Optional[str] = None) -> str:
     status, action = interpret_kappa(result["verdict_kappa"])
+    # Tur adı raporun İÇİNDE de yazar: dosya adı kopyalanırken düşebilir,
+    # içeriğin kendisi hangi turu ölçtüğünü söylemek zorundadır.
+    tur_etiketi = _slug(tur) if tur else tur_adi(result.get("files") or [])
     lines = [
         "# Anotatörler Arası Uyum (IAA) Raporu",
         "",
@@ -329,6 +365,7 @@ def render(result: dict) -> str:
         "BAŞLAMADAN ilan edilmiştir (ANNOTATION_GUIDE.md §7); sayılara bakıp "
         "eşik değiştirmek yasaktır.",
         "",
+        f"- **Tur: `{tur_etiketi or 'bilinmiyor'}`**",
         f"- Anotatörler: {', '.join(result['annotators'])}",
         f"- Ortak anote edilmiş satır: **{result['shared_rows']}**",
         f"- Karar bulunmayan hücre (boş/eksik): **{result['undecided_cells']}**",
@@ -423,19 +460,100 @@ def render(result: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+# --------------------------------------------------------------------------- #
+# Çıktı adı ve üzerine yazma kapısı
+# --------------------------------------------------------------------------- #
+class CiktiCakismasi(RuntimeError):
+    """Aynı ada FARKLI bir içerik yazma girişimi — sessizce ezmek yasak."""
+
+
+def _slug(metin: str) -> str:
+    """`Round0_Kalibrasyon_V2` -> `round0-kalibrasyon-v2` (kebab-case)."""
+    return _SLUG_TEMIZ_RE.sub("-", metin.casefold()).strip("-")
+
+
+def tur_adi(csv_paths: list[str]) -> str:
+    """Girdi CSV'lerinden TUR adını türetir; türetemezse boş dize döner.
+
+    Ortak önek yeter: anotatör harfi dosya adının SONUNDADIR, tur ise önündeki
+    her şeydir.
+
+        round0_kalibrasyon_{A,B,C,D}.csv     -> round0-kalibrasyon
+        round0_kalibrasyon_v2_{A,B,C,D}.csv  -> round0-kalibrasyon-v2
+        round1_{A,B}.csv                     -> round1
+
+    Ortak önek yoksa (karışık turlar) boş döner ve çağıran `--tur` ister:
+    karışık bir koşuya tek turun adını vermek, ezdiğimiz hatanın aynısıdır.
+    """
+    stems = [Path(p).stem for p in csv_paths]
+    if not stems:
+        return ""
+    return _slug(os.path.commonprefix(stems))
+
+
+def rapor_yolu(csv_paths: list[str], tur: Optional[str] = None) -> str:
+    """Turu ADINDA taşıyan rapor yolu. Tur bilinmiyorsa `CiktiCakismasi`."""
+    ad = _slug(tur) if tur else tur_adi(csv_paths)
+    if not ad:
+        raise CiktiCakismasi(
+            "çıktı adı türetilemedi: CSV adlarının ortak öneki yok. "
+            "`--tur <ad>` ile turu açıkça verin (ya da `--out` ile yolu).")
+    return str(Path(RAPOR_KLASORU) / f"{RAPOR_ONEKI}-{ad}.md")
+
+
+def raporu_yaz(yol: str | Path, icerik: str, uzerine_yaz: bool = False) -> str:
+    """Raporu yazar. Dönen değer: `olusturuldu` | `degismedi` | `uzerine-yazildi`.
+
+    Var olan bir dosyayı FARKLI içerikle ezmek, `iaa_report.md`'de olanın ta
+    kendisidir: κ = 0,302'lik rapor, ölçülemeyen bir turun raporuyla sessizce
+    değiştirildi ve altı belge var olmayan bir kanıta işaret eder oldu. Aynı
+    içerik yazmak zararsızdır (idempotent koşu) ve engellenmez.
+    """
+    hedef = Path(yol)
+    vardi = hedef.exists()
+    if vardi:
+        if hedef.read_text(encoding="utf-8") == icerik:
+            return "degismedi"
+        if not uzerine_yaz:
+            raise CiktiCakismasi(
+                f"{hedef} zaten var ve İÇERİĞİ FARKLI. Sessizce ezilmez.\n"
+                f"  - başka bir turu raporluyorsanız: `--tur <ad>` verin;\n"
+                f"  - bu turu bilerek yeniliyorsanız: `--uzerine-yaz` ekleyin.")
+    hedef.parent.mkdir(parents=True, exist_ok=True)
+    hedef.write_text(icerik, encoding="utf-8")
+    return "uzerine-yazildi" if vardi else "olusturuldu"
+
+
 def main(argv: Optional[list[str]] = None) -> int:
     parser = argparse.ArgumentParser(
         description="İki ya da daha çok anotatör CSV'sini karşılaştırır.")
     parser.add_argument("csv", nargs="+", help="doldurulmuş inceleme CSV'leri")
-    parser.add_argument("--out", default=DEFAULT_REPORT)
+    parser.add_argument("--tur", default=None,
+                        help="tur adı — çıktı adına girer "
+                             "(varsayılan: CSV adlarından türetilir)")
+    parser.add_argument("--out", default=None,
+                        help="çıktı yolu (varsayılan: "
+                             f"{RAPOR_KLASORU}/{RAPOR_ONEKI}-<tur>.md)")
+    parser.add_argument("--uzerine-yaz", action="store_true",
+                        help="var olan raporu FARKLI içerikle ez "
+                             "(varsayılan: hata ver)")
     args = parser.parse_args(argv)
 
     if len(args.csv) < 2:
         parser.error("uyum ölçmek için en az iki CSV gerekli")
 
+    try:
+        out = args.out or rapor_yolu(args.csv, args.tur)
+    except CiktiCakismasi as exc:
+        print(f"HATA: {exc}", file=sys.stderr)
+        return 1
+
     result = compute(args.csv)
-    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-    Path(args.out).write_text(render(result), encoding="utf-8")
+    try:
+        durum = raporu_yaz(out, render(result, args.tur), args.uzerine_yaz)
+    except CiktiCakismasi as exc:
+        print(f"HATA: {exc}", file=sys.stderr)
+        return 1
 
     status, action = interpret_kappa(result["verdict_kappa"])
     if result.get("bos_tur"):
@@ -455,7 +573,7 @@ def main(argv: Optional[list[str]] = None) -> int:
     print(f"Krippendorff ratio  : {_fmt(result['value_alpha_ratio'])}")
     print(f"uyuşmazlık          : {len(result['disagreements'])}")
     print(f"DURUM: {status} — {action}")
-    print(f"rapor: {args.out}")
+    print(f"rapor: {out} ({durum})")
     return 0
 
 
