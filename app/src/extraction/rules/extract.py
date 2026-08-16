@@ -11,6 +11,7 @@ Halüsinasyon yasağı: değer uydurma.
 
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass
 from typing import Optional
@@ -25,6 +26,10 @@ from .synonyms import NEGATION_RE
 
 # Kural katmanının güveni yüksektir (deterministik); LLM'inkinden ayrışsın diye 0.95.
 _RULE_CONF = 0.95
+
+# Bağlam reddi gerekçeleri buraya yazılır (DEBUG). Sessizce elenen bir değer,
+# sessizce uydurulan bir değer kadar izlenemezdir; ret kararı görünür kalmalı.
+logger = logging.getLogger(__name__)
 
 
 def _window(text: str, start: int, end: int, pad: int = 40) -> str:
@@ -344,6 +349,143 @@ def _yabanci_kavram_takip_ediyor(text: str, value_end: int) -> bool:
         text[value_end:value_end + _YABANCI_KAVRAM_PENCERE]))
 
 
+# Değeri kâr payı oranı olmaktan çıkaran DÖRDÜNCÜ sınıf: BOZUK HESAPLAMA
+# ARACI.
+#
+# Öncekiler (`_YABANCI_KAVRAM_RE`, `_CEZA_BAGLAMI_RE`, `_TUREV_ORAN_RE`) hepsi
+# "değer başka bir kavrama ait" hatasıdır — sayfa sağlamdır, okuma yanlıştır.
+# Bu ise farklı bir sınıf: SAYFANIN KENDİSİ bozuk yüklenmiştir. Banka
+# sitelerindeki finansman hesaplama araçları JavaScript ile doldurulur; scrape
+# anında servis cevap vermediğinde widget BAŞLANGIÇ durumunda donar ve HTML'e
+# şu iskelet düşer:
+#
+#     "Kar oranı limitler dışında ! Lütfen kontrol edip tekrar deneyiniz.
+#      Service unavailable ! Kâr Oranını Kendim Belirleyeceğim
+#      Aylık Taksit Tutarı 0 TL  Ödenecek Toplam Tutar 0 TL
+#      Aylık Kâr Oranı % 0"
+#
+# Buradaki "% 0" bir kampanya değil, DOLDURULMAMIŞ bir form alanıdır. Kural
+# yine de etiket + değer görüp `kar_payi_orani = 0.0` üretiyordu; üstelik
+# `%` işaretli olduğu için `C.is_plausible` bandına da takılmıyor ve
+# `_RULE_CONF = 0.95` ile en yüksek güvenle tabloya giriyordu.
+#
+# ÖLÇÜLDÜ (2026-08-16, `data/demo.db`, 70 `kar_payi_orani` kaydı): 15 kayıt
+# sıfır değerliydi, bunların **7'si** (hepsi tek bankanın 4 ürün sayfasının
+# kopyaları) bu bozuk widget'tan geliyordu. Demonun manşet sorusu ("en düşük
+# kâr payı hangi bankada?") tam bu alanı sıralıyor; sıfır her zaman tepede
+# çıkar, yani hata sessiz değil VİTRİNDEYDİ.
+#
+# ## Gerçek %0 promosyonları neden zarar görmez
+#
+# Ayrım BANKA ADINDAN DEĞİL, pencerenin kendisinden kurulur: gerçek bir %0
+# kampanyasında tutar ve vade DOLUDUR ve ayrıştırılabilir —
+#
+#     "%0 kâr payı ile 40.000 TL'ye kadar Pratik Finansman"          (gerçek)
+#     "%0 kâr payı oranı ve 3 ay vadeli olarak 50.000 TL'ye kadar"   (gerçek)
+#     "Aylık Taksit Tutarı 0 TL Ödenecek Toplam Tutar 0 TL ... % 0"  (bozuk)
+#
+# Bozuk olanda tutarlar SIFIRDIR, yani sayfa hiçbir şey hesaplamamıştır.
+# Kapı iki BOZUKLUK işaretine bakar — (a) etiketİNE BİTİŞİK sıfır tutar,
+# (b) aracın hata metni — ve bir SAĞLAMLIK işareti onları geçersizler:
+# pencerede etiketine bitişik DOLU (sıfır olmayan) bir tutar varsa sayfa
+# hesaplamıştır, ret düşer.
+#
+# ## Neden etikete BİTİŞİK tutar arıyoruz
+#
+# Çıplak "0 TL" YETMEZ ve kapıyı fazla genişletirdi. Korpusta gerçek bir %0
+# kaydının penceresi şöyle: "Aylık Akdi Kâr Payı Oranı %0 0 TL Ekstre
+# Dönemlerinde…" — buradaki "0 TL" ücret tablosunun *Tutar* kolonudur ve
+# değer meşrudur (bkz. `_CEZA_BAGLAMI_RE` başlığındaki "akdi kâr payı oranı"
+# notu). Etiket ile sayı arasına yalnız ayraç/boşluk girmesine izin vermek
+# bu kaydı korur, widget iskeletini yakalar.
+#
+# İki desen aynı etiket listesini paylaşır (`_TUTAR_ETIKETI`): ayrışırlarsa
+# "sıfır tutar var" ile "dolu tutar yok" farklı şeyleri ölçmeye başlar ve
+# kapı sessizce tek bacaklı kalır.
+_TUTAR_ETIKETI = (
+    r"(?:taksit\s*tutar[ıi]"
+    r"|[öo]denecek\s*(?:toplam\s*)?tutar"
+    r"|toplam\s*(?:geri\s*)?[öo]deme(?:\s*tutar[ıi])?"
+    r"|finansman\s*tutar[ıi]"
+    r"|kredi\s*tutar[ıi])"
+)
+_PARA_BIRIMI = r"(?:TL|₺)\b"
+_SIFIR_TUTAR = r"0(?:[.,]0+)?\s*" + _PARA_BIRIMI
+
+_SIFIR_TUTAR_RE = re.compile(
+    _TUTAR_ETIKETI + r"\s*[:=]?\s*" + _SIFIR_TUTAR, re.IGNORECASE)
+
+# Sayfanın HESAPLADIĞINI kanıtlayan işaret: etiketine bitişik, sıfır OLMAYAN
+# bir tutar. Negatif ileri-bakış olmadan "Taksit Tutarı 0 TL" de "dolu"
+# sayılır ve kapı hiç kapanmazdı.
+_DOLU_TUTAR_RE = re.compile(
+    _TUTAR_ETIKETI + r"\s*[:=]?\s*(?!" + _SIFIR_TUTAR + r")"
+    r"\d[\d.,]*\s*" + _PARA_BIRIMI,
+    re.IGNORECASE,
+)
+
+# Hesaplama aracının kendi hata/boş-durum metni. Sayfanın veri üretemediğini
+# doğrudan söyler; yanındaki her sayı bu yüzden kanıt değildir.
+#
+# Bu bacak TEK BAŞINA yetmez, `_DOLU_TUTAR_RE` tarafından geçersizlenebilir —
+# ve buna ihtiyaç ÖLÇÜLDÜ. İlk sürüm sağlamlık kapısı olmadan yazıldı ve
+# korpusta bir GERÇEK kaydı düşürdü (tom-katilim, `hesaplama-araclari.html`,
+# oran 3,99):
+#
+#     "Aylık Kâr Oranı: 3,99 % Taksit Tutarı: 1.981,98 TL Geri Ödenecek
+#      Tutar 11.891,83 TL … Bir hata oluştu, lütfen tekrar deneyin"
+#
+# Hata cümlesi sayfada GİZLİ bir uyarı kutusudur (DOM'da hep durur); araç ise
+# gayet hesaplamıştır. Yani hata metni "veri yok"un kanıtı değil, yalnız
+# şüphesidir. Karar veren şey tutarların dolu olup olmadığıdır.
+_ARAC_HATASI_RE = re.compile(
+    r"service\s+unavailable"
+    r"|temporarily\s+unavailable"
+    r"|limitler\s+d[ıi][şs][ıi]nda"
+    r"|hesaplama\s+yap[ıi]lamad[ıi]"
+    r"|bir\s+hata\s+olu[şs]tu",
+    re.IGNORECASE,
+)
+
+# Pencere ±240 karakter. Ölçülen mesafeler (bozuk widget, 7 kayıt): sıfır
+# tutar bloğu değerden 44–68, hata metni 110–130 karakter önce. 240 ikisini
+# de kapsar. Simetrik tutuluyor çünkü widget iskeletinde blok sıranın
+# ARDINDA da durabilir ("Aylık Kâr Oranı % 0 … Aylık Taksit Tutarı 0 TL");
+# sağa bakmak korpustaki hiçbir gerçek kaydı düşürmedi (ölçüldü).
+_BOZUK_ARAC_PENCERE = 240
+
+
+def _bozuk_hesaplama_araci(text: str, match_start: int, match_end: int) -> bool:
+    """Değerin penceresi, veri üretmemiş bir hesaplama aracına mı ait?
+
+    True dönerse çağıran eşleşmeyi REDDEDER (halüsinasyon yasağı, CLAUDE.md
+    §19: bilgi yoksa `null`). Ret gerekçesi `DEBUG` seviyesinde loglanır —
+    sessiz eleme, sessiz uydurma kadar izlenemezdir.
+
+    Sıra önemlidir: önce SAĞLAMLIK kanıtı aranır. Dolu bir tutar varsa sayfa
+    hesaplamıştır ve bozukluk işaretleri (gizli hata kutusu gibi) artık
+    bağlayıcı değildir.
+    """
+    bas = max(0, match_start - _BOZUK_ARAC_PENCERE)
+    son = min(len(text), match_end + _BOZUK_ARAC_PENCERE)
+    pencere = text[bas:son]
+    dolu = _DOLU_TUTAR_RE.search(pencere)
+    if dolu is not None:
+        return False
+    for neden, desen in (("sifir_tutar", _SIFIR_TUTAR_RE),
+                         ("arac_hatasi", _ARAC_HATASI_RE)):
+        isaret = desen.search(pencere)
+        if isaret is None:
+            continue
+        logger.debug(
+            "kar_payi_orani REDDEDİLDİ (bozuk hesaplama aracı): neden=%s "
+            "isaret=%r deger=%r konum=%d",
+            neden, isaret.group(0), text[match_start:match_end], match_start,
+        )
+        return True
+    return False
+
+
 def extract_kar_payi(text: str) -> Optional[ExtractedField]:
     """Kâr payı oranı: '... kâr payı oranı %1,99 ...' veya '%1,99 kâr payı'.
 
@@ -372,7 +514,8 @@ def extract_kar_payi(text: str) -> Optional[ExtractedField]:
         if (_yabanci_kavram_takip_ediyor(text, onceki.end())
                 or _ceza_baglami_onceliyor(text, onceki.start())
                 or _turev_oran_baglami(text, s, e)
-                or _paylasim_ciftinin_parcasi(text, s, e)):
+                or _paylasim_ciftinin_parcasi(text, s, e)
+                or _bozuk_hesaplama_araci(text, s, e)):
             continue
         raw = onceki.group(1)
         return _field(
@@ -418,13 +561,15 @@ def _extract_kar_payi_ileri(text: str) -> Optional[ExtractedField]:
     for m in pat.finditer(text):
         s, e = m.span(3)
         # Değeri yabancı bir kavram takip ediyorsa, eşleşmeyi bir ceza maddesi
-        # öncelİyorsa ya da değer orandan TÜRETİLMİŞ bir büyüklükse eşleşme
-        # reddedilir ve aramaya devam edilir (gerekçe: `_YABANCI_KAVRAM_RE`,
-        # `_CEZA_BAGLAMI_RE`, `_TUREV_ORAN_RE`).
+        # öncelİyorsa, değer orandan TÜRETİLMİŞ bir büyüklükse ya da pencere
+        # veri üretmemiş bir hesaplama aracına aitse eşleşme reddedilir ve
+        # aramaya devam edilir (gerekçe: `_YABANCI_KAVRAM_RE`,
+        # `_CEZA_BAGLAMI_RE`, `_TUREV_ORAN_RE`, `_bozuk_hesaplama_araci`).
         if (_yabanci_kavram_takip_ediyor(text, e)
                 or _ceza_baglami_onceliyor(text, m.start())
                 or _turev_oran_baglami(text, s, e)
-                or _paylasim_ciftinin_parcasi(text, s, e)):
+                or _paylasim_ciftinin_parcasi(text, s, e)
+                or _bozuk_hesaplama_araci(text, s, e)):
             continue
         raw = m.group(3)
         canon = N.normalize_rate(raw)
@@ -495,12 +640,197 @@ def _takvim_yili(m: "re.Match[str]") -> bool:
     return ay is not None and ay > MAKS_VADE_AY
 
 
+# --------------------------------------------------------------------------- #
+# İKİNCİ TETİKLEYİCİ SINIFI — "vade" sözcüğü olmadan vade kuran yapı
+# --------------------------------------------------------------------------- #
+#
+# ## Sorun
+#
+# `extract_vade` bir TETİKLEYİCİ ŞARTI uygular: metinde "vade" sözcüğü hiç
+# geçmiyorsa değer üretilmez (gerekçe aşağıda, `vade_pos` bloğunda — ölçülmüş
+# ve doğru bir karardır, kaldırılmamalıdır). Ama şartnamenin KENDİ örnek metni
+# bu şarta takılıyordu. Şartname s.11, A Bankası konut finansmanı metni birebir:
+#
+#     "…özel %1,89 kâr payı oranı ile 120 aya kadar konut finansmanı fırsatı
+#      sunulmaktadır."
+#
+# Metinde "vade" sözcüğü YOK; oysa s.12'deki beklenen çıktı tablosu bu metinden
+# **Vade = 120 ay** bekliyor. Sistem o hücreyi boş bırakıyordu. Jüri şartnamenin
+# örnek metnini yapıştırıp "canlı çıkarım"a bastığında en görünür alanlardan
+# biri boş dönerdi. Değerlendirme ölçütü de birebir bunu ödüllendiriyor
+# (Model Başarısı %30 — "farklı ifade biçimlerini doğru yorumlayabilmesi").
+#
+# ## Neden kapı GENİŞ açılmadı — ölçüm
+#
+# İlk refleks "X aya kadar / X aya varan kalıbını serbest bırak" olurdu.
+# ÖLÇÜLDÜ (2026-08-16, 1782 belgelik korpus, `vade_ay` üreten 441 belge):
+# `vade_ay` üretilmeyen 220 belgede "ay/yıl" ifadesi var. Bu belgelerdeki
+# "X aya kadar/varan" eşleşmelerinin dağılımı:
+#
+#     65 eşleşme  "X aya kadar/varan"  TOPLAM
+#     62 (%95)    hemen ardından "taksit*" geliyor
+#                 ("12 aya varan taksit", "3 aya kadar taksitlendirebilirler")
+#      3 (%5)     yine taksit bağlamı (uzak pencerede "kredi kartından")
+#      0          gerçek bir finansman VADESİ
+#
+# Yani korpusta bu kalıbın MEŞRU tek bir örneği bile yok; serbest bırakmak 62
+# yanlış değer ekler, 0 doğru değer kazandırırdı. "12 aya varan taksit"
+# `taksit_sayisi` alanına aittir, `vade_ay`'a değil — bu alan karışması zaten
+# `vade_pos` bloğunda 30 kayıtla belgelenmiş.
+#
+# Bu yüzden kapı yapının TAMAMINI arar, yalnız edatı değil:
+#
+#     sayı + YÖNELME hâli + sınır edatı + (kısa boşluk) + FİNANSMAN ÜRÜNÜ
+#     "120        aya        kadar                       konut finansmanı"
+#
+# Ürün adı şartı, korpustaki 65 taksit vakasının tamamını dışarıda bırakır ve
+# şartname metnini içeri alır. Ölçülen etki: korpusta **0 yeni kayıt** —
+# yani bu genişletme mevcut veriye hiç dokunmaz, sadece kaçırılan ifade
+# biçimini kazanır. Sıfır, burada başarısızlık değil GÜVENLİK KANITIDIR.
+
+#: Yönelme hâli + sınır edatı. "120 aya kadar", "36 aya varan", "1 yıla dek".
+#: Kesme işaretli yazım da kabul ("120 ay'a kadar") — temel desen kesmeden
+#: önce durduğu için ek buraya düşer.
+_SINIR_EDATI_RE = re.compile(
+    r"^\s*(?:['’]\s*[ae])?\s*(?:kadar|varan|dek|de[ğg]in)\b", re.IGNORECASE)
+
+#: Yapıyı vade yapan şey: sınırlanan şeyin bir FİNANSMAN ÜRÜNÜ olması.
+#: "kredi kartı" BİLEREK dışarıda — korpustaki taksit vakaları tam o kalıpta
+#: ("3 aya kadar … kredi kartından limit aşım").
+_FINANSMAN_URUNU_RE = re.compile(
+    r"\b(?:finansman|kredi(?!\s*kart)|murabaha|icara)", re.IGNORECASE)
+
+#: Değerin SAĞINDA yapıyı vade olmaktan çıkaran KOŞULSUZ bağlamlar.
+#: CLAUDE.md §6'daki "zor vaka" sınıfları: ödemesiz dönem, kampanya geçerlilik
+#: süresi, ücretsiz kullanım dönemi. Hiçbiri geri ödeme vadesi değildir ve
+#: hepsi aynı "X ay" yüzeyini paylaşır. Bunların istisnası YOKTUR.
+_KURULUS_SAG_RET_RE = re.compile(
+    r"[öo]demesiz|ertele|[öo]deme\s*yok|[öo]demeyi"
+    r"|[üu]cretsiz|bedava|hediye|bonus"
+    r"|ge[çc]erli|boyunca|s[üu]reyle|i[çc]inde|i[çc]erisinde",
+    re.IGNORECASE,
+)
+
+#: `taksit` reddi AYRI tutulur — çünkü tek istisnası olan bacak budur.
+#:
+#: Ret gerekçesi DEĞİŞMEDİ ve geçerlidir: korpustaki 65 sınır-edatlı adayın
+#: 62'si (%95) taksit bağlamıydı ("12 aya varan taksit seçenekleri"), hiçbiri
+#: finansman vadesi değildi. Bu ifade `taksit_sayisi` alanına aittir; ayrıca
+#: `vade_pos` bloğundaki 30 kayıtlık alan-karışması ölçümü de aynı şeyi
+#: söylüyor. Bu red kalkarsa korpusa 62 yanlış `vade_ay` girer.
+_KURULUS_TAKSIT_RET_RE = re.compile(r"taksit", re.IGNORECASE)
+
+#: `taksit` reddinin TEK istisnası: açık bir GERİ ÖDEME işareti.
+#:
+#: ## Neden bu istisna var — iki belgelenmiş kuralla çelişki
+#:
+#: CLAUDE.md §10 "Eşanlamlılar" satırı birebir şöyle diyor:
+#:
+#:     "vade ≈ ödeme süresi ≈ geri ödeme süresi"
+#:
+#: Ve `synonyms.py` içindeki `FIELD_TRIGGERS["vade_ay"]` listesi bağımsız
+#: olarak aynı şeyi sayıyor: `["vade", "ödeme süresi", "geri ödeme süresi",
+#: "taksit süresi", "ay"]`. Yani projenin KENDİ terminoloji kuralına göre
+#:
+#:     "geri ödemelerinizi 60 aya kadar taksitlendirebilirsiniz"
+#:
+#: bir vadedir. Bunu `taksit` reddiyle dışarıda bırakmak, bir kararı korumak
+#: değil BAŞKA iki kararla çelişmekti. İstisna o çelişkiyi kapatır.
+#:
+#: ## Neden güvenli — ölçüldü, yazılmadan önce
+#:
+#: 1782 belgelik korpus tarandı (2026-08-16). İstisnanın ürettiği eşleşme:
+#:
+#:     sol pencere  40 kr -> 1    80 kr -> 1
+#:     sol pencere  60 kr -> 1   120 kr -> 1
+#:
+#: Her pencere boyutunda **tek** eşleşme, hepsi aynı kayıt (albaraka 2B Arazi
+#: Finansmanı) ve o kayıt gerçek bir vade. **Yanlış pozitif: 0.** Ürün adı
+#: şartı korunarak da (sol VEYA sağ pencerede finansman ürünü) sonuç aynı 1
+#: kayıt — bu yüzden daha DAR olan sürüm seçildi.
+#:
+#: İşaret dar tutuluyor: çıplak `taksitlendir` YETMEZ, açık "geri ödeme"
+#: ibaresi şart. 60 karakter platonun ortası.
+_GERI_ODEME_RE = re.compile(r"geri\s*[öo]deme", re.IGNORECASE)
+_GERI_ODEME_PENCERE = 60
+
+#: Değerin SOLUNDA yapıyı vade olmaktan çıkaran bağlamlar.
+#:   "ilk 3 ay …"      -> promosyon/ödemesiz dönem, vade değil
+#:   "son 6 ayda …"    -> geçmiş koşulu ("son 3 aydır maaşını bankamızdan alan")
+#:   "her 3 ayda bir"  -> periyot
+_KURULUS_SOL_RET_RE = re.compile(r"\b(?:ilk|son|her)\s*$", re.IGNORECASE)
+
+#: Sınır edatından sonra ürün adına kaç karakter içinde ulaşılmalı.
+#:
+#: ÖLÇÜLDÜ (korpustaki 65 sınır-edatlı adayın tamamı üzerinde tarandı):
+#:     48 -> 0 kabul   60 -> 1 kabul   72 -> 1 kabul   90 -> 1 kabul
+#: Yani 60'tan sonra DOYUYOR; genişletmek yeni vaka açmıyor çünkü kalan 64
+#: adayın hepsini `taksit` reddi zaten tutuyor. Kazanılan tek kayıt gerçek:
+#:     "Devre Tatil finansmanı … 36 aya varan ödeme seçenekleriyle
+#:      kullanabileceğiniz bir kredidir"   (albaraka/tatiliniz-icin)
+#: 48'de kaçmasının sebebi anlam değil, ürün adının 54. karaktere düşmesiydi.
+#: Doygunluk platosunun içinde 72 seçildi: yazım varyantlarına pay bırakır,
+#: cümle sınırı koruması da altında durur.
+_KURULUS_PENCERE = 72
+
+#: Pencere cümle sınırını AŞMAZ. Dosyadaki diğer bağlam kapılarıyla
+#: (`_ceza_baglami_onceliyor`, `_turev_oran_baglami`) aynı disiplin: sınır
+#: olmasa "…36 aya varan taksit. Konut finansmanı…" dizisindeki SONRAKİ
+#: cümlenin ürün adı, önceki cümlenin taksit sayısını vade yapardı.
+_CUMLE_SONU_RE = re.compile(r"[.!?]\s")
+
+
+def _vade_kurulusu(text: str, m: "re.Match[str]") -> Optional[int]:
+    """'120 aya kadar konut finansmanı' yapısı mı? Öyleyse tetikleyici mesafesi.
+
+    Dönen değer, sayının bitişi ile FİNANSMAN ÜRÜNÜ sözcüğünün başı arasındaki
+    karakter mesafesidir; `_field` bunu güven skoruna tetikleyici yakınlığı
+    olarak geçirir. Bu yolda tetikleyici "vade" sözcüğü değil ürün adıdır ve
+    skor bunu dürüstçe yansıtır. Yapı değilse `None`.
+    """
+    sag = tr_fold(text[m.end():m.end() + _KURULUS_PENCERE])
+    edat = _SINIR_EDATI_RE.match(sag)
+    if edat is None:
+        return None
+    kalan = sag[edat.end():]
+    # Cümle biterse yapı da biter — sonraki cümlenin sözcükleri kanıt değildir.
+    cumle = _CUMLE_SONU_RE.search(kalan)
+    if cumle is not None:
+        kalan = kalan[:cumle.start()]
+    if _KURULUS_SAG_RET_RE.search(kalan):
+        return None
+    sol = tr_fold(text[max(0, m.start() - _GERI_ODEME_PENCERE):m.start()])
+    # `\s*$` çıpalı: ek/son/her yalnız sayının HEMEN solundayken reddeder,
+    # pencere büyüdü diye kapsamı genişlemez.
+    if _KURULUS_SOL_RET_RE.search(sol):
+        return None
+    geri_odeme = _GERI_ODEME_RE.search(sol)
+    if _KURULUS_TAKSIT_RET_RE.search(kalan) and geri_odeme is None:
+        return None
+    urun = _FINANSMAN_URUNU_RE.search(kalan)
+    if urun is not None:
+        return edat.end() + urun.start()
+    # "geri ödeme" yolunda ürün adı SOLDA olabilir:
+    #   "…2B araziler için FİNANSMAN desteği alabilir, GERİ ÖDEMELERİNİZİ
+    #    60 aya kadar taksitlendirebilirsiniz."
+    # Tetikleyici burada §10'un eşanlamlısı olan "geri ödeme" ibaresidir;
+    # güven skoruna geçen mesafe de ona olan uzaklıktır.
+    if geri_odeme is not None and _FINANSMAN_URUNU_RE.search(sol):
+        return len(sol) - geri_odeme.end()
+    return None
+
+
 def extract_vade(text: str) -> Optional[ExtractedField]:
-    """Vade: '120 aya kadar', '36 ay vade', '1 yıl'.
+    """Vade: '120 aya kadar konut finansmanı', '36 ay vade', '1 yıl'.
 
     Zaman-koşullu ifade tuzağı ('ilk 6 ay ödemesiz') gerçek vade değildir; bu
     yüzden 'vade' sözcüğüne yakın eşleşme tercih edilir
     (bkz. ../../decisions/zor-anlama-vakalari-merkezi.md).
+
+    İki tetikleyici sınıfı vardır: metindeki "vade" sözcüğü (birincil) ve
+    "X aya kadar <finansman ürünü>" yapısı (`_vade_kurulusu`). İkincisi
+    yalnızca birincisi HİÇ yokken devreye girer; "vade" geçen belgelerde
+    davranış birebir eskisidir.
     """
     pat = re.compile(
         r"(\d[\d.,]*)\s*(ay|yıl|yil|sene)(?:a|da|ta|dan|tan|ı|i|lık|lik)?\b",
@@ -535,8 +865,21 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     #
     # Tablolu belgeler ETKİLENMEZ: oran tablosunun başlığı zaten "Vade ..."
     # ile başlar ve `_TABLO_YEDEK_ALANLARI` yolu devrede kalır.
+    #
+    # İKİNCİ TETİKLEYİCİ: "vade" sözcüğü hiç geçmiyorsa, yalnızca
+    # "X aya kadar <finansman ürünü>" YAPISINI kuran eşleşmeler hayatta kalır
+    # (bkz. `_vade_kurulusu` başlığındaki ölçüm). Gevşetme değil ikinci bir
+    # kapıdır: aday kümesi genişlemez, DARALIR — bu yolda yapıyı kurmayan
+    # her eşleşme elenir.
+    kurulus = {m.start(): d for m in matches
+               if (d := _vade_kurulusu(text, m)) is not None}
     if not vade_pos:
-        return None
+        if not kurulus:
+            return None
+        matches = [m for m in matches if m.start() in kurulus]
+        logger.debug(
+            "vade_ay: 'vade' sözcüğü yok, yapı tetikleyicisi devrede — "
+            "aday=%r", [m.group(0) for m in matches])
 
     def score(m):
         # "ilk N ay" gibi promosyon dönemleri gerçek vade değildir → geri it
@@ -549,7 +892,11 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     raw = chosen.group(0)
     s, e = chosen.span()
     canon = N.normalize_term_months(raw)
+    # Tetikleyici mesafesi: "vade" sözcüğü varsa ona olan uzaklık, yoksa
+    # yapıyı kuran ürün adına olan uzaklık. İkisi de yoksa buraya gelinmez.
     dist = min((abs(s - v) for v in vade_pos), default=None)
+    if dist is None:
+        dist = kurulus.get(s)
     return _field(
         "vade_ay", raw, canon, _window(text, s, e),
         span_start=s, span_end=e,
@@ -804,6 +1151,16 @@ def _truncate_at_next_column(window: str) -> str:
 _CUMLE_SINIRI_RE = re.compile(r"(?<!\d)[.;!?](?!\d)|\n")
 
 
+def _cumle_araligi(text: str, bas: int, son: int) -> tuple[int, int]:
+    """Eşleşmeyi içeren cümlenin OFFSET aralığı (bkz. `_cumle_kapsami`)."""
+    sol = 0
+    for m in _CUMLE_SINIRI_RE.finditer(text, 0, bas):
+        sol = m.end()
+    sag_m = _CUMLE_SINIRI_RE.search(text, son)
+    sag = sag_m.start() if sag_m else len(text)
+    return sol, sag
+
+
 def _cumle_kapsami(text: str, bas: int, son: int) -> str:
     """Eşleşmeyi içeren cümle — iki yanı da cümle sınırında kesilir.
 
@@ -811,12 +1168,103 @@ def _cumle_kapsami(text: str, bas: int, son: int) -> str:
     bakıyor; öznenin nerede olduğunu görmek için SOLA da bakmak gerekiyor
     ("Katılım SMS'i ücretsiz" — özne solda).
     """
-    sol = 0
-    for m in _CUMLE_SINIRI_RE.finditer(text, 0, bas):
-        sol = m.end()
-    sag_m = _CUMLE_SINIRI_RE.search(text, son)
-    sag = sag_m.start() if sag_m else len(text)
+    sol, sag = _cumle_araligi(text, bas, son)
     return text[sol:sag]
+
+
+# KANIT ARALIĞI — `masraf_durumu` span'i neden tetikleyici sözcükten geniş.
+#
+# ## Ölçülen kusur (2026-08-16, `data/demo.db`, 494 kayıt)
+#
+# `masraf_durumu` kanıt olarak yalnız TETİKLEYİCİ SÖZCÜĞÜ saklıyordu:
+# 494 kaydın **488'i tek sözcük** (`Ücretsiz` 176, `ücretsiz` 145, `ücret` 95,
+# `Ücret` 23, `Masrafsız` 13, `masraf` 12, `masrafsız` 11, `tahsis` 12).
+# Komşu kurallar cümleyi saklıyor: `extract_tahsis_ucreti` → "tahsis ücreti
+# yansıtılmayacaktır", muafiyet yolu → "ekspertiz ücreti banka tarafından
+# karşılanmaktadır".
+#
+# `masrafsız` bir KANIT DEĞİL, bir ETİKETTİR — kanonik değerin kendisinin
+# tekrarı. Şartname 7 sütunlu ürün tablosunda «Kampanya Avantajı» hücresi
+# kanıt cümlesi okunabilir olduğunda bankanın kendi ifadesini basıyor; tek
+# sözcüklü kanıt ayakta duramadığı için o hücrede yan kolonun birebir
+# tekrarı görünüyordu ("Masraf Durumu: masrafsız").
+#
+# ## Bunun bilinçli bir karar OLMADIĞI nasıl saptandı
+#
+# `git log -S`, `docs/`, vault `decisions/` ve kod yorumları tarandı: span
+# darlığı için hiçbir gerekçe yok. Darlık desenin doğal sonucu — `pat` tek
+# sözcük eşliyor, `m.span()`/`m.group(0)` doğrudan kullanılıyordu. Tersine
+# bir kanıt var: DEĞER zaten 40 karakterlik ileri pencereden (`fwd`)
+# hesaplanıyor, yani KAYDEDİLEN kanıt KULLANILAN kanıttan dardı.
+#
+# ## Neden cümlenin tamamı değil
+#
+# Ölçüldü: cümle uzunluğu medyan 108 kr ama p90=474, p99=1373, maks=2781
+# (noktalama içermeyen tablo dökümleri). 67 kayıt 400 karakteri aşardı —
+# "kanıt" değil metin dökümü olurdu. Bu yüzden aralık CÜMLEYLE SINIRLI ama
+# tetikleyici çevresinde budanır: solda 40 karakter (sağdaki `fwd` penceresi
+# ile aynı sayı — yeni bir sabit uydurmamak için), sağda tam olarak değerin
+# hesaplandığı `fwd` sınırı. Yani kaydedilen kanıt, kullanılan kanıtın
+# üst kümesidir ve cümleyi asla aşmaz.
+#
+# ## Değişmez (`verify_span`)
+#
+# `raw_value` BİTİŞİK dilim olmak zorunda: `text[span_start:span_end] ==
+# raw_value`. Bu yüzden `m.group(0)` değil `text[sol:sag]` yazılır —
+# `extract_tahsis_ucreti` ile birebir aynı disiplin.
+_KANIT_SOL_PAY = 40
+
+#: Sağ kenarda yarım kalan sözcüğü tamamlamak için izin verilen taşma.
+#: Türkçe sondan eklemeli; "yararlanabilirsiniz" gibi uzun çekimler için
+#: 30 karakter yeter, kaçak bir uzamaya ise izin vermez.
+_KANIT_SAG_TASMA = 30
+
+#: Sözcük karakteri — Türkçe harfler ve rakamlar dâhil (`\w` yeterli ama
+#: niyeti adlandırmak okunurluğu artırıyor).
+_SOZCUK_KARAKTERI = re.compile(r"\w").match
+
+
+def _kanit_araligi(text: str, m: "re.Match[str]", fwd: str) -> tuple[int, int]:
+    """Tetikleyiciyi taşıyan tümceciğin aralığı — cümleyi AŞMAZ.
+
+    Sağ sınır `fwd`'nin bittiği yerdir: değer oradan hesaplandı, kanıt da
+    tam orayı göstermeli. Sol sınır cümle başı ile 40 karakter arasında,
+    sözcük ortasından başlamayacak şekilde hizalanır.
+    """
+    cumle_sol, _ = _cumle_araligi(text, m.start(), m.end())
+    sol = max(cumle_sol, m.start() - _KANIT_SOL_PAY)
+    # Sözcük ortasına düştüyse GERİYE kayarak sözcük başına hizala. İleri
+    # kaymak sözcüğü yarım bırakmaz ama anlamlı bir niteleyiciyi düşürürdü:
+    # "Kampanya kapsamında dosya masrafı alınmamaktadır" cümlesinde 40
+    # karakterlik sınır "Kampanya"nın içine düşüyor ve ileri hizalama kanıtı
+    # "kapsamında …" diye başlatıyordu. Taşma en fazla bir sözcük kadardır
+    # ve cümle başı (`cumle_sol`) her hâlükârda aşılmaz.
+    while sol > cumle_sol and not text[sol - 1].isspace():
+        sol -= 1
+    sag = m.start() + len(fwd)
+    # SAĞ KENAR SÖZCÜK ORTASINDA KALMASIN.
+    #
+    # `fwd` üç yoldan biriyle biter ve yalnız biri sözcüğü yarıda keser:
+    #   · cümle sınırı  -> sonraki karakter `.`/`;`/`\n`, sözcük zaten bitmiş
+    #   · sütun başlığı -> kesim başlığın BAŞIdır, solunda boşluk var
+    #   · 40 karakterlik üst sınır -> KEYFİ nokta, sözcüğü ortadan böler
+# Ölçüldü: elle doğrulamada "tahsil edilece", "2 aylık öd", "50 yapr"
+    # gibi kırık kanıtlar tam bu üçüncü yoldan geliyordu. Koşul iki yanın da
+    # sözcük karakteri olmasını arar; ilk iki yol bu koşula hiç girmez.
+    # Uzatma cümle sonuyla ve `_KANIT_SAG_TASMA` ile iki kez sınırlı.
+    cumle_sag = _cumle_araligi(text, m.start(), m.end())[1]
+    sinir = min(cumle_sag, sag + _KANIT_SAG_TASMA)
+    if 0 < sag < len(text) and _SOZCUK_KARAKTERI(text[sag - 1]):
+        while sag < sinir and _SOZCUK_KARAKTERI(text[sag]):
+            sag += 1
+    # Baştaki/sondaki boşluk dilime girmesin — değişmez korunarak kırpılır.
+    while sol < sag and text[sol].isspace():
+        sol += 1
+    while sag > sol and text[sag - 1].isspace():
+        sag -= 1
+    if sag <= sol:                                      # pragma: no cover
+        return m.span()
+    return sol, sag
 
 
 # ALAN-DIŞI ÖZNE: "ücretsiz"in nitelediği şey ÜRÜN DEĞİL.
@@ -864,6 +1312,127 @@ _ALAN_DISI_OZNE_RE = re.compile(
 )
 
 
+# MUAFİYET KALIBI — "X ücreti BANKA TARAFINDAN karşılanmaktadır"
+#
+# ## Sorun
+#
+# Şartname s.11, B Bankası konut finansmanı metninin son cümlesi birebir:
+#
+#     "Kampanya kapsamında ekspertiz ücreti banka tarafından karşılanmaktadır."
+#
+# s.12'deki beklenen çıktı tablosu bu tek cümleden İKİ hücre bekliyor:
+# «Kampanya Avantajı» = "Ekspertiz ücreti banka tarafından karşılanıyor" ve
+# «Masraf Durumu» = **"Ekspertiz ücretsiz"**. `masraf_durumu` bu cümleden
+# hiçbir şey üretmiyordu (ölçüldü: `None`), yani iki hücre birden boş kalıyordu.
+#
+# Bu bir NEGASYON/muafiyet kalıbıdır ve CLAUDE.md §6 zaten kuralı koyuyor:
+# "masrafsız ≠ değer yok, masraf = 0 demek". §10 eşanlamlılar da
+# "masrafsız ≈ ücretsiz ≈ dosya masrafı yok" diyor. "Banka tarafından
+# karşılanıyor" bu ailenin bir üyesidir: müşteri açısından ücret SIFIRDIR.
+#
+# `normalize_fee_status` (normalization katmanı) bu kalıbı tanımıyor ve o
+# modül bu değişikliğin sahipliği dışında; kapı bu yüzden kural katmanında.
+#
+# ## Neden ÇOK DAR yazıldı — ölçüm kapıyı zorladı
+#
+# ÖLÇÜLDÜ (2026-08-16, 1782 belge). Gevşek bir "ücret … karşılanır" kalıbı
+# 52 eşleşme/27 belge veriyor ve **baskın özne müşteridir**:
+#
+#     müşteri 9 · banka 4 · (kiracı, aracı, garantör, ortak, taraflar …)
+#     "ekspertiz ücreti MÜŞTERİ tarafından karşılanacaktır"      (cid=867)
+#     "Noter Masrafları … MÜŞTERİ tarafından ödenecektir"        (7 belge)
+#
+# Yani kalıbın çoğunluğu muafiyetin TERSİdir: sözleşme metni ücreti müşteriye
+# yükler. Gevşek kural bunları "masrafsız" diye okuyup en ağırlıklı ikinci
+# alana (`compare.DEFAULT_WEIGHTS["masraf_durumu"] = 0.20`) yalan yazardı.
+#
+# Özneyi bankaya sabitlemek de yetmiyor: "banka öznesi + öde" kalıbı korpusta
+# 4 eşleşme veriyor ve **4'ü de yanlış** —
+#
+#     "…bedellerinin Kart Hamilinin bankası tarafından ÖDENMEMESİ"  (olumsuz)
+#     "…mal bedelinin bir bankadan ödeneceğinin garantisi"          (akreditif tanımı)
+#     "…söz konusu bedel muhabir banka tarafından…" ×2              (muhabir masrafı)
+#
+# Bu yüzden kapı üç yerden birden sıkıldı: (1) fiil yalnız `karşılan`/
+# `üstlenil` — `öde` YOK, dört yanlışın üçü oradan geliyordu; (2) ücret
+# sözcüğü ile banka öznesi arasına en fazla 12 karakter; (3) yüklem olumlu
+# olmalı. Sonuç: korpusta **0 eşleşme** (12/25/40 karakterlik boşlukların
+# hepsinde), şartname cümlesinde **1**. Sıfır burada başarısızlık değil,
+# 47 karşıt vakanın hiçbirine dokunulmadığının kanıtıdır.
+#
+# ## Bilerek kapsam dışı
+#
+# "Kargo ve sigorta ücretleri **Dünya Katılım** tarafından karşılanacaktır"
+# (cid=1668) gerçek bir muafiyet ama özne BANKA ADI. Onu almak için banka
+# adlarını gömmek gerekirdi; aynı biçim korpusta bir İŞ İLANINDA da geçiyor
+# ("ücreti Kuveyt Türk tarafından karşılanacak MBA", cid=290) ve ikisi
+# şekilce ayırt edilemiyor. §21 uyarınca alınmadı.
+_MUAFIYET_FIIL = (
+    r"(?:kar[şs][ıi]lan|[üu]stlenil)"
+    # Yüklem OLUMLU olmalı. Ekler tek tek sayılıyor — `normalize.NEGATION_RE`
+    # ile aynı özgüllük disiplini. "karşılanmaktadır" olumlu, "karşılan-MA-
+    # maktadır" olumsuz; ikisini genel bir negasyon deseni ayıramaz.
+    # Ünlü uyumunun iki kolu da gerekli: "karşılan-MAKTAdır" (kalın) ve
+    # "üstlenil-MEKTEdir" (ince). İnce kol olmadan `üstlenil` bacağı ölüydü.
+    # Olumsuzları hâlâ tutar: "üstlenil-ME-mektedir" -> "memektedir", ek
+    # listesindeki hiçbir kalıpla baştan eşleşmez.
+    r"(?:maktad[ıi]r|makta|mektedir|mekte"
+    r"|acakt[ıi]r|acak|ecekt[ıi]r|ecek|m[ıi][şs]|mi[şs]|[ıi]yor|[ıi]r|d[ıi])"
+)
+
+#: Ücret türünü niteleyen sözcük olamayacaklar — bağlam/işlev sözcükleri.
+#: Bunlar olmasa "kampanya kapsamında ekspertiz ücreti" ifadesinden tür
+#: "kapsamında" diye okunurdu (ölçüldü).
+_UCRET_TURU_DISI = frozenset({
+    "kapsaminda", "kapsami", "olarak", "ayrica", "hicbir", "her", "tum",
+    "bu", "soz", "konusu", "ilgili", "gerekli", "ise", "ve", "ile", "bir",
+    "adet", "toplam", "diger", "asagidaki", "yukaridaki", "tarafindan",
+})
+
+_MUAFIYET_RE = re.compile(
+    r"(?:(?P<tur>[\wçğıöşüÇĞİıÖŞÜ]+)\s+)?"
+    r"(?P<kalem>[üu]cret|masraf|komisyon)\w*"
+    r"[^.;\n]{0,12}?\b(?:bankam[ıi]z|banka|kurumumuz|taraf[ıi]m[ıi]z)(?:ca|ce)?\b"
+    r"\s*(?:taraf[ıi]ndan|taraf[ıi]nca)?\s*" + _MUAFIYET_FIIL,
+    re.IGNORECASE,
+)
+
+#: Muafiyeti KOŞULLU kılan ifadeler — cümlede geçiyorsa muafiyet mutlak
+#: değildir ve "ücretsiz" diye yazılamaz. "ilk yıl banka tarafından
+#: karşılanır" ikinci yıl ücret VAR demektir; §21: şüphedeysen çıkarma.
+_MUAFIYET_KOSUL_RE = re.compile(
+    r"\bilk\s+\d*\s*(?:y[ıi]l|ay|d[öo]nem)"
+    r"|durumunda|halinde|[şs]art[ıi]yla|ko[şs]uluyla|kayd[ıi]yla"
+    r"|hariç|d[ıi][şs][ıi]nda",
+    re.IGNORECASE,
+)
+
+
+def _ucret_muafiyeti(text: str) -> Optional[tuple[re.Match, Optional[str]]]:
+    """"X ücreti banka tarafından karşılanmaktadır" — muafiyet var mı?
+
+    Dönüş: (eşleşme, ücret türü) ya da None. Ücret türü, muafiyetin HANGİ
+    kaleme ait olduğunu taşır ("ekspertiz"); şartname s.12 "Ekspertiz
+    ücretsiz" diyor, "masrafsız" değil — tür bilgisini düşürmek o hücreyi
+    yanlış doldurmak olurdu.
+    """
+    for m in _MUAFIYET_RE.finditer(text):
+        cumle = _cumle_kapsami(text, m.start(), m.end())
+        if _MUAFIYET_KOSUL_RE.search(cumle):
+            continue
+        if _ALAN_DISI_OZNE_RE.search(cumle):
+            continue
+        ham = m.group("tur")
+        tur = None
+        if ham is not None and tr_fold(ham).lower() not in _UCRET_TURU_DISI:
+            tur = ham.lower()
+        logger.debug(
+            "masraf_durumu MUAFİYET: kalem=%r tur=%r konum=%d",
+            m.group("kalem"), tur, m.start())
+        return m, tur
+    return None
+
+
 def extract_masraf(text: str) -> Optional[ExtractedField]:
     """Masraf durumu — negasyon farkında ('masrafsız' = 0, bilgi yok değil).
 
@@ -881,6 +1450,22 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
     olup olmadığını `tahsis_ucreti` alanı söyler ve uyuşmazlığı
     `contradiction.detect()` yakalar.
     """
+    # MUAFİYET ÖNCE TARANIR (bkz. `_MUAFIYET_RE`). Bu da bir `has_fee=False`
+    # iddiasıdır ve mevcut sözleşme gereği "masrafsız iddiası sırası ne olursa
+    # olsun kazanır"; erken dönmek o kuralla tutarlıdır. Farkı, muafiyetin
+    # HANGİ kaleme ait olduğunu (`muaf_ucret`) da taşımasıdır.
+    muafiyet = _ucret_muafiyeti(text)
+    if muafiyet is not None:
+        m, tur = muafiyet
+        canon: dict = {"has_fee": False, "amount": 0.0}
+        if tur is not None:
+            # Ek anahtar TOPLAMSAL: tüketiciler (`compare._composite_numeric`,
+            # `chatbot/structured.py`) yalnız `has_fee`/`amount` okuyor.
+            canon["muaf_ucret"] = tur
+        s, e = m.span()
+        return _field("masraf_durumu", m.group(0), canon, _window(text, s, e),
+                      span_start=s, span_end=e, trigger_distance=0)
+
     pat = re.compile(r"(masrafs[ıi]z|ücretsiz|ucretsiz|masraf|tahsis|ücret)",
                      re.IGNORECASE)
     first_positive = None
@@ -907,18 +1492,20 @@ def extract_masraf(text: str) -> Optional[ExtractedField]:
             continue
         if canon.get("has_fee") is False:
             # "masrafsız" iddiası bulundu — sırası ne olursa olsun bu kazanır.
-            s, e = m.span()
-            return _field("masraf_durumu", m.group(0), canon,
+            # Kanıt tetikleyici sözcük DEĞİL, onu taşıyan tümceciktir
+            # (gerekçe: `_kanit_araligi`).
+            s, e = _kanit_araligi(text, m, fwd)
+            return _field("masraf_durumu", text[s:e], canon,
                           _window(text, s, e),
                           span_start=s, span_end=e, trigger_distance=0)
         if first_positive is None:
-            first_positive = (m, canon)
+            first_positive = (m, canon, fwd)
 
     if first_positive is None:
         return None
-    m, canon = first_positive
-    s, e = m.span()
-    return _field("masraf_durumu", m.group(0), canon, _window(text, s, e),
+    m, canon, fwd = first_positive
+    s, e = _kanit_araligi(text, m, fwd)
+    return _field("masraf_durumu", text[s:e], canon, _window(text, s, e),
                   span_start=s, span_end=e, trigger_distance=0)
 
 

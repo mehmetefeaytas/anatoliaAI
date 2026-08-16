@@ -149,6 +149,21 @@ services:
 
   ollama:
     # MIT, demo yedeği (CPU/GPU)
+    #
+    # ÖNBELLEK PROSEDÜRÜ — offline demodan ÖNCE bir kez, internet varken:
+    #
+    #   docker compose --profile ollama up -d ollama
+    #   docker compose exec ollama ollama pull qwen2.5:7b-instruct   # 4,7 GB
+    #   docker compose exec ollama ollama list                       # doğrula
+    #
+    # Ağırlık `ollama` adlı adlandırılmış hacimde kalıcıdır; sonraki
+    # koşumlar internetsiz açılır. Bu adım ATLANIRSA `LLM_BACKEND=ollama`
+    # ilk istekte "model not found" ile düşer — ağ olmadığı için `pull`
+    # kendini kurtaramaz. Etiket birebir eşleşmelidir: `qwen2.5:7b`
+    # kısaltması ÇÖZÜLMEZ (gerekçe: src/extraction/llm/clients.py:432-437).
+    #
+    # Model künyesi: qwen2.5:7b-instruct, Q4_K_M, Apache-2.0, kök depo
+    # `Qwen/Qwen2.5-7B` (docs/model-license-audit.md §1).
     image: ollama/ollama:latest@sha256:4dea9fb511947e24a84237bb636b0203abcb2ff0d3fbc7b4ff865deb91362131
     volumes:
       - ollama:/root/.ollama
@@ -181,9 +196,26 @@ services:
       DATABASE_URL: ${DATABASE_URL:-}
       BANKS_CONFIG: config/banks.yaml
       RAW_DIR: data/raw
-      LLM_BACKEND: ""                    # "vllm"/"ollama" ile aktifleştir
+      # Varsayılan BOŞ = kural-only. Jüri demosu bir LLM beklemeden açılmalı
+      # (CLAUDE.md §11). `${LLM_BACKEND:-}` biçimi — `DATABASE_URL` ile aynı
+      # desen — kabuktan/`.env`'den `vllm`/`ollama` geçirmeye izin verir ama
+      # varsayılanı değiştirmez. Sabit `""` idi: değişkeni ilan edip
+      # geçirilemez yapmak, olmayan bir düğmeyi belgelemekti.
+      LLM_BACKEND: ${LLM_BACKEND:-}
       VLLM_URL: http://vllm:8000
+      # vLLM servisi (satır 130) `--model Trendyol/Trendyol-LLM-8B-T1` ile
+      # açılıyor ama bu satır YOKTU ve `clients.py:214` varsayılanı
+      # `Qwen/Qwen3-8B`. Yani `LLM_BACKEND=vllm` denenen ilk koşum, sunucuda
+      # SERVİS EDİLMEYEN bir model adı isteyip düşerdi. Ollama kolunda birebir
+      # aynı hata bir kez yaşanmış ve `clients.py:434-437`de yazılı; aynı
+      # tuzağın vLLM kolunda açık kalması sürüyordu. Sunucu ile istemcinin
+      # model adı TEK KAYNAKTAN gelsin diye ikisi de aynı değişkene bağlandı.
+      VLLM_MODEL: ${VLLM_MODEL:-Trendyol/Trendyol-LLM-8B-T1}
       OLLAMA_URL: http://ollama:11434
+      # `clients.py:437` varsayılanıyla birebir aynı. Şu an tesadüfen doğru
+      # çalışıyor; açıkça yazmak, varsayılan bir gün kayarsa sessiz
+      # "model not found" yerine görünür bir uyuşmazlık bırakır.
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b-instruct}
       # RAG retriever seçimi: keyword (varsayılan, üretim yolu) | auto | vector
       # bkz. src/chatbot/rag.build_retriever
       RAG_RETRIEVER: keyword
@@ -213,9 +245,14 @@ services:
       # değer yazmak, okunmayan bir ayarı ilan etmek olurdu.
       BANKS_CONFIG: config/banks.yaml
       RAW_DIR: data/raw
-      LLM_BACKEND: ""
+      # `api` ile birebir aynı gerekçe (yukarı bkz.): geçirilebilir varsayılan
+      # + sunucu/istemci model adının tek kaynaktan gelmesi. İki servis AYNI
+      # imajı koştuğu için ayrışmaları sessiz bir davranış farkı üretirdi.
+      LLM_BACKEND: ${LLM_BACKEND:-}
       VLLM_URL: http://vllm:8000
+      VLLM_MODEL: ${VLLM_MODEL:-Trendyol/Trendyol-LLM-8B-T1}
       OLLAMA_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b-instruct}
       RAG_RETRIEVER: keyword
     ports:
       - "8010:8000"

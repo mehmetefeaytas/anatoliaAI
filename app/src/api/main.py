@@ -189,13 +189,19 @@ from ..comparison.compare import (
     _HIGHER_IS_BETTER,
     _LOWER_IS_BETTER,
     ASGARI_GUVEN,
+    AVANTAJ_ALANLARI,
+    AVANTAJ_MUAFIYET_ALANLARI,
     DEFAULT_WEIGHTS,
     MIN_COVERAGE,
     MIN_GROUP_SIZE,
+    OLCULEN_SUTUNLAR,
+    SARTNAME_SUTUNLARI,
     RankRow,
     delta_between,
     rank,
     rank_advantageous_by_type,
+    tablo_dolulugu,
+    tablo_satirlari,
     tekil_banka_urun,
     weight_manifest,
     yon_zorla,
@@ -204,6 +210,7 @@ from ..comparison.contradiction import detect as detect_contradictions
 from ..db.base import (
     ARAMA_AZAMI_LIMIT,
     ARAMA_VARSAYILAN_LIMIT,
+    BELGE_TURU_SOZLESME,
     belge_turu_dogrula,
     kampanya_durumu_dogrula,
 )
@@ -786,6 +793,38 @@ def build_app():
         """
         return repo.query_fields(field, sozlesme_dahil=sozlesme_dahil)
 
+    def _kiyas_kapsami(campaign_type: Optional[str] = None) -> list[dict]:
+        """Kıyasa GİRMESİ GEREKEN (banka, kampanya türü) çiftleri.
+
+        `compare.rank(..., kapsam=...)` bunu alır ve bu kümede olup alan
+        satırı bulunmayan her çifti "Belirtilmemiş" satırı olarak ekler.
+        Gerekçe `compare.py`'nin "Kapsam kapısı" bloğunda; özeti: alanı
+        olmayan banka tablodan DÜŞMEMELİ, şartnamenin s.11–12 tablosu eksik
+        hücreli satırları açıkça gösteriyor.
+
+        Süzme `_field_rows` ile AYNI olmak zorundadır, yoksa kapsam ile veri
+        farklı evrenlerden gelir: sözleşme belgesinde oranı olan bir banka
+        kıyas tablosuna "verisi yok" diye girer ya da tersi. `query_fields`
+        `base.kiyas_where()` kullanıyor — *sözleşme hariç, türü BİLİNMEYEN
+        dahil*; buradaki süzgeç birebir odur (`== 'kampanya'` değil).
+
+        `govde=False`: yalnız banka + tür sayılıyor, ham metin okunmuyor
+        (`/bank-delta` ile aynı gerekçe, orada ölçülmüş).
+        """
+        gorulen: dict[tuple[Any, Any], dict] = {}
+        for c in repo.all_campaigns(govde=False):
+            if c.get("belge_turu") == BELGE_TURU_SOZLESME:
+                continue
+            tur = c.get("campaign_type")
+            if campaign_type and tur != campaign_type:
+                continue
+            gorulen.setdefault((c.get("bank"), tur), {
+                "bank": c.get("bank"),
+                "bank_name": c.get("bank_name"),
+                "campaign_type": tur,
+            })
+        return list(gorulen.values())
+
     def _cerceve(bank_slug: str) -> set[str]:
         """Bir bankanın belgelerinde tekrar eden cümlelerin anahtar kümesi.
 
@@ -1314,12 +1353,23 @@ def build_app():
         "bu bankanın bu ailede kaç kampanyası daha var". Bilgi gizlenmiyor,
         özetleniyor; `per_bank=all` ile tamamı yine alınabilir.
 
+        KAPSAM KARARI (2026-08-16): tablo, alanı olan bankaları değil
+        **kapsamdaki** bankaları gösterir. Şartnamenin beklenen çıktı tablosu
+        (s.11–12) eksik hücreli satırları açıkça içeriyor ("Belirtilmemiş",
+        "Masraf belirtilmemiş") — yani alanı olmayan bankayı düşürmek biçimin
+        doğrudan ihlali. Ölçüldü: `field=kar_payi_orani&type=Konut Finansmanı`
+        sekiz bankanın altısını döndürüyordu; Ziraat Katılım (46 konut
+        kampanyası) ve Adil Katılım sessizce düşüyordu. Kapsam
+        `_kiyas_kapsami()` ile hesaplanır ve `compare.rank(kapsam=...)`
+        eksikleri `value=null`, `comparable=false`, `note` ile ekler; bu
+        satırlar `sort_key`/`rank` taşımaz ve sıralamaya girmez.
+
         Dönen alanlar (mevcutlar korunur, yenileri eklendi):
           bank, bank_name, value, comparable, note, source_span  (mevcut)
           campaign_id, campaign_type, source_url, raw_value, confidence,
           confidence_source, extractor, span_start, span_end, span_scope,
           span_verified, span_ambiguous, window_start, window_end, sort_key,
-          rank, contradiction_count, other_count
+          rank, contradiction_count, other_count, oran_bazi
         """
         if intent is not None and intent not in VALID_INTENTS:
             raise HTTPException(
@@ -1384,20 +1434,59 @@ def build_app():
                 # yorum aynı tuzağı zaten iki kez anlatıyordu; üçüncüsü de
                 # aynı biçimde düştü.
                 "raw_value": r.get("raw_value"),
+                # Oranın bazı (`compare.rank()` BAZ kapısı). Çıkarım katmanı
+                # alanı henüz üretmiyor ve `.get()` `None` döndürüyor — kapı
+                # o hâlde ateşlenmez, çünkü bilinmeyen baz varsayılmaz. Alan
+                # buraya ŞİMDİDEN taşınıyor: yukarıdaki üç yorumun anlattığı
+                # tuzak tam olarak "kapı eklendi, alan taşınmadı, kapı
+                # sessizce kapalı kaldı" biçiminde üç kez tekrarlandı.
+                "oran_bazi": r.get("oran_bazi"),
             })
 
         # Sıralama → istenen yön → banka × ürün ailesi başına tek satır.
         # Üçü de `comparison/compare.py`'nin ortak kapıları; chatbot'un yapısal
         # yolu (`chatbot/structured.py`) BİREBİR aynı çağrıları yapar ve
         # ayrışmayı `tests/test_chatbot_kiyas_paritesi.py` kilitler.
-        ranked: list[RankRow] = yon_zorla(rank(rank_input, field), field,
-                                          intent)
+        ranked: list[RankRow] = yon_zorla(
+            rank(rank_input, field, kapsam=_kiyas_kapsami(type)), field, intent)
         if per_bank == "best":
             ranked = tekil_banka_urun(ranked)
 
         out = []
         position = 0
         for x in ranked:
+            # Kapsam satırı: bankanın bu ailede belgesi var ama bu alanda hiç
+            # çıkarım kaydı yok. Kaynak satırı YOKTUR — `kaynak[...]` ile
+            # aranırsa KeyError olurdu. Şema aynen korunur (arayüz tek bir
+            # satır biçimi bilir) ve ölçülmemiş her alan `None` kalır; sıfır
+            # ya da tahmin yazılmaz (CLAUDE.md §21).
+            if x.campaign_id is None:
+                out.append({
+                    "bank": x.bank,
+                    "bank_name": x.bank_name,
+                    "value": None,
+                    "comparable": False,
+                    "note": x.note,
+                    "source_span": None,
+                    "campaign_status": None,
+                    "campaign_id": None,
+                    "campaign_type": x.campaign_type,
+                    "source_url": None,
+                    "raw_value": None,
+                    "confidence": None,
+                    "confidence_source": None,
+                    "extractor": None,
+                    # Konum alanları da diğer satırlarla AYNI yoldan üretilir;
+                    # elle boş sözlük yazmak, `span_info` bir alan eklediğinde
+                    # sessizce ayrışırdı.
+                    **span_info("", None, None),
+                    "sort_key": None,
+                    "rank": None,
+                    "contradiction_count": 0,
+                    "other_count": x.other_count,
+                    "oran_bazi": None,
+                })
+                continue
             src = kaynak[(x.campaign_id, x.source_span)]
             # Metin `_campaign_view()`'dan gelir — `/campaigns/{id}/text` ile
             # AYNI metin. `query_fields()` bilerek `raw_text` döndürmez: aynı
@@ -1450,8 +1539,104 @@ def build_app():
                 # tekilleştirme hiç koşmaz ve alan 0 kalır (hiçbir şey
                 # elenmemiştir).
                 "other_count": x.other_count,
+                # Oranın bazı (`compare.rank()` baz kapısı). Değeri `None`
+                # ise baz ÖLÇÜLMEMİŞTİR — "aylık" demek değildir.
+                "oran_bazi": x.oran_bazi,
             })
         return out
+
+    @app.get("/urun-tablosu")
+    def urun_tablosu(type: Optional[str] = None, bank: Optional[str] = None):
+        """Şartname Senaryo-1 tablosu: banka başına TEK satır, YEDİ kolon.
+
+        Şartname s.11–12 çözümün çıktısını bir tabloyla tarif ediyor::
+
+            Banka | Ürün Türü | Kâr Payı Oranı | Vade | Kampanya Avantajı |
+            Masraf Durumu | Kampanya Süresi
+
+        Bu uç `/compare`'in YERİNE GEÇMEZ, yanına gelir. `/compare` tek
+        alanlıdır (bir kolon, çok banka) ve kanıt/güven/katman kolonlarıyla
+        denetim yüzeyidir; bu uç çok alanlıdır (bir banka, yedi kolon) ve
+        şartnamenin manşet illüstrasyonunun karşılığıdır. Kural ve gerekçeler
+        `comparison/compare.py`'nin "Şartname Senaryo-1 tablosu" bloğunda —
+        burada ikinci kez yazılmaz.
+
+        ## Ne YAPMAZ
+
+        * **Kampanyaları birleştirmez.** Satır tek bir kampanyayı temsil eder;
+          oranı bir kampanyadan, vadeyi bir başkasından alıp aynı satıra
+          yazmak var olmayan bir ürün icat etmek olurdu (CLAUDE.md §21).
+          Bankanın aynı ailedeki diğer kampanyaları `other_count` ile sayılır.
+        * **Serbest metin üretmez.** "Kampanya Avantajı" bir çıkarım alanı
+          DEĞİLDİR ve şemaya böyle bir sütun eklenmedi; mevcut span'li
+          alanlardan (`odul_miktari`, `alisveris_puani`, `indirim_orani`;
+          hiçbiri yoksa ücret muafiyeti) derlenen parçalardan oluşur ve her
+          parça kendi kaynağını taşır.
+        * **Türkçe metni üretmez.** Hücreler kanonik değer + kanıt döner; boş
+          hücrenin «Belirtilmemiş» yazısı arayüzün işidir
+          (`web/app/lib/format.ts`). Sunucuda ikinci bir biçimlendirici
+          tutmak, aynı kararı iki yerde yaşatmak olurdu.
+
+        ## Doluluk — gizlenmez, SAYILIR
+
+        Korpus bu tabloyu bugün büyük ölçüde boş dolduruyor ve bu bir kusur
+        değil veri gerçeğidir. `doluluk` alanı "kaç hücrenin kaçı dolu"yu
+        ÇALIŞMA ANINDA ölçer; sayı koda gömülmez, çünkü çıkarım katmanı
+        geliştikçe değişir. Şartnamenin kendi tablosunda da 21 hücrenin 3'ü
+        "Belirtilmemiş"tir.
+
+        Süzgeçler: `type` (kampanya türü), `bank` (tek banka). İkisi de
+        opsiyoneldir; `type` verilmezse her ürün ailesi ayrı satır kümesi
+        olarak döner ve satırlar (tür, banka adı) sırasındadır.
+        """
+        # Kolonların ihtiyaç duyduğu TÜM alanlar tek geçişte çekilir; alan
+        # başına bir sorgu (`/bank-delta` ile aynı desen). Kampanya kimliğine
+        # göre indekslenir çünkü satır = tek kampanya.
+        gerekli = {f for _a, _b, f in SARTNAME_SUTUNLARI if f}
+        gerekli.update(AVANTAJ_ALANLARI)
+        gerekli.update(AVANTAJ_MUAFIYET_ALANLARI)
+
+        kampanyalar: dict[Any, dict[str, Any]] = {}
+        for alan in sorted(gerekli):
+            for r in _field_rows(alan):
+                if type and r.get("campaign_type") != type:
+                    continue
+                if bank and r.get("bank") != bank:
+                    continue
+                kayit = kampanyalar.setdefault(r["campaign_id"], {
+                    "bank": r["bank"], "bank_name": r["bank_name"],
+                    "campaign_id": r["campaign_id"],
+                    "campaign_type": r["campaign_type"],
+                    "campaign_status": r.get("campaign_status"),
+                    "source_url": r.get("source_url"),
+                    "fields": {},
+                })
+                # `query_fields()` alan başına kampanyada TEK kayıt döndürür
+                # (ölçüldü: 5455 satırda mükerrer (alan, kampanya) çifti yok);
+                # yine de ilk kayıt kazanır — sessizce ikinciye geçmek, hangi
+                # kanıtın gösterildiğini sorgu sırasına bırakırdı.
+                kayit["fields"].setdefault(alan, r)
+
+        kapsam = [k for k in _kiyas_kapsami(type)
+                  if not bank or k["bank"] == bank]
+        satirlar = tablo_satirlari(kampanyalar.values(), kapsam=kapsam)
+
+        return {
+            "type": type,
+            "bank": bank,
+            "columns": [{"key": a, "label": b, "field_name": f,
+                         "olculur": a in OLCULEN_SUTUNLAR}
+                        for a, b, f in SARTNAME_SUTUNLARI],
+            "doluluk": tablo_dolulugu(satirlar),
+            "fairness_note": (
+                "Her satır TEK bir kampanyadır; bir bankanın farklı "
+                "kampanyalarından alınan değerler aynı satırda "
+                "BİRLEŞTİRİLMEZ. Ölçülemeyen hücre boş bırakılır ve "
+                "«Belirtilmemiş» olarak gösterilir — sıfır ya da tahmin "
+                "yazılmaz. Tablo bir sıralama değildir: satırlar banka adına "
+                "göre dizilir."),
+            "rows": [s.to_dict() for s in satirlar],
+        }
 
     @app.get("/bank-delta")
     def bank_delta(bank: str, type: Optional[str] = None,
@@ -1584,7 +1769,11 @@ def build_app():
                      # Koşul kapısı da geçerli: "mobilden yeni müşterilere
                      # özel %0" ile hesaplanmış bir delta, herkesin
                      # alamayacağı bir orana dayanan bir farktır.
-                     "raw_value": r.get("raw_value")}
+                     "raw_value": r.get("raw_value"),
+                     # Baz kapısı da geçerli: yıllık ilan edilmiş bir oranla
+                     # aylık bir orandan çıkarılan fark, birimi görmezden
+                     # gelen bir aritmetiktir.
+                     "oran_bazi": r.get("oran_bazi")}
                     for i, r in enumerate(aile_satirlari)
                 ], alan)
 
@@ -1626,6 +1815,7 @@ def build_app():
                         alan,
                         benim.sort_key if benim.comparable else None,
                         rakip.sort_key if rakip.comparable else None,
+                        benim.oran_bazi, rakip.oran_bazi,
                     )
 
                 alan_ciktilari.append({

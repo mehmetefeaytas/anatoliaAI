@@ -149,3 +149,7 @@ data/demo.db.yedek-*
 # Gerekçeler `docs/rapor/yayin-kademesi.md` içinde tutulur; o dosya da yayınlanmaz.
 docs/rapor/rakip-analizi.md
 docs/rapor/yayin-kademesi.md
+
+# `scripts/baslat.sh`ın çalışma dizini: log + pid dosyaları. Tümü türetilmiş ve
+# makineye özgüdür (pid'ler zaten başka bir makinede anlamsızdır).
+.calisma/

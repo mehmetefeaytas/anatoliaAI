@@ -392,3 +392,198 @@ baskısında görüldü, tahmin edilmedi**:
 Ses şu an macOS'un Türkçe sesi (Yelda). 20 cümle `ses/S01.wav` …
 `ses/S20.wav` olarak AYRI dosyalar. Kendi sesinle kaydederken aynı
 numaralandırmayı koru; `kurgu.py`yi yeniden koşmak yeterli.
+
+---
+
+## ✅ İkinci sürüm: KAPSAMLI, yalnız gerçek arayüz — 2026-08-16
+
+Yukarıdaki ilk sürüm başlık kartlarıyla anlatıyordu. Bu sürümde **tek bir
+kart, mockup veya çizim yok**: her kare sistemin kendi arayüzünden, gerçek
+veriyle, gerçek yükleme süreleriyle çekildi. Karşılığında ilk sürümün
+göstermediği yedi ekran daha giriyor.
+
+| | Dosya | Süre | Boyut |
+|---|---|---|---|
+| Tam sürüm | `anatolia-ai-demo-kapsamli.mp4` | **3:04** | 28 MB |
+| Kısa kesit | `anatolia-ai-demo-kapsamli-1dk.mp4` | **0:55** | 9,5 MB |
+
+1920×1080 · 30 fps · H.264 · AAC 48 kHz mono. Şartname s.14 tavanı (5 dk) ve
+s.19 kısa kesit koşulu — ikisi de karşılanıyor (`SARTNAME-UYUM.md` satır 68'de
+kayıtlı süre çelişkisi).
+
+### Kapsanan on iki ekran
+
+| # | Sahne | Ne kanıtlıyor |
+|---|---|---|
+| 1 | Pano + tema geçişi (açık ↔ koyu) | ürün gerçek, iki temada da çalışıyor |
+| 2 | Karşılaştırma cetveli (alan değiştirme) | 12/12 alan, adil kıyas kapısı |
+| 3 | Isı haritası | hangi banka hangi alanı yayımlıyor — boşluklar dâhil |
+| 4 | En avantajlı | yalnız normalize alan üzerinden sıralama |
+| 5 | Banka sayfası | tek kurumun tüm kampanyaları + toplanma tarihi |
+| 6 | Banka içi delta | kurumun kendi içindeki tutarsızlık |
+| 7 | Çelişki tespiti | §18/2 yenilik hedefi, korpusun tamamında tarama |
+| 8 | Jüri denetim paneli | değer → karakter aralığı → kaynak cümle |
+| 9 | Canlı çıkarım | önceden hazırlanmış cevap değil |
+| 10 | Chatbot | hibrit yönlendirme (text-to-SQL ↔ RAG), belgeye bağlı cevap |
+| 11 | Veri tazeleme | config-driven banka onboarding (§18/3) |
+| 12 | İşlem günlüğü | her koşu kayıtlı |
+
+### Üretim hattı
+
+| Aşama | Araç | Betik |
+|---|---|---|
+| Gerçek arayüz çekimi (12 sahne) | Playwright | `cek-kapsamli.py` |
+| Türkçe seslendirme (28 cümle) | `edge-tts` · `tr-TR-AhmetNeural` `+14%` | `ses-kapsamli.py` → `ses-kapsamli.json` |
+| Kurgu | ffmpeg (xfade + adelay/amix) | `kurgu-kapsamli.py` |
+
+```bash
+# ön koşul: API :8000 ve arayüz :3000 ayakta
+python docs/sunum/video-uretim/cek-kapsamli.py            # 12 klip
+python docs/sunum/video-uretim/ses-kapsamli.py            # ses + süre ölçümü
+python docs/sunum/video-uretim/kurgu-kapsamli.py          # 3:04
+python docs/sunum/video-uretim/kurgu-kapsamli.py --kisa   # 0:55
+```
+
+### Çekim sırasında düzeltilen üç kusur
+
+Yine **tahminle değil, kare bakarak** yakalandı:
+
+1. **`Açık` düğmesi yanlış öğeye düşüyordu.** `has_text="Açık"` alt dize
+   eşleştirdiği için `Jüri modu: açık` düğmesini yakalıyordu; tam eşleşmeye
+   (`get_by_role(..., exact=True)`) çevrildi.
+2. **Beş sahne, seslendirmenin gerektirdiği pencereden kısaydı.** Donmuş kare
+   basmak yerine o sahneler daha uzun tutuşlarla **yeniden çekildi**.
+3. **Sekme turlarında sayfa yüklemesi klibin baştaki ~6 saniyesini yiyordu**;
+   sabit başlangıç yükleme ekranını kadraja sokuyordu. Kurgu penceresi artık
+   klibin **sonuna yaslanıyor** (`baslangic=None`), böylece içeriğin yüklü
+   olduğu garanti.
+
+### ⚠️ İki dürüstlük notu
+
+**Seslendirme yine geçici.** Ses Microsoft'un Türkçe nöral sesi
+(`tr-TR-AhmetNeural`, %14 hızlandırılmış). 28 cümle `ses2/01.mp3` …
+`ses2/28.mp3` olarak AYRI dosyalar; kendi sesinle kaydederken numaralandırmayı
+koru, `kurgu-kapsamli.py` yeniden koşmak yeterli.
+
+**`edge-tts` internet ister.** Bu yalnız videonun ÜRETİMİNDE geçerlidir.
+Teslim edilen sistemin offline kısıtıyla ilgisi yoktur: video bir sunum
+malzemesidir, ürünün bir parçası değildir ve `docker-compose up` yolunda
+`edge-tts` hiç bulunmaz (`requirements.txt`'te yok). Kendi sesinle
+kaydedildiğinde hattan tamamen çıkar.
+
+---
+
+## ✅ 1 dakikalık kesit: sekiz ekran + Ayarlar kapanışı — 2026-08-16
+
+`anatolia-ai-demo-1dk-sekiz-ekran.mp4` — **56 sn** · 9,1 MB · 1920×1080 · 30 fps.
+
+Bu kesit kapsamlı sürümün bir alt kümesi **değil**, kendi anlatısı olan ayrı bir
+kurgu. Sekiz ekran, sekiz cümle, sahne başına ~7 saniye:
+
+| # | Ekran | Cümlenin söylediği |
+|---|---|---|
+| 1 | Karşılaştırma | 10 banka · 1.782 belge, tek cetvel |
+| 2 | En Avantajlı | yalnız aynı birime normalize alanlar sıralanıyor |
+| 3 | Banka Sayfası | son toplama tarihi · kaynak adresi · 12 alanın kaçı dolu |
+| 4 | Çelişki Tespiti | "masrafsız" deyip ücret alan kampanyalar |
+| 5 | Chatbot | sayısal soru → yapısal sorgu, koşul sorusu → getirimli üretim |
+| 6 | Veri Tazeleme | her banka tek tıkla, robots.txt ve hız sınırıyla |
+| 7 | Jüri Audit Paneli | her değer, çıkarıldığı cümlenin karakter aralığına bağlı |
+| 8 | **Ayarlar** | veri ekleme uçlarının şeması hazır — iş birliğinde açılacak |
+
+### Kapanış neden bu cümle
+
+Ayarlar sekmesi bir ayar ekranı değil, ekranın kendi deyimiyle **bir sözleşme
+belgesi**: `POST /admin/banks`, `POST /admin/banks/{slug}/campaigns` ve
+`POST /admin/banks/{slug}/products` uçlarının gövde şemaları **sunucudan
+okunuyor** ve bugün **501** dönüyor. Doldurulabilen tek bir alan bilerek yok —
+çünkü doldurulabilen bir form, doldurulunca çalışacağını vaat eder.
+
+Video bu yüzden *"uçlar çalışıyor"* demiyor; *"şeması hazır, bankalarla iş
+birliği kurulup API verildiğinde sistem açılmaya hazır bekliyor"* diyor. Ekran
+ne söylüyorsa seslendirme onu söylüyor.
+
+### Kare denetiminde düzeltilen iki şey
+
+Kurgudan önce sekiz sahnenin sekizi de kare kare bakıldı; ikisi ilk seferde
+tutmadı ve **cümle değil, önce pencere** düzeltildi:
+
+- **En Avantajlı** penceresi sona yaslanınca sıralamanın *"kıyas dışı / skor
+  yok"* kuyruğuna denk geliyordu. Pencere sıralamanın **tepesine** taşındı
+  (1. sıra Kuveyt Türk, bileşik skor 1,00).
+- **Banka Sayfası** ile **Veri Tazeleme** cümleleri ekranın göstermediği şeyi
+  söylüyordu (*"bütün kampanyalarını getiriyor"*, *"yeni bankayı tek satırla
+  sokuyor"*). Ekranlar aslında kurum künyesi + veri kapsamı ve mevcut bankaların
+  yeniden toplanmasını gösteriyor. **Cümleler ekrana uyduruldu, ekran cümleye
+  değil.**
+
+### Üretim
+
+```bash
+python docs/sunum/video-uretim/cek-kapsamli.py ayarlar   # eksik tek sahne
+python docs/sunum/video-uretim/ses-1dk.py                # 8 cümle + süre ölçümü
+python docs/sunum/video-uretim/kurgu-1dk.py              # 56 sn
+```
+
+`kurgu-1dk.py` süre 60 saniyeyi aşarsa çıktıya **⚠ 60 sn AŞILDI** basar; sessizce
+uzun bir video üretmez.
+
+---
+
+## ✅ 1 dk kesiti, ikinci geçiş: dolu veri + hızlandırma — 2026-08-16
+
+Aynı sekiz ekran, ama **korpusun dolu kesiti** ve sayfa başına iki-üç cümle.
+`anatolia-ai-demo-1dk-sekiz-ekran.mp4` — **59 sn** · 9,5 MB · 13 cümle.
+
+### Neden gerekti: ilk geçiş korpusun EN BOŞ kesitini gösteriyordu
+
+Arayüzün varsayılanları demo için ters çalışıyor. `sqlite3 data/demo.db`
+ölçümü:
+
+| Ekran | Varsayılan | Kaç veri | Seçilen | Kaç veri |
+|---|---|---|---|---|
+| Banka Sayfası | Adil Katılım | 6 belge · 12 alandan **2**'si | **Kuveyt Türk** | 537 belge · 12 alandan **12**'si · 1.703 değer |
+| Karşılaştırma | `kar_payi_orani` | 70 belge · 3/10 banka | **`masraf_durumu`** | 498 belge · **9/10 banka** |
+| En Avantajlı | Alışveriş Puanı | 1 sıralanabilir | **Yatırım Ürünü** | **14** sıralanabilir |
+
+Adil Katılım korpusun **en boş** bankası; ilk kesit tam da onu açıyordu.
+Veri uydurulmadı — var olanın en dolusu seçildi ve seçim gerekçesi ölçümle
+birlikte `cek-dolu-veri.py` başlığında yazılı.
+
+**En Avantajlı'da ayrı bir tür seçildi.** "En çok kampanya" ile "en çok
+**sıralanabilir** kampanya" aynı tür değil: sıralama bileşik skor istediği için
+Kart 446 kampanyanın yalnız 4'ünü sıralayabiliyor. Arayüzden tür tür sayıldı —
+Yatırım Ürünü 14 · Konut 9 · Taşıt 9 · İhtiyaç 7 · Kart 4 · Yeni Müşteri 0.
+
+### İki ayrı hızlandırma
+
+| Ne | Nasıl | Ne kazandırıyor |
+|---|---|---|
+| Ses | `edge-tts` `+38%` | aynı saniyede daha çok cümle (8 → 13) |
+| Görüntü | `setpts=PTS/1.4` | aynı saniyede %40 daha çok ekran |
+
+Görüntü hızlandırması kare atlamıyor: her sahnede kaynaktan `süre × 1,4`
+kadar pencere alınıp `süre`ye sıkıştırılıyor. Yani sahne daha çok kaydırma ve
+tıklama gösteriyor, daha az kare değil.
+
+`kurgu-1dk.py` süreyi 60 saniyelik tavana karşı ölçüyor ve aşarsa
+**⚠ TAVAN AŞILDI** basıyor.
+
+### Kare denetiminde düzeltilen iki şey
+
+- **Açılış karesi alan geçişinin iskelet anına denk geliyordu** — başlık hâlâ
+  önceki alanın `6/10`'unu, satırlar yükleme çizgilerini gösteriyordu. `cetvel3`
+  klibine kuyruk eklenip pencere oturmuş tabloya kaydırıldı.
+- **Cümle sırası ekran sırasıyla tersti**: pencere klibin sonuna yaslandığı
+  için önce masraf tablosu, sonra kanıt tablosu görünüyor; ama "9/10 banka"
+  iddiası kanıt tablosunun üstüne düşüyordu. Cümleler ekran sırasına dizildi.
+
+### Üretim
+
+```bash
+python docs/sunum/video-uretim/cek-dolu-veri.py   # cetvel3 · avantaj3 · banka3
+python docs/sunum/video-uretim/cek-kapsamli.py \
+       celiski sohbet tazele kanit ayarlar        # kalan beş sahne
+python docs/sunum/video-uretim/ses-1dk.py         # 13 cümle + süre ölçümü
+python docs/sunum/video-uretim/kurgu-1dk.py       # 59 sn
+```

@@ -25,7 +25,9 @@ Bu yüzden düzeltme değil **mekanizma** gerekiyor.
 
 ## İki ayrı denetim — karıştırılmamalı
 
-1. **Değer denetimi:** belgedeki sayı = kanıttan okunan sayı.
+1. **Değer denetimi:** belgedeki sayı = kanıttan okunan sayı. Yalnız tablo
+   hücresi değil, **prozadaki bayat kalıntı** da denetlenir — gerekçesi ve
+   yanlış-pozitif sınırı "prozadaki bayat sayı" bölümünde.
 2. **Tazelik denetimi:** kanıtın kendisi güncel girdilerden mi üretilmiş?
    Bir ölçüm raporu doğru sayıyı taşıyabilir ama başka bir gold'dan üretilmiş
    olabilir. `env.json`'daki `gold_sha256` bugünkü gold dosyasının sha'sı
@@ -429,6 +431,91 @@ def olc_metrik(gold_dosya: str, anahtar: str, matcher: str = "strict"
     return _olc
 
 
+# ──────────────── prozadaki bayat sayı — kapının kör noktası ───────────
+#
+# `desenler` TABLO HÜCRESİNE çapalıdır ("… mikro-F1 \| ([\d,]+)"). Aynı sayı
+# düz metinde (proza) geçtiğinde kapı onu GÖRMÜYORDU. Ölçüldü 2026-08-16:
+# `app/README.md` tablosu 12-alan mikro-F1'i 0,464 yazarken aynı belgenin iki
+# cümlesi hâlâ 0,452 diyordu (12 Ağustos ölçümü; `eval/reports/20260812-212355`
+# doğruluyor) — kapı "10 iddia · 0 sapma" yeşil yanıyordu. Bayat sayı, kapı
+# kuran bir takımda sayının kendisinden çok kapıya olan güveni zedeler.
+#
+# ## Neden "prozadaki her sayı" DENETLENMEZ
+#
+# Bir belgedeki her sayı bir ölçüm iddiası değildir: sürüm (`v1→v2`), tarih
+# (2026-08-07), satır numarası (`README.md:211`), madde numarası (§4.13/8),
+# port, örneklem büyüklüğü, eşik. Hepsini denetlemek kapıyı gürültüye boğar
+# ve gürültülü kapı kapatılır. O yüzden denetlenen küme TEK BİR KURALLA
+# sınırlanır:
+#
+#   **Belgenin KENDİ geçersiz ilan ettiği eski değer.**
+#
+# Belge bir yerde `0,452 → 0,464` yazıyor ve bugünkü ölçüm 0,464 ise, 0,452'yi
+# geçersiz ilan eden belgenin kendisidir. O hâlde aynı belgede başka bir yerde
+# çıplak duran her 0,452 bayat kalıntıdır. Bu çıkarım sezgi değil, belgenin
+# kendi aleyhine tanıklığıdır — yanlış pozitif üretemez, çünkü hiçbir sayı
+# "geçmişte bu iddianın değeriydi" diye belgede yazmadan denetime giremez.
+#
+# İlanın kendisi (`0,452 → 0,464`) MUAFTIR: eski değeri tarihçe olarak yazmak
+# dürüstlüktür, bayatlık değil.
+
+# "eski → yeni" ilanı. Ok, yazarın "bu değişti" demesidir.
+OK_ISARETI = r"(?:→|->|=>)"
+
+# TR biçiminde bir sayı: `0,464` · `1.782` · `2.946` · `53`.
+SAYI_PARCASI = r"\d+(?:[.,]\d+)*"
+
+
+def _ayrisik(sayi: str) -> str:
+    """Sayıyı KOMŞU rakam/ayırıcı olmadan eşleyen desen.
+
+    `0,452` ararken `0,4521` veya `10,452` eşleşmemeli.
+    """
+    return rf"(?<![\d.,]){re.escape(sayi)}(?![\d.,])"
+
+
+def _prozada_denetlenir(gosterim: str) -> bool:
+    """Yalnız AYIRICI TAŞIYAN değer prozada denetlenir (`0,464` · `1.782`).
+
+    Çıplak küçük tam sayı denetim dışıdır. Gerekçe ölçülmüştür, varsayım
+    değil — `app/README.md` bugün iki gerçek yanlış pozitif üretirdi:
+      * "halüsinasyonu 60 → 53 düşürüyor" → 53 bugünkü `test_atlandi`
+        ölçümüdür; kural 60'ı "bayat" ilan eder ve belgedeki her çıplak 60'ı
+        (vade, yüzde, kayıt sayısı) işaretlerdi.
+      * "66 → 150 bandı" → gold büyütme hedefi, ölçüm değil.
+    Ayırıcılı değer (`0,464`, `1.782`) bir metnin içinde tesadüfen başka bir
+    şeyi anlatacak kadar sık geçmez; çıplak `53` geçer.
+    """
+    return "," in gosterim or "." in gosterim
+
+
+def _ilan_edilen_eskiler(metin: str, guncel: str) -> list[str]:
+    """Belgenin `<eski> → <güncel>` diye geçersiz ilan ettiği değerler."""
+    desen = re.compile(
+        rf"(?<![\d.,])({SAYI_PARCASI})\s*{OK_ISARETI}\s*{re.escape(guncel)}"
+        rf"(?![\d.,])")
+    eskiler: list[str] = []
+    for m in desen.finditer(metin):
+        eski = m.group(1)
+        # Aynı değere ok atmak bir düzeltme değildir; ayırıcısız değer de
+        # denetim dışıdır (bkz. `_prozada_denetlenir`).
+        if eski != guncel and _prozada_denetlenir(eski) and eski not in eskiler:
+            eskiler.append(eski)
+    return eskiler
+
+
+def _bayat_kalintilar(metin: str, eski: str, guncel: str) -> list[tuple[int, str]]:
+    """(satır, değer) — ilan satırı dışında hâlâ duran eski değer geçişleri."""
+    ilan = re.compile(rf"{_ayrisik(eski)}\s*{OK_ISARETI}\s*{re.escape(guncel)}")
+    tekil = re.compile(_ayrisik(eski))
+    bulunan: list[tuple[int, str]] = []
+    for i, satir in enumerate(metin.splitlines(), 1):
+        # İlanın kendisi maskelenir; aynı satırdaki DİĞER geçişler kalır.
+        maskeli = ilan.sub(lambda m: "\x00" * len(m.group(0)), satir)
+        bulunan.extend((i, eski) for _ in tekil.finditer(maskeli))
+    return bulunan
+
+
 # ─────────────────────────────── iddialar ──────────────────────────────
 
 
@@ -454,6 +541,38 @@ class Iddia:
                 for m in re_.finditer(satir):
                     bulunan.append((goreli, i, m.group(1)))
         return bulunan
+
+    def kapsam(self) -> tuple[str, ...]:
+        """Prozası taranacak belgeler — iddianın zaten yayımlandığı belgeler.
+
+        Ayrı bir alan DEĞİL, `desenler`den türetilir: bir belgeyi denetime
+        sokmanın tek yolu oraya bir desen yazmaktır, ve o belge otomatik
+        olarak proza taramasına da girer. İki listenin ayrışması mümkün olmaz.
+        """
+        gorulen: list[str] = []
+        for goreli, _ in self.desenler:
+            if goreli not in gorulen:
+                gorulen.append(goreli)
+        return tuple(gorulen)
+
+    def bayat_prozada(self, olculen: float) -> list[dict[str, Any]]:
+        """Belgenin kendi geçersiz ilan ettiği değerin hâlâ duran geçişleri."""
+        guncel = yaz_tr(olculen)
+        if not _prozada_denetlenir(guncel):
+            return []
+        bulgular: list[dict[str, Any]] = []
+        for goreli in self.kapsam():
+            yol = DEPO / goreli
+            if not yol.exists():
+                continue
+            metin = yol.read_text(encoding="utf-8")
+            for eski in _ilan_edilen_eskiler(metin, guncel):
+                for satir, deger in _bayat_kalintilar(metin, eski, guncel):
+                    bulgular.append({
+                        "dosya": goreli, "satir": satir, "yazan": deger,
+                        "not": f"prozada bayat — belge {eski} → {guncel} "
+                               f"düzeltmesini kendisi ilan etmiş"})
+        return bulgular
 
 
 @dataclass
@@ -557,16 +676,29 @@ def iddialar() -> list[Iddia]:
             olcer=olc_banka_sayisi,
             tolerans=0.5,
         ),
+        # İki metrik iddiası yalnız kök README'ye bakıyordu; `app/README.md`
+        # aynı sayıları kendi tablosunda yayımladığı hâlde denetim dışıydı.
+        # `\*{0,2}` iki tablonun kalın/düz biçim farkını tek desende toplar.
         Iddia(
             ad="v2_mikro_f1",
             aciklama="gold.v2 · strict · 12-alan mikro-F1",
-            desenler=(("README.md", r"12-alan mikro-F1 \| ([\d,]+)"),),
+            desenler=(
+                ("README.md", r"12-alan mikro-F1 \| \*{0,2}([\d,]+)"),
+                ("app/README.md", r"12-alan mikro-F1 \| \*{0,2}([\d,]+)"),
+            ),
             olcer=olc_metrik("gold.v2.json", "mikro_f1"),
         ),
         Iddia(
             ad="v2_halusinasyon",
             aciklama="gold.v2 · strict · halüsinasyon oranı",
-            desenler=(("README.md", r"Halüsinasyon oranı \| \*\*([\d,]+)\*\*"),),
+            # `(0,\d+)` gevşeklik değil, ÖLÇÜLMÜŞ bir yanlış pozitifin kapısı:
+            # `README.md:172` "`absent` kararı (halüsinasyon paydası) | **444**"
+            # satırı `([\d,]+)` ile eşleşip PAYDAYI oran sanıyordu. Halüsinasyon
+            # oranı tanımı gereği 0 ile 1 arasındadır; payda değildir.
+            desenler=(
+                ("README.md", r"(?i)halüsinasyon[^|]*\| \*\*(0,\d+)\*\*"),
+                ("app/README.md", r"(?i)halüsinasyon[^|]*\| \*\*(0,\d+)\*\*"),
+            ),
             olcer=olc_metrik("gold.v2.json", "halusinasyon"),
         ),
     ]
@@ -599,6 +731,14 @@ def denetle(secili: set[str] | None = None) -> list[Sonuc]:
                 continue
             if abs(deger - olculen) > iddia.tolerans:
                 sapmalar.append({"dosya": dosya, "satir": satir, "yazan": ham})
+        # Tablo hücresi bittikten sonra PROZA: belgenin kendi geçersiz ilan
+        # ettiği eski değer hâlâ cümlelerin içinde duruyor olabilir.
+        gorulen = {(d["dosya"], d["satir"], d["yazan"]) for d in sapmalar}
+        for bulgu in iddia.bayat_prozada(olculen):
+            anahtar = (bulgu["dosya"], bulgu["satir"], bulgu["yazan"])
+            if anahtar not in gorulen:
+                gorulen.add(anahtar)
+                sapmalar.append(bulgu)
         sonuclar.append(Sonuc(iddia.ad, "sapma" if sapmalar else "tamam",
                               olculen, sapmalar))
     return sonuclar

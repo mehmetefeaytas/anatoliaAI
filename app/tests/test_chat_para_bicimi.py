@@ -106,7 +106,20 @@ class TestAlanBazliGosterim(unittest.TestCase):
     def test_bilinmeyen_alan_cokmez(self) -> None:
         self.assertEqual(_fmt_value("bilinmeyen_alan", 1500.0), "1.500")
         self.assertEqual(_fmt_value("bilinmeyen_alan", "metin"), "metin")
-        self.assertEqual(_fmt_value("masraf_durumu", None), "None")
+
+    def test_degeri_olmayan_alan_Belirtilmemis_basar(self) -> None:
+        """Eskiden burada `"None"` bekleniyordu — ham Python gösterimi.
+
+        O beklenti bu sınıfın kendi ilkesiyle çelişiyordu
+        (`test_hicbir_alanda_ham_python_sayisi_kalmaz`: kullanıcıya
+        `str(12.0)` gibi bir çıktı gitmemeli) ve kusuru yerinde donduruyordu.
+        Kusur görünür hâle geldi: `compare.rank(kapsam=...)` artık alanı
+        olmayan bankayı da satır olarak döndürüyor (değer `None`) ve sohbette
+        "Ziraat Katılım: None" yazıyordu. Jeton arayüzdekiyle aynı olmalı —
+        `web/app/lib/format.ts:73` `BELIRTILMEMIS`.
+        """
+        self.assertEqual(_fmt_value("masraf_durumu", None), "Belirtilmemiş")
+        self.assertEqual(_fmt_value("kar_payi_orani", None), "Belirtilmemiş")
 
 
 class TestTekYer(unittest.TestCase):

@@ -48,13 +48,67 @@ function isRec(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null;
 }
 
+const AYLAR = [
+  "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+  "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık",
+];
+
+const ISO_TARIH = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/**
+ * ISO-8601 tarihi Türkçe okunuşa çevirir: `2026-12-31` → `31 Aralık 2026`.
+ *
+ * Kanonik biçim ISO'dur (CLAUDE.md §10) ve DEĞİŞMEZ — bu yalnız GÖSTERİM.
+ * Şartname s.12 tablosunun «Kampanya Süresi» hücresi tam bu okunuşu yazıyor
+ * ("31 Aralık 2026"); ekranda `2026-12-31` basmak, kanonik saklama biçimini
+ * kullanıcıya sızdırmak olurdu (§19: kullanıcıya dönük metinler Türkçe).
+ *
+ * Ay adları SABİT bir diziden gelir, `Intl.DateTimeFormat`ten değil: `Intl`in
+ * tarih verisi Node/tarayıcı derlemesine göre değişebiliyor (küçük ICU
+ * derlemesinde İngilizce'ye düşer) ve bu ekran offline bir jüri makinesinde
+ * açılacak. Sabit dizi her yerde aynı çıktıyı verir.
+ *
+ * ISO OLMAYAN ya da geçersiz bir dizeye `null` döner — çağıran ham değeri
+ * basar. Tanımadığı bir biçimi tarih sanıp yeniden yazmak, olmayan bir bilgi
+ * iddia etmek olurdu.
+ */
+export function trTarih(deger: string): string | null {
+  const m = deger.match(ISO_TARIH);
+  if (!m) return null;
+  const [, yil, ay, gun] = m;
+  const ayNo = Number(ay);
+  const gunNo = Number(gun);
+  if (ayNo < 1 || ayNo > 12 || gunNo < 1 || gunNo > 31) return null;
+  return `${gunNo} ${AYLAR[ayNo - 1]} ${yil}`;
+}
+
 function num(v: unknown): string {
   return typeof v === "number" ? trNum(v) : String(v);
 }
 
+/**
+ * Bilgi YOKLUĞUNUN jetonu.
+ *
+ * Şartnamenin beklenen çıktı tablosu (s.11–12) bu sözcüğü BİREBİR kullanıyor:
+ * B Bankası satırının «Kampanya Süresi» hücresi «Belirtilmemiş», C Bankası
+ * satırının «Masraf Durumu» hücresi «Masraf belirtilmemiş». Yani boş hücrenin
+ * beklenen biçimi bir tire değil, bir CÜMLEDİR.
+ *
+ * Eskiden burada `«—»` vardı. Tire iki ayrı şeyi aynı işarete indiriyordu:
+ * «bu bilgi kampanyada belirtilmemiş» ile «burada gösterilecek bir şey yok».
+ * Ekran okuyucuda ise hiçbir şey okunmuyordu — erişilebilirlik açısından da
+ * boş bir hücre.
+ *
+ * Şartnamenin alan-nitelemeli varyantı («Masraf belirtilmemiş») BİLEREK
+ * kurulmadı: aynı bilgiyi iki biçimde üreten bir sözlük, sütun adı
+ * değiştiğinde sessizce ayrışır. Sütun başlığı zaten hangi alan olduğunu
+ * söylüyor; jeton tektir.
+ */
+export const BELIRTILMEMIS = "Belirtilmemiş";
+
 /** Kanonik değeri insan-okur Türkçe metne çevirir. */
 export function formatValue(v: unknown, field?: string): string {
-  if (v === null || v === undefined) return "—";
+  if (v === null || v === undefined) return BELIRTILMEMIS;
   if (typeof v === "boolean") return v ? "var" : "yok";
   if (typeof v === "number") {
     if (field === "kar_payi_orani" || field === "indirim_orani") return `%${num(v)}`;
@@ -62,7 +116,10 @@ export function formatValue(v: unknown, field?: string): string {
     if (field === "taksit_sayisi") return `${num(v)} taksit`;
     return num(v);
   }
-  if (Array.isArray(v)) return v.length ? v.map((x) => formatValue(x)).join(", ") : "—";
+  // Boş liste de bilgi taşımaz; `null` ile aynı jetonu kullanır. İkisini iki
+  // ayrı işarete ayırmak, kullanıcıya anlamı olmayan bir ayrım göstermek olurdu.
+  if (Array.isArray(v))
+    return v.length ? v.map((x) => formatValue(x)).join(", ") : BELIRTILMEMIS;
   if (isRec(v)) {
     if ("min" in v && "max" in v) {
       const pfx = field === "kar_payi_orani" || field === "indirim_orani" ? "%" : "";
@@ -78,16 +135,108 @@ export function formatValue(v: unknown, field?: string): string {
       return amt === null || amt === undefined ? "masraf var" : `${num(amt)} TL`;
     }
     if ("segments" in v && Array.isArray(v.segments)) {
-      return v.segments.length ? v.segments.join(", ") : "—";
+      return v.segments.length ? v.segments.join(", ") : BELIRTILMEMIS;
     }
     if ("start" in v || "end" in v) {
-      const s = v.start ? String(v.start) : "?";
-      const e = v.end ? String(v.end) : "?";
+      const s = v.start ? formatValue(v.start) : "?";
+      const e = v.end ? formatValue(v.end) : "?";
       return `${s} → ${e}`;
     }
     return JSON.stringify(v);
   }
+  if (typeof v === "string") {
+    // Boş/boşluklu dize de bilgi taşımaz — boş liste ve `null` ile AYNI
+    // jetonu kullanır. Üç ayrı yokluk biçimini üç ayrı işarete ayırmak,
+    // kullanıcıya anlamı olmayan bir ayrım göstermek olurdu.
+    if (v.trim() === "") return BELIRTILMEMIS;
+    // Kanonik tarih ekranda Türkçe okunur; ISO olmayan dize aynen basılır.
+    return trTarih(v) ?? v;
+  }
   return String(v);
+}
+
+/**
+ * Sunucunun işareti: bu avantaj parçası, yanındaki bir tablo kolonuyla AYNI
+ * çıkarımdan geliyor (bkz. `compare.SUTUN_AVANTAJ_CAKISAN`).
+ *
+ * Dize sunucuyla birebir aynı olmak zorunda; tek kopya orada, buradaki sabit
+ * onun okunuşu. Ayrışırsa dal hiç ateşlenmez ve hücre eski (tekrarlı) biçime
+ * döner — sessiz ama zararsız bir bozulma, yanlış metin basmaktan iyidir.
+ */
+export const SUTUN_AVANTAJ_CAKISAN = "kampanya_avantaji_cakisan";
+
+/** Avantaj hücresini oluşturan tek parça — sunucunun `TabloHucresi`si. */
+export type AvantajParcasi = {
+  field_name: string | null;
+  value: unknown;
+  /** Hangi dalda üretildi; çakışan parçalarda `SUTUN_AVANTAJ_CAKISAN`. */
+  sutun?: string;
+  /** Bankanın kendi ifadesi — çakışan parçada BU basılır. */
+  raw_value?: string | null;
+};
+
+/**
+ * Ham ifade tek başına bir hücreyi doldurabilir mi — ÖLÇÜLMÜŞ eşik.
+ *
+ * ÖLÇÜM (2026-08-16, `data/demo.db`, tazelenmiş korpus). `masraf_durumu`
+ * alanında muafiyet bildiren **414 kaydın 414'ü de TEK sözcük**:
+ *
+ *     'Ücretsiz' (7) · 'ücretsiz' (6) · 'ücret' (5) · 'masraf' (3) ·
+ *     'masrafsız' · 'Masrafsız' · 'Ücret'
+ *
+ * Çünkü kural yalnız TETİKLEYİCİ sözcüğü saklıyor, cümleyi değil. Çok
+ * sözcüklü muafiyet ifadeleri ise en az ÜÇ sözcük:
+ *
+ *     'tahsis ücreti yansıtılmayacaktır'                        (3 sözcük)
+ *     'ekspertiz ücreti banka tarafından karşılanmaktadır'      (5 sözcük)
+ *
+ * Dağılım iki kümede toplanıyor ve **2 sözcüklü hiçbir kayıt yok**. Eşik bu
+ * boşluğa oturuyor — okunmuş, seçilmemiş. (Aynı yöntem `compare.ASGARI_GUVEN`
+ * için de kullanıldı: eşik dağılımdaki boşluktan okunur.)
+ *
+ * Tek sözcük neden yetmez: «masraf» ya da «ücret» bir hücreyi doldurduğunda
+ * kullanıcı ücretin VAR mı YOK mu olduğunu okuyamaz — muafiyet bilgisi
+ * kanonik değerde, ham sözcükte değil. O yüzden tek sözcükte alan-adlı
+ * biçime düşülür ve hücre asla boşalmaz.
+ */
+export function ayaktaDurur(ham: string | null | undefined): boolean {
+  return typeof ham === "string" && ham.trim().split(/\s+/).length >= 2;
+}
+
+/**
+ * «Kampanya Avantajı» hücresinin metni — PARÇALARDAN, serbest metinden değil.
+ *
+ * Şartname s.12'nin beşinci kolonu ("5.000 TL alışveriş çeki", "Ekspertiz
+ * ücreti banka tarafından karşılanıyor") bir CÜMLEdir. Sistem o cümleyi
+ * ÜRETMEZ (CLAUDE.md §21): sunucu, gerçek çıkarım satırlarından derlenmiş
+ * parçalar gönderir (`/urun-tablosu`, `compare.avantaj_hucresi`) ve burada
+ * yalnız **alan etiketi + kanonik değer** biçiminde okunur:
+ *
+ *     Ödül Miktarı: 5.000 TL · Alışveriş Puanı: 750
+ *
+ * Etiket dışarıdan gelir (`etiketle`), burada bir sözlük TUTULMAZ: alan
+ * etiketlerinin tek kaynağı sunucunun `/fields` yanıtıdır ve ikinci bir kopya
+ * bir gün ondan ayrışırdı. Etiket çözülemezse alan adı ham hâliyle basılır —
+ * makine adı göstermek, yanlış bir Türkçe ad uydurmaktan iyidir.
+ *
+ * Parça yoksa `BELIRTILMEMIS`: boşluğun jetonu tablonun her yerinde aynıdır.
+ */
+export function avantajMetni(
+  parcalar: readonly AvantajParcasi[],
+  etiketle: (field: string) => string,
+): string {
+  if (parcalar.length === 0) return BELIRTILMEMIS;
+  return parcalar
+    .map((p) => {
+      // Yandaki kolonu tekrar eden parça, bankanın KENDİ cümlesiyle basılır.
+      if (p.sutun === SUTUN_AVANTAJ_CAKISAN && ayaktaDurur(p.raw_value)) {
+        return `«${(p.raw_value as string).trim()}»`;
+      }
+      const deger = formatValue(p.value, p.field_name ?? undefined);
+      if (!p.field_name) return deger;
+      return `${etiketle(p.field_name)}: ${deger}`;
+    })
+    .join(" · ");
 }
 
 /** Güven skorunun sözel seviyesi — renk TEK sinyal olmasın diye (erişilebilirlik). */

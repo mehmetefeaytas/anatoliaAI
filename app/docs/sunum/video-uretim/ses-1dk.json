@@ -1,0 +1,93 @@
+[
+  {
+    "no": 1,
+    "sahne": "cetvel3",
+    "dosya": "01.mp3",
+    "sure": 6.552,
+    "metin": "Karşılaştırma cetveli on bankanın bin yedi yüz seksen iki belgesini tek tabloya indiriyor; masraf durumunda onun dokuzu ölçülebiliyor."
+  },
+  {
+    "no": 2,
+    "sahne": "cetvel3",
+    "dosya": "02.mp3",
+    "sure": 5.112,
+    "metin": "Altındaki kanıt tablosunda ham ifade, güven skoru, katman ve kaynak paragraf yan yana."
+  },
+  {
+    "no": 3,
+    "sahne": "cetvel3",
+    "dosya": "03.mp3",
+    "sure": 2.424,
+    "metin": "Her satır kendi kaynağına bağlı."
+  },
+  {
+    "no": 4,
+    "sahne": "avantaj3",
+    "dosya": "04.mp3",
+    "sure": 4.512,
+    "metin": "En avantajlı, Yatırım Ürünü'ndeki doksan sekiz kampanyayı bileşik skorla sıralıyor."
+  },
+  {
+    "no": 5,
+    "sahne": "avantaj3",
+    "dosya": "05.mp3",
+    "sure": 4.392,
+    "metin": "Yalnız aynı birime normalize alanlar giriyor; girmeyen kıyas dışı yazılıyor."
+  },
+  {
+    "no": 6,
+    "sahne": "banka3",
+    "dosya": "06.mp3",
+    "sure": 3.744,
+    "metin": "Kuveyt Türk: beş yüz otuz yedi belge, on iki alanın on ikisi dolu."
+  },
+  {
+    "no": 7,
+    "sahne": "banka3",
+    "dosya": "07.mp3",
+    "sure": 3.696,
+    "metin": "Sayfa her türde yıldızı kırıp hangi alanın doldurduğunu söylüyor."
+  },
+  {
+    "no": 8,
+    "sahne": "celiski",
+    "dosya": "08.mp3",
+    "sure": 4.368,
+    "metin": "Çelişki tespiti, masrafsız deyip ücret alan kampanyaları tüm korpusta tarıyor."
+  },
+  {
+    "no": 9,
+    "sahne": "sohbet",
+    "dosya": "09.mp3",
+    "sure": 4.512,
+    "metin": "Sohbet sayısal soruyu yapısal sorguya çeviriyor; her satır kaynak belgeye bağlı."
+  },
+  {
+    "no": 10,
+    "sahne": "tazele",
+    "dosya": "10.mp3",
+    "sure": 4.944,
+    "metin": "Veri tazeleme her bankayı tek tıkla, robots.txt ve hız sınırıyla yeniden topluyor."
+  },
+  {
+    "no": 11,
+    "sahne": "kanit",
+    "dosya": "11.mp3",
+    "sure": 3.288,
+    "metin": "Her değer, çıkarıldığı cümlenin karakter aralığına bağlı."
+  },
+  {
+    "no": 12,
+    "sahne": "kanit",
+    "dosya": "12.mp3",
+    "sure": 4.104,
+    "metin": "Paragrafa tıklayınca kaynak cümle açılıyor; sayı kanıtından ayrılamıyor."
+  },
+  {
+    "no": 13,
+    "sahne": "ayarlar",
+    "dosya": "13.mp3",
+    "sure": 5.208,
+    "metin": "Veri ekleme uçlarının şeması hazır: iş birliği kurulup API verildiğinde sistem açılmaya hazır bekliyor."
+  }
+]

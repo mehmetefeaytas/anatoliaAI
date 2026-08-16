@@ -26,22 +26,35 @@ tek satırlık bir iş olurdu ama o ölçümler yeniden koşulmadı: değiştiri
 bunu yasaklıyor. Aşağıdaki tablo güncel durumu **ayrı** verir; ikisi
 karıştırılmaz.
 
-| Ne | 3 Ağustos (rapor gövdesi) | 13 Ağustos (güncel, koşuldu) |
-|---|---|---|
-| Korpus | 849 belge | **1.782 satır / 1.677 farklı içerik** |
-| Banka | 10 | 10 katılım bankası + TKBB |
-| Test | 890 | **2.649 toplanan · 2.596 geçen** |
-| Gold seti | `gold.v1` (20 kayıt) | `gold.v2` (48 kayıt) · v3 turu dağıtıma hazır (+26) |
-| Yapılandırılmış alan mikro-F1 | ölçülmemişti | **0,646** |
-| 12-alan mikro-F1 | 0,400 | **0,452** [%95 GA 0,384–0,512] |
-| Halüsinasyon oranı | 0,083 | **0,059** (yapısal kesitte 0,047) |
-| RAG terim kapsama R@5 | modül yoktu | **0,867** |
-| RAG banka hedefleme R@5 | modül yoktu | **0,800** (BM25 sıralama) |
-| Reddetme kararı doğruluğu | ölçülmemişti | **30/30** |
-| Güvenlik seti | ölçülmemişti | **29/30** · aşırı red 0/6 |
-| Anotatör uyumu | ölçülmemişti | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 |
-| Güven kalibrasyonu | ölçülmemişti | ECE **0,306** · MCE 0,550 · Brier 0,316 |
-| Gold kanıt zinciri | araç yoktu | **48/48** izlenebilir (45 birebir + 3 içerik kayması) |
+| Ne | 3 Ağustos (rapor gövdesi) | 13 Ağustos | **16 Ağustos (en güncel, koşuldu)** |
+|---|---|---|---|
+| Korpus | 849 belge | 1.782 satır / 1.677 farklı içerik | **1.782** (değişmedi) |
+| Banka | 10 | 10 katılım bankası + TKBB | aynı |
+| Test | 890 | 2.649 toplanan · 2.596 geçen | 🔄 **tazelenecek** — kirli ağaç koşumu `3.046 toplandı · 2.988 geçti · 53 atlandı · 5 başarısız`; kanıt sayılmaz, temiz ağaçta yeniden koşulacak (`python -m scripts.test_ozeti`) |
+| Gold seti | `gold.v1` (20 kayıt) | `gold.v2` (48 kayıt) · v3 turu dağıtıma hazır (+26) | aynı · toplam **66 tekil** belge (v1 20 + v2 48, 2 örtüşme — ölçüldü) |
+| Yapılandırılmış alan mikro-F1 | ölçülmemişti | 0,646 | **0,671** |
+| 12-alan mikro-F1 | 0,400 | 0,452 [%95 GA 0,384–0,512] | **0,464** [%95 GA 0,398–0,522] |
+| makro-F1 | ölçülmemişti | 0,556 | **0,601** |
+| Halüsinasyon oranı | 0,083 | 0,059 (yapısal kesitte 0,047) | **0,047** [21/444] (yapısal kesitte **0,035**) |
+| Değişmez denetimi | 0 ihlal · 849 belge · kapsam %85,5 | 1 ihlal (`P4`) · kapsam %91,3 | **0 ihlal** · 1.782 belge · kapsam **%89,6** (1.597/1.782) |
+| Çelişki tespiti | 849 belgede 1 | ölçülmedi | **5** (`as_of` yok) / **15** (`as_of` var) · 1.782 belge — bkz. §A9 güncel blok |
+| RAG terim kapsama R@5 | modül yoktu | **0,867** | yeniden ölçülmedi |
+| RAG banka hedefleme R@5 | modül yoktu | **0,800** (BM25 sıralama) | yeniden ölçülmedi |
+| Reddetme kararı doğruluğu | ölçülmemişti | **30/30** | yeniden ölçülmedi |
+| Güvenlik seti | ölçülmemişti | **29/30** · aşırı red 0/6 | yeniden ölçülmedi |
+| Anotatör uyumu | ölçülmemişti | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 | yeniden ölçülmedi |
+| Güven kalibrasyonu | ölçülmemişti | ECE **0,306** · MCE 0,550 · Brier 0,316 | yeniden ölçülmedi |
+| Gold kanıt zinciri | araç yoktu | **48/48** izlenebilir (45 birebir + 3 içerik kayması) | yeniden ölçülmedi |
+
+> **16 Ağustos sütununun künyesi.** F1/halüsinasyon satırları
+> `eval/reports/20260815-195653/` koşumundan gelir ve 2026-08-16'da
+> `python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural`
+> ile yeniden koşularak **birebir doğrulandı** (`eval/reports/20260816-102045/`).
+> Değişmez ve çelişki satırlarının komutları `app/README.md` §"Ölçüm Durumu" içindedir
+> (`app/docs/invariants.md` daha ayrıntılı ölçüm geçmişi tutar ama `vitrin`
+> dalındadır — `main`'de bulunmaz).
+> *"Yeniden ölçülmedi"* yazan satırlar 13 Ağustos değerini taşır — bilerek
+> kopyalanmadı, çünkü kopyalanan sayı ölçülmüş sayı gibi görünürdü.
 
 Güncel sayıların üreten komutları kök `README.md`'nin "Ölçülebilir Durum"
 tablosunda satır satır yazılıdır. Metodoloji (hata taksonomisi, küme bootstrap,
@@ -54,9 +67,18 @@ Aşağıdakiler 849 belgeye dayanıyor ve 1.782 belgede **tekrarlanmadı**. Say�
 kullanmadan önce yeniden koşun:
 
 - §A3 korpus dağılımı ve nitel-ifade sayımı (54 belge / 45'inde sayısal karşılık yok)
-- §A9 çelişki tespiti (849 belgede 1 çelişki)
-- Bölüm C değişmez kapsamı (726/849, %85,5)
-- §A5 çıkarılmış alan sayısı (2.204)
+- ✅ ~~§A9 çelişki tespiti (849 belgede 1 çelişki)~~ — **2026-08-16'da 1.782
+  belgede yeniden ölçüldü**; sonuç §A9'un sonuna ayrı blok olarak eklendi
+  (5 çelişki / 2 tür ya da 15 çelişki / 3 tür — hangi kod yolunun koştuğuna
+  bağlı). Gövdedeki 849'luk sayı yerinde bırakıldı.
+- ✅ ~~Bölüm C değişmez kapsamı (726/849, %85,5)~~ — **2026-08-16'da 1.782
+  belgede yeniden ölçüldü**: **0 ihlal**, kapsam **%89,6** (1.597/1.782).
+  Komut: `app/README.md` §"Ölçüm Durumu". Ayrıntılı ölçüm geçmişi tablosu
+  `app/docs/invariants.md` içindedir (`vitrin` dalı; `main`'de yok).
+- §A5 çıkarılmış alan sayısı (2.204) — ⚠️ 2026-08-16 korpus koşumu **4.709
+  alan** üretti (`repo.fields_by_extractor()` → `{'rule': 4709}`), ama bu sayı
+  §A5'in saydığı şeyle birebir aynı kapsamda mı doğrulanmadı; §A5 hâlâ
+  yeniden ölçülmeli sayılır.
 
 ---
 
@@ -733,6 +755,52 @@ tutarlı yazıyor, (b) tespit kuralları fazla muhafazakâr. Hangisi olduğu **�
 negatif oranı bilinmiyor. Canlı çıkarım demosu (yukarıdaki P2 görüntüsü) mekanizmayı daha iyi
 gösterir.
 
+#### 🔄 GÜNCEL ÖLÇÜM — 2026-08-16, 1.782 belge (yukarıdaki 849'luk sayının yerine geçmez, yanına durur)
+
+Yukarıdaki paragraf 3 Ağustos korpusuna (849 belge) çapalıdır ve raporun künye kuralı gereği
+**değiştirilmedi**. Aşağıdaki blok aynı ölçümün bugünkü korpusta tekrarıdır.
+
+**Bulgu — çelişki sayısı hangi kod yolunun koştuğuna bağlıdır ve bu ayrım şimdiye kadar hiçbir
+belgede yazılmamıştı.** Zaman bağımlı kural `suresi_dolmus_kampanya` yalnız
+`detect(campaign, as_of=...)` çağrıldığında koşar (`src/comparison/contradiction.py:348`).
+`run_pipeline` `as_of` geçirmez; API/pano geçirir. Yani CLI ile panonun gösterdiği sayı
+**farklıdır** ve ikisi de doğrudur.
+
+| yol | `as_of` | belge | çelişki | tür |
+|---|---|---:|---:|---:|
+| `run_pipeline(mode="corpus")` — CLI, `scripts.build_demo_db` | ✗ | 1.782 | **5** | **2** |
+| API `/contradictions` — `detect(c, as_of=scraped_at)`; **panonun/demonun gösterdiği** | ✓ | 1.782 | **15** | **3** |
+
+| tür | `as_of` yok | `as_of` var |
+|---|---:|---:|
+| `suresi_dolmus_kampanya` | 0 | **10** |
+| `celisen_tutar_bandi` | 4 | 4 |
+| `celisen_kampanya_bitisi` | 1 | 1 |
+| **toplam** | **5** | **15** |
+
+Banka kırılımı (15'lik yol): Albaraka 9 · Kuveyt Türk 5 · Dünya Katılım 1.
+Üreten komutların ikisi de `app/README.md` §"Çelişki tespiti — iki kod yolu, iki sayı"
+içinde birebir yazılıdır.
+
+**§A9'un metninde ikinci bir bayat iddia:** yukarıda *"Altı çelişki türü tanımlıdır"* deniyor ve
+altı ad sayılıyor, ama listede `celisen_tutar_bandi` **yok** — oysa bugünkü koşumda en çok üreten
+ikinci tür odur. Kodda tanımlı tür sayısı **altı değil yedidir** (ölçüm 2026-08-16):
+
+```bash
+grep -o 'kind="[a-z_]*"' src/comparison/contradiction.py | sort -u
+# capraz_kampanya_bitisi · capraz_kar_payi_uyusmazligi · celisen_kampanya_bitisi
+# celisen_tutar_bandi · masrafsiz_ama_tutar · masrafsiz_ama_ucret · suresi_dolmus_kampanya
+```
+
+Eksik olan tek ad `celisen_tutar_bandi`'dir; §A9'un altı adı doğru, listesi **eksikti**.
+
+⚠️ **Dürüst değerlendirme, güncel korpusta da aynen geçerli:** 1.782 belgede 15 çelişki hâlâ
+düşük bir sayıdır ve **yanlış negatif oranı yine ölçülmedi**. Korpus iki katından fazla büyüdü,
+bulunan çelişki 1 → 15'e çıktı; bu, oranın kabaca korunduğu (binde 1,2 → binde 8,4, yani
+aslında **arttığı**) anlamına gelir — ama artışın ne kadarı korpustan, ne kadarı `as_of` yolunun
+ilk kez koşmasından geldiği **ayrıştırılmadı**. `as_of` yolunun 10 bulgusu çıkarılırsa sayı 5'te
+kalır ve o zaman oran düşer. İki etki karıştırılmamalıdır.
+
 ### Chatbot — iki yol, bir router
 
 ![Chatbot yapısal sorgu](gorseller/07-chatbot-yapisal-sorgu.png)
@@ -1030,8 +1098,27 @@ değişmemesini beklemek.
 | 1. düzeltme | 43 | P2 28 · P3 15 |
 | 2. düzeltme | 15 | P3 15 |
 | **Bugün (3 Ağustos, koşuldu)** | **0** | 849 belge · kapsam %85,5 (726/849) |
+| 🔄 **2026-08-16 (yeniden koşuldu)** | **0** | **1.782 belge · kapsam %89,6 (1.597/1.782)** |
 
 İhlallerin tamamı tek bir alanda toplandı: `kampanya_kosullari`. Diğer 11 alan baştan temizdi.
+
+> **2026-08-16 tazelemesi.** Korpus 849 → 1.782 belgeye çıktıktan sonra denetim yeniden koşuldu
+> ve **yine 0 ihlal** verdi; kapsam %85,5 → %89,6'ya yükseldi (1.597 belgede en az bir alan çıktı,
+> 185 boş belgede denetim hiçbir şey test etmiyor).
+> ```bash
+> python -m eval.properties --raw-dir data/raw --out eval/reports/violations-20260816.jsonl
+> # -> 1782 belge (1597 tanesinde en az bir alan çıktı; 185 boş belgede denetim hiçbir şey
+> #    test etmiyor — kapsam 89.6%) — tüm değişmezler GEÇTİ (0 ihlal) · çıkış kodu 0
+> ```
+> ⚠️ **Ara dönemde yayımlanmış olan "1.782 belgede 1 ihlal (`P4_cumle_sirasi`), kapsam %91,3"
+> değeri bu koşumda TEKRARLANMADI.** Çelişki gizlenmiyor: ihlal artık gözlenmiyor *ve* kapsam
+> %91,3 → %89,6 düştü. En olası açıklama aradaki kural değişikliklerinin bazı belgelerde alan
+> üretmeyi bırakmasıdır (alan üretmeyen belge hem kapsamı düşürür hem P4'ün karşılaştıracağı
+> kümeyi boşaltır) — **bu açıklama ölçülmedi, hipotezdir.** Ölçüm geçmişi tablosu:
+> `app/README.md` §"Ölçüm Durumu" (ayrıntılı geçmiş: `app/docs/invariants.md`,
+> `vitrin` dalı).
+> 🔄 Kâr payı çıkarımındaki sahte %0 temizliği sürüyor; bittiğinde kapsam yeniden değişecek ve
+> bu satır tazelenmelidir.
 
 ## İki gerçek hata
 

@@ -82,6 +82,17 @@ class _SahteDepo:
         self.cagrilar.append(field_name)
         return list(self.alanlar.get(field_name, []))
 
+    def all_campaigns(self, **_kw):
+        """Kıyas kapsamı için gereken katalog — bu sahtede bilerek BOŞ.
+
+        `structured._kiyas_kapsami()` kullanıcı bankayı adıyla saydığında
+        kapsamı buradan kurar. Boş katalog "kapsam yok" demektir, yani
+        `rank()` birebir eski davranışını sürdürür — bu dosyanın ölçtüğü şey
+        (boş cevap gereksiz sorgu atmamalı) etkilenmez. Sayaca da girmiyor:
+        `cagrilar` yalnız `query_fields` çağrılarını ölçer.
+        """
+        return []
+
 
 def _sure(cid, iso):
     return {"campaign_id": cid, "canonical_value": iso}

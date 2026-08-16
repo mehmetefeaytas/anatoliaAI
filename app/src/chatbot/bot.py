@@ -379,7 +379,12 @@ class Chatbot:
             # sessizce daraltmaktır. Not gövdeye burada eklenir, `_sozellestir`
             # SONRASINDA: LLM'in yeniden ifade ederken notu yutması ya da
             # anlamını kaydırması mümkün olmasın.
-            if r.alan_varsayildi and sources:
+            # Çok boyutlu kıyas cevabı (şartname "Senaryo 2") bu notu ALMAZ:
+            # not "yukarıdaki kıyas kâr payı oranı üzerindendir" diyor ve dört
+            # boyutu birden karşılaştıran bir cevabın altında düpedüz yanlış
+            # olurdu. O cevap kendi kapsam notunu zaten taşıyor (hangi ürün
+            # ailesinde kıyaslandığı + hangi ailelerde de kıyaslanabileceği).
+            if r.alan_varsayildi and sources and not ans.cok_boyutlu:
                 govde = f"{govde}\n\n{_KIYAS_KAPSAM_NOTU}"
             return _Dagitim("structured", r.field, govde, sources, has_rate,
                             r, soz, list(ans.rows))

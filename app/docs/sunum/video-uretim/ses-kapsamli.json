@@ -1,0 +1,170 @@
+[
+  {
+    "no": 1,
+    "dosya": "01.mp3",
+    "sure": 7.608,
+    "metin": "Anatolia AI, katılım bankalarının kampanya metinlerinden finansal bilgiyi çıkarıp karşılaştırılabilir hâle getiren bir sistem."
+  },
+  {
+    "no": 2,
+    "dosya": "02.mp3",
+    "sure": 6.696,
+    "metin": "Şu anda gördüğünüz her şey gerçek: bin yedi yüz seksen iki belge, on katılım bankasından canlı toplandı."
+  },
+  {
+    "no": 3,
+    "dosya": "03.mp3",
+    "sure": 4.296,
+    "metin": "Panelin tamamı kendi makinenizde, internetsiz çalışıyor."
+  },
+  {
+    "no": 4,
+    "dosya": "04.mp3",
+    "sure": 5.568,
+    "metin": "Karşılaştırma sekmesi, şartnamenin on iki alanının tamamını tek cetvele indiriyor."
+  },
+  {
+    "no": 5,
+    "dosya": "05.mp3",
+    "sure": 5.52,
+    "metin": "Alanı değiştirdiğimde tablo yeniden kuruluyor: önce vade, sonra kâr payı oranı."
+  },
+  {
+    "no": 6,
+    "dosya": "06.mp3",
+    "sure": 5.232,
+    "metin": "Her değerin yanında güven skoru var; sistem ne kadar emin olduğunu saklamıyor."
+  },
+  {
+    "no": 7,
+    "dosya": "07.mp3",
+    "sure": 7.2,
+    "metin": "Birimler farklıysa kıyas yapılmıyor. Uydurma sıralama yerine, doğrudan kıyaslanamaz diyoruz."
+  },
+  {
+    "no": 8,
+    "dosya": "08.mp3",
+    "sure": 5.28,
+    "metin": "Isı haritası, hangi bankanın hangi alanı yayımladığını tek bakışta gösteriyor."
+  },
+  {
+    "no": 9,
+    "dosya": "09.mp3",
+    "sure": 6.264,
+    "metin": "Boş hücreler gizlenmiyor. Çünkü bilgi metinde yoksa sistem değer üretmiyor."
+  },
+  {
+    "no": 10,
+    "dosya": "10.mp3",
+    "sure": 5.784,
+    "metin": "En avantajlı sekmesi yalnızca aynı birime normalize edilmiş alanlar üzerinden sıralıyor."
+  },
+  {
+    "no": 11,
+    "dosya": "11.mp3",
+    "sure": 3.936,
+    "metin": "Sıralamanın dayandığı belge her zaman tek tıkla açılıyor."
+  },
+  {
+    "no": 12,
+    "dosya": "12.mp3",
+    "sure": 5.832,
+    "metin": "Banka sayfası, tek bir kurumun bütün kampanyalarını toplandığı tarihle birlikte getiriyor."
+  },
+  {
+    "no": 13,
+    "dosya": "13.mp3",
+    "sure": 8.832,
+    "metin": "Banka içi delta, aynı bankanın kendi kampanyaları arasındaki farkı ölçüyor. Kurumun kendi içindeki tutarsızlık da bir bulgudur."
+  },
+  {
+    "no": 14,
+    "dosya": "14.mp3",
+    "sure": 3.528,
+    "metin": "Çelişki tespiti, üç yenilik hedefimizden biri."
+  },
+  {
+    "no": 15,
+    "dosya": "15.mp3",
+    "sure": 6.192,
+    "metin": "Bir yerde masrafsız deyip başka bir yerde tahsis ücreti belirten kampanyaları otomatik yakalıyor."
+  },
+  {
+    "no": 16,
+    "dosya": "16.mp3",
+    "sure": 4.656,
+    "metin": "Tarama örneklem üzerinde değil, korpusun tamamı üzerinde koşuyor."
+  },
+  {
+    "no": 17,
+    "dosya": "17.mp3",
+    "sure": 3.648,
+    "metin": "Jüri denetim paneli bu projenin merkezinde duruyor."
+  },
+  {
+    "no": 18,
+    "dosya": "18.mp3",
+    "sure": 3.984,
+    "metin": "Her değer, çıkarıldığı cümlenin karakter aralığına bağlı."
+  },
+  {
+    "no": 19,
+    "dosya": "19.mp3",
+    "sure": 6.696,
+    "metin": "Paragraf numarasına tıkladığınızda kaynak cümle açılıyor. Sayı, kanıtından ayrılamıyor."
+  },
+  {
+    "no": 20,
+    "dosya": "20.mp3",
+    "sure": 7.776,
+    "metin": "Ölçülen sonuç: yapılandırılmış alanlarda mikro F bir, sıfır virgül altmış yedi; halüsinasyon oranı yüzde dört virgül yedi."
+  },
+  {
+    "no": 21,
+    "dosya": "21.mp3",
+    "sure": 4.728,
+    "metin": "Canlı çıkarım, sistemin gerçekten çalıştığının en dolaysız kanıtı."
+  },
+  {
+    "no": 22,
+    "dosya": "22.mp3",
+    "sure": 6.528,
+    "metin": "Metni veriyorsunuz, çıkarım o anda koşuyor. Önceden hazırlanmış bir cevap yok."
+  },
+  {
+    "no": 23,
+    "dosya": "23.mp3",
+    "sure": 7.848,
+    "metin": "Sohbet katmanı hibrit çalışıyor: sayısal ve karşılaştırmalı sorular yapısal sorguya, koşul soruları getirimli üretime gidiyor."
+  },
+  {
+    "no": 24,
+    "dosya": "24.mp3",
+    "sure": 5.496,
+    "metin": "Cevap yine belgeye bağlı. Kaynağı olmayan cümle kurmuyoruz."
+  },
+  {
+    "no": 25,
+    "dosya": "25.mp3",
+    "sure": 5.256,
+    "metin": "Veri tazeleme, yeni bir bankayı tek satırlık yapılandırmayla sisteme sokuyor."
+  },
+  {
+    "no": 26,
+    "dosya": "26.mp3",
+    "sure": 4.968,
+    "metin": "İşlem günlüğü her koşuyu, süresiyle ve sonucuyla birlikte kaydediyor."
+  },
+  {
+    "no": 27,
+    "dosya": "27.mp3",
+    "sure": 7.728,
+    "metin": "Yayımladığımız her sayıyı kendi sürekli tümleştirme hattımız denetliyor. Sayı kanıtından ayrışırsa yapı düşer."
+  },
+  {
+    "no": 28,
+    "dosya": "28.mp3",
+    "sure": 6.576,
+    "metin": "İki bin dokuz yüz kırk altı test, doksan altı paketlik yazılım malzeme listesi, ve tamamı açık kaynak."
+  }
+]

@@ -85,6 +85,7 @@ from ..comparison.compare import (
     turlere_ayir,
     yon_zorla,
 )
+from ..db.base import BELGE_TURU_SOZLESME
 from ..db.repository import Repository
 from ..normalization.normalize import bicimle_tr_sayi
 from .router import BANK_DISPLAY, FIELD_DISPLAY, Route
@@ -122,9 +123,25 @@ class StructuredAnswer:
     rows: list[RankRow]
     field: str
     intent: str
+    #: Cevap şartnamenin çok boyutlu kıyas kalıbıyla mı üretildi
+    #: (`_phrase_iki_banka_kiyasi`). `bot.py` bunu okuyup tek alanlı kapsam
+    #: notunu BASTIRIR: o not "kıyas kâr payı oranı üzerindendir" diyor ve
+    #: dört boyutlu bir cevabın altında YANLIŞ olurdu.
+    cok_boyutlu: bool = False
 
 
 def answer(repo: Repository, r: Route) -> StructuredAnswer:
+    # Şartname "Senaryo 2" — iki adı geçen bankanın çok boyutlu kıyası.
+    # Koşul dar tutuldu: alan SÖYLENMEMİŞ ("hangisi daha avantajlı?") ve en az
+    # iki banka adı geçmiş olmalı. Alanı söylenen soru ("Kuveyt Türk'ün kâr
+    # payı oranı ne?") ve üstünlük soruları bu daldan HİÇ geçmez.
+    if r.alan_varsayildi and len(r.filters.get("banks") or []) >= 2:
+        kiyas = _phrase_iki_banka_kiyasi(repo, r)
+        if kiyas is not None:
+            metin, gosterilen = kiyas
+            return StructuredAnswer(metin, gosterilen, r.field, r.intent,
+                                    cok_boyutlu=True)
+
     havuz = repo.query_fields(r.field)
 
     # filtreler
@@ -140,7 +157,10 @@ def answer(repo: Repository, r: Route) -> StructuredAnswer:
     # sayar; "3 kampanyanın üçü de kapanmış" gibi kapı bazlı bir sayım o
     # listeden çıkarılamaz — temsilcinin sebebi temsil ettiklerininkiyle aynı
     # olmak zorunda değildir.
-    ranked = yon_zorla(rank(rows, r.field), r.field, r.intent)
+    # Kapsam: adı geçen banka o alanda satırı yok diye DÜŞMESİN. `None` ise
+    # (banka sayılmamışsa) `rank()` birebir eski davranışını sürdürür.
+    ranked = yon_zorla(rank(rows, r.field, kapsam=_kiyas_kapsami(repo, r.filters)),
+                       r.field, r.intent)
     tekil = tekil_banka_urun(ranked)
     gruplar = turlere_ayir(tekil)
 
@@ -188,6 +208,52 @@ def answer(repo: Repository, r: Route) -> StructuredAnswer:
             tekil, r.field, r.intent)
     text, gosterilen = _phrase_list_by_type(r.field, gruplar)
     return StructuredAnswer(text, gosterilen, r.field, r.intent)
+
+
+def _kiyas_kapsami(repo: Repository, filters: dict) -> Optional[list[dict]]:
+    """Kıyasa GİRMESİ GEREKEN (banka, ürün ailesi) çiftleri — ya da None.
+
+    `compare.rank(..., kapsam=...)` bunu alır ve bu kümede olup alan satırı
+    bulunmayan her çifti `NOT_ALAN_YOK` ("bu alan belirtilmemiş") satırı olarak
+    ekler. Süzme kuralı `api/main.py::_kiyas_kapsami` ile BİREBİR aynıdır
+    (sözleşme belgesi hariç, türü bilinmeyen dahil; anahtar
+    `(bank, campaign_type)`) — iki yüzey aynı soruya farklı kapsam vermemeli.
+
+    ## Neden yalnız BANKA ADI GEÇEN sorularda
+
+    Kapsam, kullanıcının ADIYLA saydığı bankalarla sınırlıdır ve banka
+    sayılmamışsa `None` döner (davranış birebir eskisi). Gerekçe: "en düşük kâr
+    payı hangi bankada?" sorusunda kapsam açmak, cevabı o alanda hiç verisi
+    olmayan onlarca (banka × aile) çiftiyle doldururdu — soru zaten "kim
+    kazanıyor"dur ve verisi olmayan banka kazanamaz. Alanın nerede BULUNDUĞU
+    sorusunu o dalda `_nerede_var()` zaten cevaplıyor.
+
+    Ama kullanıcı iki bankayı adıyla saydıysa durum tersine döner: sorulan bir
+    banka o alanda satırı yok diye sessizce düşerse cevap YANILTICI olur —
+    "Kuveyt Türk ve Ziraat Katılım konut finansmanını karşılaştır" sorusunda
+    Ziraat Katılım'ın 46 konut kampanyası hiç yokmuş gibi görünüyordu. Doğru
+    cevap "kâr payı oranı hiçbirinde belirtilmemiş"tir; bilginin yokluğu da
+    bilgidir.
+    """
+    banks = list(filters.get("banks") or [])
+    if not banks:
+        return None
+    ctype = filters.get("campaign_type")
+    gorulen: dict[tuple[Any, Any], dict] = {}
+    for c in repo.all_campaigns(govde=False):
+        if c.get("belge_turu") == BELGE_TURU_SOZLESME:
+            continue
+        if c.get("bank") not in banks:
+            continue
+        tur = c.get("campaign_type")
+        if ctype and tur != ctype:
+            continue
+        gorulen.setdefault((c.get("bank"), tur), {
+            "bank": c.get("bank"),
+            "bank_name": c.get("bank_name"),
+            "campaign_type": tur,
+        })
+    return list(gorulen.values())
 
 
 def _grup_kazanani(grup: list[RankRow]) -> Optional[RankRow]:
@@ -291,8 +357,19 @@ def _tr_para(tutar: float, currency: Optional[str] = "TRY") -> str:
     return f"{_tr_sayi(tutar)} {birim}".strip()
 
 
+#: Değeri olmayan alanın ekran jetonu. Arayüzdeki `BELIRTILMEMIS`
+#: (`web/app/lib/format.ts:73`) ile AYNI kelime olmak zorunda: aynı kampanyanın
+#: aynı hücresi tabloda "Belirtilmemiş", sohbette "None" yazamaz.
+BELIRTILMEMIS = "Belirtilmemiş"
+
+
 def _fmt_value(field: str, value) -> str:
     """Kanonik değeri kullanıcıya gösterilecek Türkçe metne çevirir."""
+    # Kapsam kapısı (`compare._kapsam_eksikleri`) değeri `None` olan satırlar
+    # üretir: banka kıyasta DURUR ama o alanda değeri yoktur. Son dal bunu
+    # `str(None)` ile "None" diye basıyordu — şartmenin jetonu "Belirtilmemiş".
+    if value is None:
+        return BELIRTILMEMIS
     # Alışveriş puanı iki BİRİMDE ilan edilir ve kanonik değer hangisi
     # olduğunu söyler (`{"kind": "points"|"rate"}`). Bu dal olmadan puan
     # değeri para dalına düşüyor ve "500 TRY" diye basılıyordu — 500 puan ile
@@ -779,6 +856,311 @@ def _phrase_superlative_by_type(
     lines.append("")
     lines.append(_AILE_NOTU)
     return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------- #
+# Şartname "Örnek Temsili Senaryo-2 / Senaryo 2": iki bankayı karşılaştırma
+# --------------------------------------------------------------------------- #
+# Şartname (2026 TEKNOFEST TYDA, 2. Senaryo, s.13) çıktı kalıbını ÖRNEKLE
+# yazılı olarak veriyor:
+#
+#     Kullanıcı: A Bankası mı daha avantajlı, C Bankası mı?
+#     Chatbot: Bu iki kampanya farklı avantajlar sunmaktadır.
+#         • Kâr payı oranı açısından C Bankası daha avantajlıdır çünkü oran
+#           %1,87'dir.
+#         • Vade açısından A Bankası daha avantajlıdır çünkü 120 ay vade
+#           sunmaktadır.
+#         • Masraf avantajı açısından A Bankası öne çıkmaktadır çünkü 50.000
+#           TL'ye kadar dosya masrafı alınmamaktadır.
+#         • Ek ödül açısından ise C Bankası 5.000 TL alışveriş kartı
+#           vermektedir.
+#
+# ÖLÇÜLDÜ (2026-08-16, `data/demo.db`, LLM kapalı) — bu senaryo KARŞILANMIYORDU.
+# "Kuveyt Türk mü daha avantajlı, Albaraka mı?" sorusu tek boyuta düşüyor,
+# yalnız `kar_payi_orani` listeliyor ve diğer boyutları kullanıcıya SORU olarak
+# geri veriyordu ("vade, tahsis ücreti, masraf durumu … da sorabilirsiniz").
+# Yani şartnamenin çok boyutlu madde listesi hiç üretilmiyordu; açık cümle
+# biçimi değil, KIYAS KAPSAMIydı.
+#
+# Dört boyut şartnamenin dört maddesinin karşılığıdır. Sıra da şartnamedeki
+# sıradır — jüri çıktıyı örnekle yan yana koyabilsin.
+_KIYAS_BOYUTLARI: tuple[str, ...] = (
+    "kar_payi_orani", "vade_ay", "masraf_durumu", "odul_miktari",
+)
+
+#: Boyut etiketi. `_FIELD_LABEL` (= `router.FIELD_DISPLAY`) TEK KAYNAKTIR;
+#: burada yalnız şartnamenin madde başlığından FARKLI olan iki alan geçersiz
+#: kılınır ("masraf durumu" → "masraf avantajı", "ödül miktarı" → "ek ödül").
+#: Sözlüğün tamamını kopyalamak, bu dosyada bir kez yaşanmış olan etiket
+#: ayrışmasını (bkz. `_FIELD_LABEL` yorumu) tekrar davet ederdi.
+_BOYUT_ETIKETI = {"masraf_durumu": "masraf avantajı", "odul_miktari": "ek ödül"}
+
+#: Kazanan ilan eden yüklem. Şartname masraf maddesinde "öne çıkmaktadır"
+#: diyor, diğerlerinde "daha avantajlıdır"; ikisi de korunur.
+_BOYUT_FIILI = {"masraf_durumu": "öne çıkmaktadır"}
+_VARSAYILAN_FIIL = "daha avantajlıdır"
+
+#: Sayının OKUNUŞUNA göre bildirme eki ("%1,87" → "'dir").
+#:
+#: Şartname "çünkü oran %1,87'dir" yazıyor; ek sayının okunuşuna göre değişir
+#: ve yanlış ek ("%0'dir") Türkçe dil ajanı iddiasını doğrudan yaralar.
+#: Tablolar sayı adlarının SON ÜNLÜSÜ (büyük ünlü uyumu) ve SON SESSİZİ
+#: (ünsüz sertleşmesi) üzerinden kuruludur:
+#:     bir→dir  iki→dir  üç→tür  dört→tür  beş→tir
+#:     altı→dır yedi→dir sekiz→dir dokuz→dur
+_EK_BIRLER = {"1": "dir", "2": "dir", "3": "tür", "4": "tür", "5": "tir",
+              "6": "dır", "7": "dir", "8": "dir", "9": "dur"}
+#:     on→dur yirmi→dir otuz→dur kırk→tır elli→dir
+#:     altmış→tır yetmiş→tir seksen→dir doksan→dır
+_EK_ONLAR = {"1": "dur", "2": "dir", "3": "dur", "4": "tır", "5": "dir",
+             "6": "tır", "7": "tir", "8": "dir", "9": "dır"}
+
+
+def _sayi_eki(basamaklar: str) -> str:
+    """Ayıraçsız bir rakam dizisinin okunuşuna göre bildirme eki.
+
+    Kural: okunuş, SIFIRDAN FARKLI son basamağın basamak adıyla biter. Sondaki
+    sıfır sayısı (`z`) o adı tek başına belirler — 120 "yirmi", 1.200 "yüz",
+    12.000 ve 120.000 "bin", 1.000.000 "milyon" ile biter.
+    """
+    if not basamaklar.isdigit():
+        return ""
+    if basamaklar.strip("0") == "":
+        return "dır"                                    # sıfır
+    govde = basamaklar.rstrip("0")
+    z = len(basamaklar) - len(govde)
+    son = govde[-1]
+    if z == 0:
+        return _EK_BIRLER[son]
+    if z == 1:
+        return _EK_ONLAR[son]
+    if z == 2:
+        return "dür"                                    # yüz
+    if z < 6:
+        return "dir"                                    # bin
+    if z < 9:
+        return "dur"                                    # milyon
+    return "dır"                                        # milyar
+
+
+def _bildirme_eki(gosterim: str) -> str:
+    """Gösterim metnine eklenecek kesme işaretli bildirme eki ("'dir").
+
+    Karar veremezse BOŞ döner; çağıran o zaman eksiz bir kalıba düşer. Yanlış
+    ek üretmektense ek üretmemek dürüsttür.
+    """
+    metin = gosterim.strip()
+    if metin.endswith("TL"):
+        return "'dir"                                   # "te le" → dir
+    kuyruk = ""
+    for ch in reversed(metin):
+        if ch.isdigit() or ch in ".,":
+            kuyruk = ch + kuyruk
+        else:
+            break
+    kuyruk = kuyruk.strip(".,")
+    if not kuyruk:
+        return ""
+    # Ondalık varsa okunuş ondalık kısımla biter ("bir virgül seksen yedi").
+    basamaklar = kuyruk.split(",")[-1] if "," in kuyruk else kuyruk.replace(".", "")
+    ek = _sayi_eki(basamaklar)
+    return f"'{ek}" if ek else ""
+
+
+def _boyut_etiketi(field: str) -> str:
+    return _BOYUT_ETIKETI.get(field, _FIELD_LABEL.get(field, field))
+
+
+def _boyut_gerekcesi(field: str, r: RankRow) -> Optional[str]:
+    """"…çünkü <gerekçe>" cümleciği. Değer yoksa None — uydurma yok."""
+    val = _fmt_value(field, r.value)
+    if field in _ORAN_ALANLARI:
+        ek = _bildirme_eki(val)
+        return f"oran {val}{ek}" if ek else f"oran {val} olarak sunulmaktadır"
+    if field == "vade_ay":
+        return f"{val} vade sunmaktadır"
+    if field == "masraf_durumu":
+        # Şartnamedeki gerekçe SAYI değil KOŞUL metnidir ("…dosya masrafı
+        # alınmamaktadır"). Tutarı bilinmeyen ücret sıfır sayılmaz.
+        if isinstance(r.value, dict) and r.value.get("has_fee") is False:
+            return "dosya masrafı alınmamaktadır"
+        if isinstance(r.value, dict) and r.value.get("amount") is not None:
+            ek = _bildirme_eki(val.replace(" masraf", ""))
+            return f"masraf {val.replace(' masraf', '')}{ek}"
+        return None
+    return f"{val} tutarında ödül sunmaktadır"
+
+
+def _boyut_bilgisi(field: str, r: RankRow) -> Optional[str]:
+    """Kazanan İLAN ETMEDEN yalnız bilgi veren cümlecik.
+
+    Şartmenin son maddesi ("Ek ödül açısından ise C Bankası …vermektedir")
+    kazanan ilan etmez: o boyutta kıyas edecek ikinci değer yoktur. Aynı
+    kalıp beraberlikte de kullanılır ("her ikisi de …").
+    """
+    val = _fmt_value(field, r.value)
+    if field in _ORAN_ALANLARI:
+        return f"{val} {_FIELD_LABEL.get(field, field)} sunmaktadır"
+    if field == "vade_ay":
+        return f"{val} vade sunmaktadır"
+    if field == "masraf_durumu":
+        if isinstance(r.value, dict) and r.value.get("has_fee") is False:
+            return "dosya masrafı almamaktadır"
+        if isinstance(r.value, dict) and r.value.get("amount") is not None:
+            return f"{val.replace(' masraf', '')} masraf almaktadır"
+        return None
+    return f"{val} tutarında ödül vermektedir"
+
+
+def _kiyas_maddesi(field: str, grup: list[RankRow]) -> Optional[str]:
+    """Bir boyutun madde satırı. Karar verilemiyorsa None (madde basılmaz).
+
+    `rank()` satırları alanın KENDİ iyi yönünde sıralar (`_LOWER_IS_BETTER`),
+    bu yüzden kazanan ilk KIYASLANABİLİR satırdır — ikinci bir "en iyiyi seç"
+    kuralı yazmak sıralamayı ayrışma riskiyle tekrarlamak olurdu.
+    """
+    uygun = [x for x in grup if x.comparable]
+    if not uygun:
+        return None                     # kıyaslanabilir değer yok → madde yok
+    etiket = _bas_harf(_boyut_etiketi(field))
+    en_iyi = uygun[0]
+    # `bank_name` boşsa slug'ı EKRANA BASMA: `BANK_DISPLAY` doğru yazılmış adı
+    # zaten biliyor ("albaraka" → "Albaraka Türk").
+    ad = en_iyi.bank_name or BANK_DISPLAY.get(en_iyi.bank, en_iyi.bank)
+    if len(uygun) == 1:
+        bilgi = _boyut_bilgisi(field, en_iyi)
+        return f"- {etiket} açısından ise **{ad}** {bilgi}." if bilgi else None
+    ikinci = uygun[1]
+    if (en_iyi.sort_key is not None and ikinci.sort_key is not None
+            and en_iyi.sort_key == ikinci.sort_key):
+        # Beraberlik UYDURULMUŞ kazanana çevrilmez. Ölçüldü (`data/demo.db`):
+        # Kuveyt Türk ile Albaraka konut finansmanında vade (120 ay) ve masraf
+        # (masrafsız) boyutlarında birebir eşit.
+        bilgi = _boyut_bilgisi(field, en_iyi)
+        return (f"- {etiket} açısından iki kampanya eşittir çünkü her ikisi de "
+                f"{bilgi}." if bilgi else None)
+    gerekce = _boyut_gerekcesi(field, en_iyi)
+    if gerekce is None:
+        return None
+    fiil = _BOYUT_FIILI.get(field, _VARSAYILAN_FIIL)
+    return f"- {etiket} açısından **{ad}** {fiil} çünkü {gerekce}."
+
+
+def _kiyas_boyut_gruplari(repo: Repository, r: Route
+                          ) -> dict[str, dict[str, list[RankRow]]]:
+    """ürün ailesi → (alan → o ailedeki tekilleştirilmiş satırlar).
+
+    Alan başına TEK sorgu atılır; aile ayrımı bellekte yapılır.
+    """
+    # Kapsam bir kez hesaplanır, dört alanda da aynısı kullanılır: aynı soruda
+    # boyuttan boyuta değişen bir kapsam, "hangi bankalar kıyasta" sorusuna
+    # cevap başına farklı yanıt vermek olurdu.
+    kapsam = _kiyas_kapsami(repo, r.filters)
+    out: dict[str, dict[str, list[RankRow]]] = {}
+    for field in _KIYAS_BOYUTLARI:
+        rows = _apply_filters(repo, repo.query_fields(field), r.filters)
+        siralanan = rank(rows, field, kapsam=kapsam)
+        for tur, grup in turlere_ayir(tekil_banka_urun(siralanan)):
+            out.setdefault(tur, {})[field] = grup
+    return out
+
+
+def _kiyas_ailesi_sec(gruplar: dict[str, dict[str, list[RankRow]]],
+                      bankalar: list[str]) -> Optional[str]:
+    """Kıyasın yapılacağı ürün ailesi — EN ÇOK KARAR VEREBİLDİĞİMİZ aile.
+
+    Aileler arası kıyas YAPILMAZ (CLAUDE.md §17): konut finansmanı ile taşıt
+    finansmanı birbirinin alternatifi değildir. Kullanıcı aile söylemediyse
+    seçim, sorulan bankaların ikisini birden kapsayan aileler arasından yapılır.
+
+    Ölçüt sırası bilinçli: önce KARŞI KARŞIYA kıyaslanabilen boyut sayısı,
+    sonra toplam madde sayısı. Ters sırayla ölçüldüğünde (`data/demo.db`,
+    Kuveyt Türk × Albaraka) seçim "Kart" ailesine düşüyordu: dört maddenin
+    ikisi tek bankalıydı, yani cevap "kıyas" adı altında iki tek-taraflı bilgi
+    basıyordu. Karşı-karşıya sayısı önce gelince aynı soru "Taşıt Finansmanı"
+    ailesine düşüyor ve üç boyutta gerçek kıyas üretiyor.
+
+    Eşitlikte ad sırası — seçim koşumdan koşuma değişmesin.
+    """
+    adaylar = []
+    for tur, alanlar in gruplar.items():
+        kapsanan = {x.bank for grup in alanlar.values() for x in grup}
+        if len(kapsanan & set(bankalar)) < 2:
+            continue
+        karsilikli = sum(1 for g in alanlar.values()
+                         if len([x for x in g if x.comparable]) >= 2)
+        karar = sum(1 for f, g in alanlar.items() if _kiyas_maddesi(f, g))
+        if not karar:
+            continue
+        adaylar.append((-karsilikli, -karar, -len(kapsanan), tur))
+    return min(adaylar)[3] if adaylar else None
+
+
+def _phrase_iki_banka_kiyasi(repo: Repository, r: Route
+                             ) -> Optional[tuple[str, list[RankRow]]]:
+    """Şartname "Senaryo 2" cevabı: çok boyutlu madde listesi + gerekçeler.
+
+    Karar verilebilen tek bir boyut bile yoksa None döner ve çağıran mevcut
+    tek alanlı yola düşer — boş bir "farklı avantajlar sunmaktadır" başlığı
+    basmak, olmayan bir kıyas iddia etmek olurdu.
+    """
+    bankalar = list(r.filters.get("banks") or [])
+    if len(bankalar) < 2:
+        return None
+    gruplar = _kiyas_boyut_gruplari(repo, r)
+    tur = _kiyas_ailesi_sec(gruplar, bankalar)
+    if tur is None:
+        return None
+
+    alanlar = gruplar[tur]
+    satirlar: list[str] = []
+    gosterilen: list[RankRow] = []
+    for field in _KIYAS_BOYUTLARI:
+        grup = alanlar.get(field) or []
+        madde = _kiyas_maddesi(field, grup)
+        if madde is None:
+            continue
+        satirlar.append(madde)
+        gosterilen.extend(x for x in grup if x.comparable)
+    # Kıyaslanamayan boyutların KANITI da taşınır — ama yalnız gerçek çıkarım
+    # satırları (`source_span` taşıyanlar). Kapsam kapısının ürettiği sentetik
+    # "belirtilmemiş" satırının dayanağı yoktur; onu kaynak diye göstermek
+    # olmayan bir belgeye atıf olurdu.
+    for field in _KIYAS_BOYUTLARI:
+        grup = alanlar.get(field) or []
+        if _kiyas_maddesi(field, grup) is None:
+            gosterilen.extend(x for x in grup if x.source_span)
+    if not satirlar:
+        return None
+
+    adet = "Bu iki kampanya" if len(bankalar) == 2 else "Bu kampanyalar"
+    lines = [f"{adet} farklı avantajlar sunmaktadır — **{tur}**:", ""]
+    lines.extend(satirlar)
+    # Karar verilemeyen boyut SESSİZCE düşmez. Kullanıcı bankaları adıyla
+    # saymışken kâr payı maddesinin hiç görünmemesi, kapsam kapısıyla az önce
+    # kapatılan sessiz eksilmenin cümle hâli olurdu: boyutun sorulduğu ama
+    # kıyaslanamadığı SÖYLENİR.
+    kiyaslanamayan = [_boyut_etiketi(f) for f in _KIYAS_BOYUTLARI
+                      if _kiyas_maddesi(f, alanlar.get(f) or []) is None]
+    if kiyaslanamayan:
+        lines.append("")
+        lines.append(f"_Bu ailede kıyaslanamayan boyut: "
+                     f"{_ve_ile(kiyaslanamayan)} — değer ya belirtilmemiş ya "
+                     f"da doğrudan kıyaslanabilir değil (aralık, koşullu oran, "
+                     f"süresi dolmuş). Kaynaklar aşağıda._")
+    # Kıyas dışında kalan aileler GİZLENMEZ: kullanıcı aile adını yazıp aynı
+    # kıyası orada da alabilir.
+    diger = sorted(t for t in gruplar
+                   if t != tur
+                   and len({x.bank for g in gruplar[t].values() for x in g}
+                           & set(bankalar)) >= 2)
+    lines.append("")
+    lines.append(f"_Kıyas **{tur}** ürün ailesi içinde yapıldı; farklı aileler "
+                 f"(konut, taşıt, kart…) birbirinin alternatifi değildir._")
+    if diger:
+        lines.append(f"_Aynı bankalar şu ailelerde de karşılaştırılabilir: "
+                     f"{', '.join(diger)}. Aile adını yazmanız yeterli._")
+    return "\n".join(lines), gosterilen
 
 
 def _satir(field: str, r: RankRow) -> str:

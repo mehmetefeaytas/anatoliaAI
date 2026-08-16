@@ -10,6 +10,21 @@ raw/**/*.pdf
 # kendi kanıtımızı dışarıda bırakmak o kuralın amacı değildi.
 !docs-ekran/anatolia-ai-panel-ekranlari.pdf
 
+# İSTİSNA: jüri sunumu — ZORUNLU TESLİM KALEMİ, izlenmek ZORUNDA.
+# Şartname §6 (s.14) sunumu "PDF ve PPTX formatında" istiyor; §10 (s.19) ayrıca
+# "yaptıkları sunumu GitHub hesaplarına da yüklemek zorundadır" diyor. `.pptx`
+# zaten izleniyordu, `.pdf` `*.pdf` kuralına takılıp sessizce dışarıda kalıyordu
+# — yani teslim kaleminin yarısı depoda yoktu. `docs/sunum/uret-sunum.py` ile
+# yeniden üretilebilir olması onu izlemekten muaf tutmaz: jüri depoya bakıyor,
+# betiği koşmuyor.
+!app/docs/sunum/anatolia-ai-sunum.pdf
+
+# İSTİSNA: teknik rapor PDF'i. `docs/SARTNAME-UYUM.md` satır 71 bunu 12. teslim
+# kaleminin (proje dokümantasyonu) kanıtı olarak "(+ `.pdf`)" diye gösteriyor.
+# İzlenmediği sürece o kanıt beyanı doğru değildi; `.md` tracked olduğu için
+# kalem yine karşılanıyordu ama atıf yanlıştı.
+!app/docs/rapor/anatolia-ai-teknik-rapor.pdf
+
 # Ham ekran görüntüleri PDF'in İÇİNDE zaten var — ikisini birden tutmak
 # aynı kanıtı iki kez, 36 MB olarak taşımak olurdu. PNG'ler `ekran_cek.py`
 # ile yeniden üretilebilir; PDF ise teslim edilen biçimdir.

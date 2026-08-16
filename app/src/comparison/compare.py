@@ -22,7 +22,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, replace
 from dataclasses import field as dc_field
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Mapping, Optional
 
 from ..db.base import suresi_dolmus_mu
 from ..normalization.normalize import collapse_degenerate_range
@@ -58,6 +58,12 @@ class RankRow:
     #: güveni söyleyebilmesi gerekir ("0,55 — eşik 0,65"). Notun içinden
     #: sayıyı geri ayrıştırmak, aynı bilgiyi iki biçimde taşımak olurdu.
     confidence: Optional[float] = None
+    #: Oranın BAZI (`'aylik'` | `'yillik'` | `None`). Yalnız oran alanlarında
+    #: anlamlıdır ve `None` "ölçülmedi" demektir — "aylık" değil. Notun içine
+    #: gömmek yerine ayrı taşınır: satır aynı anda hem yıllık bazlı hem süresi
+    #: dolmuş olabilir ve `note` tek bir dizedir (aynı gerekçe:
+    #: `campaign_status`). Arayüz rozeti bu alandan okunur.
+    oran_bazi: Optional[str] = None
 
 
 # --------------------------------------------------------------------------- #
@@ -78,9 +84,16 @@ NOT_TUTAR_BELIRSIZ = "ücret var, tutarı belirtilmemiş"
 NOT_SAYISAL_DEGIL = "sayısal değil"
 NOT_SURESI_DOLMUS = "kampanya süresi dolmuş — doğrudan kıyaslanamaz"
 
-#: Ölçülen sayıyı gövdesinde taşıyan iki notun sabit öneki.
+#: Banka kapsamda ama bu alanda HİÇ kaydı yok (bkz. "kapsam kapısı" bloğu).
+#: "değer yok"tan AYRIDIR: orada bir çıkarım satırı vardır ve kanonik değeri
+#: boştur; burada satırın kendisi yoktur. İkisini tek nota toplamak, ölçülen
+#: bir boşluk ile hiç ölçülmemiş bir alanı aynı şey saymak olurdu.
+NOT_ALAN_YOK = "bu alan belirtilmemiş — doğrudan kıyaslanamaz"
+
+#: Ölçülen sayıyı/etiketi gövdesinde taşıyan notların sabit öneki.
 _NOT_GUVEN_ONEKI = "düşük çıkarım güveni"
 _NOT_PARA_ONEKI = "farklı para birimi"
+_NOT_BAZ_ONEKI = "farklı oran bazı"
 
 #: Eleme sebebi kodları. `bilinmiyor` bilerek vardır: tanınmayan bir not
 #: sessizce başka bir sebebe yazılmamalı, "sınıflandıramadım" demeli.
@@ -91,6 +104,8 @@ ELEME_TUTAR_BELIRSIZ = "tutar_belirsiz"
 ELEME_DEGER_YOK = "deger_yok"
 ELEME_PARA_BIRIMI = "para_birimi"
 ELEME_SAYISAL_DEGIL = "sayisal_degil"
+ELEME_ALAN_YOK = "alan_yok"
+ELEME_ORAN_BAZI = "oran_bazi"
 ELEME_BILINMIYOR = "bilinmiyor"
 
 _TAM_NOT_KODU = {
@@ -99,6 +114,7 @@ _TAM_NOT_KODU = {
     NOT_TUTAR_BELIRSIZ: ELEME_TUTAR_BELIRSIZ,
     NOT_DEGER_YOK: ELEME_DEGER_YOK,
     NOT_SAYISAL_DEGIL: ELEME_SAYISAL_DEGIL,
+    NOT_ALAN_YOK: ELEME_ALAN_YOK,
 }
 
 
@@ -117,6 +133,8 @@ def eleme_sebebi(note: Optional[str]) -> Optional[str]:
         return ELEME_DUSUK_GUVEN
     if note.startswith(_NOT_PARA_ONEKI):
         return ELEME_PARA_BIRIMI
+    if note.startswith(_NOT_BAZ_ONEKI):
+        return ELEME_ORAN_BAZI
     return ELEME_BILINMIYOR
 
 
@@ -458,6 +476,166 @@ def _kosul_notu(field_name: str, raw_value: Optional[str],
     return None
 
 
+# --------------------------------------------------------------------------- #
+# Baz kapısı — aylık oran, yıllık oranla aynı kolonda sıralanmaz
+# --------------------------------------------------------------------------- #
+#
+# CLAUDE.md §6 "aylık vs. yıllık baz"ı mimarinin merkezindeki zor vakalar
+# arasında sayıyor; §17 ise yalnızca **aynı birime normalize** alanların
+# kıyaslanmasını şart koşuyor. Bu kapı o şartı orana uygular.
+#
+# ## Ölçülen boşluk (2026-08-16, `data/demo.db`)
+#
+# `delta_between()` ve `rank()` iki oranı yalnız SAYI olarak görüyordu: aylık
+# %1,89 ile yıllık %24,0 aynı eksende sıralanıyor ve aylık olan "daha iyi"
+# çıkıyordu. Oysa aylık %1,89 kabaca yıllık %25 demektir — yani sıralamanın
+# söylediğinin tersi de olabilir. Sayıların birimi yoktu ve kıyas o yüzden
+# adil değildi.
+#
+# Korpus şu an bu tuzağı ÖRTMÜŞ durumda: 70 `kar_payi_orani` satırının
+# kanıtında 38 kez "aylık", 3 kez "yıllık" geçiyor ve yıllık geçenlerin
+# hiçbirinde saklanan değer yıllık oranın kendisi değil ("Aylık Kar payı oranı
+# : %1,20 Efektif Yıllık Kar Payı Oranı : %23,52" satırından 1,20 saklanmış).
+# Yani bugün yanlış bir sıralama ÜRETİLMİYOR — ama bunu sağlayan şey çıkarım
+# katmanının tesadüfi tercihi, kıyas katmanının bir güvencesi değil. Kapı,
+# bazın veriye girdiği gün sessizce yanlış sıralanmaması içindir.
+#
+# ## Baz UYDURULMAZ, ÇEVRİLMEZ
+#
+# İki şey bilerek YAPILMIYOR:
+#
+#  1. **Varsayım yok.** `oran_bazi` yoksa `None`'dır ve kapı ateşlenmez. Alanın
+#     baskın kullanımı aylık olsa bile, ölçülmemiş bir bazı "aylık" saymak
+#     CLAUDE.md §21'in yasakladığı değer uydurmadır. Bilinmeyen baz, kıyası
+#     bugünkü davranışta bırakır.
+#  2. **Çevirme yok.** Yıllık %24'ü 12'ye bölüp aylık %2 demek aritmetik olarak
+#     mümkün ama olgusal olarak yanlıştır: ilan edilen yıllık oran çoğu zaman
+#     *efektif* (bileşik) orandır ve "yıllık maliyet oranı" ücretleri de içerir.
+#     Türetilmiş bir sayı üretmek, uydurma sıralamanın hesap makinesiyle
+#     yapılmış hâli olurdu. §17'nin dediği yapılır: "doğrudan kıyaslanamaz".
+#
+# ## Neden kanonik baza göre, çoğunluğa göre DEĞİL
+#
+# "Popülasyondaki baskın baz kazansın" kuralı, aynı satırı kimin yanında
+# durduğuna göre kıyaslanabilir ya da kıyaslanamaz yapardı: iki bankalı bir
+# süzgeçte geçen bir oran, süzgeç genişleyince elenirdi. Kapı bunun yerine alan
+# başına SABİT bir kıyas bazı okur; karar veriden değil, alanın tanımından
+# gelir ve her sorguda aynıdır.
+
+ORAN_BAZI_AYLIK = "aylik"
+ORAN_BAZI_YILLIK = "yillik"
+
+#: Kabul edilen baz değerleri. Başka bir dize `None` sayılır — tanınmayan bir
+#: etiketi geçerli saymak, ölçülmemiş bir bilgiyi ölçülmüş göstermek olurdu.
+ORAN_BAZLARI = frozenset({ORAN_BAZI_AYLIK, ORAN_BAZI_YILLIK})
+
+#: Kullanıcıya dönük Türkçe karşılıklar. Saklanan değer ASCII'dir (`base.py`
+#: `KAMPANYA_DURUMU_*` ile aynı gerekçe: sınıf etiketi çevrilmez, gösterilirken
+#: Türkçeleşir).
+_BAZ_ETIKET = {ORAN_BAZI_AYLIK: "aylık", ORAN_BAZI_YILLIK: "yıllık"}
+
+#: Alan → kıyasın yürütüldüğü baz. Katılım bankacılığında ilan edilen kâr payı
+#: oranı murabaha **aylık** kâr oranıdır; `extraction/rules/confidence.py:112`
+#: aynı varsayımı makul band olarak zaten yazıyor ("aylık % — yıllıklar da bu
+#: bandın üstü"). Bu sözlükte olmayan alanda kapı hiç çalışmaz.
+KANONIK_ORAN_BAZI: dict[str, str] = {"kar_payi_orani": ORAN_BAZI_AYLIK}
+
+
+def oran_bazi_dogrula(deger: Any) -> Optional[str]:
+    """Ham baz etiketini `'aylik'` | `'yillik'` | `None`'a indirger.
+
+    Tanınmayan değer (`''`, `'monthly'`, `3`) **`None`** döner: sessizce
+    kıyaslanabilir saymak, olmayan bir ölçümü iddia etmek olurdu.
+    """
+    return deger if deger in ORAN_BAZLARI else None
+
+
+def _baz_notu(field_name: str, oran_bazi: Any) -> Optional[str]:
+    """Oranın bazı kıyas bazından FARKLIYSA gerekçe; değilse `None`.
+
+    Bilinmeyen baz (`None`) kapıyı ateşlemez — gerekçe yukarıdaki blokta.
+    """
+    kanonik = KANONIK_ORAN_BAZI.get(field_name)
+    baz = oran_bazi_dogrula(oran_bazi)
+    if kanonik is None or baz is None or baz == kanonik:
+        return None
+    return (f"{_NOT_BAZ_ONEKI} ({_BAZ_ETIKET[baz]}; kıyas bazı "
+            f"{_BAZ_ETIKET[kanonik]}) — doğrudan kıyaslanamaz")
+
+
+# --------------------------------------------------------------------------- #
+# Kapsam kapısı — kapsamdaki her banka görünür, alanı olmasa bile
+# --------------------------------------------------------------------------- #
+#
+# Şartnamenin çalışılmış örneği (s.11–12) üç bankalı bir konut finansmanı
+# tablosudur ve **B ile C bankalarının bazı hücreleri boştur**: "Belirtilmemiş",
+# "Masraf belirtilmemiş". Satırlar eksik alana rağmen tabloda DURUYOR. Yani
+# beklenen çıktı biçimi, alanı olmayan bankayı tablodan düşürmeyi doğrudan
+# yasaklıyor.
+#
+# ## Ölçülen kusur (2026-08-16, `data/demo.db`)
+#
+# `/compare?field=kar_payi_orani&type=Konut+Finansmanı` sekiz bankanın
+# ALTISINI döndürüyordu. Düşen ikisi:
+#
+#     Ziraat Katılım  46 konut kampanyası — `kar_payi_orani` satırı: 0
+#     Adil Katılım     1 konut kampanyası — `kar_payi_orani` satırı: 0
+#
+# Kök neden `rank()` DEĞİLDİ: `rank()` satırı olan hiçbir bankayı düşürmez,
+# yalnız `comparable=False` işaretler. Kayıp bir adım önce, veri getirmede
+# oluyordu — `repo.query_fields(field)` `extracted_fields` tablosundan okur ve
+# o alanda satırı olmayan banka sorguya HİÇ girmez. Kıyas motoruna hiç
+# ulaşmayan bir bankayı kıyas motoru işaretleyemez.
+#
+# Sonuç kullanıcı için sessiz ve yanlıştı: "Kuveyt Türk ve Ziraat Katılım konut
+# finansmanını karşılaştır" sorusunda Ziraat Katılım hiç yokmuş gibi görünüyor.
+# Oysa doğru cevap "Ziraat Katılım'ın 46 konut kampanyası var, kâr payı oranı
+# hiçbirinde belirtilmemiş" — bu, bilgi YOKLUĞUNUN kendisi bir bilgidir ve
+# arayüzdeki `FairnessNotice` şeridi tam bunu vaat ediyor ("veri yok ≠ ürün
+# yok"). Kapsama cetveli (`grafik/KapsamaCetveli.tsx`) bu kararı zaten vermiş
+# ve verisi olmayan bankayı kesik çizgiyle çiziyordu; tablo ondan ayrışmıştı.
+#
+# ## Neden yeni bir mekanizma değil
+#
+# Süre, koşul ve güven kapılarının deseni aynen genişletildi: satır GÖRÜNÜR
+# kalır, gerekçesi yanındadır, sıralamaya girmez. Değer `None`'dır ve arayüz
+# onu şartnamenin jetonuyla ("Belirtilmemiş") basar; sıfır ya da tahmin
+# yazılmaz.
+
+
+def _kapsam_eksikleri(built: list[RankRow],
+                      kapsam: Optional[Iterable[Mapping[str, Any]]]
+                      ) -> list[RankRow]:
+    """Kapsamda olup çıkarım satırı OLMAYAN (banka, tür) çiftleri için satır.
+
+    `kapsam` öğeleri ``{"bank", "bank_name", "campaign_type"}`` okur; fazlası
+    yok sayılır. Anahtar `(bank, campaign_type)`'dır — `tekil_banka_urun()` ve
+    `turlere_ayir()` ile AYNI anahtar, çünkü eksiklik de ürün ailesi
+    düzeyindedir: bir bankanın konut finansmanında oranı olmaması, taşıt
+    finansmanında da olmadığı anlamına gelmez.
+
+    Sıra ada göre sabittir: bu satırların bir sıralama anahtarı yoktur ve
+    çağrıdan çağrıya yer değiştirmeleri, sıralama değişmiş gibi okunurdu.
+    """
+    if not kapsam:
+        return []
+    var = {(x.bank, x.campaign_type) for x in built}
+    eksik: dict[tuple[Any, Any], Mapping[str, Any]] = {}
+    for k in kapsam:
+        anahtar = (k.get("bank"), k.get("campaign_type"))
+        if anahtar in var or anahtar in eksik:
+            continue
+        eksik[anahtar] = k
+    sirali = sorted(eksik.items(),
+                    key=lambda kv: (str(kv[1].get("bank_name") or kv[0][0] or ""),
+                                    str(kv[0][0] or ""), str(kv[0][1] or "")))
+    return [RankRow(bank=k.get("bank"), bank_name=k.get("bank_name"),
+                    value=None, sort_key=None, comparable=False,
+                    note=NOT_ALAN_YOK, source_span=None,
+                    campaign_id=None, campaign_type=k.get("campaign_type"))
+            for _, k in sirali]
+
+
 #: `rank()` kapılarının girdi sözlüğünden OKUDUĞU alanlar.
 #:
 #: Kapılar eksik alanda sessizce kapanır ve bu bilinçlidir ("bilinmiyor" ile
@@ -472,10 +650,12 @@ RANK_KAPI_ALANLARI: frozenset[str] = frozenset({
     "campaign_status",    # süre kapısı
     "raw_value",          # koşul kapısı — orana göre konum
     "bank_name",          # koşul kapısı — bankanın kendi adını dışlar
+    "oran_bazi",          # baz kapısı — aylık/yıllık
 })
 
 
-def rank(rows: list[dict], field_name: str) -> list[RankRow]:
+def rank(rows: list[dict], field_name: str,
+         kapsam: Optional[Iterable[Mapping[str, Any]]] = None) -> list[RankRow]:
     """query_fields() çıktısını alıp adil sıralama döndürür.
 
     rows: [{"bank","bank_name","canonical_value","source_span","confidence",...}]
@@ -491,6 +671,17 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
     `'expired'` işaretli satır sıralamaya girmez, notunda sebebi yazar ve
     durum `RankRow.campaign_status` alanında ayrıca taşınır (arayüz rozeti).
     Damgasız (`None`) satır etkilenmez.
+
+    `oran_bazi` taşınmışsa **baz kapısı** uygulanır: bazı alanın kıyas bazından
+    (`KANONIK_ORAN_BAZI`) farklı olan oran sıralamaya girmez. Baz bilinmiyorsa
+    (`None`) kapı ateşlenmez ve baz UYDURULMAZ — gerekçesi "Baz kapısı"
+    bloğunda.
+
+    `kapsam` verilirse, kapsamda olup `rows` içinde HİÇ satırı bulunmayan her
+    `(bank, campaign_type)` çifti için değeri `None` olan bir satır eklenir
+    (`NOT_ALAN_YOK`). Şartnamenin beklenen tablosu (s.11–12) alanı eksik olan
+    bankayı da satır olarak gösteriyor; gerekçe "Kapsam kapısı" bloğunda.
+    Kapsam verilmezse davranış birebir eskisidir.
     """
     built: list[RankRow] = []
     for r in rows:
@@ -502,6 +693,16 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
         durum_notu = _durum_notu(r.get("campaign_status"))
         if durum_notu is not None and comparable:
             comparable, note = False, durum_notu
+        # Baz kapısı, süre kapısından SONRA ve koşul kapısından ÖNCE. Baz,
+        # sayının BİRİMİDİR — farklı para birimi ile aynı sınıftan bir
+        # engeldir ve o kontrol zaten `_numeric_key` içinde, her şeyden önce
+        # yapılıyor. Koşulluluk ise ürünün kime/nasıl verildiğiyle ilgilidir;
+        # birimi yanlış okunan bir sayıda koşulu tartışmak sıra hatasıdır.
+        # Süresi dolmuşluk yine en önde: artık verilmeyen bir teklifin bazı
+        # ikincil bir ayrıntıdır.
+        baz_notu = _baz_notu(field_name, r.get("oran_bazi"))
+        if baz_notu is not None and comparable:
+            comparable, note = False, baz_notu
         # Koşul kapısı, güven kapısından ÖNCE ve süre kapısından SONRA:
         # süresi dolmuşluk ürünün varlığıyla, koşulluluk ürünün kendisiyle,
         # düşük güven ise bizim ÖLÇÜMÜMÜZLE ilgilidir. Kullanıcıya gösterilecek
@@ -530,13 +731,17 @@ def rank(rows: list[dict], field_name: str) -> list[RankRow]:
             campaign_type=r.get("campaign_type"),
             campaign_status=r.get("campaign_status"),
             confidence=r.get("confidence"),
+            oran_bazi=oran_bazi_dogrula(r.get("oran_bazi")),
         ))
 
     lower_better = field_name in _LOWER_IS_BETTER
     comparables = [b for b in built if b.comparable and b.sort_key is not None]
     others = [b for b in built if not (b.comparable and b.sort_key is not None)]
     comparables.sort(key=lambda b: b.sort_key, reverse=not lower_better)
-    return comparables + others
+    # Kapsam satırları EN SONA: bir sıralama anahtarları yok ve elenmiş
+    # satırların (aralık, süresi dolmuş…) önüne geçmeleri, ölçülmüş bir
+    # boşluğu hiç ölçülmemiş bir alanın önünde göstermek olurdu.
+    return comparables + others + _kapsam_eksikleri(built, kapsam)
 
 
 def best(rows: list[dict], field_name: str) -> Optional[RankRow]:
@@ -655,6 +860,413 @@ def turlere_ayir(ranked: list[RankRow]) -> list[tuple[str, list[RankRow]]]:
     return sorted(gruplar.items(),
                   key=lambda kv: (-sum(1 + x.other_count for x in kv[1]),
                                   -len(kv[1]), kv[0]))
+
+
+# =========================================================================== #
+# Şartname Senaryo-1 tablosu — banka başına TEK satır, YEDİ kolon
+# =========================================================================== #
+#
+# Şartname s.11–12 çözümün çıktısını bir tabloyla TARİF EDİYOR ve o tablo bu
+# dosyadaki her şeyden farklı bir şekle sahip:
+#
+#     Banka | Ürün Türü | Kâr Payı Oranı | Vade | Kampanya Avantajı |
+#     Masraf Durumu | Kampanya Süresi
+#
+# `rank()` TEK alanlıdır (bir kolon, çok banka); bu tablo ÇOK alanlıdır (bir
+# banka, yedi kolon). İkisi birbirinin yerine geçmez ve bu blok `rank()`in
+# YANINA gelir: tek alanlı ekranın kanıt/güven/katman kolonları denetim
+# yüzeyidir, bu tablo ise şartnamenin manşet illüstrasyonudur.
+#
+# ## Satır = TEK kampanya, birleştirme YOK
+#
+# Bir bankanın oranını bir kampanyasından, vadesini bir başkasından alıp aynı
+# satıra yazmak, var olmayan bir ürün icat etmek olurdu — §21'in yasakladığı
+# değer uydurmanın satır düzeyindeki hâli. Bu yüzden satır tek bir kampanyayı
+# temsil eder; bankanın o ailedeki diğer kampanyaları `other_count` ile
+# SAYILIR (gizlenmez), `tekil_banka_urun()` ile aynı sözleşme.
+#
+# ## Temsilciyi ne seçer — bileşik skor DEĞİL
+#
+# `rank_advantageous()` kullanmak cazipti ama yanlış olurdu: o fonksiyon "en
+# avantajlı" İDDİASINI üretir ve iddia ağırlıklara (bir ürün kararına) dayanır.
+# Bu tablo bir sıralama değil bir KATALOGdur; temsilciyi "en avantajlı" diye
+# seçmek, tabloya sormadığı bir soruyu cevaplatmak olurdu.
+#
+# Ölçüt bunun yerine tablonun kendi amacıdır — **en çok hücreyi dolduran
+# kampanya**:
+#
+#     1. süresi dolmamış olan önce   (kapanmış kampanya ürünü temsil etmez)
+#     2. dolu hücresi çok olan önce  (tablonun amacı: okunabilir satır)
+#     3. ortalama güveni yüksek olan önce
+#     4. küçük `campaign_id` önce    (kararlılık — eşitlikte sıra oynamasın)
+#
+# ## Sıra: alfabetik, çünkü bu bir SIRALAMA DEĞİL
+#
+# Satırlar banka adına göre dizilir. Kâr payına göre dizmek tabloyu bir
+# sıralama gibi okuturdu; oysa yedi kolonun hepsi aynı yönde "iyi" değildir ve
+# kolonların bir kısmı kıyaslanabilir bile değildir (§17).
+
+#: Kampanya avantajını besleyen alanlar — ÖNCELİK SIRASIYLA.
+#:
+#: Kural: "Kampanya Avantajı" **serbest metin ÜRETİLMEZ**; mevcut çıkarım
+#: satırlarından derlenir ve her parça kendi `span`ını taşır. Şartnamenin
+#: örnek hücreleri zaten bu alanların biçiminde: "5.000 TL alışveriş çeki" →
+#: `odul_miktari` / `alisveris_puani`.
+#:
+#: Sıra keyfi değil, ÖZGÜLLÜK sırası: doğrudan para ödülü (`odul_miktari`) en
+#: somut fayda, puan ondan sonra, oransal indirim en soyutu.
+AVANTAJ_ALANLARI: tuple[str, ...] = (
+    "odul_miktari", "alisveris_puani", "indirim_orani",
+)
+
+#: Ücret MUAFİYETİ de bir avantajdır — ama yalnız yukarıdakiler boşsa.
+#:
+#: Şartnamenin kendi kavram tablosu (s.10) "Avantajlı Finansman"ı *"daha uygun
+#: maliyet, kâr payı oranı **veya ek fayda** sunan"* diye tanımlıyor; s.12
+#: tablosunda da A Bankası'nın avantaj hücresi masraf cümlesinden geliyor
+#: ("50.000 TL'ye kadar masraf alınmıyor"). Yani muafiyet, şartnamenin kendi
+#: okumasında avantajdır.
+#:
+#: YALNIZ muafiyet yönü sayılır: var olan bir ücret avantaj değildir. Ve
+#: yalnız `AVANTAJ_ALANLARI` boşsa devreye girer — "Masraf Durumu" zaten ayrı
+#: bir kolondur ve iki hücrede aynı çıkarımı basmak, doluluk sayacını da
+#: kendi kopyasıyla şişirirdi.
+AVANTAJ_MUAFIYET_ALANLARI: tuple[str, ...] = ("masraf_durumu", "tahsis_ucreti")
+
+# `kampanya_kosullari` BİLEREK kaynak DEĞİL. Alan adı avantaj çağrıştırıyor
+# ama içeriği kısıttır — korpustaki 1344 satırdan ölçülen örnekler:
+#
+#     "Müşteri olma aşamasında \"Davet Kodu\" alanına \"KTOD2026\" kodunun
+#      yazılması gerekmektedir."
+#     "Kuveyt Türk önceden haber vermeden kampanya koşullarında değişiklik
+#      yapabilir ya da kampanyayı sonlandırabilir."
+#
+# Bir kısıtı "Kampanya Avantajı" kolonuna basmak, anlamını TERSİNE çevirmek
+# olurdu. Boş bırakmak yanlış bilgi vermekten iyidir.
+
+
+def _muafiyet_mi(field_name: str, value: Any) -> bool:
+    """Bu masraf/ücret değeri bir MUAFİYET mi (yani avantaj mı)?
+
+    Tutarı bilinmeyen bir ücret (`has_fee=True, amount=None`) muafiyet
+    DEĞİLDİR — orada bilinen tek şey ücretin var olduğudur.
+
+    `has_fee` taşıyan bir değerde **yalnız `has_fee is False`** muafiyettir;
+    tutara BAKILMAZ. Ölçüldü (`data/demo.db`, Vakıf Katılım konut satırı):
+    korpus `{"has_fee": True, "amount": 0.0}` üretebiliyor — kendi içinde
+    çelişkili bir kayıt ("ücret var ve sıfır"). Tutara bakan bir kural bunu
+    avantaj sayıyordu, yani çelişkili bir çıkarımı kullanıcıya olumlu bir
+    iddia olarak sunuyordu. Çelişki halinde `has_fee` bayrağı kazanır ve
+    hücre boş kalır: bir avantaj UYDURMAKtansa söylememek yeğdir.
+
+    Bayrak taşımayan para biçimli ücretlerde (`tahsis_ucreti`) sıfır tutar
+    muafiyettir — orada çelişki yoktur, "0 TL tahsis ücreti" tek bir şey söyler.
+    """
+    if field_name not in AVANTAJ_MUAFIYET_ALANLARI or value is None:
+        return False
+    if isinstance(value, dict):
+        if "has_fee" in value:
+            return value.get("has_fee") is False
+        return value.get("value") == 0 or value.get("amount") == 0
+    return value == 0
+
+
+#: Tablonun kolon sözleşmesi: `(anahtar, başlık, alan_adı)`.
+#:
+#: Başlıklar şartname s.12'deki yazımla BİREBİR aynıdır — tablo o
+#: illüstrasyonun karşılığı olduğunu iddia ediyorsa kolon adını da değiştiremez.
+#: `alan_adı` `None` olan iki kolon TÜRETİLMİŞTİR (kampanya kaydından okunur,
+#: çıkarımdan değil) ve doluluk sayacına GİRMEZ: her zaman dolu oldukları için
+#: sayaca katılmaları kapsama oranını sebepsiz yükseltirdi.
+#:
+#: `kampanya_avantaji` bir çıkarım alanı DEĞİLDİR ve şemaya böyle bir sütun
+#: eklenmez; `AVANTAJ_ALANLARI` üzerinden derlenen BİRLEŞİK kolondur.
+SARTNAME_SUTUNLARI: tuple[tuple[str, str, Optional[str]], ...] = (
+    ("bank", "Banka", None),
+    ("campaign_type", "Ürün Türü", None),
+    ("kar_payi_orani", "Kâr Payı Oranı", "kar_payi_orani"),
+    ("vade_ay", "Vade", "vade_ay"),
+    ("kampanya_avantaji", "Kampanya Avantajı", None),
+    ("masraf_durumu", "Masraf Durumu", "masraf_durumu"),
+    ("kampanya_suresi", "Kampanya Süresi", "kampanya_suresi"),
+)
+
+#: Doluluk sayacına giren kolonlar — türetilmiş ikisi hariç hepsi.
+OLCULEN_SUTUNLAR: tuple[str, ...] = (
+    "kar_payi_orani", "vade_ay", "kampanya_avantaji",
+    "masraf_durumu", "kampanya_suresi",
+)
+
+
+@dataclass
+class TabloHucresi:
+    """Tablonun tek bir hücresi — değer + KANITI.
+
+    Avantaj parçaları da aynı şekli kullanır (`parcalar`): bir hücre ile onu
+    oluşturan parçanın farklı şekilleri olsaydı, arayüz kaynak rozetini iki
+    kez yazmak zorunda kalırdı.
+
+    `bos` hesaplanmış bir alandır ve arayüzün `value is None` denemesinden
+    farklıdır: birleşik kolonda değer yoktur ama parçalar olabilir.
+    """
+
+    sutun: str
+    field_name: Optional[str]
+    value: Any = None
+    raw_value: Optional[str] = None
+    confidence: Optional[float] = None
+    extractor: Optional[str] = None
+    source_span: Optional[str] = None
+    span_start: Optional[int] = None
+    span_end: Optional[int] = None
+    parcalar: list["TabloHucresi"] = dc_field(default_factory=list)
+
+    @property
+    def bos(self) -> bool:
+        return self.value is None and not self.parcalar
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "sutun": self.sutun,
+            "field_name": self.field_name,
+            "value": self.value,
+            "raw_value": self.raw_value,
+            "confidence": self.confidence,
+            "extractor": self.extractor,
+            "source_span": self.source_span,
+            "span_start": self.span_start,
+            "span_end": self.span_end,
+            "bos": self.bos,
+            "parcalar": [p.to_dict() for p in self.parcalar],
+        }
+
+
+@dataclass
+class TabloSatiri:
+    """Bir banka × ürün ailesi satırı — TEK kampanyadan."""
+
+    bank: Optional[str]
+    bank_name: Optional[str]
+    campaign_id: Optional[Any]
+    campaign_type: Optional[str]
+    campaign_status: Optional[str]
+    #: Bu bankanın aynı ailede gösterilmeyen kampanya sayısı.
+    other_count: int
+    cells: dict[str, TabloHucresi]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "bank": self.bank,
+            "bank_name": self.bank_name,
+            "campaign_id": self.campaign_id,
+            "campaign_type": self.campaign_type,
+            "campaign_status": self.campaign_status,
+            "other_count": self.other_count,
+            "cells": {k: h.to_dict() for k, h in self.cells.items()},
+        }
+
+
+def _hucre(sutun: str, field_name: Optional[str],
+           alan: Optional[Mapping[str, Any]]) -> TabloHucresi:
+    """Çıkarım kaydından hücre kurar; kayıt yoksa BOŞ hücre."""
+    if not alan:
+        return TabloHucresi(sutun=sutun, field_name=field_name)
+    return TabloHucresi(
+        sutun=sutun,
+        field_name=field_name,
+        value=collapse_degenerate_range(alan.get("canonical_value")),
+        raw_value=alan.get("raw_value"),
+        confidence=alan.get("confidence"),
+        extractor=alan.get("extractor"),
+        source_span=alan.get("source_span"),
+        span_start=alan.get("span_start"),
+        span_end=alan.get("span_end"),
+    )
+
+
+#: Avantaj parçasının, yanındaki bir tablo kolonuyla AYNI çıkarımdan geldiğini
+#: söyleyen işaret. Arayüz bu parçayı farklı basar (bkz. aşağıdaki blok).
+SUTUN_AVANTAJ_CAKISAN = "kampanya_avantaji_cakisan"
+
+#: Tablonun kendi kolonlarında görünen alanlar — çakışma bu kümeyle belirlenir.
+_KOLON_ALANLARI: frozenset[str] = frozenset(
+    f for _a, _b, f in SARTNAME_SUTUNLARI if f
+)
+
+
+# --------------------------------------------------------------------------- #
+# Çakışan avantaj parçası — neden ayrı işaretleniyor
+# --------------------------------------------------------------------------- #
+#
+# "Kampanya Avantajı" hücresi ücret muafiyetinden beslendiğinde, kaynağı
+# `masraf_durumu`dur — yani YANINDAKİ "Masraf Durumu" kolonunun ta kendisi.
+# Arayüz ikisini de "alan adı: kanonik değer" biçiminde bastığında satır
+# kelimesi kelimesine tekrar ediyordu:
+#
+#     … | Kampanya Avantajı: Masraf Durumu: masrafsız | Masraf Durumu: masrafsız
+#
+# Şartname s.12 aynı olguyu İKİ FARKLI cümleyle yazıyor ("50.000 TL'ye kadar
+# masraf alınmıyor" / "Dosya masrafı yok"), yani tekrar beklenen biçim değil.
+#
+# Çözüm: çakışan parçada bankanın KENDİ ham ifadesini bas (üretilmiş metin
+# değil; kanıtı zaten span'iyle bağlı). Karar sunucuda veriliyor çünkü
+# "hangi alanlar tablo kolonudur" bilgisi burada; arayüzde ikinci bir kopya
+# tutmak, bu depoda beş kez pahalıya mal olmuş "aynı karar iki yerde" hatası
+# olurdu. Ham ifadenin tek başına ayakta durup duramadığına ise ARAYÜZ karar
+# verir — o bir okunabilirlik yargısıdır, veri yargısı değil.
+#
+# Bu işaret YALNIZ çakışan dalda konur. `odul_miktari` / `alisveris_puani` /
+# `indirim_orani` kaynaklı parçalar hiçbir kolonu tekrar etmiyor ve olduğu
+# gibi kalıyor.
+
+
+def avantaj_hucresi(alanlar: Mapping[str, Mapping[str, Any]]) -> TabloHucresi:
+    """"Kampanya Avantajı" birleşik hücresi — parçalar, serbest metin DEĞİL.
+
+    Kural ve gerekçesi `AVANTAJ_ALANLARI` / `AVANTAJ_MUAFIYET_ALANLARI`
+    yorumlarında. Özet: önce doğrudan fayda alanları (hepsi, öncelik
+    sırasıyla); hiçbiri yoksa ücret MUAFİYETİ (ilk bulunan). Hiçbiri yoksa
+    hücre boştur ve arayüz «Belirtilmemiş» basar.
+
+    Parçaların metne çevrilmesi burada YAPILMAZ: Türkçe biçimlendirme
+    arayüzün işidir (`web/app/lib/format.ts`) ve sunucuda ikinci bir
+    biçimlendirici tutmak, aynı kararı iki yerde yaşatmak olurdu.
+    """
+    parcalar: list[TabloHucresi] = []
+    for ad in AVANTAJ_ALANLARI:
+        alan = alanlar.get(ad)
+        if alan and alan.get("canonical_value") is not None:
+            parcalar.append(_hucre("kampanya_avantaji", ad, alan))
+    if not parcalar:
+        for ad in AVANTAJ_MUAFIYET_ALANLARI:
+            alan = alanlar.get(ad)
+            if alan and _muafiyet_mi(ad, alan.get("canonical_value")):
+                # Kaynak aynı zamanda bir tablo kolonuysa parça İŞARETLENİR;
+                # gerekçe yukarıdaki blokta.
+                sutun = (SUTUN_AVANTAJ_CAKISAN if ad in _KOLON_ALANLARI
+                         else "kampanya_avantaji")
+                parcalar.append(_hucre(sutun, ad, alan))
+                break
+    return TabloHucresi(sutun="kampanya_avantaji", field_name=None,
+                        parcalar=parcalar)
+
+
+def _satir_kur(kampanya: Mapping[str, Any], other_count: int) -> TabloSatiri:
+    alanlar: Mapping[str, Mapping[str, Any]] = kampanya.get("fields") or {}
+    cells: dict[str, TabloHucresi] = {}
+    for anahtar, _baslik, field_name in SARTNAME_SUTUNLARI:
+        if anahtar == "kampanya_avantaji":
+            cells[anahtar] = avantaj_hucresi(alanlar)
+        elif field_name is None:
+            # Türetilmiş kolon: kampanya kaydının kendisinden okunur.
+            deger = (kampanya.get("bank_name") or kampanya.get("bank")
+                     if anahtar == "bank" else kampanya.get("campaign_type"))
+            cells[anahtar] = TabloHucresi(sutun=anahtar, field_name=None,
+                                          value=deger)
+        else:
+            cells[anahtar] = _hucre(anahtar, field_name, alanlar.get(field_name))
+    return TabloSatiri(
+        bank=kampanya.get("bank"), bank_name=kampanya.get("bank_name"),
+        campaign_id=kampanya.get("campaign_id"),
+        campaign_type=kampanya.get("campaign_type"),
+        campaign_status=kampanya.get("campaign_status"),
+        other_count=other_count, cells=cells,
+    )
+
+
+def _temsilci_anahtari(kampanya: Mapping[str, Any]) -> tuple:
+    """Temsilci seçim ölçütü — gerekçesi blok başlığında."""
+    alanlar: Mapping[str, Mapping[str, Any]] = kampanya.get("fields") or {}
+    gecici = _satir_kur(kampanya, 0)
+    dolu = sum(1 for s in OLCULEN_SUTUNLAR if not gecici.cells[s].bos)
+    guvenler = [a.get("confidence") for a in alanlar.values()
+                if a.get("confidence") is not None]
+    ort = sum(guvenler) / len(guvenler) if guvenler else 0.0
+    cid = kampanya.get("campaign_id")
+    return (
+        suresi_dolmus_mu(kampanya.get("campaign_status")),  # False (0) önce
+        -dolu,
+        -ort,
+        cid if isinstance(cid, int) else 0,
+    )
+
+
+def tablo_satirlari(
+    kampanyalar: Iterable[Mapping[str, Any]],
+    kapsam: Optional[Iterable[Mapping[str, Any]]] = None,
+) -> list[TabloSatiri]:
+    """Şartname s.12 tablosunun satırları — banka × ürün ailesi başına bir.
+
+    `kampanyalar` öğeleri::
+
+        {"bank": "kuveyt-turk", "bank_name": "Kuveyt Türk",
+         "campaign_id": 12, "campaign_type": "Konut Finansmanı",
+         "campaign_status": None,
+         "fields": {"kar_payi_orani": {"canonical_value": 1.89,
+                                       "raw_value": "%1,89",
+                                       "confidence": 0.95, ...}, ...}}
+
+    `kapsam` `rank()`teki ile AYNI sözleşmedir ve aynı işi yapar: o ailede
+    belgesi olup hiç ölçülebilir alanı olmayan banka tablodan DÜŞMEZ, tüm
+    hücreleri boş bir satır alır. Şartnamenin kendi tablosunda da 21 hücrenin
+    3'ü "Belirtilmemiş"tir; seyreklik gizlenecek bir şey değil.
+    """
+    gruplar: dict[tuple[Any, Any], list[Mapping[str, Any]]] = {}
+    for k in kampanyalar:
+        gruplar.setdefault((k.get("bank"), k.get("campaign_type")), []).append(k)
+
+    satirlar = [
+        _satir_kur(min(grup, key=_temsilci_anahtari), len(grup) - 1)
+        for grup in gruplar.values()
+    ]
+
+    for k in kapsam or ():
+        anahtar = (k.get("bank"), k.get("campaign_type"))
+        if anahtar in gruplar:
+            continue
+        gruplar[anahtar] = []
+        satirlar.append(_satir_kur(
+            {"bank": k.get("bank"), "bank_name": k.get("bank_name"),
+             "campaign_type": k.get("campaign_type"), "fields": {}}, 0))
+
+    # Alfabetik: bu bir katalog, sıralama değil (gerekçe blok başlığında).
+    satirlar.sort(key=lambda s: (str(s.campaign_type or ""),
+                                 str(s.bank_name or s.bank or "")))
+    return satirlar
+
+
+def tablo_dolulugu(satirlar: Iterable[TabloSatiri]) -> dict[str, Any]:
+    """"Bu görünümde X hücrenin Y'si dolu" — ÇALIŞMA ANINDA ölçülür.
+
+    Sayı koda GÖMÜLMEZ: korpus doluluğu çıkarım katmanı geliştikçe değişiyor
+    ve donmuş bir sayı, ekranda bir gün gerçek olmayan bir iddia olurdu.
+
+    Türetilmiş kolonlar (Banka, Ürün Türü) sayaca girmez — her zaman dolu
+    oldukları için oranı sebepsiz yükseltirlerdi. Şartnamenin kendi tablosuyla
+    kıyaslanabilsin diye yedi kolonluk toplam da ayrıca döner.
+    """
+    satirlar = list(satirlar)
+    n = len(satirlar)
+    sutun_basina = {
+        s: sum(1 for x in satirlar if not x.cells[s].bos)
+        for s in OLCULEN_SUTUNLAR
+    }
+    dolu = sum(sutun_basina.values())
+    hucre = n * len(OLCULEN_SUTUNLAR)
+    return {
+        "satir": n,
+        "olculen_sutun": len(OLCULEN_SUTUNLAR),
+        "hucre": hucre,
+        "dolu": dolu,
+        "oran": (dolu / hucre) if hucre else 0.0,
+        "sutun_basina": {s: {"dolu": d, "toplam": n}
+                         for s, d in sutun_basina.items()},
+        # Şartname s.12 tablosu 3×7 = 21 hücre sayıyor; karşılaştırılabilirlik
+        # için aynı ölçü de verilir. Türetilmiş iki kolon her satırda doludur.
+        "tum_sutun": len(SARTNAME_SUTUNLARI),
+        "tum_hucre": n * len(SARTNAME_SUTUNLARI),
+        "tum_dolu": dolu + n * (len(SARTNAME_SUTUNLARI) - len(OLCULEN_SUTUNLAR)),
+    }
 
 
 # =========================================================================== #
@@ -879,6 +1491,14 @@ def rank_advantageous(rows: Iterable[dict],
     kıyaslanabilir biri değil sayması, bu depoda beş kez pahalıya mal olmuş
     "aynı karar iki yerde" hatasının bileşik skordaki karşılığı olurdu.
 
+    `field_oran_bazi` de aynı biçimde isteğe bağlıdır ve aynı gerekçeyle
+    `rank()`in **baz kapısını** bileşik skora taşır::
+
+        {"field_oran_bazi": {"kar_payi_orani": "yillik"}}
+
+    Bazı `KANONIK_ORAN_BAZI`den farklı olan alan skorlanmaz (kapsamayı düşürür,
+    kampanyayı cezalandırmaz); baz bilinmiyorsa kapı ateşlenmez.
+
     Yöntem (docstring'de olması istendi):
 
     1. **Sayısallaştırma** — her kanonik değer `_composite_numeric()` ile tek
@@ -922,6 +1542,14 @@ def rank_advantageous(rows: Iterable[dict],
             durum_notu = _durum_notu(r.get("campaign_status"))
             if durum_notu is not None and num is not None:
                 num, note = None, durum_notu
+            # Baz kapısı: `rank()` ile aynı sıra (süreden sonra, güvenden
+            # önce), aynı metin. Süre kapısının aksine yalnız BU alanı
+            # düşürür — baz, kampanyanın değil tek bir oranın özelliğidir ve
+            # yıllık ilan edilmiş bir oran yüzünden vadeyi de elemek,
+            # ölçülmemiş bir kusur iddia etmek olurdu.
+            baz_notu = _baz_notu(fname, (r.get("field_oran_bazi") or {}).get(fname))
+            if baz_notu is not None and num is not None:
+                num, note = None, baz_notu
             # Güven kapısı: `rank()` ile aynı eşik, aynı gerekçe metni.
             guven_notu = _guven_notu((r.get("field_confidence") or {}).get(fname))
             if guven_notu is not None and num is not None:
@@ -1140,9 +1768,11 @@ DELTA_KINDS = (
 
 def delta_between(field_name: str,
                   mine_key: Optional[float],
-                  rival_key: Optional[float]) -> tuple[str, Optional[float],
-                                                       Optional[float]]:
-    """İki sıralama anahtarı arasındaki farkı YÖNE göre yorumlar.
+                  rival_key: Optional[float],
+                  mine_bazi: Optional[str] = None,
+                  rival_bazi: Optional[str] = None
+                  ) -> tuple[str, Optional[float], Optional[float]]:
+    """İki sıralama anahtarı arasındaki farkı YÖNE ve BAZA göre yorumlar.
 
     Dönüş: ``(kind, abs_diff, rel_pct)``.
 
@@ -1150,11 +1780,33 @@ def delta_between(field_name: str,
     farklı para birimi) fark **hesaplanmaz** ve `kiyaslanamaz` döner. Yaklaşık
     bir fark üretmek, CLAUDE.md §17'nin yasakladığı uydurma sıralamadır.
 
+    `mine_bazi` / `rival_bazi` oranın bazıdır (`'aylik'` | `'yillik'` |
+    `None`). İKİSİ DE biliniyor ve FARKLIYSA fark hesaplanmaz: aylık %1,89 ile
+    yıllık %24,0 arasındaki "%1.170 daha iyi" cümlesi, birimi görmezden gelen
+    bir aritmetiktir (bkz. "Baz kapısı" bloğu). Baz çevrilmez ve tarafların
+    biri bilinmiyorsa **varsayılmaz** — kapı yalnız ölçülmüş bir farkta kapanır.
+
+    Bu kontrol `rank()`in baz kapısıyla ÜST ÜSTE gelir ve bilerek öyledir:
+    `/bank-delta` anahtarları `comparable` satırlardan alıyor, yani oradan
+    zaten geçmiş olurlar; ama `delta_between()` doğrudan da çağrılabilen genel
+    bir işlevdir ve tek başına da adil kalmalıdır.
+
+    Kontrol ALAN BAĞIMSIZDIR — `rank()`inkinden geniştir. `rank()` alan başına
+    kanonik bir baz okur (`KANONIK_ORAN_BAZI`) ve o sözlükte olmayan alanda
+    çalışmaz; burada ölçülen tek şey ÇAĞIRANIN iki taraf için farklı birim
+    bildirmiş olmasıdır. Bu bildirime rağmen fark üretmek hiçbir alanda doğru
+    olmaz, reddetmek ise hiçbir alanda yanlış olmaz.
+
     Göreli fark rakibin değerine oranlanır ve rakip 0 ise **hesaplanmaz**:
     sıfıra bölme tanımsızdır ve 0 burada gerçek bir üründür ("masrafsız",
     "vade farksız"), eksik veri değil.
     """
     if mine_key is None or rival_key is None:
+        return "kiyaslanamaz", None, None
+
+    benim_baz = oran_bazi_dogrula(mine_bazi)
+    rakip_baz = oran_bazi_dogrula(rival_bazi)
+    if benim_baz is not None and rakip_baz is not None and benim_baz != rakip_baz:
         return "kiyaslanamaz", None, None
 
     fark = mine_key - rival_key

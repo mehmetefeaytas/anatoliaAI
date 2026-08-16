@@ -9,7 +9,7 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-2946%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Testler](https://img.shields.io/badge/testler-3118%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge-yellow.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
@@ -28,7 +28,7 @@ kampanya ve ürün metinlerinden finansal bilgileri **otomatik çıkaran**,
 **on-premise** ve **internetsiz** çalışabilen bir Türkçe NLP sistemi.
 
 > **1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
-> 2.946 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti**
+> 3.118 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti**
 
 ---
 
@@ -106,7 +106,7 @@ kanıtla karşılaştırır, ayrışırsa CI kırmızı yanar. Ölçüm tarihi:
 | Güven kalibrasyonu | ECE **0,188** · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
 | Bağımlılık envanteri | **96 paket**, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
 | On-prem kanıtı | **14/14 adım** `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
-| Test | **2.999** toplanan · **2.946** geçti · **53** atlandı (Postgres — CI'da koşar) | `python -m scripts.test_ozeti` |
+| Test | **3.171** toplanan · **3.118** geçti · **53** atlandı (Postgres — CI'da koşar) · **0 başarısız** | `python -m scripts.test_ozeti` — ölçüm 2026-08-16 ⚠️ kirli ağaçta üretildi, commit sonrası tekrarlanacak |
 | CI regresyon kapısı | **iki taban** (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | **var** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 
@@ -408,7 +408,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — temiz ağaçta ölçüldü (15 Ağu): 2.946 geçti, 53 atlandı.
+# Tüm test paketi — 16 Ağu ölçümü: 3.171 toplandı, 3.118 geçti, 53 atlandı, 0 başarısız.
 # Atlananlar isteğe bağlı bağımlılık isteyenlerdir (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değildir ve tamamı offline koşar.
 python3 -m unittest discover -s tests

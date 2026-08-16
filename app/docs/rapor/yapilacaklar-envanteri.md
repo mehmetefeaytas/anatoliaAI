@@ -140,6 +140,26 @@ korpusu (T-037, T-038).
 
 ### A. Şartname uyumu — teslim zorunlulukları
 
+> ⚠️ **BU TABLONUN «Durum» KOLONU 3 AĞUSTOS KESİTİDİR.** Aşağıdaki satırların
+> bir kısmı o tarihten sonra kapandı ve **satırlar bilerek düzenlenmedi** —
+> envanterin değeri, o günkü durumun bozulmamış kaydı olmasıdır. Kapananlar
+> (16 Ağustos 2026 itibarıyla, hepsi ölçümle doğrulandı):
+>
+> | task | ne oldu |
+> |---|---|
+> | T-001 | ✅ Veri seti Hugging Face'te herkese açık (15 Ağu) |
+> | T-002 | ✅ Demo videosu 3:04, kartsız, 12 ekran |
+> | T-003 | ✅ 1 dk kesit — 59 sn, sekiz ekran |
+> | T-004 | ✅ Sunum PDF (15 sayfa) + PPTX (15 slayt) |
+> | T-007 | ✅ Haftalık etiketler `hafta-00`…`hafta-06` kesintisiz |
+> | T-020 | ✅ Sahte `%0` kâr payı temizlendi — alan 4.709 → 4.704, Dünya Katılım sahte `%0` 7 → 0 |
+> | T-074 | ✅ Şartname 7 sütunlu ürün tablosu — `GET /urun-tablosu`, 32 test yeşil |
+>
+> Güncel ve **kanıt komutlu** teslim durumu için tek doğruluk kaynağı:
+> [`app/docs/SARTNAME-UYUM.md`](../SARTNAME-UYUM.md) (2026-08-16 itibarıyla
+> ✅ 18 · 🟠 1 · ❌ 0, toplam 19 satır). ⚠️ Kapanan kalemlerin dosyaları **henüz commit
+> edilmemiş**; `git add` teslim öncesi zorunlu.
+
 | Task No | Konu | Durum | Önem | İçerik | Kanıt | Bağımlılık |
 |---|---|---|---|---|---|---|
 | T-001 | Şartname uyumu | yapılmamış | kritik | Veri setinin herkese açık indirme bağlantısını üret (GitHub Release / HF Datasets / Zenodo) ve README'ye yaz | `README.md:117` → *"**Herkese açık indirme bağlantısı:** _(yükleme tamamlandığında buraya eklenecektir)_"*; şartname §9 s.18 "(3) kullanılan veri setinin indirilebileceği herkese açık bir bağlantısını içermelidir" | T-005 |
@@ -211,6 +231,7 @@ korpusu (T-037, T-038).
 | T-071 | Test | yapılmamış | düşük | Testlerde kapatılmayan SQLite bağlantılarını düzelt — `unittest` koşumu çok sayıda `ResourceWarning: unclosed database in <sqlite3.Connection>` basıyor | `.venv` ile `python -m unittest discover -s tests` çıktısındaki `ResourceWarning` yığını (davranışı bozmuyor ama sızıntı) | — |
 | T-072 | Değerlendirme | yarım | yüksek | Ön-anotasyonu LLM açıkken yeniden üret — mevcut `preannotations.json` `llm_available=False` ve `disagreement_count=0`, yani anotatörler **uyuşmazlık sinyali olmadan** çalışacak ve `disagreement` kolonu ölü | `app/data/gold/preannotations.json` üstbilgisi: `doc_count=250`, `field_count=945`, `seed=42`, `llm_available=False`, `disagreement_count=0`; CSV'lerde `disagreement` kolonu var (`round1_A.csv` başlığı) ama hepsi boş | T-044 |
 | T-073 | Değerlendirme | yapılmamış | düşük | Bu envanter oturumunda üretilen duman-testi artefaktını sil: `rm -rf app/eval/reports/20260803-160006` | `git status --porcelain -uall` → `?? app/eval/reports/20260803-160006/`; içinde 3 örneklik gold ile üretilmiş `metrics.json`/`report.md`/`per_field.csv`/`env.json` var, gerçek metrik değil | — |
+| T-074 | Dashboard | ✅ **BİTTİ + ÖLÇÜLDÜ** (2026-08-16) | **yüksek** | Şartname s.11–12'nin **7 sütunlu, banka başına tek satır** kıyas tablosu üretilemiyor; `/compare` **tek alanlı**. Karar: ① yeterli alanı olan kampanyalar için 7 sütunlu görünüm üret (boşluk "—"), ② «Kampanya Avantajı» serbest metin çıkarıcısı ekle, ③ üretme ve sapmayı sunumda önce biz söyle | Ölçüm 2026-08-16: `GET /compare` tek `field` parametresi alır (`src/api/main.py:1306`); `RankRow` tek `value` sütunu taşır; `ComparePanel.tsx:605-612` başlıkları `Sıra·Banka·Değer·Ham ifade·[Güven]·Katman·Durum·Kaynak`; `EXTRACTION_FIELDS` (12 alan) içinde `kampanya_avantaji` **yok**. Ayrıntı: §"Örnek Temsili Senaryolar" Senaryo-1 satırı altındaki düzeltme bloğu | T-020, T-022, T-023 |
 | T-050 | Test | test edilmemiş | orta | `eval/ablation.py` için doğrudan test yaz — 19,2 KB modülün tek dolaylı kapsaması `tests/test_predictors.py:202` | `grep -rl "eval.ablation" tests/` → 1 dosya, o da tahmin-kaynağı paritesini test ediyor; `app/eval/ablation.py` için özel test dosyası yok | T-014 |
 | T-051 | CI-Dağıtım | yapılmamış | düşük | `model-license-audit.md` denetim listesinde açık kalan 2 maddeyi kapat (`requirements.txt` = gerçekten kullanılanlar; teslim imajında GPL linklenmiş kod yok kanıtı) | `app/docs/model-license-audit.md:193-194` iki `- [ ]` işaretsiz madde | T-045 |
 
@@ -241,8 +262,12 @@ korpusu (T-037, T-038).
 | T-067 | Veri toplama | yarım | düşük | `app/data/processed/` neredeyse boş (1 dosya) — ya hattı işlet ya klasörü mimariden düş | `find app/data/processed -type f | wc -l` → **1**; `app/CLAUDE.md:154` `data/processed/ # temizlenmiş metin` | — |
 | T-068 | Dashboard | yapılmamış | düşük | Kullanılmayan iki API ucunu (`/health`, `/banks`) ya arayüze bağla ya kaldır — `/banks` yarım kalmış banka filtresi izlenimi veriyor | `app/src/api/main.py:340` `/health`, `:351` `/banks`; `app/web/app/lib/api.ts:229-256` 11 uçtan 9'unu tüketiyor, bu ikisini kullanmıyor | — |
 
-> T-069…T-073 numaraları D bölümünde (test/CI kalemleriyle birlikte) yer alıyor.
-> Toplam **73 madde**, numaralar T-001…T-073 arası kesintisizdir.
+> T-069…T-074 numaraları D bölümünde (test/CI kalemleriyle birlikte) yer alıyor.
+> Toplam **74 madde**, numaralar T-001…T-074 arası kesintisizdir.
+>
+> **T-074 2026-08-16'da eklendi:** şartnamenin 7 sütunlu kıyas tablosu satırı
+> "✅ üretilebiliyor" işaretliydi; ölçüm bunu çürüttü (`/compare` tek alanlı,
+> «Kampanya Avantajı» alanı hiç yok). Satır ❌ + "karar bekliyor"a taşındı.
 
 ---
 
@@ -591,9 +616,119 @@ Sayfa numaraları `pdftotext -layout` ile çıkarılan basılı sayfa işaretler
 
 | Gereklilik | Şartname referansı | Projedeki karşılığı (dosya) | Durum |
 |---|---|---|---|
-| Senaryo-1: A/B/C Bankası konut finansmanı → 6 kolonlu karşılaştırma tablosu (Banka · Ürün Türü · Kâr Payı · Vade · Kampanya Avantajı · Masraf Durumu · Kampanya Süresi) | s.11–12 | `app/src/comparison/compare.py` + `app/web/app/components/ComparePanel.tsx`; ekran görüntüsü `app/docs/rapor/gorseller/01-karsilastirma.png` | ✅ üretilebiliyor (tür içi sıralama) · ⚠️ kanıt görüntüsü commit edilmemiş (T-006) |
+| Senaryo-1: A/B/C Bankası konut finansmanı → **7 sütunlu** karşılaştırma tablosu (Banka · Ürün Türü · Kâr Payı Oranı · Vade · Kampanya Avantajı · Masraf Durumu · Kampanya Süresi) | s.11–12 | `app/src/comparison/compare.py` + `app/web/app/components/ComparePanel.tsx`; ekran görüntüsü `app/docs/rapor/gorseller/01-karsilastirma.png` | ✅ **ÜRETİLİYOR — `GET /urun-tablosu` + Karşılaştırma sekmesi görünüm anahtarı (T-074, ölçüldü 2026-08-16)**. Ayrıntı ve ölçüm aşağıda. ⚠️ kanıt görüntüsü commit edilmemiş (T-006) |
 | Senaryo-2 / durum 1: tek bankaya ait bilgi sorma ("A Bankası'nın konut finansmanı oranı ne?") | s.13 | `app/src/chatbot/{router,structured}.py`; görüntü `gorseller/07-chatbot-yapisal-sorgu.png` | ✅ yapısal sorgu yolu · ⚠️ ürün düzeyi filtre yok (T-033) |
 | Senaryo-2 / durum 2: iki bankayı karşılaştırma, gerekçeli madde madde cevap | s.13 | `app/src/chatbot/bot.py` + `comparison/compare.py`; görüntü `gorseller/08-chatbot-rag.png` | ✅ çalışıyor · ❌ arayüzde markdown render edilmiyor (T-036) |
+
+> ### ⛔ DÜZELTME (2026-08-16) — bu satır "✅ üretilebiliyor" diyordu, ölçüm ÇÜRÜTTÜ
+>
+> **Eski hâli:** *"6 kolonlu karşılaştırma tablosu (…) · ✅ üretilebiliyor (tür içi sıralama)"*.
+> HARD RULE 3 gereği satır silinmedi, durumu gerçeğe taşındı. İki ayrı hata vardı:
+>
+> **Hata 1 — kendi içinde tutarsız:** "6 kolonlu" diyor ama parantezde **7 sütun** sayıyor.
+> Şartnamedeki tablo 7 sütunludur (aşağıdaki alıntıya bakınız).
+>
+> **Hata 2 — asıl iddia yanlış:** şartname **banka başına TEK satır, ÇOK alanlı** bir tablo
+> istiyor; bizim `/compare` ucumuz **tek alanlı**dır. Bu bir sunum eksiği değil, **farklı bir
+> veri şekli**.
+>
+> #### Ölçüm — nasıl doğrulandı
+>
+> ① **Şartname tarafı** (`raw/teknofest/2026-teknofest-tyda-sartname-2-senaryo.pdf`, dosya
+> sayfası 13): tablo sütunları `Banka · Ürün Türü · Kâr Payı Oranı · Vade · Kampanya Avantajı ·
+> Masraf Durumu · Kampanya Süresi`; A/B/C Bankası **birer satır**, her satırda yedi hücre dolu.
+>
+> ② **Bizim uç** — `GET /compare?field=…` **tek** `field` parametresi alır
+> (`src/api/main.py:1306`). `rank()` çıktısının gerçek alanları (1.782 belgelik korpusta
+> ölçüldü):
+> ```
+> bank · bank_name · value · sort_key · comparable · note · source_span
+> campaign_id · campaign_type · other_count · campaign_status · confidence · oran_bazi
+> ```
+> Tek bir `value` sütunu var — seçilen alanın değeri.
+>
+> ③ **Arayüz** — `ComparePanel.tsx:605-612` başlıkları:
+> `Sıra · Banka · Değer · Ham ifade · [Güven] · Katman · Durum · Kaynak`.
+> Bileşenin kendi başlığı da bunu söylüyor: *"Karşılaştırma Paneli — bankalar arası **tek alan**
+> kıyası"* (`ComparePanel.tsx:4`). Alan, açılır menüden seçiliyor.
+> **7 sütunlu böyle bir satır üreten hiçbir uç ya da ekran yok.**
+>
+> ④ **«Kampanya Avantajı» sütununun karşılığı olan alan HİÇ YOK.** `EXTRACTION_FIELDS` 12
+> alandır ve `kampanya_avantaji` içermez; ad kodda hiç geçmiyor. En yakınları `odul_miktari`,
+> `indirim_orani`, `alisveris_puani`, `kampanya_kosullari` — hiçbiri şartnamedeki **serbest
+> metin özeti** değil (*"50.000 TL'ye kadar masraf alınmıyor"*, *"5.000 TL alışveriş çeki"*,
+> *"Ekspertiz ücreti banka tarafından karşılanıyor"*).
+>
+> #### Neyin VAR olduğu — iddia karartılmıyor
+>
+> Yapılandırılmış çok alanlı veri **var**: her kampanya için 12 alan, her biri
+> `span_start`/`span_end` + `confidence` + `extractor` taşıyor. Tür içi sıralama, adil-kıyas
+> kapısı ve 5/5 kıyas ölçütü (§5.7) çalışıyor. **Eksik olan iki şey:**
+> 1. o alanları şartname düzeninde **banka başına tek satırda birleştiren sunum** (uç + ekran),
+> 2. **«Kampanya Avantajı» serbest metin alanı** (çıkarıcı + şema + gold tanımı).
+>
+> #### Yapılsa bile sınır — 7 sütunun 6'sı doldurulabilir, o da seyrek
+>
+> Yedi sütundan altısının arkasında bir alan var; biri (Kampanya Avantajı) yok. Ama **var olanlar
+> da seyrek** — 1.782 belgelik korpusta ölçülen kapsam:
+>
+> | şartname sütunu | karşılık gelen alan | kapsam (1.782 belge) |
+> |---|---|---:|
+> | Banka | `bank_name` | %100 |
+> | Ürün Türü | `campaign_type` (8 tür sınıflandırma) | %92,9 (60 belge sınıflanamıyor, T-022) |
+> | Kâr Payı Oranı | `kar_payi_orani` | **60 belge · %3,4** |
+> | Vade | `vade_ay` | 441 belge · %24,7 |
+> | **Kampanya Avantajı** | **— alan yok —** | **%0** |
+> | Masraf Durumu | `masraf_durumu` | 494 belge · %27,7 |
+> | Kampanya Süresi | `kampanya_suresi` | 927 belge · %52,0 |
+>
+> Yani 7 sütunlu görünüm bugün yapılsaydı **satırların ezici çoğunluğu büyük ölçüde boş**
+> gelirdi. Bu bir sunum kusuru değil **veri gerçeği**: bankalar oranları kampanya sayfalarında
+> büyük ölçüde yayımlamıyor. Şartnamenin örnek tablosu üç kurgusal bankayla yedi hücreyi de
+> dolduruyor; gerçek korpus öyle davranmıyor.
+>
+> #### ✅ KAPANDI (2026-08-16) — T-074 inşa edildi VE ölçüldü
+>
+> Karar "yapılacak" oldu, yapıldı ve **bağımsız ölçüldü**. Yukarıdaki ❌ analizi
+> silinmedi — üretim öncesi durumun kaydıdır ve hangi boşluğun kapandığını gösterir.
+>
+> **Ne geldi:** `GET /urun-tablosu` (`src/api/main.py:1548`) + Karşılaştırma
+> sekmesinde görünüm anahtarı (`web/app/components/urunTablosu.ts`).
+> **`/compare` HİÇ DEĞİŞMEDİ** — yeni uç onun yerine geçmiyor, yanına geliyor:
+> `/compare` tek alanlı denetim yüzeyi (bir kolon, çok banka), `/urun-tablosu`
+> çok alanlı şartname görünümü (bir banka, yedi kolon).
+>
+> **Doğruladığım ölçümler (2026-08-16):**
+>
+> | kontrol | sonuç |
+> |---|---|
+> | Sütun sayısı | `len(SARTNAME_SUTUNLARI)` = **7**, şartname s.11–12 sırasıyla birebir |
+> | «Kampanya Avantajı» | **yeni çıkarım alanı EKLENMEDİ** — mevcut span'li alanlardan (`odul_miktari`, `alisveris_puani`, `indirim_orani`, ücret muafiyeti) derleniyor, her parça kendi kaynağını taşıyor |
+> | Şartname üç örneği | **21 hücrenin 18'i dolu**; boş kalan üçün üçü s.12'de de "Belirtilmemiş" — yani sapma değil, birebir eşleşme |
+> | Test kilidi | `tests/test_sartname_urun_tablosu.py` → **32 test, hepsi geçiyor** (`Ran 32 tests ... OK`) |
+> | Gerçek korpus (1.782 belge, `data/demo.db`) | **60 satır** (banka × ürün ailesi) · 8 ürün ailesi |
+>
+> **Doluluk — İKİ payda var, ikisi de adlandırılmalı.** Bu, bu belgede daha önce
+> düzeltilen 96/91 hatasının aynısıdır; tekrarlanmasın diye ikisi de yazılıyor:
+>
+> | payda | ne sayıyor | sonuç |
+> |---|---|---:|
+> | **ölçülen 5 sütun** | `kar_payi_orani`, `vade_ay`, `kampanya_avantaji`, `masraf_durumu`, `kampanya_suresi` — yani gerçekten çıkarıma bağlı olanlar | **157/300 = %52,3** |
+> | **tüm 7 sütun** | yukarıdakiler + `Banka` + `Ürün Türü` (ikisi tanım gereği hep dolu) | **277/420 = %66,0** |
+>
+> "Korpusta doluluk %52" cümlesi **ölçülen 5 sütun** paydasına aittir; 7 sütunluk
+> payda %66 verir. İkisi de doğrudur, karıştırılırsa değildir.
+>
+> `doluluk` alanı yanıtta **çalışma anında** hesaplanır, koda gömülü değildir —
+> çıkarım katmanı geliştikçe kendiliğinden tazelenir.
+>
+> Ürün ailesi başına doluluk (tüm 7 sütun): Kart %73,0 · Yatırım Ürünü %71,4 ·
+> Konut Finansmanı %69,6 · Taşıt Finansmanı %64,3 · İhtiyaç Finansmanı %63,5 ·
+> Yeni Müşteri %62,9 · Finansman %58,9 · Alışveriş Puanı %52,4.
+>
+> Boş hücre **uydurulmuyor**: satır tek bir kampanyayı temsil ediyor, bir bankanın
+> farklı kampanyalarından değer devşirip aynı satıra yazmak yasak (CLAUDE.md §21)
+> ve uç bunu `fairness_note` ile açıkça beyan ediyor.
 
 ### §6 Tespit Edilmesi Gerekenler (teslimler)
 
@@ -601,9 +736,9 @@ Sayfa numaraları `pdftotext -layout` ile çıkarılan basılı sayfa işaretler
 |---|---|---|---|
 | Çalışan proje kodu (ön işleme + çıkarım + normalizasyon + karşılaştırma çıktısı) | s.13 | `app/src/` (54 modül), `app/src/pipeline.py`; 890 test yeşil | ✅ |
 | Kurulum adımları (gereksinimler, kütüphaneler, ortam) net belirtilmiş | s.13 | `README.md`, `app/README.md`, `app/requirements*.txt`, `app/web/package.json` | ⚠️ **yarım** — `build_demo_db` adımı yok (T-038), `pytest` yanlış (T-048) |
-| Demo videosu, maksimum 5 dakika (arayüz + dashboard + chatbot + metin girdisi + yapılandırılmış çıktı + karşılaştırma) | s.14 | — | ❌ **yapılmamış** (T-002) |
+| Demo videosu, maksimum 5 dakika (arayüz + dashboard + chatbot + metin girdisi + yapılandırılmış çıktı + karşılaştırma) | s.14 | `app/docs/sunum/anatolia-ai-demo-kapsamli.mp4` (**3:04**, kartsız, 12 ekran) + `anatolia-ai-demo-1dk-sekiz-ekran.mp4` (**59 sn**) | ✅ **KAPANDI (16 Ağu)** — T-002/T-003. ⚠️ dosyalar henüz commit edilmemiş |
 | Proje dokümantasyonu — 10 alt madde | s.14 | `app/docs/rapor/anatolia-ai-teknik-rapor.md` (77 KB), `app/docs/sartname-kod-eslesme.md`, `OFFLINE-KANIT.md`, `model-license-audit.md`, `veri-katmani.md`, `katilim-bankaciligi-guvenligi.md`, `kaynak-tuketimi.md` | ⚠️ **yarım** — içerik var, ana belge **commit edilmemiş** (T-006, T-065) |
-| Sunum materyali (PDF **ve** PPTX) | s.14 | — | ❌ **yapılmamış** (T-004) |
+| Sunum materyali (PDF **ve** PPTX) | s.14 | `app/docs/sunum/anatolia-ai-sunum.pdf` (**15 sayfa**, 1440×810 pt, metin katmanı vektör) · `anatolia-ai-sunum.pptx` (**15 slayt**, 20″×11,25″) · üreteç `docs/sunum/uret-sunum.py` | ✅ **KAPANDI (16 Ağu)** — T-004. Doğrulandı: pypdf 15 sayfa, `slideN.xml` 15, `testzip()` hatasız. ⚠️ henüz commit edilmemiş |
 
 ### §7 Değerlendirme Kriterleri
 

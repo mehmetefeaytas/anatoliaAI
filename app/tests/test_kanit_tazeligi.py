@@ -16,6 +16,12 @@ Bu dosyanın koruduğu beş şey:
    üretilmiş olabilir ama tek-kol metriği taşımaz; elenmezse yanlış sayı okunur.
 5. **Tanımsız oran uydurulmaz.** Gold'da hiç `absent` kararı yoksa halüsinasyon
    oranının paydası sıfırdır; `0,0` yazmak yalan olur (CLAUDE.md §19).
+6. **Proza tablo kadar denetlenir — ama gürültüye boğulmadan.** Kapı 2026-08-16'ya
+   kadar yalnız TABLO HÜCRESİNE bakıyordu; cümle içinde duran bayat sayı kör
+   noktadaydı. Kör nokta kapatılırken ikinci bir tuzak açılır: prozadaki her
+   sayıyı denetlemek (sürüm, tarih, satır no, madde no, port, örneklem) kapıyı
+   kullanılamaz kılar. Bu yüzden aşağıdaki testler **hem yakalamayı hem
+   yakalamamayı** doğrular; ikisinden biri düşerse mekanizma çöker.
 """
 
 from __future__ import annotations
@@ -239,6 +245,105 @@ class TestDenetim(_RaporTemeli):
             self.assertEqual(K.main(["--json"]), K.CIKIS_TEMIZ)
 
 
+class TestProzadakiBayatSayi(_RaporTemeli):
+    """Kapının kör noktası: tablo hücresi denetleniyor, cümle içi denetlenmiyordu.
+
+    Gerçek olay (2026-08-16): `app/README.md` tablosu 12-alan mikro-F1'i **0,464**
+    yazarken aynı belgenin iki cümlesi hâlâ **0,452** diyordu; kapı "0 sapma"
+    yeşil yanıyordu. Yani kapı, korumak için var olduğu hatanın yanından geçti.
+    """
+
+    def _belge(self, govde: str) -> K.Iddia:
+        (self.kok / "BELGE.md").write_text(govde, encoding="utf-8")
+        return K.Iddia(
+            ad="deneme", aciklama="test",
+            desenler=(("BELGE.md", r"mikro-F1 \| \*{0,2}([\d,]+)"),),
+            olcer=lambda: 0.464)
+
+    def test_TABLO_ve_PROZA_birlikte_yakalanir(self) -> None:
+        """Tek belge, iki yayım biçimi: hücre doğru, cümle bayat."""
+        iddia = self._belge(
+            "| mikro-F1 | 0,464 |\n"
+            "Bu sayı 12 Ağustos'takinden iyidir (0,452 → 0,464).\n"
+            "Yukarıdaki 0,452 gold.v2 üzerinde ölçüldü.\n"
+            "GA'lar daralınca 0,452 savunulabilir hâle gelir.\n")
+        with mock.patch.object(K, "iddialar", lambda: [iddia]):
+            (s,) = K.denetle()
+        self.assertEqual(s.durum, "sapma")
+        self.assertEqual([(d["satir"], d["yazan"]) for d in s.sapmalar],
+                         [(3, "0,452"), (4, "0,452")])
+
+    def test_ILAN_SATIRI_bayat_sayilmaz(self) -> None:
+        """`0,452 → 0,464` yazmak tarihçedir; onu sapma saymak yazarı susturur."""
+        iddia = self._belge(
+            "| mikro-F1 | 0,464 |\n"
+            "Ölçüm iyileşti: 0,452 → 0,464.\n")
+        with mock.patch.object(K, "iddialar", lambda: [iddia]):
+            (s,) = K.denetle()
+        self.assertEqual(s.durum, "tamam", f"yanlış pozitif: {s.sapmalar}")
+
+    def test_ILAN_YOKSA_prozadaki_sayi_denetlenmez(self) -> None:
+        """Kural açık: belge bir değeri kendi geçersiz ilan etmediyse dokunulmaz.
+
+        Yoksa kapı, belgedeki her ondalığı bir metrik sanardı.
+        """
+        iddia = self._belge(
+            "| mikro-F1 | 0,464 |\n"
+            "makro-F1 0,601 · kalem düzeyi 0,381 · κ 0,302 · RAG R@5 0,867\n")
+        with mock.patch.object(K, "iddialar", lambda: [iddia]):
+            (s,) = K.denetle()
+        self.assertEqual(s.durum, "tamam", f"yanlış pozitif: {s.sapmalar}")
+
+    def test_CIPLAK_TAM_SAYI_supurulmez(self) -> None:
+        """`app/README.md` "halüsinasyonu 60 → 53 düşürüyor" gerçek tuzağı.
+
+        53 bugünkü `test_atlandi` ölçümüdür. Çıplak tam sayı süpürülseydi kural
+        60'ı "bayat" ilan eder ve belgedeki her 60'ı işaretlerdi — 60 ise
+        belgede vade, yüzde, kayıt sayısı olarak sürekli geçer.
+        """
+        (self.kok / "BELGE.md").write_text(
+            "| atlanan | 53 |\n"
+            "Halüsinasyonu 60 → 53 düşürüyor.\n"
+            "Vade 60 aya kadar; 60 belgede doğrulandı.\n", encoding="utf-8")
+        iddia = K.Iddia(ad="atlandi", aciklama="",
+                        desenler=(("BELGE.md", r"atlanan \| (\d+)"),),
+                        olcer=lambda: 53.0, tolerans=0.5)
+        with mock.patch.object(K, "iddialar", lambda: [iddia]):
+            (s,) = K.denetle()
+        self.assertEqual(s.durum, "tamam", f"yanlış pozitif: {s.sapmalar}")
+
+    def test_SURUM_TARIH_SATIR_MADDE_PORT_yanlis_pozitif_uretmez(self) -> None:
+        """Belgedeki her sayı bir ölçüm iddiası değildir."""
+        iddia = self._belge(
+            "| mikro-F1 | 0,464 |\n"
+            "Düzeltme: 0,452 → 0,464.\n"
+            "Kılavuz v1.452 → v2; port 8.452; §4.452/8; 2026-08-16; "
+            "bkz. README.md:452 ve 0,4521 ile 10,452.\n")
+        with mock.patch.object(K, "iddialar", lambda: [iddia]):
+            (s,) = K.denetle()
+        # `v1.452`, `8.452`, `4.452`, `:452`, `0,4521`, `10,452` — hiçbiri
+        # ayrışık bir `0,452` değildir.
+        self.assertEqual(s.durum, "tamam", f"yanlış pozitif: {s.sapmalar}")
+
+    def test_ayni_satirda_ilan_ve_kalinti_birlikte(self) -> None:
+        """İlanı maskelemek satırın tamamını affetmez."""
+        iddia = self._belge(
+            "| mikro-F1 | 0,464 |\n"
+            "0,452 → 0,464 oldu ama aşağıda hâlâ 0,452 yazıyor.\n")
+        with mock.patch.object(K, "iddialar", lambda: [iddia]):
+            (s,) = K.denetle()
+        self.assertEqual([(d["satir"], d["yazan"]) for d in s.sapmalar],
+                         [(2, "0,452")])
+
+    def test_kapsam_desenlerden_turer_ve_ayrisamaz(self) -> None:
+        """Denetim listesi ile proza listesi tek kaynaktan gelir."""
+        iddia = K.Iddia(
+            ad="x", aciklama="",
+            desenler=(("A.md", r"(\d+)"), ("B.md", r"(\d+)"), ("A.md", r"x(\d+)")),
+            olcer=lambda: 1.0)
+        self.assertEqual(iddia.kapsam(), ("A.md", "B.md"))
+
+
 class TestGercekIddiaListesi(unittest.TestCase):
     """Liste bozulursa kapı sessizce hiçbir şey denetlemez."""
 
@@ -255,6 +360,26 @@ class TestGercekIddiaListesi(unittest.TestCase):
                     self.assertEqual(
                         _re.compile(desen).groups, 1,
                         "desen tam bir yakalama grubu içermeli")
+
+    def test_metrik_iddialari_HER_IKI_README_i_kapsar(self) -> None:
+        """`app/README.md` aynı metrikleri yayımlıyor; denetim dışı kalamaz.
+
+        Kapsam `desenler`den türediği için bu aynı zamanda proza taramasının
+        o belgeyi gördüğünü de garanti eder.
+        """
+        for ad in ("v2_mikro_f1", "v2_halusinasyon"):
+            iddia = next(i for i in K.iddialar() if i.ad == ad)
+            with self.subTest(iddia=ad):
+                self.assertEqual(set(iddia.kapsam()), {"README.md", "app/README.md"})
+
+    def test_halusinasyon_deseni_PAYDA_hucresini_ORAN_sanmaz(self) -> None:
+        """Ölçülmüş yanlış pozitif: `**444**` paydadır, halüsinasyon oranı değil."""
+        import re as _re
+        satir = "| `absent` kararı (halüsinasyon paydası) | **444** | **60** |"
+        iddia = next(i for i in K.iddialar() if i.ad == "v2_halusinasyon")
+        for _, desen in iddia.desenler:
+            with self.subTest(desen=desen):
+                self.assertIsNone(_re.compile(desen).search(satir))
 
     def test_banka_sayaci_semsiye_kurulusu_saymaz(self) -> None:
         """TKBB katılım bankası değildir; README de ikisini ayrı sayıyor."""

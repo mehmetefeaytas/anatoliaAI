@@ -27,7 +27,7 @@ DOCS    := docs
 # bir şeyi ÜRETMEK yerine seçenekleri görmeli.
 .DEFAULT_GOAL := help
 
-.PHONY: help lisanslar sbom lisans-kapisi test veri-seti veri-seti-yukle
+.PHONY: help lisanslar sbom lisans-kapisi test veri-seti veri-seti-yukle baslat durdur
 
 # Veri seti paketinin çıktı dizini. Tek yerde tanımlı ki iki hedef
 # (üretim ve yükleme) aynı dizine baksın — ayrışırlarsa yükleyici bir
@@ -37,6 +37,10 @@ VERI_SETI := data/yayin/anatolia-ai-gold
 ## help: bu listeyi göster
 help:
 	@echo "Anatolia AI — kullanılabilir hedefler:"
+	@echo ""
+	@echo "  make baslat         Tüm yığını kaldırır: API + panel + yerel model"
+	@echo "                      (LLM=0 make baslat → modelsiz, kural-only)"
+	@echo "  make durdur         Yığını kapatır, modeli bellekten düşürür"
 	@echo ""
 	@echo "  make lisanslar      Bağımlılık lisans envanterini docs/LISANSLAR.md'ye yazar"
 	@echo "  make sbom           CycloneDX SBOM üretir → docs/sbom.json"
@@ -100,3 +104,20 @@ veri-seti-yukle:
 ## test: test paketini koşar
 test:
 	@$(PYTEST) tests/ -q
+
+## baslat: tüm yığını kaldırır — API + panel + yerel model
+# Betik `bash` ile çağrılır, `./scripts/baslat.sh` ile değil: çalıştırma bitinin
+# git'te korunması platformdan platforma değişir ve kaybolduğu gün hedef
+# "permission denied" ile ölürdü.
+#
+# Ortam değişkenleri betiğe GEÇER (make bunları dışa aktarır):
+#   LLM=0             modelsiz, kural-only koşum
+#   API_PORT / WEB_PORT   varsayılan 8000 / 3000
+baslat:
+	@bash scripts/baslat.sh
+
+## durdur: yığını kapatır ve model ağırlığını bellekten düşürür
+# Yalnız `baslat`ın kendi başlattığı süreçleri kapatır — gerekçe betiğin
+# başındaki nottadır.
+durdur:
+	@bash scripts/durdur.sh
