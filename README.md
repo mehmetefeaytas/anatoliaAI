@@ -21,10 +21,11 @@ Yürütücü: **Bilişim Vadisi**
 
 ---
 
-Türkiye'deki katılım bankalarının (faizsiz finans) resmî sitelerindeki kampanya ve
-ürün metinlerinden finansal bilgileri çıkaran, normalize eden, sınıflandıran ve
-karşılaştıran bir Türkçe NLP sistemi. Sonuçları dashboard ve hibrit chatbot ile
-sunuyor. Tamamı açık kaynak (Apache-2.0), on-premise ve internetsiz çalışabiliyor.
+Anatolia AI, Türkiye'deki katılım bankalarının (faizsiz finans) resmî
+sitelerindeki kampanya ve ürün metinlerinden finansal bilgiyi çıkarıyor; bu
+bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaştırıyor.
+Sonucu dashboard ve hibrit chatbot ile sunuyor. Tamamı açık kaynak (Apache-2.0);
+on-premise ve internetsiz çalışıyor.
 
 > 1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
 > 3.118 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
@@ -319,14 +320,19 @@ ağsız ayrıca sınamadık; imaj derlemesi de internet gerektiriyor. "İnternet
 
 ---
 
-## 💡 Yenilikçi Yönler
+## 🌟 Öne Çıkan Yönler
+
+Dört mekanizma projenin bel kemiğini oluşturuyor. Her biri ölçülmüş, kanıtı elde
+ve bir CI kapısına bağlı — soyut bir vaat değil.
 
 #### 🔎 Alan bazlı güven skoru ve kaynak vurgulama
 
-Her çıkarılan değer `confidence` ve `source_span` taşıyor; arayüz kanıtı belgede
-vurguluyor. `verify_span()` ile `text[start:end] == raw_value` kendi kendini
-denetliyor. Skoru kalibre ettik ve ölçtük (ECE 0,188) — kalibre edilmemiş bir
-skora eşik koymak, eşiğin ne attığını bilmemek olurdu.
+Ekranda gördüğünüz her sayının hangi cümleden geldiğini ve o cümleye ne kadar
+güvenildiğini de görüyorsunuz: her çıkarılan değer `confidence` ve
+`source_span` taşıyor, arayüz kanıtı belgede vurguluyor. `verify_span()` ile
+`text[start:end] == raw_value` kendi kendini denetliyor. Skoru kalibre ettik ve
+ölçtük (ECE 0,188) — kalibre edilmemiş bir skora eşik koymak, eşiğin ne attığını
+bilmemek olurdu.
 
 #### ⚖️ Bankalar arası çelişki tespiti
 
@@ -338,13 +344,15 @@ işaretleniyor, uydurma sıralama yapılmıyor.
 
 #### 🏦 Config-driven banka onboarding
 
-Yeni banka eklemek `config/banks.yaml` içine tek blok yazmak demek. Statik, JS ve
-manuel toplama modları, sitemap keşfi ve detay süzgeçleri hep config'ten okunuyor.
-10/10 katılım bankasını bu yolla topluyoruz.
+Yeni bir katılım bankası eklemek mühendislik projesi değil, `config/banks.yaml`
+içine tek blok yazmak. Statik, JS ve manuel toplama modları, sitemap keşfi ve
+detay süzgeçleri hep config'ten okunuyor. 10/10 katılım bankasını bu yolla
+topluyoruz.
 
 #### 🧪 Kanıt-tazeliği kapısı
 
-Yayımlanan her sayıyı üreten kanıtla karşılaştıran bir CI kapısı. İki ayrı denetim
+Bu README'de okuduğunuz hiçbir sayı bayatlayıp sessizce yanlış kalamaz: yayımlanan
+her sayıyı üreten kanıtla karşılaştıran bir CI kapısı var. İki ayrı denetim
 yapıyor: değer (belgedeki sayı = kanıttaki sayı) ve tazelik (kanıt güncel
 girdilerden mi üretilmiş). İkincisi olmadan birincisi kendini kandırır, çünkü
 bayat bir rapordan okunan bayat bir sayı bayat bir README ile mükemmel uyum
