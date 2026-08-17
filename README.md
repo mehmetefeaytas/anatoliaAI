@@ -21,311 +21,70 @@ Yürütücü: **Bilişim Vadisi**
 
 ---
 
-Türkiye'deki **katılım bankalarının** (faizsiz finans) resmî sitelerindeki
-kampanya ve ürün metinlerinden finansal bilgileri **otomatik çıkaran**,
-**normalize eden**, **sınıflandıran** ve **karşılaştıran**; sonuçları
-**dashboard + hibrit chatbot** ile sunan; **tamamen açık kaynak (Apache-2.0)**,
-**on-premise** ve **internetsiz** çalışabilen bir Türkçe NLP sistemi.
-
-> **1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
-> 3.118 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti**
-
----
-
-## 🏆 Bizi ayıran şey: ölçümün kendisi
-
-Bu alanda yüksek bir F1 ilan etmek kolaydır. Zor olan, o sayının **ne anlama
-geldiğini** ve **nerede tutmadığını** aynı sayfada söylemektir. Projeyi üç ilke
-üzerine kurduk ve üçünü de **kod olarak** uyguladık — slogan değil, kapı.
-
-<table>
-<tr>
-<td width="33%" valign="top">
-
-### 1️⃣ Sayı ≠ İddia
-**Yayımlanan her sayı, onu üreten kanıtla eşleşmek zorunda.**
-
-`scripts/kanit_tazeligi.py` bu README'deki her rakamı üreten komutun
-çıktısıyla karşılaştırır. Ayrışırsa **CI kırmızı yanar**.
-
-Kapı kurulduğu gün 8 sapma buldu — kendi belgelerimizde.
-
-</td>
-<td width="33%" valign="top">
-
-### 2️⃣ Kaçırmak ≠ Uydurmak
-**Tek bir parlak yüzde vermiyoruz.**
-
-Bir alanı kaçırmak bilgi eksikliğidir; uydurmak kullanıcıyı yanlış yönlendirir.
-Bunlar aynı hata değildir ve **ayrı paydalarla** sayılır.
-
-CI kapısı yalnız F1'e değil **halüsinasyon tavanına** da bakar.
-
-</td>
-<td width="33%" valign="top">
-
-### 3️⃣ Sınırı biz söyleriz
-**Bir vitrinin en kolay yalanı, kapsamı yazmamaktır.**
-
-Hangi sayının neyi ölçtüğünü ve **nerede ölçemediğini** aşağıda kendi başlığı
-altında yazıyoruz.
-
-Ölçüp **geri adım attığımız** kararlar da öyle.
-
-</td>
-</tr>
-</table>
-
----
-
-## 📊 Ölçülebilir Durum
-
-Bu tablodaki her sayı, yanındaki komutla **yeniden üretilebilir** — ve bu bir
-iddia değil, **kapı**: `python -m scripts.kanit_tazeligi` her satırı üreten
-kanıtla karşılaştırır, ayrışırsa CI kırmızı yanar. Ölçüm tarihi:
-**15 Ağustos 2026** · ölçüm kolu: `kural` (resmî varsayılan, LLM kapalı).
-
-| Ne | Değer | Üreten komut |
-|---|---|---|
-| Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
-| AI özeti kapsaması | **1.759** üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
-| Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
-| Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
-| **Yapılandırılmış alan mikro-F1** (gold.v2, 11 alan) | **0,671** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
-| 12-alan mikro-F1 | 0,464 [%95 GA 0,398–0,522] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
-| makro-F1 | **0,601** | *(aynı komut)* |
-| Halüsinasyon oranı | **0,047** (21/444) · yapısal kesitte 0,035 | *(aynı komut)* |
-| RAG — terim kapsama R@5 | **0,867** | `python -m eval.rag_eval --db data/demo.db` |
-| RAG — banka hedefleme R@5 | **0,800** (BM25 sıralama) | *(aynı komut)* |
-| RAG — kaynak gösterme oranı | **1,000** | *(aynı komut)* |
-| Reddetme kararı doğruluğu | **30/30 = 1,000** | *(aynı komut)* |
-| Güvenlik seti | **29/30 = 0,97** · aşırı red **0/6** | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
-| Anotatör uyumu — round0 | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
-| Anotatör uyumu — round1 | Cohen κ **0,274** (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
-| Güven kalibrasyonu | ECE **0,188** · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
-| Bağımlılık envanteri | **96 paket**, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
-| On-prem kanıtı | **14/14 adım** `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
-| Test | **3.171** toplanan · **3.118** geçti · **53** atlandı (Postgres — CI'da koşar) · **0 başarısız** | `python -m scripts.test_ozeti` — ölçüm 2026-08-16 ⚠️ kirli ağaçta üretildi, commit sonrası tekrarlanacak |
-| CI regresyon kapısı | **iki taban** (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
-| Kanıt-tazeliği kapısı | **var** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
-
-<details>
-<summary><b>📐 Ölçüm metodolojisi — dört ilke, hepsi kod olarak</b></summary>
-
-<br>
-
-**1) Hata tek tip değildir.** `eval/run_eval.py` her kararı dört kovaya ayırır:
-
-| Kova | Ne demek | Neden ayrı sayılır |
-|---|---|---|
-| **kaçırma** | bilgi metinde var, model hiçbir şey üretmedi | bilgi eksikliği |
-| **yanlış çıkarım** | bilgi metinde var, model yanlış yerden aldı | düzeltilebilir kural hatası |
-| **halüsinasyon** | bilgi metinde **yok**, model uydurdu | kullanıcıyı yanlış yönlendirir — en pahalısı |
-| **ATL (atlanan)** | gold bu alan hakkında karar vermemiş | metriğe **girmez**; paydayı şişirmemek için |
-
-CI kapısı bu yüzden yalnız F1'e değil **halüsinasyon üst sınırına** da bakar
-(`eval/esikler.json`): uydurma artarsa F1 yükselse bile kapı kapanır.
-
-**2) Güven aralığı belge düzeyinde yeniden örneklenir.** Bir belgeden 12 alan
-çıkar ve bu 12 gözlem **bağımsız değildir** (aynı metin, aynı banka şablonu,
-aynı hata kaynağı). Alan düzeyinde örneklemek GA'yı yapay olarak daraltır —
-bu bir tercih değil, istatistiksel bir hatadır. `stats.bootstrap_ci` örnekleme
-birimi olarak **belgeyi** alır (küme bootstrap): belge düzeyi bootstrap 1000
-örnek, tohum 42. Seed'i raporlanmayan bir GA tekrar üretilemez, dolayısıyla
-kanıt değildir.
-
-**3) Karşılaştırmalar McNemar ile yapılır.** İki yapılandırma aynı belgelerde
-koşulduğu için eşleştirilmiş test gerekir. Sonucu şudur: **hibrit yapı kural
-katmanını geçemedi** — 0,575 < 0,612, p = 0,0117, ve halüsinasyon oranı kural
-katmanının %60 üstünde. Projenin kendi iç kılavuzu bu tablodan "hibridin
-kazandığının kanıtlanmasını" istiyordu; kanıtlanmadı, **tersi ölçüldü**. Rapor
-sonucu düzeltmeye çalışmıyor, ölçüldüğü gibi bırakıyor.
-
-**4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** Round0: 4 anotatör, 260
-ortak satır, 0 boş hücre → Fleiss κ **0,302**. Round1: 2 anotatör, 141 ortak
-karar → Cohen κ **0,274**. Eşik anotasyon **başlamadan** ilan edilmişti
-(`ANNOTATION_GUIDE.md` §7) ve ilan edilen sonuç uygulandı: κ < 0,67 → zorunlu
-hakemlik + kılavuz revizyonu. **Sayıya bakıp eşiği değiştirmek yasaktır.**
-
-⚠️ **İki κ simetrik değil ve bunu yazmak zorundayız:** round0'ın 0,302'si
-**hakemlik sonrası** bir durumdur (yedekler 0,051 → 0,268 → 0,302 ilerlemesini
-gösteriyor), round1'in 0,274'ü ise **hakemlik öncesidir**. İkisini yan yana
-koyup "uyum düzeliyor" demek, ölçtüğümüz şeyi ölçmediğimizi söylemek olurdu.
-
-</details>
-
-<details>
-<summary><b>🔍 İki gold seti, iki farklı soru — ve neden birleştirmiyoruz</b></summary>
-
-<br>
-
-`gold.v2` (n=48) **kasten zor** seçilmiş bir settir: 40 kaydı koşullu aralık,
-format varyantı, çelişki ya da terminoloji tuzağı taşır. `gold.round1` (n=134)
-inceleme kuyruğundan gelen **geniş** bir örneklemdir. İkisi aynı sistemi ölçer
-ama aynı soruyu sormaz, bu yüzden **manşet sayı gold.v2'dir** — zor olan.
-
-| | gold.v2 | gold.round1 |
-|---|---:|---:|
-| kayıt | 48 | 134 |
-| zor vaka | 40 | 3 |
-| `absent` kararı (halüsinasyon paydası) | **444** | **60** |
-| 12-alan mikro-F1 | 0,464 | 0,744 |
-| halüsinasyon | **0,047** | **0,433** |
-
-**Round1'in 0,433'ü bir gerileme değil, seçim etkisidir** ve bunu gizlemiyoruz:
-round1'de bir hücre inceleme kuyruğuna **zaten model bir şey ürettiği için**
-giriyor. Yani o setin `absent` kümesi rastgele değil, düşmanca seçilmiş bir alt
-kümedir; payda 60'a düşünce oran şişer.
-
-Aynı sebeple **halüsinasyon tavanı `gold.v2`'de kalıyor**: kapıyı round1'e
-taşımak, önceden ilan edilmiş 0,08'lik tavanı sayıya bakarak gevşetmek olurdu.
-Round1 kendi tabanında **ikinci bir kapı** olarak koşar
-(`eval/esikler-round1.json`).
-
-</details>
-
-<details>
-<summary><b>📏 İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz</b></summary>
-
-<br>
-
-`kampanya_kosullari` **serbest cümle listesi** döndüren bir alandır ("Kampanyaya
-dahil olmak için X gerekir"). Span/jeton eşleşmesiyle F1 ölçmek bu alanda
-metodolojik olarak yanlıştır: aynı koşulu farklı sözcüklerle yazan iki anotatör
-bile birbirini "yanlış" bulurdu. Bu tek alan mikro-F1'i **0,671'den 0,464'e**
-çekiyor.
-
-Alanı **gizlemiyoruz**: ana tabloda satırı duruyor, değerlendirme raporunda
-kendi bölümünde **kalem düzeyi ölçütle** (jeton-Jaccard ≥ 0,70) raporlanıyor ve
-iki sayı yan yana yayımlanıyor. Eşik duyarlılığı da basılıyor — ve ölçüldü ki
-sonuç eşikten bağımsız: 0,6/0,7/0,8'in üçünde de aynı sayı çıkıyor, yani bu
-korpusta sınır vaka yok. **Eşiğin sonucu taşımadığını söylemek, taşıdığını
-söylemek kadar raporlanmaya değer.**
-
-</details>
-
-<details>
-<summary><b>🎯 RAG Recall@5 burada ne demek</b></summary>
-
-<br>
-
-Klasik bilgi erişiminde bir sorgunun "ilgili belge kümesi" bilinir; bizde
-bilinmiyor. Bu yüzden ölçülen şey **kanıtlanabilir isabet**: ilk 5 sonuç
-arasında şartı sağlayan (terimi gerçekten içeren / doğru bankaya ait) en az bir
-belge var mı. Tanım `eval/rag_eval.py` başlığında yazılıdır ve başka bir
-sistemin Recall@5'iyle **doğrudan kıyaslanamaz**. Bunu biz söylüyoruz.
-
-</details>
-
----
-
-## 🔬 Yöntem kararları ve kapsam sınırları
-
-Aşağıdakiler *kusur* değil **karar** ve **kapsam**tır; ayrımı biz yapıyoruz ki
-okuyucu sayıları doğru yorumlasın.
-
-**Hakemlik kör ve makine hakemleriyle yapıldı.** Round1'de 41 uyuşmazlık karara
-bağlandı; 38 kayıt `adjudicated: true` taşıyor. Protokol dar ve yazılı: hakem,
-A ya da B ile **hem karar hem değer** olarak örtüşmek zorunda — üçüncü bir
-cevap hiçbir tarafa dokunmuyor; her hakem yalnız kendi alanının kılavuz
-paragrafını görüyor ve birbirlerinden habersiz çalışıyor. Şartname insan
-hakemliği şart koşmuyor; biz de `adjudicated: true`nun **"hakemlikten geçti"**
-dediğini, "insan onayladı" demediğini alan adının yanına yazıyoruz.
-
-**Ölçüm kapsamı iki yerde dardır ve ikisi de veri kaynaklıdır:**
-`tahsis_ucreti` gold'da 0 pozitif örnek taşıdığı için F1'i **tanımsızdır** —
-sistem değer üretmiyor, gold da beklemiyor; bu "çalışmıyor" değil
-"ölçülemiyor"dur. `kar_payi_orani` ise korpusun **70/1.782** belgesinde
-(%3,9) geçiyor, çünkü bankalar oranı HTML'de değil hesaplama ucunda
-yayımlıyor — model kısıtı değil, ölçülmüş bir **veri gerçeği**.
-
-**On-prem kanıtının kapsamı:** 14/14 adım `--network none` içinde geçti, ama
-kanıt **API konteynerini** kapsıyor; `docker compose up` tam yığını (Postgres,
-web, LLM) ağsız ayrıca sınanmadı ve **imaj derlemesi internet gerektiriyor**.
-Yani "internetsiz çalışır" iddiası **önceden derlenmiş imajlarla** doğrudur.
-Bunu jüri sormadan biz söylüyoruz.
-
-### Ölçüp geri adım attığımız kararlar
-
-- **LLM orkestrasyonu reddedildi.** Yetki-kısıtlı çok-ajanlı çıkarım yazıldı,
-  ölçüldü ve kabul kapısından **geçemedi** (McNemar p = 0,0391, kazanan kural
-  katmanı). Üretime alınmadı ve bu karar `tests/test_orchestrator.py` ile
-  **testle kilitlendi**.
-- **Oransal ücret türetmesi kaldırıldı.** Belgenin başka bir yerindeki tutarla
-  çarpmak çıkarım değil **türetmedir**; 6 belgede metinde hiç geçmeyen bir TL
-  değeri üretiyordu — birinde taban finansman tutarı bile değil bir vade eşiğiydi.
-- **BERTurk ince ayarı yapıldı, kullanılmadı.** Ölçüldü, kabul kapısını
-  geçemedi, teslim edilen sistemde yok — ve bunu mimari belgesi açıkça yazıyor.
-
----
-
-## 💡 Yenilikçi Yönler
-
-<table>
-<tr><td width="50%" valign="top">
-
-**🔎 Alan bazlı güven skoru + kaynak vurgulama**
-
-Her çıkarılan değer `confidence` + `source_span` taşır; arayüz kanıtı belgede
-**vurgular**. `verify_span()` ile `text[start:end] == raw_value` kendi kendini
-denetler.
-
-Skor kalibre **edildi ve ölçüldü** (ECE 0,188) — kalibre edilmemiş bir skora
-eşik koymak, eşiğin ne attığını bilmemektir.
-
-</td><td width="50%" valign="top">
-
-**⚖️ Bankalar arası çelişki tespiti**
-
-"Masrafsız" diyen bir kampanyanın ücret tarifesinde tahsis ücreti alması gibi
-**belgeler arası** çelişkileri yakalar (`src/comparison/contradiction.py`).
-
-Kıyas motoru ayrıca **adil kıyas garantisi** uygular: yalnız aynı birime
-normalize edilmiş alanlar kıyaslanır; koşullar farklıysa "doğrudan
-kıyaslanamaz" işaretlenir, uydurma sıralama yapılmaz.
-
-</td></tr>
-<tr><td width="50%" valign="top">
-
-**🏦 Config-driven banka onboarding**
-
-Yeni banka eklemek = `config/banks.yaml` içine **tek blok**. Statik/JS/manuel
-toplama modları, sitemap keşfi ve detay süzgeçleri hep config'ten okunur.
-
-10/10 katılım bankası bu yolla toplanıyor.
-
-</td><td width="50%" valign="top">
-
-**🧪 Kanıt-tazeliği kapısı**
-
-Yayımlanan her sayıyı üreten kanıtla karşılaştıran bir CI kapısı. İki ayrı
-denetim yapar: **değer** (belgedeki sayı = kanıttaki sayı) ve **tazelik**
-(kanıt güncel girdilerden mi üretilmiş).
-
-İkincisi olmadan birincisi kendini kandırır: bayat bir rapordan okunan bayat
-bir sayı, bayat bir README ile mükemmel uyum gösterir.
-
-</td></tr>
-</table>
+Türkiye'deki katılım bankalarının (faizsiz finans) resmî sitelerindeki kampanya ve
+ürün metinlerinden finansal bilgileri çıkaran, normalize eden, sınıflandıran ve
+karşılaştıran bir Türkçe NLP sistemi. Sonuçları dashboard ve hibrit chatbot ile
+sunuyor. Tamamı açık kaynak (Apache-2.0), on-premise ve internetsiz çalışabiliyor.
+
+> 1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
+> 3.118 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
 
 ---
 
 ## 🎯 Proje Tanımı
 
-Katılım bankacılığında bilgiler doğal dilde, dağınık ve birbiriyle kıyaslanması
-zor biçimde sunulur ("ilk 6 ay masrafsız", "%1,99–%2,49 arası kâr payı", "120
-aya kadar vade"). Anatolia AI bu metinleri makine tarafından okunabilir,
-**karşılaştırılabilir** yapısal veriye dönüştürür:
+Katılım bankacılığında bilgiler doğal dilde, dağınık ve kıyaslanması zor biçimde
+sunulur: "ilk 6 ay masrafsız", "%1,99–%2,49 arası kâr payı", "120 aya kadar
+vade". Anatolia AI bu metinleri makine tarafından okunabilir, karşılaştırılabilir
+yapısal veriye dönüştürür.
 
 | # | Aşama | Ne yapar |
 |---|---|---|
-| 1 | **Toplama** | Banka sitelerinden kampanya metinleri (config-driven, robots.txt uyumlu, provenance'lı) |
-| 2 | **Bilgi çıkarımı** | "Önce Kural, Sonra LLM" hibrit yaklaşımı: kâr payı oranı, tutar, vade, taksit, masraf, tarih… |
-| 3 | **Normalizasyon** | TR sayı/oran/para/vade/tarih biçimleri tek kanonik biçime (`%1,89` → `1.89`, `1.500,00` → `1500.00`, `12 ay` → `12`) |
-| 4 | **Sınıflandırma** | 8 kampanya türü (Konut/Taşıt/İhtiyaç Finansmanı, Kart, Alışveriş Puanı, Yeni Müşteri, Yatırım Ürünü, Finansman) |
-| 5 | **Karşılaştırma** | Bankalar arası **adil kıyas** + **çelişki tespiti** |
-| 6 | **Sunum** | Next.js dashboard + router'lı **hibrit chatbot** (text-to-SQL + RAG) |
+| 1 | Toplama | Banka sitelerinden kampanya metinleri (config-driven, robots.txt uyumlu, provenance'lı) |
+| 2 | Bilgi çıkarımı | "Önce Kural, Sonra LLM" hibrit yaklaşımı: kâr payı oranı, tutar, vade, taksit, masraf, tarih… |
+| 3 | Normalizasyon | TR sayı/oran/para/vade/tarih biçimleri tek kanonik biçime (`%1,89` → `1.89`, `1.500,00` → `1500.00`, `12 ay` → `12`) |
+| 4 | Sınıflandırma | 8 kampanya türü (Konut/Taşıt/İhtiyaç Finansmanı, Kart, Alışveriş Puanı, Yeni Müşteri, Yatırım Ürünü, Finansman) |
+| 5 | Karşılaştırma | Bankalar arası adil kıyas ve çelişki tespiti |
+| 6 | Sunum | Next.js dashboard + router'lı hibrit chatbot (text-to-SQL + RAG) |
+
+### Somut örnek — bir kampanya cümlesi, üç yapısal alan
+
+Girdi, Kuveyt Türk'ün bir alışveriş finansmanı kampanyasının açılışı
+(`clean_text[57:334]`, belge #294):
+
+> Taksitlio'da Yeni Müşterilere Özel Kuveyt Türk Alışveriş Finansmanı Fırsatı!
+> Taksitlio'nun anlaşmalı olduğu mağazalarda yapacağınız alışverişlerinizde yeni
+> müşteriye özel %2,99 kar payı oranlı Taksitlio Alışveriş Finansmanı sizlerle!
+> Kampanya Tarihleri 20.01.2026 - 31.12.2026
+
+Bu alıntıdan çıkan alanlar (belgenin tamamı altı alan veriyor; kalan üçü metnin
+ilerleyen kısmından):
+
+| Alan | Ham ifade | Kanonik değer | Güven | Katman | Kaynak aralığı |
+|---|---|---|---|---|---|
+| `hedef_kitle` | «Yeni Müşteri» | `["yeni_musteri"]` | 0,95 | kural | `[70, 82]` |
+| `kar_payi_orani` | «%2,99» | `2.99` | 0,95 | kural | `[228, 233]` |
+| `kampanya_suresi` | «20.01.2026 - 31.12.2026» | `"2026-12-31"` | 0,72 | kural | `[310, 333]` |
+
+Üç aralığın üçü de `verify_span()` denetiminden geçiyor: `clean_text[start:end]`
+ham ifadeye birebir eşit. Kanonik biçim farkına dikkat: oran virgüllü metinden
+noktalı ondalığa, tarih aralığı ISO-8601 bitiş tarihine dönüyor. Kampanya
+süresinin güveni (0,72) diğerlerinden düşük, çünkü tek tarihe indirgenen bir
+aralıktan geliyor.
+
+Kaynak: `data/demo.db` · üreten komut `python -m src.extraction.run`
+
+### Ürün ekranı — her değer kaynağına bağlı
+
+![Jüri Audit Paneli — çıkarılan her alanın yanında güven skoru, üreten katman ve doğrulanmış kaynak aralığı; altta kaynak metinde vurgulanmış ham ifade](app/docs/rapor/gorseller/03-audit-span-vurgulama.png)
+
+Panelin tezi şu: ekranda bir sayı görüyorsanız, o sayının çıkarıldığı cümle ve
+karakter aralığı bir tık uzakta. Ölçülemeyen alan boş bırakılıyor ve boşluğun
+kendisi sayılıyor.
+
+Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık görsel tur:
+[`docs-ekran/anatolia-ai-panel-ekranlari.pdf`](docs-ekran/anatolia-ai-panel-ekranlari.pdf)
+(45 sayfa, her ekranın altında ne işe yaradığı yazılı).
 
 ### 🏗️ Mimari
 
@@ -351,55 +110,284 @@ aya kadar vade"). Anatolia AI bu metinleri makine tarafından okunabilir,
 ```
 
 - **Kural/Regex (birincil, deterministik):** sayısal ve yapısal alanlar.
-- **Yerel LLM + `guided_json`:** yalnızca örtük/bulanık ifadeler için; serbest
-  metin **asla** parse edilmez.
-- **Halüsinasyon yasağı:** bilgi yoksa `null` + düşük güven döner, değer
-  uydurulmaz. Bu bir temenni değil, `eval/properties.py` ve CI kapısıyla
-  denetlenen bir değişmezdir.
+- **Yerel LLM + `guided_json`:** yalnızca örtük ya da bulanık ifadeler için.
+  Serbest metin hiçbir yerde parse edilmiyor.
+- **Halüsinasyon yasağı:** bilgi yoksa sistem `null` ve düşük güven döndürür,
+  değer uydurmaz. `eval/properties.py` ve CI kapısı bunu denetliyor.
 
-> **Dürüst mimari notu:** planlanan üçüncü katman (NER) **teslim edilmedi**.
-> GLiNER projeye hiç girmedi; BERTurk eğitildi, ölçüldü ve kabul kapısını
-> geçemedi. Teslim edilen sistem **iki katmandır** ve belgeler bunu gizlemiyor
-> (`src/extraction/reconcile.py` modül başlığı).
+> **Teslim edilen katman sayısı: iki.** Planlanan üçüncü katmanı (NER) teslim
+> etmedik. GLiNER projeye hiç girmedi; BERTurk eğitildi, ölçüldü ve kabul
+> kapısını geçemedi. Belgeler bunu yazıyor (`src/extraction/reconcile.py` modül
+> başlığı).
+
+---
+
+## 📊 Ölçülebilir Durum
+
+Bu tablodaki her sayı yanındaki komutla yeniden üretilebilir ve bir CI kapısına
+bağlı: `python -m scripts.kanit_tazeligi` her satırı üreten kanıtla
+karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 · ölçüm kolu:
+`kural` (resmî varsayılan, LLM kapalı).
+
+| Ne | Değer | Üreten komut |
+|---|---|---|
+| Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
+| Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
+| AI özeti kapsaması | 1.759 üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
+| Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
+| Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
+| Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | 0,671 | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
+| 12-alan mikro-F1 | 0,464 [%95 GA 0,398–0,522] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
+| makro-F1 | 0,601 | *(aynı komut)* |
+| Halüsinasyon oranı | **0,047** (21/444) · yapısal kesitte 0,035 | *(aynı komut)* |
+| RAG — terim kapsama R@5 | 0,867 | `python -m eval.rag_eval --db data/demo.db` |
+| RAG — banka hedefleme R@5 | 0,800 (BM25 sıralama) | *(aynı komut)* |
+| RAG — kaynak gösterme oranı | 1,000 | *(aynı komut)* |
+| Reddetme kararı doğruluğu | 30/30 = 1,000 | *(aynı komut)* |
+| Güvenlik seti | 29/30 = 0,97 · aşırı red 0/6 | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
+| Anotatör uyumu — round0 | Fleiss κ 0,302 · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
+| Anotatör uyumu — round1 | Cohen κ 0,274 (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
+| Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
+| Bağımlılık envanteri | 96 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
+| On-prem kanıtı | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
+| Test | **3.171** toplanan · 3.118 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız | `python -m scripts.test_ozeti` — ölçüm 2026-08-16 ⚠️ kirli ağaçta üretildi, commit sonrası tekrarlanacak |
+| CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
+| Kanıt-tazeliği kapısı | var — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+
+<details>
+<summary><b>📐 Ölçüm metodolojisi — dört ilke, hepsi kod olarak</b></summary>
+
+<br>
+
+**1) Hata tek tip değildir.** `eval/run_eval.py` her kararı dört kovaya ayırır:
+
+| Kova | Ne demek | Neden ayrı sayılır |
+|---|---|---|
+| kaçırma | bilgi metinde var, model hiçbir şey üretmedi | bilgi eksikliği |
+| yanlış çıkarım | bilgi metinde var, model yanlış yerden aldı | düzeltilebilir kural hatası |
+| halüsinasyon | bilgi metinde yok, model uydurdu | kullanıcıyı yanlış yönlendirir, en pahalısı |
+| ATL (atlanan) | gold bu alan hakkında karar vermemiş | metriğe girmez; paydayı şişirmemek için |
+
+CI kapısı bu yüzden yalnız F1'e değil halüsinasyon üst sınırına da bakar
+(`eval/esikler.json`). Uydurma artarsa F1 yükselse bile kapı kapanır.
+
+**2) Güven aralığı belge düzeyinde yeniden örneklenir.** Bir belgeden 12 alan
+çıkar ve bu 12 gözlem bağımsız değil: aynı metin, aynı banka şablonu, aynı hata
+kaynağı. Alan düzeyinde örneklemek güven aralığını yapay olarak daraltır ve bu
+istatistiksel bir hata. `stats.bootstrap_ci` örnekleme birimi olarak belgeyi alır
+(küme bootstrap): belge düzeyi bootstrap 1000 örnek, tohum 42. Tohumu
+raporlanmayan bir güven aralığı tekrar üretilemez.
+
+**3) Karşılaştırmalar McNemar ile yapılır.** İki yapılandırma aynı belgelerde
+koştuğu için eşleştirilmiş test gerekiyor. Sonuç: hibrit yapı kural katmanını
+geçemedi. 0,575 < 0,612, p = 0,0117; halüsinasyon oranı ise kural katmanının %60
+üstünde. Projenin kendi iç kılavuzu bu tablodan "hibridin kazandığının
+kanıtlanmasını" istiyordu. Tersi ölçüldü ve rapor ölçüldüğü gibi duruyor.
+
+**4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** Round0: 4 anotatör, 260
+ortak satır, 0 boş hücre, Fleiss κ 0,302. Round1: 2 anotatör, 141 ortak karar,
+Cohen κ 0,274. Eşiği anotasyon başlamadan ilan etmiştik
+(`ANNOTATION_GUIDE.md` §7) ve ilan edileni uyguladık: κ < 0,67 olduğu için
+zorunlu hakemlik ve kılavuz revizyonu. Sayıya bakıp eşiği değiştirmek yasak.
+
+⚠️ **İki κ simetrik değil.** Round0'ın 0,302'si hakemlik sonrası bir durum
+(yedekler 0,051 → 0,268 → 0,302 ilerlemesini gösteriyor); round1'in 0,274'ü
+hakemlik öncesi. İkisini yan yana koyup "uyum düzeliyor" demek, ölçtüğümüz şeyi
+ölçmediğimizi söylemek olur.
+
+</details>
+
+<details>
+<summary><b>🔍 İki gold seti, iki farklı soru — ve neden birleştirmiyoruz</b></summary>
+
+<br>
+
+`gold.v2` (n=48) kasten zor seçilmiş bir set: 40 kaydı koşullu aralık, format
+varyantı, çelişki ya da terminoloji tuzağı taşıyor. `gold.round1` (n=134)
+inceleme kuyruğundan gelen geniş bir örneklem. İkisi aynı sistemi ölçüyor ama
+aynı soruyu sormuyor, bu yüzden manşet sayı `gold.v2` — zor olan.
+
+| | gold.v2 | gold.round1 |
+|---|---:|---:|
+| kayıt | 48 | 134 |
+| zor vaka | 40 | 3 |
+| `absent` kararı (halüsinasyon paydası) | **444** | **60** |
+| 12-alan mikro-F1 | 0,464 | 0,744 |
+| halüsinasyon | **0,047** | **0,433** |
+
+Round1'in 0,433'ü seçim etkisi. Round1'de bir hücre inceleme kuyruğuna zaten
+model bir şey ürettiği için giriyor; o setin `absent` kümesi rastgele değil,
+düşmanca seçilmiş bir alt küme. Payda 60'a düşünce oran şişiyor.
+
+Aynı sebeple halüsinasyon tavanı `gold.v2`'de kalıyor. Kapıyı round1'e taşımak,
+önceden ilan edilmiş 0,08'lik tavanı sayıya bakarak gevşetmek olur. Round1 kendi
+tabanında ikinci bir kapı olarak koşuyor (`eval/esikler-round1.json`).
+
+</details>
+
+<details>
+<summary><b>📏 İki mikro-F1 neden farklı — ve neden ikisini de veriyoruz</b></summary>
+
+<br>
+
+`kampanya_kosullari` serbest cümle listesi döndüren bir alan ("Kampanyaya dahil
+olmak için X gerekir"). Span veya jeton eşleşmesiyle F1 ölçmek bu alanda
+metodolojik olarak yanlış: aynı koşulu farklı sözcüklerle yazan iki anotatör bile
+birbirini yanlış bulurdu. Bu tek alan mikro-F1'i 0,671'den 0,464'e çekiyor.
+
+Alanı gizlemiyoruz. Ana tabloda satırı duruyor, değerlendirme raporunda kendi
+bölümünde kalem düzeyi ölçütle (jeton-Jaccard ≥ 0,70) raporlanıyor ve iki sayı
+yan yana yayımlanıyor. Eşik duyarlılığı da basılıyor: 0,6 / 0,7 / 0,8'in üçünde
+de aynı sayı çıkıyor, yani bu korpusta sınır vaka yok. Eşiğin sonucu taşımadığını
+söylemek de raporlanmaya değer.
+
+</details>
+
+<details>
+<summary><b>🎯 RAG Recall@5 burada ne demek</b></summary>
+
+<br>
+
+Klasik bilgi erişiminde bir sorgunun "ilgili belge kümesi" bilinir; bizde
+bilinmiyor. Bu yüzden ölçtüğümüz şey kanıtlanabilir isabet: ilk 5 sonuç arasında
+şartı sağlayan (terimi içeren ya da doğru bankaya ait) en az bir belge var mı.
+Tanım `eval/rag_eval.py` başlığında yazılı. Başka bir sistemin Recall@5'iyle
+doğrudan kıyaslanamaz.
+
+</details>
+
+---
+
+## 🏆 Ölçüm disiplini
+
+Yukarıdaki sayıların hangi disiplinle üretildiğini üç ilke belirliyor. Üçünü de
+kod olarak uyguladık; her biri CI'da bir kapıya karşılık geliyor.
+
+### 1️⃣ Her sayı kanıtına bağlı
+
+`scripts/kanit_tazeligi.py`, bu README'deki her rakamı onu üreten komutun
+çıktısıyla karşılaştırır. İkisi ayrışırsa CI düşer. Kapıyı kurduğumuz gün kendi
+belgelerimizde 8 sapma buldu.
+
+### 2️⃣ Kaçırma ve uydurma ayrı sayılır
+
+Bir alanı kaçırmak bilgi eksikliği; uydurmak kullanıcıyı yanlış yönlendiriyor.
+İkisini ayrı paydalarla sayıyoruz; CI kapısı F1'in yanında bir halüsinasyon
+tavanı da denetliyor. Tek bir parlak yüzde yayımlamıyoruz.
+
+### 3️⃣ Kapsam sınırları yazılı
+
+Hangi sayının neyi ölçtüğünü ve nerede ölçemediğini aşağıda kendi başlığı altında
+yazıyoruz. Ölçüp geri adım attığımız kararlar da orada.
+
+---
+
+## 🔬 Yöntem kararları ve kapsam sınırları
+
+Aşağıdakiler alınmış kararlar ve ölçülmüş kapsam sınırları. Okuyucunun sayıları
+doğru yorumlaması için ayrı bir başlık altında topluyoruz.
+
+**Hakemlik kör ve makine hakemleriyle yapıldı.** Round1'de 41 uyuşmazlık karara
+bağlandı; 38 kayıt `adjudicated: true` taşıyor. Protokol dar ve yazılı: hakem, A
+ya da B ile hem karar hem değer olarak örtüşmek zorunda, üçüncü bir cevap hiçbir
+tarafa dokunmuyor. Her hakem yalnız kendi alanının kılavuz paragrafını görüyor ve
+diğerlerinden habersiz çalışıyor. Şartname insan hakemliği şart koşmuyor;
+`adjudicated: true` "hakemlikten geçti" demek, "insan onayladı" demek değil.
+
+**Ölçüm kapsamı iki yerde dar ve ikisi de veri kaynaklı.** `tahsis_ucreti` gold'da
+0 pozitif örnek taşıdığı için F1'i tanımsızdır: sistem değer üretmiyor, gold da
+beklemiyor. Bu "çalışmıyor" değil, ölçülemiyor. `kar_payi_orani` ise korpusun
+yalnız 70/1.782 belgede (%3,9) geçiyor, çünkü bankalar oranı HTML'de değil
+hesaplama ucunda yayımlıyor. Sınır veride, çıkarım katmanında.
+
+**On-prem kanıtının kapsamı.** 14/14 adım `--network none` içinde geçti, ama kanıt
+API konteynerini kapsıyor. `docker compose up` ile tam yığını (Postgres, web, LLM)
+ağsız ayrıca sınamadık; imaj derlemesi de internet gerektiriyor. "İnternetsiz
+çalışır" iddiası önceden derlenmiş imajlar için geçerli.
+
+### Ölçüp geri adım attığımız kararlar
+
+- **LLM orkestrasyonu reddedildi.** Yetki-kısıtlı çok-ajanlı çıkarımı yazdık,
+  ölçtük ve kabul kapısından geçemedi (McNemar p = 0,0391, kazanan kural
+  katmanı). Üretime almadık ve kararı `tests/test_orchestrator.py` ile testle
+  kilitledik.
+- **Oransal ücret türetmesi kaldırıldı.** Belgenin başka bir yerindeki tutarla
+  çarpmak çıkarım değil türetme. 6 belgede metinde hiç geçmeyen bir TL değeri
+  üretiyordu; birinde taban finansman tutarı bile değil, bir vade eşiğiydi.
+- **BERTurk ince ayarı yapıldı, kullanılmadı.** Ölçtük, kabul kapısını geçemedi,
+  teslim edilen sistemde yok. Mimari belgesi bunu açıkça yazıyor.
+
+---
+
+## 💡 Yenilikçi Yönler
+
+#### 🔎 Alan bazlı güven skoru ve kaynak vurgulama
+
+Her çıkarılan değer `confidence` ve `source_span` taşıyor; arayüz kanıtı belgede
+vurguluyor. `verify_span()` ile `text[start:end] == raw_value` kendi kendini
+denetliyor. Skoru kalibre ettik ve ölçtük (ECE 0,188) — kalibre edilmemiş bir
+skora eşik koymak, eşiğin ne attığını bilmemek olurdu.
+
+#### ⚖️ Bankalar arası çelişki tespiti
+
+"Masrafsız" diyen bir kampanyanın ücret tarifesinde tahsis ücreti alması gibi
+belgeler arası çelişkileri yakalıyor (`src/comparison/contradiction.py`). Kıyas
+motoru ayrıca adil kıyas garantisi uyguluyor: yalnız aynı birime normalize
+edilmiş alanlar kıyaslanıyor. Koşullar farklıysa "doğrudan kıyaslanamaz"
+işaretleniyor, uydurma sıralama yapılmıyor.
+
+#### 🏦 Config-driven banka onboarding
+
+Yeni banka eklemek `config/banks.yaml` içine tek blok yazmak demek. Statik, JS ve
+manuel toplama modları, sitemap keşfi ve detay süzgeçleri hep config'ten okunuyor.
+10/10 katılım bankasını bu yolla topluyoruz.
+
+#### 🧪 Kanıt-tazeliği kapısı
+
+Yayımlanan her sayıyı üreten kanıtla karşılaştıran bir CI kapısı. İki ayrı denetim
+yapıyor: değer (belgedeki sayı = kanıttaki sayı) ve tazelik (kanıt güncel
+girdilerden mi üretilmiş). İkincisi olmadan birincisi kendini kandırır, çünkü
+bayat bir rapordan okunan bayat bir sayı bayat bir README ile mükemmel uyum
+gösterir.
 
 ---
 
 ## 📦 (1) Bağımlılıklar
 
-Tüm bağımlılıklar **açık kaynaktır** (Apache/MIT/BSD). **Ücretli
-API/servis/yazılım kullanılmaz.** Deterministik çekirdek (normalizasyon + kural
-çıkarımı + değerlendirme) **hiçbir harici bağımlılık olmadan**, saf Python
-standart kütüphanesiyle çalışır.
+Tüm bağımlılıklar açık kaynak (Apache/MIT/BSD) ve ücretli API, servis ya da
+yazılım kullanmıyoruz. Deterministik çekirdek (normalizasyon + kural çıkarımı +
+değerlendirme) hiçbir harici bağımlılık olmadan, saf Python standart
+kütüphanesiyle çalışıyor.
 
 | Katman | Dosya | Not |
 |---|---|---|
 | Python (geliştirme) | [`app/requirements.txt`](app/requirements.txt) | pydantic, requests, beautifulsoup4, playwright, transformers, fastapi, psycopg, zeyrek … |
 | Python (teslim imajı) | [`app/requirements-api.txt`](app/requirements-api.txt) | çalışma zamanı için gereken asgari küme |
 | Web (Node.js) | [`app/web/package.json`](app/web/package.json) | next 14, react 18, typescript |
-| Servis orkestrasyonu | [`app/docker-compose.yml`](app/docker-compose.yml) | postgres + vllm/ollama + api + web — **anahtarsız, offline** |
+| Servis orkestrasyonu | [`app/docker-compose.yml`](app/docker-compose.yml) | postgres + vllm/ollama + api + web, anahtarsız ve offline |
 
 **Makine-okur envanter:** [`app/docs/sbom.json`](app/docs/sbom.json) (CycloneDX
-1.6, **96 paket** — geçişli bağımlılıklar dâhil) ve insan-okur
-[`app/docs/LISANSLAR.md`](app/docs/LISANSLAR.md). CI'da bir **lisans kapısı**
-koşar: izin listesi dışı ya da `UNKNOWN` lisanslı bir paket girerse build düşer.
-Muafiyet mümkündür ama **gerekçesiz muafiyet kabul edilmez**
+1.6, 96 paket, geçişli bağımlılıklar dâhil) ve insan-okur
+[`app/docs/LISANSLAR.md`](app/docs/LISANSLAR.md). CI'da bir lisans kapısı koşuyor:
+izin listesi dışı ya da `UNKNOWN` lisanslı bir paket girerse build düşer. Muafiyet
+mümkün ama gerekçesiz muafiyeti kabul etmiyoruz
 (`config/lisans_istisnalari.yaml`).
 
-**Model ağırlıkları:** yalnızca Apache-2.0/MIT. Gemma ve Llama community
-license altındaki ağırlıklar **bilinçli olarak reddedilmiştir**; `base_model`
-zinciri köke kadar izlenmiştir ([`app/NOTICE`](app/NOTICE),
+**Model ağırlıkları:** yalnızca Apache-2.0 ve MIT. Gemma ve Llama community
+license altındaki ağırlıkları bilinçli olarak reddettik; `base_model` zincirini
+köke kadar izledik ([`app/NOTICE`](app/NOTICE),
 [`model-license-audit.md`](app/docs/model-license-audit.md)).
 
 **Gereksinimler:** Python 3.11+, (opsiyonel) Node.js 18+ ve Docker.
 
 ---
 
-## ▶️ (2) Kurulum ve Çalıştırma
+## ▶️ (2) Kurulum ve Çalıştırma Adımları
 
 ### A) Sıfır bağımlılık — deterministik çekirdek (en hızlı doğrulama)
 
-> ⚠️ **Python 3.11+ gerekir** (`python3 -V`). Kod `zip(..., strict=)` gibi
-> 3.10+ sözdizimi kullanıyor; macOS'un sistemle gelen `python3`'ü 3.9'dur.
+> ⚠️ **Python 3.11+ gerekir** (`python3 -V`). Kod `zip(..., strict=)` gibi 3.10+
+> sözdizimi kullanıyor; macOS'un sistemle gelen `python3`'ü 3.9'dur.
 
 ```bash
 git clone https://github.com/mehmetefeaytas/anatoliaAI.git
@@ -409,8 +397,8 @@ cd anatoliaAI/app
 python3 -m unittest tests.test_normalize tests.test_extract
 
 # Tüm test paketi — 16 Ağu ölçümü: 3.171 toplandı, 3.118 geçti, 53 atlandı, 0 başarısız.
-# Atlananlar isteğe bağlı bağımlılık isteyenlerdir (Postgres, FastAPI, model
-# indirmesi); çekirdek hiçbirine bağlı değildir ve tamamı offline koşar.
+# Atlananlar isteğe bağlı bağımlılık isteyenler (Postgres, FastAPI, model
+# indirmesi); çekirdek hiçbirine bağlı değil ve tamamı offline koşuyor.
 python3 -m unittest discover -s tests
 
 # Değerlendirme: alan bazında P/R/F1 + zor-vaka alt kümesi
@@ -437,8 +425,8 @@ docker-compose up             # postgres + vllm/ollama + api + web
 ```
 
 - Dashboard: `http://localhost:3000` · API: `http://localhost:8000`
-- LLM **opsiyoneldir**; `LLM_BACKEND` boşsa sistem **kural-only** modda çalışır
-  ve tüm alanlar yine çıkarılır.
+- LLM opsiyonel. `LLM_BACKEND` boşsa sistem kural-only modda çalışır ve tüm
+  alanlar yine çıkarılır.
 
 ### D) Denetim komutları (tek satır)
 
@@ -469,24 +457,24 @@ ds = load_dataset("mehmetefeaytas/katilim-bankaciligi-kampanya-gold")
 
 | Dosya | Kayıt | Ne |
 |---|---:|---|
-| `gold.round1.jsonl` | 134 | inceleme kuyruğundan gelen **geniş** örneklem |
-| `gold.v2.jsonl` | 48 | kasten **zor** seçilmiş küçük set |
-| `train / val / test` | 127 / 27 / 28 | iki setin birleşimi, **belge düzeyinde** bölme |
+| `gold.round1.jsonl` | 134 | inceleme kuyruğundan gelen geniş örneklem |
+| `gold.v2.jsonl` | 48 | kasten zor seçilmiş küçük set |
+| `train / val / test` | 127 / 27 / 28 | iki setin birleşimi, belge düzeyinde bölme |
 
-**Sızıntı denetimi: 0 ihlal.** Ve bu risk teorik değildi — ölçüldü: iki gold
-seti **5 `source_url` paylaşıyor** (aynı belge, iki hasat arasında değişmiş).
-Naif kayıt düzeyi bölme tam oradan sızardı: neredeyse aynı metin hem eğitimde
-hem testte. Bölme bu yüzden **birleşim-bul** ile belge düzeyinde yapılır ve
-denetim `tests/test_veri_seti_paketle.py` ile çitlenmiştir.
+**Sızıntı denetimi: 0 ihlal.** Bu risk teorik değildi, ölçtük: iki gold seti 5
+`source_url` paylaşıyor (aynı belge, iki hasat arasında değişmiş). Naif kayıt
+düzeyi bölme tam oradan sızardı, çünkü neredeyse aynı metin hem eğitimde hem
+testte olurdu. Bölmeyi bu yüzden birleşim-bul ile belge düzeyinde yapıyoruz ve
+denetimi `tests/test_veri_seti_paketle.py` ile çitledik.
 
-⚠️ **İki gold seti tek küme gibi raporlanmaz.** Her kayıt `kaynak_set` alanı
-taşır (`gold.round1` / `gold.v2`) — bu bilgi örtük bırakılmadı, çünkü iki set
-kıyaslanamaz ve karıştırmayı önleyen bilgi açık olmalı.
+⚠️ **İki gold setini tek küme gibi raporlamıyoruz.** Her kayıt `kaynak_set` alanı
+taşıyor (`gold.round1` ya da `gold.v2`). İki set kıyaslanamaz, dolayısıyla
+karıştırmayı önleyen bilgi açık olmalı.
 
 **Veri seti kartı** alan şemasını, protokolü, κ değerlerini (iki turu ayırarak),
-"insan hakemliği yapılmadı" uyarısını ve kullanım sınırlarını taşır. Kartın her
-sayısı veriden **hesaplanır** — elle yazılmış tek bir rakam yoktur — ve
-dürüstlük uyarıları testle korunur: biri düşerse test kırılır.
+"insan hakemliği yapılmadı" uyarısını ve kullanım sınırlarını taşıyor. Kartın her
+sayısı veriden hesaplanıyor, elle yazılmış tek bir rakam yok. Dürüstlük uyarıları
+testle korunuyor: biri düşerse test kırılır.
 
 **Yeniden üretim:**
 
@@ -497,17 +485,17 @@ make veri-seti-yukle     # KURU koşu: ne yükleneceğini sha256 ile listeler
 
 ### Veri toplama yöntemi ve kökeni (provenance)
 
-- Veri **kamuya açık** katılım bankası sitelerinden **config-driven scraping**
-  ile toplanır ([`app/config/banks.yaml`](app/config/banks.yaml)).
-- Banka listesi resmî **BDDK Liste 77**'ye dayanır:
+- Veri, kamuya açık katılım bankası sitelerinden config-driven scraping ile
+  toplanıyor ([`app/config/banks.yaml`](app/config/banks.yaml)).
+- Banka listesi resmî BDDK Liste 77'ye dayanıyor:
   <https://www.bddk.org.tr/Kurulus/Liste/77>
-- Scraping **etik kurallara uyar**: robots.txt, domain başına rate-limit,
-  açıklayıcı User-Agent, provenance/timestamp cache'i. Site engellediğinde
-  şartnamenin izin verdiği manuel toplamaya düşülür ve bu **dokümana yazılır**.
-- **Ham HTML yayımlanmaz** — pakete çıkarılmış metin ve provenance alanları
-  (`source_url`, `content_hash`) girer; "bu bilgiyi nereden aldınız" sorusunu
-  cevaplamaya yeter.
-- Gold'un kaynağı ham arşive kadar izlenir ve bu bir **CI kapısıdır**
+- Scraping etik kurallara uyuyor: robots.txt, domain başına rate-limit,
+  açıklayıcı User-Agent, provenance ve timestamp cache'i. Site engellediğinde
+  şartnamenin izin verdiği manuel toplamaya düşüyoruz ve bunu dokümana yazıyoruz.
+- Ham HTML'i yayımlamıyoruz. Pakete çıkarılmış metin ve provenance alanları
+  (`source_url`, `content_hash`) giriyor; "bu bilgiyi nereden aldınız" sorusunu
+  cevaplamaya yetiyor.
+- Gold'un kaynağı ham arşive kadar izleniyor ve bu bir CI kapısı
   (`scripts/kanit_zinciri`): kaynağı gösterilemeyen tek bir kayıt build'i düşürür.
 
 ---
@@ -516,17 +504,17 @@ make veri-seti-yukle     # KURU koşu: ne yükleneceğini sha256 ile listeler
 
 Madde madde uyum matrisi: **[`app/docs/SARTNAME-UYUM.md`](app/docs/SARTNAME-UYUM.md)**
 
-Her kalem ✅ / 🟠 / ❌ olarak işaretli ve **✅ yazan her satırın kanıt sütununda
-çalışan bir komut ya da var olan bir dosya var**. Doğrulayamadığımız hiçbir
-kaleme ✅ vermedik — kanıtsız bir ✅, yakalandığında tüm matrisi değersizleştirir.
+Her kalem ✅ / 🟠 / ❌ olarak işaretli ve ✅ yazan her satırın kanıt sütununda
+çalışan bir komut ya da var olan bir dosya var. Doğrulayamadığımız hiçbir kaleme
+✅ vermedik.
 
 ---
 
 ## 📄 Lisans
 
-**Apache-2.0** — [`app/LICENSE`](app/LICENSE). Yalnızca Apache/MIT/BSD lisanslı
-kütüphaneler ve model ağırlıkları kullanılır; uyum bir **CI kapısıyla**
-denetlenir.
+**Apache-2.0** — [`app/LICENSE`](app/LICENSE). Yalnızca Apache, MIT ve BSD
+lisanslı kütüphaneler ve model ağırlıkları kullanıyoruz; uyumu bir CI kapısı
+denetliyor.
 
 ---
 
@@ -539,7 +527,7 @@ denetlenir.
 │   │                            #   comparison · rag · chatbot · api · db
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
-│   ├── tests/                   #   2.996 birim/entegrasyon testi (offline)
+│   ├── tests/                   #   3.118 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
 │   ├── data/gold/               #   altın setler + anotasyon kılavuzu
 │   ├── docs/                    #   SBOM · lisans envanteri · offline kanıt
@@ -547,6 +535,7 @@ denetlenir.
 │   ├── Makefile                 #   make lisanslar / sbom / veri-seti
 │   ├── docker-compose.yml       #   offline servis orkestrasyonu
 │   └── CLAUDE.md                #   ayrıntılı mimari/karar dokümanı
+├── docs-ekran/                  # panel ekran görüntüleri → 45 sayfalık PDF
 ├── decisions/ concepts/ entities/ syntheses/ sorun/   # bilgi arşivi
 └── index.md log.md              # dizin + değişiklik günlüğü
 ```
@@ -572,10 +561,5 @@ denetlenir.
 | Irmak Altay | Ekip Üyesi |
 | Ayça Engindeniz | Ekip Üyesi |
 | Ecegüneş Dağ | Ekip Üyesi |
-
-<br>
-
-*Tek bir parlak yüzde vermiyoruz — çünkü bir alanı kaçırmak ile uydurmak
-aynı hata değildir.*
 
 </div>
