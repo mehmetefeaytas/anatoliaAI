@@ -77,11 +77,12 @@ Kaynak: `data/demo.db` · üreten komut `python -m src.extraction.run`
 
 ### Ürün ekranı — her değer kaynağına bağlı
 
-![Jüri Audit Paneli — çıkarılan her alanın yanında güven skoru, üreten katman ve doğrulanmış kaynak aralığı; altta kaynak metinde vurgulanmış ham ifade](app/docs/rapor/gorseller/03-audit-span-vurgulama.png)
+![Kanıt sayfası — solda çıkarılan değerin künyesi (güven skoru, üreten katman, doğrulanmış karakter aralığı), sağda bankanın kendi cümlesi iki katmanlı vurguyla](app/docs/rapor/gorseller/12-kanit-sayfasi.png)
 
-Panelin tezi şu: ekranda bir sayı görüyorsanız, o sayının çıkarıldığı cümle ve
-karakter aralığı bir tık uzakta. Ölçülemeyen alan boş bırakılıyor ve boşluğun
-kendisi sayılıyor.
+Ekranın tezi şu: solda bir değer görüyorsanız, sağda o değeri doğuran cümle zaten
+açık — ayrı bir tıklama gerekmez. Vurgu iki katmanlıdır: sarı, değerin
+çıkarıldığı ifade; mavi yıkama, kuralın gördüğü cümle bağlamı. Ölçülemeyen alan
+boş bırakılıyor ve boşluğun kendisi sayılıyor.
 
 Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık görsel tur:
 [`docs-ekran/anatolia-ai-panel-ekranlari.pdf`](docs-ekran/anatolia-ai-panel-ekranlari.pdf)
