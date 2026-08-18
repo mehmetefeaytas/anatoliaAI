@@ -15,7 +15,7 @@ import type { ReactNode } from "react";
  *    "en kötü" gibi göstermek ya da boş hücreyle karıştırmak, faizsiz finansın
  *    en ayırt edici ürününü sıralamanın dibine iter.
  * 2. **Koşulu farklı olan kıyaslanmaz.** Aralık (`%1,99–%2,49`) ya da
- *    zaman-koşullu oran («ilk 6 ay %0») aynı birime indirgenemez; sistem
+ *    zaman-koşullu oran «ilk 6 ay %0» aynı birime indirgenemez; sistem
  *    bunları sıralamaya SOKMAZ, «doğrudan kıyaslanamaz» işaretiyle listede
  *    bırakır. Uydurma sıralama yapılmaz.
  * 3. **Farklı kampanya türleri kıyaslanmaz** (2026-08-09'da eklendi). Bu madde
@@ -87,7 +87,7 @@ export default function FairnessNotice({ varyant = "tam", ek }: Props) {
     <details className="fairness-serit">
       <summary className="fairness-ozet">
         <span>
-          <b>Adil kıyas:</b> yalnız aynı birime normalize edilmiş,{" "}
+          <b>Adil kıyas:</b> Yalnız aynı birime normalize edilmiş,{" "}
           <b>aynı kampanya türü</b> içindeki değerler kıyaslanır ·{" "}
           <span className="mono">0</span> bir ceza değil, üründür · süresi
           dolmuş kampanya sıralamaya girmez
@@ -122,7 +122,7 @@ function TamBloklar({ ek }: { ek?: ReactNode }) {
         <p>
           Yalnızca <b>aynı birime normalize edilmiş</b> değerler kıyaslanır.
           Koşulları farklı olanlar — aralık (<span className="mono">%1,99–%2,49</span>),
-          zaman-koşullu oran («ilk 6 ay %0»), farklı para birimi — sıralamaya
+          zaman-koşullu oran «ilk 6 ay %0», farklı para birimi — sıralamaya
           alınmaz; <span className="badge badge-warn">doğrudan kıyaslanamaz</span>{" "}
           gerekçesiyle listede kalır. Silinmez, uydurma sıra da verilmez.
         </p>

@@ -77,7 +77,7 @@ type Props = {
  * eksik bir eşleme, gelecekte sessiz bir boşluk bırakırdı.
  */
 const KATMAN_NOTU: Record<Extractor, string> = {
-  rule: "Deterministik kural çıkardı; yerel model bu alana dokunmadı.",
+  rule: "Sistem kuralları uyguladı; yerel model bu alana dokunmadı.",
   ner: "Varlık çıkarımı katmanı üretti (bu teslimde kullanılmıyor).",
   llm: "Kuralların bulamadığı alanı yerel model doldurdu.",
 };

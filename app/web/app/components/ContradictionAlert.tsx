@@ -111,7 +111,7 @@ export default function ContradictionAlert({
 
       {list.data?.length === 0 && !list.loading && (
         <EmptyNotice
-          title="Bu külliyatta iç çelişki bulunamadı"
+          title="Bu belge havuzunda iç çelişki bulunamadı"
           kesir={
             sum.data
               ? `0 / ${trNum(sum.data.scanned_campaigns)} belge`

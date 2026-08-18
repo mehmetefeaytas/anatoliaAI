@@ -473,7 +473,7 @@ export default function ComparePanel({
           varyant="serit"
           ek={
             <>
-              <b>Verisi olmayan banka listeden düşmez.</b> Onbir satırın onbiri
+              <b>Verisi olmayan banka listeden düşmez.</b> On bir satırın on biri
               her zaman çizilir; ölçülemeyen satır kesik taban çizgisi ve{" "}
               <span className="mono">veri yok</span> etiketiyle yerini korur.
               Boşluk gizlenmiyor, sayılıyor — cetvelin başındaki kapsama kesri
