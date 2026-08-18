@@ -98,7 +98,7 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
                                          ▼
                     ┌──────────────────────────────────────────┐
                     │  ÇIKARIM — "önce kural, sonra LLM"        │
-                    │  ① kural/regex  (birincil, deterministik) │
+                    │  ① kural/regex  (birincil, kesin kurallara dayalı) │
                     │  ② LLM + guided_json (yalnız boşluklar)   │
                     │  → reconcile: kural kazanır, LLM doldurur │
                     └────────────────────┬─────────────────────┘
@@ -134,7 +134,7 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 �
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
+| Belge Havuzu | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
 | AI özeti kapsaması | 1.759 üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
@@ -393,7 +393,7 @@ köke kadar izledik ([`app/NOTICE`](app/NOTICE),
 
 ## ▶️ (2) Kurulum ve Çalıştırma Adımları
 
-### A) Sıfır bağımlılık — deterministik çekirdek (en hızlı doğrulama)
+### A) Sıfır bağımlılık — kesin kurallara dayalı  çekirdek (en hızlı doğrulama)
 
 > ⚠️ **Python 3.11+ gerekir** (`python3 -V`). Kod `zip(..., strict=)` gibi 3.10+
 > sözdizimi kullanıyor; macOS'un sistemle gelen `python3`'ü 3.9'dur.
