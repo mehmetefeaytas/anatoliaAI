@@ -43,7 +43,7 @@ yapısal veriye dönüştürür.
 |---|---|---|
 | 1 | Toplama | Banka sitelerinden kampanya metinleri (config-driven, robots.txt uyumlu, provenance'lı) |
 | 2 | Bilgi çıkarımı | "Önce Kural, Sonra LLM" hibrit yaklaşımı: kâr payı oranı, tutar, vade, taksit, masraf, tarih… |
-| 3 | Normalizasyon | TR sayı/oran/para/vade/tarih biçimleri tek kanonik biçime (`%1,89` → `1.89`, `1.500,00` → `1500.00`, `12 ay` → `12`) |
+| 3 | Normalizasyon | TR sayı/oran/para/vade/tarih biçimleri tek standart biçime (`%1,89` → `1.89`, `1.500,00` → `1500.00`, `12 ay` → `12`) |
 | 4 | Sınıflandırma | 8 kampanya türü (Konut/Taşıt/İhtiyaç Finansmanı, Kart, Alışveriş Puanı, Yeni Müşteri, Yatırım Ürünü, Finansman) |
 | 5 | Karşılaştırma | Bankalar arası adil kıyas ve çelişki tespiti |
 | 6 | Sunum | Next.js dashboard + router'lı hibrit chatbot (text-to-SQL + RAG) |
@@ -61,14 +61,14 @@ Girdi, Kuveyt Türk'ün bir alışveriş finansmanı kampanyasının açılış�
 Bu alıntıdan çıkan alanlar (belgenin tamamı altı alan veriyor; kalan üçü metnin
 ilerleyen kısmından):
 
-| Alan | Ham ifade | Kanonik değer | Güven | Katman | Kaynak aralığı |
+| Alan | Ham ifade | Standart değer | Güven | Katman | Kaynak aralığı |
 |---|---|---|---|---|---|
 | `hedef_kitle` | «Yeni Müşteri» | `["yeni_musteri"]` | 0,95 | kural | `[70, 82]` |
 | `kar_payi_orani` | «%2,99» | `2.99` | 0,95 | kural | `[228, 233]` |
 | `kampanya_suresi` | «20.01.2026 - 31.12.2026» | `"2026-12-31"` | 0,72 | kural | `[310, 333]` |
 
 Üç aralığın üçü de `verify_span()` denetiminden geçiyor: `clean_text[start:end]`
-ham ifadeye birebir eşit. Kanonik biçim farkına dikkat: oran virgüllü metinden
+ham ifadeye bire bir eşit. Standart biçim farkına dikkat: oran virgüllü metinden
 noktalı ondalığa, tarih aralığı ISO-8601 bitiş tarihine dönüyor. Kampanya
 süresinin güveni (0,72) diğerlerinden düşük, çünkü tek tarihe indirgenen bir
 aralıktan geliyor.
@@ -103,7 +103,7 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
                     │  → reconcile: kural kazanır, LLM doldurur │
                     └────────────────────┬─────────────────────┘
                                          ▼
-   normalize (kanonik) ──▶ PostgreSQL/SQLite ──▶ compare & rank
+   normalize (standart) ──▶ PostgreSQL/SQLite ──▶ compare & rank
                                          │
                           ┌──────────────┴──────────────┐
                           ▼                             ▼
@@ -111,9 +111,9 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
                     (kanıt vurgulamalı)     (router: SQL │ RAG)
 ```
 
-- **Kural/Regex (birincil, deterministik):** sayısal ve yapısal alanlar.
+- **Kural/Regex (birincil, kesin kurallara dayalı):** sayısal ve yapısal alanlar.
 - **Yerel LLM + `guided_json`:** yalnızca örtük ya da bulanık ifadeler için.
-  Serbest metin hiçbir yerde parse edilmiyor.
+  Serbest metin hiçbir yerde ayrıştırılamıyor (parse edilemiyor).
 - **Halüsinasyon yasağı:** bilgi yoksa sistem `null` ve düşük güven döndürür,
   değer uydurmaz. `eval/properties.py` ve CI kapısı bunu denetliyor.
 
@@ -161,9 +161,9 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 �
 
 <br>
 
-**1) Hata tek tip değildir.** `eval/run_eval.py` her kararı dört kovaya ayırır:
+**1) Hata tek tip değildir.** `eval/run_eval.py` her kararı dört kategoriye ayırır:
 
-| Kova | Ne demek | Neden ayrı sayılır |
+| Kategori | Ne demek | Neden ayrı sayılır |
 |---|---|---|
 | kaçırma | bilgi metinde var, model hiçbir şey üretmedi | bilgi eksikliği |
 | yanlış çıkarım | bilgi metinde var, model yanlış yerden aldı | düzeltilebilir kural hatası |
@@ -219,7 +219,7 @@ aynı soruyu sormuyor, bu yüzden manşet sayı `gold.v2` — zor olan.
 
 Round1'in 0,433'ü seçim etkisi. Round1'de bir hücre inceleme kuyruğuna zaten
 model bir şey ürettiği için giriyor; o setin `absent` kümesi rastgele değil,
-düşmanca seçilmiş bir alt küme. Payda 60'a düşünce oran şişiyor.
+düşmanca seçilmiş bir alt küme. Payda 60'a düşünce oran yükseliyor.
 
 Aynı sebeple halüsinasyon tavanı `gold.v2`'de kalıyor. Kapıyı round1'e taşımak,
 önceden ilan edilmiş 0,08'lik tavanı sayıya bakarak gevşetmek olur. Round1 kendi
@@ -240,7 +240,7 @@ birbirini yanlış bulurdu. Bu tek alan mikro-F1'i 0,671'den 0,464'e çekiyor.
 Alanı gizlemiyoruz. Ana tabloda satırı duruyor, değerlendirme raporunda kendi
 bölümünde kalem düzeyi ölçütle (jeton-Jaccard ≥ 0,70) raporlanıyor ve iki sayı
 yan yana yayımlanıyor. Eşik duyarlılığı da basılıyor: 0,6 / 0,7 / 0,8'in üçünde
-de aynı sayı çıkıyor, yani bu korpusta sınır vaka yok. Eşiğin sonucu taşımadığını
+de aynı sayı çıkıyor, yani bu veri setinde sınır vaka yok. Eşiğin sonucu taşımadığını
 söylemek de raporlanmaya değer.
 
 </details>
@@ -298,8 +298,8 @@ diğerlerinden habersiz çalışıyor. Şartname insan hakemliği şart koşmuyo
 
 **Ölçüm kapsamı iki yerde dar ve ikisi de veri kaynaklı.** `tahsis_ucreti` gold'da
 0 pozitif örnek taşıdığı için F1'i tanımsızdır: sistem değer üretmiyor, gold da
-beklemiyor. Bu "çalışmıyor" değil, ölçülemiyor. `kar_payi_orani` ise korpusun
-yalnız 70/1.782 belgede (%3,9) geçiyor, çünkü bankalar oranı HTML'de değil
+beklemiyor. Bu "çalışmıyor" değil, ölçülemiyor. `kar_payi_orani` ise belge havuzunun
+yalnız 70/1.782 belgesinde (%3,9) geçiyor, çünkü bankalar oranı HTML'de değil
 hesaplama ucunda yayımlıyor. Sınır veride, çıkarım katmanında.
 
 **On-prem kanıtının kapsamı.** 14/14 adım `--network none` içinde geçti, ama kanıt
@@ -364,7 +364,7 @@ gösterir.
 ## 📦 (1) Bağımlılıklar
 
 Tüm bağımlılıklar açık kaynak (Apache/MIT/BSD) ve ücretli API, servis ya da
-yazılım kullanmıyoruz. Deterministik çekirdek (normalizasyon + kural çıkarımı +
+yazılım kullanmıyoruz. Kesin kurallara dayalı çekirdek (normalizasyon + kural çıkarımı +
 değerlendirme) hiçbir harici bağımlılık olmadan, saf Python standart
 kütüphanesiyle çalışıyor.
 
@@ -375,8 +375,8 @@ kütüphanesiyle çalışıyor.
 | Web (Node.js) | [`app/web/package.json`](app/web/package.json) | next 14, react 18, typescript |
 | Servis orkestrasyonu | [`app/docker-compose.yml`](app/docker-compose.yml) | postgres + vllm/ollama + api + web, anahtarsız ve offline |
 
-**Makine-okur envanter:** [`app/docs/sbom.json`](app/docs/sbom.json) (CycloneDX
-1.6, 96 paket, geçişli bağımlılıklar dâhil) ve insan-okur
+**Makine tarafından okunabilir envanter:** [`app/docs/sbom.json`](app/docs/sbom.json) (CycloneDX
+1.6, 96 paket, geçişli bağımlılıklar dâhil) ve insan tarafından okunabilen
 [`app/docs/LISANSLAR.md`](app/docs/LISANSLAR.md). CI'da bir lisans kapısı koşuyor:
 izin listesi dışı ya da `UNKNOWN` lisanslı bir paket girerse build düşer. Muafiyet
 mümkün ama gerekçesiz muafiyeti kabul etmiyoruz
@@ -471,10 +471,10 @@ ds = load_dataset("mehmetefeaytas/katilim-bankaciligi-kampanya-gold")
 | `train / val / test` | 127 / 27 / 28 | iki setin birleşimi, belge düzeyinde bölme |
 
 **Sızıntı denetimi: 0 ihlal.** Bu risk teorik değildi, ölçtük: iki gold seti 5
-`source_url` paylaşıyor (aynı belge, iki hasat arasında değişmiş). Naif kayıt
-düzeyi bölme tam oradan sızardı, çünkü neredeyse aynı metin hem eğitimde hem
+`source_url` paylaşıyor (aynı belge, iki hasat arasında değişmiş). Basit bir kayıt
+düzeyi bölme işlemi tam oradan sızardı, çünkü neredeyse aynı metin hem eğitimde hem
 testte olurdu. Bölmeyi bu yüzden birleşim-bul ile belge düzeyinde yapıyoruz ve
-denetimi `tests/test_veri_seti_paketle.py` ile çitledik.
+denetimi `tests/test_veri_seti_paketle.py` ile güvence altına aldık.
 
 ⚠️ **İki gold setini tek küme gibi raporlamıyoruz.** Her kayıt `kaynak_set` alanı
 taşıyor (`gold.round1` ya da `gold.v2`). İki set kıyaslanamaz, dolayısıyla
@@ -489,7 +489,7 @@ testle korunuyor: biri düşerse test kırılır.
 
 ```bash
 make veri-seti           # paketi gold'dan tek komutla üretir
-make veri-seti-yukle     # KURU koşu: ne yükleneceğini sha256 ile listeler
+make veri-seti-yukle     # DENEME koşusu: ne yükleneceğini sha256 ile listeler
 ```
 
 ### Veri toplama yöntemi ve kökeni (provenance)
@@ -500,7 +500,7 @@ make veri-seti-yukle     # KURU koşu: ne yükleneceğini sha256 ile listeler
   <https://www.bddk.org.tr/Kurulus/Liste/77>
 - Scraping etik kurallara uyuyor: robots.txt, domain başına rate-limit,
   açıklayıcı User-Agent, provenance ve timestamp cache'i. Site engellediğinde
-  şartnamenin izin verdiği manuel toplamaya düşüyoruz ve bunu dokümana yazıyoruz.
+  şartnamenin izin verdiği manuel toplamaya başvuruyoruz ve bunu dokümana yazıyoruz.
 - Ham HTML'i yayımlamıyoruz. Pakete çıkarılmış metin ve provenance alanları
   (`source_url`, `content_hash`) giriyor; "bu bilgiyi nereden aldınız" sorusunu
   cevaplamaya yetiyor.
