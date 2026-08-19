@@ -370,7 +370,11 @@ class TestGercekIddiaListesi(unittest.TestCase):
         for ad in ("v2_mikro_f1", "v2_halusinasyon"):
             iddia = next(i for i in K.iddialar() if i.ad == ad)
             with self.subTest(iddia=ad):
-                self.assertEqual(set(iddia.kapsam()), {"README.md", "app/README.md"})
+                # Kapsam DARALAMAZ ama genişleyebilir: 19 Ağustos'ta sunum
+                # HTML'i de bu iki iddiaya eklendi. Eşitlik aramak, kapsamı
+                # büyüten bir iyileştirmeyi test hatası gibi gösterirdi.
+                self.assertLessEqual(
+                    {"README.md", "app/README.md"}, set(iddia.kapsam()))
 
     def test_halusinasyon_deseni_PAYDA_hucresini_ORAN_sanmaz(self) -> None:
         """Ölçülmüş yanlış pozitif: `**444**` paydadır, halüsinasyon oranı değil."""
@@ -384,6 +388,62 @@ class TestGercekIddiaListesi(unittest.TestCase):
     def test_banka_sayaci_semsiye_kurulusu_saymaz(self) -> None:
         """TKBB katılım bankası değildir; README de ikisini ayrı sayıyor."""
         self.assertEqual(K.olc_banka_sayisi(), 10.0)
+
+
+
+class TestDesenlerGERCEKTEN_Yakaliyor(unittest.TestCase):
+    """Yazılmış her desen, işaret ettiği belgede GERÇEKTEN bir şey yakalıyor mu.
+
+    ## Neden bu test var
+
+    Kapının en tehlikeli arıza biçimi gürültülü değil SESSİZ olanıdır: bir
+    desen bozulur (belge yeniden yazılır, biçim değişir, bir `<em>` eklenir)
+    ve o iddia denetim dışı kalır. Kapı yine "0 sapma" der, kimse fark etmez
+    ve korunduğu sanılan sayı bayatlar.
+
+    Bu tam olarak 19 Ağustos'ta yaşandı. Sunum HTML'i kapsama alındıktan
+    sonra elle bir sapma yaratıldı (0,477 -> 0,999) ve kapı **ateşlenmedi**;
+    sebebi kirli ağaçta kanıtın reddedilmesiydi, ama arıza tablosu bir desen
+    hatasınınkiyle BİREBİR aynı görünüyordu. İki durumu ayırt edecek bir
+    ölçüt yoktu.
+
+    ## Neden iddia başına değil BELGE başına
+
+    Bir iddia birden çok belgeyi kapsar (kök README, app README, sunum).
+    Yalnız "toplam eşleşme > 0" denetlenirse, üç belgeden biri bozulduğunda
+    diğer ikisi testi yeşil tutar — yani asıl korunmak istenen şey, tam da
+    gözden kaçan şey olur.
+    """
+
+    def test_her_desen_kendi_belgesinde_esleme_veriyor(self) -> None:
+        eksik: list[str] = []
+        for iddia in K.iddialar():
+            for belge in iddia.kapsam():
+                if not [x for x in iddia.belgedeki() if x[0] == belge]:
+                    eksik.append(f"{iddia.ad} · {belge}")
+        self.assertEqual(
+            eksik, [],
+            "şu desenler işaret ettikleri belgede hiçbir şey yakalamıyor "
+            "(iddia sessizce denetim dışı kalmış): " + ", ".join(eksik))
+
+    def test_kapsam_desenlerden_TURETILIYOR(self) -> None:
+        """`kapsam()` ayrı bir liste olsaydı desenlerle ayrışabilirdi."""
+        for iddia in K.iddialar():
+            self.assertEqual(
+                set(iddia.kapsam()), {d for d, _ in iddia.desenler},
+                f"{iddia.ad}: kapsam ile desen listesi ayrışmış")
+
+    def test_sunum_UC_iddiada_kapsamda(self) -> None:
+        """Sunum yayımlanan bir belgedir ve 19 Ağustos'ta kapsama alındı.
+
+        Kapsamdan çıkarılırsa bu test düşer — sunumun sayıları bir kez daha
+        iki sürüm geride kalmasın (o gün 2.946 test / 0,464 F1 yazıyordu).
+        """
+        kapsayan = [i.ad for i in K.iddialar()
+                    if any("docs/sunum" in k for k in i.kapsam())]
+        self.assertEqual(
+            sorted(kapsayan), ["test_gecti", "v2_halusinasyon", "v2_mikro_f1"],
+            "sunumu denetleyen iddia kümesi değişmiş")
 
 
 if __name__ == "__main__":

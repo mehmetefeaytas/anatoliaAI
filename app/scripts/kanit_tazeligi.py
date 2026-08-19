@@ -619,7 +619,7 @@ def iddialar() -> list[Iddia]:
             ad="test_atlandi",
             aciklama="Atlanan test sayısı (Postgres vb.)",
             desenler=(
-                ("app/README.md", r"koşuda ([\d.]+)'i atlanır"),
+                ("app/README.md", r"([\d.]+) atlanan"),
                 ("README.md", r"([\d.]+) atlandı"),
             ),
             olcer=olc_test_atlandi,
@@ -652,7 +652,7 @@ def iddialar() -> list[Iddia]:
             ad="gold_round1_kayit",
             aciklama="gold.round1 kayıt sayısı",
             desenler=(
-                ("README.md", r"`gold\.round1`[^|]*\|\s*(\d+)\s*\|"),
+                ("README.md", r"`gold\.round1(?:\.jsonl)?`[^|]*\|\s*(\d+)\s*\|"),
                 ("app/README.md", r"`gold\.round1`[^|]*\|\s*(\d+)\s*\|"),
             ),
             olcer=olc_gold_kayit("gold.round1.json"),
@@ -673,7 +673,7 @@ def iddialar() -> list[Iddia]:
             aciklama="config-driven banka sayısı",
             desenler=(
                 ("README.md", r"\*\*(\d+) katılım bankası\*\*"),
-                ("app/README.md", r"\*\*(\d+) katılım bankası\*\*"),
+                ("app/README.md", r"(?:\*\*)?(\d+) katılım bankası"),
             ),
             olcer=olc_banka_sayisi,
             tolerans=0.5,
