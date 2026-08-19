@@ -41,11 +41,11 @@
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "Aralığın BİTİŞİ alındı; 1.09.2024 başlangıç tarihidir.",
       "odul_miktari": "Ödül 8.000 Mil — parasal tutar değil. Kılavuz §4 'alisveris_puani' örneği (60.000 Mil) gereği puan/adet olarak alisveris_puani'na yazıldı.",
@@ -94,11 +94,12 @@
       "format_varyant",
       "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
-      "M1"
+      "M1",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "Aralığın BİTİŞİ alındı (1 Temmuz başlangıç). 15 Eylül 2026 ParafPara geri alma tarihidir, kampanya bitişi değildir.",
       "alisveris_puani": "Kademeli ödül: 300 / 750 / 1.750 / 3.000 TL ParafPara. Puan alanı aralık kabul etmediği için başlıkta ilan edilen üst sınır (3.000) yazıldı. #kosullu_aralik",
@@ -149,11 +150,12 @@
       "eksik_bilgi",
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
-      "M1"
+      "M1",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "Aralığın BİTİŞİ alındı. 15 Ekim 2026 ParafPara geri alma tarihidir.",
       "taksit_sayisi": "'sadece taksitli işlemlerde geçerlidir' — taksit ADEDİ verilmemiş. #eksik_bilgi",
@@ -201,11 +203,11 @@
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "Aralığın BİTİŞİ alındı. Metindeki 14 Ekim 2026 / 15 Ekim 2026 tarihleri ParafPara son kullanım ve geri alma tarihleridir, kampanya bitişi değildir.",
       "odul_miktari": "ParafPara TL cinsinden sadakat puanıdır (chip-para sınıfı) -> alisveris_puani.",
@@ -254,11 +256,11 @@
       "format_varyant",
       "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "Aralığın BİTİŞİ alındı. 15 Eylül 2026 ParafPara geri alma tarihidir.",
       "alisveris_puani": "Kademeli ödül: 10.000-24.999 TL -> 500 TL, 25.000 TL üzeri -> 1.000 TL. Üst sınır yazıldı. #kosullu_aralik",
@@ -299,11 +301,12 @@
     "hard_tags": [
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
-      "M1"
+      "M1",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "masraf_durumu": "'hesap işletim ücreti alınmamaktadır' NEGASYONDUR: masraf sıfırdır, bilgi eksikliği değil (kılavuz §4).",
       "kar_payi_orani": "'kâr payı dağıtımı yapılmayan hesaplardır' — bu bir FİNANSMAN kâr payı oranı değil, cari hesabın niteliği; sayı da yok. #terminoloji",
@@ -339,11 +342,12 @@
     "hard_tags": [
       "eksik_bilgi"
     ],
-    "hard": true,
     "annotators": [
-      "M1"
+      "M1",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "vade_ay": "'Sigorta süresi, finansman süresi ile eş değerdir' — ay cinsinden sayı verilmemiş. #eksik_bilgi",
       "finansman_tutari": "'Kredi tutarınız' primi etkileyen faktör olarak sayılmış; tutar yok.",
@@ -375,11 +379,11 @@
       "vade_ay"
     ],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "campaign_type": "8 sınıfın hiçbiri uymuyor: tasarruf finansman şirketleri adına aidat TAHSİLAT hizmeti sayfası; bankanın finansman ürünü değil. Aday dosyadaki 'Finansman' başlıktaki kelimeden kaynaklanıyor. #terminoloji",
       "finansman_tutari": "Başlıkta 'Tasarruf Finansman' geçiyor ama hiçbir tutar verilmemiş."
@@ -411,11 +415,11 @@
     "hard_tags": [
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "Metindeki tek yüzde '% 90'ını aşamaz' — ihraç tutarının gerçeğe uygun değere oranla ÜST SINIRIDIR, kâr payı oranı değildir. #terminoloji",
       "vade_ay": "'12 nci maddenin birinci fıkrası' mevzuat madde numarasıdır, vade değildir.",
@@ -449,11 +453,11 @@
     "hard_tags": [
       "eksik_bilgi"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "finansman_tutari": "'Dış ticaret finansman desteğimizle' — niteleyici var, sayı yok. #eksik_bilgi",
       "masraf_durumu": "Sayfa altındaki 'havale, EFT ve FAST işlemlerinize para ödemekten kurtulun' ifadesi tüm siteye ait tanıtım bandıdır ve havale/EFT ücretine değinir; kılavuz §4 gereği ürünün masraf durumu bilgisi sayılmadı.",
@@ -500,11 +504,11 @@
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "Aralığın BİTİŞİ alındı (01.01.2026 başlangıçtır). Sayfadaki 'Bitiş Tarihi: -' boştur; 31.01.2026 ise kodların son AKTİFLEŞTİRME tarihidir.",
       "vade_ay": "'3 aylık TOD Trendyol Süperlig Paketi' hediye üyeliğin süresidir, finansman vadesi değildir.",
@@ -552,21 +556,21 @@
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M1"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "kampanya_suresi"
+    ],
     "notes": {
       "kampanya_suresi": "BELİRSİZ: '01 Ağustos - 31 Ağustos' ifadesinde YIL yok ('26 Gün kaldı' dinamik sayaç). ISO-8601 tarih yıl olmadan üretilemez, tahmin edilmedi. #format_varyant",
       "alisveris_puani": "Bonus, TL cinsinden ifade edilen sadakat puanıdır (kılavuz §4'teki chip-para ile aynı sınıf) -> puan/adet olarak yazıldı.",
       "odul_miktari": "Ödül Bonus puanıdır; ayrı bir nakit/hediye tutarı yok.",
       "hedef_kitle": "Yalnızca kart ürünü kısıtı (Happy Kart Silver/Gold/Platinum/Zero); müşteri segmenti sinyali yok.",
       "campaign_type": "Aday etiket 'Kart' korundu: kampanya alışveriş değil OTOMATİK ÖDEME TALİMATI üzerine kurulu. Ancak ödül Bonus puanı olduğu için 'Alışveriş Puanı' da savunulabilir — hakemliğe açık."
-    },
-    "unclear_fields": [
-      "kampanya_suresi"
-    ]
+    }
   },
   {
     "id": "dunya-katilim--kendim-icin-kartlar",
@@ -578,29 +582,29 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "odul_miktari",
-      "indirim_orani",
       "alisveris_puani",
-      "kampanya_suresi",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
       "kampanya_kosullari",
-      "hedef_kitle"
-    ],
-    "unclear_fields": [
-      "masraf_durumu"
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
       "eksik_bilgi"
     ],
-    "hard": true,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "masraf_durumu"
+    ],
     "notes": {
       "masraf_durumu": "«Üstelik yıllık kart aidatı ödemeden!» ifadesi sayfadaki dört karttan yalnızca DKart Kredi Kartı'na ait. Kılavuz §4 kart yıllık ücretini yalnız tahsis_ucreti'nden dışlıyor, masraf_durumu'na girip girmediğini söylemiyor. Ürün-kapsamlı bir muafiyeti belge düzeyinde «masraf yok» saymaya karar veremedim.",
       "vade_ay": "Metindeki «1 yıl» (çerez saklama süresi) ve «otuz (30) gün» (KVKK başvuru cevap süresi) ürün vadesi değildir; tuzak sayılar.",
@@ -645,23 +649,23 @@
       "hedef_kitle": "Kampanya'dan faydalanmak için Hadi Gold üyesi olmalısın."
     },
     "absent_fields": [
-      "kar_payi_orani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
-      "indirim_orani"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
-      "M2"
+      "M2",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "alisveris_puani": "Zaman-koşullu oran: 1 Eylül 2026'dan sonra %1'e düşüyor, kredi kartıyla yapılan alışverişlerde %1. Kılavuz §4 «yürürlükteki asıl oran» dediği için kampanyanın ilan edilen oranı %3 alındı; diğerleri kampanya_kosullari'nda.",
       "odul_miktari": "Aylık kazanım üst sınırı (takvim ayı başına en fazla 125 TL nakit iade).",
@@ -712,24 +716,24 @@
       "hedef_kitle": "Mobilden müşteri olanlara özel 11.000 TL'ye varan bonus kazanma fırsatı"
     },
     "absent_fields": [
-      "taksit_sayisi",
+      "alisveris_puani",
       "indirim_orani",
-      "alisveris_puani"
-    ],
-    "unclear_fields": [
-      "kar_payi_orani",
-      "tahsis_ucreti"
+      "taksit_sayisi"
     ],
     "hard_tags": [
       "celiskili",
-      "kosullu_aralik",
-      "format_varyant"
+      "format_varyant",
+      "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "kar_payi_orani",
+      "tahsis_ucreti"
+    ],
     "notes": {
       "kar_payi_orani": "Sayfadaki maliyet tablosunda İhtiyaç Finansmanı için İKİ ayrı kâr oranı var: sigortalı 1-3 vade %0,00 ve sigortasız 1-3 vade %1,90. İkisi de aynı kampanyanın oranı değil, farklı ürün kurgularının oranı; tek bir belge değeri seçemedim. (Ayrıca sayfa çok ürünlü: Yedek Hesap için «kâr payı ödemezsiniz» ifadesi de var.)",
       "tahsis_ucreti": "«Tahsis ücreti vergiler hariç finansman tutarının binde 5'i oranındadır» — değer ORAN olarak verilmiş (tabloda %0,50), tutar olarak değil. Alanın kanonik biçimi {value, currency} olduğu için oransal tahsis ücreti şemaya sığmıyor; karar veremedim (kılavuz boşluğu).",
@@ -752,29 +756,29 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
-      "terminoloji",
-      "eksik_bilgi"
+      "eksik_bilgi",
+      "terminoloji"
     ],
-    "hard": true,
     "annotators": [
-      "M2"
+      "M2",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "«Bu hesaplarda kâr payı uygulanmaz» ifadesi ÖZEL CARİ HESAP içindir (mevduat tarafı), finansman kâr payı oranı değildir; kılavuz §4 gereği bu alana yazılmadı. Sayfada hiçbir sayısal oran yok.",
       "genel": "Belge bir ürün/hizmet tanıtım sayfası; hiçbir sayı, tarih ya da tutar içermiyor. 12 alanın tamamı absent.",
@@ -809,26 +813,26 @@
       "hedef_kitle": "Konutu riskli yapı olarak tespit edilen ve farklı bir konut almak isteyen malikleri."
     },
     "absent_fields": [
+      "alisveris_puani",
+      "indirim_orani",
+      "kampanya_suresi",
       "kar_payi_orani",
-      "taksit_sayisi",
-      "tahsis_ucreti",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi"
+      "tahsis_ucreti",
+      "taksit_sayisi"
     ],
-    "unclear_fields": [],
     "hard_tags": [
-      "kosullu_aralik",
       "eksik_bilgi",
-      "format_varyant"
+      "format_varyant",
+      "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
-      "M2"
+      "M2",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "finansman_tutari": "Koşullu kademeler: yapım/edinim için bağımsız bölüm başına en fazla 1.250.000 TL (birden fazla bölümde toplamda 6.000.000 TL), güçlendirmede bölüm başına 320.000 TL (toplamda 1.600.000 TL). Ana kullanım olan yapım/edinimin bağımsız bölüm başına üst sınırı yazıldı.",
       "vade_ay": "«azami vade 10 yıl» -> 120 ay. Bireysel işyeri finansmanı için 7 yıl (84 ay) ayrıca belirtilmiş; konut vadesi (en uzun) alındı.",
@@ -846,26 +850,25 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "genel": "Belge, özel bankacılık finansman ürünlerinin liste sayfası (konut, taşıt, ihtiyaç, arsa, iş yeri, tarımsal). Hiçbir oran, tutar, vade ya da tarih verilmemiş.",
       "hedef_kitle": "«Yalnızca ticari faaliyeti olmayan gerçek kişilere (kamu ve özel sektör çalışanları, emekliler vb.)» ifadesi altı üründen yalnızca Bireysel İş Yeri Finansmanı'nın tanımıdır ve bireysel/ticari ayrımından ibarettir; 4 etiketten birine karşılık gelmediği için absent.",
@@ -894,28 +897,28 @@
       "kampanya_kosullari": "Kampanya 1 Eylül – 30 Kasım 2025 tarihleri arasında üç (3) ay süresince sadece hafta sonları geçerlidir."
     },
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "masraf_durumu",
-      "indirim_orani",
       "alisveris_puani",
-      "hedef_kitle"
-    ],
-    "unclear_fields": [
-      "odul_miktari"
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
       "format_varyant",
       "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "odul_miktari"
+    ],
     "notes": {
       "kampanya_suresi": "«30-11-2025» ve «1 Eylül – 30 Kasım 2025» -> BİTİŞ tarihi 2025-11-30.",
       "odul_miktari": "Kampanyanın faydası 100 TL tutarında indirim kodu (dönem boyunca en fazla 6 kez). Bu bir ödül/hediye değil, TUTAR cinsinden indirimdir; indirim_orani yalnız yüzde kabul ediyor, tutar indirimi için şemada alan yok. Hangi alana yazılacağına karar veremedim (kılavuz boşluğu).",
@@ -937,26 +940,25 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "genel": "Belge bir zekât hesaplama aracı sayfası; banka ürünü ya da kampanya değil. Hiçbir ürün oranı/tutarı/vadesi yok.",
       "finansman_tutari": "«10 yıl vadeli 180.000 TL ev borcu» ve «18.000 TL» sayıları zekât hesaplamasını anlatan ÖRNEK cümledir, banka ürünü tutarı değildir.",
@@ -996,25 +998,25 @@
       "hedef_kitle": "Sadece bireysel Hayat Finans müşterileri yararlanabilir."
     },
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "odul_miktari",
       "alisveris_puani",
-      "kampanya_suresi"
+      "finansman_tutari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "kosullu_aralik",
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
-      "M2"
+      "M2",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "indirim_orani": "Genel aralık %10–%50 olarak ilan edilmiş; kategori kırılımları ayrıca var (restoranlarda %30'a varan, paket serviste %25'e varan, moda/teknolojide %20'ye varan, kuru temizlemede %50). Kılavuz §9-5 gereği aralık tek sayıya indirilmedi.",
       "masraf_durumu": "«GastroClub üyeliği ... ücretsiz» -> negasyon kuralı: masraf yok, has_fee=false, amount=0.",
@@ -1051,26 +1053,25 @@
       "kampanya_kosullari": "Sadece sıfır kilometre T10X ve T10F modeli Togg araçlar için geçerlidir."
     },
     "absent_fields": [
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "alisveris_puani",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi"
     ],
-    "unclear_fields": [],
     "hard_tags": [
+      "format_varyant",
       "kosullu_aralik",
-      "terminoloji",
-      "format_varyant"
+      "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "Tabloda vadeye bağlı iki oran var: 12 ay vadeli satırlarda %0,00, 36-48 ay vadeli satırlarda %2,99. Kılavuz §4'ün «ilk 6 ay %0, sonrasında ...» kuralına benzeterek yürürlükteki asıl oran (2,99) yazıldı; %0,00 kısa vadeye özel promosyon kademesidir.",
       "finansman_tutari": "Model x vade tablosundaki tutarlar: 600.000 / 800.000 / 1.300.000 / 1.500.000 / 1.700.000 TL. En yüksek finansman tutarı alındı.",
@@ -1089,28 +1090,27 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "eksik_bilgi"
     ],
-    "hard": true,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "«uygun kar oranları» niteleyicisi var, sayı yok (#eksik_bilgi).",
       "vade_ay": "«uzun vade» niteleyicisi var, ay/yıl sayısı yok (#eksik_bilgi).",
@@ -1141,28 +1141,28 @@
       "kampanya_kosullari": "1000 TL ve üzeri akaryakıt harcamalarına 100 TL indirim verilir."
     },
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "masraf_durumu",
-      "indirim_orani",
       "alisveris_puani",
-      "hedef_kitle"
-    ],
-    "unclear_fields": [
-      "odul_miktari"
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "masraf_durumu",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
-      "format_varyant",
-      "celiskili"
+      "celiskili",
+      "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M2"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "odul_miktari"
+    ],
     "notes": {
       "kampanya_suresi": "Başlık «31.05.2024 - 30.06.2024» derken gövde «1 Haziran 2024 - 30 Haziran 2024» diyor: başlangıç tarihleri çelişiyor, BİTİŞ tarihi ikisinde de 30.06.2024 -> 2024-06-30 (#celiskili, #format_varyant).",
       "odul_miktari": "«200 TL'ye Varan İndirim» ve «en fazla 200 TL indirim kazanabilir» — TUTAR cinsinden indirim. Ödül/hediye değil; indirim_orani ise yalnız yüzde kabul ediyor. Hangi alana yazılacağına karar veremedim (kılavuz boşluğu, belge 6 ile aynı vaka).",
@@ -1204,24 +1204,23 @@
       "hedef_kitle": "Kampanyadan Esnaf, Çiftçi ve KOBİ müşterilerimiz faydalanabilecektir."
     },
     "absent_fields": [
+      "alisveris_puani",
       "finansman_tutari",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "indirim_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani"
+      "tahsis_ucreti",
+      "taksit_sayisi"
     ],
-    "unclear_fields": [],
     "hard_tags": [
-      "kosullu_aralik",
-      "format_varyant"
+      "format_varyant",
+      "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada 'Taşıt Finansmanı' idi; DÜZELTİLDİ -> 'Finansman'. Leasing kapsamı 'makine, ekipman ve araçlar' olup yalnız taşıt değil, ticari müşteriye genel finansman.",
       "kar_payi_orani": "Tek oran yok: vadeye göre değişen TL kâr oranı tablosu (12 ay 4.15 / 24 ay 3.90 / 36-48-60 ay 3.81). Aralık olarak yazıldı (min 3.81, max 4.15). USD (0.83-0.90) ve EUR (0.79) oranları ayrıca verilmiş; korpusun kanonik para birimi TRY olduğu için TL sütunu esas alındı. #kosullu_aralik",
@@ -1258,26 +1257,26 @@
       "kampanya_kosullari": "Hesap açılışı için minimum tutar 50.000 TL, maksimum tutar ise 2.000.000 TL'dir."
     },
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "odul_miktari",
-      "indirim_orani",
       "alisveris_puani",
-      "hedef_kitle"
-    ],
-    "unclear_fields": [
-      "vade_ay"
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi"
     ],
     "hard_tags": [
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "vade_ay"
+    ],
     "notes": {
       "kar_payi_orani": "%99 / %95 / %90 değerleri KÂR PAYLAŞIM ORANIDIR (vade sonu kârın müşteri/banka arasındaki bölüşüm yüzdesi: '99 kâr paylaşım oranı, kârın %99'unun müşteriye, %1'inin bankaya aktarılacağını ifade eder'). Ne finansman kâr payı oranı ne de getiri oranıdır -> kılavuz §4 'katılma hesabı getirisi bu alana yazılmaz' kuralı gereği absent. #terminoloji",
       "vade_ay": "BELİRSİZ: vade yalnızca '32 günden başlayan vadeler' olarak gün cinsinden verilmiş; ay tamsayısına çevirmek (32 gün ~ 1 ay) bilgi uydurmak olur. Metrik dışı bırakıldı.",
@@ -1296,26 +1295,26 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
-      "M3"
+      "M3",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "_belge": "Hesap türlerini tanıtan LİSTELEME sayfası (+ çerez/erişilebilirlik menüsü metni). Metinde tek bir sayı, oran, tarih, koşul cümlesi ya da segment ifadesi yok; 12 alanın tamamı absent. Bu belge halüsinasyon ölçümü için saf negatif örnektir.",
       "campaign_type": "Aday değer 'Yatırım Ürünü' korundu: sayfa katılma/cari/avantajlı hesap ürünlerini listeliyor."
@@ -1342,24 +1341,23 @@
       "hedef_kitle": "HFY yatırımcısı olabilmek için yatırım hesabı açtıktan sonra nitelikli yatırımcı beyanı vererek, yatırım fonu menüsünden alım – satım yapabilirsiniz."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "indirim_orani",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "kar_payi_orani": "Likit katılım fonu tanıtımı; hiçbir oran verilmemiş ('günlük değer artışı potansiyeli' niteleyici, sayı yok) -> absent.",
       "vade_ay": "'Fon vadesizdir' ve 'kısa vadeli' ifadeleri var; ay cinsinden bir vade değeri yok -> absent.",
@@ -1390,27 +1388,27 @@
       "kampanya_kosullari": "Hisse senedi hesap açılışı için Uygunluk Testi yapılması zorunludur."
     },
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "odul_miktari",
-      "indirim_orani",
       "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "indirim_orani",
       "kampanya_suresi",
-      "hedef_kitle"
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
-      "terminoloji",
-      "celiskili"
+      "celiskili",
+      "terminoloji"
     ],
-    "hard": true,
     "annotators": [
-      "M3"
+      "M3",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "'Kâr Payı (temettü)' burada şirketin dağıttığı temettüdür, murabaha kâr payı oranı DEĞİL; yanındaki yüzdeler (stopaj 'yüzde 10' ve '%0') vergi oranıdır. Komisyon oranı 0,002 de kâr payı değildir -> absent. #terminoloji",
       "masraf_durumu": "Ürün için pozitif masraf beyanı var: 'Komisyon oranı: 0,002 (binde 2)'. Tutar (TL) verilmediği için amount=null. Aynı belgede 'Ekstre gönderim ücreti ... ücretsiz' deniyor; bu yalnız rapor gönderimi içindir, işlem komisyonunu ortadan kaldırmaz -> kısmi çelişki. #celiskili",
@@ -1436,27 +1434,26 @@
       "kampanya_kosullari": "ileri valörlü fonlarda asgari işlem tutarı 100 TL (Yüz Türk Lirası) olarak uygulanacaktır"
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "Metindeki yüzdeler: stopaj oranı %17,5, hisse senedi yoğun fonlarda %0 stopaj istisnası ve alış emrinde %20 marj. Üçü de kâr payı/getiri oranı değildir -> absent. #terminoloji",
       "finansman_tutari": "100 TL asgari işlem tutarı ve 1 TL alt limit yatırım tutarlarıdır, finansman tutarı değil -> absent.",
@@ -1489,25 +1486,24 @@
       "hedef_kitle": "Albaraka Mobil üzerinden görüntülü görüşme sürecini tamamlayıp ilk kez müşteri olan, Albaraka Mobil üzerinden TL cinsinden Katılma Hesabı açan müşterilerimiz faydalanabilir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "'98/2 kâr paylaşım oranı' vade sonu kârın müşteri/banka bölüşüm oranıdır (katılma hesabı), finansman kâr payı oranı DEĞİLDİR; üstelik yüzde biçiminde bir orana da indirgenemez -> absent. #terminoloji",
       "finansman_tutari": "'minimum 250 TL' hesap açılış tutarıdır, finansman tutarı değil -> absent.",
@@ -1525,29 +1521,29 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "vade_ay",
-      "tahsis_ucreti",
+      "indirim_orani",
       "masraf_durumu",
-      "indirim_orani"
-    ],
-    "unclear_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "taksit_sayisi",
-      "odul_miktari",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "vade_ay"
     ],
     "hard_tags": [
       "eksik_bilgi"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "alisveris_puani",
+      "finansman_tutari",
+      "hedef_kitle",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "taksit_sayisi"
+    ],
     "notes": {
       "_belge": "KAMPANYA LİSTELEME sayfası: en az 9 ayrı kampanyanın başlığı/özeti yan yana. Tek bir kampanyaya ait olmayan değerler (140.000 TL destek, 500/1.250/2.000/5.000 TL Worldpuan, 6 ve 4 taksit, 31 Aralık/31 Ağustos/30 Eylül son günleri) belge düzeyinde tek değere indirgenemez -> ilgili alanlar BELİRSİZ bırakıldı (metrik dışı). Kılavuzda liste/dizin sayfaları için kural yok; boşluk raporlandı.",
       "campaign_type": "Aday değer 'Yeni Müşteri' idi; KALDIRILDI (null). Sayfada Yeni Müşteri, Kart/taksit ve Alışveriş Puanı kampanyaları bir arada; tek bir tür atamak uydurma olur.",
@@ -1593,24 +1589,23 @@
       "hedef_kitle": "Bankamızdan daha önce kredi kartı almamış ve 9 Nisan – 31 Mayıs 2025 tarihleri arasında ilk kez VKart TROY Kredi Kartı sahibi olacak müşterilerimizin"
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "alisveris_puani"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada 'Yeni Müşteri' idi; DÜZELTİLDİ -> 'Kart'. Kampanyanın konusu VKart TROY kredi kartı harcamalarıdır; koşul 'ilk kez KART sahibi olmak', banka müşterisi olarak yeni olmak değil.",
       "indirim_orani": "'%50'si Bizden' = harcamanın yarısının iade/indirimi; metinde 'Kazanılan indirim ... yansıtılacaktır' ile indirim olarak adlandırılmış. DİKKAT: sayfanın 'İlginizi Çekebilecek Kampanyalar' bölümündeki '%15 İndirim' BAŞKA bir kampanyaya (English Home) aittir, bu belgenin değeri değildir.",
@@ -1649,24 +1644,24 @@
       "hedef_kitle": "Kampanya, belirlenen tarihler içerisinde, gelen Ria ödemesini Vakıf Katılım Mobil Şubesini kullanarak hesaplarına aktaran yeni müşterilerimiz için düzenlenmektedir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "masraf_durumu",
       "indirim_orani",
-      "alisveris_puani"
+      "kar_payi_orani",
+      "masraf_durumu",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
-      "M3"
+      "M3",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kampanya_suresi": "'1 Şubat 2026 – 18 Mart 2026' aralığının BİTİŞ tarihi. #format_varyant (TR ay adı)",
       "indirim_orani": "Sayfadaki '%15 İndirim' (English Home) ve '150 TL İndirim' (ENUYGUN.com) ifadeleri 'İlginizi Çekebilecek Kampanyalar' bölümündeki BAŞKA kampanyalara aittir -> bu belge için absent.",
@@ -1694,27 +1689,27 @@
       "hedef_kitle": "Görüntülü görüşmeyle müşteri olan dijital kanallardan yatırım hesabı açanlar hisse senedi alım-satım işlemlerinde on binde 5 komisyon oranından yararlanır."
     },
     "absent_fields": [
-      "kar_payi_orani",
-      "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "odul_miktari",
       "alisveris_puani",
-      "kampanya_suresi"
-    ],
-    "unclear_fields": [
-      "indirim_orani",
-      "masraf_durumu"
+      "finansman_tutari",
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
       "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M3"
     ],
     "adjudicated": false,
+    "hard": true,
+    "unclear_fields": [
+      "indirim_orani",
+      "masraf_durumu"
+    ],
     "notes": {
       "_belge": "Sayfa bir başvuru formu (Alışveriş Finansmanı Başvurusu) + 'Kampanya ve Yenilikler' kutusundaki dört ayrı kampanya duyurusundan oluşuyor; alanların bir kısmı tek bir ürüne atfedilemiyor.",
       "kar_payi_orani": "98/2, 75/25, 65/35 değerleri katılma hesabı KÂR PAYLAŞIM (bölüşüm) oranlarıdır; finansman kâr payı oranı değildir ve yüzdeye indirgenemez -> absent. #terminoloji",
@@ -1734,26 +1729,26 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
-    "unclear_fields": [],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
-      "M3"
+      "M3",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "_belge": "Kampanya değil, katılım bankacılığını anlatan KURUMSAL BİLGİ sayfası (danışma komitesi, icazet belgeleri, akitler). Hiçbir sayı, oran, tarih ya da koşul cümlesi yok -> 12 alanın tamamı absent. Halüsinasyon ölçümü için saf negatif örnek.",
       "campaign_type": "Aday dosyada 'İhtiyaç Finansmanı' idi; YANLIŞ -> null yapıldı. Belge bir kampanya/ürün sayfası değil; 8 sınıftan hiçbiri uygun değil.",
@@ -1770,25 +1765,25 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
       "M4"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "campaign_type": "Adil Katılım kurumsal ana sayfa (vizyon/misyon/değerler). Kampanya ya da ürün metni değil; aday dosyadaki 'İhtiyaç Finansmanı' etiketi yanlış, null'a çekildi. 8 sınıfın hiçbiri kurumsal tanıtım sayfasına uymuyor — kılavuz boşluğu.",
       "hedef_kitle": "'Girişimcilerden KOBİ'lere, yatırımcılardan öğrencilere herkesin ve her kesimin' ifadesi bir hedefleme değil, kapsayıcılık beyanı. Segment sinyali yok -> absent."
@@ -1818,24 +1813,25 @@
       "kampanya_kosullari": "Kampanyadan Dünya Katılım Paraf kartlar faydalanabilecektir. Sanal kartlar kampanyaya dahildir. ParafPara kullanılarak yapılan işlemler ile iptal ve iade işlemleri dahil değildir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "vade_ay"
     ],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
-      "M4"
+      "M4",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada 'İhtiyaç Finansmanı' yazıyordu; metin bir kredi kartı taksit kampanyası -> 'Kart' olarak düzeltildi.",
       "kampanya_suresi": "'30 Haziran 2026' ay-adlı TR tarih biçimi (#format_varyant). Metinde başlangıç tarihi yok, yalnız bitiş var.",
@@ -1865,24 +1861,24 @@
       "kampanya_kosullari": "Kampanyadan Dünya Katılım Paraf kartlar faydalanabilecektir. Sanal kartlar kampanyaya dahildir. ParafPara kullanılarak yapılan işlemler ile iptal ve iade işlemleri dahil değildir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "vade_ay"
     ],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M4"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada 'İhtiyaç Finansmanı' yazıyordu; kredi kartı taksit kampanyası -> 'Kart'.",
       "kampanya_suresi": "'31 Temmuz 2026' ay-adlı TR tarih biçimi (#format_varyant); yalnız bitiş tarihi var.",
@@ -1921,22 +1917,22 @@
       "hedef_kitle": "Enerya Enerji A.Ş. faaliyet alanı içerisinde yer alan illerde doğalgaz dönüşümü kapsamında abonelik işlemleri başlatan Dünya Katılım müşterileri"
     },
     "absent_fields": [
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "alisveris_puani",
+      "indirim_orani",
+      "kampanya_suresi",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi"
+      "tahsis_ucreti",
+      "taksit_sayisi"
     ],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M4"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "kar_payi_orani": "Baz açıkça belirtilmiş: 'aylık %3,99'. Belirsizlik yok. Metin 'kâr oranı' diyor, 'kâr payı oranı' demiyor — kılavuz §5 eşanlamlıları uyarınca aynı alana yazıldı.",
       "taksit_sayisi": "'36 aya kadar taksit seçenekleriyle' ifadesindeki 36, VADE ayıdır (aynı cümlede '36 ay vade' olarak da geçiyor). Kılavuz §4: vade ayı taksit_sayisi sayılmaz -> absent.",
@@ -1955,25 +1951,26 @@
     "fields": {},
     "field_spans": {},
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kampanya_kosullari",
+      "kampanya_suresi",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "kampanya_suresi",
-      "kampanya_kosullari",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [],
-    "hard": false,
     "annotators": [
-      "M4"
+      "M4",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": false,
     "notes": {
       "campaign_type": "Adil Katılım Danışma Komitesi üye özgeçmişleri. Kampanya/ürün metni değil; 8 sınıftan hiçbiri uymuyor -> null (aday dosyada da null idi, doğrulandı).",
       "kampanya_suresi": "Metindeki 1983, 2000, 2023-2026 gibi yıllar özgeçmiş tarihleridir, kampanya süresi değil -> absent."
@@ -2002,24 +1999,24 @@
       "kampanya_kosullari": "Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "vade_ay"
     ],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M4"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada null idi; kredi kartı taksit kampanyası -> 'Kart' atandı.",
       "kampanya_suresi": "'31 Ağustos 2026 tarihine kadar' -> bitiş tarihi. Ay-adlı TR biçim (#format_varyant).",
@@ -2050,24 +2047,24 @@
       "kampanya_kosullari": "4 taksitten yararlanabilmek için kampanyanın satış görevlisine belirtilmesi gerekmektedir. www.yargici.com.tr web sitesinden yapılacak işlemler kampanyaya dahil değildir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "tahsis_ucreti",
+      "hedef_kitle",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani",
-      "hedef_kitle"
+      "tahsis_ucreti",
+      "vade_ay"
     ],
     "hard_tags": [
       "format_varyant"
     ],
-    "hard": true,
     "annotators": [
       "M4"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada null idi; kredi kartı taksit kampanyası -> 'Kart' atandı.",
       "kampanya_suresi": "'31 Ağustos 2026 tarihine kadar' -> bitiş tarihi (#format_varyant).",
@@ -2097,26 +2094,27 @@
       "hedef_kitle": "Eğer Kuveyt Türk müşterisi değilseniz, hızlı ve pratik bir şekilde Kuveyt Türk Mobil ile Kuveyt Türk müşterisi olabilir, size avantajlardan yararlanabilirsiniz."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
       "odul_miktari",
-      "indirim_orani",
-      "alisveris_puani"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
       "eksik_bilgi",
-      "terminoloji",
-      "format_varyant"
+      "format_varyant",
+      "terminoloji"
     ],
-    "hard": true,
     "annotators": [
-      "M4"
+      "M4",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "campaign_type": "Aday dosyada null idi. Sayfa 'Müşteri Ol Kampanyaları' altında ve müşteri olmayı teşvik ediyor -> 'Yeni Müşteri'.",
       "kar_payi_orani": "'özel avantajlı kur fırsatları' / 'avantajlı oranlarla' ifadeleri DÖVİZ VE KIYMETLİ MADEN KURUNA aittir, kâr payı oranına değil; ayrıca hiçbir sayı verilmemiş. Kılavuz §4 (#terminoloji + #eksik_bilgi) -> absent.",
@@ -2161,16 +2159,20 @@
       "vade_ay"
     ],
     "hard_tags": [
-      "terminoloji",
       "celiskili",
-      "format_varyant"
+      "format_varyant",
+      "terminoloji"
     ],
-    "hard": true,
     "annotators": [
       "M4",
       "HAKEM-02"
     ],
     "adjudicated": true,
+    "hard": true,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "odul_miktari"
+    ],
     "notes": {
       "campaign_type": "Çek tahsil paketi / çek karnesi ücret muafiyeti kampanyası. 8 sınıfın hiçbiri (Finansman, İhtiyaç/Konut/Taşıt Finansmanı, Kart, Alışveriş Puanı, Yeni Müşteri, Yatırım Ürünü) bankacılık HİZMET ÜCRETİ muafiyeti kampanyasını karşılamıyor -> null. KILAVUZ BOŞLUĞU.",
       "masraf_durumu": "'ücretsiz' negasyonu masrafın SIFIR olduğunun pozitif ifadesidir (kılavuz §4) -> has_fee=false, amount=0. ÇELİŞKİ: 'Çek karnesi ücreti muafiyetine vergiler dahil değildir' — muafiyet kısmi; #celiskili olarak işaretlendi.",
@@ -2179,11 +2181,7 @@
       "finansman_tutari": "7.000 / 10.000 TL tutarları finansman değil, ücret muafiyeti değeridir -> absent.",
       "kampanya_suresi": "'Kampanya Tarihleri 23.10.2024 - 31.12.2024' aralığının BİTİŞİ; gövdedeki 'Kampanya 31 Aralık 2024 tarihinde sona erecektir' cümlesi doğruluyor.",
       "hedef_kitle": "HAKEM 02 (2026-08-19): `belirli_segment` KALDIRILDI. Kanıt span'i \"Kampanya size özel hazırlanmıştır, devredilemez.\" — bu cümle kişiselleştirilmiş bir davet bildirir ama HANGİ segment olduğunu söylemez. ANNOTATION_GUIDE §4.13/2: sinyal yoksa `absent`."
-    },
-    "unclear_fields": [
-      "odul_miktari"
-    ],
-    "needs_adjudication": true
+    }
   },
   {
     "id": "tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan",
@@ -2221,23 +2219,23 @@
       "hedef_kitle": "TOM Bank Hadi'li olup Çok Kazananlar Kulübü üyesi olan Hadi Black Kredi Kartı ile harcama yapan"
     },
     "absent_fields": [
-      "kar_payi_orani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "indirim_orani",
+      "kar_payi_orani",
       "masraf_durumu",
-      "indirim_orani"
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
-      "kosullu_aralik",
-      "format_varyant"
+      "format_varyant",
+      "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
       "M4"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "alisveris_puani": "'%50 iade' bir İADE ORANIDIR; kılavuz §4 iade/puan oranını indirim_orani'na değil alisveris_puani'na yazdırıyor -> {kind: rate, value: 50}. '%50'ye varan' tavan ifadesi (#kosullu_aralik).",
       "indirim_orani": "Metindeki tek yüzde '%50 iade'; kılavuz gereği alisveris_puani'na yazıldı, indirim_orani'na ait bir değer yok -> absent.",
@@ -2278,15 +2276,20 @@
       "vade_ay"
     ],
     "hard_tags": [
-      "kosullu_aralik",
-      "format_varyant"
+      "format_varyant",
+      "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
       "M4",
       "HAKEM-02"
     ],
     "adjudicated": true,
+    "hard": true,
+    "needs_adjudication": true,
+    "unclear_fields": [
+      "alisveris_puani",
+      "masraf_durumu"
+    ],
     "notes": {
       "taksit_sayisi": "'Tüm giyimde vade farksız 3 yerine 6 taksit' — kulüp üyesine sağlanan değer 6'dır (3 taban değerdir). Zaman/koşul bağımlı (#kosullu_aralik).",
       "alisveris_puani": "BELİRSİZ: metin tek bir iade oranı değil, sektöre göre DÖRT farklı oran veriyor (market %10, restoran %15, akaryakıt %10, Pegasus %50). Şema tek {kind, value} kabul ediyor; hangisinin kanonik değer olacağını kılavuz söylemiyor. Tahmin etmemek için boş bırakıldı — KILAVUZ BOŞLUĞU.",
@@ -2296,12 +2299,7 @@
       "kampanya_suresi": "Metinde hiçbir başlangıç/bitiş tarihi yok -> absent.",
       "finansman_tutari": "'minimum 10.000 TL' bir bakiye şartıdır, finansman tutarı değil -> absent.",
       "hedef_kitle": "HAKEM 02 (2026-08-19): `belirli_segment` KALDIRILDI. Kanıt span'i \"yalnızca Hadi Black Kredi Kartı harcamaları için geçerli\" — saf ÜRÜN kısıtı. ANNOTATION_GUIDE §4.13/2 KİM/NE testi: cümle müşterinin NE kullandığını söylüyor, KİM olduğunu değil; ürün kısıtı `kampanya_kosullari`na aittir."
-    },
-    "unclear_fields": [
-      "alisveris_puani",
-      "masraf_durumu"
-    ],
-    "needs_adjudication": true
+    }
   },
   {
     "id": "tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b",
@@ -2334,24 +2332,25 @@
       "hedef_kitle": "Kampanya 31 Temmuz'a kadar mevcut kredi kartı limitini artıran seçili müşteriler için geçerlidir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
-      "masraf_durumu",
       "indirim_orani",
-      "alisveris_puani"
+      "kar_payi_orani",
+      "masraf_durumu",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
-      "kosullu_aralik",
-      "format_varyant"
+      "format_varyant",
+      "kosullu_aralik"
     ],
-    "hard": true,
     "annotators": [
-      "M4"
+      "M4",
+      "LLM-01"
     ],
     "adjudicated": false,
+    "hard": true,
     "notes": {
       "odul_miktari": "Kademeli ödül (10.000 TL harcamaya 1000 TL, 20.000'e 1250, 35.000'e 1500, 50.000'e 2000); üst sınır 2000 TL, metin de 'en fazla 2000 TL' diyerek doğruluyor (#kosullu_aralik).",
       "kampanya_suresi": "TUZAK: '31 Temmuz'a kadar limitini artır' bir ALT SON TARİHTİR; kampanyanın bitişi '27 Temmuz – 31 Ağustos 2026' aralığının sonu, yani 2026-08-31.",

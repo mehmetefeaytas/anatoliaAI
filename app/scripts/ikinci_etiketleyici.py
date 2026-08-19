@@ -60,9 +60,14 @@ KOK = Path(__file__).resolve().parents[1]
 if str(KOK) not in sys.path:
     sys.path.insert(0, str(KOK))
 
-from eval.iaa import cohen_kappa, interpret_kappa
+from eval.iaa import cohen_kappa, interpret_kappa, krippendorff_alpha
 from eval.matchers import tolerant_match
 from scripts.gold_schema import load_gold
+
+# Sayıya indirme sıralamanın ve kıyasın kullandığı AYNI kodla yapılır;
+# ikinci bir dönüştürücü α'yı kıyas motorunun görmediği bir ölçekte
+# hesaplamak olurdu.
+from src.comparison.compare import _numeric_key
 from src.extraction.llm.schema import EXTRACTION_FIELDS
 
 GOLD = KOK / "data" / "gold" / "gold.v2.json"
@@ -203,6 +208,7 @@ def kappa(args: argparse.Namespace) -> int:
     uyusmazlik: list[dict] = []
     ortak_dolu = 0
     deger_uyum = 0
+    alpha_birimleri: list[list] = []
     alan_bazli: dict[str, list[tuple]] = {}
 
     for x in ikinci:
@@ -221,6 +227,20 @@ def kappa(args: argparse.Namespace) -> int:
             if a == "dolu" and b == "dolu":
                 ortak_dolu += 1
                 m = tolerant_match(alan, llm_alanlar[alan], kayit.fields[alan])
+                # Krippendorff α (`ratio`) için sayısal birim. Kılavuz §7 iki
+                # sayı vaat ediyor: karar uyumu (κ) VE değer uyumu (α, ratio
+                # ölçeği — "%1,89 vs %1,90 tam uyuşmazlık sayılmaz"). α'yı
+                # ölçmemek, kendi ilan ettiğimiz ölçütü atlamak olurdu.
+                #
+                # Sayıya indirme `compare._numeric_key` ile: sıralamanın ve
+                # kıyasın kullandığı AYNI kod. İkinci bir dönüştürücü yazmak,
+                # α'yı kıyas motorunun görmediği bir ölçekte hesaplamak
+                # demekti. Aralık değerleri (`comparable=False`) atlanır —
+                # ratio ölçeğinde bir aralığın "değeri" yoktur.
+                ia, ia_ok, _ = _numeric_key(alan, kayit.fields[alan])
+                ib, ib_ok, _ = _numeric_key(alan, llm_alanlar[alan])
+                if ia_ok and ib_ok and ia is not None and ib is not None:
+                    alpha_birimleri.append([ia, ib])
                 if m.ok:
                     deger_uyum += 1
                 else:
@@ -247,17 +267,24 @@ def kappa(args: argparse.Namespace) -> int:
     if ortak_dolu:
         print(f"değer uyumu (iki taraf da dolu): {deger_uyum}/{ortak_dolu} "
               f"= {deger_uyum / ortak_dolu:.3f}")
+    alpha = krippendorff_alpha(alpha_birimleri, level="ratio") \
+        if len(alpha_birimleri) >= 2 else float("nan")
+    print(f"Krippendorff α (ratio, sayısal alanlar): "
+          f"{'ölçülemedi' if alpha != alpha else f'{alpha:.3f}'} "
+          f"({len(alpha_birimleri)} sayısal birim)")
     print(f"uyuşmazlık: {len(uyusmazlik)}")
 
     _rapor_yaz(k, yorum, cift, len(ikinci), len(hatali), ortak_dolu,
-               deger_uyum, uyusmazlik, alan_bazli, ikinci)
+               deger_uyum, uyusmazlik, alan_bazli, ikinci,
+               alpha, len(alpha_birimleri))
     print(f"rapor: {RAPOR.relative_to(KOK)}")
     return 0
 
 
 def _rapor_yaz(k: float, yorum: str, cift: int, belge: int, hatali: int,
                ortak_dolu: int, deger_uyum: int, uyusmazlik: list[dict],
-               alan_bazli: dict[str, list[tuple]], ikinci: list[dict]) -> None:
+               alan_bazli: dict[str, list[tuple]], ikinci: list[dict],
+               alpha: float, alpha_n: int) -> None:
     model = ikinci[0].get("model", "?") if ikinci else "?"
     backend = ikinci[0].get("backend", "?") if ikinci else "?"
     sure = sum(x.get("latency_ms", 0) for x in ikinci) / 1000
@@ -282,9 +309,34 @@ def _rapor_yaz(k: float, yorum: str, cift: int, belge: int, hatali: int,
         f"| κ — varlık kararı (dolu / absent) | **{k:.3f}** ({yorum}) |",
     ]
     if ortak_dolu:
-        L.append(f"| Değer uyumu (iki taraf da dolu; κ DEĞİL) | "
+        L.append(f"| Değer uyumu — birebir (iki taraf da dolu) | "
                  f"{deger_uyum}/{ortak_dolu} = {deger_uyum / ortak_dolu:.3f} |")
+    #: α'nın istatistiksel olarak yorumlanabilmesi için asgari birim sayısı.
+    #: Altında sayı YİNE raporlanır ama "yetersiz" damgasıyla — bir tanesi
+    #: değişince 1.000'den 0'a düşebilen bir α'yı çıplak basmak, ölçülmemiş
+    #: bir güveni ölçülmüş gibi göstermek olurdu.
+    ALPHA_ASGARI = 10
+    if alpha != alpha:
+        L.append("| Krippendorff α (`ratio`, sayısal alanlar) | "
+                 "**ölçülemedi** (2'den az sayısal birim) |")
+    elif alpha_n < ALPHA_ASGARI:
+        L.append(f"| Krippendorff α (`ratio`, sayısal alanlar) | "
+                 f"{alpha:.3f} — **YETERSİZ BİRİM** ({alpha_n} < "
+                 f"{ALPHA_ASGARI}) |")
+    else:
+        L.append(f"| Krippendorff α (`ratio`, sayısal alanlar) | "
+                 f"**{alpha:.3f}** ({alpha_n} birim) |")
     L += [
+        "",
+        (f"α {alpha_n} sayısal birim üzerinden hesaplandı ve bu sayı bir "
+         "iddiaya taban olamaz: tek bir birimin değişmesi α'yı 1.000'den "
+         "sıfıra düşürebilir. Sebep kapsam: 26 ortak-dolu çiftin çoğu liste "
+         "ya da serbest metin alanı (`hedef_kitle`, `kampanya_kosullari`) ve "
+         "`ratio` ölçeğine oturmuyor; aralık değerleri de "
+         "(`comparable=False`) atlanıyor. Kılavuz §7'nin vaat ettiği α "
+         "ÖLÇÜLDÜ ama şu korpus kesitinde anlamlı değil — sayının kendisi "
+         "değil bu sınır raporlanıyor."
+         if alpha == alpha and alpha_n < 10 else ""),
         "",
         "`κ` yalnız **varlık** kararını ölçer: \"bu alan bu belgede var mı?\". "
         "Değer uyumu ayrı satırda ve şans düzeltmesi YOKTUR, bu yüzden κ "
@@ -294,21 +346,72 @@ def _rapor_yaz(k: float, yorum: str, cift: int, belge: int, hatali: int,
         "",
         "## Alan bazında uyum",
         "",
-        "| Alan | çift | uyum | κ |",
-        "|---|---|---|---|",
+        "Marjinal sayılar (kaç kez \"dolu\" dendi) tabloda BİLEREK duruyor: "
+        "κ'yı onlar olmadan okumak yanıltıcıdır (aşağıdaki paradoks notu).",
+        "",
+        "| Alan | çift | gözlenen uyum | insan \"dolu\" | LLM \"dolu\" | κ |",
+        "|---|---|---|---|---|---|",
     ]
+    paradoks: list[str] = []
+    ters: list[str] = []
+    bos: list[str] = []
     for alan in sorted(alan_bazli):
         ciftler = alan_bazli[alan]
         ay = sum(1 for a, b in ciftler if a == b)
+        a_dolu = sum(1 for a, _ in ciftler if a == "dolu")
+        b_dolu = sum(1 for _, b in ciftler if b == "dolu")
         ak = cohen_kappa([a for a, _ in ciftler], [b for _, b in ciftler])
-        ak_s = "—" if ak != ak else f"{ak:.3f}"          # nan kontrolü
-        L.append(f"| `{alan}` | {len(ciftler)} | {ay}/{len(ciftler)} | {ak_s} |")
+        ak_s = "tanımsız" if ak != ak else f"{ak:.3f}"        # nan kontrolü
+        L.append(f"| `{alan}` | {len(ciftler)} | {ay}/{len(ciftler)} | "
+                 f"{a_dolu} | {b_dolu} | {ak_s} |")
+        if ak == ak and ak <= 0.0 and ay / len(ciftler) >= 0.75:
+            (ters if ak < 0 else paradoks).append(alan)
+        # κ = 1.0 ama hiçbir taraf "dolu" dememiş: `cohen_kappa` beklenen uyum
+        # 1.0 olduğunda 1.0 döndürüyor (docstring'inde yazılı) ve tabloda bu
+        # "mükemmel uyum" gibi okunur. Oysa ölçülecek anlaşmazlık YOKTUR.
+        if a_dolu == 0 and b_dolu == 0:
+            bos.append(alan)
 
     L += [
         "",
-        "Tek kategoriye yığılmış alanlarda κ tanımsızdır (`—`): iki taraf da "
-        "\"yok\" diyorsa şans uyumu 1'dir ve κ payı 0/0 olur. Bu bir kusur "
-        "değil, o alanda ölçülecek anlaşmazlık olmadığının ifadesidir.",
+        "### κ paradoksu — yüksek uyum, sıfır κ",
+        "",
+        "Yukarıdaki tabloda gözlenen uyumu 15/16 olup κ'sı **0.000** çıkan "
+        "alanlar var. Bu bir hesap hatası değil, Cohen's κ'nın bilinen "
+        "davranışı: κ gözlenen uyumdan ŞANS uyumunu düşer ve marjinal "
+        "dağılım çok dengesiz olduğunda (her iki etiketleyici de neredeyse "
+        "her belgede \"yok\" diyorsa) şans uyumu gözlenen uyuma yaklaşır, "
+        "pay sıfıra iner. Yani κ o alanda \"uyum yok\" DEMİYOR; \"bu "
+        "marjinal dağılımda uyumun şanstan ayırt edilemeyeceğini\" diyor.",
+        "",
+        "Bu yüzden alan bazlı κ tek başına raporlanmaz: yanında gözlenen uyum "
+        "ve iki tarafın \"dolu\" sayıları durur. Toplam κ (0'dan uzak) "
+        "anlamlıdır çünkü 192 çiftte dağılım dengelidir.",
+        "",
+        (f"**Negatif κ — gerçek bulgu:** {', '.join('`' + a + '`' for a in ters)} "
+         "alanında κ sıfırın ALTINDA. Bu, yüksek gözlenen uyuma rağmen iki "
+         "etiketleyicinin anlaşmazlığının sistematik olduğunu gösterir: aynı "
+         "belgelerde ters yönde karar veriyorlar. Kılavuzun o alandaki tanımı "
+         "belirsiz olabilir ve hakem turunun ilk bakacağı yer burasıdır."
+         if ters else
+         "Negatif κ'lı alan yok — hiçbir alanda sistematik ters karar "
+         "örüntüsü ölçülmedi."),
+    ]
+    if bos:
+        L += [
+            "",
+            "**κ = 1.000 olan alanlar tam uyum DEĞİL, boş uyumdur:** "
+            + ", ".join("`" + a + "`" for a in bos)
+            + " alanlarında iki etiketleyici de HİÇBİR belgede \"dolu\" "
+            "demedi. `cohen_kappa` beklenen uyum 1'e eşitken 1.0 döndürüyor "
+            "(0/0 yerine \"tam uyum\" doğru yorum olduğu için) ama bu sayı "
+            "\"bu alanda mükemmel anlaşıyoruz\" anlamına gelmez — o alanda "
+            "16 belgenin hiçbirinde ölçülecek bir karar yok. Kapsam sorunu "
+            "olarak okunmalı: `kar_payi_orani` korpus kapsaması %3,4'tür ve "
+            "bunun sebebi çıkarım değil kaynak yapısıdır "
+            "(`docs/rapor/banka-siteleri-veri-kaynagi-haritasi.md`).",
+        ]
+    L += [
         "",
         "## Uyuşmazlıklar — hakeme gidecek liste",
         "",

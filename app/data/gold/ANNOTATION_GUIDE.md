@@ -699,6 +699,50 @@ yok eder.
 - **Değer uyumu** (Krippendorff α, `ratio`) — sayısal alanlarda değerler ne kadar
   yakın? `%1,89` vs `%1,90` tam uyuşmazlık sayılmaz.
 
+### Ölçülen sonuç (19 Ağustos 2026) — ikinci etiketleyici bir LLM'dir
+
+Ana geçiş tek anotasyonla yapıldı: `gold.v2`'de 48 kaydın hiçbirinde
+etiketleyici örtüşmesi YOKTU (`annotators` dağılımı M1:12, M2:12, M3:12,
+M4:10, M4+HAKEM-02:2). Örtüşme olmadan κ **tanımı gereği** hesaplanamaz, yani
+yukarıdaki eşik tablosu ölçülemeyen bir sayı için ilan edilmiş durumdaydı.
+
+16 kayıt (her etiketleyici bloğundan 4) bağımsız bir LLM turuyla ikinci kez
+etiketlendi ve κ ölçüldü:
+
+| Ölçüt | Değer | Karar |
+|---|---|---|
+| κ — varlık kararı | **0,700** | **notla kabul** (0,67 ≤ κ < 0,80 bandı) |
+| Değer uyumu — birebir | 0,423 (11/26) | κ değil; şans düzeltmesi yok |
+| Krippendorff α (`ratio`) | 1,000 ama **3 birim** | yetersiz birim, iddia kurulmaz |
+
+Eşik tablosu anotasyon başlamadan sabitlenmişti ve ölçülen κ o tablonun
+"notla kabul" bandına düştü. Bu bölümün gereği olan not budur:
+
+* **İkinci etiketleyici insan değil, yerel bir LLM** (`qwen2.5:7b-instruct`).
+  İnsan çift-anotasyonun yerine geçtiği iddia EDİLMİYOR. Ölçülen şey
+  "bağımsız bir ikinci etiketleyicinin kararlarıyla uyum"dur; LLM gold'u da
+  kural motoru çıktısını da görmedi.
+* **Değer uyumu (0,423) varlık uyumundan belirgin düşük.** Bu tek başına
+  gold'un değerlerinin güvenilmez olduğunu göstermez: ikinci etiketleyici 7B
+  bir modeldir ve düşük değer uyumunun sebebi "gold tutarsız" mı "ikinci
+  yargıç yetersiz" mi ayırt edilemez. `colab/03_kappa.py` aynı turu
+  `qwen3:32b` ile koşup tam bu ayrımı yapmak için var.
+* **`masraf_durumu` κ'sı negatif (-0,103).** Gözlenen uyum 12/16 olmasına
+  rağmen anlaşmazlık sistematik: aynı belgelerde ters yönde karar veriliyor.
+  Bu alanın kılavuz tanımı (§4) hakem turunun ilk bakacağı yer.
+* **Alan bazlı κ tek başına okunamaz.** Bazı alanlarda gözlenen uyum 15/16
+  olduğu hâlde κ 0,000 — marjinal dağılım çok dengesiz olduğunda κ'nın
+  bilinen davranışı (κ paradoksu). Bu yüzden rapor her alanın yanına gözlenen
+  uyumu ve iki tarafın "dolu" sayılarını basar.
+
+Tam tablo, uyuşmazlık listesi ve yöntem:
+`data/gold/review/_kappa-ikinci-tur.md`. Üretim:
+`python -m scripts.ikinci_etiketleyici kos` → `… kappa`.
+
+Örtüşme artık gold'un KENDİSİNDE görünür: ikinci tur yapılan 16 kaydın
+`annotators` listesinde `LLM-01` var (18 kayıt ≥ 2 etiketleyici; 2'si önceki
+`HAKEM-02` turundan).
+
 ---
 
 ## 8. Kalibrasyon turu (20 belge) — ATLANMAZ
