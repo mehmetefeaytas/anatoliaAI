@@ -2534,6 +2534,25 @@ def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:
     (halüsinasyon yasağı). Negasyon penceresi kontrol edilir: "yeni müşteri
     olmayanlar" ifadesi yeni_musteri etiketi ÜRETMEZ.
     """
+    # ÖLÇÜLMÜŞ YANLIŞ DENEME — tekrarlanmasın (19 Ağu 2026).
+    #
+    # Kendi gold.v2'mizde bu alan 12 yanlış pozitif üretiyor ve dördü açıkça
+    # kılavuzun §4.13/2 kuralına aykırı görünüyordu: "Bireysel Emeklilik" bir
+    # ÜRÜN ADI, "Hoş Geldiniz" bir PAZARLAMA SELAMI. İkisini lookahead ile
+    # elemek denendi (`emekli(?!lik)`, `ho[şs]\s*geldin(?!iz)`).
+    #
+    # Sonuç: F1 0,267 -> 0,214 (tp 4->3) — DAHA KÖTÜ. Gold o iki ifadeyi
+    # sinyal SAYIYOR: `vakif-katilim--musteri-alisveris-*` kaydında
+    # "hoş geldiniz" gold'da `yeni_musteri`, `vakif-katilim--detay-troy-*`
+    # kaydında "emeklilik" gold'da `belirli_segment` üretiyor. Kural
+    # metinde ne yazdığına değil, gold'un o ifadeyi nasıl yorumladığına
+    # bağlı; bu alanda sözleşme henüz o ayrımı yapmıyor.
+    #
+    # Bu yüzden desen DOKUNULMADAN bırakıldı. Alanın gerçek sorunu kod
+    # değil sözleşme: kaçırılan 10 etiketin yarısı da kılavuzun yasakladığı
+    # ürün/kart kısıtlarından üretilmiş (bkz.
+    # data/gold/review/_hakem-turu-02-hedef-kitle.md). Motoru tutarsız bir
+    # hedefe uydurmak metriği süsler, sistemi bozar.
     segments = {
         "yeni_musteri": r"(yeni\s*müşteri|yeni\s*musteri|ilk\s*kez|hoş\s*geldin|"
                         r"hos\s*geldin|yeni\s*üye)",

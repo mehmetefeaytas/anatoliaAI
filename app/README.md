@@ -80,7 +80,7 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > manşet sayıyı** kanıtlamaz. Ölçüm: `eval/reports/20260816-094841/report.md`
 > (2026-08-16, n=3, tüm alt kümelerde P=R=F1=1,000).
 >
-> Manşet sayılar (0,464 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
+> Manşet sayılar (0,477 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
 > paket istemez, yalnız stdlib kullanır:
 > ```bash
 > python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural
@@ -189,7 +189,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **3.171** birim/entegrasyon testi toplanıyor · **3.118 geçiyor** ·
+**Test:** **3.180** birim/entegrasyon testi toplanıyor · **3.127 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`).
@@ -206,8 +206,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.171** | **3.118** | 53 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **3.171** | **3.118** | 53 | **0** (+1.307 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.180** | **3.127** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **3.180** | **3.127** | 53 | **0** (+1.307 subtest) |
 >
 > Yayımlanan manşet **unittest** sayısıdır, çünkü kanıt-tazeliği kapısı taze
 > artefakt varken onu okur; artefakt bayatsa `pytest --collect-only` yedeğine
@@ -216,7 +216,7 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 > **Tarihçe (gizlenmiyor):** 16 Ağustos gün ortasında bir ara ölçümde
 > `pytest` 4 testi fazla topluyordu (3.159 / 3.155) ve kapı bunu sapma diye
 > raporluyordu. Gün sonunda, o günün test eklemeleri tamamlandıktan sonra
-> yapılan ölçümde fark **tekrarlanmıyor** — iki koşucu da 3.171 topluyor.
+> yapılan ölçümde fark **tekrarlanmıyor** — iki koşucu da 3.180 topluyor.
 > Ara ölçüm bir hata değil, bir ara durumdu; kayda geçiriliyor çünkü aynı
 > sapma yeniden görülürse ilk bakılacak yer keşif (discovery) farkıdır.
 > Doğrulama: `python -m pytest tests/ -q` ve `python -m pytest -q` — ikisi de
@@ -240,7 +240,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **3.118 test yeşil** (3.171 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-16, bugünün işinin tamamı üzerinde: `python -m scripts.test_ozeti`. ⚠️ Artefakt **kirli ağaçta** üretildi; commit sonrası tekrarlanacak (yukarıdaki nota bakınız) |
+| Testler | ✅ **3.127 test yeşil** (3.180 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-16, bugünün işinin tamamı üzerinde: `python -m scripts.test_ozeti`. ⚠️ Artefakt **kirli ağaçta** üretildi; commit sonrası tekrarlanacak (yukarıdaki nota bakınız) |
 | Değişmez (invariant) denetimi | ✅ **1.782 belgede 0 ihlal** — kapsam **%89,6** (1.597 belgede en az bir alan çıktı; 185 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-16: `python -m eval.properties --raw-dir data/raw --out eval/reports/violations-20260816.jsonl` → çıkış kodu 0. Bir önceki yayımlanan hâl ("1 ihlal `P4_cumle_sirasi`, kapsam %91,3") bu koşumda **tekrarlanmadı**; P4 dahil dört değişmezin dördü de geçti |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-16, 1.782 belge — **iki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
@@ -311,7 +311,7 @@ uygulamıştı (ayrı yardımcı ortam, `.venv` kirletilmedi).
 | `.venv` ↔ `docs/sbom.json` sapması | **0** — her iki yönde de fark yok |
 | envanter | **96 = 96** |
 | `make lisans-kapisi` | **GEÇTİ ✅** |
-| tam test paketi | **3.118 geçti · 0 başarısız** — hiçbir şey kırılmadı |
+| tam test paketi | **3.127 geçti · 0 başarısız** — hiçbir şey kırılmadı |
 
 ```bash
 .venv/bin/python -m pip list --format=json | .venv/bin/python -c "
@@ -392,10 +392,10 @@ belge düzeyi bootstrap 1000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| **yapılandırılmış alan mikro-F1** (11 alan) | **0,671** |
-| 12-alan mikro-F1 | **0,464** [%95 GA 0,398–0,522] |
-| makro-F1 | **0,601** |
-| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,047** [21/444] · yapısal kesitte 0,035 |
+| **yapılandırılmış alan mikro-F1** (11 alan) | **0,693** |
+| 12-alan mikro-F1 | **0,477** [%95 GA 0,410–0,534] |
+| makro-F1 | **0,634** |
+| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,043** [19/444] · yapısal kesitte 0,030 |
 | kalem düzeyi mikro-F1 (12 alan) | 0,381 |
 
 > **Künye.** Bu sayılar 15 Ağustos koşumundan gelir
