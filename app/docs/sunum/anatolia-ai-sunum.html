@@ -463,15 +463,22 @@
   <span class="no">12</span>
   <p class="goz gir">Ölçülen sonuçlar</p>
   <div class="izgara k4 gir">
-    <div class="kart"><span class="sayac">0,671</span><p><strong>yapılandırılmış alan mikro-F1</strong> — 11 alan, zor vaka setinde</p></div>
-    <div class="kart"><span class="sayac">0,047</span><p><strong>halüsinasyon oranı</strong> — 21 / 444 karar, ayrı paydayla</p></div>
-    <div class="kart"><span class="sayac">2.946</span><p><strong>yeşil test</strong> — 0 hata, ağ gerektirmeden</p></div>
+    <div class="kart"><span class="sayac">0,717</span><p><strong>yapılandırılmış alan mikro-F1</strong> — 11 alan, zor vaka setinde</p></div>
+    <div class="kart"><span class="sayac">0,043</span><p><strong>halüsinasyon oranı</strong> — 19 / 447 karar, ayrı paydayla</p></div>
+    <div class="kart"><span class="sayac">3.159</span><p><strong>yeşil test</strong> — 0 hata, ağ gerektirmeden</p></div>
     <div class="kart"><span class="sayac">14/14</span><p><strong>ağsız kanıt adımı</strong> — temiz kaynak ağacında</p></div>
   </div>
   <p class="yumusak gir" style="margin-top:clamp(24px,2.8vw,40px); max-width:68ch">
-    12 alan mikro-F1'i <em>0,464</em> [%95 GA 0,398–0,522] — ve bu sayıyı düşüren alanı
+    12 alan mikro-F1'i <em>0,477</em> [%95 GA 0,407–0,536] — ve bu sayıyı düşüren alanı
     gizlemiyoruz: serbest cümle listesi döndüren <em>kampanya koşulları</em>, span
     eşleşmesiyle ölçülemez. İki sayıyı da yan yana yayımlıyoruz.
+  </p>
+  <p class="yumusak gir" style="margin-top:clamp(14px,1.6vw,22px); max-width:68ch">
+    Referansın <em>kendi</em> güvenilirliği de ölçüldü: 16 kayıt bağımsız bir ikinci
+    turla etiketlendi, Cohen <em>κ = 0,700</em> — eşik tablosu anotasyon başlamadan
+    ilan edilmişti ve bu, onun "notla kabul" bandı. İkinci etiketleyici bir
+    <em>LLM</em>'dir ve bunu saklamıyoruz: aynı tur, o modelin bir belgede
+    dayanaksız değer ürettiğini de gösterdi.
   </p>
   <div class="kanit"><b>kanıt →</b><code>python -m eval.run_eval --gold data/gold/gold.v2.json</code></div>
 </section>
