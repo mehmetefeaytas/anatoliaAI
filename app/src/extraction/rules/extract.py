@@ -2294,6 +2294,21 @@ def extract_from_rate_table(text: str) -> list[ExtractedField]:
     return out
 
 
+# Ödül çapasının komşusunda geçiyorsa tutar ödül DEĞİLDİR. Liste bilinçli
+# olarak dar: yalnız kendi gold setimizde yanlış pozitif ürettiği ölçülmüş
+# sınıflar var. Marka puanları (ParafPara/Worldpuan/Bonus) BİLEREK dışarıda
+# — gold onları tutarlı etiketlemiyor ("500 TL Bonus" -> `alisveris_puani`,
+# "11.000 TL'ye varan bonus" -> `odul_miktari`), dolayısıyla hangi yöne
+# düzeltilse bir kaydı bozuyor. Tutarsızlık hakem turuna bırakıldı
+# (bkz. data/gold/review/).
+# `para\s*çek` çekim/çekebilir/çekme çekimlerinin hepsini kapsar; "hediye
+# çeki" bu kalıba GİRMEZ, dolayısıyla meşru hediye çeki ödülü korunur.
+_ODUL_DISI_RE = re.compile(
+    r"indirim|para\s*çek|çek\s*karnesi|çek\s*tahsil",
+    re.IGNORECASE,
+)
+
+
 def extract_odul_miktari(text: str) -> Optional[ExtractedField]:
     """Kampanya ödülü: 'X TL hediye', '500 TL para puan', 'cashback'.
 
@@ -2313,6 +2328,19 @@ def extract_odul_miktari(text: str) -> Optional[ExtractedField]:
 
     best = None
     for rm in reward.finditer(text):
+        # `kazan\w*` ve `çek` çapaları geniş: gold'un ödül SAYMADIĞI üç sınıfı
+        # da içeri alıyorlardı (19 Ağu 2026, kendi gold.v2'mizde 4 yanlış
+        # pozitif olarak ölçüldü):
+        #
+        #   "1.000 TL indirim kazanabilir"          -> indirim, ödül değil
+        #   "50.000 TL … para çekimi yapılabilir"   -> hesap işlemi, ödül değil
+        #   "10.000 TL … çek karnesi ve çek tahsil" -> hizmet paketi, ödül değil
+        #
+        # `çek` çapası korunuyor çünkü "500 TL değerinde A101 hediye çeki"
+        # gold'da DOLU bir ödüldür; ayrım çapada değil, çapanın komşusunda.
+        if _ODUL_DISI_RE.search(
+                text[max(0, rm.start() - 40): rm.end() + 25]):
+            continue
         # Arama METNİN KENDİSİNDE, konum sınırlarıyla yapılır — dilim ALINMAZ.
         #
         # `text[a:b]` alıp desende aramak, sayının ortasından başlayan bir
