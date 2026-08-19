@@ -9,7 +9,7 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3118%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Testler](https://img.shields.io/badge/testler-3127%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge-yellow.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)

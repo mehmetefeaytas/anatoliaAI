@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3118%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-3127%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
