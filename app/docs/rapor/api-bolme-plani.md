@@ -3,7 +3,7 @@
 **Tarih:** 2026-08-19
 **Tetikleyen:** değerlendirmede `api/main.py`'nin "kod yapısının modüler ve
 okunabilir olması" maddesini ihlal ettiği işaretlendi.
-**Durum:** 1. adım uygulandı; kalan adımlar aşağıda sıralı.
+**Durum:** 1. ve 2. adım uygulandı; kalan 4 adım aşağıda sıralı.
 
 ## Sorun — ölçülmüş hâli
 
@@ -73,19 +73,36 @@ taşınmaları düşünüldüğü kadar riskli değil; asıl dikkat gerektiren t
 ## Plan — sıra bilinçli
 
 Sıra "en düşük dairesel-import riski" ilkesine göre kuruldu. Her adımda tam
-test paketi (3.134 test) koşulur ve ayrı commit atılır; yarım kalan bir adım
+test paketi (3.142 test) koşulur ve ayrı commit atılır; yarım kalan bir adım
 bırakılmaz.
 
 - [x] **1. Sunum sabitleri** → `api/sabitler.py`.
       Hiçbir şey import etmedikleri için dairesel bağımlılık riski sıfır.
       `FIELD_LABELS` taşındı (9 kullanım), ad `main`'de yeniden ihraç edildi
       çünkü `zor_vaka.liste()` onu `main.FIELD_LABELS` olarak okuyor.
-- [ ] **2. Katalog uçları** → `api/routers/katalog.py`.
+- [x] **2. Katalog uçları** → `api/routers/katalog.py`. **UYGULANDI.**
       `/health`, `/banks`, `/campaigns`, `/search`, `/stats`, `/fields` —
       258 satır, bağımlılık yalnız `repo` + `llm`. Router bir **factory**
       olarak yazılır: `router_kur(repo, llm, *, otorite_sluglari) -> APIRouter`.
-      `_otorite_kaynak_sluglari` ve `scoring_direction` taşınmaz, parametre
-      geçilir — böylece `main` ↔ `routers` döngüsü hiç doğmaz.
+      `_otorite_kaynak_sluglari` ve `scoring_direction` taşınmadı, parametre
+      geçildi — böylece `main` ↔ `routers` döngüsü hiç doğmadı.
+      Sonuç: `build_app()` 1.914 → **1.668 satır**; router 321 satır.
+      8 yeni test (`tests/test_api_router_katalog.py`) uçların artık
+      `build_app()` kurmadan, sahte bağımlılıklarla sınanabildiğini kilitliyor.
+
+      TAŞIMADA BİR KEZ KIRILDI — tekrarlanmasın: `Response` fonksiyon içine
+      import edilince `GET /campaigns` her istekte **422** döndü.
+      `from __future__ import annotations` tip anotasyonlarını dizeye çeviriyor
+      ve FastAPI onları modül global'lerinden çözüyor; import fonksiyon içinde
+      kalırsa `response: Response` çözülemiyor ve query parametresi sanılıyor.
+      Aynı tuzak `main.py`'de daha önce yaşanıp yorumla işaretlenmişti; taşıma
+      onu birebir tekrarladı. Kalan adımlarda `Response`/`Request` alan uçlar
+      için önce modül-seviyesi import yazılacak.
+
+      Ayrıca ölçüldü: FastAPI 0.141.1'de `include_router` ile eklenen uçlar
+      `app.routes` listesinde GÖRÜNMÜYOR ama yönlendirme çalışıyor
+      (TestClient ile 200 doğrulandı). Route sayısına bakarak "router
+      bağlanmadı" sonucuna varmak yanlış olur.
 - [ ] **3. Arka plan işleri** → `api/routers/isler.py`.
       `/refresh*` + `/summaries*` (10 uç, 158 satır). Closure bağımlılığı
       neredeyse yok; yöneticiler (`TazelemeYoneticisi`, `OzetYoneticisi`)
@@ -105,7 +122,7 @@ Adım 2–6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
 
 ## Neden kademeli, tek seferde değil
 
-1.914 satırı tek commit'te taşımak, 3.134 testin hangi adımda kırıldığını
+1.914 satırı tek commit'te taşımak, 3.142 testin hangi adımda kırıldığını
 belirsizleştirir. Kademeli bölmede her adım kendi testiyle doğrulanır ve
 gerektiğinde tek commit geri alınır.
 

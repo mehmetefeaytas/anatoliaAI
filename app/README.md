@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3134%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-3142%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -189,7 +189,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **3.187** birim/entegrasyon testi toplanıyor · **3.134 geçiyor** ·
+**Test:** **3.195** birim/entegrasyon testi toplanıyor · **3.142 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`).
@@ -206,8 +206,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.187** | **3.134** | 53 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **3.187** | **3.134** | 53 | **0** (+1.307 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.195** | **3.142** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **3.195** | **3.142** | 53 | **0** (+1.307 subtest) |
 >
 > Yayımlanan manşet **unittest** sayısıdır, çünkü kanıt-tazeliği kapısı taze
 > artefakt varken onu okur; artefakt bayatsa `pytest --collect-only` yedeğine
@@ -216,7 +216,7 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 > **Tarihçe (gizlenmiyor):** 16 Ağustos gün ortasında bir ara ölçümde
 > `pytest` 4 testi fazla topluyordu (3.159 / 3.155) ve kapı bunu sapma diye
 > raporluyordu. Gün sonunda, o günün test eklemeleri tamamlandıktan sonra
-> yapılan ölçümde fark **tekrarlanmıyor** — iki koşucu da 3.187 topluyor.
+> yapılan ölçümde fark **tekrarlanmıyor** — iki koşucu da 3.195 topluyor.
 > Ara ölçüm bir hata değil, bir ara durumdu; kayda geçiriliyor çünkü aynı
 > sapma yeniden görülürse ilk bakılacak yer keşif (discovery) farkıdır.
 > Doğrulama: `python -m pytest tests/ -q` ve `python -m pytest -q` — ikisi de
@@ -240,7 +240,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **3.134 test yeşil** (3.187 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-16, bugünün işinin tamamı üzerinde: `python -m scripts.test_ozeti`. ⚠️ Artefakt **kirli ağaçta** üretildi; commit sonrası tekrarlanacak (yukarıdaki nota bakınız) |
+| Testler | ✅ **3.142 test yeşil** (3.195 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-16, bugünün işinin tamamı üzerinde: `python -m scripts.test_ozeti`. ⚠️ Artefakt **kirli ağaçta** üretildi; commit sonrası tekrarlanacak (yukarıdaki nota bakınız) |
 | Değişmez (invariant) denetimi | ✅ **1.782 belgede 0 ihlal** — kapsam **%89,6** (1.597 belgede en az bir alan çıktı; 185 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-16: `python -m eval.properties --raw-dir data/raw --out eval/reports/violations-20260816.jsonl` → çıkış kodu 0. Bir önceki yayımlanan hâl ("1 ihlal `P4_cumle_sirasi`, kapsam %91,3") bu koşumda **tekrarlanmadı**; P4 dahil dört değişmezin dördü de geçti |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-16, 1.782 belge — **iki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
@@ -311,7 +311,7 @@ uygulamıştı (ayrı yardımcı ortam, `.venv` kirletilmedi).
 | `.venv` ↔ `docs/sbom.json` sapması | **0** — her iki yönde de fark yok |
 | envanter | **96 = 96** |
 | `make lisans-kapisi` | **GEÇTİ ✅** |
-| tam test paketi | **3.134 geçti · 0 başarısız** — hiçbir şey kırılmadı |
+| tam test paketi | **3.142 geçti · 0 başarısız** — hiçbir şey kırılmadı |
 
 ```bash
 .venv/bin/python -m pip list --format=json | .venv/bin/python -c "
