@@ -1449,7 +1449,34 @@ _ALAN_DISI_OZNE_RE = re.compile(
     # Kanal: katılım/işlem SMS'inin bedeli ürünün masrafı değildir.
     r"\bsms\b|k[ıi]sa\s*mesaj"
     # Yasal talep: KVKK m.13 başvurusunun ücretsiz sonuçlandırılması.
-    r"|(?:talebiniz|talep|ba[sş]vurunuz|ba[sş]vuru)[^.]{0,80}sonu[cç]land[ıi]r",
+    r"|(?:talebiniz|talep|ba[sş]vurunuz|ba[sş]vuru)[^.]{0,80}sonu[cç]land[ıi]r"
+    # ÜÇÜNCÜ TARAF AVANTAJ PROGRAMI ÜYELİĞİ (HAKEM-03, 19 Ağu 2026).
+    #
+    # "GastroClub üyeliği şimdi Hayat Finans müşterilerine özel ve ücretsiz!"
+    # cümlesinden `masraf_durumu = {has_fee: false, amount: 0}` üretiliyordu
+    # ve belge `/compare?field=masraf_durumu` tablosunda **"masrafsız"
+    # rozetiyle** görünüyordu. Bir restoran indirim kulübünün üyelik
+    # bedelinin sıfır olması, finansmanın ya da hesabın maliyeti hakkında
+    # hiçbir şey söylemez — kıyas tablosunda o rozet yanlış bir iddiadır.
+    # Kılavuz §4'e eklenen kapsam kuralı ölçütü tek soruyla veriyor: "bu
+    # kampanyayı/ürünü alırsam ne kadar masraf öderim?"
+    #
+    # Kusur önce GOLD'da bulundu (κ turunda `masraf_durumu` κ'sı NEGATİF
+    # çıktı, -0,103) ve hakemlikte gold düzeltildi; ardından iki test
+    # düşerek motorun DA aynı kapsam hatasını yaptığını gösterdi. Kapı bu
+    # yüzden burada.
+    #
+    # ÖLÇÜLDÜ (data/demo.db, 1782 belge) — desen neden bu kadar dar:
+    #   "club|kulüp … üyeliği"          ->  3 belge (2'si masraf üretiyordu:
+    #                                      GastroClub + Halalbooking Loyalty
+    #                                      Club, ikisi de üçüncü taraf)
+    #   "kart|hesap|kredi … üyelik ücreti" -> 19 belge — DOKUNULMADI, çünkü
+    #                                      kredi kartı yıllık üyelik ücreti
+    #                                      ürünün KENDİ masrafıdır ve kapsam
+    #                                      İÇİNDEDİR. Desende ürün öznesi
+    #                                      aranmadığı için bu 19 belge
+    #                                      eşleşmiyor (ölçüldü).
+    r"|(?:club|kul[üu]b[üu]?)\w*[^.\n]{0,30}?[üu]yeli[gğ]i",
     re.IGNORECASE,
 )
 

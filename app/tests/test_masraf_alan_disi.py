@@ -201,9 +201,24 @@ class GoldSetiUzerindeUCTANUCA(unittest.TestCase):
             "masraf_durumu halüsinasyonu 2'nin üstüne çıktı")
 
     def test_mesru_cikarim_sayisi_GERILEMEDI(self) -> None:
-        """Gold'da 6 belgede değer var; altısında da üretilmeye devam etmeli."""
+        """Gold'da değer taşıyan belgelerde üretim sürüyor mu.
+
+        Sayı 6 → **5** düştü (19 Ağu 2026) ve bu bir gerileme DEĞİL, bir
+        kapsam düzeltmesidir. `hayat-finans--…-gastroclub-ayricaliklari`
+        belgesinde gold `masraf_durumu = {has_fee:false}` taşıyordu; kaynak
+        cümle *"GastroClub üyeliği … ücretsiz!"*. HAKEM-03 turu bu değeri
+        `absent_fields`'a taşıdı: üçüncü taraf bir avantaj programının üyelik
+        bedeli, kampanyanın/ürünün kendisini kullanmanın maliyeti değildir ve
+        belge kıyas tablosunda **"masrafsız" rozetiyle** görünüyordu
+        (gerekçe: `data/gold/review/_hakem-turu-03-masraf-durumu.md`,
+        kapsam kuralı: `ANNOTATION_GUIDE.md` §4).
+
+        Yani payda küçüldü çünkü o belge artık "değer taşıyan" kümede değil.
+        Motor tarafında da aynı kapsam kapısı açıldı (`_ALAN_DISI_OZNE_RE`
+        club/kulüp kolu), bu yüzden halüsinasyon sayısı 2'de kaldı.
+        """
         self.assertEqual(
-            self._mesru_sayisi(), 6,
+            self._mesru_sayisi(), 5,
             "kapı meşru bir masraf iddiasını de eledi")
 
 

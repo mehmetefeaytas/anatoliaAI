@@ -322,6 +322,20 @@ zaten uygulandığı için 0 döner):
 - **Sınır vaka:** metin "masrafsız" deyip sonra tahsis ücreti belirtiyorsa
   **çelişki** vardır: her iki bilgiyi de yazın, `note`'a durumu açıklayın,
   `#celiskili` etiketleyin.
+- **KAPSAM (HAKEM-03, 19 Ağu 2026):** ücret, **kampanyanın/ürünün KENDİSİNİ
+  kullanmanın maliyeti** olmalı. Ölçüt tek soruyla verilir: *"bu kampanyayı
+  ya da ürünü alırsam ne kadar masraf öderim?"*
+  - **Sayılır:** dosya masrafı, tahsis ücreti, hesap işletim ücreti, işlem
+    komisyonu, ekstre/gönderim ücreti — hepsi ürünü kullanmanın bedeli.
+  - **SAYILMAZ:** üçüncü taraf bir avantaj programının üyelik bedeli
+    (ör. *"GastroClub üyeliği … ücretsiz"*). Bu bilgi
+    `kampanya_kosullari`na girer.
+  - *Gerekçe:* κ turunda `masraf_durumu` κ'sı **negatif** çıktı (-0,103) ve
+    hakemlik bu belirsizliği ortaya çıkardı. Bir restoran indirim kulübünün
+    üyelik bedelinin sıfır olması, finansman maliyeti hakkında hiçbir şey
+    söylemez; ama gold'a `has_fee:false` yazıldığında belge kıyas tablosunda
+    **"masrafsız" rozetiyle** görünüyordu. Ayrım ürün yüzeyinde yanlış bir
+    iddiaya dönüştüğü için kapsam kuralı yazıldı.
 
 ### `odul_miktari` — ödül / hediye tutarı
 - **Sayılır:** "5.000 TL'ye varan hoş geldin hediyesi", "1.000 TL nakit iade"

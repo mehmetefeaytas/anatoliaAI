@@ -303,9 +303,10 @@
     ],
     "annotators": [
       "M1",
-      "LLM-01"
+      "LLM-01",
+      "HAKEM-03"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "masraf_durumu": "'hesap işletim ücreti alınmamaktadır' NEGASYONDUR: masraf sıfırdır, bilgi eksikliği değil (kılavuz §4).",
@@ -775,9 +776,10 @@
     ],
     "annotators": [
       "M2",
-      "LLM-01"
+      "LLM-01",
+      "HAKEM-03"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "kar_payi_orani": "«Bu hesaplarda kâr payı uygulanmaz» ifadesi ÖZEL CARİ HESAP içindir (mevduat tarafı), finansman kâr payı oranı değildir; kılavuz §4 gereği bu alana yazılmadı. Sayfada hiçbir sayısal oran yok.",
@@ -978,10 +980,6 @@
         "min": 10.0,
         "max": 50.0
       },
-      "masraf_durumu": {
-        "has_fee": false,
-        "amount": 0.0
-      },
       "kampanya_kosullari": [
         "Sadece bireysel Hayat Finans müşterileri yararlanabilir.",
         "Bu kampanya diğer davet kodlu kampanyalarla birleştirilemez.",
@@ -993,7 +991,6 @@
     },
     "field_spans": {
       "indirim_orani": "%10 ila %50 arasında indirimlerden faydalanın",
-      "masraf_durumu": "GastroClub üyeliği şimdi Hayat Finans müşterilerine özel ve ücretsiz!",
       "kampanya_kosullari": "Sadece bireysel Hayat Finans müşterileri yararlanabilir.",
       "hedef_kitle": "Sadece bireysel Hayat Finans müşterileri yararlanabilir."
     },
@@ -1002,6 +999,7 @@
       "finansman_tutari",
       "kampanya_suresi",
       "kar_payi_orani",
+      "masraf_durumu",
       "odul_miktari",
       "tahsis_ucreti",
       "taksit_sayisi",
@@ -1013,13 +1011,14 @@
     ],
     "annotators": [
       "M2",
-      "LLM-01"
+      "LLM-01",
+      "HAKEM-03"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "indirim_orani": "Genel aralık %10–%50 olarak ilan edilmiş; kategori kırılımları ayrıca var (restoranlarda %30'a varan, paket serviste %25'e varan, moda/teknolojide %20'ye varan, kuru temizlemede %50). Kılavuz §9-5 gereği aralık tek sayıya indirilmedi.",
-      "masraf_durumu": "«GastroClub üyeliği ... ücretsiz» -> negasyon kuralı: masraf yok, has_fee=false, amount=0.",
+      "masraf_durumu": "HAKEM-03 DÜZELTMESİ: «GastroClub üyeliği … ücretsiz» ifadesi masraf_durumu'na YAZILMAZ. Alanın ürün yüzeyindeki işi «bu kampanyayı/ürünü kullanırsam ne kadar masraf öderim» sorusudur; GastroClub üçüncü taraf bir avantaj programıdır ve üyelik bedelinin sıfır olması finansman/hesap maliyeti hakkında hiçbir şey söylemez. Kıyas tablosunda bu belge «masrafsız» rozetiyle görünüyordu. Kapsam kuralı kılavuz §4'e eklendi.",
       "kar_payi_orani": "Sayfa sonundaki «Avantajlı Katılma Hesabı ... yüksek kâr paylaşım oranı» ifadesi katılma hesabı GETİRİSİdir (finansman kâr payı oranı değil) ve sayı da verilmemiş (#terminoloji + #eksik_bilgi).",
       "hedef_kitle": "«Sadece bireysel Hayat Finans müşterileri yararlanabilir» -> mevcut_musteri. «Henüz müşteri değilseniz ... müşteri olun» bir davet cümlesidir, kampanyanın hedef segmenti olarak yeni_musteri yazılmadı.",
       "campaign_type": "Aday dosyada «Taşıt Finansmanı» yazıyordu — yanlış. Belge alışveriş/restoran indirim ve ayrıcalık programı; 8 sınıf içinde en yakını «Alışveriş Puanı»."
@@ -1405,9 +1404,10 @@
     ],
     "annotators": [
       "M3",
-      "LLM-01"
+      "LLM-01",
+      "HAKEM-03"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": true,
     "notes": {
       "kar_payi_orani": "'Kâr Payı (temettü)' burada şirketin dağıttığı temettüdür, murabaha kâr payı oranı DEĞİL; yanındaki yüzdeler (stopaj 'yüzde 10' ve '%0') vergi oranıdır. Komisyon oranı 0,002 de kâr payı değildir -> absent. #terminoloji",
