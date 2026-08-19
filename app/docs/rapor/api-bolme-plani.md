@@ -3,9 +3,9 @@
 **Tarih:** 2026-08-19
 **Tetikleyen:** değerlendirmede `api/main.py`'nin "kod yapısının modüler ve
 okunabilir olması" maddesini ihlal ettiği işaretlendi.
-**Durum:** 1.–5. adım uygulandı; kalan 1 adım aşağıda sıralı.
-**Ölçülen ilerleme:** `main.py` 2.505 → **1.044 satır** (%58 küçüldü);
-uç sayısı 32'de sabit, 3.150 test yeşil.
+**Durum:** **TAMAMLANDI** — altı adımın hepsi uygulandı.
+**Ölçülen sonuç:** `main.py` 2.505 → **887 satır** (%65 küçüldü);
+uç sayısı 32'de sabit, 3.159 test yeşil, altı router 2.161 satır.
 
 ## Sorun — ölçülmüş hâli
 
@@ -214,11 +214,56 @@ bırakılmaz.
       `yardimcilar.X` okuyacak biçimde güncellendi — fonksiyonu kaynağından
       çekmek, `main` üzerinden yeniden ihraç edilmiş bir ada bağlanmaktan
       dürüsttür (o dolaylılık taşımayı gizlerdi).
-- [ ] **6. Denetim/yönetim** → `api/routers/denetim.py`.
-      `/log`, `/admin/*`, `/contradictions*`.
+- [x] **6. Denetim/yönetim** → `api/routers/denetim.py`. **UYGULANDI.**
+      `/log`, `/admin/*`, `/contradictions*` (123 satır). Sonuç: `main.py`
+      1.044 → **887 satır**; router 192 satır. Uçlar gerçek istekle
+      doğrulandı: `/log` 200, `/contradictions` 200,
+      `/contradictions/summary` 200, `/admin/plan` 200, `POST /admin/banks`
+      **501** (kapalı uç sahte başarı döndürmüyor).
 
-Adım 6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
-çağrılarından oluşur (tahmini 120–150 satır).
+      `app` parametre geçildi — `/log` günlüğe `app.state.gunluk` test
+      kancasıyla erişiyor (3. adımdaki aynı desen). `Response` modül global
+      olarak taşındı: `/log` `X-Toplam-Kayit` başlığı yazıyor ve anotasyon
+      router modülünün global'lerinden çözülüyor.
+
+      **ALTINCI DERS — aynı kusur ÜÇÜNCÜ kez çıktı.**
+      `test_api_gelecek_uclari.py` kapalı uçların gövdesinde depo yazımı
+      olmadığını `main.py` kaynağında arıyordu. Bu, 4. adımda
+      (`test_api_celiski_source_url.py`) ve 5. adımda bulunan kusurun
+      birebir aynısı: tek dosyaya bakan bir kaynak denetimi her taşımada
+      kapsamını sessizce daraltıyor. Kapsam `src/api/**/*.py` birleşimine
+      çevrildi ve bölüm sonu sınırı hem `@app.get` hem `@r.get` biçimini
+      kabul edecek şekilde yazıldı — böylece bir sonraki taşıma testi
+      kırmayacak ve kapsam kendiliğinden korunacak.
+
+## Tahmin tutmadı — `build_app()` 593 satır, 120–150 değil
+
+Plan `build_app()`ın sonunda "yalnız kurulum + `include_router` çağrılarından
+oluşur (tahmini 120–150 satır)" diyordu. Ölçülen: **593 satır**. Fark
+gizlenmiyor çünkü sebebi planın kendi içinde yazılı ve bir hata değil bir
+kısıt:
+
+Bölme uç noktaları taşıdı, **closure yardımcılarını taşımadı**. `build_app()`
+içinde kalanlar: `_campaign_view`, `_field_rows`, `_kiyas_kapsami`,
+`_campaign_contradictions`, `_bloklar`, `_cerceve`, `_ozet`,
+`_kaynaklari_zenginlestir`, `_banka_bul`, `_ozet_onbellegini_dus`, işlem
+günlüğü ara katmanı ve dört önbellek (`_view_cache`, `_contra_cache`,
+`_blok_cache`, `_cerceve_cache`). Planın "Neden naif taşıma davranışı bozar"
+bölümü bunu baştan söylüyor: önbellekler modül seviyesine çıkarılırsa **süreç
+ömrü boyunca paylaşılan** duruma dönüşür ve test izolasyonu bozulur. Yani 593
+satırın çoğu, taşınmaması GEREKEN koddur.
+
+Tahmin yalnızca uç gövdelerini saymış, onları besleyen durumlu katmanı
+saymamıştı. Doğru okuma şu: **32 uç noktanın tamamı `main.py`den çıktı**
+(hedef buydu) ve geride kalan şey uçlar değil, uçların paylaştığı istek-arası
+durum.
+
+Bir sonraki adım — bu belgenin kapsamında DEĞİL, ayrı bir karar: o önbellekleri
+bir `Onbellek` sınıfına toplamak ve `build_app()`ı gerçekten kurulum koduna
+indirmek. Bunun bedeli, şu an `main.py` docstring'lerinde yaşayan on beş
+gerekçe yorumunun yeni bir modüle taşınması ve her birinin taşımada
+doğrulanması olur; kazancı ise ~400 satır. Ölçülmüş bir sorun ortaya çıkmadan
+yapılmaması daha iyi.
 
 ## Neden kademeli, tek seferde değil
 

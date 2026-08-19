@@ -175,10 +175,24 @@ class TestUclarSahteBasariDondurmez(_ApiTemel):
         olarak" açıp `repo.insert_campaign` çağırırsa, 501 testi hâlâ geçse
         bile bu kapı düşer.
         """
-        kaynak = (KOK / "src" / "api" / "main.py").read_text(encoding="utf-8")
+        # Kapsam `src/api/` paketinin TAMAMI: kapalı uçlar 19 Ağustos'ta
+        # `routers/denetim.py`'ye taşındı (API bölmesinin 6. adımı) ve tek
+        # dosyaya bakan bir denetim her taşımada kapsamını SESSİZCE
+        # daraltıyordu — test kırılır, yol güncellenir, taşınmış gövde bir
+        # daha hiç denetlenmezdi. Aynı kusur `test_api_celiski_source_url.py`
+        # ve `test_rank_girdi_paritesi.py`'de de bulunup düzeltildi.
+        kok = KOK / "src" / "api"
+        kaynak = "\n".join(f.read_text(encoding="utf-8")
+                           for f in sorted(kok.rglob("*.py")))
         bas = kaynak.index("Gelecek faz — tanımlı ama KAPALI uçlar")
-        son = kaynak.index('@app.get("/contradictions")', bas)
-        bolum = kaynak[bas:son]
+        # Bölümün sonu: uçlar `@app.get` ile de (`main.py`de kaldıkları sürece)
+        # `@r.get` ile de (router'a taşındıktan sonra) yazılabilir; ikisi de
+        # aranır ve İLK bulunan sınır alınır.
+        adaylar = [kaynak.find(im, bas) for im
+                   in ('@app.get("/contradictions")', '@r.get("/contradictions")')]
+        adaylar = [i for i in adaylar if i >= 0]
+        assert adaylar, "kapalı uçlar bölümünün sonu bulunamadı"
+        bolum = kaynak[bas:min(adaylar)]
         for yasak in ("repo.insert_campaign", "repo.upsert_bank",
                       "repo.set_ozet", "repo.rows"):
             self.assertNotIn(yasak, bolum,
