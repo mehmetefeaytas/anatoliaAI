@@ -84,6 +84,6 @@ psycopg[binary]==3.3.4     # LGPL (dinamik bağlı istemci)
 # pgvector>=0.2          # PostgreSQL lisansı
 
 # --- geliştirme ---
-ruff==0.16.1                # MIT
+ruff==0.16.3                # MIT
 black>=24.0              # MIT
 pytest==9.1.1              # MIT

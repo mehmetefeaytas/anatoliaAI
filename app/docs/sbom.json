@@ -2539,7 +2539,7 @@
       "version": "2026.6.3"
     },
     {
-      "bom-ref": "ruff==0.16.1",
+      "bom-ref": "ruff==0.16.3",
       "description": "An extremely fast Python linter and code formatter, written in Rust.",
       "externalReferences": [
         {
@@ -2572,9 +2572,9 @@
         }
       ],
       "name": "ruff",
-      "purl": "pkg:pypi/ruff@0.16.1",
+      "purl": "pkg:pypi/ruff@0.16.3",
       "type": "library",
-      "version": "0.16.1"
+      "version": "0.16.3"
     },
     {
       "bom-ref": "safetensors==0.8.0",
