@@ -222,10 +222,34 @@ def _paylasim_ciftinin_parcasi(text: str, s: int, e: int) -> bool:
 #: pazarlama cümleleri finansman kâr payı oranı sanılırdı. Alternatifler
 #: uzundan kısaya sıralı: regex ilk eşleşeni alır, "kâr payı oranı"
 #: bütünüyle tüketilmelidir.
-_KAR_PAYI_ETIKET = r"(?:kâr|kar)\s*(?:pay[ıi]\s*oran[ıi]|pay[ıi]|oran[ıi])"
+# `pay[ıi](?:l[ıi])?`: "kâr payı" kadar "Kâr Paylı" da aynı terimdir, yalnız
+# sıfat hâlidir. Ölçüldü (19 Ağu 2026, 1.782 belgelik korpus): başlıkta
+# "Kuveyt Türk Müşterilerine Özel %1,99 Oranlı Kar Paylı Taksitlendirme
+# Fırsatı" yazan belgede oran hiç çıkarılmıyordu, çünkü desen yalnız "payı"
+# ekini tanıyordu.
+_KAR_PAYI_ETIKET = (
+    r"(?:kâr|kar)\s*(?:pay(?:l[ıi]|[ıi])\s*oran[ıi]"
+    r"|pay(?:l[ıi]|[ıi])|oran[ıi])"
+)
 
+# Araya YALNIZ "oranlı" sözcüğü girebilir — serbest mesafe DEĞİL.
+#
+# ÖLÇÜLMÜŞ YANLIŞ DENEME, tekrarlanmasın: mesafeyi `\s{0,3}` yerine 12
+# karakterlik serbest bir pencereye ("[^.;:!?%]{0,12}") açmak denendi ve
+# `tests/test_kar_payi_yon.py::test_araya_kelime_girerse_kapilmaz` anında
+# kırıldı. Kanıt cümlesi: "%15 indirim ve kâr payı oranı %1,89" — araya giren
+# " indirim ve " TAM 12 karakter, yani gevşetme indirimin oranını kâr payı
+# oranı olarak kapıyordu. Geri yönlü arama gevşerse başka alanların değerini
+# kapar; o test tam bu sınıfı koruyor.
+#
+# Doğru çözüm mesafeyi büyütmek değil, araya girmesine izin verilen sözcüğü
+# ADIYLA saymak. Korpusta ölçülen tek sınıf sıfat hâli:
+# "Kuveyt Türk Müşterilerine Özel %1,99 Oranlı Kar Paylı Taksitlendirme" —
+# burada "Oranlı" zaten oranın kendisini niteliyor, yabancı bir alan
+# getirmiyor. Yeni bir sınıf çıkarsa buraya adıyla eklenir; pencere yeniden
+# serbest bırakılmaz.
 _KAR_PAYI_ONCE_RE = re.compile(
-    rf"(%\s*\d[\d.,]*)\s{{0,3}}{_KAR_PAYI_ETIKET}",
+    rf"(%\s*\d[\d.,]*)\s{{0,3}}(?:oranl[ıi]\s+)?{_KAR_PAYI_ETIKET}",
     re.IGNORECASE,
 )
 
