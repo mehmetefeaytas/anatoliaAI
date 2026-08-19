@@ -25,7 +25,7 @@
   "matcher": "strict",
   "split": "all",
   "tolerans": 0.01,
-  "mikro_yapisal": 0.693,
+  "mikro_yapisal": 0.702,
   "halusinasyon_ust_sinir": 0.08,
   "alanlar": {
     "kar_payi_orani": 0.800,
@@ -37,7 +37,7 @@
     "odul_miktari": 0.615,
     "masraf_durumu": 0.714,
     "indirim_orani": 0.667,
-    "hedef_kitle": 0.267
+    "hedef_kitle": 0.286
   },
   "_esigi_olmayan_alanlar": {
     "tahsis_ucreti": "gold.v2'de 0 pozitif örnek (47 kayıtta absent). F1 tanımsız; eşik konamaz. Gold büyüyünce (G3.1) eklenmeli.",

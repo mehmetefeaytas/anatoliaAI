@@ -80,7 +80,7 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > manşet sayıyı** kanıtlamaz. Ölçüm: `eval/reports/20260816-094841/report.md`
 > (2026-08-16, n=3, tüm alt kümelerde P=R=F1=1,000).
 >
-> Manşet sayılar (0,477 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
+> Manşet sayılar (0,482 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
 > paket istemez, yalnız stdlib kullanır:
 > ```bash
 > python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural
@@ -392,10 +392,10 @@ belge düzeyi bootstrap 1000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| **yapılandırılmış alan mikro-F1** (11 alan) | **0,693** |
-| 12-alan mikro-F1 | **0,477** [%95 GA 0,410–0,534] |
-| makro-F1 | **0,634** |
-| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,043** [19/444] · yapısal kesitte 0,030 |
+| **yapılandırılmış alan mikro-F1** (11 alan) | **0,702** |
+| 12-alan mikro-F1 | **0,482** [%95 GA 0,410–0,534] |
+| makro-F1 | **0,636** |
+| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,043** [19/446] · yapısal kesitte 0,030 |
 | kalem düzeyi mikro-F1 (12 alan) | 0,381 |
 
 > **Künye.** Bu sayılar 15 Ağustos koşumundan gelir
