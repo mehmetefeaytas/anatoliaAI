@@ -13,12 +13,12 @@ yalnız kural katmanı (regex + normalizasyon), LLM kapalı — RESMÎ VARSAYILA
 | alt küme (split) | all |
 | eşleştirici(ler) | strict, tolerant |
 | seed | 42 |
-| git sha | ec8c0028d93848467a130529a7395e745325c5d4 |
+| git sha | 96fd846e201370bf4c9f6a5d060da6f087e01d76 |
 | commit'lenmemiş değişiklik | hayır |
 | Python | 3.14.6 |
 | platform | macOS-26.5.2-arm64-arm-64bit-Mach-O |
 | bağımlılık | yalnız Python stdlib (numpy/scipy/sklearn YOK) |
-| üretim zamanı (UTC) | 2026-08-19T13:16:43.710066+00:00 |
+| üretim zamanı (UTC) | 2026-08-19T15:21:36.030299+00:00 |
 
 ## Metrik tanımları
 
