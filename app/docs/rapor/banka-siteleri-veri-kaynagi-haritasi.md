@@ -125,6 +125,58 @@ Hesaplama API'si yok. Vakıf'ta oran istemci-taraflı ve kullanıcı düzenleyeb
 (varsayılan %3,75, "Kâr Oranı Kendin Belirle" onay kutusu) — bu değer bankanın
 ilan ettiği oran mı yoksa yalnızca form varsayılanı mı, **doğrulanmadı**.
 
+#### Hayat Finans katılma hesabı sayfası — ÜÇ TABLO, HİÇBİRİ KÂR PAYI ORANI DEĞİL
+
+19 Ağu 2026'da `hayatfinans.com.tr/hesaplar/katilma-hesabi` yeniden incelendi
+(robots.txt: **izin var**; UA `AnatoliaAI-Research/1.0`, 3 sn gecikme). Sayfada
+üç HTML tablo bulunuyor ve **naif bir çıkarım üçünü de yanlış okur**:
+
+| Tablo | Başlık / içerik | Değerler | Gerçekte ne |
+|---|---|---|---|
+| 1 | Türk Lirası · 1/3/6 Aylık · 1 Yıllık · 1 Yıldan Uzun | `%90 - %10` | kâr **PAYLAŞIM** oranı (banka–müşteri bölüşümü) |
+| 2 | Dolar & Euro, aynı vade kolonları | `%70 - %30` | kâr paylaşım oranı |
+| 3 | **"Stopaj Oranları"** · Para Birimi × vade | `%17,5` `%15` `%10` | **STOPAJ — vergi kesintisi** |
+
+**Tuzak somut:** sayfadan regex ile "en belirgin yüzde" alınsa `%17,5`
+çıkardı ve bu bir **vergi oranı** olarak `kar_payi_orani`'na yazılırdı. Bankalar
+arası kıyas tablosunda o satır Hayat Finans'ı tamamen yanlış konumlandırırdı.
+İkinci tuzak paylaşım oranıdır; `extract.py::_PAYLASIM_ORANI_RE` onu belge
+düzeyinde zaten eliyor (o koruyucunun var olma sebebi tam bu sınıf).
+
+Sonuç: bu sayfa **getiri oranı yayımlamıyor**. Gerçek oran hesaplama aracının
+arkasında ve sayfada yalnızca aracın tanımı gömülü
+(`"resultBoxes":["Net Kâr","Brüt Oran (Yıllık)",…]`). Yani `harvest_rates.py`
+başlığındaki tespit bu banka için de birebir geçerli: *değer istemci-taraflı
+hesaplama aracının arkasındadır.*
+
+**Adaptör yazılmadı.** Gerekçe: değeri almak için aracın ağ çağrısını tersine
+çevirmek gerekiyor (Playwright + istek izleme) ve bu banka başına ayrı bir iş.
+Riski de yüksek — yukarıdaki iki tablo, yanlış değeri "oran" diye kaydetmenin
+ne kadar kolay olduğunu gösteriyor. Belgelenmiş eksik, sessiz eksikten iyidir.
+
+#### Banka bazında `kar_payi_orani` kapsamı (19 Ağu 2026, `data/demo.db`)
+
+Kapsamın nerede yoğunlaştığı ölçüldü — açık, korpus genelinde değil banka
+bazında:
+
+| banka | belge | `kar_payi_orani` | verim |
+|---|---:|---:|---:|
+| turkiye-finans | 92 | 22 | %24 |
+| kuveyt-turk | 537 | 22 | %4 |
+| turkiye-emlak-katilim | 239 | 6 | %3 |
+| albaraka | 228 | 3 | %1 |
+| vakif-katilim | 197 | 3 | %2 |
+| dunya-katilim | 123 | 2 | %2 |
+| ziraat-katilim | **291** | **1** | **%0,3** |
+| tom-katilim | 19 | 1 | %5 |
+| hayat-finans | 48 | **0** | — |
+| adil-katilim | **6** | 0 | scrape eksik |
+
+Türkiye Finans oranı düz HTML tablo olarak yayımladığı için en yüksek verimde
+(§3). Ziraat 291 belgede yalnız 1 orana sahip — §5'teki "yanlış giriş noktası"
+bulgusuyla tutarlı. `adil-katilim` 6 belgede kalmış: bu bir oran sorunu değil,
+**toplama** sorunu ve ayrı ele alınmalı.
+
 ## 3. Yayımlanmış oran tabloları (statik HTML — en kolay kaynak)
 
 **Türkiye Finans** oranları düz HTML tablo olarak yayımlıyor: tek sayfada
