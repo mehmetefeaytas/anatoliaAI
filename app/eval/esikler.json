@@ -28,19 +28,22 @@
   "mikro_yapisal": 0.702,
   "halusinasyon_ust_sinir": 0.08,
   "alanlar": {
-    "kar_payi_orani": 0.800,
+    "kar_payi_orani": 0.8,
     "vade_ay": 0.545,
     "taksit_sayisi": 0.909,
     "kampanya_suresi": 0.936,
     "finansman_tutari": 0.857,
     "alisveris_puani": 0.667,
     "odul_miktari": 0.615,
-    "masraf_durumu": 0.714,
+    "masraf_durumu": 0.65,
     "indirim_orani": 0.667,
     "hedef_kitle": 0.286
   },
   "_esigi_olmayan_alanlar": {
     "tahsis_ucreti": "gold.v2'de 0 pozitif örnek (47 kayıtta absent). F1 tanımsız; eşik konamaz. Gold büyüyünce (G3.1) eklenmeli.",
     "kampanya_kosullari": "serbest metin — span/jeton F1'i metodolojik olarak anlamsız (bkz. run_eval.yapisal_kesit). Kalem düzeyi ölçütle ayrı raporlanır."
-  }
+  },
+  "_degisiklik_gunlugu": [
+    "2026-08-19 · masraf_durumu 0,714 -> 0,65. Gerileme DEĞİL, gold düzeltmesinin doğal sonucu. HAKEM-03 turu `hayat-finans--…-gastroclub` kaydında `masraf_durumu`'nu `absent_fields`'a taşıdı (üçüncü taraf avantaj programı üyeliği ürünün masrafı değildir — `data/gold/review/_hakem-turu-03-masraf-durumu.md`). Destek 6 -> 5 düştü ve o hücre TP kümesinden TN'e geçti; TN F1'e girmediği için strict F1 0,714 -> 0,667 oldu. Motor tarafı da aynı turda düzeltildi (`_ALAN_DISI_OZNE_RE` club/kulüp kolu), yani düşüşün sebebi motorun kötüleşmesi değil ÖLÇÜMÜN DÜZELMESİDİR. Yeni eşik ölçülen 0,667'nin hemen altına konuldu — kapının kendi kuralı."
+  ]
 }
