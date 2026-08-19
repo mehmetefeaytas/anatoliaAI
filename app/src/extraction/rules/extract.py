@@ -979,7 +979,22 @@ _TUTAR_PAT = re.compile(
 # "Örnek İhtiyaç Finansmanı Tablosu | Finansman Tutarı ... 30.000,00 ₺" —
 # gold doğru olarak `absent` diyor. `örnek` VE `tablo` birlikte aranıyor; tek
 # başına "örneğin" gibi kullanımlar belgeyi elemesin.
-_ORNEK_TABLO_RE = re.compile(r"örnek\w*(?:[^.]{0,80}?)tablo", re.IGNORECASE)
+#
+# 19 Ağu 2026'da genişletildi: "Maliyet Tablosu" ve "Ödeme Tablosu" da aynı
+# sınıf. Ölçülen örnek (`turkiye-finans--kampanyalar-turkiye-finans-
+# avantajlariyla-`): "İhtiyaç Finansmanı Maliyet Tablosu 50.000 TL'ye Kadar
+# Sigortalı İhtiyaç Finansmanı" — 50.000 tablonun örnek satırıdır, gold o
+# belgede 400.000 TL diyor. "örnek" sözcüğü bu başlıklarda geçmediği için
+# eski kalıp tabloyu görmüyordu.
+# `örnek` için araya söz girmesine izin verilir ("Örnek İhtiyaç Finansmanı
+# Tablosu"); diğer başlıklarda BİTİŞİK aranır, çünkü "ödeme" tek başına çok
+# geniş bir çapa ("ödemelerinizi … tablo" gibi alakasız eşleşmeleri içeri
+# alırdı).
+_ORNEK_TABLO_RE = re.compile(
+    r"örnek\w*(?:[^.]{0,80}?)tablo"
+    r"|(?:maliyet|geri\s*ödeme|ödeme)\s*tablo",
+    re.IGNORECASE,
+)
 
 # Belge birden fazla üst sınır veriyorsa TOPLAM sınır kanoniktir.
 # Ölçüm (`vakif-katilim--finansmanlar-kentsel-donusum`): "her bir bağımsız bölüm
@@ -1001,6 +1016,83 @@ _TOPLAM_AZAMI_PAT = re.compile(
 _ARALIK_UST_RE = re.compile(
     r"[\s]{0,3}(?:[-–—]|ila|ile|arası|arasında|ve)?[\s]{0,3}"
     r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
+    re.IGNORECASE,
+)
+
+# VADE KADEMESİ tutarı kampanyanın üst sınırı DEĞİLDİR.
+#
+# Türk banka metinlerinde çok yaygın bir kalıp, ölçülmüş örnek
+# (`turkiye-finans` banka çalışanı ihtiyaç finansmanı, 19 Ağu 2026):
+#
+#     "Finansman tutarının 125.000 TL'ye kadar olması durumunda maksimum
+#      vade 36 aydır. Finansman tutarının 125.000 TL – 250.000 TL arasında
+#      olması durumunda maksimum vade 24 ayı aşamaz."
+#
+# Buradaki 125.000 bir VADE EŞİĞİdir: "şu tutara kadarsa şu kadar ay".
+# Tetikleyici ("Finansman tutarı") tam da aradığımız çapa olduğu için
+# `_TUTAR_PAT` bunu birinci aday yapıyor ve `break` ile döngü kapanıyordu;
+# aynı belgedeki GERÇEK üst sınır (1.000.000 TL) hiç değerlendirilmiyordu.
+# Ölçülen sonuç: 125.000 üretiliyordu, doğrusu 1.000.000.
+#
+# Ayırt edici işaret tutarın KENDİSİ değil, ardından gelen koşul-sonuç
+# kurgusudur: "… olması durumunda … vade/N ay" ya da "vade … aşamaz".
+#
+# AYNI HATA KENDİ GOLD SETİMİZDE DE ÖLÇÜLDÜ
+# (`turkiye-finans--kampanyalar-turkiye-finans-avantajlariyla-`): gold
+# 400.000 TL derken çıkarım 125.000 TL üretiyordu, kanıt span'i tam bu
+# kademe cümlesiydi. Yani kalıp rakip korpusuna özgü değil, korpus
+# bağımsız bir çıkarım hatası — düzeltmesi iki zeminde birden kazanç.
+#
+# `vade` sözcüğü kalıpta ZORUNLU DEĞİL: o belge "olması durumunda maksimum
+# 36 ay" diyor, "vade" hiç geçmiyor. Sonuç ölçütü ay cinsinden bir süre
+# olduğu için `\d+\s*ay` de kademe işareti sayılır.
+_VADE_KADEMESI_RE = re.compile(
+    r"olmas[ıi]\s+durumunda[^.]{0,60}?(?:vade|\d+\s*ay)"
+    r"|vade[^.]{0,40}?a[şs]amaz"
+    r"|maksimum\s+vade",
+    re.IGNORECASE,
+)
+_VADE_KADEMESI_PENCERE = 80
+
+# Tutar ÖNCE, çapa SONRA gelen aralık kurgusu.
+#
+# `_TUTAR_PAT` tetikleyici→tutar sırası bekler; şu cümlede sıra terstir ve
+# tutar hiç aday olamıyordu (ölçülen örnek, aynı belge):
+#
+#     "Kampanya kapsamında 1.000 TL-1.000.000 TL arasında ihtiyaçlarınız
+#      için … İhtiyaç Finansmanı başvurusu yapabilirsiniz."
+#
+# İstenen üst sınır 1.000.000. Çapa ("finansman") aralıktan sonra geliyor.
+#
+# NEDEN ÇAPA ZORUNLU: aynı kurgu HARCAMA bantlarında da geçiyor ve orada
+# tutar finansman tutarı DEĞİLDİR — "1.000 TL- 100.000 TL tutarları arasında
+# … harcamanızı yapın" (albaraka sağlık) ve "30.000 TL- 500.000 TL arası
+# eğitim harcamalarınız" (albaraka eğitim). İkisinde de `finansman` sözcüğü
+# aralığın ardındaki pencerede yok, dolayısıyla bu kalıp onları görmez.
+# Ayrımı çapa taşıyor; kalıbı çapasız yazmak harcama bantlarını içeri alırdı.
+_ARALIK_FINANSMAN_PAT = re.compile(
+    r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))"
+    r"\s*[-–—]\s*"
+    r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))"
+    r"\s*aras[ıi](?:nda)?[^.]{0,120}?finansman",
+    re.IGNORECASE,
+)
+
+# Aynı ters sıra, aralık yerine TEK üst sınır: "<tutar> TL'ye kadar
+# <…> finansman". Ölçülen örnek (kendi gold setimiz, aynı belge):
+# "400.000 TL'ye Kadar İhtiyaç Finansmanı Kullanın, 3 Ay Öteleme Fırsatı" —
+# gold 400.000, çıkarım ise belgenin başka yerlerinden 125.000 ya da
+# 50.000 üretiyordu.
+#
+# Çapa yine ZORUNLU ve yine aynı gerekçeyle: "50.000 TL'ye kadar vade
+# farksız 5 taksit" (kuveyt-turk) bir taksitli harcama limitidir, finansman
+# tutarı değil — orada çapa yok, bu kalıp onu görmez. Ayrıca tablo
+# koruyucusu bu kalıba da uygulanır, yoksa maliyet tablosunun örnek satırı
+# ("… Maliyet Tablosu 50.000 TL'ye Kadar … Finansmanı") içeri girerdi.
+_UST_SINIR_FINANSMAN_PAT = re.compile(
+    r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))"
+    r"['’]?\s*(?:ye|ya|e|a)?\s*kadar\s+"
+    r"[^.]{0,40}?finansman",
     re.IGNORECASE,
 )
 
@@ -1034,7 +1126,14 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
         gap = m.group(2)
         if _CUMLE_SINIRI_RE.search(gap) or _VARLIK_FIYATI_RE.search(gap):
             continue
-        if _ORNEK_TABLO_RE.search(text[max(0, m.start() - 150): m.start()]):
+        # Pencere tutarın BAŞINA kadar uzar: tablo başlığı tetikleyici ile
+        # tutar ARASINDA da durabiliyor ("İhtiyaç Finansmanı Maliyet Tablosu
+        # 50.000 TL"), o durumda eşleşmenin yalnızca önüne bakmak yetmiyordu.
+        if _ORNEK_TABLO_RE.search(text[max(0, m.start() - 150): m.start(3)]):
+            continue
+        # Vade kademesi eşiği mi? ("… olması durumunda maksimum vade …")
+        if _VADE_KADEMESI_RE.search(
+                text[m.end(3): m.end(3) + _VADE_KADEMESI_PENCERE]):
             continue
         canon = N.normalize_money(m.group(3))
         if canon is None:
@@ -1054,7 +1153,26 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
             s, e = tm.span(1)
             toplam = (tm.group(1), canon, s, e, 0)
 
-    secilen = toplam or ilk
+    # Çapası SONRA gelen kurgular. Tablo koruyucusu burada da geçerli:
+    # temsili bir maliyet/ödeme tablosunun satırı kampanyanın sınırı değildir.
+    def _ters_sira_aday(pat: "re.Pattern", grup: int) -> Optional[tuple]:
+        for mm in pat.finditer(text):
+            if _ORNEK_TABLO_RE.search(text[max(0, mm.start() - 150): mm.start()]):
+                continue
+            c = N.normalize_money(mm.group(grup))
+            if c is None:
+                continue
+            gs, ge = mm.span(grup)
+            return (mm.group(grup), c, gs, ge, 0)
+        return None
+
+    aralik = _ters_sira_aday(_ARALIK_FINANSMAN_PAT, 2)
+    ust_sinir = _ters_sira_aday(_UST_SINIR_FINANSMAN_PAT, 1)
+
+    # Öncelik özgüllük sırasına göre: "toplamda azami <tutar>" en dar kalıp,
+    # ardından açık aralık kurgusu ("X – Y arası … finansman"), sonra tek üst
+    # sınır ("X'e kadar … finansman"), en sonda ilk çapa-tutar eşleşmesi.
+    secilen = toplam or aralik or ust_sinir or ilk
     if secilen is None:
         return None
 

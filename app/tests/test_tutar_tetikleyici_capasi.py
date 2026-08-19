@@ -79,9 +79,16 @@ class TutarCapasiKorunanlar(unittest.TestCase):
             50000.0)
 
     def test_finansman_tutari_iyelik_ekli(self):
+        # Bu testin konusu İYELİK EKİ: "Finansman tutarı**nın**" da geçerli
+        # bir çapadır. Kanıt cümlesi 19 Ağu 2026'da değiştirildi — eski
+        # cümle ("… olması durumunda maksimum vade 36 aydır") bir VADE
+        # KADEMESİ eşiğiydi ve artık bilinçli olarak reddediliyor; gerekçe
+        # `extract.py` içindeki `_VADE_KADEMESI_RE` yorumunda. İyelik ekinin
+        # kendisi kademe kalıbından bağımsız olarak kilitli kalsın diye
+        # cümle kademe kurgusu içermeyen bir korpus varyantıyla değiştirildi.
         self.assertEqual(
-            self._deger("Finansman tutarının 125.000 TL'ye kadar olması "
-                        "durumunda maksimum vade 36 aydır."),
+            self._deger("Finansman tutarının 125.000 TL olarak "
+                        "kullandırılması hâlinde başvuru dijitalden alınır."),
             125000.0)
 
     def test_tablo_basligi_tutar_kuyrugu_yutulur(self):
