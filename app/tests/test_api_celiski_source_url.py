@@ -57,14 +57,22 @@ TOPLAMA = "2026-08-01"
 
 
 def _api_kaynagi() -> str:
-    """`src/api/main.py` kaynağı.
+    """`src/api/` paketinin TAMAMININ kaynağı, tek dize olarak.
 
-    `inspect.getsource` kullanılmıyor: uçlar bir fabrika fonksiyonu içinde
-    değil, modül düzeyinde kuruluyor. Dosyayı doğrudan okumak tek doğruluk
-    kaynağıdır ve modülü içe aktarma yan etkisi de doğurmaz.
+    `inspect.getsource` kullanılmıyor: dosyayı doğrudan okumak tek
+    doğruluk kaynağıdır ve modülü içe aktarma yan etkisi doğurmaz.
+
+    Neden tek dosya değil paketin tamamı: `main.py` kademeli olarak
+    `routers/` altına bölünüyor (plan: docs/rapor/api-bolme-plani.md) ve
+    `/compare` ile `/bank-delta` 4. adımda `routers/kiyas.py`'ye taşındı.
+    Test yalnız `main.py`yi okuduğu sürece her bölme adımı denetim
+    kapsamını sessizce daraltıyordu: çağrı sayısı düşünce test kırılır,
+    yol güncellenir ve taşınmış çağrılar bir daha hiç denetlenmezdi.
+    Paketin tamamını okumak kapsamı bölmeden bağımsız kılar.
     """
-    return (Path(__file__).resolve().parents[1]
-            / "src" / "api" / "main.py").read_text(encoding="utf-8")
+    kok = Path(__file__).resolve().parents[1] / "src" / "api"
+    return "\n".join(p.read_text(encoding="utf-8")
+                     for p in sorted(kok.rglob("*.py")))
 
 
 def _kinds(source_url, as_of=TOPLAMA):

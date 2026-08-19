@@ -1,7 +1,7 @@
 """`rank()` çağıran her yer, KAPILARIN ihtiyaç duyduğu alanları taşımak zorunda.
 
 İlgili: ../src/comparison/compare.py (`rank`, `RANK_KAPI_ALANLARI`)
-        ../src/api/main.py (`/compare`, `/bank-delta`)
+        ../src/api/routers/kiyas.py (`/compare`, `/bank-delta`)
         ../src/chatbot/structured.py
 
 ## Bu kapının varlık sebebi — AYNI TUZAK ÜÇ KEZ
@@ -46,7 +46,7 @@ KOK = Path(__file__).resolve().parents[1]
 #: `rank()` çağıran modüller. Yeni bir çağıran eklendiğinde buraya da eklenir;
 #: liste eksik kalırsa bu testin kendisi kör olur, bu yüzden aşağıda ayrıca
 #: "başka çağıran var mı" taraması da yapılır.
-TARANAN = ("src/api/main.py", "src/chatbot/structured.py")
+TARANAN = ("src/api/routers/kiyas.py", "src/chatbot/structured.py")
 
 
 def _sozluk_anahtarlari(dugum: ast.AST) -> list[set[str]]:
@@ -146,11 +146,13 @@ class TestRankGirdiParitesi(unittest.TestCase):
         GERÇEKTEN denetlendiğini doğrular — denetim kapsamı sessizce
         daralırsa burası düşer.
         """
-        kaynak = (KOK / "src" / "api" / "main.py").read_text(encoding="utf-8")
+        kaynak = (KOK / "src" / "api" / "routers" / "kiyas.py").read_text(
+            encoding="utf-8")
         anahtarlar = _girdi_anahtarlari(kaynak)
         self.assertGreaterEqual(
             len(anahtarlar), 2,
-            "main.py'de iki `rank()` çağrı yeri var (/compare ve /bank-delta); "
+            "kiyas.py'de iki `rank()` çağrı yeri var (/compare ve "
+            "/bank-delta); "
             "ikisi de denetlenmeli")
 
     def test_baska_cagiran_kalmadi(self) -> None:

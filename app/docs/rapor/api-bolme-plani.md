@@ -3,7 +3,9 @@
 **Tarih:** 2026-08-19
 **Tetikleyen:** değerlendirmede `api/main.py`'nin "kod yapısının modüler ve
 okunabilir olması" maddesini ihlal ettiği işaretlendi.
-**Durum:** 1.–3. adım uygulandı; kalan 3 adım aşağıda sıralı.
+**Durum:** 1.–4. adım uygulandı; kalan 2 adım aşağıda sıralı.
+**Ölçülen ilerleme:** `main.py` 2.505 → **1.309 satır** (%48 küçüldü);
+uç sayısı 32'de sabit, 3.150 test yeşil.
 
 ## Sorun — ölçülmüş hâli
 
@@ -130,17 +132,64 @@ bırakılmaz.
       Ayrıca `RefreshReq` pydantic modeli `main.py`'den buraya taşındı (tek
       kullanıcısı bu grup) ve `Request`/`BaseModel` modül seviyesinde import
       edildi — 2. adımdaki 422 tuzağının tekrarı önlendi.
-- [ ] **4. Kıyas uçları** → `api/routers/kiyas.py`.
+- [x] **4. Kıyas uçları** → `api/routers/kiyas.py`. **UYGULANDI.**
       `/compare`, `/urun-tablosu`, `/bank-delta`, `/scoring`, `/advantageous`
-      (702 satır — en büyük grup). `/compare` tek başına 236 satır; bu adım
-      kendi içinde ikiye bölünebilir.
+      (701 satır — en büyük grup). Sonuç: `main.py` 2.102 → **1.309 satır**;
+      router 807 satır, yeni `api/yardimcilar.py` 147 satır. Beş uç TestClient
+      ile 200 döndü, uç sayısı 32'de kaldı.
+
+      **İkiye bölünmedi** — plan bunu öneriyordu ama `/scoring` gövdesinde
+      `compare(field=field, type=type)` çağrısı var: sıralamayı tek doğruluk
+      kaynağından alsın diye kendi tablosunu kurmuyor. İki modüle ayırmak o
+      çağrıyı bir HTTP isteğine ya da üçüncü bir ortak katmana çevirmek
+      demekti; ikisi de aynı kararı iki yerde yaşatırdı.
+
+      **YENİ KARAR — durum parametre, saflık import.** Önceki adımlarda her
+      bağımlılık factory PARAMETRESİ olarak geçiyordu. Bu adımda kıyas uçları
+      altı durumsuz yardımcıyı birden kullanıyordu (`span_info`,
+      `scoring_direction`, `_en_iyi_taraf`, `VALID_INTENTS`,
+      `VALID_PER_BANK`, `_ROW_TOKEN_SEP`) ve altısını parametre yapmak imzayı
+      şişirip her çağrı yerinde aynı altı satırı tekrar yazdırıyordu. Ayrım
+      şöyle netleşti: **çalışma-anı duruma bağlı olan parametre
+      (`repo`, önbellekli closure yardımcıları), saf olan import.** Saf
+      yardımcılar `api/yardimcilar.py`'ye çıktı — `main`in ALTINA değil
+      YANINA, çünkü `main` router'ları import ediyor ve ters yön dairesel
+      bağımlılık kurardı. Adlar `main` yüzeyinde de görünür kalıyor
+      (`tests/test_api_sozlesme.py` `main.span_info` üzerinden erişiyor).
+
+      Dört closure yardımcısı (`_field_rows`, `_kiyas_kapsami`,
+      `_campaign_view`, `_campaign_contradictions`) `main`de KALDI ve
+      parametre geçildi: `/chat`, `/extract`, `/contradictions*` ve
+      `/campaigns/{id}/text` de onları kullanıyor.
+
+      **DÖRDÜNCÜ DERS — kaynak-kodu denetleyen testler taşımada kırılır ve
+      biri kapsamı sessizce daraltıyordu.** Yedi test düştü; hiçbiri davranış
+      kırılması değildi:
+
+      * `test_rank_girdi_paritesi.py` `TARANAN` listesinden `main.py`'yi
+        okuyordu. Yol güncellendi. Bu test kendini korumuş: yanındaki
+        `test_baska_cagiran_kalmadi` `src/` ağacını tarayıp `rank()` çağıran
+        modül kümesini `TARANAN` ile karşılaştırıyor, yani yol güncellenmezse
+        kör kalmıyor DÜŞÜYOR.
+      * `test_compare_ortak_kapilar.py` `api_main.tekil_banka_urun` /
+        `api_main.yon_zorla` adlarını yamalayarak uçların ortak kapıyı
+        gerçekten çağırdığını ölçüyordu. Adlar artık `routers/kiyas.py`
+        global'lerinden çözülüyor; yama `api_main` üzerinde kalsaydı uç
+        yamalanmamış gerçek fonksiyonu çağırır ve testler **sessizce yeşil**
+        kalırdı — ölçmek istedikleri şeyi ölçmeden. Yama hedefi taşındı.
+      * `test_api_celiski_source_url.py` yalnız `main.py`de
+        `_campaign_contradictions(` çağrılarını sayıyordu (≥5 bekliyordu).
+        Kusur burada YAPISALDI: her bölme adımı sayıyı düşürüyor, test
+        kırılıyor, yol güncelleniyor ve **taşınmış çağrılar bir daha hiç
+        denetlenmiyordu**. Kapsam `src/api/**/*.py` birleşimine çevrildi;
+        artık bölmeden bağımsız.
 - [ ] **5. Ajan uçları** → `api/routers/ajan.py`.
       `/chat`, `/extract`, `/zor-vakalar`. `/extract` önbellek paylaşıyor,
       bu yüzden EN SONA bırakıldı.
 - [ ] **6. Denetim/yönetim** → `api/routers/denetim.py`.
       `/log`, `/admin/*`, `/contradictions*`.
 
-Adım 2–6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
+Adım 5–6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
 çağrılarından oluşur (tahmini 120–150 satır).
 
 ## Neden kademeli, tek seferde değil

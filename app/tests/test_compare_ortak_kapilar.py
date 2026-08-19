@@ -36,6 +36,13 @@ if str(_KOK) not in sys.path:
     sys.path.insert(0, str(_KOK))
 
 from src.api import main as api_main
+
+# Kıyas uçları `routers/kiyas.py`'ye taşındı (bölmenin 4. adımı). Kapı
+# adları artık O modülün global'lerinden çözülüyor; yama `api_main`
+# üzerinde yapılırsa uç yamalanmamış gerçek fonksiyonu çağırır ve bu
+# testler SESSİZCE yeşil kalırdı — tam olarak ölçmek istedikleri şeyi
+# ölçmeden.
+from src.api.routers import kiyas as api_kiyas
 from src.db.repository import Repository
 from src.extraction.reconcile import build_campaign
 
@@ -84,18 +91,18 @@ class TestUcNoktaOrtakKapilariCagiriyor(unittest.TestCase):
     def test_tekil_banka_urun_gercekten_cagriliyor(self) -> None:
         client = self._client()
         cagri = {"n": 0}
-        gercek = api_main.tekil_banka_urun
+        gercek = api_kiyas.tekil_banka_urun
 
         def sayan(ranked):
             cagri["n"] += 1
             return gercek(ranked)
 
-        api_main.tekil_banka_urun = sayan
+        api_kiyas.tekil_banka_urun = sayan
         try:
             r = client.get("/compare", params={"field": self.ALAN,
                                                "per_bank": "best"})
         finally:
-            api_main.tekil_banka_urun = gercek
+            api_kiyas.tekil_banka_urun = gercek
         self.assertEqual(r.status_code, 200, r.text)
         self.assertEqual(
             cagri["n"], 1,
@@ -105,18 +112,18 @@ class TestUcNoktaOrtakKapilariCagiriyor(unittest.TestCase):
     def test_yon_zorla_gercekten_cagriliyor(self) -> None:
         client = self._client()
         cagri = {"n": 0}
-        gercek = api_main.yon_zorla
+        gercek = api_kiyas.yon_zorla
 
         def sayan(ranked, field_name, intent):
             cagri["n"] += 1
             return gercek(ranked, field_name, intent)
 
-        api_main.yon_zorla = sayan
+        api_kiyas.yon_zorla = sayan
         try:
             r = client.get("/compare", params={"field": self.ALAN,
                                                "intent": "highest"})
         finally:
-            api_main.yon_zorla = gercek
+            api_kiyas.yon_zorla = gercek
         self.assertEqual(r.status_code, 200, r.text)
         self.assertEqual(
             cagri["n"], 1,
@@ -125,19 +132,19 @@ class TestUcNoktaOrtakKapilariCagiriyor(unittest.TestCase):
     def test_other_count_ortak_kapidan_geliyor(self) -> None:
         """Sayı uçta yeniden hesaplanmıyor: kapı ne derse o basılıyor."""
         client = self._client()
-        gercek = api_main.tekil_banka_urun
+        gercek = api_kiyas.tekil_banka_urun
 
         def isaretli(ranked):
             from dataclasses import replace
             return [replace(x, other_count=99) for x in gercek(ranked)]
 
-        api_main.tekil_banka_urun = isaretli
+        api_kiyas.tekil_banka_urun = isaretli
         try:
             satirlar = client.get(
                 "/compare", params={"field": self.ALAN,
                                     "per_bank": "best"}).json()
         finally:
-            api_main.tekil_banka_urun = gercek
+            api_kiyas.tekil_banka_urun = gercek
         self.assertTrue(satirlar)
         self.assertTrue(all(s["other_count"] == 99 for s in satirlar),
                         [s["other_count"] for s in satirlar])
