@@ -25,20 +25,57 @@ segment DEĞİLDİR; `kampanya_kosullari`na gider.
 
 ## A. GOLD HATASI ŞÜPHESİ — çıkarıcı bunlara uydurulmamalı
 
-### A1. Ürün/kart kısıtı `belirli_segment` olarak etiketlenmiş (5 vaka)
+### A1. Ürün/kart kısıtı `belirli_segment` olarak etiketlenmiş
 
-Kılavuzun açıkça yasakladığı sınıf. Gold'un kendi kanıt span'leri:
+**BU BÖLÜM DÜZELTİLDİ (aynı gün, karar verilirken).** İlk yazımda "5 vaka
+kılavuz ihlali" denmişti; o iddia `notes` alanları OKUNMADAN kurulmuştu ve
+fazla iddialıydı. Etiketleyici üç vakada gerekçe yazmış ve gerekçeler
+savunulabilir. Doğru tablo şu:
 
-| Kayıt (kısalt.) | `field_spans.hedef_kitle` | Kılavuza göre |
+| Kayıt (kısalt.) | Kanıt span'i | `notes` gerekçesi | Karar |
+|---|---|---|---|
+| `dunya-katilim--kampanyal` | "…**Paraf kredi kartına sahip** ancak henüz…" | "kartı olan ama hiç harcama yapmamış" | **savunulabilir** — davranış segmenti, salt ürün kısıtı değil |
+| `tom-katilim--hadi-black` | "…**Hadi Black Kredi Kartı** ile harcama…" | "'Çok Kazananlar Kulübü üyesi' + bakiye/ekstre eşikleri" | **savunulabilir** — eşiğe dayalı statü |
+| `tom-katilim--a101de` | "**Hadi Gold üyesi** olmalısın." | (boş) | **tartışmalı** — üyelik statü mü ürün mü, kılavuz cevap vermiyor |
+| `kuveyt-turk--7000-tl` | "Kampanya **size özel** hazırlanmıştır, devredilemez." | (boş) | **NET HATA** — cümlede hiç segment sinyali yok |
+| `tom-katilim--cok-kazananlar` | "yalnızca **Hadi Black Kredi Kartı** harcamaları için geçerli" | (boş) | **NET HATA** — saf ürün kısıtı, §4.13/2 KİM/NE testini doğrudan ihlal ediyor |
+
+Yani **2 net hata + 1 tartışmalı + 2 savunulabilir**. Bu düzeltmenin kendisi
+bir ders: kanıt span'ine bakıp `notes`'u atlamak, etiketleyicinin gerekçesini
+görmeden onu hatalı ilan etmeye yol açıyor.
+
+#### Uygulanan karar (2026-08-19)
+
+Yalnız **2 net hata** karara bağlandı; ikisinde de `belirli_segment`
+kaldırıldı ve alan `absent_fields`'a alındı:
+
+- `kuveyt-turk--kampanya-arsivi-7000-tl-degerin…` — "size özel hazırlanmıştır"
+  kişiselleştirilmiş davet bildirir, hangi segment olduğunu söylemez.
+  Kılavuz: sinyal yoksa `absent`.
+- `tom-katilim--kampanyalar-cok-kazananlar-kulu…` — saf ürün kısıtı,
+  `kampanya_kosullari`na aittir.
+
+Her ikisinde `notes.hedef_kitle`'ye gerekçe yazıldı, `adjudicated: true`
+işaretlendi ve `annotators`'a `HAKEM-02` eklendi. `field_spans.hedef_kitle`
+de kaldırıldı — gold şema doğrulaması haklı olarak "yokluğun alıntısı olmaz"
+diyor.
+
+Tartışmalı ve savunulabilir 3 vakaya **dokunulmadı**; onlar ikinci bir
+anotatör kararı bekliyor.
+
+**Ölçülen etki** (gold.v2, strict/all, kural):
+
+| Metrik | Önce | Sonra |
 |---|---|---|
-| `dunya-katilim--kampanyal` | "…Dünya Katılım **Paraf kredi kartına sahip** ancak henüz…" | ürün kısıtı |
-| `tom-katilim--kampanyalar` | "Kampanya'dan faydalanmak için **Hadi Gold üyesi** olmalısın." | üyelik/ürün |
-| `tom-katilim--kampanyalar` | "…**Hadi Black Kredi Kartı** ile harcama ya…" | ürün kısıtı |
-| `tom-katilim--kampanyalar` | "…yalnızca **Hadi Black Kredi Kartı** harcamaları için geçerli" | ürün kısıtı |
-| `kuveyt-turk--kampanya-ar` | "Kampanya **size özel** hazırlanmıştır, devredilemez." | segment sinyali YOK |
+| `hedef_kitle` F1 | 0,267 | **0,286** |
+| 12-alan mikro-F1 | 0,477 | **0,482** |
+| makro-F1 | 0,634 | **0,636** |
+| yapısal mikro-F1 | 0,693 | **0,702** |
+| `adjudicated` kayıt | 0/48 | **2/48** |
 
-Son satır ayrıca dikkat çekici: "size özel hazırlanmıştır" cümlesi hiçbir
-segment bilgisi taşımıyor. Bu bir etiketleme hatası gibi görünüyor.
+Kazanç küçük ve bu beklenen: iki kayıt düzeltildi, motor hiç değişmedi.
+Asıl önemi başka — `adjudicated` sayacı ilk kez sıfırdan çıktı, yani
+"48 kaydın hiçbiri hakem kararı görmemiş" eleştirisi artık tam doğru değil.
 
 ### A2. Gerçek segment varken gold boş bırakılmış (3 vaka)
 

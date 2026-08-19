@@ -2143,25 +2143,22 @@
         "Ücretsiz çek karnesi çek limitinize göre 10 veya 20 yaprak olarak verilmektedir",
         "Çek karnesi alabilmeleri için müşterilerimizin bankamızda çek karne limiti olmalıdır",
         "Kampanya size özel hazırlanmıştır, devredilemez"
-      ],
-      "hedef_kitle": [
-        "belirli_segment"
       ]
     },
     "field_spans": {
       "masraf_durumu": "7.000 TL tutarındaki 100 adet çek tahsil paketi ücretsiz olarak hesabınıza tanımlanmıştır.",
       "kampanya_suresi": "Kampanya 31 Aralık 2024 tarihinde sona erecektir.",
-      "kampanya_kosullari": "Çek karnesi ücreti muafiyetine vergiler dahil değildir. Çek tahsilatlarındaki ücret muafiyeti TL çekler için geçerlidir.",
-      "hedef_kitle": "Kampanya size özel hazırlanmıştır, devredilemez."
+      "kampanya_kosullari": "Çek karnesi ücreti muafiyetine vergiler dahil değildir. Çek tahsilatlarındaki ücret muafiyeti TL çekler için geçerlidir."
     },
     "absent_fields": [
-      "kar_payi_orani",
+      "alisveris_puani",
       "finansman_tutari",
-      "vade_ay",
-      "taksit_sayisi",
-      "tahsis_ucreti",
+      "hedef_kitle",
       "indirim_orani",
-      "alisveris_puani"
+      "kar_payi_orani",
+      "tahsis_ucreti",
+      "taksit_sayisi",
+      "vade_ay"
     ],
     "hard_tags": [
       "terminoloji",
@@ -2170,16 +2167,18 @@
     ],
     "hard": true,
     "annotators": [
-      "M4"
+      "M4",
+      "HAKEM-02"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "notes": {
       "campaign_type": "Çek tahsil paketi / çek karnesi ücret muafiyeti kampanyası. 8 sınıfın hiçbiri (Finansman, İhtiyaç/Konut/Taşıt Finansmanı, Kart, Alışveriş Puanı, Yeni Müşteri, Yatırım Ürünü) bankacılık HİZMET ÜCRETİ muafiyeti kampanyasını karşılamıyor -> null. KILAVUZ BOŞLUĞU.",
       "masraf_durumu": "'ücretsiz' negasyonu masrafın SIFIR olduğunun pozitif ifadesidir (kılavuz §4) -> has_fee=false, amount=0. ÇELİŞKİ: 'Çek karnesi ücreti muafiyetine vergiler dahil değildir' — muafiyet kısmi; #celiskili olarak işaretlendi.",
       "tahsis_ucreti": "'çek tahsil' ile 'tahsis ücreti' benzer yazılır ama farklı kavramlardır (#terminoloji). Metinde tahsis/dosya ücreti geçmiyor -> absent.",
       "odul_miktari": "BELİRSİZ: '7.000 TL tutarındaki 100 adet çek tahsili' ile 'Toplamda 10.000 TL tutarında çek karnesi ve çek tahsil paketi' iki farklı tutar veriyor; ayrıca bunlar bir ödül/hediye ödemesi değil, muaf tutulan ÜCRETİN değeridir. Tahmin etmemek için ne fields ne absent — hakemliğe.",
       "finansman_tutari": "7.000 / 10.000 TL tutarları finansman değil, ücret muafiyeti değeridir -> absent.",
-      "kampanya_suresi": "'Kampanya Tarihleri 23.10.2024 - 31.12.2024' aralığının BİTİŞİ; gövdedeki 'Kampanya 31 Aralık 2024 tarihinde sona erecektir' cümlesi doğruluyor."
+      "kampanya_suresi": "'Kampanya Tarihleri 23.10.2024 - 31.12.2024' aralığının BİTİŞİ; gövdedeki 'Kampanya 31 Aralık 2024 tarihinde sona erecektir' cümlesi doğruluyor.",
+      "hedef_kitle": "HAKEM 02 (2026-08-19): `belirli_segment` KALDIRILDI. Kanıt span'i \"Kampanya size özel hazırlanmıştır, devredilemez.\" — bu cümle kişiselleştirilmiş bir davet bildirir ama HANGİ segment olduğunu söylemez. ANNOTATION_GUIDE §4.13/2: sinyal yoksa `absent`."
     },
     "unclear_fields": [
       "odul_miktari"
@@ -2262,24 +2261,21 @@
         "Kulüp kapsamında aranan minimum 10.000 TL Mega Günlük Hesap bakiyesi, her ayın 15. günü ve son günü kontrol edilir",
         "Çok Kazananlar Kulübü ek faydaları, yalnızca Hadi Black Kredi Kartı harcamaları için geçerlidir",
         "Kulüp üyeliği sona ererse, ilgili takvim ayında ek faydalardan yararlanılamaz"
-      ],
-      "hedef_kitle": [
-        "belirli_segment"
       ]
     },
     "field_spans": {
       "taksit_sayisi": "Tüm giyimde vade farksız 3 yerine 6 taksit",
-      "kampanya_kosullari": "Çok Kazananlar Kulübüne katılmak çok kolay, bunun için Hadi Black Kredi Kartı'na sahip olman ve Günlük Kazandıran Hesabında minimum 10.000 TL bulundurman yeterli.",
-      "hedef_kitle": "Çok Kazananlar Kulübü ek faydaları, yalnızca Hadi Black Kredi Kartı harcamaları için geçerlidir."
+      "kampanya_kosullari": "Çok Kazananlar Kulübüne katılmak çok kolay, bunun için Hadi Black Kredi Kartı'na sahip olman ve Günlük Kazandıran Hesabında minimum 10.000 TL bulundurman yeterli."
     },
     "absent_fields": [
-      "kar_payi_orani",
       "finansman_tutari",
-      "vade_ay",
-      "tahsis_ucreti",
-      "odul_miktari",
+      "hedef_kitle",
       "indirim_orani",
-      "kampanya_suresi"
+      "kampanya_suresi",
+      "kar_payi_orani",
+      "odul_miktari",
+      "tahsis_ucreti",
+      "vade_ay"
     ],
     "hard_tags": [
       "kosullu_aralik",
@@ -2287,9 +2283,10 @@
     ],
     "hard": true,
     "annotators": [
-      "M4"
+      "M4",
+      "HAKEM-02"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "notes": {
       "taksit_sayisi": "'Tüm giyimde vade farksız 3 yerine 6 taksit' — kulüp üyesine sağlanan değer 6'dır (3 taban değerdir). Zaman/koşul bağımlı (#kosullu_aralik).",
       "alisveris_puani": "BELİRSİZ: metin tek bir iade oranı değil, sektöre göre DÖRT farklı oran veriyor (market %10, restoran %15, akaryakıt %10, Pegasus %50). Şema tek {kind, value} kabul ediyor; hangisinin kanonik değer olacağını kılavuz söylemiyor. Tahmin etmemek için boş bırakıldı — KILAVUZ BOŞLUĞU.",
@@ -2297,7 +2294,8 @@
       "masraf_durumu": "BELİRSİZ: 'vade farksız' ifadesi taksit vade farkının alınmadığını söylüyor, ama kılavuz §5 masrafsız eşanlamlıları arasında (masrafsız/ücretsiz/dosya masrafı yok) 'vade farksız' YOK ve CLAUDE.md §12 vade farkını ayrı bir kavram sayıyor. Karar verilemedi — KILAVUZ BOŞLUĞU.",
       "odul_miktari": "Sayfa sonundaki 'İlginizi Çekebilir' bloğundaki '2000 TL'ye kadar A101 hediye bakiye' ve '3.500 TL'ye varan iade' BAŞKA kampanyalara aittir; bu belgenin değeri değil -> absent.",
       "kampanya_suresi": "Metinde hiçbir başlangıç/bitiş tarihi yok -> absent.",
-      "finansman_tutari": "'minimum 10.000 TL' bir bakiye şartıdır, finansman tutarı değil -> absent."
+      "finansman_tutari": "'minimum 10.000 TL' bir bakiye şartıdır, finansman tutarı değil -> absent.",
+      "hedef_kitle": "HAKEM 02 (2026-08-19): `belirli_segment` KALDIRILDI. Kanıt span'i \"yalnızca Hadi Black Kredi Kartı harcamaları için geçerli\" — saf ÜRÜN kısıtı. ANNOTATION_GUIDE §4.13/2 KİM/NE testi: cümle müşterinin NE kullandığını söylüyor, KİM olduğunu değil; ürün kısıtı `kampanya_kosullari`na aittir."
     },
     "unclear_fields": [
       "alisveris_puani",

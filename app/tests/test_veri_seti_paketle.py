@@ -230,7 +230,9 @@ class Paket(unittest.TestCase):
         """Halüsinasyon oranının paydası; taşınmazsa dışarıdan yeniden üretilemez."""
         satirlar = (self.out / "gold.v2.jsonl").read_text(encoding="utf-8").splitlines()
         toplam = sum(len(json.loads(s).get("absent_fields") or []) for s in satirlar)
-        self.assertEqual(toplam, 444)
+        # 446: hakem turu 02'de iki kayda `hedef_kitle` absent kararı eklendi
+        # (2026-08-19, data/gold/review/_hakem-turu-02-hedef-kitle.md).
+        self.assertEqual(toplam, 446)
 
     def test_provenance_alanlari_duruyor(self):
         kayit = json.loads(
@@ -273,7 +275,7 @@ class Paket(unittest.TestCase):
         self.assertIn("ÖNCESİ", self.kart)
 
     def test_kart_kiyas_sayilari_gercek(self):
-        for parca in ("| **40** | **3** |", "| **444** | **60** |"):
+        for parca in ("| **40** | **3** |", "| **446** | **60** |"):
             self.assertIn(parca, self.kart, f"kıyas tablosu sayısı yanlış: {parca}")
 
     def test_kart_bolme_sayilari_gercek(self):
