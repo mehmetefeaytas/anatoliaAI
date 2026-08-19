@@ -229,6 +229,7 @@ from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import LlmKapali, OzetMesgul, OzetYoneticisi
 from ..tazeleme_sonrasi import alt_akis_kur
 from . import gelecek, gunluk, zor_vaka
+from .sabitler import FIELD_LABELS
 
 logger = logging.getLogger(__name__)
 
@@ -254,22 +255,12 @@ def _otorite_kaynak_sluglari() -> frozenset[str]:
 # `src/db/factory.create_repository()` yapar).
 DB_PATH = os.environ.get("DATABASE_PATH", ":memory:")
 
-# Karşılaştırılabilir alanlar — arayüzdeki alan çipleri bu listeden üretilir.
-# Etiketler Türkçedir (CLAUDE.md §19: kullanıcıya dönük tüm metinler Türkçe).
-FIELD_LABELS: dict[str, str] = {
-    "kar_payi_orani": "Kâr Payı Oranı",
-    "finansman_tutari": "Finansman Tutarı",
-    "vade_ay": "Vade (ay)",
-    "taksit_sayisi": "Taksit Sayısı",
-    "tahsis_ucreti": "Tahsis Ücreti",
-    "masraf_durumu": "Masraf Durumu",
-    "odul_miktari": "Ödül Miktarı",
-    "indirim_orani": "İndirim Oranı",
-    "alisveris_puani": "Alışveriş Puanı",
-    "kampanya_suresi": "Kampanya Süresi",
-    "kampanya_kosullari": "Kampanya Koşulları",
-    "hedef_kitle": "Hedef Kitle",
-}
+# Karşılaştırılabilir alanların Türkçe etiketleri `api/sabitler.py`'ye taşındı
+# (19 Ağu 2026, API katmanının kademeli bölünmesinin ilk adımı — gerekçe ve
+# uç nokta bağımlılık matrisi: docs/rapor/api-bolme-plani.md). Ad burada
+# yeniden ihraç ediliyor, çünkü `zor_vaka.liste()` ve arayüz uçları onu
+# `main.FIELD_LABELS` olarak okuyor; taşımanın davranışı değiştirmemesi
+# gerekiyordu.
 
 # --------------------------------------------------------------------------- #
 # Güvenlik kapılarının rapor yüzeyi (`POST /chat` -> `safety`)

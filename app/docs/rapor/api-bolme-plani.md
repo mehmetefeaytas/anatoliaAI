@@ -1,0 +1,113 @@
+# API katmanının kademeli bölünmesi — bağımlılık matrisi ve plan
+
+**Tarih:** 2026-08-19
+**Tetikleyen:** değerlendirmede `api/main.py`'nin "kod yapısının modüler ve
+okunabilir olması" maddesini ihlal ettiği işaretlendi.
+**Durum:** 1. adım uygulandı; kalan adımlar aşağıda sıralı.
+
+## Sorun — ölçülmüş hâli
+
+```
+src/api/main.py            2.505 satır
+  └── build_app()          1.914 satır   (satır 586–2499)
+        └── 32 uç nokta    hepsi closure üzerinden paylaşılan duruma bağlı
+```
+
+Bu, projenin geri kalanıyla çelişiyor: `extraction/`, `normalization/`,
+`comparison/`, `db/` ayrı ayrı test edilebilir katmanlar, ama API tek dosyada.
+Karşılaştırma için harici bir referans: benzer kapsamdaki bir rakip
+uygulamanın `api/main.py`'si 797 satır — yani bu yalnız bizim iç
+standardımıza göre değil, alanın pratiğine göre de büyük.
+
+## Neden naif taşıma davranışı bozar
+
+Uç noktalar `build_app()` içinde tanımlı çünkü closure üzerinden **10 paylaşılan
+nesneye** erişiyorlar:
+
+| Closure değişkeni | Ne | Kaç uç noktada |
+|---|---|---|
+| `repo` | depo (SQLite/Postgres) | 9 |
+| `llm` | çıkarım LLM'i | 3 |
+| `bot` | chatbot | 1 |
+| `clf` | tür sınıflandırıcı | 1 |
+| `gunluk_yazici` | denetim günlüğü | — (dolaylı) |
+| `_view_cache`, `_contra_cache`, `_blok_cache`, `_cerceve_cache` | istek-arası önbellek | 1+ |
+| `app` | FastAPI örneği | 32 |
+
+Önbellekler kritik: modül seviyesine çıkarılırsa **süreç ömrü boyunca
+paylaşılan** duruma dönüşürler ve test izolasyonu bozulur. Bu yüzden bölme,
+önbellekleri `build_app()` kapsamında bırakıp router'lara **parametre olarak**
+geçirmek zorundadır.
+
+## Uç nokta bağımlılık matrisi
+
+Ölçüldü (19 Ağu 2026). "satır" = uç noktanın kendi gövdesi, docstring dahil.
+
+| Uç nokta | Satır | Closure bağımlılığı |
+|---|---:|---|
+| `/health` | 11 | repo, llm |
+| `/banks` | 37 | repo |
+| `/campaigns` | 68 | repo |
+| `/search` | 78 | repo |
+| `/stats` | 49 | repo, llm |
+| `/fields` | 15 | — |
+| `/campaigns/{id}/text` | 61 | — |
+| `/compare` | 236 | — |
+| `/urun-tablosu` | 93 | — |
+| `/bank-delta` | 220 | repo |
+| `/scoring` | 72 | — |
+| `/advantageous` | 81 | — |
+| `/chat` | 75 | repo, bot |
+| `/zor-vakalar` | 5 | — |
+| `/extract` | 121 | repo, llm, clf, `_view_cache` |
+| `/refresh*` (5 uç) | 88 | repo (yalnız cancel) |
+| `/summaries*` (5 uç) | 70 | — |
+| `/log` | 68 | — |
+| `/admin/*` (4 uç) | 20 | — |
+| `/contradictions*` (2 uç) | 39 | repo |
+
+Toplam 32 uç nokta. Yarıdan fazlası **hiç closure kullanmıyor** — yani
+taşınmaları düşünüldüğü kadar riskli değil; asıl dikkat gerektiren tek uç
+`/extract` (dört bağımlılık, önbellek dahil).
+
+## Plan — sıra bilinçli
+
+Sıra "en düşük dairesel-import riski" ilkesine göre kuruldu. Her adımda tam
+test paketi (3.134 test) koşulur ve ayrı commit atılır; yarım kalan bir adım
+bırakılmaz.
+
+- [x] **1. Sunum sabitleri** → `api/sabitler.py`.
+      Hiçbir şey import etmedikleri için dairesel bağımlılık riski sıfır.
+      `FIELD_LABELS` taşındı (9 kullanım), ad `main`'de yeniden ihraç edildi
+      çünkü `zor_vaka.liste()` onu `main.FIELD_LABELS` olarak okuyor.
+- [ ] **2. Katalog uçları** → `api/routers/katalog.py`.
+      `/health`, `/banks`, `/campaigns`, `/search`, `/stats`, `/fields` —
+      258 satır, bağımlılık yalnız `repo` + `llm`. Router bir **factory**
+      olarak yazılır: `router_kur(repo, llm, *, otorite_sluglari) -> APIRouter`.
+      `_otorite_kaynak_sluglari` ve `scoring_direction` taşınmaz, parametre
+      geçilir — böylece `main` ↔ `routers` döngüsü hiç doğmaz.
+- [ ] **3. Arka plan işleri** → `api/routers/isler.py`.
+      `/refresh*` + `/summaries*` (10 uç, 158 satır). Closure bağımlılığı
+      neredeyse yok; yöneticiler (`TazelemeYoneticisi`, `OzetYoneticisi`)
+      parametre geçilir.
+- [ ] **4. Kıyas uçları** → `api/routers/kiyas.py`.
+      `/compare`, `/urun-tablosu`, `/bank-delta`, `/scoring`, `/advantageous`
+      (702 satır — en büyük grup). `/compare` tek başına 236 satır; bu adım
+      kendi içinde ikiye bölünebilir.
+- [ ] **5. Ajan uçları** → `api/routers/ajan.py`.
+      `/chat`, `/extract`, `/zor-vakalar`. `/extract` önbellek paylaşıyor,
+      bu yüzden EN SONA bırakıldı.
+- [ ] **6. Denetim/yönetim** → `api/routers/denetim.py`.
+      `/log`, `/admin/*`, `/contradictions*`.
+
+Adım 2–6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
+çağrılarından oluşur (tahmini 120–150 satır).
+
+## Neden kademeli, tek seferde değil
+
+1.914 satırı tek commit'te taşımak, 3.134 testin hangi adımda kırıldığını
+belirsizleştirir. Kademeli bölmede her adım kendi testiyle doğrulanır ve
+gerektiğinde tek commit geri alınır.
+
+Bu belge, işin yarım kalması hâlinde bir sonraki turun sıfırdan analiz
+yapmasını da önler: matris yukarıda, sıra yukarıda, gerekçe yukarıda.
