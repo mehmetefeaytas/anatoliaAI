@@ -1,6 +1,7 @@
 """Yayımlanan her sayı, onu üreten kanıtla eşleşmek zorundadır.
 
 İlgili: ../README.md ("Ölçülebilir Durum" tablosu)
+../docs/sunum/anatolia-ai-sunum.html (sunumun sonuç slaydı)
         ../../README.md (kök README, "Ölçülebilir Durum")
         eval/reports/<damga>/{metrics,env}.json — ölçüm artefaktları
         scripts/link_denetimi.py — kardeş kapı (kırık link)
@@ -599,6 +600,7 @@ def iddialar() -> list[Iddia]:
                 ("app/README.md", r"testler-([\d.]+)%20"),
                 ("app/README.md", r"\*\*([\d.]+) test yeşil\*\*"),
                 ("README.md", r"([\d.]+) geçti"),
+                ("app/docs/sunum/anatolia-ai-sunum.html", r'sayac">([\d.]+)</span><p><strong>yeşil test'),
             ),
             olcer=olc_test_gecti,
             tolerans=0.5,
@@ -685,6 +687,7 @@ def iddialar() -> list[Iddia]:
             desenler=(
                 ("README.md", r"12-alan mikro-F1 \| \*{0,2}([\d,]+)"),
                 ("app/README.md", r"12-alan mikro-F1 \| \*{0,2}([\d,]+)"),
+                ("app/docs/sunum/anatolia-ai-sunum.html", r"12 alan mikro-F1'i <em>([\d,]+)</em>"),
             ),
             olcer=olc_metrik("gold.v2.json", "mikro_f1"),
         ),
@@ -698,6 +701,7 @@ def iddialar() -> list[Iddia]:
             desenler=(
                 ("README.md", r"(?i)halüsinasyon[^|]*\| \*\*(0,\d+)\*\*"),
                 ("app/README.md", r"(?i)halüsinasyon[^|]*\| \*\*(0,\d+)\*\*"),
+                ("app/docs/sunum/anatolia-ai-sunum.html", r'sayac">(0,\d+)</span><p><strong>halüsinasyon'),
             ),
             olcer=olc_metrik("gold.v2.json", "halusinasyon"),
         ),
