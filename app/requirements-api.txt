@@ -20,9 +20,9 @@
 #
 # KISIT: yalnızca açık kaynak (Apache/MIT/BSD); ücretli API/servis YOK.
 
-fastapi>=0.110           # MIT
-uvicorn>=0.29            # BSD
-pydantic>=2.6            # MIT
+fastapi==0.141.1           # MIT
+uvicorn==0.52.0            # BSD
+pydantic==2.13.4            # MIT
 
 # beautifulsoup4 — İNCE İMAJ İSTİSNASI, gerekçe önemli:
 #
@@ -37,7 +37,7 @@ pydantic>=2.6            # MIT
 # On-prem kanıtının anlamı, teslim edilen imajın test edilen sistemle AYNI
 # davranmasıdır; o yüzden bs4 ince imaja dahil edildi (saf Python, ~0.5 MB).
 # Ölçülmüş kanıt: docs/OFFLINE-KANIT.md "bs4 sapması".
-beautifulsoup4>=4.12     # MIT
+beautifulsoup4==4.15.0     # MIT
 
 # PostgreSQL backend (DATABASE_URL verilmişse); yoksa SQLite fallback devrede.
 # GERÇEKTEN KULLANILIYOR: src/db/postgres.PostgresRepository (31 Tem 2026).
@@ -45,7 +45,7 @@ beautifulsoup4>=4.12     # MIT
 # db-check` bu imajın İÇİNDE tests/test_pgvector_repository.py'yi koşturur;
 # psycopg olmadan o testler "atlandı" derdi ve pgvector yolunun çalıştığına
 # dair konteyner içi kanıt üretilemezdi. Paket saf istemcidir.
-psycopg[binary]>=3.1     # LGPL — yalnızca istemci kütüphanesi, dinamik bağlı
+psycopg[binary]==3.3.4     # LGPL — yalnızca istemci kütüphanesi, dinamik bağlı
 
 # `pgvector` PYTHON PAKETİ KALDIRILDI (31 Tem 2026) — kod onu kullanmıyor.
 # Sunucu tarafı pgvector EKLENTİSİ kullanılmaya devam ediyor; vektörler
