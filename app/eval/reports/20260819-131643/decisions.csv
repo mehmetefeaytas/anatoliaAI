@@ -520,7 +520,7 @@ strict;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucrets
 strict;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;alisveris_puani;1
 strict;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;kampanya_suresi;1
 strict;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;kampanya_kosullari;0
-strict;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;hedef_kitle;0
+strict;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;hedef_kitle;1
 strict;tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan;kar_payi_orani;1
 strict;tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan;finansman_tutari;1
 strict;tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan;vade_ay;1
@@ -542,7 +542,7 @@ strict;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampany
 strict;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;indirim_orani;1
 strict;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;kampanya_suresi;1
 strict;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;kampanya_kosullari;0
-strict;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;hedef_kitle;0
+strict;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;hedef_kitle;1
 strict;tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b;kar_payi_orani;1
 strict;tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b;finansman_tutari;1
 strict;tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b;vade_ay;1
@@ -1076,7 +1076,7 @@ tolerant;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucre
 tolerant;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;alisveris_puani;1
 tolerant;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;kampanya_suresi;1
 tolerant;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;kampanya_kosullari;0
-tolerant;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;hedef_kitle;0
+tolerant;kuveyt-turk--kampanya-arsivi-7000-tl-degerindeki-cek-tahsil-paketi-ucretsiz-scr;hedef_kitle;1
 tolerant;tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan;kar_payi_orani;1
 tolerant;tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan;finansman_tutari;1
 tolerant;tom-katilim--kampanyalar-hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan;vade_ay;1
@@ -1098,7 +1098,7 @@ tolerant;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampa
 tolerant;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;indirim_orani;1
 tolerant;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;kampanya_suresi;1
 tolerant;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;kampanya_kosullari;0
-tolerant;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;hedef_kitle;0
+tolerant;tom-katilim--kampanyalar-cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle;hedef_kitle;1
 tolerant;tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b;kar_payi_orani;1
 tolerant;tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b;finansman_tutari;1
 tolerant;tom-katilim--kampanyalar-hadi-kredi-karti-limitini-artir-toplam-2000-tlye-kadar-a101-hediye-b;vade_ay;1

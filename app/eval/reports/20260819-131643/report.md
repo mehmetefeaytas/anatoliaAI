@@ -8,17 +8,17 @@ yalnız kural katmanı (regex + normalizasyon), LLM kapalı — RESMÎ VARSAYILA
 |---|---|
 | konfig | kural |
 | gold dosyası | data/gold/gold.v2.json |
-| gold sha256 | af1d4f1b7ab2470a… |
+| gold sha256 | e50e973779aa7cdd… |
 | gold kayıt sayısı | 48 |
 | alt küme (split) | all |
 | eşleştirici(ler) | strict, tolerant |
 | seed | 42 |
-| git sha | a7f335ae82010fb72562d3b6eb2621edfec4cc80 |
+| git sha | ec8c0028d93848467a130529a7395e745325c5d4 |
 | commit'lenmemiş değişiklik | hayır |
 | Python | 3.14.6 |
 | platform | macOS-26.5.2-arm64-arm-64bit-Mach-O |
 | bağımlılık | yalnız Python stdlib (numpy/scipy/sklearn YOK) |
-| üretim zamanı (UTC) | 2026-08-19T13:07:42.002591+00:00 |
+| üretim zamanı (UTC) | 2026-08-19T13:16:43.710066+00:00 |
 
 ## Metrik tanımları
 
@@ -45,10 +45,10 @@ Aynı sayıya bakıp "model kötü" demek yerine hangi hatanın yapıldığını
 
 | alt küme | P (mikro) | R (mikro) | F1 (mikro) | F1 (makro) | mikro-F1 %95 GA | halüsinasyon |
 |---|---|---|---|---|---|---|
-| TÜMÜ | 0.482 | 0.473 | 0.477 | 0.634 | 0.477 [0.410–0.534] | 0.043 |
-| ZOR (40 belge) | 0.520 | 0.482 | 0.500 | 0.642 | — | 0.034 |
-| YAPILANDIRILMIŞ (11 alan) | 0.716 | 0.671 | 0.693 | 0.698 | — | 0.030 |
-| ZOR + YAPILANDIRILMIŞ (40 belge) | 0.746 | 0.679 | 0.711 | 0.706 | — | 0.029 |
+| TÜMÜ | 0.482 | 0.482 | 0.482 | 0.636 | 0.482 [0.413–0.539] | 0.043 |
+| ZOR (40 belge) | 0.520 | 0.491 | 0.505 | 0.644 | — | 0.034 |
+| YAPILANDIRILMIŞ (11 alan) | 0.716 | 0.688 | 0.702 | 0.700 | — | 0.030 |
+| ZOR + YAPILANDIRILMIŞ (40 belge) | 0.746 | 0.697 | 0.721 | 0.709 | — | 0.029 |
 
 > **«YAPILANDIRILMIŞ» satırı neyi dışarıda bırakıyor:** `kampanya_kosullari`. Bu alan serbest cümle listesi döndürür; span/jeton eşleşmesiyle F1 ölçmek metodolojik olarak yanlıştır — aynı koşulu farklı sözcüklerle yazan iki anotatör bile birbirini «yanlış» bulurdu. Alan GİZLENMİYOR: aşağıda kendi bölümünde, kalem düzeyi ölçütle raporlanıyor ve iki sayı yan yana duruyor.
 
@@ -58,7 +58,7 @@ Aynı sayıya bakıp "model kötü" demek yerine hangi hatanın yapıldığını
 |---|---|---|---|---|---|---|---|---|---|
 | alisveris_puani | 1.000 | 0.500 | 0.667 | 4 | 0 | 4 | 38 | 0 | 0 |
 | finansman_tutari | 1.000 | 0.750 | 0.857 | 3 | 0 | 1 | 43 | 0 | 0 |
-| hedef_kitle | 0.333 | 0.222 | 0.267 | 4 | 8 | 14 | 24 | 5 | 0 |
+| hedef_kitle | 0.333 | 0.250 | 0.286 | 4 | 8 | 12 | 26 | 5 | 0 |
 | indirim_orani | 1.000 | 0.500 | 0.667 | 1 | 0 | 1 | 45 | 0 | 0 |
 | kampanya_kosullari | 0.000 | 0.000 | 0.000 | 0 | 36 | 33 | 8 | 6 | 0 |
 | kampanya_suresi | 0.917 | 0.957 | 0.936 | 22 | 2 | 1 | 22 | 1 | 0 |
@@ -80,7 +80,7 @@ Aşağıdaki alanlar cümle listesi döndürür. İkili ölçüt bir alanı **ya
 | `kampanya_kosullari` | ikili | 0.000 | 0.000 | 0.000 | 0 | 36 | 33 |
 |  | kalem | 0.211 | 0.197 | 0.204 | 27 | 101 | 110 |
 
-Tüm alanlarda mikro-F1: ikili **0.477** · kalem **0.388**.
+Tüm alanlarda mikro-F1: ikili **0.482** · kalem **0.390**.
 
 #### Eşik duyarlılığı
 
@@ -88,9 +88,9 @@ Eşik sayıya bakılarak seçilmedi. Aşağıdaki tablo, seçilen eşiğin sonuc
 
 | jaccard eşiği | kalem mikro-F1 | TP | FP | FN |
 |---|---|---|---|---|
-| 0.60 | 0.411 | 87 | 119 | 130 |
-| 0.70 ← ilan edilen | 0.388 | 82 | 124 | 135 |
-| 0.80 | 0.374 | 79 | 127 | 138 |
+| 0.60 | 0.413 | 87 | 119 | 128 |
+| 0.70 ← ilan edilen | 0.390 | 82 | 124 | 133 |
+| 0.80 | 0.375 | 79 | 127 | 136 |
 
 ### Zor-vaka etiketi kırılımı
 
@@ -98,20 +98,20 @@ Etiketler çok değerlidir; tablolar ÖRTÜŞÜR.
 
 | etiket | mikro-F1 | makro-F1 | TP | FP | FN |
 |---|---|---|---|---|---|
-| celiskili | 0.500 | 0.524 | 7 | 6 | 8 |
+| celiskili | 0.519 | 0.524 | 7 | 6 | 7 |
 | eksik_bilgi | 0.348 | 0.500 | 4 | 9 | 6 |
-| format_varyant | 0.515 | 0.583 | 43 | 35 | 46 |
-| kosullu_aralik | 0.494 | 0.648 | 22 | 18 | 27 |
-| terminoloji | 0.500 | 0.642 | 13 | 12 | 14 |
+| format_varyant | 0.521 | 0.585 | 43 | 35 | 44 |
+| kosullu_aralik | 0.500 | 0.650 | 22 | 18 | 26 |
+| terminoloji | 0.510 | 0.649 | 13 | 12 | 13 |
 
 ## Eşleştirici: `tolerant`
 
 | alt küme | P (mikro) | R (mikro) | F1 (mikro) | F1 (makro) | mikro-F1 %95 GA | halüsinasyon |
 |---|---|---|---|---|---|---|
-| TÜMÜ | 0.482 | 0.473 | 0.477 | 0.634 | 0.477 [0.410–0.534] | 0.043 |
-| ZOR (40 belge) | 0.520 | 0.482 | 0.500 | 0.642 | — | 0.034 |
-| YAPILANDIRILMIŞ (11 alan) | 0.716 | 0.671 | 0.693 | 0.698 | — | 0.030 |
-| ZOR + YAPILANDIRILMIŞ (40 belge) | 0.746 | 0.679 | 0.711 | 0.706 | — | 0.029 |
+| TÜMÜ | 0.482 | 0.482 | 0.482 | 0.636 | 0.482 [0.413–0.539] | 0.043 |
+| ZOR (40 belge) | 0.520 | 0.491 | 0.505 | 0.644 | — | 0.034 |
+| YAPILANDIRILMIŞ (11 alan) | 0.716 | 0.688 | 0.702 | 0.700 | — | 0.030 |
+| ZOR + YAPILANDIRILMIŞ (40 belge) | 0.746 | 0.697 | 0.721 | 0.709 | — | 0.029 |
 
 > **«YAPILANDIRILMIŞ» satırı neyi dışarıda bırakıyor:** `kampanya_kosullari`. Bu alan serbest cümle listesi döndürür; span/jeton eşleşmesiyle F1 ölçmek metodolojik olarak yanlıştır — aynı koşulu farklı sözcüklerle yazan iki anotatör bile birbirini «yanlış» bulurdu. Alan GİZLENMİYOR: aşağıda kendi bölümünde, kalem düzeyi ölçütle raporlanıyor ve iki sayı yan yana duruyor.
 
@@ -121,7 +121,7 @@ Etiketler çok değerlidir; tablolar ÖRTÜŞÜR.
 |---|---|---|---|---|---|---|---|---|---|
 | alisveris_puani | 1.000 | 0.500 | 0.667 | 4 | 0 | 4 | 38 | 0 | 0 |
 | finansman_tutari | 1.000 | 0.750 | 0.857 | 3 | 0 | 1 | 43 | 0 | 0 |
-| hedef_kitle | 0.333 | 0.222 | 0.267 | 4 | 8 | 14 | 24 | 5 | 0 |
+| hedef_kitle | 0.333 | 0.250 | 0.286 | 4 | 8 | 12 | 26 | 5 | 0 |
 | indirim_orani | 1.000 | 0.500 | 0.667 | 1 | 0 | 1 | 45 | 0 | 0 |
 | kampanya_kosullari | 0.000 | 0.000 | 0.000 | 0 | 36 | 33 | 8 | 6 | 0 |
 | kampanya_suresi | 0.917 | 0.957 | 0.936 | 22 | 2 | 1 | 22 | 1 | 0 |
@@ -143,7 +143,7 @@ Aşağıdaki alanlar cümle listesi döndürür. İkili ölçüt bir alanı **ya
 | `kampanya_kosullari` | ikili | 0.000 | 0.000 | 0.000 | 0 | 36 | 33 |
 |  | kalem | 0.211 | 0.197 | 0.204 | 27 | 101 | 110 |
 
-Tüm alanlarda mikro-F1: ikili **0.477** · kalem **0.388**.
+Tüm alanlarda mikro-F1: ikili **0.482** · kalem **0.390**.
 
 #### Eşik duyarlılığı
 
@@ -151,9 +151,9 @@ Eşik sayıya bakılarak seçilmedi. Aşağıdaki tablo, seçilen eşiğin sonuc
 
 | jaccard eşiği | kalem mikro-F1 | TP | FP | FN |
 |---|---|---|---|---|
-| 0.60 | 0.411 | 87 | 119 | 130 |
-| 0.70 ← ilan edilen | 0.388 | 82 | 124 | 135 |
-| 0.80 | 0.374 | 79 | 127 | 138 |
+| 0.60 | 0.413 | 87 | 119 | 128 |
+| 0.70 ← ilan edilen | 0.390 | 82 | 124 | 133 |
+| 0.80 | 0.375 | 79 | 127 | 136 |
 
 ### Zor-vaka etiketi kırılımı
 
@@ -161,8 +161,8 @@ Etiketler çok değerlidir; tablolar ÖRTÜŞÜR.
 
 | etiket | mikro-F1 | makro-F1 | TP | FP | FN |
 |---|---|---|---|---|---|
-| celiskili | 0.500 | 0.524 | 7 | 6 | 8 |
+| celiskili | 0.519 | 0.524 | 7 | 6 | 7 |
 | eksik_bilgi | 0.348 | 0.500 | 4 | 9 | 6 |
-| format_varyant | 0.515 | 0.583 | 43 | 35 | 46 |
-| kosullu_aralik | 0.494 | 0.648 | 22 | 18 | 27 |
-| terminoloji | 0.500 | 0.642 | 13 | 12 | 14 |
+| format_varyant | 0.521 | 0.585 | 43 | 35 | 44 |
+| kosullu_aralik | 0.500 | 0.650 | 22 | 18 | 26 |
+| terminoloji | 0.510 | 0.649 | 13 | 12 | 13 |
