@@ -138,8 +138,8 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 �
 | AI özeti kapsaması | 1.759 üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
-| Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | 0,702 | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
-| 12-alan mikro-F1 | 0,482 [%95 GA 0,410–0,534] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
+| Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | 0,698 | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
+| 12-alan mikro-F1 | 0,477 [%95 GA 0,407–0,536] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
 | makro-F1 | 0,636 | *(aynı komut)* |
 | Halüsinasyon oranı | **0,043** (19/446) · yapısal kesitte 0,030 | *(aynı komut)* |
 | RAG — terim kapsama R@5 | 0,867 | `python -m eval.rag_eval --db data/demo.db` |
@@ -227,7 +227,7 @@ aynı soruyu sormuyor, bu yüzden manşet sayı `gold.v2` — zor olan.
 | kayıt | 48 | 134 |
 | zor vaka | 40 | 3 |
 | `absent` kararı (halüsinasyon paydası) | **444** | **60** |
-| 12-alan mikro-F1 | 0,482 | 0,762 |
+| 12-alan mikro-F1 | 0,477 | 0,762 |
 | halüsinasyon | **0,043** | **0,417** |
 
 Round1'in 0,417'si seçim etkisi. Round1'de bir hücre inceleme kuyruğuna zaten
@@ -248,7 +248,7 @@ tabanında ikinci bir kapı olarak koşuyor (`eval/esikler-round1.json`).
 `kampanya_kosullari` serbest cümle listesi döndüren bir alan ("Kampanyaya dahil
 olmak için X gerekir"). Span veya jeton eşleşmesiyle F1 ölçmek bu alanda
 metodolojik olarak yanlış: aynı koşulu farklı sözcüklerle yazan iki anotatör bile
-birbirini yanlış bulurdu. Bu tek alan mikro-F1'i 0,702'ten 0,482'ye çekiyor.
+birbirini yanlış bulurdu. Bu tek alan mikro-F1'i 0,698'ten 0,477'ye çekiyor.
 
 Alanı gizlemiyoruz. Ana tabloda satırı duruyor, değerlendirme raporunda kendi
 bölümünde kalem düzeyi ölçütle (jeton-Jaccard ≥ 0,70) raporlanıyor ve iki sayı

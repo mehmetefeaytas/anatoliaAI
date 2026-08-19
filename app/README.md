@@ -80,7 +80,7 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > manşet sayıyı** kanıtlamaz. Ölçüm: `eval/reports/20260816-094841/report.md`
 > (2026-08-16, n=3, tüm alt kümelerde P=R=F1=1,000).
 >
-> Manşet sayılar (0,482 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
+> Manşet sayılar (0,477 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
 > paket istemez, yalnız stdlib kullanır:
 > ```bash
 > python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural
@@ -247,7 +247,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
 | Ablasyon + McNemar | ✅ ölçüldü — `docs/rapor/ablasyon.md` |
-| Anotatörler arası uyum (κ) | ✅ round0: **Fleiss κ 0,302** · α 0,620/0,787 (260 ortak satır, 4 anotatör, hakemlik **sonrası**) · round1: **Cohen κ 0,274** (141 ortak karar, hakemlik **öncesi**). İkisi de eşik altı → ilan edilen sonuç uygulandı. İki sayı simetrik DEĞİLDİR, ayrıntı kök [`README.md`](../README.md) §4 |
+| Anotatörler arası uyum (κ) | ✅ **v2 turu: Cohen κ 0,700** (16 kayıt, 192 çift, ikinci etiketleyici LLM — "notla kabul" bandı; `masraf_durumu` negatif κ'sı hakemlenip gold+kılavuz+motor düzeltildi) · round0: **Fleiss κ 0,302** · α 0,620/0,787 (260 ortak satır, 4 anotatör, hakemlik **sonrası**) · round1: **Cohen κ 0,274** (141 ortak karar, hakemlik **öncesi**). İkisi de eşik altı → ilan edilen sonuç uygulandı. İki sayı simetrik DEĞİLDİR, ayrıntı kök [`README.md`](../README.md) §4 |
 | Bağımlılık lisans envanteri | ✅ iki ayrı payda, ikisi de aynı `.venv` kesiti (2026-08-15 21:14 +03): **96 bileşen** = CycloneDX SBOM'un ortam taraması ([`docs/sbom.json`](docs/sbom.json), CI lisans kapısının OKUDUĞU dosya) · **91 paket** = `pip-licenses` insan-okur envanteri ([`docs/LISANSLAR.md`](docs/LISANSLAR.md)). Fark **tam olarak 5 pakettir** ve araç kaynaklıdır — aşağıya bakınız |
 | Şartname uyum matrisi | ✅ madde madde, kanıt komutlarıyla ([`docs/SARTNAME-UYUM.md`](docs/SARTNAME-UYUM.md)) |
 | Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) |
@@ -392,8 +392,8 @@ belge düzeyi bootstrap 1000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| **yapılandırılmış alan mikro-F1** (11 alan) | **0,702** |
-| 12-alan mikro-F1 | **0,482** [%95 GA 0,410–0,534] |
+| **yapılandırılmış alan mikro-F1** (11 alan) | **0,698** |
+| 12-alan mikro-F1 | **0,477** [%95 GA 0,407–0,536] |
 | makro-F1 | **0,636** |
 | halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,043** [19/446] · yapısal kesitte 0,030 |
 | kalem düzeyi mikro-F1 (12 alan) | 0,381 |
@@ -535,21 +535,63 @@ Düşük κ'yı gizlemiyoruz: serbest metin alanları (`kampanya_kosullari`)
 uyumu tek başına aşağı çekiyor ve aynı alan mikro-F1'de de ayrı raporlanıyor.
 Sayıya bakıp eşik değiştirmek yasaktı, değiştirilmedi.
 
-**Gerçek açık — v2 turu ANOTE EDİLMEDİ.** Revizyondan sonra κ'nın düzelip
-düzelmediği ölçülemedi: `round0_kalibrasyon_v2_{A,B,C,D}.csv` dağıtıldı ama
-dördünün **sha256'sı birebir aynı** (`66c7db60…`), yani hiçbiri
-doldurulmamış. `report_iaa` bu tur için dürüstçe "ölçülemedi / olcusuz"
-diyor. Kapanması insan anotasyonu gerektiriyor; kod ve komut hazır.
+**Bu açık 19 Ağustos'ta KAPANDI — ama insan turuyla değil.** Aşağıdaki
+paragraf önceki hâlini belgeliyor ve silinmiyor, çünkü kapanmanın NASIL
+olduğu sayının kendisi kadar önemli.
+
+> *(19 Ağustos öncesi)* Revizyondan sonra κ'nın düzelip düzelmediği
+> ölçülemedi: `round0_kalibrasyon_v2_{A,B,C,D}.csv` dağıtıldı ama dördünün
+> **sha256'sı birebir aynı** (`66c7db60…`), yani hiçbiri doldurulmamış.
+
+### κ v2 — ÖLÇÜLDÜ: **0,700** (ikinci etiketleyici bir LLM)
+
+`gold.v2`'nin 48 kaydında **hiç etiketleyici örtüşmesi yoktu**
+(`annotators` dağılımı M1:12, M2:12, M3:12, M4:10, M4+HAKEM-02:2) ve κ
+örtüşme olmadan tanımı gereği hesaplanamaz. 16 kayıt (her etiketleyici
+bloğundan 4, blok içinde eşit aralıkla) bağımsız bir LLM turuyla ikinci kez
+etiketlendi:
+
+| Ölçüt | Değer | Karar |
+|---|---|---|
+| **κ — varlık kararı** (192 çift) | **0,700** | **notla kabul** — §7'nin 0,67 ≤ κ < 0,80 bandı |
+| Değer uyumu — birebir | 0,423 (11/26) | κ değil; şans düzeltmesi yok |
+| Krippendorff α (`ratio`) | 1,000 ama **3 birim** | **yetersiz birim** — iddia kurulmuyor |
+
+Eşik tablosu anotasyon başlamadan sabitlenmişti; ölçülen κ onun ilan edilmiş
+bandına düştü ve o bandın gereği olan not bu bölümdür. Örtüşme artık gold'un
+KENDİSİNDE görünür (`annotators` içinde `LLM-01`; 18 kayıt ≥ 2 etiketleyici).
+
+**İkinci etiketleyicinin LLM olduğu saklanmıyor** ve tek başına insan
+çift-anotasyonun yerine geçmez. Turun kendisi bunun nedenini gösterdi: bir
+vakada LLM, belgede `masraf|ücret|komisyon` geçen **sıfır** cümle olmasına
+rağmen `has_fee:false` üretti — yani bağımsız görüş değil **uydurma**.
+
+**Hakemlik koştu ve gold'u düzeltti.** `masraf_durumu` κ'sı **negatif**
+çıktı (−0,103: gözlenen uyum 12/16 olmasına rağmen anlaşmazlık sistematik).
+Dört uyuşmazlık hakemlendi → 3 onay, 1 düzeltme. Düzeltilen vakada kusur
+anotatörde değil **kılavuzun kapsamında**ydı: kural "ücretsiz" gördüğü her
+yerde sıfır masraf diyordu ve *"GastroClub üyeliği … ücretsiz"* cümlesi
+belgeyi kıyas tablosunda **"masrafsız" rozetiyle** gösteriyordu. Düzeltme üç
+katmanda birden yapıldı (gold + kılavuz §4 kapsam kuralı + motorda
+`_ALAN_DISI_OZNE_RE` kolu) ve **ölçülen bedeli raporlanıyor**: mikro-F1
+0,482 → 0,477, çünkü gold ile motorun aynı yanlışı yaptığı bir hücre TP
+sayılıyordu; ikisi de düzeltilince hücre TN oldu ve TN F1'e girmez.
+
+Ayrıntı: [`data/gold/review/_kappa-ikinci-tur.md`](data/gold/review/_kappa-ikinci-tur.md)
+· [`data/gold/review/_hakem-turu-03-masraf-durumu.md`](data/gold/review/_hakem-turu-03-masraf-durumu.md)
+
+**Hâlâ açık:** insan hakemliği. Bir sonraki tur `colab/03_kappa.py` ile daha
+güçlü bir modelle (`qwen3` ailesi) tekrar ölçüp "düşük değer uyumunun sebebi
+gold mu, yargıç mı" ayrımını yapacak.
 
 ### Sonraki adımlar
 
 Öncelik sırasıyla, teslime kalan sürede:
 
-- **κ v2 turunu anote et** — revizyon SONRASI κ ölçülemedi çünkü
-  `round0_kalibrasyon_v2_{A,B,C,D}.csv` dördü de aynı sha256'yı taşıyor
-  (hiç doldurulmamış). Dolunca `python -m scripts.report_iaa <dosyalar>`
-  tek komutla Fleiss κ + Krippendorff α üretir ve kılavuz revizyonunun
-  uyumu düzeltip düzeltmediği ölçülür. v1 κ'sı ZATEN ölçülmüş (0,302).
+- ~~**κ v2 turunu anote et**~~ — **YAPILDI (19 Ağu)**, ama LLM ikinci
+  etiketleyiciyle: κ = **0,700**, "notla kabul" bandı (yukarıdaki bölüm).
+  Kalan iş **insan** hakemliği ve ikinci turun daha güçlü bir modelle
+  tekrarı (`colab/03_kappa.py`).
 - **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve **0,464** nokta
   tahmini savunulabilir hâle gelir (bugünkü GA 0,398–0,522, yani genişliği
   0,124 — nokta tahminin kendisi kadar büyük).
