@@ -23,8 +23,14 @@ from pathlib import Path
 from playwright.sync_api import Page, sync_playwright
 
 sys.path.insert(0, str(Path(__file__).parent))
-from cek2 import (  # noqa: E402
-    CIK, hazirla, kaydir, sekme, tikla, yeni, yuklenmeyi_bekle,
+from cek2 import (
+    CIK,
+    hazirla,
+    kaydir,
+    sekme,
+    tikla,
+    yeni,
+    yuklenmeyi_bekle,
 )
 
 T = Path(os.environ["CLAUDE_JOB_DIR"]) / "tmp"
@@ -133,7 +139,7 @@ if __name__ == "__main__":
             print(f"çekiliyor: {ad}", flush=True)
             try:
                 SAHNELER[ad](tar)
-            except Exception as exc:            # noqa: BLE001
+            except Exception as exc:
                 print(f"  ✗ {ad}: {str(exc)[:140]}", flush=True)
         tar.close()
     for ad in istenen:

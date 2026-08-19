@@ -66,6 +66,13 @@ ignore = [
 # Rapor üretim betikleri (grafik SVG'leri, ekran görüntüleri, PDF) elle
 # koşulan CLI araçlarıdır; ilerleme çıktısı basmaları beklenen davranıştır.
 "docs/rapor/*" = ["T20"]
+# Sunum ve demo videosu üretim betikleri de aynı sınıf: elle koşulan CLI
+# araçları. 15 Ağu 2026'da CI'daki ruff işi bu dizin yüzünden kırmızıydı —
+# 56 bulgunun 50'si buradaki `print()` çağrılarıydı, ürün kodunda sıfır bulgu
+# vardı. `extend-exclude` ile dizini tümden dışlamak yerine yalnız T20 muaf
+# tutuluyor; böylece gerçek defektler (bu turda bulunan B007, I001, RUF100)
+# yakalanmaya devam ediyor.
+"docs/sunum/*" = ["T20"]
 "src/scraping/run.py" = ["T20"]
 "src/scraping/harvest.py" = ["T20"]
 "src/scraping/harvest_products.py" = ["T20"]

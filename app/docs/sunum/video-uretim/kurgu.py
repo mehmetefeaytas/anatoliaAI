@@ -106,7 +106,7 @@ def ses_birlestir(cikti: Path) -> float:
 
     girdiler, suzgec, etiketler = [], [], []
     n = 0
-    for (ad, *_, cumleler), seg_bas in zip(PLAN, baslangic, strict=True):
+    for (_ad, *_, cumleler), seg_bas in zip(PLAN, baslangic, strict=True):
         for no, ofset in cumleler:
             girdiler += ["-i", str(T / "ses" / ses[no]["dosya"])]
             gecikme = int((seg_bas + ofset) * 1000)

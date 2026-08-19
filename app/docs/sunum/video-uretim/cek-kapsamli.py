@@ -269,7 +269,7 @@ if __name__ == "__main__":
             print(f"çekiliyor: {ad}", flush=True)
             try:
                 SAHNELER[ad](tar)
-            except Exception as exc:            # noqa: BLE001
+            except Exception as exc:
                 print(f"  ✗ {ad}: {str(exc)[:110]}", flush=True)
         tar.close()
     for d in sorted(CIK.iterdir()):

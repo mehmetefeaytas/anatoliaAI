@@ -1,0 +1,31 @@
+# Anatolia AI — depo kökü linter yapılandırması
+#
+# ## Neden bu dosya var
+#
+# Teslim edilen sistem `app/` altında yaşıyor ve kendi kural kümesini
+# `app/pyproject.toml`'da açıkça seçiyor. Ancak depo kökünde `colab/` ve
+# `docs-ekran/` gibi yardımcı betik dizinleri de var ve bunlar `app/`'in
+# DIŞINDA olduğu için o yapılandırmayı hiç almıyorlardı: ruff her dosya için
+# en yakın üst dizindeki yapılandırmayı arar, kökte bir şey bulamayınca
+# varsayılan kural kümesine düşüyordu.
+#
+# Sonuç, 19 Ağu 2026'da ölçüldü: CI kökten `ruff check .` koşuyor ve yerelde
+# 69, CI'da 56 bulgu veriyordu — aynı komut, farklı sayı. Fark tam olarak bu
+# yapılandırma boşluğuydu; kökteki dizinler seçilmemiş kurallardan (BLE001,
+# ISC004, UP045, S110) bulgu üretiyordu. Bir linter yalnız sıfır bulguda
+# anlamlıdır ve kapının hangi kuralları uyguladığı belirsizse kapı değildir.
+#
+# Çözüm: kök, `app/pyproject.toml`'daki kural kümesini `extend` ile miras
+# alır. Böylece tek bir doğruluk kaynağı kalır — kural kümesi orada seçilir,
+# burada yalnızca köke özgü dosya rolü muafiyetleri tanımlanır.
+
+extend = "app/pyproject.toml"
+
+[lint.per-file-ignores]
+# Colab defterinden dışa aktarılan duman testi ve ekran görüntüsü/PDF üretim
+# betikleri elle koşulan CLI araçlarıdır; ilerleme çıktısı basmaları beklenen
+# davranıştır. Aynı gerekçe `app/pyproject.toml`'da `docs/rapor/*` ve
+# `docs/sunum/*` için de geçerli — ayrım dosyanın ROLÜNE göre yapılıyor,
+# kütüphane katmanına blanket muafiyet verilmiyor.
+"colab/*" = ["T20"]
+"docs-ekran/*" = ["T20"]
