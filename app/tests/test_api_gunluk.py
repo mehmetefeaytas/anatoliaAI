@@ -395,10 +395,17 @@ class TestYazanUclarIsaretlenir(unittest.TestCase):
         cls.app = _app()
 
     def test_eylem_uclarinin_hepsi_yazan_metotta(self) -> None:
+        # OPENAPI ŞEMASI üzerinden dolaşılıyor, `app.routes` üzerinden DEĞİL.
+        # Gerekçe ölçüldü (19 Ağu 2026): FastAPI 0.141'de `include_router` ile
+        # eklenen uçlar `app.routes` içinde bir sarmalayıcı nesne olarak duruyor
+        # ve `.path` taşımıyor; API katmanı router'lara bölününce bu döngü
+        # uçları GÖRMEZ oldu ve test "eylem ucu kaybolmuş" dedi — oysa uçlar
+        # çalışıyordu. `app.openapi()["paths"]` her iki durumda da tam listeyi
+        # verir (ölçüldü: 32 uç) ve FastAPI'nin iç yapısından bağımsızdır.
         rotalar = {}
-        for rota in self.app.routes:
-            for metot in getattr(rota, "methods", set()) or set():
-                rotalar.setdefault(getattr(rota, "path", ""), set()).add(metot)
+        for yol_, metotlar_ in self.app.openapi()["paths"].items():
+            for metot in metotlar_:
+                rotalar.setdefault(yol_, set()).add(metot.upper())
         for yol in self.EYLEM_YOLLARI:
             with self.subTest(yol=yol):
                 self.assertIn(yol, rotalar, "eylem ucu kaybolmuş")

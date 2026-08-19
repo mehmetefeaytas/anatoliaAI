@@ -3,7 +3,7 @@
 **Tarih:** 2026-08-19
 **Tetikleyen:** değerlendirmede `api/main.py`'nin "kod yapısının modüler ve
 okunabilir olması" maddesini ihlal ettiği işaretlendi.
-**Durum:** 1. ve 2. adım uygulandı; kalan 4 adım aşağıda sıralı.
+**Durum:** 1.–3. adım uygulandı; kalan 3 adım aşağıda sıralı.
 
 ## Sorun — ölçülmüş hâli
 
@@ -103,10 +103,33 @@ bırakılmaz.
       `app.routes` listesinde GÖRÜNMÜYOR ama yönlendirme çalışıyor
       (TestClient ile 200 doğrulandı). Route sayısına bakarak "router
       bağlanmadı" sonucuna varmak yanlış olur.
-- [ ] **3. Arka plan işleri** → `api/routers/isler.py`.
+- [x] **3. Arka plan işleri** → `api/routers/isler.py`. **UYGULANDI.**
       `/refresh*` + `/summaries*` (10 uç, 158 satır). Closure bağımlılığı
-      neredeyse yok; yöneticiler (`TazelemeYoneticisi`, `OzetYoneticisi`)
-      parametre geçilir.
+      neredeyse yok (`repo` yalnız 1 uçta); yöneticiler parametre geçildi.
+      Sonuç: `build_app()` 1.668 → **1.533 satır**; router 238 satır.
+
+      TAŞIMADA ÜÇ ŞEY ÖĞRENİLDİ — kalan adımlarda tekrarlanmasın:
+
+      1. **Silinen blokta yalnız uç noktalar yoktu.** `ozet_isi =
+         OzetYoneticisi(...)` ve `app.state.ozet_isi = ...` atamaları uçların
+         ARASINDA duruyordu; naif kesme onları da götürdü ve `build_app()`
+         `NameError` verdi. Kesmeden önce blok içindeki ATAMALAR taranmalı.
+      2. **`app.state` bir TEST KANCASI.** Yöneticilere gövdeler
+         `app.state.tazeleme` / `app.state.ozet_isi` üzerinden erişiyor ve
+         kodda gerekçesi yazılı ("testler sahte bir iş geçirebilsin diye").
+         Doğrudan parametreye çevirmek o kancayı kırardı; bu yüzden router
+         factory'ye `app` referansı geçildi.
+      3. **`app.routes` ile uç saymak yanlış ölçüt.** `tests/
+         test_api_gunluk.py` eylem uçlarını `app.routes` üzerinden dolaşıyordu
+         ve router'a taşınan uçları GÖRMEDİ ("eylem ucu kaybolmuş") — oysa
+         uçlar çalışıyordu. `app.openapi()["paths"]` her iki durumda da tam
+         listeyi veriyor (ölçüldü: 32 uç) ve test ona çevrildi. Aynı hata CI
+         kapısında da yaşanmıştı; ölçüt artık iki yerde de FastAPI'nin iç
+         yapısından bağımsız.
+
+      Ayrıca `RefreshReq` pydantic modeli `main.py`'den buraya taşındı (tek
+      kullanıcısı bu grup) ve `Request`/`BaseModel` modül seviyesinde import
+      edildi — 2. adımdaki 422 tuzağının tekrarı önlendi.
 - [ ] **4. Kıyas uçları** → `api/routers/kiyas.py`.
       `/compare`, `/urun-tablosu`, `/bank-delta`, `/scoring`, `/advantageous`
       (702 satır — en büyük grup). `/compare` tek başına 236 satır; bu adım

@@ -228,7 +228,9 @@ class TestIstemciKisitiGevsetemez(unittest.TestCase):
     """
 
     def test_sema_yalnizca_banka_tasir(self) -> None:
-        from src.api.main import RefreshReq
+        # `RefreshReq` 19 Ağu 2026'da `routers/isler.py`'ye taşındı
+        # (API katmanının kademeli bölünmesi, 3. adım).
+        from src.api.routers.isler import RefreshReq
 
         istek = RefreshReq(bank="kuveyt-turk", gecikme_sn=0, ignore_robots=True)
         self.assertEqual(istek.bank, "kuveyt-turk")
