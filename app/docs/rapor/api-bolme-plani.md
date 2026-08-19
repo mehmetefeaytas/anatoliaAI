@@ -3,8 +3,8 @@
 **Tarih:** 2026-08-19
 **Tetikleyen:** değerlendirmede `api/main.py`'nin "kod yapısının modüler ve
 okunabilir olması" maddesini ihlal ettiği işaretlendi.
-**Durum:** 1.–4. adım uygulandı; kalan 2 adım aşağıda sıralı.
-**Ölçülen ilerleme:** `main.py` 2.505 → **1.309 satır** (%48 küçüldü);
+**Durum:** 1.–5. adım uygulandı; kalan 1 adım aşağıda sıralı.
+**Ölçülen ilerleme:** `main.py` 2.505 → **1.044 satır** (%58 küçüldü);
 uç sayısı 32'de sabit, 3.150 test yeşil.
 
 ## Sorun — ölçülmüş hâli
@@ -183,13 +183,41 @@ bırakılmaz.
         kırılıyor, yol güncelleniyor ve **taşınmış çağrılar bir daha hiç
         denetlenmiyordu**. Kapsam `src/api/**/*.py` birleşimine çevrildi;
         artık bölmeden bağımsız.
-- [ ] **5. Ajan uçları** → `api/routers/ajan.py`.
-      `/chat`, `/extract`, `/zor-vakalar`. `/extract` önbellek paylaşıyor,
-      bu yüzden EN SONA bırakıldı.
+- [x] **5. Ajan uçları** → `api/routers/ajan.py`. **UYGULANDI.**
+      `/chat`, `/extract`, `/zor-vakalar` (149 satır). Sonuç: `main.py`
+      1.309 → **1.044 satır**; router 269 satır. Üç uç gerçek istekle
+      doğrulandı (`/extract` `kar_payi_orani=1,89` + `vade_ay=120` döndürdü,
+      `/chat` `handler=structured`), uç sayısı 32'de kaldı.
+
+      **Önbellek endişesi gerçekleşmedi.** Plan `/extract`i "önbellek
+      paylaşıyor" diye en sona bırakmıştı; gövdesi okunduğunda görüldü ki
+      `/extract` hiçbir önbelleğe dokunmuyor — girdi metni istekten geliyor ve
+      çıkarım her seferinde yeniden koşuyor (canlı çıkarım ucunun anlamı bu).
+      Paylaşılan tek şey `_kaynaklari_zenginlestir` (yalnız `/chat`) ve o da
+      parametre geçildi.
+
+      **Gövde şemaları zorunlu olarak taşındı.** `ChatReq`/`ExtractReq` ve
+      `Request` `main`de bırakılamazdı: `from __future__ import annotations`
+      yüzünden anotasyonlar dizedir ve FastAPI onları ROUTER modülünün
+      global'lerinden çözer — `main`de kalsalardı iki uç da gövdeyi hiç
+      okumadan 422 verirdi. `main` yalnız `BaseModel`i tutuyor, çünkü
+      `build_app()` pydantic yokluğunu onun `None` olmasıyla raporluyor.
+      `Response` de `main`de kaldı (`GET /campaigns` başlığı için).
+
+      **BEŞİNCİ DERS — fonksiyonu taşırken OKUDUĞU sabitleri de taşı.**
+      `_guvenlik_ozeti` ilk denemede `yardimcilar.py`'ye taşındı ama okuduğu
+      `GUVENLIK_KAPILARI` ve `GATE_LABELS` `main`de kaldı; sonuç dört
+      `F821 Undefined name`. Kapı sabitleri fonksiyonun parçasıdır (ikisi
+      `chatbot/safety.py`'den ithal edilen kapı kimliklerini Türkçe etikete
+      bağlıyor) ve ayırmak aynı kararı iki modüle bölmek olurdu. Sabitler de
+      taşındı; `tests/test_chat_guvenlik_yuzeyi.py` de `api_main.X` yerine
+      `yardimcilar.X` okuyacak biçimde güncellendi — fonksiyonu kaynağından
+      çekmek, `main` üzerinden yeniden ihraç edilmiş bir ada bağlanmaktan
+      dürüsttür (o dolaylılık taşımayı gizlerdi).
 - [ ] **6. Denetim/yönetim** → `api/routers/denetim.py`.
       `/log`, `/admin/*`, `/contradictions*`.
 
-Adım 5–6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
+Adım 6 tamamlandığında `build_app()` yalnız kurulum + `include_router`
 çağrılarından oluşur (tahmini 120–150 satır).
 
 ## Neden kademeli, tek seferde değil

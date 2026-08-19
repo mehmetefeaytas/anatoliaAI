@@ -25,6 +25,11 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
+from ..chatbot.safety import (
+    ALL_GATES,
+    GATE_INJECTION,
+    sanitize_output,
+)
 from ..comparison.compare import _HIGHER_IS_BETTER, _LOWER_IS_BETTER
 
 # `/compare?intent=` için geçerli değerler — `chatbot/router.py:57` Route.intent
@@ -145,3 +150,131 @@ def scoring_direction(field: str) -> tuple[str, str]:
     if field in _HIGHER_IS_BETTER:
         return "higher_is_better", "Büyük değer daha avantajlı"
     return "unranked", "Bu alan için sıralama yönü tanımlı değil (kıyas yapılmaz)"
+
+# --------------------------------------------------------------------------- #
+# Güvenlik kapılarının rapor yüzeyi (`POST /chat` -> `safety`)
+# --------------------------------------------------------------------------- #
+# Kapı kimlikleri `chatbot/safety.py`'den İTHAL EDİLİR (`ALL_GATES`,
+# `GATE_INJECTION`), burada tekrar YAZILMAZ. Gerekçe: iki liste ayrışırsa
+# arayüz ya olmayan bir kapıyı "çalışıyor" diye gösterir ya da gerçekten
+# ateşlenmiş bir kapıyı hiç basmaz — ikisi de güvenlik iddiasını çürütür.
+#
+# Sıra da oradan gelir: kullanıcı arka arkaya iki soru sorduğunda kapı
+# listesinin yer değiştirmemesi gerekir, yoksa tablo okunmaz olur.
+GUVENLIK_KAPILARI: tuple[str, ...] = ALL_GATES + (GATE_INJECTION,)
+
+#: Kapı kimliği → (Türkçe ad, tek cümlelik açıklama). Açıklama kullanıcıya
+#: gösterilir: "terminoloji" ham kimliği tek başına hiçbir şey anlatmaz.
+GATE_LABELS: dict[str, tuple[str, str]] = {
+    "terminoloji": (
+        "Terminoloji",
+        "Konvansiyonel bankacılık terimi soruda kabul edilir; cevapta "
+        "katılım bankacılığındaki kâr payı karşılığıyla yazılır."),
+    "fikhi_hukum": (
+        "Fıkhî hüküm",
+        "Bir ürünün dinen uygunluğuna hüküm verilmez; yetkili danışma "
+        "kuruluna yönlendirilir."),
+    "yatirim_tavsiyesi": (
+        "Yatırım tavsiyesi",
+        "Bankalar karşılaştırılır, hangisinin seçileceği söylenmez."),
+    "garanti_imasi": (
+        "Garanti iması",
+        "Kâr payı oranı beklenen orandır; taahhüt edilmiş getiri gibi "
+        "sunulmaz — katılma hesabı zarara da ortaktır."),
+    "cekimserlik": (
+        "Çekimserlik",
+        "Kaynak yoksa ya da soru veri kapsamının dışındaysa değer "
+        "uydurulmaz."),
+    "icerik_karantinasi": (
+        "İçerik karantinası",
+        "Getirilen belgede talimat devralma işareti varsa belge tümüyle "
+        "düşürülür; içeriği cevaba girmez."),
+}
+
+
+# --------------------------------------------------------------------------- #
+# Sohbet güvenlik yüzeyi — kapıların denetim kaydı
+# --------------------------------------------------------------------------- #
+# `api/main.py`'den taşındı (bölmenin 5. adımı). Buraya konuldu, `routers/
+# ajan.py`'ye DEĞİL: `tests/test_chat_guvenlik_yuzeyi.py` bu iki fonksiyona
+# `api_main._guvenlik_ozeti` / `api_main._karantina_kaydi` üzerinden erişiyor
+# ve ikisi de saf fonksiyon. Saf olan import edilir (bkz. modül başlığı);
+# `main` buradan import ettiği için o test sözleşmesi kırılmadı.
+
+#: Karantina kaydında gösterilecek işaret payı (karakter). İşaret KANITTIR ve
+#: gösterilmesi gerekir, ama gösterilen şey üçüncü taraf bir sayfadan gelen
+#: saldırgan metnidir: sınırsız basmak, düşürdüğümüz belgeyi ekrana geri
+#: koymak olurdu.
+KARANTINA_ISARET_SINIRI = 120
+
+
+def _karantina_kaydi(p: dict) -> dict:
+    """Düşürülen bir pasajın kullanıcıya gösterilecek özeti.
+
+    Belgenin METNİ TAŞINMAZ — yalnız kimliği (banka, kampanya, kaynak
+    bağlantısı) ve yakalanan işaret geçer. Karantinanın gerekçesi "bu belgenin
+    geri kalanına da güvenilmez"di; metnini arayüze taşımak o gerekçeyi
+    kendi elimizle çürütürdü.
+
+    İşaret `sanitize_output`tan geçirilir: eşleşen parça saldırganın yazdığı
+    dizedir ve içinde konvansiyonel faiz terimi geçebilir. KAPI 1'in
+    değişmezi ("o terim ekranda görünmez") güvenlik uyarısı için delinmez.
+    """
+    isaret = (p.get("isaret") or "").strip()
+    if len(isaret) > KARANTINA_ISARET_SINIRI:
+        isaret = isaret[:KARANTINA_ISARET_SINIRI].rstrip() + "…"
+    temiz, _ = sanitize_output(isaret)
+    cid = p.get("campaign_id")
+    return {
+        "bank": p.get("bank"),
+        "campaign_id": int(cid) if cid is not None else None,
+        "source_url": p.get("source_url"),
+        "isaret": temiz or None,
+    }
+
+
+def _guvenlik_ozeti(rapor, gates: list, quarantined: list) -> dict:
+    """`POST /chat` yanıtındaki `safety` bloğu — kapıların denetim kaydı.
+
+    ## Neden yanıtta yer alıyor
+
+    Sistem beş güvenlik kapısı çalıştırdığını iddia ediyor ama kapıların
+    ETKİSİ metne karışmış durumda: düzeltme notu ve feragatname cevabın
+    içinde, karantina ise tamamen görünmez. "Kapılar gerçekten koşuyor mu"
+    sorusunun cevabı arayüzde kurulamıyordu.
+
+    ## Neden ateşlenmeyen kapılar da dönüyor
+
+    `fired=False` kayıtları olmadan liste "hangi kapılar var" sorusuna cevap
+    veremez; jüri yalnız ateşlenenleri görüp geri kalanının varlığından
+    haberdar olamazdı. Gürültü sorunu arayüzde çözülür (ayrıntı jüri
+    modunda açılır), sözleşmede değil.
+
+    ## Yasak terim neden GERİ GÖNDERİLMİYOR
+
+    `SafetyReport.violations` yakalanan terimi ve çevresindeki ham bağlamı
+    taşır. Onu yanıta koymak, KAPI 1'in az önce ekrandan sildiği dizeyi
+    denetim kutusunda geri basmak olurdu. Bu yüzden yalnız SAYI geçer:
+    olayın gerçekleştiği bilgisi kanıttır, terimin kendisi değil.
+    """
+    ates = set(gates or [])
+    kirli = [_karantina_kaydi(p) for p in (quarantined or [])]
+    if kirli:
+        # Karantina `SafetyReport`e yazılmaz (RAG katmanında koşar), ama
+        # ateşlenmiş bir kapıdır ve öyle raporlanır.
+        ates.add(GATE_INJECTION)
+    return {
+        "gates": [
+            {"id": g,
+             "label": GATE_LABELS.get(g, (g, ""))[0],
+             "aciklama": GATE_LABELS.get(g, (g, ""))[1],
+             "fired": g in ates}
+            for g in GUVENLIK_KAPILARI
+        ],
+        "fired": [g for g in GUVENLIK_KAPILARI if g in ates],
+        "blocked_gate": getattr(rapor, "blocked_gate", None),
+        "abstained": bool(getattr(rapor, "abstained", False)),
+        # Çıktı süzgecinin sessizce yeniden yazdığı terim sayısı.
+        "rewritten_terms": len(getattr(rapor, "violations", []) or []),
+        "quarantined": kirli,
+    }
