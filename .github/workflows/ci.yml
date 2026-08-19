@@ -264,17 +264,36 @@ jobs:
       # `test` isindeki kardes adimin BOS YESIL olmasinin sebebi burada yok:
       # fastapi kurulu, dolayisiyla `build_app()` gercekten cagriliyor ve
       # None DONMEDIGI dogrulaniyor. Adim, var olma sebebi icin dusebilir.
-      - name: API gercekten kuruluyor (build_app None donmuyor)
+      # KAPI GERCEK ISTEK ATAR, route listesine BAKMAZ (19 Agu 2026'da
+      # degistirildi). Eski hali `app.routes` uzerinden yol adi topluyordu ve
+      # API katmani router'lara bolununce kirildi:
+      # `AttributeError: '_IncludedRouter' object has no attribute 'path'`.
+      #
+      # Sebep FastAPI 0.141'in ic detayi: `include_router` ile eklenen uclar
+      # `app.routes` icinde bir sarmalayici nesne olarak duruyor, yol adiyla
+      # DEGIL. Olculdu: uclar calisiyor (TestClient 200 donduruyor) ama
+      # listede gorunmuyor. Yani eski kapi, calisan bir sistemde "uc kayboldu"
+      # diyordu -- yanlis alarm; tersi de mumkundu (liste dolu, yonlendirme
+      # bozuk).
+      #
+      # TestClient ile istek atmak bu ic detaydan bagimsizdir: 404 DISI her
+      # kod ucun gercekten yonlendirildigini kanitlar (422 = ucta zorunlu
+      # parametre var, yani yol BULUNDU). 404 ise uc kaybolmustur.
+      # Sabit komut; disaridan gelen hicbir girdi kullanilmaz.
+      - name: API gercekten kuruluyor (uclar istek aliyor)
         working-directory: app
         run: |
           python -c "
+          from fastapi.testclient import TestClient
           from src.api.main import build_app
           app = build_app()
           assert app is not None, 'build_app() None dondu'
-          yollar = {r.path for r in app.routes}
+          c = TestClient(app)
           for uc in ('/health', '/banks', '/campaigns', '/compare', '/chat'):
-              assert uc in yollar, f'uc kayboldu: {uc}'
-          print(f'API ayakta, {len(yollar)} yol kayitli')
+              kod = c.get(uc).status_code
+              assert kod != 404, f'uc kayboldu: {uc}'
+              print(f'  {uc} -> {kod}')
+          print('API ayakta, 5 uc yonlendiriliyor')
           "
 
   postgres:
