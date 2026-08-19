@@ -186,11 +186,18 @@ geçemedi. 0,575 < 0,612, p = 0,0117; halüsinasyon oranı ise kural katmanını
 üstünde. Projenin kendi iç kılavuzu bu tablodan "hibridin kazandığının
 kanıtlanmasını" istiyordu. Tersi ölçüldü ve rapor ölçüldüğü gibi duruyor.
 
-Bu iki sayı 12 Ağustos tabanına aittir. Kural katmanı 19 Ağustos'ta iyileştirildi
-(makro-F1 0,601 → 0,636) ve ablasyonun yeniden koşumu yerel bir LLM ortamı
-gerektirdiği için tekrarlanmadı. Yani yukarıdaki 0,612 bugünün kural katmanından
-düşüktür; fark hibridin aleyhine daha da açılmış olmalı, ama bunu **ölçmedik** —
-ölçülmemiş bir sayıyı rapora yazmıyoruz.
+Bu iki sayı **5 Ağustos** tabanına aittir ve o günün gold setiyle ölçüldü.
+Kural katmanı 19 Ağustos'ta iyileştirildi (makro-F1 0,601 → 0,636), yani
+yukarıdaki 0,612 bugünün kural katmanından düşüktür.
+
+Ablasyonun asıl sınırı başka: o rapor kendi içinde *"hibrit özellikle zor
+vakalarda kazanır → ölçülemedi, gold'da yalnız **1** zor belge var"* diyor.
+Bugünkü `gold.v2`'de **40 zor belge** var, yani karşılaştırma ilk kez zor vaka
+alt kümesinde anlamlı ölçülebilir durumda. 19 Ağustos'ta LLM kolu ilk kez
+koşturuldu ve doğrulandı (Ollama + `qwen2.5:7b-instruct`, CPU, katı mod) —
+[LLM kolu koşum kanıtı](app/docs/rapor/llm-kolu-kosum-kaniti.md). Ablasyonun
+kendisi CPU'da ~8 token/s ile koştuğu için uzun sürüyor; **tamamlanmadan
+hiçbir yeni sayı yayımlanmayacak.**
 
 **4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** Round0: 4 anotatör, 260
 ortak satır, 0 boş hücre, Fleiss κ 0,302. Round1: 2 anotatör, 141 ortak karar,

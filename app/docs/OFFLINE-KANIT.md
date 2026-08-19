@@ -54,6 +54,15 @@ işaretlidir. Ara değer, tahmin, "olması beklenen" sayı yoktur.
 > ⚠️ **GPU yok.** Bu makinede GPU bulunmadığı için vLLM / Trendyol-LLM-8B-T1
 > kolu **hiç koşturulmadı**. Aşağıdaki tüm gecikme sayıları **CPU, LLM'siz**
 > yoldan gelir. Ayrıntı: §7 ve §9.
+>
+> **GÜNCELLEME (19 Ağu 2026):** yukarıdaki cümle *vLLM / Trendyol* kolu için
+> hâlâ geçerli. Ancak **Ollama kolu** o tarihte ilk kez koşturuldu ve
+> doğrulandı (CPU, `qwen2.5:7b-instruct`, katı mod `LLM_STRICT=1`): üç alanın
+> üçü de doğru çıkarıldı. Bu koşumun kanıtı ayrı bir belgede —
+> `docs/rapor/llm-kolu-kosum-kaniti.md`. Yani "sistem yalnız
+> `NullLLMExtractor` ile çalışabiliyor" ifadesi artık doğru değil; bu
+> belgedeki gecikme sayıları ise değişmedi, çünkü onlar LLM'siz yoldan
+> ölçülmüştü ve o yol hâlâ varsayılan.
 
 ---
 
