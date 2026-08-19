@@ -155,7 +155,7 @@ Yalnız 1. kategori düzeltildi. Kendi gold setimizde (strict, tüm küme):
 > şöyle yeniden üretilir:
 >
 > ```bash
-> python -m eval.alan_kesiti eval/reports/20260819-115438 --kesit ortak5
+> python -m eval.alan_kesiti eval/reports/20260819-120218 --kesit ortak5
 > ```
 
 Harici korpus tarafında dikkatli olmak gerekiyor: düzeltme **öncesi** ölçüm
