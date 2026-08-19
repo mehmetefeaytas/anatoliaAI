@@ -5,8 +5,8 @@
   "atlandi": 53,
   "basarisiz": 0,
   "cikis_kodu": 0,
-  "git_sha": "e0fa63864e020089325f1868b3bcd0a32eae2b35",
-  "git_dirty": true,
-  "created_utc": "2026-08-19T22:40:49.172968+00:00",
+  "git_sha": "0589ac8d32d58c33ee39dfb7dd7c6199a5e5a8de",
+  "git_dirty": false,
+  "created_utc": "2026-08-19T22:42:30.176199+00:00",
   "python": "3.14.6"
 }
