@@ -182,6 +182,24 @@ kapsam onların tarafındaydı; bu rapor kapsamın bir bölümünü kapattı.
 - **Gold ödül ontolojisi hakemsiz.** Yukarıdaki tutarsızlık çözülmedi.
 - **Held-out küçük.** 10 kayıt / 4 alan-örnek. Anlamlı bir held-out ölçümü
   için kendi korpusumuzdan (1.782 belge) yeni etiketli kayıt gerekiyor.
+- **`vade_ay` üç hatasının üçü de bağlam sorunu** (F1 0,545, destek 5).
+  Teşhis edildi, düzeltilmedi — gerekçesiyle:
+  1. "en az **1 yıl** oturan kiracı" → oturma süresi vade sanılıyor
+     (gold 120, çıkarım 12). Hak sahipliği koşulunu vadeden ayıran bir
+     bağlam koruyucusu gerekiyor.
+  2. "**Örneğin 10 yıl vadeli** 180.000 TL ev borcu" → varsayımsal hesap
+     örneği (gold `absent`, çıkarım 120). Bu kayıt aslında bir zekât
+     hesaplama aracı, kampanya sayfası değil; yani birincil sorun korpus
+     kapsamında. `örneğin` üzerinden bir koruyucu denenebilir ama desen dar
+     değil: meşru açıklama cümlelerini de elerdi.
+  3. "**12 Ay** 4.15 / 24 Ay 3.90 / 36 …" → oran tablosunun ilk satırı
+     alınıyor (gold 60). Tabloda en uzun vadeyi seçmek gerekir; ancak
+     "adayların en büyüğünü seç" yaklaşımı `finansman_tutari`'nda bir kez
+     denenip ölçümü BOZMUŞTU (`extract_tutar` yorumu), bu yüzden aynı
+     kestirme burada da uygulanmadı.
+
+  Üçü toplam 1-2 alan-örnek kazandırır; her biri bağlam koruyucusu
+  gerektirdiği için ayrı ayrı ölçülerek yapılmalı.
 - **`_CUMLE_SINIRI_RE` iki kez tanımlı** (`extract.py`, iki ayrı satır).
   İkinci tanım ilkini gölgeliyor, yani `extract_tutar` okuyucunun sandığı
   deseni kullanmıyor. Davranış değiştirdiği için bu turda dokunulmadı;
