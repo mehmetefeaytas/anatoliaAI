@@ -397,6 +397,20 @@ def _extract_logprobs(choice: dict) -> list[dict]:
             continue
     return out
 
+def _birimsiz_sayi(v: str) -> bool:
+    """`"-1"` / `"300"` gibi birim taşımayan süre değeri mi.
+
+    `"30m"`, `"1h30m"`, `"-1s"` için False döner. Boş dize de False'tur:
+    sessizce `"s"` eklemek `""`yi geçersiz bir süreye (`"s"`) çevirirdi.
+    Boş dizeyi çağıran taraf varsayılana düşürür.
+    """
+    if not v:
+        return False
+    govde = v[1:] if v[0] in "+-" else v
+    return govde.isdigit()
+
+
+
 
 class OllamaClient:
     """Ollama `/api/chat` + `format=<schema>` — demo yedeği (CPU/GPU, offline).
@@ -446,7 +460,30 @@ class OllamaClient:
         self.timeout = float(
             timeout if timeout is not None
             else os.environ.get("OLLAMA_TIMEOUT", 180.0))
-        self.keep_alive = keep_alive or os.environ.get("OLLAMA_KEEP_ALIVE", "30m")
+        # `keep_alive` İSTEK GÖVDESİNE gider, sunucu env'ine değil — ve iki
+        # bağlam aynı değeri farklı kabul ediyor. Ollama'nın kendi belgesi
+        # "modeli bellekte süresiz tut" için `OLLAMA_KEEP_ALIVE=-1` diyor;
+        # sunucu bunu env olarak kabul eder ama `/api/chat` gövdesindeki
+        # `keep_alive` alanı Go'nun `time.ParseDuration`'ıyla çözülür ve
+        # birimsiz `-1` için
+        #     HTTP 400 {"error": "time: missing unit in duration \"-1\""}
+        # döner. ÖLÇÜLDÜ (2026-08-19, Colab A100): `colab/02_ablasyon.py`
+        # env'i `-1` yazıyordu; `kural` kolu 8 saniyede koştu, `llm`,
+        # `hibrit` ve `hibrit-verify` kollarının ÜÇÜ DE 0 saniyede düştü.
+        # `LLM_STRICT=1` sayesinde sessizce kural-only'ye düşmedi, gürültülü
+        # patladı — ama hata alt sürecin stderr'inde kaldığı için tablo
+        # "eksik kolla" üretildi.
+        #
+        # Belgesi `-1` öneren bir sistemin istemcisi `-1`i kabul etmek
+        # zorunda. Birimsiz tam sayı Ollama CLI'ının kendi kuralıyla SANİYE
+        # sayılır ve negatif değer "süresiz" anlamını korur.
+        # Sondaki `or "30m"`: env TANIMLI ama BOŞ olabilir (`OLLAMA_KEEP_ALIVE=`)
+        # ve `os.environ.get` o hâlde varsayılanı değil boş dizeyi döndürür.
+        # Boş dize istek gövdesine girse Ollama yine 400 verirdi — aynı
+        # arızanın ikinci kapısı.
+        ka = str(keep_alive or os.environ.get("OLLAMA_KEEP_ALIVE", "30m")
+                 ).strip() or "30m"
+        self.keep_alive = f"{ka}s" if _birimsiz_sayi(ka) else ka
         self.num_ctx = int(num_ctx or os.environ.get("OLLAMA_NUM_CTX", 8192))
         # ÇIKTI TOKEN SINIRI. Ollama varsayılanı sınırsızdır ve bu ölçülmüş bir
         # arızaya yol açıyordu (2026-08-08, özet üretimi, qwen2.5:7b-instruct):
