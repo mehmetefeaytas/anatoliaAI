@@ -147,6 +147,17 @@ Yalnız 1. kategori düzeltildi. Kendi gold setimizde (strict, tüm küme):
 | 5 ortak alan, mikro | 0,667 | **0,708** |
 | 5 ortak alan, makro | 0,712 | **0,769** |
 
+> **İki metrik tanımı karıştırılmamalı.** Yukarıdaki "5 ortak alan" satırları
+> karşı tarafın tanımıyla hesaplandı (yanlış değer hem FP hem FN sayılır),
+> çünkü çapraz tablonun her iki yanı aynı kodla ölçülmek zorundaydı. Bizim
+> kendi `run_eval` tanımımızla aynı kesit **mikro 0,723 / makro 0,745**
+> veriyor. İki sayı çelişmiyor; farklı ölçütler. Kendi tanımımızla kesit
+> şöyle yeniden üretilir:
+>
+> ```bash
+> python -m eval.alan_kesiti eval/reports/20260819-115438 --kesit ortak5
+> ```
+
 Harici korpus tarafında dikkatli olmak gerekiyor: düzeltme **öncesi** ölçüm
 korpusun tamamında yapılmıştı (36 canlı kayıt, mikro-F1 0,433); düzeltme
 **sonrası** rakam ise geliştirme yarısına ait (26 kayıt, 0,576). İkisi farklı

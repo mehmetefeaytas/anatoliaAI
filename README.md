@@ -9,7 +9,7 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3127%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Testler](https://img.shields.io/badge/testler-3134%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge-yellow.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
@@ -28,7 +28,7 @@ Sonucu dashboard ve hibrit chatbot ile sunuyor. Tamamı açık kaynak (Apache-2.
 on-premise ve internetsiz çalışıyor.
 
 > 1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
-> 3.127 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
+> 3.134 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
 
 ---
 
@@ -152,7 +152,7 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 �
 | Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
 | Bağımlılık envanteri | 96 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
 | On-prem kanıtı | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
-| Test | **3.180** toplanan · 3.127 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız | `python -m scripts.test_ozeti` — ölçüm 2026-08-19 |
+| Test | **3.187** toplanan · 3.134 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız | `python -m scripts.test_ozeti` — ölçüm 2026-08-19 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | var — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 
@@ -411,7 +411,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — 19 Ağu ölçümü: 3.180 toplandı, 3.127 geçti, 53 atlandı, 0 başarısız.
+# Tüm test paketi — 19 Ağu ölçümü: 3.187 toplandı, 3.134 geçti, 53 atlandı, 0 başarısız.
 # Atlananlar isteğe bağlı bağımlılık isteyenler (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değil ve tamamı offline koşuyor.
 python3 -m unittest discover -s tests
@@ -542,7 +542,7 @@ denetliyor.
 │   │                            #   comparison · rag · chatbot · api · db
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
-│   ├── tests/                   #   3.127 birim/entegrasyon testi (offline)
+│   ├── tests/                   #   3.134 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
 │   ├── data/gold/               #   altın setler + anotasyon kılavuzu
 │   ├── docs/                    #   SBOM · lisans envanteri · offline kanıt
