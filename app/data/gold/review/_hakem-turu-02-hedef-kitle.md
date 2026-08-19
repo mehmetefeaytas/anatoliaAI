@@ -5,7 +5,8 @@
 (0,267) ve **18 destekli** — yani en büyük iyileştirme potansiyeli orada
 görünüyordu. Alanı düzeltmek için 19 tutarsızlığın (10 kaçırma + 9 fazla
 üretim) tamamı tek tek, gold'un kendi kanıt span'leriyle karşılaştırıldı.
-**Durum:** `celiskili` — karar bekliyor, ikinci anotatör gerekiyor.
+**Durum:** kısmen karara bağlandı — 2 net hata düzeltildi (§A1),
+3 vaka `celiskili` olarak ikinci anotatör bekliyor.
 
 ## Neden bu belge var
 
@@ -152,7 +153,7 @@ yorum olarak işlendi.
 
 | Sınıf | Vaka | Etki |
 |---|---|---|
-| A. Gold hatası şüphesi | 8 | Çıkarıcı düzeltilmemeli |
+| A. Gold hatası şüphesi | 8 | 2'si düzeltildi · 2'si savunulabilir çıktı · 1 tartışmalı · 3'ü (A2) bekliyor |
 | B. Kod hatası | 6 | 3'ü düzeltilebilir, 2'si ölçülerek reddedildi (B3) |
 | C. Sözleşme belirsizliği | 4 | Kılavuza madde gerekiyor |
 
