@@ -1434,10 +1434,34 @@ def _kanit_araligi(text: str, m: "re.Match[str]", fwd: str) -> tuple[int, int]:
 #
 # ## Kapsam dışı bırakılan 2 vaka (bilerek)
 #
-# "TOD ayrıcalığını ücretsiz yaşa" (n=1) — yapısal ikizi gold'da MEŞRU
-# ("GastroClub üyeliği ... ücretsiz"); iki vaka çelişiyor, n=1 üzerinde
-# kural yazılmaz. "Ücretsiz İSPARK Otopark Kampanyası" (n=1) — anotatör
-# BELGE düzeyinde gerekçelendirmiş (liste sayfası), çözümü cümle kapısı değil.
+# "TOD ayrıcalığını ücretsiz yaşa" (n=1) ve "Ücretsiz İSPARK Otopark
+# Kampanyası" (n=1). İkisi de üçüncü taraf hizmet; kapsam kuralı
+# (`ANNOTATION_GUIDE.md` §4) ikisini de dışarıda bırakıyor. Yine de kural
+# YAZILMADI ve gerekçe 19 Ağustos'ta DEĞİŞTİ — eskisi artık geçersiz:
+#
+# * ESKİ gerekçe: "yapısal ikizi gold'da MEŞRU (GastroClub üyeliği …
+#   ücretsiz), iki vaka çelişiyor". Bu çelişki HAKEM-03 turunda ÇÖZÜLDÜ:
+#   GastroClub kaydı `absent_fields`'a taşındı ve `club|kulüp … üyeliği`
+#   kolu yukarıya eklendi. Yani ikiz artık meşru değil.
+# * YENİ gerekçe: kuralı yazacak ayırt edici bir sinyal ÖLÇÜLDÜ VE ÇÜRÜDÜ.
+#   Hipotez şuydu: "ücretsiz"in yakınında bir ücret KALEMİ adı (ücret,
+#   masraf, komisyon, bedel, tahsis, ekspertiz, dosya, işletim, havale,
+#   EFT, aidat, harç…) yoksa çıkarma. Gold'da ölçüldü (tetikleyici sözcük
+#   pencereden çıkarılarak — ilk ölçüm "ücretsiz" içindeki "ücret"i
+#   sayarak yanlış sonuç vermişti):
+#
+#       meşru çıkarımlarda kalem: 1/5      halüsinasyonlarda: 0/2
+#
+#   Yani kural halüsinasyonların ikisini de elerdi ama MEŞRU beşin dördünü
+#   de elerdi ("masrafsız bankacılık", "masrafsız ekosistem", "PTT
+#   ATM'lerinden ücretsiz para çekme", "e-posta üzerinden ücretsiz
+#   gönderim"). Ayrım semantiktir: bankacılık hizmeti mi, üçüncü taraf
+#   hizmet mi. Regex'le ayırmak için marka adı listesi (TOD, İSPARK,
+#   GastroClub, Halalbooking) gömmek gerekirdi — aşağıdaki "Bilerek kapsam
+#   dışı" notunun banka adları için verdiği §21 gerekçesinin aynısı.
+#
+# Kalan iki halüsinasyon bu yüzden BİLİNEREK duruyor ve testte
+# (`test_masraf_alan_disi.py`) 2 üst sınırıyla kilitli.
 #
 # `preprocessing/blocks.py` bu sorun için yazılmış ve docstring'i "KVKK'daki
 # ücretsiz" örneğini anıyor; iki sebeple yetmedi: (1) `extract_all` ona hiç
