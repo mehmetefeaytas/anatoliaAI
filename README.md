@@ -556,6 +556,7 @@ denetliyor.
 ```
 
 **Kaynaklar** — [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
+[çapraz değerlendirme](app/docs/rapor/capraz-degerlendirme.md) ·
 [IAA raporu — round0 v1](app/data/gold/iaa-raporu-round0-kalibrasyon-v1.md) ·
 [IAA raporu — round1](app/data/gold/iaa_report_round1.md) ·
 [şartname uyum matrisi](app/docs/SARTNAME-UYUM.md) ·
