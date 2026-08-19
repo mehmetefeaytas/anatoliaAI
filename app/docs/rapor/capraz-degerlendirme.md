@@ -173,6 +173,48 @@ bizim setimizde `kar_payi_orani` alanında **7 kez değer uyduruyor**
 alanda 1,000 kesinlikle hiç uydurmuyor. Yani temkinlilik bizim tarafta,
 kapsam onların tarafındaydı; bu rapor kapsamın bir bölümünü kapattı.
 
+## `kar_payi_orani` kapsamı neden düşük — ölçüldü
+
+Değerlendirmede "senaryonun kalp alanı korpusta yalnız %3,4" bulgusu vardı ve
+doğru. 19 Ağustos'ta sebebini ölçtük; sonuç, çıkarımın değil **kaynak
+yapısının** özelliği:
+
+| Kaynak | Belge | `kar_payi_orani` çıkan |
+|---|---:|---:|
+| HTML kampanya sayfaları | 1.657 | 54 |
+| PDF (`belge_turu='sozlesme'`) | 125 | 6 |
+
+125 PDF'nin adları "genel-kredi-sozlesmesi", "bankacilik-hizmetleri-
+sozlesmesi", "aracilik-ve-garantorluk-sozlesmesi" — yani **ücret tarifesi
+değil, sözleşme metni**. İçlerinde somut oran yok; yalnız tanım var
+("Kâr Payı: … tarafların mutabakatı…"). Bir belgede geçen "%30 fazlası" ise
+gecikme cezası oranı ve `_CEZA_BAGLAMI_RE` onu doğru olarak eliyor. Yani
+çıkarım bu belgelerde **doğru davranıyor**; çıkaracak oran yok.
+
+Kampanya sayfalarında da oran nadir: pazarlama metni oranı çoğu zaman
+yazmıyor ("avantajlı kâr payı", "size özel oranlar"). Oranlar bankaların
+ayrı "oranlar/tarifeler" sayfalarında ve o sayfalar `banks.yaml`'ın
+`document_paths` listesinde yok.
+
+Buna karşın gerçek bir çıkarım açığı da vardı ve kapatıldı: metninde hem oran
+hem "kâr payı" geçtiği hâlde alan üretilmeyen **77 belge** bulundu. Bir sınıfı
+tek bir ekten kaçıyordu ("Kar Pay**lı**" sıfat hâli) ve düzeltildi —
+kapsam 60 → **69 belge**. Kalan sınıflar not edildi:
+
+- **"vade farkı oranı %2,99"** — ontoloji kararı gerektiriyor. Ekonomik
+  olarak kâr payı eşdeğeri ama bizim şemada "vade farksız" ifadesi
+  `masraf_durumu.has_fee`'ye gidiyor; "vade farkı oranı"nı
+  `kar_payi_orani`'na almak aynı terimi iki alana bölerdi. Karara bağlanmadan
+  dokunulmadı.
+- **"%3.25'ten başlayan oranlarla … Finansman"** — oran önce, çapa sonra.
+  Ters sıra kalıbı `finansman_tutari` için yazıldı; oran için de yazılabilir
+  ama `finansman` çapası oran bağlamında `kar_payi_orani` ile
+  `tahsis_ucreti` arasında ayrım yapmıyor, o yüzden ölçülmeden eklenmedi.
+
+Kapsamı gerçekten büyütmenin yolu yeni desen değil, **yeni kaynak**: banka
+oran/tarife sayfalarının `document_paths`'e eklenmesi. Bu bir scraping turu
+demek ve bu turda yapılmadı.
+
 ## Açık uçlar
 
 - **`odul_birimi` alanı yok.** Harici korpusta 23 destekli, yani sık görülen
