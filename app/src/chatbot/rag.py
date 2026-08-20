@@ -45,10 +45,17 @@ from dataclasses import dataclass
 from dataclasses import field as dc_field
 from typing import Any, Optional
 
+from ..comparison.compare import RankRow, tekil_banka_urun
 from ..db.repository import Repository
-from ..preprocessing.clean import tr_fold
+from ..preprocessing.clean import split_sentences, tr_fold
 from . import safety
 from .dayanak import dayanaksiz_sayilar
+from .router import BANK_DISPLAY
+
+try:                                    # yardımcı taşınıyor (bkz. _anlamli_alinti)
+    from ..extraction.rules._ortak import gezinme_seridi as _gezinme_seridi
+except ImportError:                     # henüz taşınmadı — eski adresten oku
+    from ..extraction.rules.hedef_kitle import _gezinme_seridi
 
 logger = logging.getLogger(__name__)
 
@@ -360,6 +367,11 @@ class KeywordRetriever:
                 # görünen adı benzeşebilir; denetim bağlantısı slug'a dayanır.
                 "bank_slug": d.get("bank"),
                 "campaign_id": int(cid) if cid is not None else None,
+                # Ürün ailesi ARTIK TAŞINIYOR. `_tur_suz()` ve çeşitlilik
+                # tavanı (`_cesitlilik_tavani`) ikisi de bu alana bakar;
+                # taşınmadığı sürece RAG yolu, yapısal yolun (`structured.
+                # _apply_filters`) uyguladığı tür süzgecini uygulayamıyordu.
+                "campaign_type": d.get("campaign_type"),
                 "source_url": d.get("source_url"),
                 "text": d.get("raw_text"),
                 # Önceden üretilmiş özet; yoksa None. Arayüz uzun ham metin
@@ -536,6 +548,10 @@ class VectorRetriever:
                 "bank": meta.get("bank_name") or meta.get("bank"),
                 "bank_slug": meta.get("bank"),
                 "campaign_id": int(campaign_id),
+                # `KeywordRetriever` ile aynı sözleşme (bkz. oradaki yorum):
+                # tür süzgeci ve çeşitlilik tavanı hangi retriever konuşursa
+                # konuşsun aynı alanı okumalı.
+                "campaign_type": meta.get("campaign_type"),
                 "source_url": meta.get("source_url"),
                 # Tam kampanya metni döndürülür (KeywordRetriever ile aynı
                 # sözleşme); eşleşen parça ayrıca `chunk` alanında verilir.
@@ -590,8 +606,15 @@ def build_retriever(repo: Repository, mode: Optional[str] = None,
 
 
 def answer(repo: Repository, question: str, llm=None, retriever=None, *,
-           soru_karantinada: bool = False) -> RagAnswer:
+           soru_karantinada: bool = False,
+           filters: Optional[dict] = None) -> RagAnswer:
     """Soru için pasaj getirir; LLM varsa sentezler, yoksa alıntılar.
+
+    `filters` ROUTER'IN çıkardığı süzgeçtir (`router.Route.filters`) ve
+    `_bankaya_suz`'a geçer: banka VE ürün ailesi süzgeci burada uygulanır.
+    Geçilmezse süzgeç soru metninden yeniden çıkarılır (eski davranış) —
+    ama `bot.Chatbot` artık her zaman geçirir; süzgeci çöpe atmak, konut
+    sorusuna ihtiyaç finansmanı belgesi göstermenin kök nedeniydi.
 
     `retriever` GEÇİLMEZSE her çağrıda yeni bir dizin kurulur — soru başına
     korpusun tamamı yeniden tokenize edilir. Tekrarlayan çağrılarda (chatbot)
@@ -602,9 +625,9 @@ def answer(repo: Repository, question: str, llm=None, retriever=None, *,
     """
     retriever = retriever or KeywordRetriever(repo)
     used = getattr(retriever, "retriever_name", "keyword")
-    passages = _bankaya_suz(retriever, question)
+    passages = _bankaya_suz(retriever, question, filters)
     if not passages:
-        return RagAnswer("İlgili bir kampanya metni bulunamadı.", [], used)
+        return RagAnswer(_bos_sonuc_metni(filters), [], used)
 
     # KAPI 6 — getirilen içerik karantinası. LLM'e VE çıkarımsal yedeğe
     # gitmeden ÖNCE çalışır: ölçüldü ki yedek yol, saldırganın belgeye gömdüğü
@@ -669,23 +692,127 @@ def answer(repo: Repository, question: str, llm=None, retriever=None, *,
                 "(bu koşumdaki sentez hatası: %d)", _SENTEZ_HATALARI["sayi"])
 
     # LLM yok → extractive: en alakalı pasajı kaynağıyla döndür
-    return RagAnswer(_cikarimsal_cevap(passages[0]), passages, used,
-                     quarantined=karantina)
+    return RagAnswer(_cikarimsal_cevap(passages[0]) + _cesitlilik_notu(passages),
+                     passages, used, quarantined=karantina)
 
 
-#: Banka süzmesi yapılacaksa kaç aday üzerinden süzüleceği.
+def _bos_sonuc_metni(filters: Optional[dict]) -> str:
+    """Süzgeç her şeyi elediğinde basılan cevap — NEYİN elediğini söyler.
+
+    Eskiden tek bir sabit cümle vardı ("İlgili bir kampanya metni
+    bulunamadı."). Süzgeç eklendikten sonra o cümle eksik kalıyor: kullanıcı
+    korpusta hiç belge olmadığını sanır, oysa gerçek "bu ÜRÜN AİLESİNDE / bu
+    BANKADA eşiği geçen belge yok"tur. Farkı söylemek, kullanıcıya bir sonraki
+    adımı da vermektir.
+    """
+    kisitlar: list[str] = []
+    tur = (filters or {}).get("campaign_type")
+    if tur:
+        kisitlar.append(f"**{tur}** ürün ailesinde")
+    bankalar = list((filters or {}).get("banks") or [])
+    if bankalar:
+        adlar = ", ".join(BANK_DISPLAY.get(b, b) for b in bankalar)
+        kisitlar.append(f"**{adlar}** için")
+    if not kisitlar:
+        return "İlgili bir kampanya metni bulunamadı."
+    return (f"{' ve '.join(kisitlar)} soruyla örtüşen bir kampanya metni "
+            "bulunamadı. Başka bankanın ya da başka ürün ailesinin belgesini "
+            "cevap yerine göstermiyorum.")
+
+
+def _cesitlilik_notu(passages: list[dict]) -> str:
+    """Çeşitlilik tavanının düşürdüğü belge sayısını cevabın altına yazar.
+
+    SESSİZ ELEME YOK: tavan bir bankanın 122 belgesini gösterimden çıkardıysa
+    bunu söylemek zorundayız, yoksa "bu bankanın tek belgesi var" gibi
+    okunurdu. Sayı `comparison.tekil_banka_urun()`in `other_count` alanından
+    gelir — eleme ile sayım aynı yerde yapılır, ikinci bir sayaç tutulmaz.
+    """
+    dusen = sum(int(p.get("other_count") or 0) for p in passages)
+    if not dusen:
+        return ""
+    return (f"\n\n_Not: Gösterilen {len(passages)} belgeye ek olarak aynı "
+            f"banka ve ürün ailesinden {dusen} belge daha eşleşti; her "
+            f"banka-ürün ailesinden yalnız en alakalı belge gösteriliyor._")
+
+
+#: Süzme ve çeşitlilik tavanı kaç aday üzerinde çalışacak.
 #:
 #: Süzme, ilk 3 adayın ÜZERİNDE yapılamaz: sorulan bankanın belgesi 4. sırada
 #: olabilir ve o zaman süzgeç, var olan bir cevabı yok gösterirdi. Aday havuzu
 #: geniş tutulup süzmeden SONRA 3'e inilir.
-_BANKA_ADAY_SAYISI = 24
+#:
+#: Havuz 24'ten 60'a çıkarıldı (2026-08-20). İki sebep, ikisi de ölçülmüş:
+#:   * ÜRÜN AİLESİ SÜZGECİ (`_tur_suz`) banka süzgecinden çok daha sert
+#:     eliyor: korpusta 1.782 kampanya ve 9 aile var, yani 24 adayın tümü
+#:     yanlış aileden gelebilir ve var olan bir cevap yok görünürdü.
+#:   * ÇEŞİTLİLİK TAVANI (`_cesitlilik_tavani`) banka × aile başına tek satır
+#:     bırakıyor; tek bankanın 123 şablon-benzeri belgesi ilk 24 sırayı
+#:     süpürdüğünde geriye üç değil BİR pasaj kalırdı.
+#: Maliyet yalnız sıralama listesinin dilimlenmesidir — BM25 skorları zaten
+#: aday havuzundan bağımsız olarak hesaplanmış durumda.
+_CESITLILIK_ADAY_SAYISI = 60
 
 #: Süzme sonrası döndürülecek pasaj sayısı — süzgeçsiz yoldaki `k` ile aynı.
 _PASAJ_SAYISI = 3
 
 
-def _bankaya_suz(retriever: Any, question: str) -> list[dict]:
-    """Soruda banka adı geçiyorsa pasajları O BANKALARA sınırlar.
+def _cesitlilik_tavani(adaylar: list[dict]) -> list[dict]:
+    """Banka × ürün ailesi başına TEK pasaj bırakır; düşürdüklerini SAYAR.
+
+    ## Ölçülen kusur (2026-08-20, canlı sistem)
+
+    `KeywordRetriever.retrieve` düz BM25 + `scored[:k]`'dir ve `_PASAJ_SAYISI`
+    yalnız bir ADETtir, çeşitlilik kuralı değil. Dünya Katılım'ın 123
+    şablon-benzeri belgesi ilk üç sırayı birden süpürüyordu (skorlar
+    10,04 / 8,99 / 8,99) ve jüri, "hangi banka" sorusunun cevabı olarak TEK
+    bankanın üç belgesini görüyordu.
+
+    ## Kural İKİ YERDE ZATEN YAZILI — üçüncü kez yazılmadı
+
+    * `VectorRetriever.retrieve` kampanya bazında tekilleştiriyor ("aynı
+      kampanyanın üç parçası ilk üç sırayı kapatırsa kullanıcı tek bankayı
+      görürdü") — ama üretim yolu `RAG_RETRIEVER=keyword`.
+    * `comparison.tekil_banka_urun()` `(bank, campaign_type)` başına tek satır
+      bırakıp düşürdüklerini `other_count` ile SAYIYOR.
+
+    Bu fonksiyon ikincisini AYNEN çağırır: pasajlar geçici `RankRow`'lara
+    çevrilir, kural uygulanır, `other_count` pasaja geri yazılır. Kuralı
+    burada yeniden yazmak, bu depoda beş kez yaşanmış ayrışmayı davet etmek
+    olurdu — ve tekilleştirme anahtarının neden `bank` değil
+    `(bank, campaign_type)` olduğu (bir bankanın konut ve taşıt kampanyası
+    FARKLI ürünlerdir) orada gerekçeli yazılı.
+
+    Düşürülenler GİZLENMEZ: her pasaj `other_count` taşır ve `answer()` bu
+    sayıyı cevabın altına yazar.
+    """
+    if not adaylar:
+        return []
+    satirlar = [
+        RankRow(bank=p.get("bank_slug"), bank_name=p.get("bank"), value=None,
+                sort_key=None, comparable=False, note=None, source_span=None,
+                campaign_id=p.get("campaign_id"),
+                campaign_type=p.get("campaign_type"))
+        for p in adaylar
+    ]
+    # `tekil_banka_urun` sırayı KORUR ve ilk görüleni bırakır; adaylar BM25
+    # sırasında geldiği için kalan, o (banka, aile) çiftinin en alakalı
+    # belgesidir. Ayrı bir "en iyisini seç" mantığı yazmak sıralama kuralını
+    # ikinci kez uygulamak olurdu.
+    tekil = tekil_banka_urun(satirlar)
+    pasaj_by_id = {p.get("campaign_id"): p for p in adaylar}
+    out: list[dict] = []
+    for x in tekil[:_PASAJ_SAYISI]:
+        p = pasaj_by_id.get(x.campaign_id)
+        if p is None:
+            continue
+        out.append({**p, "other_count": x.other_count})
+    return out
+
+
+def _bankaya_suz(retriever: Any, question: str,
+                 filters: Optional[dict] = None) -> list[dict]:
+    """Soruda banka adı / ürün ailesi geçiyorsa pasajları ONLARA sınırlar.
 
     ## Ölçülen kusur (2026-08-11)
 
@@ -705,13 +832,66 @@ def _bankaya_suz(retriever: Any, question: str) -> list[dict]:
     başka bankanın belgesini göstermekti; o da sessiz halüsinasyonun ta kendisi.
 
     Banka adı geçmeyen sorularda davranış BİREBİR eskisi gibi kalır.
+
+    ## ÜRÜN AİLESİ SÜZGECİ (2026-08-20) — aynı asimetrinin ikinci ekseni
+
+    Yukarıdaki blok banka eksenindeki asimetriyi kapatmakla övünüyordu ama
+    ÜRÜN ekseninde aynısı açık duruyordu: `bot.py` router'ın çıkardığı
+    `Route.filters`'ı `rag.answer`'a HİÇ GEÇMİYORDU ve bu fonksiyon banka
+    süzgecini soruyu YENİDEN OKUYARAK kuruyordu; kampanya türü için hiçbir
+    karşılığı yoktu.
+
+    Ölçülen sonuç (canlı sistem, jürinin gördüğü ekran): **konut** finansmanı
+    sorusuna dönen üç pasajın ikisi **İhtiyaç Finansmanı** belgesiydi.
+    `structured._apply_filters` aynı süzgeci yapısal yolda 2026-08-11'den beri
+    uyguluyordu — iki yolun aynı soruya farklı dürüstlük standardı uygulaması,
+    kusuru bulmayı da zorlaştırıyordu (aynı cümle banka ekseni için de
+    yazılmıştı).
+
+    Süzgeç ARTIK ÇAĞIRANDAN gelir (`filters`): router'ın "ev" / "araba" /
+    "mortgage" gibi günlük sözcükleri ürün ailesine çeviren sözlüğü
+    (`router._FOLDED_TYPE_MAP`, `router._TUR_SOZCUK_DESENLERI`) burada ikinci
+    kez yazılmaz. `filters` geçilmezse davranış birebir eskisi gibidir.
+
+    Banka süzgecinde de çağıranın süzgeci ÖNCE gelir; yoksa soru yeniden
+    okunur. İkisi aynı sonucu vermek zorunda değildir: bağlam devralması
+    (`router._devral`) sorunun kendisinde geçmeyen bir bankayı süzgece
+    koyabilir ve doğru olan, kullanıcının o turda gördüğü kapsamdır.
     """
-    bankalar = safety.detect_banks(question)
-    if not bankalar:
-        return retriever.retrieve(question)
-    adaylar = retriever.retrieve(question, k=_BANKA_ADAY_SAYISI)
-    suzulmus = [p for p in adaylar if p.get("bank_slug") in bankalar]
-    return suzulmus[:_PASAJ_SAYISI]
+    filters = filters or {}
+    bankalar = list(filters.get("banks") or []) or safety.detect_banks(question)
+    tur = filters.get("campaign_type")
+    if not bankalar and not tur:
+        return _cesitlilik_tavani(retriever.retrieve(question,
+                                                     k=_CESITLILIK_ADAY_SAYISI))
+    adaylar = retriever.retrieve(question, k=_CESITLILIK_ADAY_SAYISI)
+    if bankalar:
+        adaylar = [p for p in adaylar if p.get("bank_slug") in bankalar]
+    if tur:
+        adaylar = _tur_suz(adaylar, tur)
+    return _cesitlilik_tavani(adaylar)
+
+
+def _tur_suz(adaylar: list[dict], tur: str) -> list[dict]:
+    """Pasajları TEK ürün ailesine sınırlar; boş kalırsa BOŞ döner.
+
+    "Sonuç boş kalırsa cevap da boş kalır" kuralı burada da geçerlidir
+    (yukarıdaki blok, banka ekseni): konut sorusuna ihtiyaç finansmanı
+    belgesi göstermek sessiz halüsinasyondur, çekimserlik ise dürüst bir
+    cevaptır.
+
+    **Etiket doğruluğu bu fonksiyonun sorumluluğu DEĞİLDİR.** `campaigns.
+    campaign_type` 8-sınıf sınıflandırıcının çıktısıdır ve kendi hata payı
+    vardır; burada uygulanan şey yalnızca "sorulan aile ile belgenin ailesi
+    aynı mı" karşılaştırmasıdır. Sınıflandırma hatası yanlış aileden belge
+    gösterebilir — o hata `src/extraction/` tarafındadır ve süzgecin
+    uygulanmamasıyla karıştırılmamalıdır.
+    """
+    dusen = [p for p in adaylar if p.get("campaign_type") != tur]
+    if dusen:
+        logger.info("RAG tür süzgeci: %d/%d aday %r dışında kaldı",
+                    len(dusen), len(adaylar), tur)
+    return [p for p in adaylar if p.get("campaign_type") == tur]
 
 
 def _dayanak_kusuru(metin: str, baglam: str) -> Optional[str]:
@@ -773,12 +953,86 @@ def _cikarimsal_cevap(top: dict) -> str:
     if ozet:
         return f"İlgili kampanya ({banka}) — AI Özeti: {ozet}"
 
-    alinti = kisa_alinti(top.get("text") or "")
+    alinti = _anlamli_alinti(top.get("text") or "")
     if not alinti:
         return (f"İlgili kampanya ({banka}). Belgenin metni boş olduğu için "
                 "gösterilecek bir parça yok.")
     return (f"İlgili kampanya ({banka}). Bu belge için AI Özeti üretilmedi; "
             f"aşağıdaki satır özet değil, ham metnin başlangıcıdır: {alinti}")
+
+
+def _anlamli_alinti(metin: str) -> str:
+    """Ham metnin başından GEZİNME ŞERİDİ olmayan ilk parça.
+
+    ## Ölçülen kusur
+
+    Özeti olmayan belgede `_cikarimsal_cevap` ham metnin başlangıcını basıyor
+    ve bir banka sayfasının BAŞI menüdür: "Bireysel Kurumsal Kredi Kartı
+    Kampanyaları Maaş Ödemesi Kampanyaları …". Kullanıcı, cevabın gövdesinde
+    HTML menüsünün metne inmiş hâlini görüyordu. Özet kapsaması %98,5'e
+    çıkarıldı ama kalan 27 belge için bu yol duruyor.
+
+    ## Yardımcı yeniden kullanılıyor, yeniden yazılmıyor
+
+    `extraction.rules` içindeki `_gezinme_seridi` bu kalıbı ölçülmüş bir
+    imzayla tanıyor (büyük harf yoğunluğu ≥ %60, cümle sonu noktalaması yok,
+    en az 6 sözcük) ve `hedef_kitle` alanının yanlış pozitiflerinin yarısını
+    tek başına o mekanizma üretiyordu. Aynı imza, aynı kirlilik.
+
+    İçe aktarma iki adreste denenir: yardımcı `_ortak`'a taşınıp kamuya
+    açılıyor (paralel çalışma, 2026-08-20) ama henüz orada olmayabilir.
+    `src/extraction/**` bu değişikliğin kapsamı DIŞINDA, o yüzden burada
+    yalnızca okunur — taşındığında bu blok kendiliğinden yeni adrese geçer.
+    """
+    cumleler = [c for c in split_sentences(metin or "") if c.strip()]
+    temiz = [c for c in cumleler if not _gezinme_seridi(c)]
+    # Belgenin TAMAMI şeritse ham metne düşülür: boş bir alıntı basmak, elde
+    # duran tek kanıtı hiç göstermemek olurdu.
+    govde = " ".join(temiz) if temiz else (metin or "")
+    return kisa_alinti(_serit_kirp(govde) or govde)
+
+
+#: Şerit taramasında kaç sözcüklük pencereye bakılacağı.
+#:
+#: `_gezinme_seridi` en az 6 sözcük ister (daha kısa parçada büyük-harf oranı
+#: gürültüdür); 8 seçildi ki pencere eşiğin hemen üstünde kalsın ve tek bir
+#: küçük harfli sözcük oranı %60'ın altına düşürmeye yetmesin.
+_SERIT_PENCERESI = 8
+
+
+def _serit_kirp(metin: str) -> str:
+    """Metnin BAŞINDAKİ gezinme şeridini sözcük sözcük kırpar.
+
+    ## Cümle bazlı süzme neden yetmedi (ölçüldü, `data/demo.db`)
+
+    `raw_text` alanında SATIR SONU YOK (`normalize_whitespace` onları
+    boşluğa çeviriyor) ve menü şeridi noktalama TAŞIMADIĞI için ilk gerçek
+    cümleyle TEK parça hâlinde geliyor:
+
+        "Müşteri Ol Kendim İçin SİZE ÖZEL ÇÖZÜMLER ÜRÜN VE HİZMETLERİMİZ …
+         BANKA MÜŞTERİSİ AYDINLATMA METNİ VERİ SORUMLUSUNUN KİMLİĞİ Bu ay …"
+
+    Bu parça noktayla bittiği için `_gezinme_seridi` onu (doğru biçimde)
+    cümle sayar — imza "cümle sonu noktalaması YOK" der. Yani cümle bazlı
+    süzme, özeti olmayan 27 belgenin çoğunda hiçbir şey yapmıyordu.
+
+    ## İmza yeniden yazılmıyor, PENCEREYE uygulanıyor
+
+    Buradaki tek yenilik tarama biçimidir: baştan `_SERIT_PENCERESI`
+    sözcüklük pencereye bakılır ve pencere şerit imzasını taşıdığı sürece
+    bir sözcük ileri kayılır. Kararı veren yine `_gezinme_seridi`'dir
+    (büyük-harf yoğunluğu ≥ %60, cümle sonu noktalaması yok) — eşikler bu
+    dosyada ikinci kez tanımlanmaz.
+
+    Her şey kırpılırsa boş dize döner ve çağıran ham gövdeye düşer: elde
+    duran tek kanıtı hiç göstermemek, menü basmaktan kötüdür.
+    """
+    kelimeler = (metin or "").split()
+    i = 0
+    while (i + _SERIT_PENCERESI <= len(kelimeler)
+           and _gezinme_seridi(" ".join(kelimeler[i:i + _SERIT_PENCERESI]))):
+        i += 1
+    return " ".join(kelimeler[i:])
 
 
 def _karantina(passages: list[dict]) -> tuple[list[dict], list[dict]]:

@@ -53,7 +53,14 @@ from . import rag, safety, structured
 # Buradan yeniden dışa veriliyor: `sayilari_ayikla` bu modülden içe
 # aktarılıyordu (testler dâhil) ve o yol kırılmamalı.
 from .dayanak import sayilari_ayikla
-from .router import BANK_DISPLAY, ChatContext, Route, route
+from .router import (
+    BANK_DISPLAY,
+    FIELD_DISPLAY,
+    VARSAYILAN_KIYAS_ALANI,
+    ChatContext,
+    Route,
+    route,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -128,6 +135,35 @@ _KIYAS_KAPSAM_NOTU = (
     "**kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve "
     "kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._"
 )
+
+#: Alan kullanıcının SÖZCÜĞÜNDEN türetildiğinde (gevşek süperlatif eşlemesi,
+#: `router._FOLDED_SUP_FIELD_KEYWORDS`) basılan not.
+#:
+#: `_KIYAS_KAPSAM_NOTU` buraya UYMAZ: o not "yukarıdaki kıyas **kâr payı
+#: oranı** üzerindendir" diyor ve cevap `finansman_tutari` üzerindeyse düpedüz
+#: yanlış olur. Varsayımı görünür kılmak, yanlış bir varsayımı görünür kılmak
+#: demek değildir; not hangi alanın seçildiğini KENDİ adıyla söyler.
+_VARSAYIM_NOTU_KALIBI = (
+    "_Not: Ölçülecek alanı açıkça söylemediniz; sorudaki sözcükten "
+    "**{etiket}** anlaşıldı ve kıyas o alan üzerinden yapıldı. Kâr payı oranı, "
+    "vade, tahsis ücreti ve masraf durumu da sonucu değiştirir; bunları da "
+    "sorabilirsiniz._"
+)
+
+
+def _kapsam_notu(field: Optional[str]) -> str:
+    """Varsayılan alanın kullanıcıya gösterilecek notu.
+
+    Alan `router.VARSAYILAN_KIYAS_ALANI` ise (kıyas/üstünlük dalı) uzun kapsam
+    notu basılır; gevşek eşlemeyle başka bir alana düşüldüyse o alanın kendi
+    adıyla yazılmış kalıp basılır. İki notu tek metinde birleştirmek, birinin
+    her zaman yanlış olması demekti.
+    """
+    if field == VARSAYILAN_KIYAS_ALANI:
+        return _KIYAS_KAPSAM_NOTU
+    return _VARSAYIM_NOTU_KALIBI.format(
+        etiket=FIELD_DISPLAY.get(field or "", field or "ilgili alan"))
+
 
 _SOZ_SISTEM = (
     "Sen bir katılım bankacılığı asistanısın. Görevin, sana verilen HAZIR "
@@ -395,8 +431,16 @@ class Chatbot:
         # Doğru davranış: tavsiye VERMEDEN karşılaştırmalı olgu tablosu sunmak.
         # Varsayılan karşılaştırma alanı kâr payı oranıdır (senaryonun kalbi).
         if scr.advice_intent and not (r.handler == "structured" and r.field):
+            # Bayraklar KORUNUR. Eskiden düşüyorlardı ve sonuç şuydu: alan
+            # burada VARSAYILDIĞI hâlde (`r.field or INTEREST_FIELD_HINT`)
+            # kullanıcı varsayımı hiç görmüyordu — `alan_varsayildi` False
+            # kaldığı için kapsam notu basılmıyordu. `ustunluk` da aynı
+            # sebeple taşınır: tavsiye kapısı bir soruyu çok boyutlu
+            # olmaktan çıkarmaz.
             r = Route("structured", r.field or safety.INTEREST_FIELD_HINT,
-                      r.intent or "list", r.filters, r.inherited)
+                      r.intent or "list", r.filters, r.inherited,
+                      alan_varsayildi=r.alan_varsayildi or r.field is None,
+                      ustunluk=r.ustunluk)
 
         if r.handler == "structured" and r.field:
             ans = structured.answer(self.repo, r)
@@ -433,7 +477,7 @@ class Chatbot:
             # olurdu. O cevap kendi kapsam notunu zaten taşıyor (hangi ürün
             # ailesinde kıyaslandığı + hangi ailelerde de kıyaslanabileceği).
             if r.alan_varsayildi and sources and not ans.cok_boyutlu:
-                govde = f"{govde}\n\n{_KIYAS_KAPSAM_NOTU}"
+                govde = f"{govde}\n\n{_kapsam_notu(r.field)}"
             return _Dagitim("structured", r.field, govde, sources, has_rate,
                             r, soz, list(ans.rows))
         ans = rag.answer(self.repo, question, llm=self.llm,
@@ -442,7 +486,17 @@ class Chatbot:
                          # atlanır (safety KAPI 6, girdi tarafı). Bayrak
                          # `screen_input`ten geliyor; burada yeniden
                          # tespit YAPILMAZ ki iki yerde ayrışmasın.
-                         soru_karantinada=bool(scr.injection))
+                         soru_karantinada=bool(scr.injection),
+                         # ROUTER'IN SÜZGECİ ÇÖPE ATILMIYOR (2026-08-20).
+                         # `r.filters` geçmediği sürece RAG banka süzgecini
+                         # soruyu yeniden okuyarak kuruyor ve ürün ailesi için
+                         # hiçbir karşılığı yok: ölçüldü ki KONUT sorusuna
+                         # dönen üç pasajın ikisi İHTİYAÇ finansmanıydı.
+                         # Yapısal yol aynı süzgeci
+                         # (`structured._apply_filters`) 2026-08-11'den beri
+                         # uyguluyordu; iki yolun aynı soruya farklı dürüstlük
+                         # standardı uygulaması kusuru bulmayı da zorlaştırdı.
+                         filters=dict(r.filters or {}))
         # RAG yolu ZATEN LLM'den geçiyor (`rag.answer` bağlamdan cevap
         # sentezliyor). Orada bir kez daha sözelleştirmek hem ikinci bir
         # gecikme ekler hem de LLM çıktısını LLM'e yeniden yazdırmak olur:

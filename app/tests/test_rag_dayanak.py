@@ -154,12 +154,41 @@ class TestBankaSuzgeci(unittest.TestCase):
         rag.answer(None, "Vakıf Katılım kampanyası ne?", llm=None, retriever=ret)
         self.assertGreaterEqual(ret.son_k, 10)
 
-    def test_banka_gecmeyen_soruda_davranis_DEGISMEDI(self) -> None:
+    def test_suzgecsiz_yolda_da_GENIS_havuz_ama_UC_pasaj(self) -> None:
+        """Süzgeçsiz yol da geniş havuz ister; DÖNEN pasaj sayısı değişmez.
+
+        Eski hâlinde bu test `son_k == 3` diye kilitliyordu ("süzgeçsiz yolda
+        `k` değişmemeli"). Kural 2026-08-20'de BİLEREK değişti: çeşitlilik
+        tavanı (`rag._cesitlilik_tavani`) banka × ürün ailesi başına tek pasaj
+        bırakıyor ve ilk 3 adayın hepsi aynı bankadan gelebilir — ölçüldü,
+        canlı sistemde Dünya Katılım'ın üç belgesi ilk üç sırayı süpürüyordu
+        (10,04 / 8,99 / 8,99). Tavan ancak GENİŞ bir havuz üzerinde iş yapar.
+
+        Kullanıcıya dönük sözleşme AYNEN korunur ve burada o kilitlenir:
+        en çok `_PASAJ_SAYISI` pasaj döner.
+        """
         ret = self._ret()
         a = rag.answer(None, "Katılma hesabı nasıl çalışır?", llm=None,
                        retriever=ret)
-        self.assertEqual(ret.son_k, 3, "süzgeçsiz yolda `k` değişmemeli")
+        self.assertEqual(ret.son_k, rag._CESITLILIK_ADAY_SAYISI)
         self.assertEqual(len(a.passages), 3)
+
+    def test_cesitlilik_tavani_AYNI_bankayi_uc_kez_gostermez(self) -> None:
+        """Tek bankanın üç belgesi ilk üç sırayı süpürmemeli — ölçülmüş kusur."""
+        ret = _Retriever([
+            _pasaj("dunya-katilim", "Dünya Katılım kampanyası bir.", 11),
+            _pasaj("dunya-katilim", "Dünya Katılım kampanyası iki.", 12),
+            _pasaj("dunya-katilim", "Dünya Katılım kampanyası üç.", 13),
+            _pasaj("albaraka", "Albaraka kampanyası.", 14),
+            _pasaj("vakif-katilim", "Vakıf Katılım kampanyası.", 15),
+        ])
+        a = rag.answer(None, "Katılma hesabı nasıl çalışır?", llm=None,
+                       retriever=ret)
+        self.assertEqual([p["bank_slug"] for p in a.passages],
+                         ["dunya-katilim", "albaraka", "vakif-katilim"])
+        # Düşürülenler SAYILIR ve cevabın altında YAZILIR.
+        self.assertEqual(a.passages[0]["other_count"], 2)
+        self.assertIn("2 belge daha", a.text)
 
 
 if __name__ == "__main__":

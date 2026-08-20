@@ -123,6 +123,70 @@ _FOLDED_SUP_HIGH = [_F(s) for s in _SUPERLATIVE_HIGH]
 _FOLDED_LIST_INTENT = [_F(s) for s in _LIST_INTENT]
 _FOLDED_KIYAS = [_F(s) for s in _KIYAS_ISARETLERI]
 
+# --------------------------------------------------------------------------- #
+# ÜSTÜNLÜK NİYETİ — "en iyi" bir YÖN değil, ÇOK BOYUTLU bir iddiadır
+# --------------------------------------------------------------------------- #
+#
+# ## Ölçülen kusur (2026-08-20, canlı sistem, jürinin gördüğü yüzey)
+#
+#   "Hangi bankada en düşük konut finansmanı var"   -> structured/finansman_tutari
+#   "Bana en iyi ev finansmanı veren banka hangisi" -> RAG / alan None
+#   "Hangi banka en uygun konut finansmanı veriyor" -> RAG / alan None
+#   "En avantajlı ev finansmanı hangi bankada"      -> structured/finansman_tutari
+#
+# İkinci ve üçüncüsü RAG'e düşüyordu: "en iyi"/"en uygun" ÜÇ sözlükten de
+# (`_SUPERLATIVE_LOW/HIGH`, `_KIYAS_ISARETLERI`, `safety._ADVICE_STEMS`)
+# eksikti. Sonuçta jüri tek bankanın üç belgesini gördü ve üç pasajın ikisi
+# İHTİYAÇ finansmanıydı — oysa soru KONUT'tu.
+#
+# ## Neden `_SUPERLATIVE_*`'a EKLENMEDİ (ölçülmüş tuzak)
+#
+# "en iyi"yi `_SUPERLATIVE_LOW`'a koymak soruyu şu cevaba çeviriyor:
+# `structured / finansman_tutari / lowest` -> "en düşük finansman tutarı:
+# Türkiye Emlak Katılım (100 TL)". Yani ikinci hata birinci hatanın birebir
+# aynısına dönüşüyor. Sebep aşağıdaki `_URUN_ADI_TUTAR_RE` bloğunda yazılı:
+# "konut **finansmanı**"nda o sözcük ürün adının parçasıdır, tutar talebi
+# değil.
+#
+# Doğru hedef `comparison.rank_advantageous_by_type()`'tır: ağırlıklı bileşik
+# skor, ürün ailesi İÇİNDE, ağırlık manifestosu şeffaf. Bu liste o dala
+# (`Route.ustunluk`) götürür, bir sıralama YÖNÜNE değil.
+_USTUNLUK_ISARETLERI = [
+    "en iyi", "en iyisi hangi", "en uygun", "en kârlı", "en karli",
+    "en cazip", "en mantıklı", "en makul",
+]
+
+#: ÇIPLAK "hangisi" — tek başına da üstünlük sinyalidir ("Konut finansmanında
+#: hangisi?"). `_KIYAS_ISARETLERI` yalnız "hangisi daha" / "hangisi avantajlı"
+#: / "hangisini" biçimlerini tanıyordu.
+#:
+#: Sözcük sınırlı: alt dize olarak "hangisini" içinde de geçer ve o ifade
+#: ZATEN `_KIYAS_ISARETLERI`'nde — iki sinyalin aynı soruda çakışması
+#: zararsızdır, ama sınırsız desen "hangisinde/hangisiyle" gibi çekimleri de
+#: sessizce yakalardı.
+_CIPLAK_HANGISI_RE = re.compile(r"\bhangisi\b")
+
+#: "konut finansmanı" / "ev kredisi" — buradaki `finansman`/`kredi` ÜRÜN
+#: ADININ PARÇASIDIR, tutar talebi DEĞİLDİR.
+#:
+#: `_FOLDED_SUP_FIELD_KEYWORDS` bu iki sözcüğü `finansman_tutari`'na eşliyor
+#: ve eşleme "Araba alımında en yüksek FİNANSMAN kimde var?" gibi sorularda
+#: DOĞRU (orada sözcük tek başına duruyor, bir ürün adının içinde değil).
+#: Ürün adının parçası olduğunda ise ölçülen sonuç şuydu: "en düşük konut
+#: finansmanı" sorusu "en düşük finansman TUTARI" diye okunuyor ve cevap
+#: 100 TL'lik bir kampanya oluyordu — kullanıcı en ucuz KONUT FİNANSMANINI
+#: sormuşken.
+#:
+#: Eşleme bastırıldığında alan `None` kalır ve soru üstünlük dalına
+#: (`Route.ustunluk`) gider: alan söylenmediği için çok boyutlu bileşik skor
+#: kullanılır ve bu SÖYLENİR.
+_URUN_ADI_TUTAR_RE = re.compile(
+    r"\b(?:konut|mesken|ev|tasit|arac|araba|otomobil|binek|ihtiyac|isyeri|"
+    r"egitim|tatil|kobi|ticari|tarim|saglik|evlilik)\s+"
+    r"(?:finansman|kredi)\w*")
+
+_FOLDED_USTUNLUK = [_F(s) for s in _USTUNLUK_ISARETLERI]
+
 # Kampanya türü filtresi: soru içindeki ipucu → 8 sınıftan biri.
 # Kullanıcı ürün adını değil GÜNLÜK KELİMEYİ kullanır: "araba alımında en
 # yüksek finansman kimde" sorusu ölçüldü ve `taşıt` geçmediği için tür
@@ -373,6 +437,19 @@ class Route:
     #: hepsini tek cevapta toplar; bulunamayan alan "bulunamadı" der,
     #: SESSİZCE atlanmaz.
     fields: list[str] = dc_field(default_factory=list)
+    #: Soru ÇOK BOYUTLU ÜSTÜNLÜK istiyor mu ("en iyi/en uygun konut
+    #: finansmanı hangi bankada?").
+    #:
+    #: `alan_varsayildi`'dan AYRI taşınır ve ayrı taşınması zorunludur: o
+    #: bayrak "alanı ben seçtim" der, bu bayrak "alan TEK BAŞINA cevap
+    #: değildir" der. İkisini tek bayrakta toplamak, gevşek alan eşlemesiyle
+    #: (`_FOLDED_SUP_FIELD_KEYWORDS`) gelen tek boyutlu bir soruyu da
+    #: (ör. "Kuveyt Türk ve Albaraka'da en yüksek finansman kimde") bileşik
+    #: skor dalına sokardı — kullanıcının SÖYLEDİĞİ alanı görmezden gelmek.
+    #:
+    #: `structured.answer()` bu bayrakla `comparison.rank_advantageous_by_type()`
+    #: dalına gider (ağırlıklı bileşik skor, ürün ailesi içinde).
+    ustunluk: bool = False
 
 
 def route(question: str, context: Optional[ChatContext] = None) -> Route:
@@ -394,21 +471,53 @@ def route(question: str, context: Optional[ChatContext] = None) -> Route:
     # Açık sıralama niyeti var ama alan çıkmadıysa gevşek eşlemeyi dene.
     # Bu kapı OLMADAN soru RAG'e düşüyor ve anahtar-kelime araması sorunun
     # yalnız yaygın sözcükleriyle örtüşen alakasız bir belge döndürebiliyor.
+    #
+    # ÜRÜN ADI MUAFİYETİ: "konut finansmanı"ndaki `finansman` bir tutar talebi
+    # değildir (`_URUN_ADI_TUTAR_RE`). Eşleme bastırılırsa alan `None` kalır ve
+    # soru aşağıdaki üstünlük kapısına düşer — bileşik skora, uydurma bir
+    # tutar sıralamasına değil.
+    alan_varsayildi = False
+    # Gevşek eşleme ÜRÜN ADI yüzünden bastırıldı mı — yani soru bir SIRALAMA
+    # istiyor ama sıralanacak alan yok. Yalnız bu durumda üstünlük dalının
+    # üçüncü sinyali (`_ustunluk_niyeti`) devreye girer; regex'in tek başına
+    # eşleşmesi YETMEZ, yoksa "Taşıt finansmanı kampanyasına kimler
+    # başvurabilir?" gibi bir AÇIKLAMA sorusu da yapısal yola giderdi
+    # (ölçüldü: `tests/test_rag_index.py` bu regresyonu yakaladı).
+    bastirilan_tutar = False
+    urun_adi_tutari = _URUN_ADI_TUTAR_RE.search(q) is not None
     if field is None and intent in ("lowest", "highest"):
         for ipucu, alan in _FOLDED_SUP_FIELD_KEYWORDS.items():
-            if ipucu in q:
-                field = alan
-                break
+            if ipucu not in q:
+                continue
+            if urun_adi_tutari and alan == "finansman_tutari":
+                bastirilan_tutar = True
+                continue
+            field = alan
+            # VARSAYIM GÖRÜNÜR OLMALI. Alan kullanıcının sözcüğünden
+            # TÜRETİLDİ ("finansman" -> finansman tutarı), söylenmedi;
+            # `bot._kapsam_notu` bunu cevaba yazar. Bayrak taşınmadığı sürece
+            # varsayım kullanıcıya görünmüyordu.
+            alan_varsayildi = True
+            break
 
     # Kıyas niyeti var ama alan söylenmemiş: "A mı daha avantajlı, B mi?".
     # Bu kapı OLMADAN soru RAG'e düşüyordu ve anahtar-kelime araması sorunun
     # yalnız yaygın sözcükleriyle örtüşen belgeler getiriyordu — iki banka da
     # soruda adıyla geçtiği hâlde. Gerekçenin tamamı `_KIYAS_ISARETLERI`'nde.
-    alan_varsayildi = False
+    ustunluk = False
     if field is None and _kiyas_niyeti(q, filters):
         field = VARSAYILAN_KIYAS_ALANI
         intent = intent or "list"
         alan_varsayildi = True
+    # İKİNCİ SİNYAL — çok boyutlu ÜSTÜNLÜK ("en iyi", "en uygun", çıplak
+    # "hangisi") ya da ürün adı yüzünden alansız kalmış bir sıralama sorusu.
+    # Birincil alan yine kâr payı oranıdır (en yüksek ağırlıklı boyut), ama
+    # cevap `rank_advantageous_by_type()` ile ÇOK BOYUTLU üretilir.
+    elif field is None and _ustunluk_niyeti(q, filters, bastirilan_tutar):
+        field = VARSAYILAN_KIYAS_ALANI
+        intent = intent or "list"
+        alan_varsayildi = True
+        ustunluk = True
 
     # Sohbet bağlamı — sorunun EKSİK boyutlarını önceki turlardan devral.
     # Kapıların (safety.screen_input) ÇOK SONRASINDA değil, çok ÖNCESİNDE
@@ -429,14 +538,14 @@ def route(question: str, context: Optional[ChatContext] = None) -> Route:
     # sayısal/karşılaştırmalı sinyal varsa yapısal sorgu
     if field and (intent or filters):
         return Route("structured", field, intent or "list", filters, inherited,
-                     alan_varsayildi, fields=fields)
+                     alan_varsayildi, fields=fields, ustunluk=ustunluk)
     # sadece superlatif + alan
     if field and intent in ("lowest", "highest"):
         return Route("structured", field, intent, filters, inherited,
-                     alan_varsayildi, fields=fields)
+                     alan_varsayildi, fields=fields, ustunluk=ustunluk)
     # aksi halde RAG (açıklama/koşul soruları)
     return Route("rag", field, intent, filters, inherited, alan_varsayildi,
-                 fields=fields)
+                 fields=fields, ustunluk=ustunluk)
 
 
 def _kiyas_niyeti(q: str, filters: dict) -> bool:
@@ -454,6 +563,53 @@ def _kiyas_niyeti(q: str, filters: dict) -> bool:
     if len(filters.get("banks") or []) < 2:
         return False
     return len(re.findall(r"\b(?:mi|mu)\b", q)) >= 2
+
+
+def _ustunluk_niyeti(q: str, filters: dict, bastirilan_tutar: bool) -> bool:
+    """Soru ÇOK BOYUTLU üstünlük mü istiyor ("en iyi konut finansmanı")?
+
+    `_kiyas_niyeti`'nin ikinci sinyalidir ve ondan SONRA denenir: iki bankayı
+    adıyla sayan soru zaten karşı karşıya kıyasa gider
+    (`structured._phrase_iki_banka_kiyasi`), bu kapı ise banka SAYILMAMIŞ
+    ya da ikiden çok bankalı üstünlük sorularını bileşik skora götürür.
+
+    Üç sinyal, biri yeterli:
+
+    * Açık üstünlük ifadesi (`_USTUNLUK_ISARETLERI`): "en iyi", "en uygun",
+      "en kârlı", "en cazip", "en mantıklı".
+    * Çıplak "hangisi" (`_CIPLAK_HANGISI_RE`).
+    * `bastirilan_tutar` — soru AÇIK bir sıralama istedi ("en düşük"),
+      gevşek eşleme ürün adı muafiyetiyle bastırıldı ve sıralanacak alan
+      kalmadı: "en düşük **konut finansmanı**". Sıralanmak istenen şey ürünün
+      KENDİSİDİR ve bunun tek dürüst karşılığı çok boyutlu üstünlüktür.
+      Muafiyet regex'inin tek başına eşleşmesi YETMEZ — "Taşıt finansmanı
+      kampanyasına kimler başvurabilir?" bir açıklama sorusudur ve RAG'de
+      kalır.
+
+    ## TEK BANKALI SORU KIYAS DEĞİLDİR (karşı-örnek)
+
+    "Albaraka'nın en iyi kampanyası hangisi" iki sinyali birden taşır ("en
+    iyi" + "hangisi") ama bir bankalar arası üstünlük sorusu DEĞİLDİR: soru
+    tek bir bankanın kendi kampanyaları arasında seçim istiyor. Süzgeç tam
+    bir bankaya çözülmüşse kapı KAPALIDIR — aksi hâlde cevap, kullanıcının
+    hiç sormadığı bankaları "daha avantajlı" diye ilan ederdi.
+    `tests/test_ustunluk_sorusu.py` bunu karşı-örnek olarak kilitler.
+
+    ## ALAN SÖYLENMİŞSE bu kapı HİÇ ÇALIŞMAZ
+
+    Çağrı yeri (`route()`) kapıyı `field is None` koşuluyla sarar: "en uygun
+    **vadeyi** hangi banka veriyor" sorusunda alan kullanıcının kendi
+    sözcüğüdür ve cevap o alan üzerinden tek boyutlu kalır. Kullanıcının
+    SÖYLEDİĞİ her zaman kazanır — bileşik skor bir varsayımdır ve varsayım,
+    söylenmiş bir alanın yerine geçemez.
+    """
+    if len(filters.get("banks") or []) == 1:
+        return False
+    if any(s in q for s in _FOLDED_USTUNLUK):
+        return True
+    if _CIPLAK_HANGISI_RE.search(q):
+        return True
+    return bastirilan_tutar
 
 
 def _devral(field: Optional[str], intent: Optional[str], filters: dict,

@@ -70,6 +70,7 @@ from typing import Any, Optional
 from ..comparison.compare import (
     ASGARI_GUVEN,
     BILINMEYEN_TUR,
+    DEFAULT_WEIGHTS,
     ELEME_ARALIK,
     ELEME_BILINMIYOR,
     ELEME_DEGER_YOK,
@@ -78,9 +79,12 @@ from ..comparison.compare import (
     ELEME_SAYISAL_DEGIL,
     ELEME_SURESI_DOLMUS,
     ELEME_TUTAR_BELIRSIZ,
+    MIN_COVERAGE,
+    MIN_GROUP_SIZE,
     RankRow,
     eleme_sebebi,
     rank,
+    rank_advantageous_by_type,
     tekil_banka_urun,
     turlere_ayir,
     yon_zorla,
@@ -151,6 +155,19 @@ def answer(repo: Repository, r: Route) -> StructuredAnswer:
         kiyas = _phrase_iki_banka_kiyasi(repo, r)
         if kiyas is not None:
             metin, gosterilen = kiyas
+            return StructuredAnswer(metin, gosterilen, r.field, r.intent,
+                                    cok_boyutlu=True)
+
+    # ÜSTÜNLÜK — "en iyi / en uygun konut finansmanı hangi bankada?"
+    # (`router._ustunluk_niyeti`). Karşı karşıya kıyas dalından SONRA gelir:
+    # kullanıcı iki bankayı adıyla saydıysa cevabı o dal verir (daha dar ve
+    # daha kesin bir soru). Buraya banka SAYILMAMIŞ ya da o dalın karar
+    # verebildiği bir aile bulamadığı sorular düşer; cevap ailenin tamamı
+    # üzerinden bileşik skorla üretilir.
+    if r.ustunluk:
+        ustunluk = _phrase_ustunluk_kiyasi(repo, r)
+        if ustunluk is not None:
+            metin, gosterilen = ustunluk
             return StructuredAnswer(metin, gosterilen, r.field, r.intent,
                                     cok_boyutlu=True)
 
@@ -1137,11 +1154,17 @@ def _kiyas_maddesi(field: str, grup: list[RankRow]) -> Optional[str]:
     return f"- {etiket} açısından **{ad}** {fiil} çünkü {gerekce}."
 
 
-def _kiyas_boyut_gruplari(repo: Repository, r: Route
+def _kiyas_boyut_gruplari(repo: Repository, r: Route,
+                          havuzlar: Optional[dict[str, list[dict]]] = None
                           ) -> dict[str, dict[str, list[RankRow]]]:
     """ürün ailesi → (alan → o ailedeki tekilleştirilmiş satırlar).
 
     Alan başına TEK sorgu atılır; aile ayrımı bellekte yapılır.
+
+    `havuzlar` verilirse (alan → SÜZÜLMÜŞ satırlar) sorgu hiç atılmaz. Üstünlük
+    dalı (`_phrase_ustunluk_kiyasi`) aynı alanları bileşik skor için de okuyor;
+    ortak havuz olmadan aynı beş sorgu iki kez koşuyordu — ve daha kötüsü, iki
+    yüzey teorik olarak farklı anlık görüntüler üzerinde çalışabiliyordu.
     """
     # Kapsam bir kez hesaplanır, dört alanda da aynısı kullanılır: aynı soruda
     # boyuttan boyuta değişen bir kapsam, "hangi bankalar kıyasta" sorusuna
@@ -1149,7 +1172,9 @@ def _kiyas_boyut_gruplari(repo: Repository, r: Route
     kapsam = _kiyas_kapsami(repo, r.filters)
     out: dict[str, dict[str, list[RankRow]]] = {}
     for field in _KIYAS_BOYUTLARI:
-        rows = _apply_filters(repo, repo.query_fields(field), r.filters)
+        rows = (havuzlar or {}).get(field)
+        if rows is None:
+            rows = _apply_filters(repo, repo.query_fields(field), r.filters)
         siralanan = rank(rows, field, kapsam=kapsam)
         for tur, grup in turlere_ayir(tekil_banka_urun(siralanan)):
             out.setdefault(tur, {})[field] = grup
@@ -1251,6 +1276,210 @@ def _phrase_iki_banka_kiyasi(repo: Repository, r: Route
     if diger:
         lines.append(f"_Aynı bankalar şu ailelerde de karşılaştırılabilir: "
                      f"{', '.join(diger)}. Aile adını yazmanız yeterli._")
+    return "\n".join(lines), gosterilen
+
+
+# =========================================================================== #
+# ÜSTÜNLÜK SORUSU — "en iyi / en uygun konut finansmanı hangi bankada?"
+# =========================================================================== #
+#
+# ## Ölçülen kusur (2026-08-20, canlı sistem)
+#
+# Bu sorular RAG'e düşüyordu (`router._ustunluk_niyeti` başlığında zincirin
+# tamamı yazılı) ve jüri şunu gördü: TEK bankanın üç belgesi, üç pasajın ikisi
+# İHTİYAÇ finansmanı — oysa soru KONUT'tu — ve değer kolonu boş.
+#
+# ## Neden `_SUPERLATIVE_*` yanlış hedefti
+#
+# "En iyi" bir YÖN değildir. "En düşük kâr payı" tek bir kolonu sıralar;
+# "en iyi konut finansmanı" kâr payını, masrafı, vadeyi ve ödülü BİRLİKTE
+# sorar. Tek yöne indirgemek soruyu cevaplamak değil, daraltmaktır — ve
+# ölçüldü ki daraltma yanlış kolona düşüyordu ("konut FİNANSMANI" ->
+# `finansman_tutari` -> "en düşük finansman tutarı: 100 TL").
+#
+# ## Neden yeni bir skor yazılmadı
+#
+# `comparison.rank_advantageous_by_type()` bu işi zaten yapıyor: ağırlıklı
+# bileşik skor, ürün ailesi İÇİNDE, `MIN_GROUP_SIZE`/`MIN_COVERAGE` kapıları
+# ve ağırlık manifestosu (`WEIGHT_RATIONALE`) ile. `/advantageous` ucu onu
+# çağırıyordu, `src/chatbot/` hiç çağırmıyordu. Aynı kararı sohbet katmanında
+# ikinci kez uygulamak, bu depoda beş kez yaşanmış ayrışmayı davet etmek olurdu.
+#
+# Madde satırları da yeniden yazılmadı: `_kiyas_maddesi()` (şartname s.13
+# kalıbı) aynen kullanılıyor. Fark yalnız KAPSAMDADIR — orada iki adı geçen
+# banka kıyaslanır, burada ailenin TAMAMI.
+
+#: Bileşik skor + madde satırları için okunacak alanlar. `DEFAULT_WEIGHTS`
+#: bileşik skorun, `_KIYAS_BOYUTLARI` madde satırlarının alan kümesidir;
+#: birleşimi TEK kez sorgulanır ve iki yüzeye aynı anlık görüntü verilir.
+_USTUNLUK_ALANLARI: tuple[str, ...] = tuple(
+    dict.fromkeys(tuple(DEFAULT_WEIGHTS) + _KIYAS_BOYUTLARI))
+
+
+def _avantaj_satirlari(havuzlar: dict[str, list[dict]]) -> list[dict]:
+    """Alan bazlı satırları KAMPANYA bazlı `rank_advantageous` girdisine çevirir.
+
+    Biçim `/advantageous` ucundakiyle birebir aynıdır
+    (`api/routers/kiyas.py::advantageous`): kampanya başına bir kayıt,
+    `fields` ve `field_confidence` sözlükleriyle. `query_fields()` alan bazlı
+    çalıştığı için bu dönüşüm kaçınılmaz; kararların (güven kapısı, süre
+    kapısı, ağırlıklar, kapsama eşiği) HİÇBİRİ burada tekrarlanmaz — hepsi
+    `rank_advantageous()` içinde kalır.
+
+    Aynı alan aynı kampanyada birden çok kez çıkabilir; İLK satır tutulur
+    (`query_fields` `ORDER BY f.id` ile gelir, yani sıra backend'ler arasında
+    da aynıdır) — `/advantageous` ile aynı kural.
+    """
+    by_campaign: dict[Any, dict] = {}
+    for alan, rows in havuzlar.items():
+        if alan not in DEFAULT_WEIGHTS:
+            continue
+        for row in rows:
+            cid = row.get("campaign_id")
+            if cid is None:
+                continue
+            kayit = by_campaign.setdefault(cid, {
+                "bank": row.get("bank"),
+                "bank_name": row.get("bank_name"),
+                "campaign_id": cid,
+                "campaign_type": row.get("campaign_type"),
+                "campaign_status": row.get("campaign_status"),
+                "fields": {},
+                "field_confidence": {},
+            })
+            kayit["fields"].setdefault(alan, row.get("canonical_value"))
+            kayit["field_confidence"].setdefault(alan, row.get("confidence"))
+    return list(by_campaign.values())
+
+
+def _ustunluk_ailesi_sec(gruplar: dict[str, dict[str, list[RankRow]]],
+                         filters: dict) -> Optional[str]:
+    """Üstünlük kıyasının yapılacağı ürün ailesi.
+
+    Kullanıcı aileyi SÖYLEDİYSE ("konut finansmanı") o aile kullanılır ve
+    başka aileye KAYILMAZ — veri yoksa cevap "yok" demeli, komşu ürünü
+    göstermemeli. Jürinin gördüğü kusurun kalbi tam buydu: konut sorusuna
+    ihtiyaç finansmanı belgesi dönüyordu.
+
+    Aile söylenmediyse EN ÇOK KARAR VEREBİLDİĞİMİZ aile seçilir
+    (`_kiyas_ailesi_sec` ile aynı ölçüt sırası: karar verilebilen boyut
+    sayısı, sonra kapsanan banka sayısı, eşitlikte ad). Aileler arası kıyas
+    YAPILMAZ (CLAUDE.md §17).
+    """
+    istenen = filters.get("campaign_type")
+    if istenen:
+        return istenen if istenen in gruplar else None
+    adaylar = []
+    for tur, alanlar in gruplar.items():
+        karar = sum(1 for f, g in alanlar.items() if _kiyas_maddesi(f, g))
+        if not karar:
+            continue
+        bankalar = {x.bank for grup in alanlar.values() for x in grup}
+        adaylar.append((-karar, -len(bankalar), tur))
+    return min(adaylar)[2] if adaylar else None
+
+
+def _agirlik_satiri() -> str:
+    """Ağırlık manifestosunun tek satırlık sohbet karşılığı.
+
+    Ağırlıklar bir ÜRÜN KARARIDIR (bkz. `compare.DEFAULT_WEIGHTS` başlığı) ve
+    gizlenirse bileşik skor "kara kutu" olur. `GET /compare/weights`
+    gerekçeleriyle birlikte tamamını veriyor; sohbette yalnız sayılar geçer.
+    """
+    parcalar = [f"{_FIELD_LABEL.get(f, f)} %{int(round(w * 100))}"
+                for f, w in sorted(DEFAULT_WEIGHTS.items(), key=lambda kv: -kv[1])]
+    return " · ".join(parcalar)
+
+
+def _ustunluk_basligi(tur: str, bilgi: dict) -> tuple[str, Optional[str]]:
+    """(başlık satırı, bileşik skor notu). Sıralama yapılamadıysa SEBEBİ yazılır.
+
+    SESSİZ DÜŞÜŞ YOK: `MIN_GROUP_SIZE` (3) ya da `MIN_COVERAGE` (0,5) kapıları
+    sıralamayı engellediyse başlık bunu söyler ve cevap boyut boyut kıyasla
+    devam eder. "En avantajlı" iddiasını sessizce atlamak, kullanıcıya
+    sorduğu şeyin cevaplanamadığını hiç söylememek olurdu.
+    """
+    ranked = bilgi.get("ranked") or []
+    kazanan = next((c for c in ranked if c.comparable), None)
+    if kazanan is not None:
+        ad = kazanan.bank_name or BANK_DISPLAY.get(kazanan.bank, kazanan.bank)
+        skor = bicimle_tr_sayi(round(kazanan.score or 0.0, 2))
+        not_ = (f"_Bileşik skor {skor} · veri kapsaması "
+                f"%{int(round(kazanan.coverage * 100))} · "
+                f"{bilgi.get('count', len(ranked))} kampanya arasından. "
+                f"Ağırlıklar: {_agirlik_satiri()}._")
+        return f"{tur} — en avantajlı: **{ad}**", not_
+    # Kapı gerekçesi: küçük grup notu `rank_advantageous_by_type`ten gelir;
+    # grup yeterince büyük ama hiçbir kampanya kıyaslanabilir değilse gerekçe
+    # ilk satırın kendi notudur (kapsama düşük / süresi dolmuş / ölçüt yok).
+    gerekce = bilgi.get("note")
+    if not gerekce:
+        gerekce = (ranked[0].note if ranked and ranked[0].note
+                   else f"bu ailede skorlanabilir kampanya yok "
+                        f"(sıralama için en az {MIN_GROUP_SIZE} gerekiyor, "
+                        f"veri kapsaması eşiği %{int(MIN_COVERAGE * 100)})")
+    return (f"{tur} — boyut boyut kıyas. Bileşik «en avantajlı» sıralaması "
+            f"YAPILMADI: {gerekce}"), None
+
+
+def _phrase_ustunluk_kiyasi(repo: Repository, r: Route
+                            ) -> Optional[tuple[str, list[RankRow]]]:
+    """"En iyi / en uygun X hangi bankada?" — çok boyutlu, gerekçeli cevap.
+
+    Karar verilebilen tek bir boyut bile yoksa `None` döner ve çağıran mevcut
+    tek alanlı yola düşer (`_hic_kayit_cevabi` iskeleti neyin neden
+    bulunamadığını zaten yazar) — boş bir "en avantajlı" başlığı basmak,
+    olmayan bir sıralama iddia etmek olurdu.
+
+    Kaynak satırları cevabın GERÇEKTEN andığı satırlardır: boyut başına
+    kazanan ve rakip (`[:2]`). Ailenin tamamını kaynak diye listelemek
+    (ör. 10 banka × 4 boyut) cevapta geçmeyen 40 satır göstermek olurdu;
+    `StructuredAnswer.rows` sözleşmesi "cevapta GÖSTERİLEN satırlar" der.
+    """
+    havuzlar = {alan: _apply_filters(repo, repo.query_fields(alan), r.filters)
+                for alan in _USTUNLUK_ALANLARI}
+    gruplar = _kiyas_boyut_gruplari(repo, r, havuzlar=havuzlar)
+    tur = _ustunluk_ailesi_sec(gruplar, r.filters)
+    if tur is None:
+        return None
+
+    alanlar = gruplar[tur]
+    satirlar: list[str] = []
+    gosterilen: list[RankRow] = []
+    for field in _KIYAS_BOYUTLARI:
+        grup = alanlar.get(field) or []
+        madde = _kiyas_maddesi(field, grup)
+        if madde is None:
+            continue
+        satirlar.append(madde)
+        gosterilen.extend([x for x in grup if x.comparable][:2])
+    if not satirlar:
+        return None
+
+    avantaj = rank_advantageous_by_type(_avantaj_satirlari(havuzlar),
+                                        min_coverage=MIN_COVERAGE)
+    baslik, skor_notu = _ustunluk_basligi(tur, avantaj.get(tur) or {})
+
+    lines = [baslik, ""]
+    lines.extend(satirlar)
+    # Karar verilemeyen boyut SESSİZCE düşmez — `_phrase_iki_banka_kiyasi` ile
+    # aynı kural: boyutun sorulduğu ama kıyaslanamadığı SÖYLENİR.
+    kiyaslanamayan = [_boyut_etiketi(f) for f in _KIYAS_BOYUTLARI
+                      if _kiyas_maddesi(f, alanlar.get(f) or []) is None]
+    if kiyaslanamayan:
+        lines.append("")
+        lines.append(f"_Bu ailede kıyaslanamayan boyut: "
+                     f"{_ve_ile(kiyaslanamayan)} — değer ya belirtilmemiş ya "
+                     f"da doğrudan kıyaslanabilir değil (aralık, koşullu oran, "
+                     f"süresi dolmuş). Kaynaklar aşağıda._")
+    lines.append("")
+    if skor_notu:
+        lines.append(skor_notu)
+    lines.append(f"_Kıyas **{tur}** ürün ailesi içinde yapıldı; farklı aileler "
+                 f"(konut, taşıt, kart…) birbirinin alternatifi değildir._")
+    lines.append("_Alan söylenmediği için çok boyutlu bileşik skor esas "
+                 "alındı; en ağırlıklı boyut **kâr payı oranı**. Tek bir "
+                 "boyut isterseniz alan adını yazmanız yeterli._")
     return "\n".join(lines), gosterilen
 
 

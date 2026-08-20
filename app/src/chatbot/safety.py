@@ -331,6 +331,26 @@ _ADVICE_STEMS: tuple[str, ...] = (
     "tavsiye", "oner", "secmeli", "secelim", "sececegim", "sectiginizde",
     "yatirayim", "yatirmali", "yapmali miyim", "ne yapmaliyim",
     "tercih etmeli", "tercih etsem", "alayim", "gireyim", "kullanayim",
+    # ÇIPLAK "en iyi" BİLEREK BURADA DEĞİL — ölçüldü (2026-08-20).
+    #
+    # Sözlükte "daha iyi" ve "en iyisi" var, ortadaki biçim yok ve bu bir
+    # tutarsızlık gibi görünüyor. Eklenmesi DENENDİ: güvenlik ölçümü bozulmadı
+    # (30/30, aşırı red 0/6) ama TEK BANKALI sorularda cevap kötüleşiyor.
+    # "Albaraka'nın en iyi kampanyası hangisi" sorusu KAPI 3 üzerinden yapısal
+    # yola çevriliyor ve ekranda şu çıkıyor:
+    #
+    #     **Finansman**          - Albaraka Türk: Belirtilmemiş
+    #     **Kart**               - Albaraka Türk: Belirtilmemiş
+    #     **Konut Finansmanı**   - Albaraka Türk: %3,85–%3,95 (aralık)
+    #
+    # Oysa aynı soru RAG'de o bankanın gerçek kampanya metnini getiriyor.
+    # Yani kapının ateşlenmesi kazandırdığından çok kaybettiriyordu.
+    #
+    # ÇOK BANKALI "en iyi" soruları ("Bana en iyi ev finansmanı veren banka
+    # hangisi") bu sözlüğe İHTİYAÇ DUYMADAN doğru yola gidiyor:
+    # `router._USTUNLUK_ISARETLERI` onları çok boyutlu bileşik skor dalına
+    # yönlendiriyor. Kapıyı bu soruların üstüne kurmak, çözülmüş bir
+    # yönlendirmeyi ikinci bir mekanizmayla tekrarlamak olurdu.
     "daha iyi", "en iyisi", "benim icin en", "sence", "hangisi karli",
     "kazandirir mi", "portfoy",
 )

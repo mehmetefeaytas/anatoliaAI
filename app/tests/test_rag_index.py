@@ -143,12 +143,15 @@ class UnindexedRetriever:
             # ve `campaign_id` denetim alanları olarak eklendiğinde bu referans
             # güncellenmemişti ve denklik testi 14 kez düştü. Test doğru
             # davrandı: sözleşme kaymasını yakalamak onun işi. `ozet` alanı
-            # (2026-08-09, arayüzdeki «AI Özeti») aynı yoldan geçti.
+            # (2026-08-09, arayüzdeki «AI Özeti») ve `campaign_type`
+            # (2026-08-20, RAG ürün ailesi süzgeci + çeşitlilik tavanı) aynı
+            # yoldan geçti.
             ozet = (d.get("ozet") or "").strip()
             scored.append({
                 "bank": d.get("bank_name") or d.get("bank"),
                 "bank_slug": d.get("bank"),
                 "campaign_id": int(cid) if cid is not None else None,
+                "campaign_type": d.get("campaign_type"),
                 "source_url": d.get("source_url"),
                 "text": d.get("raw_text"),
                 "ozet": ozet or None,
