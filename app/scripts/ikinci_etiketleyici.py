@@ -54,7 +54,7 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
 KOK = Path(__file__).resolve().parents[1]
 if str(KOK) not in sys.path:
@@ -62,7 +62,13 @@ if str(KOK) not in sys.path:
 
 from eval.iaa import cohen_kappa, interpret_kappa, krippendorff_alpha
 from eval.matchers import tolerant_match
-from scripts.gold_schema import load_gold
+from scripts.gold_schema import (
+    LABEL_LIST_FIELDS,
+    TEXT_LIST_FIELDS,
+    GoldValidationError,
+    load_gold,
+    parse_gold_value,
+)
 
 # Sayıya indirme sıralamanın ve kıyasın kullandığı AYNI kodla yapılır;
 # ikinci bir dönüştürücü α'yı kıyas motorunun görmediği bir ölçekte
@@ -73,6 +79,14 @@ from src.extraction.llm.schema import EXTRACTION_FIELDS
 GOLD = KOK / "data" / "gold" / "gold.v2.json"
 CIKTI = KOK / "data" / "gold" / "review" / "ikinci-tur-llm.jsonl"
 RAPOR = KOK / "data" / "gold" / "review" / "_kappa-ikinci-tur.md"
+
+# İNSAN TURU — jüri gerekçesi: κ=0,700 ölçümü doğrulandı ama kısmi kredi
+# verildi çünkü ikinci etiketleyici bir LLM'di (model-model uyumu, gold'un
+# İNSAN yargısıyla tutarlılığını KANITLAMAZ). Bu turun tek farkı ikinci
+# etiketleyicinin kim/ne olduğu; kappa() aynı kodla, aynı 16 kayıtla çalışır.
+CIKTI_INSAN = KOK / "data" / "gold" / "review" / "ikinci-tur-insan.jsonl"
+ILERLEME_INSAN = KOK / "data" / "gold" / "review" / ".ikinci-tur-insan-ilerleme.json"
+INSAN_ID = "INSAN-01"
 
 #: Blok başına seçilecek kayıt sayısı. 4 × 4 blok = 16 kayıt; κ'nın anlamlı
 #: olması için her etiketleyicinin işi temsil edilmeli, yoksa ölçülen şey tek
@@ -108,6 +122,230 @@ def sec(kayitlar) -> list:
         adim = max(1, len(grup) // BLOK_BASINA)
         secilen.extend(grup[::adim][:BLOK_BASINA])
     return secilen
+
+
+#: Alan başına kısa hatırlatma — ANNOTATION_GUIDE.md §4 özetidir, kılavuzun
+#: yerine geçmez. İnsan etiketleyici emin değilse kılavuza döner.
+FIELD_YARDIM: dict[str, str] = {
+    "kar_payi_orani": (
+        'Kâr payı oranı (%). Örn: "%1,89" -> 1.89 · aralık: "%1,99-%2,49". '
+        '"ilk 6 ay %0, sonrası %1,89" -> yürürlükteki 1.89 yazın (koşulu '
+        "kampanya_kosullari'na ekleyin). Katılma hesabı GETİRİ oranı ve N/M "
+        'kâr paylaşımı ("85/15") bu alana YAZILMAZ -> yok.'
+    ),
+    "finansman_tutari": (
+        'Finansman tutarı (TL). Örn: "500.000 TL\'ye varan finansman" -> '
+        "500000. Ödül/hediye tutarı bu alana yazılmaz (o odul_miktari)."
+    ),
+    "vade_ay": (
+        'Vade, AY cinsinden tamsayı. Örn: "120 aya varan vade" -> 120, '
+        '"1 yıl" -> 12. Aralıksa EN UZUN vadeyi yazın. "45 gün" gibi 30\'un '
+        "katı olmayan gün vade -> yok yazıp not düşün (kılavuz §4.13/7)."
+    ),
+    "taksit_sayisi": (
+        'Taksit adedi. DİKKAT — belgede "taksit" kelimesi hiç geçmiyorsa bu '
+        "alan yoktur (o sayı vadedir, vade_ay'a gider). "
+        'Örn: "vade farksız 6 taksit" -> 6.'
+    ),
+    "tahsis_ucreti": (
+        'Tahsis/dosya ücreti (TL). Örn: "tahsis ücreti 500 TL" -> 500. '
+        '"alınmaz" ise 0 yazın (yok DEĞİL — sıfırın kendisi bir bilgidir). '
+        '"binde 5" gibi ORANSAL ücret bu alana yazılmaz -> yok.'
+    ),
+    "masraf_durumu": (
+        'Masraf var mı? "masrafsız/ücret alınmaz" NEGATİF bir bilgidir, '
+        "yok DEĞİLDİR: {has_fee: false, amount: 0} yazın (metne \"has_fee: "
+        'false\" gibi yazmayın; sadece "masrafsız" yazmanız yeter, sistem '
+        'çevirir). Ücret varsa "dosya masrafı 500 TL" yazın.'
+    ),
+    "odul_miktari": (
+        'Ödül/hediye tutarı (TL). Örn: "5.000 TL\'ye varan hoş geldin '
+        'hediyesi" -> 5000. Tutar cinsinden indirim ("100 TL indirim") de '
+        "BU alana yazılır, indirim_orani'na değil."
+    ),
+    "indirim_orani": (
+        'İndirim YÜZDESİ. Örn: "%10 indirim" -> 10. Yalnız yüzde; tutar '
+        "cinsinden indirim odul_miktari'na gider."
+    ),
+    "alisveris_puani": (
+        "ORAN mı ADET mi ayrımı zorunlu. Oran: \"%5 puan iadesi\" -> yazın "
+        '"oran=5". Adet: "1.000 chip-para" -> "puan=1000". Sektöre göre '
+        "farklı oranlar varsa EN YÜKSEĞİNİ yazın, gerisini "
+        "kampanya_kosullari'na düşün."
+    ),
+    "kampanya_suresi": (
+        'Kampanyanın BİTİŞ tarihi, ISO-8601. Örn: "31.12.2026 tarihine '
+        'kadar" -> 2026-12-31. Yalnız başlangıç tarihi varsa yok yazın.'
+    ),
+    "kampanya_kosullari": (
+        "Koşul cümleleri — METİNDEN BİREBİR KOPYALAYIN (kendi cümlenizle "
+        'yazmayın). Genel yasal ihtarlar ("hakkını saklı tutar" vb.) koşul '
+        "SAYILMAZ. Başka alana ait değer (vade, tutar, oran, tarih) burada "
+        "TEKRARLANMAZ — yalnızca değer bir koşula bağlıysa (\"ilk 6 ay %0, "
+        'sonra %1,89\") cümlenin tamamı buraya da girer.'
+    ),
+    "hedef_kitle": (
+        "YALNIZ 4 etiket: yeni_musteri, mevcut_musteri, maas_musterisi, "
+        'belirli_segment. "Bireysel müşteriler" = HERKES, segment DEĞİLDİR '
+        "-> yok. Ürün/kart/kanal kısıtı (\"yalnız Paraf kartlar\") segment "
+        "DEĞİLDİR, kampanya_kosullari'na gider. Serbest metin yazılmaz."
+    ),
+}
+
+
+def _coklu_alan_mi(alan: str) -> bool:
+    return alan in TEXT_LIST_FIELDS or alan in LABEL_LIST_FIELDS
+
+
+def _cok_satir_oku(girdi_fn, yaz_fn) -> list[str]:
+    """Boş satıra kadar art arda satır okur (liste alanlarının çoklu girişi)."""
+    satirlar: list[str] = []
+    while True:
+        satir = girdi_fn().strip()
+        if not satir:
+            break
+        satirlar.append(satir)
+    return satirlar
+
+
+def _alan_sor(alan: str, girdi_fn=input, yaz_fn=print) -> tuple[bool, Any]:
+    """Bir alanı insana sorar; `(dolu_mu, kanonik_deger)` döner.
+
+    KÖRLEME BURADA GARANTİ EDİLİR: bu fonksiyon `kayit.fields`,
+    `kayit.absent_fields` ya da ikinci-tur-llm.jsonl'e erişmez — parametre
+    olarak bile ALMAZ. Yalnız alan adı ve kullanıcının o an yazdığı metni
+    görür. Gold değerini ya da LLM kararını göstermek κ'yı anlamsız kılar
+    (jüri gerekçesi: ikinci etiketleyici insana taşınmasının TEK sebebi
+    budur — bkz. modül başlığı).
+
+    Dönüş: alan "yok" ise `(False, None)`; doluysa `(True, kanonik_deger)`
+    ve `kanonik_deger` `scripts.gold_schema.parse_gold_value` ile üretilir
+    — gold'un kendisinin kullandığı AYNI ayrıştırıcı/doğrulayıcı.
+    """
+    yaz_fn(f"\n--- {alan} ---")
+    yaz_fn(FIELD_YARDIM.get(alan, "(ANNOTATION_GUIDE.md §4'e bakın)"))
+    coklu = _coklu_alan_mi(alan)
+    if coklu:
+        yaz_fn("Birden çok girdi olabilir: her biri ayrı satıra, bitirmek "
+               "için boş satır. Alan yoksa TEK satıra 'yok' yazın.")
+    else:
+        yaz_fn("Değeri yazın; alan belgede yoksa 'yok' yazın.")
+    while True:
+        ilk = girdi_fn().strip()
+        if ilk.casefold() == "yok":
+            return False, None
+        if not ilk:
+            yaz_fn("Boş geçemezsiniz — değer yazın ya da 'yok' yazın.")
+            continue
+        ham = "|".join([ilk] + _cok_satir_oku(girdi_fn, yaz_fn)) if coklu else ilk
+        try:
+            deger = parse_gold_value(alan, ham)
+        except GoldValidationError as e:
+            yaz_fn(f"HATA: {e}")
+            yaz_fn("Tekrar deneyin.")
+            continue
+        return True, deger
+
+
+def _ilerleme_yukle(yol: Path) -> dict:
+    if yol.exists():
+        return json.loads(yol.read_text(encoding="utf-8"))
+    return {}
+
+
+def _ilerleme_kaydet(yol: Path, ilerleme: dict) -> None:
+    yol.parent.mkdir(parents=True, exist_ok=True)
+    yol.write_text(json.dumps(ilerleme, ensure_ascii=False, indent=2),
+                    encoding="utf-8")
+
+
+def _tamamlanan_kayit_idleri(cikti_yolu: Path) -> set[str]:
+    if not cikti_yolu.exists():
+        return set()
+    idler = set()
+    for satir in cikti_yolu.read_text(encoding="utf-8").splitlines():
+        if satir.strip():
+            idler.add(json.loads(satir)["id"])
+    return idler
+
+
+def insan(kayitlar=None, cikti_yolu: Path = CIKTI_INSAN,
+          ilerleme_yolu: Path = ILERLEME_INSAN, girdi_fn=input,
+          yaz_fn=print, bastan: bool = False) -> int:
+    """İnsan ikinci-etiketleyici turu — `kos()`nun insan karşılığı.
+
+    Seçim `sec()` ile YAPILIR (yeni rastgelelik YOK) ki LLM turuyla aynı 16
+    kayıt üzerinde κ kıyaslanabilsin. Kaydetme ARTIMLIDIR: her alan
+    cevaplandığında `ilerleme_yolu`ya yazılır (kayıt yarıda kesilse bile
+    kaybolmaz); bir kayıt TAMAMLANINCA `cikti_yolu`ya `kappa` alt komutunun
+    okuduğu biçimde tek satır JSONL eklenir.
+    """
+    if bastan:
+        if cikti_yolu.exists():
+            cikti_yolu.unlink()
+        if ilerleme_yolu.exists():
+            ilerleme_yolu.unlink()
+
+    if kayitlar is None:
+        kayitlar = load_gold(GOLD)
+    hedef = sec(kayitlar)
+
+    tamam = _tamamlanan_kayit_idleri(cikti_yolu)
+    kalan = [k for k in hedef if k.id not in tamam]
+
+    tahmini_dk = len(hedef) * 5   # ANNOTATION_GUIDE.md §1: elle ~5 dk/belge
+    yaz_fn("İKİNCİ ETİKETLEYİCİ — İNSAN TURU")
+    yaz_fn(f"Seçilen kayıt: {len(hedef)} · alan/kayıt: {len(EXTRACTION_FIELDS)}")
+    yaz_fn(f"Tahmini toplam süre: ~{tahmini_dk} dakika "
+           "(ANNOTATION_GUIDE.md §1 ölçümüne göre ~5 dk/belge)")
+    yaz_fn(f"Zaten tamamlanmış: {len(tamam)}/{len(hedef)} kayıt.")
+    if not kalan:
+        yaz_fn("Tüm kayıtlar tamamlanmış. κ için: "
+               f"python -m scripts.ikinci_etiketleyici kappa --girdi "
+               f"{cikti_yolu}")
+        return 0
+
+    ilerleme = _ilerleme_yukle(ilerleme_yolu)
+    cikti_yolu.parent.mkdir(parents=True, exist_ok=True)
+    with cikti_yolu.open("a", encoding="utf-8") as f:
+        for i, kayit in enumerate(kalan, 1):
+            yaz_fn(f"\n===== Kayıt {i}/{len(kalan)} — {kayit.id} =====")
+            yaz_fn(kayit.text)
+            yaz_fn("-" * 70)
+            durum_alan = ilerleme.setdefault(kayit.id, {})
+            t0 = time.perf_counter()
+            for alan in EXTRACTION_FIELDS:
+                if alan in durum_alan:
+                    continue          # kaldığı yerden devam
+                dolu, deger = _alan_sor(alan, girdi_fn, yaz_fn)
+                durum_alan[alan] = {"dolu": dolu, "deger": deger}
+                _ilerleme_kaydet(ilerleme_yolu, ilerleme)   # her alanda kalıcı
+            gecen = (time.perf_counter() - t0) * 1000
+            alanlar = {a: v["deger"] for a, v in durum_alan.items() if v["dolu"]}
+            f.write(json.dumps({
+                "id": kayit.id,
+                "annotator": INSAN_ID,
+                "primary_human": _birincil_etiketleyici(kayit),
+                "fields": alanlar,
+                "error": None,
+                "latency_ms": round(gecen, 1),
+                "backend": "insan",
+                "model": INSAN_ID,
+            }, ensure_ascii=False) + "\n")
+            f.flush()
+            del ilerleme[kayit.id]
+            _ilerleme_kaydet(ilerleme_yolu, ilerleme)
+            yaz_fn(f"[{i}/{len(kalan)}] {kayit.id} kaydedildi — "
+                   f"{len(alanlar)} alan dolu.")
+    yaz_fn(f"\nBitti. Çıktı: {cikti_yolu}")
+    yaz_fn("κ için: python -m scripts.ikinci_etiketleyici kappa --girdi "
+           f"{cikti_yolu}")
+    return 0
+
+
+def insan_cli(args: argparse.Namespace) -> int:
+    return insan(cikti_yolu=CIKTI_INSAN, ilerleme_yolu=ILERLEME_INSAN,
+                 bastan=args.bastan)
 
 
 def kos(args: argparse.Namespace) -> int:
@@ -192,14 +430,21 @@ def _insan_karari(kayit, alan: str) -> Optional[str]:
 
 
 def kappa(args: argparse.Namespace) -> int:
-    if not CIKTI.exists():
-        print(f"❌ {CIKTI.relative_to(KOK)} yok — önce `kos` alt komutunu "
+    girdi = Path(args.girdi).resolve() if getattr(args, "girdi", None) else CIKTI
+    if not girdi.exists():
+        kaynak_komut = "insan" if girdi == CIKTI_INSAN else "kos"
+        print(f"❌ {girdi} yok — önce `{kaynak_komut}` alt komutunu "
               "çalıştırın.")
         return 2
+    # Rapor hedefi girdiye göre ayrışır: LLM turunun raporu (`_kappa-ikinci-
+    # tur.md`) insan turu koşulunca SESSİZCE ÜZERİNE YAZILMAZ — jüri ikisini
+    # yan yana görmeli (model-model κ=0,700 vs. insan-insan κ), biri diğerini
+    # silerse kıyas kaybolur.
+    rapor_yolu = RAPOR if girdi == CIKTI else girdi.parent / f"_kappa-{girdi.stem}.md"
 
     kayitlar = {k.id: k for k in load_gold(GOLD)}
     ikinci = [json.loads(s) for s in
-              CIKTI.read_text(encoding="utf-8").splitlines() if s.strip()]
+              girdi.read_text(encoding="utf-8").splitlines() if s.strip()]
     hatali = [x for x in ikinci if x.get("error")]
     ikinci = [x for x in ikinci if not x.get("error")]
 
@@ -276,31 +521,57 @@ def kappa(args: argparse.Namespace) -> int:
 
     _rapor_yaz(k, yorum, cift, len(ikinci), len(hatali), ortak_dolu,
                deger_uyum, uyusmazlik, alan_bazli, ikinci,
-               alpha, len(alpha_birimleri))
-    print(f"rapor: {RAPOR.relative_to(KOK)}")
+               alpha, len(alpha_birimleri), rapor_yolu)
+    try:
+        print(f"rapor: {rapor_yolu.relative_to(KOK)}")
+    except ValueError:
+        print(f"rapor: {rapor_yolu}")
     return 0
 
 
 def _rapor_yaz(k: float, yorum: str, cift: int, belge: int, hatali: int,
                ortak_dolu: int, deger_uyum: int, uyusmazlik: list[dict],
                alan_bazli: dict[str, list[tuple]], ikinci: list[dict],
-               alpha: float, alpha_n: int) -> None:
+               alpha: float, alpha_n: int, rapor_yolu: Path = RAPOR) -> None:
     model = ikinci[0].get("model", "?") if ikinci else "?"
     backend = ikinci[0].get("backend", "?") if ikinci else "?"
     sure = sum(x.get("latency_ms", 0) for x in ikinci) / 1000
+    # İNSAN TURU mu — jüri gerekçesinin karşılandığını raporun kendisinde de
+    # açıkça yaz; LLM turunun metniyle karıştırılmasın.
+    insan_turu = backend == "insan"
+
+    if insan_turu:
+        acilis = (
+            "**İkinci etiketleyici bir İNSANDIR** (proje sahibi, "
+            f"`{model}`). Bu, jürinin \"κ'da ikinci etiketleyiciyi insana "
+            "taşı\" gerekçesini karşılar: ölçülen şey artık model-model "
+            "uyumu değil, iki BAĞIMSIZ İNSAN yargıcın (birincil anotatör + "
+            f"`{model}`) uyumudur ve κ'nın klasik tanımına birebir uyar. "
+            f"`{model}` gold değerini de kural motoru/LLM çıktısını da "
+            "GÖRMEDİ — yalnız belge metnini ve alan şemasını gördü "
+            "(`scripts/ikinci_etiketleyici._alan_sor` körlemesi; ayrıntı: "
+            "`tests/test_insan_etiketleyici.py`)."
+        )
+    else:
+        acilis = (
+            "**İkinci etiketleyici bir LLM'dir.** İnsan çift-anotasyonun "
+            "yerine geçtiği iddia edilmiyor; ölçülen şey bağımsız bir "
+            "ikinci etiketleyicinin kararlarıyla uyumdur. LLM gold'u da "
+            "kural motoru çıktısını da GÖRMEDİ — yalnız belge metnini ve "
+            "alan şemasını aldı."
+        )
 
     L = [
-        "# κ (Cohen's kappa) — ikinci etiketleyici turu",
+        f"# κ (Cohen's kappa) — ikinci etiketleyici turu"
+        f"{' (İNSAN)' if insan_turu else ''}",
         "",
-        "**İkinci etiketleyici bir LLM'dir.** İnsan çift-anotasyonun yerine "
-        "geçtiği iddia edilmiyor; ölçülen şey bağımsız bir ikinci "
-        "etiketleyicinin kararlarıyla uyumdur. LLM gold'u da kural motoru "
-        "çıktısını da GÖRMEDİ — yalnız belge metnini ve alan şemasını aldı.",
+        acilis,
         "",
-        f"* arka uç / model: `{backend}` / `{model}`",
-        f"* belge: **{belge}** (LLM hatası: {hatali})",
+        f"* {'etiketleyici' if insan_turu else 'arka uç / model'}: "
+        f"`{backend}` / `{model}`",
+        f"* belge: **{belge}** ({'insan' if insan_turu else 'LLM'} hatası: {hatali})",
         f"* κ çifti (karar verilmiş (belge, alan) ikilisi): **{cift}**",
-        f"* toplam LLM süresi: {sure / 60:.0f} dk",
+        f"* toplam {'insan' if insan_turu else 'LLM'} süresi: {sure / 60:.0f} dk",
         "",
         "## Sonuç",
         "",
@@ -439,9 +710,12 @@ def _rapor_yaz(k: float, yorum: str, cift: int, belge: int, hatali: int,
         "4. κ `eval/iaa.cohen_kappa` ile, değer uyumu "
         "`eval/matchers.tolerant_match` ile — resmî metriğin AYNI kodu.",
         "",
-        "Üretim: `python -m scripts.ikinci_etiketleyici kappa`",
+        "Üretim: `python -m scripts.ikinci_etiketleyici kappa" +
+        (" --girdi data/gold/review/ikinci-tur-insan.jsonl`" if insan_turu
+         else "`"),
     ]
-    RAPOR.write_text("\n".join(L) + "\n", encoding="utf-8")
+    rapor_yolu.parent.mkdir(parents=True, exist_ok=True)
+    rapor_yolu.write_text("\n".join(L) + "\n", encoding="utf-8")
 
 
 def main() -> int:
@@ -451,7 +725,16 @@ def main() -> int:
     p1.add_argument("--bastan", action="store_true",
                     help="mevcut çıktıyı yok say, baştan koş")
     p1.set_defaults(fn=kos)
+    p3 = alt.add_parser("insan", help="İNSAN ikinci etiketleyici turunu koş "
+                                       "(körlemeli, artımlı)")
+    p3.add_argument("--bastan", action="store_true",
+                    help="mevcut çıktıyı/ilerlemeyi yok say, baştan koş")
+    p3.set_defaults(fn=insan_cli)
     p2 = alt.add_parser("kappa", help="κ hesapla + uyuşmazlık raporu yaz")
+    p2.add_argument("--girdi", default=None,
+                    help="hangi ikinci-tur JSONL'i okunacak (varsayılan: "
+                         "ikinci-tur-llm.jsonl). İnsan turu için: "
+                         "data/gold/review/ikinci-tur-insan.jsonl")
     p2.set_defaults(fn=kappa)
     args = ap.parse_args()
     return args.fn(args)
