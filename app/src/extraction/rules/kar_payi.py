@@ -417,6 +417,73 @@ _ARAC_HATASI_RE = re.compile(
     re.IGNORECASE,
 )
 
+# ÜÇÜNCÜ BOZUKLUK İŞARETİ: AYNI DEĞER ≥3 FARKLI ETİKETTE
+#
+# ## Ölçülmüş kusur (2026-08-20) — koruma SIFIR için yazılmıştı, 100 için değil
+#
+# `emlakkatilim.com.tr/tr/hesaplama-araclari` boş bir widget iskeleti ve
+# yer tutucusu **sıfır değil 100**:
+#
+#     "Finansman Türü Seçiniz … Aylık Taksit Tutarı: 100TL Toplam Geri Ödeme
+#      Tutarı: 100TL Finansman Tutarı: 100TL Toplam Masraflar:
+#      Finansman Tahsis Ücreti: …"
+#
+# Yukarıdaki iki bacak bu sayfayı GÖRMEZ: `_SIFIR_TUTAR_RE` sıfır arıyor,
+# `_ARAC_HATASI_RE` hata metni arıyor. Üstelik `_DOLU_TUTAR_RE` "100 TL"yi
+# DOLU sayıp reddi düşürüyor — yani sağlamlık kapısı burada ters çalışıyordu.
+# Sonuç canlı sistemde ölçüldü: `finansman_tutari = 100 TL` (güven 0,95) ve
+# "en düşük konut finansmanı" sorusuna "Türkiye Emlak Katılım (100 TL)"
+# cevabı. Kanıt penceresi tek başına ikna edici: **aynı 100TL üç ayrı
+# etikette**.
+#
+# Ayırt edici işaret değerin BÜYÜKLÜĞÜ değil (100 de 0 kadar meşru bir tutar
+# olabilir), aynı sayının **anlamca farklı üç etikete** yazılmış olmasıdır.
+# Gerçek bir hesaplamada anapara, aylık taksit ve toplam geri ödeme birbirine
+# EŞİT OLAMAZ — eşitse sayfa hesaplamamış, iskeleti göstermiştir. Kılavuz
+# §4.13/1'in ("sayfa bir ürün/araç iskeleti ise değer alanı `absent`") kod
+# karşılığı budur.
+#
+# Eşik 3: iki etiketin eşitliği meşru olabilir ("Ödenecek Toplam Tutar" =
+# "Toplam Geri Ödeme" aynı şeyin iki adı, sıfır kâr paylı tek çekimde
+# "Finansman Tutarı" = "Ödenecek Toplam Tutar"). Üçü birden eşitse
+# tesadüf kalmaz.
+#
+# Etiket listesi `_TUTAR_ETIKETI` ile PAYLAŞILIYOR — belge 1578'in etiketleri
+# (`Aylık Taksit Tutarı` / `Toplam Geri Ödeme Tutarı` / `Finansman Tutarı`)
+# listede birebir mevcut; ikinci bir liste açmak §"iki desen aynı listeyi
+# paylaşır" gerekçesini bozardı.
+_ETIKETLI_TUTAR_RE = re.compile(
+    r"(" + _TUTAR_ETIKETI + r")\s*[:=]?\s*(\d[\d.,]*)\s*" + _PARA_BIRIMI,
+    re.IGNORECASE,
+)
+_AYNI_DEGER_ETIKET_ESIGI = 3
+_BOSLUK_RE = re.compile(r"\s+")
+
+
+def _ayni_deger_cok_etiket(pencere: str) -> Optional[str]:
+    """Aynı tutar ≥3 FARKLI etikete mi yazılmış? Öyleyse kanıt dizgesi.
+
+    Etiketler normalize edilerek (küçük harf + boşluk sadeleştirme) sayılır,
+    yoksa "Taksit Tutarı" ile "taksit  tutarı" iki ayrı etiket sanılırdı.
+    """
+    gruplar: dict[float, set[str]] = {}
+    kanit: dict[float, list[str]] = {}
+    for m in _ETIKETLI_TUTAR_RE.finditer(pencere):
+        para = N.normalize_money(f"{m.group(2)} TL")
+        if not isinstance(para, dict):
+            continue
+        deger = para.get("value")
+        if deger is None:
+            continue
+        etiket = _BOSLUK_RE.sub(" ", m.group(1).strip().lower())
+        gruplar.setdefault(deger, set()).add(etiket)
+        kanit.setdefault(deger, []).append(m.group(0))
+    for deger, etiketler in gruplar.items():
+        if len(etiketler) >= _AYNI_DEGER_ETIKET_ESIGI:
+            return " | ".join(kanit[deger][:_AYNI_DEGER_ETIKET_ESIGI])
+    return None
+
+
 # Pencere ±240 karakter. Ölçülen mesafeler (bozuk widget, 7 kayıt): sıfır
 # tutar bloğu değerden 44–68, hata metni 110–130 karakter önce. 240 ikisini
 # de kapsar. Simetrik tutuluyor çünkü widget iskeletinde blok sıranın
@@ -435,10 +502,24 @@ def _bozuk_hesaplama_araci(text: str, match_start: int, match_end: int) -> bool:
     Sıra önemlidir: önce SAĞLAMLIK kanıtı aranır. Dolu bir tutar varsa sayfa
     hesaplamıştır ve bozukluk işaretleri (gizli hata kutusu gibi) artık
     bağlayıcı değildir.
+
+    TEK İSTİSNA — "aynı değer ≥3 farklı etikette" bacağı sağlamlık kapısından
+    ÖNCE çalışır. Bunun gerekçesi ölçüldü: yer tutucusu sıfır değil `100TL`
+    olan widget'ta (belge 1578) tutarlar `_DOLU_TUTAR_RE`ye göre "dolu"dur,
+    yani kapı sağlamlık kanıtından sonra sorulsa asla kapanmazdı. Üç etiketin
+    eşitliği ise "sayfa hesaplamış" iddiasının kendisini çürütür.
     """
     bas = max(0, match_start - _BOZUK_ARAC_PENCERE)
     son = min(len(text), match_end + _BOZUK_ARAC_PENCERE)
     pencere = text[bas:son]
+    cok_etiket = _ayni_deger_cok_etiket(pencere)
+    if cok_etiket is not None:
+        logger.debug(
+            "REDDEDİLDİ (bozuk hesaplama aracı): neden=ayni_deger_cok_etiket "
+            "isaret=%r deger=%r konum=%d",
+            cok_etiket, text[match_start:match_end], match_start,
+        )
+        return True
     dolu = _DOLU_TUTAR_RE.search(pencere)
     if dolu is not None:
         return False

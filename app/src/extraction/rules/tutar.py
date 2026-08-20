@@ -27,11 +27,45 @@ from ...normalization import normalize as N
 from ...schemas import ExtractedField
 from ._ortak import _CUMLE_SINIRI_RE, _field, _window
 
+# HESAPLAMA ARACI KAPISI — `kar_payi`den ÖDÜNÇ ALINIYOR, kopyalanmıyor.
+#
+# Kapı oran alanı için yazılmıştı ama elediği şey sayfanın TÜRÜdür, alan değil:
+# veri üretmemiş bir widget iskeletinin hiçbir sayısı kanıt değildir. Etiket
+# listesi (`kar_payi._TUTAR_ETIKETI`) zaten "finansman tutarı | kredi tutarı |
+# taksit tutarı | ödenecek toplam tutar | toplam geri ödeme" diyor — yani
+# tam olarak BU alanın etiketleri. İkinci bir kopya açmak iki listenin
+# ayrışmasına ve kapının sessizce tek alanda çalışmasına yol açardı.
+#
+# Yön tek: `kar_payi` `tutar`dan hiçbir şey içe aktarmıyor, döngüsel bağımlılık
+# yok.
+from .kar_payi import _bozuk_hesaplama_araci
+
 # Varlık FİYATI finansman TUTARI değildir. Bu ayrım gold setinde de iki kez
 # karışmış (bkz. data/gold/review/_hakem-turu-01-finansman-tutari.md), yani
 # sözleşmenin zayıf olduğu bir yer — kod tarafında açıkça korunuyor.
 _VARLIK_FIYATI_RE = re.compile(
     r"fiyat\w*|değer\w*|deger\w*|bedel\w*|piyasa\s*değer|ekspertiz", re.IGNORECASE)
+
+# Aynı rol karışıklığının ÜCRET kolu: finansmanın FİYATI finansmanın TUTARI
+# değildir. Ölçülmüş halüsinasyon (`turkiye-finans--bireysel-urun-hizmet-
+# ucretleri`, gold `absent` diyor, çıkarım 0,00 TRY üretiyordu):
+#
+#     "…tirme, Yapılandırılmış Finansman Ücreti 0.00 TL % 0 - TL % 2
+#      Proje finansmanı, satın al…"
+#
+# Tetikleyici ("Finansman") aradığımız çapanın tam kendisi, ama 20 karakterlik
+# boşlukta duran sözcük `Ücreti` — yani sayı bir ücret kaleminin değeri.
+# O kalem `tahsis_ucreti` / `masraf_durumu` alanlarına aittir; buraya
+# yazılması hem uydurma hem de karşılaştırmayı bozan bir şey: 0 TL "en düşük
+# finansman" olarak sıralamanın başına geçer.
+#
+# `_VARLIK_FIYATI_RE`den AYRI tutuluyor çünkü ikisi farklı şeyi eliyor —
+# biri finanse edilen VARLIĞIN fiyatını, diğeri finansmanın kendi
+# MALİYETİNİ. Tek listede birleştirmek hangi bacağın hangi kaydı düşürdüğünü
+# izlenemez kılardı.
+_UCRET_BAGLAMI_RE = re.compile(
+    r"[üu]cret\w*|masraf\w*|komisyon\w*|prim\w*|vergi\w*|kesinti\w*",
+    re.IGNORECASE)
 
 # Tetikleyici FİNANSMANA BAĞLI olmak zorunda — çıplak "tutar"/"limit" yetmez.
 #
@@ -127,8 +161,41 @@ _TOPLAM_AZAMI_PAT = re.compile(
 # Aralığın ÜST sınırı: ilk tutarın HEMEN ardından gelen ikinci tutar.
 # Sadece kısa bir ayıraç kabul edilir ("- ", "– ", "ila ", ya da boşluk) —
 # uzun mesafeye izin vermek belgedeki alakasız tutarları içeri alır.
+#
+# ## ÖLÇÜLMÜŞ KUSUR (2026-08-20): ayıraç listesi eksikti → ALT sınır kanonik
+# kalıyordu
+#
+# Eski liste `-–— ila ile arası arasında ve` idi: **virgül yok** ve **üst sınırı
+# ADLANDIRAN sözcük yok** (`azami/maksimum/en fazla/en çok`). Türkçe banka
+# metinlerinde aralığın en sık kuruluşu tam olarak bu ikisini birlikte
+# kullanıyor. Ölçülmüş dört üyeli aile — dördü de ESKİ kalıpla ALT sınır
+# döndürüyordu:
+#
+#     "Pratik Finansman Kart ile asgari 250 TL, azami 150.000 TL …"   -> 250
+#     "Finansman tutarı asgari 250 TL - azami 150.000 TL arasındadır."-> 250
+#     "Finansman tutarı minimum 5.000 TL, maksimum 500.000 TL olabilir." -> 5.000
+#     "Finansman tutarı en az 5.000 TL, en fazla 500.000 TL olabilir."   -> 5.000
+#
+# Bu, jürinin canlı sistemde gördüğü "en düşük finansman tutarı" hatasının
+# doğrudan kaynağıydı: alt sınır kanonik olunca kart alt limiti (250 TL) bir
+# bankayı en ucuz gösteriyordu.
+#
+# Kalıp artık İKİ ayrı yuva taşıyor — noktalama ayıracı VE sınır sözcüğü —
+# çünkü ikinci vaka ("250 TL - azami 150.000 TL") ikisini BİRLİKTE kullanıyor;
+# tek alternasyonla yazmak o cümleyi kaçırırdı.
+#
+# Sınır sözcüğü sözlüğü `kosullar._KOSUL_TETIK_RE` (§4 "kapsam / nicelik
+# sınırı") ile bilinçli olarak AYNIdır; orada koşul tetikleyicisi, burada
+# aralık ayıracıdır — aynı sözlüğün iki farklı işi.
+#
+# NEDEN GEVŞEMEK GÜVENLİ: yükseltme yalnızca ikinci tutar birincisinden BÜYÜK
+# ise yapılıyor (`extract_tutar` sonundaki karşılaştırma). Yani virgülün
+# ardından gelen bir masraf/taksit tutarı (tipik olarak daha küçük) kanoniği
+# değiştiremez. Yine de mesafe kısa tutuldu: araya söz giremez, yalnız tek bir
+# ayıraç + tek bir sınır sözcüğü.
 _ARALIK_UST_RE = re.compile(
-    r"[\s]{0,3}(?:[-–—]|ila|ile|arası|arasında|ve)?[\s]{0,3}"
+    r"[\s]{0,3}(?:[-–—,;]|ila|ile|arası|arasında|ve)?[\s]{0,3}"
+    r"(?:(?:azami|maksimum|en\s*fazla|en\s*çok|en\s*cok)\s*)?"
     r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
     re.IGNORECASE,
 )
@@ -160,10 +227,62 @@ _ARALIK_UST_RE = re.compile(
 # `vade` sözcüğü kalıpta ZORUNLU DEĞİL: o belge "olması durumunda maksimum
 # 36 ay" diyor, "vade" hiç geçmiyor. Sonuç ölçütü ay cinsinden bir süre
 # olduğu için `\d+\s*ay` de kademe işareti sayılır.
+#
+# ## İKİNCİ ÖLÇÜLMÜŞ KUSUR (2026-08-20): koruma TEK ÇEKİME kilitliydi
+#
+# Üç kolun hepsi "olması durumunda" / "aşamaz" / "maksimum vade" çekimlerini
+# arıyordu. Aynı anlamın en yaygın ikinci çekimi ise **"… ve altında/üzerinde
+# İSE … ay"**dır ve hiçbir kol onu tutmuyordu. Canlı ölçüm
+# (`vakif-katilim--kendim-icin-detay-ihtiyac-finansmani`, gold bu alanda karar
+# vermemiş, yani metrik dışı — ama çıkarım YANLIŞ):
+#
+#     "kullanılan ihtiyaç finansmanı 125.000 TL ve altında ise 36 ay,
+#      125.000 TL ve 250.000 TL arasında ise 24 ay, 250.000 TL üzerinde ise
+#      12 aydır."
+#
+# Çıkarım 125.000 TL üretiyordu; bu bir VADE EŞİĞİdir, kampanyanın tutarı
+# değil. Kontrol testi korumanın SAĞ olduğunu gösterdi: aynı anlamın
+# "olması durumunda maksimum vade" çekimi doğru şekilde reddediliyordu. Yani
+# kusur korumanın kendisinde değil KAPSAMINDA: bir çekime kilitliydi.
+#
+# `ise` ZORUNLU: çıplak "125.000 TL ve altında" bir aralık ifadesi de olabilir
+# ("… ve altındaki harcamalar"); koşul-sonuç kurgusunu taşıyan sözcük `ise`dir.
 _VADE_KADEMESI_RE = re.compile(
     r"olmas[ıi]\s+durumunda[^.]{0,60}?(?:vade|\d+\s*ay)"
     r"|vade[^.]{0,40}?a[şs]amaz"
     r"|maksimum\s+vade",
+    re.IGNORECASE,
+)
+
+# "… ve altında/üzerinde İSE … ay" — aynı korumanın ikinci çekimi, ama
+# ÇAPALI (anchored) kalıp: tutarın HEMEN ardından başlamak zorunda.
+#
+# ## Neden pencere araması DEĞİL — ölçülmüş karşı-örnek
+#
+# İlk deneme bu çekimi `_VADE_KADEMESI_RE`ye dördüncü kol olarak ekledi ve
+# 80 karakterlik pencerede arattı. `albaraka--eviniz-icin-prefabrik` kaydını
+# BOZDU (gold 50.000, çıkarım `null` oldu):
+#
+#     "Finansman tutarı 50.000 TL'ye kadar olan ödemelerinizi 36 aya,
+#      50.000 TL üstünde ise 24 aya kadar vadelendirebilir"
+#
+# Buradaki "üstünde ise" İKİNCİ 50.000'e aittir; birinci adayın penceresine
+# yalnızca tesadüfen düşüyor. Pencere araması bu iki tutarı ayırt edemez.
+#
+# Çapa bunu çözüyor çünkü kalıp gerçekten bitişik kuruluyor: kademe eşiği her
+# zaman "<tutar> ve altında ise" biçiminde yazılır — araya söz girmez.
+# Ölçülmüş pozitif (`vakif-katilim--kendim-icin-detay-ihtiyac-finansmani`,
+# çıkarım 125.000 üretiyordu):
+#
+#     "kullanılan ihtiyaç finansmanı 125.000 TL ve altında ise 36 ay,
+#      125.000 TL ve 250.000 TL arasında ise 24 ay, 250.000 TL üzerinde ise
+#      12 aydır."
+#
+# `ise` ZORUNLU: çıplak "2.500 TL ve altındaki harcamalarınız" bir harcama
+# bandıdır, koşul-sonuç kurgusu değil; `ise` olmadan kalıp onu da elerdi.
+_KADEME_ISE_RE = re.compile(
+    r"['’]?\s*(?:ve\s+)?(?:alt[ıi]nda|[üu]zerinde|[üu]st[üu]nde|aras[ıi]nda)"
+    r"\s+ise[^.]{0,40}?(?:vade|\d+\s*ay)",
     re.IGNORECASE,
 )
 _VADE_KADEMESI_PENCERE = 80
@@ -238,7 +357,8 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
 
     for m in _TUTAR_PAT.finditer(text):
         gap = m.group(2)
-        if _CUMLE_SINIRI_RE.search(gap) or _VARLIK_FIYATI_RE.search(gap):
+        if (_CUMLE_SINIRI_RE.search(gap) or _VARLIK_FIYATI_RE.search(gap)
+                or _UCRET_BAGLAMI_RE.search(gap)):
             continue
         # Pencere tutarın BAŞINA kadar uzar: tablo başlığı tetikleyici ile
         # tutar ARASINDA da durabiliyor ("İhtiyaç Finansmanı Maliyet Tablosu
@@ -249,8 +369,21 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
         if _VADE_KADEMESI_RE.search(
                 text[m.end(3): m.end(3) + _VADE_KADEMESI_PENCERE]):
             continue
+        if _KADEME_ISE_RE.match(text, m.end(3)):
+            continue
+        # Veri üretmemiş hesaplama aracı iskeleti mi? (belge 1578: aynı 100TL
+        # üç ayrı etikette). Döngü içinde `continue` — aynı belgede iskeletin
+        # DIŞINDA gerçek bir tutar varsa o hâlâ aday olabilsin.
+        if _bozuk_hesaplama_araci(text, *m.span(3)):
+            continue
         canon = N.normalize_money(m.group(3))
         if canon is None:
+            continue
+        # SIFIR finansman tutarı yoktur. "0 TL finansman" bir kampanya sınırı
+        # değil, ya boş bir tablo hücresi ya da bir ücret kalemidir. Kâr payı
+        # alanında %0 MEŞRUdur (kâr paysız kampanya), tutarda değil — bu yüzden
+        # koruma `kar_payi`de değil burada.
+        if isinstance(canon, dict) and not (canon.get("value") or 0) > 0:
             continue
 
         s, e = m.span(3)
@@ -261,7 +394,7 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
             break
 
     tm = _TOPLAM_AZAMI_PAT.search(text)
-    if tm is not None:
+    if tm is not None and not _bozuk_hesaplama_araci(text, *tm.span(1)):
         canon = N.normalize_money(tm.group(1))
         if canon is not None:
             s, e = tm.span(1)
@@ -272,6 +405,8 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
     def _ters_sira_aday(pat: "re.Pattern", grup: int) -> Optional[tuple]:
         for mm in pat.finditer(text):
             if _ORNEK_TABLO_RE.search(text[max(0, mm.start() - 150): mm.start()]):
+                continue
+            if _bozuk_hesaplama_araci(text, *mm.span(grup)):
                 continue
             c = N.normalize_money(mm.group(grup))
             if c is None:

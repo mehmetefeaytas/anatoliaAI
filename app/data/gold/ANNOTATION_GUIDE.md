@@ -261,8 +261,61 @@ pahalıdır.
 
 ### `finansman_tutari` — finansman tutarı
 - **Sayılır:** "500.000 TL'ye varan finansman", "50.000 TL – 250.000 TL arası"
-- **Sayılmaz:** ödül/hediye tutarı (`odul_miktari`), taksit tutarı, masraf tutarı
+- **Sayılmaz:** ödül/hediye tutarı (`odul_miktari`), taksit tutarı, masraf tutarı,
+  finansmanın kendi ücreti ("Finansman Ücreti 0,00 TL" → `tahsis_ucreti` /
+  `masraf_durumu`), kart harcama eşiği ("2.500 TL ve altındaki harcamalar",
+  "tek seferde 5.000 TL kredi kartı harcaması"), temassız işlem limiti,
+  mevduat/katılma hesabı alt-üst limiti ("hesapta kalacak minimum tutar")
 - **Sınır vaka:** "1.500,00 TL" → `1500.0` (binlik `.`, ondalık `,`). `#format_varyant`
+
+#### ARALIKTA KANONİK UÇ — ÜST SINIR
+
+**Aralık verilmişse `gold_value` = ÜST sınırdır**; alt sınır `note`'a yazılır.
+Kural `vade_ay`ın aynadaki yüzüdür: orada "en uzun vadeyi yazın" deniyor,
+burada ürünün ilan ettiği **tavan** kanoniktir. Biçim kartı §3.4/4 ile aynı
+karar.
+
+| Metinde geçen | `gold_value` | `note` |
+|---|---:|---|
+| "50.000 TL – 250.000 TL arası finansman" | `250000.0` | `alt=50000` |
+| "asgari 250 TL, azami 150.000 TL" | `150000.0` | `alt=250` |
+| "minimum 5.000 TL, maksimum 500.000 TL" | `500000.0` | `alt=5000` |
+| "en az 5.000 TL, en fazla 500.000 TL" | `500000.0` | `alt=5000` |
+| "asgari 250 TL finansman" (tek değer) | `250.0` | — |
+
+Aralığın ayıracı **tire de virgül de** olabilir; `azami / maksimum / en fazla /
+en çok` sözcükleri ayıracın parçasıdır, ayrı bir cümle başlangıcı değil.
+Yalnız alt sınır ilan edilmişse (üst sınır hiç yoksa) o değer kanoniktir —
+tek değerli bir vaka aralık sayılmaz.
+
+**Neden bu kural yazıldı (ölçüldü, 2026-08-20).** Kural yalnız hakem
+belgesinde duruyordu (`review/_bicim-karti.md` §3.4/4); kılavuz aralığın
+"sayılır" olduğunu söylüyor ama hangi ucun kanonik olduğunu söylemiyordu.
+Kod tarafı da alt sınırı döndürüyordu: `"Pratik finansman kart ile asgari
+250 TL, 125.000 TL'ye kadar…"` → **250 TL**. Sonuç, karşılaştırmada
+"en düşük finansman tutarı" sıralamasının başına bir **kart alt limitinin**
+geçmesiydi.
+
+#### VADE KADEMESİ EŞİĞİ KANONİK DEĞİLDİR
+
+> "Finansman tutarı 125.000 TL ve altında ise 36 ay, 250.000 TL üzerinde ise
+> 12 aydır."
+
+Buradaki 125.000 / 250.000 sayıları **vade eşiğidir**, kampanyanın tutarı
+değil. `finansman_tutari`ye yazılmaz; kademeler `kampanya_kosullari`na ve/veya
+`note`'a düşürülür. `#kosullu_aralik`
+
+Aynı anlam en az iki çekimle yazılıyor ve **ikisi de** eşiktir:
+"… olması durumunda maksimum vade 36 ay" · "… ve altında **ise** 36 ay".
+
+#### HESAPLAMA ARACI / WIDGET İSKELETİ → `absent`
+
+Sayfa bir hesaplama aracıysa ve aynı sayı **üç ayrı etikette** birden
+geçiyorsa (`Aylık Taksit Tutarı: 100TL`, `Toplam Geri Ödeme Tutarı: 100TL`,
+`Finansman Tutarı: 100TL`) sayfa hiçbir şey hesaplamamış, **yer tutucusunu**
+göstermiştir → `absent`. Gerçek bir hesaplamada anapara, taksit ve toplam geri
+ödeme birbirine eşit olamaz. Kılavuz §4.13/1 ("araç/liste iskeleti") ile aynı
+karar; yer tutucusunun `0` olması şart değil, ölçülen vaka `100TL`dir.
 
 ### `vade_ay` — vade (AY cinsinden tamsayı)
 - **Sayılır:** "120 aya varan vade", "1 yıl" → `12`, "36 ay"
