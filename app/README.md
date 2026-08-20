@@ -86,6 +86,52 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 > ```
 
+## Arayüz + sohbet — Docker'sız, yerel (en hızlı demo yolu)
+
+> **`DATABASE_PATH` verilmezse sistem sessizce 3 fixture'a düşer.** Varsayılan
+> `:memory:`'dir (`src/api/main.py:231`). Docker yolu bunu imaja gömülü
+> `data/demo.db` ile çözer; **yerel** koşumda değişkeni elle vermek
+> zorunludur. Verilmezse `/stats` `campaigns: 3` döner ve dashboard 1.782
+> belge yerine 3 kampanya gösterir — sessiz düşüş, hata vermez.
+
+```bash
+cd app
+python3 -m scripts.build_demo_db --out data/demo.db   # bir kez, ~282 s
+
+DATABASE_PATH=data/demo.db .venv/bin/python -c "
+import uvicorn, sys; sys.path.insert(0,'.')
+from src.api.main import build_app
+uvicorn.run(build_app(), host='127.0.0.1', port=8000)"
+```
+
+Doğrulama (ölçüldü 2026-08-20, bu komutlarla):
+
+```bash
+curl -s localhost:8000/health   # {"status":"ok","llm":false,"backend":"sqlite"}
+curl -s localhost:8000/stats    # campaigns: 1782, banks_with_campaigns: 11, fields: 4704
+```
+
+Şartnamenin s.12 referans senaryoları, aynı koşumda canlı doğrulandı:
+
+```bash
+# Senaryo 1 — tek banka, İKİ alan birlikte
+curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
+  -d '{"question":"Kuveyt Türk konut finansmanı oranı ve vadesi ne?"}'
+# -> "kâr payı oranı: %1,89" + "vade: 120 ay" (iki alan da döner; koşullu oran
+#    uyarısı ve katılma hesabı ihtarı eklenir)
+
+# Senaryo 2 — gerekçeli karşılaştırma
+curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
+  -d '{"question":"Kuveyt Türk mü avantajlı Ziraat Katılım mı?"}'
+# -> kâr payı / vade / masraf / ek ödül boyutlarında "çünkü ..." gerekçeli
+#    madde madde cevap, 7 kaynak
+
+# Tanınmayan banka — çekimser kalma (uydurma YOK, ilgisiz banka YOK)
+curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
+  -d '{"question":"XYZ Bankası konut finansmanı oranı ne?"}'
+# -> "Sorduğunuz bankayı veri setimde bulamadım" + tanınan 10 bankanın listesi
+```
+
 ## Tam Sistem (Docker, offline)
 
 > **Önce veri tabanını kur, SONRA `docker-compose up`.** `Dockerfile.api`
