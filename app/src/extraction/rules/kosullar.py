@@ -32,7 +32,7 @@ from typing import Optional
 
 from ...preprocessing.clean import split_sentences, tr_fold
 from ...schemas import ExtractedField
-from ._ortak import _field, _window
+from ._ortak import _field, _window, bozuk_metin
 from .ihtar import ihtar_mi
 
 # DİPNOT İŞARETİ. Kampanyanın GERÇEK kısıtları sayfanın altındaki yıldızlı /
@@ -571,8 +571,13 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
     # uygulanıp çıkarıcıda uygulanmadığı sürece gold ile model 20 kalibrasyon
     # belgesinin 5'inde YAPAY olarak ayrışıyordu.
     def uygun(s: str, tetik: re.Pattern) -> bool:
+        # `bozuk_metin`: PDF metin çıkarımının bozduğu parça koşul olamaz.
+        # Ölçüt ve eşiğin gerekçesi `_ortak.bozuk_metin` başlığında; kısaca
+        # bu kapı olmadan okunamaz bir Albaraka PDF'i `eval.properties`'te
+        # 2 gerçek ihlal üretiyordu ve CI kırmızıydı.
         return (bool(tetik.search(s)) and not boilerplate.search(s)
                 and not ihtar_mi(s) and not _kosul_degil(s)
+                and not bozuk_metin(s)
                 and 20 <= len(s) <= 280)
 
     sentences = _sayi_sonu_birlestir(split_sentences(text))
@@ -612,7 +617,8 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
     # taşıyabilir ve liste mükerrer olurdu.
     for dipnot in extract_dipnotlar(text):
         if (boilerplate.search(dipnot) or ihtar_mi(dipnot)
-                or _kosul_degil(dipnot) or not 20 <= len(dipnot) <= 280):
+                or _kosul_degil(dipnot) or bozuk_metin(dipnot)
+                or not 20 <= len(dipnot) <= 280):
             continue
         if any(dipnot in s for s in picked):
             continue

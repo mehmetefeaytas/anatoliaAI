@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3278%20ye%C5%9Fil-brightgreen.svg)](tests/)
-[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
+[![Testler](https://img.shields.io/badge/testler-3456%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
 (Bilişim Vadisi). Türkiye'deki katılım bankalarının kampanya/ürün metinlerinden
@@ -92,6 +92,9 @@ kırılım ve karşı-okumalar: [`docs/rapor/ablasyon.md`](docs/rapor/ablasyon.m
 > (Aynı gün erken bir koşum 4.709 vermişti; aradaki 5 alan sahte `%0` kâr payı
 > temizliğiyle düştü. `data/demo.db` de bu sayıyı taşıyor — bağımsız doğrulama:
 > `sqlite3 data/demo.db "select count(*) from extracted_fields"` → **4704**.)
+> **Tazelenmiş ölçüm (2026-08-21, PDF hasadından sonra):** korpus 2.708 belge,
+> çıkarılan **7.032** alanın tamamı `rule`; `ner` ve `llm` yine **0**. Katman
+> dağılımı hasatla DEĞİŞMEDİ — iddia büyüyen korpusta da geçerli.
 > (`llm` sayısının 0 olması LLM'in offline Null-fallback'te olmasındandır;
 > `ner` sayısının 0 olması ise **kodun kendisindendir** — o katman yok.)
 
@@ -134,7 +137,7 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > **`DATABASE_PATH` verilmezse sistem sessizce 3 fixture'a düşer.** Varsayılan
 > `:memory:`'dir (`src/api/main.py:231`). Docker yolu bunu imaja gömülü
 > `data/demo.db` ile çözer; **yerel** koşumda değişkeni elle vermek
-> zorunludur. Verilmezse `/stats` `campaigns: 3` döner ve dashboard 1.782
+> zorunludur. Verilmezse `/stats` `campaigns: 3` döner ve dashboard 2.708
 > belge yerine 3 kampanya gösterir — sessiz düşüş, hata vermez.
 
 ```bash
@@ -166,7 +169,7 @@ Doğrulama (ölçüldü 2026-08-20, bu komutlarla):
 
 ```bash
 curl -s localhost:8000/health   # {"status":"ok","llm":false,"backend":"sqlite"}
-curl -s localhost:8000/stats    # campaigns: 1782, banks_with_campaigns: 11, fields: 4704
+curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fields: 7032
 ```
 
 Şartnamenin s.12 referans senaryoları, aynı koşumda canlı doğrulandı:
@@ -196,7 +199,7 @@ curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
 > `data/demo.db` dosyasını `COPY data/ ./data/` ile **derleme anında** imaja
 > gömer. Dosya `.gitignore`'dadır (`*.db` kuralı) — temiz bir `git clone`
 > sonrası **yoktur**. Bu adım atlanırsa API açılışta `repo.counts()["campaigns"]
-> == 0` koşuluyla sessizce fixture'lara düşer ve dashboard **1.782 belge
+> == 0` koşuluyla sessizce fixture'lara düşer ve dashboard **2.708 belge
 > yerine yalnızca 3 fixture kampanyası** gösterir; korpus ölçeği (projenin en
 > güçlü fonksiyonellik kanıtı) jüriye hiç görünmez.
 
@@ -334,7 +337,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **3.331** birim/entegrasyon testi toplanıyor · **3.278 geçiyor** ·
+**Test:** **3.509** birim/entegrasyon testi toplanıyor · **3.456 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`).
@@ -351,8 +354,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.331** | **3.278** | 53 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **3.331** | **3.278** | 53 | **0** (+1.451 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.509** | **3.456** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **3.509** | **3.456** | 53 | **0** (+1.623 subtest) |
 >
 > Yayımlanan manşet **unittest** sayısıdır, çünkü kanıt-tazeliği kapısı taze
 > artefakt varken onu okur; artefakt bayatsa `pytest --collect-only` yedeğine
@@ -384,10 +387,10 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 
 | Kalem | Durum |
 |---|---|
-| Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **3.278 test yeşil** (3.331 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-20: `python -m unittest discover -s tests` → `Ran 3331 tests … OK (skipped=53)`; `python -m pytest tests -q` → `3278 passed, 53 skipped`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
-| Değişmez (invariant) denetimi | ✅ **1.782 belgede 0 ihlal** — kapsam **%89,6** (1.597 belgede en az bir alan çıktı; 185 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-16: `python -m eval.properties --raw-dir data/raw --out eval/reports/violations-20260816.jsonl` → çıkış kodu 0. Bir önceki yayımlanan hâl ("1 ihlal `P4_cumle_sirasi`, kapsam %91,3") bu koşumda **tekrarlanmadı**; P4 dahil dört değişmezin dördü de geçti |
-| Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-16, 1.782 belge — **iki yol, iki sayı** (aşağıya bakınız) |
+| Korpus | **2.708 gerçek belge** (758 PDF dâhil), 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
+| Testler | ✅ **3.456 test yeşil** (3.509 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-21: `python -m pytest tests -q` → `3456 passed, 53 skipped, 1623 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
+| Değişmez (invariant) denetimi | ✅ **2.708 belgede 0 ihlal** — kapsam **%92,3** (2.499 belgede en az bir alan çıktı; 209 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-21: `python -m eval.properties --raw-dir data/raw` → çıkış kodu 0. **21 Ağustos'ta bu denetim 2 GERÇEK ihlal verdi ve CI'ı kırdı**: son PDF hasadındaki okunamaz bir Albaraka sözleşmesi (ToUnicode tablosu olmayan gömülü yazı tipi) çöp metni `kampanya_kosullari` kalemi olarak sunuyordu. Kök neden kodda değil veride olduğu için çözüm bir KAPI oldu (`_ortak.bozuk_metin`); ihlal gizlenmedi, sebebi burada yazılı |
+| Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-21, 2.708 belge — **28 çelişki: 8'i belgeler-arası** (6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı**), 20'si belge-içi. Kâr payı örneği manşetliktir: Albaraka aynı ürün için iki ayrı formda **%7,0 ve %1,0** yayımlamış — kesişmeyen iki oran. Komut: `python -m src.comparison.scan --raw-dir data/raw`. **İki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
@@ -493,7 +496,7 @@ verildiğinde koşar; `run_pipeline` bunu geçmez, API/pano geçer.
 | API `/contradictions` — `detect(c, as_of=scraped_at)`; **panonun gösterdiği** | ✓ | **15** | **3** | `suresi_dolmus_kampanya` 10 · `celisen_tutar_bandi` 4 · `celisen_kampanya_bitisi` 1 |
 
 Banka kırılımı (15'lik yol): Albaraka 9 · Kuveyt Türk 5 · Dünya Katılım 1.
-Her iki koşum da 1.782 belge okudu. Üreten komutlar (ikisi de offline, LLM kapalı):
+Her iki koşum da (2026-08-16 ölçümünde) 1.782 belge okudu; 2026-08-21 koşumu 2.708 belge okudu. Üreten komutlar (ikisi de offline, LLM kapalı):
 
 ```bash
 # 1) Boru hattı yolu — 5 çelişki / 2 tür
@@ -664,7 +667,8 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 
 > **Senaryonun kalp alanı yeterince ölçülmedi.** `kar_payi_orani` gold.v2'de
 > yalnız **3 karar** destekli (TP 2, FN 1). Oradan çıkan F1 = 0,800
-> **yorumlanamaz** — üç karar bir F1 taşımaz. Korpusta da alan **60/1.782 belgede (%3,4)** var
+> **yorumlanamaz** — üç karar bir F1 taşımaz. Korpusta alan **146/2.708 belgede (%5,4)** var
+> (ölçüm 2026-08-21; PDF hasadı payı 60'tan 146'ya çıkardı). Önceki ölçüm: **60/1.782 (%3,4)**
 > (ölçüm 2026-08-16, sahte `%0` temizliğinden sonra; önceki yayımlanan değer 70/1.782 = %3,9 idi
 > ve içinde bağlamsız sıfırlar vardı) — bu bir
 > model kısıtı değil, **veri gerçeği**: bankalar oranları kampanya
@@ -850,9 +854,9 @@ gold mu, yargıç mı" ayrımını yapacak.
   *kesinleştirmiyoruz*).
 - **`kampanya_kosullari` ve `vade_ay`** — ikisi mikro-F1'in en büyük tek
   kaldıracı; eşleştirici sertliği mi tanım sorunu mu ayrıştırılmalı.
-- ~~**Değişmez denetimini 1.774 belgede tekrarla**~~ — **YAPILDI (2026-08-16):**
-  1.782 belge, **0 ihlal**, kapsam %89,6. Komut ve çıktı yukarıdaki "Ölçüm
-  Durumu" tablosunda. Kalan iş: kapsamı yükseltmek — 185 belgeden hiç alan
+- ~~**Değişmez denetimini 1.774 belgede tekrarla**~~ — **YAPILDI, en son 2026-08-21:**
+  2.708 belge, **0 ihlal**, kapsam **%92,3**. Komut ve çıktı yukarıdaki "Ölçüm
+  Durumu" tablosunda. Kalan iş: kapsamı yükseltmek — 209 belgeden hiç alan
   çıkmıyor ve o belgelerde denetim hiçbir şey test etmiyor.
 - **Ablasyon kolları** — izole ortamlarda kalan kollar (Trendyol-8B hibrit,
   GLiNER geri-çağırma ağı). Başarısız kollar **negatif sonuç olarak

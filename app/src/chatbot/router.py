@@ -480,6 +480,7 @@ _VADE_MIN, _VADE_AZAMI = 1, 600
 _SUZGEC_ETIKET = {
     "campaign_type": "kampanya türü",
     "vade_ay_min": "asgari vade",
+    "vade_ay_esit": "tam vade",
     "banks": "banka",
     "kar_payi_sifir": "kâr payı oranı %0 koşulu",
     "masraf_yok": "masraf alınmaması koşulu",
@@ -559,6 +560,10 @@ def _suzgecleri_dogrula(ham: Any) -> dict:
     if isinstance(vmin, int) and not isinstance(vmin, bool) \
             and _VADE_MIN <= vmin <= _VADE_AZAMI:
         out["vade_ay_min"] = vmin
+    vesit = ham.get("vade_ay_esit")
+    if isinstance(vesit, int) and not isinstance(vesit, bool) \
+            and _VADE_MIN <= vesit <= _VADE_AZAMI:
+        out["vade_ay_esit"] = vesit
     banks = _bankalari_dogrula(ham.get("banks"))
     if banks:
         out["banks"] = banks
@@ -1077,7 +1082,7 @@ def _suzgec_etiketi(anahtar: str, deger: Any) -> str:
     ad = _SUZGEC_ETIKET.get(anahtar, anahtar)
     if anahtar == "banks" and isinstance(deger, (list, tuple)):
         return f"{ad}: {_bankalar_etiketi(deger)}"
-    if anahtar == "vade_ay_min":
+    if anahtar in ("vade_ay_min", "vade_ay_esit"):
         return f"{ad}: {deger} ay"
     return f"{ad}: {deger}"
 
@@ -1147,6 +1152,17 @@ def _detect_filters(q: str) -> dict:
     # q katlanmış (ascii) geldiği için eşik sözcükleri de katlanmış yazılır.
     if m and any(s in q for s in ("veren", "uzeri", "ve uzeri", "en az")):
         filters["vade_ay_min"] = int(m.group(1))
+    # "6 ay vadeli" — TAM vade. Jüri 3. turunda ölçülen kusur: bu çekim hiçbir
+    # tetikleyici listede yoktu, bu yüzden "6 ay vadeli ve %0 kâr paylı"
+    # sorusunda vade koşulu SESSİZCE DÜŞÜYOR ve yalnız kâr payı uygulanıyordu.
+    #
+    # Neden `vade_ay_min` DEĞİL: o süzgeç ">=" anlamındadır ("asgari vade").
+    # "6 ay vadeli" isteyene 12 ay vadeli kampanyayı vermek, düşürülen koşulun
+    # yerine YANLIŞ bir koşul koymak olurdu — aynı hatanın başka kılığı.
+    # Sıra önemli: "en az 6 ay vadeli" hem "en az" hem "vadeli" taşır ve
+    # ASGARİ okumasıdır; bu yüzden eşitlik yalnız asgari kurulmadıysa kurulur.
+    elif m and "vadeli" in q:
+        filters["vade_ay_esit"] = int(m.group(1))
     # kampanya türü filtresi — önce alt dize sözlüğü, sonra sözcük desenleri.
     # Sıra önemli: "taşıt evrakları" sorusunda "taşıt" önce eşleşir ve yalın
     # "ev" deseni hiç denenmez.

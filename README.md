@@ -9,8 +9,8 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3278%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
-[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge-yellow.svg)](app/eval/properties.py)
+[![Testler](https://img.shields.io/badge/testler-3456%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
 [![SBOM](https://img.shields.io/badge/SBOM-CycloneDX%20·%2096%20paket-informational.svg)](app/docs/sbom.json)
@@ -27,8 +27,8 @@ bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaşt
 Sonucu bir dashboard ve iki yollu (yapısal sorgu ↔ RAG) bir chatbot ile
 sunuyor. Tamamı açık kaynak (Apache-2.0); on-premise ve internetsiz çalışıyor.
 
-> 1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
-> 3.278 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
+> 2.708 gerçek belge · 10/10 katılım bankası · 758 PDF ·
+> 3.456 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
 
 **Üretim yolu kural tabanlıdır — ve bu ölçülmüş bir karardır.** LLM katmanı
 kodda vardır, koşar ve ölçülmüştür; ölçüm onu üretime almamayı söyledi:
@@ -159,8 +159,8 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **1.782 belge** (ham arşivle eşit) | `python -m scripts.check_demo_db` |
-| AI özeti kapsaması | 1.759 üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
+| Korpus | **2.708 belge** · 7.032 çıkarılan alan (ham arşivle eşit) | `python -m scripts.check_demo_db` |
+| AI özeti kapsaması | **2.634 üretildi (%97,3)** · 74 belge gerekçeli boş (29 metin boş · 41 terminoloji kapısı · 4 diğer) | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
 | Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | **0,8228** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
@@ -180,7 +180,7 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026
 | Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
 | Bağımlılık envanteri | 96 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
 | On-prem kanıtı | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
-| Test | **3.331** toplanan · 3.278 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız | `python -m unittest discover -s tests` — ölçüm 2026-08-20 |
+| Test | **3.509** toplanan · 3.456 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız · 1.623 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-21 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | **14 iddia · 0 sapma** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 | Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
@@ -360,7 +360,7 @@ diğerlerinden habersiz çalışıyor. Şartname insan hakemliği şart koşmuyo
 **Ölçüm kapsamı iki yerde dar ve ikisi de veri kaynaklı.** `tahsis_ucreti` gold'da
 0 pozitif örnek taşıdığı için F1'i tanımsızdır: sistem değer üretmiyor, gold da
 beklemiyor. Bu "çalışmıyor" değil, ölçülemiyor. `kar_payi_orani` ise korpusun
-yalnız 70/1.782 belgede (%3,9) geçiyor, çünkü bankalar oranı HTML'de değil
+yalnız 146/2.708 belgede (%5,4) geçiyor, çünkü bankalar oranı HTML'de değil
 hesaplama ucunda yayımlıyor. Sınır veride, çıkarım katmanında.
 
 **On-prem kanıtının kapsamı.** 14/14 adım `--network none` içinde geçti, ama kanıt
@@ -466,7 +466,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — 20 Ağu ölçümü: 3.331 toplandı, 3.278 geçti, 53 atlandı, 0 başarısız.
+# Tüm test paketi — 21 Ağu ölçümü: 3.509 toplandı, 3.456 geçti, 53 atlandı, 0 başarısız.
 # Atlananlar isteğe bağlı bağımlılık isteyenler (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değil ve tamamı offline koşuyor.
 python3 -m unittest discover -s tests
@@ -488,10 +488,26 @@ python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.jso
 
 ### C) Tam sistem — Docker (offline, anahtarsız)
 
+> **ÖNCE veri tabanını kur, SONRA `docker-compose up`.** `Dockerfile.api`
+> `data/demo.db`'yi **derleme anında** imaja gömer; dosya `.gitignore`'dadır
+> (`*.db`) ve temiz bir klonda **yoktur**. Bu iki adım atlanırsa API sessizce
+> 3 fixture'a düşer — dashboard 2.708 belge yerine 3 kampanya gösterir ve
+> hata vermez. Ayrıntılı gerekçe: `app/README.md` "Docker" bölümü.
+
 ```bash
 cd app
+python3 -m scripts.build_demo_db --out data/demo.db    # bir kez, ~282 s
+python3 -m scripts.ozet_geri_yukle --db data/demo.db \
+        --girdi data/ozet-yedegi.json                  # 2.634 özet, LLM İSTEMEZ
 cp .env.example .env          # API anahtarı YOK; sadece yerel config
 docker-compose up             # postgres + vllm/ollama + api + web
+```
+
+Doğrulama (iki sayı da gelmeli):
+
+```bash
+curl -s localhost:8000/stats             # campaigns: 2708, fields: 7032
+curl -s localhost:8000/summaries/coverage # ozetli: 2634
 ```
 
 - Dashboard: `http://localhost:3000` · API: `http://localhost:8000`
@@ -597,7 +613,7 @@ denetliyor.
 │   │                            #   comparison · rag · chatbot · api · db
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
-│   ├── tests/                   #   3.278 birim/entegrasyon testi (offline)
+│   ├── tests/                   #   3.456 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
 │   ├── data/gold/               #   altın setler + anotasyon kılavuzu
 │   ├── docs/                    #   SBOM · lisans envanteri · offline kanıt

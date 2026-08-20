@@ -360,3 +360,86 @@ def gezinme_seridi(cumle: str) -> bool:
     buyuk = sum(1 for w in kelimeler if w[:1].isupper())
     return (buyuk / len(kelimeler) >= _MENU_BUYUK_HARF_ORANI
             and not _CUMLE_SONU_RE.search(cumle))
+
+
+# BOZUK METİN ÖLÇÜTÜ — PDF metin çıkarımının iki bozulma sınıfı.
+#
+# Neden gerekti (21 Ağustos, jüri 3. turu): `eval.properties` HEAD'de 2 ihlal
+# verdi ve CI 4 commit'tir kırmızıydı. Kök neden veri: son PDF hasadında
+# `albaraka/docs/gecmis-tarihli-arac-kredisi-sozlesmesi-pdf.txt` metni,
+# gömülü yazı tipinin ToUnicode tablosu olmadığı için OKUNAMAZ çıktı
+# ("M$ 9GIHI A & & 9PPP1 # ,$ 1&"). Bu çöp bir `kampanya_kosullari` kalemi
+# olarak seçiliyordu; kalem cümle sonu noktalaması taşımadığı için P3
+# denetiminin eklediği alakasız cümle kaleme YAPIŞIYOR ve "ekleme çıkarımı
+# değiştirdi" ihlali doğuyordu. İhlal gerçekti: çöp kalem hiç seçilmemeliydi.
+#
+# İkinci sınıf: KERNING PARÇALANMASI. Aynı hasatta Vakıf Katılım PDF'leri
+# okunabilir Türkçe taşıyor ama sözcük içi boşluklarla ("M ü ş t eri ö d e n
+# ecek t u t arı"). Metin çöp değil, ama kalem olarak kullanılamaz.
+#
+# ÖLÇÜT — sayı jetonları YOK SAYILIR. Yalnız harf taşıyan jetonlara bakılır;
+# aksi hâlde "3 ay, 6 ay veya 12 ay vadeli" gibi meşru bir koşul, sayı
+# jetonları yüzünden bozuk sayılırdı (ölçüldü: ham oran 0,25 → yanlış ret;
+# sayısız oran 0,40 → doğru kabul).
+#
+# EŞİK VE ÖLÇÜLEN BOŞLUK (2.223 ölçülebilir koşul kalemi, canlı korpus):
+#   bozuk kalemler: 0,123 · 0,167 · 0,178 · 0,206 · 0,222   (5 kalem)
+#   gerçek kalemler: 0,571 ve yukarısı                       (2.218 kalem)
+# Aradaki boşluk 0,222 – 0,571 ve İÇİ BOŞ. Eşik 0,40 bu boşluğun ortasında
+# seçildi; 0,25 ile 0,50 arasındaki HER değer aynı 5 kalemi eliyor, yani
+# sonuç eşiğin tam yerine duyarlı DEĞİL. Eşik sonuç görülmeden değil,
+# boşluk ölçüldükten sonra ve boşluğun ortasına konarak seçildi.
+_BOZUK_UZUN_JETON_ORANI = 0.40
+
+#: Ölçüt asgari jeton sayısı. Altında ÇEKİMSER kalınır (`False` döner):
+#: "6 Ay" gibi kısa bir parçada oran istatistiği anlamsızdır ve tek harfli
+#: bir kısaltma kalemi haksız yere elerdi. Ölçüldü: 2.306 kalemin 83'ü bu
+#: eşiğin altında ve hiçbiri bozuk değil.
+_BOZUK_ASGARI_JETON = 6
+
+#: İKİNCİ BACAK — HARF YOĞUNLUĞU. Jeton oranı tek başına yetmiyor: ölçüldü,
+#: en ağır mojibake örneği ("9 5G 1 51=111N0>5102 -131:05=1…") harf taşıyan
+#: yalnız 2 jetona sahip ve birinci bacak orada ÇEKİMSER kalıyor. Bu bacak
+#: boşluk dışı karakterler arasında harf oranına bakar.
+#:
+#: ÖLÇÜLEN BOŞLUK (2.306 koşul kalemi, ≥20 karakter):
+#:   çöp: 0,042 (mojibake) · 0,156 (mojibake) · 0,280 (noktalı içindekiler
+#:        satırı) · 0,400 (boş sözleşme form satırı: "(…………)TL. (Yalnız ……")
+#:   gerçek: 0,537 ve yukarısı
+#: Boşluk 0,400 – 0,537 ve içi boş; eşik ortasına konuldu. Yan kazanç: bu
+#: bacak yalnız mojibake'i değil, PDF'lerin noktalı içindekiler satırlarını
+#: ve DOLDURULMAMIŞ form alanlarını da eliyor — üçü de koşul değildi.
+_BOZUK_HARF_YOGUNLUGU = 0.47
+
+#: Yoğunluk bacağı için asgari uzunluk. Kısa parçada yoğunluk yanıltıcıdır
+#: ("%0 kâr payı" gibi bir ifade sayı ve işaret ağırlıklıdır ama koşuldur).
+#: `kosullar.uygun` zaten ≥20 karakter istiyor; sınır burada da yazılı ki
+#: yardımcı başka bir alandan çağrıldığında da güvenli olsun.
+_BOZUK_YOGUNLUK_ASGARI_UZUNLUK = 20
+
+
+def bozuk_metin(parca: str) -> bool:
+    """Parça, PDF metin çıkarımının bozduğu bir metin mi?
+
+    İki bozulma sınıfını da yakalar: okunamaz mojibake (ToUnicode tablosu
+    olmayan gömülü yazı tipi) ve kerning parçalanması (sözcük içi boşluk).
+    Ölçüt, harf taşıyan jetonlar arasında en az üç harfli olanların oranıdır;
+    sayı ve para jetonları sayılmaz.
+
+    Args:
+        parca: Aday kalem (koşul cümlesi, dipnot vb.).
+
+    Returns:
+        Bozuk ise `True`. Sağlam ya da ölçülemeyecek kadar kısa ise `False` —
+        yani ÇEKİMSER kalır, uydurma bir karar vermez.
+    """
+    bosluksuz = sum(1 for c in parca if not c.isspace())
+    if (bosluksuz and len(parca) >= _BOZUK_YOGUNLUK_ASGARI_UZUNLUK
+            and sum(c.isalpha() for c in parca) / bosluksuz
+            < _BOZUK_HARF_YOGUNLUGU):
+        return True
+    jetonlar = [j for j in parca.split() if any(c.isalpha() for c in j)]
+    if len(jetonlar) < _BOZUK_ASGARI_JETON:
+        return False
+    uzun = sum(1 for j in jetonlar if sum(c.isalpha() for c in j) >= 3)
+    return uzun / len(jetonlar) < _BOZUK_UZUN_JETON_ORANI
