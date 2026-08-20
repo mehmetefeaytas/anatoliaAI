@@ -31,9 +31,11 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.extraction.rules._ortak import (_BOZUK_ASGARI_JETON,
-                                         _BOZUK_UZUN_JETON_ORANI,
-                                         bozuk_metin)
+from src.extraction.rules._ortak import (
+    _BOZUK_ASGARI_JETON,
+    _BOZUK_UZUN_JETON_ORANI,
+    bozuk_metin,
+)
 from src.extraction.rules.kosullar import extract_kampanya_kosullari
 
 #: MOJİBAKE — ToUnicode tablosu olmayan gömülü yazı tipi. Canlı korpustan:
