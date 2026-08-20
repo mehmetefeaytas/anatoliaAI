@@ -500,9 +500,31 @@ _INJECTION_PATTERNS: tuple[str, ...] = (
     # tek yanlış pozitif kaynağı buydu (10 belge) ve hepsi meşru bankacılık
     # dili — "otomatik ödeme talimatının iptali". Devralma fiilleri
     # (yoksay/unut/dikkate alma) tek anlamlıdır, "iptal" değildir.
-    r"(?:talimat|kural|yonerge)\w*\w{0,3}\s+(?:yoksay|unut|dikkate\s*alma|"
-    r"gormezden\s*gel)",
-    r"onceki\s+(?:tum\s+)?(?:talimat|kural|mesaj)",
+    # `mesaj` bu listeye 20 Ağu 2026'da EKLENDİ — aşağıdaki fiilsiz desen
+    # kaldırılırken "önceki mesajları yoksay" biçiminin kapsamdan düşmemesi
+    # için. Fiil şartı korunuyor.
+    r"(?:talimat|kural|yonerge|mesaj)\w*\w{0,3}\s+(?:yoksay|unut|"
+    r"dikkate\s*alma|gormezden\s*gel)",
+    # KALDIRILDI (20 Ağu 2026): r"onceki\s+(?:tum\s+)?(?:talimat|kural|mesaj)"
+    #
+    # Fiilsizdi ve bu yüzden bu bloğun kendi tasarım kuralını ihlal ediyordu:
+    # "işaretler ifade düzeyinde tutuldu, sözcük düzeyinde değil ... gerçek
+    # banka metinlerinde 'talimat' tek başına sık geçer". `iptal` tam bu
+    # sebeple bilinçli olarak dışarıda bırakılmış; bu desen aynı sınıfa
+    # düşüyordu.
+    #
+    # ÖLÇÜLDÜ: `data/raw/tom-katilim/docs/doc-abh-onbilgilendirme-formu-
+    # 12082026-pdf.txt` — "…bir önceki altın alımı tutarı kadar kredi kartı
+    # borcu ödemesini, **önceki talimatın** gerçekleşmesinden sonra yapmış
+    # olması gerekmektedir." Tamamen meşru bir düzenli altın alım talimatı
+    # cümlesi karantinaya alınıyordu; o belgenin GERİ KALANI da düşüyordu
+    # (tasarım gereği belge bütün olarak karantinaya alınır).
+    #
+    # Kapsam kaybı YOK: fiilli biçimleri ("önceki talimatları yoksay/unut/
+    # dikkate alma/görmezden gel") yukarıdaki desen zaten yakalıyor ve
+    # `mesaj` oraya eklendi. İngilizce karşılığı (`ignore|disregard
+    # previous`) da fiil şartlıydı — bu satır, iki dil arasındaki tek
+    # asimetriydi.
     r"sistem\s+talimat",
     r"sistem\s+guncellemesi(?:dir)?",
     r"asistan\s+notu",

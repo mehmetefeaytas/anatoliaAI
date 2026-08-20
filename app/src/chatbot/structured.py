@@ -215,8 +215,15 @@ def answer(repo: Repository, r: Route) -> StructuredAnswer:
                 return StructuredAnswer(
                     _kiyaslanamaz_metni(r.field, ranked, baglam=baglam),
                     tekil, r.field, r.intent)
-            return StructuredAnswer(_phrase_superlative(r.field, r.intent, top),
-                                    tekil, r.field, r.intent)
+            # Aile adı: önce sorunun kendi süzgeci, yoksa kazananın ait olduğu
+            # aile. İkisi de yoksa önek basılmaz — uydurulmuş bir aile adı,
+            # hiç ad olmamasından kötüdür.
+            tur_adi = r.filters.get("campaign_type") or (
+                gruplar[0][0] if gruplar else None)
+            return StructuredAnswer(
+                _phrase_superlative(r.field, r.intent, top, tur=tur_adi)
+                + _elenen_notu(r.field, ranked, baglam),
+                tekil, r.field, r.intent)
         kazananlar = [(tur, _grup_kazanani(grup), grup) for tur, grup in gruplar]
         gosterilen = [k for _, k, _g in kazananlar if k is not None]
         if not gosterilen:
@@ -855,6 +862,43 @@ def _adim_cumlesi(baskin: str, baglam: Optional[_Baglam]) -> str:
             f"aşağıdaki kaynaklardan ham kayda ulaşabilirsiniz.")
 
 
+def _elenen_notu(field: str, ranked: list[RankRow],
+                 baglam: Optional[_Baglam] = None) -> str:
+    """Kazanan VARKEN elenen kayıtların hesabı; elenen yoksa boş dize.
+
+    ## Niçin bu not kazanan dalında da basılmalı
+
+    Bir kazanan bulmak, aynı ailedeki diğer kayıtların yok sayılabileceği
+    anlamına gelmez. Süresi dolmuş ya da bitiş tarihi hiç yazılmamış kayıtlar
+    sıralamadan düşer; kullanıcı yalnız kazananı görürse gösterilen sayıyı
+    ailenin TAMAMININ kazananı sanır.
+
+    Bu asimetri ölçüldü: `campaign_type` onarımı "araba alımında en yüksek
+    finansman" sorusunu tek aileye indirdi ve cevap
+    "Taşıt Finansmanı — en yüksek finansman tutarı: Albaraka Türk
+    (1.700.000 TL)." oldu — elenen kayıtlardan tek kelime etmeden.
+    `tests/test_bos_cevap.py` bunu "damgasız kayıtlar sessizce yok sayıldı"
+    diye yakaladı ve haklıydı.
+
+    Cümleler YENİDEN YAZILMIYOR: kıyaslanamaz dalının kullandığı
+    `_sayim_cumlesi` / `_ayrinti_cumlesi` aynen çağrılır. İki dal aynı olguyu
+    iki farklı üslupla anlatırsa zamanla ayrışır — bu depoda beş kez olmuş
+    bir hata (bkz. `_hic_kayit_cevabi` gerekçesi).
+    """
+    elenen = [x for x in ranked if eleme_sebebi(x.note)]
+    if not elenen:
+        return ""
+    sayim: Counter = Counter(eleme_sebebi(x.note) or ELEME_BILINMIYOR
+                             for x in elenen)
+    baskin = sayim.most_common(1)[0][0]
+    cumleler = [
+        _sayim_cumlesi(field, elenen, sayim, baglam),
+        _ayrinti_cumlesi(field, elenen, baskin, baglam),
+    ]
+    govde = " ".join(c for c in cumleler if c)
+    return f" {govde}" if govde else ""
+
+
 def _kiyaslanamaz_metni(field: str, ranked: list[RankRow], *,
                         baglam: Optional[_Baglam] = None) -> str:
     """Kıyaslanabilir satır yokken NE BİLDİĞİNİ söyleyen cevap.
@@ -920,12 +964,28 @@ _AILE_NOTU = ("_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin "
               "yapılır._")
 
 
-def _phrase_superlative(field: str, intent: str, row: RankRow) -> str:
+def _phrase_superlative(field: str, intent: str, row: RankRow,
+                        tur: Optional[str] = None) -> str:
+    """Tek aile içindeki kazanan.
+
+    `tur` verilirse cümle AİLEYİ ADIYLA yazar. Bu kozmetik değil: soru bir
+    ürün ailesini işaret ettiğinde ("araba alımında en yüksek finansman")
+    cevabın hangi ailede sıralandığını söylememesi, kullanıcının sayıyı TÜM
+    korpusun kazananı sanmasına yol açar. Aynı sebeple çok-aileli dal
+    (`_phrase_superlative_by_type`) aile adlarını zaten basıyor; tek-aileli
+    dalın basmaması ikisi arasında sessiz bir asimetriydi.
+
+    Ölçüldü: `campaign_type` onarımı sonrası "araba alımında en yüksek
+    finansman" sorusu tek aileye indi ve cevap aileyi hiç anmadan
+    "en yüksek finansman tutarı: Albaraka Türk (1.700.000 TL)" dedi —
+    `tests/test_bos_cevap.py` bunu haklı olarak yakaladı.
+    """
     label = _FIELD_LABEL.get(field, field)
     sup = "en düşük" if intent == "lowest" else "en yüksek"
     name = row.bank_name or row.bank
     val = _fmt_value(field, row.value)
-    return f"{sup} {label}: **{name}** ({val})."
+    onek = f"{tur} — " if tur else ""
+    return f"{onek}{sup} {label}: **{name}** ({val})."
 
 
 def _phrase_superlative_by_type(
