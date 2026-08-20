@@ -620,7 +620,12 @@ def _rapor_yaz(k: float, yorum: str, cift: int, belge: int, hatali: int,
         "Marjinal sayılar (kaç kez \"dolu\" dendi) tabloda BİLEREK duruyor: "
         "κ'yı onlar olmadan okumak yanıltıcıdır (aşağıdaki paradoks notu).",
         "",
-        "| Alan | çift | gözlenen uyum | insan \"dolu\" | LLM \"dolu\" | κ |",
+        # Kolon adları TURA GÖRE değişir. Sabit "LLM" başlığı insan turunda
+        # NEYIN karşılaştırıldığını yanlış gösteriyordu: A tarafı her zaman
+        # gold'un birincil anotatörü (`_insan_karari`), B tarafı ise o turun
+        # ikinci etiketleyicisi (LLM ya da `INSAN-01`).
+        f"| Alan | çift | gözlenen uyum | gold/birincil \"dolu\" | "
+        f"{'`' + model + '`' if insan_turu else 'LLM'} \"dolu\" | κ |",
         "|---|---|---|---|---|---|",
     ]
     paradoks: list[str] = []

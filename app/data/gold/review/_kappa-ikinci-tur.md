@@ -23,7 +23,7 @@
 
 Marjinal sayılar (kaç kez "dolu" dendi) tabloda BİLEREK duruyor: κ'yı onlar olmadan okumak yanıltıcıdır (aşağıdaki paradoks notu).
 
-| Alan | çift | gözlenen uyum | insan "dolu" | LLM "dolu" | κ |
+| Alan | çift | gözlenen uyum | gold/birincil "dolu" | LLM "dolu" | κ |
 |---|---|---|---|---|---|
 | `alisveris_puani` | 16 | 13/16 | 3 | 0 | 0.000 |
 | `finansman_tutari` | 16 | 15/16 | 1 | 0 | 0.000 |

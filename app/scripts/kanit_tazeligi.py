@@ -311,7 +311,7 @@ def olc_banka_sayisi() -> float:
     return float(len([g for g in girdiler if g != "tkbb"]))
 
 
-def olc_kappa_ikinci_tur() -> float:
+def olc_kappa_ikinci_tur(cikti_adi: str | None = None) -> float:
     """κ (Cohen) — ikinci etiketleyici turu, VARLIK kararı üzerinden.
 
     ## Bu ölçer neden var — kapının ölçülmüş kör noktası
@@ -362,17 +362,21 @@ def olc_kappa_ikinci_tur() -> float:
     except ImportError as exc:                          # pragma: no cover
         raise KanitYok(f"κ ölçüm kodu içe alınamadı: {exc}") from exc
 
-    if not CIKTI.exists():
+    # `cikti_adi` verilmezse LLM turu (`CIKTI`); verilirse aynı dizindeki
+    # başka bir tur dosyası. İNSAN turu bu yolla denetlenir: iki tur AYNI kod
+    # yolundan ölçülür, yoksa kapı sapmayı değil iki uygulamanın farkını ölçer.
+    cikti = CIKTI if cikti_adi is None else CIKTI.parent / cikti_adi
+    if not cikti.exists():
         raise KanitYok(
-            f"{CIKTI.relative_to(DEPO)} yok — "
-            f"`python -m scripts.ikinci_etiketleyici kos` koşulmalı")
+            f"{cikti.relative_to(DEPO)} yok — "
+            f"ilgili `python -m scripts.ikinci_etiketleyici` turu koşulmalı")
     if not GOLD.exists():
         raise KanitYok(f"{GOLD.relative_to(DEPO)} yok")
 
     kayitlar = {k.id: k for k in load_gold(GOLD)}
     a_kararlar: list[str | None] = []
     b_kararlar: list[str | None] = []
-    for satir in CIKTI.read_text(encoding="utf-8").splitlines():
+    for satir in cikti.read_text(encoding="utf-8").splitlines():
         if not satir.strip():
             continue
         x = json.loads(satir)
@@ -865,6 +869,21 @@ def iddialar() -> list[Iddia]:
                  r"Cohen <em>κ = ([\d,]+)</em>"),
             ),
             olcer=olc_kappa_ikinci_tur,
+        ),
+        # κ — İNSAN turu. LLM turundan AYRI bir iddia: ikisi 0,002 fark
+        # ediyor (0,714 ↔ 0,716) ve tek bir iddiaya bağlanırsa hangi turun
+        # bayatladığı görünmez olur. Jürinin "ikinci etiketleyici insan
+        # değil" gerekçesini karşılayan sayı BU satırdır.
+        Iddia(
+            ad="kappa_insan_turu",
+            aciklama="κ — ikinci etiketleyici İNSAN (gold.v2 ↔ INSAN-01)",
+            desenler=(
+                ("app/README.md",
+                 r"insan ikinci etiketleyici[^|]*\| \*\*([\d,]+)\*\*"),
+                ("app/README.md", r"κ \(İNSAN\) = \*\*([\d,]+)\*\*"),
+                ("README.md", r"κ \(İNSAN\) = \*\*([\d,]+)\*\*"),
+            ),
+            olcer=lambda: olc_kappa_ikinci_tur("ikinci-tur-insan.jsonl"),
         ),
     ]
 
