@@ -53,7 +53,7 @@ from . import rag, safety, structured
 # Buradan yeniden dışa veriliyor: `sayilari_ayikla` bu modülden içe
 # aktarılıyordu (testler dâhil) ve o yol kırılmamalı.
 from .dayanak import sayilari_ayikla
-from .router import ChatContext, Route, route
+from .router import BANK_DISPLAY, ChatContext, Route, route
 
 logger = logging.getLogger(__name__)
 
@@ -316,6 +316,27 @@ class Chatbot:
         # olarak imkânsızdır.
         scr = safety.screen_input(question)
 
+        # KAPI 5b — TANINMAYAN BANKA ADI (jüri bulgusu, CLAUDE.md §19).
+        #
+        # `screen_input`in KAPI 5'i (kapsam) yalnız soru katılım bankacılığı
+        # KONUSU dışındaysa ateşlenir ("bugün hava nasıl?"). "XYZ Bankası'nın
+        # konut finansmanı oranı ne?" konu olarak TAM KAPSAM İÇİNDEDİR — kapı
+        # geçer, soru `route()`e ulaşır, banka süzgeci kurulamadığı için
+        # KORPUSTAKİ TÜM bankalar taranır ve alakasız gerçek bir bankanın
+        # belgesi kaynak gösterilerek dönerdi. Bu kapı o boşluğu önden kapatır:
+        # tespit `safety.olasi_taniminayan_banka_adi` içinde, gerekçe ve
+        # sınırları o fonksiyonun docstring'inde.
+        #
+        # Burada, `router.route()` ÇAĞRILMADAN ÖNCE koşar (diğer tüm
+        # kapılarla aynı disiplin — bkz. modül başlığı "KAPILAR ÖNCE, BAĞLAM
+        # SONRA"). `scr.blocked` zaten True ise (KAPI 2/5 zaten durdurduysa)
+        # hiçbir şey değişmez; bu kapı yalnız GEÇEN sorularda ek bir kontrol.
+        if not scr.blocked and safety.olasi_taniminayan_banka_adi(question):
+            scr.blocked = True
+            scr.out_of_scope = True    # çekimserlik raporunda `abstained=True`
+            scr.gates.append(safety.GATE_UNKNOWN_BANK)
+            scr.reply = self._bilinmeyen_banka_yaniti()
+
         # KAPI 2 (fıkhî hüküm) / KAPI 5 (kapsam dışı): hazır politika yanıtı;
         # veri sorgusu hiç yapılmaz.
         if scr.blocked:
@@ -335,6 +356,33 @@ class Chatbot:
                           inherited=list(d.route.inherited),
                           verbalize=d.verbalize,
                           quarantined=list(d.quarantined))
+
+    def _bilinmeyen_banka_yaniti(self) -> str:
+        """KAPI 5b'nin hazır yanıtı — hangi bankaların tanındığını SÖYLER.
+
+        Liste `router.BANK_DISPLAY`den gelir, `self.repo.all_banks()`DEN
+        DEĞİL. Bilinçli seçim: `repo.all_banks()` korpusun TÜM kaynak
+        satırlarını döner ve bunlar arasında TKBB gibi "otorite kaynağı"
+        satırlar da vardır (`api/routers/katalog.py::banks()` docstring'i —
+        gerçek bankalar DEĞİLDİR, yalnız fıkhî terim tanımı için kazınan
+        sektör dokümanlarıdır). İlk sürümde bu ayrım kaçtı ve "tanıdığım
+        bankalar" listesinde sohbet KULLANICISININ hiç soramayacağı bir kayıt
+        ("Türkiye Katılım Bankaları Birliği") görünüyordu — kendi hatasını
+        düzeltirken yeni bir yanlış bilgi üretmiş olurdu.
+        `BANK_DISPLAY`, `detect_banks()`in TANIYABİLDİĞİ banka kümesinin
+        ta kendisidir (`safety.BANK_NAME_TO_SLUG`in slug'larına birebir
+        karşılık gelir) — yani "tanıdığım bankalar" iddiası, gerçekten
+        tanıma mekanizmasının kendisinden okunur, ayrı bir listeyle
+        ayrışmaz.
+        """
+        isimler = sorted(BANK_DISPLAY.values())
+        liste = "\n".join(f"- {ad}" for ad in isimler)
+        return (
+            "Sorduğunuz bankayı veri setimde **bulamadım** — uydurmuyorum, "
+            "ilgisiz bir bankanın verisini de göstermiyorum.\n\n"
+            f"Tanıdığım katılım bankaları:\n{liste}\n\n"
+            "Bu bankalardan biri için tekrar sorabilirsiniz."
+        )
 
     # --- iç yardımcılar ----------------------------------------------------
     def _dispatch(self, question: str, scr: safety.InputScreening,

@@ -348,7 +348,7 @@ def baglam_birlestir(kayitlar: Any,
 @dataclass
 class Route:
     handler: str                 # 'structured' | 'rag'
-    field: Optional[str]         # ilgili alan (structured ise)
+    field: Optional[str]         # ilgili alan (structured ise) — BİRİNCİL alan
     intent: Optional[str]        # 'lowest' | 'highest' | 'list' | 'filter'
     filters: dict                # ör. {"vade_ay_min": 36, "campaign_type": "Konut
                                  #      Finansmanı", "banks": ["kuveyt-turk"]}
@@ -359,12 +359,27 @@ class Route:
     #: Cevaba "çok boyutlu soruya tek boyutlu cevap" notu bu bayrakla eklenir;
     #: bayrak taşınmazsa varsayım kullanıcıya görünmez olurdu.
     alan_varsayildi: bool = False
+    #: Bu turda SÖZCÜKLERİYLE istenen TÜM alanlar (`field` bunun İLKİDİR,
+    #: geri kalanı yalnız bilgi taşır — `field` her yerde eskisi gibi tek
+    #: bir alan gösterir, geriye dönük uyum bozulmaz).
+    #:
+    #: ## Ölçülen hata (jüri bulgusu, şartname s.12 Senaryo 1)
+    #:
+    #: "Kuveyt Türk'ün konut finansmanı ORANI VE VADESİ nedir?" sorusunda
+    #: yalnız oran dönüyordu, vade sessizce düşüyordu. Sebep: eski
+    #: `_detect_field` sözlükte İLK eşleşeni bulur bulmaz dururdu — ikinci
+    #: alan hiç ARANMIYORDU bile. `structured.answer()` `fields` birden
+    #: fazla ve tek bir banka çözülmüşse (`filters["banks"]` tam 1 slug)
+    #: hepsini tek cevapta toplar; bulunamayan alan "bulunamadı" der,
+    #: SESSİZCE atlanmaz.
+    fields: list[str] = dc_field(default_factory=list)
 
 
 def route(question: str, context: Optional[ChatContext] = None) -> Route:
     q = tr_fold_ascii(question)
 
-    field = _detect_field(q)
+    ham_alanlar = _detect_fields(q)
+    field = ham_alanlar[0] if ham_alanlar else None
     intent = _detect_intent(q)
     filters = _detect_filters(q)
 
@@ -404,16 +419,24 @@ def route(question: str, context: Optional[ChatContext] = None) -> Route:
         field, intent, filters, inherited = _devral(field, intent, filters,
                                                     context)
 
+    # `fields` — BU turda sözcükleriyle istenen tüm alanlar. `ham_alanlar`
+    # devralmadan (context) ETKİLENMEZ: kullanıcı bu turda gerçekten birden
+    # fazla alan söylediyse (`len(ham_alanlar) > 1`) o liste aynen taşınır;
+    # aksi hâlde (0 ya da 1 alan söylenmiş, alan belki devralınmış/varsayılmış)
+    # tek elemanlı `[field]` kalır — mevcut tek-alanlı davranış birebir korunur.
+    fields = ham_alanlar if len(ham_alanlar) > 1 else ([field] if field else [])
+
     # sayısal/karşılaştırmalı sinyal varsa yapısal sorgu
     if field and (intent or filters):
         return Route("structured", field, intent or "list", filters, inherited,
-                     alan_varsayildi)
+                     alan_varsayildi, fields=fields)
     # sadece superlatif + alan
     if field and intent in ("lowest", "highest"):
         return Route("structured", field, intent, filters, inherited,
-                     alan_varsayildi)
+                     alan_varsayildi, fields=fields)
     # aksi halde RAG (açıklama/koşul soruları)
-    return Route("rag", field, intent, filters, inherited, alan_varsayildi)
+    return Route("rag", field, intent, filters, inherited, alan_varsayildi,
+                 fields=fields)
 
 
 def _kiyas_niyeti(q: str, filters: dict) -> bool:
@@ -543,11 +566,20 @@ def _tur_ipucu(q: str) -> Optional[str]:
     return None
 
 
-def _detect_field(q: str) -> Optional[str]:
+def _detect_fields(q: str) -> list[str]:
+    """Soruda sözcükleriyle geçen TÜM alanları sırayla döndürür.
+
+    Eskiden (`_detect_field`, tekil) sözlükteki İLK eşleşende dururdu —
+    "kâr payı oranı VE VADESİ nedir?" sorusunda `vade_ay` hiç ARANMIYORDU
+    bile. Bu fonksiyon hepsini toplar; `route()` birincisini (`field`) eski
+    davranış için kullanır, tam listeyi (`Route.fields`) `structured.answer()`
+    çok-alanlı tek-banka dalı için okur.
+    """
+    bulunanlar: list[str] = []
     for fname, kws in _FOLDED_FIELD_KEYWORDS.items():
         if any(kw in q for kw in kws):
-            return fname
-    return None
+            bulunanlar.append(fname)
+    return bulunanlar
 
 
 def _detect_intent(q: str) -> Optional[str]:

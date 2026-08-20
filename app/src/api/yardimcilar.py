@@ -28,6 +28,7 @@ from typing import Any, Optional
 from ..chatbot.safety import (
     ALL_GATES,
     GATE_INJECTION,
+    GATE_UNKNOWN_BANK,
     sanitize_output,
 )
 from ..comparison.compare import _HIGHER_IS_BETTER, _LOWER_IS_BETTER
@@ -161,7 +162,14 @@ def scoring_direction(field: str) -> tuple[str, str]:
 #
 # Sıra da oradan gelir: kullanıcı arka arkaya iki soru sorduğunda kapı
 # listesinin yer değiştirmemesi gerekir, yoksa tablo okunmaz olur.
-GUVENLIK_KAPILARI: tuple[str, ...] = ALL_GATES + (GATE_INJECTION,)
+#
+# `GATE_UNKNOWN_BANK` `ALL_GATES`e EKLENMEDİ — o sabit "değerlendirme setiyle
+# aynı dize" olmak zorunda (`safety.py` yorumu) ve `GATE_INJECTION` de aynı
+# sebeple dışarıda tutulmuş: ikisi de değerlendirme setinin ölçtüğü "5 kapı"
+# değil, ayrı bir güvenlik katmanı. Buraya `GATE_INJECTION`la BİREBİR aynı
+# kalıpla eklendi ki `/chat`in `safety.gates` listesi bu kapı ateşlendiğinde
+# "fired": false YAZMASIN (jüri bulgusu düzeltmesi, CLAUDE.md §19).
+GUVENLIK_KAPILARI: tuple[str, ...] = ALL_GATES + (GATE_INJECTION, GATE_UNKNOWN_BANK)
 
 #: Kapı kimliği → (Türkçe ad, tek cümlelik açıklama). Açıklama kullanıcıya
 #: gösterilir: "terminoloji" ham kimliği tek başına hiçbir şey anlatmaz.
@@ -189,6 +197,10 @@ GATE_LABELS: dict[str, tuple[str, str]] = {
         "İçerik karantinası",
         "Getirilen belgede talimat devralma işareti varsa belge tümüyle "
         "düşürülür; içeriği cevaba girmez."),
+    "bilinmeyen_banka": (
+        "Tanınmayan banka adı",
+        "Soruda geçen banka veri setinde yoksa ilgisiz bir bankanın verisi "
+        "gösterilmez; tanınan bankalar listelenir."),
 }
 
 

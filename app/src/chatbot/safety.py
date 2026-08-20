@@ -423,6 +423,11 @@ def _build_scope_lexicon() -> tuple[str, ...]:
 BANK_NAME_TO_SLUG: dict[str, str] = {
     "kuveyt turk": "kuveyt-turk",
     "kuveytturk": "kuveyt-turk",
+    # "kt" — Kuveyt Türk'ün yaygın kısaltması (jüri/kullanıcı sınamalarında
+    # görülen meşru varyant). Kısa alan olduğu için `_YAZIM_ASGARI_UZUNLUK`
+    # yazım-hatası toleransına HİÇ girmez (o yol yalnız >=5 harfli adlarda
+    # çalışır); burada TAM eşleşme olarak tanımlanması gerekiyor.
+    "kt": "kuveyt-turk",
     "albaraka": "albaraka",
     "albaraka turk": "albaraka",
     "turkiye finans": "turkiye-finans",
@@ -718,6 +723,107 @@ def detect_bank(question: str) -> Optional[str]:
     """İlk eşleşen bankanın slug'ı (yoksa None) — tek-banka soruları için."""
     banks = detect_banks(question)
     return banks[0] if banks else None
+
+
+# ===========================================================================
+# TANINMAYAN BANKA ADI — abstention'ın önkoşulu
+# ===========================================================================
+#
+# ## Ölçülen hata (jüri bulgusu, 2026-08-19; canlı `/chat` isteğiyle
+# ## tekrar üretildi 2026-08-20)
+#
+# Kullanıcı "XYZ Bankası'nın konut finansmanı oranı ne?" gibi VERİ SETİNDE
+# OLMAYAN bir banka sordu. `detect_banks()` hiçbir slug bulamadığı için
+# `router._detect_filters()` `filters["banks"]` anahtarını HİÇ KURMUYORDU —
+# "banka söylenmedi" ile "söylenen banka tanınmadı" AYNI ŞEYMİŞ gibi
+# davranılıyordu. Sonuç: soru süzgeçsiz bir yapısal sorguya düşüyor, sistem
+# KORPUSTAKİ TÜM bankaları tarıyor ve alakasız gerçek bir bankanın (ör.
+# Ziraat Katılım) belgesini KAYNAK GÖSTEREREK döndürüyordu. Kaynaklı olduğu
+# için cevap doğru GÖRÜNÜYOR — bu, kanıtsız bir halüsinasyondan daha
+# tehlikeli, çünkü projenin en çok övündüğü "kaynaksız iddia yok" iddiasını
+# sessizce delip geçiyor.
+#
+# ## Çözüm — girdi tarafında YENİ bir kapı
+#
+# "Banka hiç anılmadı" (ör. "en düşük kâr payı hangi bankada?" — kasıtlı
+# olarak TÜM bankaları tarar) ile "anılan banka tanınmadı" (ör. "XYZ
+# Bankası'nın oranı ne?") ayırt edilmek ZORUNDA. Ayrım, "banka(sı)"
+# sözcüğünden hemen önceki sözcüğün JENERİK bir belirteç mi (hangi, en, bu…)
+# yoksa ÖZEL bir ad mı olduğuna bakılarak yapılır — özel adın işareti,
+# ORİJİNAL metindeki BÜYÜK harfle başlamasıdır (bu proje genelinde eşleşme
+# `tr_fold_ascii` üzerinden KÜÇÜK harfle yapılır, ama büyük/küçük harf farkı
+# burada BİLEREK korunur: onsuz "en avantajlı katılım bankası hangisi?" gibi
+# tamamen jenerik bir soru da yanlışlıkla "tanınmayan banka" sanılabilirdi).
+#
+# ## Bilinen sınır — GİZLENMİYOR, belgeleniyor
+#
+# Bu sezgi yalnız ÖZEL AD BÜYÜK HARFLE yazıldığında çalışır ("XYZ Bankası",
+# "Falcon Katılım Bank"). Kullanıcı uydurma adı tamamen küçük harfle yazarsa
+# ("xyz bankasının oranı ne") bu kapı ateşlenmez ve soru eski (süzgeçsiz)
+# davranışına düşer. Bilinçli bir ödünleşim: gerçek bir bankanın adını
+# (`_yazim_toleransli_bankalar` sınırının bile affetmediği kadar) bozarak
+# yazan bir kullanıcıyı yanlışlıkla "tanınmıyor" diye reddetmek de bir
+# maliyet taşır — bu yüzden büyük/küçük harf belirsizliğinde kapı
+# ATEŞLENMEZ, aşırı-red yerine mevcut (iyileştirilecek) davranış korunur.
+GATE_UNKNOWN_BANK = "bilinmeyen_banka"
+
+#: "banka(sı)" sözcüğünden hemen önceki aday JENERİK mi (özel ad DEĞİL mi).
+#: Katlanmış (küçük harf, diakritiksiz) karşılaştırılır. "katilim" ayrı
+#: ele alınır (bkz. `olasi_taniminayan_banka_adi`): "katılım bankası" tek
+#: başına jenerik bir bileşiktir ("hangi katılım bankası"), ama "Anadolu
+#: Katılım Bankası" gibi bir özel adın PARÇASI da olabilir.
+_JENERIK_BANKA_ONCESI = frozenset({
+    "hangi", "hangisi", "bu", "su", "o", "her", "tum", "butun", "diger",
+    "baska", "bazi", "bir", "ilgili", "ozel", "yerel", "ulusal", "genel",
+    "en", "iyi", "avantajli", "guvenilir", "uygun", "ucuz", "buyuk",
+    "kucuk", "yeni", "eski", "dogru", "hicbir", "herhangi", "katilim",
+})
+
+#: Soruda banka sözcüğünü tetikleyen ekli biçimler (katlanmış).
+_BANKA_ANAHTAR = frozenset({
+    "banka", "bankasi", "bankasinin", "bankanin", "bankaya", "bankada",
+    "bankadan", "bankasina", "bankasindan", "bankasinda", "bank",
+})
+
+
+def olasi_taniminayan_banka_adi(question: str) -> bool:
+    """Soru, veri setinde KARŞILIĞI OLMAYAN özel bir banka adına mı işaret ediyor?
+
+    Yalnız `detect_banks()` HİÇBİR şey bulamadığında anlamlıdır (çağıran bunu
+    zaten kontrol etmeli, ama burada da tekrar edilir — bağımsız çağrılabilir
+    olsun). Gerekçe ve sınırlar modül başlığındaki "TANINMAYAN BANKA ADI"
+    bloğunda.
+
+    >>> olasi_taniminayan_banka_adi("XYZ Bankası'nın oranı ne?")
+    True
+    >>> olasi_taniminayan_banka_adi("Anadolu Katılım Bankası'nın oranı ne?")
+    True
+    >>> olasi_taniminayan_banka_adi("Hangi bankada en düşük oran var?")
+    False
+    >>> olasi_taniminayan_banka_adi("Kuveyt Türk'ün oranı ne?")
+    False
+    """
+    if detect_banks(question):
+        return False               # zaten tanınan bir banka var
+    ham = re.findall(r"[^\W\d_]+", question or "", flags=re.UNICODE)
+    if not ham:
+        return False
+    folded = [_F(w) for w in ham]
+    for i, w in enumerate(folded):
+        if w not in _BANKA_ANAHTAR:
+            continue
+        j = i - 1
+        if j < 0:
+            continue
+        if folded[j] == "katilim":     # "... Katılım Bankası" — bir geri git
+            j -= 1
+            if j < 0:
+                continue
+        if folded[j] in _JENERIK_BANKA_ONCESI or len(ham[j]) < 2:
+            continue
+        if ham[j][0].isupper():        # özel ad işareti — bkz. modül başlığı
+            return True
+    return False
 
 
 # ===========================================================================

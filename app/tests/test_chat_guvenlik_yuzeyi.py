@@ -45,7 +45,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 # bir ada bağlanmak, taşımayı gizleyen bir dolaylılık olurdu.
 from src.api import main as api_main
 from src.api import yardimcilar
-from src.chatbot.safety import ALL_GATES, GATE_INJECTION
+from src.chatbot.safety import ALL_GATES, GATE_INJECTION, GATE_UNKNOWN_BANK
 
 
 def _fastapi_var() -> bool:
@@ -72,7 +72,12 @@ class TestGuvenlikOzeti(unittest.TestCase):
     def test_tum_kapilar_listelenir_ateslenmeyenler_dahil(self) -> None:
         ozet = yardimcilar._guvenlik_ozeti(self.SahteRapor(), [], [])
         kimlikler = [g["id"] for g in ozet["gates"]]
-        self.assertEqual(kimlikler, list(ALL_GATES) + [GATE_INJECTION])
+        # `bilinmeyen_banka` (KAPI 5b) `GATE_INJECTION`la BİREBİR aynı kalıpla
+        # eklendi (`api/yardimcilar.py::GUVENLIK_KAPILARI` yorumu): ikisi de
+        # `ALL_GATES`teki "5 kapı" değerlendirme kümesinin DIŞINDA, ama
+        # `/chat`in `safety.gates` sözleşmesinin İÇİNDE.
+        self.assertEqual(kimlikler,
+                         list(ALL_GATES) + [GATE_INJECTION, GATE_UNKNOWN_BANK])
         self.assertTrue(all(g["fired"] is False for g in ozet["gates"]))
         self.assertEqual(ozet["fired"], [])
 
@@ -190,7 +195,7 @@ class TestChatUcuGuvenlikDondurur(unittest.TestCase):
         for anahtar in ("gates", "fired", "blocked_gate", "abstained",
                         "rewritten_terms", "quarantined"):
             self.assertIn(anahtar, s)
-        self.assertEqual(len(s["gates"]), len(ALL_GATES) + 1)
+        self.assertEqual(len(s["gates"]), len(ALL_GATES) + 2)
 
     def test_fikhi_hukum_kapisi_gercekten_atesleniyor(self) -> None:
         s = self._safety("Bu ürün helal mi, caiz mi?")

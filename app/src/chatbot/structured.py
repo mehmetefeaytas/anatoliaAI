@@ -131,6 +131,18 @@ class StructuredAnswer:
 
 
 def answer(repo: Repository, r: Route) -> StructuredAnswer:
+    # Şartname s.12 "Senaryo 1" — TEK bankaya BİRDEN FAZLA alan sorulduğunda
+    # (ör. "oranı ve vadesi") hepsi TEK cevapta toplanır, hiçbiri sessizce
+    # düşmez. Koşul dar tutuldu: yalnız `r.fields` gerçekten birden fazla alan
+    # taşıyorsa VE banka süzgeci TAM OLARAK bir slug'a çözülmüşse çalışır —
+    # çoklu banka × çoklu alan matrisi (ör. "A ve B'nin oranı ve vadesi")
+    # bu dalın kapsamı DIŞINDA, ayrı bir özellik gerektirir ve buraya
+    # GİRMEZ (`len(...) == 1` şartı bunu zaten eler).
+    if len(r.fields) > 1 and len(r.filters.get("banks") or []) == 1:
+        cok_alan = _cok_alanli_tek_banka_cevabi(repo, r)
+        if cok_alan is not None:
+            return cok_alan
+
     # Şartname "Senaryo 2" — iki adı geçen bankanın çok boyutlu kıyası.
     # Koşul dar tutuldu: alan SÖYLENMEMİŞ ("hangisi daha avantajlı?") ve en az
     # iki banka adı geçmiş olmalı. Alanı söylenen soru ("Kuveyt Türk'ün kâr
@@ -297,6 +309,85 @@ def _apply_filters(repo: Repository, rows: list[dict], filters: dict) -> list[di
                if isinstance(vade_by_campaign.get(r["campaign_id"]), (int, float))
                and vade_by_campaign[r["campaign_id"]] >= vmin]
     return out
+
+
+def _cok_alan_satiri(alan: str, top: Optional[RankRow]) -> str:
+    """`_cok_alanli_tek_banka_cevabi` için tek satır — banka adı YAZILMAZ.
+
+    Çağıranın çevresinde zaten TEK bir banka var (başlıkta bir kez yazılır);
+    `_satir()` (çoklu-banka listesinin satırı) burada kullanılamaz çünkü o
+    her satıra banka adını tekrar eder.
+    """
+    etiket = _FIELD_LABEL.get(alan, alan)
+    if top is None:
+        # Halüsinasyon yasağının SİMETRİĞİ: eksik alan da uydurulmaz, ama
+        # aynı zamanda GİZLENMEZ de — sessizce düşürmek yerine adıyla anılır.
+        return f"- {etiket}: bulunamadı"
+    val = _fmt_value(alan, top.value)
+    ek = "" if top.comparable else f"  _(not: {top.note})_"
+    if top.other_count:
+        ek += f"  _(+{top.other_count} kampanya daha)_"
+    return f"- {etiket}: {val}{ek}"
+
+
+def _cok_alanli_tek_banka_cevabi(repo: Repository, r: Route
+                                 ) -> Optional[StructuredAnswer]:
+    """Tek bankaya sorulan BİRDEN FAZLA alanı TEK cevapta toplar.
+
+    ## Ölçülen hata (jüri bulgusu — şartname s.12 Senaryo 1)
+
+    "Kuveyt Türk'ün konut finansmanı oranı VE VADESİ nedir?" sorusunda
+    yalnız oran dönüyordu; vade hiçbir uyarı olmadan cevaptan düşüyordu.
+    Kök neden `router._detect_field`de idi (tekil, sözlükteki İLK eşleşende
+    dururdu — `router._detect_fields`e ve `Route.fields`e taşındı). Bu
+    fonksiyon `Route.fields`teki HER alanı, aynı banka + aynı diğer
+    süzgeçlerle (`campaign_type`, `vade_ay_min`) AYRI AYRI sorgular ve tek
+    cevapta birleştirir. Şartnamenin s.12 tablosu bankası başına Kâr Payı
+    Oranı VE Vade sütunlarının BİRLİKTE dönmesini istiyor; bu fonksiyon o
+    kalıbın sohbet karşılığıdır.
+
+    Kural: istenen alanlardan biri bu banka/ürün/süzgeç kombinasyonunda hiç
+    yoksa SESSİZCE atlanmaz, "bulunamadı" diye adı geçer (`_cok_alan_satiri`).
+
+    Hiçbir alan bulunamazsa `None` döner — çağıran (`answer()`) o zaman eski
+    tek-alanlı dala düşer ve zaten var olan "hiç kayıt yok" iskeletini
+    (`_hic_kayit_cevabi`) kullanır; burada AYRI bir boş-cevap şablonu icat
+    edilmez.
+    """
+    bank = r.filters["banks"][0]
+    diger_suzgecler = {k: v for k, v in r.filters.items() if k != "banks"}
+
+    satirlar: list[str] = []
+    gosterilen: list[RankRow] = []
+    herhangi_bulundu = False
+    for alan in r.fields:
+        havuz = repo.query_fields(alan)
+        # DEĞİŞKEN ADI BİLEREK `rows` DEĞİL: `tests/test_rank_girdi_paritesi.py`
+        # `rank()`e verilen sözlüğü modül genelinde AYNI ADLI değişkenler
+        # üzerinden izliyor (bilinen kör nokta — kendi modül başlığında
+        # belgeli). `answer()`in kendi `rows`u zaten tam alanlı
+        # (`repo.query_fields()` çıktısı, `_apply_filters()` yalnız SÜZER,
+        # alan EKLEMEZ/ÇIKARMAZ); ayrı ad, o denetimin bu satırdaki iç
+        # `filters` sözlüğünü (yalnız `banks` anahtarı taşır) yanlışlıkla
+        # "rank girdisi" sanmasını önler.
+        alan_suzgusu = {**diger_suzgecler, "banks": [bank]}
+        alan_satirlari = _apply_filters(repo, havuz, alan_suzgusu)
+        tekil = tekil_banka_urun(rank(alan_satirlari, alan))
+        top = tekil[0] if tekil else None
+        if top is not None:
+            herhangi_bulundu = True
+            gosterilen.append(top)
+        satirlar.append(_cok_alan_satiri(alan, top))
+
+    if not herhangi_bulundu:
+        return None
+
+    ad = next((x.bank_name for x in gosterilen if x.bank_name), None) or bank
+    baslik = f"{ad} — istenen alanlar:"
+    if diger_suzgecler.get("campaign_type"):
+        baslik = f"{diger_suzgecler['campaign_type']} — {baslik}"
+    return StructuredAnswer(baslik + "\n" + "\n".join(satirlar), gosterilen,
+                            r.field, r.intent)
 
 
 #: Alan → ekran etiketi. Sözlük `router.FIELD_DISPLAY`'in TA KENDİSİDİR.
