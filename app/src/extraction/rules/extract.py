@@ -2600,6 +2600,52 @@ def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
     return None
 
 
+# --------------------------------------------------------------------------- #
+# `hedef_kitle` — GEZİNME ŞERİDİ ve EVRENSELLİK süzgeçleri
+#
+# ## Ölçülen kök neden (2026-08-20, gold.v2)
+#
+# Alan kalem F1 0,343 (tp 6 · fp 12 · fn 11) idi. Yanlış pozitiflerin
+# **yarısı tek bir mekanizmadan** geliyordu: eski çıkarıcı deseni BELGENİN
+# TAMAMINDA `re.search` ile arıyordu, yani üst menüde / ürün listesinde /
+# komşu kampanya başlığında geçen bir sözcük bu kampanyanın hedef kitlesi
+# sayılıyordu. Ölçülen beş vaka:
+#
+#   "… Bireysel Emeklilik Sistemi Sigortacılık Hizmetleri …"   -> belirli_segment
+#   "… Kredi Kartı Kampanyaları Maaş Ödemesi Kampanyaları …"   -> maas_musterisi
+#   "Anonim ve Limited Şirketler … Serbest Meslek Sahipleri"   -> belirli_segment
+#   "Worldcard Kampanyaları Yeni Müşterilerimize Özel …"       -> yeni + mevcut
+#
+# Hiçbiri cümle değil; hepsi HTML menüsünün/kart listesinin metne inmiş hâli.
+# İmzası da sözdizimseldir: büyük harfle başlayan sözcük yoğunluğu yüksek ve
+# cümle sonu noktalaması yok. `kabuk.py` bu vakaları YAKALAMAZ ve yakalaması
+# da beklenmez — o kuyruktaki komşu kampanya bloğunu tanımlar, buradaki
+# kirlilik ise sayfanın BAŞINDA (menü) duruyor. Ölçüldü: kabuk süzgecini bu
+# alana bağlamak sonucu HİÇ değiştirmiyor (F1 0,600 -> 0,600).
+_MENU_BUYUK_HARF_ORANI = 0.6
+_MENU_ASGARI_KELIME = 6
+
+
+def _gezinme_seridi(cumle: str) -> bool:
+    """Cümle değil, gezinme menüsü / ürün listesi şeridi mi?"""
+    kelimeler = cumle.split()
+    if len(kelimeler) < _MENU_ASGARI_KELIME:
+        return False
+    buyuk = sum(1 for w in kelimeler if w[:1].isupper())
+    return (buyuk / len(kelimeler) >= _MENU_BUYUK_HARF_ORANI
+            and not re.search(r"[.!]\s*$", cumle))
+
+
+#: EVRENSELLİK — "herkes" segment DEĞİLDİR (kılavuz §4 `hedef_kitle`:
+#: *"Bireysel müşteriler = herkes … Tek sinyal buysa `absent`"*). Aynı mantık
+#: açık açık "herkes" / "her kesim" / "tüm müşteriler" diyen cümle için de
+#: geçerli: orada geçen segment sözcüğü bir KISIT değil, kapsayıcılık
+#: retoriğidir — "Girişimcilerden KOBİ'lere, yatırımcılardan öğrencilere
+#: herkesin … ihtiyaçlarını karşılamaya" (kurumsal tanıtım metni).
+_EVRENSELLIK_RE = re.compile(
+    r"(herkes\w*|her\s*kesim|t[üu]m\s+m[üu][şs]teri)", re.IGNORECASE)
+
+
 def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:
     """Hedef kitle — §5.3'ün 4 segmenti, ÇOK ETİKETLİ.
 
@@ -2635,26 +2681,63 @@ def extract_hedef_kitle(text: str) -> Optional[ExtractedField]:
                           r"müşterilerimize\s*özel)",
         "maas_musterisi": r"(maaş\s*müşteri\w*|maas\s*musteri\w*|maaşını\s*"
                           r"bankamızdan|maaş\s*ödemesi)",
+        # SÖZLÜK GENİŞLETİLDİ (2026-08-20) — ölçüldü, kaçırılan 11 etiketin
+        # 6'sı buradan geliyordu. Eklenen üç aile ve gerekçesi:
+        #
+        #   MESLEK  Kılavuz §4.13/2: *"'Emekli müşterilerimize' → kişi
+        #           niteliği"*. Meslek adı da kişi niteliğidir ve korpusta
+        #           kampanyanın tek hedef sinyali oluyor: "…hak ediş ödemesini
+        #           ilk defa bankamızdan alan eczacı müşterilerimize".
+        #   ÜYELİK  Kulüp/kademe üyeliği bir kişi kısıtıdır: "Kampanya'dan
+        #           faydalanmak için Hadi Gold üyesi olmalısın", "Çok
+        #           Kazananlar Kulübü üyesi olan …".
+        #   SEÇİLİ  "seçili müşteriler", "nitelikli yatırımcı", "hak sahibi"
+        #           — banka tarafından belirlenmiş alt küme.
+        #
+        # `doktor(?!a)`: lookahead ÖLÇÜMLE eklendi — çıplak `doktor` danışma
+        # komitesi özgeçmişlerindeki "doktora" (derece) sözcüğüne ateşleyip
+        # kurumsal bir sayfada uydurma etiket üretiyordu.
         "belirli_segment": r"(emekli|öğrenci|ogrenci|esnaf|kamu\s*çalışan\w*|"
-                           r"kobi|serbest\s*meslek)",
+                           r"kobi|serbest\s*meslek|"
+                           r"eczac\w*|doktor(?!a)|hekim|avukat|öğretmen|"
+                           r"[çc]iftçi|sağlık\s*çalışan\w*|"
+                           r"nitelikli\s*yat[ıi]r[ıi]mc\w*|"
+                           r"se[çc]ili\s*m[üu][şs]teri\w*|hak\s*sahip\w*|"
+                           r"[üu]yesi\s*ol\w*|kul[üu]p\s*[üu]ye\w*|"
+                           r"gold\s*[üu]ye\w*)",
     }
+    # ARAMA ARTIK CÜMLE CÜMLE — belgenin tamamında değil. Gerekçe ve ölçüm
+    # `_gezinme_seridi` başlığında: menü/liste şeridinde geçen sözcük bu
+    # kampanyanın hedef kitlesi DEĞİLDİR.
     found: list[str] = []
     first_span = None
-    for label, pat in segments.items():
-        m = re.search(pat, text, re.IGNORECASE)
-        if not m:
+    offset = 0
+    for cumle in split_sentences(text):
+        yer = text.find(cumle, offset)
+        if yer < 0:
+            yer = offset
+        offset = yer + len(cumle)
+        if _gezinme_seridi(cumle) or _EVRENSELLIK_RE.search(cumle):
             continue
-        # negasyon penceresi: "... olmayanlar", "... hariç", "... dışında"
-        after = text[m.end(): m.end() + 25]
-        if re.search(r"(olmayan\w*|hari[çc]|d[ıi][şs][ıi]nda|ge[çc]erli\s*de[ğg]il)",
-                     after, re.IGNORECASE):
-            continue
-        found.append(label)
-        if first_span is None:
-            first_span = m.span()
+        for label, pat in segments.items():
+            if label in found:
+                continue
+            m = re.search(pat, cumle, re.IGNORECASE)
+            if not m:
+                continue
+            # negasyon penceresi: "... olmayanlar", "... hariç", "... dışında"
+            after = cumle[m.end(): m.end() + 25]
+            if re.search(
+                    r"(olmayan\w*|hari[çc]|d[ıi][şs][ıi]nda|ge[çc]erli\s*de[ğg]il)",
+                    after, re.IGNORECASE):
+                continue
+            found.append(label)
+            if first_span is None:
+                first_span = (yer + m.start(), yer + m.end())
 
-    if not found:
+    if not found or first_span is None:
         return None
+    found = sorted(found)
     s, e = first_span
     # Birden çok etiket bulunduysa bu bir seçim kararıdır; tek etiketli
     # vakayla aynı kesinlikte değildir.
@@ -2743,6 +2826,369 @@ def extract_dipnotlar(text: str) -> list[str]:
     return out
 
 
+# --------------------------------------------------------------------------- #
+# `kampanya_kosullari` — KOŞUL DİLİ ve KOŞUL OLMAYANIN SÜZGEÇLERİ
+#
+# ## Neden bu blok var — ölçüm (2026-08-20, gold.v2, 48 belge)
+#
+# Alan kalem düzeyinde F1 0,204 (tp 27 · fp 101 · fn 110) ile en zayıf alandı.
+# Hata sınıfları KALEM KALEM sayıldı; kaçırmanın kökü tek bir yerde:
+#
+#   gold'un 137 koşul kaleminden **87'si** metnin bir cümlesinden token-Jaccard
+#   ≥ 0,70 ile ULAŞILABİLİR durumdaydı, ama motor yalnız 27'sini üretiyordu.
+#   Ulaşılabilir ama üretilmeyen 60 kalemin dağılımı:
+#       56  TETİKLEYİCİ YOK   ← tek başına en büyük sınıf
+#        4  `picked[:8]` kapağı kesti
+#        1  boilerplate süzgeci ("şubelerimiz") yanlışlıkla eledi
+#
+# Yani sorun sıralama ya da parafraz değil, KOŞUL DİLİNİN EKSİK MODELLENMESİ:
+# eski tetikleyici listesi yalnız kiplik (gerek*/zorunlu) ve dışlayıcılık
+# (yalnızca/sadece/hariç) sinyallerini tanıyordu. Kılavuzun (§4
+# `kampanya_kosullari`) koşul tanımı ise dört sinyal ailesi içeriyor ve
+# ikisi listede HİÇ YOKTU:
+#
+#   1. kiplik / zorunluluk      gerek*, zorunlu, şart, -malı/-meli   (vardı)
+#   2. dışlayıcılık             yalnızca, sadece, hariç              (vardı)
+#   3. YARARLANMA HAKKI         faydalan*, yararlan*, hak kazan*     (YOKTU)
+#   4. KAPSAM / NİCELİK SINIRI  dahil (değil), kapsam dışı, en fazla,
+#                               bir kez, tek sefer, sınırlı          (YOKTU)
+#
+# 3 ve 4'ün eksikliği tam da katılım bankası kampanyalarının ayırt edici
+# koşullarını kesiyordu: "Kampanyadan bir kez faydalanılabilir",
+# "Sanal kartlar kampanyaya dahildir", "Kampanya 300 adet kod ile sınırlıdır".
+#
+# ## Neden ÖNCE denenip ÇÜRÜTÜLMÜŞ olması bu ölçümü geçersiz kılmıyor
+#
+# `_KONTENJAN_RE`nin yorumunda (2026-08-07) "`_KISIT_RE`'nin tamamını gövde
+# tetikleyicisi yapmak F1'i 0,733 → 0,400 düşürdü" ölçümü duruyor ve doğrudur
+# — ama o ölçüm **gold.round1** üzerinde yapıldı ve o yorumun kendisi gerekçeyi
+# yazıyor: *"gold'un `kampanya_kosullari` listeleri bu çıkarıcının çıktısından
+# ön-etiketlenip hakemlenmiş, yani eşleşme KÜME BİREBİRdir."* Yani o gold
+# çıkarıcının kendi çıktısıydı; genişleme zorunlu olarak kesinliği düşürüyordu.
+# gold.v2 dört anotatör tarafından KILAVUZDAN bağımsız yazıldı (§4.13), o
+# döngüsellik yok. Aynı hipotez yeni ölçütte tersine çıkıyor — eski ölçüm
+# silinmedi, KAPSAMI daraltıldı.
+#
+# Genişleme YALNIZ BAŞINA kesinliği düşürür (ölçüldü: fp 92 → 214). Bu yüzden
+# aşağıdaki dört süzgeç aynı değişiklikte devreye girer; her biri gold.v2'nin
+# 137 gerçek koşuluna ateşlenmediği doğrulanarak eklendi.
+# --------------------------------------------------------------------------- #
+
+#: KOŞUL DİLİ — dört sinyal ailesi (yukarıdaki tabloyla birebir).
+#:
+#: `ge[çc]erli\w*` ÇIPLAK BİÇİMDE TETİKLEYİCİDİR — eski yorumun yasağı
+#: KALDIRILDI, ama gerekçesi kaldırılmadı, KODA TAŞINDI. Eski yasak şuydu:
+#: *"Neredeyse her kampanya metni 'Kampanya <tarih> tarihine kadar geçerlidir'
+#: cümlesiyle biter; bu bir GEÇERLİLİK TARİHİdir."* Bu doğru — ama çözümü
+#: sözcüğü tetikleyici listesinden atmak değil, o CÜMLE SINIFINI elemektir:
+#: `_yalnizca_tarih_gecerliligi` tam olarak bunu yapar (K3). Sözcüğü atmak
+#: birlikte 9 gerçek koşulu da atıyordu ("… tüm işlem türlerinde geçerlidir",
+#: "Çok Kazananlar Kulübü ek faydaları, yalnızca … için geçerlidir",
+#: "Özel kurlar döviz … işlemlerinizde geçerlidir").
+_KOSUL_TETIK_RE = re.compile(
+    # 1) kiplik / zorunluluk
+    r"(şart\w*|koşul\w*|kosul\w*|gerek\w*|zorunlu\w*|olmal[ıi]\w*|"
+    # 2) dışlayıcılık
+    r"yalnız\w*|yalniz\w*|sadece|hariç|haric|"
+    # 3) yararlanma hakkı
+    r"faydalan\w*|yararlan\w*|hak\s*kazan\w*|"
+    # 4) kapsam / nicelik sınırı
+    r"dahil\w*|d[âa]hil\w*|kapsam\w*\s*d[ıi][şs]\w*|s[ıi]n[ıi]rl[ıi]\w*|"
+    r"s[ıi]n[ıi]rland[ıi]r\w*|"
+    r"asgari|azami|minimum|maksimum|en\s*az\s+\d|en\s*fazla|en\s*çok|"
+    r"alt\s*limit|bir\s*(?:\(\d\)\s*)?(?:kez|defa)|tek\s*sefer|"
+    # 5) olumsuz yeterlilik / yasaklama — "…birleştirilemez", "…devredilemez",
+    #    "…kazanılmaz", "…katılamaz", "…yoktur", "…gerek bulunmamaktadır".
+    #    Kılavuz §4'ün "sayılır" örneklerinin aynadaki yüzü: bir kısıtı
+    #    olumsuz kurarak ifade eden cümle de koşuldur.
+    r"[ıiuü]lemez|[ıiuü]lamaz|[ıi]lmaz|[ıi]lamaz|[ıi]nmaz|edilemez|"
+    r"yap[ıi]lamaz|kat[ıi]lamaz|yoktur|bulunmamaktad[ıi]r|"
+    # 6) uygulama / tahsis bildirimi — koşulun edilgen kuruluşu
+    r"uygulan[ıi]r|uygulanmaktad[ıi]r|verilmektedir|verilir|"
+    # geçerlilik: artık ÇIPLAK biçim de tetikleyici (aşağıdaki gerekçeye bak)
+    r"ge[çc]erli\w*)",
+    re.IGNORECASE,
+)
+
+#: KOŞUL DEĞİL — SORU CÜMLESİ (SSS başlığı).
+#: Ölçülen yanlış pozitifler: "Bu avantajlar sadece ilk başta mı geçerli?",
+#: "HFY fonunda minimum yatırım tutarı var mı?", "Vade içerisinde para
+#: ekleyebilir miyim?". Soru bir koşul BİLDİRMEZ, koşul sorar; cevabı bir
+#: sonraki cümlededir. Kılavuz §4: koşul cümlesi bir kısıt İFADE eder.
+_SORU_CUMLESI_RE = re.compile(r"\?\s*$")
+
+#: KOŞUL DEĞİL — YÖNLENDİRME / BAĞLANTI cümlesi.
+#: "Kampanya koşulları hakkında detaylı bilgi için tıklayın.",
+#: "Ayrıntılı bilgi için kampanya şartlarına göz atabilirsiniz."
+#: Bunlar "koşul" sözcüğünü taşır ama içerik olarak bir bağlantı etiketidir;
+#: `extract_dipnotlar` aynı sınıfı dipnot tarafında zaten eliyor.
+_YONLENDIRME_RE = re.compile(
+    r"(t[ıi]klay[ıi]n|göz\s*at\w*|ziyaret\s*ed\w*|inceleyebilir\w*|"
+    r"ayr[ıi]nt[ıi]l[ıi]\s*bilgi\s*i[çc]in|detayl[ıi]\s*bilgi\s*i[çc]in|"
+    r"bilgi\s*almak\s*i[çc]in|t[üu]m[üu]n[üu]\s*g[öo]ster)",
+    re.IGNORECASE,
+)
+
+#: KOŞUL DEĞİL — SSS CEVABININ AÇILIŞI ("Hayır, …" / "Evet, …").
+#: Ölçülen: "Hayır, avantajlar sadece ilk başta geçerli değildir.",
+#: "Hayır, Kampanyalı Togg Finansmanı yalnızca sıfır kilometre …".
+#: Bu cümleler bir SSS cevabının retorik açılışıdır; taşıdıkları kısıt zaten
+#: ürün gövdesinde bir kez daha (koşul cümlesi olarak) yazılıdır.
+_SSS_CEVAP_RE = re.compile(r"^(hay[ıi]r|evet)\s*[,:]", re.IGNORECASE)
+
+#: KOŞUL DEĞİL — OKUYUCUYA SESLENEN PAZARLAMA DAVETİ.
+#:
+#: Kılavuz §4 `kampanya_kosullari`: *"Sayılmaz: … pazarlama sloganları."*
+#: Davetin sözdizimsel imzası cümlenin SONUNDADIR: 2. kişiye yeterlilik
+#: (`-abilirsiniz / -ebilirsiniz`) ya da emir kipi. Bu cümleler koşul
+#: BİLDİRMEZ, eyleme çağırır:
+#:   "Birikimlerinizi yönetmek için profesyonel hizmetten yararlanabilirsiniz."
+#:   "Hesaplama Yap Hemen Başvur … Kuveyt Türk farkıyla yararlanın!"
+#:   "Mobil uygulamamızdan sözleşmelerinizi onaylayarak … başlayabilirsiniz."
+#:
+#: MUAFİYET: cümle bir dışlayıcılık belirteciyle BAŞLIYORSA davet değil
+#: kısıttır — "Sadece Türk Lirası (TL) cinsinden hesap açılışı yapabilirsiniz."
+#: gold'da koşuldur. Muafiyet ölçümle eklendi: muafiyetsiz desen bu kalemi
+#: öldürüyor, muafiyetli desen 16 yanlış pozitifi elerken hiçbir gold
+#: kalemine dokunmuyor.
+_DAVET_SONU_RE = re.compile(
+    r"(?:(?:abilir|ebilir)siniz|(?:abilir|ebilir)sin|"
+    r"(?:yararlanmaya|faydalanmaya)\s+ba[şs]la\w*|"
+    r"yararlan[ıi]n|faydalan[ıi]n|tan[ıi][şs][ıi]n|olun|b[üu]y[üu]t[üu]n|"
+    r"yakala|teslim\s+edin|giriniz|ekleyin|ba[şs]vurun|ka[çc][ıi]rmay[ıi]n)"
+    r"\s*[.!]?\s*$", re.IGNORECASE)
+_DISLAYICI_BAS_RE = re.compile(r"^(sadece|yaln[ıi]z\w*)\b", re.IGNORECASE)
+
+#: KOŞUL DEĞİL — ÜRÜN TANIMI. "…taksitli bireysel finansman ürünüdür",
+#: "…ihraç edilen kira sertifikalarıdır". Tanım cümlesi ürünün NE OLDUĞUNU
+#: söyler; kampanyadan yararlanma koşulu değildir (kılavuz §4.13/1 "tek özne
+#: testi"nin cümle düzeyindeki karşılığı).
+_URUN_TANIMI_RE = re.compile(
+    r"([üu]r[üu]n[üu]d[üu]r|sertifikalar[ıi]d[ıi]r|hesab[ıi]d[ıi]r|"
+    r"hizmetidir)\s*[.!]?\s*$", re.IGNORECASE)
+
+#: KOŞUL DEĞİL — FIKIH / MEVZUAT METNİ.
+#:
+#: Korpusta iki belge (zekât hesaplama aracı, sukuk ürün sayfası) kampanya
+#: DEĞİL; kılavuz §4.13/1'in "tek öznesi yok" sınıfı. Bu sayfalarda
+#: "zorunludur", "gerekmez", "dahil ederler" gibi kiplik sözcükleri fıkhî ve
+#: hukukî hükümlere ait. 8 uydurma kalemin kaynağı buydu.
+_FIKIH_MEVZUAT_RE = re.compile(
+    r"(mezhep|mezhebin|zekat|zek[âa]t|nisab|ziynet|"
+    r"tebli[ğg]|VK[ŞS]\b|kira\s+sertifikas|mevzuat|y[öo]netmeli[kğ])",
+    re.IGNORECASE)
+
+#: KOŞUL DEĞİL — SORUMLULUK REDDİ / TARİFE ÇEKİNCESİ.
+#:
+#: `ihtar.py` "kampanyayı durdurma hakkı" ailesini tutar; bu ise onun kardeşi:
+#: bankanın sorumluluğunu sınırlayan ya da genel ücret tarifesine atıf yapan
+#: standart çekince. Kılavuz K2'nin gerekçesi birebir geçerli — cümle her
+#: sayfada birebir tekrarlanır, yani kıyasta SIFIR ayırt edici bilgi taşır.
+#: Ölçüldü: 5 yanlış pozitif, 0 gerçek koşul.
+_SORUMLULUK_REDDI_RE = re.compile(
+    r"(sorumluluk.{0,80}?ait\s+de[ğg]ildir|"
+    r"Kurul\s+taraf[ıi]ndan\s+belirlenen\s+tarife|"
+    r"geriye\s+d[öo]n[üu]k\s+yararland[ıi]rma)", re.IGNORECASE)
+
+#: KOŞUL DEĞİL — ÖDÜL TUTARI BİLDİRİMİ (kılavuz K3).
+#:
+#: "…ilk harcamaya 500 TL, 25.000 TL ve üzerindeki ilk harcamaya 1.000 TL
+#: ParafPara verilecektir." Bu cümle ÖDÜLÜ anlatır; ödül `odul_miktari` /
+#: `alisveris_puani` alanlarına aittir ve K3 aynı değerin koşullara ikinci
+#: kez kopyalanmasını yasaklar.
+#:
+#: İKİ KOŞUL BİRLİKTE aranır ve bu ölçümle belirlendi: yalnız "…verilir /
+#: verilmektedir" ile bitmek YETMEZ — o desen gold'un üç gerçek koşuluna
+#: ateşliyordu ("1000 TL ve üzeri akaryakıt harcamalarına 100 TL indirim
+#: verilir", "…bir (1) defaya mahsus verilir", "Ücretsiz çek karnesi …
+#: verilmektedir"). Ayırt edici ikinci koşul ÖDÜL KADEMESİ: cümlede en az
+#: İKİ para/puan tutarı geçmesi, yani bir tutar–ödül tarifesi olması.
+_ODUL_TUTAR_SONU_RE = re.compile(
+    r"(verilecektir|verilecek|hediye|bonus)\s*[.!]?\s*$", re.IGNORECASE)
+_PARA_JETONU_RE = re.compile(
+    r"\d[\d.,]*\s*(?:TL|₺|ParafPara|Bonus|Mil\b|puan)", re.IGNORECASE)
+
+#: KOŞUL DEĞİL — ÜRÜN ÖZELLİĞİ / İŞLEYİŞ BİLDİRİMİ.
+#: "Maksimum 48 aya varan vade imkânı sunar." (bu `vade_ay`, K3),
+#: "Ödeme karşılığı teslim esası uygulanır.", "…bir sadakat ve üyelik
+#: platformudur." Ürünün NASIL çalıştığını anlatır; yararlanma koşulu değil.
+_URUN_OZELLIGI_RE = re.compile(
+    r"(imk[âa]n[ıi]?\s+sunar|esas[ıi]?\s+uygulan[ıi]r|"
+    r"esas\s+al[ıi]narak\s+uygulanmaktad[ıi]r|platformudur)\s*[.!]?\s*$",
+    re.IGNORECASE)
+
+#: BLOK BAŞLIĞI — HTML→metin dönüşümünde cümlenin başına YAPIŞAN başlıklar.
+#:
+#: `split_sentences` blok sınırını görmez (başlıkta nokta yoktur), bu yüzden
+#: "Kampanya Koşulları" gibi bir `<h3>` bir sonraki cümlenin önüne geçiyor:
+#:   "Kampanya Koşulları Kampanya 1-31 Temmuz 2026 tarihleri arasında
+#:    geçerlidir."
+#: Başlık cümlenin PARÇASI DEĞİLDİR; kırpılması hem kalemi kılavuzun K1
+#: (birebir) biçimine yaklaştırır hem de `text.find` ile izlenebilirliği
+#: korur (kırpma yalnız kenarlardan, dolayısıyla sonuç hâlâ bitişik alt dize).
+_BASLIK_ONEKI_RE = re.compile(
+    r"^.{0,80}?(?:kampanya\s+(?:ko[şs]ullar[ıi]|[şs]artlar[ıi]|detaylar[ıi]|"
+    r"detay|bilgileri|[öo]zellikleri)|ba[şs]vuru\s+[şs]artlar[ıi]|"
+    r"[üu]r[üu]n\s+kullan[ıi]m\s+detaylar[ıi]|detayl[ıi]\s+bilgi|"
+    r"sayfa\s+i[çc]eri[ğg]i)"
+    r"\s*[:;]?\s+",
+    re.IGNORECASE,
+)
+
+#: SİTE KROMU — cümlenin başına yapışan paylaşım zinciri ve sonuna yapışan
+#: oynatıcı uyarısı. İkisi de ölçülmüş gerçek vaka:
+#:   "Kampanyayı Paylaş Facebook'da paylaş X'de paylaş … Kampanya koşulları: …"
+#:   "… değiştirme hakkına sahiptir. × Your browser does not support the audio…"
+#: Paylaşım zinciri iki biçimde iniyor: fiilli ("… Whatsapp'da paylaş") ve
+#: çıplak marka dizisi ("CampaignDetailImg Facebook Twitter LinkedIn Whatsapp
+#: 01 Ağustos - 31 Ağustos … Sayfa İçeriği Kampanya ayın ilk ve son günleri
+#: arasında geçerlidir."). İkinci biçim ölçüldü: gerçek koşulu bir kez
+#: kaçırtıyor, çünkü kroma yapışan cümle jeton örtüşmesini yarıya düşürüyor.
+_PAYLASIM_ONEKI_RE = re.compile(
+    r"^.{0,200}?(?:(?:whatsapp'?da|whatsapp'?ta|linkedin'?de)\s+payla[şs]|"
+    r"linkedin\s+whatsapp)\s+",
+    re.IGNORECASE)
+_KROM_SONEKI_RE = re.compile(
+    r"\s*×?\s*your\s+browser\s+does\s+not\s+support.*$", re.IGNORECASE)
+
+#: TARİH-GEÇERLİLİK CÜMLESİ — kılavuz K3: başka alana ait değer koşula
+#: TEKRAR yazılmaz. "Kampanya 1-31 Temmuz 2026 tarihleri arasında geçerlidir"
+#: tek başına `kampanya_suresi`dir, koşul değildir (kılavuz §4: *"Sayılmaz:
+#: sadece geçerlilik tarihi bildiren cümle"*).
+#:
+#: Testi ÇIKARMA ile yapıyoruz, kalıp eşlemesiyle değil: cümleden tarih ve
+#: geçerlilik iskeleti atıldığında geriye anlamlı içerik kalmıyorsa cümle
+#: yalnızca tarih bildiriyor. Böylece gerçek koşul taşıyan tarih cümleleri
+#: ("… üç (3) ay süresince sadece hafta sonları geçerlidir") ayakta kalır.
+_TARIH_ISKELETI_RE = re.compile(
+    r"\d+|ocak|şubat|mart|nisan|may[ıi]s|haziran|temmuz|a[ğg]ustos|eyl[üu]l|"
+    r"ekim|kas[ıi]m|aral[ıi]k|kampanya\w*|ko[şs]ullar[ıi]|[şs]artlar[ıi]|"
+    r"tarih\w*|aras[ıi]nda|itibar\w*|ba[şs]lang[ıi][çc]|biti[şs]|d[öo]nemi|"
+    r"ge[çc]erli\w*|s[üu]resi|boyunca|olup|ve|ile|saat|kadar|dan|den|"
+    r"[-–—.,;:()/'\"]",
+    re.IGNORECASE)
+
+
+def _kabuk_kirp(cumle: str) -> str:
+    """Cümlenin başına/sonuna yapışan blok başlığı ve site kromunu kırpar.
+
+    Kırpma YALNIZ kenarlardan yapılır: sonuç ham metnin hâlâ bitişik bir alt
+    dizesidir, dolayısıyla `text.find` ile span kurulabilir ve kaynak
+    vurgulama (CLAUDE.md §18/1) bozulmaz.
+    """
+    s = _KROM_SONEKI_RE.sub("", cumle).strip()
+    s = _PAYLASIM_ONEKI_RE.sub("", s).strip()
+    s = _BASLIK_ONEKI_RE.sub("", s).strip()
+    return s
+
+
+#: BİRLEŞİK BLOK EŞİĞİ ve İÇ AYIRAÇLARI.
+#:
+#: Ölçüm (gold.v2): gold koşul kalemlerinin uzunluk ortancası 80, %90'ı ≤ 127,
+#: en uzunu 285 karakter — kılavuz K1/"birden çok koşul → dikey çizgi" gereği
+#: her kalem TEK bir koşuldur. Motorun ürettiği yanlış pozitiflerin ortancası
+#: ise 145, %90'ı ≤ 235: yani uzun kalem neredeyse her zaman **cümle
+#: bölücünün ayıramadığı birleşik bloktur**, tek bir koşul değil.
+#:
+#: Doğru tepki bloğu ATMAK değil BÖLMEKtir; atmak blok içindeki gerçek koşulu
+#: da götürür. Ayıraçlar `split_sentences`'ın görmediği, HTML listelerinden
+#: metne inen işaretlerdir (aynı gerekçe `_DIPNOT_ISARET_RE`de yazılı):
+#:   "… sadece birini kazanabilir. -Bir kart ile kampanyaya katılım …"
+#:   "Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için …"
+_BIRLESIK_ESIK = 170
+_IC_AYIRAC_RE = re.compile(r"\s*[;•‣]\s*|\s+-(?=[A-ZÇĞİÖŞÜ])")
+
+
+#: SIRA SAYISI SONU — `split_sentences`'ın kısaltma listesi sayıları tanımaz.
+#: "…her ayın 15. günü ve son günü kontrol edilir" cümlesi "15." noktasından
+#: bölünüyor ve koşulun yarısı kayboluyordu (gold.v2'de ölçülmüş 1 kalem).
+#: Bölücü `src/preprocessing/clean.py`de ve bu değişikliğin sahiplik alanında
+#: DEĞİL; düzeltme bu yüzden tüketici tarafında, geri-birleştirme olarak yapılır.
+_SAYI_SONU_RE = re.compile(r"(?:^|\s)\d{1,2}\.$")
+
+
+def _sayi_sonu_birlestir(cumleler: list[str]) -> list[str]:
+    """Sıra sayısında yanlış bölünmüş cümleleri geri birleştirir."""
+    out: list[str] = []
+    for c in cumleler:
+        if out and _SAYI_SONU_RE.search(out[-1]):
+            out[-1] = out[-1] + " " + c
+        else:
+            out.append(c)
+    return out
+
+
+#: YAKIN-TEKİL EŞİĞİ. Jeton örtüşmesi bu değerin üstündeki iki kalem aynı
+#: koşulun iki yazımıdır. 0,85 seçildi: ölçütün kalem eşiğinden (0,70) YÜKSEK
+#: — yani burada birleştirilen iki kalem ölçütte de zorunlu olarak aynı gold
+#: koşuluna düşerdi; eşiği ölçütün altına indirmek gerçek iki koşulu
+#: birleştirme riski taşır.
+_YAKIN_TEKIL_ESIK = 0.85
+
+
+def _yakin_tekil(a: str, b: str) -> bool:
+    """İki koşul kalemi aynı koşulun iki yazımı mı?"""
+    ja = {t for t in tr_fold(a).lower().split() if t}
+    jb = {t for t in tr_fold(b).lower().split() if t}
+    if not ja or not jb:
+        return ja == jb
+    return len(ja & jb) / len(ja | jb) >= _YAKIN_TEKIL_ESIK
+
+
+def _dipnot_kuyrugunu_kes(cumle: str) -> str:
+    """Cümleye yapışan dipnot kuyruğunu GÖVDE yolundan düşürür.
+
+    Dipnotun kendi yolu var (`extract_dipnotlar`) ve orada ayrı, temiz bir
+    kalem olarak çıkıyor. Gövde yolu aynı metni bir kez daha üretirse
+    yinelenme süzgeci (`dipnot in s`) yanlış tarafı tutuyor: uzun gövde
+    parçası listede kalıyor, temiz dipnot düşüyor. `tests/test_dipnot.py`
+    bu sınırı kilitliyor.
+    """
+    m = _DIPNOT_ISARET_RE.search(cumle)
+    return cumle[:m.start()].strip() if m else cumle
+
+
+def _kosul_parcalari(cumle: str) -> list[str]:
+    """Birleşik bloğu koşul adaylarına böler; kısa cümleyi olduğu gibi verir."""
+    cumle = _dipnot_kuyrugunu_kes(cumle)
+    if not cumle:
+        return []
+    if len(cumle) <= _BIRLESIK_ESIK:
+        return [cumle]
+    parcalar = [p.strip() for p in _IC_AYIRAC_RE.split(cumle) if p and p.strip()]
+    # Ayıraç yoktu (tek parça geri geldi) → blok bölünemiyor; olduğu gibi
+    # bırakılır ve uzunluk süzgecinin kararına kalır.
+    return parcalar if len(parcalar) > 1 else [cumle]
+
+
+def _yalnizca_tarih_gecerliligi(cumle: str) -> bool:
+    """Cümle SADECE geçerlilik tarihi mi bildiriyor? (K3 → koşul değil)"""
+    kalan = _TARIH_ISKELETI_RE.sub(" ", cumle)
+    return len(re.sub(r"\s+", "", kalan)) < 12
+
+
+def _kosul_degil(cumle: str) -> bool:
+    """Tetikleyici geçse bile koşul SAYILMAYAN cümle sınıfları.
+
+    Her sınıf gold.v2'nin 137 gerçek koşul kalemine ateşlenmediği ÖLÇÜLEREK
+    eklendi; `tests/test_kampanya_kosullari_kalite.py` bunu kapıda tutar.
+    """
+    if _SORU_CUMLESI_RE.search(cumle) or _SSS_CEVAP_RE.search(cumle):
+        return True
+    if _YONLENDIRME_RE.search(cumle) or _URUN_TANIMI_RE.search(cumle):
+        return True
+    if _FIKIH_MEVZUAT_RE.search(cumle) or _SORUMLULUK_REDDI_RE.search(cumle):
+        return True
+    if _URUN_OZELLIGI_RE.search(cumle):
+        return True
+    if (_ODUL_TUTAR_SONU_RE.search(cumle)
+            and len(_PARA_JETONU_RE.findall(cumle)) >= 2):
+        return True
+    if _DAVET_SONU_RE.search(cumle) and not _DISLAYICI_BAS_RE.search(cumle):
+        return True
+    return _yalnizca_tarih_gecerliligi(cumle)
+
+
 def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
     """Kampanya koşulları — SKALER DEĞİL, cümle listesi.
 
@@ -2759,12 +3205,10 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
     # biter; bu bir GEÇERLİLİK TARİHİdir (zaten `kampanya_suresi` yakalar),
     # yararlanma koşulu değil. Tetikleyici olarak bırakılması her belgede
     # yanlış pozitif üretiyordu. Yalnızca "için geçerli" biçimi koşul sayılır.
-    triggers = re.compile(
-        r"(şart\w*|koşul\w*|kosul\w*|gerekmekte\w*|gerekli\w*|zorunlu\w*|"
-        r"asgari|en\s*az\s+\d|minimum|yalnızca|sadece|hariç|"
-        r"için\s*geçerli|olmas[ıi]\s*gerek)",
-        re.IGNORECASE,
-    )
+    #
+    # Tetikleyici kümesi ve süzgeçler modül düzeyinde, gerekçeleri ölçümle
+    # birlikte yazılı: `_KOSUL_TETIK_RE` başındaki blok.
+    triggers = _KOSUL_TETIK_RE
     # BOILERPLATE FİLTRESİ — gerçek veride bulundu (291 belgelik korpus,
     # değişmez denetimi `kampanya_kosullari`nı tek suçlu olarak işaretledi).
     #
@@ -2779,9 +3223,15 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
         r"(çerez|cookie|kvkk|kişisel\s*veri|aydınlatma\s*metni|"
         r"gizlilik\s*(politika|bildirim)|açık\s*rıza|veri\s*sorumlusu|"
         r"telif|tüm\s*hakları|sosyal\s*medya\s*hesap|bilgi\s*toplumu|"
-        r"çağrı\s*merkezi|müşteri\s*hizmetleri|şubelerimiz)",
+        r"çağrı\s*merkezi|müşteri\s*hizmetleri)",
         re.IGNORECASE,
     )
+    # `şubelerimiz` LİSTEDEN ÇIKARILDI (2026-08-20, ölçüldü). Amaç iletişim
+    # altbilgisini elemekti ama sözcük KANAL KISITI cümlelerinde de geçiyor ve
+    # bunlar gerçek koşuldur: "Albaraka Togg finansman başvuruları yalnızca
+    # şubelerimizden yapılmaktadır." gold.v2'de koşul. Desen 1 gerçek kalemi
+    # öldürüyor, karşılığında hiçbir yanlış pozitifi elemiyordu (kalan
+    # altbilgi sinyalleri — çağrı merkezi / müşteri hizmetleri — yeterli).
 
     # GENEL YASAL İHTAR — koşul DEĞİLDİR. Desen `ihtar.py`de tek kez tanımlı;
     # anotasyon tarafındaki `kosul-ihtar` kuralı da oradan okur. Ayrıntı ve
@@ -2790,22 +3240,47 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
     # belgesinin 5'inde YAPAY olarak ayrışıyordu.
     def uygun(s: str, tetik: re.Pattern) -> bool:
         return (bool(tetik.search(s)) and not boilerplate.search(s)
-                and not ihtar_mi(s) and 20 <= len(s) <= 400)
+                and not ihtar_mi(s) and not _kosul_degil(s)
+                and 20 <= len(s) <= 280)
 
-    sentences = split_sentences(text)
-    picked = [s.strip() for s in sentences
-              if uygun(s.strip(), triggers) or uygun(s.strip(), _KONTENJAN_RE)]
+    sentences = _sayi_sonu_birlestir(split_sentences(text))
+    picked: list[str] = []
+    for ham in sentences:
+        # Blok başlığı / site kromu kırpılMADAN önce tetikleyici aranmaz:
+        # başlık kendisi ("Kampanya Koşulları") tetikleyici taşıyor ve
+        # arkasındaki tarih cümlesini koşul gibi gösteriyordu.
+        for s in _kosul_parcalari(_kabuk_kirp(ham.strip())):
+            if not (uygun(s, triggers) or uygun(s, _KONTENJAN_RE)):
+                continue
+            # Aynı cümle iki blokta tekrar ediyorsa bir kez; NEREDEYSE aynı
+            # olan iki kalem de bir kez. Gerekçe ölçütte yazılı: eşleştirme
+            # 1-1'dir (`eval/matchers.item_counts`), yani iki yakın-tekil
+            # kalem tek gold koşulunu karşılar ve ikincisi ZORUNLU olarak
+            # yanlış pozitiftir; üstelik kapak altında bir slot yer.
+            if any(_yakin_tekil(s, t) for t in picked):
+                continue
+            picked.append(s)
 
-    # DİPNOTLAR. Gövde cümleleriyle AYNI kovaya eklenir ama ölçütü daha dardır:
-    # yalnız gerçek kısıt taşıyanlar (`_KISIT_RE`) girer. Dipnotların çoğu
-    # sorumluluk reddi ("*Detaylı bilgi için ... sayfasını ziyaret edebilirsiniz")
-    # ve bunları koşul saymak alanın kesinliğini düşürür.
+    # DİPNOTLAR. Gövde cümleleriyle AYNI kovaya eklenir.
+    #
+    # AYRI TETİKLEYİCİ ARTIK ARANMIYOR (2026-08-20, ölçüldü: +3 doğru kalem,
+    # 0 yeni yanlış pozitif). Eski ölçüt `_KISIT_RE` idi ve gerekçesi
+    # "dipnotların çoğu sorumluluk reddidir" idi. O gerekçenin işi bugün
+    # `_kosul_degil` süzgecine geçti: `_YONLENDIRME_RE` tam olarak
+    # "*Detaylı bilgi için … ziyaret edebilirsiniz" sınıfını eliyor,
+    # `ihtar_mi` de hukuki ihtarı. Geriye kalanda DİPNOT İŞARETİNİN KENDİSİ
+    # kanıttır: kılavuz (§4 `kampanya_kosullari`, `_DIPNOT_ISARET_RE` yorumu)
+    # kampanyanın gerçek kısıtlarının yıldızlı/madde imli listede yazıldığını
+    # söylüyor. İkinci bir sözcük ölçütü aramak, orada duran koşulu — "18
+    # yaşını doldurmuş olmak" gibi kiplik sözcüğü OLMAYAN kalemleri —
+    # gereksiz yere kesiyordu.
     #
     # Zaten seçilmiş bir cümlenin İÇİNDE geçen dipnot tekrar eklenmez: cümle
     # bölücü dipnotu önceki cümleye yapıştırdığı için ikisi aynı bilgiyi
     # taşıyabilir ve liste mükerrer olurdu.
     for dipnot in extract_dipnotlar(text):
-        if not uygun(dipnot, _KISIT_RE):
+        if (boilerplate.search(dipnot) or ihtar_mi(dipnot)
+                or _kosul_degil(dipnot) or not 20 <= len(dipnot) <= 280):
             continue
         if any(dipnot in s for s in picked):
             continue
@@ -2813,9 +3288,14 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
 
     if not picked:
         return None
-    # Üst sınır: bir kampanyanın onlarca koşulu olmaz. Fazlası, filtrenin
-    # kaçırdığı gövde metnidir.
-    picked = picked[:8]
+    # ÜST SINIR — bir kampanyanın onlarca koşulu olmaz; fazlası, süzgecin
+    # kaçırdığı gövde metnidir. 8 -> 6 (2026-08-20, ölçüldü): gold.v2'de en
+    # uzun koşul listesi 6 kalem; kapak taraması F1'i 8'de 0,484, 6'da 0,502
+    # veriyor. Sıra BELGE SIRASIDIR ve bu bilinçli bir tercihtir — koşul
+    # gücüne göre PUANLAMA denendi ve ÇÜRÜTÜLDÜ (0,502 -> 0,428): gerçek
+    # koşullar "Kampanya Koşulları" bloğunda kümeleniyor, pazarlama ve SSS
+    # metni sayfanın kuyruğunda; belge sırası bu yapıyı zaten kodluyor.
+    picked = picked[:6]
 
     # span: ilk koşul cümlesinin metindeki yeri
     first = picked[0]
