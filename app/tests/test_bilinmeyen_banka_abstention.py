@@ -34,7 +34,6 @@ Bu dosya iki şeyi kilitler:
 from __future__ import annotations
 
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 

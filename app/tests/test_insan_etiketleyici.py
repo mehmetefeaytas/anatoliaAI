@@ -177,7 +177,7 @@ class TestArtimliKayit(unittest.TestCase):
             try:
                 return next(ilk_cevaplar)
             except StopIteration:
-                raise Kesme()
+                raise Kesme() from None
 
         with self.assertRaises(Kesme):
             ie.insan(kayitlar=[kayit], cikti_yolu=cikti, ilerleme_yolu=ilerleme,

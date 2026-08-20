@@ -116,7 +116,7 @@ class TestSartnameS12IkiReferansSorusu(unittest.TestCase):
         self.bot = Chatbot(self.repo)
 
     def test_her_iki_referans_soru_ORAN_VE_VADE_dondurur(self):
-        for slug, _metin, ad, oran, vade, soru in SARTNAME_S12_REFERANS_SORULARI:
+        for _slug, _metin, ad, oran, vade, soru in SARTNAME_S12_REFERANS_SORULARI:
             with self.subTest(banka=ad):
                 cevap = self.bot.ask(soru)
                 self.assertEqual("structured", cevap.handler)
