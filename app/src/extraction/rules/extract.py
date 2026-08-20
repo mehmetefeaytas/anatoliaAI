@@ -804,6 +804,45 @@ _KURULUS_PENCERE = 72
 _CUMLE_SONU_RE = re.compile(r"[.!?]\s")
 
 
+#: İŞLENMİŞ ÖRNEK CÜMLESİ — sayı ürünün değeri değil, ANLATIM aracıdır.
+#:
+#: Ölçülen halüsinasyon (gold.v2 `ziraat-katilim--zekat-hesaplama`, belge bir
+#: zekât hesaplama aracı sayfası):
+#:
+#:     "Örneğin 10 yıl vadeli 180.000 TL ev borcu olan kimse …"  -> vade_ay 120
+#:
+#: Gold notu birebir: *"«10 yıl vadeli» ifadesi aynı örnek cümleye aittir;
+#: ürün vadesi değildir."* Aynı sınıf, bilgilendirme formlarının "Hesaplama
+#: Örneği / Örnek Ödeme Planı" bloklarında da var.
+#:
+#: KAPI İKİ KOŞULLU ve daraltma ÖLÇÜMLE zorunlu oldu. Yalnız örnek işareti
+#: aranan gevşek sürüm 1.782 belgede `vade_ay` üreten 452 belgenin 3'ünü
+#: kesiyordu ve **biri gerçek bir ürün vadesiydi**:
+#:
+#:     "Örneğin: Kuveyt Türk Çeyiz Hesabı, minimum 3 yıl vade ile … açılır"
+#:
+#: Yani 2 doğru elemeye 1 yanlış eleme düşüyordu (2:1) — projenin kendi
+#: barajının (SMS ailesi 4:0, talep ailesi 3:0) altında. İkinci koşul olarak
+#: cümlede PARA TUTARI aranınca oran **4:0** oldu: işlenmiş sayısal örnek her
+#: zaman bir tutar taşır ("180.000 TL ev borcu", "Finansman Miktarı 10.000
+#: TL"), ürün beyanı ise taşımıyor. Kesilen 4 belge:
+#:     zekat-hesaplama (120) · medium-bireysel-finansman-talebi-…-4012/4013/
+#:     4014 "Hesaplama Örneği / Örnek Ödeme Planı" (12) — dördü de örnek.
+#: Çeyiz Hesabı kaydı KORUNUR (cümlede TL tutarı yok).
+_ORNEK_ISARET_RE = re.compile(
+    r"(?:^|[.;:!?]\s*|\s)[öo]rne[ğg]in\b|[öo]rnek\s+olarak\b"
+    r"|[öo]rnek\s*:|[öo]rne[ğg]i\b", re.IGNORECASE)
+_ORNEK_PARA_RE = re.compile(
+    r"\d[\d.,]*\s*(?:TL|₺|TRY|t[üu]rk\s*liras)", re.IGNORECASE)
+
+
+def _islenmis_ornek(text: str, m: "re.Match[str]") -> bool:
+    """Eşleşme bir işlenmiş (sayısal) örnek cümlesinin içinde mi?"""
+    cumle = _cumle_kapsami(text, m.start(), m.end())
+    return bool(_ORNEK_ISARET_RE.search(cumle)
+                and _ORNEK_PARA_RE.search(cumle))
+
+
 def _vade_kurulusu(text: str, m: "re.Match[str]") -> Optional[int]:
     """'120 aya kadar konut finansmanı' yapısı mı? Öyleyse tetikleyici mesafesi.
 
@@ -857,10 +896,11 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     davranış birebir eskisidir.
     """
     pat = re.compile(
-        r"(\d[\d.,]*)\s*(ay|yıl|yil|sene)(?:a|da|ta|dan|tan|ı|i|lık|lik)?\b",
+        r"(\d[\d.,]*)\s*(ay|yıl|yil|sene)(?:a|da|ta|dan|tan|ı|i|lık|lik|d[ıi]r|t[ıi]r)?\b",
         re.IGNORECASE,
     )
-    matches = [m for m in pat.finditer(text) if not _takvim_yili(m)]
+    matches = [m for m in pat.finditer(text)
+               if not _takvim_yili(m) and not _islenmis_ornek(text, m)]
     if not matches:
         return None
     # tr_fold: 'İLK 6 AY' -> .lower() 'i̇lk' promo tespitini kaçırıyordu.
@@ -915,7 +955,16 @@ def extract_vade(text: str) -> Optional[ExtractedField]:
     chosen = min(matches, key=score)
     raw = chosen.group(0)
     s, e = chosen.span()
-    canon = N.normalize_term_months(raw)
+    # Normalizasyona SAYI + BİRİM verilir, ham eşleşme değil.
+    #
+    # Desen artık yüklem ekini de yutuyor ("azami vade 10 YILDIR") ve
+    # `normalize_term_months` o eki tanımıyor -> `None` dönüyordu. Sonuç:
+    # eşleşme SEÇİLİYOR ama değer üretilmiyordu, yani alan sessizce boşalıyordu
+    # (gold.v2 `ziraat-katilim--konut-finansmani-kentsel-donusum-finansmani`).
+    # Normalizasyon katmanı bu değişikliğin sahipliğinde değil; ek burada,
+    # tüketici tarafında düşürülüyor. Kanıt/`raw_value` ham eşleşme kalır ki
+    # span izlenebilirliği (CLAUDE.md §18/1) bozulmasın.
+    canon = N.normalize_term_months(f"{chosen.group(1)} {chosen.group(2)}")
     # Tetikleyici mesafesi: "vade" sözcüğü varsa ona olan uzaklık, yoksa
     # yapıyı kuran ürün adına olan uzaklık. İkisi de yoksa buraya gelinmez.
     dist = min((abs(s - v) for v in vade_pos), default=None)
@@ -2122,6 +2171,7 @@ class RateRow:
     vade_ay: int
     kar_payi: float
     tahsis_ucreti: Optional[float] = None
+    tutar: Optional[float] = None
 
 
 # Oran tablosunun BAŞLIĞI — TEK DOĞRULUK KAYNAĞI.
@@ -2162,6 +2212,102 @@ _TAHSIS_KOLON_RE = re.compile(
     re.IGNORECASE)
 
 
+# TUTAR KOLONU — `_TAHSIS_KOLON_RE` ile AYNI disiplin: başlıkta adı geçiyorsa
+# vardır, yoksa yoktur. Çıplak "tutar" YETMEZ; tetikleyici finansmanın kendisini
+# adlandırmalı (aynı gerekçe `_TUTAR_TETIK` başlığında ölçümle yazılı: Türkçede
+# her parasal büyüklüğün adı "… tutarı"dır).
+#
+# Ölçülen kayıp (gold.v2 `albaraka--tasit-finansmani-togg-finansmani`):
+#     "Araç Modeli Vade (Ay) Kredi Tutarı Aylık Kar Oranı
+#      T10F V2 12 800.000 0,00%   T10F V2 48 1.700.000 2,99%   …"
+# `_TUTAR_PAT` bunu göremez, çünkü tetikleyici ("Kredi Tutarı") tablo
+# BAŞLIĞINDA ve tutardan onlarca karakter uzakta — `extract_kar_payi`'nin aynı
+# tablolarda yaşadığı sorunun eşi. Gold değeri 1.700.000 ve gold notu
+# sözleşmeyi yazıyor: *"En yüksek finansman tutarı alındı."* (vade tarafındaki
+# "en uzun vade" kuralının kardeşi).
+#
+# ÖLÇÜLDÜ (1.782 belge, 2026-08-20): başlıkta tutar kolonu OLAN ve satır kuran
+# belge sayısı **1** — tam bu belge; başka hiçbir belgenin değeri değişmiyor.
+# Alan ayrıca YEDEKtir (`_TABLO_YEDEK_ALANLARI`), yani `extract_tutar` bir
+# değer üretebiliyorsa tabloya hiç bakılmaz. Sıfır etki burada başarısızlık
+# değil güvenlik kanıtıdır (aynı gerekçe `_KURULUS_PENCERE` bloğunda).
+_TUTAR_KOLON_RE = re.compile(
+    r"(?:kredi|finansman|kulland[ıi]r[ıi]m)\s*tutar", re.IGNORECASE)
+
+#: Tablo hücresindeki tutar BİNLİK AYIRAÇLI yazılır ("1.700.000"). Ayıraç şartı
+#: bilinçli: çıplak "48" gibi vade/adet hücrelerini tutar sanmayı imkânsız kılar.
+_TABLO_TUTAR_RE = re.compile(
+    r"(?<![\d.,])(\d{1,3}(?:\.\d{3})+(?:,\d+)?)(?![\d.,])")
+
+
+# BİÇİM C — YÜZDE İŞARETİ OLMAYAN oran tablosu.
+#
+# Ölçülen kayıp (gold.v2 `kuveyt-turk--kampanya-arsivi-kuveyt-turkten-
+# avantajli-leasing-finansmani`): tablo başlığı tanınıyor ama satır kurulmuyor,
+# çünkü hücrelerde `%` yok —
+#
+#     "Vade TL Kar Oranı USD Kar Oranı EUR Kar Oranı
+#      12 Ay 4.15 0.83 0.79   24 Ay 3.90 0.83 0.79   36 Ay 3.81 0.84 0.79
+#      48 Ay 3.81 0.90 0.79   60 Ay 3.81 0.90 0.79"
+#
+# Bu belgede İKİ alan birden düşüyordu: `kar_payi_orani` hiç üretilmiyordu
+# (gold {min 3,81 · max 4,15}) ve `vade_ay` tablonun İLK satırından 12 alıyordu
+# (gold 60 — `extract_from_rate_table` zaten `max` alıyor, ama satır yoktu).
+#
+# ## Neden çıplak ondalık okumak GÜVENLİ — üç kapı da ölçümle kondu
+#
+# 1.782 belge tarandı (2026-08-20). Başlığı tanınıp mevcut biçimlerle satır
+# kurulAMAYAN ve kuyruğunda hiç `%` bulunmayan belgeler: **5**.
+#
+#     kampanya-arsivi-esnaf-ve-kobilere-ozel-avantajli-arac-kredisi
+#         "Vade Kar Oranı 24 ay 3.54 36 ay 3.29 48 ay 3.23 60 ay 3.23"   GERÇEK
+#     kampanya-arsivi-esnafa-ozel-avantajli-arac-finansmani
+#         "12 Ay 3.42 18 Ay 3.50 24 Ay 3.25 36 Ay 3.09 …"                GERÇEK
+#     kampanya-arsivi-kuveyt-turkten-avantajli-leasing-finansmani         GERÇEK
+#     tr.txt   "Vade Kâr Oranı % Oranı kendim gireceğim…" -> (1, 1.93),
+#              (12, 1.93)                                                 ÇÖP
+#              (hesaplama aracı widget'ı, tablo değil)
+#     detay-3-ay-ertelemeli-tasit-finansmani -> (36, 1.20), (24, 1.20)     ÇÖP
+#              (düz metin: "48 ay vadeye kadar … tüm vadelerde uygun kâr
+#               oranıyla"; oran hücresi yok)
+#
+# İki çöpü eleyen yapısal iki özellik ÖLÇÜLDÜ: gerçek tabloların üçünde de
+# satır sayısı >= 3 VE vade kolonu ARTAN sırada (12 < 24 < 36 …); iki çöpün
+# biri 2 satır, öteki azalan. Kapı bu yüzden bu ikisini arar ve sonuç **3:0**
+# olur. Ek olarak `%` bulunan kuyruklara HİÇ dokunulmaz — biçim A/B'nin
+# alanına girmez, yalnız onların hiç satır kurmadığı yerde devreye girer.
+#
+# `(?![\d.,]*\s*%)` kuyruğu: bir yüzde ifadesinin gövdesini çıplak ondalık
+# sanmayı imkânsız kılar (aynı sınır disiplini `vade_re` yorumunda yazılı).
+_TABLO_C_VADE_RE = re.compile(r"(?<![\d.,])(\d{1,3})\s*ay\b", re.IGNORECASE)
+_TABLO_C_ORAN_RE = re.compile(r"(?<![\d.,%])(\d{1,2}[.,]\d{1,2})(?![\d.,]*\s*%)")
+_TABLO_C_ASGARI_SATIR = 3
+_TABLO_C_ORAN_PENCERE = 25
+
+
+def _oran_tablosu_c(kuyruk: str) -> list["RateRow"]:
+    """Yüzde işaretsiz oran tablosu (BİÇİM C). Yapı tutmazsa boş liste."""
+    satirlar: list[RateRow] = []
+    for vm in _TABLO_C_VADE_RE.finditer(kuyruk):
+        vade = int(vm.group(1))
+        if not (1 <= vade <= 480):
+            continue
+        om = _TABLO_C_ORAN_RE.search(
+            kuyruk, vm.end(), min(len(kuyruk), vm.end() + _TABLO_C_ORAN_PENCERE))
+        if om is None:
+            continue
+        kar = N.parse_tr_number(om.group(1))
+        if kar is None or not (0 < kar <= 15):
+            continue
+        satirlar.append(RateRow(vade_ay=vade, kar_payi=kar))
+    if len(satirlar) < _TABLO_C_ASGARI_SATIR:
+        return []
+    vadeler = [r.vade_ay for r in satirlar]
+    if vadeler != sorted(set(vadeler)):        # artan ve tekil olmalı
+        return []
+    return satirlar
+
+
 def parse_rate_table(text: str) -> list[RateRow]:
     """Banka ürün sayfalarındaki ORAN TABLOSUNU ayrıştırır.
 
@@ -2196,6 +2342,8 @@ def parse_rate_table(text: str) -> list[RateRow]:
     # doldurulmaz (gerekçe: `_TAHSIS_KOLON_RE`).
     tahsis_kolonu = bool(
         _TAHSIS_KOLON_RE.search(text[baslik.start(): baslik.end() + 120]))
+    tutar_kolonu = bool(
+        _TUTAR_KOLON_RE.search(text[baslik.start(): baslik.end() + 120]))
 
     kuyruk = text[baslik.end(): baslik.end() + 4000]
 
@@ -2230,7 +2378,9 @@ def parse_rate_table(text: str) -> list[RateRow]:
     yuzdeler = [(m.start(), m.end(), m.group(0))
                 for m in yuzde_re.finditer(kuyruk)]
     if not yuzdeler:
-        return []
+        # Kuyrukta hiç `%` yok -> biçim A/B kurulamaz. Yüzde İŞARETSİZ tablo
+        # olabilir; gerekçe ve ölçüm `_oran_tablosu_c` başlığında.
+        return _oran_tablosu_c(kuyruk)
 
     # BİÇİM A önce denenir: "3 4,09% 0,50% 5,63% 92,88% 12 4,05% ..."
     # Vade çıplak tamsayı, ardından 2-5 yüzde bir arada. Bu düzen KATI
@@ -2292,7 +2442,18 @@ def parse_rate_table(text: str) -> list[RateRow]:
             t = N.parse_tr_number(ardindan[0][2])
             if t is not None and 0 <= t <= 10:
                 tahsis = t
-        rows.append(RateRow(vade_ay=vade, kar_payi=kar, tahsis_ucreti=tahsis))
+        # Tutar kolonu: vade hücresi ile kâr payı yüzdesi ARASINDA duran
+        # binlik ayıraçlı sayı (gerekçe: `_TUTAR_KOLON_RE`).
+        tutar = None
+        if tutar_kolonu:
+            tm = _TABLO_TUTAR_RE.search(kuyruk, vm.end(), s0)
+            if tm is not None:
+                aday = N.parse_tr_number(tm.group(1))
+                alt, ust = C.PLAUSIBLE_RANGES["finansman_tutari"]
+                if aday is not None and alt <= aday <= ust:
+                    tutar = aday
+        rows.append(RateRow(vade_ay=vade, kar_payi=kar, tahsis_ucreti=tahsis,
+                            tutar=tutar))
     return rows
 
 
@@ -2357,6 +2518,13 @@ def extract_from_rate_table(text: str) -> list[ExtractedField]:
         _field("vade_ay", text[s:e], max(r.vade_ay for r in rows), pencere,
                span_start=s, span_end=e, trigger_distance=0),
     ]
+    tutarlar = [r.tutar for r in rows if r.tutar is not None]
+    if tutarlar:
+        # "En yüksek finansman tutarı" — gold sözleşmesi (`_TUTAR_KOLON_RE`).
+        out.append(_field("finansman_tutari", text[s:e],
+                          {"value": max(tutarlar), "currency": "TRY"},
+                          pencere, span_start=s, span_end=e,
+                          trigger_distance=0))
     ucretler = {r.tahsis_ucreti for r in rows if r.tahsis_ucreti is not None}
     if len(ucretler) == 1:
         # Tahsis ücreti tabloda ORAN olarak veriliyor (%0,50), tutar değil —
@@ -2379,7 +2547,8 @@ def extract_from_rate_table(text: str) -> list[ExtractedField]:
 # `para\s*çek` çekim/çekebilir/çekme çekimlerinin hepsini kapsar; "hediye
 # çeki" bu kalıba GİRMEZ, dolayısıyla meşru hediye çeki ödülü korunur.
 _ODUL_DISI_RE = re.compile(
-    r"indirim|para\s*çek|çek\s*karnesi|çek\s*tahsil",
+    r"indirim|para\s*çek|çek\s*karnesi|çek\s*tahsil"
+    r"|parafpara|chip[\s-]*para|maximiles|worldpuan|world\s*puan",
     re.IGNORECASE,
 )
 
@@ -2514,7 +2683,7 @@ def extract_indirim_orani(text: str) -> Optional[ExtractedField]:
 _PUAN_TRIGGER_RE = re.compile(
     r"(chip[\s-]*para|parafpara|maximiles|worldpuan|world\s*puan|"
     r"bonus\s*puan\w*|alışveriş\s*puan\w*|alisveris\s*puan\w*|"
-    r"puan\s*iade\w*|puan)", re.IGNORECASE)
+    r"puan\s*iade\w*|puan|\bmil\b)", re.IGNORECASE)
 
 # Gezinme/SSS bağlantısı kalıbı — ödül bildirimi değil.
 _PUAN_KROM_RE = re.compile(
@@ -2530,13 +2699,57 @@ _PUAN_KROM_RE = re.compile(
 # `1.500 TL` gibi binlik ayıraçlı tutarları bozmaz — orada nokta sayının içinde.
 _PUAN_SAYI_RE = re.compile(
     rf"{_SAYI_BASI}(\d[\d.,]*\d|\d)\s*(?:adet\s*)?"
-    r"(?:chip[\s-]*para|parafpara|maximiles|worldpuan|puan|tl|₺)",
+    r"(?:chip[\s-]*para|parafpara|maximiles|worldpuan|puan|\bmil\b|tl|₺)",
     re.IGNORECASE)
 
 #: Puan bağlamındaki oran deseni. `_SAYI_BASI` ile sayının ortasından
 #: başlayamaz; modül düzeyinde derlenir çünkü belge başına onlarca kez koşar.
 _PUAN_ORAN_RE = re.compile(
     rf"%\s*{_SAYI_BASI}(\d[\d.,]*)|{_SAYI_BASI}(\d[\d.,]*)\s*%")
+
+
+#: NAKİT İADE (cashback) — kılavuz §4 gereği `alisveris_puani`, `indirim_orani`
+#: DEĞİL: *"Sayılmaz: kâr payı oranı, puan/iade oranı (o `alisveris_puani`)"*.
+#:
+#: Ölçülen kayıp (gold.v2): iki kayıt yalnız bu tetikleyici yokluğundan
+#: düşüyordu —
+#:     "A101'de her alışverişte %3'e varan nakit iade!"        -> rate 3,0
+#:     "…Pegasus harcamalarında %50'ye varan iade kazanılabilir" -> rate 50,0
+#:
+#: TETİKLEYİCİ YALNIZ ORAN BİÇİMİNİ AÇAR. Sebep ölçülmüş bir tehlike:
+#: "iade" Türkçede ödülü DEĞİL geri dönüşü de anlatıyor ("Alışverişin
+#: iptal/iade edilmesi durumunda…"). Adet biçimi de açılsaydı, o cümlelerin
+#: ±30 karakterindeki herhangi bir TL tutarı puan sanılırdı. Oran biçiminde
+#: bu risk yok: bir yüzde işareti şart.
+#:
+#: ÖLÇÜLDÜ (1.782 belge, 2026-08-20): kapı 28 belgede YENİ değer, 3 belgede
+#: değişiklik üretiyor. Elle bakıldı — 27 yeni değer gerçek nakit iade oranı
+#: ("%18'i kadar nakit iade", "%75 Nakit İade Fırsatı", "%5 iade kazan"),
+#: 3 değişiklik de doğru yönde (eskiden komşu cümleden 100 "puan" devşiriliyor,
+#: artık "işleme %50 iade" okunuyor). TEK çöp bir ücret tarifesiydi:
+#:     "Çek İade Ücreti 0% 0% 0% …"  -> rate 0,0
+#: `_IADE_UCRETI_RE` tam o sınıfı eler: "iade ÜCRETİ" bir masraftır, ödül
+#: değil. Kalan oran: 30 doğru / 0 çöp.
+_IADE_TRIGGER_RE = re.compile(r"(nakit\s*iade|para\s*iade|iade)",
+                              re.IGNORECASE)
+_IADE_UCRETI_RE = re.compile(
+    r"iade\s*(?:[üu]cret|masraf|komisyon|bedel)", re.IGNORECASE)
+
+
+def _puan_tetikleyicileri(text: str) -> list[tuple["re.Match[str]", bool]]:
+    """(eşleşme, yalnız_oran) çiftleri — BELGE SIRASINDA.
+
+    Sıra korunur çünkü `extract_alisveris_puani` ilk geçerli adayı döndürüyor
+    ve sıra değişirse sonuç yazım sırasına bağlı hâle gelirdi (P4 değişmezi).
+    """
+    adaylar: list[tuple[re.Match[str], bool]] = [
+        (m, False) for m in _PUAN_TRIGGER_RE.finditer(text)]
+    for m in _IADE_TRIGGER_RE.finditer(text):
+        if _IADE_UCRETI_RE.search(text[m.start(): m.end() + 20]):
+            continue
+        adaylar.append((m, True))
+    adaylar.sort(key=lambda p: p[0].start())
+    return adaylar
 
 
 def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
@@ -2555,7 +2768,7 @@ def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
     yerine tüm tetikleyiciler taranıyor — kromdaki bir eşleşme gerçek ödülü
     artık gölgelemiyor.
     """
-    for tm in _PUAN_TRIGGER_RE.finditer(text):
+    for tm, yalniz_oran in _puan_tetikleyicileri(text):
         # Site kromu / SSS bağlantısı ödül DEĞİLDİR. Ölçülen halüsinasyon:
         # "3D Secure Nedir, Ne İşe Yarar? Kredi Notu (Kredi Puanı) Nedir?" —
         # iki Türkiye Finans sayfasında `puan` sözcüğünün geçtiği TEK yer buydu
@@ -2580,6 +2793,9 @@ def extract_alisveris_puani(text: str) -> Optional[ExtractedField]:
             if val is None:
                 continue
             canon = {"kind": "rate", "value": val}
+        elif yalniz_oran:
+            # `iade` çapası ADET biçimini açmaz (gerekçe: `_IADE_TRIGGER_RE`).
+            continue
         else:
             # Sayı tetikleyiciye KOMŞU olmak zorunda. Eskiden birim grubu
             # opsiyoneldi (`(?:chip|puan)?`), yani ±30 karakterdeki herhangi bir
@@ -3095,8 +3311,51 @@ def _kabuk_kirp(cumle: str) -> str:
 #: metne inen işaretlerdir (aynı gerekçe `_DIPNOT_ISARET_RE`de yazılı):
 #:   "… sadece birini kazanabilir. -Bir kart ile kampanyaya katılım …"
 #:   "Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için …"
+#:
+#: TİRE AYIRACI BÜYÜK/KÜÇÜK HARFE BAĞLI OLAMAZ (2026-08-20, değişmez ihlali).
+#:
+#: Desen önce `\s+-(?=[A-ZÇĞİÖŞÜ])` idi: "boşluk + tire + BÜYÜK harf". Bu,
+#: madde iminin tipografik görüntüsünü doğru tarif ediyordu ama çıkarımı
+#: ORTOGRAFİYE bağlıyordu ve `eval.properties` P2 değişmezi bunu üç belgede
+#: yakaladı (1.782 belgelik korpus, `albaraka/bilgilendirme-formu-murabaha`,
+#: `…-icare-is-gucu-hizmet-kiralamasi`, `turkiye-emlak-katilim/qr-kur-…`):
+#:
+#:   normal metin : "… irade beyanının (icap -kabul) bulunması gerekir."
+#:                  → 'kabul' küçük harf, ayıraç ATEŞLEMEZ, koşul tek parça
+#:   BÜYÜK metin  : "… İRADE BEYANININ (İCAP -KABUL) BULUNMASI GEREKİR."
+#:                  → 'KABUL' büyük harf, ayıraç ATEŞLER, koşul ORTADAN KESİLİR
+#:                    ve listeye 'KABUL) BULUNMASI GEREKİR.' düşer
+#:
+#: Aynı sınıf ikinci bir yazım kusuruyla besleniyor: PDF metin çıkarımı
+#: birleşik sözcüğün tiresinden önce boşluk bırakıyor ("alım -satım",
+#: "e -posta", "prim -ücret"). Bunlar madde imi DEĞİL; büyük harfli belgede
+#: madde imi gibi görünüyorlar.
+#:
+#: Düzeltme, ayıracı harf büyüklüğü yerine ÖNCEKİ NOKTALAMAYA bağlar: madde
+#: imi bir cümle ya da başlık bitiminden sonra gelir (". -Bir kart …",
+#: "Bitiş Tarihi: - Paylaş"), birleşik sözcük tiresi ise harften sonra gelir
+#: ("alım -satım"). Böylece kural ortografiden bağımsızlaşır — ve rubriğin
+#: "farklı ifade biçimlerini doğru yorumlayabilme" maddesi gereği BÜYÜK
+#: HARFLE yazılmış banka metni normal metinle aynı sonucu verir.
+#:
+#: ÖLÇÜM ve ÇÜRÜTÜLEN ALTERNATİFLER (gold.v2, kural/strict, kalem mikro):
+#:   eski `\s+-(?=[A-ZÇĞİÖŞÜ])`      → 0,520 · P2 ihlali 3
+#:   `(?<=[.!?:])\s+-\s*` (seçilen)  → 0,520 · P2 ihlali 0
+#:   `(?<=[.!?])\s+-\s*`             → 0,520 · P2 ihlali 0
+#:   tire ayıracı hiç yok            → 0,520 · P2 ihlali 0
+#:   `\s+-(?=\w)` (harf-bağımsız)    → 0,520 · P2 ihlali 0
+#: Yani gold.v2 bu dört seçenek arasında AYRIM YAPMIYOR (48 belgede tire
+#: ayıracı 170 karakterden uzun bir tetikleyicili cümlede hiç ateşlemiyor).
+#: Seçim bu yüzden gold F1'e değil korpus kanıtına dayanıyor: 1.782 belgede
+#: 170+ karakterlik 13.502 cümle tarandı ve tire alternatifi
+#:   `\s+-(?=\w)` ile 208, eski desenle 81, seçilen desenle 114 kez ateşliyor.
+#: `\s+-(?=\w)`ın fazladan ateşlediklerinin çoğu yukarıdaki PDF yazım kusuru
+#: ("e -posta", "% -0,52959", "alış -verişi") — yani harf-bağımsız ama YANLIŞ.
+#: Ayıracı tamamen atmak da değişmezi geçirirdi ama belgelenmiş madde imi
+#: işlevini (". -Bir kart ile kampanyaya katılım …") kaybettirirdi; o vakayı
+#: `tests/test_buyuk_harf_degismezligi.py` kilitliyor.
 _BIRLESIK_ESIK = 170
-_IC_AYIRAC_RE = re.compile(r"\s*[;•‣]\s*|\s+-(?=[A-ZÇĞİÖŞÜ])")
+_IC_AYIRAC_RE = re.compile(r"\s*[;•‣]\s*|(?<=[.!?:])\s+-\s*")
 
 
 #: SIRA SAYISI SONU — `split_sentences`'ın kısaltma listesi sayıları tanımaz.
@@ -3330,7 +3589,8 @@ def extract_kampanya_kosullari(text: str) -> Optional[ExtractedField]:
 # satırındaki vade `RateRow` içinde KALIR (kâr payını vadeye bağlamak için
 # gerekli), yalnız `vade_ay` ALANI olarak dışa verilmesi yedeğe düşer —
 # `extract_vade` sustuğunda yine devreye girer, yani bilgi kaybı yok.
-_TABLO_YEDEK_ALANLARI = frozenset({"masraf_durumu", "vade_ay"})
+_TABLO_YEDEK_ALANLARI = frozenset(
+    {"masraf_durumu", "vade_ay", "finansman_tutari"})
 
 # Tüm kural çıkarıcılar — sırayla denenir.
 _EXTRACTORS = [
@@ -3401,6 +3661,40 @@ def extract_all(text: str) -> list[ExtractedField]:
     for ad, f in tablo_yedek.items():
         if ad not in out:
             out[ad] = f
+
+    # TABLO HÜCRESİ TABLONUN TAMAMINI TEMSİL ETMEZ.
+    #
+    # `extract_vade` tetikleyiciye EN YAKIN sayıyı seçer ve oran tablosunun
+    # başlığı "Vade" sözcüğüyle başladığı için en yakın sayı neredeyse her
+    # zaman tablonun İLK SATIRIdır. Ölçülen hata (gold.v2 `kuveyt-turk--
+    # kampanya-arsivi-kuveyt-turkten-avantajli-leasing-finansmani`):
+    #
+    #     "Vade TL Kar Oranı … 12 Ay 4.15 … 60 Ay 3.81"
+    #     -> extract_vade 12 (ilk satır)          gold 60 (en uzun vade)
+    #
+    # Kılavuz ve `extract_from_rate_table` aynı sözleşmeyi paylaşıyor: tablodan
+    # vade **en uzun** vadedir. Kapı bu yüzden ÇOK DAR: yalnız tekil
+    # çıkarıcının değeri tablonun bir SATIR DEĞERİYSE (yani hücreden
+    # devşirilmişse) ve tablo daha uzun bir vade biliyorsa tablo kazanır.
+    #
+    # ÇÜRÜTÜLEN ALTERNATİF (ölçüldü): `vade_ay`'ı `_TABLO_YEDEK_ALANLARI`dan
+    # çıkarıp tabloyu KOŞULSUZ birincil yapmak. F1 0,800 -> 0,600 düştü, çünkü
+    # iki belgede satır ayrıştırması vadeyi YANLIŞ okuyor ve doğru değer düz
+    # metinde duruyor:
+    #     albaraka TOGG        tablo 10  ("T10F" markasından)   metin 48  ✓
+    #     turkiye-finans mobil tablo  3  (kolon kayması)        metin 36  ✓
+    # Bu iki vaka dar kapıdan da GEÇMEZ: tablo maksimumu (10 / 3) tekil
+    # çıkarıcının değerinden (48 / 36) küçük olduğu için kapı hiç açılmaz.
+    tablo_vade = tablo_yedek.get("vade_ay")
+    mevcut_vade = out.get("vade_ay")
+    if (tablo_vade is not None and mevcut_vade is not None
+            and mevcut_vade is not tablo_vade):
+        satir_vadeleri = {r.vade_ay for r in parse_rate_table(text)}
+        if (isinstance(mevcut_vade.canonical_value, int)
+                and isinstance(tablo_vade.canonical_value, int)
+                and mevcut_vade.canonical_value in satir_vadeleri
+                and tablo_vade.canonical_value > mevcut_vade.canonical_value):
+            out["vade_ay"] = tablo_vade
 
     # KABUK SÜZGECİ — kılavuz §4.13/8'in kod karşılığı. Tek noktada, çünkü
     # kural 12 alanın hepsi için aynıdır ve test edilecek tek bir sınır olmalı.
