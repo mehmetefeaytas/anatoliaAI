@@ -1,0 +1,92 @@
+{
+  "kind": "ablation",
+  "matcher": "strict",
+  "documents": 48,
+  "hard_documents": 40,
+  "arms": [
+    {
+      "config": "kural",
+      "description": "yalnız kural katmanı (regex + normalizasyon), LLM kapalı — RESMÎ VARSAYILAN (K-2)",
+      "available": true,
+      "documents": 48,
+      "micro": {
+        "precision": 0.47706422018348627,
+        "recall": 0.47706422018348627,
+        "f1": 0.47706422018348627,
+        "tp": 52,
+        "fp": 57,
+        "fn": 57,
+        "tn": 428,
+        "fp_hallucinated": 19,
+        "fp_wrong": 38,
+        "support": 109,
+        "absent_decisions": 447,
+        "kacirma": 19,
+        "yanlis_cikarim": 38,
+        "halusinasyon": 19,
+        "extraction_failure_rate": 0.5229357798165137,
+        "hallucination_rate": 0.042505592841163314,
+        "skipped_undecided": 0,
+        "unclear": 20
+      },
+      "macro_f1": 0.6317234023230154,
+      "hard": {
+        "documents": 40,
+        "micro": {
+          "precision": 0.5148514851485149,
+          "recall": 0.48598130841121495,
+          "f1": 0.5,
+          "tp": 52,
+          "fp": 49,
+          "fn": 55,
+          "tn": 341,
+          "fp_hallucinated": 12,
+          "fp_wrong": 37,
+          "support": 107,
+          "absent_decisions": 353,
+          "kacirma": 18,
+          "yanlis_cikarim": 37,
+          "halusinasyon": 12,
+          "extraction_failure_rate": 0.514018691588785,
+          "hallucination_rate": 0.0339943342776204,
+          "skipped_undecided": 0,
+          "unclear": 20
+        },
+        "macro_f1": 0.639798963125849
+      },
+      "ci_micro_f1": {
+        "point": 0.47706422018348627,
+        "low": 0.4072332421340629,
+        "high": 0.5355685893604304,
+        "width": 0.12833534722636747,
+        "confidence": 0.95,
+        "n_resamples": 1000,
+        "n_units": 48,
+        "seed": 42,
+        "method": "percentile",
+        "unit": "document"
+      }
+    },
+    {
+      "config": "llm",
+      "available": false,
+      "reason": "LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1)."
+    },
+    {
+      "config": "hibrit",
+      "available": false,
+      "reason": "LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1)."
+    },
+    {
+      "config": "hibrit-verify",
+      "available": false,
+      "reason": "LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1)."
+    }
+  ],
+  "comparisons": [],
+  "notes": [
+    "`llm` ÖLÇÜLMEDİ: LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1).",
+    "`hibrit` ÖLÇÜLMEDİ: LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1).",
+    "`hibrit-verify` ÖLÇÜLMEDİ: LLM backend kapalı (offline). Bu konfig ÖLÇÜLMEDİ — sahte bir 'hibrit = kural' satırı üretmemek için atlandı. Ölçmek için: LLM_BACKEND=vllm|ollama (ve tercihen LLM_STRICT=1)."
+  ]
+}

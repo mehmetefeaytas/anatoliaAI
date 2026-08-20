@@ -1,6 +1,89 @@
 # Ablasyon: kural-only vs LLM-only vs hibrit
 
-**Durum:** ✅ **koşuldu** (envanter T-014, T-018, T-044)
+**Durum:** ✅ **iki kez koşuldu.** 5 Ağustos'ta 1 zor belgeyle, 20 Ağustos'ta
+**40 zor belgeyle** — ikinci koşum ilk raporun kendi açık bıraktığı soruyu
+kapatıyor.
+
+---
+
+## 20 Ağustos 2026 koşumu — zor vaka sorusu KAPANDI
+
+5 Ağustos raporu şu sınırı kendi içinde yazıyordu:
+
+> Hibrit özellikle ZOR vakalarda kazanır → ❌ Ölçülemedi — gold'da yalnız
+> **1** zor belge var
+
+`gold.v2`'de bugün **40** zor belge var. Soru ilk kez anlamlı ölçüldü ve
+cevap ilk koşumla aynı yönde, ama artık zor alt kümede de geçerli.
+
+### Koşum künyesi
+
+| | |
+|---|---|
+| ölçülen commit | `0728bc44` — dört konfigin **DÖRDÜ DE** aynı commit, çalışma ağacı temiz |
+| gold | `gold.v2.json`, sha `e38a5276…` — dört koşumda **aynı** |
+| gold hacmi | 48 kayıt, **40 zor** |
+| LLM | Ollama · `qwen2.5:7b-instruct` (Apache-2.0) · CPU |
+| katı mod | `LLM_STRICT=1` — arka uç düşerse sessizce kural-only'ye inmez, patlar |
+| LLM sağlığı | **384 çağrı, 384 başarılı**: parse hatası 0, HTTP hatası 0, şema ihlali 0, onarım 0 |
+
+`LLM sağlığı` satırı bu raporun en önemli tek satırıdır: düşük F1 **teknik bir
+arızadan gelmiyor.** Model çağrıldı, geçerli JSON döndürdü, hiç onarım
+gerekmedi — ve yine kaybetti. "LLM kötü çünkü bozuktu" savunması bu ölçümde
+kapalıdır.
+
+### Tablo (eşleştirici `tolerant`, manşet ölçüt)
+
+| konfig | F1 (tümü) | F1 (**zor**, 40 belge) | makro-F1 | halüsinasyon |
+|---|---|---|---|---|
+| **kural** | **0,477** | **0,500** | **0,632** | **0,043** |
+| llm | 0,255 | 0,249 | 0,259 | 0,058 |
+| hibrit | 0,440 | 0,452 | 0,548 | 0,103 |
+| hibrit-verify | 0,367 | 0,376 | 0,539 | 0,098 |
+
+Üç şey birden okunuyor:
+
+1. **Kural katmanı her ölçütte önde** — tüm vakalarda da, zor vakalarda da.
+2. **Hibrit halüsinasyonu 2,4 KATINA çıkarıyor** (0,043 → 0,103). Alan bileşik
+   avantaj skorunda ikinci en yüksek ağırlığa sahip olduğu için (bkz.
+   `comparison/compare.py`), uydurulmuş bir değer doğrudan "En Avantajlı"
+   sıralamasına girer. Yani hibridin bedeli yalnız F1 değil, **kullanıcıya
+   yanlış bilgi verme oranı**.
+3. **`hibrit-verify` hibritten de kötü** (0,367 < 0,440). Doğrulama katmanı
+   zararı azaltmıyor, artırıyor — sebebi §7b'de: güven skoru kalibre değil,
+   yani "düşük güvenli olanı ele" kuralı doğru değerleri de eliyor.
+
+### McNemar (eşleşmiş çiftler, 556 ortak karar)
+
+| karşılaştırma | b (kural ✓ / öteki ✗) | c (kural ✗ / öteki ✓) | p | karar |
+|---|---:|---:|---|---|
+| kural vs llm | **51** | 22 | 0,00105 | kural üstün, **anlamlı** |
+| kural vs hibrit | **27** | 6 | 0,00050 | kural üstün, **anlamlı** |
+| kural vs hibrit-verify | **35** | 6 | 0,0000123 | kural üstün, **anlamlı** |
+
+Üç karşılaştırmada da `b > c` ve `p < 0,05`. Yani fark örneklem gürültüsü
+değil: LLM katmanı kural katmanını **hiçbir konfigde** geçmiyor ve bu sonuç
+istatistiksel olarak dayanıklı.
+
+### Bu tablo ne KANITLAMIYOR
+
+* **"LLM işe yaramaz" demiyor.** Ölçülen şey tek bir 7B modelin CPU'da, bu
+  korpusta, bu şemayla verdiği sonuçtur. Daha büyük bir model farklı sonuç
+  verebilir; `colab/03_kappa.py` ve `colab/02_ablasyon.py` bu tekrarı
+  `qwen3:32b` ile koşmak için var.
+* **"Kural katmanı yeterli" demiyor.** Kuralın kendi F1'i 0,477 ve bu düşük;
+  tablo kuralın iyi olduğunu değil, LLM'in onu geçemediğini gösteriyor.
+* **Dört koşum tek süreçte değil, dört ayrı süreçte yapıldı.** Aynı commit ve
+  aynı gold sha'sı ile hizalandılar (künyede yazılı), ama `eval.ablation`'ın
+  tek koşumda ürettiği tabloyla birebir aynı yordam değil. Farkın kaynağı bir
+  hatadır ve düzeltildi: `colab/02_ablasyon.py` `eval.ablation`'ı zorunlu
+  `--gold` argümanı olmadan çağırıyordu ve o adım her koşumda sessizce
+  düşüyordu.
+
+---
+
+## 5 Ağustos 2026 koşumu (ilk tur)
+
 **Ölçüm tarihi:** 2026-08-05
 **Ölçülen commit:** `4117601f76cc6ff63455fb01f26ade9636eb5315` — **çalışma ağacı temiz**
 **Ham çıktı:** `eval/reports/20260804-215206` (strict), `eval/reports/20260804-215208` (tolerant)

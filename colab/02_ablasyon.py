@@ -198,7 +198,18 @@ def eval_kos() -> list[str]:
         if kod != 0:
             print(f"  ⚠️  {konfig} düştü — ablasyon eksik kolla koşacak")
     print("\n=== ablasyon (McNemar dahil) ===")
-    _kos([sys.executable, "-u", "-m", "eval.ablation"], cwd=app)
+    # `--gold` ZORUNLU argümandır ve eksikti: bu adım her koşumda
+    # `error: the following arguments are required: --gold` ile sessizce
+    # düşüyordu. Dört eval koşumu başarıyla tamamlanıyor, ardından
+    # karşılaştırma tablosu hiç üretilmiyordu — yani betiğin varlık sebebi
+    # olan tek artefakt eksik kalıyordu (ölçüldü: 2026-08-20).
+    #
+    # `LLM_STRICT` ve `LLM_BACKEND` de ortamda kalmak ZORUNDA: `eval.ablation`
+    # kolları KENDİ koşumunda ölçüyor, mevcut rapor dizinlerinden okumuyor.
+    # Env taşınmazsa LLM kolları "ÖLÇÜLMEDİ (backend kapalı)" diye atlanır ve
+    # tablo yalnız kural satırıyla üretilir.
+    _kos([sys.executable, "-u", "-m", "eval.ablation", "--gold", GOLD],
+         cwd=app, env={**os.environ, "LLM_STRICT": "1"})
     return dizinler
 
 
