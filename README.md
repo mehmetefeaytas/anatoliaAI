@@ -174,6 +174,7 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026
 | Reddetme kararı doğruluğu | 30/30 = 1,000 | *(aynı komut)* |
 | Güvenlik seti | 29/30 = 0,97 · aşırı red 0/6 | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
 | Anotatör uyumu — **v2 turu** | **Cohen κ 0,714** (192 çift, ikinci etiketleyici LLM — "notla kabul") | `python -m scripts.ikinci_etiketleyici kappa` |
+| Anotatör uyumu — **İNSAN turu** | κ (İNSAN) = **0,716** (aynı 16 kayıt, ikinci etiketleyici bir İNSAN; LLM turuyla fark **0,002** → LLM varlık kararında geçerli vekildi, değer uyumunda değil: 0,423 ↔ 0,750) | `python -m scripts.ikinci_etiketleyici kappa --girdi data/gold/review/ikinci-tur-insan.jsonl` |
 | Anotatör uyumu — round0 | Fleiss κ 0,302 · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
 | Anotatör uyumu — round1 | Cohen κ 0,274 (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
 | Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
@@ -238,7 +239,7 @@ kanıtlanmasını"* istiyordu. Tersi ölçüldü ve rapor **ölçüldüğü gibi
 
 **4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** Round0: 4 anotatör, 260
 ortak satır, 0 boş hücre, Fleiss κ 0,302. Round1: 2 anotatör, 141 ortak karar,
-Cohen κ 0,274. **v2 turu: Cohen κ 0,714** (192 çift, ikinci etiketleyici bir
+Cohen κ 0,274. **v2 turu: Cohen κ 0,714** · insan turunda κ (İNSAN) = **0,716** (192 çift, ikinci etiketleyici bir
 LLM). Eşiği anotasyon başlamadan ilan etmiştik (`ANNOTATION_GUIDE.md` §7) ve
 ilan edileni uyguladık: round0/round1'de κ < 0,67 olduğu için zorunlu hakemlik
 ve kılavuz revizyonu; v2 turunda 0,67 ≤ κ < 0,80 bandına düştüğü için "notla
