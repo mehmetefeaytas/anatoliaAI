@@ -288,7 +288,8 @@ def micro_f1_yapisal_of(docs: Sequence[DocScore]) -> float:
     return micro(yapisal_kesit(aggregate(docs))).f1()
 
 
-def esik_ihlalleri(table: dict[str, Counts], esikler: dict) -> list[str]:
+def esik_ihlalleri(table: dict[str, Counts], esikler: dict,
+                   kalem_table: dict[str, Counts] | None = None) -> list[str]:
     """Eşik dosyasına göre GERİLEME listesi; boş liste = kapı açık.
 
     ## Neden bu kapı var (plan G1.5)
@@ -303,6 +304,27 @@ def esik_ihlalleri(table: dict[str, Counts], esikler: dict) -> list[str]:
     halüsinasyon oranının ÜST sınırı. Sonuncusu ters yönlüdür: halüsinasyon
     ARTARSA kapı kapanır, çünkü bu projede uydurmak kaçırmaktan pahalıdır
     (CLAUDE.md §19).
+
+    ## `alanlar_kalem` — niçin ikinci bir alan sözlüğü var (20 Ağu 2026)
+
+    `alanlar` İKİLİ ölçütle bakar: tahmin kümesi gold kümesine birebir eşit
+    değilse o alan o belgede sıfırdır. Serbest metin LİSTE alanlarında bu
+    ölçüt yapısal olarak bozuktur — beş koşuldan dördü doğru çıkarılsa bile
+    sonuç TP=0/FP=1/FN=1 olur. Bu, bugünden ÖNCE `eval/matchers.py`'de
+    ölçülüp yazılmıştı; yeni bir keşif değil.
+
+    Ölçülen sonucu: `kampanya_kosullari` alanında kural katmanı 20 Ağustos'ta
+    iyileştirildiğinde round1 tabanında İKİLİ F1 0,847 -> 0,143 düştü ama
+    KALEM F1 0,409 -> 0,429 YÜKSELDİ. Yani motor özde kötüleşmedi; kalemleri
+    farklı bölüyor ve tümü-ya-hiç ölçütü bunu tamamen kayıp sayıyor.
+
+    Bu yüzden bir alanın kapısı `alanlar_kalem`e taşınabilir. Taşıma
+    KURAL DEĞİL İSTİSNADIR ve iki koşulu vardır:
+      1. Alan serbest metin listesi olmalı (`TEXT_LIST_FIELDS`).
+      2. Gerekçe eşik dosyasında YAZILI olmalı — hangi sayı düştü, hangi sayı
+         yükseldi, hangi belge bunu belgeliyor.
+    İkili sayı GİZLENMEZ: raporlarda yayımlanmaya devam eder, yalnız o alan
+    için CI'ı kırma yetkisi kalem ölçütüne devredilir.
     """
     tol = float(esikler.get("tolerans", 0.0))
     ihlaller: list[str] = []
@@ -318,6 +340,24 @@ def esik_ihlalleri(table: dict[str, Counts], esikler: dict) -> list[str]:
         if f1 < float(asgari) - tol:
             ihlaller.append(
                 f"{alan}: F1 {f1:.3f} < eşik {float(asgari):.3f} "
+                f"(tolerans {tol})")
+
+    for alan, asgari in sorted(esikler.get("alanlar_kalem", {}).items()):
+        if kalem_table is None:
+            ihlaller.append(
+                f"{alan}: `alanlar_kalem` eşiği var ama kalem tablosu "
+                f"verilmedi (çağrı yeri güncellenmeli)")
+            continue
+        c = kalem_table.get(alan)
+        if c is None:
+            ihlaller.append(
+                f"{alan}: `alanlar_kalem`de var ama kalem ölçümünde YOK "
+                f"(alan liste alanı olmaktan çıktı mı?)")
+            continue
+        f1 = c.f1()
+        if f1 < float(asgari) - tol:
+            ihlaller.append(
+                f"{alan} (KALEM): F1 {f1:.3f} < eşik {float(asgari):.3f} "
                 f"(tolerans {tol})")
 
     asgari_yapisal = esikler.get("mikro_yapisal")
@@ -1178,7 +1218,8 @@ def main(argv: list[str] | None = None) -> int:
                   f"bu koşumda yok ({', '.join(matcher_names)}). "
                   f"`--matcher {istenen}` ile koşun.", file=sys.stderr)
             return 2
-        kapi_ihlalleri = esik_ihlalleri(hedef.table, esikler)
+        kapi_ihlalleri = esik_ihlalleri(hedef.table, esikler,
+                                        kalem_table=hedef.item_table)
         print(f"\n=== REGRESYON KAPISI ({esik_yolu}) ===")
         if kapi_ihlalleri:
             print(f"KAPALI — {len(kapi_ihlalleri)} gerileme:")

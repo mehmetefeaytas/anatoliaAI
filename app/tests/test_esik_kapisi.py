@@ -121,3 +121,63 @@ class TestKapiMantigi(unittest.TestCase):
 
 if __name__ == "__main__":                                # pragma: no cover
     unittest.main()
+
+
+class TestKalemDuzeyiKapi(unittest.TestCase):
+    """`alanlar_kalem` — liste alanları için ikinci kapı (20 Ağu 2026).
+
+    ## Neden bu sınıf var
+
+    `alanlar` İKİLİ ölçütle bakar ve serbest metin listelerinde bu ölçüt
+    yapısal olarak bozuktur: beş koşuldan dördü doğru çıkarılsa bile sonuç
+    TP=0/FP=1/FN=1. `kampanya_kosullari` alanında ölçüldü — ikili F1 0,000
+    iken 137 kalemin 78'i doğruydu.
+
+    Kapı bu yüzden ikinci bir sözlük tanıyor. **Bu sınıfın asıl işi kapının
+    GERÇEKTEN ateşlediğini kanıtlamaktır.** Bugün bir kez, var görünen ama
+    hiçbir şey denetlemeyen bir kapı yüzünden sessiz sapma yaşandı; aynı
+    hatanın burada tekrarlanmaması için her kapı ayrı ayrı kilitlenir.
+    """
+
+    ESIK = {"tolerans": 0.01, "alanlar_kalem": {"kampanya_kosullari": 0.50}}
+
+    def test_KAPI_1_kalem_esigi_altinda_KAPANIR(self):
+        kalem = {"kampanya_kosullari": _c(tp=1, fp=4, fn=4)}   # F1 = 0,200
+        ihlaller = esik_ihlalleri({}, self.ESIK, kalem_table=kalem)
+        self.assertEqual(len(ihlaller), 1, ihlaller)
+        self.assertIn("KALEM", ihlaller[0])
+        self.assertIn("kampanya_kosullari", ihlaller[0])
+
+    def test_KAPI_2_kalem_esigi_uzerinde_GECER(self):
+        kalem = {"kampanya_kosullari": _c(tp=8, fp=1, fn=1)}   # F1 = 0,889
+        self.assertEqual(esik_ihlalleri({}, self.ESIK, kalem_table=kalem), [])
+
+    def test_KAPI_3_kalem_tablosu_verilmezse_SESSIZ_GECMEZ(self):
+        """Çağrı yeri güncellenmezse kapı sessizce açık kalmamalı."""
+        ihlaller = esik_ihlalleri({}, self.ESIK)
+        self.assertEqual(len(ihlaller), 1, ihlaller)
+        self.assertIn("kalem tablosu", ihlaller[0])
+
+    def test_KAPI_4_alan_liste_olmaktan_cikarsa_FARK_EDILIR(self):
+        ihlaller = esik_ihlalleri({}, self.ESIK, kalem_table={"baska": _c(tp=1)})
+        self.assertEqual(len(ihlaller), 1, ihlaller)
+        self.assertIn("kalem ölçümünde YOK", ihlaller[0])
+
+    def test_ikili_ve_kalem_kapilari_BIRLIKTE_calisir(self):
+        esik = {"tolerans": 0.01,
+                "alanlar": {"vade_ay": 0.90},
+                "alanlar_kalem": {"kampanya_kosullari": 0.50}}
+        ihlaller = esik_ihlalleri(
+            {"vade_ay": _c(tp=1, fp=1, fn=1)},                 # 0,500 < 0,90
+            esik,
+            kalem_table={"kampanya_kosullari": _c(tp=1, fp=4, fn=4)})  # 0,200
+        self.assertEqual(len(ihlaller), 2, ihlaller)
+
+    def test_YAYIMLANAN_esik_dosyalari_kalem_anahtarini_TASIYOR(self):
+        """Gerçek eşik dosyaları bu turda kalem kapısına bağlandı."""
+        for ad in ("eval/esikler.json", "eval/esikler-round1.json"):
+            with self.subTest(dosya=ad):
+                yol = Path(__file__).resolve().parents[1] / ad
+                d = json.loads(yol.read_text(encoding="utf-8"))
+                self.assertIn("alanlar_kalem", d)
+                self.assertIn("kampanya_kosullari", d["alanlar_kalem"])

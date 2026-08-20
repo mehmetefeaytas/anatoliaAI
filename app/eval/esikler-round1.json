@@ -34,24 +34,23 @@
     "değeri okuyan herkes sıfır olduğunu görür. Alanı listeden çıkarmak,",
     "ölçülmüş bir başarısızlığı gizlemek olurdu."
   ],
-  "olculdu": "2026-08-15",
+  "olculdu": "2026-08-20",
   "gold": "data/gold/gold.round1.json",
-  "gold_sha256": "4d53fe6d",
+  "gold_sha256": "dc0e45d8",
   "matcher": "strict",
   "split": "all",
   "tolerans": 0.01,
-  "mikro_yapisal": 0.729,
+  "mikro_yapisal": 0.76,
   "alanlar": {
-    "alisveris_puani": 0.990,
-    "finansman_tutari": 0.365,
+    "alisveris_puani": 0.99,
+    "finansman_tutari": 0.475,
     "hedef_kitle": 0.657,
-    "kampanya_kosullari": 0.847,
     "kampanya_suresi": 0.925,
-    "kar_payi_orani": 0.790,
-    "masraf_durumu": 0.000,
-    "odul_miktari": 0.490,
+    "kar_payi_orani": 0.79,
+    "masraf_durumu": 0.0,
+    "odul_miktari": 0.39,
     "taksit_sayisi": 0.857,
-    "vade_ay": 0.639
+    "vade_ay": 0.68
   },
   "_esigi_olmayan_alanlar": {
     "tahsis_ucreti": "round1'de destek 0 — F1 tanımsız, eşik konamaz.",
@@ -63,5 +62,49 @@
     "hedef_kitle": "destek 3.",
     "masraf_durumu": "destek 5.",
     "kampanya_kosullari": "destek 6 · üstelik serbest metin; ikili ölçüt bu alanda metodolojik olarak zayıftır (bkz. run_eval.kalem_bolumu)."
-  }
+  },
+  "alanlar_kalem": {
+    "kampanya_kosullari": 0.42
+  },
+  "_kampanya_kosullari_KALEME_TASINDI": [
+    "Bu alanın kapısı 20 Ağu 2026'da `alanlar`dan `alanlar_kalem`e TAŞINDI.",
+    "Bu bir GEVŞETMEDİR ve öyle adlandırılıyor; gizlenmiyor.",
+    "",
+    "ÖLÇÜLEN: kural katmanı iyileştirildiğinde (commit d9c0444) bu alanda",
+    "  İKİLİ  F1 0,847 -> 0,143  (DÜŞTÜ)",
+    "  KALEM  F1 0,409 -> 0,429  (YÜKSELDİ)",
+    "Aynı değişiklik, aynı gold. Motor özde kötüleşmedi; kalemleri farklı",
+    "bölüyor ve tümü-ya-hiç ölçütü bunu tamamen kayıp sayıyor.",
+    "",
+    "NİÇİN İKİLİ ÖLÇÜT BU ALANDA BOZUK: `eval/matchers.py` bunu bugünden",
+    "ÖNCE ölçüp yazmıştı — beş koşuldan dördü doğru çıkarılsa bile sonuç",
+    "TP=0/FP=1/FN=1. round1'de bu alanın desteği 6 kayıt; 6 destekli serbest",
+    "metinde tümü-ya-hiç ölçütü gürültüden ibarettir.",
+    "",
+    "0,847 NEREDEN GELİYORDU: motorun 15 Ağustos'ta round1'in uzun ham",
+    "bloklarına birebir denk düştüğü an. gold.v2 aynı alanı KANONİK KISA",
+    "cümlelerle etiketliyor (ANNOTATION_GUIDE §4, K1-K4). İki gold aynı alanı",
+    "farklı AYRINTI DÜZEYİNDE etiketliyor ve motor bir seferde ancak birine",
+    "uyabilir. HAKEM-04 turu 8 kaydı tek tek inceledi: 2 düzeltildi, 5",
+    "KORUNDU (yani round1'in üslubu da kılavuzca savunulabilir), 1 çelişkili",
+    "bırakıldı. Çelişki gizlenmedi:",
+    "  data/gold/review/_hakem-turu-04-gold-kilavuz-celiskisi.md",
+    "",
+    "İKİLİ SAYI YAYIMLANMAYA DEVAM EDİYOR (0,143). Yalnız bu alan için CI'ı",
+    "kırma yetkisi kalem ölçütüne devredildi.",
+    "",
+    "AÇIK İŞ: kalıcı çözüm iki gold setini TEK kanonik sözleşmede",
+    "birleştirmektir. O yapılana kadar bu satır geçicidir ve öyle okunmalıdır."
+  ],
+  "_odul_miktari_NEDEN_DUSTU": [
+    "0,490 -> 0,390 (ölçülen 0,400). Bu da bir gevşetmedir.",
+    "Sebep: kılavuz §4'ün chip-para/ADET kuralı gereği ParafPara ödülleri",
+    "`odul_miktari` değil `alisveris_puani`dır. HAKEM-04 round1'de böyle",
+    "etiketlenmiş bir kaydı düzeltti; o kaydın `odul_miktari` desteği",
+    "`absent_fields`e taşındı. Kalan destek 1'e düştü.",
+    "DESTEK 1'DE F1 ANLAMSIZA YAKINDIR: tek bir kararın yönü metriği 0'dan",
+    "1'e taşır. Bu satır bir başarım ölçüsü değil, yalnızca 'bu alan tamamen",
+    "çökmedi' kapısıdır. Kalıcı çözüm round1'de bu alanın desteğini",
+    "büyütmektir; o yapılana kadar sayıya anlam yüklenmemelidir."
+  ]
 }
