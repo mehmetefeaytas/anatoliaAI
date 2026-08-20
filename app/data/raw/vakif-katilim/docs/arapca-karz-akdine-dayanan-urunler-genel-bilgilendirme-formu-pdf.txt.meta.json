@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/karz-akdine-dayanan-urunler-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:38+00:00",
+  "content_hash": "391bb4391ab24a51c540d0927c7b79fe3ee6a1859a13f357284b582273d08ead",
+  "collection_method": "pdf",
+  "title": "karz akdine dayanan urunler genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 972771,
+  "text_chars": 4483,
+  "pdf_pages": 2
+}

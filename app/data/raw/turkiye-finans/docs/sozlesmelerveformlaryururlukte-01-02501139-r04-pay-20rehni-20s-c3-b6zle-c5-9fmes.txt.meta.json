@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02501139_R04_Pay%20Rehni%20S%C3%B6zle%C5%9Fmesi%20_Halka%20A%C3%A7%C4%B1k%20Olmayan%20A.%C5%9E.%20ve%20LTD.%20%C5%9Eirketler%20%C4%B0%C3%A7in.pdf",
+  "scraped_at": "2026-08-20T18:12:01+00:00",
+  "content_hash": "b52b84a540d4689ba4b08b05bfe43b318b4ef0e9ff212bfd18d25ba31f09e512",
+  "collection_method": "pdf",
+  "title": "01 02501139 R04 Pay Rehni Sözleşmesi  Halka Açık Olmayan A.Ş. ve LTD. Şirketler İçin",
+  "http_status": 200,
+  "raw_bytes": 586881,
+  "text_chars": 13071,
+  "pdf_pages": 7
+}

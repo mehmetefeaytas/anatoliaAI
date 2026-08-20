@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/eximbank-sevk-oncesi-hracat-finansmani-urunu-sticrar-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:37:38+00:00",
+  "content_hash": "22893ea95aa26156c75cba7c459bfe3a4c7a4841a4157312b541f5e7c3bc8d8b",
+  "collection_method": "pdf",
+  "title": "eximbank sevk oncesi hracat finansmani urunu sticrar genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1200662,
+  "text_chars": 6431,
+  "pdf_pages": 3
+}

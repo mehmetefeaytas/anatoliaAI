@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/ticari-kredi-taahhutnamesi-ve-beyani.pdf",
+  "scraped_at": "2026-08-20T18:34:13+00:00",
+  "content_hash": "8b9fef56636e57acea9c7ee92c7c287584bc2e35fcc351e81ea1fd043f75418a",
+  "collection_method": "pdf",
+  "title": "ticari kredi taahhutnamesi ve beyani",
+  "http_status": 200,
+  "raw_bytes": 514522,
+  "text_chars": 6744,
+  "pdf_pages": 2
+}

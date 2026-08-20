@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/gft-garantili-fon-transferi-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:39:28+00:00",
+  "content_hash": "9b1eb67f9b99db75d81885a79852061a80183070c0f93c57956593251098c1ee",
+  "collection_method": "pdf",
+  "title": "gft garantili fon transferi genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 973032,
+  "text_chars": 5986,
+  "pdf_pages": 2
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/kredi-karti-katilim-bankaciligi-formu.pdf",
+  "scraped_at": "2026-08-20T18:37:23+00:00",
+  "content_hash": "1691b3070d9ef83e0333c872930f43e5493d6b8230f384a42be644b5fda4db48",
+  "collection_method": "pdf",
+  "title": "kredi karti katilim bankaciligi formu",
+  "http_status": 200,
+  "raw_bytes": 1280623,
+  "text_chars": 6486,
+  "pdf_pages": 3
+}

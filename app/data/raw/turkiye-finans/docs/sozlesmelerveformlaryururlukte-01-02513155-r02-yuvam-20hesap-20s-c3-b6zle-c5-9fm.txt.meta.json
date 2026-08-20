@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02513155_R02_YUVAM%20Hesap%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:14:46+00:00",
+  "content_hash": "51c0310d5943a0cdcf19449937b0f1d55a100c4b56a9fefc369a52a508109a46",
+  "collection_method": "pdf",
+  "title": "01 02513155 R02 YUVAM Hesap Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 421209,
+  "text_chars": 6140,
+  "pdf_pages": 2
+}

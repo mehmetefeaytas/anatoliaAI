@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Pay%20Rehin%20S%C3%B6zle%C5%9Fmesi%20Kaydi%20Paylar%20Hisse%20Senetleri%20i%C3%A7in.pdf",
+  "scraped_at": "2026-08-20T18:11:46+00:00",
+  "content_hash": "f57a65154263f1668c2c7b806db254a7fe10c29915ef9ee652190af650b20746",
+  "collection_method": "pdf",
+  "title": "Pay Rehin Sözleşmesi Kaydi Paylar Hisse Senetleri için",
+  "http_status": 200,
+  "raw_bytes": 465202,
+  "text_chars": 44759,
+  "pdf_pages": 17
+}

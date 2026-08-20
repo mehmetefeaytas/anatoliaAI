@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Konforlu%20Hesap%20S%C3%B6zle%C5%9Fmesi%20ile%20Talep%20Formu_Barkotlu%20(003).pdf",
+  "scraped_at": "2026-08-20T18:09:31+00:00",
+  "content_hash": "67b0a6b6edd6e6379ee9e8916fbe3d03ee5373d8205c3f254fd22deefaefc29a",
+  "collection_method": "pdf",
+  "title": "Konforlu Hesap Sözleşmesi ile Talep Formu Barkotlu (003)",
+  "http_status": 200,
+  "raw_bytes": 300784,
+  "text_chars": 53550,
+  "pdf_pages": 27
+}

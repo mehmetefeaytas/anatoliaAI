@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02501088_R05_T%C3%BCketici%20%C4%B0%C5%9Flemleri%20%C4%B0%C3%A7in%20Kefalet%20ve%20Hesap%20Rehni%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:13:01+00:00",
+  "content_hash": "2f96976945ec93ee71d4047c35438166cea09f606868a687f031e2ff4dc273d1",
+  "collection_method": "pdf",
+  "title": "01 02501088 R05 Tüketici İşlemleri İçin Kefalet ve Hesap Rehni Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 290601,
+  "text_chars": 7920,
+  "pdf_pages": 5
+}

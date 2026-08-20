@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/eskr.pdf",
+  "scraped_at": "2026-08-20T18:32:52+00:00",
+  "content_hash": "1b27a77e42479c7d5be8c45a257d0f928924197b37e3255aece37935fd2c7823",
+  "collection_method": "pdf",
+  "title": "eskr",
+  "http_status": 200,
+  "raw_bytes": 75894,
+  "text_chars": 1641,
+  "pdf_pages": 1
+}

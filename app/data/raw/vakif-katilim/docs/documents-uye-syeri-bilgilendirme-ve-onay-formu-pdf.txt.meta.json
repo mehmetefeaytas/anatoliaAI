@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/uye-syeri-bilgilendirme-ve-onay-formu.pdf",
+  "scraped_at": "2026-08-20T18:32:48+00:00",
+  "content_hash": "7275cb073955b4546e6626fd2eba530cb357c71a83805a826ffbe7f9c06615f0",
+  "collection_method": "pdf",
+  "title": "uye syeri bilgilendirme ve onay formu",
+  "http_status": 200,
+  "raw_bytes": 119626,
+  "text_chars": 17314,
+  "pdf_pages": 5
+}

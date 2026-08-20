@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/musteri_acik-riza-metni.pdf",
+  "scraped_at": "2026-08-20T18:33:53+00:00",
+  "content_hash": "a613fc6c3abb839b78118c6d9a99bbda9da1c10b1a0d2117d81d38ad97348a82",
+  "collection_method": "pdf",
+  "title": "musteri acik riza metni",
+  "http_status": 200,
+  "raw_bytes": 408204,
+  "text_chars": 537,
+  "pdf_pages": 1
+}

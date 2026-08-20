@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/G%C3%BCvenli%20%C3%96deme%20Hizmeti%20%C3%87evrimi%C3%A7i%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:08:01+00:00",
+  "content_hash": "93cfadc362ace3fdc92fe569148b1f02e256fabb35fc7f2efd25653c61fd1cf6",
+  "collection_method": "pdf",
+  "title": "Güvenli Ödeme Hizmeti Çevrimiçi Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 810378,
+  "text_chars": 19315,
+  "pdf_pages": 6
+}

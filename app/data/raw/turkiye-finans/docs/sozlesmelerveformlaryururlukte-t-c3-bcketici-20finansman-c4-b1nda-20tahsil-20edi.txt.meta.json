@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCketici%20Finansman%C4%B1nda%20Tahsil%20Edilecek%20%C3%9Ccretlere%20%C4%B0li%C5%9Fkin%20Bilgilendirme%20Formu_Barkotlu%20(003).pdf",
+  "scraped_at": "2026-08-20T18:25:47+00:00",
+  "content_hash": "d94d34f8ad09faf9ed530bcd13c247cfe1a4d3f19385b6dd53344a6aa7c860e6",
+  "collection_method": "pdf",
+  "title": "Tüketici Finansmanında Tahsil Edilecek Ücretlere İlişkin Bilgilendirme Formu Barkotlu (003)",
+  "http_status": 200,
+  "raw_bytes": 929105,
+  "text_chars": 10433,
+  "pdf_pages": 8
+}

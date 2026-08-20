@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Ticari%20M%C3%BC%C5%9Fteriler%20%C4%B0%C3%A7in%20%C3%9Cr%C3%BCn%20Bazl%C4%B1%20%C3%9Ccret%20Bilgilendirme%20Formu%20Krediler%20D%C4%B1%C5%9F%20Ticaret%20Nakit%20Y%C3%B6netimi%20Ticari%20Kredi%20Kart%C4%B1%20%C3%9Ccretleri.pdf",
+  "scraped_at": "2026-08-20T18:25:17+00:00",
+  "content_hash": "715f427927eae1f0f48237c6db54b071ca333b73d6efcf334cad391a75ac8326",
+  "collection_method": "pdf",
+  "title": "Ticari Müşteriler İçin Ürün Bazlı Ücret Bilgilendirme Formu Krediler Dış Ticaret Nakit Yönetimi Ticari Kredi Kartı Ücretleri",
+  "http_status": 200,
+  "raw_bytes": 590170,
+  "text_chars": 20001,
+  "pdf_pages": 15
+}

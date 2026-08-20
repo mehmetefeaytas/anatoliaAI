@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/bankacilik-hizmetleri-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T18:30:38+00:00",
+  "content_hash": "5abb0c15cd0460fb35c4f906f7d8d0e7a160a2f0b4488736f691b9643595366e",
+  "collection_method": "pdf",
+  "title": "bankacilik hizmetleri sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 408721,
+  "text_chars": 121405,
+  "pdf_pages": 27
+}

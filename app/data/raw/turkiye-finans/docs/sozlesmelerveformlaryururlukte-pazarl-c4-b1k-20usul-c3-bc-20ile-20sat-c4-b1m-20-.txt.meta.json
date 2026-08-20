@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Pazarl%C4%B1k%20Usul%C3%BC%20ile%20Sat%C4%B1m%20(M%C3%BCsaveme)%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu%20(2).pdf",
+  "scraped_at": "2026-08-20T18:23:17+00:00",
+  "content_hash": "529ee56ceaa6240c0efb49bd991fd06b8e67c08c952a7223272f6d0b6b2e1173",
+  "collection_method": "pdf",
+  "title": "Pazarlık Usulü ile Satım (Müsaveme) Akdi Müşteri Bilgilendirme Formu (2)",
+  "http_status": 200,
+  "raw_bytes": 587022,
+  "text_chars": 4762,
+  "pdf_pages": 2
+}

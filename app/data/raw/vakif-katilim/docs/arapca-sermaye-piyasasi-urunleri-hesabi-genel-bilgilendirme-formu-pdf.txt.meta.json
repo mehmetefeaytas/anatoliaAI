@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/sermaye-piyasasi-urunleri-hesabi-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:39:53+00:00",
+  "content_hash": "d549b99c3d86a62072a46b807b63b20ac624906f42436b4b75ec214ba5c5ceb4",
+  "collection_method": "pdf",
+  "title": "sermaye piyasasi urunleri hesabi genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 955691,
+  "text_chars": 3275,
+  "pdf_pages": 2
+}

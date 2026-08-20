@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02503060_R02_Elektronik%20%C3%9Cr%C3%BCn%20Senedi%20Rehin%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:05:23+00:00",
+  "content_hash": "47dbd1cfbffa558559fd5d15c84ac16d2527410c1c8cbe4032f318008e5bb904",
+  "collection_method": "pdf",
+  "title": "01 02503060 R02 Elektronik Ürün Senedi Rehin Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 456206,
+  "text_chars": 35174,
+  "pdf_pages": 15
+}

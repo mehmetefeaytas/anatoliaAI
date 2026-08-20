@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Konut%20Kredisi_Ek%20S%C3%B6zle%C5%9Fme.pdf",
+  "scraped_at": "2026-08-20T18:10:31+00:00",
+  "content_hash": "6e3d1a371f21997272c93b9f5ed54f753861da9b786e0038f50a839304283fad",
+  "collection_method": "pdf",
+  "title": "Konut Kredisi Ek Sözleşme",
+  "http_status": 200,
+  "raw_bytes": 351317,
+  "text_chars": 4300,
+  "pdf_pages": 3
+}

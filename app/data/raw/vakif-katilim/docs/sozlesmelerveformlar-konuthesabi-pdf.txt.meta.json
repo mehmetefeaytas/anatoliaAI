@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/konuthesabi.pdf",
+  "scraped_at": "2026-08-20T18:35:38+00:00",
+  "content_hash": "49d7ce475480b67a98a1f1e5efa17b2039502234420a81524ced360f9f4a8961",
+  "collection_method": "pdf",
+  "title": "konuthesabi",
+  "http_status": 200,
+  "raw_bytes": 854041,
+  "text_chars": 7087,
+  "pdf_pages": 3
+}

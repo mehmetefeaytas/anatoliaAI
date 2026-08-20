@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/ozel-cari-hesap-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:39:43+00:00",
+  "content_hash": "b5c52f37cba85cd467e7cb380053623ff8584f91869ce804ea8df806e20760d4",
+  "collection_method": "pdf",
+  "title": "ozel cari hesap genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 949306,
+  "text_chars": 3370,
+  "pdf_pages": 2
+}

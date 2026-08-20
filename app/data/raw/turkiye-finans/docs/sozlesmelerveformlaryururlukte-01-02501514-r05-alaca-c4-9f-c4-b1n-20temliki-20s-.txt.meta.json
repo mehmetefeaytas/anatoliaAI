@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02501514_R05_Alaca%C4%9F%C4%B1n%20Temliki%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:01:50+00:00",
+  "content_hash": "e38ce47dd7b7796c44add8f4cb5f21802581a99e2cdf158780113d6d776d544e",
+  "collection_method": "pdf",
+  "title": "01 02501514 R05 Alacağın Temliki Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 373319,
+  "text_chars": 9243,
+  "pdf_pages": 5
+}

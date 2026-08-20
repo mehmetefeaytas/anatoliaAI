@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/karzararortakligibilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:34:58+00:00",
+  "content_hash": "f6e8a2a07aa03a32568cd3fe3092186de295475384d6b3de0f8631c648cbaf79",
+  "collection_method": "pdf",
+  "title": "karzararortakligibilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 422621,
+  "text_chars": 6410,
+  "pdf_pages": 3
+}

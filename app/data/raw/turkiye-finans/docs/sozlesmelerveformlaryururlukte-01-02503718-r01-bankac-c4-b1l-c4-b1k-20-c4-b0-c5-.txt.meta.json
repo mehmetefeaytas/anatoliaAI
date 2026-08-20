@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02503718_R01_Bankac%C4%B1l%C4%B1k%20%C4%B0%C5%9Flemleri%20S%C3%B6zle%C5%9Fmesi%20Bireysel%20Dijital%20N%C3%BCsha_Barkodlu.pdf",
+  "scraped_at": "2026-08-20T18:02:20+00:00",
+  "content_hash": "ddb479ef36f99108aed642d3258508632c75c08d30c69bcbd80b11887c745725",
+  "collection_method": "pdf",
+  "title": "01 02503718 R01 Bankacılık İşlemleri Sözleşmesi Bireysel Dijital Nüsha Barkodlu",
+  "http_status": 200,
+  "raw_bytes": 696590,
+  "text_chars": 115935,
+  "pdf_pages": 26
+}

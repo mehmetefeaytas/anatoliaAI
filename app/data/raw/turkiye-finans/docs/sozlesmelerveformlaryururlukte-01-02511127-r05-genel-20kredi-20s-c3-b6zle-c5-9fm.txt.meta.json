@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02511127_R05_Genel%20Kredi%20S%C3%B6zle%C5%9Fmesindeki%20Genel%20%C4%B0%C5%9Flem%20%C5%9Eartlar%C4%B1na%20%C4%B0li%C5%9Fkin%20Bilgilendirme%20Formu_TR.pdf",
+  "scraped_at": "2026-08-20T18:17:47+00:00",
+  "content_hash": "af74e7c0386d9e15dc239d3e97c939fe1d8b2ba18fa173427d7814167aed7840",
+  "collection_method": "pdf",
+  "title": "01 02511127 R05 Genel Kredi Sözleşmesindeki Genel İşlem Şartlarına İlişkin Bilgilendirme Formu TR",
+  "http_status": 200,
+  "raw_bytes": 540692,
+  "text_chars": 8440,
+  "pdf_pages": 4
+}

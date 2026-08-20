@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/exim-hracat-taahhutlu-doviz-finansmani-urunu-stisna-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:37:53+00:00",
+  "content_hash": "1ea30e6d1d124d6d0556bbc85f17249d4dfa63c194157719479dfc798248aafd",
+  "collection_method": "pdf",
+  "title": "exim hracat taahhutlu doviz finansmani urunu stisna genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1221207,
+  "text_chars": 7368,
+  "pdf_pages": 3
+}

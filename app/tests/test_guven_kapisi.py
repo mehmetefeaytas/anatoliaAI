@@ -297,9 +297,29 @@ class TestKorpusOlcumu(unittest.TestCase):
                          "meşru 'masrafsız' kayıtları kıyas dışı kaldı")
 
     def test_hesaplama_araci_sifirlarinin_TAMAMI_elenir(self):
-        """`finansman_tutari` sıfırları hesaplama aracı varsayılanıdır."""
+        """`finansman_tutari` sıfırları hesaplama aracı varsayılanıdır.
+
+        ## `assertGreater(len, 0)` KALDIRILDI — öncül geçersizleşti (2026-08-20)
+
+        Bu test "korpusta en az bir hesaplama-aracı sıfırı VAR ve hepsi güven
+        eşiğinin altında" diyordu. İkinci yarısı hâlâ geçerli; ilk yarısı
+        artık değil.
+
+        Sebep bir gerileme değil, **iyileşme**: rol ayrımı turu `extract_tutar`
+        içine "ücret bağlamındaki sıfır finansman tutarı değildir" korumasını
+        ekledi (`tutar.py`, `_UCRET_BAGLAMI_RE`). O sıfırlar artık **çıkarım
+        anında** eleniyor, dolayısıyla güven kapısına hiç ulaşmıyorlar ve
+        korpusta sayıları 0.
+
+        Güven eşiğiyle elemek ikinci savunma hattıydı; birinci hat kurulduğu
+        için ikincisinin iş yükü sıfıra düştü. "En az bir tane olmalı"
+        koşulunu korumak, birinci hattın çalışmasını hata saymak olurdu.
+
+        Asıl iddia (varsa hepsi eşiğin altında) BOZULMADAN duruyor: bir gün
+        yeni bir hesaplama aracı biçimi birinci hattı aşarsa, bu satır onu
+        yine yakalar.
+        """
         guvenler = self._sifirlar("finansman_tutari")
-        self.assertGreater(len(guvenler), 0)
         self.assertEqual([], [g for g in guvenler if g >= ASGARI_GUVEN],
                          "hesaplama aracı varsayılanı kıyasta kaldı")
 

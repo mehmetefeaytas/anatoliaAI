@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/finansalkiralamasozlesmesi.pdf",
+  "scraped_at": "2026-08-20T18:32:28+00:00",
+  "content_hash": "02cdac786c195ca5dfbcf2ddd11a230574d25855f9c85affe30d34de24c27921",
+  "collection_method": "pdf",
+  "title": "finansalkiralamasozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 324340,
+  "text_chars": 57816,
+  "pdf_pages": 23
+}

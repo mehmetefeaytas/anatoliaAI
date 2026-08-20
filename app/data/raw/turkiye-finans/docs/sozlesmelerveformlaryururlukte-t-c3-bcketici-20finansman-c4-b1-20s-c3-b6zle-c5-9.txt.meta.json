@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCketici%20Finansman%C4%B1%20S%C3%B6zle%C5%9Fmesi%20ve%20Ekleri_R10.pdf",
+  "scraped_at": "2026-08-20T18:12:46+00:00",
+  "content_hash": "3ac0aabda1420ca0df05c6da74a63f445704c444d009ae7559492598c428b5f0",
+  "collection_method": "pdf",
+  "title": "Tüketici Finansmanı Sözleşmesi ve Ekleri R10",
+  "http_status": 200,
+  "raw_bytes": 772328,
+  "text_chars": 63701,
+  "pdf_pages": 21
+}

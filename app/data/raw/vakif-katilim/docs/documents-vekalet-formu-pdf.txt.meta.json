@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/vekalet-formu.pdf",
+  "scraped_at": "2026-08-20T18:33:28+00:00",
+  "content_hash": "9002d54859f3d6d1eda88cd9e658011877b7cbf58d01b86f448629035aeb2a25",
+  "collection_method": "pdf",
+  "title": "vekalet formu",
+  "http_status": 200,
+  "raw_bytes": 116991,
+  "text_chars": 2675,
+  "pdf_pages": 2
+}

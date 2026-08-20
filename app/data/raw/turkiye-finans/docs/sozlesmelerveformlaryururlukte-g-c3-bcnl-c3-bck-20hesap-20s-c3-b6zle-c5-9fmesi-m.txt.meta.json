@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/G%C3%BCnl%C3%BCk%20Hesap%20S%C3%B6zle%C5%9Fmesi_Mesafeli_Barkodlu.pdf",
+  "scraped_at": "2026-08-20T18:07:46+00:00",
+  "content_hash": "91b83f395d2b6cfa01c713b0843ec0536344e7a3ea94dc40a6b3061f226ddbd7",
+  "collection_method": "pdf",
+  "title": "Günlük Hesap Sözleşmesi Mesafeli Barkodlu",
+  "http_status": 200,
+  "raw_bytes": 251796,
+  "text_chars": 16263,
+  "pdf_pages": 5
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/%C3%87apraz%20Kur%20De%C4%9Fi%C5%9Fimi%20%C4%B0%C5%9Flemlerine%20(CCS)%20ili%C5%9Fkin%20S%C3%B6zle%C5%9Fme_%C3%96zel%20H%C3%BCk%C3%BCmler%20Eki(3).pdf",
+  "scraped_at": "2026-08-20T18:04:38+00:00",
+  "content_hash": "9639be69ba740c1f557986dcb084a50ef710defe577f92207f52ba7ea4e2b73b",
+  "collection_method": "pdf",
+  "title": "Çapraz Kur Değişimi İşlemlerine (CCS) ilişkin Sözleşme Özel Hükümler Eki(3)",
+  "http_status": 200,
+  "raw_bytes": 415816,
+  "text_chars": 3424,
+  "pdf_pages": 2
+}

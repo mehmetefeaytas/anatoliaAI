@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02511552_R05_Kat%C4%B1l%C4%B1m%20Bankac%C4%B1l%C4%B1%C4%9F%C4%B1%20Vekalet%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:20:17+00:00",
+  "content_hash": "7267f4da60205e26ea7ba7602327da3edabd5716ea577614b40721d871d88242",
+  "collection_method": "pdf",
+  "title": "01 02511552 R05 Katılım Bankacılığı Vekalet Formu",
+  "http_status": 200,
+  "raw_bytes": 602932,
+  "text_chars": 2130,
+  "pdf_pages": 1
+}

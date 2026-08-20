@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/G%C3%BCnl%C3%BCk%20Hesap%20S%C3%B6zle%C5%9Fmesi%20%C3%96n%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:18:02+00:00",
+  "content_hash": "fe9d4a8802cdd64407ed38b21b81a0f98071b9773cbe0be29abc5fc831237360",
+  "collection_method": "pdf",
+  "title": "Günlük Hesap Sözleşmesi Ön Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 381463,
+  "text_chars": 15619,
+  "pdf_pages": 5
+}

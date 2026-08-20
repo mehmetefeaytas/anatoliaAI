@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/arac-ve-htiyac-sozlesme-oncesi-bilgilendirme-form(1).pdf",
+  "scraped_at": "2026-08-20T18:33:12+00:00",
+  "content_hash": "868940c38e20ae849c6f974d105dae621ac73e3bda9bc93bbdb62e0459a3b5c7",
+  "collection_method": "pdf",
+  "title": "arac ve htiyac sozlesme oncesi bilgilendirme form(1)",
+  "http_status": 200,
+  "raw_bytes": 170875,
+  "text_chars": 15112,
+  "pdf_pages": 7
+}

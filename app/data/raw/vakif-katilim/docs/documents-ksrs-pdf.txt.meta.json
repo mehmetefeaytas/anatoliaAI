@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/ksrs.pdf",
+  "scraped_at": "2026-08-20T18:30:27+00:00",
+  "content_hash": "8efc6b2054234ab25a5bdc4448c00fe2a0e39a35c2b9e5c2ab04d43f521e8850",
+  "collection_method": "pdf",
+  "title": "ksrs",
+  "http_status": 200,
+  "raw_bytes": 148980,
+  "text_chars": 28461,
+  "pdf_pages": 10
+}

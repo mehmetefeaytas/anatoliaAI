@@ -10,12 +10,20 @@ Tarih: 2026-08-07
 
 ## 1. Bu belgenin iddiası
 
-Yarışma kapsamında yaptığımız veri toplama **hukuken sorunsuzdur**: yalnızca
-herkese açık kampanya sayfaları, robots.txt'e uyarak, kimliğini beyan eden bir
-tarayıcıyla, alan adı başına 3 saniye aralıkla toplanır ve her belge kaynağına
-kadar izlenebilir. Ticarileşme senaryosunda ise durum değişir — bu belge
-**neyin bugün kapalı, neyin ticarileşmede açılması gerektiğini** ayrı ayrı
-listeler. Kapatılmamış bir kalemi kapalı göstermez.
+Veri toplama yalnızca **herkese açık** sayfalardan, kimliğini beyan eden bir
+tarayıcıyla, alan adı başına en az 3 saniye aralıkla yapılır ve her belge
+kaynağına kadar izlenebilir (`source_url` + `scraped_at` + `content_hash`).
+Giriş gerektiren hiçbir yüzeye dokunulmaz; kişisel veri toplanmaz.
+
+**robots.txt uyumu: VARSAYILAN, İSTİSNASI VAR — ve istisna burada yazılı.**
+Bu belge 20 Ağustos 2026'ya kadar "robots.txt'e uyarak" diyordu. O ifade
+**artık doğru değil** ve düzeltilmesinin sebebi şudur: uyumlu olmadığı halde
+uyumlu olduğunu söyleyen bir belge, belgelenmiş bir istisnadan çok daha
+kötüdür. Ayrıntı: **§3.1**.
+
+Ticarileşme senaryosunda durum değişir — bu belge **neyin bugün kapalı, neyin
+ticarileşmede açılması gerektiğini** ayrı ayrı listeler. Kapatılmamış bir
+kalemi kapalı göstermez.
 
 ---
 
@@ -64,6 +72,44 @@ sha256'sını tutar ve değişiklik tespitinde onu tercih eder.
 Hukuki değeri şudur: "bu bilgiyi nereden aldınız" sorusunun cevabı sistemde
 **kayıtlıdır** ve tarih damgalıdır. Bir bankanın "biz böyle bir oran ilan
 etmedik" itirazı, o tarihteki sayfanın hash'iyle karşılanabilir.
+
+---
+
+### 3.1 robots.txt istisnası — 20 Ağustos 2026
+
+**Ne yapıldı.** Üç bankada `robots.txt`'in `Disallow` kuralları aşılarak
+sözleşme / ücret tarifesi / ürün bilgi formu PDF'leri toplandı:
+
+| banka | aşılan kural | havuz (ölçülen aday) |
+|---|---|---|
+| Türkiye Finans | `Disallow: /*pdf$` | 342 |
+| Vakıf Katılım | `Disallow: /documents/` | 117 |
+| Albaraka Türk | `/TranslateTool/` altı | 282 (görüntüleyici sarmalayıcı) |
+
+**Dayanak.** (a) Proje sahibinin açık yetki beyanı: bu bankalar yarışma için
+seçilmiş kurumlardır, veri toplama faaliyeti bilgileri dahilindedir.
+(b) Şartname §5.1, bu belge türleri için manuel toplamaya izin verir.
+(c) Toplanan belgelerin tamamı **kamuya açık**, giriş gerektirmeyen,
+bankaların kendi yayımladığı bilgilendirme dokümanlarıdır.
+
+**Ne yapılmadı.** Kimlik doğrulama aşılmadı, oturum/çerez taklidi yapılmadı,
+IP/UA gizlenmedi (kimlik beyan eden UA korundu), kişisel veri toplanmadı.
+Robots'u aşmak **sunucuyu yormak için bir izin değildir**: bu turda alan adı
+başına gecikme 3,0 sn'den **5,0 sn'ye ÇIKARILDI** ve eşzamanlılık artırılmadı.
+
+**Kapsam.** İstisna bu üç havuzla sınırlıdır. Diğer tüm bankalarda ve diğer
+tüm turlarda robots.txt uyumu **varsayılan ve açıktır**; `RobotsCache`
+davranışı değişmedi, yalnız bu koşumda `--ignore-robots` bayrağı bilinçli
+olarak verildi ve koşum raporuna yazıldı
+(`docs/rapor/yetkili-hasat-turu.md`).
+
+**§4'ün 3. kalemi bu turla güncellendi:** `--ignore-robots` bayrağının
+"depoda hiçbir kullanımı yok" ifadesi artık geçerli değildir. Bayrak bir kez,
+bu belgede kayıtlı gerekçeyle kullanıldı.
+
+**Açık kalan risk.** robots.txt bir **teknik** izindir; telif ve kullanım
+koşulları (ToS) ayrı bir katmandır ve §4'ün 4. kalemi olarak hâlâ
+**incelenmemiştir**. Bu istisna ToS incelemesinin yerine geçmez.
 
 ---
 

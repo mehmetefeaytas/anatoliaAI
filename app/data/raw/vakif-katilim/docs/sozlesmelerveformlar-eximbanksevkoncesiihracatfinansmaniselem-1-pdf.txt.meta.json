@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/eximbanksevkoncesiihracatfinansmaniselem(1).pdf",
+  "scraped_at": "2026-08-20T18:36:33+00:00",
+  "content_hash": "5d26e9761585bb959b1c5c9ee7596df084bd2ad705778e1a461abedc91fcb6ad",
+  "collection_method": "pdf",
+  "title": "eximbanksevkoncesiihracatfinansmaniselem(1)",
+  "http_status": 200,
+  "raw_bytes": 425024,
+  "text_chars": 7715,
+  "pdf_pages": 4
+}

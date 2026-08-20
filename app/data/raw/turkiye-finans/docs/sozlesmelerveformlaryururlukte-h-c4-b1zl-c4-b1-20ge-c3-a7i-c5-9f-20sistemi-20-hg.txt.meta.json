@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/H%C4%B1zl%C4%B1%20Ge%C3%A7i%C5%9F%20Sistemi%20(HGS)%20Etiketi-Kart%C4%B1%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:08:16+00:00",
+  "content_hash": "c6aaeb95f0f693d2115b0ff771f52190d69f3f36e52ef69ba481272bb43b38ef",
+  "collection_method": "pdf",
+  "title": "Hızlı Geçiş Sistemi (HGS) Etiketi Kartı Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 489722,
+  "text_chars": 7875,
+  "pdf_pages": 3
+}

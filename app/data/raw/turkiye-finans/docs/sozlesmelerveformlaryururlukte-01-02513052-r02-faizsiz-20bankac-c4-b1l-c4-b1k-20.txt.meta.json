@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02513052_R02_Faizsiz%20Bankac%C4%B1l%C4%B1k%20%C4%B0lke%20Ve%20Standartlar%C4%B1%20Kapsam%C4%B1nda%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu%20_Fon%20Kulland%C4%B1r%C4%B1m-%20M%C3%BC%C5%9F%C3%A2reke.pdf",
+  "scraped_at": "2026-08-20T18:16:31+00:00",
+  "content_hash": "27d31826f8b5ffd88e3b390386bfea1a9c374ec2c6555a42072e8f457c022373",
+  "collection_method": "pdf",
+  "title": "01 02513052 R02 Faizsiz Bankacılık İlke Ve Standartları Kapsamında Müşteri Bilgilendirme Formu  Fon Kullandırım  Müşâreke",
+  "http_status": 200,
+  "raw_bytes": 566656,
+  "text_chars": 4246,
+  "pdf_pages": 2
+}

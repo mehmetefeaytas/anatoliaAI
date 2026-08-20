@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/IntgI.pdf",
+  "scraped_at": "2026-08-20T18:30:47+00:00",
+  "content_hash": "a81982b6d9bac49745dc006fb1fe9e9acaff86dbe3dcb14040b9260beab1eb10",
+  "collection_method": "pdf",
+  "title": "IntgI",
+  "http_status": 200,
+  "raw_bytes": 166745,
+  "text_chars": 15769,
+  "pdf_pages": 7
+}

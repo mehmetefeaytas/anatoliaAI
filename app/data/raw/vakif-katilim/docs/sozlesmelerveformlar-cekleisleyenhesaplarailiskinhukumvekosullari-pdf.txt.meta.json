@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/cekleisleyenhesaplarailiskinhukumvekosullari.pdf",
+  "scraped_at": "2026-08-20T18:32:08+00:00",
+  "content_hash": "53d2ee8e4ef1233f0668dc04b9e5377ceaa39a199faf223cc6bb73707b5972f7",
+  "collection_method": "pdf",
+  "title": "cekleisleyenhesaplarailiskinhukumvekosullari",
+  "http_status": 200,
+  "raw_bytes": 156549,
+  "text_chars": 6403,
+  "pdf_pages": 2
+}

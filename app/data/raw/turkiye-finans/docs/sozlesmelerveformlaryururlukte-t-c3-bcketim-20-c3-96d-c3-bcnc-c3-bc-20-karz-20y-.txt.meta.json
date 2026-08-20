@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCketim%20%C3%96d%C3%BCnc%C3%BC%20(Karz)%20Y%C3%B6ntemi%20ile%20T%C3%BCketici%20Finansman%C4%B1%20Talep%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:26:02+00:00",
+  "content_hash": "dcb6829e7fa16e24a11a4aa400ae08b9c14042709a4e73b5904db350118bf86c",
+  "collection_method": "pdf",
+  "title": "Tüketim Ödüncü (Karz) Yöntemi ile Tüketici Finansmanı Talep Formu",
+  "http_status": 200,
+  "raw_bytes": 427330,
+  "text_chars": 11868,
+  "pdf_pages": 4
+}

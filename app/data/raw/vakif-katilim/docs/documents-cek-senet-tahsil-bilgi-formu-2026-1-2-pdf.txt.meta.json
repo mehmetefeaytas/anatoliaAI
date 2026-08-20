@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/cek-senet-tahsil-bilgi-formu-2026-1(2).pdf",
+  "scraped_at": "2026-08-20T18:32:57+00:00",
+  "content_hash": "43bec39a56443f2270916cf5f952b3e6b52678d19c35b678b7a60c854e38d16c",
+  "collection_method": "pdf",
+  "title": "cek senet tahsil bilgi formu 2026 1(2)",
+  "http_status": 200,
+  "raw_bytes": 147852,
+  "text_chars": 3542,
+  "pdf_pages": 2
+}

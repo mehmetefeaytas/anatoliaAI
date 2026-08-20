@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/musavemeakdinedayananurunlergenelbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:34:43+00:00",
+  "content_hash": "d4dd62edb7c79be9ec7d9fde97598331eee95887960ec3482566c9377d2bfafd",
+  "collection_method": "pdf",
+  "title": "musavemeakdinedayananurunlergenelbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 370379,
+  "text_chars": 7355,
+  "pdf_pages": 4
+}

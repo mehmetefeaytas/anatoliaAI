@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/care-finansal-kiralama-akdine-dayanan-urunler-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:08+00:00",
+  "content_hash": "7c70b560e4ef19369dcd1763f91c9498f5541a99c5a00f4cbb0fd50809f199d4",
+  "collection_method": "pdf",
+  "title": "care finansal kiralama akdine dayanan urunler genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1146298,
+  "text_chars": 6957,
+  "pdf_pages": 3
+}

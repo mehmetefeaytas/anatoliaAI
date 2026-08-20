@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/bireysel-finansman-talebi-onay-ve-bilgilendirme.pdf",
+  "scraped_at": "2026-08-20T18:33:33+00:00",
+  "content_hash": "6d56785fe171c24ca53350bb5dd63c47325c403b81fb190137e1d675c82f126c",
+  "collection_method": "pdf",
+  "title": "bireysel finansman talebi onay ve bilgilendirme",
+  "http_status": 200,
+  "raw_bytes": 196752,
+  "text_chars": 17533,
+  "pdf_pages": 9
+}

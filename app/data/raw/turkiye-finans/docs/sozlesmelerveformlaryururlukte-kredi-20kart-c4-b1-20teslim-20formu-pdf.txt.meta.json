@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Kredi%20Kart%C4%B1%20Teslim%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:21:47+00:00",
+  "content_hash": "d7582f19523038f975a59714b840fbb885c2bd1c7827f23bbe2da011d0dc9f01",
+  "collection_method": "pdf",
+  "title": "Kredi Kartı Teslim Formu",
+  "http_status": 200,
+  "raw_bytes": 542662,
+  "text_chars": 4841,
+  "pdf_pages": 3
+}

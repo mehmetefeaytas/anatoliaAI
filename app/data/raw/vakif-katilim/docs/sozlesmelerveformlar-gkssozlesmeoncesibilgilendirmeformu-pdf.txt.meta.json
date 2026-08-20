@@ -1,0 +1,13 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/gkssozlesmeoncesibilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:37:09+00:00",
+  "content_hash": "fed90df721b65945c5f2081290927c651090ddc5f80b7e152ac8b6e246d57177",
+  "collection_method": "pdf",
+  "title": "gkssozlesmeoncesibilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 5443510,
+  "text_chars": 30,
+  "pdf_pages": 3,
+  "extraction_note": "metin katmani yok/zayif (30 krkt) — taranmis olabilir"
+}

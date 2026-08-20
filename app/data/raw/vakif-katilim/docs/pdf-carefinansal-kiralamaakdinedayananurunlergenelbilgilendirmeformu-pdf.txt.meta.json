@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/carefinansal-kiralamaakdinedayananurunlergenelbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:35:48+00:00",
+  "content_hash": "33a0314a309899bf0c5e83a92eb23eeaa180a663f4d0ee3d327982a952a87285",
+  "collection_method": "pdf",
+  "title": "carefinansal kiralamaakdinedayananurunlergenelbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 402657,
+  "text_chars": 7871,
+  "pdf_pages": 4
+}

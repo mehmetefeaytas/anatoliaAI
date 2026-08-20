@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCrkiye%20Finans%20Kat%C4%B1l%C4%B1m%20A%C5%9E%20Tezgah%C3%BCst%C3%BC%20T%C3%BCrev%20Ara%C3%A7lar%20%C3%87er%C3%A7eve%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:13:16+00:00",
+  "content_hash": "d3bf1f40c0df880f0b9bf217d27bf3cd8f93178e8f034fe3e862769fee54e7de",
+  "collection_method": "pdf",
+  "title": "Türkiye Finans Katılım AŞ Tezgahüstü Türev Araçlar Çerçeve Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 775096,
+  "text_chars": 62884,
+  "pdf_pages": 13
+}

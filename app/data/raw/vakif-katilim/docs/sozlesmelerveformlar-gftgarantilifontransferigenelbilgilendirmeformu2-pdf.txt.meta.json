@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/gftgarantilifontransferigenelbilgilendirmeformu2.pdf",
+  "scraped_at": "2026-08-20T18:36:43+00:00",
+  "content_hash": "bd71fc3334fc2e6bf1cbbbdcb4522f9941468030a7922bfbf263fcb85e7bd42d",
+  "collection_method": "pdf",
+  "title": "gftgarantilifontransferigenelbilgilendirmeformu2",
+  "http_status": 200,
+  "raw_bytes": 356897,
+  "text_chars": 6461,
+  "pdf_pages": 3
+}

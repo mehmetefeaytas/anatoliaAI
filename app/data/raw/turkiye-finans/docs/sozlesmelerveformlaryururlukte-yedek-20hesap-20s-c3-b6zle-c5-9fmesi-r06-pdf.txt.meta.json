@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Yedek%20Hesap%20S%C3%B6zle%C5%9Fmesi_R06.pdf",
+  "scraped_at": "2026-08-20T18:14:31+00:00",
+  "content_hash": "dbaa4247ff342924a2b5dac8f616144ad91beb6fffc88f8063f5492511557f7d",
+  "collection_method": "pdf",
+  "title": "Yedek Hesap Sözleşmesi R06",
+  "http_status": 200,
+  "raw_bytes": 611894,
+  "text_chars": 34197,
+  "pdf_pages": 11
+}

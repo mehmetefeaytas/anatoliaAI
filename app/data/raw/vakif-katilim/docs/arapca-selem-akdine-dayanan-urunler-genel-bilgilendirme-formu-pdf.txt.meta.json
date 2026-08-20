@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/selem-akdine-dayanan-urunler-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:28+00:00",
+  "content_hash": "5ab4b513202e848e2a8dc635f3452d8cd5238d21923d574d89aef99a4321a8ce",
+  "collection_method": "pdf",
+  "title": "selem akdine dayanan urunler genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1091786,
+  "text_chars": 6927,
+  "pdf_pages": 3
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/turkce-arapca-genel-kredi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T18:37:19+00:00",
+  "content_hash": "906f3f251467fd99e01759ea7f4988634fbeb7a2c5bc1a19f3c288d96f6b68b3",
+  "collection_method": "pdf",
+  "title": "turkce arapca genel kredi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 1038077,
+  "text_chars": 290177,
+  "pdf_pages": 50
+}

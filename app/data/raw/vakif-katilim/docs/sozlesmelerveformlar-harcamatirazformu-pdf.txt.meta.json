@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/harcamatirazformu.pdf",
+  "scraped_at": "2026-08-20T18:36:58+00:00",
+  "content_hash": "8ed13cd8c52548742525328f750f4f81b7f424b56adb446dc72b2fe92d4580aa",
+  "collection_method": "pdf",
+  "title": "harcamatirazformu",
+  "http_status": 200,
+  "raw_bytes": 465455,
+  "text_chars": 1913,
+  "pdf_pages": 1
+}

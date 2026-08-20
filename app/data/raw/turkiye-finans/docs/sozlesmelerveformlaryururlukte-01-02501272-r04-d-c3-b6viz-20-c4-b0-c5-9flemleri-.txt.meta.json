@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02501272_R04_D%C3%B6viz%20%C4%B0%C5%9Flemleri%20Platformu%20S%C3%B6zle%C5%9Fmesindeki%20G%C4%B0%C5%9E%20ve%20Risk%20Bildirimi%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:05:08+00:00",
+  "content_hash": "b2f2edf908cf0fa9a13f0dc009361b57284dcfd24d4cc7e1217d40717af00e01",
+  "collection_method": "pdf",
+  "title": "01 02501272 R04 Döviz İşlemleri Platformu Sözleşmesindeki GİŞ ve Risk Bildirimi Formu",
+  "http_status": 200,
+  "raw_bytes": 648981,
+  "text_chars": 39001,
+  "pdf_pages": 15
+}

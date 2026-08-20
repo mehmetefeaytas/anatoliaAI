@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/yurticiteminatmektububilgilendirmeformu(1).pdf",
+  "scraped_at": "2026-08-20T18:34:28+00:00",
+  "content_hash": "8f247710058b01f7bc2f01bcb63375c7f1ee67fae476da1033fb5be9afd3fe97",
+  "collection_method": "pdf",
+  "title": "yurticiteminatmektububilgilendirmeformu(1)",
+  "http_status": 200,
+  "raw_bytes": 416050,
+  "text_chars": 5878,
+  "pdf_pages": 3
+}

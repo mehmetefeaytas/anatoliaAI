@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCrkiye%20Finans%20ve%20TFKB%20Varl%C4%B1k%20Kira%20Sertifikas%C4%B1%20Fon%20Kullan%C4%B1c%C4%B1lar%C4%B1na%20Y%C3%B6nelik%20Ki%C5%9Fisel%20Verilerin%20Korunmas%C4%B1%20Hakk%C4%B1nda%20Ayd%C4%B1nlatma%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:27:17+00:00",
+  "content_hash": "1c6c027eeeebcc5dcfaf152d5095857b8472d9087483ffe02040a7e69ddc1d1f",
+  "collection_method": "pdf",
+  "title": "Türkiye Finans ve TFKB Varlık Kira Sertifikası Fon Kullanıcılarına Yönelik Kişisel Verilerin Korunması Hakkında Aydınlatma Formu",
+  "http_status": 200,
+  "raw_bytes": 577838,
+  "text_chars": 8750,
+  "pdf_pages": 5
+}

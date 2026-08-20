@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Vekalet%20-%20Yat%C4%B1r%C4%B1m%20Vek%C3%A2leti%20_Fon%20Kulland%C4%B1rma_%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:27:32+00:00",
+  "content_hash": "ac4fd3695ab8d2aec17a646feeb7b0a1c3d60554780774a7e8dd213feed98e35",
+  "collection_method": "pdf",
+  "title": "Vekalet   Yatırım Vekâleti  Fon Kullandırma  Akdi Müşteri Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 610457,
+  "text_chars": 4506,
+  "pdf_pages": 2
+}

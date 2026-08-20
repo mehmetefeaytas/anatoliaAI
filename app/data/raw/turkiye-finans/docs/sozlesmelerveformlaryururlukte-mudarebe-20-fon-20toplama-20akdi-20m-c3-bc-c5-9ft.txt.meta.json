@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Mudarebe%20(Fon%20Toplama)%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:22:02+00:00",
+  "content_hash": "a5bbb850ef676dd43eb800be6cd40e063a52975801e533c2812260fb91d1b1d8",
+  "collection_method": "pdf",
+  "title": "Mudarebe (Fon Toplama) Akdi Müşteri Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 716432,
+  "text_chars": 4638,
+  "pdf_pages": 2
+}

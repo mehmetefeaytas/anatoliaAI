@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/fon-kullandirim-kar-zarar-ortakligi-yatirimi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:39:08+00:00",
+  "content_hash": "e1a55adbab7042281ecbc257719137c6b120b6e1db5b3624a5b128f1bd16d78f",
+  "collection_method": "pdf",
+  "title": "fon kullandirim kar zarar ortakligi yatirimi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1121574,
+  "text_chars": 5648,
+  "pdf_pages": 2
+}

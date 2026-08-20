@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/bko.pdf",
+  "scraped_at": "2026-08-20T18:30:52+00:00",
+  "content_hash": "d732f3c60eb22bd26decca3641095b40fbf90ec1e145bc7cbb1b774d04b8908c",
+  "collection_method": "pdf",
+  "title": "bko",
+  "http_status": 200,
+  "raw_bytes": 112004,
+  "text_chars": 10882,
+  "pdf_pages": 5
+}

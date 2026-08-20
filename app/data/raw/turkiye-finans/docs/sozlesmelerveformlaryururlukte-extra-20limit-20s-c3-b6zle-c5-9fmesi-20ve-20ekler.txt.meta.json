@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Extra%20Limit%20S%C3%B6zle%C5%9Fmesi%20ve%20Ekleri_Barkotlu.pdf",
+  "scraped_at": "2026-08-20T18:05:53+00:00",
+  "content_hash": "3d5e0c2c69268b7ac92ceb836af481b50bea34dbe0f7750b8d5a8b1ad68e25f7",
+  "collection_method": "pdf",
+  "title": "Extra Limit Sözleşmesi ve Ekleri Barkotlu",
+  "http_status": 200,
+  "raw_bytes": 870832,
+  "text_chars": 57373,
+  "pdf_pages": 21
+}

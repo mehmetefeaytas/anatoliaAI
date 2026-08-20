@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/dbs.pdf",
+  "scraped_at": "2026-08-20T18:36:48+00:00",
+  "content_hash": "325f4821820044df7345ee372fa1d0d5e1a0bc3f6401d753a7d5ed3a55e73022",
+  "collection_method": "pdf",
+  "title": "dbs",
+  "http_status": 200,
+  "raw_bytes": 571441,
+  "text_chars": 7405,
+  "pdf_pages": 4
+}

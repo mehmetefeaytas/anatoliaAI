@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Bireysel%20Masraf%20Paketi%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:03:38+00:00",
+  "content_hash": "bada2f1651a9b3ff70f7cce729f5b688be1311c611e688360c7ebd35e0d12006",
+  "collection_method": "pdf",
+  "title": "Bireysel Masraf Paketi Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 735829,
+  "text_chars": 11866,
+  "pdf_pages": 5
+}

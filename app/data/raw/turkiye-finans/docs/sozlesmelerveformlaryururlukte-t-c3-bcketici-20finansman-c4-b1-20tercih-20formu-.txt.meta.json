@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCketici%20Finansman%C4%B1%20Tercih%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:25:32+00:00",
+  "content_hash": "94a40e3129417c0cc7b34a142bde6926abf970ad2f3d79154fa059e1e898af5b",
+  "collection_method": "pdf",
+  "title": "Tüketici Finansmanı Tercih Formu",
+  "http_status": 200,
+  "raw_bytes": 681035,
+  "text_chars": 888,
+  "pdf_pages": 1
+}

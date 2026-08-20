@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Cari%20Kat%C4%B1lma%20Hesab%C4%B1%20Rehin%20S%C3%B6zle%C5%9Fmesi%20(2).pdf",
+  "scraped_at": "2026-08-20T18:04:23+00:00",
+  "content_hash": "0aee61e68d7c3935009ce813c5c03dfe587d90d92d4488cff9a141f1de219af1",
+  "collection_method": "pdf",
+  "title": "Cari Katılma Hesabı Rehin Sözleşmesi (2)",
+  "http_status": 200,
+  "raw_bytes": 635230,
+  "text_chars": 5558,
+  "pdf_pages": 3
+}

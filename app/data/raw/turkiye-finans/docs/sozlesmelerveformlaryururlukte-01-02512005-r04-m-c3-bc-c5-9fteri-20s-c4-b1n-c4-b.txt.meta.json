@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02512005_R04_M%C3%BC%C5%9Fteri%20S%C4%B1n%C4%B1fland%C4%B1rma%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:22:32+00:00",
+  "content_hash": "9bd523edbf2f1e8154c56552dad9a9ba8c3944abb006c86361432f11a66be546",
+  "collection_method": "pdf",
+  "title": "01 02512005 R04 Müşteri Sınıflandırma Formu",
+  "http_status": 200,
+  "raw_bytes": 347870,
+  "text_chars": 4584,
+  "pdf_pages": 3
+}

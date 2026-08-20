@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/murabahaakdinedayanangenelbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:34:48+00:00",
+  "content_hash": "bde39dcba0c14adfdacae6f8c9624ab8cf276637825c5fb7ac0b019b73420125",
+  "collection_method": "pdf",
+  "title": "murabahaakdinedayanangenelbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 547419,
+  "text_chars": 8997,
+  "pdf_pages": 4
+}

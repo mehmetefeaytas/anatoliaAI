@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/T%C3%BCrkiye%20Finans%20Kat%C4%B1l%C4%B1m%20Bankas%C4%B1%20Finansman%20G%C3%BCvence%20Sigortas%C4%B1%20Sa%C4%9Fl%C4%B1k%20Beyan%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:26:47+00:00",
+  "content_hash": "a7fd2ef6e1556fc6fa66fb07e740dd32a54d08de67c877efe02ef810a6645175",
+  "collection_method": "pdf",
+  "title": "Türkiye Finans Katılım Bankası Finansman Güvence Sigortası Sağlık Beyan Formu",
+  "http_status": 200,
+  "raw_bytes": 508412,
+  "text_chars": 1822,
+  "pdf_pages": 1
+}

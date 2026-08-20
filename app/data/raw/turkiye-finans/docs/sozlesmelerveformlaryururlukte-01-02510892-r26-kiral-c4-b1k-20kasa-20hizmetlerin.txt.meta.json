@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02510892_R26_Kiral%C4%B1k%20Kasa%20Hizmetlerine%20%C4%B0li%C5%9Fkin%20S%C3%B6zle%C5%9Fme%20%C4%B0le%20Bilgi%20Ve%20Talep%20Formu.p.pdf",
+  "scraped_at": "2026-08-20T18:20:31+00:00",
+  "content_hash": "bab20cefe062b64280fe7023fa35a72defcd3ecaef71d3ad7b2e316a026650be",
+  "collection_method": "pdf",
+  "title": "01 02510892 R26 Kiralık Kasa Hizmetlerine İlişkin Sözleşme İle Bilgi Ve Talep Formu.p",
+  "http_status": 200,
+  "raw_bytes": 392345,
+  "text_chars": 12076,
+  "pdf_pages": 7
+}

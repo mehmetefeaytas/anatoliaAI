@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/selemakdinedayananurunlergenelbilgilendirmeformu(1).pdf",
+  "scraped_at": "2026-08-20T18:34:38+00:00",
+  "content_hash": "c0c6839165bcf80c6ae890c3678988154afa9b21bff874c3221926b8d22b130f",
+  "collection_method": "pdf",
+  "title": "selemakdinedayananurunlergenelbilgilendirmeformu(1)",
+  "http_status": 200,
+  "raw_bytes": 394691,
+  "text_chars": 7419,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Yetkili%20ve%20S%C4%B1n%C4%B1rl%C4%B1%20Yetkili%20%20M%C3%BCessese%20%C4%B0zni%20Alan%20Yabanc%C4%B1%20Para%20Al%C4%B1m%20Sat%C4%B1m%20Hesaplar%C4%B1na%20ili%C5%9Fkin%20Beyan%20ve%20Taahh%C3%BCt%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:29:47+00:00",
+  "content_hash": "75978a07cc471929d84f04b899aea6048a6216ca979245494aac3baef8cbd593",
+  "collection_method": "pdf",
+  "title": "Yetkili ve Sınırlı Yetkili  Müessese İzni Alan Yabancı Para Alım Satım Hesaplarına ilişkin Beyan ve Taahhüt Formu",
+  "http_status": 200,
+  "raw_bytes": 344166,
+  "text_chars": 2706,
+  "pdf_pages": 1
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Fiziki%20K%C3%BCl%C3%A7e%20Alt%C4%B1n%20Teslim%20Esaslar%C4%B1na%20%C4%B0li%C5%9Fkin%20S%C3%B6zle%C5%9Fme.pdf",
+  "scraped_at": "2026-08-20T18:06:23+00:00",
+  "content_hash": "141a3d4afe20a4c2911c9a9a849f0bdfbcf37e1e15016df71b646f2d43e30736",
+  "collection_method": "pdf",
+  "title": "Fiziki Külçe Altın Teslim Esaslarına İlişkin Sözleşme",
+  "http_status": 200,
+  "raw_bytes": 364398,
+  "text_chars": 9781,
+  "pdf_pages": 3
+}

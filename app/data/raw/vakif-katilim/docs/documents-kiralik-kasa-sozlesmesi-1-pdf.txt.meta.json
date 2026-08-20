@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/kiralik-kasa-sozlesmesi(1).pdf",
+  "scraped_at": "2026-08-20T18:31:47+00:00",
+  "content_hash": "6c978956f4084da4cc69216b03ff183faf363d007c5f663a171968f5c5ae4d4a",
+  "collection_method": "pdf",
+  "title": "kiralik kasa sozlesmesi(1)",
+  "http_status": 200,
+  "raw_bytes": 117017,
+  "text_chars": 17331,
+  "pdf_pages": 6
+}

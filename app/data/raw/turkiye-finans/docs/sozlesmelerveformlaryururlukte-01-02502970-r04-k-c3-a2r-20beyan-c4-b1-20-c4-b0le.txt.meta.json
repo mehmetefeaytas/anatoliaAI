@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02502970_R04_K%C3%A2r%20Beyan%C4%B1%20%C4%B0le%20Sat%C4%B1m%20_Murabaha_%20S%C3%B6zle%C5%9Fmesi_T%C3%BCzel.pdf",
+  "scraped_at": "2026-08-20T18:09:01+00:00",
+  "content_hash": "4996503081812ce7237179f858f5a79333ee901d515fcc5d7da3187efa76daa1",
+  "collection_method": "pdf",
+  "title": "01 02502970 R04 Kâr Beyanı İle Satım  Murabaha  Sözleşmesi Tüzel",
+  "http_status": 200,
+  "raw_bytes": 547456,
+  "text_chars": 7390,
+  "pdf_pages": 7
+}

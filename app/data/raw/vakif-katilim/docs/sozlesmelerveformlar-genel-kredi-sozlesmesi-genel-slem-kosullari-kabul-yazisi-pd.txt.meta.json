@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/genel-kredi-sozlesmesi-genel-slem-kosullari-kabul-yazisi.pdf",
+  "scraped_at": "2026-08-20T18:32:32+00:00",
+  "content_hash": "dfd1b87ac39d780a6aea22223cb98e961c98d4b6449c1578f7232ad2c473fdfe",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi genel slem kosullari kabul yazisi",
+  "http_status": 200,
+  "raw_bytes": 100422,
+  "text_chars": 1051,
+  "pdf_pages": 1
+}

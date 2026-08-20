@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02513054_R02_%C4%B0care%20_Kiralama_%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu%20-%20Finansal%20Kiralama.pdf",
+  "scraped_at": "2026-08-20T18:19:02+00:00",
+  "content_hash": "16571991ec5d159ef97a0e173be251107e178d4421986a9b33773ebf075ec406",
+  "collection_method": "pdf",
+  "title": "01 02513054 R02 İcare  Kiralama  Akdi Müşteri Bilgilendirme Formu   Finansal Kiralama",
+  "http_status": 200,
+  "raw_bytes": 564804,
+  "text_chars": 5785,
+  "pdf_pages": 2
+}

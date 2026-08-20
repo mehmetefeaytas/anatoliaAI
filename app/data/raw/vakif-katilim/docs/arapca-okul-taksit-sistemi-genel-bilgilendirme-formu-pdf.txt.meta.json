@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/okul-taksit-sistemi-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:39:48+00:00",
+  "content_hash": "0e175dba3602ad5fa1fdb87cd65f508d4f26dc5351045a0306bccd1010602999",
+  "collection_method": "pdf",
+  "title": "okul taksit sistemi genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 858613,
+  "text_chars": 4251,
+  "pdf_pages": 2
+}

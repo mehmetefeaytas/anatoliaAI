@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Gemi%20%C4%B0potek%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:06:38+00:00",
+  "content_hash": "7d56d07a5ab4cd8806b462576e61081c7452f6abdec391ab1be68a0e2e61fd43",
+  "collection_method": "pdf",
+  "title": "Gemi İpotek Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 346235,
+  "text_chars": 8147,
+  "pdf_pages": 3
+}

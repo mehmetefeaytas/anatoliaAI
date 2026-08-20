@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/ceyizhesabi.pdf",
+  "scraped_at": "2026-08-20T18:35:43+00:00",
+  "content_hash": "519f7e9f1151b492cc21725c675b9ab24df8683839386c97d865c1e62c0425bc",
+  "collection_method": "pdf",
+  "title": "ceyizhesabi",
+  "http_status": 200,
+  "raw_bytes": 856611,
+  "text_chars": 6874,
+  "pdf_pages": 3
+}

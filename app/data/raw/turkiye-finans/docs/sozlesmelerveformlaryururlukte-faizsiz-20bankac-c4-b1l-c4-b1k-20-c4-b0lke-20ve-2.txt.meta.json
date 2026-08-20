@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Faizsiz%20Bankac%C4%B1l%C4%B1k%20%C4%B0lke%20Ve%20Standartlar%C4%B1%20Kapsam%C4%B1nda%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu%20(Fon%20Kulland%C4%B1r%C4%B1m_Karz-%C4%B1%20Hasen)%20(1).pdf",
+  "scraped_at": "2026-08-20T18:16:46+00:00",
+  "content_hash": "907be95d2cf491bed5973ee60bdd274361071273fa462a8348d02c0dfebbd3f7",
+  "collection_method": "pdf",
+  "title": "Faizsiz Bankacılık İlke Ve Standartları Kapsamında Müşteri Bilgilendirme Formu (Fon Kullandırım Karz ı Hasen) (1)",
+  "http_status": 200,
+  "raw_bytes": 618519,
+  "text_chars": 4072,
+  "pdf_pages": 2
+}

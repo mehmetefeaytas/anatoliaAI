@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Yat%C4%B1r%C4%B1m%20Vek%C3%A2leti%20%C3%87er%C3%A7eve%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:13:46+00:00",
+  "content_hash": "6bc0e16ab574496ab7ddd17b0bf23187ad595fd1a24aa883f3ef4600d0ea2f71",
+  "collection_method": "pdf",
+  "title": "Yatırım Vekâleti Çerçeve Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 491862,
+  "text_chars": 4963,
+  "pdf_pages": 5
+}

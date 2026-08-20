@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/karzakdigenelbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:35:03+00:00",
+  "content_hash": "317080d6847ef8f7a8e7d6192ed758053dc09cc58412c6078d36c4ab11424922",
+  "collection_method": "pdf",
+  "title": "karzakdigenelbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 304687,
+  "text_chars": 5097,
+  "pdf_pages": 3
+}

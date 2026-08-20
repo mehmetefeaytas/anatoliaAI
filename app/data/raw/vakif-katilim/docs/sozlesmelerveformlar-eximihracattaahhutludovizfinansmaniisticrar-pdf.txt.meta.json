@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/eximihracattaahhutludovizfinansmaniisticrar.pdf",
+  "scraped_at": "2026-08-20T18:35:58+00:00",
+  "content_hash": "422a12c9924d7c5fe2478b6c15343b952d3489a6f791d0760824bc9ab861b5fe",
+  "collection_method": "pdf",
+  "title": "eximihracattaahhutludovizfinansmaniisticrar",
+  "http_status": 200,
+  "raw_bytes": 542920,
+  "text_chars": 8300,
+  "pdf_pages": 4
+}

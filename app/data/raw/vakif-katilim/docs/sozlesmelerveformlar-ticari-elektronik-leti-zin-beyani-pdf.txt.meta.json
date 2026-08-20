@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/ticari-elektronik-leti-zin-beyani.pdf",
+  "scraped_at": "2026-08-20T18:33:47+00:00",
+  "content_hash": "596d07f61aeb002b620e0bf4e2c64b466b98bd93393be3f1decb92406f41cd6e",
+  "collection_method": "pdf",
+  "title": "ticari elektronik leti zin beyani",
+  "http_status": 200,
+  "raw_bytes": 36869,
+  "text_chars": 374,
+  "pdf_pages": 1
+}

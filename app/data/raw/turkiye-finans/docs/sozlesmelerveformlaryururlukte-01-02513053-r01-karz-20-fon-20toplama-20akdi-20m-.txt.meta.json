@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02513053_R01_Karz%20_Fon%20Toplama_%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:20:02+00:00",
+  "content_hash": "672ce431fb6cd511a2022a4bfbba665fcd55ef933740089a49651f7aea230dde",
+  "collection_method": "pdf",
+  "title": "01 02513053 R01 Karz  Fon Toplama  Akdi Müşteri Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 567037,
+  "text_chars": 2288,
+  "pdf_pages": 1
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/akreditif-urunu-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:23+00:00",
+  "content_hash": "92afd4e8fd32bebb55f0cfab7ea408f2cf398b23239498c2ed1338aed8410caf",
+  "collection_method": "pdf",
+  "title": "akreditif urunu genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1018169,
+  "text_chars": 4860,
+  "pdf_pages": 2
+}

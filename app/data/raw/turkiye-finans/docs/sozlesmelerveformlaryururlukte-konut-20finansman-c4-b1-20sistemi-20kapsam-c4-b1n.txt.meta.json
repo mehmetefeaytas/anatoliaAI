@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Konut%20Finansman%C4%B1%20Sistemi%20Kapsam%C4%B1nda%20%C3%9Ccretlere%20%C4%B0li%C5%9Fkin%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:21:32+00:00",
+  "content_hash": "84cb4f1364335e6ba427991e9c24d16807a4b087f2051219bfd22977903edba4",
+  "collection_method": "pdf",
+  "title": "Konut Finansmanı Sistemi Kapsamında Ücretlere İlişkin Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 1004149,
+  "text_chars": 7451,
+  "pdf_pages": 5
+}

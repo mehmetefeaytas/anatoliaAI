@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02501134_R01_%C4%B0potek%20%C5%9Eartlar%C4%B1%20Metni_YAYIM_SON_WEB_CEMRE.pdf",
+  "scraped_at": "2026-08-20T18:08:46+00:00",
+  "content_hash": "6bb2ce0105df3e27c5e15ba3d75706ad768f575331cd94a4d3802f54397a1433",
+  "collection_method": "pdf",
+  "title": "01 02501134 R01 İpotek Şartları Metni YAYIM SON WEB CEMRE",
+  "http_status": 200,
+  "raw_bytes": 292247,
+  "text_chars": 8956,
+  "pdf_pages": 3
+}

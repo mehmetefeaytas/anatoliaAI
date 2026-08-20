@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/TFX%20Target%20Platformu%20%20S%C3%B6zle%C5%9Fmesi%20%C4%B0le%20Genel%20%C4%B0%C5%9Flem%20%C5%9Eartlar%C4%B1na%20%C4%B0li%C5%9Fkin%20Bilgilendirme%20ve%20Risk%20Formu_TR.pdf",
+  "scraped_at": "2026-08-20T18:25:02+00:00",
+  "content_hash": "60ee85ab4d14ac2c73ed80c741674a9d1cf80da8702bc57c1d5107ebc0b0ba5e",
+  "collection_method": "pdf",
+  "title": "TFX Target Platformu  Sözleşmesi İle Genel İşlem Şartlarına İlişkin Bilgilendirme ve Risk Formu TR",
+  "http_status": 200,
+  "raw_bytes": 610686,
+  "text_chars": 42413,
+  "pdf_pages": 17
+}

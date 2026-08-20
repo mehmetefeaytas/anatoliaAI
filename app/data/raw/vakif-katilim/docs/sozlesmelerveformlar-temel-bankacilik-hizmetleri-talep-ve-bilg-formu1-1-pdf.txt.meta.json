@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/temel-bankacilik-hizmetleri-talep-ve-bilg-formu1(1).pdf",
+  "scraped_at": "2026-08-20T18:32:43+00:00",
+  "content_hash": "24ac3a7cd0b2842d01416df11f4b3a570c9fec3ec5b0d4c9e4c384ce52a18a41",
+  "collection_method": "pdf",
+  "title": "temel bankacilik hizmetleri talep ve bilg formu1(1)",
+  "http_status": 200,
+  "raw_bytes": 1301068,
+  "text_chars": 6770,
+  "pdf_pages": 6
+}

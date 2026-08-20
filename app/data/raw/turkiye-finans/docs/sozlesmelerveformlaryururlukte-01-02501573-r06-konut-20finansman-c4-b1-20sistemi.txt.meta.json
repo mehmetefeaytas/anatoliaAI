@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02501573_R06_Konut%20Finansman%C4%B1%20Sistemi%20Kapsam%C4%B1nda%20T%C3%BCketici%20Kredisi%20S%C3%B6zle%C5%9Fmesi%20ve%20Ekleri.pdf",
+  "scraped_at": "2026-08-20T18:10:01+00:00",
+  "content_hash": "90aa36d3a9d63ddeb618eb8c654657265899d68bfd3208e2fce28262dceb849f",
+  "collection_method": "pdf",
+  "title": "01 02501573 R06 Konut Finansmanı Sistemi Kapsamında Tüketici Kredisi Sözleşmesi ve Ekleri",
+  "http_status": 200,
+  "raw_bytes": 711540,
+  "text_chars": 56931,
+  "pdf_pages": 19
+}

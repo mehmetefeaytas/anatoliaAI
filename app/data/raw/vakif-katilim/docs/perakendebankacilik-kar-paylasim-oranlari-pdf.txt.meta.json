@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/PerakendeBankacilik/kar-paylasim-oranlari.pdf",
+  "scraped_at": "2026-08-20T18:40:03+00:00",
+  "content_hash": "f65ddfab6fc7b9c2494cc20066ba8b9ae117c4b2d15552f818b7bd8883fff5b7",
+  "collection_method": "pdf",
+  "title": "kar paylasim oranlari",
+  "http_status": 200,
+  "raw_bytes": 178287,
+  "text_chars": 1935,
+  "pdf_pages": 1
+}

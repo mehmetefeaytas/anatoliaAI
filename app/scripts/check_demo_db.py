@@ -50,6 +50,7 @@ VARSAYILAN_RAW = "data/raw"
 CORPUS_SUFFIX = ".txt"
 
 
+
 def korpus_belge_sayisi(raw_dir: str) -> int:
     """`collect_corpus` ile AYNI ölçütü kullanır: özyinelemeli `.txt`.
 
@@ -95,6 +96,7 @@ def icerik_bayatligi(db: str, raw_dir: str) -> tuple[int, int, int]:
     """
     import json
     from collections import defaultdict
+    from difflib import SequenceMatcher
 
     def _sadelestir(s: str) -> str:
         """Boşluk ve TİPOGRAFİK TIRNAK düzenini eşitler — YANLIŞ POZİTİF kaynağı.
@@ -127,11 +129,57 @@ def icerik_bayatligi(db: str, raw_dir: str) -> tuple[int, int, int]:
         ve tırnak BİÇİMİ anlam taşımaz, bu yüzden eşitlemek gerçek bir
         içerik değişikliğini gizlemez — oranın, tutarın, tarihin değişmesi
         hâlâ yakalanır.
+
+        Açılı ayraç / HTML varlığı gibi yazma yolunun SİLDİĞİ parçalar burada
+        ele alınmaz; onlar `_yalnizca_silinmis` ile karşılanır (gerekçesi orada).
         """
         s = (s or "")
         for kivrik, duz in (("’", "'"), ("‘", "'"), ("“", '"'), ("”", '"')):
             s = s.replace(kivrik, duz)
         return " ".join(s.split())
+
+    def _yalnizca_silinmis(disk: str, db: str) -> bool:
+        """DB metni, disk metninden YALNIZCA SİLEREK türetilebiliyor mu?
+
+        ## Niçin eşitlik değil de bu — desen elle kovalamak kırılgandı
+
+        Yazma yolu (`preprocessing.clean.normalize_text`) metinden karakter
+        **çıkarır**, asla eklemez ya da değiştirmez: `strip_html`, C0 denetim
+        karakterleri, sıfır-genişlik karakterler, `&#NNN;` varlıkları.
+        Denetleyen taraf ise ham diski okur.
+
+        20 Ağustos'ta bu ayrım üç ayrı yanlış pozitif üretti ve her birini
+        elle bir desenle kapatmaya çalıştım:
+
+            `<dövඈz veya TL>`                     -> sözde-etiket (kapatıldı)
+            `&#1`                                 -> yarım HTML varlığı
+            `<malı/h൴zmet൴ Satıcıdan Banka …`      -> 80 karakterden uzun sözde-etiket
+
+        Üçü de aynı kökten geliyordu ve her yeni PDF partisi dördüncüsünü
+        getirecekti. Desen kovalamak, kapının kendi ilkesine de aykırıydı:
+        denetleyen taraf denetlenenin temizleme kodunu **taklit** etmeye
+        çalışıyordu — o kod değişince kapı sessizce yanlış cevap verirdi.
+
+        Bu yüzden ölçüt DEĞİŞTİ: eşitlik değil, **silinebilirlik**.
+        `SequenceMatcher` üzerinde yalnız `equal` ve `delete` işlemleri varsa
+        DB metni diskten türetilebilir demektir — temizleme budur.
+        `replace` ya da `insert` görünürse GERÇEK bir içerik değişikliği var.
+
+        Bu bir gevşetme DEĞİL: bir oranın `%2,05` -> `%2,15` olması bir
+        `replace`tir ve hâlâ yakalanır. Bir tarihin, tutarın, vadenin
+        değişmesi de öyle. Yakalanmayan tek şey, yazma yolunun zaten attığı
+        karakterlerdir — onları "değişiklik" saymak kapatılamayan bir alarmdı.
+        `import preprocessing.clean` yapılmadı; bağımsızlık korundu.
+        """
+        if disk == db:
+            return True
+        if len(db) > len(disk):
+            return False
+        for tag, _i1, _i2, _j1, _j2 in SequenceMatcher(
+                None, disk, db, autojunk=False).get_opcodes():
+            if tag not in ("equal", "delete"):
+                return False
+        return True
 
     db_metin: dict[str, set[str]] = defaultdict(set)
     ozetli: dict[str, bool] = {}
@@ -172,7 +220,7 @@ def icerik_bayatligi(db: str, raw_dir: str) -> tuple[int, int, int]:
         except OSError:
             continue
         karsilastirilan += 1
-        if disk not in db_metin[url]:
+        if not any(_yalnizca_silinmis(disk, db) for db in db_metin[url]):
             degisen += 1
             if ozetli.get(url):
                 ozeti_bayat += 1

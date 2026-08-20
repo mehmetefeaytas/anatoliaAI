@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/kredi-karti-uyelik-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T18:30:33+00:00",
+  "content_hash": "61deec1f39685914fcf7ba1636556bc34bdc28337d18b4d325127895da1804e2",
+  "collection_method": "pdf",
+  "title": "kredi karti uyelik sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 375352,
+  "text_chars": 70780,
+  "pdf_pages": 22
+}

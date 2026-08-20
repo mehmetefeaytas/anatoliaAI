@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/eximbank-sevk-oncesi-hracat-finansmani-urunu-musaveme-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:37:43+00:00",
+  "content_hash": "27ae4ca9058e5d2c33feef78c8e5bfbcb1ee35cdf8d75f3884a2ff87df08617e",
+  "collection_method": "pdf",
+  "title": "eximbank sevk oncesi hracat finansmani urunu musaveme genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1189319,
+  "text_chars": 6570,
+  "pdf_pages": 3
+}

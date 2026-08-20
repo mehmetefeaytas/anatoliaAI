@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/teverrukbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:34:08+00:00",
+  "content_hash": "7601567207b6bf11955c1c2db106e739d661f96f59db47593a27783c1a0887c1",
+  "collection_method": "pdf",
+  "title": "teverrukbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 739955,
+  "text_chars": 5001,
+  "pdf_pages": 2
+}

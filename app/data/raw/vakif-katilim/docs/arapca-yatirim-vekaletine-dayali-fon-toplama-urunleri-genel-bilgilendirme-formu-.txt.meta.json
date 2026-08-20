@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/yatirim-vekaletine-dayali-fon-toplama-urunleri-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:43+00:00",
+  "content_hash": "d5b55566dbdc5ef52eaaa1bd7760a656d5bc98276470248d60fb33ddb8393c52",
+  "collection_method": "pdf",
+  "title": "yatirim vekaletine dayali fon toplama urunleri genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1317071,
+  "text_chars": 6463,
+  "pdf_pages": 3
+}

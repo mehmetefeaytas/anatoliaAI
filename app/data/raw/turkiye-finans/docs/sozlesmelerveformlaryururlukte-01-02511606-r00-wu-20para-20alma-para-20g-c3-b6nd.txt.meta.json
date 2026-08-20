@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02511606_R00_WU%20Para%20Alma-Para%20G%C3%B6nderme%20TR_RU.pdf",
+  "scraped_at": "2026-08-20T18:28:32+00:00",
+  "content_hash": "ac9ac8582140acdd4195233df656c42591d8c889c5f28845c09bcbc8f1c83db4",
+  "collection_method": "pdf",
+  "title": "01 02511606 R00 WU Para Alma Para Gönderme TR RU",
+  "http_status": 200,
+  "raw_bytes": 173442,
+  "text_chars": 45314,
+  "pdf_pages": 2
+}

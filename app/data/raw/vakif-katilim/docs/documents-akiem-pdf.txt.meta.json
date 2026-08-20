@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/akiem.pdf",
+  "scraped_at": "2026-08-20T18:33:07+00:00",
+  "content_hash": "7e040f03e6cc854bc3c6393019a3a7ce9731e8b24c20f143ca4cc596822bb9b8",
+  "collection_method": "pdf",
+  "title": "akiem",
+  "http_status": 200,
+  "raw_bytes": 65176,
+  "text_chars": 2124,
+  "pdf_pages": 1
+}

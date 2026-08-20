@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/musaveme-akdine-dayanan-urunler-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:53+00:00",
+  "content_hash": "d496da4a60bf17e24794022fab7b1b78a4d4ca362574d06c8a01df7b9956224e",
+  "collection_method": "pdf",
+  "title": "musaveme akdine dayanan urunler genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1159733,
+  "text_chars": 6565,
+  "pdf_pages": 3
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Elektronik%20%C3%87ek%20Sistemi%20Talep%20ve%20Bilgilendirme%20Formu(3).pdf",
+  "scraped_at": "2026-08-20T18:15:46+00:00",
+  "content_hash": "808ed43759bd8d2b39c0c788c3a759cb794f9c3497ac253548f979edd1da7846",
+  "collection_method": "pdf",
+  "title": "Elektronik Çek Sistemi Talep ve Bilgilendirme Formu(3)",
+  "http_status": 200,
+  "raw_bytes": 346864,
+  "text_chars": 2500,
+  "pdf_pages": 2
+}

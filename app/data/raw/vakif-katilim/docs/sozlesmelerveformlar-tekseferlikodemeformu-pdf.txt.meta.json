@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/tekseferlikodemeformu.pdf",
+  "scraped_at": "2026-08-20T18:32:17+00:00",
+  "content_hash": "13acb5bca8aca75c0e05b863e168ee3f86682c5ecb4eecf702a9763ee090b043",
+  "collection_method": "pdf",
+  "title": "tekseferlikodemeformu",
+  "http_status": 200,
+  "raw_bytes": 538702,
+  "text_chars": 2411,
+  "pdf_pages": 2
+}

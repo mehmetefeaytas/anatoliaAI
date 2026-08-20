@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/g%C3%BCncel_%C4%B0sticrar%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:19:31+00:00",
+  "content_hash": "080b458bfadc68c1cdb70e46be6561cf5727dba5762db4bf494b9e63bedd4760",
+  "collection_method": "pdf",
+  "title": "güncel İsticrar Akdi Müşteri Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 722285,
+  "text_chars": 4459,
+  "pdf_pages": 2
+}

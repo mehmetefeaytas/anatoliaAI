@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/yurt-ci-teminat-mektubu-urunleri-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:38:33+00:00",
+  "content_hash": "fa9c134c757d2325b0865ed53190f8081869233810aaa8cb1a63475138478f43",
+  "collection_method": "pdf",
+  "title": "yurt ci teminat mektubu urunleri genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 853894,
+  "text_chars": 4992,
+  "pdf_pages": 2
+}

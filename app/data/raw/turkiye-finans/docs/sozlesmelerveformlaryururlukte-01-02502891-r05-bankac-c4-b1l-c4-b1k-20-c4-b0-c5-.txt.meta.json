@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02502891_R05_Bankac%C4%B1l%C4%B1k%20%C4%B0%C5%9Flemleri%20S%C3%B6zle%C5%9Fmesi-%20K%C4%B1sa%20N%C3%BCsha.pdf",
+  "scraped_at": "2026-08-20T18:02:35+00:00",
+  "content_hash": "6286ca6a68bea242e96d0c3a39edbc025fb77e32dd28943f02a03e1d5a839eea",
+  "collection_method": "pdf",
+  "title": "01 02502891 R05 Bankacılık İşlemleri Sözleşmesi  Kısa Nüsha",
+  "http_status": 200,
+  "raw_bytes": 570667,
+  "text_chars": 4870,
+  "pdf_pages": 2
+}

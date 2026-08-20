@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Konut%20Hesap%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:10:16+00:00",
+  "content_hash": "f73218345592dbf7683cc9b8ef626c1620fb89d3e8e7431bf66665f98295e8d8",
+  "collection_method": "pdf",
+  "title": "Konut Hesap Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 784697,
+  "text_chars": 10985,
+  "pdf_pages": 7
+}

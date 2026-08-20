@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02512144_R03_T%C3%BCrev%20%C4%B0%C5%9Flemlere%20%C4%B0li%C5%9Fkin%20Risk%20Bildirim%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:26:32+00:00",
+  "content_hash": "c22f2e8120c728482b16e002e4bd984ba50ad3e604d8685039a7d82e93b20c51",
+  "collection_method": "pdf",
+  "title": "01 02512144 R03 Türev İşlemlere İlişkin Risk Bildirim Formu",
+  "http_status": 200,
+  "raw_bytes": 373889,
+  "text_chars": 19732,
+  "pdf_pages": 8
+}

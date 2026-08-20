@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/konut-finansmani-sozlesmesi(1).pdf",
+  "scraped_at": "2026-08-20T18:31:17+00:00",
+  "content_hash": "9be4791a92fe76bb906d9879d678fddebfd14ebddb7f50d0608f17718a28dd6a",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesmesi(1)",
+  "http_status": 200,
+  "raw_bytes": 233184,
+  "text_chars": 19391,
+  "pdf_pages": 8
+}

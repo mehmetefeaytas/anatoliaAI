@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/ots-faizsiz-bankacilik-urun-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:33:38+00:00",
+  "content_hash": "a0d3a56e45befa194f9b1fe80a2666f8a73502eebe0ea4097a4ac5f7bdb94a80",
+  "collection_method": "pdf",
+  "title": "ots faizsiz bankacilik urun bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 110763,
+  "text_chars": 8708,
+  "pdf_pages": 4
+}

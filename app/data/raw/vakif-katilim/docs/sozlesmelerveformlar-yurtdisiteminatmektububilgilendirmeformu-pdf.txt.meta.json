@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/yurtdisiteminatmektububilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:34:23+00:00",
+  "content_hash": "a6ff18e725f537a84afcea02ffc8c5fa3bfa6566715b40fa88abe9967777906a",
+  "collection_method": "pdf",
+  "title": "yurtdisiteminatmektububilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 568736,
+  "text_chars": 5791,
+  "pdf_pages": 3
+}

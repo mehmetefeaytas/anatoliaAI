@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Konut%20Finansman%C4%B1%20%C4%B0le%20%C4%B0lgili%20Bor%C3%A7%20S%C3%B6zle%C5%9Fmesi(2).pdf",
+  "scraped_at": "2026-08-20T18:09:46+00:00",
+  "content_hash": "897795831e8f3762e42c900d2467b03563afbbd09d73d1390f7f302821a0a382",
+  "collection_method": "pdf",
+  "title": "Konut Finansmanı İle İlgili Borç Sözleşmesi(2)",
+  "http_status": 200,
+  "raw_bytes": 532291,
+  "text_chars": 4780,
+  "pdf_pages": 3
+}

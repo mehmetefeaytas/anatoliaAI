@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Finansal%20Kiralama%20S%C3%B6zle%C5%9Fmesi'ndeki%20Genel%20%C4%B0%C5%9Flem%20%C5%9Eartlar%C4%B1na%20ili%C5%9Fkin%20Bilgilendirme%20Formu%20(1).pdf",
+  "scraped_at": "2026-08-20T18:17:02+00:00",
+  "content_hash": "2f96a3b3e62c81e0a6a580948a3fc88579a82a5167894d8ce91d3ceadf3fb941",
+  "collection_method": "pdf",
+  "title": "Finansal Kiralama Sözleşmesi'ndeki Genel İşlem Şartlarına ilişkin Bilgilendirme Formu (1)",
+  "http_status": 200,
+  "raw_bytes": 378195,
+  "text_chars": 10806,
+  "pdf_pages": 4
+}

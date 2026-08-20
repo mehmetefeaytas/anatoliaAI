@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02503006_R02_K%C3%A2r%20Beyan%C4%B1%20%C4%B0le%20Sat%C4%B1m%20_Murabaha_%20S%C3%B6zle%C5%9Fmesi_Bireysel.pdf",
+  "scraped_at": "2026-08-20T18:09:16+00:00",
+  "content_hash": "d79cc8c7d87c1a9a38fd943d96c2780b29a65b264ed89dc179f156ee93d1ac3b",
+  "collection_method": "pdf",
+  "title": "01 02503006 R02 Kâr Beyanı İle Satım  Murabaha  Sözleşmesi Bireysel",
+  "http_status": 200,
+  "raw_bytes": 627973,
+  "text_chars": 7460,
+  "pdf_pages": 3
+}

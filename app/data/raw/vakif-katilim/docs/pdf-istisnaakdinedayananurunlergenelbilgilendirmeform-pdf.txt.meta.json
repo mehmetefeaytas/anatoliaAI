@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/Istisnaakdinedayananurunlergenelbilgilendirmeform.pdf",
+  "scraped_at": "2026-08-20T18:35:08+00:00",
+  "content_hash": "8e7bebfc871d803707e7afde800aedbb74b81869091e62b0a7d8814e217ade20",
+  "collection_method": "pdf",
+  "title": "Istisnaakdinedayananurunlergenelbilgilendirmeform",
+  "http_status": 200,
+  "raw_bytes": 456391,
+  "text_chars": 8653,
+  "pdf_pages": 5
+}

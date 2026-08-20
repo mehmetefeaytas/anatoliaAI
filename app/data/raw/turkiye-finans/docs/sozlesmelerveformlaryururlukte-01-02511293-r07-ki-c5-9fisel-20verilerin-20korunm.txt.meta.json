@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02511293_R07_Ki%C5%9Fisel%20Verilerin%20Korunmas%C4%B1%20Hakk%C4%B1nda%20Ayd%C4%B1nlatma%20ve%20A%C3%A7%C4%B1k%20R%C4%B1za%20Formu_TR.pdf",
+  "scraped_at": "2026-08-20T18:21:17+00:00",
+  "content_hash": "bbcf0841d4be94352b67769b80d30c819392e98e4b8f97a0da87b7db1fdc6534",
+  "collection_method": "pdf",
+  "title": "01 02511293 R07 Kişisel Verilerin Korunması Hakkında Aydınlatma ve Açık Rıza Formu TR",
+  "http_status": 200,
+  "raw_bytes": 657867,
+  "text_chars": 13304,
+  "pdf_pages": 5
+}

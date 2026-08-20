@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Bol%20Kep%C3%A7e%20Hesap%20S%C3%B6zle%C5%9Fmesi_Mesafeli.pdf",
+  "scraped_at": "2026-08-20T18:04:08+00:00",
+  "content_hash": "f1b086d039c8cc4b56afe21dfcbc7269bb9102db7ed69dc479cc2daf9d1dde2d",
+  "collection_method": "pdf",
+  "title": "Bol Kepçe Hesap Sözleşmesi Mesafeli",
+  "http_status": 200,
+  "raw_bytes": 904308,
+  "text_chars": 35975,
+  "pdf_pages": 15
+}

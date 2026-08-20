@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Vekalet-Yat%C4%B1r%C4%B1m%20Vekaleti%20(Fon%20Toplama)%20Akdi%20M%C3%BC%C5%9Fteri%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:27:47+00:00",
+  "content_hash": "e0d99fbc557186060edb84b168813189cb16165b1636ed32081398d8e3a896e9",
+  "collection_method": "pdf",
+  "title": "Vekalet Yatırım Vekaleti (Fon Toplama) Akdi Müşteri Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 716528,
+  "text_chars": 4996,
+  "pdf_pages": 2
+}

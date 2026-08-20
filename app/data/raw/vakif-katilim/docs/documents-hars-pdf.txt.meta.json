@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/hars.pdf",
+  "scraped_at": "2026-08-20T18:30:42+00:00",
+  "content_hash": "5235f7a6dd54d43cda90637c43cd4fe91512b36153657a4291606b29a24dff2c",
+  "collection_method": "pdf",
+  "title": "hars",
+  "http_status": 200,
+  "raw_bytes": 191524,
+  "text_chars": 7692,
+  "pdf_pages": 5
+}

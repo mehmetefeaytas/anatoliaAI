@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Makine-Ara%C3%A7%20Rehni%20S%C3%B6zle%C5%9Fmesi%20(H%C4%B1zl%C4%B1%20Finansman).pdf",
+  "scraped_at": "2026-08-20T18:11:16+00:00",
+  "content_hash": "30b4916f715a644bd4d8c2103d2d4a2f04fd8058a010e63c0c9ad9adcced65a6",
+  "collection_method": "pdf",
+  "title": "Makine Araç Rehni Sözleşmesi (Hızlı Finansman)",
+  "http_status": 200,
+  "raw_bytes": 407048,
+  "text_chars": 8804,
+  "pdf_pages": 5
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/sermayepiyasasiurunlerihesabi.pdf",
+  "scraped_at": "2026-08-20T18:35:33+00:00",
+  "content_hash": "25a7207ce542a3d102928932900421308a5ecf2bed354014c6da775cf32aec5e",
+  "collection_method": "pdf",
+  "title": "sermayepiyasasiurunlerihesabi",
+  "http_status": 200,
+  "raw_bytes": 711249,
+  "text_chars": 3544,
+  "pdf_pages": 2
+}

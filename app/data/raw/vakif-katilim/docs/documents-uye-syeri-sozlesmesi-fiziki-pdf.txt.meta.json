@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/uye-syeri-sozlesmesi-fiziki.pdf",
+  "scraped_at": "2026-08-20T18:31:28+00:00",
+  "content_hash": "42e7f794b15beb1398f0748b17d0d177f9e6ae578ee08776efe5386052a0a717",
+  "collection_method": "pdf",
+  "title": "uye syeri sozlesmesi fiziki",
+  "http_status": 200,
+  "raw_bytes": 259983,
+  "text_chars": 111025,
+  "pdf_pages": 22
+}

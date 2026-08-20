@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/ats.pdf",
+  "scraped_at": "2026-08-20T18:31:02+00:00",
+  "content_hash": "85b416c234c21dd3f1472f376e0cd7df1b17946f8199c34e171b1b0e9e7a9555",
+  "collection_method": "pdf",
+  "title": "ats",
+  "http_status": 200,
+  "raw_bytes": 110495,
+  "text_chars": 8660,
+  "pdf_pages": 5
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Yabanc%C4%B1%20M%C3%BC%C5%9Fterilere%20Y%C3%B6nelik%20TCMB%E2%80%99ye%20Yap%C4%B1lan%20D%C3%B6viz%20Sat%C4%B1%C5%9F%20%C4%B0%C5%9Flemi%20%C3%96n%20Bilgilendirme%20Formu%20(1).pdf",
+  "scraped_at": "2026-08-20T18:28:47+00:00",
+  "content_hash": "af3c6256427ef969b2bc0b7bb82c8eea617fd4fe827fa46b735b9b345f294c51",
+  "collection_method": "pdf",
+  "title": "Yabancı Müşterilere Yönelik TCMB’ye Yapılan Döviz Satış İşlemi Ön Bilgilendirme Formu (1)",
+  "http_status": 200,
+  "raw_bytes": 626254,
+  "text_chars": 2336,
+  "pdf_pages": 1
+}

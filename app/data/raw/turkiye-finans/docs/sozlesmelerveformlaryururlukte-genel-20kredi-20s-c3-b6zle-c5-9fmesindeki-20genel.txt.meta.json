@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Genel%20Kredi%20S%C3%B6zle%C5%9Fmesindeki%20Genel%20%C4%B0%C5%9Flem%20%C5%9Eartlar%C4%B1na%20%C4%B0li%C5%9Fkin%20Bilgilendirme%20Formu_Mesafeli.pdf",
+  "scraped_at": "2026-08-20T18:17:31+00:00",
+  "content_hash": "f5b0da95fa03b9a4bc6597785bcc6cbc5212f7932fa8e5df16a578d43a370bd0",
+  "collection_method": "pdf",
+  "title": "Genel Kredi Sözleşmesindeki Genel İşlem Şartlarına İlişkin Bilgilendirme Formu Mesafeli",
+  "http_status": 200,
+  "raw_bytes": 498165,
+  "text_chars": 8266,
+  "pdf_pages": 3
+}

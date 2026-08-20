@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/Isticrarakdinedayananurunlergenelbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:35:13+00:00",
+  "content_hash": "a53175cb246688b24f3f6a533c6c4c7d582cb07cb65805d6d47326ace6bdba7a",
+  "collection_method": "pdf",
+  "title": "Isticrarakdinedayananurunlergenelbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 336831,
+  "text_chars": 7209,
+  "pdf_pages": 4
+}

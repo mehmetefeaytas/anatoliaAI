@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/giskabulonaybeyaniv2.pdf",
+  "scraped_at": "2026-08-20T18:32:37+00:00",
+  "content_hash": "971b74bca792e525426235d191d60e26ecc0738497d9720ff9aa1e980b1a5473",
+  "collection_method": "pdf",
+  "title": "giskabulonaybeyaniv2",
+  "http_status": 200,
+  "raw_bytes": 89780,
+  "text_chars": 1063,
+  "pdf_pages": 1
+}

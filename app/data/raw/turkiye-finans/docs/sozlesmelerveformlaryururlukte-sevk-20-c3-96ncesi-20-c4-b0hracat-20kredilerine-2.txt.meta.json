@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Sevk%20%C3%96ncesi%20%C4%B0hracat%20Kredilerine%20%C4%B0li%C5%9Fkin%20Ek%20S%C3%B6zle%C5%9Fme(2).pdf",
+  "scraped_at": "2026-08-20T18:12:31+00:00",
+  "content_hash": "73731f9bcea4d77d919f28bcb441e736ef6c8dc7d8e0d0f9265b3c12be0d1499",
+  "collection_method": "pdf",
+  "title": "Sevk Öncesi İhracat Kredilerine İlişkin Ek Sözleşme(2)",
+  "http_status": 200,
+  "raw_bytes": 336722,
+  "text_chars": 2373,
+  "pdf_pages": 2
+}

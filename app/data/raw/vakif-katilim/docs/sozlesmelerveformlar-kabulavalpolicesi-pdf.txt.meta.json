@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/kabulavalpolicesi.pdf",
+  "scraped_at": "2026-08-20T18:36:38+00:00",
+  "content_hash": "4e6367ce79f09f7b5241cb37ab59c7dbcd895cc6504566b1608b19df6c14987d",
+  "collection_method": "pdf",
+  "title": "kabulavalpolicesi",
+  "http_status": 200,
+  "raw_bytes": 334121,
+  "text_chars": 5230,
+  "pdf_pages": 2
+}

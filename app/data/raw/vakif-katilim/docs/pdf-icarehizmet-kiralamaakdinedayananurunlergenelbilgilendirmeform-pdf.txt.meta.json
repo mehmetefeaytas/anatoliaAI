@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/pdf/icarehizmet-kiralamaakdinedayananurunlergenelbilgilendirmeform.pdf",
+  "scraped_at": "2026-08-20T18:35:18+00:00",
+  "content_hash": "082afd581d92375fa4a52e4d283b0a345cbecd23372ece5a27b0e0f1ac147fcd",
+  "collection_method": "pdf",
+  "title": "icarehizmet kiralamaakdinedayananurunlergenelbilgilendirmeform",
+  "http_status": 200,
+  "raw_bytes": 713357,
+  "text_chars": 6156,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/bk.pdf",
+  "scraped_at": "2026-08-20T18:30:58+00:00",
+  "content_hash": "89a8f5f18742c8901ebaf5eb4ac57aa716029a3f0617526491a589845fd1a117",
+  "collection_method": "pdf",
+  "title": "bk",
+  "http_status": 200,
+  "raw_bytes": 190859,
+  "text_chars": 34357,
+  "pdf_pages": 17
+}

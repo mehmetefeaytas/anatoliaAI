@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Finansman%C4%B1n%20Vadesinden%20%C3%96nce%20Kap.%20ve%20Finansman%20%C4%B0le%20Ba%C4%9F.%20Sig.S%C3%B6z.%20%C4%B0li%C5%9Fkin%20Bilg.%20ve%20%C4%B0%C5%9Flem%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:17:17+00:00",
+  "content_hash": "f3f845a12a0ab5799265fb6fa84cb2899af933a2f3e6bac0be984fa429da018d",
+  "collection_method": "pdf",
+  "title": "Finansmanın Vadesinden Önce Kap. ve Finansman İle Bağ. Sig.Söz. İlişkin Bilg. ve İşlem Formu",
+  "http_status": 200,
+  "raw_bytes": 483325,
+  "text_chars": 1898,
+  "pdf_pages": 1
+}

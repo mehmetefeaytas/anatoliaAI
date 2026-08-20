@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/bireysel-finansman-destegi-sozlesmesi(3).pdf",
+  "scraped_at": "2026-08-20T18:31:32+00:00",
+  "content_hash": "deda902dd13a0d83e29bacd7f9b4027b8bd52f24dfa163b3d6e2799038db554c",
+  "collection_method": "pdf",
+  "title": "bireysel finansman destegi sozlesmesi(3)",
+  "http_status": 200,
+  "raw_bytes": 193017,
+  "text_chars": 21187,
+  "pdf_pages": 8
+}

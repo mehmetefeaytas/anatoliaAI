@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Yat%C4%B1r%C4%B1m%20Vek%C3%A2leti%20Finansman%C4%B1%20Yat%C4%B1r%C4%B1m%20S%C3%B6zle%C5%9Fmesi.pdf",
+  "scraped_at": "2026-08-20T18:14:01+00:00",
+  "content_hash": "b422f6e96f6c3458fb0a093149f8f301348830df3665385894a97e9740b6735e",
+  "collection_method": "pdf",
+  "title": "Yatırım Vekâleti Finansmanı Yatırım Sözleşmesi",
+  "http_status": 200,
+  "raw_bytes": 555358,
+  "text_chars": 14158,
+  "pdf_pages": 7
+}

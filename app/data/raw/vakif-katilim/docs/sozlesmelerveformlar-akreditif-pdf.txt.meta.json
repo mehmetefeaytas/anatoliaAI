@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/akreditif.pdf",
+  "scraped_at": "2026-08-20T18:35:53+00:00",
+  "content_hash": "724285a0a0b6a263a74043e69d293584fe823955954179953fe1b8cbb58966f3",
+  "collection_method": "pdf",
+  "title": "akreditif",
+  "http_status": 200,
+  "raw_bytes": 333928,
+  "text_chars": 5366,
+  "pdf_pages": 2
+}

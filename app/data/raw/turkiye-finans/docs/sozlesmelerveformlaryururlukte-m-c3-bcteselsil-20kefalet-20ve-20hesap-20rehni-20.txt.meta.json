@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/M%C3%BCteselsil%20Kefalet%20ve%20Hesap%20Rehni%20S%C3%B6zle%C5%9Fmesi_Limit%20Art%C4%B1r%C4%B1m%20Eki%20(1).pdf",
+  "scraped_at": "2026-08-20T18:11:31+00:00",
+  "content_hash": "5172c87cb5a7b0b6e5e06ccc78e36493096bba3c41decdda3f1c513dcf566da3",
+  "collection_method": "pdf",
+  "title": "Müteselsil Kefalet ve Hesap Rehni Sözleşmesi Limit Artırım Eki (1)",
+  "http_status": 200,
+  "raw_bytes": 694578,
+  "text_chars": 1716,
+  "pdf_pages": 1
+}

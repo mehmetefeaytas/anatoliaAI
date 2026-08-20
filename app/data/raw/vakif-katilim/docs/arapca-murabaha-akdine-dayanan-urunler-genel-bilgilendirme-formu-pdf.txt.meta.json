@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/Arapca/murabaha-akdine-dayanan-urunler-genel-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T18:39:23+00:00",
+  "content_hash": "ec3dbb3d06689d122378035e048a1d2095beb7393e8517c3aad7929215f65bbe",
+  "collection_method": "pdf",
+  "title": "murabaha akdine dayanan urunler genel bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 1260331,
+  "text_chars": 7251,
+  "pdf_pages": 3
+}

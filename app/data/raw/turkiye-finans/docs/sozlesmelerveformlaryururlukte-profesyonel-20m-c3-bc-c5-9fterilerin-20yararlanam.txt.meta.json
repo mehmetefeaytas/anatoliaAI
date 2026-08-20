@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/Profesyonel%20M%C3%BC%C5%9Fterilerin%20Yararlanamayaca%C4%9F%C4%B1%20Mevzuat%20H%C3%BCk%C3%BCmleri%20Konusunda%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:23:47+00:00",
+  "content_hash": "74ae723ef4cdfdab620c79011e6352bf11e10d7bc788a535e6f7a9d4f65b9e77",
+  "collection_method": "pdf",
+  "title": "Profesyonel Müşterilerin Yararlanamayacağı Mevzuat Hükümleri Konusunda Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 469254,
+  "text_chars": 3461,
+  "pdf_pages": 2
+}

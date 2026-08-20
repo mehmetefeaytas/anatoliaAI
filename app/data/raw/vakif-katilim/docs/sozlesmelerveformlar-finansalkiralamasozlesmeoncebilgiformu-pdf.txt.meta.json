@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/finansalkiralamasozlesmeoncebilgiformu.pdf",
+  "scraped_at": "2026-08-20T18:37:13+00:00",
+  "content_hash": "0e57fad93a2c6b58d78849208389a08078ba8f701cd9e577444a27933384f437",
+  "collection_method": "pdf",
+  "title": "finansalkiralamasozlesmeoncebilgiformu",
+  "http_status": 200,
+  "raw_bytes": 237002,
+  "text_chars": 10719,
+  "pdf_pages": 4
+}

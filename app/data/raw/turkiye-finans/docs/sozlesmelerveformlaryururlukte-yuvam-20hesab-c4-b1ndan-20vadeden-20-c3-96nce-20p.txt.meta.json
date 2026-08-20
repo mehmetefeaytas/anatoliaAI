@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/YUVAM%20Hesab%C4%B1ndan%20Vadeden%20%C3%96nce%20Para%20%C3%87ekimine%20%C4%B0li%C5%9Fkin%20Bilgilendirme%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:30:04+00:00",
+  "content_hash": "4be0f33f9d9f229c90d3cacb971415af2288458297dcbe62b3cb091659e6258b",
+  "collection_method": "pdf",
+  "title": "YUVAM Hesabından Vadeden Önce Para Çekimine İlişkin Bilgilendirme Formu",
+  "http_status": 200,
+  "raw_bytes": 394610,
+  "text_chars": 2249,
+  "pdf_pages": 1
+}

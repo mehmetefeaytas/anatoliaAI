@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/sozlesmeler-ve-formlar/SozlesmelerVeFormlarYururlukte/01-02511746_R00_Ki%C5%9Fisel%20Veri%20Sahibi%20Ba%C5%9Fvuru%20Formu.pdf",
+  "scraped_at": "2026-08-20T18:20:47+00:00",
+  "content_hash": "99a974d368257ae1330df094b492c57cbfb38e394a29dc0777b7bc5f9328b142",
+  "collection_method": "pdf",
+  "title": "01 02511746 R00 Kişisel Veri Sahibi Başvuru Formu",
+  "http_status": 200,
+  "raw_bytes": 519590,
+  "text_chars": 4983,
+  "pdf_pages": 3
+}

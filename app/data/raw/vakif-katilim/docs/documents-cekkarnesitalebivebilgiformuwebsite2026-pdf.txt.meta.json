@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/cekkarnesitalebivebilgiformuwebsite2026.pdf",
+  "scraped_at": "2026-08-20T18:33:02+00:00",
+  "content_hash": "eb634f6c7400f2c74771d6da56b3b868956015b87eab6dcbb7d6befe19444d4e",
+  "collection_method": "pdf",
+  "title": "cekkarnesitalebivebilgiformuwebsite2026",
+  "http_status": 200,
+  "raw_bytes": 114730,
+  "text_chars": 2311,
+  "pdf_pages": 1
+}

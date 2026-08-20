@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/kredi-karti-urunu-hizmeti-faizsiz-bankacilik-bilgilendirme-formu-1.pdf",
+  "scraped_at": "2026-08-20T18:34:04+00:00",
+  "content_hash": "4c9f6664ee8fa5b3790255de4307a728a4e3a3b434b16f873ed25be83b1705a4",
+  "collection_method": "pdf",
+  "title": "kredi karti urunu hizmeti faizsiz bankacilik bilgilendirme formu 1",
+  "http_status": 200,
+  "raw_bytes": 725126,
+  "text_chars": 8452,
+  "pdf_pages": 5
+}

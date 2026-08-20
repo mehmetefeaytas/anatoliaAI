@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/gks02.pdf",
+  "scraped_at": "2026-08-20T18:30:23+00:00",
+  "content_hash": "7317009d048e295c67aefdc603b3840a4da89545880f13552fff1d7b0b35a211",
+  "collection_method": "pdf",
+  "title": "gks02",
+  "http_status": 200,
+  "raw_bytes": 391746,
+  "text_chars": 167548,
+  "pdf_pages": 39
+}

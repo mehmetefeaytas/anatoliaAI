@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/konut-finansmani-sozlesme-oncesi-bilgi-formu(2).pdf",
+  "scraped_at": "2026-08-20T18:33:18+00:00",
+  "content_hash": "996906a06691088af4f06560f9cdadb47e0b78086ca9dead0634d694032e1bdb",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesme oncesi bilgi formu(2)",
+  "http_status": 200,
+  "raw_bytes": 239395,
+  "text_chars": 19607,
+  "pdf_pages": 10
+}

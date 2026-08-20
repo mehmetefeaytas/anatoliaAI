@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/okultaksitsistemi.pdf",
+  "scraped_at": "2026-08-20T18:35:28+00:00",
+  "content_hash": "abb2e7017513722b247114307dc7b79a7ed82abe52a3c722d89598fa8c4d1ce2",
+  "collection_method": "pdf",
+  "title": "okultaksitsistemi",
+  "http_status": 200,
+  "raw_bytes": 350914,
+  "text_chars": 4690,
+  "pdf_pages": 2
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/SozlesmelerVeFormlar/sozlesmeoncesikefilbilgilendirmeformu.pdf",
+  "scraped_at": "2026-08-20T18:37:03+00:00",
+  "content_hash": "3142c87aa50e069ad2b1aac2721be7341b0b863f9e519a27562ecc03b98b504d",
+  "collection_method": "pdf",
+  "title": "sozlesmeoncesikefilbilgilendirmeformu",
+  "http_status": 200,
+  "raw_bytes": 96126,
+  "text_chars": 3573,
+  "pdf_pages": 1
+}

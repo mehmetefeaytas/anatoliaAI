@@ -1,0 +1,12 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/documents/konut-finansmanina-liskin-taahhutname.pdf",
+  "scraped_at": "2026-08-20T18:33:43+00:00",
+  "content_hash": "87492eea359f4068959e7707714c5c6bf664d10d6dbb5ca68bef983a198770ae",
+  "collection_method": "pdf",
+  "title": "konut finansmanina liskin taahhutname",
+  "http_status": 200,
+  "raw_bytes": 91088,
+  "text_chars": 6540,
+  "pdf_pages": 2
+}
