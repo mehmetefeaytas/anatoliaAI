@@ -103,6 +103,7 @@ elde edilmesine bir şans daha verilmesidir.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from typing import Any, Iterable, Optional
 
@@ -138,6 +139,54 @@ SISTEM_PROMPT = (
     "Özetlenecek anlamlı bir içerik yoksa boş dize döndür. "
     'Çıktı biçimi: {"ozet": "..."}'
 )
+
+#: Terminoloji kapısının sebep kodu. Ölçüldü (2026-08-20, 2.455 özet):
+#: 25 özet (%1,0) "faiz bankacılığı" / "kapitalizm bankacılığı" diyordu,
+#: 9'u bankayı "Kâr Payı Bankası X" diye adlandırıyordu, 7'sinde çıplak
+#: "faiz" geçiyordu. Hepsi kullanıcıya "AI Özeti" etiketiyle gösteriliyordu.
+#:
+#: Niçin kapı gerekiyordu: `SISTEM_PROMPT` bu terimleri ZATEN yasaklıyor —
+#: ama yasak bir YÖNERGEDİR. Aynı istemdeki alfabe kuralının bir kapısı
+#: vardı (`turkce_alfabede_mi`), terminoloji kuralının yoktu. İstemin kendi
+#: yorumu bunu söylüyor: "Yönergedeki bu cümle KAPININ YERİNE GEÇMEZ, onu
+#: tamamlar." İki kuraldan yalnız birinin kapısı olması bir asimetriydi.
+#:
+#: CLAUDE.md §12: katılım bankacılığı terminolojisi %30'luk kalemin kalbi.
+#: "Faiz" sözcüğünü bir katılım bankası özetinde basmak, jürinin ilk
+#: yakalayacağı alan hatasıdır.
+SEBEP_TERMINOLOJI = "terminoloji_ihlali"
+
+#: Yasak kalıplar. Sözcük sınırlı: "faizsiz" ve "faiz dışı" MEŞRUDUR ve
+#: elenmez (`(?<!siz)` yeterli değil — `faizsiz`de kök "faiz" ile bitmiyor,
+#: bu yüzden tam sözcük araması kullanılıyor).
+_YASAK_TERIMLER: tuple[tuple[str, str], ...] = (
+    # SIRA ÖNEMLİ: özgül kalıplar önce. Aksi hâlde "faiz bankacılığı" ifadesi
+    # çıplak `\bfaiz\b` desenine takılır ve sebep alanına "faiz" yazılır —
+    # yakalama doğru olur ama etiket daha az bilgilendirici olurdu.
+    (r"kapitalizm bankacıl\w*", "kapitalizm bankacılığı"),
+    (r"faiz bankacıl\w*", "faiz bankacılığı"),
+    (r"kâr payı bankası|kar payı bankası", "kâr payı bankası"),
+    (r"\bkredi faizi\b", "kredi faizi"),
+    (r"\bfaizli\b", "faizli"),
+    # "faiz dışı" MUAF: sektör raporlarında meşru bir kalemdir ("faiz dışı
+    # gelirler"). "faizsiz" de muaf ve ona ek koşul gerekmiyor — `\b` sınırı
+    # "faizsiz" içindeki kökü zaten yakalamaz.
+    (r"\bfaizi\b(?!\s+dışı)", "faizi"),
+    (r"\bfaiz\b(?!\s+dışı)", "faiz"),
+)
+
+
+def _terminoloji_ihlali(ozet: str) -> Optional[str]:
+    """Özet konvansiyonel/uydurma bankacılık terimi taşıyor mu?
+
+    Döner: ihlal eden ifade ya da `None`. İlk eşleşmede durur — sebep
+    alanına yazılacak tek bir etiket yeterlidir, envanter değil.
+    """
+    for desen, etiket in _YASAK_TERIMLER:
+        if re.search(desen, ozet, re.IGNORECASE):
+            return etiket
+    return None
+
 
 #: `sebep` alanının kapıya ait değeri — toplu raporlar bunu sayarak
 #: "kaç özet alfabe kaymasından düştü" sorusunu cevaplar.
@@ -328,9 +377,21 @@ def ozetle(text: str, llm: Any, *, cerceve: Optional[set[str]] = None,
         # ALFABE KAPISI — kirli özet DÜZELTİLMEZ, reddedilir (modül
         # docstring'i). Kaymış karakterleri ayıklayıp kalanı yazmak, modelin
         # üretmediği bir metni "AI özeti" etiketiyle sunmak olurdu.
-        if turkce_alfabede_mi(ozet):
-            return OzetSonucu(ozet, OZET_KAYNAK_LLM, kirpildi=kirpildi,
-                              girdi_karakter=len(girdi))
+        if not turkce_alfabede_mi(ozet):
+            son = OzetSonucu(None, None, sebep=SEBEP_YABANCI_ALFABE,
+                             kirpildi=kirpildi, girdi_karakter=len(girdi))
+            continue
+        # TERMİNOLOJİ KAPISI — alfabe kapısının eşi. Aynı sebeple var:
+        # istemdeki "konvansiyonel bankacılık terimlerini kullanma" cümlesi
+        # bir YÖNERGEDİR, kapı değil; model ona uymayabilir.
+        ihlal = _terminoloji_ihlali(ozet)
+        if ihlal:
+            son = OzetSonucu(None, None,
+                             sebep=f"{SEBEP_TERMINOLOJI}: {ihlal}",
+                             kirpildi=kirpildi, girdi_karakter=len(girdi))
+            continue
+        return OzetSonucu(ozet, OZET_KAYNAK_LLM, kirpildi=kirpildi,
+                          girdi_karakter=len(girdi))
     return son
 
 

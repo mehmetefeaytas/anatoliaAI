@@ -147,9 +147,13 @@ python3 -m scripts.build_demo_db --out data/demo.db   # bir kez, ~282 s
 # Özetler yerel modelle üretildi (~4 saat) ve yedekte duruyor; geri yükleme
 # saniyeler sürer ve LLM İSTEMEZ. Kural tabanlı sahte özet basmak YASAK
 # (src/summarize/ozet.py) — bu yüzden yedek tek meşru yol.
-# Ölçüldü (2026-08-20): 1.782 belgenin 1.759'u özetlendi (%98,7); kalan 23'ün
-# sebebi `metin_bos` (belgede içerik yok), üretim hatası değil.
-python3 -m scripts.ozet_tasi --kaynak data/demo.db.yedek-1202 --hedef data/demo.db
+# Kaynak `data/ozet-yedegi.json` — GIT'TE İZLENEN dosya (1,3 MB, 2.634 özet).
+# ÖNEMLİ: bu adım bir `.db` yedeğine bağlanMAZ. `*.db` gitignore'dadır, yani
+# temiz bir klonda hiçbir `demo.db.yedek-*` dosyası YOKTUR ve o dosyayı kaynak
+# gösteren bir komut sessizce başarısız olur. İzlenen JSON yedeği tek doğru yol.
+# Ölçüldü (2026-08-20): 2.708 belgenin 2.634'ü özetlendi (%97,3); kalan 74'ün
+# sebebi `metin_bos` (içerik yok) ya da `terminoloji_ihlali` (kapı reddetti).
+python3 -m scripts.ozet_geri_yukle --db data/demo.db
 
 
 DATABASE_PATH=data/demo.db .venv/bin/python -c "
@@ -207,9 +211,13 @@ python3 -m scripts.build_demo_db --out data/demo.db
 # Özetler yerel modelle üretildi (~4 saat) ve yedekte duruyor; geri yükleme
 # saniyeler sürer ve LLM İSTEMEZ. Kural tabanlı sahte özet basmak YASAK
 # (src/summarize/ozet.py) — bu yüzden yedek tek meşru yol.
-# Ölçüldü (2026-08-20): 1.782 belgenin 1.759'u özetlendi (%98,7); kalan 23'ün
-# sebebi `metin_bos` (belgede içerik yok), üretim hatası değil.
-python3 -m scripts.ozet_tasi --kaynak data/demo.db.yedek-1202 --hedef data/demo.db
+# Kaynak `data/ozet-yedegi.json` — GIT'TE İZLENEN dosya (1,3 MB, 2.634 özet).
+# ÖNEMLİ: bu adım bir `.db` yedeğine bağlanMAZ. `*.db` gitignore'dadır, yani
+# temiz bir klonda hiçbir `demo.db.yedek-*` dosyası YOKTUR ve o dosyayı kaynak
+# gösteren bir komut sessizce başarısız olur. İzlenen JSON yedeği tek doğru yol.
+# Ölçüldü (2026-08-20): 2.708 belgenin 2.634'ü özetlendi (%97,3); kalan 74'ün
+# sebebi `metin_bos` (içerik yok) ya da `terminoloji_ihlali` (kapı reddetti).
+python3 -m scripts.ozet_geri_yukle --db data/demo.db
 # Gerçekten ölçüldü (temiz klon simülasyonu — izlenen dosyalardan taze
 # checkout, 2026-08-20): süre 282 s (~4 dk 42 sn), 1.782 belge -> 1.782
 # kampanya kaydı, 11/11 banka, çıktı data/demo.db ~22,2 MB.

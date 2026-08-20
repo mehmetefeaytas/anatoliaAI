@@ -62,6 +62,11 @@ class TasimaSonucu:
     hedefte_yok: int = 0
     kaynakta_ozet_yok: int = 0
 
+    #: Terminoloji kapısına takılıp taşınMAYAN özet sayısı. Ayrı sayılır:
+    #: "kaynakta özet yoktu" ile "kaynaktaki özet REDDEDİLDİ" farklı olgular
+    #: ve ikincisi kaynağın kalitesi hakkında bilgi taşır.
+    terminoloji_reddi: int = 0
+
     @property
     def aday(self) -> int:
         return (self.tasinan + self.metni_degisti + self.hedefte_yok)
@@ -76,7 +81,12 @@ class TasimaSonucu:
             f"hedefte bulunamayan   : {self.hedefte_yok}"
             "   <- kaynakta olup hedefte olmayan belge",
             f"kaynakta özeti yoktu  : {self.kaynakta_ozet_yok}",
+            f"terminoloji reddi    : {self.terminoloji_reddi}"
+            "   <- kaynaktaki özet konvansiyonel/uydurma terim taşıyordu",
         ])
+
+
+from src.summarize.ozet import _terminoloji_ihlali
 
 
 def _kolonlar(conn: sqlite3.Connection) -> set[str]:
@@ -144,6 +154,20 @@ def tasi(kaynak_yolu: Path, hedef_yolu: Path, *,
             else:
                 sonuc.hedefte_yok += 1
             continue
+        # TERMİNOLOJİ KAPISI — yedekten geri yükleme, kapı EKLENMEDEN ÖNCE
+        # üretilmiş özetleri geri getirebilir. Ölçüldü (2026-08-20): korpustaki
+        # 2.455 özetin 41'i konvansiyonel/uydurma banka terimi taşıyordu
+        # ("kapitalizm bankacılığı" 25 · "Kâr Payı Bankası X" 9 · çıplak
+        # "faiz" 7). Onları DB'den temizlemek yetmez: bu betik bir sonraki
+        # yeniden kurulumda yedekten AYNI metni geri yazardı.
+        # Kapı üretim anında da var (`src/summarize/ozet.py`); burada ikinci
+        # kez uygulanması gereksiz değil, çünkü bu yolun girdisi ESKİ bir
+        # artefakttır ve o artefakt kapıyı hiç görmemiştir.
+        if ozet:
+            ihlal = _terminoloji_ihlali(ozet)
+            if ihlal:
+                sonuc.terminoloji_reddi += 1
+                continue
         hedef_id = adaylar.pop(0)   # aynı çiftten birden çok satır olabilir
         sonuc.tasinan += 1
         yazilacak.append((ozet or None, sebep, hedef_id) if sebep_var
