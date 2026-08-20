@@ -9,7 +9,7 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3162%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Testler](https://img.shields.io/badge/testler-3278%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge-yellow.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
@@ -24,11 +24,36 @@ Yürütücü: **Bilişim Vadisi**
 Anatolia AI, Türkiye'deki katılım bankalarının (faizsiz finans) resmî
 sitelerindeki kampanya ve ürün metinlerinden finansal bilgiyi çıkarıyor; bu
 bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaştırıyor.
-Sonucu dashboard ve hibrit chatbot ile sunuyor. Tamamı açık kaynak (Apache-2.0);
-on-premise ve internetsiz çalışıyor.
+Sonucu bir dashboard ve iki yollu (yapısal sorgu ↔ RAG) bir chatbot ile
+sunuyor. Tamamı açık kaynak (Apache-2.0); on-premise ve internetsiz çalışıyor.
 
 > 1.782 gerçek belge · 10/10 katılım bankası · 6 tarama tarihi ·
-> 3.162 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
+> 3.278 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
+
+**Üretim yolu kural tabanlıdır — ve bu ölçülmüş bir karardır.** LLM katmanı
+kodda vardır, koşar ve ölçülmüştür; ölçüm onu üretime almamayı söyledi:
+üç LLM konfigürasyonunun üçü de kural katmanının altında kaldı (McNemar
+p = 0,00105 / 0,00050 / 0,0000123) ve hibrit kol halüsinasyonu **2,4 katına**
+çıkardı (0,0425 → 0,1029). LLM sağlığı temizdi (384/384 çağrı, 0 hata), yani
+düşük başarım teknik bir arıza değil. Kendi hipotezimizi çürüten sonucu
+düzeltmedik; yayımladık → [ablasyon raporu](app/docs/rapor/ablasyon.md).
+
+### 🔬 Gold setin güvenilirliği — jürinin ilk sorusu, ilk ekranda
+
+| ne | değer | durum |
+|---|---|---|
+| **κ — ikinci etiketleyici turu** (gold.v2 ↔ LLM-01, 192 çift) | **0,714** | **notla kabul** — önceden ilan edilmiş 0,67 ≤ κ < 0,80 bandı |
+| κ — round0 kalibrasyon (Fleiss, 4 anotatör, 260 satır) | 0,302 | eşik altı → ilan edilen sonuç **uygulandı** (kılavuz v1→v2) |
+| κ — round1 (Cohen, 141 ortak karar, hakemlik öncesi) | 0,274 | eşik altı → zorunlu hakemlik **koştu** |
+| İkinci etiketleyici kim | **bir LLM** (`qwen2.5:7b-instruct`) | insan çift-anotasyonun yerine **geçmez**; insan turu şu an koşuyor |
+| HAKEM turları | 4 tur koştu; gold + kılavuz + motor **üç katmanda birden** düzeltildi | bedeli raporlanıyor (bkz. §4) |
+
+Eşik tablosu anotasyon **başlamadan** ilan edildi (`ANNOTATION_GUIDE.md` §7);
+ölçülen κ'ya bakıp eşik değiştirilmedi. `masraf_durumu` alanında κ **negatif**
+çıktı (−0,103) ve bu gizlenmedi — hakemlendi, kök neden kılavuzun kapsam
+kuralında bulundu ve düzeltmenin **F1'e maliyeti** yayımlandı.
+Üreten komut: `python -m scripts.ikinci_etiketleyici kappa`
+· ayrıntı [`_kappa-ikinci-tur.md`](app/data/gold/review/_kappa-ikinci-tur.md).
 
 ---
 
@@ -42,11 +67,11 @@ yapısal veriye dönüştürür.
 | # | Aşama | Ne yapar |
 |---|---|---|
 | 1 | Toplama | Banka sitelerinden kampanya metinleri (config-driven, robots.txt uyumlu, provenance'lı) |
-| 2 | Bilgi çıkarımı | "Önce Kural, Sonra LLM" hibrit yaklaşımı: kâr payı oranı, tutar, vade, taksit, masraf, tarih… |
+| 2 | Bilgi çıkarımı | **Kural katmanı** (üretimde tek etkin katman): kâr payı oranı, tutar, vade, taksit, masraf, tarih… LLM kolu mimaride var, üretimde kapalı — gerekçe ölçüm |
 | 3 | Normalizasyon | TR sayı/oran/para/vade/tarih biçimleri tek kanonik biçime (`%1,89` → `1.89`, `1.500,00` → `1500.00`, `12 ay` → `12`) |
 | 4 | Sınıflandırma | 8 kampanya türü (Konut/Taşıt/İhtiyaç Finansmanı, Kart, Alışveriş Puanı, Yeni Müşteri, Yatırım Ürünü, Finansman) |
 | 5 | Karşılaştırma | Bankalar arası adil kıyas ve çelişki tespiti |
-| 6 | Sunum | Next.js dashboard + router'lı hibrit chatbot (text-to-SQL + RAG) |
+| 6 | Sunum | Next.js dashboard + router'lı chatbot: yapısal sorgu (text-to-SQL) ↔ RAG |
 
 ### Somut örnek — bir kampanya cümlesi, üç yapısal alan
 
@@ -128,7 +153,7 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
 
 Bu tablodaki her sayı yanındaki komutla yeniden üretilebilir ve bir CI kapısına
 bağlı: `python -m scripts.kanit_tazeligi` her satırı üreten kanıtla
-karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 · ölçüm kolu:
+karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026** (`app/eval/reports/20260820-130322/`) · ölçüm kolu:
 `kural` (resmî varsayılan, LLM kapalı).
 
 | Ne | Değer | Üreten komut |
@@ -138,23 +163,26 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: 15 Ağustos 2026 �
 | AI özeti kapsaması | 1.759 üretildi · 23 belge gerekçeli boş | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
-| Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | 0,698 | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
-| 12-alan mikro-F1 | 0,477 [%95 GA 0,407–0,536] | *(aynı komut — farkı aşağıda açıklıyoruz)* |
-| makro-F1 | 0,636 | *(aynı komut)* |
-| Halüsinasyon oranı | **0,043** (19/446) · yapısal kesitte 0,030 | *(aynı komut)* |
+| Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | **0,8228** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
+| 12-alan mikro-F1 | **0,5702** *(ikili ölçüt — hedef 0,60'ın ALTINDA)* | *(aynı komut — farkı aşağıda açıklıyoruz)* |
+| Kalem düzeyi mikro-F1 (12 alan) | **0,6291** | *(aynı komut)* |
+| makro-F1 | **0,7646** | *(aynı komut)* |
+| Halüsinasyon oranı | **0,0336** · yapısal kesitte 0,0254 | *(aynı komut)* |
 | RAG — terim kapsama R@5 | 0,867 | `python -m eval.rag_eval --db data/demo.db` |
 | RAG — banka hedefleme R@5 | 0,800 (BM25 sıralama) | *(aynı komut)* |
 | RAG — kaynak gösterme oranı | 1,000 | *(aynı komut)* |
 | Reddetme kararı doğruluğu | 30/30 = 1,000 | *(aynı komut)* |
 | Güvenlik seti | 29/30 = 0,97 · aşırı red 0/6 | `python -m src.chatbot.run_safety_eval --db data/demo.db` |
+| Anotatör uyumu — **v2 turu** | **Cohen κ 0,714** (192 çift, ikinci etiketleyici LLM — "notla kabul") | `python -m scripts.ikinci_etiketleyici kappa` |
 | Anotatör uyumu — round0 | Fleiss κ 0,302 · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
 | Anotatör uyumu — round1 | Cohen κ 0,274 (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
 | Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
 | Bağımlılık envanteri | 96 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
 | On-prem kanıtı | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
-| Test | **3.215** toplanan · 3.162 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız | `python -m scripts.test_ozeti` — ölçüm 2026-08-19 |
+| Test | **3.331** toplanan · 3.278 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız | `python -m unittest discover -s tests` — ölçüm 2026-08-20 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
-| Kanıt-tazeliği kapısı | var — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+| Kanıt-tazeliği kapısı | **14 iddia · 0 sapma** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+| Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
 
 <details>
 <summary><b>📐 Ölçüm metodolojisi — dört ilke, hepsi kod olarak</b></summary>
@@ -181,29 +209,48 @@ istatistiksel bir hata. `stats.bootstrap_ci` örnekleme birimi olarak belgeyi al
 raporlanmayan bir güven aralığı tekrar üretilemez.
 
 **3) Karşılaştırmalar McNemar ile yapılır.** İki yapılandırma aynı belgelerde
-koştuğu için eşleştirilmiş test gerekiyor. Sonuç: hibrit yapı kural katmanını
-geçemedi. 0,575 < 0,612, p = 0,0117; halüsinasyon oranı ise kural katmanının %60
-üstünde. Projenin kendi iç kılavuzu bu tablodan "hibridin kazandığının
-kanıtlanmasını" istiyordu. Tersi ölçüldü ve rapor ölçüldüğü gibi duruyor.
+koştuğu için eşleştirilmiş test gerekiyor. **Ablasyon 20 Ağustos'ta 40 zor
+belgeyle koştu** ve 5 Ağustos'un n=20'de bıraktığı soruyu kapattı: LLM katmanı
+kural katmanını **hiçbir konfigde** geçmedi.
 
-Bu iki sayı **5 Ağustos** tabanına aittir ve o günün gold setiyle ölçüldü.
-Kural katmanı 19 Ağustos'ta iyileştirildi (makro-F1 0,601 → 0,636), yani
-yukarıdaki 0,612 bugünün kural katmanından düşüktür.
+| kol | mikro-F1 (`strict`) | halüsinasyon | McNemar vs `kural` (`tolerant`) |
+|---|---|---|---|
+| **kural** | **0,4771** | **0,0425** | — |
+| llm | 0,2545 | 0,0582 | b=51 / c=22 · p = 0,00105 |
+| hibrit | 0,4402 | **0,1029** | b=27 / c=6 · p = 0,00050 |
+| hibrit-verify | 0,3672 | 0,0984 | b=35 / c=6 · p = 0,0000123 |
 
-Ablasyonun asıl sınırı başka: o rapor kendi içinde *"hibrit özellikle zor
-vakalarda kazanır → ölçülemedi, gold'da yalnız **1** zor belge var"* diyor.
-Bugünkü `gold.v2`'de **40 zor belge** var, yani karşılaştırma ilk kez zor vaka
-alt kümesinde anlamlı ölçülebilir durumda. 19 Ağustos'ta LLM kolu ilk kez
-koşturuldu ve doğrulandı (Ollama + `qwen2.5:7b-instruct`, CPU, katı mod) —
-[LLM kolu koşum kanıtı](app/docs/rapor/llm-kolu-kosum-kaniti.md). Ablasyonun
-kendisi CPU'da ~8 token/s ile koştuğu için uzun sürüyor; **tamamlanmadan
-hiçbir yeni sayı yayımlanmayacak.**
+Üç karşılaştırmada da `b > c` ve `p < 0,05` — fark örneklem gürültüsü değil.
+Hibrit halüsinasyonu **2,4 katına** çıkarıyor. **LLM sağlığı temiz: 384
+çağrının 384'ü başarılı** (parse hatası 0, HTTP hatası 0, şema ihlali 0,
+onarım 0), yani "LLM kötü çünkü bozuktu" savunması bu ölçümde kapalıdır.
+
+Projenin kendi iç kılavuzu bu tablodan *"hibridin kazandığının
+kanıtlanmasını"* istiyordu. Tersi ölçüldü ve rapor **ölçüldüğü gibi duruyor**.
+
+> Bu tablonun kolları **20 Ağustos sabahının** kural katmanıyla ölçüldü
+> (commit `0728bc44`); kural katmanı aynı gün iki tur daha iyileştirildi ve
+> manşet 0,5702'ye çıktı. Yani yukarıdaki `kural` satırı bugünün kural
+> katmanından **düşüktür** — LLM kollarının aleyhine değil, lehine bir
+> kıyastır ve yine kaybettiler. Kolları bugünün koduyla yeniden koşmak
+> açık iştir. Ayrıntı, kırılım ve karşı-okumalar:
+> [ablasyon raporu](app/docs/rapor/ablasyon.md).
 
 **4) Anotasyon uyumu, önceden ilan edilmiş eşikle.** Round0: 4 anotatör, 260
 ortak satır, 0 boş hücre, Fleiss κ 0,302. Round1: 2 anotatör, 141 ortak karar,
-Cohen κ 0,274. Eşiği anotasyon başlamadan ilan etmiştik
-(`ANNOTATION_GUIDE.md` §7) ve ilan edileni uyguladık: κ < 0,67 olduğu için
-zorunlu hakemlik ve kılavuz revizyonu. Sayıya bakıp eşiği değiştirmek yasak.
+Cohen κ 0,274. **v2 turu: Cohen κ 0,714** (192 çift, ikinci etiketleyici bir
+LLM). Eşiği anotasyon başlamadan ilan etmiştik (`ANNOTATION_GUIDE.md` §7) ve
+ilan edileni uyguladık: round0/round1'de κ < 0,67 olduğu için zorunlu hakemlik
+ve kılavuz revizyonu; v2 turunda 0,67 ≤ κ < 0,80 bandına düştüğü için "notla
+kabul" ve o notun yazılması. Sayıya bakıp eşiği değiştirmek yasak.
+
+> **κ neden 0,700 değil 0,714.** 0,700 daha önce yayımlanmıştı ve bir sonraki
+> HAKEM turu gold'u düzelttiği için **bayatladı**. κ, gold.v2'yi girdi olarak
+> okur; gold değişince κ da değişir. Yeniden ölçüldü:
+> `python -m scripts.ikinci_etiketleyici kappa` → **0,714**. Sayı bizim
+> lehimize değişti, ama yanlış sayıyı yayımlamak lehimize de olsa hatadır.
+> Bu sapmayı kanıt-tazeliği kapısı **yakalamamıştı**; kapı onarıldı
+> (`scripts/kanit_tazeligi.py`, `kappa_ikinci_tur` iddiası).
 
 ⚠️ **İki κ simetrik değil.** Round0'ın 0,302'si hakemlik sonrası bir durum
 (yedekler 0,051 → 0,268 → 0,302 ilerlemesini gösteriyor); round1'in 0,274'ü
@@ -227,8 +274,8 @@ aynı soruyu sormuyor, bu yüzden manşet sayı `gold.v2` — zor olan.
 | kayıt | 48 | 134 |
 | zor vaka | 40 | 3 |
 | `absent` kararı (halüsinasyon paydası) | **444** | **60** |
-| 12-alan mikro-F1 | 0,477 | 0,762 |
-| halüsinasyon | **0,043** | **0,417** |
+| 12-alan mikro-F1 (ikili) | **0,5702** | 0,762 |
+| halüsinasyon | **0,0336** | **0,417** |
 
 Round1'in 0,417'si seçim etkisi. Round1'de bir hücre inceleme kuyruğuna zaten
 model bir şey ürettiği için giriyor; o setin `absent` kümesi rastgele değil,
@@ -248,7 +295,7 @@ tabanında ikinci bir kapı olarak koşuyor (`eval/esikler-round1.json`).
 `kampanya_kosullari` serbest cümle listesi döndüren bir alan ("Kampanyaya dahil
 olmak için X gerekir"). Span veya jeton eşleşmesiyle F1 ölçmek bu alanda
 metodolojik olarak yanlış: aynı koşulu farklı sözcüklerle yazan iki anotatör bile
-birbirini yanlış bulurdu. Bu tek alan mikro-F1'i 0,698'ten 0,477'ye çekiyor.
+birbirini yanlış bulurdu. Bu tek alan mikro-F1'i 0,8228'den 0,5702'ye çekiyor: ikili ölçüt tam küme eşitliği arar ve bu koşumda 137 kalemin 78'i doğru çıkarılmış olmasına rağmen **hiçbir kayıt** birebir eşleşmedi — o yüzden ikili F1 0,000, kalem F1 ise 0,520.
 
 Alanı gizlemiyoruz. Ana tabloda satırı duruyor, değerlendirme raporunda kendi
 bölümünde kalem düzeyi ölçütle (jeton-Jaccard ≥ 0,70) raporlanıyor ve iki sayı
@@ -418,7 +465,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — 19 Ağu ölçümü: 3.215 toplandı, 3.162 geçti, 53 atlandı, 0 başarısız.
+# Tüm test paketi — 20 Ağu ölçümü: 3.331 toplandı, 3.278 geçti, 53 atlandı, 0 başarısız.
 # Atlananlar isteğe bağlı bağımlılık isteyenler (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değil ve tamamı offline koşuyor.
 python3 -m unittest discover -s tests
@@ -549,7 +596,7 @@ denetliyor.
 │   │                            #   comparison · rag · chatbot · api · db
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
-│   ├── tests/                   #   3.162 birim/entegrasyon testi (offline)
+│   ├── tests/                   #   3.278 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
 │   ├── data/gold/               #   altın setler + anotasyon kılavuzu
 │   ├── docs/                    #   SBOM · lisans envanteri · offline kanıt

@@ -248,6 +248,27 @@ yerel 8B modelin donması riski, kazancından büyüktü. `LLM_BACKEND` boş old
 **Bunun anlamı:** mimari "hibrit" ama şu an ölçülen sistem kural katmanıdır. Hibridin
 üstünlüğünü iddia etmek için ablasyon koşulmalıdır (bkz. A10 ve E5).
 
+> ### ✅ AÇIK KAPANDI (2026-08-20) — ablasyon koştu, iddia KURULMADI
+>
+> Bu raporun künye kuralı gereği yukarıdaki paragraf **silinmiyor**; o gün doğruydu.
+> Bugün eksik olan ölçüm yapıldı ve sonuç, beklenen yönün **tersi**:
+>
+> | kol | mikro-F1 (`strict`) | halüsinasyon | McNemar vs `kural` (`tolerant`) |
+> |---|---|---|---|
+> | **kural** | **0,4771** | **0,0425** | — |
+> | llm | 0,2545 | 0,0582 | p = 0,00105 |
+> | hibrit | 0,4402 | **0,1029** | p = 0,00050 |
+> | hibrit-verify | 0,3672 | 0,0984 | p = 0,0000123 |
+>
+> `gold.v2` (48 kayıt, 40 zor), commit `0728bc44`, Ollama + `qwen2.5:7b-instruct`,
+> CPU, `LLM_STRICT=1`. **LLM sağlığı temiz: 384/384 çağrı, 0 hata** — düşük başarım
+> teknik arıza değil.
+>
+> Yani "hibridin üstünlüğü" iddiası **kurulamadı ve kurulmadı**: LLM katmanı üç
+> konfigin üçünde de kural katmanının altında kaldı ve hibrit halüsinasyonu 2,4
+> katına çıkardı. Sonuç, üretim yolunun kural tabanlı **kalması** kararına
+> dönüştü. Ayrıntı: [`ablasyon.md`](ablasyon.md).
+
 ### Kısıtlı decoding tasarımı ve ölçülmüş kısıtları
 
 `src/extraction/llm/schema.py` şemayı gramer derleyicisinin kabul edeceği şekilde daraltır.

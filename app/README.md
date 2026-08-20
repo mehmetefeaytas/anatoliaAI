@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3162%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-3278%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-1782%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -21,13 +21,56 @@ offline** çalışabilen bir NLP sistemi.
 - Yalnızca Apache/MIT/BSD lisanslı model ağırlıkları.
 
 ## Mimari (özet)
-"Önce Kural, Sonra LLM" hibrit çıkarım — **teslim edilen alan çıkarımı İKİ
-katmandır**:
+
+**Üretim yolu kural tabanlıdır.** LLM katmanı kodda vardır, koşar ve
+ölçülmüştür — ama ölçüm onu üretime almamayı söyledi. Bu bir eksiklik değil,
+kanıta bağlı bir karardır; kanıtı `docs/rapor/ablasyon.md` taşıyor ve aşağıda
+özetleniyor.
+
 ```
-scrape → clean → preprocess → extract (kural [birincil] → LLM [yalnız boşluklar])
+scrape → clean → preprocess → extract (KURAL — üretimde tek etkin katman)
 → reconcile → normalize → PostgreSQL → compare
-→ dashboard + hibrit chatbot (text-to-SQL + RAG)
+→ dashboard + chatbot (yapısal sorgu ↔ RAG yönlendirmesi)
 ```
+
+> **"Hibrit" bu depoda iki ayrı şeye kullanılıyordu ve karıştırılması fazla
+> iddia üretiyordu.** Bundan sonra ayrı yazılıyor:
+>
+> | anlam | durum |
+> |---|---|
+> | **mimari olarak mevcut** | `src/extraction/llm/` + `reconcile.py`'nin boşluk-doldurma kolu vardır, test edilir, ablasyonda koşar |
+> | **üretimde devre dışı** | resmî metrik ve teslim kolu `kural`'dır (K-2); teslim edilen korpusta LLM katmanı **hiç alan üretmedi** (ölçüm aşağıda) |
+>
+> Ablasyon tablolarında `hibrit` kelimesi geçmeye **devam ediyor**; orada bir
+> **ölçüm konfigürasyonunun adıdır**, sistem hakkında bir iddia değil.
+> Chatbot'un iki yollu (yapısal sorgu ↔ RAG) yönlendirmesi ayrı bir
+> mekanizmadır ve alan çıkarımıyla ilgisi yoktur.
+
+### LLM katmanı neden üretimde değil — ölçüm
+
+20 Ağustos 2026, `gold.v2` (48 kayıt, 40'ı zor), Ollama +
+`qwen2.5:7b-instruct` (Apache-2.0), CPU, `LLM_STRICT=1`. **LLM sağlığı temiz:
+384 çağrının 384'ü başarılı** — parse hatası 0, HTTP hatası 0, şema ihlali 0,
+onarım 0. Yani düşük başarım teknik bir arızadan **gelmiyor**; model çağrıldı,
+geçerli JSON döndürdü ve yine kaybetti.
+
+| kol | mikro-F1 (`strict`) | halüsinasyon | McNemar vs `kural` (`tolerant`) |
+|---|---|---|---|
+| **kural** | **0,4771** | **0,0425** | — |
+| llm | 0,2545 | 0,0582 | p = 0,00105 · kural üstün |
+| hibrit | 0,4402 | **0,1029** | p = 0,00050 · kural üstün |
+| hibrit-verify | 0,3672 | 0,0984 | p = 0,0000123 · kural üstün |
+
+İki cümlelik okuma: LLM katmanı kural katmanını **hiçbir konfigde** geçmiyor
+(üç karşılaştırmada da p < 0,05), ve hibrit halüsinasyonu **2,4 katına**
+çıkarıyor (0,0425 → 0,1029). Bankacılıkta uydurulmuş bir değer doğrudan "En
+Avantajlı" sıralamasına girdiği için bunun bedeli F1 değil, **kullanıcıya
+yanlış bilgi verme oranıdır**.
+
+Bu tablo "LLM işe yaramaz" demiyor: ölçülen şey tek bir 7B modelin, bu
+korpusta, bu şemayla verdiği sonuçtur. Kuralın kendi F1'i de yüksek değildir —
+tablo kuralın iyi olduğunu değil, LLM'in onu geçemediğini gösteriyor. Künye,
+kırılım ve karşı-okumalar: [`docs/rapor/ablasyon.md`](docs/rapor/ablasyon.md).
 
 > **Neden "NER" katmanı bu okta YOK.** `CLAUDE.md` §3'teki üç katmanlı tasarım
 > PLANDIR; ikinci katman teslim edilmedi. `Extractor.NER` **hiçbir kod yolunda
@@ -80,7 +123,7 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > manşet sayıyı** kanıtlamaz. Ölçüm: `eval/reports/20260816-094841/report.md`
 > (2026-08-16, n=3, tüm alt kümelerde P=R=F1=1,000).
 >
-> Manşet sayılar (0,477 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
+> Manşet sayılar (0,5702 vb.) **gold.v2** (n=48) ile üretilir; o koşum da ek
 > paket istemez, yalnız stdlib kullanır:
 > ```bash
 > python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural
@@ -248,20 +291,20 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Ön işleme | `src/preprocessing/clean.py` | ✅ |
 | Normalizasyon | `src/normalization/normalize.py` | ✅ oran/para/vade/tarih/TR-sayı/aralık/negasyon |
 | Kural çıkarımı | `src/extraction/rules/` | ✅ confidence + source_span, halüsinasyon yasağı |
-| LLM çıkarımı | `src/extraction/llm/` | ✅ guided_json + vLLM/Ollama + offline Null-fallback |
-| Uzlaştırma | `src/extraction/reconcile.py` | ✅ kural birincil + LLM boşluk doldurma (**iki** katman; `Extractor.NER` üretilmiyor) |
+| LLM çıkarımı | `src/extraction/llm/` | ✅ guided_json + vLLM/Ollama + offline Null-fallback — **üretimde devre dışı** (ölçülmüş karar, yukarı bkz.) |
+| Uzlaştırma | `src/extraction/reconcile.py` | ✅ kural birincil; LLM boşluk-doldurma kolu **mevcut ama üretimde kapalı** (`Extractor.NER` hiç üretilmiyor) |
 | Sınıflandırma (8 tür) | `src/extraction/ner/classifier.py` | ✅ kural-ipucu + BERTurk yolu — **kampanya TÜRÜ sınıflandırması**, alan çıkarımı DEĞİL (klasör adı `ner/` tarihseldir) |
 | DB | `src/db/` | ✅ SQLite (offline) + Postgres/pgvector şema |
 | Karşılaştırma | `src/comparison/compare.py` | ✅ adil-kıyas garantisi |
 | Çelişki tespiti | `src/comparison/contradiction.py` | ✅ yenilikçilik |
-| Hibrit chatbot | `src/chatbot/` | ✅ router + yapısal sorgu + RAG |
+| Chatbot — iki yollu yönlendirme | `src/chatbot/` | ✅ router + yapısal sorgu ↔ RAG (alan çıkarımından bağımsız mekanizma) |
 | Scraping | `src/scraping/` | ✅ config-driven + offline fixtures |
 | Pipeline | `src/pipeline.py` | ✅ uçtan uca |
 | API | `src/api/main.py` | ✅ FastAPI (import-safe) |
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **3.215** birim/entegrasyon testi toplanıyor · **3.162 geçiyor** ·
+**Test:** **3.331** birim/entegrasyon testi toplanıyor · **3.278 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`).
@@ -278,8 +321,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.215** | **3.162** | 53 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **3.215** | **3.162** | 53 | **0** (+1.307 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.331** | **3.278** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **3.331** | **3.278** | 53 | **0** (+1.451 subtest) |
 >
 > Yayımlanan manşet **unittest** sayısıdır, çünkü kanıt-tazeliği kapısı taze
 > artefakt varken onu okur; artefakt bayatsa `pytest --collect-only` yedeğine
@@ -288,7 +331,7 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 > **Tarihçe (gizlenmiyor):** 16 Ağustos gün ortasında bir ara ölçümde
 > `pytest` 4 testi fazla topluyordu (3.162 / 3.155) ve kapı bunu sapma diye
 > raporluyordu. Gün sonunda, o günün test eklemeleri tamamlandıktan sonra
-> yapılan ölçümde fark **tekrarlanmıyor** — iki koşucu da 3.215 topluyor.
+> yapılan ölçümde fark **tekrarlanmıyor** — iki koşucu da aynı sayıyı topluyor.
 > Ara ölçüm bir hata değil, bir ara durumdu; kayda geçiriliyor çünkü aynı
 > sapma yeniden görülürse ilk bakılacak yer keşif (discovery) farkıdır.
 > Doğrulama: `python -m pytest tests/ -q` ve `python -m pytest -q` — ikisi de
@@ -312,17 +355,18 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **1.782 gerçek belge**, 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **3.162 test yeşil** (3.215 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-19, temiz ağaçta: `python -m scripts.test_ozeti`. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
+| Testler | ✅ **3.278 test yeşil** (3.331 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-20: `python -m unittest discover -s tests` → `Ran 3331 tests … OK (skipped=53)`; `python -m pytest tests -q` → `3278 passed, 53 skipped`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
 | Değişmez (invariant) denetimi | ✅ **1.782 belgede 0 ihlal** — kapsam **%89,6** (1.597 belgede en az bir alan çıktı; 185 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-16: `python -m eval.properties --raw-dir data/raw --out eval/reports/violations-20260816.jsonl` → çıkış kodu 0. Bir önceki yayımlanan hâl ("1 ihlal `P4_cumle_sirasi`, kapsam %91,3") bu koşumda **tekrarlanmadı**; P4 dahil dört değişmezin dördü de geçti |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-16, 1.782 belge — **iki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
 | Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
 | Ablasyon + McNemar | ✅ ölçüldü — `docs/rapor/ablasyon.md` |
-| Anotatörler arası uyum (κ) | ✅ **v2 turu: Cohen κ 0,700** (16 kayıt, 192 çift, ikinci etiketleyici LLM — "notla kabul" bandı; `masraf_durumu` negatif κ'sı hakemlenip gold+kılavuz+motor düzeltildi) · round0: **Fleiss κ 0,302** · α 0,620/0,787 (260 ortak satır, 4 anotatör, hakemlik **sonrası**) · round1: **Cohen κ 0,274** (141 ortak karar, hakemlik **öncesi**). İkisi de eşik altı → ilan edilen sonuç uygulandı. İki sayı simetrik DEĞİLDİR, ayrıntı kök [`README.md`](../README.md) §4 |
+| Anotatörler arası uyum (κ) | ✅ **v2 turu: Cohen κ 0,714** (16 kayıt, 192 çift, ikinci etiketleyici LLM — "notla kabul" bandı; `masraf_durumu` negatif κ'sı hakemlenip gold+kılavuz+motor düzeltildi) · round0: **Fleiss κ 0,302** · α 0,620/0,787 (260 ortak satır, 4 anotatör, hakemlik **sonrası**) · round1: **Cohen κ 0,274** (141 ortak karar, hakemlik **öncesi**). İkisi de eşik altı → ilan edilen sonuç uygulandı. İki sayı simetrik DEĞİLDİR, ayrıntı kök [`README.md`](../README.md) §4 |
 | Bağımlılık lisans envanteri | ✅ iki ayrı payda, ikisi de aynı `.venv` kesiti (2026-08-15 21:14 +03): **96 bileşen** = CycloneDX SBOM'un ortam taraması ([`docs/sbom.json`](docs/sbom.json), CI lisans kapısının OKUDUĞU dosya) · **91 paket** = `pip-licenses` insan-okur envanteri ([`docs/LISANSLAR.md`](docs/LISANSLAR.md)). Fark **tam olarak 5 pakettir** ve araç kaynaklıdır — aşağıya bakınız |
 | Şartname uyum matrisi | ✅ madde madde, kanıt komutlarıyla ([`docs/SARTNAME-UYUM.md`](docs/SARTNAME-UYUM.md)) |
-| Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) |
+| Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) — **14 iddia · 0 sapma** (2026-08-20) |
+| Eşik düşürme disiplini | ✅ ADR'ye bağlı: bir regresyon eşiği yalnız **ölçüt kusuru** kanıtlanırsa düşürülebilir, dört kapı + iki imza ([`docs/adr/0001`](docs/adr/0001-esik-dusurme-disiplini.md)) |
 
 #### 96 mı 91 mi — iki payda, iki farklı şey
 
@@ -383,7 +427,7 @@ uygulamıştı (ayrı yardımcı ortam, `.venv` kirletilmedi).
 | `.venv` ↔ `docs/sbom.json` sapması | **0** — her iki yönde de fark yok |
 | envanter | **96 = 96** |
 | `make lisans-kapisi` | **GEÇTİ ✅** |
-| tam test paketi | **3.162 geçti · 0 başarısız** — hiçbir şey kırılmadı |
+| tam test paketi | **3.162 geçti · 0 başarısız** (o günün ağacı) — hiçbir şey kırılmadı |
 
 ```bash
 .venv/bin/python -m pip list --format=json | .venv/bin/python -c "
@@ -464,35 +508,84 @@ belge düzeyi bootstrap 1000 örnek, tohum 42:
 
 | ölçüt | değer |
 |---|---|
-| **yapılandırılmış alan mikro-F1** (11 alan) | **0,698** |
-| 12-alan mikro-F1 | **0,477** [%95 GA 0,407–0,536] |
-| makro-F1 | **0,636** |
-| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,043** [19/446] · yapısal kesitte 0,030 |
-| kalem düzeyi mikro-F1 (12 alan) | 0,381 |
+| **yapılandırılmış alan mikro-F1** (11 alan, ikili) | **0,8228** |
+| kalem düzeyi mikro-F1 (12 alan) | **0,6291** |
+| 12-alan mikro-F1 | **0,5702** *(ikili ölçüt)* |
+| makro-F1 | **0,7646** |
+| halüsinasyon (bilgi metinde YOK, değer uyduruldu) | **0,0336** · yapısal kesitte 0,0254 |
 
-> **Künye.** Bu sayılar 15 Ağustos koşumundan gelir
-> (`eval/reports/20260815-195653/`) ve **2026-08-16'da yeniden koşularak
-> doğrulandı** — dördü de birebir aynı çıktı
-> (`eval/reports/20260816-102045/`). Üreten komut:
+**Hedef tutulmadı ve bu yazılıyor:** ikili 12-alan mikro-F1 **0,5702 < 0,60**
+hedefinin altında kaldı. Sayı bugün iki turda iyileştirildi (0,4771 → 0,5702)
+ama ilan edilmiş hedefe ulaşmadı; hedefi sonradan indirmek yerine tutulmadığını
+yazıyoruz.
+
+#### Alan bazında (aynı koşum, `strict`, tümü)
+
+| alan | ikili F1 | not |
+|---|---:|---|
+| `vade_ay` | **1,000** | |
+| `kar_payi_orani` | **1,000** | destek 3 — F1 yorumlanamaz |
+| `finansman_tutari` | **1,000** | destek 4 |
+| `kampanya_suresi` | 0,936 | |
+| `alisveris_puani` | 0,933 | |
+| `taksit_sayisi` | 0,909 | |
+| `odul_miktari` | 0,727 | |
+| `masraf_durumu` | 0,667 | |
+| `indirim_orani` | 0,667 | destek 2 |
+| `hedef_kitle` | 0,571 | kalem düzeyinde 0,632 |
+| `kampanya_kosullari` | **0,000** | **kalem düzeyinde 0,520** — aşağıya bakınız |
+| `tahsis_ucreti` | — | destek 0, F1 tanımsız |
+
+> **`kampanya_kosullari` ikili 0,000 gizlenmiyor — ama tek başına okunması
+> yanlıştır.** İkili ölçüt **tam küme eşitliği** arar: bir belgenin koşul
+> listesi birebir eşleşmezse, kaç koşulun doğru çıkarıldığına bakılmaksızın
+> sonuç TP=0 / FP=1 / FN=1 olur. Bu koşumda **137 kalemin 78'i doğru
+> çıkarıldı** (kalem P 0,479 · R 0,569 · F1 **0,520**) ama **hiçbir kayıt**
+> birebir küme eşleşmesi vermedi — dolayısıyla ikili sayı 0,000.
+>
+> Serbest metin listesi döndüren bir alanda anlamlı ölçüt **kalem
+> düzeyidir**; ikili sayı yine de yayımlanıyor, çünkü onu saklamak ölçütün
+> zayıflığını değil sonucu saklamak olurdu. **Üç görünüm de (ikili · kalem ·
+> yapısal) yayımlanmaya devam ediyor** ve hiçbiri diğerinin yerine
+> geçmez — yapısal kesit (11 alan) bu alanı dışlar, o yüzden 0,8228'dir.
+
+> **Künye.** Bu sayılar **20 Ağustos 2026** koşumundan gelir
+> (`eval/reports/20260820-130322/`, kod sha `7e19f2d0`, gold sha `e38a5276…`).
+> Üreten komut:
 > ```bash
-> python3 -m eval.run_eval --gold data/gold/gold.v2.json --config kural
+> .venv/bin/python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 > ```
 >
-> 12 Ağustos koşumu (`eval/reports/20260812-212355/`) **0,452**
-> [%95 GA 0,384–0,512] · makro 0,556 · halüsinasyon 0,059 veriyordu; yani
-> 0,452 → **0,464**, halüsinasyon 0,059 → **0,047**. Fark iki kural
-> düzeltmesinden geliyor: oransal tahsis ücretinde türetme kaldırıldı
-> (§4.13/5) ve kabuk bölgesi kapısı eklendi (§4.13/8). İkisi de metinde
-> geçmeyen değer üretmeyi bitirdi.
+> **Bugün iki tur iyileştirme koştu ve sayılar bu yüzden değişti:**
 >
-> **0,452 artık geçerli manşet DEĞİLDİR** — yalnız 12 Ağustos kesitinin
-> tarihsel değeridir. Belgede bu sayıyla karşılaşırsanız tarihine bakın.
+> | ölçüt | 19 Ağu (`20260820-053530`) | **20 Ağu (bugün)** |
+> |---|---|---|
+> | 12-alan mikro-F1, ikili | 0,4771 | **0,5702** |
+> | kalem mikro-F1 | 0,3866 | **0,6291** |
+> | yapısal mikro-F1 (11 alan) | 0,6980 | **0,8228** |
+> | makro-F1 | 0,6317 | **0,7646** |
+> | halüsinasyon oranı | 0,0425 | **0,0336** |
+>
+> Önceki manşetler (0,452 · 0,464 · 0,477) **artık geçerli DEĞİLDİR** — her
+> biri kendi kesitinin tarihsel değeridir. Belgede bu sayılarla
+> karşılaşırsanız tarihine bakın; kanıt-tazeliği kapısı
+> (`python -m scripts.kanit_tazeligi`) bu kalıntıları arar.
+>
+> ⚠️ **Bu koşumun künyesi `git_dirty: true`.** Ölçüm bugünün işinin tamamı
+> üzerinde koştu ama ağaç o an kirliydi (değişiklikler henüz commit
+> edilmemişti). Kanıt-tazeliği kapısı bunu **doğru biçimde reddediyor** ve
+> `KANIT YOK` diyor — kirli ağaçta üretilmiş rapor tekrar üretilemez, o yüzden
+> kanıt sayılmaz. **Yapılacak (teslim öncesi):** commit'ten sonra `run_eval`
+> yeniden koşulacak ve temiz damgalı rapor üretilecek. Sayının değişmesi
+> beklenmiyor; beklenen tek fark artefaktın **kanıt sayılabilir** hâle
+> gelmesidir.
 
-**İki mikro-F1 neden veriliyor:** `kampanya_kosullari` serbest cümle listesi
-döndürür; span/jeton eşleşmesiyle F1 ölçmek metodolojik olarak yanlıştır (aynı
-koşulu farklı sözcüklerle yazan iki anotatör bile birbirini "yanlış" bulurdu).
-Alan **gizlenmiyor**, kalem düzeyi ölçütle ayrı raporlanıyor; iki sayı yan yana
-duruyor. Ayrıntı: kök [`README.md`](../README.md#-ölçülebilir-durum).
+**Neden üç mikro-F1 birden veriliyor:** `kampanya_kosullari` serbest cümle
+listesi döndürür; küme eşitliği arayan ikili ölçüt bu alanda metodolojik
+olarak yanlıştır (aynı koşulu farklı sözcüklerle yazan iki anotatör bile
+birbirini "yanlış" bulurdu). Alan **gizlenmiyor**: ikili sayısı (0,000), kalem
+sayısı (0,520) ve alanı dışlayan yapısal kesit (0,8228) **üçü birden**
+yayımlanıyor. Ayrıntı: kök [`README.md`](../README.md#-ölçülebilir-durum).
 
 #### Gold setin statüsü — iki set, iki farklı güvenilirlik
 
@@ -504,10 +597,11 @@ Bu ayrım metriklerden önce gelir ve **birleştirilerek sunulmaz**:
 | `gold.v2` | 48 | **makine** anotatör (M1–M4), her belge birebir alıntı kanıtıyla | ❌ hakemlik yok (`adjudicated: false`) |
 | `gold.round1` | 134 | **makine** anotatör (A–D), protokol v2 | 🟠 **makine kör hakem** — 38 kayıt (`adjudicated: true`); insan hakemliği YOK |
 
-Yukarıdaki 0,464 **gold.v2 üzerinde** ölçüldü, yani **insan hakemliğinden
-geçmemiş** bir sette. Bunu gizlemek yerine yazıyoruz çünkü alternatifi
-(0,677'yi manşete koymak) daha kötü — o da modele çapalı bir protokolden
-geliyor. İkisi de kısıtlıdır ve ikisi de kısıtıyla birlikte sunulur.
+Yukarıdaki **0,5702** `gold.v2` üzerinde ölçüldü, yani **insan
+hakemliğinden geçmemiş** bir sette. Bunu gizlemek yerine yazıyoruz çünkü
+alternatifi (`gold.v1`'in 0,677'sini manşete koymak) daha kötü — o da modele
+çapalı bir protokolden geliyor. İkisi de kısıtlıdır ve ikisi de kısıtıyla
+birlikte sunulur.
 
 **`gold.round1`'deki hakemlik makine hakemliğidir.** 41 uyuşmazlık, yalnız
 kendi alanının kılavuz paragrafını gören ve birbirinden habersiz çalışan
@@ -549,19 +643,26 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 **Tekrarlanan tek sayı halüsinasyon oranıdır** (~%10), payda 166'dan 444'e
 çıkarken korundu. İki protokolden de bağımsız çıkan tek metrik budur.
 
-### Ölçümle yanlışlanan üç hipotez
+### Ölçümle yanlışlanan hipotezler
 
-Bu projede "daha güçlü model ekleyelim" refleksi **üç kez** denendi ve
-üçünde de kural katmanı önde kaldı:
+Bu projede "daha güçlü model ekleyelim" refleksi **beş ayrı kolda** denendi ve
+beşinde de kural katmanı önde kaldı. LLM'li dört kolun künyesi ortak:
+20 Ağustos 2026, `gold.v2` (48 kayıt, 40 zor), `qwen2.5:7b-instruct`, CPU,
+`LLM_STRICT=1`, mikro-F1 `strict`:
 
 | deneme | sonuç |
 |---|---|
-| Hibrit kol (LLM boşlukları doldurur) | 0,575 vs kural 0,677; halüsinasyon %70 fazla |
+| Hibrit kol (LLM boşlukları doldurur) | **20 Ağu, 40 zor belge:** 0,4402 vs kural 0,4771; McNemar p=0,00050; halüsinasyon **2,4 katı** (0,0425 → 0,1029). *(5 Ağu, n=20: 0,575 vs 0,677 — aynı yön)* |
+| LLM-only kol | 0,2545 vs kural 0,4771; McNemar p=0,00105. LLM sağlığı temiz (384/384 çağrı, 0 hata) — düşük başarım arıza değil |
+| Doğrulama kolu (`hibrit-verify`) | 0,3672 — hibritten de **kötü**; güven skoru kalibre olmadığı için doğru değerleri de eliyor |
 | Orkestrasyon (ajan önerir, hakem reddeder) | 0,377 vs kural 0,387; üç ölçütte de kural önde. McNemar yönü kuralı gösteriyor (ham p=0,039) ama **çoklu karşılaştırma düzeltmesi yapılmadı** — projede ≥18 test koşuldu, bu p tek başına kanıt sayılmamalı |
 | BERTurk ince ayarı (8 sınıf) | makro-F1 0,565 vs kural 0,762 — kabul kapısında **kaldı**, projeye alınmadı |
 
-Mekanizma üçünde de aynı: LLM doğru sayısını artırmıyor, yanlış sayısını
-artırıyor. Negatif sonuçlar gizlenmedi; `docs/rapor/ablasyon.md` ve
+Mekanizma hepsinde aynı: LLM doğru sayısını artırmıyor, yanlış sayısını
+artırıyor. Sebep yapısaldır — `reconcile.py` sözleşmesi gereği LLM kuralın
+FP'lerini **düzeltemez**, yalnız kuralın boş bıraktığı alanlara FP
+**ekleyebilir**; kazanç tavanı dar, kayıp tabanı geniştir. Negatif sonuçlar
+gizlenmedi; `docs/rapor/ablasyon.md` ve
 `docs/rapor/berturk-ince-ayar-plani.md` içinde ölçüm künyeleriyle duruyor.
 
 **Yan bulgu (pozitif):** hakem katmanının katkısı izole edildi — orkestra,
@@ -615,7 +716,7 @@ olduğu sayının kendisi kadar önemli.
 > ölçülemedi: `round0_kalibrasyon_v2_{A,B,C,D}.csv` dağıtıldı ama dördünün
 > **sha256'sı birebir aynı** (`66c7db60…`), yani hiçbiri doldurulmamış.
 
-### κ v2 — ÖLÇÜLDÜ: **0,700** (ikinci etiketleyici bir LLM)
+### κ v2 — ÖLÇÜLDÜ: **0,714** (ikinci etiketleyici bir LLM)
 
 `gold.v2`'nin 48 kaydında **hiç etiketleyici örtüşmesi yoktu**
 (`annotators` dağılımı M1:12, M2:12, M3:12, M4:10, M4+HAKEM-02:2) ve κ
@@ -625,7 +726,7 @@ etiketlendi:
 
 | Ölçüt | Değer | Karar |
 |---|---|---|
-| **κ — varlık kararı** (192 çift) | **0,700** | **notla kabul** — §7'nin 0,67 ≤ κ < 0,80 bandı |
+| **κ — varlık kararı** (192 çift) | **0,714** | **notla kabul** — §7'nin 0,67 ≤ κ < 0,80 bandı |
 | Değer uyumu — birebir | 0,423 (11/26) | κ değil; şans düzeltmesi yok |
 | Krippendorff α (`ratio`) | 1,000 ama **3 birim** | **yetersiz birim** — iddia kurulmuyor |
 
@@ -638,8 +739,9 @@ KENDİSİNDE görünür (`annotators` içinde `LLM-01`; 18 kayıt ≥ 2 etiketle
 vakada LLM, belgede `masraf|ücret|komisyon` geçen **sıfır** cümle olmasına
 rağmen `has_fee:false` üretti — yani bağımsız görüş değil **uydurma**.
 
-**Hakemlik koştu ve gold'u düzeltti.** `masraf_durumu` κ'sı **negatif**
-çıktı (−0,103: gözlenen uyum 12/16 olmasına rağmen anlaşmazlık sistematik).
+**Hakemlik koştu ve gold'u düzeltti.** `masraf_durumu` κ'sı hakemlik
+ÖNCESİNDE **−0,103** (gözlenen uyum 12/16), hakemlik SONRASINDA **−0,091**
+(13/16) — hâlâ negatif, yani anlaşmazlık sistematik ve alan **kapanmadı**.
 Dört uyuşmazlık hakemlendi → 3 onay, 1 düzeltme. Düzeltilen vakada kusur
 anotatörde değil **kılavuzun kapsamında**ydı: kural "ücretsiz" gördüğü her
 yerde sıfır masraf diyordu ve *"GastroClub üyeliği … ücretsiz"* cümlesi
@@ -648,6 +750,14 @@ katmanda birden yapıldı (gold + kılavuz §4 kapsam kuralı + motorda
 `_ALAN_DISI_OZNE_RE` kolu) ve **ölçülen bedeli raporlanıyor**: mikro-F1
 0,482 → 0,477, çünkü gold ile motorun aynı yanlışı yaptığı bir hücre TP
 sayılıyordu; ikisi de düzeltilince hücre TN oldu ve TN F1'e girmez.
+
+> **Bu düzeltme κ'yı da değiştirdi ve yayımlanan κ 0,700'de KALDI.** Hakemlik
+> `hayat-finans … gastroclub` kaydındaki uyuşmazlığı çözünce toplam uyuşmazlık
+> 32 → 31'e, `masraf_durumu` gözlenen uyumu 12/16 → 13/16'ya ve **κ 0,700 →
+> 0,714**'e taşındı. Sayı bizim lehimize değişti ama README günlerce eski
+> değeri yayımladı; **yanlış sayı lehimize de olsa yanlıştır**. Kanıt-tazeliği
+> kapısı bunu yakalamamıştı çünkü κ hiç denetlenmiyordu — kapı onarıldı
+> (`kappa_ikinci_tur` iddiası) ve artık bu sapma CI'ı kırar.
 
 Ayrıntı: [`data/gold/review/_kappa-ikinci-tur.md`](data/gold/review/_kappa-ikinci-tur.md)
 · [`data/gold/review/_hakem-turu-03-masraf-durumu.md`](data/gold/review/_hakem-turu-03-masraf-durumu.md)
@@ -661,12 +771,15 @@ gold mu, yargıç mı" ayrımını yapacak.
 Öncelik sırasıyla, teslime kalan sürede:
 
 - ~~**κ v2 turunu anote et**~~ — **YAPILDI (19 Ağu)**, ama LLM ikinci
-  etiketleyiciyle: κ = **0,700**, "notla kabul" bandı (yukarıdaki bölüm).
+  etiketleyiciyle: κ = **0,714**, "notla kabul" bandı (yukarıdaki bölüm).
   Kalan iş **insan** hakemliği ve ikinci turun daha güçlü bir modelle
   tekrarı (`colab/03_kappa.py`).
-- **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve **0,464** nokta
-  tahmini savunulabilir hâle gelir (bugünkü GA 0,398–0,522, yani genişliği
-  0,124 — nokta tahminin kendisi kadar büyük).
+- **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve **0,5702**
+  nokta tahmini savunulabilir hâle gelir (bugünkü %95 GA **0,492–0,632**, yani
+  genişliği **0,140** — nokta tahminin dörtte biri kadar. Bu genişlikte
+  "0,5702 < 0,60 hedefi" ifadesi bile GA içinde kalıyor; hedefin
+  tutulmadığını nokta tahmine dayanarak yazıyoruz, GA'ya dayanarak
+  *kesinleştirmiyoruz*).
 - **`kampanya_kosullari` ve `vade_ay`** — ikisi mikro-F1'in en büyük tek
   kaldıracı; eşleştirici sertliği mi tanım sorunu mu ayrıştırılmalı.
 - ~~**Değişmez denetimini 1.774 belgede tekrarla**~~ — **YAPILDI (2026-08-16):**

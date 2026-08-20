@@ -24,6 +24,21 @@ kadar üç kez oldu. Ölçülmüş sapmalar (15 Ağustos):
 
 Bu yüzden düzeltme değil **mekanizma** gerekiyor.
 
+## Mekanizmanın kendi kör noktası (ölçüldü 2026-08-20)
+
+Kapı kurulduktan sonra da bir sapma geçti: README **κ = 0,700** yazıyordu,
+gerçek değer **0,714**'tü. Bu bir regex hatası DEĞİLDİ — `iddialar()` içinde
+κ diye bir satır **hiç yoktu**, yani sayı hiç denetlenmiyordu. Aynı denetimde
+`yapısal mikro-F1`, `kalem mikro-F1` ve `makro-F1` de korumasız çıktı:
+`olc_metrik` bu anahtarları destekliyordu ama hiçbir iddia onları
+kullanmıyordu.
+
+Alınan ders, kapının kendi kuralının kendisine uygulanmasıdır: **korunan
+sayıların listesi, yayımlanan sayıların listesinden küçük olduğu sürece kapı
+"0 sapma" derken yanılıyor olabilir.** Dördü de artık `iddialar()` içinde;
+`tests/test_kanit_tazeligi.py::TestDesenlerGERCEKTEN_Yakaliyor` her desenin
+işaret ettiği belgede gerçekten bir şey yakaladığını doğruluyor.
+
 ## İki ayrı denetim — karıştırılmamalı
 
 1. **Değer denetimi:** belgedeki sayı = kanıttan okunan sayı. Yalnız tablo
@@ -294,6 +309,95 @@ def olc_banka_sayisi() -> float:
     # TKBB şemsiye kuruluştur, katılım bankası DEĞİLDİR — README de ikisini
     # ayrı sayıyor ("10 katılım bankası + TKBB"). Burada da ayrılır.
     return float(len([g for g in girdiler if g != "tkbb"]))
+
+
+def olc_kappa_ikinci_tur() -> float:
+    """κ (Cohen) — ikinci etiketleyici turu, VARLIK kararı üzerinden.
+
+    ## Bu ölçer neden var — kapının ölçülmüş kör noktası
+
+    20 Ağustos'ta yayımlanan κ **0,700**'dü; yeniden ölçüldüğünde **0,714**
+    çıktı. Kapı bunu YAKALAMADI ve sebebi bir regex hatası değil, bir
+    EKSİKLİKTİ: `iddialar()` içinde κ diye bir satır **hiç yoktu**. Bu
+    dosyanın kendi uyarısı ("Eklemezsen kapı onu korumaz — ve korunmayan
+    sayı, ölçülmüş olarak, bayatlar") κ üzerinde birebir gerçekleşti.
+
+    Sapmanın mekanizması, kapının zaten bildiği bir mekanizmanın aynısıdır:
+    κ girdi olarak `gold.v2.json`'u okur. HAKEM turları gold'u düzeltince
+    gold'dan türeyen BÜTÜN F1'ler için kapı doğru davranıp "ölçüm yeniden
+    koşulmalı" dedi (`taze_rapor` gold sha'sını denetliyor) — ama κ o
+    denetimin kapsamında olmadığı için sessizce eski değerinde kaldı. Yani
+    aynı girdi değişikliği bir sayı sınıfını korudu, diğerini korumadı.
+
+    `bayat_prozada` mekanizması da bunu yakalayamazdı: o mekanizma belgenin
+    kendi yazdığı `<eski> → <yeni>` ilanına çapalıdır ve README hiçbir yerde
+    "0,700 → 0,714" yazmamıştı. Yakalanmayan sapmanın yakalanabilir tek yolu
+    iddianın kendisini buraya yazmaktı.
+
+    ## Neden artefakt değil KAYNAK VERİ okunuyor
+
+    `_kappa-ikinci-tur.md` bu ölçümün raporudur ve ondan okumak kolay olurdu
+    — ama o rapor da bayatlayabilir (üretildikten sonra gold değişebilir).
+    `test_gecti`'de artefakta mecburduk (tam test koşusu pahalıdır); burada
+    değiliz: κ iki dosyadan saniyeler içinde yeniden hesaplanır. O yüzden
+    ölçüm KAYNAKTAN yapılır ve arada bayatlayacak bir katman kalmaz.
+
+    ## Neden ikinci bir hesap YAZILMIYOR
+
+    Karar çıkarımı ve κ, `scripts.ikinci_etiketleyici`'nin kullandığı AYNI
+    koddan (`_insan_karari` + `eval.iaa.cohen_kappa`) gelir. İkinci bir
+    uygulama yazmak, kapının yayımlanan sayıyı ÜRETEN koddan farklı bir
+    kodla denetlemesi olurdu; o zaman kapı sapmayı değil, iki uygulamanın
+    farkını ölçerdi.
+    """
+    try:
+        from eval.iaa import cohen_kappa
+        from scripts.gold_schema import load_gold
+        from scripts.ikinci_etiketleyici import (
+            CIKTI,
+            EXTRACTION_FIELDS,
+            GOLD,
+            _insan_karari,
+        )
+    except ImportError as exc:                          # pragma: no cover
+        raise KanitYok(f"κ ölçüm kodu içe alınamadı: {exc}") from exc
+
+    if not CIKTI.exists():
+        raise KanitYok(
+            f"{CIKTI.relative_to(DEPO)} yok — "
+            f"`python -m scripts.ikinci_etiketleyici kos` koşulmalı")
+    if not GOLD.exists():
+        raise KanitYok(f"{GOLD.relative_to(DEPO)} yok")
+
+    kayitlar = {k.id: k for k in load_gold(GOLD)}
+    a_kararlar: list[str | None] = []
+    b_kararlar: list[str | None] = []
+    for satir in CIKTI.read_text(encoding="utf-8").splitlines():
+        if not satir.strip():
+            continue
+        x = json.loads(satir)
+        if x.get("error"):
+            continue
+        kayit = kayitlar.get(x["id"])
+        if kayit is None:
+            continue
+        for alan in EXTRACTION_FIELDS:
+            a = _insan_karari(kayit, alan)
+            a_kararlar.append(a)
+            b_kararlar.append(
+                ("dolu" if alan in x["fields"] else "absent")
+                if a is not None else None)
+
+    cift = sum(1 for a, b in zip(a_kararlar, b_kararlar, strict=True)
+               if a is not None and b is not None)
+    if cift == 0:
+        raise KanitYok(
+            "κ çifti yok — gold ile ikinci tur arasında karar verilmiş "
+            "(belge, alan) ikilisi bulunamadı")
+    k = cohen_kappa(a_kararlar, b_kararlar)
+    if k != k:                                          # NaN
+        raise KanitYok(f"κ hesaplanamadı (tanımsız), {cift} çift")
+    return float(k)
 
 
 def olc_bootstrap_ornek() -> float:
@@ -704,6 +808,63 @@ def iddialar() -> list[Iddia]:
                 ("app/docs/sunum/anatolia-ai-sunum.html", r'sayac">(0,\d+)</span><p><strong>halüsinasyon'),
             ),
             olcer=olc_metrik("gold.v2.json", "halusinasyon"),
+        ),
+        # Aynı koşumun DİĞER iki manşeti de denetim dışıydı: `olc_metrik`
+        # bu anahtarları zaten destekliyordu ama hiçbir iddia onları
+        # kullanmıyordu. Yapısal/kalem ayrımı yayımlanan üç görünümden
+        # ikisidir; korunmayan sayı bayatlar.
+        Iddia(
+            ad="v2_yapisal_mikro_f1",
+            aciklama="gold.v2 · strict · yapılandırılmış kesit (11 alan) mikro-F1",
+            desenler=(
+                ("app/README.md",
+                 r"yapılandırılmış alan mikro-F1\*\* \(11 alan, ikili\) \| \*\*([\d,]+)\*\*"),
+                ("README.md",
+                 r"Yapılandırılmış alan mikro-F1 \(gold\.v2, 11 alan\) \| \*\*([\d,]+)\*\*"),
+                ("app/docs/sunum/anatolia-ai-sunum.html",
+                 r'sayac">([\d,]+)</span><p><strong>yapılandırılmış alan mikro-F1'),
+            ),
+            olcer=olc_metrik("gold.v2.json", "yapisal_mikro_f1"),
+        ),
+        Iddia(
+            ad="v2_kalem_mikro_f1",
+            aciklama="gold.v2 · strict · kalem düzeyi mikro-F1 (12 alan)",
+            desenler=(
+                ("app/README.md",
+                 r"kalem düzeyi mikro-F1 \(12 alan\) \| \*\*([\d,]+)\*\*"),
+                ("README.md",
+                 r"Kalem düzeyi mikro-F1 \(12 alan\) \| \*\*([\d,]+)\*\*"),
+            ),
+            olcer=olc_metrik("gold.v2.json", "kalem_mikro_f1"),
+        ),
+        Iddia(
+            ad="v2_makro_f1",
+            aciklama="gold.v2 · strict · makro-F1",
+            desenler=(
+                ("app/README.md", r"^\| makro-F1 \| \*\*([\d,]+)\*\*"),
+                ("README.md", r"^\| makro-F1 \| \*\*([\d,]+)\*\*"),
+            ),
+            olcer=olc_metrik("gold.v2.json", "makro_f1"),
+        ),
+        # κ — kapının ölçülmüş kör noktası. Gerekçe `olc_kappa_ikinci_tur`
+        # docstring'inde: iddia buraya YAZILMADIĞI için 0,700 → 0,714
+        # sapması kapıdan geçti.
+        Iddia(
+            ad="kappa_ikinci_tur",
+            aciklama="κ — ikinci etiketleyici turu, varlık kararı (gold.v2 ↔ LLM-01)",
+            desenler=(
+                ("app/README.md", r"\*\*v2 turu: Cohen κ ([\d,]+)\*\*"),
+                ("app/README.md", r"### κ v2 — ÖLÇÜLDÜ: \*\*([\d,]+)\*\*"),
+                ("app/README.md",
+                 r"\*\*κ — varlık kararı\*\* \(192 çift\) \| \*\*([\d,]+)\*\*"),
+                ("app/README.md", r"etiketleyiciyle: κ = \*\*([\d,]+)\*\*"),
+                ("README.md", r"\(gold\.v2 ↔ LLM-01, 192 çift\) \| \*\*([\d,]+)\*\*"),
+                ("README.md", r"\*\*Cohen κ ([\d,]+)\*\* \(192 çift"),
+                ("README.md", r"\*\*v2 turu: Cohen κ ([\d,]+)\*\*"),
+                ("app/docs/sunum/anatolia-ai-sunum.html",
+                 r"Cohen <em>κ = ([\d,]+)</em>"),
+            ),
+            olcer=olc_kappa_ikinci_tur,
         ),
     ]
 

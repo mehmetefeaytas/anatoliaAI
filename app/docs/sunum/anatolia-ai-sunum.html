@@ -463,19 +463,21 @@
   <span class="no">12</span>
   <p class="goz gir">Ölçülen sonuçlar</p>
   <div class="izgara k4 gir">
-    <div class="kart"><span class="sayac">0,717</span><p><strong>yapılandırılmış alan mikro-F1</strong> — 11 alan, zor vaka setinde</p></div>
-    <div class="kart"><span class="sayac">0,043</span><p><strong>halüsinasyon oranı</strong> — 19 / 447 karar, ayrı paydayla</p></div>
-    <div class="kart"><span class="sayac">3.162</span><p><strong>yeşil test</strong> — 0 hata, ağ gerektirmeden</p></div>
+    <div class="kart"><span class="sayac">0,8228</span><p><strong>yapılandırılmış alan mikro-F1</strong> — 11 alan, zor vaka setinde</p></div>
+    <div class="kart"><span class="sayac">0,0336</span><p><strong>halüsinasyon oranı</strong> — ayrı paydayla, yapısal kesitte 0,0254</p></div>
+    <div class="kart"><span class="sayac">3.278</span><p><strong>yeşil test</strong> — 0 hata, ağ gerektirmeden</p></div>
     <div class="kart"><span class="sayac">14/14</span><p><strong>ağsız kanıt adımı</strong> — temiz kaynak ağacında</p></div>
   </div>
   <p class="yumusak gir" style="margin-top:clamp(24px,2.8vw,40px); max-width:68ch">
-    12 alan mikro-F1'i <em>0,477</em> [%95 GA 0,407–0,536] — ve bu sayıyı düşüren alanı
-    gizlemiyoruz: serbest cümle listesi döndüren <em>kampanya koşulları</em>, span
-    eşleşmesiyle ölçülemez. İki sayıyı da yan yana yayımlıyoruz.
+    12 alan mikro-F1'i <em>0,5702</em> — ilan ettiğimiz <em>0,60</em> hedefinin
+    <em>altında</em> ve bunu yazıyoruz. Sayıyı düşüren alanı da gizlemiyoruz: serbest
+    cümle listesi döndüren <em>kampanya koşulları</em>, tam küme eşitliği arayan ikili
+    ölçütle 0,000 alıyor — oysa aynı koşumda 137 kalemin 78'i doğru çıkarıldı
+    (kalem F1 <em>0,520</em>). Üç görünümü de yan yana yayımlıyoruz.
   </p>
   <p class="yumusak gir" style="margin-top:clamp(14px,1.6vw,22px); max-width:68ch">
     Referansın <em>kendi</em> güvenilirliği de ölçüldü: 16 kayıt bağımsız bir ikinci
-    turla etiketlendi, Cohen <em>κ = 0,700</em> — eşik tablosu anotasyon başlamadan
+    turla etiketlendi, Cohen <em>κ = 0,714</em> — eşik tablosu anotasyon başlamadan
     ilan edilmişti ve bu, onun "notla kabul" bandı. İkinci etiketleyici bir
     <em>LLM</em>'dir ve bunu saklamıyoruz: aynı tur, o modelin bir belgede
     dayanaksız değer ürettiğini de gösterdi.
@@ -492,7 +494,9 @@
     <table class="kiyas">
       <thead><tr><th>Ne denendi</th><th>Ölçüm</th><th>Karar</th></tr></thead>
       <tbody>
-        <tr><td>Çok-ajanlı LLM orkestrasyonu</td><td>0,575 &lt; 0,612 · p = 0,0117</td><td class="biz">reddedildi</td></tr>
+        <tr><td>Hibrit kol — LLM boşlukları doldurur</td><td>0,4402 &lt; 0,4771 · p = 0,00050 · halüsinasyon 2,4 katı</td><td class="biz">üretime alınmadı</td></tr>
+        <tr><td>LLM-only kol</td><td>0,2545 &lt; 0,4771 · p = 0,00105</td><td class="biz">reddedildi</td></tr>
+        <tr><td>Çok-ajanlı LLM orkestrasyonu</td><td>0,377 &lt; 0,387 · ham p = 0,039</td><td class="biz">reddedildi</td></tr>
         <tr><td>Oransal ücretten tutar türetme</td><td>6 belgede metinde geçmeyen değer</td><td class="biz">kaldırıldı</td></tr>
         <tr><td>BERTurk ince ayarı</td><td>kabul kapısını geçemedi</td><td class="biz">teslim edilmedi</td></tr>
       </tbody>

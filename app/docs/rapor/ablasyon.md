@@ -16,7 +16,23 @@ kapatıyor.
 `gold.v2`'de bugün **40** zor belge var. Soru ilk kez anlamlı ölçüldü ve
 cevap ilk koşumla aynı yönde, ama artık zor alt kümede de geçerli.
 
-### Koşum künyesi
+### Koşum künyesi — TEK DOĞRULUK KAYNAĞI
+
+Bu bölümün her sayısı **şu dört ham rapordan** okunur; başka hiçbir yerden
+türetilmez:
+
+| kol | ham rapor |
+|---|---|
+| `kural` | `eval/reports/20260820-053530/` |
+| `llm` | `eval/reports/20260820-004106/` |
+| `hibrit` | `eval/reports/20260820-021010/` |
+| `hibrit-verify` | `eval/reports/20260820-035526/` |
+
+> **`eval/reports/20260820-053401/` bu tablonun kaynağı DEĞİLDİR.** O damga
+> `eval.ablation`'ın tek süreçte koştuğu bir denemedir ama içinde yalnız
+> `kural` kolu ölçülmüştür; diğer üç kol `available: false` ("LLM backend
+> kapalı") ile atlanmıştır. Aynı gold'dan üretilmiş olması onu bu tablonun
+> kanıtı yapmaz ve karıştırılmamalıdır.
 
 | | |
 |---|---|
@@ -32,38 +48,78 @@ arızadan gelmiyor.** Model çağrıldı, geçerli JSON döndürdü, hiç onarı
 gerekmedi — ve yine kaybetti. "LLM kötü çünkü bozuktu" savunması bu ölçümde
 kapalıdır.
 
-### Tablo (eşleştirici `tolerant`, manşet ölçüt)
+### ✅ DÜZELTİLDİ — özet tablo ile ham rapor arasındaki 0,01–0,02 farkı
 
-| konfig | F1 (tümü) | F1 (**zor**, 40 belge) | makro-F1 | halüsinasyon |
-|---|---|---|---|---|
-| **kural** | **0,477** | **0,500** | **0,632** | **0,043** |
-| llm | 0,255 | 0,249 | 0,259 | 0,058 |
-| hibrit | 0,440 | 0,452 | 0,548 | 0,103 |
-| hibrit-verify | 0,367 | 0,376 | 0,539 | 0,098 |
+Bu bölümün özet tablosu **`tolerant` etiketi taşıyor ama `strict` sayıları
+yayımlıyordu.** Fark 0,008–0,030 bandındaydı ve tam olarak jürinin bulduğu
+sapmadır. Kaynağı bayat bir rapor değil, **yanlış etiket**: künye doğruydu,
+sayılar doğruydu, yalnız hangi eşleştiriciden geldikleri yanlış yazılmıştı.
+
+Ayrıca aynı bölümdeki **McNemar tablosu gerçekten `tolerant`ti**; yani tek
+başlık altında iki farklı eşleştirici yan yana duruyordu. Bu ikisinin
+karıştırılması, iki tablonun birbirini doğruladığı izlenimini veriyordu.
+
+**Karar: manşet ölçüt `strict`.** Gerekçe tercih değil tutarlılık — README'nin
+ve kanıt-tazeliği kapısının (`scripts/kanit_tazeligi.py`, `matcher="strict"`)
+okuduğu kesit budur. `tolerant` **silinmiyor**, duyarlılık sütunu olarak yan
+yana yayımlanıyor.
+
+### Tablo — her sayının eşleştiricisi yazılı
+
+| konfig | F1 tümü (`strict`) | F1 tümü (`tolerant`) | F1 zor/40 (`strict`) | makro-F1 (`strict`) | halüsinasyon |
+|---|---|---|---|---|---|
+| **kural** | **0,4771** | **0,4771** | **0,5000** | **0,6317** | **0,0425** |
+| llm | 0,2545 | 0,2727 | 0,2488 | 0,2594 | 0,0582 |
+| hibrit | 0,4402 | 0,4479 | 0,4516 | 0,5476 | **0,1029** |
+| hibrit-verify | 0,3672 | 0,3750 | 0,3755 | 0,5386 | 0,0984 |
+
+Halüsinasyon oranı iki eşleştiricide **birebir aynıdır** ve bu tesadüf değil:
+uydurma FP'si "gold `absent` derken değer üretildi" demektir, gevşek eşleşme
+o kararı değiştiremez. Yani bu raporun en ağır bulgusu — hibridin
+halüsinasyonu **2,4 katına** çıkarması — eşleştirici seçiminden **bağımsızdır**.
+
+Sıralama da iki eşleştiricide aynıdır; `tolerant` yalnız LLM'li kolları
+0,008–0,018 yukarı taşır ve hiçbir karşılaştırmanın yönünü çevirmez.
 
 Üç şey birden okunuyor:
 
-1. **Kural katmanı her ölçütte önde** — tüm vakalarda da, zor vakalarda da.
-2. **Hibrit halüsinasyonu 2,4 KATINA çıkarıyor** (0,043 → 0,103). Alan bileşik
+1. **Kural katmanı her ölçütte önde** — tüm vakalarda da, zor vakalarda da,
+   iki eşleştiricide de.
+2. **Hibrit halüsinasyonu 2,4 KATINA çıkarıyor** (0,0425 → 0,1029). Alan bileşik
    avantaj skorunda ikinci en yüksek ağırlığa sahip olduğu için (bkz.
    `comparison/compare.py`), uydurulmuş bir değer doğrudan "En Avantajlı"
    sıralamasına girer. Yani hibridin bedeli yalnız F1 değil, **kullanıcıya
    yanlış bilgi verme oranı**.
-3. **`hibrit-verify` hibritten de kötü** (0,367 < 0,440). Doğrulama katmanı
+3. **`hibrit-verify` hibritten de kötü** (0,3672 < 0,4402). Doğrulama katmanı
    zararı azaltmıyor, artırıyor — sebebi §7b'de: güven skoru kalibre değil,
    yani "düşük güvenli olanı ele" kuralı doğru değerleri de eliyor.
 
-### McNemar (eşleşmiş çiftler, 556 ortak karar)
+### McNemar (eşleşmiş çiftler, 556 ortak karar — hizalanamayan 0)
 
-| karşılaştırma | b (kural ✓ / öteki ✗) | c (kural ✗ / öteki ✓) | p | karar |
-|---|---:|---:|---|---|
-| kural vs llm | **51** | 22 | 0,00105 | kural üstün, **anlamlı** |
-| kural vs hibrit | **27** | 6 | 0,00050 | kural üstün, **anlamlı** |
-| kural vs hibrit-verify | **35** | 6 | 0,0000123 | kural üstün, **anlamlı** |
+Eşleştirici burada da **ayrı ayrı** yazılıyor; iki tabloyu tek etiket altında
+toplamak bu bölümün düzeltilen hatasıydı.
 
-Üç karşılaştırmada da `b > c` ve `p < 0,05`. Yani fark örneklem gürültüsü
-değil: LLM katmanı kural katmanını **hiçbir konfigde** geçmiyor ve bu sonuç
-istatistiksel olarak dayanıklı.
+| karşılaştırma | eşleştirici | b (kural ✓ / öteki ✗) | c (kural ✗ / öteki ✓) | p |
+|---|---|---:|---:|---|
+| kural vs llm | `strict` | **52** | 21 | 0,000446 |
+| kural vs llm | `tolerant` | **51** | 22 | 0,00105 |
+| kural vs hibrit | `strict` | **27** | 5 | 0,0002054 |
+| kural vs hibrit | `tolerant` | **27** | 6 | 0,00050 |
+| kural vs hibrit-verify | `strict` | **35** | 5 | 0,0000045 |
+| kural vs hibrit-verify | `tolerant` | **35** | 6 | 0,0000123 |
+
+**Altı satırın altısında `b > c` ve `p < 0,05`; kazanan altısında `kural`.**
+Yani fark örneklem gürültüsü değil ve **eşleştirici seçimine duyarlı da
+değil**: LLM katmanı kural katmanını hiçbir konfigde, hiçbir eşleştiricide
+geçmiyor.
+
+Üreten komut (her satır için `--matcher` değiştirilerek):
+
+```bash
+.venv/bin/python -m scripts.mcnemar_report \
+    --a eval/reports/20260820-053530 --b eval/reports/20260820-021010 \
+    --ad-a kural --ad-b hibrit --matcher strict
+```
 
 ### Bu tablo ne KANITLAMIYOR
 
@@ -71,14 +127,26 @@ istatistiksel olarak dayanıklı.
   korpusta, bu şemayla verdiği sonuçtur. Daha büyük bir model farklı sonuç
   verebilir; `colab/03_kappa.py` ve `colab/02_ablasyon.py` bu tekrarı
   `qwen3:32b` ile koşmak için var.
-* **"Kural katmanı yeterli" demiyor.** Kuralın kendi F1'i 0,477 ve bu düşük;
+* **"Kural katmanı yeterli" demiyor.** Kuralın kendi F1'i 0,4771 ve bu düşük;
   tablo kuralın iyi olduğunu değil, LLM'in onu geçemediğini gösteriyor.
 * **Dört koşum tek süreçte değil, dört ayrı süreçte yapıldı.** Aynı commit ve
-  aynı gold sha'sı ile hizalandılar (künyede yazılı), ama `eval.ablation`'ın
-  tek koşumda ürettiği tabloyla birebir aynı yordam değil. Farkın kaynağı bir
-  hatadır ve düzeltildi: `colab/02_ablasyon.py` `eval.ablation`'ı zorunlu
-  `--gold` argümanı olmadan çağırıyordu ve o adım her koşumda sessizce
-  düşüyordu.
+  aynı gold sha'sı ile hizalandılar (künyede yazılı) ve McNemar hizalamasında
+  **hizalanamayan karar 0** çıktı — yani dört kol gerçekten aynı 48 belge ×
+  12 alan kümesinde koştu. Yine de `eval.ablation`'ın tek koşumda ürettiği
+  tabloyla birebir aynı yordam değil ve bu bir sınırdır.
+* **`eval.ablation` tek süreçte HÂLÂ dört kol üretemedi.** 20 Ağustos'ta
+  denendi (`eval/reports/20260820-053401/`) ama o koşumda LLM arka ucu kapalı
+  olduğu için üç kol `available: false` ile atlandı; artefakt yalnız `kural`
+  satırı taşıyor. Betik sahte bir "hibrit = kural" satırı ÜRETMEDİ — doğru
+  davranış — ama tek süreçli ablasyon **hâlâ koşulmamıştır** ve bu açık iş
+  olarak yazılıdır.
+* **Kural katmanı bu ölçümden SONRA iki tur daha iyileştirildi.** Aynı günün
+  ilerleyen saatlerinde manşet 0,4771 → **0,5702**'ye çıktı
+  (`eval/reports/20260820-130322/`). Yani yukarıdaki tablo, LLM kollarını
+  bugünün kural katmanından **daha zayıf** bir rakiple karşılaştırıyor —
+  LLM'in lehine bir kıyastır ve LLM yine kaybetti. Kolları bugünün koduyla
+  yeniden koşmak açık iştir; **o koşulmadan hiçbir yeni ablasyon sayısı
+  yayımlanmayacak.**
 
 ---
 

@@ -11,7 +11,7 @@
 
 | Ölçüt | Değer |
 |---|---|
-| κ — varlık kararı (dolu / absent) | **0.700** (notla) |
+| κ — varlık kararı (dolu / absent) | **0.714** (notla) |
 | Değer uyumu — birebir (iki taraf da dolu) | 11/26 = 0.423 |
 | Krippendorff α (`ratio`, sayısal alanlar) | 1.000 — **YETERSİZ BİRİM** (3 < 10) |
 
@@ -32,7 +32,7 @@ Marjinal sayılar (kaç kez "dolu" dendi) tabloda BİLEREK duruyor: κ'yı onlar
 | `kampanya_kosullari` | 16 | 14/16 | 10 | 10 | 0.733 |
 | `kampanya_suresi` | 16 | 15/16 | 7 | 8 | 0.875 |
 | `kar_payi_orani` | 16 | 16/16 | 0 | 0 | 1.000 |
-| `masraf_durumu` | 16 | 12/16 | 3 | 1 | -0.103 |
+| `masraf_durumu` | 16 | 13/16 | 2 | 1 | -0.091 |
 | `odul_miktari` | 16 | 14/16 | 3 | 5 | 0.673 |
 | `tahsis_ucreti` | 16 | 16/16 | 0 | 0 | 1.000 |
 | `taksit_sayisi` | 16 | 15/16 | 1 | 0 | 0.000 |
@@ -50,7 +50,7 @@ Bu yüzden alan bazlı κ tek başına raporlanmaz: yanında gözlenen uyum ve i
 
 ## Uyuşmazlıklar — hakeme gidecek liste
 
-Toplam **32** uyuşmazlık. Hakem turu yalnız bunlara bakar; uyuşan kararlar yeniden açılmaz.
+Toplam **31** uyuşmazlık. Hakem turu yalnız bunlara bakar; uyuşan kararlar yeniden açılmaz.
 
 | Belge | Alan | Tür | İnsan | LLM |
 |---|---|---|---|---|
@@ -65,7 +65,6 @@ Toplam **32** uyuşmazlık. Hakem turu yalnız bunlara bakar; uyuşan kararlar y
 | `vakif-katilim--hesaplar-ozel-cari-hesaplar` | `masraf_durumu` | insan_dolu_llm_yok | `{'has_fee': False, 'amount': 0.0}` | `None` |
 | `adil-katilim--katilim-bankaciligi-urun-ve-hizmetler` | `masraf_durumu` | insan_yok_llm_dolu | `None` | `{'has_fee': False, 'amount': 0}` |
 | `adil-katilim--katilim-bankaciligi-urun-ve-hizmetler` | `kampanya_kosullari` | insan_yok_llm_dolu | `None` | `["Metin 'kâr payı uygulanmaz' ifadesinde masrafsız finansman belirtilmiş."]` |
-| `hayat-finans--kampanyalar-hayat-finans-ile-gastroclub-ayricaliklari` | `masraf_durumu` | insan_dolu_llm_yok | `{'has_fee': False, 'amount': 0.0}` | `None` |
 | `hayat-finans--kampanyalar-hayat-finans-ile-gastroclub-ayricaliklari` | `indirim_orani` | deger | `{'min': 10.0, 'max': 50.0}` | `{'min': 0.1, 'max': 0.5}` |
 | `hayat-finans--kampanyalar-hayat-finans-ile-gastroclub-ayricaliklari` | `kampanya_suresi` | insan_yok_llm_dolu | `None` | `2023-04-18T00:00:00Z` |
 | `hayat-finans--kampanyalar-hayat-finans-ile-gastroclub-ayricaliklari` | `kampanya_kosullari` | deger | `['Sadece bireysel Hayat Finans müşterileri yararlanabilir.', 'Bu kampanya diğer davet kodlu kampanyalarla birleştirilemez.', 'İndirim oranları ve geçerli markalar Hayat Finans uygulamasında Kampanyalar > Ayrıcalıklar alanından güncel olarak görüntülenebilir.']` | `['Sadece bireysel Hayat Finans müşterileri yararlanabilir.', 'Bu kampanya diğer davet kodlu kampanyalarla birleştirilemez.']` |

@@ -12,6 +12,31 @@ tahmin yazılmaz.
 
 Son güncelleme: **3 Ağustos 2026** · commit `03835ce`
 
+> ## ⚠️ BU BELGE 3 AĞUSTOS KESİTİDİR — manşet sayılar için buraya BAKMAYIN
+>
+> Aşağıdaki gövde o günün ağacına çapalıdır ve **silinmiyor** (belgenin kendi
+> künye kuralı). Ama o günden bugüne aşağıdaki listenin büyük kısmı **ölçüldü**,
+> yani belgenin ikinci amacı — tutarsızlık yakalamak — bugün tersine işliyor:
+> bu dosyayı kaynak sanan biri bayat sayı okur.
+>
+> **Güncel tek doğruluk kaynağı (2026-08-20):**
+>
+> | ne | değer | nerede |
+> |---|---|---|
+> | 12-alan mikro-F1 (ikili) | **0,5702** | [`app/README.md`](../../README.md) · `eval/reports/20260820-130322/` |
+> | kalem mikro-F1 | **0,6291** | aynı |
+> | yapısal mikro-F1 (11 alan) | **0,8228** | aynı |
+> | makro-F1 | **0,7646** | aynı |
+> | halüsinasyon | **0,0336** | aynı |
+> | κ (ikinci etiketleyici turu) | **0,714** | [`_kappa-ikinci-tur.md`](../../data/gold/review/_kappa-ikinci-tur.md) |
+> | Ablasyon (4 kol) + McNemar | **KOŞULDU** — kural her kolda önde | [`ablasyon.md`](ablasyon.md) |
+> | Korpus | **1.782 belge · 4.704 alan** | `data/demo.db` |
+>
+> Aşağıda "⏳ ölçülmedi/koşulmadı" yazan kalemlerden bugün **ölçülmüş olanlar**:
+> mikro/makro F1, halüsinasyon oranı, κ, 4 kollu ablasyon, zor-vaka alt kümesi
+> metriği. **Hâlâ ölçülmemiş olanlar:** gerçek hibrit gecikmesi (LLM açıkken),
+> vLLM + Trendyol uçtan uca koşu, GPU profilleri.
+
 ---
 
 ## 1. Korpus ve veri

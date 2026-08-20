@@ -433,17 +433,71 @@ class TestDesenlerGERCEKTEN_Yakaliyor(unittest.TestCase):
                 set(iddia.kapsam()), {d for d, _ in iddia.desenler},
                 f"{iddia.ad}: kapsam ile desen listesi ayrışmış")
 
-    def test_sunum_UC_iddiada_kapsamda(self) -> None:
+    def test_sunum_BES_iddiada_kapsamda(self) -> None:
         """Sunum yayımlanan bir belgedir ve 19 Ağustos'ta kapsama alındı.
 
         Kapsamdan çıkarılırsa bu test düşer — sunumun sayıları bir kez daha
         iki sürüm geride kalmasın (o gün 2.946 test / 0,464 F1 yazıyordu).
+
+        20 Ağustos'ta iki iddia eklendi: sunum yapısal mikro-F1'i ve κ'yı da
+        yayımlıyordu, ikisi de denetim dışıydı ve **ikisi de bayatlamıştı**
+        (0,717 ve 0,700).
         """
         kapsayan = [i.ad for i in K.iddialar()
                     if any("docs/sunum" in k for k in i.kapsam())]
         self.assertEqual(
-            sorted(kapsayan), ["test_gecti", "v2_halusinasyon", "v2_mikro_f1"],
+            sorted(kapsayan),
+            ["kappa_ikinci_tur", "test_gecti", "v2_halusinasyon",
+             "v2_mikro_f1", "v2_yapisal_mikro_f1"],
             "sunumu denetleyen iddia kümesi değişmiş")
+
+    def test_kappa_iddiasi_KAYITLI(self) -> None:
+        """κ, kapının 20 Ağustos'ta ölçülen kör noktasıydı.
+
+        README **0,700** yayımlıyordu, gerçek değer **0,714**'tü ve kapı
+        ateşlenmedi — çünkü `iddialar()` içinde κ diye bir satır YOKTU.
+        Bu test o satırın silinmesini engeller: iddia kaybolursa κ sessizce
+        denetim dışına düşer ve aynı sapma tekrar eder.
+        """
+        adlar = {i.ad for i in K.iddialar()}
+        self.assertIn("kappa_ikinci_tur", adlar)
+
+    def test_kappa_deseni_HER_belgede_esliyor(self) -> None:
+        """κ üç belgede yayımlanıyor; üçü de ayrı ayrı denetlenmeli.
+
+        Yalnız "toplam eşleşme > 0" yeterli olsaydı, kök README'nin κ satırı
+        biçim değiştirdiğinde app README'nin deseni testi yeşil tutardı.
+        """
+        (iddia,) = [i for i in K.iddialar() if i.ad == "kappa_ikinci_tur"]
+        for belge in iddia.kapsam():
+            with self.subTest(belge=belge):
+                self.assertTrue(
+                    [x for x in iddia.belgedeki() if x[0] == belge],
+                    f"{belge}: κ deseni hiçbir şey yakalamıyor")
+
+    def test_kappa_tek_deger_yayimliyor(self) -> None:
+        """Üç belgedeki κ geçişlerinin HEPSİ aynı sayıyı söylemeli.
+
+        Kapının değer denetimi ölçülen değere karşı koşar; bu test ondan
+        bağımsız olarak belgeler arası TUTARLILIĞI korur. 0,700 sapması tam
+        buradan girdi: bir belge güncellendi, diğerleri kalmadı.
+        """
+        (iddia,) = [i for i in K.iddialar() if i.ad == "kappa_ikinci_tur"]
+        degerler = {ham for _, _, ham in iddia.belgedeki()}
+        self.assertEqual(
+            len(degerler), 1,
+            f"κ belgeler arasında ayrışmış: {sorted(degerler)}")
+
+    def test_yayimlanan_UC_gorunum_de_denetimde(self) -> None:
+        """İkili · kalem · yapısal — üçü birden yayımlanıyor, üçü de gated.
+
+        `kampanya_kosullari` ikili 0,000 alıyor ama kalem düzeyinde 0,520;
+        bu yüzden üç görünüm yan yana yayımlanıyor. Biri denetim dışı
+        kalırsa "kötü sayıyı saklamıyoruz" iddiası mekanizmasız kalır.
+        """
+        adlar = {i.ad for i in K.iddialar()}
+        for ad in ("v2_mikro_f1", "v2_kalem_mikro_f1", "v2_yapisal_mikro_f1"):
+            self.assertIn(ad, adlar)
 
 
 if __name__ == "__main__":
