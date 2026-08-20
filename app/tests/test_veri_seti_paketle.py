@@ -281,7 +281,11 @@ class Paket(unittest.TestCase):
         self.assertIn("ÖNCESİ", self.kart)
 
     def test_kart_kiyas_sayilari_gercek(self):
-        for parca in ("| **40** | **3** |", "| **447** | **60** |"):
+        # `absent` paydası 60 -> 61: HAKEM-04 turu (2026-08-20) round1'de
+        # `…-2000-tlye-varan-parafpara` kaydının `odul_miktari`nı
+        # `absent_fields`e taşıdı (değer `alisveris_puani`na geçti).
+        # Gerekçe: data/gold/review/_hakem-turu-04-gold-kilavuz-celiskisi.md
+        for parca in ("| **40** | **3** |", "| **447** | **61** |"):
             self.assertIn(parca, self.kart, f"kıyas tablosu sayısı yanlış: {parca}")
 
     def test_kart_bolme_sayilari_gercek(self):

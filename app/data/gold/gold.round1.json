@@ -24,9 +24,7 @@
         "Müşterilerimiz kampanya süresi boyunca yalnızca 1 kez kampanyadan faydalanabilecektir.",
         "Kampanyadan 25 yaş ve üzerindeki müşteriler yararlanabilecek olup, ayrıca gelir şartı aranacaktır.",
         "Kampanya sadece Albaraka Mobil ve İnternet üzerinden tamamlanacak Pratik Finansman Kart başvuruları için geçerlidir.",
-        "Pratik Finansman Kart ile asgari 250 TL, azami 150.000 TL finansman kullanılabilmektedir.",
-        "Sadece ihtiyaç finansmanı olan pratik kart ürünümüzde araç veya konut alıma konu olduğunda ilgili finansman kart kullanılamamaktadır.",
-        "Pratik Finansman Kart kullanım koşulları ve ürün detayları için tıklayınız."
+        "Sadece ihtiyaç finansmanı olan pratik kart ürünümüzde araç veya konut alıma konu olduğunda ilgili finansman kart kullanılamamaktadır."
       ],
       "hedef_kitle": [
         "yeni_musteri"
@@ -41,7 +39,8 @@
     "hard_tags": [],
     "annotators": [
       "A",
-      "B"
+      "B",
+      "HAKEM-04"
     ],
     "adjudicated": true,
     "hard": false,
@@ -50,7 +49,8 @@
       "finansman_tutari": "Azami değeri almış | Metinde asgari 250 TL, azami 150.000 TL belirtiliyor. Finansman tutarı için üst limit (150.000 TL) esas alınıp asgari tutar note olarak değerlendirilebilir.",
       "vade_ay": "Metinde vade seçenekleri kademelidir: 1-6 ay, 7-12 ay ve 13-36 ay (azami 36 ay) vade imkânı sunulmaktadır.",
       "kampanya_suresi": "Metinde kampanya başlangıç ve bitiştarihlerii var ancak tek değerli alan olduğundan bitiş tarihi olarak doğru kabul edilir kampanya başlangıç tarihi de 01.01.2026'dır.",
-      "hedef_kitle": "#hakemlik-round1 A->B (kor hakem onayi) | Metinde kampanyanın yalnızca ilk defa Albaraka müşterisi olacak kişiler için geçerli olduğu, mevcut müşterilerin yararlanamayacağı belirtilmiştir."
+      "hedef_kitle": "#hakemlik-round1 A->B (kor hakem onayi) | Metinde kampanyanın yalnızca ilk defa Albaraka müşterisi olacak kişiler için geçerli olduğu, mevcut müşterilerin yararlanamayacağı belirtilmiştir.",
+      "kampanya_kosullari": "HAKEM-04 (2026-08-20) DÜZELT — iki kalem kaldırıldı. (1) 'Pratik Finansman Kart ile asgari 250 TL, azami 150.000 TL finansman kullanılabilmektedir.' → K3: tutar kendi alanına yazılır, koşula ikinci kez kopyalanmaz; değer finansman_tutari=150.000 TL'de ve o alanın notunda zaten duruyor, cümle bir koşula bağlı değil (K3 istisnası uygulanamaz), çıplak tutar bildirimidir. Bilgi kaybı yok. (2) 'Pratik Finansman Kart kullanım koşulları ve ürün detayları için tıklayınız.' → §4 kampanya_kosullari tanımı: koşul cümlesi değildir, gezinme/bağlantı çağrısıdır; hiçbir şart bildirmez, kıyasta sıfır bilgi taşır (K2'nin gerekçesiyle aynı ölçüt). KORUNAN, çelişkili işaretlenen kalem: 1. kalemdeki başlık sızıntısı ('Pratik Finansman Kart Finansman Kampanyası Koşulları') ve 1 Ocak – 31 Aralık 2026 tarih aralığı yerinde bırakıldı; cümle salt geçerlilik tarihi bildirmiyor (kanal + ilk kez müşteri olma şartını taşıyor), başlık sızıntısını yasaklayan bağlayıcı bir kural yok ve aynı olguya review/_hakem_kararlari.jsonl 'ok' demiş (albaraka--tarim-bankaciligi-diger-finansmanlar). İki taraf review/_hakem-turu-04-gold-kilavuz-celiskisi.md'de yazılıdır."
     }
   },
   {
@@ -385,7 +385,7 @@
     "adjudicated": true,
     "hard": false,
     "notes": {
-      "kampanya_kosullari": "Metin Albaraka Tarım Bankacılığı ürün tanıtım sayfasıdır, kampanya koşulu içermemektedir. Model ürün özelliklerini kampanya koşulu olarak hatalı üretmiştir. | #hakemlik-round1 B->A (kor hakem onayi)",
+      "kampanya_kosullari": "Metin Albaraka Tarım Bankacılığı ürün tanıtım sayfasıdır, kampanya koşulu içermemektedir. Model ürün özelliklerini kampanya koşulu olarak hatalı üretmiştir. | #hakemlik-round1 B->A (kor hakem onayi) | HAKEM-04 (2026-08-20) KORU — ÇELİŞKİ KAYDI: yukarıdaki not (B'nin azınlık görüşü) 'kampanya koşulu içermemektedir' diyor, oysa alan dolu. Değer A'nın 'ok' kararıdır; kör makine hakemi B->A yönünde onaylamış, review/_hakem_kararlari.jsonl ikinci kez 'ok' demiştir. HAKEM-04 kılavuza bakarak aynı sonuca varıyor: 1. cümle salt vade bildirimi değil ('hasat dönemine uygun ödeme koşulları ile') → K3 istisnası; 2. cümle IPARD kapsam koşuludur. Not metni silinmedi, çelişki review/_hakem-turu-04-gold-kilavuz-celiskisi.md'de belgelendi.",
       "hedef_kitle": "Metin Tarım Bankacılığı bölümünde yer almakta olup, hedef kitle tarım sektöründe faaliyet gösteren üreticiler, çiftçiler ve tarım işletmeleridir."
     }
   },
@@ -626,7 +626,7 @@
     "notes": {
       "vade_ay": "12 ay olarak gözüken kısım aslında kvkk metni | Metinde vade süresi ile ilgili bir bilgi yer almamaktadır",
       "masraf_durumu": "#hakemlik-round1 A->B (kor hakem onayi) | Metin Dünya Katılım Paraf Platinum Kredi Kartı tanıtım sayfasıdır ve kartın yıllık üyelik ücreti bulunmaktadır. Model masraf durumunu yanlışlıkla yok saymıştır.",
-      "kampanya_kosullari": "Metin Dünya Katılım Paraf Platinum Kredi Kartı tanıtım sayfasıdır, kampanya koşulu içermemektedir. Model kart kullanım yönergesini kampanya koşulu olarak hatalı üretmiştir. | #hakemlik-round1 B->A (kor hakem onayi)"
+      "kampanya_kosullari": "Metin Dünya Katılım Paraf Platinum Kredi Kartı tanıtım sayfasıdır, kampanya koşulu içermemektedir. Model kart kullanım yönergesini kampanya koşulu olarak hatalı üretmiştir. | #hakemlik-round1 B->A (kor hakem onayi) | HAKEM-04 (2026-08-20) KORU — ÇELİŞKİ KAYDI: yukarıdaki not (B'nin azınlık görüşü) 'kampanya koşulu içermemektedir' diyor, oysa alan dolu. Değer A'nın 'ok' kararıdır; kör makine hakemi B->A yönünde onaylamış, review/_hakem_kararlari.jsonl ikinci kez 'ok' demiştir. HAKEM-04 kılavuza bakarak aynı sonuca varıyor: cümle 'söylemeniz gerekmektedir' ile gerçek bir kullanım koşulu bildirir, K1 birebirdir, K2 (yasal ihtar) ve K3 (başka alanın değeri) kapsamına girmez. Not metni silinmedi, çelişki review/_hakem-turu-04-gold-kilavuz-celiskisi.md'de belgelendi."
     }
   },
   {
@@ -825,7 +825,10 @@
       "D"
     ],
     "adjudicated": false,
-    "hard": false
+    "hard": false,
+    "notes": {
+      "odul_miktari": "HAKEM-04 (2026-08-20) KORU — '…kazanılabilecek maksimum nakit ödül tutarı toplamda 300 TL'dir' §4 odul_miktari 'Sayılır' listesindeki '1.000 TL nakit iade' kalıbının birebir eşidir; ödül nakit olarak cari hesaba aktarılıyor, marka puanı değil, dolayısıyla alisveris_puani'na ait değildir. Etiket doğru. AYRI GÖZLEM (uygulanmadı, kapsam dışı): belgedeki '%75 nakit iade' oranı alisveris_puani {\"kind\": \"rate\", \"value\": 75} olarak boş duruyor — §4 indirim_orani 'Sayılmaz: … puan/iade oranı (o alisveris_puani)'. Bu bir kapsama boşluğudur, hatalı değer değil; ANA OTURUM'a raporlandı."
+    }
   },
   {
     "id": "hayat-finans--krediler-bana-bunu-al",
@@ -923,7 +926,8 @@
     "adjudicated": false,
     "hard": false,
     "notes": {
-      "kampanya_suresi": "Metin yatırım fonları bilgilendirme ve örnek işlem sayfasıdır. Belirtilen tarih (25.01.2024) kampanya süresi değil, örnek bir işlem senaryosu tarihidir."
+      "kampanya_suresi": "Metin yatırım fonları bilgilendirme ve örnek işlem sayfasıdır. Belirtilen tarih (25.01.2024) kampanya süresi değil, örnek bir işlem senaryosu tarihidir.",
+      "kampanya_kosullari": "HAKEM-04 (2026-08-20) ÇELİŞKİLİ — değişiklik YAPILMADI. 1. kalem ('TEFAS'ta yazan bütün ihbar süreleri 13.30'dan önce iletilen emirler için geçerlidir') açık bir işlem koşuludur, meşrudur. 2. kalem ('… 03.03.2025 … asgari işlem tutarı 100 TL …') iki savunulabilir okuma taşır: (a) K3 — tarih ve tutar başka alanlara aittir, tutar finansman_tutari=100 TL'de zaten duruyor, koşula ikinci kez kopyalanmamalı; (b) K3 istisnası — tutar bir koşula bağlıdır ('ileri valörlü fonlarda'), o hâlde cümlenin tamamı buraya da girer. Kılavuz iki okuma arasında hüküm vermiyor; hakem tek taraflı karar vermeyi reddetti. İki taraf review/_hakem-turu-04-gold-kilavuz-celiskisi.md'de."
     }
   },
   {
@@ -2188,27 +2192,30 @@
     "text": "Türkiye Emlak Katılım Bankası A.Ş. internet sitesini ziyaretiniz esnasında kullanılabilecek çerezler ve benzeri teknolojiler hakkında bilgi vermek amacıyla işbu Çerez Politikası'nı hazırlanmıştır. Ana sayfa Bireysel Kampanyalar Kampanya Paraf ile Seçili E-Ticaret Alışverişlerinize 2.000 TL'ye varan ParafPara! Paraf ile Seçili E-Ticaret Alışverişlerinize 2.000 TL'ye varan ParafPara! Paraf ile Seçili E-Ticaret Alışverişlerinize 2.000 TL'ye varan ParafPara! Kampanyaya Nasıl Katılırım? Kampanyaya katılmak için \"KAZAN\" yazıp 6026'ya SMS gönderilmesi gerekmektedir. Kampanya katılımının başarılı sayılabilmesi için banka sisteminde adınıza tanımlı telefon numarasından katılım sağlanmalıdır. Katılım SMS'i ücretsiz olup; kampanyaya katılabilmek için SMS'in Turkcell, Vodafone veya Türk Telekom operatörleri üzerinden ve yurt içinden gönderilmesi gerekmektedir. Kampanya Koşulları Paraf ile 1-31 Ağustos 2026 tarihleri arasında Amazon.com.tr, Çiçek Sepeti, Hepsiburada, İdefix, n11, Pazarama, PttAvm, Trendyol web siteleri ve mobil uygulamaları üzerinden Paraf POS'larından, tek seferde yapılacak her 3.000 TL ve üzeri harcamaya 200 TL, toplamda 2.000 TL ParafPara verilecektir. Aynı gün aynı iş yerinden yapılacak harcamaların ilki kampanyaya dahildir Bir müşterinin kampanya boyunca kazanabileceği ParafPara tutarı 2.000 TL ile sınırlı olacaktır. Fiziki mağazalardan, fiziki POS'lardan ve ödeme kuruluşları aracılığıyla yapılan işlemler kampanyaya dahil olmayıp, kampanya koşullarında yer alan seçili internet sitelerinden ve mobil uygulamalarından ve Paraf POS'larından gerçekleştirilen alışverişler kampanyaya dahildir. Market, Altın & Gümüş, Hat, Bilet vb. belirli kategorilerinden yapılan alışverişler kampanya kapsamında değildir. Kampanyadan Emlak Katılım Paraf ve Emlak Katılım Paraf Premium kartlar faydalanabilecektir. Sanal ve ek kartlar kampanyaya dahildir. Alışverişin iptal/iade edilmesi durumunda ParafPara yüklenmeyecektir. Fatura ödemesi, düzenli ödeme, para yatırma-çekme, vergi ve bağış ödemesi, BES ödemesi, bakiye görüntüleme ve para transferi işlemleri kampanyaya dahil değildir. Finans kuruluşları ve ödeme hizmet sağlayıcıları üzerinden gerçekleşen harcama işlemleri ile dijital cüzdana yapılan yüklemeler ve dijital cüzdan kullanılarak yapılan harcamalar kampanyaya dahil değildir. ParafPara kullanılarak yapılan alışverişler kampanyaya dahil değildir. Ödül kazanımı için kampanyaya katılım sağlandıktan sonra yapılan harcamalar dikkate alınacaktır. Harcama yapıldıktan sonra kampanyaya katılım durumlarında ödül yüklemesi yapılmayacaktır. Alışverişin yapıldığı iş yerinin, sistemde kayıtlı sektör bilgisinin doğru olmasının sorumluluğu iş yerine aittir. Hedefe ulaşılan harcama hangi kart ile yapılırsa ParafPara ödülü o karta yansıtılmaktadır. Kampanya başka kampanyalarla birleştirilmez. Türkiye Emlak Katılım Bankası A.Ş. kampanyayı dilediği zaman durdurma ve/veya kampanya koşullarını değiştirme hakkına sahiptir. ParafPara Yüklenmesi Ne Zaman Yapılır? Kampanya kapsamında kazanılan ParafPara'lar, kampanyayı takip eden ayın 10‘unda, kampanya koşullarını sağlayan müşterilerimizin işlem yaptığı ve kullanıma açık kartına yansıtılacaktır. Kazanılan ParafPara'lar puan kullanımına uygun tüm Paraf üye iş yerlerinde kullanılabilecektir. Kullanılmayan ParafPara'lar 15 Ekim 2026 tarihinde geri alınacaktır. × Your browser does not support the audio element.",
     "campaign_type": "Alışveriş Puanı",
     "fields": {
-      "odul_miktari": {
-        "currency": "TRY",
+      "alisveris_puani": {
+        "kind": "points",
         "value": 2000.0
       },
       "kampanya_suresi": "2026-08-31"
     },
     "field_spans": {
-      "odul_miktari": "boyunca kazanabileceği ParafPara tutarı 2.000 TL ile sınırlı olacaktır. Fiziki mağazalar",
+      "alisveris_puani": "boyunca kazanabileceği ParafPara tutarı 2.000 TL ile sınırlı olacaktır. Fiziki mağazalar",
       "kampanya_suresi": "kmektedir. Kampanya Koşulları Paraf ile 1-31 Ağustos 2026 tarihleri arasında Amazon.com.tr, Çiçek"
     },
-    "absent_fields": [],
+    "absent_fields": [
+      "odul_miktari"
+    ],
     "hard_tags": [],
     "annotators": [
-      "D"
+      "D",
+      "HAKEM-04"
     ],
-    "adjudicated": false,
+    "adjudicated": true,
     "hard": false,
-    "needs_adjudication": true,
-    "unclear_fields": [
-      "alisveris_puani"
-    ]
+    "notes": {
+      "odul_miktari": "HAKEM-04 (2026-08-20) DÜZELT — kayıt zaten hakemliğe düşmüştü (needs_adjudication: true, unclear_fields: ['alisveris_puani']): ön anotasyon AYNI 2.000 değerini İKİ alana birden üretti, etiketleyici D odul_miktari'na 'ok' dedi ve alisveris_puani'na 'unclear' dedi. HAKEM-04 bu askıdaki hücreyi kapatıyor: değer odul_miktari'ndan alisveris_puani'na taşındı: {\"kind\": \"points\", \"value\": 2000.0}. Dayanak §4 alisveris_puani: marka puanı/chip-para cinsinden ADET bu alana yazılır ('1.000 chip-para', '60.000 Mil'). ParafPara nakit değildir — yalnız Paraf üye iş yerlerinde kullanılır ve kullanılmayanı 15 Ekim 2026'da geri alınır; belgenin campaign_type'ı da 'Alışveriş Puanı'dır. Round1 KENDİ İÇİNDE tutarsızdı: aynı etiketleyici (D) aynı bankanın turkiye-emlak-katilim--kampanya-beyaz-esya-ve-elektronik-alisverislerinize-3000-tlye-varan-parafpara kaydında aynı nesneyi alisveris_puani {\"kind\": \"points\", \"value\": 3000.0} yazmıştı. Tutarsızlık alisveris_puani yönünde giderildi. odul_miktari absent_fields'a eklendi (baktım, bu belgede ParafPara'dan ayrı bir ödül tutarı YOK) — bilgi kaybı yok. Karşılaştırma: hayat-finans--kampanyalar-biz-kart-dijital-uyelikler-kampanyasi kaydındaki 300 TL GERÇEK nakittir (cari hesaba aktarılır), o kayıt KORUNDU.",
+      "alisveris_puani": "HAKEM-04 (2026-08-20): değer odul_miktari'ndan taşındı — §4 alisveris_puani ADET kuralı (marka puanı / chip-para). Alıntı da aynı cümledir. Ayrıntı: review/_hakem-turu-04-gold-kilavuz-celiskisi.md"
+    }
   },
   {
     "id": "turkiye-emlak-katilim--kartlar-kredi-karti",

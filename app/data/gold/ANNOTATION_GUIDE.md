@@ -757,6 +757,27 @@ Tam tablo, uyuşmazlık listesi ve yöntem:
 `annotators` listesinde `LLM-01` var (18 kayıt ≥ 2 etiketleyici; 2'si önceki
 `HAKEM-02` turundan).
 
+### Hakem turu künyesi
+
+Bu bölümün "hakemlik" kararı uygulandığında her tur kendi belgesini bırakır.
+Kurallar hakem turlarında **değişmez**; kural değişikliği ekip onayıyla §4'e
+yazılır (ör. §4 `masraf_durumu` KAPSAM maddesi, HAKEM-03).
+
+| Tur | Tarih | Alan(lar) | Gold | Belge |
+|---|---|---|---|---|
+| HAKEM-01 | 2026-08-04 | `finansman_tutari` · `alisveris_puani` | v1 | `review/_hakem-turu-01-finansman-tutari.md` |
+| HAKEM-02 | 2026-08-19 | `hedef_kitle` | v2 | `review/_hakem-turu-02-hedef-kitle.md` |
+| HAKEM-03 | 2026-08-19 | `masraf_durumu` | v2 | `review/_hakem-turu-03-masraf-durumu.md` |
+| **HAKEM-04** | **2026-08-20** | `kampanya_kosullari` · `odul_miktari` | **round1** | `review/_hakem-turu-04-gold-kilavuz-celiskisi.md` |
+
+HAKEM-04, gold ↔ kılavuz çelişkisi turudur: `gold.round1`in bu iki alandaki
+8 dolu kaydının 15 kalemi tek tek K1–K4'e göre okundu. Sonuç 2 `düzelt`,
+5 `koru`, 1 `çelişkili`; iki kalem kaldırıldı (K3 · koşul olmayan gezinme
+cümlesi), bir değer `odul_miktari`ndan `alisveris_puani`na taşındı (marka
+puanı ADET kuralı). Kılavuza **hiçbir kural eklenmedi**; kapanmayan iki
+boşluk (koşul kaleminde başlık öneki · aynı tutarın hem kendi alanında hem
+koşul cümlesinde durması) belgede ekip kararına bırakıldı.
+
 ---
 
 ## 8. Kalibrasyon turu (20 belge) — ATLANMAZ
