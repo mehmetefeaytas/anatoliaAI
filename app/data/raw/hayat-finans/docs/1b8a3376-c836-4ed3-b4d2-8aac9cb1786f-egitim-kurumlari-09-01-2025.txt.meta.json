@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/1b8a3376-c836-4ed3-b4d2-8aac9cb1786f/Egitim-Kurumlari-09-01-2025",
+  "scraped_at": "2026-08-20T16:33:20+00:00",
+  "content_hash": "cbc48f404235e05bed6de498055cab5c2ca2234487b20b4456f65fcd083de91e",
+  "collection_method": "pdf",
+  "title": "Egitim Kurumlari 09 01 2025",
+  "http_status": 200,
+  "raw_bytes": 186245,
+  "text_chars": 1033,
+  "pdf_pages": 2
+}

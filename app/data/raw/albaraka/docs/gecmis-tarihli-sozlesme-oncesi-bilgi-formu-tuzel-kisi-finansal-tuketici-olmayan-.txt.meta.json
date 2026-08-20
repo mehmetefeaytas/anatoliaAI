@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/sozlesme-oncesi-bilgi-formu-tuzel-kisi-finansal-tuketici-olmayan.pdf",
+  "scraped_at": "2026-08-20T17:01:44+00:00",
+  "content_hash": "b6f00054382a3e28aa520efcc9642769f6f192286665f509ffa7d8ccccbaf5c3",
+  "collection_method": "pdf",
+  "title": "sozlesme oncesi bilgi formu tuzel kisi finansal tuketici olmayan",
+  "http_status": 200,
+  "raw_bytes": 179586,
+  "text_chars": 31514,
+  "pdf_pages": 8
+}

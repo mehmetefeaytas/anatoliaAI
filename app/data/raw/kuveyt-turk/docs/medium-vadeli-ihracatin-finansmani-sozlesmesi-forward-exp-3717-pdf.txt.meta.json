@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vadeli-ihracatin-finansmani-sozlesmesi-forward-exp-3717.pdf",
+  "scraped_at": "2026-08-20T16:09:13+00:00",
+  "content_hash": "f4bbfb721419f753a500a1e220adf116d700fb0c2353571ecf49e0e078d279a4",
+  "collection_method": "pdf",
+  "title": "vadeli ihracatin finansmani sozlesmesi forward exp 3717",
+  "http_status": 200,
+  "raw_bytes": 347018,
+  "text_chars": 141540,
+  "pdf_pages": 26
+}

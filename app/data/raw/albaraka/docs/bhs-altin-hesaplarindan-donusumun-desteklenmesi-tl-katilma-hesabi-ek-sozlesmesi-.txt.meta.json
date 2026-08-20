@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BHS/altin-hesaplarindan-donusumun-desteklenmesi-tl-katilma-hesabi-ek-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:22+00:00",
+  "content_hash": "fb609510177e4c3e0ba675325cd60801db07888b6dbcc8d6fabb0cedb587dc6e",
+  "collection_method": "pdf",
+  "title": "altin hesaplarindan donusumun desteklenmesi tl katilma hesabi ek sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 95467,
+  "text_chars": 7742,
+  "pdf_pages": 2
+}

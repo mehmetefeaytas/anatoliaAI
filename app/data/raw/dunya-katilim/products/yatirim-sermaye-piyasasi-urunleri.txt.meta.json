@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/yatirim/sermaye-piyasasi-urunleri",
-  "scraped_at": "2026-08-03T17:45:46+00:00",
-  "content_hash": "988b9f26f9515bddbf1848e07fec986646eb90b01432449b6b4dd81449ee03ce",
+  "scraped_at": "2026-08-20T17:07:30+00:00",
+  "content_hash": "fe9edab47e3c285d318e1c97b754d0db5362f1e41bfe0c1679153d0b3d5ded4f",
   "collection_method": "live",
   "title": "Sermaye Piyasas&#x131; &#xDC;r&#xFC;nleri | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499594,
-  "text_chars": 9228,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9228
 }

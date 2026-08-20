@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-finansmani-sozlesmesi-421.pdf",
+  "scraped_at": "2026-08-20T16:18:43+00:00",
+  "content_hash": "b39de31fd051557e0ad9837f7bf89183142770c72272bf1c9f297567bd7d0c39",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesmesi 421",
+  "http_status": 200,
+  "raw_bytes": 146924,
+  "text_chars": 16852,
+  "pdf_pages": 6
+}

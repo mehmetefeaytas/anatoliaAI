@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/altin-kart-icin-bankacilik-hizmetleri-sozlesmesine-414.pdf",
+  "scraped_at": "2026-08-20T16:18:22+00:00",
+  "content_hash": "f9ebfa91790ab25a0d68b4923d3627cd10355b48ba1b37cc630ab20c6d0d510c",
+  "collection_method": "pdf",
+  "title": "altin kart icin bankacilik hizmetleri sozlesmesine 414",
+  "http_status": 200,
+  "raw_bytes": 98118,
+  "text_chars": 3516,
+  "pdf_pages": 2
+}

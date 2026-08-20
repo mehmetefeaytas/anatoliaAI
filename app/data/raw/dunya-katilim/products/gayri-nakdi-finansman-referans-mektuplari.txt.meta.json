@@ -1,14 +1,14 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/gayri-nakdi-finansman/referans-mektuplari",
-  "scraped_at": "2026-08-03T17:45:17+00:00",
-  "content_hash": "70ee32bbe63a296baecf7ae9d27e0dfb2b48807fc20eb33c2c4101859590e030",
+  "scraped_at": "2026-08-20T17:07:00+00:00",
+  "content_hash": "0df9dae1471925cd9a1c5e9849be4414ee7b0cde93e94feb77af73a23ec42434",
   "collection_method": "live",
   "title": "Referans Mektuplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 498929,
-  "text_chars": 9485,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "cerceve",
-  "content_status": "kabuk"
+  "text_chars": 9485
 }

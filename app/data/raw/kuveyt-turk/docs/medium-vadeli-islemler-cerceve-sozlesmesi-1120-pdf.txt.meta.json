@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vadeli-islemler-cerceve-sozlesmesi------1120.pdf",
+  "scraped_at": "2026-08-20T16:20:53+00:00",
+  "content_hash": "30b7436b6605da7cbfa0959c57f7eecec6ef157cb59cacb03ca3d131676e312a",
+  "collection_method": "pdf",
+  "title": "vadeli islemler cerceve sozlesmesi 1120",
+  "http_status": 200,
+  "raw_bytes": 1339630,
+  "text_chars": 46425,
+  "pdf_pages": 10
+}

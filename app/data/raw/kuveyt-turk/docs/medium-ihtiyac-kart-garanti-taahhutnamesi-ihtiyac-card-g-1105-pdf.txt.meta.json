@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ihtiyac-kart-garanti-taahhutnamesi--ihtiyac-card-g-1105.pdf",
+  "scraped_at": "2026-08-20T16:03:47+00:00",
+  "content_hash": "0c1f9c230540813dfa385b2daa4644ce36e271c9a3879c2b71452319de074c52",
+  "collection_method": "pdf",
+  "title": "ihtiyac kart garanti taahhutnamesi ihtiyac card g 1105",
+  "http_status": 200,
+  "raw_bytes": 108788,
+  "text_chars": 7538,
+  "pdf_pages": 3
+}

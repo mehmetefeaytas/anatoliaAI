@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/kredi-kartlari.aspx",
-  "scraped_at": "2026-08-03T17:27:21+00:00",
-  "content_hash": "5f19db4089fdc5a5ec5ec9e79b364eb8d109ffb63d5fbcd9fc176ff72b247ebb",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:19+00:00",
+  "content_hash": "ad85a26c7b1845b2d82c9e1097e95a682934dbca1e8b342d6ff498806bfb2c4a",
+  "collection_method": "browser",
   "title": "Kredi Kartları | Bireysel | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 190832,
-  "text_chars": 25440,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 303564,
+  "text_chars": 27296,
+  "extraction_invalidated_at": "2026-08-20T16:56:19+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

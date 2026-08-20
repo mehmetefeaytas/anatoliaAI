@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/hesaplar/cari-hesap",
-  "scraped_at": "2026-08-03T17:44:01+00:00",
-  "content_hash": "34ece7aefe1079b29e18bfe06ae32f7bd1b9a713c45192b7dbd33627dbc04a22",
+  "scraped_at": "2026-08-20T17:05:48+00:00",
+  "content_hash": "447e92b94d5c7bbcb2f8f23eee9f0dea1d4828843ae9de8c1dfec61cc5fd6370",
   "collection_method": "browser",
   "title": "Cari Hesap | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 312007,
-  "text_chars": 3657,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 312362,
+  "text_chars": 3657
 }

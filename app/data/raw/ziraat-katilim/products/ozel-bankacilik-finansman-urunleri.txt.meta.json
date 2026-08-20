@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/finansman-urunleri",
-  "scraped_at": "2026-08-03T17:30:20+00:00",
-  "content_hash": "4c989aee5592b76d6c077e191db18ad5a048eca7447f4542b0887ff70c2b37e6",
+  "scraped_at": "2026-08-20T16:59:20+00:00",
+  "content_hash": "a73d6f4dd19c7c41a56a1f096fa75d8194322f1eb99ae5909de3a3eec824cf3e",
   "collection_method": "live",
   "title": "Finansman Ürünleri | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 477127,
-  "text_chars": 1408,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 477489,
+  "text_chars": 1408
 }

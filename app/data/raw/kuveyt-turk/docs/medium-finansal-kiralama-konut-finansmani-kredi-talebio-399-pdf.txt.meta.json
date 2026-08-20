@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-kiralama---konut-finansmani-kredi-talebio-399.pdf",
+  "scraped_at": "2026-08-20T16:17:37+00:00",
+  "content_hash": "20feec3e2a0a1450910711ebebb56e834960c45ea17a57e68cd4041a700a86d2",
+  "collection_method": "pdf",
+  "title": "finansal kiralama konut finansmani kredi talebio 399",
+  "http_status": 200,
+  "raw_bytes": 162709,
+  "text_chars": 12674,
+  "pdf_pages": 6
+}

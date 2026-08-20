@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi/altin-hesaplari",
-  "scraped_at": "2026-08-03T17:46:02+00:00",
-  "content_hash": "963987b7345fe87c33b45e708992c02f5709b187b422d65e75648cfe14312ef5",
+  "scraped_at": "2026-08-20T17:07:45+00:00",
+  "content_hash": "1db72b994acf9b93028ba0788e3e9a9acf3e2039e4dfe9cc595041157b387f6e",
   "collection_method": "live",
   "title": "Alt&#x131;n Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499541,
-  "text_chars": 9241,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9241
 }

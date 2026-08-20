@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/coklu--hizli-gecis-sistemi-hgs-etiketi-sozlesmesi--3965.pdf",
+  "scraped_at": "2026-08-20T16:01:32+00:00",
+  "content_hash": "27bdb2a63aedc603a5adbfb4816230ddd0d61e4ddac312a2caef67ec040f9b21",
+  "collection_method": "pdf",
+  "title": "coklu hizli gecis sistemi hgs etiketi sozlesmesi 3965",
+  "http_status": 200,
+  "raw_bytes": 295009,
+  "text_chars": 29439,
+  "pdf_pages": 9
+}

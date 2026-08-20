@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/arac-tasit-rehni-sozlesmesi-------2467.pdf",
+  "scraped_at": "2026-08-20T15:59:56+00:00",
+  "content_hash": "96707e21a82fc47e7e43820953eb7f8254d5c05dbbb7747ef8fc6e07ab79be88",
+  "collection_method": "pdf",
+  "title": "arac tasit rehni sozlesmesi 2467",
+  "http_status": 200,
+  "raw_bytes": 244961,
+  "text_chars": 9133,
+  "pdf_pages": 2
+}

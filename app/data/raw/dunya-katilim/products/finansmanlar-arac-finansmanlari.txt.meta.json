@@ -1,14 +1,14 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar/arac-finansmanlari",
-  "scraped_at": "2026-08-03T17:46:17+00:00",
-  "content_hash": "c163496a7460ec6689704e9e7c21afb082c69dd039f8eac20b11ead5dbb27159",
+  "scraped_at": "2026-08-20T17:08:00+00:00",
+  "content_hash": "dc2fa8ebd5f6e689cf91f0c1e72978d52e5a1cc769f050b6cd864e63e77a772e",
   "collection_method": "live",
   "title": "Ara&#xE7; Finansmanlar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 498529,
-  "text_chars": 9235,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "cerceve",
-  "content_status": "kabuk"
+  "text_chars": 9235
 }

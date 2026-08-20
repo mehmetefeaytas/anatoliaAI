@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/teverruk_akdi_musteri_bilgilendirme.pdf",
+  "scraped_at": "2026-08-20T16:30:11+00:00",
+  "content_hash": "470fbb68c43f6e58d8552a81611fdd72618fc74d4935b979781dc3175283d9f4",
+  "collection_method": "pdf",
+  "title": "teverruk akdi musteri bilgilendirme",
+  "http_status": 200,
+  "raw_bytes": 283237,
+  "text_chars": 3645,
+  "pdf_pages": 2
+}

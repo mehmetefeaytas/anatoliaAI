@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ihtiyac-kart-garanti-taahhutnamesi---turkce-1104.pdf",
+  "scraped_at": "2026-08-20T16:03:44+00:00",
+  "content_hash": "c6f82d4646589389a37fa332eee3090cb148ee35133cbe14bc23f98634081a11",
+  "collection_method": "pdf",
+  "title": "ihtiyac kart garanti taahhutnamesi turkce 1104",
+  "http_status": 200,
+  "raw_bytes": 97052,
+  "text_chars": 4188,
+  "pdf_pages": 2
+}

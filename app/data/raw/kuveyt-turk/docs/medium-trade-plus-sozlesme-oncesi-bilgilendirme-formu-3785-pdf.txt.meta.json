@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/trade-plus-sozlesme-oncesi-bilgilendirme-formu-3785.pdf",
+  "scraped_at": "2026-08-20T16:14:19+00:00",
+  "content_hash": "99ce605f7a83cd64999e9c1d67707fddffa4f6f368f884e9020868176cecda68",
+  "collection_method": "pdf",
+  "title": "trade plus sozlesme oncesi bilgilendirme formu 3785",
+  "http_status": 200,
+  "raw_bytes": 102075,
+  "text_chars": 10639,
+  "pdf_pages": 3
+}

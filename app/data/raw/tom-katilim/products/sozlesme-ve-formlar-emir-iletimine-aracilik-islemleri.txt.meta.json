@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/emir-iletimine-aracilik-islemleri",
+  "scraped_at": "2026-08-20T17:04:06+00:00",
+  "content_hash": "bc4aedfed721e7f1be2a8959e35f6c74248a135da2cdfdf26ffca69750d9147d",
+  "collection_method": "browser",
+  "title": "Emir İletimine Aracılık İşlemleri | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 97933,
+  "text_chars": 389
+}

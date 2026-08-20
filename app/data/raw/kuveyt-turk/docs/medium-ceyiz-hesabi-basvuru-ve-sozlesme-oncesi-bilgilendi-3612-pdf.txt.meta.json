@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ceyiz-hesabi-basvuru-ve-sozlesme-oncesi-bilgilendi-3612.pdf",
+  "scraped_at": "2026-08-20T16:11:03+00:00",
+  "content_hash": "67522cb833166a91a4fddfb9480259a050d4687d40dc7c4f0596c22a4e978733",
+  "collection_method": "pdf",
+  "title": "ceyiz hesabi basvuru ve sozlesme oncesi bilgilendi 3612",
+  "http_status": 200,
+  "raw_bytes": 201741,
+  "text_chars": 10999,
+  "pdf_pages": 4
+}

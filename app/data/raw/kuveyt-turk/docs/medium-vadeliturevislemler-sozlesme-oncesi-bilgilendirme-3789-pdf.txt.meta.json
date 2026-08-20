@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vadeliturevislemler-sozlesme-oncesi-bilgilendirme--3789.pdf",
+  "scraped_at": "2026-08-20T16:20:29+00:00",
+  "content_hash": "e3430867ce8995d07aec0073c6df494637201b7029656101d9d237fb62be2f94",
+  "collection_method": "pdf",
+  "title": "vadeliturevislemler sozlesme oncesi bilgilendirme 3789",
+  "http_status": 200,
+  "raw_bytes": 342471,
+  "text_chars": 43076,
+  "pdf_pages": 11
+}

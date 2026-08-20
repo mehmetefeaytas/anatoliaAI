@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/ticari/gayri-nakdi-finansman/Sayfalar/default.aspx",
-  "scraped_at": "2026-08-03T17:28:09+00:00",
-  "content_hash": "214a508fc5bae750a6d97dd6a746a07c1520ab6ab8c4d5569e82d7913a8a910a",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:57:07+00:00",
+  "content_hash": "5dfab62627b77ac5d7a544f43a4eea324237f466671fa84c2a83511b0c55de8d",
+  "collection_method": "browser",
   "title": "Gayri Nakdi Krediler | KOBİ | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 97213,
-  "text_chars": 7507,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 207146,
+  "text_chars": 8355,
+  "extraction_invalidated_at": "2026-08-20T16:57:07+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/7bc1cda6-3cf9-446b-b35c-afb5898f6d7a/bankacilik-hizmetleri-sozlesmesi-09-15-2023-15-33-45",
+  "scraped_at": "2026-08-20T16:32:53+00:00",
+  "content_hash": "c19891aaadcc99f8f875bea714631c8d12bf08c6ccb830ea414cfc477d50b4e0",
+  "collection_method": "pdf",
+  "title": "bankacilik hizmetleri sozlesmesi 09 15 2023 15 33 45",
+  "http_status": 200,
+  "raw_bytes": 260320,
+  "text_chars": 74582,
+  "pdf_pages": 24
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/cek-karnesi-talebi-ve-bilgi-formu-394.pdf",
+  "scraped_at": "2026-08-20T16:20:01+00:00",
+  "content_hash": "503affefa15518e2bc8ee67d2e07200a692ec122aa8b8459505e2d55985a560c",
+  "collection_method": "pdf",
+  "title": "cek karnesi talebi ve bilgi formu 394",
+  "http_status": 200,
+  "raw_bytes": 74946,
+  "text_chars": 2075,
+  "pdf_pages": 1
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-kiralama-talebi-ve-bilgi-formu-financial--1600.pdf",
+  "scraped_at": "2026-08-20T16:21:29+00:00",
+  "content_hash": "13bee77f8d38f680052eb39ad649e457a4ac0302028ffe7e454505ee4d8652dc",
+  "collection_method": "pdf",
+  "title": "finansal kiralama talebi ve bilgi formu financial 1600",
+  "http_status": 200,
+  "raw_bytes": 311001,
+  "text_chars": 3060,
+  "pdf_pages": 2
+}

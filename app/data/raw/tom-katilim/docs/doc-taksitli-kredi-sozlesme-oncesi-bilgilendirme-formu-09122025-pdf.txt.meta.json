@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/taksitli_kredi_sozlesme_oncesi_bilgilendirme_formu-09122025.pdf",
+  "scraped_at": "2026-08-20T16:28:59+00:00",
+  "content_hash": "f8eb40029e68aecc332d5b377efd9bc187554197632e8c8d6c93970b2c1d7fb0",
+  "collection_method": "pdf",
+  "title": "taksitli kredi sozlesme oncesi bilgilendirme formu 09122025",
+  "http_status": 200,
+  "raw_bytes": 329527,
+  "text_chars": 15508,
+  "pdf_pages": 6
+}

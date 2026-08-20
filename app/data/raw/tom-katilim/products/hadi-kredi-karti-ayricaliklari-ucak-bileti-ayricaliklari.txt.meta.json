@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-kredi-karti-ayricaliklari/ucak-bileti-ayricaliklari",
+  "scraped_at": "2026-08-20T17:04:49+00:00",
+  "content_hash": "5d8d442bc831b85624bee341ce2068f85900fbda430ac01fdf7f52778fefab58",
+  "collection_method": "browser",
+  "title": "Uçak bileti alımlarınızda her ay 1.250 TL’ye varan iade! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 97945,
+  "text_chars": 1707
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/yatirim-hizmet-ve-faaliyetleri-cerceve-sozlesmesi--1004.pdf",
+  "scraped_at": "2026-08-20T16:09:34+00:00",
+  "content_hash": "bbb5189203dee4a8b487253ecb6f205629c95d75a55315de9dd83e923220dbd5",
+  "collection_method": "pdf",
+  "title": "yatirim hizmet ve faaliyetleri cerceve sozlesmesi 1004",
+  "http_status": 200,
+  "raw_bytes": 417080,
+  "text_chars": 96241,
+  "pdf_pages": 22
+}

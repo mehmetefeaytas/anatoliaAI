@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/sozlesme/2026/hesap-rehni-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:26:18+00:00",
+  "content_hash": "c14b4cb0f7a20daa753ab3fe1e5e9fcf162923389bdbca98ea97008e3959d437",
+  "collection_method": "pdf",
+  "title": "hesap rehni sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 296471,
+  "text_chars": 7697,
+  "pdf_pages": 3
+}

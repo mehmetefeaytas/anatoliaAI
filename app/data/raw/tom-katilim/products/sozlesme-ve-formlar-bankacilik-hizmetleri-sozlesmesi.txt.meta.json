@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/bankacilik-hizmetleri-sozlesmesi",
+  "scraped_at": "2026-08-20T17:03:39+00:00",
+  "content_hash": "e8b11762d973aefa13ff3544a3c11f31c8aee3ea3095a4310e2dfbb749a68cb6",
+  "collection_method": "browser",
+  "title": "Bankacılık Hizmetleri Sözleşmesi | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 98209,
+  "text_chars": 409
+}

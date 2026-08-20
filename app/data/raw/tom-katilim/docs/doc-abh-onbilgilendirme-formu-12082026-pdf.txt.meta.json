@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/abh-onbilgilendirme-formu_12082026.pdf",
+  "scraped_at": "2026-08-20T16:31:44+00:00",
+  "content_hash": "aa7262f19590c1fa7c979aa340bb59ac8bfee6b420fd4a7e7b6dbc234fd567b4",
+  "collection_method": "pdf",
+  "title": "abh onbilgilendirme formu 12082026",
+  "http_status": 200,
+  "raw_bytes": 187132,
+  "text_chars": 5154,
+  "pdf_pages": 3
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/egitim_ogretim_destegi_bireysel_kredi_sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T17:02:11+00:00",
+  "content_hash": "f3ae1dc529485f11ba02453c1389a2a7f466bcaab68a9f25c1c2fc75c1a208ae",
+  "collection_method": "pdf",
+  "title": "egitim ogretim destegi bireysel kredi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 120611,
+  "text_chars": 17480,
+  "pdf_pages": 4
+}

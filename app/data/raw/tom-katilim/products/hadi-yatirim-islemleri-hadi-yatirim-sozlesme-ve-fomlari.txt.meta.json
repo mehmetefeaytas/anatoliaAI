@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-yatirim-islemleri/hadi-yatirim-sozlesme-ve-fomlari",
+  "scraped_at": "2026-08-20T17:03:24+00:00",
+  "content_hash": "7b235cf797e1a78b6b456aaebbb9c4808a307fb3cd8b63004d8af0f958312dab",
+  "collection_method": "browser",
+  "title": "Hadi Yatırım Sözleşme ve Fomları | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 97843,
+  "text_chars": 339
+}

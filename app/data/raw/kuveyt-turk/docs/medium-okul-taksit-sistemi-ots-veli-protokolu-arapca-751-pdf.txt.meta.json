@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/okul-taksit-sistemi-ots-veli-protokolu-arapca------751.pdf",
+  "scraped_at": "2026-08-20T16:06:15+00:00",
+  "content_hash": "3ad7e5410d43b38ee675c3f6580258ec6e6e068ebd3b8d339366635e0556e839",
+  "collection_method": "pdf",
+  "title": "okul taksit sistemi ots veli protokolu arapca 751",
+  "http_status": 200,
+  "raw_bytes": 272829,
+  "text_chars": 8688,
+  "pdf_pages": 2
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/konut-finansmani-sozlesmesi-sozlesme-oncesi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T16:58:11+00:00",
+  "content_hash": "5772f252d166f78d7f5ccb2de6c8135853f6cad4bd5afa6fde8b9703aff36d5f",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesmesi sozlesme oncesi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 494312,
+  "text_chars": 47804,
+  "pdf_pages": 22
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/tek-seferlik-oIdeme-islemi-talep-talimat-formu-efrm-137-060.pdf",
+  "scraped_at": "2026-08-20T17:02:56+00:00",
+  "content_hash": "27eede3ca0f044e9e38cc31ff720663526b8dca221984641b4eed92de28736db",
+  "collection_method": "pdf",
+  "title": "tek seferlik oIdeme islemi talep talimat formu efrm 137 060",
+  "http_status": 200,
+  "raw_bytes": 38046,
+  "text_chars": 2646,
+  "pdf_pages": 1
+}

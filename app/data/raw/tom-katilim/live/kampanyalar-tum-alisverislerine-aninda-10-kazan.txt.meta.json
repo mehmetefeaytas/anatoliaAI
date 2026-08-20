@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/tum-alisverislerine-aninda-10-kazan",
+  "scraped_at": "2026-08-20T16:38:20+00:00",
+  "content_hash": "5383af349d90e2a76987f9aa28bd13decfe6c050caddde5fe8b4bea669875d1e",
+  "collection_method": "browser",
+  "title": "English Home alışverişlerinde %10 nakit iade! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101306,
+  "text_chars": 1913
+}

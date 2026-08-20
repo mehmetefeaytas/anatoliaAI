@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/miles--smiles-gks-eki-sozlesme-----------1904.pdf",
+  "scraped_at": "2026-08-20T16:05:57+00:00",
+  "content_hash": "a062e4374baa8282ac9cc1b97e3d7a16db898abfe33cca6b5bf02e825e21c024",
+  "collection_method": "pdf",
+  "title": "miles smiles gks eki sozlesme 1904",
+  "http_status": 200,
+  "raw_bytes": 462477,
+  "text_chars": 34660,
+  "pdf_pages": 8
+}

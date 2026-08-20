@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/yatirim-vekleti-cerceve-sozlesmesi---invesment-att-2613.pdf",
+  "scraped_at": "2026-08-20T16:09:39+00:00",
+  "content_hash": "6be3a771e97d620baca4caeeb81272752a6656ecc77e5299415b470f714a0f1a",
+  "collection_method": "pdf",
+  "title": "yatirim vekleti cerceve sozlesmesi invesment att 2613",
+  "http_status": 200,
+  "raw_bytes": 126651,
+  "text_chars": 15880,
+  "pdf_pages": 4
+}

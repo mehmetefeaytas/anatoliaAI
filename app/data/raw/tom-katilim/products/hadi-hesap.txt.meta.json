@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-hesap",
+  "scraped_at": "2026-08-20T17:02:55+00:00",
+  "content_hash": "c8b06ba0c774d74d39da6f843a0a4953b93e7b630140ef9cbe5d8193f6b795c0",
+  "collection_method": "browser",
+  "title": "Hadi Hesap | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 111479,
+  "text_chars": 3024
+}

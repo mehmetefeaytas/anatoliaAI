@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/HS/aidat-odeyen-hesap-basvuru-formu-ve-aoh-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:43+00:00",
+  "content_hash": "3a81b7e3159cc45e3dd2f4ade3a8695fb982e3d16c7e0f159bc786cb5b9e87e3",
+  "collection_method": "pdf",
+  "title": "aidat odeyen hesap basvuru formu ve aoh sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 454155,
+  "text_chars": 4334,
+  "pdf_pages": 2
+}

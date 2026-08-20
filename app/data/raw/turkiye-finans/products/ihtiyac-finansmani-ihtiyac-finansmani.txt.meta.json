@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/ihtiyac-finansmani/Sayfalar/ihtiyac-finansmani.aspx",
-  "scraped_at": "2026-08-03T17:26:39+00:00",
-  "content_hash": "c468742d88499a9c412b4081c40a85f3dbbcaac2c1a2cd185a92a5c38a7e0f50",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:55:37+00:00",
+  "content_hash": "ffb2b34baa1448623dcc9567e52d3b5dea37e53f2e39fdd28c513c2fde90f225",
+  "collection_method": "browser",
   "title": "İhtiyaç Finansmanı: Bireysel Finansman - Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 124945,
-  "text_chars": 12120,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 239362,
+  "text_chars": 13173,
+  "extraction_invalidated_at": "2026-08-20T16:55:37+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

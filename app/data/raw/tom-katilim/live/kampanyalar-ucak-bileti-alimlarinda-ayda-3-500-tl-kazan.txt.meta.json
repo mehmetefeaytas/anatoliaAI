@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/ucak-bileti-alimlarinda-ayda-3-500-tl-kazan",
+  "scraped_at": "2026-08-20T16:38:04+00:00",
+  "content_hash": "692d9b8bba1eb605cde849ad2080cd0e9cfd260a4b11d1d81c4bafaeae742d3c",
+  "collection_method": "browser",
+  "title": "Uçak bileti alımlarında ayda 3.500 TL kazan! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103240,
+  "text_chars": 3138
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bankacilik-hizmetleri-sozlesmesi---banking-service-3844.pdf",
+  "scraped_at": "2026-08-20T16:00:13+00:00",
+  "content_hash": "92fe9d6d5b89591ee33b3e58d681640899b0890f3bc252ab30062a3c6d869341",
+  "collection_method": "pdf",
+  "title": "bankacilik hizmetleri sozlesmesi banking service 3844",
+  "http_status": 200,
+  "raw_bytes": 607315,
+  "text_chars": 232747,
+  "pdf_pages": 44
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/emir-iletimine-aracilik-islemleri-cerceve-sozlesmesi-obf.pdf",
+  "scraped_at": "2026-08-20T16:32:23+00:00",
+  "content_hash": "fd130cdcfb07d3d930874c476797584b40a6be3d15285684b98b7f71f947903b",
+  "collection_method": "pdf",
+  "title": "emir iletimine aracilik islemleri cerceve sozlesmesi obf",
+  "http_status": 200,
+  "raw_bytes": 346871,
+  "text_chars": 24682,
+  "pdf_pages": 7
+}

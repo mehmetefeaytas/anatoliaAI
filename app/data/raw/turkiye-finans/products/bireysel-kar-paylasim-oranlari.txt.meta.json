@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/Kar-Paylasim-Oranlari.aspx",
-  "scraped_at": "2026-08-03T17:27:15+00:00",
-  "content_hash": "cb750e29010be8d603efa332ac4756199c5fb8d7d3f9a5ad8c4777fc057eb15c",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:13+00:00",
+  "content_hash": "a9e28f741e7709bc80d261829ca8b7902a0825f1013c6b6987d6d2ccc8843954",
+  "collection_method": "browser",
   "title": "Kar Paylaşım Oranları | Bireysel | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 163985,
-  "text_chars": 9216,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 281731,
+  "text_chars": 10068,
+  "extraction_invalidated_at": "2026-08-20T16:56:13+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

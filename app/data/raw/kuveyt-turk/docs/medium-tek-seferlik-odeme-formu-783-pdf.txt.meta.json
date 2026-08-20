@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/tek-seferlik-odeme-formu-783.pdf",
+  "scraped_at": "2026-08-20T16:07:57+00:00",
+  "content_hash": "791099fb8dacc0e9fa0488d27671bc6ba1c04459d9a1ead802a9afe7263d8b14",
+  "collection_method": "pdf",
+  "title": "tek seferlik odeme formu 783",
+  "http_status": 200,
+  "raw_bytes": 525237,
+  "text_chars": 2255,
+  "pdf_pages": 1
+}

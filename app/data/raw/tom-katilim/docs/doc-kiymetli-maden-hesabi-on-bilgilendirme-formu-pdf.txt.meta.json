@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/kiymetli-maden-hesabi-on-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T16:32:17+00:00",
+  "content_hash": "dfa4099ff834dc343916ef92ffdbefb0cdfb782f5767fe873e1b6115f3f116df",
+  "collection_method": "pdf",
+  "title": "kiymetli maden hesabi on bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 271000,
+  "text_chars": 5197,
+  "pdf_pages": 3
+}

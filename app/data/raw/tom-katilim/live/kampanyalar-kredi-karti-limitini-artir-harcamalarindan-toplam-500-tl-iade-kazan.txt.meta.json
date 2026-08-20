@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/kredi-karti-limitini-artir-harcamalarindan-toplam-500-tl-iade-kazan",
+  "scraped_at": "2026-08-20T16:39:47+00:00",
+  "content_hash": "f06eb01b913058928dc31d167d56c94090d5d9a518b093f426c7af865d91b7fb",
+  "collection_method": "browser",
+  "title": "Kredi Kartı limitini artır, harcamalarından toplam 500 TL iade kazan! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101545,
+  "text_chars": 1800
+}

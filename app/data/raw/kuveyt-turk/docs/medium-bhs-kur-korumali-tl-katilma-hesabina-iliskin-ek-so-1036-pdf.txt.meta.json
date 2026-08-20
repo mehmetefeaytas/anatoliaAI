@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bhs-kur-korumali-tl-katilma-hesabina-iliskin-ek-so-1036.pdf",
+  "scraped_at": "2026-08-20T16:20:13+00:00",
+  "content_hash": "f5da315657b95a55c0651a4279af7a1991dbcac6c15675f347de4bf23c351f71",
+  "collection_method": "pdf",
+  "title": "bhs kur korumali tl katilma hesabina iliskin ek so 1036",
+  "http_status": 200,
+  "raw_bytes": 122656,
+  "text_chars": 6632,
+  "pdf_pages": 2
+}

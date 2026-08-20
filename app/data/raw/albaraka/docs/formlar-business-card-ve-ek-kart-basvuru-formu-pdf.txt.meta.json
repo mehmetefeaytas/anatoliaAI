@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/business-card-ve-ek-kart-basvuru-formu.pdf",
+  "scraped_at": "2026-08-20T16:57:59+00:00",
+  "content_hash": "36f422b8fa9626103cbde8670e850bac5df7c1c560c3b7b1714af3f430abc110",
+  "collection_method": "pdf",
+  "title": "business card ve ek kart basvuru formu",
+  "http_status": 200,
+  "raw_bytes": 868960,
+  "text_chars": 63806,
+  "pdf_pages": 10
+}

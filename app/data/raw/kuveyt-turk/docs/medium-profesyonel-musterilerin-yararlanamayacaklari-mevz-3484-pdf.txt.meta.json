@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/profesyonel-musterilerin-yararlanamayacaklari-mevz-3484.pdf",
+  "scraped_at": "2026-08-20T16:13:25+00:00",
+  "content_hash": "d2cf64413c699d33822d785935b63488bab4cb6be50c1bfbdba7a765710742c1",
+  "collection_method": "pdf",
+  "title": "profesyonel musterilerin yararlanamayacaklari mevz 3484",
+  "http_status": 200,
+  "raw_bytes": 118410,
+  "text_chars": 7605,
+  "pdf_pages": 2
+}

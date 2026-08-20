@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/vahesabi_onbilg_formu17122025.pdf",
+  "scraped_at": "2026-08-20T16:31:50+00:00",
+  "content_hash": "f710dcec803a8bf468635d68f763b9c088b6413ebca06b2d412a7aad32ad643d",
+  "collection_method": "pdf",
+  "title": "vahesabi onbilg formu17122025",
+  "http_status": 200,
+  "raw_bytes": 216882,
+  "text_chars": 3454,
+  "pdf_pages": 3
+}

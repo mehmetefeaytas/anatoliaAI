@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-vadeli-hesap",
+  "scraped_at": "2026-08-20T17:03:01+00:00",
+  "content_hash": "992365dab1a5cb19ffd4656f5f6e80841944705f693203d7ff9799627085d5f6",
+  "collection_method": "browser",
+  "title": "Hadi Vadeli (Katılma) Hesabı | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 99586,
+  "text_chars": 2072
+}

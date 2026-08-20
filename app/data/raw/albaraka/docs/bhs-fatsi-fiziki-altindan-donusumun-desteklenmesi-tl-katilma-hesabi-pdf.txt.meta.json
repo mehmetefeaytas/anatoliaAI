@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BHS/fatsi-fiziki-altindan-donusumun-desteklenmesi-tl-katilma-hesabi.pdf",
+  "scraped_at": "2026-08-20T16:56:16+00:00",
+  "content_hash": "fe6e87917333a17598afd3184ae7eecf252bc7c3b7a750ea94c9531eb6c97ba4",
+  "collection_method": "pdf",
+  "title": "fatsi fiziki altindan donusumun desteklenmesi tl katilma hesabi",
+  "http_status": 200,
+  "raw_bytes": 132516,
+  "text_chars": 7894,
+  "pdf_pages": 2
+}

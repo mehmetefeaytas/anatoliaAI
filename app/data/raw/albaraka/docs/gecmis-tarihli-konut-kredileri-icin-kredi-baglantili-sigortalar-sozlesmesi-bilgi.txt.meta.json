@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/konut-kredileri-icin-kredi-baglantili-sigortalar-sozlesmesi-bilgi-formu.pdf",
+  "scraped_at": "2026-08-20T17:02:38+00:00",
+  "content_hash": "e8f3123bebea79b195317785540d4d12dee607fbd6c35c6ddbdbf04f790449b6",
+  "collection_method": "pdf",
+  "title": "konut kredileri icin kredi baglantili sigortalar sozlesmesi bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 68942,
+  "text_chars": 9211,
+  "pdf_pages": 2
+}

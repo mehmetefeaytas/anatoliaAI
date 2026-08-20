@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-hesabini-aktiflestir",
+  "scraped_at": "2026-08-20T16:39:23+00:00",
+  "content_hash": "2966173a7d44a52409483a7b1c4b80d7b651cb26b33d3bf33f7a9312e5ace76d",
+  "collection_method": "browser",
+  "title": "Hesabını Aktifleştirmek için Göndereceğin İlk 250 TL Alışverişine Özel 25 TL Kazan (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102661,
+  "text_chars": 1931,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "İlk 250 TL Alışverişine Özel 25 TL Kazan (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Detayları Kampanya 8 Kasım 2024 - 30 Kasım 2024 t",
+    "span_start": 307,
+    "span_end": 332,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

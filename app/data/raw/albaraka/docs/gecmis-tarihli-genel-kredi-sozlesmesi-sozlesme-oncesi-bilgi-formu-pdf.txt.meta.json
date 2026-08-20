@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/genel-kredi-sozlesmesi-sozlesme-oncesi-bilgi-formu.pdf",
+  "scraped_at": "2026-08-20T16:59:56+00:00",
+  "content_hash": "3b28f32fcd1461f8dc61c7f674d790eb8cc33f9c29f131945c3e178a6e1a5d42",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi sozlesme oncesi bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 41419,
+  "text_chars": 9202,
+  "pdf_pages": 4
+}

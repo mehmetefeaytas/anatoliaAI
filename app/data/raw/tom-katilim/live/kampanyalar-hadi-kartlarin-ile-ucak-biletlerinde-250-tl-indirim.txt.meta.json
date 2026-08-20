@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-kartlarin-ile-ucak-biletlerinde-250-tl-indirim",
+  "scraped_at": "2026-08-20T16:39:08+00:00",
+  "content_hash": "45c3ab2939eead2a2095ed556bcc7fc347de2d1ba2483369c5e9ba1d0f730e98",
+  "collection_method": "browser",
+  "title": "Hadi Kartların ile uçak biletlerinde 250 TL İndirim! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 105374,
+  "text_chars": 4216,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "rın ile uçak biletlerinde 250 TL İndirim! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Detayları Kampanya, 23.12.2024-06.01.2025 tarihle",
+    "span_start": 247,
+    "span_end": 272,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri/forward",
-  "scraped_at": "2026-08-03T17:30:26+00:00",
-  "content_hash": "5bf74dcc6dc00a7eb9e208a40f3302bb3dc5bddb9d829f2c088c859cfa9767b7",
+  "scraped_at": "2026-08-20T16:59:26+00:00",
+  "content_hash": "54becc0f1191edb69ab12315fe7c01d8ad8ae94985a610ee86be436a984df03d",
   "collection_method": "live",
   "title": "Vaade Dayalı Döviz Alım Satım - Forward İşlemleri | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 476233,
-  "text_chars": 1001,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 476595,
+  "text_chars": 1001
 }

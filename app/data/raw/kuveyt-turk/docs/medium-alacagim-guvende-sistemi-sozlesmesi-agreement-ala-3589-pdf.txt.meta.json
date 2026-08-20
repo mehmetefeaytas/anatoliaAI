@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/alacagim-guvende-sistemi-sozlesmesi--agreement-ala-3589.pdf",
+  "scraped_at": "2026-08-20T15:59:44+00:00",
+  "content_hash": "986fc666faa6d6dbabed3879f7a89ccf8656491f9a6a53ced9ec23d5341366b4",
+  "collection_method": "pdf",
+  "title": "alacagim guvende sistemi sozlesmesi agreement ala 3589",
+  "http_status": 200,
+  "raw_bytes": 190799,
+  "text_chars": 18385,
+  "pdf_pages": 5
+}

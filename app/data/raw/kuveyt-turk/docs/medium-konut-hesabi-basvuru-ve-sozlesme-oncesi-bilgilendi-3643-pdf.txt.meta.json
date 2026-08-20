@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-hesabi-basvuru-ve-sozlesme-oncesi-bilgilendi-3643.pdf",
+  "scraped_at": "2026-08-20T16:12:49+00:00",
+  "content_hash": "9e693b24448a9aed0f58ef29dd358bbd515c183bc20b8a9920fd2e2848f04444",
+  "collection_method": "pdf",
+  "title": "konut hesabi basvuru ve sozlesme oncesi bilgilendi 3643",
+  "http_status": 200,
+  "raw_bytes": 108038,
+  "text_chars": 7490,
+  "pdf_pages": 3
+}

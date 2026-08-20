@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/bankacilik_hizmetleri_sozlesmesi-01122025.pdf",
+  "scraped_at": "2026-08-20T16:27:48+00:00",
+  "content_hash": "3334f894c9947a625576009985b22e475b19fb09d54612193b8f3b746fe3dce8",
+  "collection_method": "pdf",
+  "title": "bankacilik hizmetleri sozlesmesi 01122025",
+  "http_status": 200,
+  "raw_bytes": 254776,
+  "text_chars": 23429,
+  "pdf_pages": 8
+}

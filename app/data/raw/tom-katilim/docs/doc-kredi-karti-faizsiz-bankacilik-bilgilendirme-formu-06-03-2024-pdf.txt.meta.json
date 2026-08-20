@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/Kredi-Karti-Faizsiz-Bankacilik-Bilgilendirme-Formu_06.03.2024.pdf",
+  "scraped_at": "2026-08-20T16:31:32+00:00",
+  "content_hash": "282acce424f7554644fed7730b435bf5cd2fba71dc4e8f76505020f91332821d",
+  "collection_method": "pdf",
+  "title": "Kredi Karti Faizsiz Bankacilik Bilgilendirme Formu 06.03.2024",
+  "http_status": 200,
+  "raw_bytes": 295966,
+  "text_chars": 6763,
+  "pdf_pages": 3
+}

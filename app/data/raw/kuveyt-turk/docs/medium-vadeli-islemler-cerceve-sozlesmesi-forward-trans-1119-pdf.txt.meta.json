@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vadeli-islemler-cerceve-sozlesmesi---forward-trans-1119.pdf",
+  "scraped_at": "2026-08-20T16:21:23+00:00",
+  "content_hash": "5c25f83b65b00d0f8c7b06d2512ff6d5feca4e0eeb8f3b16b2e0eccf71920031",
+  "collection_method": "pdf",
+  "title": "vadeli islemler cerceve sozlesmesi forward trans 1119",
+  "http_status": 200,
+  "raw_bytes": 255858,
+  "text_chars": 53217,
+  "pdf_pages": 10
+}

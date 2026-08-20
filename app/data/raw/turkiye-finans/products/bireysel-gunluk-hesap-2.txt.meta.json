@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/gunluk-hesap.aspx?utm_source=kurumsal-site&utm_medium=anasayfa-banner",
+  "scraped_at": "2026-08-20T16:57:31+00:00",
+  "content_hash": "fc57a49d400d6302f397ecc26d6e6c1b74b6729b3bf040c1fb173da53f7e4e10",
+  "collection_method": "browser",
+  "title": "Günlük Hesap | Bireysel | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 227512,
+  "text_chars": 17999
+}

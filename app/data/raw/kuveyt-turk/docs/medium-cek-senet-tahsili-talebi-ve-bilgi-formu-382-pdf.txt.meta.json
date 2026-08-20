@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/cek-senet-tahsili-talebi-ve-bilgi-formu-382.pdf",
+  "scraped_at": "2026-08-20T16:19:25+00:00",
+  "content_hash": "ee00e730c7e0461fb8bea7dcb9f8db1148249cdfc0b0fa8a84ef2d0ea1422c15",
+  "collection_method": "pdf",
+  "title": "cek senet tahsili talebi ve bilgi formu 382",
+  "http_status": 200,
+  "raw_bytes": 245617,
+  "text_chars": 3051,
+  "pdf_pages": 2
+}

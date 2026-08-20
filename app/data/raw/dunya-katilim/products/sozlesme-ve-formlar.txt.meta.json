@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/sozlesme-ve-formlar",
-  "scraped_at": "2026-08-03T17:48:08+00:00",
-  "content_hash": "cbeaa2c8ca7135d2c6b2e84ac0c4508f8a45a70cfa25dd9216d300921c643c88",
+  "scraped_at": "2026-08-20T17:09:52+00:00",
+  "content_hash": "7903c50b1cfc96d74beafc6ba74ebda86c07e61ba445c7757a8336c8894337e7",
   "collection_method": "live",
   "title": "S&#xF6;zle&#x15F;me ve Formlar | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 506436,
-  "text_chars": 9044,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9044
 }

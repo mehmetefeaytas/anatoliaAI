@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/yatirim/sermaye-piyasasi-urunleri/yatirim-fonlari",
-  "scraped_at": "2026-08-03T17:45:56+00:00",
-  "content_hash": "ad9262e301416e4bcd36b68a73de3d4b846c4fa3c00975305fdb8f603e2e48e7",
+  "scraped_at": "2026-08-20T17:07:39+00:00",
+  "content_hash": "a0b08f3dea568217d98caae1d4c0014b15854d900e604441c7691aa4d281e9ba",
   "collection_method": "live",
   "title": "Yat&#x131;r&#x131;m Fonlar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 505637,
-  "text_chars": 11581,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 11581
 }

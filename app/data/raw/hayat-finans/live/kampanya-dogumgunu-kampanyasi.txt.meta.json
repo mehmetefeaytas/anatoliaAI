@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatpay.com.tr/kampanya/dogumgunu-kampanyasi",
+  "scraped_at": "2026-08-20T16:46:25+00:00",
+  "content_hash": "73b107611063c8b3420a3adb763adbea7d8ddfdfc3cc062385d1d824f4efbc84",
+  "collection_method": "browser",
+  "title": "Doğum gününe özel 2.000 hayatpara hediye",
+  "http_status": 200,
+  "raw_bytes": 25840,
+  "text_chars": 1515
+}

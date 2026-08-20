@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kartlar/bankkart-ucretsiz",
-  "scraped_at": "2026-08-03T17:30:28+00:00",
-  "content_hash": "9c76f02c7e12c92215d6a741ebacb99f6485d25e609b9391abf37e597e83a83a",
+  "scraped_at": "2026-08-20T16:59:29+00:00",
+  "content_hash": "611de9120682be053c7e22a177f893a95ec39ae9aced71d05cbd4631d023c6a8",
   "collection_method": "live",
   "title": "Bankkart (Ücretsiz) | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 470176,
-  "text_chars": 344,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 470538,
+  "text_chars": 1123
 }

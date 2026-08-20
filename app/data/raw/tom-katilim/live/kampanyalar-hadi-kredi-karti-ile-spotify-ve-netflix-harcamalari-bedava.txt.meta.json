@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-kredi-karti-ile-spotify-ve-netflix-harcamalari-bedava",
+  "scraped_at": "2026-08-20T16:39:20+00:00",
+  "content_hash": "bbe80220103a39461b3484f7757f31ec08e1f3af880406af334997048b2ff750",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı ile Spotify ve Netflix harcamaları bedava! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 104631,
+  "text_chars": 3422,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "le Spotify ve Netflix harcamaları bedava! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Koşulları Hadi Kredi Kartın ile bir ekstre dönemi",
+    "span_start": 262,
+    "span_end": 287,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

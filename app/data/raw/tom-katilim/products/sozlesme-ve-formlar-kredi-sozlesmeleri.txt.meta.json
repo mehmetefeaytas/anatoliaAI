@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/kredi-sozlesmeleri",
+  "scraped_at": "2026-08-20T17:03:45+00:00",
+  "content_hash": "ac196808815c0e5a0f07fe7e1d77dfd1aa2e8deb9c6a2d1bc8299cc4720059a9",
+  "collection_method": "browser",
+  "title": "Kredi Sözleşmeleri | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 115737,
+  "text_chars": 2400
+}

@@ -3,11 +3,11 @@
   "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar/biz-kart-ile-arkadasini-getir-kazan",
-  "scraped_at": "2026-08-20T12:31:00+00:00",
-  "content_hash": "2c4b1bc3125480b36a5cc277e50d3b6150f7cbfbaf208b8b09077294dcb6e90e",
+  "scraped_at": "2026-08-20T16:44:44+00:00",
+  "content_hash": "5d9009207cd4ca2834c8cfdf14319fe7084683f1d78f7a79f70c66f180297894",
   "collection_method": "browser",
   "title": "Biz Kart Arkadaşını Getir &amp; Kazan | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 300163,
+  "raw_bytes": 300182,
   "text_chars": 3891
 }

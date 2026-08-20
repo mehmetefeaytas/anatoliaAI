@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/Mudarebe_Akdi_Musteri_Bilgi_Formu.pdf",
+  "scraped_at": "2026-08-20T16:29:19+00:00",
+  "content_hash": "e42343f7d3a4aec732925a38b658b2e0f15cc03d833c9aa24adc74411f94364f",
+  "collection_method": "pdf",
+  "title": "Mudarebe Akdi Musteri Bilgi Formu",
+  "http_status": 200,
+  "raw_bytes": 443758,
+  "text_chars": 5251,
+  "pdf_pages": 3
+}

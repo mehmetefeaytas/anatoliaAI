@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/d1a25e80-0656-45ce-8c86-a92635798631/sozlesme-oncesi-bilgilendirme-ile-ucret-ve-masraflara-iliskin-bilgilendirme-formu-11-16-2023-08-40-49",
+  "scraped_at": "2026-08-20T16:33:14+00:00",
+  "content_hash": "c97623fc68403bf306921280aca8a6e8e028daa93c4ae0005ffe4dc1c2884db2",
+  "collection_method": "pdf",
+  "title": "sozlesme oncesi bilgilendirme ile ucret ve masraflara iliskin bilgilendirme formu 11 16 2023 08 40 49",
+  "http_status": 200,
+  "raw_bytes": 91857,
+  "text_chars": 11085,
+  "pdf_pages": 4
+}

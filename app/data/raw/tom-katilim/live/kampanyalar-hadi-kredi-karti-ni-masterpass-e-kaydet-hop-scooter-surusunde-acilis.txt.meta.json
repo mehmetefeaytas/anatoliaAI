@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-kredi-karti-ni-masterpass-e-kaydet-hop-scooter-surusunde-acilis-ucreti-odeme",
+  "scraped_at": "2026-08-20T16:39:32+00:00",
+  "content_hash": "f13252b0fdd26c19262c63bcb207f6105de11d9cf87bdd3af82a56e154851f6c",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı'nı Masterpass'e kaydet, hop sürüşlerinde açılış ücreti ödeme! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102495,
+  "text_chars": 1265,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "et, hop sürüşlerinde açılış ücreti ödeme! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Detayları 5 Ekim 2024 - 27 Ekim 2024 tarihleri ar",
+    "span_start": 297,
+    "span_end": 322,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

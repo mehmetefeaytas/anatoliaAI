@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/2025/bhs-sobf-gercek-kisi-finansal-tuketici.pdf",
+  "scraped_at": "2026-08-20T16:58:32+00:00",
+  "content_hash": "004cda758b41385446b6009cfd6b54348f38ba35016da8a56ba9520d95bc7f05",
+  "collection_method": "pdf",
+  "title": "bhs sobf gercek kisi finansal tuketici",
+  "http_status": 200,
+  "raw_bytes": 470999,
+  "text_chars": 43790,
+  "pdf_pages": 11
+}

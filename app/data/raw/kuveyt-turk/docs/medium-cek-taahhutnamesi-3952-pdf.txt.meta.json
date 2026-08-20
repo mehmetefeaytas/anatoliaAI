@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/cek-taahhutnamesi-----3952.pdf",
+  "scraped_at": "2026-08-20T16:01:17+00:00",
+  "content_hash": "72eb433b92bfb92ab88603bbc61748516f5425513600dc9a842f2e0a0c03cf32",
+  "collection_method": "pdf",
+  "title": "cek taahhutnamesi 3952",
+  "http_status": 200,
+  "raw_bytes": 282665,
+  "text_chars": 9841,
+  "pdf_pages": 2
+}

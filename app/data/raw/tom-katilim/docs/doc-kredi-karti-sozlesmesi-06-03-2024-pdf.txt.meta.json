@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/Kredi-Karti-Sozlesmesi_06.03.2024.pdf",
+  "scraped_at": "2026-08-20T16:31:23+00:00",
+  "content_hash": "71e363868e3393096f16112845404a80113f28cc733a45bd8957a378754b3c1c",
+  "collection_method": "pdf",
+  "title": "Kredi Karti Sozlesmesi 06.03.2024",
+  "http_status": 200,
+  "raw_bytes": 325689,
+  "text_chars": 15478,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vadeli-ihracatin-finansmani-sozlesmesi------3719.pdf",
+  "scraped_at": "2026-08-20T16:09:16+00:00",
+  "content_hash": "9fe678397fb4f8725703ace5464e54b09b54ad8f4deb8555afc94d8c3e3f4f4c",
+  "collection_method": "pdf",
+  "title": "vadeli ihracatin finansmani sozlesmesi 3719",
+  "http_status": 200,
+  "raw_bytes": 503919,
+  "text_chars": 124176,
+  "pdf_pages": 23
+}

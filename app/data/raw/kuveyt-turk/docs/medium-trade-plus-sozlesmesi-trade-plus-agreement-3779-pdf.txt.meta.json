@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/trade-plus-sozlesmesi---trade-plus-agreement-3779.pdf",
+  "scraped_at": "2026-08-20T16:08:30+00:00",
+  "content_hash": "4eae3d0d526365d7e4be0e7f4cbf49eed20b392c53971b205dbaaef0dafe5b8e",
+  "collection_method": "pdf",
+  "title": "trade plus sozlesmesi trade plus agreement 3779",
+  "http_status": 200,
+  "raw_bytes": 294239,
+  "text_chars": 72608,
+  "pdf_pages": 19
+}

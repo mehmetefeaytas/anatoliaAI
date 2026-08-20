@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/veresiye_sozlesme_oncesi_bilgilendirme_formu-09122025.pdf",
+  "scraped_at": "2026-08-20T16:29:29+00:00",
+  "content_hash": "9f682d5fe6c566109318180bf284b34ce1a70f9ba907406c0c94446473298a3a",
+  "collection_method": "pdf",
+  "title": "veresiye sozlesme oncesi bilgilendirme formu 09122025",
+  "http_status": 200,
+  "raw_bytes": 325100,
+  "text_chars": 13502,
+  "pdf_pages": 6
+}

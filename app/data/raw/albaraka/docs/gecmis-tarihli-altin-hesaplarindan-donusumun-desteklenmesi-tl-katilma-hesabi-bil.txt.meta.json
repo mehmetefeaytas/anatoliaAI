@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/altin-hesaplarindan-donusumun-desteklenmesi-tl-katilma-hesabi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T16:59:47+00:00",
+  "content_hash": "fcf82337a68823c11000feeab45834707a28f25b59cb7cef06211d4d172098e1",
+  "collection_method": "pdf",
+  "title": "altin hesaplarindan donusumun desteklenmesi tl katilma hesabi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 99747,
+  "text_chars": 7294,
+  "pdf_pages": 2
+}

@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/yatirim-urunleri",
-  "scraped_at": "2026-07-30T20:29:46+00:00",
-  "content_hash": "0233fc51eb9a694f3db7f541b85c863aab5576c357db39dafc630eb5e59dc1ad",
+  "scraped_at": "2026-08-20T17:09:21+00:00",
+  "content_hash": "9354315e9f10c8e2ca6cc5dad8861e75210b73c366521c10e8a2a50fa7701a8b",
   "collection_method": "live",
   "title": "Yat&#x131;r&#x131;m &#xDC;r&#xFC;nleri | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 503641,
-  "text_chars": 9564,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9564
 }

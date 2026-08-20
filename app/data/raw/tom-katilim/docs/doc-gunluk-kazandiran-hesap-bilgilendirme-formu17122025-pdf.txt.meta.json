@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/gunluk-kazandiran-hesap-bilgilendirme-formu17122025.pdf",
+  "scraped_at": "2026-08-20T16:32:14+00:00",
+  "content_hash": "a7e08326c34d5c70c9abbe553be2c9b2a36511cb9fa559a32c3680f905b3cd3e",
+  "collection_method": "pdf",
+  "title": "gunluk kazandiran hesap bilgilendirme formu17122025",
+  "http_status": 200,
+  "raw_bytes": 219217,
+  "text_chars": 6393,
+  "pdf_pages": 3
+}

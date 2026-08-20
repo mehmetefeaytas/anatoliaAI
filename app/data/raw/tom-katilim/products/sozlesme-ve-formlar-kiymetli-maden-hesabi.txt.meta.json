@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/kiymetli-maden-hesabi",
+  "scraped_at": "2026-08-20T17:04:03+00:00",
+  "content_hash": "42de1ad08e43af1d4a42cb5a7c0bedf72cfac380b814019f3581af887a67e9a0",
+  "collection_method": "browser",
+  "title": "Kıymetli Maden Hesabı | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 97666,
+  "text_chars": 258
+}

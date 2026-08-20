@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/tedarikci-finansmani-alici-cerceve-sozlesmesi-supp-3743.pdf",
+  "scraped_at": "2026-08-20T16:07:24+00:00",
+  "content_hash": "3a59b32f6d3ebca4f9c2edc38932c98b21e1b94e5c38b7779ae555205ad07e42",
+  "collection_method": "pdf",
+  "title": "tedarikci finansmani alici cerceve sozlesmesi supp 3743",
+  "http_status": 200,
+  "raw_bytes": 338211,
+  "text_chars": 73075,
+  "pdf_pages": 18
+}

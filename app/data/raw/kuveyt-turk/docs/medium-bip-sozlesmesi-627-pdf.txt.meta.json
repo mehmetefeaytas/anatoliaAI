@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bip-sozlesmesi-627.pdf",
+  "scraped_at": "2026-08-20T16:00:35+00:00",
+  "content_hash": "6bd7e6f644e340852b5413a6135471af214dd77f249aed4945cbd6c65d57b734",
+  "collection_method": "pdf",
+  "title": "bip sozlesmesi 627",
+  "http_status": 200,
+  "raw_bytes": 102651,
+  "text_chars": 19664,
+  "pdf_pages": 5
+}

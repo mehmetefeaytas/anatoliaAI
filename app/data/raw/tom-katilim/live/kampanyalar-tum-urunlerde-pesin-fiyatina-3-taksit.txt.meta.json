@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/tum-urunlerde-pesin-fiyatina-3-taksit",
+  "scraped_at": "2026-08-20T16:38:26+00:00",
+  "content_hash": "c6a59e95dabc94e664b6c0b3222eb97c3fedaa05efed60e1fd4ee27fc7ee0ba8",
+  "collection_method": "browser",
+  "title": "Hadi Taksitli Kredi ile A101 Ekstra’da Tüm Ürünlerde Peşin Fiyatına 3 Taksit! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101538,
+  "text_chars": 1610
+}

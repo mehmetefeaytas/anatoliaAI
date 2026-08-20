@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/DS/hgs-etiketi-satis-musteri-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:57:50+00:00",
+  "content_hash": "81e3189a08bdd1bf7adc7c1d47d580be036fd71f26f09391d8bdcd7e31085d78",
+  "collection_method": "pdf",
+  "title": "hgs etiketi satis musteri sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 197112,
+  "text_chars": 22227,
+  "pdf_pages": 5
+}

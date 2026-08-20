@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kredi-baglantili-sigortalar-bilgi-ve-talep-formu---1738.pdf",
+  "scraped_at": "2026-08-20T16:15:40+00:00",
+  "content_hash": "c8fb909d7c20fa8d219371a78d0721eff7b6b58d43c33430538a158e7c225b50",
+  "collection_method": "pdf",
+  "title": "kredi baglantili sigortalar bilgi ve talep formu 1738",
+  "http_status": 200,
+  "raw_bytes": 92972,
+  "text_chars": 10266,
+  "pdf_pages": 3
+}

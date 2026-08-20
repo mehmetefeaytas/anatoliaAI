@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi/fiziki-altin-alimi/dijitalden-fiziki-altin-islemleri",
-  "scraped_at": "2026-08-03T17:46:11+00:00",
-  "content_hash": "e01f1c67651e2278a3d0216e0c7e82b2dc8e08b6df6631f4e0c87fad83335fa6",
+  "scraped_at": "2026-08-20T17:07:54+00:00",
+  "content_hash": "dada5a9b3b844aecf20f6a3b9c34944c951dacc2f6a8043046d7e1d009015db7",
   "collection_method": "live",
   "title": "Dijitalden Fiziki Alt&#x131;n &#x130;&#x15F;lemleri | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 501023,
-  "text_chars": 10862,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 10862
 }

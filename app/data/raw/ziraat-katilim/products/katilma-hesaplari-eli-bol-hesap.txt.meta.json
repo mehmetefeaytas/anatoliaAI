@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/katilma-hesaplari/eli-bol-hesap",
-  "scraped_at": "2026-08-03T17:30:43+00:00",
-  "content_hash": "9e71921f52559efb8b344df97cad9c0324cfc3749aacdc220d66275b9341da11",
+  "scraped_at": "2026-08-20T16:59:44+00:00",
+  "content_hash": "435349f91e621dd86e31dac42a8f940923c67bb464cb10955551528707e118f6",
   "collection_method": "live",
   "title": "Eli Bol Hesap | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 476925,
-  "text_chars": 1552,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 477287,
+  "text_chars": 1552
 }

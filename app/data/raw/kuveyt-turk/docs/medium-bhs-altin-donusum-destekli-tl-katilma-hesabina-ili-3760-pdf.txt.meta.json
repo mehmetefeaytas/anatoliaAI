@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bhs-altin-donusum-destekli-tl-katilma-hesabina-ili-3760.pdf",
+  "scraped_at": "2026-08-20T16:16:55+00:00",
+  "content_hash": "85751805aa33b946e3f52ae70c9d26ac887ce9b305abe8c9b1a9a39464dffa77",
+  "collection_method": "pdf",
+  "title": "bhs altin donusum destekli tl katilma hesabina ili 3760",
+  "http_status": 200,
+  "raw_bytes": 125291,
+  "text_chars": 9215,
+  "pdf_pages": 2
+}

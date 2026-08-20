@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/parcali-sepet-hesabi-sozlesmesi-3866.pdf",
+  "scraped_at": "2026-08-20T16:06:45+00:00",
+  "content_hash": "d3bfff532abc7a3b92daf66ab4ba055df6b4d7c5617c35001834e95c660a221b",
+  "collection_method": "pdf",
+  "title": "parcali sepet hesabi sozlesmesi 3866",
+  "http_status": 200,
+  "raw_bytes": 158330,
+  "text_chars": 12189,
+  "pdf_pages": 3
+}

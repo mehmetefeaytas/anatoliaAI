@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/kobi-kredileri/Sayfalar/kobi-aninda-finansman.aspx",
-  "scraped_at": "2026-08-03T17:27:42+00:00",
-  "content_hash": "7598d460b23c2030a0625bea0ac854c600bc49f58daedea567c18378987216cd",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:40+00:00",
+  "content_hash": "e4eac287639f165b8f2361c9335a5905cdec8837bc45aacc866b8bffc0f31f19",
+  "collection_method": "browser",
   "title": "KOBİ Anında Finansman | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 107117,
-  "text_chars": 10330,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 217867,
+  "text_chars": 11299,
+  "extraction_invalidated_at": "2026-08-20T16:56:40+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

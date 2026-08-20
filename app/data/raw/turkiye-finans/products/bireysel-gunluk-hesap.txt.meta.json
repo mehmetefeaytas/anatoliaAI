@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/gunluk-hesap.aspx",
-  "scraped_at": "2026-08-03T17:27:03+00:00",
-  "content_hash": "91424140c66fcdd19b618be20ff2005b743055dfa07dd4735b739ee257f664e5",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:00+00:00",
+  "content_hash": "86929c04847bd906fdbc4bd433842c0851e0411e0f7b18d9bdf96cb4f1b02db6",
+  "collection_method": "browser",
   "title": "Günlük Hesap | Bireysel | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 118039,
-  "text_chars": 16972,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 229478,
+  "text_chars": 17963,
+  "extraction_invalidated_at": "2026-08-20T16:56:00+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

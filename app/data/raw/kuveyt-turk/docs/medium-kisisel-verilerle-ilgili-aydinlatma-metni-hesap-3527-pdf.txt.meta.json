@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kisisel-verilerle-ilgili-aydinlatma-metni---hesap--3527.pdf",
+  "scraped_at": "2026-08-20T16:04:24+00:00",
+  "content_hash": "f8eb554f48e447f5175b2eac59a19b15b8a7ab5619f0e10dd1c00e09efd5559f",
+  "collection_method": "pdf",
+  "title": "kisisel verilerle ilgili aydinlatma metni hesap 3527",
+  "http_status": 200,
+  "raw_bytes": 268634,
+  "text_chars": 45276,
+  "pdf_pages": 13
+}

@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/Kar-Payi-Oranlari.aspx",
-  "scraped_at": "2026-08-03T17:27:14+00:00",
-  "content_hash": "f70279272d13c5171d12e74d90886d16d0a820b65c3be0b74b45bddb4118b4df",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:11+00:00",
+  "content_hash": "25a4cc79c42e0f251781e06ff0ac7b86cf7d8d08159c25f78808a4c27b339765",
+  "collection_method": "browser",
   "title": "Kar Payı Oranları | Bireysel | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 169166,
-  "text_chars": 9245,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 284982,
+  "text_chars": 10164,
+  "extraction_invalidated_at": "2026-08-20T16:56:11+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

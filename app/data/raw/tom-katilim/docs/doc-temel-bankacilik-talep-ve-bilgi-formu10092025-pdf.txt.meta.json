@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/temel_bankacilik_talep_ve_bilgi_formu10092025.pdf",
+  "scraped_at": "2026-08-20T16:28:01+00:00",
+  "content_hash": "c78d089dcbfe98bad8696ea94a393041c3d334e9d5d8bb044489a493d9bcb2bf",
+  "collection_method": "pdf",
+  "title": "temel bankacilik talep ve bilgi formu10092025",
+  "http_status": 200,
+  "raw_bytes": 137494,
+  "text_chars": 3349,
+  "pdf_pages": 2
+}

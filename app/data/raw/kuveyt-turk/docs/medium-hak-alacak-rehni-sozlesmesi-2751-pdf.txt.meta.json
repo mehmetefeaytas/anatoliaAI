@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hak-alacak-rehni-sozlesmesi-----2751.pdf",
+  "scraped_at": "2026-08-20T16:03:14+00:00",
+  "content_hash": "1e02651176abd74b95eb6faf2d166d0995795dd29f535da5ccce914928672917",
+  "collection_method": "pdf",
+  "title": "hak alacak rehni sozlesmesi 2751",
+  "http_status": 200,
+  "raw_bytes": 260711,
+  "text_chars": 22578,
+  "pdf_pages": 5
+}

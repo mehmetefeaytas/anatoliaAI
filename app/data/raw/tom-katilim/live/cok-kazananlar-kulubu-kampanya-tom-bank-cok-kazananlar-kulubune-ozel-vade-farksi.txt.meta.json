@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/tom-bank-cok-kazananlar-kulubune-ozel-vade-farksiz-veresiye",
+  "scraped_at": "2026-08-20T16:39:59+00:00",
+  "content_hash": "7ee2ed7cda046f5d440c2abe9503bf151a65b5a05a9185fef7e1b0abd906861c",
+  "collection_method": "browser",
+  "title": "TOM Bank Çok Kazananlar Kulübüne Özel Vade Farksız Veresiye | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 100191,
+  "text_chars": 3195
+}

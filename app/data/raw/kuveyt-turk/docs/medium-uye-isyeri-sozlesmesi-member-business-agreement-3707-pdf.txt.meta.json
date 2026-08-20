@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/uye-isyeri-sozlesmesi--member-business-agreement-3707.pdf",
+  "scraped_at": "2026-08-20T16:08:48+00:00",
+  "content_hash": "2b1dcf8145854d7e138f5aaa54debecf76fbdd6756f4a27cd2ecdc400b8f34bf",
+  "collection_method": "pdf",
+  "title": "uye isyeri sozlesmesi member business agreement 3707",
+  "http_status": 200,
+  "raw_bytes": 397217,
+  "text_chars": 108325,
+  "pdf_pages": 27
+}

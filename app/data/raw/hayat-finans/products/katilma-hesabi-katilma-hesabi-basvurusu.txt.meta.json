@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/hesaplar/katilma-hesabi/katilma-hesabi-basvurusu",
-  "scraped_at": "2026-08-03T17:44:39+00:00",
-  "content_hash": "fc8eeff3203c874b6a58018fe9a4c8c674b4d3435cdaa498a59d51772661802e",
+  "scraped_at": "2026-08-20T17:06:26+00:00",
+  "content_hash": "0b6b2396dffb6fe354f31ae0a44a867793c480a4e1b264264f87ecf527fd5af4",
   "collection_method": "browser",
   "title": "Katılma Hesabı Başvurusu | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 309544,
-  "text_chars": 953,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 309919,
+  "text_chars": 2826
 }

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/hadi-kartlarin-ile-ucak-biletlerinde-250-tl-indirim",
+  "scraped_at": "2026-08-20T17:02:22+00:00",
+  "content_hash": "84d3cf120ce8928fdb05f60d3d7a627ae99eee272db4f690876d13767acd850c",
+  "collection_method": "browser",
+  "title": "Hadi Kartların ile uçak biletlerinde 250 TL İndirim! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 105779,
+  "text_chars": 4266
+}

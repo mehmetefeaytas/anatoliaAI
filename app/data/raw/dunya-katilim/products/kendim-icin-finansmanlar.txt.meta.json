@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar",
-  "scraped_at": "2026-08-03T17:46:14+00:00",
-  "content_hash": "dfa5fbd8197096fd9ff68128e1ca410ca1364ce492b10fa7db25de2dcf2b3a07",
+  "scraped_at": "2026-08-20T17:07:57+00:00",
+  "content_hash": "790363c72b82415510659e654d5170f7f57acf8200daa5ab6299382ffd5374c4",
   "collection_method": "live",
   "title": "Finansmanlar | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 506900,
-  "text_chars": 10279,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 10279
 }

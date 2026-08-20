@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bilgi-paylasim-talimati-gizlilik-ve-musteri-hakkin-829.pdf",
+  "scraped_at": "2026-08-20T16:10:18+00:00",
+  "content_hash": "fefb4e106fb9377fb42837a9469713f731081c6696d4959937feadbc2437700c",
+  "collection_method": "pdf",
+  "title": "bilgi paylasim talimati gizlilik ve musteri hakkin 829",
+  "http_status": 200,
+  "raw_bytes": 172840,
+  "text_chars": 6628,
+  "pdf_pages": 2
+}

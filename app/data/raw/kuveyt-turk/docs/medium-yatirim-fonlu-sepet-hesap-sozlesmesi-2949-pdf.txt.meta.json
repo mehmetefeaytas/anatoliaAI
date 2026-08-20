@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/yatirim-fonlu-sepet-hesap-sozlesmesi-2949.pdf",
+  "scraped_at": "2026-08-20T16:09:18+00:00",
+  "content_hash": "4018d2b8e55dea940a86dffc86ce5d8d497fa7c058480d759dfb56013b1622ad",
+  "collection_method": "pdf",
+  "title": "yatirim fonlu sepet hesap sozlesmesi 2949",
+  "http_status": 200,
+  "raw_bytes": 163487,
+  "text_chars": 12850,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/musteri-ve-potansiyel-musteri-aydinlatma-metni.pdf",
+  "scraped_at": "2026-08-20T16:32:29+00:00",
+  "content_hash": "613dc713eeaf664099c02cf839303c707247cf0271c5a80425b4c836860c0838",
+  "collection_method": "pdf",
+  "title": "musteri ve potansiyel musteri aydinlatma metni",
+  "http_status": 200,
+  "raw_bytes": 322282,
+  "text_chars": 10925,
+  "pdf_pages": 3
+}

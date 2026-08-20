@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/Sayfalar/isyeri-finansmani.aspx",
-  "scraped_at": "2026-08-03T17:26:54+00:00",
-  "content_hash": "d31dfc7b6d54a2270ae415d75c9ad622a0e10700ac2e0b74eb5697b519a56f12",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:55:51+00:00",
+  "content_hash": "214966074862ca97335117a70bb32690792d26e54d7ec9a6fad285f9ed8dbd0e",
+  "collection_method": "browser",
   "title": "İşyeri Finansmanı - Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 106523,
-  "text_chars": 9777,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 219952,
+  "text_chars": 10668,
+  "extraction_invalidated_at": "2026-08-20T16:55:51+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

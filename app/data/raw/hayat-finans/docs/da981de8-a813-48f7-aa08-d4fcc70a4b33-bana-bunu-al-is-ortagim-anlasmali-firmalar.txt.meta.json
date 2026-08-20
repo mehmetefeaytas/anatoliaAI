@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/da981de8-a813-48f7-aa08-d4fcc70a4b33/Bana-Bunu-Al-Is-Ortagim-Anlasmali-Firmalar",
+  "scraped_at": "2026-08-20T16:33:17+00:00",
+  "content_hash": "078a46f9d7abe32be95dae8f9717a0a943749f663b5c4206ff16d8148e0f540b",
+  "collection_method": "pdf",
+  "title": "Bana Bunu Al Is Ortagim Anlasmali Firmalar",
+  "http_status": 200,
+  "raw_bytes": 300852,
+  "text_chars": 49902,
+  "pdf_pages": 16
+}

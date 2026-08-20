@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/okul-taksit-sistemi-ots-sozlesmesi---school-instal-748.pdf",
+  "scraped_at": "2026-08-20T16:06:03+00:00",
+  "content_hash": "6089cf96dcb97f94d2323b85f031def861b0d2b821ceab409afecc255db9986c",
+  "collection_method": "pdf",
+  "title": "okul taksit sistemi ots sozlesmesi school instal 748",
+  "http_status": 200,
+  "raw_bytes": 160631,
+  "text_chars": 33695,
+  "pdf_pages": 7
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/zorunlu-deprem-sigortasi-dask-bilgilendirme-formu-443.pdf",
+  "scraped_at": "2026-08-20T16:15:07+00:00",
+  "content_hash": "3e0c79cb1a7813d8632f86c6c126d05438b76c1edefcc56173c7226771bd4439",
+  "collection_method": "pdf",
+  "title": "zorunlu deprem sigortasi dask bilgilendirme formu 443",
+  "http_status": 200,
+  "raw_bytes": 186041,
+  "text_chars": 18737,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-finansmani-sozlesmesi-tercih-formu-2218.pdf",
+  "scraped_at": "2026-08-20T16:12:40+00:00",
+  "content_hash": "f7165e22d225d62a2e0c746ad6915874a5240189307115c76c87cec1ecb7abec",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesmesi tercih formu 2218",
+  "http_status": 200,
+  "raw_bytes": 89927,
+  "text_chars": 1114,
+  "pdf_pages": 1
+}

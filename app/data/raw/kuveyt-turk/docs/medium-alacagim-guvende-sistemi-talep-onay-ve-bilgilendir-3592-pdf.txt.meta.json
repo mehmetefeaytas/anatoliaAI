@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/alacagim-guvende-sistemi-talep-onay-ve-bilgilendir-3592.pdf",
+  "scraped_at": "2026-08-20T16:09:57+00:00",
+  "content_hash": "17fd2df2e9f436edf664229b0221f144403f5fa377586f83f9477b3330347a4b",
+  "collection_method": "pdf",
+  "title": "alacagim guvende sistemi talep onay ve bilgilendir 3592",
+  "http_status": 200,
+  "raw_bytes": 123792,
+  "text_chars": 3349,
+  "pdf_pages": 1
+}

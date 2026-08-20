@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/yatirim-urunleri/sermaye-piyasasi-urunleri/kira-sertifikasi",
-  "scraped_at": "2026-08-03T17:47:53+00:00",
-  "content_hash": "5818629e82a41c249a5ada1aa48d28bfecaa6de0a858ad1a078cdd478c37d15b",
+  "scraped_at": "2026-08-20T17:09:36+00:00",
+  "content_hash": "9b9a257dc9f0628ff03bc219c63b0679163827b5d33ba3c2a3355dd76e6cda19",
   "collection_method": "live",
   "title": "Kira Sertifikas&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 500430,
-  "text_chars": 10273,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 10273
 }

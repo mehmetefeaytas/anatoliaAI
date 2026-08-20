@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-kredilerim",
+  "scraped_at": "2026-08-20T17:03:27+00:00",
+  "content_hash": "d8a14d5a76c677bff1fc70d503c931f3c2e9b240d738d2f4c9c45bfeec520147",
+  "collection_method": "browser",
+  "title": "Hadi Kredilerim | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101217,
+  "text_chars": 2297
+}

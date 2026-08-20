@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/garantorluk-sozlesmesi---ihtiyac---(ayip-caymaa.pdf",
+  "scraped_at": "2026-08-20T16:57:26+00:00",
+  "content_hash": "0d855044e17c476414e168317363d084486655d5d941391f5a7fd3a89d7a009f",
+  "collection_method": "pdf",
+  "title": "garantorluk sozlesmesi ihtiyac (ayip caymaa",
+  "http_status": 200,
+  "raw_bytes": 472446,
+  "text_chars": 40227,
+  "pdf_pages": 15
+}

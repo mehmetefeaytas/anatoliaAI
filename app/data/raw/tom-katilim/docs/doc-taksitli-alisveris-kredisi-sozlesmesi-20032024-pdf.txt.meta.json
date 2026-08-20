@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/taksitli_alisveris_kredisi_sozlesmesi-20032024.pdf",
+  "scraped_at": "2026-08-20T16:28:52+00:00",
+  "content_hash": "9d4468b9e5ed38bc574b7b740b202a67490ba5acfb99510629342719ecb733e0",
+  "collection_method": "pdf",
+  "title": "taksitli alisveris kredisi sozlesmesi 20032024",
+  "http_status": 200,
+  "raw_bytes": 304047,
+  "text_chars": 11487,
+  "pdf_pages": 4
+}

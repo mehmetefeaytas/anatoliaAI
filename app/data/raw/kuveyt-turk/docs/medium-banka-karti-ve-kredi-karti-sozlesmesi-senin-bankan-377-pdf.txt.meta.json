@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/banka-karti-ve-kredi-karti-sozlesmesi-senin-bankan-377.pdf",
+  "scraped_at": "2026-08-20T16:19:10+00:00",
+  "content_hash": "3949dffb093b8d257582dd41d3e5953887bd8543f69a778b75e6f82c9b95f168",
+  "collection_method": "pdf",
+  "title": "banka karti ve kredi karti sozlesmesi senin bankan 377",
+  "http_status": 200,
+  "raw_bytes": 424121,
+  "text_chars": 25225,
+  "pdf_pages": 5
+}

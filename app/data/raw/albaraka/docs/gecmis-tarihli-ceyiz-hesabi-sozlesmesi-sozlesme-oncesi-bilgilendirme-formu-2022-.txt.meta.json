@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/ceyiz-hesabi-sozlesmesi-sozlesme-oncesi-bilgilendirme-formu-2022.pdf",
+  "scraped_at": "2026-08-20T17:01:20+00:00",
+  "content_hash": "3425c4088a6f3f0706a4b2204c697c4b3f9ad8d51825442df0c738e9b3cea2cb",
+  "collection_method": "pdf",
+  "title": "ceyiz hesabi sozlesmesi sozlesme oncesi bilgilendirme formu 2022",
+  "http_status": 200,
+  "raw_bytes": 221160,
+  "text_chars": 5990,
+  "pdf_pages": 2
+}

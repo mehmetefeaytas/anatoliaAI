@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ceyiz-hesabi-basvuru-ve-bilgilendirme-formu--dowry-3611.pdf",
+  "scraped_at": "2026-08-20T16:11:00+00:00",
+  "content_hash": "70c9af5346e129395c6f08ac12af2e50bb76c9ac23d1bc7983748b4e66d7b644",
+  "collection_method": "pdf",
+  "title": "ceyiz hesabi basvuru ve bilgilendirme formu dowry 3611",
+  "http_status": 200,
+  "raw_bytes": 149360,
+  "text_chars": 12380,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bireysel-fon-kullanma-talebi-onay-ve-bilgilendirme-3605.pdf",
+  "scraped_at": "2026-08-20T16:10:42+00:00",
+  "content_hash": "e37a69237b712b6d5b61d858bca0e26d3d080777591d6ee9c9635361432d2f36",
+  "collection_method": "pdf",
+  "title": "bireysel fon kullanma talebi onay ve bilgilendirme 3605",
+  "http_status": 200,
+  "raw_bytes": 163236,
+  "text_chars": 28583,
+  "pdf_pages": 9
+}

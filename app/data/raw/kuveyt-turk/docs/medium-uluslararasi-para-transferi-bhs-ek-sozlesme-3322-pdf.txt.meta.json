@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/uluslararasi-para-transferi-bhs-ek-sozlesme-3322.pdf",
+  "scraped_at": "2026-08-20T16:08:36+00:00",
+  "content_hash": "6174501e7bc86fc925b6c9a41ea27074c8fe2d3778a316616e3c82a20b99c036",
+  "collection_method": "pdf",
+  "title": "uluslararasi para transferi bhs ek sozlesme 3322",
+  "http_status": 200,
+  "raw_bytes": 141815,
+  "text_chars": 7333,
+  "pdf_pages": 3
+}

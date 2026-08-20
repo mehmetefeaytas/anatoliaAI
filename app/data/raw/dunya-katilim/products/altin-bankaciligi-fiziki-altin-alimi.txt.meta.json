@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi/fiziki-altin-alimi",
-  "scraped_at": "2026-08-03T17:46:08+00:00",
-  "content_hash": "1780ff021085c1c8e3d00973a77cce66c2e34deda48c7fa90c5064610904f38f",
+  "scraped_at": "2026-08-20T17:07:51+00:00",
+  "content_hash": "c7b9a571ede1424bd56cb44f4b6a555c024cc556ece541d4d356e01abb733492",
   "collection_method": "live",
   "title": "Fiziki Alt&#x131;n Al&#x131;m&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 497285,
-  "text_chars": 8930,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 8930
 }

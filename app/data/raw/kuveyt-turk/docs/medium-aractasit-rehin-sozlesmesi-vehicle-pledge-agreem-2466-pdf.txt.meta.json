@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/aractasit-rehin-sozlesmesi---vehicle-pledge-agreem-2466.pdf",
+  "scraped_at": "2026-08-20T15:59:53+00:00",
+  "content_hash": "b25b7968c80e0501145030a36c085c043c975e097e6f33d77fe2ebab2fe9895c",
+  "collection_method": "pdf",
+  "title": "aractasit rehin sozlesmesi vehicle pledge agreem 2466",
+  "http_status": 200,
+  "raw_bytes": 162564,
+  "text_chars": 9228,
+  "pdf_pages": 3
+}

@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/sigortalar/hayat-sigortalari/finansmana-bagli-ferdi-kaza-sigortasi",
-  "scraped_at": "2026-08-03T17:47:32+00:00",
-  "content_hash": "d8515de203eabbcdcd9a5b0e497f55760eb76672acaa49f945525b8ecb15dc50",
+  "scraped_at": "2026-08-20T17:09:15+00:00",
+  "content_hash": "90efb646957a462dd7be3bb58e8baa54ead33c4c66b5d8e53c737961b69eb3ef",
   "collection_method": "live",
   "title": "Finansmana Ba&#x11F;l&#x131; Ferdi Kaza Sigortas&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499419,
-  "text_chars": 9479,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9479
 }

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/biletcomda-otobus-biletlerinde-40tl-indirim",
+  "scraped_at": "2026-08-20T16:39:05+00:00",
+  "content_hash": "99d3c5f415252b8fbed6dca8f5af8ea5083e2a84aab8c203b788840cc124cc9c",
+  "collection_method": "browser",
+  "title": "Bilet.com’da Otobüs Biletlerinde 40 TL İndirim! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102200,
+  "text_chars": 1614
+}

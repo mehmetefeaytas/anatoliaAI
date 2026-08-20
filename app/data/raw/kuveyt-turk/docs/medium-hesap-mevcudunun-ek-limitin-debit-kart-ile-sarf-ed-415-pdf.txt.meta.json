@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hesap-mevcudunun-ek-limitin-debit-kart-ile-sarf-ed-415.pdf",
+  "scraped_at": "2026-08-20T16:18:25+00:00",
+  "content_hash": "47effc1e915ae9b3fcc718a92dd250620f28a98c785cbce3ca742432a44eb0dd",
+  "collection_method": "pdf",
+  "title": "hesap mevcudunun ek limitin debit kart ile sarf ed 415",
+  "http_status": 200,
+  "raw_bytes": 138635,
+  "text_chars": 2178,
+  "pdf_pages": 2
+}

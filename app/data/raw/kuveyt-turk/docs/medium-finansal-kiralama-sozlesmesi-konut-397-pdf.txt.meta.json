@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-kiralama-sozlesmesi-konut-397.pdf",
+  "scraped_at": "2026-08-20T16:17:31+00:00",
+  "content_hash": "89ccc5593ebf4681451a6add7a7a44d3170b6dbab429677d1ac8bfefd623c364",
+  "collection_method": "pdf",
+  "title": "finansal kiralama sozlesmesi konut 397",
+  "http_status": 200,
+  "raw_bytes": 136604,
+  "text_chars": 19977,
+  "pdf_pages": 6
+}

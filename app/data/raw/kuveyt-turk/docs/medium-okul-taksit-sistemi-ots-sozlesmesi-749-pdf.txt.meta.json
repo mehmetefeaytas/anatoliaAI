@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/okul-taksit-sistemi-ots-sozlesmesi---------749.pdf",
+  "scraped_at": "2026-08-20T16:06:06+00:00",
+  "content_hash": "46253689c113a447ca5f1ccc4d3c7c7693f22bf999eb6bd7d8cd70993559cab9",
+  "collection_method": "pdf",
+  "title": "okul taksit sistemi ots sozlesmesi 749",
+  "http_status": 200,
+  "raw_bytes": 393604,
+  "text_chars": 31139,
+  "pdf_pages": 7
+}

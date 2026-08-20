@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/yatirim/hazine-urunleri",
-  "scraped_at": "2026-08-03T17:45:41+00:00",
-  "content_hash": "6c5f29af5cc6c033461bea2da871bcecc7312cae97bf27b3c050086935431774",
+  "scraped_at": "2026-08-20T17:07:24+00:00",
+  "content_hash": "f738e9ebf0bf6754c62d690890bc8f05db7e161207787e863fc1d41377c7be0d",
   "collection_method": "live",
   "title": "Hazine &#xDC;r&#xFC;nleri | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 497214,
-  "text_chars": 9001,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9001
 }

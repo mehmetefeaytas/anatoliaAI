@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/taksitli-kredi-sozlesmesi",
+  "scraped_at": "2026-08-20T17:04:00+00:00",
+  "content_hash": "207379016d60ae92f51ddfaa7488c00527670cb582acb107f5a4dc8fe1d828c4",
+  "collection_method": "browser",
+  "title": "Taksitli Kredi Sözleşmesi | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 95563,
+  "text_chars": 209
+}

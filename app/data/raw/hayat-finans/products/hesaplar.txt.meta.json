@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/hesaplar",
-  "scraped_at": "2026-08-03T17:43:27+00:00",
-  "content_hash": "ccbf7e5926f61c546d42a0a12880ac1234b5da9629cef82db2d7bf5dc8c82bcc",
+  "scraped_at": "2026-08-20T17:05:16+00:00",
+  "content_hash": "55a6a7ef0c6c9c23898aa5133f9ecaf2d8573b82d243603763f8ab157d237c47",
   "collection_method": "browser",
   "title": "Hesaplar | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 286172,
-  "text_chars": 800,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 286567,
+  "text_chars": 2207
 }

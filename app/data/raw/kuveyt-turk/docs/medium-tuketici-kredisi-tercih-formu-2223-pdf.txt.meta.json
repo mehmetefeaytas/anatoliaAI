@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/tuketici-kredisi-tercih-formu-----2223.pdf",
+  "scraped_at": "2026-08-20T16:14:34+00:00",
+  "content_hash": "660324f16a65b0d3f4c462df5e9bbce53da0ca2e9a976fc54fd0a936a63bd278",
+  "collection_method": "pdf",
+  "title": "tuketici kredisi tercih formu 2223",
+  "http_status": 200,
+  "raw_bytes": 124074,
+  "text_chars": 2308,
+  "pdf_pages": 1
+}

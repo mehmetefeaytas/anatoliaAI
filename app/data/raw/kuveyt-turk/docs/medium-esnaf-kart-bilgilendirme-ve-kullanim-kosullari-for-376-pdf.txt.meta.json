@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/esnaf-kart-bilgilendirme-ve-kullanim-kosullari-for-376.pdf",
+  "scraped_at": "2026-08-20T16:19:07+00:00",
+  "content_hash": "6d57ae3ca7d291d7031eb752e14ae091b4617b9c7ed714709d2d4b72eb53d4bc",
+  "collection_method": "pdf",
+  "title": "esnaf kart bilgilendirme ve kullanim kosullari for 376",
+  "http_status": 200,
+  "raw_bytes": 282390,
+  "text_chars": 3631,
+  "pdf_pages": 1
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hizli-gecis-sistemihgsetiketi-sozlesmesi-hgs------3969.pdf",
+  "scraped_at": "2026-08-20T16:03:33+00:00",
+  "content_hash": "718af66ee82a6863fdc6ec5cdc61b941287c80a9378ae4e442b46f97520e914f",
+  "collection_method": "pdf",
+  "title": "hizli gecis sistemihgsetiketi sozlesmesi hgs 3969",
+  "http_status": 200,
+  "raw_bytes": 393470,
+  "text_chars": 26700,
+  "pdf_pages": 8
+}

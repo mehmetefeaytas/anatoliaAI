@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/katilma-hesaplari",
-  "scraped_at": "2026-08-03T17:29:22+00:00",
-  "content_hash": "4973088f9ffa97420df8cf260c5f0fdbf802d010f510def9cc2c0d16c879f1a4",
+  "scraped_at": "2026-08-20T16:58:23+00:00",
+  "content_hash": "01d2b975cf58834d5b0661ae9357c13ec77c81de5f408748001ac433a757e05d",
   "collection_method": "live",
   "title": "Katılma Hesapları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 481305,
-  "text_chars": 2161,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 481667,
+  "text_chars": 2161
 }

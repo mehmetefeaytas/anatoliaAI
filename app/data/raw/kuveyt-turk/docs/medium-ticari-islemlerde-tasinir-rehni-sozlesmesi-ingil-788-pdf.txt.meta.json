@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ticari-islemlerde-tasinir-rehni-sozlesmesi---ingil-788.pdf",
+  "scraped_at": "2026-08-20T16:08:12+00:00",
+  "content_hash": "7f85cfc48e9e8432ef0510a74124bc0486ab220ae1850b18cc83060f44180d08",
+  "collection_method": "pdf",
+  "title": "ticari islemlerde tasinir rehni sozlesmesi ingil 788",
+  "http_status": 200,
+  "raw_bytes": 269046,
+  "text_chars": 40230,
+  "pdf_pages": 10
+}

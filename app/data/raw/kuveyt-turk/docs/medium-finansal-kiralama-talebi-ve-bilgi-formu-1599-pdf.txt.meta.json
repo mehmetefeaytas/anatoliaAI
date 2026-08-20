@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-kiralama-talebi-ve-bilgi-formu-1599.pdf",
+  "scraped_at": "2026-08-20T16:21:26+00:00",
+  "content_hash": "e0b0fed6f91db2baacd9758bf367ba1b8b1250645ac649b0233f9ee4a4137da9",
+  "collection_method": "pdf",
+  "title": "finansal kiralama talebi ve bilgi formu 1599",
+  "http_status": 200,
+  "raw_bytes": 313259,
+  "text_chars": 2792,
+  "pdf_pages": 2
+}

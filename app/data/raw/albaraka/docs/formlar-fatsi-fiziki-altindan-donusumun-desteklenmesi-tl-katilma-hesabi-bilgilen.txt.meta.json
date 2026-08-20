@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/fatsi-fiziki-altindan-donusumun-desteklenmesi-tl-katilma-hesabi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T16:58:47+00:00",
+  "content_hash": "7e7cb9b28e71b7dc061d716fd81e83d660b2838ce0a207ccf2441077080a049e",
+  "collection_method": "pdf",
+  "title": "fatsi fiziki altindan donusumun desteklenmesi tl katilma hesabi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 94933,
+  "text_chars": 7999,
+  "pdf_pages": 2
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-yatirim-islemleri/yatirim-fonu-islemleri",
+  "scraped_at": "2026-08-20T17:03:21+00:00",
+  "content_hash": "973d57cc58e8c8a19861b057146f1fcc17749f62e64e7d0ca0df60238568982d",
+  "collection_method": "browser",
+  "title": "Yatırım Fonu İşlemleri | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 205409,
+  "text_chars": 27420
+}

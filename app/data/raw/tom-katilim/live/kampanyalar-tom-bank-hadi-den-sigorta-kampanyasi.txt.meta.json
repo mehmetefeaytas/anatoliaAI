@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/tom-bank-hadi-den-sigorta-kampanyasi",
+  "scraped_at": "2026-08-20T16:36:56+00:00",
+  "content_hash": "634dff9e0f71523fc04fbe7576690fad2e41f063637a3a13a123fa9132ca9030",
+  "collection_method": "browser",
+  "title": "TOM Bank Hadi'den Sigorta Kampanyası!! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 100919,
+  "text_chars": 1686
+}

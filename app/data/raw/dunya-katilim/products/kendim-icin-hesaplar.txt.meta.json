@@ -1,13 +1,16 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar",
-  "scraped_at": "2026-08-03T17:46:38+00:00",
-  "content_hash": "c9314a55706400831250167437567f8e74a20dd51b47a4db58a8dba7aecf108c",
+  "scraped_at": "2026-08-20T17:08:21+00:00",
+  "content_hash": "9be0e18af4c65bb46380618ae4e214259602a6f310165a39f02349d7cecf0bf6",
   "collection_method": "live",
   "title": "Hesaplar | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507195,
-  "text_chars": 9905,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 508464,
+  "text_chars": 9987,
+  "extraction_invalidated_at": "2026-08-20T17:08:21+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ferdi-kaza-sigortasi-genel-bilgilendirme-formu-448.pdf",
+  "scraped_at": "2026-08-20T16:15:22+00:00",
+  "content_hash": "45574466949370b756f1bb4b54fb36814a931ea2114836f7ab1dcc102f3c70b4",
+  "collection_method": "pdf",
+  "title": "ferdi kaza sigortasi genel bilgilendirme formu 448",
+  "http_status": 200,
+  "raw_bytes": 245038,
+  "text_chars": 19664,
+  "pdf_pages": 6
+}

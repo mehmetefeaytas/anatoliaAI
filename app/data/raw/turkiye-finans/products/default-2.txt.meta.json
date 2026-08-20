@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.hizlifinansman.com.tr/Sayfalar/default.aspx",
+  "scraped_at": "2026-08-20T16:55:41+00:00",
+  "content_hash": "847907d69e7d1dc362825c72d7150e563d429c84b06065c5cd9948f6b203cbee",
+  "collection_method": "browser",
+  "title": "Ana Sayfa - Hızlı Finansman - Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 69349,
+  "text_chars": 1631
+}

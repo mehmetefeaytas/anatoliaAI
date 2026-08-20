@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/8a1c30cd-b533-4af4-973c-a86601a92e82/genel-kredi-sozlesme-09-28-2023-13-18-40",
+  "scraped_at": "2026-08-20T16:32:56+00:00",
+  "content_hash": "96394bc0a005e9f54d7ba8be12e755777086f64a4b61752808a96efcbb158bb7",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesme 09 28 2023 13 18 40",
+  "http_status": 200,
+  "raw_bytes": 243253,
+  "text_chars": 87536,
+  "pdf_pages": 21
+}

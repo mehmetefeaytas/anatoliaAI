@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/hadi-black-karti-ile-restoderm-alisverislerinde-30-indirim",
-  "scraped_at": "2026-08-12T08:37:19+00:00",
-  "content_hash": "8484d36c8c490bdac58e1ddd0f99b7b8283469dfc0091124515fcb193e181066",
+  "scraped_at": "2026-08-20T16:36:02+00:00",
+  "content_hash": "e83b48a2f176191c7e65adfae55962a0826e346c767d879099ee13861563e251",
   "collection_method": "browser",
   "title": "Hadi Black Kredi Kartı ile Restoderm’de %30 İndirim! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 99964,
-  "text_chars": 2151
+  "raw_bytes": 101932,
+  "text_chars": 2154
 }

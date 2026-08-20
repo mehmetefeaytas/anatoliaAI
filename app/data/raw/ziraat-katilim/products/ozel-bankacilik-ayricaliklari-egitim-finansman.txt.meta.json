@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/ozel-bankacilik-ayricaliklari/egitim-finansman",
-  "scraped_at": "2026-08-03T17:31:53+00:00",
-  "content_hash": "3e21ef94700ba76c87cf6a90a91b9b63f83b32032d05c52211b101eab25e4d97",
+  "scraped_at": "2026-08-20T17:00:53+00:00",
+  "content_hash": "4aeb2cd6054a63b9c8142b528515ed3f01ace1d594b2f4477ad8bc6a3ee91972",
   "collection_method": "live",
   "title": "Eğitim Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 474573,
-  "text_chars": 1573,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 474935,
+  "text_chars": 1573
 }

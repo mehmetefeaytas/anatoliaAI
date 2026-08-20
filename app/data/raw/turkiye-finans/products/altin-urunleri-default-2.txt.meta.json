@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/altin-urunleri/sayfalar/default.aspx",
-  "scraped_at": "2026-08-03T17:28:30+00:00",
-  "content_hash": "f146fc73f2169137983cc125f95fc6d82de34781ffca9974bd9c6f34f94fd85b",
-  "collection_method": "live",
-  "title": "Kıymetli Maden Ürünleri: Altın & Gümüş Hesap | Türkiye Finans",
+  "scraped_at": "2026-08-20T16:57:28+00:00",
+  "content_hash": "f22c85b6eca09e98eab5968c051dbb197001db550c7065a24faa8894ffa80a93",
+  "collection_method": "browser",
+  "title": "Kıymetli Maden Ürünleri: Altın &amp; Gümüş Hesap | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 106056,
-  "text_chars": 7857,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 214421,
+  "text_chars": 8719,
+  "extraction_invalidated_at": "2026-08-20T16:57:28+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

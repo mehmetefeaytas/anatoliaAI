@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/kredi-talebi-ve-bilgi.pdf",
+  "scraped_at": "2026-08-20T17:03:02+00:00",
+  "content_hash": "39343ab09835a82d1fe97fa870d7f682da4bee9a1eeb4c38c6d505b4246d1e3d",
+  "collection_method": "pdf",
+  "title": "kredi talebi ve bilgi",
+  "http_status": 200,
+  "raw_bytes": 107641,
+  "text_chars": 3038,
+  "pdf_pages": 2
+}

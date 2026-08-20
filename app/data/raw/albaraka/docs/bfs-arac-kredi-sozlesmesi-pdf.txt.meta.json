@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BFS/arac-kredi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:59+00:00",
+  "content_hash": "63b52b498a2e9af54919f2d72bfb6159aa8b111634fc91291f88ca404b93cd3d",
+  "collection_method": "pdf",
+  "title": "arac kredi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 586962,
+  "text_chars": 29231,
+  "pdf_pages": 8
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/vahesabi_ve_abh_sozlesmesi17122025.pdf",
+  "scraped_at": "2026-08-20T16:31:41+00:00",
+  "content_hash": "b87fdcbb10bdf30cea007e0a2f31d12de08665463495b48e158071b28cc0d692",
+  "collection_method": "pdf",
+  "title": "vahesabi ve abh sozlesmesi17122025",
+  "http_status": 200,
+  "raw_bytes": 223551,
+  "text_chars": 7723,
+  "pdf_pages": 4
+}

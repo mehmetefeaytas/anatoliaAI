@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar/gumus-hesaplari",
-  "scraped_at": "2026-08-03T17:46:50+00:00",
-  "content_hash": "83f47c1466067b4e4c5dcb4cf303115466218df79295aa9122d970adc26afd73",
+  "scraped_at": "2026-08-20T17:08:33+00:00",
+  "content_hash": "f0e934635cc425f8d15248784fe0a5a15b69f27a7d9f4e731f9c86899c008c4c",
   "collection_method": "live",
   "title": "G&#xFC;m&#xFC;&#x15F; Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 500916,
-  "text_chars": 10187,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 10187
 }

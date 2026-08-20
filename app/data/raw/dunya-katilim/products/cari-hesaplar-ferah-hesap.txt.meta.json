@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar/ferah-hesap",
-  "scraped_at": "2026-08-03T17:46:47+00:00",
-  "content_hash": "7c69747d4a09795babd3bcebc4b459fe4c1f8e9329c63051e72f5381f9ed4653",
+  "scraped_at": "2026-08-20T17:08:30+00:00",
+  "content_hash": "1a8cd254eb1ed2293705ccd20f0c82a7dd62fea28ff82a69af544f05459f367a",
   "collection_method": "live",
   "title": "Ferah Hesap | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 510244,
-  "text_chars": 12363,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 12363
 }

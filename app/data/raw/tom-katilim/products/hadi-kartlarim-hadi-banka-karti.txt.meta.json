@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-kartlarim/hadi-banka-karti",
+  "scraped_at": "2026-08-20T17:04:19+00:00",
+  "content_hash": "6bccc675cab7b6eedb38fbcc2918bf18f5b267c5bf063b95519e8ef625f7e73c",
+  "collection_method": "browser",
+  "title": "Hadi Banka Kartı | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102343,
+  "text_chars": 1358
+}

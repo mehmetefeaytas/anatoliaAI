@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/genel-kredi-sozlesmesi-sozlesme-oncesi-bilgilendir-2741.pdf",
+  "scraped_at": "2026-08-20T16:21:16+00:00",
+  "content_hash": "991daa81202b5b7106e417ac84d635b871d4c79bdcb37aa814796ab3c49f13c6",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi sozlesme oncesi bilgilendir 2741",
+  "http_status": 200,
+  "raw_bytes": 125244,
+  "text_chars": 10773,
+  "pdf_pages": 2
+}

@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/urun-ve-hizmet-ucretleri",
-  "scraped_at": "2026-08-03T17:29:16+00:00",
-  "content_hash": "efc7dd0eee301df1d44d8a5e9e2829d2260596e782d7b3e245ea99cbf1e3b1fb",
+  "scraped_at": "2026-08-20T16:58:17+00:00",
+  "content_hash": "910edb9588436aff6a6526bf26f2bab7bf6d3cb08c345030f33a933c68c176a2",
   "collection_method": "live",
   "title": "Ürün ve Hizmet Ücretleri | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 481996,
-  "text_chars": 406,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 482358,
+  "text_chars": 1185
 }

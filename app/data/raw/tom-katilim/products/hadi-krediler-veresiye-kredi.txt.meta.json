@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-krediler/veresiye-kredi",
+  "scraped_at": "2026-08-20T17:04:33+00:00",
+  "content_hash": "e553027ff7beeb8d052b63762d53da983c306ed2fff3144ec36962435a4fcb64",
+  "collection_method": "browser",
+  "title": "veresiye-kredi | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 100676,
+  "text_chars": 1872
+}

@@ -193,14 +193,26 @@ class TestKorpusRegresyonu(unittest.TestCase):
     #: bankalarda bulduğu her eşleşme menü bağlantısı, ihtar kalıbı ya da
     #: kuyruk bloğundaki başka kampanyanın damgasıydı.
     KONTROL_BANKALAR = ("turkiye-finans", "kuveyt-turk", "hayat-finans",
-                        "tom-katilim", "adil-katilim", "turkiye-emlak-katilim",
+                        "adil-katilim", "turkiye-emlak-katilim",
                         "albaraka")
 
     #: Korpusta gerçekten damga taşıyan bankalar ve ölçülen belge sayıları.
     #: Sayı değişirse ya desen bozulmuştur ya korpus yeniden hasat edilmiştir;
     #: ikinci durumda ölçüm tekrarlanıp bu sayılar ve rapor güncellenmelidir.
+    #:
+    #: `tom-katilim` 20 Ağu 2026'da KONTROL'den DAMGALI'ya TAŞINDI. Desen
+    #: bozulmadı — korpus yeniden hasat edildi (19 -> 259 belge) ve gelen
+    #: sayfaların bir kısmı gövdesinde harfiyen "(GEÇMİŞ KAMPANYA) Bu kampanya
+    #: sona ermiştir." yazıyor. Damga DOĞRU; bayat olan bu sınıflandırmaydı ve
+    #: yukarıdaki not tam bu durumu tarif ediyor.
+    #: Sayı iki kez ölçüldü: hasattan hemen sonra 22, `/cok-kazananlar-kulubu-
+    #: kampanya/` ağacının 80 mükerrer dosyası silindikten sonra **11**.
+    #: (Mükerrerler `/kampanyalar/` ikizinin kopyasıydı; tek fark 50 baytlık
+    #: kırıntı yolu. Kulübe özel TEK özgün belge silinmedi.)
+    #: Diğer üç bankanın sayısı bu turda DEĞİŞMEDİ — desenin sağlam olduğunun
+    #: kanıtı budur.
     DAMGALI_BANKALAR = {"ziraat-katilim": 102, "vakif-katilim": 81,
-                        "dunya-katilim": 38}
+                        "dunya-katilim": 38, "tom-katilim": 11}
 
     @classmethod
     def setUpClass(cls):

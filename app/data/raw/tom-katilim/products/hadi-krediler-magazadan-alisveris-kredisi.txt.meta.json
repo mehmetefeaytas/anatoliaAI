@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-krediler/magazadan-alisveris-kredisi",
+  "scraped_at": "2026-08-20T17:04:39+00:00",
+  "content_hash": "383fd4cf128d210ebae0aa22183e0cc3827051f2e4e71c739f13c01a16691354",
+  "collection_method": "browser",
+  "title": "Mağazadan Alışveriş Kredisi | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 98034,
+  "text_chars": 1968
+}

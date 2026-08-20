@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/saglam-business-pratik-kart-kurumsal-karti-sozlesm-3162.pdf",
+  "scraped_at": "2026-08-20T16:06:57+00:00",
+  "content_hash": "3057a5d4608251a786d61ce9b0415200dbca6acf9e8d280d83309e6a497bbe73",
+  "collection_method": "pdf",
+  "title": "saglam business pratik kart kurumsal karti sozlesm 3162",
+  "http_status": 200,
+  "raw_bytes": 123845,
+  "text_chars": 19046,
+  "pdf_pages": 4
+}

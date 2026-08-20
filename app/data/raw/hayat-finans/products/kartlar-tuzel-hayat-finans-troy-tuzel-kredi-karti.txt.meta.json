@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar-tuzel/hayat-finans-troy-tuzel-kredi-karti",
-  "scraped_at": "2026-08-03T17:44:17+00:00",
-  "content_hash": "ec7a582008c2ffe572c6ae4b8f4a37ad9ad15a6d03bf62a5babcdc5a889ddc35",
+  "scraped_at": "2026-08-20T17:06:05+00:00",
+  "content_hash": "dd883da816827d3df094b9f42d9110283471ad96dd46b0f3e9720253dca84f75",
   "collection_method": "browser",
   "title": "TROY Tüzel Kredi Kartı | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 294350,
-  "text_chars": 2445,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 294705,
+  "text_chars": 2445
 }

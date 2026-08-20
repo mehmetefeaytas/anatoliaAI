@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dbs---dts-alici-sozlesmesi-4001.pdf",
+  "scraped_at": "2026-08-20T16:01:38+00:00",
+  "content_hash": "5fd3efc650e44aab720a93ed6b426b5db367317bd33628424ee1bde1bdb57eea",
+  "collection_method": "pdf",
+  "title": "dbs dts alici sozlesmesi 4001",
+  "http_status": 200,
+  "raw_bytes": 248802,
+  "text_chars": 20993,
+  "pdf_pages": 10
+}

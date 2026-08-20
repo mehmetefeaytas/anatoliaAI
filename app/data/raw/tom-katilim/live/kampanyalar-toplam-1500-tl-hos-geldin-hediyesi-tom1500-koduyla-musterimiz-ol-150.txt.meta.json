@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/toplam-1500-tl-hos-geldin-hediyesi-tom1500-koduyla-musterimiz-ol-1500-tl-senin-olsun",
+  "scraped_at": "2026-08-20T16:35:56+00:00",
+  "content_hash": "f551bfe81cd3f9bea44c5434a94a16fbb42f7e0d8f5ae9ead685165028df43de",
+  "collection_method": "browser",
+  "title": "Toplam 1500 TL hoş geldin hediyesi! TOM1500 koduyla müşterimiz ol, 1500 TL senin olsun! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 104254,
+  "text_chars": 4027
+}

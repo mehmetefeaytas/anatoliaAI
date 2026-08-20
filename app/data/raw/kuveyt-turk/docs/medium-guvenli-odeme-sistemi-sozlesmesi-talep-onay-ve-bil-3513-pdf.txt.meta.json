@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/guvenli-odeme-sistemi-sozlesmesi-talep-onay-ve-bil-3513.pdf",
+  "scraped_at": "2026-08-20T16:11:33+00:00",
+  "content_hash": "30bf1fcd91f18a678729c54a5dfbb3e0e2dd30a94fbb55ad0e18999f789369cc",
+  "collection_method": "pdf",
+  "title": "guvenli odeme sistemi sozlesmesi talep onay ve bil 3513",
+  "http_status": 200,
+  "raw_bytes": 104544,
+  "text_chars": 5089,
+  "pdf_pages": 2
+}

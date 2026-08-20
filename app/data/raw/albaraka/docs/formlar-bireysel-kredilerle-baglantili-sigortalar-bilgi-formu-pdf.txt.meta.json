@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/bireysel-kredilerle-baglantili-sigortalar-bilgi-formu.pdf",
+  "scraped_at": "2026-08-20T16:58:26+00:00",
+  "content_hash": "2f2706b26996e60941256b8ff7c4c813899adce4d6fa81b8563f87f359e935f1",
+  "collection_method": "pdf",
+  "title": "bireysel kredilerle baglantili sigortalar bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 527885,
+  "text_chars": 28595,
+  "pdf_pages": 9
+}

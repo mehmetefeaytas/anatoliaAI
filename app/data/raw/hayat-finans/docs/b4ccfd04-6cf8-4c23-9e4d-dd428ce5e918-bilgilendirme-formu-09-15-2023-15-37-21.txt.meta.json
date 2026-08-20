@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/b4ccfd04-6cf8-4c23-9e4d-dd428ce5e918/bilgilendirme-formu-09-15-2023-15-37-21",
+  "scraped_at": "2026-08-20T16:33:02+00:00",
+  "content_hash": "63c812170b8e14e1f898edf56a28956048b34dbfae83d1a3119d2cdf80fc5f92",
+  "collection_method": "pdf",
+  "title": "bilgilendirme formu 09 15 2023 15 37 21",
+  "http_status": 200,
+  "raw_bytes": 123535,
+  "text_chars": 21178,
+  "pdf_pages": 8
+}

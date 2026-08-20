@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/hadi-alisveris-kredisi-ile-klima-supurge-ve-televizyonlarda-vade-farksiz-12-taksit",
-  "scraped_at": "2026-08-12T08:37:15+00:00",
-  "content_hash": "d594cf1df7bbecc598e8cb49515f0c70e4d6eeaa7b6baa34464872206df649ec",
+  "scraped_at": "2026-08-20T16:35:59+00:00",
+  "content_hash": "2302a45f41a8c8ec34de17cfc7f3146e4e70a957982fd0b44b327b2064f6759a",
   "collection_method": "browser",
   "title": "Hadi Alışveriş Kredisi ile Klima, Süpürge ve Televizyonlarda Vade Farksız 12 Taksit! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 100091,
-  "text_chars": 1854
+  "raw_bytes": 102059,
+  "text_chars": 1857
 }

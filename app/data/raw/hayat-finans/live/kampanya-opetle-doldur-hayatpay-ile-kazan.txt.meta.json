@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatpay.com.tr/kampanya/opetle-doldur-hayatpay-ile-kazan",
+  "scraped_at": "2026-08-20T16:46:49+00:00",
+  "content_hash": "ac5574e30d991cc8d85cacc397475ea4649120659cae5848ccdff3917942e22e",
+  "collection_method": "browser",
+  "title": "Opet’le doldur Hayat Pay ile kazan",
+  "http_status": 200,
+  "raw_bytes": 26294,
+  "text_chars": 1862
+}

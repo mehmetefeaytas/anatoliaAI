@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/hafta-sonu-restoran-harcamalarinda-7-5-iade-ustelik-cok-kazananlar-kulubune-ozel-15-iade",
-  "scraped_at": "2026-08-12T08:37:33+00:00",
-  "content_hash": "b01f48aa1d8a06d1b93c6617628943c860043bb3bf4b83a63f9d6698bd44cb80",
+  "scraped_at": "2026-08-20T16:36:17+00:00",
+  "content_hash": "d4d661fafc8a03443a0d709c135031b7784c3fb8c4b1a3aa4c1c536b1a2d320c",
   "collection_method": "browser",
   "title": "Hafta sonu restoran harcamalarında %7,5 iade! Üstelik Çok kazananlar Kulübü’ne özel %15 iade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 102228,
-  "text_chars": 3705
+  "raw_bytes": 104132,
+  "text_chars": 3729
 }

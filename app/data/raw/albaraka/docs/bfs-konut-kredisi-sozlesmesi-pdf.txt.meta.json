@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BFS/konut-kredisi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:56+00:00",
+  "content_hash": "615a5c39849b1519638c23ba1bc0e7a8d01ab200c643fba8bb68bfb1c885c798",
+  "collection_method": "pdf",
+  "title": "konut kredisi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 575118,
+  "text_chars": 25908,
+  "pdf_pages": 7
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ihtiyac-kart-sozlesmesi---------3633.pdf",
+  "scraped_at": "2026-08-20T16:04:00+00:00",
+  "content_hash": "796158c2eb62688c4840bf372e2ffb66899d127374ed118c3d18548fbe415178",
+  "collection_method": "pdf",
+  "title": "ihtiyac kart sozlesmesi 3633",
+  "http_status": 200,
+  "raw_bytes": 430073,
+  "text_chars": 56492,
+  "pdf_pages": 12
+}

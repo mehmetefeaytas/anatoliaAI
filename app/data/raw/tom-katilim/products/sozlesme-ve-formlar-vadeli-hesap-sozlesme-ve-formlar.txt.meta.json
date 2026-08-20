@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/vadeli-hesap-sozlesme-ve-formlar",
+  "scraped_at": "2026-08-20T17:03:51+00:00",
+  "content_hash": "c9d8ead348c4f6a49d3100279cecb536a2eb1a7641bd3868b9ca641ce2dda62a",
+  "collection_method": "browser",
+  "title": "Vadesiz (Cari) &amp; Vadeli (Katılma) Hesapları Sözleşme ve Formları | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102450,
+  "text_chars": 830
+}

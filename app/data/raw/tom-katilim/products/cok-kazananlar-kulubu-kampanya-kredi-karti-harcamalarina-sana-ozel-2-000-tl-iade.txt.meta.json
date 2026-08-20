@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/kredi-karti-harcamalarina-sana-ozel-2-000-tl-iade",
+  "scraped_at": "2026-08-20T17:02:49+00:00",
+  "content_hash": "4ff566e9f2276e9b001fe8411a3be3e563a5704c59e6a11efc5518c02d29c758",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı harcamalarına sana özel 2.000 TL İade! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101773,
+  "text_chars": 1854
+}

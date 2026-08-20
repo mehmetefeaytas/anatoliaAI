@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/gunluk-kazandiran-hesap-sozlesmesi-27072026.pdf",
+  "scraped_at": "2026-08-20T16:31:53+00:00",
+  "content_hash": "7d708ca13e81c08635bf13ce17f57ebe194ff75d34b3200e2f3eea831d05e3eb",
+  "collection_method": "pdf",
+  "title": "gunluk kazandiran hesap sozlesmesi 27072026",
+  "http_status": 200,
+  "raw_bytes": 196097,
+  "text_chars": 12181,
+  "pdf_pages": 6
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/proemtia-saglam-bayi-kart-talep-ve-bilgilendirme-f-3661.pdf",
+  "scraped_at": "2026-08-20T16:13:34+00:00",
+  "content_hash": "b2676da0d2ca0b3696ea120f89ea813234f55c078aa18d268d97261f19942f90",
+  "collection_method": "pdf",
+  "title": "proemtia saglam bayi kart talep ve bilgilendirme f 3661",
+  "http_status": 200,
+  "raw_bytes": 107452,
+  "text_chars": 6470,
+  "pdf_pages": 2
+}

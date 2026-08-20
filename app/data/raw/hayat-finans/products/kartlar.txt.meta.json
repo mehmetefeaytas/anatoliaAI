@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar",
-  "scraped_at": "2026-08-03T17:43:30+00:00",
-  "content_hash": "8d2860c06b17911122d603ada0fefb32734ac769b84953bbdb8ffa14b73250c1",
+  "scraped_at": "2026-08-20T17:05:17+00:00",
+  "content_hash": "fd991ec6ed06a379d68343a4b8205def00ddb16a54ba9967f1cc1de1ceb04885",
   "collection_method": "browser",
   "title": "Kartlar | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 285407,
-  "text_chars": 522,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 285782,
+  "text_chars": 1929
 }

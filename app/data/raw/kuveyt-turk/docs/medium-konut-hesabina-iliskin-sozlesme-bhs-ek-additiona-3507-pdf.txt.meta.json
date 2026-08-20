@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-hesabina-iliskin-sozlesme-bhs-ek---additiona-3507.pdf",
+  "scraped_at": "2026-08-20T16:04:42+00:00",
+  "content_hash": "065d310b298f1f908490e6473c7ca00ef98b47536ed6d78e94876084dc193a47",
+  "collection_method": "pdf",
+  "title": "konut hesabina iliskin sozlesme bhs ek additiona 3507",
+  "http_status": 200,
+  "raw_bytes": 153670,
+  "text_chars": 17580,
+  "pdf_pages": 4
+}

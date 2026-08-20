@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bireysel-finansman-garanti-taahhutnamesi-katki-pay-634.pdf",
+  "scraped_at": "2026-08-20T16:00:56+00:00",
+  "content_hash": "34826472f075ae878d50b036c014e413ce46aa6271334ca0291dc211d4da9ec8",
+  "collection_method": "pdf",
+  "title": "bireysel finansman garanti taahhutnamesi katki pay 634",
+  "http_status": 200,
+  "raw_bytes": 116910,
+  "text_chars": 9527,
+  "pdf_pages": 3
+}

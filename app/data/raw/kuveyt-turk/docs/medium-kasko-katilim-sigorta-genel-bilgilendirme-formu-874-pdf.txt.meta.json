@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kasko-katilim-sigorta-genel-bilgilendirme-formu-874.pdf",
+  "scraped_at": "2026-08-20T16:12:10+00:00",
+  "content_hash": "1f1d6eeb905b948d7246299c13a8b054b82c2e427c854622a6afca25d0c82d22",
+  "collection_method": "pdf",
+  "title": "kasko katilim sigorta genel bilgilendirme formu 874",
+  "http_status": 200,
+  "raw_bytes": 169324,
+  "text_chars": 8864,
+  "pdf_pages": 2
+}

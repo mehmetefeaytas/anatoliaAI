@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/sigorta-talepleri-talimatlari-ve-taahudleri---bire-1727.pdf",
+  "scraped_at": "2026-08-20T16:15:55+00:00",
+  "content_hash": "087985c1df0ae22dfcd0ded9e2f1af8ec487a63097b84dc53300e19241b44cbc",
+  "collection_method": "pdf",
+  "title": "sigorta talepleri talimatlari ve taahudleri bire 1727",
+  "http_status": 200,
+  "raw_bytes": 83848,
+  "text_chars": 2197,
+  "pdf_pages": 1
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/abh-sozlesmesi_12082026.pdf",
+  "scraped_at": "2026-08-20T16:31:35+00:00",
+  "content_hash": "e02dd3358d237c05321a044b26611e048eda781e504ddaf9e45fa846e765e263",
+  "collection_method": "pdf",
+  "title": "abh sozlesmesi 12082026",
+  "http_status": 200,
+  "raw_bytes": 191696,
+  "text_chars": 7685,
+  "pdf_pages": 4
+}

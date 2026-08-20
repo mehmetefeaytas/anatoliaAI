@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dip-bip-katki-payi-odeme-taahhutnamesi---turkce-663.pdf",
+  "scraped_at": "2026-08-20T16:01:56+00:00",
+  "content_hash": "42139e1b23bce22bbc8c97b11520a31ee512ca1658b482334fc9ab8a44132763",
+  "collection_method": "pdf",
+  "title": "dip bip katki payi odeme taahhutnamesi turkce 663",
+  "http_status": 200,
+  "raw_bytes": 167199,
+  "text_chars": 6023,
+  "pdf_pages": 2
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BHS/kur-korumali-(hazine-destekli)-turk-lirasi-katilma-hesabi.pdf",
+  "scraped_at": "2026-08-20T16:56:28+00:00",
+  "content_hash": "bf99fc3a63025dff35fec4d18b87abe8003d5d40df462e99ea13b9ff613fd9df",
+  "collection_method": "pdf",
+  "title": "kur korumali (hazine destekli) turk lirasi katilma hesabi",
+  "http_status": 200,
+  "raw_bytes": 115046,
+  "text_chars": 4452,
+  "pdf_pages": 1
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kredi-borcunun-yeniden-yapilandirma-sozlesmesi---c-3770.pdf",
+  "scraped_at": "2026-08-20T16:04:51+00:00",
+  "content_hash": "83b08fe9a22d7b561bdb9f00b4cf292f9172ccd6d9a8647e8af8660fb187654f",
+  "collection_method": "pdf",
+  "title": "kredi borcunun yeniden yapilandirma sozlesmesi c 3770",
+  "http_status": 200,
+  "raw_bytes": 144300,
+  "text_chars": 25786,
+  "pdf_pages": 6
+}

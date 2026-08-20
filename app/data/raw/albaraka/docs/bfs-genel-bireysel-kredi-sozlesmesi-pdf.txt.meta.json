@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BFS/genel-bireysel-kredi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:53+00:00",
+  "content_hash": "ab01751449efca368482800d93ffc5cc7f2927f0bbe46c60cbdd2bc820d6111f",
+  "collection_method": "pdf",
+  "title": "genel bireysel kredi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 752848,
+  "text_chars": 29642,
+  "pdf_pages": 8
+}

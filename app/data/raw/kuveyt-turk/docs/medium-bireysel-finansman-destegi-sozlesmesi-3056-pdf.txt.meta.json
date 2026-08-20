@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bireysel-finansman-destegi-sozlesmesi-3056.pdf",
+  "scraped_at": "2026-08-20T16:00:44+00:00",
+  "content_hash": "a87628779aa5dff1e19e4f7532a72045d43148c39649aace273c8274a2b75460",
+  "collection_method": "pdf",
+  "title": "bireysel finansman destegi sozlesmesi 3056",
+  "http_status": 200,
+  "raw_bytes": 175243,
+  "text_chars": 17232,
+  "pdf_pages": 5
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/dceae3d6-7aa0-47a7-afb2-212cbef1d146/bana-bunu-al-finansman-ihtiyac-finansmani-sozlesmesi-11-16-2023-08-39-46",
+  "scraped_at": "2026-08-20T16:32:59+00:00",
+  "content_hash": "86ff79bcdc135a9cb955374cbe141e9a9712eb894b30b426844c2efa4e69ea93",
+  "collection_method": "pdf",
+  "title": "bana bunu al finansman ihtiyac finansmani sozlesmesi 11 16 2023 08 39 46",
+  "http_status": 200,
+  "raw_bytes": 128648,
+  "text_chars": 28816,
+  "pdf_pages": 8
+}

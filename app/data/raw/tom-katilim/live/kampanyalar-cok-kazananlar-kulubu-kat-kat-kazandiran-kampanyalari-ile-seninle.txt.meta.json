@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/cok-kazananlar-kulubu-kat-kat-kazandiran-kampanyalari-ile-seninle",
-  "scraped_at": "2026-08-12T08:37:27+00:00",
-  "content_hash": "37d5b0260d1216afca36d27e31bfdb0d878a71209cf41269c556b49250ec8de9",
+  "scraped_at": "2026-08-20T16:36:11+00:00",
+  "content_hash": "33d07e2050a409afd1326d908d779db99711aedecd12c80c146a08a4f75d2617",
   "collection_method": "browser",
   "title": "Çok Kazananlar Kulübü, 2 kat kazandıran kampanyaları ile seninle! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 100215,
-  "text_chars": 2226
+  "raw_bytes": 102119,
+  "text_chars": 2250
 }

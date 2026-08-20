@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/uye-isyeri-sozlesmesi----3708.pdf",
+  "scraped_at": "2026-08-20T16:08:52+00:00",
+  "content_hash": "56c8e205f265b4d571c0c8d8cd7a1d5e4265b29e02b14c0938400d6bc74b169a",
+  "collection_method": "pdf",
+  "title": "uye isyeri sozlesmesi 3708",
+  "http_status": 200,
+  "raw_bytes": 503017,
+  "text_chars": 97443,
+  "pdf_pages": 26
+}

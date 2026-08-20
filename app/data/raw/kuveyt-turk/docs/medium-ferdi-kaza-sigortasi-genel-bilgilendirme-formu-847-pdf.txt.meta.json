@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ferdi-kaza-sigortasi-genel-bilgilendirme-formu-847.pdf",
+  "scraped_at": "2026-08-20T16:11:19+00:00",
+  "content_hash": "f245c8db1fc2431383a2591a305922fc539445944699ea4422dc669b208985ef",
+  "collection_method": "pdf",
+  "title": "ferdi kaza sigortasi genel bilgilendirme formu 847",
+  "http_status": 200,
+  "raw_bytes": 245038,
+  "text_chars": 19664,
+  "pdf_pages": 6
+}

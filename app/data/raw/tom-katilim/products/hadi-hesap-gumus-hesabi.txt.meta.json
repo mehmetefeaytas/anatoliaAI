@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-hesap/gumus-hesabi",
+  "scraped_at": "2026-08-20T17:03:09+00:00",
+  "content_hash": "a317f3a4c8aaf78bfd2055dc81e01618e34ca1c32b6f2b9d175abe18382509b5",
+  "collection_method": "browser",
+  "title": "Gümüş Hesabı | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 96636,
+  "text_chars": 1046
+}

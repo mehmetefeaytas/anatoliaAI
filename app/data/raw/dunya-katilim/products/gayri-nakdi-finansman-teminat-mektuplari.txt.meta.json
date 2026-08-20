@@ -1,14 +1,14 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "cerceve",
+  "content_status": "kabuk",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/finansmanlar/gayri-nakdi-finansman/teminat-mektuplari",
-  "scraped_at": "2026-08-03T17:45:20+00:00",
-  "content_hash": "2a98fe3c2fe354628f65dca047ff7054837d21f80c3bd4327dbcda8b1b9d66a5",
+  "scraped_at": "2026-08-20T17:07:03+00:00",
+  "content_hash": "da6aadb437d1d6b413cada97ad483167706e7a01a455540702d36f77a3ca0350",
   "collection_method": "live",
   "title": "Teminat Mektuplar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 501080,
-  "text_chars": 11398,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "cerceve",
-  "content_status": "kabuk"
+  "text_chars": 11398
 }

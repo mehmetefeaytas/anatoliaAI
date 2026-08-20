@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar",
-  "scraped_at": "2026-08-03T17:47:08+00:00",
-  "content_hash": "8e737d98e89c9f1b4b07090eee2e7050dfe23593a4cdfee859e7e585e60d61d0",
+  "scraped_at": "2026-08-20T17:08:51+00:00",
+  "content_hash": "fa069eac6807c7a2b01f36f1057c26cc4e5feb9df2c971dbf302a4db56bf057b",
   "collection_method": "live",
   "title": "Kartlar | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 503375,
-  "text_chars": 9600,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9600
 }

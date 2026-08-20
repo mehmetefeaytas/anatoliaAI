@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/cek-karnesi-talebi-ve-bilgi-formu-chequebook-reque-3608.pdf",
+  "scraped_at": "2026-08-20T16:10:51+00:00",
+  "content_hash": "7334f4168dfa15de25442f933467521da48d4c0cd02ce16d1346c7648eaea95a",
+  "collection_method": "pdf",
+  "title": "cek karnesi talebi ve bilgi formu chequebook reque 3608",
+  "http_status": 200,
+  "raw_bytes": 122374,
+  "text_chars": 7503,
+  "pdf_pages": 3
+}

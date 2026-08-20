@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/yatirim-ve-hazine",
-  "scraped_at": "2026-08-03T17:43:42+00:00",
-  "content_hash": "7badb9f1dfcd0d4b7ea20bec99dc34af3b7fbccdc65d7c2ab9de339499cd544c",
+  "scraped_at": "2026-08-20T17:05:33+00:00",
+  "content_hash": "e4142ef60a3e68c87314c09fd6fa027e58f8a3d9aba2c2fc915b3b665ccb8ceb",
   "collection_method": "browser",
   "title": "Yatırım ve Hazine | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 288118,
-  "text_chars": 821,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 288493,
+  "text_chars": 2228
 }

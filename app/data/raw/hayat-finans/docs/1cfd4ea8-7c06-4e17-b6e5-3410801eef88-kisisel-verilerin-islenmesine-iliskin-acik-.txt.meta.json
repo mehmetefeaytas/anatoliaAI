@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/1cfd4ea8-7c06-4e17-b6e5-3410801eef88/kisisel-verilerin-islenmesine-iliskin-acik-riza-onay-formu-09-15-2023-15-37-46",
+  "scraped_at": "2026-08-20T16:33:08+00:00",
+  "content_hash": "ead7ff9d709997162c0aa53c2c428fa0f2b7f34d26746e5167ccb9536d388764",
+  "collection_method": "pdf",
+  "title": "kisisel verilerin islenmesine iliskin acik riza onay formu 09 15 2023 15 37 46",
+  "http_status": 200,
+  "raw_bytes": 77515,
+  "text_chars": 5423,
+  "pdf_pages": 2
+}

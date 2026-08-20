@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar/kredi-kartlari/paraf-kredi-karti",
-  "scraped_at": "2026-08-03T17:47:23+00:00",
-  "content_hash": "beafdb00838d40cbd059c37119845c9e8223735a19980c3e69dee5bc0b8e93bd",
+  "scraped_at": "2026-08-20T17:09:06+00:00",
+  "content_hash": "73deb13cffcf0626ef5dbcf569aaac5772ddaab3c2a2caad74f3af1752b55599",
   "collection_method": "live",
   "title": "Paraf Kredi Kart&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 509642,
-  "text_chars": 12715,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 12715
 }

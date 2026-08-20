@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ihtiyac-kart-sozlesmesi---indefinite-term-personal-3632.pdf",
+  "scraped_at": "2026-08-20T16:03:57+00:00",
+  "content_hash": "f7edfafaefdf29d0266c616830aafe1d95d97f5745198387ffcc72889b7d7d12",
+  "collection_method": "pdf",
+  "title": "ihtiyac kart sozlesmesi indefinite term personal 3632",
+  "http_status": 200,
+  "raw_bytes": 283390,
+  "text_chars": 65476,
+  "pdf_pages": 14
+}

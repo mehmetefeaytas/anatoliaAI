@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/icare_akdi_musteri_bilgilendirme_formu-16122025.pdf",
+  "scraped_at": "2026-08-20T16:29:07+00:00",
+  "content_hash": "6f774c197aff56dc8ff534971565ee2b0476b3c77c31e5f1f9cff43a92135c01",
+  "collection_method": "pdf",
+  "title": "icare akdi musteri bilgilendirme formu 16122025",
+  "http_status": 200,
+  "raw_bytes": 268458,
+  "text_chars": 4983,
+  "pdf_pages": 3
+}

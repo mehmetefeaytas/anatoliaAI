@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/otomatik-odeme-talimati-formu-20190425.pdf",
+  "scraped_at": "2026-08-20T16:59:26+00:00",
+  "content_hash": "74454698c047e166facfe4c7f168f2d8ceea3f954463d91d80d2af011364e8b0",
+  "collection_method": "pdf",
+  "title": "otomatik odeme talimati formu 20190425",
+  "http_status": 200,
+  "raw_bytes": 653464,
+  "text_chars": 1931,
+  "pdf_pages": 1
+}

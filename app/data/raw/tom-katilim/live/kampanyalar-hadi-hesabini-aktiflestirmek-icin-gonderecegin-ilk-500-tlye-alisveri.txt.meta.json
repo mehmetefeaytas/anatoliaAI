@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-hesabini-aktiflestirmek-icin-gonderecegin-ilk-500-tlye-alisverisine-ozel-50-tl-kazan",
+  "scraped_at": "2026-08-20T16:39:35+00:00",
+  "content_hash": "96f93d66851f82db180cd13533551ac71b5b22a81aff9ff12c7c29fb070250f5",
+  "collection_method": "browser",
+  "title": "Hesabını aktifleştirmek için göndereceğin ilk 500 TL’ye 50 TL kazan! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103282,
+  "text_chars": 1890,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "n göndereceğin ilk 500 TL'ye 50 TL kazan! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Detayları Kampanya 18 Ekim-25 Ekim 2024 tarihleri",
+    "span_start": 277,
+    "span_end": 302,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

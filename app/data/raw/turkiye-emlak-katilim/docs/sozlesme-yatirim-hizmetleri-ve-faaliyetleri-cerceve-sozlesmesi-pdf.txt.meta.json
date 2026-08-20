@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/sozlesme/yatirim-hizmetleri-ve-faaliyetleri-cerceve-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:26:21+00:00",
+  "content_hash": "30a60f38aecf233152d397a491243b82b107ece4b6d9b090ae5f7103dc69da18",
+  "collection_method": "pdf",
+  "title": "yatirim hizmetleri ve faaliyetleri cerceve sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 1105705,
+  "text_chars": 73255,
+  "pdf_pages": 19
+}

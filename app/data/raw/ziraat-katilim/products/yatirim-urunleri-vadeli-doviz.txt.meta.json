@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/yatirim-urunleri/vadeli-doviz",
-  "scraped_at": "2026-08-03T17:29:43+00:00",
-  "content_hash": "787cb5daa66b698e04c83d308a4ae307e4a717436f27a360c93065f1b202a6e1",
+  "scraped_at": "2026-08-20T16:58:44+00:00",
+  "content_hash": "7ec9d8e2f7610b6bf02237a7ee4f8b435f049e52699f568bf80bdef62e3c29cd",
   "collection_method": "live",
   "title": "Vaade Dayalı Döviz Alım / Satım İşlemleri (Forward) | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 475041,
-  "text_chars": 1858,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 475403,
+  "text_chars": 1858
 }

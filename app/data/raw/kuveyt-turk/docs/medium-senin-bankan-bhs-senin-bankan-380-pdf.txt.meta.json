@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/senin-bankan-bhs----senin-bankan-380.pdf",
+  "scraped_at": "2026-08-20T16:19:21+00:00",
+  "content_hash": "8efd69cb78b454512c6e7631edbb26aae77cf70b15c1e23e04278182be025de7",
+  "collection_method": "pdf",
+  "title": "senin bankan bhs senin bankan 380",
+  "http_status": 200,
+  "raw_bytes": 1727367,
+  "text_chars": 207566,
+  "pdf_pages": 39
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/BHS/TR/2026/bhs_bankacilik_hizmetleri_sozlesmesi_gercek.pdf",
+  "scraped_at": "2026-08-20T16:56:02+00:00",
+  "content_hash": "7bb6cd661952d97fa0678dcaad0552e421e67ab82ff7c9a7b0b16cd316e2cc92",
+  "collection_method": "pdf",
+  "title": "bhs bankacilik hizmetleri sozlesmesi gercek",
+  "http_status": 200,
+  "raw_bytes": 866874,
+  "text_chars": 133124,
+  "pdf_pages": 28
+}

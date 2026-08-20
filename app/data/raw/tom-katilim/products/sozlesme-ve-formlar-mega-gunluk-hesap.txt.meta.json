@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/sozlesme-ve-formlar/mega-gunluk-hesap",
+  "scraped_at": "2026-08-20T17:03:57+00:00",
+  "content_hash": "95d992d686923cefddbb39b6b8d7bbcfd6720914fe44ba87847d9056c323bb83",
+  "collection_method": "browser",
+  "title": "Günlük Kazandıran Hesap Sözleşmesi ve Bilgilendirme Formu | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 98975,
+  "text_chars": 662
+}

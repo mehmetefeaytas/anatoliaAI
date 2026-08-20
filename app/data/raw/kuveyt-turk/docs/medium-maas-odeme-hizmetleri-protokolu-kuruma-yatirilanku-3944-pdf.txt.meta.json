@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/maas-odeme-hizmetleri-protokolu-kuruma-yatirilanku-3944.pdf",
+  "scraped_at": "2026-08-20T16:05:39+00:00",
+  "content_hash": "bffd56761e2168fff91a14bca9bb5a39823f53609cfbbe7d2292874c78a5684d",
+  "collection_method": "pdf",
+  "title": "maas odeme hizmetleri protokolu kuruma yatirilanku 3944",
+  "http_status": 200,
+  "raw_bytes": 368418,
+  "text_chars": 35845,
+  "pdf_pages": 10
+}

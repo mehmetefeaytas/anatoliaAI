@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/taksitli_alisveris_kredisi_sozlesme_oncesi_bilgi_formu-12112024.pdf",
+  "scraped_at": "2026-08-20T16:28:25+00:00",
+  "content_hash": "66dffe9837bdb81c4da8c71fc71a64d63c43ea576d676d30f23da26fc4649730",
+  "collection_method": "pdf",
+  "title": "taksitli alisveris kredisi sozlesme oncesi bilgi formu 12112024",
+  "http_status": 200,
+  "raw_bytes": 434208,
+  "text_chars": 12863,
+  "pdf_pages": 3
+}

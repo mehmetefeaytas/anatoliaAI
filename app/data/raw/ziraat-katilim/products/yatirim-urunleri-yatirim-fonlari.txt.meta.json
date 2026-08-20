@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/yatirim-urunleri/yatirim-fonlari",
-  "scraped_at": "2026-08-03T17:29:56+00:00",
-  "content_hash": "5b8b8fade3453dbc6f62aa447306e810dcf3242fb905058f6841754a1c7459d7",
+  "scraped_at": "2026-08-20T16:58:56+00:00",
+  "content_hash": "8160e67d8e4aab76d262b51f8dfa8dd0d2a370de0a41c9e3633ae9b6913214dd",
   "collection_method": "live",
   "title": "Yatırım Fonları | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 496132,
-  "text_chars": 6440,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 496494,
+  "text_chars": 6440
 }

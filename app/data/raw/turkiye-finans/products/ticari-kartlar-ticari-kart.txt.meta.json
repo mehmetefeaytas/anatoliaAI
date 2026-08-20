@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/ticari-kartlar/Sayfalar/ticari-kart.aspx",
-  "scraped_at": "2026-08-03T17:28:15+00:00",
-  "content_hash": "7a62a75866971365b67772f3e5afbbbaa10acc694f8187e8c1f1ed72024ce484",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:57:13+00:00",
+  "content_hash": "1fe0b449ecbbaefe20d1645c196e3fb26987c4c615e61669607927b66639610c",
+  "collection_method": "browser",
   "title": "Ticari Kartlar – KOBİ'ere Özel Esnek Ödeme Çözümleri | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 107707,
-  "text_chars": 13379,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 217932,
+  "text_chars": 14244,
+  "extraction_invalidated_at": "2026-08-20T16:57:13+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

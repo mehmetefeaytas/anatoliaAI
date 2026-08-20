@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-yatirim-islemleri/hisse-senedi-ve-halka-arz-islemleri",
+  "scraped_at": "2026-08-20T17:03:18+00:00",
+  "content_hash": "4a72bf7bf7a8be2dcb5edb6497e2b08cd6b7ba42b484486a9758d301cc632015",
+  "collection_method": "browser",
+  "title": "Hisse Senedi ve Halka Arz İşlemleri | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103805,
+  "text_chars": 1704
+}

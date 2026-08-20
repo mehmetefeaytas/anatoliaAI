@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/sigorta-talebitalimat-ve-taahhudu-konut----------1722.pdf",
+  "scraped_at": "2026-08-20T16:16:19+00:00",
+  "content_hash": "8e548aba7a9f74f1b3cc99e9865bf1186b8fe6824e793e9af2cc771cba5df097",
+  "collection_method": "pdf",
+  "title": "sigorta talebitalimat ve taahhudu konut 1722",
+  "http_status": 200,
+  "raw_bytes": 222832,
+  "text_chars": 4211,
+  "pdf_pages": 1
+}

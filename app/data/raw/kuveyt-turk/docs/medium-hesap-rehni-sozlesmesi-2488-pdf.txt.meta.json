@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hesap-rehni-sozlesmesi----2488.pdf",
+  "scraped_at": "2026-08-20T16:03:24+00:00",
+  "content_hash": "5549712276604eccdc28ecd7351a60760b017826d844aaf57fcd062854f2c6c8",
+  "collection_method": "pdf",
+  "title": "hesap rehni sozlesmesi 2488",
+  "http_status": 200,
+  "raw_bytes": 225232,
+  "text_chars": 14492,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hos-geldin-katilma-hesabi-bilgilendirme-ve-talep-f-3201.pdf",
+  "scraped_at": "2026-08-20T16:11:55+00:00",
+  "content_hash": "ca1b417cad1c2336f213b31669f816dc381d197b9b24ba932ede70a405a813ec",
+  "collection_method": "pdf",
+  "title": "hos geldin katilma hesabi bilgilendirme ve talep f 3201",
+  "http_status": 200,
+  "raw_bytes": 89324,
+  "text_chars": 4354,
+  "pdf_pages": 1
+}

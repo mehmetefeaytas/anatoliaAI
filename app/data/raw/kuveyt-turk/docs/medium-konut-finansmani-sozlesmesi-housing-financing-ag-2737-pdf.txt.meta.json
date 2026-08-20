@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-finansmani-sozlesmesi---housing-financing-ag-2737.pdf",
+  "scraped_at": "2026-08-20T16:04:33+00:00",
+  "content_hash": "851dc9c07c3d8956a8cd7b460c66f3fee2f44ec67e3b7176712173f1e023d917",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesmesi housing financing ag 2737",
+  "http_status": 200,
+  "raw_bytes": 262075,
+  "text_chars": 35502,
+  "pdf_pages": 9
+}

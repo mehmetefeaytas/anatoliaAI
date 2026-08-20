@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/uye-isyeri-sozlesmesine-ek-madde-ilavesine-dair-so-2240.pdf",
+  "scraped_at": "2026-08-20T16:08:54+00:00",
+  "content_hash": "7d544398388ee937f41eb9f65bcf789d8ed58d46a618d1576b910ab729ed9be2",
+  "collection_method": "pdf",
+  "title": "uye isyeri sozlesmesine ek madde ilavesine dair so 2240",
+  "http_status": 200,
+  "raw_bytes": 118801,
+  "text_chars": 16780,
+  "pdf_pages": 4
+}

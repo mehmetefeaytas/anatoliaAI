@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/a101-de-100tl-kazan",
+  "scraped_at": "2026-08-20T16:38:35+00:00",
+  "content_hash": "89bb95a633b215121f2a7ec0540d35fbd9ef41fd8bd5fdca3dc0244f21d0cd20",
+  "collection_method": "browser",
+  "title": "A101'de 100TL kazan (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101874,
+  "text_chars": 2331
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-hesap/altin-biriktiren-hesap",
+  "scraped_at": "2026-08-20T17:03:06+00:00",
+  "content_hash": "d6da6a0997edd528b8853b04aa9b17e948d4473b4e37e594ce427991a5eaf521",
+  "collection_method": "browser",
+  "title": "Altın Biriktiren Hesap | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 96783,
+  "text_chars": 1198
+}

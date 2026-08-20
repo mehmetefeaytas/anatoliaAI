@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-yatirim-islemleri",
+  "scraped_at": "2026-08-20T17:03:12+00:00",
+  "content_hash": "87ef1340b6ea760b201862da24576fa36355ca2988e8416b6775aa1ab7a330b4",
+  "collection_method": "browser",
+  "title": "Hadi Yatırım İşlemleri | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 97350,
+  "text_chars": 542
+}

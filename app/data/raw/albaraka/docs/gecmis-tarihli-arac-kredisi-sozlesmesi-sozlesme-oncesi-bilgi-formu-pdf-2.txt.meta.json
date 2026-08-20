@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/arac_kredisi_sozlesmesi_sozlesme_oncesi_bilgi_formu.pdf",
+  "scraped_at": "2026-08-20T17:02:53+00:00",
+  "content_hash": "7f2e257b7434783892373e7bc406dac8b9a88e8e740de108683b9123834c5c02",
+  "collection_method": "pdf",
+  "title": "arac kredisi sozlesmesi sozlesme oncesi bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 98465,
+  "text_chars": 9216,
+  "pdf_pages": 2
+}

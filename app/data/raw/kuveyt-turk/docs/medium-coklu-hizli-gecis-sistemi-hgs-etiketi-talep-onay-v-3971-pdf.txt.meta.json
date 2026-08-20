@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/coklu-hizli-gecis-sistemi-hgs-etiketi-talep-onay-v-3971.pdf",
+  "scraped_at": "2026-08-20T16:11:09+00:00",
+  "content_hash": "052edbc7d54cdcbf19eedaaba723f604391443391d8f33bf54495f0ed8c4a6db",
+  "collection_method": "pdf",
+  "title": "coklu hizli gecis sistemi hgs etiketi talep onay v 3971",
+  "http_status": 200,
+  "raw_bytes": 177639,
+  "text_chars": 8004,
+  "pdf_pages": 2
+}

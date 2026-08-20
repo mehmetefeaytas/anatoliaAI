@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kiralik-kasa-talebi-onay-ve-bilgilendirme-formu-or-3657.pdf",
+  "scraped_at": "2026-08-20T16:12:28+00:00",
+  "content_hash": "dea51204444bea74fdf1a2f2be953930d62d588524bd8a36329d05a21249a592",
+  "collection_method": "pdf",
+  "title": "kiralik kasa talebi onay ve bilgilendirme formu or 3657",
+  "http_status": 200,
+  "raw_bytes": 196160,
+  "text_chars": 5586,
+  "pdf_pages": 2
+}

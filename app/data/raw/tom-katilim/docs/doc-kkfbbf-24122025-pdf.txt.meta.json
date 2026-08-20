@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/kkfbbf_24122025.pdf",
+  "scraped_at": "2026-08-20T16:31:26+00:00",
+  "content_hash": "eb38390db41764cf70973078cd8090e6ab743109e6476fcc55d196bfd81bf40e",
+  "collection_method": "pdf",
+  "title": "kkfbbf 24122025",
+  "http_status": 200,
+  "raw_bytes": 205996,
+  "text_chars": 7023,
+  "pdf_pages": 3
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/20190403-bhs-sozlesme-oncesi-bilgilendirme-formu-tuzel-kisi-finansal-tuketici.pdf",
+  "scraped_at": "2026-08-20T17:01:14+00:00",
+  "content_hash": "6a9ecf3b954393a776a1b190037fa713fa4b64b7fbc3bacebda9c5bb79ac600f",
+  "collection_method": "pdf",
+  "title": "20190403 bhs sozlesme oncesi bilgilendirme formu tuzel kisi finansal tuketici",
+  "http_status": 200,
+  "raw_bytes": 352452,
+  "text_chars": 32261,
+  "pdf_pages": 6
+}

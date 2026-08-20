@@ -1,13 +1,16 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar-is",
-  "scraped_at": "2026-08-03T17:43:24+00:00",
-  "content_hash": "2f809708334b4ef211e92f1b3e31733f0255bd8900ae91b014e0484712a769fc",
+  "scraped_at": "2026-08-20T17:05:11+00:00",
+  "content_hash": "00d271040a37910c4434ece5e55a0da344fb3b0a5066392bdbf8834b503b887d",
   "collection_method": "browser",
   "title": "İş Finansmanı | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 293075,
-  "text_chars": 597,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 292422,
+  "text_chars": 1999,
+  "extraction_invalidated_at": "2026-08-20T17:05:11+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

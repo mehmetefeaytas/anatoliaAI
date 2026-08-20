@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-kiralama-sozlesmesi-ticari---financial-le-3883.pdf",
+  "scraped_at": "2026-08-20T16:02:45+00:00",
+  "content_hash": "5bcc2354736e5698fa284b2d4c3d53fab05eb36718f24e43a42e7bee390bbf00",
+  "collection_method": "pdf",
+  "title": "finansal kiralama sozlesmesi ticari financial le 3883",
+  "http_status": 200,
+  "raw_bytes": 407060,
+  "text_chars": 121737,
+  "pdf_pages": 27
+}

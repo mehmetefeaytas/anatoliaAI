@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/ticari-kartlar/Sayfalar/default.aspx",
-  "scraped_at": "2026-08-03T17:27:45+00:00",
-  "content_hash": "de2c0dfbc8ac458ca1399016beffde5178167acc80024bef018f9246b41775bb",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:43+00:00",
+  "content_hash": "9e785c33faacf808e68181007c3928b0b1b3d98936bc7afb06a1c8861cb47031",
+  "collection_method": "browser",
   "title": "Ticari Kartlar | Kredi Kartları | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 117327,
-  "text_chars": 10640,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 227313,
+  "text_chars": 11500,
+  "extraction_invalidated_at": "2026-08-20T16:56:43+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

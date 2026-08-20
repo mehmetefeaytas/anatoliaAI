@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hisse-rehni-sozlesmesi-------700.pdf",
+  "scraped_at": "2026-08-20T16:03:42+00:00",
+  "content_hash": "75e2bb56c9c98edef602330cc20f9db801d26fe3dd8c0e05fd066f0bc2b6f9e7",
+  "collection_method": "pdf",
+  "title": "hisse rehni sozlesmesi 700",
+  "http_status": 200,
+  "raw_bytes": 343618,
+  "text_chars": 34082,
+  "pdf_pages": 8
+}

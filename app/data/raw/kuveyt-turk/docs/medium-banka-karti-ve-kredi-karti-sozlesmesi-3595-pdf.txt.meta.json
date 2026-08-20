@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/banka-karti-ve-kredi-karti-sozlesmesi-3595.pdf",
+  "scraped_at": "2026-08-20T15:59:59+00:00",
+  "content_hash": "fbdedf00288a786a6363ad3e053488c617b780c5fbf204ad4e4dafff3da86157",
+  "collection_method": "pdf",
+  "title": "banka karti ve kredi karti sozlesmesi 3595",
+  "http_status": 200,
+  "raw_bytes": 243162,
+  "text_chars": 56359,
+  "pdf_pages": 13
+}

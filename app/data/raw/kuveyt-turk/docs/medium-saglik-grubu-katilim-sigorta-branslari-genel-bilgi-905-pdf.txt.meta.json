@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/saglik-grubu-katilim-sigorta-branslari-genel-bilgi-905.pdf",
+  "scraped_at": "2026-08-20T16:13:37+00:00",
+  "content_hash": "a8c236318689dcff77135524962acb6a946998865d57f1f37a4880fb48c1e993",
+  "collection_method": "pdf",
+  "title": "saglik grubu katilim sigorta branslari genel bilgi 905",
+  "http_status": 200,
+  "raw_bytes": 329071,
+  "text_chars": 9037,
+  "pdf_pages": 2
+}

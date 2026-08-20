@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/cevre-dostu-arac-finansmani",
-  "scraped_at": "2026-08-03T17:46:23+00:00",
-  "content_hash": "f86cdba88d05af02a1ccb6677bc284fad7c3cfd7c4716544a039fefedc5d809b",
+  "scraped_at": "2026-08-20T17:08:06+00:00",
+  "content_hash": "3f8b8885d02555096438c8f369b5109a3d044a533526256ffe269f36f37713cd",
   "collection_method": "live",
   "title": "&#xC7;evre Dostu Ara&#xE7; Finansman&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 524385,
-  "text_chars": 13721,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 13721
 }

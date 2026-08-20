@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dip-sozlesmesi--------827.pdf",
+  "scraped_at": "2026-08-20T16:02:12+00:00",
+  "content_hash": "af1c7e3e17ec2d80b04a92a189f8f892ed8187a8fdd67f573e0575e94796e8e5",
+  "collection_method": "pdf",
+  "title": "dip sozlesmesi 827",
+  "http_status": 200,
+  "raw_bytes": 255859,
+  "text_chars": 47784,
+  "pdf_pages": 10
+}

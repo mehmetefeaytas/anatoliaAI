@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kiralik-kasa-taleponay-ve-bilgilendirme-formu-395.pdf",
+  "scraped_at": "2026-08-20T16:20:04+00:00",
+  "content_hash": "99dcea04d0d789cf26276ce5d0d7066f34976c824864146c8cdd02eab2252885",
+  "collection_method": "pdf",
+  "title": "kiralik kasa taleponay ve bilgilendirme formu 395",
+  "http_status": 200,
+  "raw_bytes": 241775,
+  "text_chars": 2577,
+  "pdf_pages": 1
+}

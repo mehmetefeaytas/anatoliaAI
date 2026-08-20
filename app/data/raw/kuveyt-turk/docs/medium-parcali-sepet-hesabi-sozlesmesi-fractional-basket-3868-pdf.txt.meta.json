@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/parcali-sepet-hesabi-sozlesmesi-fractional-basket--3868.pdf",
+  "scraped_at": "2026-08-20T16:06:48+00:00",
+  "content_hash": "7bf2e936fedee1454dd0fa2a805df20e288fc802f852372d48fa09d0542579c6",
+  "collection_method": "pdf",
+  "title": "parcali sepet hesabi sozlesmesi fractional basket 3868",
+  "http_status": 200,
+  "raw_bytes": 185548,
+  "text_chars": 26129,
+  "pdf_pages": 5
+}

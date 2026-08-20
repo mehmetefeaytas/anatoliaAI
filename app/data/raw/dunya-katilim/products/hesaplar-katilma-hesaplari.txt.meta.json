@@ -1,13 +1,16 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/katilma-hesaplari",
-  "scraped_at": "2026-08-03T17:46:59+00:00",
-  "content_hash": "5233bcfc6fc7ee3ff4fe97bcb17c340b0d58ce0d3d74f72bd301824f09429169",
+  "scraped_at": "2026-08-20T17:08:43+00:00",
+  "content_hash": "ec9eecd19ccf08a064c21a9d79628d731f81c576ff7fdbf452b9c556bb0f1969",
   "collection_method": "live",
   "title": "Kat&#x131;lma Hesaplar&#x131; | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 498285,
-  "text_chars": 9055,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 499422,
+  "text_chars": 9137,
+  "extraction_invalidated_at": "2026-08-20T17:08:43+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

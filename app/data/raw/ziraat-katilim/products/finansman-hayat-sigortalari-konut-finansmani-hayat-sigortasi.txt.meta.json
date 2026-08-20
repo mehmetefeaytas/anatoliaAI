@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/sigorta/finansman-hayat-sigortalari/konut-finansmani-hayat-sigortasi",
-  "scraped_at": "2026-08-03T17:30:04+00:00",
-  "content_hash": "7a3cf010bb865ab43f080d911eec47906be411ab8b790187aab97b775da002f5",
+  "scraped_at": "2026-08-20T16:59:05+00:00",
+  "content_hash": "725c1d147fba249d6cac6c0869f88e3dafea054e8b5d3237b39280f0bd73d5f6",
   "collection_method": "live",
   "title": "Konut Finansmanı Hayat Sigortası | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 471912,
-  "text_chars": 575,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 472274,
+  "text_chars": 1354
 }

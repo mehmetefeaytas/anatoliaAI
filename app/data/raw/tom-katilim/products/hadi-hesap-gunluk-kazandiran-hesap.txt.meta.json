@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-hesap/gunluk-kazandiran-hesap",
+  "scraped_at": "2026-08-20T17:03:03+00:00",
+  "content_hash": "58903609f78ed44f74411c76880936a4a7ec4597dc991ea2128f7a4f691d81b6",
+  "collection_method": "browser",
+  "title": "Günlük Kazandıran Hesap | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 101010,
+  "text_chars": 4782
+}

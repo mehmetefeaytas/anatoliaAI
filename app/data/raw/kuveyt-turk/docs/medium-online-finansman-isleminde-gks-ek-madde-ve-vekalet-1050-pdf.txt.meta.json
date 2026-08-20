@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/online-finansman-isleminde-gks-ek-madde-ve-vekalet-1050.pdf",
+  "scraped_at": "2026-08-20T16:06:18+00:00",
+  "content_hash": "f458bb90ce64c2aa53fcac7b55735c0d23738d51e0333eac0612bba9f3762a5a",
+  "collection_method": "pdf",
+  "title": "online finansman isleminde gks ek madde ve vekalet 1050",
+  "http_status": 200,
+  "raw_bytes": 89947,
+  "text_chars": 5885,
+  "pdf_pages": 2
+}

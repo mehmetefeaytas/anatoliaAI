@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/egitim-ve-ogretim-destegi-bireysel-kredi-sozlesmesi-sozlesme-oncesi-bilgilendirme-formu-yeni.pdf",
+  "scraped_at": "2026-08-20T17:00:11+00:00",
+  "content_hash": "06f787b02ed2755eafa86b3b2b97e6c6ee68a955583c2e5cce4bc9c95a5e480e",
+  "collection_method": "pdf",
+  "title": "egitim ve ogretim destegi bireysel kredi sozlesmesi sozlesme oncesi bilgilendirme formu yeni",
+  "http_status": 200,
+  "raw_bytes": 614746,
+  "text_chars": 20730,
+  "pdf_pages": 8
+}

@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim/yatirimci-seviye-sistemi",
-  "scraped_at": "2026-08-03T17:44:58+00:00",
-  "content_hash": "e5c6d0f7958b8112f24cf1d682aaa4f1cad720d4d3f68f141995b706ff332b99",
+  "scraped_at": "2026-08-20T17:06:45+00:00",
+  "content_hash": "a290f2a71d3ff9616fe04fc3580af3f22a083aa390547350f56189588b47eb02",
   "collection_method": "browser",
   "title": "Yatırımcı Seviye Sistemi | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 308020,
-  "text_chars": 2255,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 308395,
+  "text_chars": 2255
 }

@@ -1,13 +1,16 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/hesaplar/katilma-hesabi",
-  "scraped_at": "2026-08-03T17:44:36+00:00",
-  "content_hash": "38c27f9893e8e02b8b32fc62e0f198b4cb736205152238662bc6fc773a5d8ba2",
+  "scraped_at": "2026-08-20T17:06:25+00:00",
+  "content_hash": "5799c77478f53540e82a02968b3a06c65a73cdef3209b2026b87c5cfa8267b9c",
   "collection_method": "browser",
   "title": "Yüksek Kâr Payı Veren Katılım Hesabı | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 355298,
+  "raw_bytes": 355668,
   "text_chars": 5990,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_invalidated_at": "2026-08-20T17:06:25+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

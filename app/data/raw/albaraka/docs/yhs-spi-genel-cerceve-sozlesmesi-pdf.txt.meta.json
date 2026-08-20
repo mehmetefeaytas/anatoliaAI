@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/YHS/spi-genel-cerceve-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:40+00:00",
+  "content_hash": "5bb49cc87989ce13b02fd9a2c789ab894ab076a81674290b791323a763250ced",
+  "collection_method": "pdf",
+  "title": "spi genel cerceve sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 104519,
+  "text_chars": 5208,
+  "pdf_pages": 3
+}

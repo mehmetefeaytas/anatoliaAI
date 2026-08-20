@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar/hayat-finans-banka-karti",
-  "scraped_at": "2026-08-03T17:44:11+00:00",
-  "content_hash": "80fde019c088e22244df591d49afe8239ead5f1037e03e5e9887a57982aef639",
+  "scraped_at": "2026-08-20T17:05:58+00:00",
+  "content_hash": "8373bb9c410a6593c301fc77dcd608141c38702e77fcb9853dfdfabc714d1ed4",
   "collection_method": "browser",
   "title": "Hayat Finans Banka Kartı | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 319295,
-  "text_chars": 5248,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 319670,
+  "text_chars": 5248
 }

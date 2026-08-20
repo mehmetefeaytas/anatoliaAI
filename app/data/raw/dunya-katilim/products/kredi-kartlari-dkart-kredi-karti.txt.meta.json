@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/kartlar/kredi-kartlari/dkart-kredi-karti",
-  "scraped_at": "2026-08-03T17:47:20+00:00",
-  "content_hash": "7a044bb9aece077f5911312cffb13ec51f6ed8aeb66451d7a0c375aa1daf53bb",
+  "scraped_at": "2026-08-20T17:09:03+00:00",
+  "content_hash": "3adaf629025303bee3f24e2fe7bc992a72d8c451ba0bf306dab735d5f145ceda",
   "collection_method": "live",
   "title": "DKart Kredi Kart&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 506713,
-  "text_chars": 11477,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 11477
 }

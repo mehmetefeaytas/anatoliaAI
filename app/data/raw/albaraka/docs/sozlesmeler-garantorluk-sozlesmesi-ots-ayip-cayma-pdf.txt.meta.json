@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/garantorluk-sozlesmesi---ots---(ayip-cayma).pdf",
+  "scraped_at": "2026-08-20T16:57:32+00:00",
+  "content_hash": "7d00d4a331facfd86058f430a2193391c1ed73d097d6a1d1790f307b59c98018",
+  "collection_method": "pdf",
+  "title": "garantorluk sozlesmesi ots (ayip cayma)",
+  "http_status": 200,
+  "raw_bytes": 459123,
+  "text_chars": 40247,
+  "pdf_pages": 14
+}

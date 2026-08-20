@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/restoran-harcamalarinda-her-ay-10-000-tlye-varan-iade",
+  "scraped_at": "2026-08-20T16:38:01+00:00",
+  "content_hash": "5556db0a2aba4bb1f61a14a8402b75f550d9dd5985ae13f24eec573000c39a28",
+  "collection_method": "browser",
+  "title": "Restoran harcamalarında her ay 10.000 TL’ye varan iade! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103698,
+  "text_chars": 3418
+}

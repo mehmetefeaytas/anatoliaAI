@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/cari-hesaplar/Sayfalar/cari-hesaplar.aspx",
-  "scraped_at": "2026-08-03T17:27:06+00:00",
-  "content_hash": "36bc2454a7b576f90b8ba6517979b3d12afd68c04d98da85f750ea5ecfed857e",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:04+00:00",
+  "content_hash": "8a911da01e94b01323421709a77aa58be9c0d62f48900d086b2cbb3532f8d559",
+  "collection_method": "browser",
   "title": "Cari Hesap | Bireysel Finansman | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 108345,
-  "text_chars": 9035,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 218300,
+  "text_chars": 10108,
+  "extraction_invalidated_at": "2026-08-20T16:56:04+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

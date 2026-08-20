@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/nakit-yonetimi/tedarikci-finansman-sistem",
-  "scraped_at": "2026-08-03T17:44:52+00:00",
-  "content_hash": "147a8640e81d2c733c9ca7d5f64bbf08b42a75a3829121fdca76cd5eede54eea",
+  "scraped_at": "2026-08-20T17:06:39+00:00",
+  "content_hash": "e8c8509f74dd375a2bab23f892b602b4f0d4904d04eeed3e42aa61413f142180",
   "collection_method": "browser",
   "title": "Tedarikçi Finansman Sistemi (TFS) | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 296102,
-  "text_chars": 2022,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 296458,
+  "text_chars": 2022
 }

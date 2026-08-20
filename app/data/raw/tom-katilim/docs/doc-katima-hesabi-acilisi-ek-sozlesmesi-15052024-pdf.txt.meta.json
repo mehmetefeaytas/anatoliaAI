@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/katima-hesabi-acilisi-ek-sozlesmesi_15052024.pdf",
+  "scraped_at": "2026-08-20T16:28:16+00:00",
+  "content_hash": "6bc953ec16aa79ad1429fdcfc5365431345c0dd37fe6645cfa6ea22a18e91a2b",
+  "collection_method": "pdf",
+  "title": "katima hesabi acilisi ek sozlesmesi 15052024",
+  "http_status": 200,
+  "raw_bytes": 406225,
+  "text_chars": 5321,
+  "pdf_pages": 3
+}

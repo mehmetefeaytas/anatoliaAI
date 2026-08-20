@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dts-dbs-sozlesme-protokol-ekler-ingilizce-1123.pdf",
+  "scraped_at": "2026-08-20T16:21:14+00:00",
+  "content_hash": "73bb6df8c31266e7e7a28beb572c903aab85fd7b70093e11a076ae9c5e4fa9af",
+  "collection_method": "pdf",
+  "title": "dts dbs sozlesme protokol ekler ingilizce 1123",
+  "http_status": 200,
+  "raw_bytes": 238366,
+  "text_chars": 67020,
+  "pdf_pages": 14
+}

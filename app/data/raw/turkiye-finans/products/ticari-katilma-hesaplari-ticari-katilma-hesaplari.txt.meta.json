@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/ticari/ticari-katilma-hesaplari/Sayfalar/ticari-katilma-hesaplari.aspx",
-  "scraped_at": "2026-08-03T17:28:03+00:00",
-  "content_hash": "de550c2debd1cfdac2417620e89349a17bcdac4cbead94155d3ed6e0007b108d",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:57:01+00:00",
+  "content_hash": "69a7a229c52f155f42b871c54c3ae1852f2971f1e48d9eb0f19d4fd0b874141a",
+  "collection_method": "browser",
   "title": "Şirketiniz İçin Katılma Hesapları | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 102438,
-  "text_chars": 8241,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 213400,
+  "text_chars": 9190,
+  "extraction_invalidated_at": "2026-08-20T16:57:01+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

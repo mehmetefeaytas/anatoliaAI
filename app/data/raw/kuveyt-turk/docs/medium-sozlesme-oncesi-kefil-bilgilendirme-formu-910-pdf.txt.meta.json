@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/sozlesme-oncesi-kefil-bilgilendirme-formu-910.pdf",
+  "scraped_at": "2026-08-20T16:13:52+00:00",
+  "content_hash": "954f35dbb7623798e4f3db046d1673f3dcc345ff40ddfbb5a569d6e9f50172be",
+  "collection_method": "pdf",
+  "title": "sozlesme oncesi kefil bilgilendirme formu 910",
+  "http_status": 200,
+  "raw_bytes": 84223,
+  "text_chars": 3600,
+  "pdf_pages": 1
+}

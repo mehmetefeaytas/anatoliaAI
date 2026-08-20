@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/kredi-karti-taksitlendir",
+  "scraped_at": "2026-08-20T17:01:58+00:00",
+  "content_hash": "0db04a85367d713516cdbff7a91ea4fd969a3f8e4a280b09483e2c7c1ad7bb42",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı ile sonradan taksitlendir! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102366,
+  "text_chars": 2527
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/sigorta-talebi-talimat-ve-taahhudu---kfs---kredili-1728.pdf",
+  "scraped_at": "2026-08-20T16:16:10+00:00",
+  "content_hash": "28040eeba61a07bd7a2f28eff7f780aed98be288f62a2b973d15663247d75a2a",
+  "collection_method": "pdf",
+  "title": "sigorta talebi talimat ve taahhudu kfs kredili 1728",
+  "http_status": 200,
+  "raw_bytes": 286974,
+  "text_chars": 4002,
+  "pdf_pages": 1
+}

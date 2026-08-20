@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/musteri_islemleri_sozlesme_oncesi_bilgi_formu.pdf",
+  "scraped_at": "2026-08-20T17:01:56+00:00",
+  "content_hash": "ee189a718b58e318d9bc78d2aae49065538f67cd667d495b4a87984fd0a5271d",
+  "collection_method": "pdf",
+  "title": "musteri islemleri sozlesme oncesi bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 48895,
+  "text_chars": 10719,
+  "pdf_pages": 4
+}

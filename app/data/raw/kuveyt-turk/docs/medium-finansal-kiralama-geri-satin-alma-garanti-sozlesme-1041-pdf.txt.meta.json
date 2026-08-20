@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/finansal-kiralama-geri-satin-alma-garanti-sozlesme-1041.pdf",
+  "scraped_at": "2026-08-20T16:02:32+00:00",
+  "content_hash": "07b368bdff1925e4231a2bc7279ff9d019517446347f60ec1cb992f9d2fcfabd",
+  "collection_method": "pdf",
+  "title": "finansal kiralama geri satin alma garanti sozlesme 1041",
+  "http_status": 200,
+  "raw_bytes": 125805,
+  "text_chars": 9321,
+  "pdf_pages": 3
+}

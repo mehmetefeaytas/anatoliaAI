@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/karz_fon_toplama_akdi_musteri_bilgilendirme_formu.pdf",
+  "scraped_at": "2026-08-20T16:28:07+00:00",
+  "content_hash": "dfb5849067cf933cd14a4a7cdbe3696d5f67d3d8cb609d6f6b638655bf056a6c",
+  "collection_method": "pdf",
+  "title": "karz fon toplama akdi musteri bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 438000,
+  "text_chars": 3372,
+  "pdf_pages": 2
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/ortaksiz-kiralik-kasa-sozlesmesi-3658.pdf",
+  "scraped_at": "2026-08-20T16:06:36+00:00",
+  "content_hash": "d2baa04b2accae07e3731ce09eb33ad47768e00ae8b111a83e6eb675cdacee60",
+  "collection_method": "pdf",
+  "title": "ortaksiz kiralik kasa sozlesmesi 3658",
+  "http_status": 200,
+  "raw_bytes": 133146,
+  "text_chars": 9857,
+  "pdf_pages": 3
+}

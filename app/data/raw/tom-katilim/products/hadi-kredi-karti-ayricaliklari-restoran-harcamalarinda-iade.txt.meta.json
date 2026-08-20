@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-kredi-karti-ayricaliklari/restoran-harcamalarinda-iade",
+  "scraped_at": "2026-08-20T17:04:55+00:00",
+  "content_hash": "7bbc345de2f21213de417175e271e945df44ddb887a6ffaca91e0131b02cccc6",
+  "collection_method": "browser",
+  "title": "Restoran harcamalarında her ay 10.000 TL iade! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 98995,
+  "text_chars": 2026
+}

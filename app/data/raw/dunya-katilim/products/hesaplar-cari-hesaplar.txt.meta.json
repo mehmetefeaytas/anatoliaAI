@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/hesaplar/cari-hesaplar",
-  "scraped_at": "2026-08-03T17:46:41+00:00",
-  "content_hash": "48d027c630b1ca70aed9995e09a24be15eccc046ee3c20881faacbabba669e81",
+  "scraped_at": "2026-08-20T17:08:25+00:00",
+  "content_hash": "604b4720175f7b329e54201f21afbdcac4704462016512b9a1717ff5927b6fee",
   "collection_method": "live",
   "title": "Cari Hesaplar | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 501707,
-  "text_chars": 9488,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9488
 }

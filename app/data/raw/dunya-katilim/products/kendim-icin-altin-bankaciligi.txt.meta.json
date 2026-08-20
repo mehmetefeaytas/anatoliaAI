@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kendim-icin/altin-bankaciligi",
-  "scraped_at": "2026-08-03T17:45:59+00:00",
-  "content_hash": "daab2b1c76fa087b7d040894290b1cddb3533b9988e5599d00153209d2884ba8",
+  "scraped_at": "2026-08-20T17:07:42+00:00",
+  "content_hash": "eefd5820c560c89b8fcb9fe12cbf5091fbd1bf605f093b90490da76099e38928",
   "collection_method": "live",
   "title": "Alt&#x131;n Bankac&#x131;l&#x131;&#x11F;&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 503416,
-  "text_chars": 9382,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9382
 }

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kisisel-verilerle-ilgili-aydinlatma-metni----------1109.pdf",
+  "scraped_at": "2026-08-20T16:20:47+00:00",
+  "content_hash": "e362abd72bbeab15e17749e488694b5f06eace82032cf1768d778102354a767b",
+  "collection_method": "pdf",
+  "title": "kisisel verilerle ilgili aydinlatma metni 1109",
+  "http_status": 200,
+  "raw_bytes": 339921,
+  "text_chars": 16293,
+  "pdf_pages": 3
+}

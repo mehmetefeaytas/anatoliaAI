@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kt-ymd---yatirim-hizmetleri-cerceve-sozlesmesi-----3440.pdf",
+  "scraped_at": "2026-08-20T16:05:04+00:00",
+  "content_hash": "3bc2e75d4c7d551a8746162c1775a0506d2bfebfb9ce92ad39f3b7e5d12db78a",
+  "collection_method": "pdf",
+  "title": "kt ymd yatirim hizmetleri cerceve sozlesmesi 3440",
+  "http_status": 200,
+  "raw_bytes": 989340,
+  "text_chars": 266477,
+  "pdf_pages": 65
+}

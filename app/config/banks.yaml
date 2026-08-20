@@ -98,6 +98,16 @@ banks:
     document_paths:
       - /urun-hizmet-ucretleri
       - /sozlesmeler
+    # 2026-08-20 AİLE KAPSAMI turu (docs/rapor/aile-kapsami-hasadi.md).
+    # `discover_documents` kuru koşusu ile ÖLÇÜLDÜ (PDF indirmeden, yalnız
+    # `document_paths` liste sayfaları çekilerek):
+    #   aday 444 · robots.txt ile engellenen 0 · çekilebilir 444
+    # Tavan 40'ta kaldığı için 404 PDF adayı SESSİZCE kırpılıyordu (aynı
+    # ölçüm `data/raw/_extra_report.md` notlarında da duruyor).
+    # "Ürün Bilgi Formu" PDF'leri kesin kâr payı oranı / tahsis ücreti
+    # taşıyor — şartnamenin manşet alanı korpusta yalnız %3,4 belgede vardı.
+    # 460 = 444 + pay; kırpma bir daha devreye girmesin diye üstünde.
+    max_document_docs: 460
     # Arşivde 318 aday bulundu; 60 tavanı gerçek veri kaybettiriyordu.
     max_archive_docs: 200
     sitemap_urls:
@@ -171,6 +181,26 @@ banks:
     document_paths:
       - /tr/urun-ve-hizmet-ucretleri
       - /tr/hakkimizda/iletisim/sozlesme-ve-formlar
+    # 2026-08-20 AİLE KAPSAMI turu — `discover_documents` kuru koşusuyla ÖLÇÜLDÜ:
+    #   aday 427 · robots.txt ile engellenen 282 · **çekilebilir 145**
+    # Tavan 145'in ÜSTÜNE değil, çekilebilir havuza göre konuyor: 282 aday
+    # `/TranslateTool/pdf-isaretdili/...` ve `/TranslateTool/pdf-ses/...`
+    # sarmalayıcılarıdır ve robots.txt bunları Disallow ediyor. `--ignore-robots`
+    # KULLANILMADI (CLAUDE.md §14 taahhüdü) → o 282 aday raporda "robots engeli"
+    # olarak sayılıyor, tavan yükseltmek onları kurtarmaz.
+    #
+    # ÖNCE 160 DENENDİ, KOŞULDU, YETMEDİĞİ ÖLÇÜLDÜ (aynı gün): 160 tavanıyla
+    # 427 aday kırpıldı, kalan 160'ın **103'ü robots engelliydi** ve yalnız
+    # 57 PDF geldi. Sebep sıralama: `rank_documents` "ucret|tarife" geçen
+    # her adayı 0. kovaya alıyor, `/TranslateTool/pdf-isaretdili/...` ve
+    # `/pdf-ses/...` sarmalayıcıları da o desene uyduğu için çekilebilir
+    # adaylarla AYNI kovada yarışıp onları dışarı itiyor. Kırpma robots
+    # süzgecinden ÖNCE çalıştığı için tavan, engelli adayları da sayıyor.
+    # Çözüm tavanı tüm aday havuzunun üstüne çıkarmak: 427 → 440. Yeniden
+    # koşuldu, sonuç 57 → **141 PDF** (ölçüldü; 145 çekilebilir adayın 4'ü
+    # `content_hash` tekilleştirmesine takıldı — aynı PDF iki sarmalayıcıdan).
+    # Tavanı 160'a düşürmeyin.
+    max_document_docs: 440
     extra_hosts:
       - albarakaozel.com
     sitemap_urls:
@@ -285,6 +315,14 @@ banks:
       - /tr-tr/bireysel/Sayfalar/urun-hizmet-ucretleri.aspx
       - /tr-tr/sozlesmeler-ve-formlar/Sayfalar/sozlesmeler-ve-formlar.aspx
       - /tr-tr/bireysel/sozlesmeler-ve-formlar/Sayfalar/default.aspx
+    # 2026-08-20 AİLE KAPSAMI turu — `max_document_docs` BİLİNÇLİ OLARAK
+    # YÜKSELTİLMEDİ. `discover_documents` kuru koşusu ölçtü:
+    #   aday 342 · robots.txt ile engellenen 342 · **çekilebilir 0**
+    # Türkiye Finans'ın robots.txt'i PDF ağacının TAMAMINI Disallow ediyor;
+    # tavanı 40'tan 400'e çıkarmak tek belge kazandırmaz, yalnız config'i
+    # yanıltıcı yapar. `--ignore-robots` KULLANILMADI (CLAUDE.md §14).
+    # Şartname §5.1 bu belgeler için ELLE toplamaya izin veriyor →
+    # `data/raw/turkiye-finans/manual/`. Otomatik hat robots'a uyumlu kalıyor.
     detail_patterns:
       - /tr-tr/kampanyalar/Sayfalar/
       # happycard.com.tr'de yol öneki "/tr-tr" YOK: /kampanyalar/Sayfalar/x.aspx.
@@ -390,6 +428,11 @@ banks:
     document_paths:
       - /tr/diger/sozlesmeler-ve-formlar
       - /tr/kendim-icin/hesaplar/katilma-hesaplari/kar-paylasim-oranlari
+    # 2026-08-20 AİLE KAPSAMI turu — `max_document_docs` BİLİNÇLİ OLARAK
+    # YÜKSELTİLMEDİ; Türkiye Finans'takiyle aynı durum. Kuru koşu ölçtü:
+    #   aday 117 · robots.txt ile engellenen 117 · **çekilebilir 0**
+    # Tavan yükseltmek tek PDF kazandırmaz. `--ignore-robots` KULLANILMADI.
+    # Şartname §5.1 elle toplamaya izin veriyor → `data/raw/vakif-katilim/manual/`.
     sitemap_urls:
       - https://www.vakifkatilim.com.tr/sitemap-tr.xml
     detail_patterns:
@@ -426,6 +469,10 @@ banks:
     document_paths:
       - /tr/urun-ve-hizmet-ucretleri
       - /tr/sozlesmeler-ve-formlar
+    # 2026-08-20 AİLE KAPSAMI turu — kuru koşu ölçtü: aday 43, robots engeli 0.
+    # Diskteki belge sayısı TAM 40'tı, yani tavan tam tamına vurmuştu ve 3 aday
+    # kırpılıyordu (kırpma sessizdi; "40 belge" ile "hepsi" ayırt edilemiyordu).
+    max_document_docs: 60
     document_hosts:
       - asset.emlakkatilim.com.tr
     sitemap_urls:
@@ -453,12 +500,71 @@ banks:
       - https://tombankhadi.com/hadi-kazan/kampanyalar
     extra_hosts:
       - tombankhadi.com
+    # 2026-08-20 AİLE KAPSAMI turu (docs/rapor/aile-kapsami-hasadi.md).
+    # ÖNCE: TOM Katılım korpusun EN SIĞ bankasıydı — 19 belge, hiç PDF yok.
+    # Sebep keşif başlangıcı eksikliğiydi: `sitemap_urls` HİÇ tanımlı değildi,
+    # yani keşif yalnız 3 liste sayfasından yürüyordu.
+    #
+    # ÖLÇÜLDÜ (curl, tahmin DEĞİL):
+    #   www.tombank.com.tr/sitemap.xml  → HTTP 404 (kurumsal sitede sitemap YOK)
+    #   www.tombank.com.tr/robots.txt   → HTTP 404 (kural yok)
+    #   tombankhadi.com/sitemap.xml     → HTTP 200, application/xml, 235 <loc>
+    #   tombankhadi.com/robots.txt      → "User-agent: * / Allow: /" +
+    #                                      "Disallow: /*arama-sonuclari?q="
+    # Aşağıdaki `detail_patterns` ile eşleşen aday 162; bunların 14'ü korpusta
+    # zaten var → **148 YENİ aday** (ölçüm: `matches()` + mevcut meta.json'lar).
+    # Arama sonucu sayfası `DEFAULT_EXCLUDE_PATTERNS`taki `/arama` ile zaten
+    # eleniyor, yani robots'un tek Disallow kuralına dokunulmuyor.
+    sitemap_urls:
+      - https://tombankhadi.com/sitemap.xml
     detail_patterns:
       - /kampanyalar/
+      # Bu desen SİTEMAP'TEN ÖNCE eklenmişti: o zaman `/kampanyalar/` ağacı
+      # keşifte görünmüyordu ve kampanyalara ancak bu yoldan ulaşılıyordu.
+      # Sitemap eklendikten sonra ARTIK TAMAMEN GEREKSİZ ve zararlı oldu —
+      # aşağıdaki `exclude_patterns` onu nötrleyor. Satır silinmedi ki niyeti
+      # ve neden düştüğü kayıtta kalsın.
       - /cok-kazananlar-kulubu-kampanya/
       - kampanyalar.html
       - urunlerimiz.html
-    max_docs: 60
+    # MÜKERRER AĞAÇ — ÖLÇÜLDÜ VE KESİLDİ (2026-08-20, kampanya turu koşulduktan
+    # SONRA ölçüldü, tahmin değil). tombankhadi.com aynı kampanyayı İKİ yoldan
+    # yayımlıyor:
+    #   /kampanyalar/<slug>                        → 82 belge
+    #   /cok-kazananlar-kulubu-kampanya/<slug>     → 81 belge
+    #   aynı slug'ın iki yolda birlikte bulunması  → 81
+    #   YALNIZ cok-kazananlar'da bulunan slug      → 0   (SIFIR)
+    # Yani ikinci ağaç tek bir özgün belge getirmiyor. `collect_live`in temiz
+    # metin tekilleştirmesi bunları YAKALAYAMADI çünkü aradaki tek fark kırıntı
+    # yolu: "Kampanyalar" ↔ "TOM Bank Çok Kazananlar Kulübü … Kampanya"
+    # (ölçülen fark 56 bayt, gövde metni birebir aynı). Mükerrer belge
+    # değerlendirme metriklerini çifte sayar ve çelişki sayısını şişirir
+    # (collector.py'deki 2026-08-03 ölçümüyle aynı başarısızlık kipi).
+    exclude_patterns:
+      - /cok-kazananlar-kulubu-kampanya/
+    # ÜRÜN BİLGİ FORMU HAVUZU — `document_paths` bugüne kadar TANIMSIZDI, bu
+    # yüzden belge turu bu bankada hiç koşmadı (docs=0). Kanıt uydurma değil:
+    # zaten toplanmış data/raw/tom-katilim/products/sozlesme-ve-formlar.html
+    # içinde 96 tekil `.pdf` bağlantısı duruyor; canlı sayfa STATİK çekimle de
+    # 99 tekil PDF bağlantısı veriyor (curl, HTTP 200). Bunlar arasında
+    # "günlük kazandıran hesap bilgilendirme formu", "katılma hesabı ek
+    # sözleşmesi", "icâre akdi müşteri bilgilendirme formu", "karz fon toplama
+    # akdi" gibi KÂR PAYI / ÜCRET taşıyan formlar var (§18-2'nin tam hedefi).
+    # `collect_documents` PDF'i her zaman `static` çekiciyle indirir, banka
+    # `scrape_mode: js` olsa bile — bu yüzden statik ölçüm doğru ölçümdür.
+    #
+    # DENENDİ ve ALINMADI (0 statik PDF bağlantısı verdiği ölçüldü, HTTP 200):
+    #   tombankhadi.com/ucretler-ve-limitler   → PDF yok (içerik JS ile geliyor)
+    #   tombankhadi.com/sozlesme-ve-formlar    → PDF yok (aynı sebep)
+    #   www.tombank.com.tr/urun-ve-hizmet-ucretleri.html → HTTP 404 (ölü yol)
+    # Boş dönen yolu config'e yazmak istek üretir, belge üretmez.
+    document_paths:
+      - /sozlesme-ve-formlar.html
+      - https://tombankhadi.com/urun-ve-hizmet-ucretleri
+    # 100 ölçülmüş aday (99 + 1) + pay.
+    max_document_docs: 110
+    # 60 → 180: eşleşen aday 162 ölçüldü; 60'ta kalsa 100'den fazlası kırpılırdı.
+    max_docs: 180
 
   - slug: hayat-finans
     name: Hayat Finans
@@ -468,9 +574,28 @@ banks:
     #  * /kampanyalar zaten mevcuttu — tekrar eklenmedi.
     #  * hayatpay.com.tr ALT MARKA (ödeme/cüzdan tarafı) kampanyalarını KENDİ
     #    alan adında yayımlıyor; hayatfinans.com.tr sitemap'inde yer almıyor.
+    # 2026-08-20 AİLE KAPSAMI turu (docs/rapor/aile-kapsami-hasadi.md).
+    # KONUT / TAŞIT / İHTİYAÇ FİNANSMANI SAYFASI ARANDI — **YOK**, eksik hasat
+    # değil. Kanıt tahmin değil, TAM SİTEMAP: hayatfinans.com.tr/sitemap.xml
+    # (HTTP 200, 360 tekil <loc>) içinde `konut`, `tasit`, `mortgage`,
+    # `ev-kredi` geçen TEK ÜRÜN sayfası yok; "ihtiyac" yalnız bir blog
+    # yazısında geçiyor (/finansal-kilavuz/alisveris-istek-mi-ihtiyac-mi).
+    # Bankanın tüm finansman hattı sitemap'te şu 7 sayfadan oluşuyor:
+    #   /krediler/bana-bunu-al · /krediler/hayat-finans-egitim-finansmani-sistemi
+    #   /finansmanlar/bana-bunu-al-is-ortagim · /finansmanlar-is/e-teminat-mektubu
+    #   /finansmanlar-is/isletme-finansmani · /finansmanlar-is/mikro-finansman
+    #   /finansmanlar-is/ticari-finansman
+    # Zaten toplanmış /krediler ve /finansmanlar sayfalarının METNİ de aynı
+    # şeyi söylüyor. Türkiye'nin ilk dijital bankası; konut/taşıt ürünü
+    # yayımlamıyor. Olmayan sayfa için config yazılmadı.
     campaign_paths:
       - /kampanyalar
       - https://hayatpay.com.tr/kampanya
+      # 2026-08-20: sitemap'te İŞ (KOBİ) kampanya ağacı ayrı önekte duruyor:
+      # `/isim-kampanyalar`. Mevcut `detail_patterns` (`/kampanyalar`) bunu
+      # KAÇIRIYORDU — "-kampanyalar" ile "/kampanyalar" ayrı dizgeler.
+      # Ölçüldü: desen eklenince 12 → 15 aday, 3'ü YENİ (hiçbiri korpusta yok).
+      - /isim-kampanyalar
     # hayatpay.com.tr AYRI KAYITLI ALAN (alt alan değil): `same_site()` testi
     # hayatpay.com.tr ↔ hayatfinans.com.tr için False döner (ölçüldü), yani
     # `extra_hosts`a yazılmasa keşif katmanı bu alanı "site dışı" sayıp
@@ -482,10 +607,65 @@ banks:
     document_paths:
       - /urun-ve-hizmet-ucretleri
       - /sozlesme-ve-formlar
+      # 2026-08-20: getmedia bağlantısı TAŞIYAN diğer sayfalar (ölçüldü,
+      # zaten diskteki HTML'lerden sayıldı): /sozlesme-ve-formlar 8 bağlantı,
+      # aşağıdaki ikisi 1'er tane. `/urun-ve-hizmet-ucretleri` 0 veriyor ama
+      # yol silinmedi: sayfa ücret tarifesinin kanonik adresi, ilerde PDF
+      # eklenirse otomatik yakalanır.
+      - /finansmanlar/bana-bunu-al-is-ortagim
+      - /krediler/hayat-finans-egitim-finansmani-sistemi
+      # hayatpay.com.tr/sozlesmeler → 5 tekil `.pdf` bağlantısı (curl, HTTP 200,
+      # statik gövdede). `extra_hosts` zaten hayatpay.com.tr'yi "aynı site"
+      # sayıyor, bu yüzden `document_hosts` GEREKMİYOR.
+      # DENENDİ ve ALINMADI: hayatpay.com.tr/islemler-ve-ucretler 0 PDF veriyor —
+      # ücret tablosu HTML olarak yayımlanıyor, o yüzden aşağıda `detail_patterns`
+      # ile KAMPANYA turuna alındı, belge turuna değil.
+      - https://hayatpay.com.tr/sozlesmeler
+    # BELGE TURU BU BANKADA NİÇİN 0 DÖNÜYORDU (2026-08-20, kök neden bulundu).
+    # `document_paths` tanımlıydı ama tur 0 PDF getiriyordu. Sebep tavan DEĞİL,
+    # DESEN: `DEFAULT_DOCUMENT_PATTERNS` yalnız `\.pdf(\?|$)` arıyor, Hayat
+    # Finans ise belgeleri UZANTISIZ yayımlıyor:
+    #   https://hayatfinans.com.tr/getmedia/<guid>/<baslik>
+    # Ölçüldü (curl -I): HTTP 200, `content-type: application/pdf`; indirilen
+    # gövde `%PDF-1.4` ile başlıyor (91 KB). Yani gerçek PDF, yalnız adı .pdf
+    # değil. `looks_like_pdf` içerik-tipi + imzaya baktığı için indirme tarafı
+    # zaten çalışıyor; kırılan tek yer KEŞİF süzgeciydi.
+    # `\.pdf` deseni SİLİNMEDİ — bu alan varsayılanı EZER, silinse .pdf uzantılı
+    # belgeler bu bankada bir daha hiç bulunmazdı.
+    # Diskteki HTML'lerde 11 tekil getmedia belgesi sayıldı; aralarında
+    # "sözleşme öncesi bilgilendirme ile ÜCRET VE MASRAFLARA ilişkin
+    # bilgilendirme formu" ve "bana-bunu-al-finansman-IHTIYAC-FINANSMANI
+    # sözleşmesi" var — ihtiyaç finansmanı ailesinin tek birincil kaynağı.
+    # robots.txt: "User-agent: * / Allow: /" (ölçüldü) → kısıt yok.
+    document_patterns:
+      - '\.pdf(\?|$)'
+      - /getmedia/
     sitemap_urls:
       - https://www.hayatfinans.com.tr/sitemap.xml
+      # DENENDİ, KOŞULDU ve GERİ ALINDI — hayatpay.com.tr/sitemap.xml (2026-08-20).
+      # robots.txt onu bildiriyor, HTTP 200 dönüyor ve 36 <loc> içeriyor; 24'ü
+      # `/kampanya/<sayi>` biçiminde ve ana bankanın sitemap'inde yok. Umut verici
+      # göründü, EKLENDİ ve HASAT KOŞULDU. Sonuç ölçüldü: **24/24 sayısal adres
+      # HTTP 404** (tam liste `docs/rapor/aile-kapsami-hasadi.md` ölü URL
+      # bölümünde). Sitemap BAYAT. Kayıp yok: aynı kampanyalar liste sayfasından
+      # SLUG'la geliyor ve `/kampanya/` deseniyle zaten toplanıyor (11 belge
+      # ölçüldü). Sitemap kalsa her koşuda 24 boşa istek + 24 sahte "başarısız
+      # URL" üretirdi — rapor kirlenir, sağlayıcıya boşuna yük binerdi.
+      # TEKRAR EKLEMEYİN.
     detail_patterns:
       - /kampanyalar
+      - /isim-kampanyalar
+      # 2026-08-20: hayatpay.com.tr kampanya yolunu TEKİL yazıyor (`/kampanya/`),
+      # ana banka ÇOĞUL (`/kampanyalar/`). Üstteki desen "/kampanyalar" olduğu
+      # için hayatpay'in 11 kampanya detayı ELENİYORDU → `extra_hosts` doğru
+      # tanımlı olmasına rağmen bu alandan korpusa TEK belge girmemişti (ölçüldü:
+      # data/raw/hayat-finans altında hayatpay kaynaklı 0 belge).
+      # Sondaki '/' ZORUNLU: '/kampanya' yazılsa '/kampanyalar/...' ile de
+      # eşleşir ve niyet belirsizleşirdi.
+      - /kampanya/
+      # hayatpay ücret tarifesi HTML tablo olarak yayımlanıyor (PDF yok, ölçüldü)
+      # → belge turu yerine kampanya turunda içerik olarak toplanıyor.
+      - islemler-ve-ucretler
       - /finansmanlar/
     # 2026-08-04: ikinci bir kampanya kataloğu (hayatpay) eklendi; 40 tavanı iki
     # alanın belgelerini tek havuzda paylaştırıp ana bankanınkileri kırpardı.
@@ -512,6 +692,16 @@ banks:
     document_paths:
       - /urun-hizmet-ve-ucretleri
       - /sozlesme-ve-formlar
+    # 2026-08-20 AİLE KAPSAMI turu — tavan DEĞİŞTİRİLMEDİ, ölçüm nedeni:
+    #   /urun-hizmet-ve-ucretleri → 2 PDF bağlantısı (ikisi de korpusta VAR)
+    #   /sozlesme-ve-formlar      → 0 PDF bağlantısı (statik, 506 KB gövde;
+    #     107 href'in hiçbiri belge değil — liste JS ile üretiliyor)
+    # `collect_documents` PDF keşfini TASARIMI GEREĞİ statik çekiciyle yapıyor,
+    # bu yüzden bu sayfa config'le kurtarılamaz. Yol silinmedi (kanonik adres).
+    # Bu, kod tarafında ayrı bir karar konusudur; bu turda dokunulmadı.
+    # robots.txt: "Allow: /" + "Disallow: *search=" → belge yolları serbest.
+    # robots.txt'in bildirdiği sitemap (dunyakatilimsite.blueprint.com.tr)
+    # HTTP 403 dönüyor; aşağıdaki kanonik sitemap 474 <loc> ile çalışıyor.
     sitemap_urls:
       - https://dunyakatilim.com.tr/sitemap.xml
     detail_patterns:
@@ -540,6 +730,28 @@ banks:
       - adilkatilim.com.tr/$
       - kampanya
       - finansman
+    # 2026-08-20 AİLE KAPSAMI turu (docs/rapor/aile-kapsami-hasadi.md).
+    # `document_paths` bugüne kadar TANIMSIZDI → belge turu bu bankada hiç
+    # koşmadı. Yol tahminle değil, ZATEN TOPLANMIŞ sayfadan bulundu:
+    # data/raw/adil-katilim/live/katilim-bankaciligi-belgeler.html içinde
+    # 9 tekil `/assets/pdfs/...` bağlantısı `<a href>` olarak duruyor
+    # (4 bilgilendirme formu + 5 icâzet belgesi). Canlı sayfa STATİK çekimle
+    # de 10 tekil PDF bağlantısı veriyor (curl, HTTP 200) — yani Nuxt/Vue
+    # tek-sayfa uygulaması olmasına rağmen bu sayfanın bağlantıları sunucuda
+    # render ediliyor ve `collect_documents`ın statik çekicisiyle erişilebilir.
+    #   robots.txt: gövde BOŞ (1 bayt, HTTP 200) → kural yok.
+    #   sitemap.xml: HTTP 200 ama XML DEĞİL — SPA ana sayfasının HTML'i
+    #     dönüyor (<!DOCTYPE html>, <title>Anasayfa | Adil Katılım</title>).
+    #     Bu yüzden `sitemap_urls` YAZILMADI: eklenirse `parse_sitemap` 0 <loc>
+    #     bulup her koşuda boşuna bir istek üretirdi.
+    #
+    # KONUT / TAŞIT ÜRÜNÜ ARANDI — **YOK**. Kanıt bankanın kendi ürün
+    # kataloğu (live/katilim-bankaciligi-urun-ve-hizmetler.txt): dört ürün
+    # sayıyor — Özel Cari Hesap, Ticari Finansman, Katılma Hesapları,
+    # Bireysel Finansman ("eğitim, sağlık, tatil, ev eşyası"). Konut ve taşıt
+    # finansmanı hattı henüz açılmamış. Olmayan sayfa için yol yazılmadı.
+    document_paths:
+      - /katilim-bankaciligi/belgeler
     max_docs: 40
 
   # ---------------------------------------------------------------------------

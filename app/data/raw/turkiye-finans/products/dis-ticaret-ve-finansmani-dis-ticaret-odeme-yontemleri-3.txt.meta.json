@@ -1,0 +1,11 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.turkiyefinans.com.tr/tr-tr/ticari/dis-ticaret-ve-finansmani/Sayfalar/dis-ticaret-odeme-yontemleri.aspx",
+  "scraped_at": "2026-08-20T16:56:49+00:00",
+  "content_hash": "8e52e81bf8b7c4b21cd356da06e94769168e984384612999c88d87551153b4d9",
+  "collection_method": "browser",
+  "title": "KOBİ’ler İçin Dış Ticaret Finansmanı | Türkiye Finans",
+  "http_status": 200,
+  "raw_bytes": 222501,
+  "text_chars": 16003
+}

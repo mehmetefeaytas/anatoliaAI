@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/isim-icin/sigortalar/hayat-sigortalari/ticari-kredili-hayat-sigortalari",
-  "scraped_at": "2026-08-03T17:45:35+00:00",
-  "content_hash": "c384bc508b482f78c2b008b7f96bce23ce0529fafafa48585f6a464f9e0e7027",
+  "scraped_at": "2026-08-20T17:07:18+00:00",
+  "content_hash": "69581fa9b851b1714c18734ecd3728285b16cdbf3d5480a0f85072703a2f7d9a",
   "collection_method": "live",
   "title": "Ticari Kredili Hayat Sigortalar&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 499563,
-  "text_chars": 9952,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 9952
 }

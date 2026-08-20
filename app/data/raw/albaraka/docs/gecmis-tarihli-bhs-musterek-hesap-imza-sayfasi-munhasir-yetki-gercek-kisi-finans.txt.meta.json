@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/bhs-musterek-hesap-imza-sayfasi-munhasir-yetki-gercek-kisi-finansal-tuketici.pdf",
+  "scraped_at": "2026-08-20T17:00:50+00:00",
+  "content_hash": "ffb88df96d12b0ded2cb63513a992336b7ea7a50fb59ace21840eeaefeb0f286",
+  "collection_method": "pdf",
+  "title": "bhs musterek hesap imza sayfasi munhasir yetki gercek kisi finansal tuketici",
+  "http_status": 200,
+  "raw_bytes": 363907,
+  "text_chars": 2846,
+  "pdf_pages": 1
+}

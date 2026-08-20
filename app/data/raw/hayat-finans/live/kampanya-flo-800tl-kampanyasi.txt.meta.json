@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatpay.com.tr/kampanya/flo-800tl-kampanyasi",
+  "scraped_at": "2026-08-20T16:46:34+00:00",
+  "content_hash": "a09a5821c8651cfdb7fe1e3d3cf87655dccf4c916d0fa42d9049cedea8aec2a1",
+  "collection_method": "browser",
+  "title": "FLO alışverişinde 800 TL indirim",
+  "http_status": 200,
+  "raw_bytes": 24112,
+  "text_chars": 884
+}

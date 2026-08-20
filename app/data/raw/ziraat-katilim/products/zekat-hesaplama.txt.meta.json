@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/zekat-hesaplama",
-  "scraped_at": "2026-08-03T17:31:02+00:00",
-  "content_hash": "3038b81c85a8789fccb03b42ee68678166ec372782950d468a86a9fa63d6e5d9",
+  "scraped_at": "2026-08-20T17:00:02+00:00",
+  "content_hash": "4dd31987b511d2610bc5dbda24e9f90754041ad93fe0ffeff848cfc00252960f",
   "collection_method": "live",
   "title": "Zekat Hesaplama | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 523031,
-  "text_chars": 3877,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 523393,
+  "text_chars": 8490
 }

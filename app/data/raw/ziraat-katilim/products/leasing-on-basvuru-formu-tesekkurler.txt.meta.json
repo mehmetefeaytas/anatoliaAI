@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/leasing-on-basvuru-formu/tesekkurler",
-  "scraped_at": "2026-08-03T17:29:04+00:00",
-  "content_hash": "b084708472394a4b799e8acfe986e8a8dcec8e7e37fffca009ab3fbc41f1e89d",
+  "scraped_at": "2026-08-20T16:58:05+00:00",
+  "content_hash": "aee47e435c57ef304ad6e3bd202371a583d5a8004c6901fb860f6fab9e2d6af6",
   "collection_method": "live",
   "title": "Teşekkürler | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 468094,
-  "text_chars": 932,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 468456,
+  "text_chars": 932
 }

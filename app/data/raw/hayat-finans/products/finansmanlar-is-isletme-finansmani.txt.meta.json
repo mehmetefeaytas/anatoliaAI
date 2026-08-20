@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar-is/isletme-finansmani",
-  "scraped_at": "2026-08-03T17:44:33+00:00",
-  "content_hash": "7a1367b07c022958f295e8547e4ece199ae4abb1d39ec0c4a71925ae27536eba",
+  "scraped_at": "2026-08-20T17:06:21+00:00",
+  "content_hash": "03ebbb20653e059a156e2b7743296573991cf28d7082efb23f41e2c21a95ea95",
   "collection_method": "browser",
   "title": "İşletme Finansmanı | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 291981,
-  "text_chars": 1148,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 292336,
+  "text_chars": 2555
 }

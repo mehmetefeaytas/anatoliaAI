@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/isim-kampanyalar/enterprise-ile-arac-kiralamada-indirim-firsati",
+  "scraped_at": "2026-08-20T16:44:53+00:00",
+  "content_hash": "5f9152fb86d8a612283d2faf35c473929a950f2d2c3f14325c1fb973700b0ae2",
+  "collection_method": "browser",
+  "title": "Enterprise Araç Kiralama %30 İndirim | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 296145,
+  "text_chars": 2183
+}

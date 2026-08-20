@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/hadi-black-kredi-karti-ile-pegasus-harcamalarindan-50-iade-kazan",
+  "scraped_at": "2026-08-20T17:01:13+00:00",
+  "content_hash": "fb123cc2a374993498aa91a47814c27e689e242f63995c92296aa023df87fd88",
+  "collection_method": "browser",
+  "title": "Hadi Black Kredi Kartı ile tüm Pegasus uçuşlarında %50 iade! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 106923,
+  "text_chars": 5961
+}

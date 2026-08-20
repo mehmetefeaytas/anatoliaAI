@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/okul-taksit-sistemi-ots-veli-protokolu-750.pdf",
+  "scraped_at": "2026-08-20T16:06:09+00:00",
+  "content_hash": "ca9809f75ec6678bc406f58d1e062f2c768ee92b2fb4e05db33ebe5c6b90f9cf",
+  "collection_method": "pdf",
+  "title": "okul taksit sistemi ots veli protokolu 750",
+  "http_status": 200,
+  "raw_bytes": 121652,
+  "text_chars": 4693,
+  "pdf_pages": 2
+}

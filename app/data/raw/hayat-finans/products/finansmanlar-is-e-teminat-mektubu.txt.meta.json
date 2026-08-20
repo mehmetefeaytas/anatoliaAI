@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar-is/e-teminat-mektubu",
-  "scraped_at": "2026-08-03T17:44:07+00:00",
-  "content_hash": "9cde6d0a4b19b82885bdf4bc99dc7cd852a178b255266ca9774edfffa7897acd",
+  "scraped_at": "2026-08-20T17:05:55+00:00",
+  "content_hash": "9e7706b9bc0324ab9e9000710936281917198a4cde9bb1534197b6fd92de5c0b",
   "collection_method": "browser",
   "title": "E-Teminat Mektubu | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 293609,
-  "text_chars": 1521,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 294003,
+  "text_chars": 1521
 }

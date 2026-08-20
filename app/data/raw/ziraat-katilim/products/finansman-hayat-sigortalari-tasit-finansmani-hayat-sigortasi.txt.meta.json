@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/sigorta/finansman-hayat-sigortalari/tasit-finansmani-hayat-sigortasi",
-  "scraped_at": "2026-08-03T17:30:07+00:00",
-  "content_hash": "8499a7f3baec5d6cfc8acfa4691395c3559a322258b644ab1976780ef6d83f38",
+  "scraped_at": "2026-08-20T16:59:08+00:00",
+  "content_hash": "68ed821d607bd095046625e12ab7b588f80f2118c320bdd9caa4dafe0367318d",
   "collection_method": "live",
   "title": "Taşıt Finansmanı Hayat Sigortası | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 471939,
-  "text_chars": 575,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 472301,
+  "text_chars": 1354
 }

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/sites/default/files/2026-02/Ticari%20%C3%9Cr%C3%BCn%20Hizmetleri%20Tablosu%20%289%29.pdf",
+  "scraped_at": "2026-08-20T16:24:37+00:00",
+  "content_hash": "9d4e38ad29fe0fe7fc27a809fcf4291bcd1fe1ca10f71a2eb545c3ac9fc8b24a",
+  "collection_method": "pdf",
+  "title": "Ticari Ürün Hizmetleri Tablosu (9)",
+  "http_status": 200,
+  "raw_bytes": 374594,
+  "text_chars": 19229,
+  "pdf_pages": 5
+}

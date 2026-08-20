@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/hizmet_kiralamas%C4%B1_y%C3%B6ntemi_ile_tuketici_finansmani_talep_formu-16122025.pdf",
+  "scraped_at": "2026-08-20T16:29:10+00:00",
+  "content_hash": "263ddf1d080fa8d28340a0a9a49961e953a0b3aceb4c3bc0626cc8b7b3e1b69e",
+  "collection_method": "pdf",
+  "title": "hizmet kiralaması yöntemi ile tuketici finansmani talep formu 16122025",
+  "http_status": 200,
+  "raw_bytes": 203811,
+  "text_chars": 5098,
+  "pdf_pages": 3
+}

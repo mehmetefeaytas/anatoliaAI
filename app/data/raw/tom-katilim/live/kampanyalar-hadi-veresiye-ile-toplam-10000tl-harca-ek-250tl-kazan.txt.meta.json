@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-veresiye-ile-toplam-10000tl-harca-ek-250tl-kazan",
+  "scraped_at": "2026-08-20T16:39:14+00:00",
+  "content_hash": "f4e0b77f46de842b1b27bfe2d2cbb110ecceec2cb2343fa4be5af8669b07530e",
+  "collection_method": "browser",
+  "title": "Hadi Veresiye ile toplam 10.000 TL harca ek 250 TL kazan! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103318,
+  "text_chars": 2348,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "e toplam 10.000 TL harca ek 250 TL kazan! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Koşulları Kampanya, 11-31 Aralık tarihleri arasın",
+    "span_start": 259,
+    "span_end": 284,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

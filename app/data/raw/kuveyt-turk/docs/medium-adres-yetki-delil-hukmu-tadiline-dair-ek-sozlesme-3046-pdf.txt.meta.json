@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/adres-yetki-delil-hukmu-tadiline-dair-ek-sozlesme--3046.pdf",
+  "scraped_at": "2026-08-20T15:59:38+00:00",
+  "content_hash": "eeb4b81f59051286cb6192ce6a0a5b2220518656f4029c962240d36911e86198",
+  "collection_method": "pdf",
+  "title": "adres yetki delil hukmu tadiline dair ek sozlesme 3046",
+  "http_status": 200,
+  "raw_bytes": 350580,
+  "text_chars": 10690,
+  "pdf_pages": 2
+}

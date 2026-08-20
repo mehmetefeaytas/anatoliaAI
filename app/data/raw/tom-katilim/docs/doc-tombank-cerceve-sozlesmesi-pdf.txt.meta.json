@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/tombank-cerceve-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:32:32+00:00",
+  "content_hash": "4cac8c997801156580c8b11d11f4a282a705e4670f01dc0f3c707cc75c2ddd97",
+  "collection_method": "pdf",
+  "title": "tombank cerceve sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 543037,
+  "text_chars": 18533,
+  "pdf_pages": 5
+}

@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-kredi-karti-ni-trendyol-a-kaydet-200-tl-indirim-kuponu-kazan",
+  "scraped_at": "2026-08-20T16:39:29+00:00",
+  "content_hash": "010b3ae22f770c986d007cf86ec624649aae43eecd305b3ccc7f27d9d7068763",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı'nı Trendyol'a kaydet, 200 TL indirim kuponu kazan! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 104028,
+  "text_chars": 2724,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "ol'a kaydet, 200 TL indirim kuponu kazan! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Koşulları 9 Eylül 2024 - 31 Ekim 2024 tarihleri a",
+    "span_start": 276,
+    "span_end": 301,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

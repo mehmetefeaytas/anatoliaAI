@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/sozlesmeler-ve-formlar/Sayfalar/sozlesmeler-ve-formlar.aspx",
-  "scraped_at": "2026-08-03T17:28:46+00:00",
-  "content_hash": "9b8a28574503db82e3b9ec116ce6963fae92794e4ab3db8e4e5ebc0c77d06b9b",
-  "collection_method": "live",
-  "title": "Sözleşmeler ve Formlar | Türkiye Finans",
+  "scraped_at": "2026-08-20T16:57:46+00:00",
+  "content_hash": "93ae9f57eeec3d1c4adb9da8b692510eb430dc2fe15daae13b2af271db4d3be4",
+  "collection_method": "browser",
+  "title": "KOBİ'ler İçin Sözleşmeler ve Formlar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 559490,
-  "text_chars": 14998,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 712209,
+  "text_chars": 31800,
+  "extraction_invalidated_at": "2026-08-20T16:57:46+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

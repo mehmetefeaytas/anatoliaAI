@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/kiymetli-maden-hesabi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:32:20+00:00",
+  "content_hash": "20f9ad295f602139df37ff13d75130a58ad1474816685e8959b2d41657bde29d",
+  "collection_method": "pdf",
+  "title": "kiymetli maden hesabi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 276898,
+  "text_chars": 6759,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kuveyt-turk-akilli-islem-paketleri-talep-ve-bilgil-895.pdf",
+  "scraped_at": "2026-08-20T16:13:07+00:00",
+  "content_hash": "8c5d538fbfb8ad44435f8db097df278b9b970fc921dc7955ac16c07589903307",
+  "collection_method": "pdf",
+  "title": "kuveyt turk akilli islem paketleri talep ve bilgil 895",
+  "http_status": 200,
+  "raw_bytes": 134274,
+  "text_chars": 6060,
+  "pdf_pages": 3
+}

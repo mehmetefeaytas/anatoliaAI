@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/YHS/yatirim-vekaleti-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:56:34+00:00",
+  "content_hash": "b5fae6126a0fb5107014e3d7a871470c40f744bda9865d9c08b43aea09173569",
+  "collection_method": "pdf",
+  "title": "yatirim vekaleti sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 354665,
+  "text_chars": 4625,
+  "pdf_pages": 1
+}

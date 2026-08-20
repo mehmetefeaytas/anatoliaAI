@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/teyitsiz-tedarikci-finansmani-sozlesmesi---turkce-786.pdf",
+  "scraped_at": "2026-08-20T16:08:06+00:00",
+  "content_hash": "01cbebb18a2134b4cd1395b95bae42548f497aa1451dc060e63e807ba4ed38fa",
+  "collection_method": "pdf",
+  "title": "teyitsiz tedarikci finansmani sozlesmesi turkce 786",
+  "http_status": 200,
+  "raw_bytes": 150083,
+  "text_chars": 12747,
+  "pdf_pages": 4
+}

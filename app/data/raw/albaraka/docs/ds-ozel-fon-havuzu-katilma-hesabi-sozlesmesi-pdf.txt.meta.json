@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/DS/ozel-fon-havuzu-katilma-hesabi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:57:53+00:00",
+  "content_hash": "6b240cf46cc28c43dd9809f89e435bff0dfbf6f3e549bc91c86a8237e44feb25",
+  "collection_method": "pdf",
+  "title": "ozel fon havuzu katilma hesabi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 274342,
+  "text_chars": 12512,
+  "pdf_pages": 7
+}

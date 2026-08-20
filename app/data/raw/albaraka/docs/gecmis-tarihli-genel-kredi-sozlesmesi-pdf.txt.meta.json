@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/genel-kredi-sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:59:59+00:00",
+  "content_hash": "1ffb63077fc327bbde0f75745de04da1c790e6ef26c17d3e46fb1a13472c7bda",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 217374,
+  "text_chars": 28244,
+  "pdf_pages": 7
+}

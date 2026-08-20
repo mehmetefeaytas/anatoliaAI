@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/sozlesme-oncesi-bilgi-formu-gercek-kisi-finansal-tuketici-olmayan.pdf",
+  "scraped_at": "2026-08-20T17:01:38+00:00",
+  "content_hash": "d0babbf6aa73d19dbeda8a443c3f989b36b9474ca3b99fca27ecec24773df3a8",
+  "collection_method": "pdf",
+  "title": "sozlesme oncesi bilgi formu gercek kisi finansal tuketici olmayan",
+  "http_status": 200,
+  "raw_bytes": 199999,
+  "text_chars": 37452,
+  "pdf_pages": 9
+}

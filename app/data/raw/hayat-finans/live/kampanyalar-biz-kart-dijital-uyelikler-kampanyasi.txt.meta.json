@@ -1,16 +1,16 @@
 {
-  "bank_slug": "hayat-finans",
-  "source_url": "https://hayatfinans.com.tr/kampanyalar/biz-kart-dijital-uyelikler-kampanyasi",
-  "scraped_at": "2026-08-20T12:30:58+00:00",
-  "content_hash": "219e6142e537f6fc21f1cd8eb896b3c6b1e90f55630611d725fad2a29272991a",
-  "collection_method": "browser",
-  "title": "Biz Kart Dijital Üyelikler | Hayat Finans",
-  "http_status": 200,
-  "raw_bytes": 298979,
-  "text_chars": 3011,
   "extraction_invalidated_at": "2026-08-20T12:30:58+00:00",
   "extraction_invalidated_keys": [
     "extraction_result",
     "reextracted_at"
-  ]
+  ],
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar/biz-kart-dijital-uyelikler-kampanyasi",
+  "scraped_at": "2026-08-20T16:44:41+00:00",
+  "content_hash": "cb634b54838a2f04fce8873baf89e43c6e0d4bc0971d9a039852d4e7d72a9830",
+  "collection_method": "browser",
+  "title": "Biz Kart Dijital Üyelikler | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 298999,
+  "text_chars": 3011
 }

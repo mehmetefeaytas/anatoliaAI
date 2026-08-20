@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/taksitli_kredi_sozlesmesi-20-05-2026.pdf",
+  "scraped_at": "2026-08-20T16:29:02+00:00",
+  "content_hash": "62cb97d71bdaf5d07f8154d193a3fe2b7d92bffbb3463e9aa1a1cb98a2671da8",
+  "collection_method": "pdf",
+  "title": "taksitli kredi sozlesmesi 20 05 2026",
+  "http_status": 200,
+  "raw_bytes": 302556,
+  "text_chars": 19008,
+  "pdf_pages": 7
+}

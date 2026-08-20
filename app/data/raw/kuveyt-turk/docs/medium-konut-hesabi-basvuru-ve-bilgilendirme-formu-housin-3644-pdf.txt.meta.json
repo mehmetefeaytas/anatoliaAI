@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-hesabi-basvuru-ve-bilgilendirme-formu-housin-3644.pdf",
+  "scraped_at": "2026-08-20T16:12:52+00:00",
+  "content_hash": "3f83d80957bae894740b1bc2a7f1d0023e5c67c943441b61a6d8312001039e5f",
+  "collection_method": "pdf",
+  "title": "konut hesabi basvuru ve bilgilendirme formu housin 3644",
+  "http_status": 200,
+  "raw_bytes": 157737,
+  "text_chars": 14931,
+  "pdf_pages": 5
+}

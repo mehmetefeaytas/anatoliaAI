@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/bhs-munferit-hesap-imza-sayfasi-tuzel-kisi-finansal-tuketici.pdf",
+  "scraped_at": "2026-08-20T17:00:38+00:00",
+  "content_hash": "c918d8f8493ea61c9840d81e70009121dfc7efc9459600751925116b49970e4f",
+  "collection_method": "pdf",
+  "title": "bhs munferit hesap imza sayfasi tuzel kisi finansal tuketici",
+  "http_status": 200,
+  "raw_bytes": 355818,
+  "text_chars": 905,
+  "pdf_pages": 1
+}

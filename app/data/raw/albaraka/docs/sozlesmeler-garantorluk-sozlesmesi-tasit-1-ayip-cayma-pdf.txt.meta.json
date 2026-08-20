@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/garantorluk-sozlesmesi---tasit-1--(ayip-cayma).pdf",
+  "scraped_at": "2026-08-20T16:57:38+00:00",
+  "content_hash": "008472881000bf3cbbb12d87c94e2bb9597efabb98266d40cd54ab6e12b24c6c",
+  "collection_method": "pdf",
+  "title": "garantorluk sozlesmesi tasit 1 (ayip cayma)",
+  "http_status": 200,
+  "raw_bytes": 471868,
+  "text_chars": 40026,
+  "pdf_pages": 14
+}

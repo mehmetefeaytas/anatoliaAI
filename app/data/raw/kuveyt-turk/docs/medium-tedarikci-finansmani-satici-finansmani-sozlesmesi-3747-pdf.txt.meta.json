@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/tedarikci-finansmani-satici-finansmani-sozlesmesi--3747.pdf",
+  "scraped_at": "2026-08-20T16:07:54+00:00",
+  "content_hash": "8140d803e6ca524c77debceab795b230146a75f8375c6a2d23918be79c9f69f7",
+  "collection_method": "pdf",
+  "title": "tedarikci finansmani satici finansmani sozlesmesi 3747",
+  "http_status": 200,
+  "raw_bytes": 316096,
+  "text_chars": 26323,
+  "pdf_pages": 8
+}

@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/sozlesme-ve-formlar",
-  "scraped_at": "2026-08-03T17:44:49+00:00",
-  "content_hash": "fa4dad44c7b284e93e200b8ed712974395512d2940347be297fee2731f387980",
+  "scraped_at": "2026-08-20T17:06:36+00:00",
+  "content_hash": "dbde5b9be1a1193c5641a43a0a6db26c64d161c57ff602d275b8fe4991e91948",
   "collection_method": "browser",
   "title": "Sözleşme ve Formlar | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 301005,
-  "text_chars": 807,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 301361,
+  "text_chars": 2214
 }

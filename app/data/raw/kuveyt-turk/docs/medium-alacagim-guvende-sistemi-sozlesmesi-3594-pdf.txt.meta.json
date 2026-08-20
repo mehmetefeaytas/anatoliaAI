@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/alacagim-guvende-sistemi-sozlesmesi-3594.pdf",
+  "scraped_at": "2026-08-20T15:59:41+00:00",
+  "content_hash": "ed1eef74a87ea2eeeb6e55753797a06db537ee83b288f1626c3b965994732bc7",
+  "collection_method": "pdf",
+  "title": "alacagim guvende sistemi sozlesmesi 3594",
+  "http_status": 200,
+  "raw_bytes": 165305,
+  "text_chars": 8911,
+  "pdf_pages": 3
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/menkul-kiymet-rehni-sozlesmesi-3410.pdf",
+  "scraped_at": "2026-08-20T16:05:42+00:00",
+  "content_hash": "32e8871eba580ceaaf69e7512f920133afd604791649e930338cdd428e10731f",
+  "collection_method": "pdf",
+  "title": "menkul kiymet rehni sozlesmesi 3410",
+  "http_status": 200,
+  "raw_bytes": 182665,
+  "text_chars": 9932,
+  "pdf_pages": 5
+}

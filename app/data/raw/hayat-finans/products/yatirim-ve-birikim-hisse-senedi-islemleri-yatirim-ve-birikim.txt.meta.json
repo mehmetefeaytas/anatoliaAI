@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim/hisse-senedi-islemleri-yatirim-ve-birikim",
-  "scraped_at": "2026-08-03T17:44:30+00:00",
-  "content_hash": "fc38aac9681be8a5b4e0772d424e3e08bd1bd07b7685b40693aa11f4fef0017b",
+  "scraped_at": "2026-08-20T17:06:18+00:00",
+  "content_hash": "c816fcbd80049e8cbd464f738b2d9dfa6473c2039f3c7280262a4c6b80c3792f",
   "collection_method": "browser",
   "title": "Hisse Senedi İşlemleri | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 335715,
-  "text_chars": 7334,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 336110,
+  "text_chars": 7334
 }

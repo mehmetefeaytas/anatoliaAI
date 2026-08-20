@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/yatirim-urunleri/yp-sukuk",
-  "scraped_at": "2026-08-03T17:30:59+00:00",
-  "content_hash": "8101760e0b48dc69f9ea91a2217628233e6093434b4cc8b9f0a61c7dbe937aa0",
+  "scraped_at": "2026-08-20T16:59:59+00:00",
+  "content_hash": "cc6f8a9a464a8d95fece705d6285abae624f81cdc6ea959078c41288d4f5fd06",
   "collection_method": "live",
   "title": "YP (Yabancı Para) Sukuk | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 472244,
-  "text_chars": 2086,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 472606,
+  "text_chars": 2086
 }

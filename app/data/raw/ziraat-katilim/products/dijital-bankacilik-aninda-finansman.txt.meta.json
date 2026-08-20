@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/dijital-bankacilik/aninda-finansman",
-  "scraped_at": "2026-08-03T17:30:50+00:00",
-  "content_hash": "29de775dfc1aae554098171b87c3fde792fc1a8eccde0d0bbb09636be7814126",
+  "scraped_at": "2026-08-20T16:59:50+00:00",
+  "content_hash": "95ea021a44bc31e352c00f2bb1f9d74c4a41fac47d4acafe64c578db595a3889",
   "collection_method": "live",
   "title": "Anında Finansman Platformu | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 475266,
-  "text_chars": 3616,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 475628,
+  "text_chars": 3616
 }

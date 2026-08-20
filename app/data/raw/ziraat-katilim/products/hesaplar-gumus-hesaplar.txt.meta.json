@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/gumus-hesaplar",
-  "scraped_at": "2026-08-03T17:29:25+00:00",
-  "content_hash": "e4e0c988b6b03366811cce945d0c184a4a4ed903b7aff3417f8ad760958ae389",
+  "scraped_at": "2026-08-20T16:58:26+00:00",
+  "content_hash": "aa45f149bf34f6a149dc33ade25909808cb878385a30a87d4278bfb2f2eb2377",
   "collection_method": "live",
   "title": "Gümüş Depo Hesabı (Gümüş Cari Hesap) | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 474837,
-  "text_chars": 681,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 475199,
+  "text_chars": 1460
 }

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/yatirim-hizmet-ve-faaliyetleri-genel-risk-bildirim-933.pdf",
+  "scraped_at": "2026-08-20T16:14:58+00:00",
+  "content_hash": "f3064d6fab42d351df7829ea7cd9cc900811256bf4e9d7a099648ff8fd8b6646",
+  "collection_method": "pdf",
+  "title": "yatirim hizmet ve faaliyetleri genel risk bildirim 933",
+  "http_status": 200,
+  "raw_bytes": 190566,
+  "text_chars": 28226,
+  "pdf_pages": 8
+}

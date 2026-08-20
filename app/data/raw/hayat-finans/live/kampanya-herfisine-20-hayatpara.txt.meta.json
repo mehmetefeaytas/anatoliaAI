@@ -1,0 +1,11 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatpay.com.tr/kampanya/herfisine-20-hayatpara",
+  "scraped_at": "2026-08-20T16:46:31+00:00",
+  "content_hash": "81114e04b48d86fd931c0f14a9db20d3b3de3db5b45f8571d12709a945843780",
+  "collection_method": "browser",
+  "title": "Her fişine 20 hayatpara",
+  "http_status": 200,
+  "raw_bytes": 29090,
+  "text_chars": 3303
+}

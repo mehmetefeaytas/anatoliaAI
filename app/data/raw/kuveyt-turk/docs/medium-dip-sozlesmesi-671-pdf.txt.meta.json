@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dip-sozlesmesi-671.pdf",
+  "scraped_at": "2026-08-20T16:02:05+00:00",
+  "content_hash": "5ae8edd0d23caf253078523cc6c2858a685fc221ffe19a9ff759f7dcf39eb04c",
+  "collection_method": "pdf",
+  "title": "dip sozlesmesi 671",
+  "http_status": 200,
+  "raw_bytes": 114580,
+  "text_chars": 26471,
+  "pdf_pages": 6
+}

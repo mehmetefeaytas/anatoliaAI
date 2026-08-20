@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/20250911-bhs-sozlesme-oncesi-bilgilendirme-formu-gercek-kisi-finansal-tuketici-olmayan.pdf",
+  "scraped_at": "2026-08-20T17:01:11+00:00",
+  "content_hash": "6166784d6685eb3aa116570fbb4a0c58054446da3f65730ebd294c4246944369",
+  "collection_method": "pdf",
+  "title": "20250911 bhs sozlesme oncesi bilgilendirme formu gercek kisi finansal tuketici olmayan",
+  "http_status": 200,
+  "raw_bytes": 958156,
+  "text_chars": 32147,
+  "pdf_pages": 8
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/bankacilik-hizmetleri-sozlesmesi-v1.pdf",
+  "scraped_at": "2026-08-20T17:01:18+00:00",
+  "content_hash": "31a3d6176f11df5433b3d4b9c86b032310e8c40d1a23fc3e0ef18c61324de37d",
+  "collection_method": "pdf",
+  "title": "bankacilik hizmetleri sozlesmesi v1",
+  "http_status": 200,
+  "raw_bytes": 1093374,
+  "text_chars": 121699,
+  "pdf_pages": 22
+}

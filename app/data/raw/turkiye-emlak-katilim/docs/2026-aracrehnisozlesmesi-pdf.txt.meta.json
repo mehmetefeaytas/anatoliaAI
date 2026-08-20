@@ -1,0 +1,12 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://asset.emlakkatilim.com.tr/documents/sozlesme-formlar/sozlesme/2026/aracrehnisozlesmesi.pdf",
+  "scraped_at": "2026-08-20T16:25:47+00:00",
+  "content_hash": "b799bfff4259d24dab43dfdae6b5420005bc8147238c7eda6161edecc989a697",
+  "collection_method": "pdf",
+  "title": "aracrehnisozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 162840,
+  "text_chars": 5317,
+  "pdf_pages": 2
+}

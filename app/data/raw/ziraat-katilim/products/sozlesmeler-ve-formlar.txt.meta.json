@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/sozlesmeler-ve-formlar",
-  "scraped_at": "2026-08-03T17:29:07+00:00",
-  "content_hash": "cab4feff5b2992d979f5db2148392b86ae6e4f256fd765d87d14f594482a032e",
+  "scraped_at": "2026-08-20T16:58:08+00:00",
+  "content_hash": "d6748c15ca693f45cb884d648712f93790291511b193e19f096d75979e4cab98",
   "collection_method": "live",
   "title": "Sözleşmeler ve Formlar | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 489153,
-  "text_chars": 816,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 489515,
+  "text_chars": 816
 }

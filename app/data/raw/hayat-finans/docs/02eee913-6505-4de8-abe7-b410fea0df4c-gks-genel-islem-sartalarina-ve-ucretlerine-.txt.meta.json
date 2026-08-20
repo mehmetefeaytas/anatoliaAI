@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/02eee913-6505-4de8-abe7-b410fea0df4c/gks-genel-islem-sartalarina-ve-ucretlerine-iliskin-bilgilendirme-formudijital-09-28-2023-13-21-29",
+  "scraped_at": "2026-08-20T16:33:05+00:00",
+  "content_hash": "a8a280134f68639d830490f9525c9867377a9c45a2eba643475ca4360cfa0e85",
+  "collection_method": "pdf",
+  "title": "gks genel islem sartalarina ve ucretlerine iliskin bilgilendirme formudijital 09 28 2023 13 21 29",
+  "http_status": 200,
+  "raw_bytes": 108931,
+  "text_chars": 13649,
+  "pdf_pages": 5
+}

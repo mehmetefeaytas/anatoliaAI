@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/karekod-ile-hesaptan-odeme-sistemi-sozlesmesi-3729.pdf",
+  "scraped_at": "2026-08-20T16:04:11+00:00",
+  "content_hash": "ac49f887dc5b806baa3388aeddd0c94063d701005ea831273a85560cda0a2266",
+  "collection_method": "pdf",
+  "title": "karekod ile hesaptan odeme sistemi sozlesmesi 3729",
+  "http_status": 200,
+  "raw_bytes": 120440,
+  "text_chars": 15109,
+  "pdf_pages": 4
+}

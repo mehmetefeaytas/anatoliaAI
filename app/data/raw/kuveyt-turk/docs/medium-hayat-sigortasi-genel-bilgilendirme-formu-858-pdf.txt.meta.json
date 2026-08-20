@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/hayat-sigortasi-genel-bilgilendirme-formu-858.pdf",
+  "scraped_at": "2026-08-20T16:11:40+00:00",
+  "content_hash": "c680bf0d0aa73475a3a3fbfda4b296b77bd996ce617a55feccaf07816be8e0de",
+  "collection_method": "pdf",
+  "title": "hayat sigortasi genel bilgilendirme formu 858",
+  "http_status": 200,
+  "raw_bytes": 268575,
+  "text_chars": 29111,
+  "pdf_pages": 9
+}

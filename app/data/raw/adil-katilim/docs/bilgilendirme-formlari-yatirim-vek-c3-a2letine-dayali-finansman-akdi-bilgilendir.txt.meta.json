@@ -1,0 +1,12 @@
+{
+  "bank_slug": "adil-katilim",
+  "source_url": "https://www.adilkatilim.com.tr/assets/pdfs/bilgilendirme-formlari/yatirim-vek%C3%A2letine-dayali-finansman-akdi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T16:33:45+00:00",
+  "content_hash": "e89f3dede0d6ad6701b5facf726da7d36bc0cb78319480f7c587e00933b3a0d5",
+  "collection_method": "pdf",
+  "title": "yatirim vekâletine dayali finansman akdi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 162857,
+  "text_chars": 2881,
+  "pdf_pages": 2
+}

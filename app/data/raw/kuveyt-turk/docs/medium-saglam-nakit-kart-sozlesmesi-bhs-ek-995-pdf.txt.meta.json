@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/saglam-nakit-kart-sozlesmesi-bhs-ek---------995.pdf",
+  "scraped_at": "2026-08-20T16:07:09+00:00",
+  "content_hash": "ea14febca5ce0f623229ff665c3a48775a7e46caf5b32c25dddb323b39dbff9a",
+  "collection_method": "pdf",
+  "title": "saglam nakit kart sozlesmesi bhs ek 995",
+  "http_status": 200,
+  "raw_bytes": 204437,
+  "text_chars": 6921,
+  "pdf_pages": 2
+}

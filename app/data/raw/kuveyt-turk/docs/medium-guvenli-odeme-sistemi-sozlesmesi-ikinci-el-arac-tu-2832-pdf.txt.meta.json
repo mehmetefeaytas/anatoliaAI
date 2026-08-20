@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/guvenli-odeme-sistemi-sozlesmesi-ikinci-el-arac-tu-2832.pdf",
+  "scraped_at": "2026-08-20T16:02:59+00:00",
+  "content_hash": "95b896680abc1bc685bf1074fdc79cbda5b8c5ad81a53477535de2568db336bf",
+  "collection_method": "pdf",
+  "title": "guvenli odeme sistemi sozlesmesi ikinci el arac tu 2832",
+  "http_status": 200,
+  "raw_bytes": 128913,
+  "text_chars": 12570,
+  "pdf_pages": 3
+}

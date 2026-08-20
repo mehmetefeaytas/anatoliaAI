@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/veresiye_sozlesmesi-20-05-2026.pdf",
+  "scraped_at": "2026-08-20T16:29:47+00:00",
+  "content_hash": "beac4493e566393b8ea1a6ffe410a170e2193991bf4c20c50a5590baa24bb368",
+  "collection_method": "pdf",
+  "title": "veresiye sozlesmesi 20 05 2026",
+  "http_status": 200,
+  "raw_bytes": 308861,
+  "text_chars": 16941,
+  "pdf_pages": 7
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/kiralik-kasa.pdf",
+  "scraped_at": "2026-08-20T17:03:08+00:00",
+  "content_hash": "bdba40589cea3153c97148f5abf187629c506d4062dadb7d8c58cfea50882da2",
+  "collection_method": "pdf",
+  "title": "kiralik kasa",
+  "http_status": 200,
+  "raw_bytes": 94818,
+  "text_chars": 2161,
+  "pdf_pages": 1
+}

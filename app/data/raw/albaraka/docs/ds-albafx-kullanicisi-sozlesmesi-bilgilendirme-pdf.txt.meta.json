@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/sozlesmeler/DS/albafx-kullanicisi-sozlesmesi-bilgilendirme.pdf",
+  "scraped_at": "2026-08-20T16:59:08+00:00",
+  "content_hash": "fc2237226d1812faeeb81d4123f8664aa283338bc9b72e5ff230211be9f29b40",
+  "collection_method": "pdf",
+  "title": "albafx kullanicisi sozlesmesi bilgilendirme",
+  "http_status": 200,
+  "raw_bytes": 171392,
+  "text_chars": 29116,
+  "pdf_pages": 18
+}

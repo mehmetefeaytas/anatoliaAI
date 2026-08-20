@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/hadi_gold_kullanim_kosullari.pdf",
+  "scraped_at": "2026-08-20T16:32:41+00:00",
+  "content_hash": "f72bd9bc2fc70622957f5a6c892a9b25b2b08d000ffaa4e7f39d4232d7bb74e7",
+  "collection_method": "pdf",
+  "title": "hadi gold kullanim kosullari",
+  "http_status": 200,
+  "raw_bytes": 224123,
+  "text_chars": 5178,
+  "pdf_pages": 2
+}

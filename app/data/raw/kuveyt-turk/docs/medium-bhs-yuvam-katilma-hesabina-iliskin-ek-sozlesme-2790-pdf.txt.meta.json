@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bhs-yuvam-katilma-hesabina-iliskin-ek-sozlesme-----2790.pdf",
+  "scraped_at": "2026-08-20T16:00:32+00:00",
+  "content_hash": "f9b5a3c995645c6e22f3b8d1eb897e3291102e41f330ad511e53beacb0da8927",
+  "collection_method": "pdf",
+  "title": "bhs yuvam katilma hesabina iliskin ek sozlesme 2790",
+  "http_status": 200,
+  "raw_bytes": 235169,
+  "text_chars": 18968,
+  "pdf_pages": 4
+}

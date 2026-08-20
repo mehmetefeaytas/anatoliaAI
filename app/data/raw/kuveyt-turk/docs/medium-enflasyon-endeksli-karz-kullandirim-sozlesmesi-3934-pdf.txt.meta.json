@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/enflasyon-endeksli-karz-kullandirim-sozlesmesi-----3934.pdf",
+  "scraped_at": "2026-08-20T16:02:20+00:00",
+  "content_hash": "ddf6109ab14a098f3cb5e218935edc6622e9d48ec24bf6a5ed1a512830ef8244",
+  "collection_method": "pdf",
+  "title": "enflasyon endeksli karz kullandirim sozlesmesi 3934",
+  "http_status": 200,
+  "raw_bytes": 217593,
+  "text_chars": 7758,
+  "pdf_pages": 2
+}

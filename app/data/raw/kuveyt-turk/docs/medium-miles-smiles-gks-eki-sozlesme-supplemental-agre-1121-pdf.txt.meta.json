@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/miles--smiles-gks-eki-sozlesme---supplemental-agre-1121.pdf",
+  "scraped_at": "2026-08-20T16:20:26+00:00",
+  "content_hash": "5980b3ad492e8d5358abf1751687f320574ed1d991d257d2a3b8bbb6483b06e6",
+  "collection_method": "pdf",
+  "title": "miles smiles gks eki sozlesme supplemental agre 1121",
+  "http_status": 200,
+  "raw_bytes": 382320,
+  "text_chars": 36875,
+  "pdf_pages": 8
+}

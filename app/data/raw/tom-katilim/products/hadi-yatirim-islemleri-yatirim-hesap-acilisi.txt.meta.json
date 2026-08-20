@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-yatirim-islemleri/yatirim-hesap-acilisi",
+  "scraped_at": "2026-08-20T17:03:15+00:00",
+  "content_hash": "613df5941ddceca05b5bc1ead1780138282a8bc68870d3158e567cb0ddf314a4",
+  "collection_method": "browser",
+  "title": "Yatırım Hesap Açılışı | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 111927,
+  "text_chars": 4054
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/kredi_urunleri_aydinlatma_metni.pdf?v=07092026",
+  "scraped_at": "2026-08-20T16:29:13+00:00",
+  "content_hash": "76719d45bc73f102cb1a0e9200056740554747b66dd0a19457a7470a17c4fc6d",
+  "collection_method": "pdf",
+  "title": "kredi urunleri aydinlatma metni",
+  "http_status": 200,
+  "raw_bytes": 308416,
+  "text_chars": 5959,
+  "pdf_pages": 3
+}

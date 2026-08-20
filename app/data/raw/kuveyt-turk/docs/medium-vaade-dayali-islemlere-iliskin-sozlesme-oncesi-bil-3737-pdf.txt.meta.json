@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vaade-dayali-islemlere-iliskin-sozlesme-oncesi-bil-3737.pdf",
+  "scraped_at": "2026-08-20T16:14:46+00:00",
+  "content_hash": "596d624e88d1d8d4dda53b316492fee25cf586c29e973e55dec901f2ea6deebc",
+  "collection_method": "pdf",
+  "title": "vaade dayali islemlere iliskin sozlesme oncesi bil 3737",
+  "http_status": 200,
+  "raw_bytes": 292530,
+  "text_chars": 18901,
+  "pdf_pages": 8
+}

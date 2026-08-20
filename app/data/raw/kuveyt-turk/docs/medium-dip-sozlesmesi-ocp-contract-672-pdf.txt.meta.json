@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dip-sozlesmesi---ocp-contract-672.pdf",
+  "scraped_at": "2026-08-20T16:02:09+00:00",
+  "content_hash": "8fe9bd081a46a771a71e521ce4a11211856d70872d6a24ce4c28620963d56aaf",
+  "collection_method": "pdf",
+  "title": "dip sozlesmesi ocp contract 672",
+  "http_status": 200,
+  "raw_bytes": 190064,
+  "text_chars": 55108,
+  "pdf_pages": 10
+}

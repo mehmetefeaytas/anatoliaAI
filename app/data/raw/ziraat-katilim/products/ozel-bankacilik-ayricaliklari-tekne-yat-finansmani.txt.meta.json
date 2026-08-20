@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/ozel-bankacilik-ayricaliklari/tekne-yat-finansmani",
-  "scraped_at": "2026-08-03T17:31:50+00:00",
-  "content_hash": "a17d921892393eef6c0ed16a2156ee900cf1eeb4621cacd695ef9485fe25d3f9",
+  "scraped_at": "2026-08-20T17:00:50+00:00",
+  "content_hash": "928a6ee68b62999c6b49c16d0a7f71f43798ef3fe926f65afa6b8ad19f5ad863",
   "collection_method": "live",
   "title": "Tekne / Yat Finansmanı | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 474302,
-  "text_chars": 1334,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 474664,
+  "text_chars": 1334
 }

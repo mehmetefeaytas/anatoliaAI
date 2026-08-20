@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/urun-hizmet-ve-ucretleri",
-  "scraped_at": "2026-08-03T17:48:11+00:00",
-  "content_hash": "ef4909590a8c4218dbad28f40dee8d0068b10350828ca75b76d54543852e442a",
+  "scraped_at": "2026-08-20T17:09:54+00:00",
+  "content_hash": "00f1474132fd7fd5ea2ae928907e0698ecf4d3fe134ca429eaba294e840f379e",
   "collection_method": "live",
   "title": "&#xDC;r&#xFC;n Hizmet ve &#xDC;cretleri | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 497890,
-  "text_chars": 8944,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "text_chars": 8944
 }

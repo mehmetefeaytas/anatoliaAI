@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/konut_finansmani_kredisi_sozlesmesi.pdf",
+  "scraped_at": "2026-08-20T17:03:14+00:00",
+  "content_hash": "47d1d97b87384e993718dbbafe2d6d1e4da5b074821c4603f34db1379e9f337a",
+  "collection_method": "pdf",
+  "title": "konut finansmani kredisi sozlesmesi",
+  "http_status": 200,
+  "raw_bytes": 91989,
+  "text_chars": 705,
+  "pdf_pages": 4
+}

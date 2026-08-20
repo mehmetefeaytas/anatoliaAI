@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/ticari/nakdi-finansman/Sayfalar/nakdi-finansman.aspx",
-  "scraped_at": "2026-08-03T17:28:06+00:00",
-  "content_hash": "31e9e06fbb77ed708c125333492ee04dad46fca166b50a20b4f633a34947e842",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:57:05+00:00",
+  "content_hash": "aa1aa545cc5db79a841fb86e8181bd21e953135d24b003bf379dcea82437c297",
+  "collection_method": "browser",
   "title": "Nakdi Finansman | Ticari | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 99300,
-  "text_chars": 7118,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 209200,
+  "text_chars": 7977,
+  "extraction_invalidated_at": "2026-08-20T16:57:05+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

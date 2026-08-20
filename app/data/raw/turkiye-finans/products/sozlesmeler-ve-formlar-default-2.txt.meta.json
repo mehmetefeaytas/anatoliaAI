@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kobi/sozlesmeler-ve-formlar/Sayfalar/default.aspx",
-  "scraped_at": "2026-08-03T17:27:48+00:00",
-  "content_hash": "27f73bb60f375d36637b46235aafcaf8032ea228c1ddd796ce08fa316f1937a9",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:46+00:00",
+  "content_hash": "641aad0a1f7c7304ae53f6aa98bed60250fb704ac1b319049ca19b28f4f5e4a9",
+  "collection_method": "browser",
   "title": "Sözleşmeler ve Formlar | KOBİ | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 253311,
-  "text_chars": 9389,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 378733,
+  "text_chars": 15685,
+  "extraction_invalidated_at": "2026-08-20T16:56:46+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

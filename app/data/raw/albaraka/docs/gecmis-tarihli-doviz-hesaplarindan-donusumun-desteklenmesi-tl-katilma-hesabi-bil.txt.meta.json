@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/gecmis-tarihli/doviz-hesaplarindan-donusumun-desteklenmesi-tl-katilma-hesabi-bilgilendirme-formu.pdf",
+  "scraped_at": "2026-08-20T16:59:53+00:00",
+  "content_hash": "64ca38306edf88ba2d9f6e610812a9546b79671c38f1d959e1376a7e90205b4a",
+  "collection_method": "pdf",
+  "title": "doviz hesaplarindan donusumun desteklenmesi tl katilma hesabi bilgilendirme formu",
+  "http_status": 200,
+  "raw_bytes": 99477,
+  "text_chars": 7405,
+  "pdf_pages": 2
+}

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-kartlarim/hadi-sanal-kart",
+  "scraped_at": "2026-08-20T17:04:21+00:00",
+  "content_hash": "639e75f41f8955e60e997129fe45b9f6da0c718fc8389f73c3be02e7d4f4fbce",
+  "collection_method": "browser",
+  "title": "Hadi Sanal Kart | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 95571,
+  "text_chars": 335
+}

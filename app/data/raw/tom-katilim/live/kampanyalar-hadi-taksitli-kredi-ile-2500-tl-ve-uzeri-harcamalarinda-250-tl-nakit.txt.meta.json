@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-taksitli-kredi-ile-2500-tl-ve-uzeri-harcamalarinda-250-tl-nakit-iade",
+  "scraped_at": "2026-08-20T16:39:26+00:00",
+  "content_hash": "90b503b050a2215c09deda3178a78b78b128a74d1e751902b112c9ea603bac4c",
+  "collection_method": "browser",
+  "title": "Hadi Taksitli Kredi ile 2.500 TL ve üzeri harcamalarında 250 TL nakit iade! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 104051,
+  "text_chars": 2751,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "e üzeri harcamalarında 250 TL nakit iade! (GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Detayları Kampanya 22 Ekim – 10 Kasım tarihleri a",
+    "span_start": 292,
+    "span_end": 317,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

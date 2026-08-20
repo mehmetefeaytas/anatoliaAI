@@ -1,0 +1,12 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/getmedia/136e3dee-cd7d-42c0-b2cd-fdef6a6de3b5/Ilgili-Kisi-Basvuru-Formu",
+  "scraped_at": "2026-08-20T16:33:11+00:00",
+  "content_hash": "3ed2c54058a6e44d7b1ef79dfed46d26d3469ae7ef3aeae0fbf76d28e811b8c2",
+  "collection_method": "pdf",
+  "title": "Ilgili Kisi Basvuru Formu",
+  "http_status": 200,
+  "raw_bytes": 407394,
+  "text_chars": 2432,
+  "pdf_pages": 3
+}

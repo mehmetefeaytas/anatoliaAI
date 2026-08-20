@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/yatirim-ve-birikim",
-  "scraped_at": "2026-08-03T17:43:40+00:00",
-  "content_hash": "e3f67d83274f047e2eaf4cbe7159d4fdc55202bf7487c96b3e6069f4851f33b7",
+  "scraped_at": "2026-08-20T17:05:27+00:00",
+  "content_hash": "c11523d008d2f3f4b566e3e9fa5825afb8fe47dce731a9c47d4e0707c4b9331f",
   "collection_method": "browser",
   "title": "Yatırım ve Birikim | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 294515,
-  "text_chars": 1197,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 294910,
+  "text_chars": 2604
 }

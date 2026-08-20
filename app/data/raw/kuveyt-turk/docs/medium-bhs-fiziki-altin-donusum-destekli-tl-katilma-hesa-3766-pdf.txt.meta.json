@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/bhs--fiziki-altin-donusum-destekli-tl-katilma-hesa-3766.pdf",
+  "scraped_at": "2026-08-20T16:17:10+00:00",
+  "content_hash": "f944d078fe6f950a42a2ed37eda9808dadeb07b3179c9d10f234e531baae7fa0",
+  "collection_method": "pdf",
+  "title": "bhs fiziki altin donusum destekli tl katilma hesa 3766",
+  "http_status": 200,
+  "raw_bytes": 133678,
+  "text_chars": 12896,
+  "pdf_pages": 3
+}

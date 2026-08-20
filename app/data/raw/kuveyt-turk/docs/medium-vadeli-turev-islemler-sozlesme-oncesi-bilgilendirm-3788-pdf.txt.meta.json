@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/vadeli-turev-islemler-sozlesme-oncesi-bilgilendirm-3788.pdf",
+  "scraped_at": "2026-08-20T16:20:34+00:00",
+  "content_hash": "831c7ba2a8a682b55650806bec4acad2a651520487e992dfccecdc473cc994e9",
+  "collection_method": "pdf",
+  "title": "vadeli turev islemler sozlesme oncesi bilgilendirm 3788",
+  "http_status": 200,
+  "raw_bytes": 291430,
+  "text_chars": 18629,
+  "pdf_pages": 7
+}

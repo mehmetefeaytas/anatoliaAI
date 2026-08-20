@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/diger-katilim-sigorta-branslari-genel-bilgilendirm-846.pdf",
+  "scraped_at": "2026-08-20T16:11:15+00:00",
+  "content_hash": "605e050085a47fce9840aa90c28a9749d9d4660cc357d97a37622d993301c990",
+  "collection_method": "pdf",
+  "title": "diger katilim sigorta branslari genel bilgilendirm 846",
+  "http_status": 200,
+  "raw_bytes": 172839,
+  "text_chars": 9428,
+  "pdf_pages": 2
+}

@@ -1,0 +1,23 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-yilin-kampanyasi",
+  "scraped_at": "2026-08-20T16:39:11+00:00",
+  "content_hash": "6f01de22ee9c8f58c1ff80cd66ec96ac480f7d650a171bf8856caa538ea61f3e",
+  "collection_method": "browser",
+  "title": "Yılın Kampanyası! A101'de Hadi Veresiye ile Toplam 5.000 TL Harcamana,500 TL Kazan!(GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103336,
+  "text_chars": 2625,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Bu kampanya sona ermiştir",
+    "quote": "le Toplam 5.000 TL Harcamana,500 TL Kazan!(GEÇMİŞ KAMPANYA) Bu kampanya sona ermiştir. Kampanya Detayları Kampanya 1 Kasım – 31 Aralık tarihleri",
+    "span_start": 308,
+    "span_end": 333,
+    "end_date": null,
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-20T17:19:50+00:00"
+  }
+}

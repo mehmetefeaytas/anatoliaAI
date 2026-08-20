@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/katilma-hesaplari/Sayfalar/bol-kepce-hesap.aspx",
-  "scraped_at": "2026-08-03T17:27:36+00:00",
-  "content_hash": "23b1cf9300d2b41f2a64276611c1704a8d269cfcaf87e830788367f910f40a98",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:34+00:00",
+  "content_hash": "b4b8beb53fef4af69d251fb4fa0a2e9efe84a27505a84ffac0522e383c73bfc2",
+  "collection_method": "browser",
   "title": "Vadeli Yatırım Hesabı: Bol Kepçe Hesap | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 123986,
-  "text_chars": 9685,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 235434,
+  "text_chars": 10754,
+  "extraction_invalidated_at": "2026-08-20T16:56:34+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

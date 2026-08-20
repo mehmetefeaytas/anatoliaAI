@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/genel-kredi-sozlesmesi-----3478.pdf",
+  "scraped_at": "2026-08-20T16:02:59+00:00",
+  "content_hash": "0d53cce0c11aa7d7385eeee954b5bdd5fdc226ff2eaf71e7a0b1e60e4b0e30cb",
+  "collection_method": "pdf",
+  "title": "genel kredi sozlesmesi 3478",
+  "http_status": 200,
+  "raw_bytes": 1117193,
+  "text_chars": 321782,
+  "pdf_pages": 66
+}

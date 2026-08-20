@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/dip-bip-katki-payi-odeme-taahhutnamesi---dip-bip-c-1095.pdf",
+  "scraped_at": "2026-08-20T16:01:59+00:00",
+  "content_hash": "c4fced6c43116be248fe3323996756ae2b81f53cef003d478a6da7a9dbacc6a7",
+  "collection_method": "pdf",
+  "title": "dip bip katki payi odeme taahhutnamesi dip bip c 1095",
+  "http_status": 200,
+  "raw_bytes": 127128,
+  "text_chars": 11253,
+  "pdf_pages": 3
+}

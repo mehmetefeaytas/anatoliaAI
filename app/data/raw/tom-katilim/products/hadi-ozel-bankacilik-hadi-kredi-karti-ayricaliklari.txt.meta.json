@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/hadi-ozel-bankacilik/hadi-kredi-karti-ayricaliklari",
+  "scraped_at": "2026-08-20T17:04:52+00:00",
+  "content_hash": "23a49d232c8ea251cd91ee7ee93b8a44659d7f2fc3ba57a5cb3f959527b0bfc7",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı Ayrıcalıkları | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 96564,
+  "text_chars": 600
+}

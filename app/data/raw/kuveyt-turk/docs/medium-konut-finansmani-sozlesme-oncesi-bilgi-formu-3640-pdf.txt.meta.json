@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/konut-finansmani-sozlesme-oncesi-bilgi-formu-3640.pdf",
+  "scraped_at": "2026-08-20T16:12:31+00:00",
+  "content_hash": "39b25f88596a8e0dc82214e9c36555f3543abe1da7c65f44e26e65291e8a52db",
+  "collection_method": "pdf",
+  "title": "konut finansmani sozlesme oncesi bilgi formu 3640",
+  "http_status": 200,
+  "raw_bytes": 156750,
+  "text_chars": 15570,
+  "pdf_pages": 6
+}

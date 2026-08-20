@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar-is/mikro-finansman",
-  "scraped_at": "2026-08-03T17:44:46+00:00",
-  "content_hash": "8bce50f4003990a55d43f0584cdacd1568f9495169254a6c11431e644bc094fd",
+  "scraped_at": "2026-08-20T17:06:33+00:00",
+  "content_hash": "68038976285e283bdb4600541d2378517f8525412165800a22cfa56ab3cd1065",
   "collection_method": "browser",
   "title": "Mikro Finansman | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 291169,
-  "text_chars": 877,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 291524,
+  "text_chars": 2284
 }

@@ -1,0 +1,11 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/hadi-kredi-karti-ile-alldayesim-alisverislerinde-40-indirim",
+  "scraped_at": "2026-08-20T17:01:19+00:00",
+  "content_hash": "8401a9f1e5c4520cb3fa4d526e9cd24196f34c3ce028457ddfdb3364491bf36f",
+  "collection_method": "browser",
+  "title": "Hadi Kredi Kartı ile AllDayEsim alışverişlerinde %40 indirim! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102930,
+  "text_chars": 2759
+}

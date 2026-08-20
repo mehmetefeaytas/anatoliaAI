@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/kksozlesme_25072025.pdf",
+  "scraped_at": "2026-08-20T16:31:02+00:00",
+  "content_hash": "676315397ea905998d7482a584833533c7e2a2a94f785e54e7e1555ff9a223a1",
+  "collection_method": "pdf",
+  "title": "kksozlesme 25072025",
+  "http_status": 200,
+  "raw_bytes": 396589,
+  "text_chars": 18005,
+  "pdf_pages": 5
+}

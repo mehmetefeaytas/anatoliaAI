@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/altin-doviz-donusum-destekli-tl-katilma-hesabina-i-3758.pdf",
+  "scraped_at": "2026-08-20T16:16:49+00:00",
+  "content_hash": "6ef0000991d67fa4158a02679b0efda212235af8b97daeaf39cc7242b1332591",
+  "collection_method": "pdf",
+  "title": "altin doviz donusum destekli tl katilma hesabina i 3758",
+  "http_status": 200,
+  "raw_bytes": 151997,
+  "text_chars": 23394,
+  "pdf_pages": 5
+}

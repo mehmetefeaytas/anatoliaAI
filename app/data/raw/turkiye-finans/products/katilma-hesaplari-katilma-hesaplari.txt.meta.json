@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/bireysel/katilma-hesaplari/Sayfalar/katilma-hesaplari.aspx",
-  "scraped_at": "2026-08-03T17:27:09+00:00",
-  "content_hash": "ba5b5415a100e776b50dbcfe8396f0fd8a7ee8d05be3cab62fe163f7993b43e5",
-  "collection_method": "live",
+  "scraped_at": "2026-08-20T16:56:07+00:00",
+  "content_hash": "d3a3e9dc0752fa42d9d88132b0b5bc3ab5c1c930e3dd4be55d2e5a3e0ed13cf7",
+  "collection_method": "browser",
   "title": "Katılma Hesapları | Vadeli Hesaplar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 111658,
-  "text_chars": 9803,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 220360,
+  "text_chars": 10735,
+  "extraction_invalidated_at": "2026-08-20T16:56:07+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

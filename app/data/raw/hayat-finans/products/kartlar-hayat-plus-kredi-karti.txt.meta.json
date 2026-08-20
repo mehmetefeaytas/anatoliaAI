@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kartlar/hayat-plus-kredi-karti",
-  "scraped_at": "2026-08-03T17:44:22+00:00",
-  "content_hash": "5ec2104e7b9b5c26613d5616effe1b48a7de9e77e4c9edadac0ffb1cd5d1edcb",
+  "scraped_at": "2026-08-20T17:06:11+00:00",
+  "content_hash": "3c56311edca553c51d495edb4d95f2a0406ce4bbb13e0b38ad592b57531e3647",
   "collection_method": "browser",
   "title": "Hayat Plus Kredi Kartı Ayrıcalıkları | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 292289,
-  "text_chars": 1448,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 292664,
+  "text_chars": 1448
 }

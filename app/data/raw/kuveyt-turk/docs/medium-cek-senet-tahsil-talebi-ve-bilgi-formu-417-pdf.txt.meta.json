@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/cek-senet-tahsil-talebi-ve-bilgi-formu-417.pdf",
+  "scraped_at": "2026-08-20T16:18:31+00:00",
+  "content_hash": "2c89f9f69dd15fd1e35c83816968278765d66d71041a7b529ea17af7e60433a8",
+  "collection_method": "pdf",
+  "title": "cek senet tahsil talebi ve bilgi formu 417",
+  "http_status": 200,
+  "raw_bytes": 88631,
+  "text_chars": 2831,
+  "pdf_pages": 2
+}

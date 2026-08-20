@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ticari/finansal-kiralama-leasing",
-  "scraped_at": "2026-08-03T17:29:01+00:00",
-  "content_hash": "111c81e4bae4100b90fae84a098dff0b722b1a50bcf22aecf847ab7cda45b488",
+  "scraped_at": "2026-08-20T16:58:02+00:00",
+  "content_hash": "6ca59cd0df869a38ab728e4d1ef98cbb8962042570e1994c67499f54274ddf18",
   "collection_method": "live",
   "title": "Finansal Kiralama (Leasing) | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 482081,
-  "text_chars": 382,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 482442,
+  "text_chars": 2011
 }

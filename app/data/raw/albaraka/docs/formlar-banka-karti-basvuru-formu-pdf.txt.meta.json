@@ -1,0 +1,12 @@
+{
+  "bank_slug": "albaraka",
+  "source_url": "https://www.albaraka.com.tr/documents/hakkimizda/sozlesme-ve-formlar/formlar/banka-karti-basvuru-formu.pdf",
+  "scraped_at": "2026-08-20T16:58:02+00:00",
+  "content_hash": "d5ddc538649ad3d48c32e422bb98f77e10fd716b7becff9a9b658e2f2e21359f",
+  "collection_method": "pdf",
+  "title": "banka karti basvuru formu",
+  "http_status": 200,
+  "raw_bytes": 1447134,
+  "text_chars": 1896,
+  "pdf_pages": 1
+}

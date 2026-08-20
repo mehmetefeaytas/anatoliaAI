@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/Kredi-Karti-Sozlesme-Oncesi-Bilgi-Formu_06.03.2024.pdf",
+  "scraped_at": "2026-08-20T16:30:44+00:00",
+  "content_hash": "1b890b39b37496c10d2d6bfaf41fb3d72ba12c80f0c001e0ebf9a50fa18f82c9",
+  "collection_method": "pdf",
+  "title": "Kredi Karti Sozlesme Oncesi Bilgi Formu 06.03.2024",
+  "http_status": 200,
+  "raw_bytes": 160539,
+  "text_chars": 8902,
+  "pdf_pages": 3
+}

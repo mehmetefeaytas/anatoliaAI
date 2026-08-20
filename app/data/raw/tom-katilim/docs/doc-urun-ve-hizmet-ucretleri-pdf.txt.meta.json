@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/urun_ve_hizmet_ucretleri.pdf",
+  "scraped_at": "2026-08-20T16:27:45+00:00",
+  "content_hash": "da295d8c1e2cc5b574429d9354f489041511241ebcbfcff2a8c25a7762328a65",
+  "collection_method": "pdf",
+  "title": "urun ve hizmet ucretleri",
+  "http_status": 200,
+  "raw_bytes": 250546,
+  "text_chars": 4359,
+  "pdf_pages": 2
+}

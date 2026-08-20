@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/teminatlar-hakkinda-bilgilendirme-formu-----919.pdf",
+  "scraped_at": "2026-08-20T16:14:16+00:00",
+  "content_hash": "1ff0e71f94ba96c736d29faa9fa6f1c04a86b368d20c4943bd38ab381b377818",
+  "collection_method": "pdf",
+  "title": "teminatlar hakkinda bilgilendirme formu 919",
+  "http_status": 200,
+  "raw_bytes": 280540,
+  "text_chars": 16136,
+  "pdf_pages": 4
+}

@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/murabaha_akdi_musteri_bilgi_formu.pdf?v=28092023",
+  "scraped_at": "2026-08-20T16:29:16+00:00",
+  "content_hash": "b999d2c1031b57bb15a7177bdd06e738fd178a8080d1872aed6d3ae5d22ca0bb",
+  "collection_method": "pdf",
+  "title": "murabaha akdi musteri bilgi formu",
+  "http_status": 200,
+  "raw_bytes": 350806,
+  "text_chars": 5031,
+  "pdf_pages": 2
+}

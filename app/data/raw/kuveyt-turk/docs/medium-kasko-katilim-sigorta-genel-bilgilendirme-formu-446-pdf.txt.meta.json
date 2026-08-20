@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kasko-katilim-sigorta-genel-bilgilendirme-formu-446.pdf",
+  "scraped_at": "2026-08-20T16:15:16+00:00",
+  "content_hash": "b0081d65fed475eafb78359b04afe79399e2609f63fc420258807581b4f541f2",
+  "collection_method": "pdf",
+  "title": "kasko katilim sigorta genel bilgilendirme formu 446",
+  "http_status": 200,
+  "raw_bytes": 169324,
+  "text_chars": 8864,
+  "pdf_pages": 2
+}

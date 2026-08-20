@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/ozel-bankacilik/ozel-bankacilik-ayricaliklari/ozel-fon-kurulumu",
-  "scraped_at": "2026-08-03T17:30:17+00:00",
-  "content_hash": "f32a439fba53685433d2def88ea0fc010f3cc6f9fa7cb3f191392e294fbd1b8c",
+  "scraped_at": "2026-08-20T16:59:17+00:00",
+  "content_hash": "5ff3650ae09a36941ae58c7925eeeca037f5890b2db2a84b1a234788e9a34c15",
   "collection_method": "live",
   "title": "Özel Fon Kurulumu | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 480409,
-  "text_chars": 2602,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 480771,
+  "text_chars": 2602
 }

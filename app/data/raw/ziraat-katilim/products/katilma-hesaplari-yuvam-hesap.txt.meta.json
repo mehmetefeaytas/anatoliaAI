@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/hesaplar/katilma-hesaplari/Yuvam-hesap",
-  "scraped_at": "2026-08-03T17:29:49+00:00",
-  "content_hash": "da11990015230ac287efacaf4ca2e3af765bea45fee6530d696b82bcb119a0ef",
+  "scraped_at": "2026-08-20T16:58:50+00:00",
+  "content_hash": "f63ffad0d5fa81fb979e236b2301ab2dc709c2c15570dba8cb902d81a7be2861",
   "collection_method": "live",
   "title": "YUVAM Hesap | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 479417,
-  "text_chars": 3533,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 479779,
+  "text_chars": 3533
 }

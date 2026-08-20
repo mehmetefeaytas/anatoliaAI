@@ -1,0 +1,12 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/medium/kurumsal-kredi-kartlari-sozlesmesi-1020.pdf",
+  "scraped_at": "2026-08-20T16:05:06+00:00",
+  "content_hash": "1a8ffd20230892c87b693c10da7a4121cbc2fd239a0fe9719f852195696fbe94",
+  "collection_method": "pdf",
+  "title": "kurumsal kredi kartlari sozlesmesi 1020",
+  "http_status": 200,
+  "raw_bytes": 279567,
+  "text_chars": 78335,
+  "pdf_pages": 17
+}

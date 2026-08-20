@@ -1,0 +1,12 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://www.tombank.com.tr/assets/images/doc/hadi_gold_aydinlatma_metni.pdf",
+  "scraped_at": "2026-08-20T16:32:38+00:00",
+  "content_hash": "0bba549ad97ea0cb563470d92c8a12740cedde9ed2c47d7c6a8572891d18e06e",
+  "collection_method": "pdf",
+  "title": "hadi gold aydinlatma metni",
+  "http_status": 200,
+  "raw_bytes": 521884,
+  "text_chars": 9935,
+  "pdf_pages": 4
+}
