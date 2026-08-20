@@ -734,6 +734,44 @@ Eşik tablosu anotasyon başlamadan sabitlenmişti; ölçülen κ onun ilan edil
 bandına düştü ve o bandın gereği olan not bu bölümdür. Örtüşme artık gold'un
 KENDİSİNDE görünür (`annotators` içinde `LLM-01`; 18 kayıt ≥ 2 etiketleyici).
 
+### κ İNSAN turu — ÖLÇÜLDÜ: κ (İNSAN) = **0,716**
+
+Yukarıdaki turun tek zayıf noktası ikinci etiketleyicinin bir LLM olmasıydı:
+model-model uyumu, gold'un **insan** yargısıyla tutarlılığını kanıtlamaz.
+Bu yüzden **aynı 16 kayıt** (aynı seçim mantığı, yeni rastgelelik yok) bir
+İNSAN tarafından ikinci kez etiketlendi (`INSAN-01`, 287 dk).
+
+Körleme yapısaldır: alan sorma fonksiyonu gold/LLM parametresi **bile
+almıyor**, kayıt alanlarına ve LLM turunun dosyasına hiç erişmiyor
+(`tests/test_insan_etiketleyici.py` bunu sahte bir gold değerinin hiçbir
+çıktı satırında görünmediğini göstererek kilitliyor).
+
+| Ölçüt | LLM turu | **İNSAN turu** |
+|---|---|---|
+| κ — varlık kararı (192 çift) | 0,714 | **0,716** |
+| Değer uyumu — birebir | 0,423 (11/26) | **0,750 (18/24)** |
+| Uyuşmazlık | 31 | **21** |
+| Krippendorff α (`ratio`) | 1,000 / 3 birim | 0,760 / 9 birim — ikisi de **yetersiz birim** |
+
+**İki bulgu, ikisi de ölçülmüş:**
+
+1. **Varlık kararında LLM geçerli bir vekildi.** İki κ arasındaki fark
+   **0,002**. Yani gold'un κ'sının 0,80 eşiğinin altında kalmasının sebebi
+   "ikinci etiketleyici LLM'di" değil; gold setin kendi tutarlılık
+   seviyesidir. Bu, LLM turunun sonucunu güçlendirir — çürütmez.
+2. **Değer uyumunda LLM zayıf bir vekildi.** 0,423 ↔ 0,750. Alanın *var
+   olduğunu* saptamak ile *doğru değeri* yazmak farklı zorluklardır ve LLM
+   ikincisinde belirgin biçimde geride kaldı. "İkinci etiketleyici LLM
+   olabilir" sonucu bu yüzden yalnız varlık kararı için geçerlidir.
+
+κ hâlâ 0,80'in altında ve **§7'nin ilan ettiği "notla kabul" bandındadır**;
+insan turu bu bandı değiştirmedi, yalnız sebebini netleştirdi.
+
+Bir düzeltme kayıtta duruyor: `INSAN-01` bir kayıtta `kampanya_suresi`'ni
+`2926-09-01` girdi (hane hatası), sonradan `2026-09-01` olarak bildirdi.
+Düzeltme uygulandı ve **eski değer `duzeltmeler` alanında saklandı** — IAA
+verisinde sonradan yapılan değişiklik κ'yı etkilediği için izi bırakılır.
+
 **İkinci etiketleyicinin LLM olduğu saklanmıyor** ve tek başına insan
 çift-anotasyonun yerine geçmez. Turun kendisi bunun nedenini gösterdi: bir
 vakada LLM, belgede `masraf|ücret|komisyon` geçen **sıfır** cümle olmasına
