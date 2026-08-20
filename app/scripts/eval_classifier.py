@@ -56,6 +56,7 @@ import json
 import os
 import sys
 from collections import Counter
+from collections.abc import Sequence
 from typing import Any, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -68,13 +69,22 @@ from src.schemas import CAMPAIGN_TYPES
 GUVENILIR_N = 50
 
 
-def _gold_yukle(path: str) -> list[tuple[str, str, str]]:
-    """(doc_id, metin, gerçek etiket) — yalnız `campaign_type` taşıyanlar."""
+def _gold_yukle(path: str) -> list[tuple[str, str, str, Optional[str]]]:
+    """(doc_id, metin, gerçek etiket, source_url) — `campaign_type` taşıyanlar.
+
+    DÖRDÜNCÜ alan 2026-08-20'de eklendi: `RuleHintClassifier` artık URL yolunu
+    kullanıyor (bkz. src/extraction/ner/classifier.py) ve URL'i harness'ta
+    düşürmek, ölçülen kolu üretimde koşan koldan FARKLI kılardı — tam olarak
+    bu dosyanın başlığında "eşit koşul" diye adlandırılan kusur.
+
+    Tüketiciler ÜÇ elemanlı kayıtları da kabul eder (`olc`, `_kural_tahminleri`
+    indekse göre okur); testlerdeki elle yazılmış 3'lüler bozulmadan çalışır.
+    """
     from scripts.gold_schema import load_gold
     out = []
     for rec in load_gold(path):
         if isinstance(rec.campaign_type, str) and rec.campaign_type:
-            out.append((rec.id, rec.text, rec.campaign_type))
+            out.append((rec.id, rec.text, rec.campaign_type, rec.source_url))
     return out
 
 
@@ -91,20 +101,27 @@ def _tahminleri_yukle(path: str) -> dict[str, Optional[str]]:
     return out
 
 
-def _kural_tahminleri(gold: list[tuple[str, str, str]]) -> dict[str, Optional[str]]:
+def _kural_tahminleri(gold: Sequence[Sequence[Any]]) -> dict[str, Optional[str]]:
+    """Kural kolunu ÜRETİMDEKİ imzasıyla koşturur (metin + `source_url`)."""
     from src.extraction.ner.classifier import RuleHintClassifier
     clf = RuleHintClassifier()
-    return {doc_id: clf.classify(text)[0] for doc_id, text, _ in gold}
+    return {k[0]: clf.classify(k[1], k[3] if len(k) > 3 else None)[0]
+            for k in gold}
 
 
-def olc(gold: list[tuple[str, str, str]],
+def olc(gold: Sequence[Sequence[Any]],
         tahmin: dict[str, Optional[str]]) -> dict[str, Any]:
-    """Sınıf başına bire-karşı-hepsi sayaçları + özet."""
+    """Sınıf başına bire-karşı-hepsi sayaçları + özet.
+
+    Kayıtlar 3 ya da 4 elemanlı olabilir (bkz. `_gold_yukle`); dördüncü alan
+    `source_url` yalnız tahmin üretiminde kullanılır, metrikte yer almaz.
+    """
     tablo = {sinif: Counts() for sinif in CAMPAIGN_TYPES}
     dogru = cekimser = 0
     karisiklik: Counter[tuple[str, str]] = Counter()
 
-    for doc_id, _text, gercek in gold:
+    for kayit in gold:
+        doc_id, gercek = kayit[0], kayit[2]
         pred = tahmin.get(doc_id)
         if pred is None:
             # Çekimserlik: doğru sınıf için FN, hiçbir sınıf için FP değil.
@@ -169,7 +186,7 @@ def main(argv: Optional[list[str]] = None) -> int:
         return 2
 
     print(f"Gold: {len(gold)} belge, "
-          f"{len({g for _, _, g in gold})} farklı sınıf")
+          f"{len({k[2] for k in gold})} farklı sınıf")
     if len(gold) < GUVENILIR_N:
         print(f"UYARI: n={len(gold)} < {GUVENILIR_N}. Sınıf başına ortalama "
               f"{len(gold) / len(CAMPAIGN_TYPES):.1f} örnek düşüyor; makro-F1 "

@@ -190,7 +190,10 @@ def run_pipeline(repo: Repository, banks_yaml: str, raw_dir: str = "data/raw",
     for bank, docs in per_bank:
         for doc in docs:
             text = normalize_text(doc.clean_text)
-            ctype, _conf = clf.classify(text)
+            # `source_url` sınıflandırıcıya VERİLİR: URL yolu bu alanın en
+            # güçlü sinyalidir (bkz. ner/classifier.py modül başlığı, kusur 2)
+            # ve sayfa çerçevesi metni kirlettiğinde tek güvenilir kanıttır.
+            ctype, _conf = clf.classify(text, doc.source_url)
             campaign = build_campaign(text, bank_slug=bank.slug,
                                       source_url=doc.source_url, llm=llm,
                                       campaign_type=ctype)

@@ -2,9 +2,15 @@
 
 ## Neden bu sınır burada
 
-`_gezinme_seridi`/`_EVRENSELLIK_RE` yalnız bu alana özgü ve başka hiçbir
-modül tarafından kullanılmıyor. `_gezinme_seridi` bilerek public
-bırakıldı: `tests/test_hedef_kitle_etiket.py` onu doğrudan içe aktarıyor.
+`_EVRENSELLIK_RE` yalnız bu alana özgü ve başka hiçbir modül tarafından
+kullanılmıyor.
+
+`gezinme_seridi` ise 2026-08-20'de `_ortak.py`ye TAŞINDI ve kamuya açıldı:
+aynı sayfa-çerçevesi kirliliği `campaign_type` sınıflandırıcısını da
+etkiliyor ve arayüz katmanı da onu tanımak zorunda, yani ölçüt artık iki
+alanın ötesinde paylaşılıyor. Eski private ad (`_gezinme_seridi`) burada
+geriye dönük uyum için duruyor: `extract.py` ve
+`tests/test_hedef_kitle_etiket.py` onu bu modülden içe aktarıyor.
 """
 
 from __future__ import annotations
@@ -14,7 +20,7 @@ from typing import Optional
 
 from ...preprocessing.clean import split_sentences
 from ...schemas import ExtractedField
-from ._ortak import _field, _window
+from ._ortak import _field, _window, gezinme_seridi
 
 # --------------------------------------------------------------------------- #
 # `hedef_kitle` — GEZİNME ŞERİDİ ve EVRENSELLİK süzgeçleri
@@ -38,18 +44,11 @@ from ._ortak import _field, _window
 # da beklenmez — o kuyruktaki komşu kampanya bloğunu tanımlar, buradaki
 # kirlilik ise sayfanın BAŞINDA (menü) duruyor. Ölçüldü: kabuk süzgecini bu
 # alana bağlamak sonucu HİÇ değiştirmiyor (F1 0,600 -> 0,600).
-_MENU_BUYUK_HARF_ORANI = 0.6
-_MENU_ASGARI_KELIME = 6
-
-
-def _gezinme_seridi(cumle: str) -> bool:
-    """Cümle değil, gezinme menüsü / ürün listesi şeridi mi?"""
-    kelimeler = cumle.split()
-    if len(kelimeler) < _MENU_ASGARI_KELIME:
-        return False
-    buyuk = sum(1 for w in kelimeler if w[:1].isupper())
-    return (buyuk / len(kelimeler) >= _MENU_BUYUK_HARF_ORANI
-            and not re.search(r"[.!]\s*$", cumle))
+#
+# ÖLÇÜT ARTIK `_ortak.gezinme_seridi` — tek doğruluk kaynağı. Aşağıdaki ad
+# yalnızca geriye dönük uyum takma adıdır (bkz. modül başlığı); davranışı
+# birebir aynıdır.
+_gezinme_seridi = gezinme_seridi
 
 
 #: EVRENSELLİK — "herkes" segment DEĞİLDİR (kılavuz §4 `hedef_kitle`:

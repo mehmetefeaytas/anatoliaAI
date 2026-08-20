@@ -50,5 +50,45 @@
   "alanlar_kalem": {
     "kampanya_kosullari": 0.51,
     "hedef_kitle": 0.62
-  }
+  },
+  "campaign_type": {
+    "_olculdu": "2026-08-20 · kural kolu · gold.v2 (48 kayıt, 39'u etiketli)",
+    "_onceki": "dogruluk_etiketli 0,590 · dogruluk_tumu 0,521 · uydurma 7/9",
+    "dogruluk_etiketli": 0.76,
+    "dogruluk_tumu": 0.72,
+    "makro_f1": 0.76,
+    "uydurma_orani_ust_sinir": 0.45
+  },
+  "_campaign_type_NEDEN_EKLENDI": [
+    "`campaign_type` bugüne kadar HİÇ ölçülmüyordu: `eval/run_eval.py`de alan",
+    "adı sıfır kez geçiyordu (grep). Ölçülmeyen alan çürür ve çürüdü —",
+    "sınıflandırıcının beraberlik kırıcısı korpusun %31,5'ini `Konut",
+    "Finansmanı`na yıkıyordu, `Konut` etiketli 179 belgenin 114'ü (%64)",
+    "beraberlikten geliyordu ve yalnız 45'inin URL'sinde `konut` geçiyordu.",
+    "Kök neden ve onarım: docs/rapor/campaign-type-onarimi.md",
+    "",
+    "İKİ doğruluk birden denetlenir, çünkü gold bu alanda \"tür yok\" ile",
+    "\"anotatör karar vermedi\"yi AYIRMIYOR (`absent_fields` içinde",
+    "`campaign_type` hiç geçmiyor). `dogruluk_etiketli` çekimserliği",
+    "cezalandırır, `dogruluk_tumu` dürüst çekimserliği ödüllendirir. Tek",
+    "birini seçmek, ölçütü sonuca göre seçmek olurdu.",
+    "",
+    "`uydurma_orani_ust_sinir` TERS yönlüdür: gold `null` derken tür üretme",
+    "oranı ARTARSA kapı kapanır (CLAUDE.md §19 — uydurmak kaçırmaktan",
+    "pahalıdır).",
+    "",
+    "ÖLÇÜLEN (gold.v2): dogruluk_etiketli 0,590 -> 0,769 · dogruluk_tumu",
+    "0,521 -> 0,729 · makro-F1 0,775 · uydurma 7/9 -> 4/9. Eşikler ölçülenin",
+    "hemen altına konuldu — kapının kendi kuralı.",
+    "",
+    "AÇIK İŞ: hedef 0,85'ti, ulaşılmadı. Tavan ölçüldü: URL DİZİNİNİ",
+    "ezberleyen bir kâhin bile gold.v2'de 0,846 yapabiliyor (aynı dizinde",
+    "farklı etiketli 6 kayıt var). Sayı yukarı çekilecekse önce gold'un",
+    "kendi tutarlılığı ele alınmalı.",
+    "",
+    "NOT: `uydurma` 7/9'dan 4/9'a düştü ama ORAN hâlâ yüksek (0,444);",
+    "kalan 4 belgenin üçü liste/sözleşme sayfası ve kılavuz §4.13/1'e göre",
+    "`absent` olmaları gerekir. Tavan ölçülenin hemen üstüne konuldu:",
+    "artışı yakalar, düşüşü ödüllendirmez."
+  ]
 }

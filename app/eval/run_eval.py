@@ -51,11 +51,12 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections import Counter
 from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from dataclasses import field as dc_field
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
@@ -83,6 +84,7 @@ from scripts.gold_schema import (
     validate_gold,
 )
 from src.extraction.llm.schema import EXTRACTION_FIELDS
+from src.schemas import CAMPAIGN_TYPES
 
 SPLITS = ("all", "hard", "easy")
 
@@ -289,7 +291,8 @@ def micro_f1_yapisal_of(docs: Sequence[DocScore]) -> float:
 
 
 def esik_ihlalleri(table: dict[str, Counts], esikler: dict,
-                   kalem_table: dict[str, Counts] | None = None) -> list[str]:
+                   kalem_table: dict[str, Counts] | None = None,
+                   tur: "TurSonuc | None" = None) -> list[str]:
     """Eşik dosyasına göre GERİLEME listesi; boş liste = kapı açık.
 
     ## Neden bu kapı var (plan G1.5)
@@ -375,6 +378,33 @@ def esik_ihlalleri(table: dict[str, Counts], esikler: dict,
             ihlaller.append(
                 f"halüsinasyon oranı: {oran:.3f} > üst sınır "
                 f"{float(ust):.3f} (tolerans {tol})")
+
+    # `campaign_type` kapısı — 12 alandan AYRI ölçüt (bkz. `tur_puanla`).
+    # Eşik dosyası bu bölümü tanımlıyor ama ölçüm verilmediyse SESSİZ
+    # geçilmez: denetlenmemiş bir şeyi denetlenmiş göstermek bu kapının
+    # varlık sebebine aykırıdır.
+    tur_esik = esikler.get("campaign_type")
+    if tur_esik is not None:
+        if tur is None:
+            ihlaller.append(
+                "campaign_type: eşik dosyasında var ama tür ölçümü "
+                "verilmedi (çağrı yeri güncellenmeli)")
+        else:
+            for anahtar, olculen in (
+                    ("dogruluk_etiketli", tur.dogruluk_etiketli),
+                    ("dogruluk_tumu", tur.dogruluk_tumu),
+                    ("makro_f1", tur.macro_f1)):
+                asgari = tur_esik.get(anahtar)
+                if asgari is not None and olculen < float(asgari) - tol:
+                    ihlaller.append(
+                        f"campaign_type {anahtar}: {olculen:.3f} < eşik "
+                        f"{float(asgari):.3f} (tolerans {tol})")
+            ust_uyd = tur_esik.get("uydurma_orani_ust_sinir")
+            if ust_uyd is not None and tur.uydurma_orani is not None:
+                if tur.uydurma_orani > float(ust_uyd) + tol:
+                    ihlaller.append(
+                        f"campaign_type uydurma oranı: {tur.uydurma_orani:.3f} "
+                        f"> üst sınır {float(ust_uyd):.3f} (tolerans {tol})")
 
     return ihlaller
 
@@ -595,6 +625,179 @@ def by_hard_tag(docs: Sequence[DocScore]) -> dict[str, dict[str, Counts]]:
             for name, counts in doc.per_field.items():
                 table.setdefault(name, Counts()).add(counts)
     return out
+
+
+# --------------------------------------------------------------------------- #
+# `campaign_type` — 8 SINIF SINIFLANDIRMA (12 alandan AYRI ölçüt)
+# --------------------------------------------------------------------------- #
+# ## Niçin bu bölüm eklendi (2026-08-20)
+#
+# `campaign_type` gold şemasının birinci sınıf alanı (`gold_schema`
+# `ANNOTATABLE_KEYS` içinde) ve CLAUDE.md §16 açıkça "sınıflandırma accuracy +
+# macro-F1 (8 tür)" raporlanmasını istiyor. Buna karşın bu dosyada
+# `campaign_type` SIFIR kez geçiyordu: resmî değerlendirme hattı alanı hiç
+# ölçmüyordu. Ölçülmeyen alan çürür — ve gerçekten çürüdü: sınıflandırıcının
+# beraberlik kırıcısı korpusun %31,5'ini `Konut Finansmanı`na yıkıyordu ve
+# kimse fark etmedi (`docs/rapor/campaign-type-onarimi.md`).
+#
+# ## Niçin 12 alanın TABLOSUNA girmiyor
+#
+# Alan tablosu `EXTRACTION_FIELDS` üzerinde koşar ve her hücrede "değer var /
+# YOK / karar yok" üçlüsünü `absent_fields` ile ayırır. `campaign_type` bu
+# şemaya girmiyor:
+#   * bir çıkarıcı değil bir SINIFLANDIRICI üretiyor (`ner/classifier.py`),
+#     `extract_all` onu hiç döndürmüyor;
+#   * kapalı bir 8 elemanlı kümeden tek etiket seçiliyor, yani doğal ölçütü
+#     çok-sınıflı doğruluk + makro-F1'dir, alan başına P/R/F1 değil;
+#   * eşleştirici (`strict`/`tolerant`) ayrımı burada anlamsızdır — dize
+#     eşitliğinden başka bir eşleşme tanımı yok.
+# Aynı tabloya sokmak, kıyaslanamaz iki sayıyı tek mikro-F1'de toplamak
+# olurdu. Bu yüzden AYRI bölüm, AYRI eşik satırı, AYRI JSON anahtarı.
+#
+# ## ÖLÇÜLMÜŞ KISIT — gold `absent` ile `karar yok`u AYIRMIYOR
+#
+# 12 alanda "anotatör baktı, yok" kararı `absent_fields` listesine yazılır ve
+# TN olarak ödüllendirilir. `campaign_type` için gold'da böyle bir kayıt YOK:
+# ölçüldü, `absent_fields`/`unclear_fields` içinde `campaign_type` round1'de 0,
+# v2'de 0 kez geçiyor; kılavuzun §4.13/1 "liste sayfası -> absent" kararı
+# dosyada düpedüz `campaign_type: null` olarak duruyor. Yani `null`, "tür
+# yok" ile "anotatör karar vermedi"yi aynı kovada tutuyor.
+#
+# Bu belirsizlik GİZLENMİYOR, İKİ sayı birden yayımlanıyor:
+#   * `dogruluk_etiketli` — paydası yalnız gold'da ETİKET olan belgeler. Bir
+#     `null` tahmini burada YANLIŞ sayılır (çekimserlik cezalandırılır).
+#   * `dogruluk_tumu`     — paydası tüm belgeler; gold `null` iken tahminin de
+#     `null` olması DOĞRU sayılır (dürüst çekimserlik ödüllendirilir).
+# `uydurma` (gold `null`, tahmin var) ayrıca sayılır: CLAUDE.md §19'un
+# sınıflandırma tarafındaki karşılığı budur.
+
+
+@dataclass
+class TurSonuc:
+    """`campaign_type` ölçümünün tüm sayaçları (tek koşum)."""
+
+    n_toplam: int = 0
+    n_etiketli: int = 0
+    dogru_etiketli: int = 0
+    n_bos: int = 0            # gold `null`
+    dogru_bos: int = 0        # gold `null` + tahmin `null`
+    uydurma: int = 0          # gold `null` + tahmin VAR
+    cekimser: int = 0         # gold etiketli + tahmin `null`
+    tablo: dict[str, Counts] = dc_field(default_factory=dict)
+    karisiklik: dict[tuple[str, str], int] = dc_field(default_factory=dict)
+
+    @property
+    def dogruluk_etiketli(self) -> float:
+        return self.dogru_etiketli / self.n_etiketli if self.n_etiketli else 0.0
+
+    @property
+    def dogruluk_tumu(self) -> float:
+        if not self.n_toplam:
+            return 0.0
+        return (self.dogru_etiketli + self.dogru_bos) / self.n_toplam
+
+    @property
+    def uydurma_orani(self) -> Optional[float]:
+        """gold `null` derken tür üretme oranı. Payda 0 ise TANIMSIZ."""
+        return self.uydurma / self.n_bos if self.n_bos else None
+
+    @property
+    def macro_f1(self) -> float:
+        return macro_f1(self.tablo)
+
+    def as_dict(self) -> dict:
+        return {
+            "documents": self.n_toplam,
+            "labeled": self.n_etiketli,
+            "correct_labeled": self.dogru_etiketli,
+            "dogruluk_etiketli": self.dogruluk_etiketli,
+            "dogruluk_tumu": self.dogruluk_tumu,
+            "macro_f1": self.macro_f1,
+            "gold_null": self.n_bos,
+            "gold_null_dogru_cekimser": self.dogru_bos,
+            "uydurma": self.uydurma,
+            "uydurma_orani": self.uydurma_orani,
+            "cekimser_etiketli": self.cekimser,
+            "per_class": {k: v.as_dict() for k, v in sorted(self.tablo.items())},
+            "karisiklik": {f"{g} -> {p}": n
+                           for (g, p), n in sorted(self.karisiklik.items())},
+        }
+
+
+def tur_puanla(records: Sequence[GoldRecord],
+               clf: Any = None) -> TurSonuc:
+    """`campaign_type` sınıflandırmasını gold üzerinde ölçer.
+
+    Args:
+        records: gold kayıtları.
+        clf: `classify(text, source_url)` sunan sınıflandırıcı. `None` ise
+            ortamdan kurulur (`default_classifier`).
+
+    `source_url` KASITLI olarak veriliyor: üretimde `src/pipeline.py` de onu
+    veriyor ve harness'ta düşürmek ölçülen kolu koşan koldan farklı kılardı.
+    """
+    from src.extraction.ner.classifier import default_classifier
+    from src.preprocessing.clean import normalize_text
+
+    if clf is None:
+        clf = default_classifier()
+
+    s = TurSonuc(tablo={t: Counts() for t in CAMPAIGN_TYPES})
+    karisiklik: Counter[tuple[str, str]] = Counter()
+    for r in records:
+        s.n_toplam += 1
+        pred, _conf = clf.classify(normalize_text(r.text), r.source_url)
+        gold = r.campaign_type
+        if gold is None:
+            s.n_bos += 1
+            if pred is None:
+                s.dogru_bos += 1
+            else:
+                s.uydurma += 1
+                karisiklik[("(gold null)", pred)] += 1
+            continue
+        s.n_etiketli += 1
+        if pred is None:
+            # Çekimserlik: doğru sınıf için FN, hiçbir sınıfa FP DEĞİL —
+            # susmak yanlış iddia değildir (bkz. scripts/eval_classifier.py).
+            s.cekimser += 1
+            s.tablo[gold].fn += 1
+            karisiklik[(gold, "(çekimser)")] += 1
+        elif pred == gold:
+            s.dogru_etiketli += 1
+            s.tablo[gold].tp += 1
+        else:
+            s.tablo[gold].fn += 1
+            if pred in s.tablo:
+                s.tablo[pred].fp += 1
+            karisiklik[(gold, pred)] += 1
+    s.karisiklik = dict(karisiklik)
+    return s
+
+
+def format_tur(s: TurSonuc) -> str:
+    """`campaign_type` bölümünün konsol çıktısı."""
+    p = ["=== KAMPANYA TÜRÜ (campaign_type) — 8 SINIF ===",
+         f"doğruluk (gold ETİKETLİ, n={s.n_etiketli}) : "
+         f"{s.dogruluk_etiketli:.3f}   [{s.dogru_etiketli}/{s.n_etiketli}]",
+         f"doğruluk (TÜM belgeler, n={s.n_toplam})   : {s.dogruluk_tumu:.3f}"
+         f"   <- gold null iken null tahmin DOĞRU sayılır",
+         f"makro-F1 (8 sınıf)                       : {s.macro_f1:.3f}",
+         f"uydurma  (gold null, tür üretildi)       : {s.uydurma}"
+         + (f"  oran {s.uydurma_orani:.3f}  [{s.uydurma}/{s.n_bos}]"
+            if s.uydurma_orani is not None else "  (gold'da null kayıt yok)"),
+         f"çekimser (gold etiketli, tahmin null)    : {s.cekimser}",
+         "",
+         f"{'sınıf':<22}{'destek':>7}{'P':>8}{'R':>8}{'F1':>8}"]
+    for sinif, c in s.tablo.items():
+        p.append(f"{sinif:<22}{c.support:>7}{c.precision():>8.3f}"
+                 f"{c.recall():>8.3f}{c.f1():>8.3f}")
+    if s.karisiklik:
+        p.append("")
+        p.append("karışıklıklar (gold -> tahmin):")
+        for (g, t), n in sorted(s.karisiklik.items(), key=lambda x: -x[1]):
+            p.append(f"  {g} -> {t}: {n}")
+    return "\n".join(p)
 
 
 # --------------------------------------------------------------------------- #
@@ -961,9 +1164,51 @@ def kalem_bolumu(result: MatcherResult, item_esik: float,
     return out
 
 
+def tur_bolumu(s: TurSonuc) -> list[str]:
+    """`report.md` içindeki `campaign_type` bölümü."""
+    return [
+        "## Kampanya türü (`campaign_type`) — 8 sınıf", "",
+        ("CLAUDE.md §16 bu alan için *accuracy + macro-F1* istiyor. Ölçüt 12 "
+         "alanın tablosundan AYRIDIR ve niçin ayrı olduğu "
+         "`run_eval.tur_puanla` başlığında yazılıdır (sınıflandırıcı çıktısı, "
+         "kapalı 8 elemanlı küme, eşleştirici ayrımı anlamsız)."), "",
+        report_mod.md_table(
+            ["ölçüt", "değer", "payda"],
+            [["doğruluk (gold ETİKETLİ)", f"{s.dogruluk_etiketli:.3f}",
+              f"{s.dogru_etiketli}/{s.n_etiketli}"],
+             ["doğruluk (TÜM belgeler)", f"{s.dogruluk_tumu:.3f}",
+              f"{s.dogru_etiketli + s.dogru_bos}/{s.n_toplam}"],
+             ["makro-F1 (8 sınıf)", f"{s.macro_f1:.3f}", "—"],
+             ["uydurma oranı (gold `null` iken tür üretme)",
+              ("tanımsız" if s.uydurma_orani is None
+               else f"{s.uydurma_orani:.3f}"), f"{s.uydurma}/{s.n_bos}"],
+             ["çekimserlik (gold etiketli, tahmin `null`)", str(s.cekimser),
+              f"{s.cekimser}/{s.n_etiketli}"]]), "",
+        ("> **İki doğruluk niçin yan yana:** gold bu alanda \"tür yok\" ile "
+         "\"anotatör karar vermedi\"yi AYIRMIYOR — ölçüldü, `absent_fields` "
+         "içinde `campaign_type` hiç geçmiyor, kılavuzun §4.13/1 `absent` "
+         "kararı dosyada düz `null` olarak duruyor. Birinci sayı çekimserliği "
+         "cezalandırır, ikincisi ödüllendirir; hangisinin doğru olduğu gold "
+         "şeması netleşene kadar belirsizdir, o yüzden ikisi de yayımlanıyor."),
+        "",
+        "### Sınıf bazında", "",
+        report_mod.md_table(
+            ["sınıf", "destek", "P", "R", "F1"],
+            [[k, c.support, f"{c.precision():.3f}", f"{c.recall():.3f}",
+              f"{c.f1():.3f}"] for k, c in s.tablo.items()]), "",
+    ] + ([
+        "### Karışıklıklar (gold → tahmin)", "",
+        report_mod.md_table(
+            ["gold", "tahmin", "adet"],
+            [[g, t, n] for (g, t), n in
+             sorted(s.karisiklik.items(), key=lambda x: (-x[1], x[0]))]), "",
+    ] if s.karisiklik else [])
+
+
 def markdown_report(results: list[MatcherResult], predictor: Predictor,
                     env: report_mod.EnvInfo,
                     *, item_esik: float = ITEM_JACCARD_ESIK,
+                    tur: TurSonuc | None = None,
                     kalem_duyarlilik: dict[str, dict[float, dict[str, Counts]]]
                     | None = None) -> str:
     """`report.md` gövdesi — jüri ve ekip için insan-okur rapor."""
@@ -1087,6 +1332,8 @@ def markdown_report(results: list[MatcherResult], predictor: Predictor,
                           micro(t).tp, micro(t).fp, micro(t).fn]
                          for tag, t in sorted(result.per_tag.items())]),
                     ""]
+    if tur is not None:
+        out += tur_bolumu(tur)
     return "\n".join(out)
 
 
@@ -1193,11 +1440,15 @@ def main(argv: list[str] | None = None) -> int:
                 for esik in sorted({0.6, args.kalem_esik, 0.8})
             }
 
+    # `campaign_type` — eşleştiriciden BAĞIMSIZ, tek geçiş (bkz. `tur_puanla`).
+    tur = tur_puanla(selected)
+
     print(f"\nkonfig : {predictor.name} — {predictor.description}")
     print(f"gold   : {gold_path} ({len(records)} kayıt, alt küme "
           f"'{args.split}' -> {len(selected)} belge)")
     for result in results:
         print("\n" + format_result(result, predictor))
+    print("\n" + format_tur(tur))
 
     # REGRESYON KAPISI — rapor yazılmadan ÖNCE değerlendirilir ama çıkış
     # koduna en sonda dönüşür: kapı kapansa bile rapor diske yazılmalı,
@@ -1219,7 +1470,8 @@ def main(argv: list[str] | None = None) -> int:
                   f"`--matcher {istenen}` ile koşun.", file=sys.stderr)
             return 2
         kapi_ihlalleri = esik_ihlalleri(hedef.table, esikler,
-                                        kalem_table=hedef.item_table)
+                                        kalem_table=hedef.item_table,
+                                        tur=tur)
         print(f"\n=== REGRESYON KAPISI ({esik_yolu}) ===")
         if kapi_ihlalleri:
             print(f"KAPALI — {len(kapi_ihlalleri)} gerileme:")
@@ -1240,6 +1492,8 @@ def main(argv: list[str] | None = None) -> int:
                 korunan.append("yapısal mikro-F1")
             if "halusinasyon_ust_sinir" in esikler:
                 korunan.append("halüsinasyon üst sınırı")
+            if "campaign_type" in esikler:
+                korunan.append("campaign_type sınıflandırması")
             print(f"AÇIK — {' + '.join(korunan)} korunuyor.")
             if "halusinasyon_ust_sinir" not in esikler:
                 print("  NOT: bu eşik dosyası halüsinasyon tavanı TANIMLAMIYOR; "
@@ -1266,6 +1520,10 @@ def main(argv: list[str] | None = None) -> int:
         "gold_total_records": len(records),
         "fields_evaluated": list(EXTRACTION_FIELDS),
         "hard_tags_known": list(ALL_HARD_TAGS),
+        # `campaign_type` alan tablosunun DIŞINDA durur ama artefakta girer:
+        # diske yazılmayan bir sayı makine tarafından denetlenemez, yani
+        # sessizce bayatlar (bkz. `micro_f1_yapisal` yorumu).
+        "campaign_type": tur.as_dict(),
         "results": [r.as_dict() for r in results],
     }
 
@@ -1273,7 +1531,7 @@ def main(argv: list[str] | None = None) -> int:
     written = report_mod.write_report(
         run_dir, metrics=metrics, env=env,
         markdown=markdown_report(results, predictor, env,
-                                 item_esik=args.kalem_esik,
+                                 item_esik=args.kalem_esik, tur=tur,
                                  kalem_duyarlilik=kalem_duyarlilik),
         per_field_rows=per_field_rows(results, predictor.name),
         per_field_columns=PER_FIELD_COLUMNS,

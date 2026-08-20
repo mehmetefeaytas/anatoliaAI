@@ -316,3 +316,47 @@ _SAYI_BASI = r"(?<![\d.,:])"
 _PARA_IFADESI = rf"{_SAYI_BASI}\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])"
 #: Yukarıdaki `_SAYI_BASI` korumasıyla kurulan tutar ifadesi. `tahsis_ucreti`,
 #: `odul_indirim` ve `alisveris_puani` bunu doğrudan içe aktarır.
+
+
+# --------------------------------------------------------------------------- #
+# GEZİNME ŞERİDİ — sayfa çerçevesini (menü / ürün listesi) cümleden ayırt eder
+#
+# Buraya 2026-08-20'de `hedef_kitle.py`den TAŞINDI ve **kamuya açıldı**.
+# Gerekçe: aynı kirlilik iki ayrı hataya sebep oluyor ve iki ayrı katman onu
+# tanımak zorunda:
+#   1. `hedef_kitle` çıkarımı — menüde geçen "Emeklilik"/"Yeni Müşterilerimize"
+#      gibi sözcükleri segment sanıyordu (ölçüm: modül başlığı, hedef_kitle.py).
+#   2. Arayüz/görüntüleme katmanı — `raw_text` şeridi ekrana basıyor.
+# İki kopya kaçınılmaz olarak birbirinden ayrışırdı; ölçüt TEK yerde durur.
+#
+# ÖLÇÜT DEĞİŞMEDİ (birebir taşındı): >= 6 kelime, kelimelerin >= %60'ı büyük
+# harfle başlıyor ve cümle sonu noktalaması (`.`/`!`) YOK. Eski private ad
+# `hedef_kitle._gezinme_seridi` geriye dönük uyum için orada duruyor.
+#
+# ÖLÇÜLMÜŞ SINIR — bu ölçüt CÜMLE düzeyindedir ve tek başına bir belgenin
+# BAŞINDAKİ menü şeridini temizlemeye YETMEZ: şerit noktalama taşımadığı için
+# `split_sentences` onu ilk gerçek cümleye kaynatır ("… Konut Finansmanı Nedir?
+# Konut finansmanı, ev sahibi olmak isteyen…"), birleşik cümle `.`/`!` ile
+# bittiği için ölçüt `False` döner. Sınıflandırıcı girdisini bu ölçütle
+# temizleme denemesi ÖLÇÜLDÜ ve DOĞRULUĞU DÜŞÜRDÜ; ayrıntı ve sayılar:
+# docs/rapor/campaign-type-onarimi.md
+_MENU_BUYUK_HARF_ORANI = 0.6
+_MENU_ASGARI_KELIME = 6
+_CUMLE_SONU_RE = re.compile(r"[.!]\s*$")
+
+
+def gezinme_seridi(cumle: str) -> bool:
+    """Cümle değil, gezinme menüsü / ürün listesi şeridi mi?
+
+    Args:
+        cumle: `split_sentences` çıktısındaki tek bir parça.
+
+    Returns:
+        Şerit ise `True`. Gerçek bir cümle ise `False`.
+    """
+    kelimeler = cumle.split()
+    if len(kelimeler) < _MENU_ASGARI_KELIME:
+        return False
+    buyuk = sum(1 for w in kelimeler if w[:1].isupper())
+    return (buyuk / len(kelimeler) >= _MENU_BUYUK_HARF_ORANI
+            and not _CUMLE_SONU_RE.search(cumle))
