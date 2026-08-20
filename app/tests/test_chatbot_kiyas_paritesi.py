@@ -291,8 +291,19 @@ class TuruBilinmeyenBelgeElenmez(_DepoluTest):
             "Kâr payı oranı %2,49, 36 ay vade.", bank_slug="albaraka"))
 
     def test_bilinmeyen_tur_kendi_grubunda_gorunur(self):
+        """Grup GÖRÜNÜR kalır — ama kullanıcıya `AILE_BELIRLENEMEDI` adıyla.
+
+        `comparison.BILINMEYEN_TUR` ("Sınıflandırılamadı") bir kova ADIDIR, bir
+        ürün ailesi adı değil; sohbet yüzeyi onu sunum katmanında çevirir
+        (gerekçe `structured.AILE_BELIRLENEMEDI` bloğunda). Testin iddiası
+        değişmedi — türü bilinmeyen belge GİZLENMİYOR, kendi grubunda
+        görünüyor; yalnız grubun EKRAN ADI kontrol ediliyor.
+        """
+        from src.chatbot.structured import AILE_BELIRLENEMEDI
         from src.comparison.compare import BILINMEYEN_TUR
-        self.assertIn(BILINMEYEN_TUR, self.cevap("kar_payi_orani").text)
+        metin = self.cevap("kar_payi_orani").text
+        self.assertIn(AILE_BELIRLENEMEDI, metin)
+        self.assertNotIn(BILINMEYEN_TUR, metin)
 
 
 # --------------------------------------------------------------------------- #

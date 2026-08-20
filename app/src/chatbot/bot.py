@@ -384,8 +384,14 @@ class Chatbot:
                               report.gates)
 
         d = self._dispatch(question, scr, context)
+        # KATALOG cevabının dayanağı bir BELGE değil, deponun kendi sayımıdır
+        # (`_banka_katalogu_yaniti`) ve gövde bunu söylüyor. Çekimserlik kapısı
+        # (KAPI 5) "kaynak yok" diye onu silmemeli; sentetik bir kaynak
+        # UYDURMAK ise kapının kendisini kandırmak olurdu — bu yüzden istisna
+        # BURADA, adıyla ve tek satırda duruyor.
+        kaynak_var = bool(d.sources) or d.handler == "katalog"
         text, report = safety.guard_output(d.body, scr,
-                                           has_sources=bool(d.sources),
+                                           has_sources=kaynak_var,
                                            has_rate=d.has_rate)
         return ChatAnswer(text, d.handler, d.field, d.sources, report,
                           report.gates, context=_yeni_baglam(d),
@@ -420,11 +426,83 @@ class Chatbot:
             "Bu bankalardan biri için tekrar sorabilirsiniz."
         )
 
+    def _banka_katalogu_yaniti(self) -> tuple[str, list]:
+        """KATALOG cevabı: tanınan bankalar + belge sayıları. (metin, kaynaklar)
+
+        ## Ölçülen kusur (2026-08-20, canlı `/chat`)
+
+            — "Hangi bankalar var?"
+            — [RAG] "…HESAP CÜZDANI TALEP ETMEYEN MÜŞTERİLERDEN ALINACAK
+               TALEP ÖRNEĞİ VE BİLGİLENDİRME FORMU…"
+
+        Çok muhtemel bir jüri sorusu ve cevabı sistemin elindeydi: `/banks`
+        ucu tam listeyi, `repo.campaigns_per_bank()` belge sayılarını zaten
+        veriyor. Soru bir ALAN sorusu olmadığı için router yapısal sorgu
+        kuramıyor ve anahtar-kelime araması sorunun tek ayırt edici sözcüğü
+        ("banka") üzerinden alakasız bir form getiriyordu.
+
+        ## Sayılar DEPODAN, liste `BANK_DISPLAY` ile SÜZÜLÜ
+
+        Belge sayıları `repo.campaigns_per_bank()`ten gelir — "10 banka, 2.706
+        belge" iddiası ancak ölçülürse kurulabilir.
+
+        Ama listenin KENDİSİ `BANK_DISPLAY` ile kesiştirilir, çünkü
+        `repo.all_banks()` korpusun TÜM kaynak satırlarını döner ve arasında
+        TKBB gibi OTORİTE KAYNAKLARI da vardır (`api/routers/katalog.py::banks`
+        docstring'i — gerçek banka DEĞİLDİR, fıkhî terim tanımı için kazınan
+        sektör dokümanıdır). `/banks` ucu aynı satırı `banks.yaml`'daki
+        `otorite_kaynak` bayrağıyla süzüyor; sohbet katmanı config dosyası
+        OKUMAZ, o yüzden aynı sonucu tanıma kümesinden okur: `BANK_DISPLAY`,
+        `detect_banks()`in tanıdığı slug kümesinin ta kendisidir. Böylece
+        "veri setimde şu bankalar var" cümlesi ile "bu bankalar hakkında soru
+        cevaplayabilirim" cümlesi aynı kümeye işaret eder — iki yüzeyin
+        ayrışması imkânsız kalır.
+
+        `_bilinmeyen_banka_yaniti` ile aynı ilke, farklı soru: orada "hangi
+        adları tanıyorsun", burada "veri setinde ne var ve ne kadar".
+
+        Kaynaklar BİLEREK boştur: bu cevap tek bir belgeye dayanmıyor, kendi
+        veri tabanının sayımına dayanıyor ve gövde bunu SÖYLÜYOR. Bu yüzden
+        `_dispatch` çekimserlik kapısını atlatmak için sentetik bir kaynak
+        UYDURMAZ; bkz. `ask()` içindeki katalog dalı.
+        """
+        sayim = self.repo.campaigns_per_bank()
+        bankalar = [b for b in self.repo.all_banks()
+                    if b.get("slug") in BANK_DISPLAY]
+        satirlar = []
+        toplam_belge = 0
+        for b in sorted(bankalar,
+                        key=lambda x: BANK_DISPLAY.get(x["slug"], x["slug"])):
+            n = sayim.get(b["slug"], 0)
+            toplam_belge += n
+            satirlar.append(
+                f"- **{BANK_DISPLAY.get(b['slug'], b['slug'])}** — {n} belge")
+        if not satirlar:
+            return ("Veri setim şu an boş — hiçbir banka belgesi yüklenmemiş.",
+                    [])
+        return (
+            f"Veri setimde **{len(satirlar)} katılım bankası** var "
+            f"(toplam {toplam_belge} belge):\n"
+            + "\n".join(satirlar)
+            + "\n\nBir bankanın adını yazarak kâr payı oranı, vade, masraf "
+              "durumu gibi alanlarını sorabilir ya da iki bankayı "
+              "karşılaştırmamı isteyebilirsiniz.", [])
+
     # --- iç yardımcılar ----------------------------------------------------
     def _dispatch(self, question: str, scr: safety.InputScreening,
                   context: Optional[ChatContext] = None) -> "_Dagitim":
         """Router'ı çalıştırıp seçilen yolun tüm çıktısını toplar."""
         r = route(question, context)
+
+        # KATALOG — "Hangi bankalar var?" (gerekçe `router._KATALOG_RE` ve
+        # `_banka_katalogu_yaniti`). Tavsiye kapısından ÖNCE gelir: katalog
+        # sorusu bir tavsiye talebi değildir ve "hangisini seçmeliyim"
+        # çerçevesine sokulması soruyu değiştirmek olurdu.
+        if r.handler == "katalog":
+            metin, kaynaklar = self._banka_katalogu_yaniti()
+            return _Dagitim("katalog", None, metin, kaynaklar, False, r,
+                            {"attempted": False, "applied": False,
+                             "ms": None, "reason": "katalog yolu"}, [])
 
         # KAPI 3 — karşılaştırma ≠ tavsiye. "Hangi bankaya para yatırayım?"
         # sorusunda alan çıkarılamaz ve sistem RAG'a düşüp çekimser kalırdı.

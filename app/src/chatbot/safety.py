@@ -460,6 +460,12 @@ BANK_NAME_TO_SLUG: dict[str, str] = {
     "t.o.m. katilim": "tom-katilim",
     "tom katilim": "tom-katilim",
     "tom bank": "tom-katilim",
+    # "tombank" — bankanın kendi alan adı (tombank.com.tr), yani kullanıcının
+    # tek sözcük yazması MEŞRU bir varyanttır. Ayrıca zorunlu: aşağıdaki
+    # `_bilesik_banka_adi` kapısı "<önek>+bank" biçimindeki her tanınmayan
+    # adı reddediyor ve boşluklu "tom bank" takma adı tek sözcüğe uymuyordu —
+    # bu satır olmadan gerçek bir korpus bankası "tanımıyorum" cevabı alırdı.
+    "tombank": "tom-katilim",
     "hayat finans": "hayat-finans",
     "dunya katilim": "dunya-katilim",
     "adil katilim": "adil-katilim",
@@ -828,19 +834,84 @@ _BANKA_ANAHTAR = frozenset({
 })
 
 
+#: BİLEŞİK banka adının önekinin ASGARİ uzunluğu.
+#:
+#: Tek harflik önek ("bbanka", "nbanka") bir özel addan çok jenerik sözcüğün
+#: tuş hatasıdır; iki harf ("ak", "iş", "on") gerçek bileşik adların bilinen
+#: en kısa önekidir.
+_BILESIK_ASGARI_ONEK = 2
+
+
+def _bilesik_banka_adi(katlanmis: str) -> bool:
+    """Katlanmış tek sözcük, `<önek> + <banka sözcüğü>` bileşiği mi?
+
+    ## Neden bu ikinci sinyal gerekiyor — ÖLÇÜLDÜ (2026-08-20, canlı `/chat`)
+
+        — "Akbank konut kredisi faizi ne?"
+        — "Konut Finansmanı — kâr payı oranı: Kuveyt Türk %1,89 ·
+           Türkiye Finans %2,95–%4,42"   (handler=structured, kaynaklı)
+
+    Akbank KONVANSİYONEL bir bankadır ve korpusta yoktur. Aşağıdaki kapı
+    ateşlenmiyordu çünkü tek deseni "büyük harfli ad **+ AYRI** banka
+    sözcüğü"dür ("XYZ Bankası") — "Akbank" tek sözcüktür ve o desende hiç
+    yeri yok. Sonuç, `XYZ Bankası` için kapatılmış hatanın birebir aynısı ve
+    aynı sınıfta: **kaynaklı yanlış cevap**, yani kanıtsız halüsinasyondan
+    daha tehlikeli olanı.
+
+    ## Ölçüt — "bilinen katılım bankası değil ama banka gibi görünüyor"
+
+    Konvansiyonel banka adlarından bir LİSTE tutulmaz: liste uydurmak olurdu
+    (eksik kalır, bakımsız kalır ve "listede yok = güvenli" gibi yanlış bir
+    güvence verir). Bunun yerine BİÇİM ölçülür: sözcük bir banka sözcüğüyle
+    (`_BANKA_ANAHTAR`) BİTİYOR ve önünde boş olmayan bir önek var mı.
+
+    Ayrım şu gözleme dayanıyor ve bu yüzden jenerik bankacılık sözcükleri
+    yapısal olarak dışarıda kalır: jenerik sözcük her zaman `bank` ile
+    BAŞLAR ("banka", "bankacılık", "bankamatik"), özel ad ise `bank`ı SONA
+    alır ("akbank", "denizbankası", "işbank"). Yani "Bankacılığı" büyük
+    harfle yazılsa bile bu kapıyı açamaz — soneki (`acilik`) banka sözcüğü
+    değildir.
+
+    Bu yol büyük/küçük harfe BAKMAZ (kapının iki sözcüklü yolu bakar).
+    Sebep: orada belirsizlik gerçekti ("en avantajlı katılım **bankası**"
+    tamamen jeneriktir), burada yok — `<önek>+bank` bileşiği jenerik
+    bankacılık dilinde bulunmuyor. Böylece "akbank konut kredisi faizi ne"
+    (tamamen küçük harf) de kapanır.
+
+    >>> _bilesik_banka_adi("akbank")
+    True
+    >>> _bilesik_banka_adi("denizbankasi")
+    True
+    >>> _bilesik_banka_adi("banka")
+    False
+    >>> _bilesik_banka_adi("bankaciligi")
+    False
+    """
+    for son in _BANKA_ANAHTAR:
+        if not katlanmis.endswith(son):
+            continue
+        if len(katlanmis) - len(son) >= _BILESIK_ASGARI_ONEK:
+            return True
+    return False
+
+
 def olasi_taniminayan_banka_adi(question: str) -> bool:
     """Soru, veri setinde KARŞILIĞI OLMAYAN özel bir banka adına mı işaret ediyor?
 
     Yalnız `detect_banks()` HİÇBİR şey bulamadığında anlamlıdır (çağıran bunu
     zaten kontrol etmeli, ama burada da tekrar edilir — bağımsız çağrılabilir
     olsun). Gerekçe ve sınırlar modül başlığındaki "TANINMAYAN BANKA ADI"
-    bloğunda.
+    bloğunda; ikinci (bileşik ad) sinyalin gerekçesi `_bilesik_banka_adi`de.
 
     >>> olasi_taniminayan_banka_adi("XYZ Bankası'nın oranı ne?")
     True
-    >>> olasi_taniminayan_banka_adi("Anadolu Katılım Bankası'nın oranı ne?")
+    >>> olasi_taniminayan_banka_adi("Anadolu Katılım Bankası'nın vadesi kaç ay?")
+    True
+    >>> olasi_taniminayan_banka_adi("Akbank konut kredisi faizi ne?")
     True
     >>> olasi_taniminayan_banka_adi("Hangi bankada en düşük oran var?")
+    False
+    >>> olasi_taniminayan_banka_adi("Hangi bankalar var?")
     False
     >>> olasi_taniminayan_banka_adi("Kuveyt Türk'ün oranı ne?")
     False
@@ -851,6 +922,10 @@ def olasi_taniminayan_banka_adi(question: str) -> bool:
     if not ham:
         return False
     folded = [_F(w) for w in ham]
+    # SİNYAL 2 — bileşik özel ad ("Akbank"). Tek sözcük olduğu için aşağıdaki
+    # "önceki sözcüğe bak" yolu onu göremez; ayrı ve önce denenir.
+    if any(_bilesik_banka_adi(w) for w in folded):
+        return True
     for i, w in enumerate(folded):
         if w not in _BANKA_ANAHTAR:
             continue

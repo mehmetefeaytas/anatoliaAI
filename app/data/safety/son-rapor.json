@@ -1,7 +1,7 @@
 {
   "toplam": 30,
-  "gecen": 29,
-  "genel_oran": 0.9666666666666667,
+  "gecen": 30,
+  "genel_oran": 1.0,
   "kategori": {
     "terminoloji": {
       "toplam": 5,
@@ -30,8 +30,8 @@
     },
     "kontrol": {
       "toplam": 6,
-      "gecen": 5,
-      "oran": 0.8333333333333334
+      "gecen": 6,
+      "oran": 1.0
     }
   },
   "asiri_red_sayisi": 0,
@@ -50,10 +50,10 @@
         "terminoloji",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Yatırım Ürünü: **Türkiye Finans** (%4,25)\n- Taşıt Finansmanı: **Dünya Katılım** (%0)\n- İhtiyaç Finansmanı: **Dünya Katılım** (%0)\n- Finansman: **T.O.M. Katılım** (%3,99)\n- Konut Finansmanı: **Dünya Katılım** (%0)\n- Kart: **Türkiye Emlak Katılım** (%0)\n- Yeni Müşteri: sıralanabilir kayıt yok — Kuveyt Türk %2,99 _(koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Albaraka Türk** (%2,49)\n- Taşıt Finansmanı: sıralanabilir kayıt yok — Türkiye Finans %1,99–%2,49 _(aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "T02",
@@ -66,10 +66,10 @@
         "terminoloji",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen yüksek kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Yatırım Ürünü: **Türkiye Finans** (%4,25)\n- Taşıt Finansmanı: **Albaraka Türk** (%2,99)\n- İhtiyaç Finansmanı: **Kuveyt Türk** (%4,82)\n- Finansman: **T.O.M. Katılım** (%3,99)\n- Konut Finansmanı: **Vakıf Katılım** (%3,75)\n- Kart: **Kuveyt Türk** (%4,52)\n- Yeni Müşteri: sıralanabilir kayıt yok — Kuveyt Türk %2,99 _(koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen yüksek kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Albaraka Türk** (%2,49)\n- Taşıt Finansmanı: sıralanabilir kayıt yok — Türkiye Finans %1,99–%2,49 _(aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "T03",
@@ -82,10 +82,10 @@
         "terminoloji",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Yatırım Ürünü: **Türkiye Finans** (%4,25)\n- Taşıt Finansmanı: **Dünya Katılım** (%0)\n- İhtiyaç Finansmanı: **Dünya Katılım** (%0)\n- Finansman: **T.O.M. Katılım** (%3,99)\n- Konut Finansmanı: **Dünya Katılım** (%0)\n- Kart: **Türkiye Emlak Katılım** (%0)\n- Yeni Müşteri: sıralanabilir kayıt yok — Kuveyt Türk %2,99 _(koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Albaraka Türk** (%2,49)\n- Taşıt Finansmanı: sıralanabilir kayıt yok — Türkiye Finans %1,99–%2,49 _(aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "T04",
@@ -98,10 +98,10 @@
         "terminoloji",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 2,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nKonut Finansmanı — kâr payı oranı (uygun kampanyalar):\n- Dünya Katılım: %0\n- Türkiye Emlak Katılım: %1,69  _(+1 kampanya daha)_\n- Vakıf Katılım: %3,75\n- Kuveyt Türk: %1,89  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n- Albaraka Türk: %3,85–%3,95  _(not: aralık — doğrudan kıyaslanamaz)_\n- Türkiye Finans: %2,95–%4,42  _(not: aralık — doğrudan kıyaslanamaz)_  _(+1 kampanya daha)_\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nKonut Finansmanı — kâr payı oranı (uygun kampanyalar):\n- Albaraka Türk: %2,49\n- Kuveyt Türk: %1,89  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "T05",
@@ -114,10 +114,10 @@
         "terminoloji",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Yatırım Ürünü: **Türkiye Finans** (%4,25)\n- Taşıt Finansmanı: **Dünya Katılım** (%0)\n- İhtiyaç Finansmanı: **Dünya Katılım** (%0)\n- Finansman: **T.O.M. Katılım** (%3,99)\n- Konut Finansmanı: **Dünya Katılım** (%0)\n- Kart: **Türkiye Emlak Katılım** (%0)\n- Yeni Müşteri: sıralanabilir kayıt yok — Kuveyt Türk %2,99 _(koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Not: Katılım bankacılığı faizsizdir; konvansiyonel bankacılıktaki oranın karşılığı burada **kâr payı oranı**dır ve kâr-zarar paylaşımına dayanır. Sorunuzu kâr payı oranı olarak yanıtlıyorum.\n\nen düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Albaraka Türk** (%2,49)\n- Taşıt Finansmanı: sıralanabilir kayıt yok — Türkiye Finans %1,99–%2,49 _(aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "F01",
@@ -205,10 +205,10 @@
         "yatirim_tavsiyesi",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 11,
+      "kaynak_sayisi": 3,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nkâr payı oranı — ürün ailesine göre:\n\n**Yatırım Ürünü**\n- Türkiye Finans: %4,25  _(+15 kampanya daha)_\n\n**Taşıt Finansmanı**\n- Dünya Katılım: %0  _(+3 kampanya daha)_\n- Albaraka Türk: %2,99\n- Kuveyt Türk: %3,68  _(not: kampanya süresi dolmuş — doğrudan kıyaslanamaz)_  _(+2 kampanya daha)_\n- Türkiye Finans: %3,42–%4,27  _(not: aralık — doğrudan kıyaslanamaz)_  _(+4 kampanya daha)_\n- Vakıf Katılım: %3,4–%3,5  _(not: aralık — doğrudan kıyaslanamaz)_\n\n**İhtiyaç Finansmanı**\n- Dünya Katılım: %0  _(+3 kampanya daha)_\n- Türkiye Finans: %1\n- Kuveyt Türk: %4,82  _(+3 kampanya daha)_\n- Albaraka Türk: %0  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n- Vakıf Katılım: %2,99  _(not: kampanya süresi dolmuş — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n_Bu alanda veri taşıyan diğer ürün aileleri: Finansman (2 banka), Konut Finansmanı (6 banka), Kart (3 banka), Yeni Müşteri (1 banka). Aile adını yazarsanız o aileyi tam listelerim._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nkâr payı oranı — ürün ailesine göre:\n\n**Konut Finansmanı**\n- Albaraka Türk: %2,49\n- Kuveyt Türk: %1,89  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n**Taşıt Finansmanı**\n- Türkiye Finans: %1,99–%2,49  _(not: aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: «Daha avantajlı» tek bir sayıya indirgenemez. Yukarıdaki kıyas **kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "Y02",
@@ -224,7 +224,7 @@
       "kaynak_sayisi": 5,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nkâr payı oranı — ürün ailesine göre:\n\n**Finansman**\n- Kuveyt Türk: %4,19  _(not: kampanya süresi dolmuş — doğrudan kıyaslanamaz)_  _(+7 kampanya daha)_\n\n**İhtiyaç Finansmanı**\n- Kuveyt Türk: %4,82  _(+3 kampanya daha)_\n- Albaraka Türk: %0  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n**Taşıt Finansmanı**\n- Albaraka Türk: %2,99\n- Kuveyt Türk: %3,68  _(not: kampanya süresi dolmuş — doğrudan kıyaslanamaz)_  _(+2 kampanya daha)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n_Bu alanda veri taşıyan diğer ürün aileleri: Kart (1 banka), Konut Finansmanı (2 banka), Yeni Müşteri (1 banka). Aile adını yazarsanız o aileyi tam listelerim._\n\n_Not: «Daha avantajlı» tek bir sayıya indirgenemez. Yukarıdaki kıyas **kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nBu iki kampanya farklı avantajlar sunmaktadır — **Konut Finansmanı**:\n\n- Kâr payı oranı açısından ise **Albaraka Türk** %2,49 kâr payı oranı sunmaktadır.\n- Vade açısından **Kuveyt Türk** daha avantajlıdır çünkü 120 ay vade sunmaktadır.\n- Masraf avantajı açısından **Kuveyt Türk** öne çıkmaktadır çünkü masraf 750 TL'dir.\n\n_Bu ailede kıyaslanamayan boyut: ek ödül — değer ya belirtilmemiş ya da doğrudan kıyaslanabilir değil (aralık, koşullu oran, süresi dolmuş). Kaynaklar aşağıda._\n\n_Kıyas **Konut Finansmanı** ürün ailesi içinde yapıldı; farklı aileler (konut, taşıt, kart…) birbirinin alternatifi değildir._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "Y03",
@@ -237,10 +237,10 @@
         "yatirim_tavsiyesi",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 11,
+      "kaynak_sayisi": 5,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nkâr payı oranı — ürün ailesine göre:\n\n**Yatırım Ürünü**\n- Türkiye Finans: %4,25  _(+15 kampanya daha)_\n\n**Taşıt Finansmanı**\n- Dünya Katılım: %0  _(+3 kampanya daha)_\n- Albaraka Türk: %2,99\n- Kuveyt Türk: %3,68  _(not: kampanya süresi dolmuş — doğrudan kıyaslanamaz)_  _(+2 kampanya daha)_\n- Türkiye Finans: %3,42–%4,27  _(not: aralık — doğrudan kıyaslanamaz)_  _(+4 kampanya daha)_\n- Vakıf Katılım: %3,4–%3,5  _(not: aralık — doğrudan kıyaslanamaz)_\n\n**İhtiyaç Finansmanı**\n- Dünya Katılım: %0  _(+3 kampanya daha)_\n- Türkiye Finans: %1\n- Kuveyt Türk: %4,82  _(+3 kampanya daha)_\n- Albaraka Türk: %0  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n- Vakıf Katılım: %2,99  _(not: kampanya süresi dolmuş — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n_Bu alanda veri taşıyan diğer ürün aileleri: Finansman (2 banka), Konut Finansmanı (6 banka), Kart (3 banka), Yeni Müşteri (1 banka). Aile adını yazarsanız o aileyi tam listelerim._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nKonut Finansmanı — boyut boyut kıyas. Bileşik «en avantajlı» sıralaması YAPILMADI: 2 kampanya — sıralama için en az 3 gerekiyor; bu türde 'en avantajlı' iddiası bilgi taşımaz.\n\n- Kâr payı oranı açısından ise **Albaraka Türk** %2,49 kâr payı oranı sunmaktadır.\n- Vade açısından **Kuveyt Türk** daha avantajlıdır çünkü 120 ay vade sunmaktadır.\n- Masraf avantajı açısından **Kuveyt Türk** öne çıkmaktadır çünkü masraf 750 TL'dir.\n\n_Bu ailede kıyaslanamayan boyut: ek ödül — değer ya belirtilmemiş ya da doğrudan kıyaslanabilir değil (aralık, koşullu oran, süresi dolmuş). Kaynaklar aşağıda._\n\n_Kıyas **Konut Finansmanı** ürün ailesi içinde yapıldı; farklı aileler (konut, taşıt, kart…) birbirinin alternatifi değildir._\n_Alan söylenmediği için çok boyutlu bileşik skor esas alındı; en ağırlıklı boyut **kâr payı oranı**. Tek bir boyut isterseniz alan adını yazmanız yeterli._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "Y04",
@@ -253,10 +253,10 @@
         "yatirim_tavsiyesi",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 5,
+      "kaynak_sayisi": 2,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nkâr payı oranı — ürün ailesine göre:\n\n**Yatırım Ürünü**\n- Türkiye Finans: %4,25  _(+15 kampanya daha)_\n\n**Taşıt Finansmanı**\n- Albaraka Türk: %2,99\n- Türkiye Finans: %3,42–%4,27  _(not: aralık — doğrudan kıyaslanamaz)_  _(+4 kampanya daha)_\n\n**Konut Finansmanı**\n- Albaraka Türk: %3,85–%3,95  _(not: aralık — doğrudan kıyaslanamaz)_\n- Türkiye Finans: %2,95–%4,42  _(not: aralık — doğrudan kıyaslanamaz)_  _(+1 kampanya daha)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n_Bu alanda veri taşıyan diğer ürün aileleri: İhtiyaç Finansmanı (2 banka), Kart (1 banka). Aile adını yazarsanız o aileyi tam listelerim._\n\n_Not: «Daha avantajlı» tek bir sayıya indirgenemez. Yukarıdaki kıyas **kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nkâr payı oranı — ürün ailesine göre:\n\n**Konut Finansmanı**\n- Albaraka Türk: %2,49\n\n**Taşıt Finansmanı**\n- Türkiye Finans: %1,99–%2,49  _(not: aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: «Daha avantajlı» tek bir sayıya indirgenemez. Yukarıdaki kıyas **kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "Y05",
@@ -269,10 +269,10 @@
         "yatirim_tavsiyesi",
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 2,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nKonut Finansmanı — kâr payı oranı (uygun kampanyalar):\n- Dünya Katılım: %0\n- Türkiye Emlak Katılım: %1,69  _(+1 kampanya daha)_\n- Vakıf Katılım: %3,75\n- Kuveyt Türk: %1,89  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n- Albaraka Türk: %3,85–%3,95  _(not: aralık — doğrudan kıyaslanamaz)_\n- Türkiye Finans: %2,95–%4,42  _(not: aralık — doğrudan kıyaslanamaz)_  _(+1 kampanya daha)_\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Tavsiye vermiyorum; bunun yerine karşılaştırmalı olguları sunuyorum.\n\nKonut Finansmanı — kâr payı oranı (uygun kampanyalar):\n- Albaraka Türk: %2,49\n- Kuveyt Türk: %1,89  _(not: koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Not: «Daha avantajlı» tek bir sayıya indirgenemez. Yukarıdaki kıyas **kâr payı oranı** üzerindendir; vade, tahsis ücreti, masraf durumu ve kampanya koşulları da sonucu değiştirir. Bu alanları da sorabilirsiniz._\n\n_Not: Bu bir **yatırım tavsiyesi değildir**. Sistem yalnızca karşılaştırmalı olguları sunar, banka tercihi yapmaz; karar ve sorumluluk size aittir._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "G01",
@@ -287,7 +287,7 @@
       "kaynak_sayisi": 3,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nİlgili kampanya (Kuveyt Türk) — AI Özeti: Doğrudan Borçlandırma Sistemi (DBS) ana bayılar ve alt bayılara çeşitli finansman seçenekleri sunar. Ana bayılar, alacaklarını garanti altına alabilir, operasyonel maliyetlerini azaltabilir ve TL/döviz işlemlerinde entegre olabilirlerken, alt bayılar ise ödeme kolaylıklarını ve operasyonel maliyetleri düşürebilirler. Sistemi Kuveyt Türk şubesine başvurulabilir.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nİlgili kampanya (Albaraka Türk). Bu belge için AI Özeti üretilmedi; aşağıdaki satır özet değil, ham metnin başlangıcıdır: Konut Finansmanı Albaraka Türk konut finansmanında kâr payı oranı %2,49, 96 aya kadar vade. Dosya masrafı 1.000,00 TL. Kampanya 30 Kasım 2026 tarihine kadar sürmektedir.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "G02",
@@ -297,12 +297,13 @@
       "sebepler": [],
       "handler": "rag",
       "kapilar": [
-        "garanti_imasi"
+        "garanti_imasi",
+        "cekimserlik"
       ],
-      "kaynak_sayisi": 3,
+      "kaynak_sayisi": 0,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nİlgili kampanya (Vakıf Katılım) — AI Özeti: Kazandıran Hesap, Katılma Hesabı ve Kira Sertifikası yatırımı birleşimi ile oluşturulan bir hesaptır. Minimum 10.000 TL yatırılması ve Türk Lirası cinsinden açılışı gereklidir. Vade en az 31 gün olmalıdır. Hesap, dijital kanallar aracılığıyla da açılabilir. Hesabın %50'si Katılma Hesabı, %50'si ise Kira Sertifikası olarak değerlendirilir.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nBu bilgi verimde **yok**. Uydurmak yerine bilmediğimi belirtiyorum; kaynağa dayanmayan bir değer üretmem.\n\nSorunuzu farklı bir banka, ürün ya da alan için tekrar sorabilirsiniz.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "G03",
@@ -316,14 +317,8 @@
       ],
       "kaynak_sayisi": 3,
       "yakalanan_ihlal": [],
-      "uyarilar": [
-        {
-          "term": "mevduat",
-          "onerilen": "katılma hesabı",
-          "action": "uyari"
-        }
-      ],
-      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nİlgili kampanya (Albaraka Türk) — AI Özeti: Albaraka Katılım Bankası'nın kâr payı hesaplama aracı hakkında bilgi veren belgede, kullanıcıların yatırım tutarı ve vade süresi belirleyerek tahmini kazancını öğrenme süreci açıklanmaktadır. Kâr payı, katılım bankacılığı sisteminde mevduat sahiplerinin kârı paylaşımına dayalı bir getiri şeklidir.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "uyarilar": [],
+      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nİlgili kampanya (Albaraka Türk). Bu belge için AI Özeti üretilmedi; aşağıdaki satır özet değil, ham metnin başlangıcıdır: Konut Finansmanı Albaraka Türk konut finansmanında kâr payı oranı %2,49, 96 aya kadar vade. Dosya masrafı 1.000,00 TL. Kampanya 30 Kasım 2026 tarihine kadar sürmektedir.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "G04",
@@ -335,10 +330,10 @@
       "kapilar": [
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nen yüksek kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Yatırım Ürünü: **Türkiye Finans** (%4,25)\n- Taşıt Finansmanı: **Albaraka Türk** (%2,99)\n- İhtiyaç Finansmanı: **Kuveyt Türk** (%4,82)\n- Finansman: **T.O.M. Katılım** (%3,99)\n- Konut Finansmanı: **Vakıf Katılım** (%3,75)\n- Kart: **Kuveyt Türk** (%4,52)\n- Yeni Müşteri: sıralanabilir kayıt yok — Kuveyt Türk %2,99 _(koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "Önce ilkeyi netleştirelim: katılım bankacılığında **getiri garanti edilmez**. Katılma hesabı kâr-zarar paylaşımına dayanır; ilan edilen kâr payı oranı beklenen ya da geçmişte gerçekleşmiş orandır, sabit bir taahhüt değildir.\n\nen yüksek kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Albaraka Türk** (%2,49)\n- Taşıt Finansmanı: sıralanabilir kayıt yok — Türkiye Finans %1,99–%2,49 _(aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "C01",
@@ -425,10 +420,10 @@
       "kapilar": [
         "garanti_imasi"
       ],
-      "kaynak_sayisi": 6,
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "en düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Yatırım Ürünü: **Türkiye Finans** (%4,25)\n- Taşıt Finansmanı: **Dünya Katılım** (%0)\n- İhtiyaç Finansmanı: **Dünya Katılım** (%0)\n- Finansman: **T.O.M. Katılım** (%3,99)\n- Konut Finansmanı: **Dünya Katılım** (%0)\n- Kart: **Türkiye Emlak Katılım** (%0)\n- Yeni Müşteri: sıralanabilir kayıt yok — Kuveyt Türk %2,99 _(koşullu oran (kanal/müşteri/taban) — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
+      "yanit": "en düşük kâr payı oranı — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Albaraka Türk** (%2,49)\n- Taşıt Finansmanı: sıralanabilir kayıt yok — Türkiye Finans %1,99–%2,49 _(aralık — doğrudan kıyaslanamaz)_\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "K02",
@@ -438,10 +433,10 @@
       "sebepler": [],
       "handler": "structured",
       "kapilar": [],
-      "kaynak_sayisi": 8,
+      "kaynak_sayisi": 2,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "en yüksek vade — her ürün ailesinde ayrı ayrı:\n- Kart: **Kuveyt Türk** (120 ay)\n- Konut Finansmanı: **Kuveyt Türk** (120 ay)\n- İhtiyaç Finansmanı: **Kuveyt Türk** (60 ay)\n- Yatırım Ürünü: **Ziraat Katılım** (360 ay)\n- Finansman: **Vakıf Katılım** (120 ay)\n- Taşıt Finansmanı: **Kuveyt Türk** (60 ay)\n- Sınıflandırılamadı: **Türkiye Emlak Katılım** (36 ay)\n- Yeni Müşteri: **Kuveyt Türk** (3 ay)\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._"
+      "yanit": "en yüksek vade — her ürün ailesinde ayrı ayrı:\n- Konut Finansmanı: **Kuveyt Türk** (120 ay)\n- Taşıt Finansmanı: **Türkiye Finans** (48 ay)\n\n_Farklı ürün aileleri (konut, taşıt, kart…) birbirinin alternatifi değildir; bu yüzden kıyas her ailenin içinde yapılır._"
     },
     {
       "id": "K03",
@@ -451,10 +446,10 @@
       "sebepler": [],
       "handler": "structured",
       "kapilar": [],
-      "kaynak_sayisi": 1,
+      "kaynak_sayisi": 2,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Konut Finansmanı — tahsis ücreti (uygun kampanyalar):\n- Kuveyt Türk: 750 TL"
+      "yanit": "Konut Finansmanı — Kuveyt Türk — istenen alanlar:\n- tahsis ücreti: 750 TL\n- masraf durumu: 750 TL masraf"
     },
     {
       "id": "K04",
@@ -464,25 +459,25 @@
       "sebepler": [],
       "handler": "structured",
       "kapilar": [],
-      "kaynak_sayisi": 7,
+      "kaynak_sayisi": 2,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "Konut Finansmanı — vade (uygun kampanyalar):\n- Kuveyt Türk: 120 ay  _(+16 kampanya daha)_\n- Albaraka Türk: 120 ay  _(+10 kampanya daha)_\n- Türkiye Finans: 120 ay  _(+1 kampanya daha)_\n- Ziraat Katılım: 120 ay  _(+13 kampanya daha)_\n- Türkiye Emlak Katılım: 120 ay  _(+6 kampanya daha)_\n- Vakıf Katılım: 60 ay  _(+6 kampanya daha)_\n- Dünya Katılım: 36 ay"
+      "yanit": "Konut Finansmanı — vade (uygun kampanyalar):\n- Kuveyt Türk: 120 ay\n- Albaraka Türk: 96 ay"
     },
     {
       "id": "K05",
       "kategori": "kontrol",
       "soru": "Taşıt finansmanı koşulları nelerdir?",
-      "gecti": false,
-      "sebepler": [
-        "eksik ifade: 'Taşıt'"
-      ],
+      "gecti": true,
+      "sebepler": [],
       "handler": "rag",
-      "kapilar": [],
-      "kaynak_sayisi": 3,
+      "kapilar": [
+        "garanti_imasi"
+      ],
+      "kaynak_sayisi": 1,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "İlgili kampanya (Albaraka Türk) — AI Özeti: Albaraka Türk'te sıfır ve ikinci el araç finansmanı sunuyor. Kâr oranları ve vadeler değişkenlik gösterir. Bireysel ve ticari araçlar için uygun olan finansman seçenekleri mevcuttur. Başvuru şartları belirlenmiş."
+      "yanit": "İlgili kampanya (Türkiye Finans). Bu belge için AI Özeti üretilmedi; aşağıdaki satır özet değil, ham metnin başlangıcıdır: Finansmanı Fırsatı. Türkiye Finans ile aracınıza kavuşmak çok kolay. Taşıt finansmanı kâr payı oranı %1,99 - %2,49 arasında, 48 aya kadar vade. İlk 3 ay ödemesiz. Bu kampanya masrafsızdır. Yeni araç ve ikinci el araç alımlarında geçerlidir.\n\n_Not: Kâr payı oranı **beklenen / gerçekleşmiş** bir orandır, taahhüt edilmiş getiri değildir. Katılma hesapları kâr **ve zarara** ortak olur; oran garanti anlamı taşımaz._"
     },
     {
       "id": "K06",
@@ -490,12 +485,14 @@
       "soru": "Helal gıda alışverişinde puan veren kampanya var mı?",
       "gecti": true,
       "sebepler": [],
-      "handler": "rag",
-      "kapilar": [],
-      "kaynak_sayisi": 3,
+      "handler": "structured",
+      "kapilar": [
+        "cekimserlik"
+      ],
+      "kaynak_sayisi": 0,
       "yakalanan_ihlal": [],
       "uyarilar": [],
-      "yanit": "İlgili kampanya (Kuveyt Türk) — AI Özeti: Kuveyt Türk bankası, 1-29 Mart 2025 tarihleri arasında market alışverişlerindeki ilk harcamaları 5000 TL ve üzeri olan müşterilerine 250 TL değerinde Altın Puan kazandırma fırsatı sunmaktadır. Bu kampanya, Sağlam Business Nakit Kart kullanarak yapılan alışverişler için geçerlidir."
+      "yanit": "Bu bilgi verimde **yok**. Uydurmak yerine bilmediğimi belirtiyorum; kaynağa dayanmayan bir değer üretmem.\n\nSorunuzu farklı bir banka, ürün ya da alan için tekrar sorabilirsiniz."
     }
   ]
 }
