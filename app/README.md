@@ -140,6 +140,17 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 ```bash
 cd app
 python3 -m scripts.build_demo_db --out data/demo.db   # bir kez, ~282 s
+# Özetleri geri yükle — ATLAMAYIN.
+# `build_demo_db` `campaigns.ozet` sütununu BİLMEZ ve boş bırakır. Bu adım
+# atlanırsa panel ve sohbet her belgede "AI Özeti üretilmedi" der ve kullanıcıya
+# ham metnin başı (bazı sayfalarda site gezinme şeridi) gösterilir.
+# Özetler yerel modelle üretildi (~4 saat) ve yedekte duruyor; geri yükleme
+# saniyeler sürer ve LLM İSTEMEZ. Kural tabanlı sahte özet basmak YASAK
+# (src/summarize/ozet.py) — bu yüzden yedek tek meşru yol.
+# Ölçüldü (2026-08-20): 1.782 belgenin 1.759'u özetlendi (%98,7); kalan 23'ün
+# sebebi `metin_bos` (belgede içerik yok), üretim hatası değil.
+python3 -m scripts.ozet_tasi --kaynak data/demo.db.yedek-1202 --hedef data/demo.db
+
 
 DATABASE_PATH=data/demo.db .venv/bin/python -c "
 import uvicorn, sys; sys.path.insert(0,'.')
@@ -188,6 +199,17 @@ curl -s -X POST localhost:8000/chat -H 'Content-Type: application/json' \
 ```bash
 cd app
 python3 -m scripts.build_demo_db --out data/demo.db
+
+# Özetleri geri yükle — ATLAMAYIN.
+# `build_demo_db` `campaigns.ozet` sütununu BİLMEZ ve boş bırakır. Bu adım
+# atlanırsa panel ve sohbet her belgede "AI Özeti üretilmedi" der ve kullanıcıya
+# ham metnin başı (bazı sayfalarda site gezinme şeridi) gösterilir.
+# Özetler yerel modelle üretildi (~4 saat) ve yedekte duruyor; geri yükleme
+# saniyeler sürer ve LLM İSTEMEZ. Kural tabanlı sahte özet basmak YASAK
+# (src/summarize/ozet.py) — bu yüzden yedek tek meşru yol.
+# Ölçüldü (2026-08-20): 1.782 belgenin 1.759'u özetlendi (%98,7); kalan 23'ün
+# sebebi `metin_bos` (belgede içerik yok), üretim hatası değil.
+python3 -m scripts.ozet_tasi --kaynak data/demo.db.yedek-1202 --hedef data/demo.db
 # Gerçekten ölçüldü (temiz klon simülasyonu — izlenen dosyalardan taze
 # checkout, 2026-08-20): süre 282 s (~4 dk 42 sn), 1.782 belge -> 1.782
 # kampanya kaydı, 11/11 banka, çıktı data/demo.db ~22,2 MB.

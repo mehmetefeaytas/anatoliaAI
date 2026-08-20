@@ -179,6 +179,40 @@ def icerik_bayatligi(db: str, raw_dir: str) -> tuple[int, int, int]:
     return degisen, ozeti_bayat, karsilastirilan
 
 
+
+def ozet_kapsami(db: str) -> tuple[int, int]:
+    """`(ozetli, toplam)` — kaç kampanyanın AI özeti var.
+
+    ## Bu kapı NİÇİN var — ölçülmüş bir test/üretim ayrışması
+
+    20 Ağustos 2026: teslim edilen `data/demo.db`de 1.782 belgenin
+    **tamamında** `ozet` NULL'du. Panel ve sohbet her belgede "AI Özeti
+    üretilmedi" diyor ve kullanıcıya ham metnin başı — bazı sayfalarda site
+    gezinme şeridi (`"Anasayfa Kendim Için Içerik…"`) — gösteriliyordu.
+
+    Sebep: `scripts/build_demo_db` `campaigns.ozet` sütununu BİLMEZ ve boş
+    bırakır; geri yükleme adımı (`scripts/ozet_tasi`) kurulum belgesinde
+    yazılı değildi.
+
+    Niçin testler yakalamadı: `tests/test_chat_ai_ozeti.py` **sözleşmeyi**
+    denetliyor (`ozet` anahtarı her zaman var, yoksa `None`) — kapsamı değil.
+    Sözleşme kusursuz çalışıyordu; üretimde ölçülecek özet yoktu. Bir
+    davranışın doğru olması, o davranışın *tetiklendiği* anlamına gelmiyor.
+
+    `metin_bos` sebepli belgeler (içeriği olmayan sayfa) sayıma girer ve
+    kapsamı düşürür; eşik bu yüzden %100 değildir. Ölçüldü: 23 belge.
+    """
+    with sqlite3.connect(f"file:{db}?mode=ro", uri=True) as conn:
+        kolonlar = {r[1] for r in conn.execute("PRAGMA table_info(campaigns)")}
+        if "ozet" not in kolonlar:
+            return 0, 0
+        (toplam,) = conn.execute("SELECT COUNT(*) FROM campaigns").fetchone()
+        (ozetli,) = conn.execute(
+            "SELECT COUNT(*) FROM campaigns "
+            "WHERE ozet IS NOT NULL AND TRIM(ozet) <> ''").fetchone()
+    return int(ozetli), int(toplam)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(
         prog="python -m scripts.check_demo_db",
@@ -191,6 +225,9 @@ def main(argv: list[str] | None = None) -> int:
                     help="DB dosyası yoksa 2 yerine 0 dön (CI için)")
     ap.add_argument("--icerik-tolerans", type=int, default=0,
                     help="hoş görülen İÇERİK farkı (varsayılan 0)")
+    ap.add_argument("--ozet-kapsam-asgari", type=float, default=0.90,
+                    help="asgari AI özeti kapsamı (0-1, varsayılan 0,90); "
+                         "0 verilirse kapı kapatılır")
     ap.add_argument("--sayi-yeter", action="store_true",
                     help="yalnız belge sayısına bak, içerik karşılaştırma "
                          "(eski davranış; 48 belgelik bayatlığı kaçırmıştı)")
@@ -228,12 +265,41 @@ def main(argv: list[str] | None = None) -> int:
         print(f"içerik denetimi: {karsilastirilan} belge karşılaştırıldı, "
               f"{degisen} metin değişmiş ({ozeti_bayat} tanesinin özeti de bayat)")
 
+    # ÖZET KAPSAMI — sayı ve içerik güncel olsa bile özetler boş olabilir;
+    # 20 Ağustos'ta tam bu oldu (bkz. `ozet_kapsami` docstring'i).
+    # `ozet_toplam == 0` iki şeyin ikisinde de olur: (a) `campaigns` boş,
+    # (b) şemada `ozet` kolonu hiç yok (eski DB ya da test kurgusu). İkisinde
+    # de ÖLÇÜLECEK ŞEY YOKTUR ve payda sıfırdır — oranı 0,0 sayıp "bayat"
+    # demek, olmayan bir kusuru rapor etmek olurdu. Kapı bu durumda SUSAR.
+    # Ölçüldü: bu kontrol olmadan `tests/test_demo_db_tazelik.py`nin iki
+    # testi düşüyordu; kurgu DB'lerinde `ozet` kolonu yok ve kapı boş tabloyu
+    # bayat ilan ediyordu.
+    ozet_bayat = False
+    if args.ozet_kapsam_asgari > 0:
+        ozetli, ozet_toplam = ozet_kapsami(args.db)
+        if ozet_toplam == 0:
+            print("özet kapsamı  : ölçülemedi (kampanya yok ya da `ozet` "
+                  "kolonu şemada yok) — kapı atlandı")
+        else:
+            oran = ozetli / ozet_toplam
+            print(f"özet kapsamı  : {ozetli}/{ozet_toplam} "
+                  f"({oran:.1%}, asgari {args.ozet_kapsam_asgari:.0%})")
+            ozet_bayat = oran < args.ozet_kapsam_asgari
+
     sayi_bayat = abs(fark) > args.tolerans
     icerik_bayat = degisen > args.icerik_tolerans
 
-    if not sayi_bayat and not icerik_bayat:
+    if not sayi_bayat and not icerik_bayat and not ozet_bayat:
         print("\nGÜNCEL.")
         return 0
+
+    if ozet_bayat:
+        print(f"\nBAYAT: AI özeti kapsamı {oran:.1%} < "
+              f"{args.ozet_kapsam_asgari:.0%}.\n"
+              f"  Geri yüklemek için: python -m scripts.ozet_tasi "
+              f"--kaynak data/demo.db.yedek-1202 --hedef {args.db}\n"
+              f"  (LLM istemez, saniyeler sürer. Kural tabanlı sahte özet "
+              f"BASILMAZ — bkz. src/summarize/ozet.py)", file=sys.stderr)
 
     if sayi_bayat:
         print(f"\nBAYAT: DB korpusun {abs(fark)} belgesini "
