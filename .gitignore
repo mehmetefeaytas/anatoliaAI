@@ -70,3 +70,12 @@ app/data/gold/preannotations.json
 # Vitrin dokumanlari: `vitrin` dalinda tutulur, yayin zamani main'e
 # birlestirilir. main'e kazara girmesinler diye burada yok sayilir.
 app/docs/invariants.md
+
+# İnsan etiketleme turunun YARI YOLDA kalan durumu (`scripts/ikinci_etiketleyici
+# insan`). Alan alan diske yazılır ki iş yarıda bırakılıp sürdürülebilsin —
+# yani içeriği tanım gereği geçicidir ve her tuş vuruşunda değişir.
+# Tur bitince asıl çıktı `ikinci-tur-insan.jsonl` COMMITLENİR (LLM turunun
+# `ikinci-tur-llm.jsonl`'i gibi); κ iddiasının kanıtı o dosyadır.
+# Bu satırın sebebi: izlenmeyen bir çalışma dosyası ağacı sürekli "kirli"
+# gösterip her eval raporunun `git_dirty` künyesini bozuyordu.
+app/data/gold/review/.ikinci-tur-insan-ilerleme.json
