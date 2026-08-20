@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar/biz-kart-yemek-harcamasi-nakit-iade-kampanyasi",
-  "scraped_at": "2026-08-03T17:01:43+00:00",
-  "content_hash": "157d1682111c4076ffac585c3528f204c9aee92eb5c9e2a7e2cb7ba2c4caf265",
+  "scraped_at": "2026-08-20T12:31:04+00:00",
+  "content_hash": "1bb283a0b7cd7a33ea60fb96e92f8d3e5325f915200a1e033a950b19ea8e8050",
   "collection_method": "browser",
   "title": "Biz Kart Yemek Harcamalarında %10 Nakit İade | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 300314,
-  "text_chars": 2367,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 300465,
+  "text_chars": 2367
 }

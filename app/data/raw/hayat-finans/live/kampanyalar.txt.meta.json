@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar",
-  "scraped_at": "2026-08-03T17:01:20+00:00",
-  "content_hash": "ac5037788fb915102a0dc8d05b650122e76b3d766130b1f2e3c66f289e915238",
+  "scraped_at": "2026-08-20T12:30:40+00:00",
+  "content_hash": "37bd9b8f22c642cb629a2592437a539ce2e99ddbeaca78ec30a18f67368fa5e5",
   "collection_method": "browser",
   "title": "En Güncel Banka Kampanyaları | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 323978,
-  "text_chars": 623,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 324351,
+  "text_chars": 2104
 }

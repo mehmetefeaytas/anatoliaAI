@@ -1,13 +1,13 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/finansmanlar/bana-bunu-al-is-ortagim",
-  "scraped_at": "2026-08-03T17:01:28+00:00",
-  "content_hash": "1c27e10463325167384d2606619bd8195669c684a744f35bd76e5a61045bd8a7",
+  "scraped_at": "2026-08-20T12:30:50+00:00",
+  "content_hash": "ab0c2e0627c077603d56757df0bde72fd405e12ce9666338a50e729d449fdae0",
   "collection_method": "browser",
   "title": "Bana Bunu Al İş Ortağım | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 301830,
-  "text_chars": 2613,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 302188,
+  "text_chars": 2613
 }
