@@ -87,10 +87,36 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 > ```
 
 ## Tam Sistem (Docker, offline)
+
+> **Önce veri tabanını kur, SONRA `docker-compose up`.** `Dockerfile.api`
+> `data/demo.db` dosyasını `COPY data/ ./data/` ile **derleme anında** imaja
+> gömer. Dosya `.gitignore`'dadır (`*.db` kuralı) — temiz bir `git clone`
+> sonrası **yoktur**. Bu adım atlanırsa API açılışta `repo.counts()["campaigns"]
+> == 0` koşuluyla sessizce fixture'lara düşer ve dashboard **1.782 belge
+> yerine yalnızca 3 fixture kampanyası** gösterir; korpus ölçeği (projenin en
+> güçlü fonksiyonellik kanıtı) jüriye hiç görünmez.
+
 ```bash
+cd app
+python3 -m scripts.build_demo_db --out data/demo.db
+# Gerçekten ölçüldü (temiz klon simülasyonu — izlenen dosyalardan taze
+# checkout, 2026-08-20): süre 282 s (~4 dk 42 sn), 1.782 belge -> 1.782
+# kampanya kaydı, 11/11 banka, çıktı data/demo.db ~22,2 MB.
+# Çıkış kodları: 0 başarılı · 1 hedef dosya zaten var (--force gerekir)
+# · 2 korpus BOŞ (sessizce "kuruldu" demez).
+
 docker-compose up        # postgres + vllm/ollama + api + web
 pip install -r requirements.txt   # geliştirme ortamı
 ```
+
+> **Neden otomatik değil (compose'a init servisi olarak eklenmedi).**
+> `scripts/build_demo_db` ~4-5 dakika sürüyor; bunu her `docker-compose up`'ta
+> koşturmak CLAUDE.md §11'in doğrudan ihlali olurdu ("4 dakikalık sunumda
+> beklenecek tek bir servis bile fazladır") — jüri `up` dedikten dakikalarca
+> sonra ekran görürdü. Ayrıca `Dockerfile.api` `data/`yi **derleme anında**
+> kopyaladığı için bir çalışma-zamanı init konteyneri zaten geç kalırdı
+> (imaj o ana kadar demo.db'siz derlenmiş olurdu). Doğru sıralama **derleme
+> ÖNCESİ, elle, bir kez** çalıştırmaktır — tam olarak yukarıdaki adım.
 
 ### Geliştirme kurulumu — canlı toplama için tarayıcı
 

@@ -9,7 +9,10 @@
 **Koşulan commit:** `9493c29` — **temiz ağaç**
 **Sorumlu kalem:** Şartname §5.9 (dış servise bağımlı olmadan yerel çalışma), §8, §5.10
 **⚠️ Kapsam sınırı (önce okuyun):** kanıt yalnız **API konteynerini** kapsar;
-tam yığın ağsız denenmedi ve **imaj derlemesi internet ister**. Ayrıntı: **§0-b**.
+**imaj derlemesi internet ister**. Tam yığın (postgres+api+api-postgres+ollama+web)
+ağsız koşumu **2026-08-20'de denendi, host disk yetersizliği yüzünden
+TAMAMLANAMADI** — izolasyon mekanizması ayrı deneylerle doğrulandı ama
+`docker compose` ile birlikte koşum ölçülemedi. Ayrıntı: **§0-b**.
 
 > **Ağaç temizliği neden burada yazıyor.** Transkript başlığındaki satır
 > `git durum : 1 degisik dosya` der. O tek dosya **koşumun kendi
@@ -418,6 +421,18 @@ gerçekten çözüldü (uydurulmadı):
 > `FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1…53a93` satırını
 > basıyor (transkript adım 1), yani `Dockerfile.api` hâlâ aynı digest'e sabit.
 > Diğer üç satır (Postgres, vLLM, Ollama) **tazelenmedi**.
+>
+> **GÜNCELLEME (2026-08-20):** Postgres ve Ollama satırları için tam
+> `docker buildx imagetools inspect` yenilemesi yine yapılamadı — bu
+> oturumda Docker daemon `scripts/tam_yigin_agsiz.sh` denemesi sırasında
+> host disk yetersizliğinden çöktü (bkz. §0-c). Ama iki digest'in kendisi
+> **bugün `docker pull <imaj>@<digest>` ile birebir bu değerlerle
+> başarıyla çekildi** — yani her ikisi de registry'de hâlâ **geçerli/
+> erişilebilir**. Bu, hareketli etiketin (`:pg16`, `:latest`) HÂLÂ bu
+> digest'e işaret ettiğini KANITLAMAZ (onun için `imagetools inspect`
+> gerekir); yalnızca sabitlenen digest'in bozulmadığını/kaldırılmadığını
+> kanıtlar. vLLM satırı bu oturumda hiç denenmedi (imaj 10,3 GB, bu host'ta
+> zaten disk sınırına takıldık).
 
 Yenilemek için:
 
@@ -686,22 +701,109 @@ Bayat sayılar, düzeltilmiş halleriyle:
 > diskte durur ama teslim sisteminde kullanılmaz; bu koşumda sınıflandırıcı
 > `RuleHintClassifier`'dır (gecikme JSON `environment.classifier`).
 
-### Kapsam sınırı — DEĞİŞMEDİ, sunumda açıkça söylenmeli
+### Kapsam sınırı — kısmen kapatıldı (2026-08-20), ayrıntı aşağıda
 
-Koşum tazelenmiş olması bu sınırları kaldırmaz. Üçü de aynen geçerlidir:
-
-1. **Kanıt yalnız API konteynerini kapsıyor.** Ölçülen şey
+1. **Kanıt (§1-§9 yukarısı) yalnız API konteynerini kapsıyor.** Ölçülen şey
    `anatolia-api:offline-proof` imajının `--network none` içindeki
    davranışıdır.
-2. **`docker compose up` tam yığını ağsız denenmedi** — Postgres, Next.js
-   web katmanı, vLLM ve Ollama servislerinin ağsız birlikte ayağa kalkması
-   **ölçülmedi**.
+2. **`docker compose up` tam yığını ağsız koşumu 2026-08-20'de DENENDİ ve
+   TAMAMLANAMADI** — ayrıntı §0-c. İzolasyon MEKANİZMASI (Docker `--internal`
+   ağ) bağımsız deneylerle doğrulandı; `docker compose` ile postgres+api+
+   api-postgres+ollama+web'in BİRLİKTE ayağa kalkması host disk yetersizliği
+   yüzünden ölçülemedi. vLLM kolu bu betiğe hiç dahil değil (GPU gerektirir,
+   §7/§9'daki aynı sınır geçerli).
 3. **İmaj derlemesi internet gerektiriyor** (`pip install`, `npm ci`).
    Dolayısıyla *"internetsiz çalışır"* iddiası **önceden derlenmiş
    imajlarla** doğrudur — sıfırdan derleme ağ ister (bkz. §3 tablo notu).
 
 Bu boşlukları önce **biz** söylüyoruz. Jüri kendisi bulursa kaybedilen bir
 puan değil, belgenin geri kalanına duyulan güven olur.
+
+---
+
+## 0-c. Tam yığın ağsız koşumu — 2026-08-20 girişimi: TAMAMLANAMADI
+
+**Durum: ◐ KISMEN — mekanizma doğrulandı, `docker compose` koşumu host disk
+yetersizliği yüzünden tamamlanamadı.**
+**Üreten betik:** [`scripts/tam_yigin_agsiz.sh`](../scripts/tam_yigin_agsiz.sh)
+(yazıldı, `bash -n` ile sözdizimi doğrulandı; **uçtan uca koşmadı**).
+
+Bu bölüm, önceki uyarının ("tam yığın ağsız hiç denenmedi") üzerine yapılan
+gerçek bir girişimin **dürüst kaydıdır**. Sözleşme aynı: koşmamış bir adımı
+koşmuş gibi yazmıyoruz.
+
+### Ne yapılmaya çalışıldı
+
+`docker-compose.yml`'deki `postgres`, `ollama` (default `api`+`web` ile
+birlikte) profillerini **TEK bir izole ağda, dış dünyaya rotasız** ayağa
+kaldırıp aralarındaki servis-adı iletişimini ve dışarıya-kapalılığı ölçmek.
+Yöntem: `docker network create --internal <ad>` + geçici bir compose override
+(`networks.default: {name: <ad>, external: true}`) ile tüm servisleri bu ağa
+bağlamak (script'in başlığında ayrıntılı gerekçe var).
+
+### Ne gerçekten koştu ve BAŞARILI oldu
+
+| Adım | Sonuç |
+|---|---|
+| Docker Desktop başlatma (bu makinede kapalıydı) | ✅ ~20 sn'de ayağa kalktı |
+| `docker pull pgvector/pgvector:pg16@sha256:a3625087…` (digest'e sabit, `docker-compose.yml` ile birebir) | ✅ indirildi, digest doğrulandı |
+| `docker pull ollama/ollama:latest@sha256:4dea9fb5…` (digest'e sabit) | ✅ indirildi, digest doğrulandı |
+| `docker compose build api web` | ✅ ikisi de derlendi (`app-api:latest`, `app-web:latest`) |
+| **İzolasyon mekanizması — bağımsız deney 1:** `--internal` ağda published port (`-p 18080:8000`) host'tan **erişilemiyor** | ✅ doğrulandı (`curl` bağlantı reddi) — bu yüzden script host'tan değil `docker exec` ile kontrol ediyor |
+| **İzolasyon mekanizması — bağımsız deney 2:** `--internal` ağdaki konteynerden `huggingface.co`/`1.1.1.1`/`pypi.org`'a erişim | ✅ tamamı ENGELLENDİ (`gaierror`, `Network is unreachable`) |
+| **İzolasyon mekanizması — bağımsız deney 3:** aynı `--internal` ağdaki İKİ konteyner birbirine **servis adıyla** (DNS) ulaşıyor mu | ✅ ulaştı, HTTP 200 — yani izole ağ dışa kapalı ama İÇTE tam çalışır |
+
+Üç bağımsız deney de tek-kullanımlık `python:3.11-slim` konteynerleriyle,
+`docker compose`'un DIŞINDA, script'i yazmadan önce elle doğrulandı — script'in
+tasarımı (host'tan değil `docker exec`'ten sağlık kontrolü) doğrudan bu
+deneylerin sonucudur.
+
+### Ne başarısız oldu ve neden
+
+`docker compose --profile postgres build api-postgres db-check` adımında
+build context aktarımı (~320 MB, `data/` dahil) ortasında şu hatayla düştü:
+
+```
+ERROR: write /var/lib/desktop-containerd/.../data/raw/hayat-finans/products/krediler-bana-bunu-al.html:
+input/output error
+```
+
+Kök neden **kod veya compose dosyasında değil, test makinesinin diskinde**:
+bu hata sırasında host'ta (`df -h /`) boş alan **~234 MiB'a kadar düştüğü**
+ölçüldü (bir önceki ölçümde 5,9 GiB'ydi). Bunun hemen ardından Docker
+daemon'ın kendisi yanıt vermez oldu — `docker version`, `docker info`,
+`docker images`, `docker system df` hepsi `EOF` ile döndü. Docker Desktop
+`osascript -e 'quit app "Docker"'` + yeniden başlatma ile kontrollü şekilde
+kapatılıp açıldı; **240 saniye beklendi, daemon bu oturumda geri gelmedi.**
+
+Bu noktada koşum **bilerek durduruldu**. Diskin ~5-7 GiB serbest alanla
+sınırlı olduğu bir makinede zaten kırılgan olan Docker VM diskini zorlamaya
+devam etmek — kullanıcının makinesini daha da riske atardı; bu, betiğin bir
+kusurundan çok **bu spesifik test makinesinin kapasite sınırıdır**
+(Postgres + Ollama + API + API-Postgres + Web imajları toplamda >10 GB, artı
+her `docker compose build`'un yeniden ilettiği ~320 MB'lık build context).
+
+### Dürüst sonuç
+
+- `scripts/tam_yigin_agsiz.sh` **yazıldı ve teslim edildi**; `bash -n` ile
+  sözdizimi doğrulandı. **Uçtan uca hiç koşmadı** — bunu gizlemiyoruz.
+- İzolasyonun **mekanizması** (Docker `--internal` ağ: dışa kapalı + içte
+  servis-adı DNS'i çalışır) **doğrulandı**, ama bağımsız deneylerle —
+  `docker compose` yığınının kendisiyle değil.
+- `⏳ ölçülmedi — sebep: bu test makinesinde disk yetersiz (koşum sırasında
+  ~234 MiB'a düştü, Docker daemon çöktü). Yeniden koşum için ÖNERİ: ≥15 GB
+  boş disk olan bir makinede (veya `docker system prune` ile temizlenmiş bir
+  Docker Desktop kurulumunda) şunu çalıştırın:`
+
+  ```bash
+  docker pull pgvector/pgvector:pg16@sha256:a36250871de0833b8757561c72f2477ef1ddd1101afa4e617fb552e0de514c6b
+  docker pull ollama/ollama:latest@sha256:4dea9fb511947e24a84237bb636b0203abcb2ff0d3fbc7b4ff865deb91362131
+  bash scripts/tam_yigin_agsiz.sh
+  ```
+- Bu bölüm jüriye **görülmeden önce biz söylüyoruz**: "tam yığın ağsız
+  koşumu deneyip disk yetmediği için durdurduk" ifadesi, "hiç denemedik"ten
+  farklı ve daha güçlü bir dürüstlük sinyalidir — ama yine de bir **eksiktir**
+  ve öyle kayda geçirilmiştir.
 
 ---
 
@@ -783,13 +885,13 @@ boşken vLLM **sessizce internete çıkmaz, başlamaz** — istenen davranış b
 | Tüketici GPU profili | `⏳ ölçülmedi` | Donanım yok |
 | Sunucu GPU profili (A100/H100) | `⏳ ölçülmedi` | Donanım yok |
 | Model ağırlığı SHA-256 | `⏳ koşturulmadı` | §9 — ağırlıklar indirilmedi, prosedür yazıldı |
-| `docker compose up` tam yığın (postgres + api + web) | `⏳ koşturulmadı` | Bu paket **API konteynerini** kanıtladı (adım 13: sunucu ağsız ayağa kalkıyor). Postgres + Next.js web katmanının ağsız birlikte ayağa kalkması ölçülmedi |
-| pgvector / Postgres ağsız başlatma | `⏳ ölçülmedi` | İmaj çekildi mi diye bakılmadı; `docker compose` koşusu yapılmadı. Teslim imajında `pgvector` paketi de yok (§6) — bu koşum SQLite koluyla ayağa kalktı |
+| `docker compose up` tam yığın (postgres + api + api-postgres + ollama + web) | `◐ 2026-08-20'de DENENDİ, TAMAMLANAMADI` | `scripts/tam_yigin_agsiz.sh` yazıldı; imajlar çekildi/derlendi ama `docker compose build api-postgres db-check` sırasında host disk ~234 MiB'a düştü ve Docker daemon çöktü. İzolasyon mekanizması bağımsız deneylerle doğrulandı, `compose` yığınının kendisi doğrulanamadı. Ayrıntı: §0-c |
+| pgvector / Postgres ağsız başlatma (compose içinde) | `⏳ ölçülmedi` | Aynı sebep — §0-c. İmaj kendisi digest'e sabit şekilde başarıyla çekildi (2026-08-20), ama `docker compose` ile ayağa kaldırma denemesi disk yetersizliğinden yarım kaldı |
 | **İmajın ağsız DERLENMESİ** | `⏳ ölçülmedi — ve ölçülemez` | `docker build` `pip install` yapar, ağ ister. Adım 1 bilerek ağ açıkken koşar. "İnternetsiz çalışır" iddiası **önceden derlenmiş imajlarla** doğrudur (§0-b) |
 | Host ↔ konteyner gecikme karşılaştırması | `⏳ 2026-08-15'te yenilenmedi` | Host koşumu bu pakette koşturulmadı; elimizdeki host JSON 31 Temmuz tarihli ve **farklı korpustan** (§7) |
 | Chatbot iyileşmesinin sebebi | `⏳ ölçülmedi` | p95 325 ms → 16 ms düştü ama hangi commit'in getirdiği ayrıştırılmadı; 498 commit'lik aralıkta ablasyon koşturulmadı (§7.3) |
 | İmaj boyutu artışının katman kırılımı | `⏳ ölçülmedi` | ≈96,5 → ≈220,0 MiB; `docker history` kırılımı alınmadı (§8) |
-| Postgres/vLLM/Ollama digest'lerinin tazeliği | `⏳ 2026-08-15'te yenilenmedi` | Kanıt betiği digest çözmez (ağ ister); tablo 31 Temmuz ölçümüdür (§5) |
+| Postgres/vLLM/Ollama digest'lerinin tazeliği | `◐ kısmen — bkz. §5 not` | Tam `imagetools inspect` yenilemesi bu oturumda da yapılamadı (Docker daemon §0-c'deki disk sorunuyla çöktü). Ama Postgres ve Ollama digest'leri **bugün (2026-08-20) `docker pull <imaj>@<digest>` ile başarıyla çekildi** — bu, digest'lerin registry'de hâlâ GEÇERLİ olduğunu kanıtlar (tazelenmiş bir eşleşme iddiası değildir, bkz. §5) |
 | Doğruluk (P/R/F1) | ölçüldü **ama anlamsız** | `gold.sample.json` = 3 kayıt (§3.3). Ağsız *koşabilirlik* kanıtı, doğruluk kanıtı değil |
 | `curl` negatif kontrolü | `atlandı, gerekçeli` | Taban imajda curl yok (§2.3); yerine stdlib probu |
 | x86_64 (amd64) mimarisi | `⏳ ölçülmedi` | Host arm64. Digest'ler çoklu-mimari indeks olduğu için amd64 çalışmalı, ama **doğrulanmadı** |
@@ -831,11 +933,13 @@ Ortam değişkenleri: `IMAGE`, `OUT_DIR`, `GOLD`, `BENCH_ITERATIONS`, `SKIP_BUIL
 - `tests/_ortam_gereksinimleri.py` — atlanan 272 testin gerekçeleri (§3.1.1)
 - `docs/model-license-audit.md` §2 — trafilatura kararı (bu belge onu düzenlemez)
 - git `a3c2f05` (2026-08-08) — `ANATOLIA_OFFLINE` sahte bayrağının kaldırılması (§3.4)
+- `scripts/tam_yigin_agsiz.sh` — 2026-08-20 girişiminin betiği (§0-c); yazıldı, uçtan uca koşmadı, sebep host disk
 
 ## Related
 
 - [[on-premise-calistirilabilir-mimari]] — kararın kendisi
 - [[apache-2-acik-kaynak-lisansi]] — §8 dağıtım şartı
 - [`kaynak-tuketimi.md`](kaynak-tuketimi.md) — donanım profili tabloları
-- [`../scripts/offline_proof.sh`](../scripts/offline_proof.sh) — kanıtı üreten betik
+- [`../scripts/offline_proof.sh`](../scripts/offline_proof.sh) — kanıtı üreten betik (tek konteyner)
+- [`../scripts/tam_yigin_agsiz.sh`](../scripts/tam_yigin_agsiz.sh) — tam yığın (çoklu servis) kanıt betiği, §0-c: yazıldı, host disk yetersizliğinden uçtan uca koşmadı
 - [`../scripts/latency_bench.py`](../scripts/latency_bench.py) — gecikme ölçüm betiği

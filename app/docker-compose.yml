@@ -178,7 +178,20 @@ services:
       # `scripts/build_demo_db.py` ile üretilen data/demo.db imaja kopyalanır
       # (Dockerfile.api: `COPY data/ ./data/`). Dosya yoksa API açılışta
       # fixture'lardan tohumlar (`repo.counts()["campaigns"] == 0` koşulu),
-      # yani sistem yine çalışır — sadece korpus küçük olur.
+      # yani sistem yine çalışır — sadece korpus küçük olur (3 fixture
+      # kampanyası, 1.782 yerine). `data/demo.db` `.gitignore`'dadır, yani
+      # TEMİZ BİR KLONDA YOKTUR — bu tam olarak jürinin karşılaştığı durum.
+      #
+      # BİLEREK OTOMATİKLEŞTİRİLMEDİ (compose'a init/seed servisi olarak
+      # eklenmedi): `build_demo_db` ~4-5 dakika sürüyor (ölçüldü: 282 s,
+      # 1.782 belge -> 1.782 kampanya, bkz. README "Tam Sistem" bölümü) ve
+      # `COPY data/ ./data/` DERLEME ANINDA çalıştığı için bir çalışma-zamanı
+      # init konteyneri zaten geç kalırdı (imaj o ana kadar demo.db'siz
+      # derlenmiş olurdu). Ayrıca her `docker compose up`'ta 4-5 dakika
+      # beklemek CLAUDE.md §11'i ("4 dakikalık sunumda beklenecek tek bir
+      # servis bile fazladır") doğrudan ihlal ederdi. Doğru sıralama: derleme
+      # ÖNCESİ, elle, BİR KEZ `python3 -m scripts.build_demo_db --out
+      # data/demo.db` çalıştırıp sonra `docker compose build`/`up` etmek.
       #
       # Neden ":memory:" değil: bellek içi DB her yeniden başlatmada 849
       # belgelik korpusu ATAR ve fixture'lara düşer; jüri demoda ikinci kez
