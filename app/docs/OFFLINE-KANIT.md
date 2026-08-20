@@ -12,7 +12,7 @@
 **imaj derlemesi internet ister**. Tam yığın (postgres+api+api-postgres+ollama+web)
 ağsız koşumu **2026-08-20'de denendi, host disk yetersizliği yüzünden
 TAMAMLANAMADI** — izolasyon mekanizması ayrı deneylerle doğrulandı ama
-`docker compose` ile birlikte koşum ölçülemedi. Ayrıntı: **§0-b**.
+`docker compose` ile birlikte koşum **2026-08-20'de ÖLÇÜLDÜ: 13/13 adım geçti** (§0-d). Kalan tek kapsam sınırı vLLM kolu (GPU). Ayrıntı: **§0-b**.
 
 > **Ağaç temizliği neden burada yazıyor.** Transkript başlığındaki satır
 > `git durum : 1 degisik dosya` der. O tek dosya **koşumun kendi
@@ -39,6 +39,64 @@ komuttan gelir. Koşturulmayan her kalem `⏳ ölçülmedi — sebep: ...` ile
 işaretlidir. Ara değer, tahmin, "olması beklenen" sayı yoktur.
 
 ---
+
+---
+
+## 0-d. Tam yığın ağsız koşumu — 2026-08-20 **İKİNCİ** girişimi: 13/13 GEÇTİ
+
+**Durum: ✅ ÖLÇÜLDÜ.** Beş servis aynı izole ağda, dış dünyaya hiçbir rota
+olmadan, birlikte ayağa kalktı.
+
+**Üreten betik:** [`scripts/tam_yigin_agsiz.sh`](../scripts/tam_yigin_agsiz.sh)
+**Transkript:** `docs/offline-proof/tam-yigin-agsiz-transcript-20260820-171857.log`
+**Kapsam:** `postgres` + `api` + `api-postgres` + `ollama` + `web` (Next.js).
+vLLM kolu dahil DEĞİL (GPU gerektirir — §7/§9 sınırı sürüyor).
+
+### Sonuç tablosu — 13 adım, 0 beklenmedik
+
+| # | adım | kod | süre | sonuç |
+|---|---|---|---|---|
+| 1 | İmaj derleme (`compose build api api-postgres web db-check`) | 0 | 22,5 s | beklendiği gibi |
+| 2 | İzole ağ oluştur (`--internal`, dış dünyaya rotasız) | 0 | 0,2 s | beklendiği gibi |
+| 3 | **META-KONTROL:** aynı prob SIRADAN ağda ULAŞMALI | 0 | 4,1 s | beklendiği gibi |
+| 4 | Tam yığın ayağa kalkıyor | 0 | 10,9 s | beklendiği gibi |
+| 5 | **NEGATİF KONTROL:** izole ağdaki `api` dışarıya ULAŞAMAMALI | **3** | 3,2 s | beklendiği gibi |
+| 6 | `postgres` hazır (`pg_isready`) | 0 | 3,3 s | beklendiği gibi |
+| 7 | `api` `/health` hazır | 0 | 3,2 s | beklendiği gibi |
+| 8 | `api-postgres` `/health` hazır (postgres arka uç) | 0 | 3,2 s | beklendiği gibi |
+| 9 | `ollama` API hazır (`/api/tags`) | 0 | 3,2 s | beklendiği gibi |
+| 10 | `web` (Next.js) hazır | 0 | 3,2 s | beklendiği gibi |
+| 11 | `web` -> `api` servis ADIYLA erişiyor (dahili DNS) | 0 | 3,1 s | beklendiği gibi |
+| 12 | `api-postgres` PostgreSQL'e gerçekten YAZIYOR (`repo.counts`) | 0 | 3,2 s | beklendiği gibi |
+| 13 | `db-check`: pgvector paritesi + embeddings testi | 0 | 5,0 s | beklendiği gibi |
+
+### Kanıtın gücü nerede
+
+Adımlar 3 ve 5 birlikte okunmalı; tek başına hiçbiri yeterli değil:
+
+- **Adım 5** izole ağdaki konteynerin dışarıya çıkamadığını gösterir (çıkış 3).
+- **Adım 3** aynı probun SIRADAN ağda ulaştığını gösterir.
+
+İkincisi olmadan birincisi hiçbir şey kanıtlamaz: probun kendisi bozuk olsa da
+aynı sonucu verirdi. "Ağ yok" iddiası ancak bu ikisi birlikteyken kanıtlanır.
+
+Adımlar 11 ve 12 ise bunun **çalışan** bir yığın olduğunu gösterir: servisler
+yalnız ayağa kalkmıyor, birbirine servis-adı DNS'iyle erişiyor ve Postgres'e
+gerçekten yazıyor. Ağsız ayağa kalkıp iş yapmayan bir yığın kanıt değildir.
+
+### İlk girişim neden tutmamıştı — ve sebebi kodda DEĞİLDİ
+
+İlk koşumda 13 adımın 10'u geçti; başarısız olan üçü de tek bir kök nedenden:
+`web` konteyneri **3000 portuna bağlanamadı**, çünkü o portu aynı makinede
+demo için elle başlatılmış bir Next.js geliştirme sunucusu tutuyordu
+(`ports are not available: ... bind: address already in use`). Adım 11 ve 12'nin
+`docker exec`'i bu yüzden BOŞ konteyner kimliğiyle çağrıldı
+(`invalid container name or ID: value is empty`).
+
+Port boşaltıldıktan sonra **aynı betik, hiçbir değişiklik yapılmadan** 13/13
+geçti. Yani kusur ne compose dosyasında ne betikteydi; ölçüm ortamındaydı.
+Bu ayrım kayda geçiyor çünkü tersi varsayılırsa var olmayan bir hata aranır.
+
 
 ## 1. Ölçüm ortamı
 
@@ -706,12 +764,13 @@ Bayat sayılar, düzeltilmiş halleriyle:
 1. **Kanıt (§1-§9 yukarısı) yalnız API konteynerini kapsıyor.** Ölçülen şey
    `anatolia-api:offline-proof` imajının `--network none` içindeki
    davranışıdır.
-2. **`docker compose up` tam yığını ağsız koşumu 2026-08-20'de DENENDİ ve
-   TAMAMLANAMADI** — ayrıntı §0-c. İzolasyon MEKANİZMASI (Docker `--internal`
-   ağ) bağımsız deneylerle doğrulandı; `docker compose` ile postgres+api+
-   api-postgres+ollama+web'in BİRLİKTE ayağa kalkması host disk yetersizliği
-   yüzünden ölçülemedi. vLLM kolu bu betiğe hiç dahil değil (GPU gerektirir,
-   §7/§9'daki aynı sınır geçerli).
+2. **`docker compose up` tam yığını ağsız koşumu 2026-08-20'de ÖLÇÜLDÜ ve
+   13/13 adım geçti** — ayrıntı **§0-d**. postgres + api + api-postgres +
+   ollama + web AYNI izole ağda, dış dünyaya rotasız, BİRLİKTE ayağa kalktı ve
+   birbirine servis-adı DNS'iyle erişti. Aynı günün ilk girişimi disk
+   yetersizliğinden yarım kalmıştı; o kayıt §0-c'de **silinmedi**.
+   vLLM kolu bu betiğe hâlâ dahil değil (GPU gerektirir, §7/§9'daki aynı
+   sınır geçerli) — tek kalan kapsam sınırı budur.
 3. **İmaj derlemesi internet gerektiriyor** (`pip install`, `npm ci`).
    Dolayısıyla *"internetsiz çalışır"* iddiası **önceden derlenmiş
    imajlarla** doğrudur — sıfırdan derleme ağ ister (bkz. §3 tablo notu).
@@ -721,7 +780,12 @@ puan değil, belgenin geri kalanına duyulan güven olur.
 
 ---
 
-## 0-c. Tam yığın ağsız koşumu — 2026-08-20 girişimi: TAMAMLANAMADI
+## 0-c. Tam yığın ağsız koşumu — 2026-08-20 **İLK** girişimi: TAMAMLANAMADI
+
+> **SONRADAN KAPANDI.** Aynı gün ikinci koşum 13/13 geçti — bkz. **§0-d**.
+> Bu bölüm silinmiyor: başarısız bir girişimin kaydı, başarılı olanın
+> künyesinin parçasıdır. Neyin denenip neden tutmadığı, sonunda neyin
+> tuttuğu kadar bilgi taşır.
 
 **Durum: ◐ KISMEN — mekanizma doğrulandı, `docker compose` koşumu host disk
 yetersizliği yüzünden tamamlanamadı.**
@@ -885,8 +949,8 @@ boşken vLLM **sessizce internete çıkmaz, başlamaz** — istenen davranış b
 | Tüketici GPU profili | `⏳ ölçülmedi` | Donanım yok |
 | Sunucu GPU profili (A100/H100) | `⏳ ölçülmedi` | Donanım yok |
 | Model ağırlığı SHA-256 | `⏳ koşturulmadı` | §9 — ağırlıklar indirilmedi, prosedür yazıldı |
-| `docker compose up` tam yığın (postgres + api + api-postgres + ollama + web) | `◐ 2026-08-20'de DENENDİ, TAMAMLANAMADI` | `scripts/tam_yigin_agsiz.sh` yazıldı; imajlar çekildi/derlendi ama `docker compose build api-postgres db-check` sırasında host disk ~234 MiB'a düştü ve Docker daemon çöktü. İzolasyon mekanizması bağımsız deneylerle doğrulandı, `compose` yığınının kendisi doğrulanamadı. Ayrıntı: §0-c |
-| pgvector / Postgres ağsız başlatma (compose içinde) | `⏳ ölçülmedi` | Aynı sebep — §0-c. İmaj kendisi digest'e sabit şekilde başarıyla çekildi (2026-08-20), ama `docker compose` ile ayağa kaldırma denemesi disk yetersizliğinden yarım kaldı |
+| `docker compose up` tam yığın (postgres + api + api-postgres + ollama + web) | `✅ 2026-08-20 — 13/13 adım geçti` | `scripts/tam_yigin_agsiz.sh`; beş servis AYNI izole ağda (`--internal`, dış dünyaya rotasız) birlikte ayağa kalktı, birbirine servis-adı DNS'iyle erişti, `api-postgres` PostgreSQL'e gerçekten yazdı. Negatif kontrol (dışarıya çıkış) çıkış 3, meta-kontrol (aynı prob sıradan ağda) çıkış 0. Transkript: `docs/offline-proof/tam-yigin-agsiz-transcript-20260820-171857.log`. Ayrıntı: §0-d |
+| pgvector / Postgres ağsız başlatma (compose içinde) | `✅ 2026-08-20` | §0-d adım 6 (`pg_isready`), adım 12 (`repo.counts` ile gerçek YAZMA) ve adım 13 (`db-check`: pgvector paritesi + embeddings testi) — üçü de izole ağda geçti |
 | **İmajın ağsız DERLENMESİ** | `⏳ ölçülmedi — ve ölçülemez` | `docker build` `pip install` yapar, ağ ister. Adım 1 bilerek ağ açıkken koşar. "İnternetsiz çalışır" iddiası **önceden derlenmiş imajlarla** doğrudur (§0-b) |
 | Host ↔ konteyner gecikme karşılaştırması | `⏳ 2026-08-15'te yenilenmedi` | Host koşumu bu pakette koşturulmadı; elimizdeki host JSON 31 Temmuz tarihli ve **farklı korpustan** (§7) |
 | Chatbot iyileşmesinin sebebi | `⏳ ölçülmedi` | p95 325 ms → 16 ms düştü ama hangi commit'in getirdiği ayrıştırılmadı; 498 commit'lik aralıkta ablasyon koşturulmadı (§7.3) |

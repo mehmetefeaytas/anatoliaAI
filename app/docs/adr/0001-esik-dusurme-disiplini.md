@@ -6,7 +6,7 @@
 | tarih | 2026-08-20 |
 | karar veren | ölçüm sahibi (teknik yazar/denetçi) + gold sahibi — **iki ayrı imza** |
 | kapsam | `eval/esikler.json`, `eval/esikler-round1.json`, `scripts/kanit_tazeligi.py`, `docs/rapor/olcumler.md` |
-| ilgili | [`ANNOTATION_GUIDE.md`](../../ANNOTATION_GUIDE.md) §7 · [`docs/rapor/ablasyon.md`](../rapor/ablasyon.md) · vault `decisions/` |
+| ilgili | [`ANNOTATION_GUIDE.md`](../../data/gold/ANNOTATION_GUIDE.md) §7 · [`docs/rapor/ablasyon.md`](../rapor/ablasyon.md) · vault `decisions/` |
 
 ---
 
