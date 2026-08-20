@@ -227,12 +227,49 @@ def _in_same_scope(a: ExtractedField, b: ExtractedField) -> bool:
 _D = (r"(\d{1,2}[./]\d{1,2}[./]\d{4}|\d{4}-\d{1,2}-\d{1,2}|"
       r"\d{1,2}\s+[A-Za-zÇĞİÖŞÜçğıöşü]+\s+\d{4})")
 
+# Bir "gün-gün" ya da "gün ay - gün ay yıl" aralığının SOL tarafı: yalnız gün
+# ("1 – 31 Temmuz 2026") ya da gün+ay ("16 Haziran - 31 Temmuz 2026"), YIL YOK
+# — yılı sağdaki tam tarihle PAYLAŞIR. `(?<!\d)` şart: solundaki 4 haneli bir
+# yılın son 1-2 hanesini ("2026" içindeki "26") gün sanıp yanlış eşleşmeyi
+# önler (bkz. `extract.py`'nin `_GUN_GUN_RE`'si aynı mantığı ayrı şekilde
+# uygular — bkz. modül docstring'i, "kod yolu tutarsızlığı").
+_LEFT_DAY_MONTH = r"(?<!\d)\d{1,2}(?:\s+[A-Za-zÇĞİÖŞÜçğıöşü]+)?"
+
 # SIKI kalıplar. Bir belgede onlarca tarih geçer (güncellenme tarihi, ödül
 # yükleme tarihi, "31 Ağustos'a kadar tahsil edilmeli" gibi yükümlülükler).
 # Yalnız KAMPANYANIN GEÇERLİLİĞİNİ tarif eden tarihler alınır: "kampanya"
 # sözcüğü en fazla 80 karakter önde, tarihten sonra "geçerli" ya da açık bir
-# "Başlangıç ve Bitiş" başlığı. Gevşek kalıp ölçümde 138 belgede tetikleniyor
-# ve büyük kısmı kampanya süresiyle ilgisiz.
+# "Başlangıç ve Bitiş" / "Dönemi" başlığı. Gevşek kalıp ölçümde 138 belgede
+# tetikleniyor ve büyük kısmı kampanya süresiyle ilgisiz.
+#
+# ## Kod yolu tutarsızlığı (ölçüldü 2026-08-20, bkz. docs/rapor/celiski-kod-yolu-
+# tutarsizligi.md) — NİÇİN VE NASIL KAPATILDI
+#
+# Genel alan çıkarıcı `extract_kampanya_suresi` (`src/extraction/rules/extract.py`)
+# korpusta EN SIK geçen bitiş biçimini ("Kampanya 1 – 31 Temmuz 2026
+# tarihlerinde geçerlidir" — gün-gün, YIL PAYLAŞIMLI) yakalıyordu; burdaki
+# `_END_PATTERNS` yakalamıyordu. Ölçüm: 40 gerçek `kampanya_suresi` değişikliği
+# adayından (iki hasat turu, c3f3b90→e05bc83) yalnız 6'sı `detect_across()`'ta
+# ateşliyordu. Bu satır tesadüf değil, KASITLI TASARIM ARALIĞIydı: alan
+# çıkarımı geniş olmalı (boşluk bırakmamak için), çelişki iddiası dar olmalı
+# (yanlış çelişki halüsinasyon sayılır — CLAUDE.md, bu modülün "sayı değil
+# doğruluk" ilkesi). AMA bu aralık hiçbir yerde YAZILI değildi; iki kod yolu
+# sessizce ayrışmıştı.
+#
+# Karar: GENİŞLET, ama yalnız ÖLÇÜMLE DOĞRULANMIŞ biçimlerle — desen eklemeden
+# önce 40 adayın hepsi tam korpustan (2465 belge, iki tur) çekilip yeni
+# desenin ürettiği ISO, genel çıkarıcının kanonik değeriyle karşılaştırıldı:
+#   - Yeni "gün-gün + geçerli" deseni: 97 belgede ateşledi, 85'i genel
+#     çıkarıcıyla TUTARLI. 12 "tutarsız" olan TEK TEK elle doğrulandı — hepsi
+#     genel çıkarıcının KENDİ hatasıydı (Ziraat Katılım'ın "Diğer Kampanyalar"
+#     kenar çubuğundaki alakasız "Son Gün" tarihini yakalıyordu), yeni desenin
+#     hatası değil. Sıfır gerçek yanlış-pozitif.
+#   - Yeni "Kampanya Dönemi:" başlık deseni: 14 belgede ateşledi, 14'ü tutarlı.
+# "Kampanya Koşulları" başlığı + gün-gün (geçerli gerektirmeyen 3. aday desen)
+# ELENDİ: yalnız 3 ek aday kazandırıyordu ama başlığın KENDİSİ tek başına
+# yeterince güvenilir bir çapa değil (bkz. `_multiple_campaign_blocks` — aynı
+# başlık bir sayfada birden çok kez tekrarlanabiliyor, bu da liste sayfası
+# sinyali, tekil-doğrulama çapası değil).
 _END_PATTERNS: tuple[tuple[re.Pattern[str], int], ...] = (
     (re.compile(rf"kampanya[^.]{{0,80}}?{_D}\s*tarihine\s+(?:kadar|dek)"
                 rf"[^.]{{0,40}}?ge[çc]erli", re.IGNORECASE), 1),
@@ -240,6 +277,20 @@ _END_PATTERNS: tuple[tuple[re.Pattern[str], int], ...] = (
                 rf"aras[ıi]nda[^.]{{0,60}}?ge[çc]erli", re.IGNORECASE), 2),
     (re.compile(rf"kampanya\s+ba[şs]lang[ıi][çc]\s*(?:ve\s*)?biti[şs]\s*"
                 rf"(?:tarihi\s*)?:?\s*{_D}\s*[-–—]\s*{_D}", re.IGNORECASE), 2),
+    # YENİ (2026-08-20) — "gün-gün" / "gün ay - gün ay yıl" ortak-yıl aralığı,
+    # "tarihinde/tarihlerinde geçerli" ya da "tarihleri arasında geçerli" ile
+    # kapanıyor. Sağdaki (tam) tarih grup 1'dir — solundaki gün/gün-ay YIL
+    # taşımaz, karşılaştırmaya girmez (`kampanya_suresi` zaten yalnız BİTİŞi
+    # tutar, bkz. `extract_kampanya_suresi` docstring'i).
+    (re.compile(rf"kampanya[^.]{{0,80}}?{_LEFT_DAY_MONTH}\s*[-–—]\s*({_D})\s*"
+                rf"tarih(?:i|leri)(?:nde|\s+aras[ıi]nda)[^.]{{0,60}}?ge[çc]erli",
+                re.IGNORECASE), 1),
+    # YENİ (2026-08-20) — "Kampanya Dönemi: <gün/gün-ay> - <tam tarih>" başlığı.
+    # pattern3'teki "Başlangıç ve Bitiş Tarihi:" ile AYNI güven seviyesi:
+    # başlığın kendisi zaten "bu bir geçerlilik aralığıdır" diyor, "geçerli"
+    # sözcüğü gerekmiyor. Ölçüm: 14/14 tutarlı, 0 tutarsız (bkz. yukarı).
+    (re.compile(rf"kampanya\s+d[öo]nemi\s*:?\s*{_LEFT_DAY_MONTH}\s*[-–—]\s*"
+                rf"({_D})", re.IGNORECASE), 1),
 )
 
 # Banka kendi kendine "bu kampanya bitti" diyorsa bu ÇELİŞKİ DEĞİLDİR — dürüst
@@ -275,6 +326,53 @@ _VALIDITY_WINDOW = re.compile(
 
 
 _DATE_ONLY = re.compile(_D)
+
+# Bir sayfada KAÇ KEZ "Kampanya Koşulları" başlığı geçiyor — bu başlık PER
+# KAMPANYA bir bölüm başlığıdır (bkz. gerçek korpus, ör. T.O.M. Bank'ın
+# `kampanyalar.html` listesi: 3 farklı kampanya, 3 kez tekrarlanan başlık).
+# TEK kampanyanın kendi sayfasında bu başlık normalde bir kez geçer.
+_CAMPAIGN_HEADING = re.compile(r"kampanya\s+ko[şs]ullar[ıi]", re.IGNORECASE)
+
+
+def _multiple_campaign_blocks(text: str) -> bool:
+    """Sayfa, HER BİRİ KENDİ "Kampanya Koşulları" bölümüne sahip birden çok
+    kampanyayı art arda mı listeliyor?
+
+    ## Niçin bu koruma gerekli — ÖNCEDEN VAR OLAN, ölçümle bulunan hata
+
+    `_rule_conflicting_end_dates` (aşağıda) `_looks_like_listing` KORUMASINI
+    KULLANMAZ — kasıtlı: `_looks_like_listing` tek doğrulanmış belge-içi çelişki
+    örneğinde (`ALBARAKA_TEMMUZ`, bkz. testler) de True döner (sayfa 2 farklı
+    "bitiş" görüyor: 2026-07-31 ve 2027-07-31), çünkü o koruma "TEK kampanyanın
+    KENDİ İÇİNDE çelişip çelişmediğini" değil "sayfada kaç farklı bitiş
+    tarihi var"ı sayar. `_looks_like_listing`'i buraya eklemek tek doğrulanmış
+    true-positive'i susturur.
+
+    Ama bu, örtük bir hata olarak KALMIŞTI: mevcut
+    `tests/test_contradiction_across.py::test_liste_sayfasi_tumu_icin_hukum_vermez`
+    testindeki SENTETİK T.O.M. Bank metni ("Kampanya Koşulları ... 26 Aralık
+    2025 - 25 Mart 2026 ... Kampanya Koşulları ... 19.01.2026 - 30.09.2026")
+    yalnızca `suresi_dolmus_kampanya` türünü kontrol ediyordu; PATCH ÖNCESİ
+    KODLA BİLE bu metin sessizce bir `celisen_kampanya_bitisi` HAYALETİ
+    üretiyordu (ölçüldü 2026-08-20) — iki AYRI kampanyanın kendi bitiş
+    tarihleri "aynı belgede çelişen tek kampanya" sanılıyordu. Bu fonksiyon bu
+    ÖNCEDEN VAR OLAN hatayı kapatır; `_END_PATTERNS`'in gün-gün genişlemesiyle
+    birlikte gelen YENİ bir risk değildir (ayrıca genişleme onu daha sık
+    tetikler hale getirdi — gerçek korpusta T.O.M. Bank'ın kendi sayfası da bu
+    şekilde kırılıyordu, ölçüm: docs/rapor/celiski-kod-yolu-tutarsizligi.md).
+
+    ## Neden "Kampanya Koşulları" tekrarı ve neden `_looks_like_listing` değil
+
+    "Kampanya Koşulları" tek bir kampanyanın KENDİ bölüm başlığıdır; bir
+    sayfada 2+ kez geçmesi güçlü bir sinyaldir: sayfa birden çok kampanyayı ART
+    ARDA yapıştırıyor. `ALBARAKA_TEMMUZ` gerçek vakasında bu başlık hiç
+    GEÇMİYOR (orada "Kampanya Şartları:" kullanılıyor, farklı sözcük) — yani bu
+    koruma true-positive'i etkilemiyor. Ölçüm (2465 belge, iki hasat turu):
+    başlık ≥2 kez geçen 274 belge var, ama bunların KESİŞİMİ "ayrıca ≥2 farklı
+    `end_date_claims` üreten" belgelerle yalnız 1 gerçek sayfa (T.O.M. Bank) —
+    yani koruma dar bir kesişimde devreye giriyor, geniş bir vetoya dönüşmüyor.
+    """
+    return len(_CAMPAIGN_HEADING.findall(text)) >= 2
 
 
 def _looks_like_listing(text: str) -> bool:
@@ -579,7 +677,15 @@ def _rule_conflicting_end_dates(campaign: Campaign) -> list[Contradiction]:
       başlıkta "Kampanya Başlangıç ve Bitiş 01.07.2026 - 31.07.2026",
       koşullarda "Kampanya 31 Temmuz 2027 tarihine kadar geçerlidir."
     Bir yıllık fark; müşteri hangisine güvenecek?
+
+    Koruma: `_multiple_campaign_blocks` — sayfa birden çok kampanyayı ART ARDA
+    listeliyorsa (her biri kendi "Kampanya Koşulları" başlığı ve kendi bitiş
+    tarihiyle) bu bir çelişki değil, bir LİSTEDİR (gerekçe fonksiyonun kendi
+    docstring'inde: gerçek korpus örneği + önceden var olan, bu koruma
+    eklenmeden önce mevcut kodda da var olduğu ölçülen hata).
     """
+    if _multiple_campaign_blocks(campaign.raw_text):
+        return []
     claims = end_date_claims(campaign.raw_text)
     if len(claims) < 2:
         return []

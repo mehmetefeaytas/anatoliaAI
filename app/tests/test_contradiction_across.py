@@ -408,9 +408,17 @@ GHOST_CEILINGS = {
     # Tablo↔SSS tutar bandı ayrışması. DAR tutuldu: ölçülen 2, koruma düşerse 15+
     # olur (liste sayfaları). Bu satır asıl hayalet dedektörüdür.
     "celisen_tutar_bandi": 5,
-    # Belgeler arası kurallar — korpusta henüz doğrulanmış bulgu yok.
-    "capraz_kar_payi_uyusmazligi": 5,
-    "capraz_kampanya_bitisi": 5,
+    # Belgeler arası kurallar.
+    "capraz_kar_payi_uyusmazligi": 5,  # korpusta henüz doğrulanmış bulgu yok
+    # `capraz_kampanya_bitisi` 20 Ağu 2026'da İLK KEZ ateşledi: `_END_PATTERNS`
+    # iki ölçülmüş biçimle genişletildi (gün-gün ortak yıl + "Kampanya Dönemi:"),
+    # ateşleme 0 → 6. Genişletme öncesi 111 belgede genel çıkarıcıyla karşılaştırıldı:
+    # 99 tutarlı, 12 "tutarsız"ın hepsinde hatalı olan genel çıkarıcıydı → ölçülen
+    # yanlış-pozitif 0. Tavan, dosyanın kendi geleneğine uyarak ölçülenin ~2 katı.
+    # UYARI: bu 6 bulgunun tamamı Albaraka'nın aylık tekrarlayan worldpuan serisi
+    # (`_1`/`_2`/`_3` sonekleri) — muhtemelen ardışık edisyonlar, eşzamanlı çelişki
+    # DEĞİL. Ayrıntı: docs/rapor/celiski-kod-yolu-tutarsizligi.md §8.
+    "capraz_kampanya_bitisi": 12,
     "masrafsiz_ama_ucret": 10,
     "masrafsiz_ama_tutar": 10,
 }
@@ -422,6 +430,12 @@ class TestKorpusRegresyonu(unittest.TestCase):
 
     Ölçüm (2026-07-30 snapshot, 849 belge): 6 çelişki — 5 "süresi dolmuş
     kampanya", 1 "belge içi çelişen bitiş tarihi". Altısı da elle doğrulandı.
+
+    Güncel ölçüm (20 Ağu 2026, 1.782 belge): 24 çelişki —
+    `suresi_dolmus_kampanya` 13 · `celisen_tutar_bandi` 4 ·
+    `capraz_kampanya_bitisi` 6 · `celisen_kampanya_bitisi` 1.
+    Belgeler-arası kural ilk kez ateşledi; künye ve yanlış-pozitif ölçümü
+    `GHOST_CEILINGS` yorumunda.
     """
 
     @classmethod
