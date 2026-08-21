@@ -136,6 +136,44 @@ _TUTAR_PAT = re.compile(
     re.IGNORECASE,
 )
 
+#: ÖDÜL, FİNANSMAN DEĞİLDİR — tutarın SAĞINDAKİ ada bakılır.
+#:
+#: HAKEM-05'in bulduğu tek gerçek model hatası (B9,
+#: `turkiye-finans--kampanyalar-yakininizi-davet-edin`): *"%0 kâr paylı
+#: 50.000 TL'ye varan İhtiyaç Finansmanı **ve 11.000 TL'ye varan bonus**"*
+#: cümlesinden `finansman_tutari = 11.000 TL` çıkıyordu. 11.000 TL bir
+#: BONUSTUR; kılavuz onu `odul_miktari`ya yazar. Gold'un hücreyi boş
+#: bırakması doğru okumaydı.
+#:
+#: ÖLÇÜLDÜ (canlı korpus, `finansman_tutari` taşıyan 78 alan): kalıp tam
+#: **2** alanı düşürüyor ve ikisi de yanlıştı — B9'un `11.000 TL`'si ve
+#: *"1.000 TL değerinde **Altın Puan** kazanabilirsiniz"*. Yanlış pozitif
+#: yok.
+#:
+#: `[^\d]{0,22}` penceresi gerekli: ödül adı tutara YAPIŞIK değil, arada
+#: çekim eki ve bir sıfat durabiliyor ("TL'ye varan bonus", "TL değerinde
+#: Altın Puan"). Pencerede rakam yasak — rakam gelirse başka bir tutar
+#: başlamış demektir ve o cümle artık bu tutarı nitelemiyor.
+_ODUL_SAGI_RE = re.compile(
+    r"[^\d]{0,22}\b(bonus|ödül|iade|promosyon|hediye|puan|mil)\b",
+    re.IGNORECASE,
+)
+
+# BAĞLAÇ YASAĞI DENENDİ VE ÖLÇÜMLE REDDEDİLDİ (2026-08-21).
+#
+# HAKEM-05 §4.5/1 tetikleyici ile tutar arasındaki boşlukta `ve|ile|ayrıca|,|;`
+# yasağı öneriyordu (B9'daki "Finansmanı **ve** 11.000 TL" kurgusu için).
+# Uygulanmadan önce ölçüldü: kalıp `finansman_tutari` taşıyan 78 alanın
+# **21'ini** (%27) düşürüyor ve düşürdükleri MEŞRU:
+#   "…ödeme seçeneği **ile** 200.000 TL'ye kadar olan alışverişlerinizde"
+#   "…finansmanı **ile** Hepsiburada'da 30.000 TL'ye kadar"
+# Birincisi tam olarak S1 kılavuz kararıyla (anotatör, 2026-08-21) DOLDURULAN
+# dört hücrenin kaynağı; yasak konsa o kararı geri almış olurduk.
+#
+# Aynı işi sağdaki ödül adı (`_ODUL_SAGI_RE`) yanlış pozitif ÜRETMEDEN
+# yapıyor: B9'u düşürüyor, 21 meşru alana dokunmuyor. Öneri reddedildi,
+# gerekçe burada duruyor ki tekrar denenmesin.
+
 # "Örnek ... Tablosu" TEMSİLİ bir hesap örneğidir, kampanyanın tutarı değil.
 # Ölçülen halüsinasyon (`turkiye-emlak-katilim--finansmanlar-ihtiyac-finansmani`):
 # "Örnek İhtiyaç Finansmanı Tablosu | Finansman Tutarı ... 30.000,00 ₺" —
@@ -384,6 +422,9 @@ def extract_tutar(text: str) -> Optional[ExtractedField]:
                 text[m.end(3): m.end(3) + _VADE_KADEMESI_PENCERE]):
             continue
         if _KADEME_ISE_RE.match(text, m.end(3)):
+            continue
+        # ÖDÜL, FİNANSMAN DEĞİLDİR — tutarın SAĞINDAKİ ada bakılır.
+        if _ODUL_SAGI_RE.match(text, m.end(3)):
             continue
         # Veri üretmemiş hesaplama aracı iskeleti mi? (belge 1578: aynı 100TL
         # üç ayrı etikette). Döngü içinde `continue` — aynı belgede iskeletin

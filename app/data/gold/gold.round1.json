@@ -985,11 +985,16 @@
     "campaign_type": "Finansman",
     "fields": {
       "vade_ay": 6,
-      "taksit_sayisi": 12
+      "taksit_sayisi": 12,
+      "finansman_tutari": {
+        "currency": "TRY",
+        "value": 200000.0
+      }
     },
     "field_spans": {
       "vade_ay": "tedir. Tablet alışverişleriniz en fazla 6 ay vadelendirilmektedir. Bilgisayar alışve",
-      "taksit_sayisi": "erişleriniz 20.000 TL'ye kadar en fazla 12 taksit, 20.000 TL'nin üzerinde ise en fazla 3"
+      "taksit_sayisi": "erişleriniz 20.000 TL'ye kadar en fazla 12 taksit, 20.000 TL'nin üzerinde ise en fazla 3",
+      "finansman_tutari": "niz. Alışveriş Finansmanı ödeme seçeneği ile 200.000 TL'ye kadar olan alışverişlerinizde 36 aya v"
     },
     "absent_fields": [],
     "hard_tags": [],
@@ -1001,9 +1006,7 @@
     "notes": {
       "vade_ay": "model, campaign type ile kart eşleştirmesi yapıp yanılmıştır. Veri metninde finansman anlatılmaktadır"
     },
-    "unclear_fields": [
-      "finansman_tutari"
-    ]
+    "unclear_fields": []
   },
   {
     "id": "kuveyt-turk--alisveris-finansmanlari-lc-waikiki-alisveris-finansmani",
@@ -1026,9 +1029,7 @@
     "notes": {
       "vade_ay": "model, 3 ay değerini vade_ay olarak eşleştirerek hata yapmıştır. 3 ay bilgisi taksit sayısına aittir. Veri metninde vade_ay bilgisi yazmamaktadır"
     },
-    "unclear_fields": [
-      "finansman_tutari"
-    ]
+    "unclear_fields": []
   },
   {
     "id": "kuveyt-turk--alisveris-finansmanlari-teknosa-alisveris-finansmani",
@@ -1039,11 +1040,16 @@
     "campaign_type": "Finansman",
     "fields": {
       "vade_ay": 6,
-      "taksit_sayisi": 12
+      "taksit_sayisi": 12,
+      "finansman_tutari": {
+        "currency": "TRY",
+        "value": 200000.0
+      }
     },
     "field_spans": {
       "vade_ay": "tedir. Tablet alışverişleriniz en fazla 6 ay vadelendirilmektedir. Bilgisayar alışve",
-      "taksit_sayisi": "erişleriniz 20.000 TL'ye kadar en fazla 12 taksit, 20.000 TL'nin üzerinde ise en fazla 3"
+      "taksit_sayisi": "erişleriniz 20.000 TL'ye kadar en fazla 12 taksit, 20.000 TL'nin üzerinde ise en fazla 3",
+      "finansman_tutari": "niz. Alışveriş Finansmanı ödeme seçeneği ile 200.000 TL'ye kadar olan alışverişlerinizde 36 aya v"
     },
     "absent_fields": [],
     "hard_tags": [],
@@ -1052,9 +1058,7 @@
     ],
     "adjudicated": false,
     "hard": false,
-    "unclear_fields": [
-      "finansman_tutari"
-    ]
+    "unclear_fields": []
   },
   {
     "id": "kuveyt-turk--alisveris-finansmanlari-vivense-alisveris-finansmani",
@@ -1064,10 +1068,15 @@
     "text": "Ana Sayfa Kendim İçin Finansmanlar Alışveriş Finansmanları Vivense Alışveriş Finansmanı CebimPOS ile Alışveriş Finansmanı İhtiyaç Kart Taksitlio Alışveriş Finansmanı Hepsiburada Alışveriş Finansmanı Trendyol Alışveriş Finansmanı LC Waikiki Alışveriş Finansmanı Teknosa Alışveriş Finansmanı Vivense Alışveriş Finansmanı Alışveriş Finansmanı Vivense Alışveriş Finansmanı Vivense'den yapacağınız alışverişlerde Vivense Alışveriş Finansmanı sizinle! Evinizi güzelleştirecek mobilya ve ev dekorasyonu için pek çok kategoride yapacağınız Vivense alışverişlerinizde uygun kar oranı ve 36 aya varan taksit imkânı ile Kuveyt Türk Alışveriş Finansmanı fırsatını kullanabilir, kredi kartı limitiniz ve nakit paranızdan harcamadan alışveriş yapmanın keyfini sürebilirsiniz. Vivense Alışveriş Finansmanı Nedir? Alışveriş Finansmanı yapacağınız alışverişlerde taksitli ve avantajlı ödeme imkânı sunan dijital bir finansman ürünüdür. Alışveriş Finansmanı ödeme seçeneğini Vivense mobil uygulamasından veya web sitesinden yapacağınız alışverişlerinizde sepetinizde anında kullanabilirsiniz. Alışveriş Finansmanı ödeme seçeneği ile 200.000 TL'ye kadar olan alışverişlerinizde 36 aya varan taksit fırsatından faydalanarak alışverişinizi hızlıca tamamlayabilirsiniz. Nasıl Başvurulur? Vivense mobil uygulaması veya web sitesi üzerinden sepetinizi oluşturduktan sonra ödeme seçeneğinde Alışveriş Kredisi'ni seçip bilgilerinizi doldurduktan sonra anında Alışveriş Finansmanına başvurabilirsiniz. Finansman başvurusu onaylanan müşterilerimiz Kuveyt Türk Mobil üzerinden sözleşmeleri onaylayarak finansman başvuru işlemini tamamlayabilirler. Kuveyt Türk müşterisi değilseniz Kuveyt Türk Mobil üzerinden görüntülü görüşmeyle müşterimiz olduktan sonra Vivense mobil uygulamasından veya web sitesinden Alışveriş Finansmanı başvurusunda bulunabilirsiniz. İşlemini tamamlayan müşterilerimiz siparişlerini Vivense hesapları üzerinden takip edebilirler. Kampanya kapsamında kullanacağınız Alışveriş Finansmanında tarafınıza sigorta ve tahsis ücreti yansıtılmayacaktır. Dipnotlar Tahsis süreçleri olumlu olan müşterilerimiz Alışveriş Finansmanı'ndan yararlanabilecektir. Bankamız finansman kullandırım politikaları çerçevesinde, finansman başvurusunda bulunan her müşterimiz için ayrı değerlendirme yapmaktadır. Kuveyt Türk kampanya koşul ve tarihlerini değiştirme, sonlandırma hakkını saklı tutar. Uygulamayı İndir QR Kodunu Okut",
     "campaign_type": "İhtiyaç Finansmanı",
     "fields": {
-      "vade_ay": 36
+      "vade_ay": 36,
+      "finansman_tutari": {
+        "currency": "TRY",
+        "value": 200000.0
+      }
     },
     "field_spans": {
-      "vade_ay": "e alışverişlerinizde uygun kar oranı ve 36 aya varan taksit imkânı ile Kuveyt Türk Alı"
+      "vade_ay": "e alışverişlerinizde uygun kar oranı ve 36 aya varan taksit imkânı ile Kuveyt Türk Alı",
+      "finansman_tutari": "niz. Alışveriş Finansmanı ödeme seçeneği ile 200.000 TL'ye kadar olan alışverişlerinizde 36 aya v"
     },
     "absent_fields": [],
     "hard_tags": [],
@@ -1076,9 +1085,7 @@
     ],
     "adjudicated": true,
     "hard": false,
-    "unclear_fields": [
-      "finansman_tutari"
-    ]
+    "unclear_fields": []
   },
   {
     "id": "kuveyt-turk--api-market-finansman",

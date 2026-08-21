@@ -16,7 +16,12 @@ CLAUDE.md §3 (katman mimarisi), §21 (halüsinasyon yasağı)
 > **İkinci tur da reddetti.** Bulgu bir hipotez üretmişti (hata alan
 > ETİKETLEME hatası olabilir), iki açıklaması ölçüldü: daha büyük/yeni model
 > (`qwen3.5:9b-q4_K_M`) ve tek çağrıda tek alan sorma. 2×2 ablasyonun
-> **dört hücresinin hiçbiri** kabul ölçütünü geçmedi — ayrıntı §10.
+> **dört hücresinin hiçbiri** kabul ölçütünü geçmedi; sekiz koşumun sekizinde
+> regresyon kapısı kapalı — ayrıntı §10.
+>
+> Kapsam uyarısı: round1 hücreleri, `gold.round1` yeniden anotlanmadan ÖNCE
+> ölçüldü. Tahkim barı yükseltti (0,738 → 0,786), yani kararı güçlendiriyor;
+> tahkim sonrası round1 hibrit sayıları ölçülmedi ve iddia edilmiyor (§10.7).
 >
 > Üretim korpusu yeniden kurulmadı; `--llm` varsayılanı `kapali`.
 > Kök nedenin YAPISAL kısmı (niyetin ifade edilemiyor olması ve kural-only
@@ -595,6 +600,11 @@ Taban (kural katmanı, aynı kod anlık görüntüsü, aynı makine):
 **gold.v2 F1 0,570 · halüsinasyon 0,034** · **gold.round1 F1 0,738 ·
 halüsinasyon 0,344**.
 
+> **round1 satırları** tahkimden ÖNCEKİ `gold.round1`e karşı ölçüldü
+> (taban 0,738 / hal 0,344). `HEAD`te o gold yeniden anotlandı ve taban
+> 0,786 / 0,297 oldu — bar YÜKSELDİ. Ayrıntı ve etkisi §10.7'de.
+> **v2 satırları** `HEAD` tabanıyla doğrudan karşılaştırılabilir.
+
 | hücre | model | granülarite | gold | mikro-F1 | yapısal F1 | halüsinasyon | TP | FP | regresyon kapısı | koşum kipi |
 |---|---|---|---|---|---|---|---|---|---|---|
 | **A** | qwen2.5:7b | çoklu-alan | v2 | 0.539 | 0.760 | 0.058 [26/447] | 65 | 67 | KAPALI (6) | katı |
@@ -666,9 +676,12 @@ gold.v2      MİKRO 0.546 0.596 0.570   TP 65  FP 54  FN 44   halüsinasyon 0.03
 gold.round1  MİKRO 0.733 0.743 0.738   TP 110 FP 40  FN 38   halüsinasyon 0.344 [21/61]
 ```
 
-Sayılar birebir aynı: düzeltme bu iki gold'un metriklerine dokunmuyor.
-Dolayısıyla §10.3'teki hibrit hücreleri, `HEAD`teki kural tabanıyla
-karşılaştırılabilir durumda.
+O düzeltme için sayılar birebir aynıydı. **Ama ölçüm bittikten sonra
+gold.round1'in KENDİSİ değişti** — bu, §10.7'de ayrıca ele alınıyor ve
+§10.3 tablosunun round1 satırlarını etkiliyor.
+
+gold.v2 tabanı `HEAD`te de aynıdır (0,570 / 0,034), dolayısıyla tablonun
+**v2 satırları `HEAD` ile karşılaştırılabilir** durumda.
 
 ### 10.3c ÖLÇÜLEN tekrar-varyansı: LLM kolu determinist DEĞİL, kural kolu determinist
 
@@ -790,9 +803,55 @@ geri alındı (bkz. §10.3 köken notu). İlk turun satırları (`colab-v2-*`,
 ### 10.6 İkinci turun kararı: REDDEDİLDİ
 
 Ölçüt dört eşiğin **hepsini** ister: v2'de F1 > 0,570 **ve** halüsinasyon
-≤ 0,034; round1'de F1 > 0,738 **ve** halüsinasyon ≤ 0,344. **Hiçbir hücre kabul ölçütünü geçmedi.**
+≤ 0,034; round1'de F1 > 0,738 **ve** halüsinasyon ≤ 0,344.
+**Hiçbir hücre kabul ölçütünü geçmedi** — sekiz koşumun sekizinde regresyon
+kapısı da kapalı.
+
+Ölçümden sonra `gold.round1` yeniden anotlandı ve round1 barı **yükseldi**
+(0,738 → 0,786 · hal 0,344 → 0,297). Bu, ret kararını güçlendirir, zayıflatmaz;
+tahkim sonrası round1 hibrit sayıları ise **ölçülmedi** ve bu raporda
+verilmiyor (§10.7).
 
 Eşiklere dokunulmadı, hiçbir hücre gizlenmedi.
+
+### 10.7 KAPSAM UYARISI — gold.round1 ölçümden SONRA yeniden anotlandı
+
+Bu ölçüm bittikten sonra, ilgisiz bir iş kolunda `gold.round1` üzerinde bir
+anotasyon tahkimi yapıldı ve uygulandı (`c5100ddb` "HAKEM-05 UYGULANDI",
+23 hücre: 13 `absent`, 2 değer düzeltmesi, 4 boş hücre dolduruldu, 4
+`unclear`). Etkisi kural kolunda **ölçülmüştür**:
+
+| gold | taban (ölçüm anı) | taban (`HEAD`, HAKEM-05 sonrası) |
+|---|---|---|
+| gold.v2 | 0,570 · hal 0,034 [15/447] | **0,570 · hal 0,034 [15/447]** — değişmedi |
+| gold.round1 | 0,738 · hal 0,344 [21/61] | **0,786 · hal 0,297 [22/74]** — değişti |
+
+**Bunun anlamı, dürüst hâliyle:**
+
+1. **§10.3'ün v2 satırları geçerli.** gold.v2 dokunulmadı; o dört hücre
+   `HEAD`teki tabanla doğrudan karşılaştırılabilir.
+2. **§10.3'ün round1 satırları, tahkimden ÖNCEKİ gold'a karşı ölçülmüştür**
+   (`42493665` anlık görüntüsü). Tahkim sonrası round1 sayıları **ölçülmedi**;
+   dolayısıyla bu raporda tahkim sonrası round1 hibrit F1'i için sayı
+   verilmiyor.
+3. **Kararın yönü değişmez, ve sebebi mekanik.** Tahkim, tabanı
+   0,738 → 0,786'ya **yükseltti** ve halüsinasyon eşiğini 0,344 → 0,297'ye
+   **sıkılaştırdı**. Yani geçilmesi gereken bar iki ölçütte de **yukarı**
+   gitti; LLM kolları ise eski, daha alçak bara göre bile 0,703–0,735
+   (F1) ve 0,492–0,541 (halüsinasyon) ile kalıyordu. Ayrıca tahkimin
+   13 hücreyi `absent` yapması halüsinasyon fırsat sayısını 61 → 74'e
+   çıkardı; hücreleri kuraldan DAHA ÇOK dolduran LLM kolları bu yeni
+   `absent` hücrelerden daha fazla ceza alır, daha az değil.
+
+   Kısacası: barın yükseldiği, kolun ise aynı kaldığı bir karşılaştırmada
+   ret kararı zayıflamaz. Ama "kesin sayı" iddiası yalnız v2 için yapılıyor.
+4. **Yeniden ölçüm gerekirse** dört round1 hücresi (A/B/C/D) yeniden
+   koşulmalıdır; A100'de maliyeti ~1 saat ve komutlar §9'da hazır. Bu turda
+   yapılmadı, çünkü ölçüm kapsamı dört hücreyle sınırlıydı ve tahkim ölçüm
+   bittikten sonra geldi.
+
+`eval/esikler-round1.json` bu turda **değiştirilmedi**; regresyon kapısı
+sekiz koşumun sekizinde zaten kapalıydı.
 
 ## Kaynaklar
 
