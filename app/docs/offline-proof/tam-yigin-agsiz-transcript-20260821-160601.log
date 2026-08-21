@@ -1,0 +1,225 @@
+==============================================================================
+ ANATOLIA AI — TAM YIGIN AGSIZ KOSUM (postgres + api + api-postgres + ollama + web)
+==============================================================================
+tarih         : 2026-08-21T13:06:01Z (UTC)
+calisma dizini: /Users/mehmetefeaytas/anatoliaaI/app
+proje adi     : anatolia-agsiz
+izole ag      : anatolia-agsiz-izole-ag
+transkript    : docs/offline-proof/tam-yigin-agsiz-transcript-20260821-160601.log
+host          : Darwin Mehmet-MacBook-Air.local 25.5.0 Darwin Kernel Version 25.5.0: Tue Jun  9 22:28:17 PDT 2026; root:xnu-12377.121.10~1/RELEASE_ARM64_T8142 arm64
+git commit    : 092a8c91
+git durum     : 8 degisik dosya
+
+docker        : Docker version 29.5.3, build d1c06ef6b4
+daemon        : 29.6.1 (linux/aarch64)
+compose       : 5.3.0
+on-cekilmis imajlar: postgres+pgvector VE ollama yerelde mevcut (digest eslesti)
+
+------------------------------------------------------------------------------
+ADIM 1: Imaj derleme (docker compose build api api-postgres web db-check) — AG ACIK
+beklenti : cikis kodu 0
+komut    : docker compose -p anatolia-agsiz --profile postgres build api api-postgres web db-check
+------------------------------------------------------------------------------
+ Image anatolia-agsiz-api Building 
+ Image anatolia-agsiz-api-postgres Building 
+ Image anatolia-agsiz-web Building 
+ Image anatolia-agsiz-db-check Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.92kB done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.65kB 0.0s done
+#2 DONE 0.0s
+
+#3 [api-postgres internal] load build definition from Dockerfile.api
+#3 transferring dockerfile: 2.36kB 0.0s done
+#3 DONE 0.0s
+
+#4 [api-postgres internal] load metadata for docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#4 DONE 0.0s
+
+#5 [api internal] load .dockerignore
+#5 transferring context: 937B done
+#5 DONE 0.0s
+
+#6 [api internal] load build context
+#6 ...
+
+#7 [db-check  1/10] FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#7 resolve docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93 0.0s done
+#7 DONE 0.0s
+
+#6 [api internal] load build context
+#6 transferring context: 4.59MB 0.8s done
+#6 DONE 0.9s
+
+#8 [web internal] load metadata for docker.io/library/node:20-alpine
+#8 DONE 1.0s
+
+#9 [api-postgres  5/10] COPY src/ ./src/
+#9 CACHED
+
+#10 [api-postgres  2/10] WORKDIR /app
+#10 CACHED
+
+#11 [api-postgres  3/10] COPY requirements-api.txt .
+#11 CACHED
+
+#12 [api-postgres  4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#12 CACHED
+
+#13 [api-postgres  6/10] COPY config/ ./config/
+#13 CACHED
+
+#14 [web internal] load .dockerignore
+#14 transferring context: 308B 0.0s done
+#14 DONE 0.0s
+
+#15 [api-postgres  7/10] COPY data/ ./data/
+#15 ...
+
+#16 [web deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#16 resolve docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 0.0s done
+#16 DONE 0.0s
+
+#17 [web internal] load build context
+#17 transferring context: 4.17kB done
+#17 DONE 0.0s
+
+#18 [web run 5/7] COPY --from=build /app/package.json ./package.json
+#18 CACHED
+
+#19 [web build 5/5] RUN npm run build
+#19 CACHED
+
+#20 [web deps 2/4] WORKDIR /app
+#20 CACHED
+
+#21 [web run 4/7] COPY --from=build /app/node_modules ./node_modules
+#21 CACHED
+
+#22 [web deps 4/4] RUN npm ci
+#22 CACHED
+
+#23 [web run 6/7] COPY --from=build /app/next.config.js ./next.config.js
+#23 CACHED
+
+#24 [web run 3/7] COPY --from=build /app/.next ./.next
+#24 CACHED
+
+#25 [web deps 3/4] COPY package.json package-lock.json ./
+#25 CACHED
+
+#26 [web build 3/5] COPY --from=deps /app/node_modules ./node_modules
+#26 CACHED
+
+#27 [web build 4/5] COPY . .
+#27 CACHED
+
+#28 [web run 7/7] COPY --from=build /app/public ./public
+#28 CACHED
+
+#29 [web] exporting to image
+#29 exporting layers done
+#29 exporting manifest sha256:e1da8710a49f9782a5ad91239e490d2ec6397862248186a5e79811e2a92c7232 0.0s done
+#29 exporting config sha256:8a7a44f06a4312d6c629d7b806b74bb27ecee81eff4a0f074b2f32f73061d4b5 done
+#29 exporting attestation manifest sha256:9c3b92b77a4ba68813854d95c3d224e6558f7a7800fa24dc13160fe46296011c 0.1s done
+#29 exporting manifest list sha256:4df24f4aaa39518364a7226aaaa7071e1e40dd2c1877fa3a70431448ec93f645 0.0s done
+#29 naming to docker.io/library/anatolia-agsiz-web:latest done
+#29 unpacking to docker.io/library/anatolia-agsiz-web:latest
+#29 unpacking to docker.io/library/anatolia-agsiz-web:latest 0.0s done
+#29 DONE 0.2s
+
+#15 [api-postgres  7/10] COPY data/ ./data/
+#15 ...
+
+#30 [web] resolving provenance for metadata file
+#30 DONE 0.0s
+
+#15 [api-postgres  7/10] COPY data/ ./data/
+#15 DONE 17.0s
+
+#31 [api  8/10] COPY eval/ ./eval/
+#31 DONE 0.6s
+
+#32 [api-postgres  9/10] COPY tests/ ./tests/
+#32 DONE 0.1s
+
+#33 [api 10/10] COPY scripts/ ./scripts/
+#33 DONE 0.1s
+
+#34 [api] exporting to image
+#34 exporting layers
+#34 ...
+
+#35 [api-postgres] exporting to image
+#35 ...
+
+#36 [db-check] exporting to image
+#36 ...
+
+#35 [api-postgres] exporting to image
+#35 exporting layers 41.2s done
+#35 exporting manifest sha256:2681264d07e945a5ff90d29a97a8902e546f22faf6b5e1fcce633e4ef2d22215 0.0s done
+#35 exporting config sha256:51cb06b768a6c4783e6d7ef855fcf395c21a08cf5f4fd4ecf71bf16c02148819 0.0s done
+#35 exporting attestation manifest sha256:0662edf7d6f25c057287f3911820eb4f9ec38692dcd300b35c0c15c05fc038f5
+#35 exporting attestation manifest sha256:0662edf7d6f25c057287f3911820eb4f9ec38692dcd300b35c0c15c05fc038f5 0.0s done
+#35 exporting manifest list sha256:d9add8665c4c996a5a9673a42cf259695af1a1ad55d451dba6795e974963caa3 0.1s done
+#35 naming to docker.io/library/anatolia-agsiz-api-postgres:latest
+#35 naming to docker.io/library/anatolia-agsiz-api-postgres:latest 0.1s done
+#35 unpacking to docker.io/library/anatolia-agsiz-api-postgres:latest
+#35 ...
+
+#34 [api] exporting to image
+#34 exporting layers 41.2s done
+#34 exporting manifest sha256:a2f2122c48b1d180783166b8463f130e808edbfdc2bbae22f420bf5646796f9a 0.0s done
+#34 exporting config sha256:a55911d3e7820388353736a9b5287d80aaea9192e62fa8242d6cf3e0e90beb19 0.0s done
+#34 exporting attestation manifest sha256:fe0cb98feef42f54a2cc29b6751a379154e762c64bd6ff304eea0eb863a6ff15 0.0s done
+#34 exporting manifest list sha256:a3cc366a7db5fb1b1a778dc6cd96aa2ae2ae3391dec58f323f1c504b9bdd57ba 0.0s done
+#34 naming to docker.io/library/anatolia-agsiz-api:latest 0.0s done
+#34 unpacking to docker.io/library/anatolia-agsiz-api:latest
+#34 ...
+
+#36 [db-check] exporting to image
+#36 exporting layers 41.2s done
+#36 exporting manifest sha256:f1981211387bacd92ac65b10dd8982f55cbfacafb7efc9a302a910902f4fd6be 0.0s done
+#36 exporting config sha256:26a3b1e63f0fa60c8ca89acf5ac6b94f053df84f68245eeff17d067dee274d32 0.0s done
+#36 exporting attestation manifest sha256:beab3e8c82f1fb89cc6fb20a2a9e0767cae6b2678f26c438e915ff681cfcffc0 0.0s done
+#36 exporting manifest list sha256:c98bf6c89d5f0cacea9c6dbc4cc10e65ecdf0adc8c310c7699d856c0b5146fbb 0.0s done
+#36 naming to docker.io/library/anatolia-agsiz-db-check:latest 0.0s done
+#36 unpacking to docker.io/library/anatolia-agsiz-db-check:latest
+
+temizlik: docker compose down (KEEP_UP=1 ile servisleri ayakta birakabilirsiniz)
+#36 ...
+
+#35 [api-postgres] exporting to image
+#35 unpacking to docker.io/library/anatolia-agsiz-api-postgres:latest 37.2s done
+#35 ...
+
+#36 [db-check] exporting to image
+#36 unpacking to docker.io/library/anatolia-agsiz-db-check:latest 37.2s done
+#36 DONE 78.8s
+
+#34 [api] exporting to image
+#34 unpacking to docker.io/library/anatolia-agsiz-api:latest 37.2s done
+#34 DONE 78.8s
+
+#35 [api-postgres] exporting to image
+#35 DONE 78.9s
+
+#37 [api-postgres] resolving provenance for metadata file
+#37 ...
+
+#38 [db-check] resolving provenance for metadata file
+#38 DONE 0.1s
+
+#37 [api-postgres] resolving provenance for metadata file
+#37 DONE 0.6s
+
+#39 [api] resolving provenance for metadata file
+#39 DONE 0.2s
+ Image anatolia-agsiz-api Built 
+ Image anatolia-agsiz-api-postgres Built 
+ Image anatolia-agsiz-web Built 
+ Image anatolia-agsiz-db-check Built 

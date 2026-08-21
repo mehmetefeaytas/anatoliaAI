@@ -26,7 +26,25 @@
 > DOĞRULUĞU — kaldırılan 14 hücrenin taşıdığı şey finansman tutarı değildi
 > (temassız limit, mevduat limiti, vade kademesi eşiği, örnek ödeme planı).
 >
-> **S1 HÂLÂ AÇIK.** 4 `unclear` hücre onun cevabını bekliyor. Cevap
+> **NİHAİ DESTEK 22 → 17 (bağımsız denetim notu, 2026-08-21).** Zincir:
+> 22 (başlangıç) → 15 (13 hücre `absent`) → 18 (S1 dört hücreyi doldurdu) →
+> **17** (ödül kapısı tek kalan FP'yi düşürdü). Yani S1'in genişletmesine
+> RAĞMEN nihai destek orijinalin **5 altında.** "F1 0,50 → 1,000" başlığını
+> destek değişimini söylemeden sunmak yanıltıcı olur; bu satır o yüzden burada
+> ve README'nin ölçüm tablosunda duruyor.
+>
+> Aynı denetim ikinci bir zayıflık daha not etti: onayı veren kişi projenin
+> geliştiricisidir, bağımsız bir insan hakem değil. Bu, kararların
+> metinle doğrulanabilir olmasını değiştirmiyor (8 vaka bağımsızca kontrol
+> edildi, alıntıların hepsi birebir eşleşti) ama gözetimin tek kişilik
+> olduğunu kayda geçiriyor.
+>
+> **S1 CEVAPLANDI (anotatör, 2026-08-21):** üst sınır **finansman tavanıdır**.
+> Dört `unclear` hücre dolduruldu (200.000 ×3, 5.000 ×1), her biri metinden
+> birebir alıntıyla. `finansman_tutari` F1 0,9655 → 0,9714; ardından ödül
+> kapısı son FP'yi düşürünce **1,000**.
+>
+> **ESKİ NOT (S1 açıkken yazılmıştı):** 4 `unclear` hücre onun cevabını bekliyor. Cevap
 > "finansman tavanıdır" olursa F1 0,9730'a çıkar, "harcama eşiğidir" olursa
 > 0,8485'e düşer — ikisi de bu satırların doldurulmasıyla, ölçümün
 > genişlemesiyle olur.

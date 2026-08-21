@@ -27,16 +27,31 @@ bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaşt
 Sonucu bir dashboard ve iki yollu (yapısal sorgu ↔ RAG) bir chatbot ile
 sunuyor. Tamamı açık kaynak (Apache-2.0); on-premise ve internetsiz çalışıyor.
 
-> 2.708 gerçek belge · 10/10 katılım bankası · 758 PDF ·
-> 3.543 yeşil test · 14/14 ağsız kanıt adımı · yayımlanmış altın veri seti
+> 2.708 gerçek belge · 10/10 katılım bankası · 758 PDF · 3.543 yeşil test ·
+> ağsız kanıt: tek konteyner 14/14, tam yığın **3/3 koşum · 39/39 adım** ·
+> yayımlanmış altın veri seti
 
 **Üretim yolu kural tabanlıdır — ve bu ölçülmüş bir karardır.** LLM katmanı
-kodda vardır, koşar ve ölçülmüştür; ölçüm onu üretime almamayı söyledi:
-üç LLM konfigürasyonunun üçü de kural katmanının altında kaldı (McNemar
-p = 0,00105 / 0,00050 / 0,0000123) ve hibrit kol halüsinasyonu **2,4 katına**
-çıkardı (0,0425 → 0,1029). LLM sağlığı temizdi (384/384 çağrı, 0 hata), yani
-düşük başarım teknik bir arıza değil. Kendi hipotezimizi çürüten sonucu
-düzeltmedik; yayımladık → [ablasyon raporu](app/docs/rapor/ablasyon.md).
+kodda var, koşuyor ve ölçüldü; ölçüm onu üretime almamayı söyledi.
+
+İki bağımsız ölçüm, iki ayrı donanım, aynı sonuç. Birincisi CPU'da üç
+konfigürasyon: üçü de kural katmanının altında kaldı (McNemar p = 0,00105 /
+0,00050 / 0,0000123) ve hibrit kol halüsinasyonu **2,4 katına** çıkardı
+(0,0425 → 0,1029). İkincisi A100'de **sekiz hücre** — iki model
+(`qwen2.5:7b`, `qwen3.5:9b`) × iki sorgu granülaritesi × iki gold seti:
+**sekizinin sekizi de** kabul kapısından geçemedi.
+
+İki hipotezi de kendimiz kurup kendimiz çürüttük. Daha büyük model daha iyi
+değil, daha cesur: 9B halüsinasyonu tabanın **4,2 katına** çıkardı. Modele tek
+çağrıda tek alan sormak da işe yaramadı — hata "yanlış kutuyu seçmek" değil,
+"boş kalması gereken kutuya bir şey yazmak". İki gold'da LLM'in kazandırdığı
+doğru değer **6**, getirdiği yanlış pozitif **23–60**.
+
+LLM sağlığı temizdi (4.469 çağrı kaydı, şema ihlali 0), yani düşük başarım
+teknik bir arıza değil. Şartname ablasyon tablosu istiyor; bizimki hibridin
+kazanmadığını gösteriyor ve öyle yayımlandı →
+[ablasyon raporu](app/docs/rapor/ablasyon.md) ·
+[8 hücrelik ölçüm](app/docs/rapor/llm-uretim-devreye-alma.md).
 
 ### 🔬 Gold setin güvenilirliği — jürinin ilk sorusu, ilk ekranda
 
@@ -45,8 +60,8 @@ düzeltmedik; yayımladık → [ablasyon raporu](app/docs/rapor/ablasyon.md).
 | **κ — ikinci etiketleyici turu** (gold.v2 ↔ LLM-01, 192 çift) | **0,714** | **notla kabul** — önceden ilan edilmiş 0,67 ≤ κ < 0,80 bandı |
 | κ — round0 kalibrasyon (Fleiss, 4 anotatör, 260 satır) | 0,302 | eşik altı → ilan edilen sonuç **uygulandı** (kılavuz v1→v2) |
 | κ — round1 (Cohen, 141 ortak karar, hakemlik öncesi) | 0,274 | eşik altı → zorunlu hakemlik **koştu** |
-| İkinci etiketleyici kim | **bir LLM** (`qwen2.5:7b-instruct`) | insan çift-anotasyonun yerine **geçmez**; insan turu şu an koşuyor |
-| HAKEM turları | 4 tur koştu; gold + kılavuz + motor **üç katmanda birden** düzeltildi | bedeli raporlanıyor (bkz. §4) |
+| İkinci etiketleyici kim | **bir LLM** (`qwen2.5:7b-instruct`) — ve ayrıca **bir İNSAN** | insan turu **koştu**: κ 0,716, LLM turuyla fark 0,002. Körleme kod düzeyinde garanti (`ikinci_etiketleyici.py` gold/LLM değerini parametre olarak bile almıyor) |
+| HAKEM turları | **5 tur** koştu; gold + kılavuz + motor **üç katmanda birden** düzeltildi | bedeli raporlanıyor (bkz. §4). HAKEM-05'te 23 vakanın 18'inde gold, 1'inde motor yanlıştı |
 
 Eşik tablosu anotasyon **başlamadan** ilan edildi (`ANNOTATION_GUIDE.md` §7);
 ölçülen κ'ya bakıp eşik değiştirilmedi. `masraf_durumu` alanında κ **negatif**
@@ -153,8 +168,8 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
 
 Bu tablodaki her sayı yanındaki komutla yeniden üretilebilir ve bir CI kapısına
 bağlı: `python -m scripts.kanit_tazeligi` her satırı üreten kanıtla
-karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026** (`app/eval/reports/20260820-130322/`) · ölçüm kolu:
-`kural` (resmî varsayılan, LLM kapalı).
+karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **21 Ağustos 2026** (`app/eval/reports/20260821-124529/` ve
+`.../20260821-124526/`) · ölçüm kolu: `kural` (resmî varsayılan, LLM kapalı).
 
 | Ne | Değer | Üreten komut |
 |---|---|---|
@@ -163,6 +178,8 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026
 | AI özeti kapsaması | **2.634 üretildi (%97,3)** · 74 belge gerekçeli boş (29 metin boş · 41 terminoloji kapısı · 4 diğer) | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
+| **gold.round1 mikro-F1** | **0,793** · halüsinasyon **0,284** · makro **0,650** — HAKEM-05 sonrası (öncesi 0,738 / 0,344) | `python -m eval.run_eval --gold data/gold/gold.round1.json` |
+| gold.round1 `finansman_tutari` | **F1 1,000** (P 1,0 · R 1,0 · TP 17 · FP 0) — öncesi 0,500. **Destek 22 → 17:** artışın bir kısmı ölçümün DARALMASINDAN geliyor; ayrıntı aşağıda | *(aynı komut)* |
 | Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | **0,8228** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
 | 12-alan mikro-F1 | **0,5702** *(ikili ölçüt — hedef 0,60'ın ALTINDA)* | *(aynı komut — farkı aşağıda açıklıyoruz)* |
 | Kalem düzeyi mikro-F1 (12 alan) | **0,6291** | *(aynı komut)* |
@@ -179,10 +196,12 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **20 Ağustos 2026
 | Anotatör uyumu — round1 | Cohen κ 0,274 (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
 | Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
 | Bağımlılık envanteri | 96 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
-| On-prem kanıtı | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
+| On-prem kanıtı — tek konteyner | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
+| On-prem kanıtı — **tam yığın** | **3/3 koşum · 39/39 adım · 0 beklenmedik** (postgres + api + api-postgres + ollama + web, izole ağda) | `for i in 1 2 3; do bash scripts/tam_yigin_agsiz.sh; done` |
+| API kimlik doğrulama | `X-API-Key` / Bearer · tam ve salt-okuma rolü · **yeni bağımlılık 0** (harici JWKS on-prem'i çökertirdi) | `python -m pytest tests/test_api_kimlik_dogrulama.py` |
 | Test | **3.596** toplanan · 3.543 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız · 1.697 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-21 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
-| Kanıt-tazeliği kapısı | **14 iddia · 0 sapma** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+| Kanıt-tazeliği kapısı | **15 iddia · 0 sapma · 0 kanıt eksik** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 | Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
 
 <details>
@@ -363,10 +382,23 @@ beklemiyor. Bu "çalışmıyor" değil, ölçülemiyor. `kar_payi_orani` ise kor
 yalnız 146/2.708 belgede (%5,4) geçiyor, çünkü bankalar oranı HTML'de değil
 hesaplama ucunda yayımlıyor. Sınır veride, çıkarım katmanında.
 
-**On-prem kanıtının kapsamı.** 14/14 adım `--network none` içinde geçti, ama kanıt
-API konteynerini kapsıyor. `docker compose up` ile tam yığını (Postgres, web, LLM)
-ağsız ayrıca sınamadık; imaj derlemesi de internet gerektiriyor. "İnternetsiz
-çalışır" iddiası önceden derlenmiş imajlar için geçerli.
+**On-prem kanıtının kapsamı.** İki ayrı kanıt var. Tek konteyner
+`--network none` içinde 14/14 adım geçti; tam yığın (postgres + api +
+api-postgres + ollama + web) izole bir ağda **3 koşum, 39/39 adım, 0
+beklenmedik** verdi. Kalan sınır ikisi: imaj derlemesi internet istiyor
+(iddia önceden derlenmiş imajlar için geçerli) ve vLLM/GPU kolu bu makinede
+hiç koşmadı — NVIDIA GPU yok, ölçülmesi için gereken komut
+`docs/kaynak-tuketimi.md`'ye yazıldı.
+
+Kanıtın **tekrarlanabilirliği** ayrı bir iş oldu. Jüri turu betiği yeniden
+koşturdu ve üç denemeden yalnız biri tam yeşil geldi. Kıran şey izolasyon
+değildi: compose dosyası host portu yayımlıyordu ve 3000 portu doluysa `web`
+konteyneri hiç doğmuyor, tek çakışma üç adımı düşürüyordu. Host portu
+yayımlamayı tamamen kaldırdık — 13 denetim adımının hepsi `docker exec` ile
+konteynerin içinden koşuyor, port yayımlamak kanıta bir şey eklemiyordu ve
+"dış dünyaya rotası yok" denen bir ağda çelişki yaratıyordu. Ayrıntı ve
+başarısız denemelerin transkriptleri:
+[`OFFLINE-KANIT.md §0-e`](app/docs/OFFLINE-KANIT.md).
 
 ### Ölçüp geri adım attığımız kararlar
 
@@ -379,6 +411,17 @@ ağsız ayrıca sınamadık; imaj derlemesi de internet gerektiriyor. "İnternet
   üretiyordu; birinde taban finansman tutarı bile değil, bir vade eşiğiydi.
 - **BERTurk ince ayarı yapıldı, kullanılmadı.** Ölçtük, kabul kapısını geçemedi,
   teslim edilen sistemde yok. Mimari belgesi bunu açıkça yazıyor.
+- **LLM boşluk-doldurma ikinci kez reddedildi (A100, 8 hücre).** İlk ret CPU'da
+  üç konfigürasyonla verilmişti; jüri "belki model küçüktü, belki soru yanlış
+  soruluyordu" diyebilirdi. İki hipotezi de kurup ölçtük: daha büyük model
+  (9B) ve tek çağrıda tek alan sorma. Sekiz hücrenin sekizi de kapıdan
+  geçemedi. Eşiklere dokunmadık.
+- **Bir kural düzeltmesi ölçülüp reddedildi.** Hakem turu, tutar ile tetikleyici
+  arasındaki bağlaçları yasaklamayı önerdi. Uygulamadan önce ölçtük: kalıp
+  `finansman_tutari` taşıyan 78 alanın 21'ini düşürüyordu ve düşürdükleri
+  meşruydu ("ödeme seçeneği **ile** 200.000 TL'ye kadar"). Aynı hatayı
+  tutarın sağındaki ödül adına bakarak yanlış pozitif üretmeden kapattık.
+  Reddin gerekçesi hem kodda hem testte duruyor.
 
 ---
 
