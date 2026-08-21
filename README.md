@@ -174,7 +174,7 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
 Bu tablodaki her sayı yanındaki komutla yeniden üretilebilir ve bir CI kapısına
 bağlı: `python -m scripts.kanit_tazeligi` her satırı üreten kanıtla
 karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **21 Ağustos 2026**, temiz
-ağaçta (`app/eval/reports/20260821-134101/` gold.v2 ve `.../20260821-134125/`
+ağaçta (`app/eval/reports/20260821-182450/` gold.v2 ve `.../20260821-182525/`
 gold.round1) · ölçüm kolu: `kural` (resmî varsayılan, LLM kapalı).
 
 | Ne | Değer | Üreten komut |

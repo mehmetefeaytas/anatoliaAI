@@ -639,8 +639,8 @@ yazıyoruz.
 > ✅ **Temiz damgalı rapor üretildi (2026-08-21).** Bu ölçüm bir ara kirli
 > ağaçta koşmuştu ve kanıt-tazeliği kapısı onu doğru biçimde reddediyordu;
 > commit `8259aa72` sonrası `run_eval` iki gold için de temiz ağaçta
-> tekrarlandı — `eval/reports/20260821-134101/` (gold.v2) ve
-> `.../20260821-134125/` (gold.round1), ikisi de `git_dirty: false`. Sayılar
+> tekrarlandı — `eval/reports/20260821-182450/` (gold.v2) ve
+> `.../20260821-182525/` (gold.round1), ikisi de `git_dirty: false`. Sayılar
 > değişmedi; artefaktlar kanıt sayılır hâle geldi.
 
 **Neden üç mikro-F1 birden veriliyor:** `kampanya_kosullari` serbest cümle
@@ -719,8 +719,8 @@ toplanarak doğrulandı:
 .venv/bin/python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 .venv/bin/python -m eval.run_eval --gold data/gold/gold.round1.json --config kural
 ```
-Kanıt: `eval/reports/20260821-134101/` (`gold.v2`) ve
-`eval/reports/20260821-134125/` (`gold.round1`, **HAKEM-05 sonrası, temiz ağaç**).
+Kanıt: `eval/reports/20260821-182450/` (`gold.v2`) ve
+`eval/reports/20260821-182525/` (`gold.round1`, **HAKEM-05 sonrası, temiz ağaç**).
 
 | | `gold.v2` (n=48) | `gold.round1` (n=134) |
 |---|---:|---:|
