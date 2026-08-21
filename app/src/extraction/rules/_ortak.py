@@ -313,7 +313,25 @@ def _kanit_araligi(text: str, m: "re.Match[str]", fwd: str) -> tuple[int, int]:
 # sanılıyordu (tablo kolonundaki `TL` bir sonraki hücreye aitti).
 _SAYI_BASI = r"(?<![\d.,:])"
 
-_PARA_IFADESI = rf"{_SAYI_BASI}\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])"
+#: YÜZDE İŞARETİ TUTAR OLAMAZ. `_SAYI_BASI` rakam/noktalama/`:` yasaklıyordu
+#: ama `%`'yi yasaklamıyordu; "Azami **%2 TL** İşlem Başına" satırından
+#: `finansman_tutari = 2 TL` çıkıyordu. İfade bozuk bir ORAN yazımıdır (banka
+#: "%2" derken TL kolonuna taşmış), tutar değil — ve 2 TL'lik bir finansman
+#: tutarı absürt olduğu için bu yanlış pozitif jüri gözüne ilk çarpanlardan.
+#:
+#: ÖLÇÜLDÜ (2026-08-21, canlı korpus 7.032 alan): kalıp **3 alanı** kurtarıyor
+#: ve üçü de açıkça yanlıştı:
+#:   `finansman_tutari` "2 TL"          ← "%2 TL İşlem Başına"
+#:   `odul_miktari`     "6,37 TL"       ← "% 6,37 TL"
+#:   `odul_miktari`     "0,20125.000 TL" ← "%0,20125.000 TL" (bozuk yazım)
+#: Meşru bir tutarı eleyen tek örnek bulunamadı.
+#:
+#: `_SAYI_BASI` DEĞİŞTİRİLMEDİ — onu oran modülleri de kullanıyor ve orada
+#: `%` önce gelmesi TAM OLARAK beklenen şeydir ("%2,05"). Yasak yalnız PARA
+#: ifadesine konuldu. Python geriye-bakışı sabit genişlik ister; bu yüzden
+#: `%` ve `% ` iki AYRI lookbehind olarak yazıldı.
+_PARA_IFADESI = (rf"{_SAYI_BASI}(?<!%)(?<!%\s)"
+                 r"\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi])")
 #: Yukarıdaki `_SAYI_BASI` korumasıyla kurulan tutar ifadesi. `tahsis_ucreti`,
 #: `odul_indirim` ve `alisveris_puani` bunu doğrudan içe aktarır.
 

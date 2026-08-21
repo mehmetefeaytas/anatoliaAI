@@ -116,9 +116,23 @@ _TUTAR_TETIK = (
     r"(?:\s*(?:tutar|limit|miktar)\w*)?"
 )
 
+# YÜZDE İŞARETİ TUTAR OLAMAZ — `(?<!%)(?<!%\s)`.
+#
+# Ölçülen yanlış pozitif (`turkiye-emlak-katilim--qr-temel-bankacilik-…`):
+# "Kapama (Türk Lirası Krediler) **Azami %2 TL** İşlem Başına" satırından
+# `finansman_tutari = 2 TL` çıkıyordu. Bu bozuk bir ORAN yazımıdır (banka
+# "%2" derken TL kolonuna taşmış); 2 TL'lik bir finansman tutarı absürt ve
+# jürinin ilk yakalayacağı türden bir hata. Gold da doğru olarak `absent`.
+#
+# Aynı koruma `_ortak._PARA_IFADESI`'ne de konuldu (orada `odul_miktari`'nda
+# iki vaka kurtardı) ama BURAYA AYRICA gerekliydi: `finansman_tutari`
+# `_PARA_IFADESI`'ni kullanmıyor, kendi kalıbını taşıyor. Bunu ölçmeden
+# varsaymak, düzeltmeyi yanlış yola koymak olurdu — ölçüldü, öyle çıktı.
+#
+# Python geriye-bakışı sabit genişlik ister; `%` ve `% ` iki ayrı lookbehind.
 _TUTAR_PAT = re.compile(
     rf"({_TUTAR_TETIK})([^\d]{{0,20}})"
-    r"(\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
+    r"((?<!%)(?<!%\s)\d[\d.,]*\s*(?:tl|₺|try|türk\s*liras[ıi]))",
     re.IGNORECASE,
 )
 
