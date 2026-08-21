@@ -126,6 +126,26 @@ Kısa sürüme mimari ve eval koşusu **girmez**; onlar sunumun işi.
 
 ## C) 4 dakikalık sunum — slayt iskeleti
 
+> ⚠️ **BU İSKELET 15 AĞUSTOS PLANIDIR — TESLİM EDİLEN SUNUM 5 SLAYTTIR.**
+> Aşağıdaki 10 slaytlık iskelet 16 Ağustos'ta 15 slayt olarak üretildi, sonra
+> **21 Ağustos'ta 5 slayta indirildi.** Gerekçe: şartname §10 sunum süresini
+> 4 dakika veriyor; 15 slayt o sürede sunulamıyordu ve sunum sahnede
+> konuşulan bir ikna metni değil, okunan bir savunma dokümanı gibi
+> davranıyordu.
+>
+> | Ne | Nerede |
+> |---|---|
+> | Teslim edilen sunum (5 slayt) | `docs/sunum/anatolia-ai-sunum.html` → `.pdf` / `.pptx` |
+> | Konuşmacı notları + jüri soru bankası | `docs/sunum/juri-4dk-konusmaci-notlari.md` |
+> | 15 slaytlık sürüm (silinmedi) | `docs/archive/sunum-15-slayt-2026-08-21.html` |
+>
+> Bu bölüm **silinmiyor**: bir iskeletin neden terk edildiğini yazmak, onu bir
+> daha yanlışlıkla teslime koymamanın tek güvenilir yolu (aynı disiplin
+> §Ç "Ölü iddiaların mezarlığı"nda da uygulanıyor). Aşağıdaki §C ve §D
+> tablolarındaki **sayılar 15 Ağustos ölçümüdür ve bayattır**; teslime giden
+> sayılar 21 Ağustos ölçümüdür ve `scripts/kanit_tazeligi` kapısına bağlıdır.
+
+
 PDF + PPTX olarak teslim edilir (s.14). 10 slayt · toplam 4:00.
 
 | # | Slayt | Süre | Çekirdek mesaj |
