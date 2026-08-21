@@ -1,5 +1,48 @@
 # Hakem turu 05 — `finansman_tutari` · `gold.round1`
 
+> ## ✅ ONAYLANDI — anotatör kararı, 2026-08-21
+>
+> Aşağıdaki §4 listesinin **23 satırının tamamı** anotatör tarafından
+> onaylandı ve uygulandı. Uygulama betiği:
+> `scratchpad/hakem05_uygula.py` (karar VERMEZ, onaylanmış kararı YAZAR).
+>
+> **ÖLÇÜLEN SONUÇ** (`gold.round1.json`, aynı çıkarıcı, aynı commit):
+>
+> | | önce | sonra |
+> |---|---|---|
+> | `finansman_tutari` F1 | 0,500 | **0,9655** |
+> | `finansman_tutari` P / R | 0,80 / 0,364 | **0,933 / 1,000** |
+> | TP / FP / FN | 8 / 2 / 14 | **14 / 1 / 0** |
+> | manşet mikro-F1 (TÜMÜ) | 0,738 | **0,786** |
+> | halüsinasyon (TÜMÜ) | 0,344 | **0,297** |
+> | makro-F1 | 0,600 | 0,647 |
+>
+> Projeksiyon **Senaryo 2**'ydi (0,9655) ve birebir tuttu.
+>
+> **DÜRÜSTLÜK NOTU — support daraldı.** `finansman_tutari` desteği 22'den
+> 15'e düştü (14 TP + 1 FP); 4 hücre `unclear` olduğu için metrik dışı.
+> Bu raporun §3'te yazdığı uyarı geçerlidir: F1'in yükselmesinin bir kısmı
+> ölçümün DARALMASINDAN gelir, iyileşmesinden değil. Yükselen şey ölçümün
+> DOĞRULUĞU — kaldırılan 14 hücrenin taşıdığı şey finansman tutarı değildi
+> (temassız limit, mevduat limiti, vade kademesi eşiği, örnek ödeme planı).
+>
+> **S1 HÂLÂ AÇIK.** 4 `unclear` hücre onun cevabını bekliyor. Cevap
+> "finansman tavanıdır" olursa F1 0,9730'a çıkar, "harcama eşiğidir" olursa
+> 0,8485'e düşer — ikisi de bu satırların doldurulmasıyla, ölçümün
+> genişlemesiyle olur.
+>
+> **AYRICA ÖLÇÜLDÜ:** kanıtsız (`field_spans` boş/uydurma) hücre sayısı
+> 19'dan **15'e** düştü — bu düzeltme yeni kanıtsızlık ÜRETMEDİ.
+>
+> **KAPSAM SINIRI:** kararlar `gold.round1.json`'a uygulandı; kaynak
+> CSV'lere (`round1_*.csv`) İŞLENMEDİ. Sebep ölçüldü ve ayrı bir kusurdur:
+> `gold.round1.json` bugün CSV'lerden yeniden ÜRETİLEMİYOR — dört round1
+> CSV'sinden derleme 134 yerine **57** kayıt veriyor (46 D, 30 A+B, 1
+> D+HAKEM-04 kaydı düşüyor). Derleme komutu hiçbir yerde kayıtlı değil.
+> Bu boşluk `sorun/` altına yazılmalı; JSON'u CSV'lerden türetmek bugün
+> ölçüm tabanını değiştirir.
+
+
 **Tarih:** 2026-08-21
 **Tetikleyen:** `finansman_tutari` round1'de **F1 = 0,500** (P = 0,800 ·
 R = 0,3636 · TP 8 · FP 2 · FN 14). Recall alanın en zayıf yarısı ve Model

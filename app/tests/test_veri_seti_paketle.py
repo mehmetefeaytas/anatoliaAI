@@ -285,7 +285,19 @@ class Paket(unittest.TestCase):
         # `…-2000-tlye-varan-parafpara` kaydının `odul_miktari`nı
         # `absent_fields`e taşıdı (değer `alisveris_puani`na geçti).
         # Gerekçe: data/gold/review/_hakem-turu-04-gold-kilavuz-celiskisi.md
-        for parca in ("| **40** | **3** |", "| **447** | **61** |"):
+        #
+        # 61 -> 74: HAKEM-05 turu (2026-08-21, ANOTATÖR ONAYLI) round1'de
+        # `finansman_tutari`nın **13** hücresini `absent_fields`e taşıdı.
+        # Taşınanların hiçbiri finansman tutarı DEĞİLDİ: temassız ödeme
+        # limiti, katılma hesabı açılış limiti, vade kademesi eşiği, örnek
+        # ödeme planının "ödenecek toplam tutar"ı, ve bir vakada sayfa
+        # altındaki "Diğer Kampanyalar" kutusundan sızmış BAŞKA kampanyanın
+        # ödülü. Gerekçe ve 23 vakanın tamamı:
+        # data/gold/review/_hakem-turu-05-finansman-tutari-round1.md
+        #
+        # Bu testin işi sayıyı DONDURMAK değil, sayı değiştiğinde bir
+        # insanın SEBEBİNİ yazmaya zorlamak. İki kez işe yaradı.
+        for parca in ("| **40** | **3** |", "| **447** | **74** |"):
             self.assertIn(parca, self.kart, f"kıyas tablosu sayısı yanlış: {parca}")
 
     def test_kart_bolme_sayilari_gercek(self):

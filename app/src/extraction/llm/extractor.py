@@ -37,12 +37,14 @@ Yeni tasarımın üç dayanağı:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import os
 import time
 from dataclasses import dataclass
 from dataclasses import field as dc_field
+from pathlib import Path
 from typing import Any, Callable, Optional, Protocol, Sequence, runtime_checkable
 
 from ...schemas import ExtractedField, Extractor
@@ -81,6 +83,42 @@ _RAW_PREVIEW = 400
 # bu tavana çarpar.
 CIKARIM_NUM_PREDICT = 1536
 
+# MAKİNE-OKUR SAĞLIK GÜNLÜĞÜ — her LLM çağrısı bir JSONL satırı.
+#
+# Neden var: "384/384 temiz LLM çağrısı" iddiası iki jüri turu boyunca yalnız
+# bir rapor tablosu satırıydı. `self.stats` sayaçları koşum bitince bellekle
+# birlikte kayboluyordu; iddiayı denetlemek isteyen biri koşumu yeniden
+# üretmek zorundaydı. Sayaç ÖZETTİR, günlük KANITTIR: hangi model, hangi
+# alanlar, kaç ms, şema geçti mi, geçmediyse hangi sebeple.
+SAGLIK_LOG_VARSAYILAN = "eval/reports/llm-sagligi.jsonl"
+
+# `LLM_SAGLIK_LOG` bu değerlerden birine eşitse günlük KAPALIDIR.
+_LOG_KAPALI = {"", "0", "off", "false", "no", "kapali"}
+
+# YANIT ÖNBELLEĞİ (`LLM_ONBELLEK=<dizin>`) — varsayılan KAPALI.
+#
+# Neden var: ölçüm koşumu belge başına ~40 s sürüyor ve 134 belgelik gold
+# ~90 dakika demek. Bu süre içinde süreç ölürse (yerel makinede bellek
+# baskısı altında ÖLÇÜLDÜ: iki koşum işletim sistemi tarafından düşürüldü)
+# hesaplanmış her çağrı çöpe gider ve koşum sıfırdan başlar. Önbellek
+# koşumu YENİDEN BAŞLATILABİLİR kılar: ikinci deneme, ilk denemenin
+# ürettiği yanıtları HTTP'ye hiç dokunmadan okur.
+#
+# Sıcaklık 0 olduğu için aynı istem aynı yanıtı verir; önbellek bu
+# determinizmi diske yazmaktan başka bir şey yapmaz. Yine de bir çağrının
+# önbellekten geldiği sağlık günlüğüne AÇIKÇA yazılır (`onbellek: true`) ve
+# ayrı bir `cache_hit` sayacına yazılır; künye ayrıca
+# `gercek_cagri = calls - cache_hit` yayımlar.
+#
+# `calls` sayacının anlamı DEĞİŞTİRİLMEDİ: o baştan beri "kaç çıkarım isteği
+# geldi"yi sayıyor (onarım denemeleri ayrıca `repairs`e girer). Önbellek
+# isabeti de bir çıkarım isteğidir, dolayısıyla `calls`a girer. Değişen şey,
+# künyenin artık "kaç tanesi GERÇEKTEN modele gitti" sorusunu da
+# cevaplaması. Bu ayrım olmadan `calls: 384, ok: 384` satırı 384 gerçek
+# çağrı gibi okunabilirdi — kapatmaya çalıştığımız denetlenemezlik yeni bir
+# kılıkta geri gelirdi.
+_ONBELLEK_SURUM = "v1"
+
 
 class LLMExtractionError(RuntimeError):
     """Katı (strict) modda LLM çağrısı başarısız olduğunda yükseltilir."""
@@ -109,6 +147,7 @@ class LLMCallResult:
     logprobs: list[dict] = dc_field(default_factory=list)
     retries: int = 0
     structured_mode: Optional[str] = None
+    kanit_reddi: int = 0
 
     @property
     def ok(self) -> bool:
@@ -117,7 +156,8 @@ class LLMCallResult:
 
 def _new_stats() -> dict[str, int]:
     return {"calls": 0, "ok": 0, "parse_error": 0, "http_error": 0,
-            "schema_violation": 0, "repairs": 0}
+            "schema_violation": 0, "repairs": 0, "kanit_reddi": 0,
+            "cache_hit": 0}
 
 
 class LLMExtractor:
@@ -131,7 +171,11 @@ class LLMExtractor:
                  system_builder: Optional[Callable[[str], str]] = None,
                  fields: Optional[Sequence[str]] = None,
                  role: str = "genel",
-                 num_predict: Optional[int] = None):
+                 num_predict: Optional[int] = None,
+                 require_evidence: Optional[bool] = None,
+                 saglik_log: Optional[str] = None,
+                 onbellek: Optional[str] = None,
+                 alan_basina: Optional[bool] = None):
         """
         num_predict: ÇIKARIM çağrılarının çıktı token bütçesi. Gerekçe ve
             ölçüm `CIKARIM_NUM_PREDICT` yanında. İstemci nesnesi burada
@@ -161,8 +205,30 @@ class LLMExtractor:
         self.num_predict = int(
             num_predict if num_predict is not None
             else os.environ.get("LLM_EXTRACT_NUM_PREDICT", CIKARIM_NUM_PREDICT))
+        # KANIT KAPISI — alıntısı metinde birebir bulunmayan değeri düşür.
+        # Varsayılan `LLM_KANIT_ZORUNLU` ortam değişkeninden okunur; gerekçesi
+        # ve ölçümü `docs/rapor/llm-uretim-devreye-alma.md`.
+        self.require_evidence = (_env_flag("LLM_KANIT_ZORUNLU")
+                                 if require_evidence is None
+                                 else bool(require_evidence))
+        self.saglik_log = _saglik_log_yolu(saglik_log)
+        self.onbellek = _onbellek_dizini(onbellek)
+        # SORGU GRANÜLARİTESİ. Varsayılan çoklu-alan (tek çağrıda tüm eksikler).
+        # `True` ise eksik alan başına AYRI çağrı yapılır. Gerekçe:
+        # `docs/rapor/llm-uretim-devreye-alma.md §10` — çoklu-alan kolunda
+        # ölçülen hata "değer bulamama" değil, bulunan gerçek alıntıyı YANLIŞ
+        # ALAN etiketine yakıştırmaktı (TP hiç artmadı, yalnız FP geldi).
+        # Modele tek seferde 8-9 alan verildiğinde alan seçimi modelin işi
+        # olur; tek alan verildiğinde o seçim yapısal olarak ortadan kalkar.
+        # Bu bir HİPOTEZdir ve ölçülmek için eklendi, varsayılan olmak için
+        # değil — maliyeti belge başına ~9 kat çağrıdır.
+        self.alan_basina = (_env_flag("LLM_ALAN_BASINA")
+                            if alan_basina is None else bool(alan_basina))
         self.stats = _new_stats()
         self.last_result: Optional[LLMCallResult] = None
+        # Sağlık günlüğüne yazılacak istek künyesi (`call()` doldurur).
+        self._son_istek: dict[str, Any] = {}
+        self._onbellekten = False
         # (istemci, bütçe) -> bütçeli kopya. Anahtar ikisini birden taşır:
         # `client` veya `num_predict` sonradan değişirse kopya bayatlamasın.
         self._butceli: Optional[tuple[Any, int, Any]] = None
@@ -202,8 +268,20 @@ class LLMExtractor:
             f"{examples}\n\n"
             f"Şu alanları çıkar (diğerlerini kural katmanı zaten buldu): "
             f"{json.dumps(wanted, ensure_ascii=False)}\n"
-            f"Listedeki HER alan için bir anahtar üret; bulamadığını null yap.\n\n"
-            f"Metin: {text}\nJSON:"
+            + (
+                # TEK ALAN kipi: modelin işi "hangi alan" değil "bu alan var mı".
+                # Çoklu-alan kipinde model 8-9 etiket arasından seçim yapıyor ve
+                # ölçüm bu seçimin hatalı olduğunu gösterdi (§10). Cümle bunu
+                # açıkça daraltır; few-shot örnekleri AYNI kalır ki iki kol
+                # arasındaki tek fark granülarite olsun.
+                f"YALNIZ bu tek alanı değerlendir. Metinde tam olarak "
+                f"'{wanted[0]}' bilgisi geçiyorsa değeri ve birebir alıntısını "
+                f"ver; GEÇMİYORSA null yap. Başka hiçbir alan üretme.\n\n"
+                if len(wanted) == 1 else
+                "Listedeki HER alan için bir anahtar üret; bulamadığını "
+                "null yap.\n\n"
+            )
+            + f"Metin: {text}\nJSON:"
         )
 
     @staticmethod
@@ -234,6 +312,14 @@ class LLMExtractor:
 
         started = time.perf_counter()
         self.stats["calls"] += 1
+        self._son_istek = {
+            "rol": self.role,
+            "istenen_alanlar": list(wanted),
+            "metin_uzunlugu": len(text or ""),
+            "istem_uzunlugu": len(user),
+        }
+        kanit_reddi_once = self.stats["kanit_reddi"]
+        self._onbellekten = False
         raw_text: Optional[str] = None
         logprobs: list[dict] = []
         last_error: Optional[str] = None
@@ -283,7 +369,8 @@ class LLMExtractor:
             return self._finish(LLMCallResult(
                 fields=fields, latency_ms=_ms(started), raw_text=raw_text,
                 logprobs=logprobs, retries=retries,
-                structured_mode=self.structured_mode))
+                structured_mode=self.structured_mode,
+                kanit_reddi=self.stats["kanit_reddi"] - kanit_reddi_once))
 
         # Buraya düşülmez (döngü her dalda return eder) — savunma amaçlı.
         return self._finish(LLMCallResult(   # pragma: no cover
@@ -293,7 +380,46 @@ class LLMExtractor:
 
     def _finish(self, result: LLMCallResult) -> LLMCallResult:
         self.last_result = result
+        self._saglik_yaz(result)
         return result
+
+    def _saglik_yaz(self, result: LLMCallResult) -> None:
+        """Çağrıyı JSONL sağlık günlüğüne ekle (asla çıkarımı düşürmez).
+
+        Günlük yazımı BEST-EFFORT'tur: disk dolu, dizin salt-okunur ya da yol
+        hatalıysa çıkarım devam eder ve yalnız bir uyarı basılır. Aksi hâlde
+        denetim artefaktı üretmek, denetlenen işi bozma riski doğururdu.
+        """
+        if self.saglik_log is None:
+            return
+        kayit = {
+            "ts": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            # Koşum etiketi (`LLM_KOSUM`). Tek dosyaya birden çok koşum
+            # yazıldığında satırların hangi ölçüme ait olduğu ancak böyle
+            # ayrılabilir; zaman damgası tek başına yetmez çünkü iki koşum
+            # arasındaki sınır rapordan okunamaz.
+            "kosum": os.environ.get("LLM_KOSUM") or None,
+            "model": getattr(self.client, "model", None),
+            "client": type(self.client).__name__ if self.client else None,
+            "structured_mode": result.structured_mode,
+            "num_predict": self.num_predict,
+            "kanit_zorunlu": self.require_evidence,
+            **self._son_istek,
+            "sure_ms": round(result.latency_ms, 1),
+            "sema_gecti": result.ok,
+            "sebep": result.error,
+            "onbellek": self._onbellekten,
+            "onarim": result.retries,
+            "uretilen_alan": len(result.fields),
+            "kanit_reddi": result.kanit_reddi,
+        }
+        try:
+            self.saglik_log.parent.mkdir(parents=True, exist_ok=True)
+            with self.saglik_log.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(kayit, ensure_ascii=False) + "\n")
+        except OSError as exc:
+            logger.warning("LLM saglik gunlugu yazilamadi (%s): %s",
+                           self.saglik_log, exc)
 
     def _invoke(self, system: str, user: str, schema: dict
                 ) -> tuple[Optional[str], list[dict], Optional[dict]]:
@@ -307,16 +433,69 @@ class LLMExtractor:
         özet şemasından geniştir ve ortak nesnenin tavanı özet için konmuştur
         (bkz. `CIKARIM_NUM_PREDICT`).
         """
+        yol = self._onbellek_yolu(system, user, schema)
+        if yol is not None and yol.is_file():
+            try:
+                kayit = json.loads(yol.read_text(encoding="utf-8"))
+            except (ValueError, OSError) as exc:
+                logger.warning("onbellek okunamadi (%s): %s", yol, exc)
+            else:
+                self.stats["cache_hit"] += 1
+                self._onbellekten = True
+                return (kayit.get("raw_text"), list(kayit.get("logprobs") or []),
+                        None)
+
         istemci = self._butceli_istemci(schema)
         gen = getattr(istemci, "generate", None)
         if callable(gen):
             resp = gen(system, user, schema)
-            return (getattr(resp, "text", None),
-                    list(getattr(resp, "logprobs", []) or []),
-                    None)
-        obj = istemci.generate_json(system, user, schema)  # type: ignore[union-attr]
-        return (json.dumps(obj, ensure_ascii=False) if isinstance(obj, dict) else None,
-                [], obj if isinstance(obj, dict) else None)
+            ham = getattr(resp, "text", None)
+            lp = list(getattr(resp, "logprobs", []) or [])
+            dogrudan = None
+        else:
+            obj = istemci.generate_json(system, user, schema)  # type: ignore[union-attr]
+            ham = json.dumps(obj, ensure_ascii=False) if isinstance(obj, dict) else None
+            lp, dogrudan = [], obj if isinstance(obj, dict) else None
+        if yol is not None and ham is not None:
+            self._onbellege_yaz(yol, ham, lp)
+        return ham, lp, dogrudan
+
+    def _onbellek_yolu(self, system: str, user: str, schema: dict
+                       ) -> Optional[Path]:
+        """İstemin içerik-adresli önbellek yolu (önbellek kapalıysa None).
+
+        Anahtar İSTEMİN TAMAMINI kapsar: model, sistem istemi, kullanıcı
+        istemi, şema ve çıktı bütçesi. Biri değişirse anahtar değişir, yani
+        bayat bir yanıt yeni bir yapılandırmaya sessizce sızamaz — önbelleğin
+        tek gerçek riski budur.
+        """
+        if self.onbellek is None:
+            return None
+        h = hashlib.sha256()
+        for parca in (_ONBELLEK_SURUM,
+                      str(getattr(self.client, "model", "")),
+                      type(self.client).__name__ if self.client else "",
+                      str(self.num_predict), system, user,
+                      json.dumps(schema, ensure_ascii=False, sort_keys=True)):
+            h.update(parca.encode("utf-8"))
+            h.update(b"\x00")
+        return self.onbellek / f"{h.hexdigest()}.json"
+
+    @staticmethod
+    def _onbellege_yaz(yol: Path, raw_text: str, logprobs: list[dict]) -> None:
+        """Yanıtı diske yazar (best-effort — ölçümü düşürmez)."""
+        try:
+            yol.parent.mkdir(parents=True, exist_ok=True)
+            gecici = yol.with_suffix(".tmp")
+            gecici.write_text(
+                json.dumps({"raw_text": raw_text, "logprobs": logprobs},
+                           ensure_ascii=False),
+                encoding="utf-8")
+            # Atomik yer değiştirme: yarım yazılmış bir dosya sonraki koşumda
+            # "bozuk önbellek" olarak okunur ve o belge sessizce kaybedilirdi.
+            gecici.replace(yol)
+        except OSError as exc:
+            logger.warning("onbellege yazilamadi (%s): %s", yol, exc)
 
     def _butceli_istemci(self, schema: dict) -> Any:
         """Çıkarım bütçesi uygulanmış istemci kopyası (bir kez kurulur).
@@ -386,6 +565,17 @@ class LLMExtractor:
             span_text = span_text if isinstance(span_text, str) else None
             start, end = _locate(text, span_text)
 
+            # KANIT KAPISI: alıntı metinde birebir bulunmuyorsa değer
+            # düşürülür. `orchestrator._kanit_kapisi` ile AYNI ilke; burada
+            # tek-ajanlı yolda da uygulanabilmesi için duruyor. Ölçülmüş
+            # gerekçe: hibrit kolun halüsinasyonu esasen kanıtsız
+            # değerlerden geliyor (`docs/rapor/ablasyon.md` §2).
+            if self.require_evidence and start is None:
+                self.stats["kanit_reddi"] += 1
+                logger.debug("kanit kapisi: %s dusuruldu (alinti metinde yok)",
+                             name)
+                continue
+
             if name in lp_conf:
                 score, source = lp_conf[name], conf_mod.SOURCE_LOGPROB
             else:
@@ -416,6 +606,8 @@ class LLMExtractor:
         artık LOGLANIR ve `self.stats` / `self.last_result` üzerinden görülür.
         Katı modda (`LLM_STRICT=1`) `LLMExtractionError` yükseltilir.
         """
+        if self.alan_basina:
+            return self._extract_alan_basina(text, missing)
         result = self.call(text, missing)
         if result.error is not None:
             if self.strict:
@@ -424,6 +616,31 @@ class LLMExtractor:
                     f"| ham={(result.raw_text or '')[:_RAW_PREVIEW]!r}")
             return []
         return result.fields
+
+    def _extract_alan_basina(self, text: str, missing: Optional[list[str]]
+                             ) -> list[ExtractedField]:
+        """Eksik alan başına AYRI çağrı yapar (`LLM_ALAN_BASINA=1`).
+
+        Gerekçe `self.alan_basina` yanında. Hata davranışı çoklu-alan koluyla
+        AYNI tutulur: katı modda ilk hata yükseltilir, hoşgörülü modda o alan
+        atlanır ve kalan alanlar sorulmaya devam eder. İkincisi bilinçli —
+        tek alanın başarısızlığı diğer sekiz alanın cevabını çöpe atmamalı.
+        """
+        wanted = [f for f in (missing or self.fields) if f in self.fields]
+        if not wanted:
+            wanted = list(self.fields)
+        toplam: list[ExtractedField] = []
+        for ad in wanted:
+            result = self.call(text, [ad])
+            if result.error is not None:
+                if self.strict:
+                    raise LLMExtractionError(
+                        f"{result.error} | alan={ad} "
+                        f"| mode={result.structured_mode} "
+                        f"| ham={(result.raw_text or '')[:_RAW_PREVIEW]!r}")
+                continue
+            toplam.extend(result.fields)
+        return toplam
 
     def summary(self) -> dict[str, Any]:
         """Rapor satırı: hangi modda, kaç çağrı, kaç hata, hangi bütçeyle.
@@ -439,7 +656,18 @@ class LLMExtractor:
             "strict": self.strict,
             "structured_mode": self.structured_mode,
             "client": type(self.client).__name__ if self.client else None,
+            # Model etiketi künyeye GİRER: "hangi ağırlıkla ölçtük" sorusu
+            # rapordan cevaplanabilir olmalı (bkz. `docs/rapor/ablasyon.md §6`).
+            "model": getattr(self.client, "model", None),
             "num_predict": self.num_predict,
+            "require_evidence": self.require_evidence,
+            "saglik_log": str(self.saglik_log) if self.saglik_log else None,
+            "onbellek": str(self.onbellek) if self.onbellek else None,
+            # Sorgu granülaritesi künyeye GİRER: iki kolun sayıları yalnız bu
+            # ayar bilinerek karşılaştırılabilir (bkz. §10 ablasyon tablosu).
+            "alan_basina": self.alan_basina,
+            # Modele GERÇEKTEN giden çağrı sayısı (önbellek isabetleri hariç).
+            "gercek_cagri": self.stats["calls"] - self.stats["cache_hit"],
             **self.stats,
         }
 
@@ -456,6 +684,45 @@ class NullLLMExtractor(LLMExtractor):
 # --------------------------------------------------------------------------- #
 def _ms(started: float) -> float:
     return (time.perf_counter() - started) * 1000.0
+
+
+def _onbellek_dizini(explicit: Optional[str]) -> Optional[Path]:
+    """Yanıt önbelleği dizini — ya da önbellek kapalıysa None.
+
+    Varsayılan KAPALIdır. Gerekçe `_ONBELLEK_SURUM` yanında: önbellek bir
+    ÖLÇÜM kolaylığıdır, üretim davranışı değil. Üretim koşumunda açık olması
+    zararsızdır ama varsayılan yapılmadı — sessizce bayat yanıt servis eden
+    bir üretim hattı, kapatmaya çalıştığımız sınıfın hatasıdır.
+    """
+    ham = explicit if explicit is not None else os.environ.get("LLM_ONBELLEK")
+    if ham is None:
+        return None
+    ham = ham.strip()
+    return None if ham.lower() in _LOG_KAPALI else Path(ham)
+
+
+def _saglik_log_yolu(explicit: Optional[str]) -> Optional[Path]:
+    """Sağlık günlüğü dosya yolu — ya da günlük kapalıysa None.
+
+    Öncelik: açık argüman > `LLM_SAGLIK_LOG` > (yalnız gerçek bir backend
+    istendiyse) varsayılan yol.
+
+    Son basamak kasıtlı. Günlük koşulsuz açık olsaydı, sahte istemcilerle
+    koşan birim testleri de aynı dosyaya satır yazardı ve artefakt "kaç gerçek
+    çağrı yapıldı" sorusuna yanlış cevap verirdi — yani denetim kaydının
+    kendisi kirlenirdi. `LLM_BACKEND` boşken hiç gerçek çağrı yapılmıyor
+    (bkz. `default_extractor`), dolayısıyla yazılacak bir şey de yoktur.
+    """
+    if explicit is not None:
+        ham = explicit.strip()
+        return None if ham.lower() in _LOG_KAPALI else Path(ham)
+    env = os.environ.get("LLM_SAGLIK_LOG")
+    if env is not None:
+        ham = env.strip()
+        return None if ham.lower() in _LOG_KAPALI else Path(ham)
+    if os.environ.get("LLM_BACKEND", "").strip():
+        return Path(SAGLIK_LOG_VARSAYILAN)
+    return None
 
 
 def _env_flag(name: str) -> bool:

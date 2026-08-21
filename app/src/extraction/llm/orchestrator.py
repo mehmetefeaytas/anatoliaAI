@@ -206,10 +206,17 @@ class LLMOrchestrator:
         # onları okuyor; orkestrasyon kolunda eksik kalsalardı "kaç çağrı,
         # kaç ayrıştırma hatası" sorusu sessizce cevapsız kalırdı.
         toplam = {k: 0 for k in ("calls", "ok", "parse_error", "http_error",
-                                 "schema_violation", "repairs")}
+                                 "schema_violation", "repairs", "kanit_reddi",
+                                 "cache_hit")}
         for a in self.ajanlar.values():
             for k in toplam:
                 toplam[k] += a.stats.get(k, 0)
+        # Kanıt reddi İKİ yerde olabilir: ajanın kendi kapısı
+        # (`LLMExtractor.require_evidence`) ve orkestrasyonun kapısı
+        # (`_kanit_kapisi`). İkisi aynı ilkeyi uygular, aynı kovaya yazılır —
+        # aksi hâlde künye "kaç öneri kanıtsız diye düştü" sorusuna kolun
+        # yalnız yarısıyla cevap verirdi.
+        toplam["kanit_reddi"] += self.stats.get("kanit_kapisi_red", 0)
 
         return {
             "available": self.available,
@@ -221,6 +228,23 @@ class LLMOrchestrator:
             # yalan söylemesin. Neden künyede: bkz. `LLMExtractor.summary()`.
             "num_predict": _tek_deger(
                 [a.num_predict for a in self.ajanlar.values()]),
+            "model": getattr(self.client, "model", None),
+            # `require_evidence` sözleşmesi: bu kolda kanıt kapısı
+            # orkestrasyon düzeyinde işler (`self.kanit_kapisi`), ajanların
+            # kendi kapıları ayrıca açık olabilir. Künyede TEK soru
+            # cevaplanmalı: "kanıtsız değer geçebilir mi?" — biri açıksa hayır.
+            "require_evidence": bool(
+                self.kanit_kapisi
+                or any(a.require_evidence for a in self.ajanlar.values())),
+            "saglik_log": _tek_deger(
+                [str(a.saglik_log) if a.saglik_log else None
+                 for a in self.ajanlar.values()]),
+            "onbellek": _tek_deger(
+                [str(a.onbellek) if a.onbellek else None
+                 for a in self.ajanlar.values()]),
+            "gercek_cagri": toplam["calls"] - toplam["cache_hit"],
+            "alan_basina": _tek_deger(
+                [a.alan_basina for a in self.ajanlar.values()]),
             **toplam,
             "orkestrasyon": True,
             "hakem": self.judge,

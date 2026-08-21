@@ -87,6 +87,10 @@ DEFAULT_OUT = "data/demo.db"
 DEFAULT_CONFIG = "config/banks.yaml"
 DEFAULT_RAW = "data/raw"
 
+# LLM boşluk-doldurma katmanı seçenekleri (`--llm`).
+LLM_KAPALI = "kapali"
+LLM_SECENEKLERI = (LLM_KAPALI, "ollama", "vllm")
+
 # İlerleme çıktısı: kaç belgede bir satır basılsın (tty değilse).
 PROGRESS_EVERY = 50
 
@@ -220,11 +224,45 @@ class _Progress:
         self.stream.flush()
 
 
+def _llm_kur(secim: str, kanit_zorunlu: bool, stream: Any):
+    """`--llm` seçimine göre LLM çıkarıcıyı kurar. KAPALI ise None döner.
+
+    ## Neden bu fonksiyon var — ve neden KATI (strict) kuruyor
+
+    2026-08-21'e kadar bu betiğin LLM'i isteyecek hiçbir anahtarı yoktu.
+    `run_pipeline` LLM'i `default_extractor()` üzerinden kuruyor, o da
+    `LLM_BACKEND` ortam değişkenine bakıyor; değişken hiçbir belgelenmiş
+    çağrıda verilmediği için üretim korpusu 7.032 alanın TAMAMINI `rule`
+    olarak üretti. Yani kusur kodda değil, **niyetin ifade edilememesindeydi**.
+
+    `strict=True` bilinçli: operatör `--llm ollama` yazdıysa ve istemci
+    kurulamıyorsa (servis kapalı, model yok) betik **durur**. Hoşgörülü modda
+    `NullLLMExtractor`a düşülür ve korpus sessizce kural-only kurulur — kapatmaya
+    çalıştığımız arızanın tam kendisi. LLM'i istemek isteğe bağlıdır; istedikten
+    sonra sessizce vazgeçmek değil.
+    """
+    if secim == LLM_KAPALI:
+        return None
+    from src.extraction.llm.extractor import default_extractor
+
+    os.environ["LLM_BACKEND"] = secim
+    os.environ["LLM_KANIT_ZORUNLU"] = "1" if kanit_zorunlu else "0"
+    llm = default_extractor(strict=True)
+    print(f"LLM boşluk doldurma AÇIK: backend={secim} "
+          f"model={getattr(llm.client, 'model', '?')} "
+          f"kanıt_kapısı={'zorunlu' if kanit_zorunlu else 'serbest'}",
+          file=stream)
+    return llm
+
+
 def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
           raw_dir: str = DEFAULT_RAW, force: bool = False,
           quiet: bool = False,
           stream: Any = None,
-          database_url: Optional[str] = None) -> tuple[Optional[dict], int]:
+          database_url: Optional[str] = None,
+          llm: str = LLM_KAPALI,
+          llm_kanit_zorunlu: bool = True,
+          ornek: Optional[int] = None) -> tuple[Optional[dict], int]:
     """DB'yi kurar ve (rapor, çıkış kodu) döndürür.
 
     `database_url` verilirse hedef **PostgreSQL**, verilmezse `out_path`
@@ -242,8 +280,11 @@ def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
     """
     stream = stream if stream is not None else sys.stderr
 
+    llm_ex = _llm_kur(llm, llm_kanit_zorunlu, stream)
+
     if database_url:
-        return _build_postgres(database_url, config, raw_dir, force, quiet, stream)
+        return _build_postgres(database_url, config, raw_dir, force, quiet,
+                               stream, llm_ex, ornek)
 
     out = Path(out_path)
 
@@ -262,8 +303,25 @@ def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
     try:
         print(f"Korpus okunuyor: {raw_dir}  (mod={MODE_CORPUS}, yalnız .txt)",
               file=stream)
-        result = run_pipeline(repo, config, raw_dir=raw_dir, mode=MODE_CORPUS,
-                              on_progress=_Progress(stream, enabled=not quiet))
+        try:
+            result = run_pipeline(repo, config, raw_dir=raw_dir,
+                                  mode=MODE_CORPUS, llm=llm_ex, limit=ornek,
+                                  on_progress=_Progress(stream,
+                                                        enabled=not quiet))
+        except Exception as exc:
+            # YARIM DB BIRAKMA. LLM açıkken çıkarım koşum ORTASINDA
+            # patlayabilir (servis düşer, zaman aşımı, `LLM_STRICT` altında
+            # şema hatası). O anda diskte binlerce kampanyası eksik ama
+            # geçerli görünen bir SQLite dosyası durur; API onu açar, dashboard
+            # sayı basar ve hiçbir yerde "bu DB yarım" yazmaz — kapatmaya
+            # çalıştığımız sessiz-yanlış sınıfının aynısı, yeni bir kılıkta.
+            # Hata ZATEN yükseltiliyor (gürültülü olması doğru); eklenen şey
+            # yalnız yarım artefaktın silinmesi.
+            repo.close()
+            out.unlink(missing_ok=True)
+            print(f"HATA: çıkarım koşum ortasında düştü, YARIM DB SİLİNDİ "
+                  f"({out}).\n      {type(exc).__name__}: {exc}", file=stream)
+            raise
         if result.documents_loaded == 0:
             print(f"HATA: {raw_dir} altında hiç .txt belge bulunamadı. "
                   f"Boş bir DB üretip 'kuruldu' demek sessiz bir yalan olurdu; "
@@ -280,7 +338,8 @@ def build(out_path: str | Path, config: str = DEFAULT_CONFIG,
 
 
 def _build_postgres(database_url: str, config: str, raw_dir: str, force: bool,
-                    quiet: bool, stream: Any) -> tuple[Optional[dict], int]:
+                    quiet: bool, stream: Any, llm_ex: Any = None,
+                    ornek: Optional[int] = None) -> tuple[Optional[dict], int]:
     """Korpusu PostgreSQL'e yazar.
 
     Neden gerekli: `data/demo.db` bir SQLite DOSYASI; Postgres yolu onu
@@ -313,6 +372,7 @@ def _build_postgres(database_url: str, config: str, raw_dir: str, force: bool,
         print(f"Korpus okunuyor: {raw_dir}  (mod={MODE_CORPUS}, yalnız .txt)\n"
               f"Hedef: PostgreSQL", file=stream)
         result = run_pipeline(repo, config, raw_dir=raw_dir, mode=MODE_CORPUS,
+                             llm=llm_ex, limit=ornek,
                              on_progress=_Progress(stream, enabled=not quiet))
         if result.documents_loaded == 0:
             print(f"HATA: {raw_dir} altında hiç .txt belge bulunamadı. "
@@ -357,6 +417,10 @@ def _report(repo: Any, result: PipelineResult, out: Optional[Path],
         "fields_by_extractor": by_extractor,
         "contradiction_count": len(result.contradictions),
         "contradictions_by_kind": by_kind,
+        # LLM katmanının künyesi. `fields_by_extractor` "rule 7032" derken
+        # bunun bir ARIZA mı yoksa kasıtlı bir kural-only koşum mu olduğunu
+        # söyleyemiyordu; iki durum aynı görünüyordu. Bu künye ayırır.
+        "llm": result.llm,
     }
 
 
@@ -398,12 +462,45 @@ def format_report(rep: dict) -> str:
     satirlar += ["", "  KATMAN BAŞINA ALAN"]
     for ext, n in rep["fields_by_extractor"].items():
         satirlar.append(f"    {ext:<26} {n:>5}")
+    satirlar += _llm_satirlari(rep.get("llm") or {})
     if rep["contradictions_by_kind"]:
         satirlar += ["", "  ÇELİŞKİ TÜRLERİ"]
         for kind, n in rep["contradictions_by_kind"].items():
             satirlar.append(f"    {kind:<26} {n:>5}")
     satirlar += ["=" * 66, ""]
     return "\n".join(satirlar)
+
+
+def _llm_satirlari(llm: dict) -> list[str]:
+    """LLM katmanı künyesi — kural-only koşum ARIZA gibi görünmeli.
+
+    `KATMAN BAŞINA ALAN: rule 7032` satırı kasıtlı offline bir koşumda da,
+    LLM'in sessizce hiç istenmediği bir koşumda da aynıdır. İki durumu ayıran
+    tek şey bu blok.
+    """
+    if not llm:
+        return []
+    if not llm.get("available"):
+        return ["", "  LLM BOŞLUK DOLDURMA: KAPALI (kural-only)",
+                "    Bu koşumda ikinci katman HİÇ çağrılmadı. Kasıtlıysa sorun",
+                "    yok; değilse `--llm ollama` verin.",
+                "    Ayrıntı: docs/rapor/llm-uretim-devreye-alma.md"]
+    cagri = llm.get("calls", 0) or 0
+    hata = sum(int(llm.get(k, 0) or 0)
+               for k in ("parse_error", "http_error", "schema_violation"))
+    return ["", "  LLM BOŞLUK DOLDURMA: AÇIK",
+            f"    istemci / model          : {llm.get('client')} / "
+            f"{llm.get('model') or llm.get('structured_mode')}",
+            f"    çağrı                    : {cagri}"
+            + (f"   (modele giden: {llm.get('gercek_cagri')}, "
+               f"önbellek: {llm.get('cache_hit', 0)})"
+               if llm.get("onbellek") else ""),
+            f"    şema geçti               : {llm.get('ok', 0)}/{cagri}",
+            f"    hata (ayrıştırma/HTTP/şema): {hata}",
+            f"    onarım denemesi          : {llm.get('repairs', 0)}",
+            f"    kanıt kapısı reddi       : {llm.get('kanit_reddi', 0)}"
+            f"   (kanıt zorunlu: {llm.get('require_evidence')})",
+            f"    sağlık günlüğü           : {llm.get('saglik_log')}"]
 
 
 def _main(argv: Optional[list[str]] = None) -> int:
@@ -425,6 +522,19 @@ def _main(argv: Optional[list[str]] = None) -> int:
                     help="ilerleme göstergesini kapat")
     ap.add_argument("--json-report", default=None,
                     help="özet raporu JSON olarak da yaz")
+    ap.add_argument("--llm", default=LLM_KAPALI, choices=list(LLM_SECENEKLERI),
+                    help="boşluk doldurma LLM katmanı (varsayılan: kapali). "
+                         "Kural katmanının bulamadığı alanlar LLM'e sorulur. "
+                         "İstemci kurulamazsa betik DURUR (sessiz kural-only "
+                         "düşüşü yok).")
+    ap.add_argument("--llm-kanit", default="zorunlu",
+                    choices=("zorunlu", "serbest"),
+                    help="LLM değerinin alıntısı metinde birebir bulunmak "
+                         "ZORUNDA mı (varsayılan: zorunlu — CLAUDE.md §21 "
+                         "halüsinasyon yasağı).")
+    ap.add_argument("--ornek", type=int, default=None, metavar="N",
+                    help="yalnız N belge işle (adımlı örnekleme). SÜRE ölçümü "
+                         "içindir; kalite iddiası için kullanılamaz.")
     args = ap.parse_args(argv)
 
     # Yollar depo köküne göre çözülür; betik nereden çağrılırsa çağrılsın
@@ -435,7 +545,10 @@ def _main(argv: Optional[list[str]] = None) -> int:
     rep, code = build(_resolve(args.out), config=_resolve(args.config),
                       raw_dir=_resolve(args.raw_dir), force=args.force,
                       quiet=args.quiet,
-                          database_url=args.database_url)
+                      database_url=args.database_url,
+                      llm=args.llm,
+                      llm_kanit_zorunlu=(args.llm_kanit == "zorunlu"),
+                      ornek=args.ornek)
     if rep is None:
         return code
     print(format_report(rep))

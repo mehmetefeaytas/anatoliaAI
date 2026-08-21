@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "hayat-finans--kampanyalar-hayatfinansla-islem-yaptikca-kazan",
+    "bank_slug": "hayat-finans",
+    "source_url": "https://hayatfinans.com.tr/kampanyalar/hayatfinansla-islem-yaptikca-kazan",
+    "reason": "kampanya_degil",
+    "detail": "campaign_type=absent — anotatör bu belgeyi kampanya metni saymadı (menü/kurumsal sayfa vb.)."
+  }
+]
