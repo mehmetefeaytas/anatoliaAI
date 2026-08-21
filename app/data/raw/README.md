@@ -16,34 +16,40 @@
 
 ## Ne var?
 
-10 katılım bankasının resmî sitelerinden toplanmış metinler.
+10 katılım bankasının ve TKBB'nin (şemsiye kuruluş) resmî sitelerinden
+toplanmış metinler ve PDF asılları. Ölçüm tarihi: **2026-08-21**.
 
 | Nicelik | Değer | Nasıl ölçüldü |
 |---|--:|---|
-| Toplam `.txt` | **1761** | `find data/raw -name '*.txt' \| wc -l` |
-| Kazınmış belge | **1759** | `live` / `products` / `archive` / `docs` / `manual` kovalarındaki `.txt` |
+| Toplam `.txt` | **2.708** | `find data/raw -name '*.txt' \| wc -l` |
+| Kazınmış belge | **2.706** | `live` / `products` / `archive` / `docs` / `manual` kovalarındaki `.txt` |
 | Demo fikstürü | **2** | Banka kökündeki `.txt`: `kuveyt-turk/konut.txt`, `turkiye-finans/tasit.txt` |
-| Banka sayısı | **10** | `data/raw/*/` dizinleri |
+| PDF aslı | **999** (~356 MB) | `find data/raw -name '*.pdf' \| wc -l` — ücret tarifesi / bilgi formu / sözleşme öncesi form asılları, `docs/` kovasında metne indirilmiş halleriyle birlikte |
+| Kaynak dizini | **11** (10 banka + `tkbb`) | `data/raw/*/` dizinleri |
 
-### Banka bazında belge dağılımı (`.txt`)
+### Kaynak bazında dağılım (`.txt` / `.pdf`)
 
-| Banka | Belge | Banka | Belge |
-|---|--:|---|--:|
-| `adil-katilim` | 6 | `tom-katilim` | 15 |
-| `albaraka` | 217 | `turkiye-emlak-katilim` | 239 |
-| `dunya-katilim` | 123 | `turkiye-finans` | 92 |
-| `hayat-finans` | 48 | `vakif-katilim` | 197 |
-| `kuveyt-turk` | 533 | `ziraat-katilim` | 291 |
-| | | **TOPLAM** | **1761** |
+| Kaynak | `.txt` | `.pdf` | Kaynak | `.txt` | `.pdf` |
+|---|--:|--:|---|--:|--:|
+| `adil-katilim` | 11 | 5 | `tom-katilim` | 260 | 99 |
+| `albaraka` | 353 | 156 | `turkiye-emlak-katilim` | 227 | 43 |
+| `dunya-katilim` | 110 | 2 | `turkiye-finans` | 205 | 112 |
+| `hayat-finans` | 72 | 10 | `vakif-katilim` | 307 | 113 |
+| `kuveyt-turk` | 885 | 441 | `ziraat-katilim` | 276 | 17 |
+| `tkbb` | 2 | 1 | **TOPLAM** | **2.708** | **999** |
 
-`.html` ham önbelleği diskte tutulur ama depo dışıdır (`.gitignore` satır 30-39);
-banka kökündeki fikstür `.html` dosyaları istisna olarak izlenir.
+`.html` ham önbelleği diskte tutulur ama depo dışıdır (**`app/.gitignore`**
+`data/raw/**/*.html` kuralı); banka kökündeki fikstür `.html` dosyaları istisna
+olarak izlenir. PDF asılları da aynı dosyada dışlanır; metne indirilmiş `.txt`
+karşılıkları izlenir.
 
 ## Rolü
 
 - **Yarışma veri seti** — teslim edilen, indirme bağlantısı verilen küme budur.
-- **Altın (gold) değerlendirme** — `data/gold/gold.v1.json` yalnızca bu
-  korpustan derlenmiştir; insan anotasyonludur ve Cohen κ çapasını taşır.
+- **Altın (gold) değerlendirme** — üç gold seti de bu korpustan derlenmiştir:
+  `gold.v1.json` (20 kayıt, insan anotasyonlu, Cohen κ çapası),
+  `gold.v2.json` (48 kayıt, kör etiketleme, 40'ı zor vaka),
+  `gold.round1.json` (134 kayıt, protokol v2, 38'i hakemlikten geçti).
 - **Ölçüm** — P/R/F1, macro-F1, normalizasyon doğruluğu burada hesaplanır.
 
 ## Kapsam dışı korpusla ilişki

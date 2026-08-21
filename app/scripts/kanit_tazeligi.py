@@ -288,6 +288,19 @@ def olc_korpus_belge() -> float:
         return float(baglanti.execute("SELECT COUNT(*) FROM campaigns").fetchone()[0])
 
 
+def olc_korpus_pdf() -> float:
+    """`data/raw` altındaki PDF aslı sayısı.
+
+    Bu iddia kapıya 2026-08-21'de eklendi: «758 PDF» manşeti aylarca hiçbir
+    kapıya takılmadan bayatladı, çünkü PDF sayısını denetleyen iddia yoktu.
+    Kapı dışında kalan sayı sessizce bayatlar — bu ölçer o dersin kaydıdır.
+    """
+    kok = KOK / "data" / "raw"
+    if not kok.exists():
+        raise KanitYok(f"{kok} yok")
+    return float(len(list(kok.rglob("*.pdf"))))
+
+
 def olc_gold_kayit(dosya: str) -> Callable[[], float]:
     def _olc() -> float:
         yol = KOK / "data" / "gold" / dosya
@@ -744,6 +757,17 @@ def iddialar() -> list[Iddia]:
                 ("README.md", r"70/([\d.]+) belgede"),
             ),
             olcer=olc_korpus_belge,
+            tolerans=0.5,
+        ),
+        Iddia(
+            ad="korpus_pdf",
+            aciklama="Korpustaki PDF aslı sayısı (data/raw altında)",
+            desenler=(
+                ("README.md", r"([\d.]+) PDF ·"),
+                ("app/README.md", r"\(([\d.]+) PDF aslıyla birlikte\)"),
+                ("app/data/raw/README.md", r"\| PDF aslı \| \*\*([\d.]+)\*\*"),
+            ),
+            olcer=olc_korpus_pdf,
             tolerans=0.5,
         ),
         Iddia(

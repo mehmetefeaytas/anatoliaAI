@@ -90,10 +90,11 @@ kırılım ve karşı-okumalar: [`docs/rapor/ablasyon.md`](docs/rapor/ablasyon.m
 > # -> 1782 {'rule': 4704}
 > ```
 > (Aynı gün erken bir koşum 4.709 vermişti; aradaki 5 alan sahte `%0` kâr payı
-> temizliğiyle düştü. `data/demo.db` de bu sayıyı taşıyor — bağımsız doğrulama:
-> `sqlite3 data/demo.db "select count(*) from extracted_fields"` → **4704**.)
-> **Tazelenmiş ölçüm (2026-08-21, PDF hasadından sonra):** korpus 2.708 belge,
-> çıkarılan **7.032** alanın tamamı `rule`; `ner` ve `llm` yine **0**. Katman
+> temizliğiyle düştü. O günkü `data/demo.db` de bu sayıyı taşıyordu.)
+> **Tazelenmiş ölçüm (2026-08-21 akşamı, PDF hasadı + günün kural
+> düzeltmelerinden sonra):** korpus 2.708 belge, çıkarılan **7.022** alanın
+> tamamı `rule`; `ner` ve `llm` yine **0**. Bağımsız doğrulama:
+> `sqlite3 data/demo.db "select count(*) from extracted_fields"` → **7022**. Katman
 > dağılımı hasatla DEĞİŞMEDİ — iddia büyüyen korpusta da geçerli.
 > (`llm` sayısının 0 olması LLM'in offline Null-fallback'te olmasındandır;
 > `ner` sayısının 0 olması ise **kodun kendisindendir** — o katman yok.)
@@ -142,7 +143,7 @@ python3 -m eval.run_eval --gold data/gold/gold.sample.json
 
 ```bash
 cd app
-python3 -m scripts.build_demo_db --out data/demo.db   # bir kez, ~282 s
+python3 -m scripts.build_demo_db --out data/demo.db   # bir kez, ~55 s (ölçüm 2026-08-21, arm64)
 # Özetleri geri yükle — ATLAMAYIN.
 # `build_demo_db` `campaigns.ozet` sütununu BİLMEZ ve boş bırakır. Bu adım
 # atlanırsa panel ve sohbet her belgede "AI Özeti üretilmedi" der ve kullanıcıya
@@ -169,7 +170,7 @@ Doğrulama (ölçüldü 2026-08-20, bu komutlarla):
 
 ```bash
 curl -s localhost:8000/health   # {"status":"ok","llm":false,"backend":"sqlite"}
-curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fields: 7032
+curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11 (10 banka + TKBB), fields: 7022
 ```
 
 Şartnamenin s.12 referans senaryoları, aynı koşumda canlı doğrulandı:
@@ -221,14 +222,20 @@ python3 -m scripts.build_demo_db --out data/demo.db
 # Ölçüldü (2026-08-20): 2.708 belgenin 2.634'ü özetlendi (%97,3); kalan 74'ün
 # sebebi `metin_bos` (içerik yok) ya da `terminoloji_ihlali` (kapı reddetti).
 python3 -m scripts.ozet_geri_yukle --db data/demo.db
-# Gerçekten ölçüldü (temiz klon simülasyonu — izlenen dosyalardan taze
-# checkout, 2026-08-20): süre 282 s (~4 dk 42 sn), 1.782 belge -> 1.782
-# kampanya kaydı, 11/11 banka, çıktı data/demo.db ~22,2 MB.
+# Gerçekten ölçüldü (2026-08-21, arm64): süre ~55 s, 2.708 belge -> 2.708
+# kampanya kaydı, 11/11 kaynak, çıktı data/demo.db ~75 MB.
+# (Önceki ölçüm, 1.782 belgelik korpusta ve temiz klon simülasyonunda 282 s
+# vermişti; süre korpusla ve makineyle değişir.)
 # Çıkış kodları: 0 başarılı · 1 hedef dosya zaten var (--force gerekir)
 # · 2 korpus BOŞ (sessizce "kuruldu" demez).
 
 docker-compose up        # postgres + vllm/ollama + api + web
-pip install -r requirements.txt   # geliştirme ortamı
+```
+
+Geliştirme ortamı (Docker yolunda gerekmez):
+
+```bash
+pip install -r requirements.txt
 ```
 
 > **Neden otomatik değil (compose'a init servisi olarak eklenmedi).**
@@ -261,8 +268,8 @@ toplamayı sürdürür.
 ```bash
 python -m src.scraping.run --config config/banks.yaml   # scraping (demo/fixture)
 python -m src.extraction.run --input data/processed/sample.txt
-python -m eval.run_eval --gold data/gold/               # değerlendirme + ablasyon
-pytest
+python -m eval.run_eval --gold data/gold/gold.v2.json   # değerlendirme (tek dosya alır, dizin DEĞİL)
+python -m unittest discover -s tests
 cd web && npm run dev
 ```
 
@@ -339,12 +346,12 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 
 **Test:** **3.605** birim/entegrasyon testi toplanıyor · **3.552 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
-(`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
-(`cd web && npm run test`).
+(`.venv/bin/python -m unittest discover -s tests`) + 224 arayüz testi
+(`cd web && npm run test` — ölçüm 2026-08-21: 224 test / 52 küme / 9 dosya).
 
 ```bash
 python -m scripts.test_ozeti     # -> eval/reports/test-ozeti.json
-# 2026-08-16: 3171 toplandı · 3118 geçti · 53 atlandı · 0 başarısız
+# 2026-08-21 (temiz ağaç): 3605 toplandı · 3552 geçti · 53 atlandı · 0 başarısız
 ```
 
 Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde koşar.
@@ -360,6 +367,10 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 > Yayımlanan manşet **unittest** sayısıdır, çünkü kanıt-tazeliği kapısı taze
 > artefakt varken onu okur; artefakt bayatsa `pytest --collect-only` yedeğine
 > düşer. İki koşucu aynı sayıyı verdiği sürece bu yedek sapma üretmez.
+> (2026-08-21'den beri kanonik koşucu her yerde `unittest`: Makefile `test`
+> hedefi CI ile eşitlendi ve `pytest` bağımlılığı `requirements.txt`'ten
+> düşürüldü — hiçbir test dosyası pytest API'si kullanmıyor. Çapraz doğrulama
+> isteyen `pip install pytest` ile aynı sayıyı yeniden üretebilir.)
 >
 > **Tarihçe (gizlenmiyor):** 16 Ağustos gün ortasında bir ara ölçümde
 > `pytest` 4 testi fazla topluyordu (3.162 / 3.155) ve kapı bunu sapma diye
@@ -370,16 +381,11 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 > Doğrulama: `python -m pytest tests/ -q` ve `python -m pytest -q` — ikisi de
 > aynı sonucu veriyor.
 
-> ⚠️ **ARTEFAKT HENÜZ KANIT DEĞİL — commit sonrası tekrarlanacak.** Yukarıdaki
-> sayı bugünün işinin **tamamı üzerinde** ölçüldü, ama ağaç o an kirliydi
-> (günün değişiklikleri henüz commit edilmemişti) ve betik bunu söylüyor:
-> `⚠️ kirli ağaç — bu artefakt kanıt sayılmaz, temiz ağaçta tekrarla`.
-> **Yapılacak (teslim öncesi, unutulmamalı):** commit'ten sonra
-> `python -m scripts.test_ozeti` yeniden koşulacak ve
-> `eval/reports/test-ozeti.json` temiz ağaç damgasıyla üretilecek. Sayının
-> değişmesi beklenmiyor; beklenen tek fark artefaktın **kanıt sayılabilir**
-> hâle gelmesidir. Aynı koşul aşağıdaki "Ölçüm Durumu" tablosunun *Testler*
-> satırı ve `docs/SARTNAME-UYUM.md` için de geçerlidir.
+> ✅ **Artefakt temiz ağaçta yeniden üretildi (2026-08-21).** Bu sayı bir ara
+> kirli ağaçta ölçülmüştü ve betik onu kanıt saymıyordu; commit `8259aa72`
+> sonrası `python -m scripts.test_ozeti` temiz ağaçta tekrarlandı —
+> `eval/reports/test-ozeti.json` artık `git_dirty: false` damgası taşıyor
+> (3.605 / 3.552 / 53 / 0). Sayı değişmedi; artefakt kanıt sayılır hâle geldi.
 
 ## Ölçüm Durumu
 
@@ -387,18 +393,18 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 
 | Kalem | Durum |
 |---|---|
-| Korpus | **2.708 gerçek belge** (758 PDF dâhil), 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
+| Korpus | **2.708 gerçek belge** (999 PDF aslıyla birlikte), 10 katılım bankası + TKBB'den canlı toplandı; provenance her kayıtta: `source_url` 2.708/2.708, `scraped_at` 2.706/2.708 (eksik ikisi demo fikstürü) |
 | Testler | ✅ **3.552 test yeşil** (3.605 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-21: `python -m pytest tests -q` → `3552 passed, 53 skipped, 1722 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
 | Değişmez (invariant) denetimi | ✅ **2.708 belgede 0 ihlal** — kapsam **%92,3** (2.499 belgede en az bir alan çıktı; 209 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-21: `python -m eval.properties --raw-dir data/raw` → çıkış kodu 0. **21 Ağustos'ta bu denetim 2 GERÇEK ihlal verdi ve CI'ı kırdı**: son PDF hasadındaki okunamaz bir Albaraka sözleşmesi (ToUnicode tablosu olmayan gömülü yazı tipi) çöp metni `kampanya_kosullari` kalemi olarak sunuyordu. Kök neden kodda değil veride olduğu için çözüm bir KAPI oldu (`_ortak.bozuk_metin`); ihlal gizlenmedi, sebebi burada yazılı |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-21, 2.708 belge — **28 çelişki: 8'i belgeler-arası** (6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı**), 20'si belge-içi. Kâr payı örneği manşetliktir: Albaraka aynı ürün için iki ayrı formda **%7,0 ve %1,0** yayımlamış — kesişmeyen iki oran. Komut: `python -m src.comparison.scan --raw-dir data/raw`. **İki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
-| Gold set | **66 tekil belge**, iki farklı statüde — aşağıya bakınız |
+| Gold set | **202 tekil belge** (v1 20 + v2 48 + round1 134, kesişim 0), üç farklı statüde — aşağıya bakınız |
 | Alan bazında P/R/F1 + %95 GA | ✅ ölçüldü — aşağıdaki tablo |
 | Ablasyon + McNemar | ✅ ölçüldü — `docs/rapor/ablasyon.md` |
 | Anotatörler arası uyum (κ) | ✅ **v2 turu: Cohen κ 0,714** (16 kayıt, 192 çift, ikinci etiketleyici LLM — "notla kabul" bandı; `masraf_durumu` negatif κ'sı hakemlenip gold+kılavuz+motor düzeltildi) · round0: **Fleiss κ 0,302** · α 0,620/0,787 (260 ortak satır, 4 anotatör, hakemlik **sonrası**) · round1: **Cohen κ 0,274** (141 ortak karar, hakemlik **öncesi**). İkisi de eşik altı → ilan edilen sonuç uygulandı. İki sayı simetrik DEĞİLDİR, ayrıntı kök [`README.md`](../README.md) §4 |
 | Bağımlılık lisans envanteri | ✅ iki ayrı payda, ikisi de aynı `.venv` kesiti (2026-08-15 21:14 +03): **96 bileşen** = CycloneDX SBOM'un ortam taraması ([`docs/sbom.json`](docs/sbom.json), CI lisans kapısının OKUDUĞU dosya) · **91 paket** = `pip-licenses` insan-okur envanteri ([`docs/LISANSLAR.md`](docs/LISANSLAR.md)). Fark **tam olarak 5 pakettir** ve araç kaynaklıdır — aşağıya bakınız |
 | Şartname uyum matrisi | ✅ madde madde, kanıt komutlarıyla ([`docs/SARTNAME-UYUM.md`](docs/SARTNAME-UYUM.md)) |
-| Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) — **14 iddia · 0 sapma** (2026-08-20) |
+| Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) — **16 iddia · 0 sapma** (2026-08-21) |
 | Eşik düşürme disiplini | ✅ ADR'ye bağlı: bir regresyon eşiği yalnız **ölçüt kusuru** kanıtlanırsa düşürülebilir, dört kapı + iki imza ([`docs/adr/0001`](docs/adr/0001-esik-dusurme-disiplini.md)) — üç düşürme kayıtlı: `kampanya_kosullari`, `odul_miktari`, **`masraf_durumu` (0,714 → 0,65, 2026-08-19, gold düzeltmesi)** |
 
 #### 96 mı 91 mi — iki payda, iki farklı şey
@@ -486,20 +492,24 @@ bağımlılığı değiller" ölçümünü bağımsız olarak doğruladı. **"96
 yazılmamıştı. Zaman bağımlı kural (`suresi_dolmus_kampanya`) yalnız `as_of`
 verildiğinde koşar; `run_pipeline` bunu geçmez, API/pano geçer.
 
-> **Çıkarım düzeltmelerinden sonra yeniden ölçüldü (2026-08-16) — iki sayı da
-> DEĞİŞMEDİ.** Sahte `%0` temizliği kâr payı alanını 5 kayıt azalttı
-> (4.709 → 4.704) ama çelişki kümesine dokunmadı; aşağıdaki tablo tazedir.
+> **Günün kural düzeltmelerinden sonra yeniden ölçüldü (2026-08-21 akşamı) —
+> iki sayı da DEĞİŞTİ ve tablo tazelendi.** PDF hasadı korpusu 1.782'den
+> 2.708'e büyüttü, HAKEM-05/S1 kural düzeltmeleri ve bozuk-metin kapısı alan
+> kümesini değiştirdi. Önceki kesit (2026-08-16, 1.782 belge) 5 / 15 vermişti;
+> o sayılar artık tarihseldir.
 
 | yol | `as_of` | çelişki | tür | kırılım |
 |---|---|---:|---:|---|
-| `run_pipeline(mode="corpus")` — CLI / `scripts.build_demo_db` | ✗ | **5** | **2** | `celisen_tutar_bandi` 4 · `celisen_kampanya_bitisi` 1 |
-| API `/contradictions` — `detect(c, as_of=scraped_at)`; **panonun gösterdiği** | ✓ | **15** | **3** | `suresi_dolmus_kampanya` 10 · `celisen_tutar_bandi` 4 · `celisen_kampanya_bitisi` 1 |
+| `run_pipeline(mode="corpus")` — CLI / `scripts.build_demo_db` | ✗ | **3** | **2** | `celisen_tutar_bandi` 2 · `celisen_kampanya_bitisi` 1 |
+| API `/contradictions` — `detect(c, as_of=scraped_at)`; **panonun gösterdiği** | ✓ | **20** | **3** | `suresi_dolmus_kampanya` 17 · `celisen_tutar_bandi` 2 · `celisen_kampanya_bitisi` 1 |
 
-Banka kırılımı (15'lik yol): Albaraka 9 · Kuveyt Türk 5 · Dünya Katılım 1.
-Her iki koşum da (2026-08-16 ölçümünde) 1.782 belge okudu; 2026-08-21 koşumu 2.708 belge okudu. Üreten komutlar (ikisi de offline, LLM kapalı):
+Banka kırılımı (20'lik yol): Albaraka 11 · T.O.M. 4 · Kuveyt Türk 3 ·
+Türkiye Emlak Katılım 1 · Dünya Katılım 1.
+Her iki koşum da 2.708 belge okudu (2026-08-21). Üreten komutlar (ikisi de
+offline, LLM kapalı):
 
 ```bash
-# 1) Boru hattı yolu — 5 çelişki / 2 tür
+# 1) Boru hattı yolu — 3 çelişki / 2 tür
 .venv/bin/python -c "
 import collections
 from src.db.repository import Repository
@@ -509,7 +519,7 @@ res = run_pipeline(Repository(':memory:'), 'config/banks.yaml',
 print(res.documents_loaded, len(res.contradictions),
       collections.Counter(c['kind'] for c in res.contradictions))"
 
-# 2) API yolu (as_of=scraped_at) — 15 çelişki / 3 tür
+# 2) API yolu (as_of=scraped_at) — 20 çelişki / 3 tür
 .venv/bin/python -c "
 import collections
 from src.scraping.config import load_banks
@@ -626,14 +636,12 @@ yazıyoruz.
 > karşılaşırsanız tarihine bakın; kanıt-tazeliği kapısı
 > (`python -m scripts.kanit_tazeligi`) bu kalıntıları arar.
 >
-> ⚠️ **Bu koşumun künyesi `git_dirty: true`.** Ölçüm bugünün işinin tamamı
-> üzerinde koştu ama ağaç o an kirliydi (değişiklikler henüz commit
-> edilmemişti). Kanıt-tazeliği kapısı bunu **doğru biçimde reddediyor** ve
-> `KANIT YOK` diyor — kirli ağaçta üretilmiş rapor tekrar üretilemez, o yüzden
-> kanıt sayılmaz. **Yapılacak (teslim öncesi):** commit'ten sonra `run_eval`
-> yeniden koşulacak ve temiz damgalı rapor üretilecek. Sayının değişmesi
-> beklenmiyor; beklenen tek fark artefaktın **kanıt sayılabilir** hâle
-> gelmesidir.
+> ✅ **Temiz damgalı rapor üretildi (2026-08-21).** Bu ölçüm bir ara kirli
+> ağaçta koşmuştu ve kanıt-tazeliği kapısı onu doğru biçimde reddediyordu;
+> commit `8259aa72` sonrası `run_eval` iki gold için de temiz ağaçta
+> tekrarlandı — `eval/reports/20260821-134101/` (gold.v2) ve
+> `.../20260821-134125/` (gold.round1), ikisi de `git_dirty: false`. Sayılar
+> değişmedi; artefaktlar kanıt sayılır hâle geldi.
 
 **Neden üç mikro-F1 birden veriliyor:** `kampanya_kosullari` serbest cümle
 listesi döndürür; küme eşitliği arayan ikili ölçüt bu alanda metodolojik
@@ -696,7 +704,7 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 > model kısıtı değil, **veri gerçeği**: bankalar oranları kampanya
 > sayfalarında büyük ölçüde yayımlamıyor.
 
-**Tekrarlanan tek sayı halüsinasyon oranıdır** (~%10), payda 166'dan 444'e
+**Tekrarlanan tek sayı halüsinasyon oranıdır** (~%10), payda 166'dan 447'ye
 çıkarken korundu. İki protokolden de bağımsız çıkan tek metrik budur.
 
 #### Halüsinasyon oranı: `gold.v2` ile `gold.round1` DOĞRUDAN KARŞILAŞTIRILAMAZ
@@ -711,8 +719,8 @@ toplanarak doğrulandı:
 .venv/bin/python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 .venv/bin/python -m eval.run_eval --gold data/gold/gold.round1.json --config kural
 ```
-Kanıt: `eval/reports/20260821-122109/` (`gold.v2`) ve
-`eval/reports/20260821-122008/` (`gold.round1`, **HAKEM-05 sonrası**).
+Kanıt: `eval/reports/20260821-134101/` (`gold.v2`) ve
+`eval/reports/20260821-134125/` (`gold.round1`, **HAKEM-05 sonrası, temiz ağaç**).
 
 | | `gold.v2` (n=48) | `gold.round1` (n=134) |
 |---|---:|---:|
@@ -724,12 +732,12 @@ Kanıt: `eval/reports/20260821-122109/` (`gold.v2`) ve
 karar vermemiş**; bunlar metrik dışı kalıyor ve `absent_decisions`'a hiç
 girmiyor. `gold.v2`'de "YOK" kararı 447 kez verilmiş, `gold.round1`'de yalnız
 74 kez — küçük paydada tek kayıt oranın çok daha büyük bir dilimini taşır:
-61'lik paydadaki 21 halüsinasyonun **10'u tek başına `vade_ay`** alanından
+74'lük paydadaki 21 halüsinasyonun **10'u tek başına `vade_ay`** alanından
 geliyor (`per_field.csv`: `vade_ay` satırı `fp_hallucinated=10`), yani
 round1'in yüksek oranının ~%48'i tek bir alanın kararlarına yığılı.
 
 **Sonuç:** iki oran ayrı ayrı doğru ölçülmüş ama yan yana konup "model
-round1'de kötüleşti" denemez. Payda 447'den 61'e küçülmesi bir **gold
+round1'de kötüleşti" denemez. Payda 447'den 74'e küçülmesi bir **gold
 kapsama yoğunluğu artefaktıdır**, gerçek bir model kusuru değil.
 
 ### Ölçümle yanlışlanan hipotezler
@@ -901,7 +909,7 @@ gold mu, yargıç mı" ayrımını yapacak.
   etiketleyiciyle: κ = **0,714**, "notla kabul" bandı (yukarıdaki bölüm).
   Kalan iş **insan** hakemliği ve ikinci turun daha güçlü bir modelle
   tekrarı (`colab/03_kappa.py`).
-- **Gold seti büyütmek** — 66 → 150 bandı; GA'lar daralır ve **0,5702**
+- **Gold seti büyütmek** — zor-vaka setini (v2, n=48) büyütmek; GA'lar daralır ve **0,5702**
   nokta tahmini savunulabilir hâle gelir (bugünkü %95 GA **0,492–0,632**, yani
   genişliği **0,140** — nokta tahminin dörtte biri kadar. Bu genişlikte
   "0,5702 < 0,60 hedefi" ifadesi bile GA içinde kalıyor; hedefin

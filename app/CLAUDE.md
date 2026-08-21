@@ -266,9 +266,9 @@ güncel listeyi doğrula: https://www.bddk.org.tr/Kurulus/Liste/77
 docker-compose up                                   # offline, anahtarsız tüm sistem
 python -m src.scraping.run --config config/banks.yaml
 python -m src.extraction.run --input data/processed/sample.txt
-python -m eval.run_eval --gold data/gold/           # P/R/F1, macro-F1, kappa
+python -m eval.run_eval --gold data/gold/gold.v2.json  # P/R/F1, macro-F1 (tek dosya alır, dizin DEĞİL)
 python -m eval.ablation                             # kural vs LLM vs hibrit
-pytest
+python -m unittest discover -s tests
 cd web && npm run dev
 ```
 
@@ -311,7 +311,7 @@ Trend analizi / çift dili **dağıtma**. Bütçeyi şu üçe yığ:
 
 - **Dil:** kod/değişken İngilizce; yorum/docstring Türkçe olabilir; kullanıcıya
   dönük tüm metinler (dashboard, chatbot) Türkçe.
-- **Python:** type hints zorunlu, Pydantic şema, `ruff` + `black`, tek-sorumluluk.
+- **Python:** type hints zorunlu, Pydantic şema, `ruff` (lint + format kapısı), tek-sorumluluk.
 - **LLM çıktısı:** her zaman `guided_json` / Pydantic ile zorunlu — serbest metin
   parse etme.
 - **Modülerlik:** her katman bağımsız test edilebilir (Teknik İmplementasyon %20).

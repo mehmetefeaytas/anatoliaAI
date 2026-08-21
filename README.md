@@ -27,7 +27,7 @@ bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaşt
 Sonucu bir dashboard ve iki yollu (yapısal sorgu ↔ RAG) bir chatbot ile
 sunuyor. Tamamı açık kaynak (Apache-2.0); on-premise ve internetsiz çalışıyor.
 
-> 2.708 gerçek belge · 10/10 katılım bankası · 758 PDF · 3.552 yeşil test ·
+> 2.708 gerçek belge · 10/10 katılım bankası · 999 PDF · 3.552 yeşil test ·
 > ağsız kanıt: tek konteyner 14/14, tam yığın **3/3 koşum · 39/39 adım** ·
 > yayımlanmış altın veri seti
 
@@ -40,6 +40,9 @@ konfigürasyon: üçü de kural katmanının altında kaldı (McNemar p = 0,0010
 (0,0425 → 0,1029). İkincisi A100'de **sekiz hücre** — iki model
 (`qwen2.5:7b`, `qwen3.5:9b`) × iki sorgu granülaritesi × iki gold seti:
 **sekizinin sekizi de** kabul kapısından geçemedi.
+(`qwen3.5:9b` yalnız bu ablasyonda ikame olarak koştu, üretim yolunda yok;
+adın Alibaba numaralandırmasındaki karşılığı doğrulanamadı — çekince ve
+digest'ler: [`app/docs/model-lisanslari/README.md`](app/docs/model-lisanslari/README.md).)
 
 İki hipotezi de kendimiz kurup kendimiz çürüttük. Daha büyük model daha iyi
 değil, daha cesur: 9B halüsinasyonu tabanın **4,2 katına** çıkardı. Modele tek
@@ -47,8 +50,10 @@ değil, daha cesur: 9B halüsinasyonu tabanın **4,2 katına** çıkardı. Model
 "boş kalması gereken kutuya bir şey yazmak". İki gold'da LLM'in kazandırdığı
 doğru değer **6**, getirdiği yanlış pozitif **23–60**.
 
-LLM sağlığı temizdi (4.469 çağrı kaydı, şema ihlali 0), yani düşük başarım
-teknik bir arıza değil. Şartname ablasyon tablosu istiyor; bizimki hibridin
+LLM sağlığı da ölçüldü: ablasyon koşumunda 384 çağrının 384'ü geçerli yanıt
+verdi; tüm sağlık günlüğünde (4.472 çağrı kaydı) yalnız 10 arıza var — 9 kesik
+yanıt, 1 bağlantı kopması, sıfır şema ihlali. Düşük başarım teknik bir arıza
+değil. Şartname ablasyon tablosu istiyor; bizimki hibridin
 kazanmadığını gösteriyor ve öyle yayımlandı →
 [ablasyon raporu](app/docs/rapor/ablasyon.md) ·
 [8 hücrelik ölçüm](app/docs/rapor/llm-uretim-devreye-alma.md).
@@ -168,13 +173,14 @@ Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık g
 
 Bu tablodaki her sayı yanındaki komutla yeniden üretilebilir ve bir CI kapısına
 bağlı: `python -m scripts.kanit_tazeligi` her satırı üreten kanıtla
-karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **21 Ağustos 2026** (`app/eval/reports/20260821-124529/` ve
-`.../20260821-124526/`) · ölçüm kolu: `kural` (resmî varsayılan, LLM kapalı).
+karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **21 Ağustos 2026**, temiz
+ağaçta (`app/eval/reports/20260821-134101/` gold.v2 ve `.../20260821-134125/`
+gold.round1) · ölçüm kolu: `kural` (resmî varsayılan, LLM kapalı).
 
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **2.708 belge** · 7.032 çıkarılan alan (ham arşivle eşit) | `python -m scripts.check_demo_db` |
+| Korpus | **2.708 belge** (ham arşivle eşit) · 7.022 çıkarılan alan — kurulum betiği güncel kodla bu sayıları üretir | `python -m scripts.check_demo_db` |
 | AI özeti kapsaması | **2.634 üretildi (%97,3)** · 74 belge gerekçeli boş (29 metin boş · 41 terminoloji kapısı · 4 diğer) | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `python -m scripts.build_gold --pre data/gold/preannotations.v2.json --csv data/gold/review/round1_{A,B}.csv --csv data/gold/review/round1_main_{C,D}.csv` |
@@ -201,7 +207,7 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **21 Ağustos 2026
 | API kimlik doğrulama | `X-API-Key` / Bearer · tam ve salt-okuma rolü · **yeni bağımlılık 0** (harici JWKS on-prem'i çökertirdi) | `python -m pytest tests/test_api_kimlik_dogrulama.py` |
 | Test | **3.605** toplanan · 3.552 geçti · 53 atlandı (Postgres, CI'da koşar) · 0 başarısız · 1.722 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-21 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
-| Kanıt-tazeliği kapısı | **15 iddia · 0 sapma · 0 kanıt eksik** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+| Kanıt-tazeliği kapısı | **16 iddia · 0 sapma · 0 kanıt eksik** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 | Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
 
 <details>
@@ -293,13 +299,15 @@ aynı soruyu sormuyor, bu yüzden manşet sayı `gold.v2` — zor olan.
 |---|---:|---:|
 | kayıt | 48 | 134 |
 | zor vaka | 40 | 3 |
-| `absent` kararı (halüsinasyon paydası) | **444** | **60** |
-| 12-alan mikro-F1 (ikili) | **0,5702** | 0,762 |
-| halüsinasyon | **0,0336** | **0,417** |
+| `absent` kararı (halüsinasyon paydası) | **447** | **74** |
+| 12-alan mikro-F1 (ikili) | **0,5702** | 0,795 |
+| halüsinasyon | **0,0336** | **0,284** |
 
-Round1'in 0,417'si seçim etkisi. Round1'de bir hücre inceleme kuyruğuna zaten
-model bir şey ürettiği için giriyor; o setin `absent` kümesi rastgele değil,
-düşmanca seçilmiş bir alt küme. Payda 60'a düşünce oran şişiyor.
+Round1'in 0,284'ü seçim etkisi taşıyor. Round1'de bir hücre inceleme kuyruğuna
+zaten model bir şey ürettiği için giriyor; o setin `absent` kümesi rastgele
+değil, düşmanca seçilmiş bir alt küme. Payda 447'den 74'e düşünce tek kayıt
+oranın çok daha büyük bir dilimini taşıyor (21 halüsinasyonun 10'u tek başına
+`vade_ay` alanından).
 
 Aynı sebeple halüsinasyon tavanı `gold.v2`'de kalıyor. Kapıyı round1'e taşımak,
 önceden ilan edilmiş 0,08'lik tavanı sayıya bakarak gevşetmek olur. Round1 kendi
@@ -529,17 +537,38 @@ python -m src.extraction.run --input data/processed/sample.txt
 python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json
 ```
 
-### C) Tam sistem — Docker (offline, anahtarsız)
+### C) Arayüz + sohbet — Docker'sız, yerel (en hızlı demo yolu)
 
-> **ÖNCE veri tabanını kur, SONRA `docker-compose up`.** `Dockerfile.api`
-> `data/demo.db`'yi **derleme anında** imaja gömer; dosya `.gitignore`'dadır
-> (`*.db`) ve temiz bir klonda **yoktur**. Bu iki adım atlanırsa API sessizce
-> 3 fixture'a düşer — dashboard 2.708 belge yerine 3 kampanya gösterir ve
-> hata vermez. Ayrıntılı gerekçe: `app/README.md` "Docker" bölümü.
+> **`DATABASE_PATH` verilmezse sistem sessizce 3 fixture'a düşer** —
+> `/stats` `campaigns: 3` döner, dashboard 2.708 belge yerine 3 kampanya
+> gösterir ve hata vermez. Yerel koşumda değişkeni elle vermek zorunludur.
 
 ```bash
 cd app
-python3 -m scripts.build_demo_db --out data/demo.db    # bir kez, ~282 s
+python3 -m scripts.build_demo_db --out data/demo.db   # bir kez, ~55 s
+python3 -m scripts.ozet_geri_yukle --db data/demo.db  # 2.634 özet, LLM İSTEMEZ
+
+DATABASE_PATH=data/demo.db .venv/bin/python -c "
+import uvicorn, sys; sys.path.insert(0,'.')
+from src.api.main import build_app
+uvicorn.run(build_app(), host='127.0.0.1', port=8000)"
+```
+
+Ayrıntı ve şartname senaryolarının canlı doğrulaması:
+[`app/README.md`](app/README.md) "Arayüz + sohbet" bölümü.
+
+### D) Tam sistem — Docker (offline, anahtarsız)
+
+> **ÖNCE veri tabanını kur, SONRA `docker-compose up`.** `Dockerfile.api`
+> `data/demo.db`'yi **derleme anında** imaja gömer; dosya `app/.gitignore`'daki
+> `*.db` kuralıyla depo dışıdır ve temiz bir klonda **yoktur**. Bu iki adım
+> atlanırsa API sessizce 3 fixture'a düşer — dashboard 2.708 belge yerine 3
+> kampanya gösterir ve hata vermez. Ayrıntılı gerekçe: `app/README.md`
+> "Docker" bölümü.
+
+```bash
+cd app
+python3 -m scripts.build_demo_db --out data/demo.db    # bir kez, ~55 s
 python3 -m scripts.ozet_geri_yukle --db data/demo.db \
         --girdi data/ozet-yedegi.json                  # 2.634 özet, LLM İSTEMEZ
 cp .env.example .env          # API anahtarı YOK; sadece yerel config
@@ -549,7 +578,7 @@ docker-compose up             # postgres + vllm/ollama + api + web
 Doğrulama (iki sayı da gelmeli):
 
 ```bash
-curl -s localhost:8000/stats             # campaigns: 2708, fields: 7032
+curl -s localhost:8000/stats             # campaigns: 2708, fields: 7022
 curl -s localhost:8000/summaries/coverage # ozetli: 2634
 ```
 
@@ -557,16 +586,28 @@ curl -s localhost:8000/summaries/coverage # ozetli: 2634
 - LLM opsiyonel. `LLM_BACKEND` boşsa sistem kural-only modda çalışır ve tüm
   alanlar yine çıkarılır.
 
-### D) Denetim komutları (tek satır)
+### E) Denetim komutları (tek satır)
 
 ```bash
 make lisanslar sbom lisans-kapisi   # bağımlılık envanteri + lisans kapısı
 make veri-seti                       # yayına hazır veri seti paketi
 python -m scripts.kanit_tazeligi     # yayımlanan sayı ↔ kanıt denetimi
 bash scripts/offline_proof.sh        # 14 adımlık ağsız on-prem kanıtı
+cd web && npm run test               # 224 arayüz testi (node:test, bağımlılıksız)
 ```
 
 Ayrıntılı komut listesi: [`app/README.md`](app/README.md).
+
+### Sorun giderme
+
+- **Dashboard 3 kampanya gösteriyor, 2.708 değil** → veri tabanı adımı
+  atlandı ya da (yerel koşumda) `DATABASE_PATH` verilmedi. Sistem hata
+  vermeden fixture'lara düşer; `curl -s localhost:8000/stats` ile doğrulayın.
+- **`web` konteyneri hiç doğmuyor** → 3000 portu dolu. Portu boşaltın ya da
+  compose'daki port eşlemesini değiştirin. (Ağsız kanıt betiği bu yüzden
+  host portu hiç yayımlamaz; 13 denetim adımı `docker exec` ile içeriden koşar.)
+- **`TypeError: zip() takes no keyword arguments`** → Python 3.11+ gerekir;
+  macOS'un sistem `python3`'ü 3.9'dur. `python3 -V` ile doğrulayın.
 
 ---
 
@@ -595,6 +636,11 @@ ds = load_dataset("mehmetefeaytas/katilim-bankaciligi-kampanya-gold")
 düzeyi bölme tam oradan sızardı, çünkü neredeyse aynı metin hem eğitimde hem
 testte olurdu. Bölmeyi bu yüzden birleşim-bul ile belge düzeyinde yapıyoruz ve
 denetimi `tests/test_veri_seti_paketle.py` ile çitledik.
+
+⚠️ **Yayımlanan paket 2026-08-15 kesitidir.** 21 Ağustos'taki HAKEM-05/S1
+tahkim onarımı depodaki gold'u değiştirdi (round1 manşeti 0,793 → 0,795);
+güncel gold `app/data/gold/` dizinindedir ve paket bir sonraki yayında
+yenilenecek. İki kaynağı karşılaştırırken kesit tarihine bakın.
 
 ⚠️ **İki gold setini tek küme gibi raporlamıyoruz.** Her kayıt `kaynak_set` alanı
 taşıyor (`gold.round1` ya da `gold.v2`). İki set kıyaslanamaz, dolayısıyla
@@ -655,6 +701,7 @@ denetliyor.
 │   ├── src/                     #   scraping · extraction · normalization
 │   │                            #   comparison · rag · chatbot · api · db
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
+│   │                            #   (+ 224 arayüz testi: web/tests/)
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
 │   ├── tests/                   #   3.552 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
@@ -665,7 +712,12 @@ denetliyor.
 │   ├── docker-compose.yml       #   offline servis orkestrasyonu
 │   └── CLAUDE.md                #   ayrıntılı mimari/karar dokümanı
 ├── docs-ekran/                  # panel ekran görüntüleri → 45 sayfalık PDF
-├── decisions/ concepts/ entities/ syntheses/ sorun/   # bilgi arşivi
+├── raw/ sources/                # bilgi arşivi: ham kaynak linkleri + özetleri
+├── decisions/ concepts/ entities/ syntheses/ sorun/   # bilgi arşivi sayfaları
+├── archive/ colab/              # arşiv + Colab eğitim/ölçüm defterleri
+├── CLAUDE.md AGENTS.md          # arşiv işletim kılavuzu (ikiz dosyalar)
+├── lint-report.md               # arşiv tutarlılık denetimi raporu
+├── .github/workflows/ci.yml    # CI: testler · ruff · lisans kapısı · kanıt tazeliği
 └── index.md log.md              # dizin + değişiklik günlüğü
 ```
 
