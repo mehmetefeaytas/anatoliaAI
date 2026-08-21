@@ -3,8 +3,10 @@ title: "Offline / On-Prem Kanıt Paketi — `--network none` altında 14/14 adı
 tags: [source, on-premise, offline, ag-izolasyonu, docker, olcum, gecikme, lisans]
 source: "raw/docs/OFFLINE-KANIT.md (→ app/docs/OFFLINE-KANIT.md)"
 date: 2026-07-31
-status: stable
+status: taslak
 ---
+
+> Not (2026-08-21): sayfadaki bazı kavram linkleri hedef sayfa yazılmadığı için düz metne indirildi; sayfa taslak statüsündedir.
 
 # Offline / On-Prem Kanıt Paketi
 
@@ -43,10 +45,10 @@ tahmin, "olması beklenen" sayı yoktur.
 | LLM arka ucu | **kapalı** (`LLM_BACKEND=""` → `NullLLMExtractor`) |
 
 Makinede **GPU yok**; vLLM / Trendyol-LLM-8B-T1 kolu **hiç koşturulmadı**
-(→ [[vllm]]). Tüm gecikme sayıları CPU + LLM'siz yoldan gelir.
+(→ vllm). Tüm gecikme sayıları CPU + LLM'siz yoldan gelir.
 
 **2. Kanıtın omurgası: negatif kontrol + onun pozitif kontrolü**
-(→ [[negatif-kontrolun-pozitif-kontrolu]]).
+(→ negatif-kontrolun-pozitif-kontrolu).
 
 Aynı dört prob iki kez koşturuldu:
 
@@ -59,7 +61,7 @@ Adım 3'ün ham hata mesajları işletim sistemi düzeyinde: DNS `huggingface.co
 `gaierror: [Errno -3] Temporary failure in name resolution`; TCP `1.1.1.1:443` →
 `OSError: [Errno 101] Network is unreachable`; iki HTTPS hedefi (`huggingface.co`,
 `pypi.org`) → `URLError`. Yani çekirdek seviyesinde ağ yok, uygulama katmanında
-zaman aşımı taklidi değil (→ [[ag-izolasyonu-network-none]]).
+zaman aşımı taklidi değil (→ ag-izolasyonu-network-none).
 
 **3. `--network none` içinde koşan gerçek iş — 14 adım.**
 
@@ -111,10 +113,10 @@ içinden** `127.0.0.1`'e atıldı:
 BEKLENMEDİK, betik *"SONUÇ: 1 ADIM BEKLENMEDİK. Kanıt paketi GEÇERSİZ"* dedi.
 Kök neden `tests/test_run_eval.py` içinde eksik `import contextlib`
 (`NameError: name 'contextlib' is not defined`); bizim dosyalarımızda değildi ve
-sonraki koşudan önce düzeltildi (→ [[offline-kanit-betigi]]).
+sonraki koşudan önce düzeltildi (→ offline-kanit-betigi).
 
 **6. Digest pin tablosu** (2026-07-31'de `docker buildx imagetools inspect` ile
-gerçekten çözüldü) → [[imaj-digest-sabitleme]]:
+gerçekten çözüldü) → imaj-digest-sabitleme:
 
 | Bileşen | Etiket | Digest | Sıkıştırılmış boyut (linux/arm64) |
 |---|---|---|---|
@@ -150,13 +152,13 @@ Bu, "önce kural, sonra LLM" mimarisini ([[ner-fine-tune-yerine-kural-few-shot]]
 **ilk kez sayıyla** gerekçelendiriyor: kural yolu belge başına medyan 1,03 ms,
 p99 6,30 ms; yerel 8B bir LLM'in tek çağrısı tipik olarak saniyeler
 mertebesindedir → **üç mertebe** fark. Chatbot'un p95/p99 yayılımı ayrı bir kalem
-olarak kaydedildi (→ [[chatbot-rag-gecikme-yayilimi]]).
+olarak kaydedildi (→ chatbot-rag-gecikme-yayilimi).
 
 **9. Kaynak tüketimi** (hepsi `--network none` koşusundan): teslim imajı
 101 218 586 bayt (≈96,5 MiB) · API boşta bellek **36,36 MiB** · hazır olma **~1 s** ·
 tepe RSS (1696 belge çıkarımı) **100,4 MB** · demo soğuk başlatma
 (`build_demo_repo`) **5,7 ms** · tam korpus alımı **4,83 s** · verim
-**21 087 belge/dakika** ([[anatolia-api-teslim-imaji]]).
+**21 087 belge/dakika** (anatolia-api-teslim-imaji).
 
 **10. Ağırlık bütünlüğü (2026-08-08 güncellemesi, `◐ KISMEN KOŞTURULDU`).**
 31 Temmuz'da `app/models/` yoktu; 8 Ağustos'ta BERTurk yerelde (Apple Silicon /
@@ -179,7 +181,7 @@ ve `--network none` altında boru hattı ağ çağrısı yapmadan tamamlanıyor.
 Bu ingest'in kaynağı olan belge ve ürettiği/atıf yaptığı artefaktlar:
 
 - `app/docs/OFFLINE-KANIT.md` — bu kaynağın kendisi
-- `app/scripts/offline_proof.sh` — kanıtı üreten harness (→ [[offline-kanit-betigi]])
+- `app/scripts/offline_proof.sh` — kanıtı üreten harness (→ offline-kanit-betigi)
 - `app/docs/offline-proof/transcript-20260731-135858.log` — **yetkili koşu**
   (14/14 yeşil, 1254 satır, kesilmemiş)
 - `app/docs/offline-proof/transcript-20260731-134646.log` — harness'ın hata
@@ -200,35 +202,35 @@ Bahsi geçen ama bu belgenin **düzenlemediği** dosyalar:
 - `app/docs/model-license-audit.md` §2 — `trafilatura` kararının sahibi
 - `app/models/berturk-kampanya-8sinif/KUNYE.json`, `app/scripts/train_berturk.py`
 - `app/src/scraping/collector.py` — `_extract_main_text` sapması
-  (→ [[bs4-eksikligi-teslim-imaji-sapmasi]])
+  (→ bs4-eksikligi-teslim-imaji-sapmasi)
 
 ## decisions
 
 - **Ağ izolasyonu negatif kontrolle kanıtlanır, testlerin ağsız geçmesiyle
-  değil** → [[negatif-kontrolun-pozitif-kontrolu]],
-  [[ag-izolasyonu-network-none]].
+  değil** → negatif-kontrolun-pozitif-kontrolu,
+  ag-izolasyonu-network-none.
 - **`curl` yerine bağımlılıksız stdlib probu kullanılır** →
-  [[curl-yerine-stdlib-ag-probu]].
+  curl-yerine-stdlib-ag-probu.
 - **İmajlar hareketli etiketle değil digest ile sabitlenir** →
-  [[imaj-digest-sabitleme]].
+  imaj-digest-sabitleme.
 - **`trafilatura` (GPLv3+) teslim imajına alınmaz** — kararın sahibi
   `docs/model-license-audit.md` §2; bu belge yalnız ölçülmüş kanıtını sağlar
   ([[apache-2-acik-kaynak-lisansi]]).
 - **vLLM / Trendyol-LLM-8B-T1 kolu korunur** (lisans zinciri Apache-2.0 doğrulandı)
-  → [[vllm]]; CPU yedeği [[ollama]].
+  → vllm; CPU yedeği ollama.
 - **Sabit test sayısı belgeye yazılmaz**; sayı her koşuda transkriptten okunur
-  → [[offline-kanit-betigi]].
+  → offline-kanit-betigi.
 
 ## issues
 
 - **bs4 sessiz sapması** — teslim imajı geliştirme ortamından farklı metin
   üretiyordu (4 317 → 6 232 karakter, +%44 gürültü); düzeltildi (4 320), imaj
-  +406 KB (%0,4) büyüdü → [[bs4-eksikligi-teslim-imaji-sapmasi]].
+  +406 KB (%0,4) büyüdü → bs4-eksikligi-teslim-imaji-sapmasi.
 - **Kanıtın kapsam sınırı** — yalnız API konteyneri kanıtlandı; `docker compose
   up` tam yığın (Postgres, web, vLLM, Ollama) ağsız denenmedi ve **imaj derlemesi
-  internet gerektiriyor** → [[offline-kanit-kapsam-siniri]].
+  internet gerektiriyor** → offline-kanit-kapsam-siniri.
 - **Chatbot p95/p99 yayılımı** — p50 12,48 ms'e karşı p95 325,02 ms (~26×)
-  → [[chatbot-rag-gecikme-yayilimi]].
+  → chatbot-rag-gecikme-yayilimi.
 - **Doğruluk sayısı anlamsız** — `gold.sample.json` 3 kayıt, F1 1,000 ve GA
   `[1,000–1,000]` dejenere; buradaki kanıt doğruluk değil **ağsız koşabilirliktir**.
 - **Tazelik (2026-08-08)** — koşumdan bu yana depo 136 commit ilerledi:
@@ -272,11 +274,11 @@ Bahsi geçen ama bu belgenin **düzenlemediği** dosyalar:
 
 - [[on-premise-calistirilabilir-mimari]] — bu kanıtın doğruladığı karar
 - [[on-premise-uygulanabilirlik]] — %20'lik rubrik kalemi
-- [[ag-izolasyonu-network-none]] — ölçüm yöntemi
-- [[negatif-kontrolun-pozitif-kontrolu]] — kanıtın omurgası
-- [[offline-kanit-betigi]] — kanıtı üreten harness
-- [[anatolia-api-teslim-imaji]] — ölçülen konteyner
-- [[vllm]], [[ollama]] — yerel model servisi kolları (ikisi de koşturulmadı)
+- ag-izolasyonu-network-none — ölçüm yöntemi
+- negatif-kontrolun-pozitif-kontrolu — kanıtın omurgası
+- offline-kanit-betigi — kanıtı üreten harness
+- anatolia-api-teslim-imaji — ölçülen konteyner
+- vllm, ollama — yerel model servisi kolları (ikisi de koşturulmadı)
 - [[apache-2-acik-kaynak-lisansi]] — §8 dağıtım şartı
-- [[2026-08-08-guvenlik-llm-modu]] — aynı chatbot'un güvenlik tarafı; oradaki
+- 2026-08-08-guvenlik-llm-modu — aynı chatbot'un güvenlik tarafı; oradaki
   sentez modu bu belgede kapalı olan LLM kolunu açıyor

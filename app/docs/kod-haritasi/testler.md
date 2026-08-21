@@ -1773,7 +1773,7 @@ Düzeltildiklerinde **kırılmaları beklenen** testler:
 - [[veri-katmani]] — `src/db/` kod haritası; §3.7'deki parite ve şema kapıları
 - `README.md` §Ölçüm Durumu — test sayısı rozeti (§1'deki çelişki)
 - `docs/OFFLINE-KANIT.md` §3.1 — ham `Ran N tests` kuyruğu ve tazelik uyarısı
-- `docs/invariants.md` — `eval/properties.py` değişmezlerinin tanımı
+- `docs/invariants.md` (vitrin dalında; `main` klonunda bulunmaz) — `eval/properties.py` değişmezlerinin tanımı
 - `docs/rapor/ablasyon.md` — K-X5 ve K-F4'ün ölçüm kaynağı
 - `docs/rapor/rag-terim-kapsama.md` — K-X2'nin ölçüm kaynağı
 - `data/gold/ANNOTATION_GUIDE.md` §3.1/§3.3/§5/§7 — protokol ve eşik politikası

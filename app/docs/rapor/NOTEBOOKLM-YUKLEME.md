@@ -42,7 +42,7 @@ Tüm yollar repo kökünden (`/Users/mehmetefeaytas/anatoliaaI/`) verilmiştir.
 |---|---|---|
 | 4 | `app/docs/sartname-kod-eslesme.md` | "§5.7 nerede uygulanmış?" — madde → dosya → test eşlemesi |
 | 5 | `app/docs/OFFLINE-KANIT.md` | "İnternetsiz çalıştığı nasıl kanıtlandı?" — 14 adım, ağ probu, digest pin |
-| 6 | `app/docs/invariants.md` | "Değişmez denetimi nedir, ne buldu?" — P1–P4, 134→0 |
+| 6 | `app/docs/invariants.md` (vitrin dalında; `main` klonunda bulunmaz) | "Değişmez denetimi nedir, ne buldu?" — P1–P4, 134→0 |
 | 7 | `app/docs/katilim-bankaciligi-guvenligi.md` | "5 güvenlik kapısı nasıl çalışır?" — politika, ablasyon, 9 eksik |
 | 8 | `app/docs/model-license-audit.md` | "Hangi model neden reddedildi?" — `base_model` zinciri |
 | 9 | `app/docs/veri-katmani.md` | "SQLite mi Postgres mi?" — parite, pgvector, NUL baytı |

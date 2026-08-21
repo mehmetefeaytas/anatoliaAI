@@ -27,7 +27,7 @@ VakıfBank, Yapı Kredi, Ziraat Bankası.
 | Banka | 11 | `data/raw-classic/*/` |
 | Toplama tarihi | 2026-08-04 (tek tur) | 724 `.meta.json` dosyasının tamamında `scraped_at` = `2026-08-04` |
 
-Karşılaştırma: yarışma korpusu ([[veri-seti]], `app/data/raw`) **1759 kazınmış
+Karşılaştırma: yarışma korpusu ([[veri-seti]], `app/data/raw`) **2.706 kazınmış
 belge + 2 demo fikstürü**, 10 katılım bankası.
 
 ## Neden var — tek meşru kullanım
@@ -69,7 +69,7 @@ Belge kapsama oranı (terimi en az bir kez içeren belge / toplam belge), sıkl�
 değil. Her `.txt` küçük harfe indirilip alt dizge araması yapıldı (ölçüm:
 2026-08-07, `.venv/bin/python`).
 
-| Terim | Klasik korpus (724 belge) | Katılım korpusu (1759 kazınmış belge) |
+| Terim | Klasik korpus (724 belge) | Katılım korpusu (ölçüm tarihinde 1759 kazınmış belge; 2026-08-21'de 2.706) |
 |---|--:|--:|
 | `faiz` | **%70,2** (508) | **%7,3** (128) |
 | `kâr payı` / `kar payı` | %0,3 (2) | **%18,1** (319) |

@@ -11,7 +11,7 @@ status: taslak
 hangi veri türünün nerede durduğu, hangi uç noktaların yapılandırılmış veri
 verdiği ve mevcut korpusun neyi kaçırdığı tespit edilmiştir.
 
-Referans: [[../../../entities/katilim-bankalari]], `app/config/banks.yaml`,
+Referans: [[katilim-bankalari]], `app/config/banks.yaml`,
 `app/data/raw/_collection_report.md` (hasat: 2026-07-30).
 
 ## Yöntem
@@ -452,7 +452,7 @@ Bu hat, ölçülmüş üç sessiz-bozulma tuzağını kapatıyor:
 
 ## Related
 
-- [[../../../entities/katilim-bankalari]] — hedef kuruluşlar
-- [[../../../entities/veri-seti]] — toplanan veri
+- [[katilim-bankalari]] — hedef kuruluşlar
+- [[veri-seti]] — toplanan veri
 - `app/src/scraping/` — toplama hattı
 - `app/src/comparison/contradiction.py` — çelişki tespiti

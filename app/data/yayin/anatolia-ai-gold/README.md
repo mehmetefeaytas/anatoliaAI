@@ -37,6 +37,11 @@ configs:
 # Anatolia AI — Katılım Bankacılığı Kampanya Metinleri Altın Seti
 
 **Paket tarihi:** 2026-08-15 · **Lisans:** Apache-2.0 (anotasyon katmanı) — bkz. `LISANS.md`
+
+> **Kesit uyarısı (2026-08-21):** bu paket 2026-08-15 kesitidir. 2026-08-21'de
+> HAKEM-05/S1 tahkim onarımı depo gold'unu değiştirdi (round1 manşeti
+> 0,793 → 0,795); güncel gold depodaki `app/data/gold/` dizinidir. Paket bir
+> sonraki yayında yenilenecek.
 **Dil:** Türkçe · **Alan:** katılım bankacılığı (faizsiz finans) kampanya metinleri
 **Görev:** belgeden yapılandırılmış finansal bilgi çıkarımı + kampanya türü sınıflandırması
 

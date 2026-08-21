@@ -11,7 +11,7 @@ status: stable
 **Karar:** Klasik (katılım olmayan) bankaların korpusu (`data/raw-classic/`, 724
 belge) **LLM ince ayarında (fine-tune) kullanılmaz** ve **RAG erişim kaynağı
 olarak indekslenmez**. Katılım bankacılığı sorularının hem eğitim hem erişim
-kaynağı yalnızca kendi katılım korpusumuzdur (`data/raw/`, 1759 belge).
+kaynağı yalnızca kendi katılım korpusumuzdur (`data/raw/`; karar tarihinde 1759, 2026-08-21 ölçümünde **2.706 kazınmış belge** — PDF hasadıyla büyüdü).
 
 ## Bağlam
 
@@ -21,7 +21,7 @@ biçimde ortaya çıktı. Öneri ölçülerek reddedildi.
 
 Terim dağılımı (terimi içeren **belge oranı**):
 
-| terim | klasik korpus (724 belge) | yarışma korpusu (1759 belge) |
+| terim | klasik korpus (724 belge) | yarışma korpusu (ölçüm tarihinde 1759 belge; 2026-08-21'de 2.706) |
 |---|---|---|
 | murabaha | %0,0 | %1,9 |
 | icare | %0,0 | %0,6 |

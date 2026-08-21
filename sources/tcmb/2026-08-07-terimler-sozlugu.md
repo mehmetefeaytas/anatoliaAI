@@ -29,7 +29,7 @@ Disallow: */search+results
 ```
 
 Terimler Sözlüğü yolu bu kalıba uymuyor → **kazıma izinli**. `Crawl-delay`
-direktifi yok; [[CLAUDE.md]] §14 gereği yine de istekler arasında 3 sn beklendi.
+direktifi yok; CLAUDE.md §14 gereği yine de istekler arasında 3 sn beklendi.
 
 **2. Toplama.** Sözlüğün tamamı **tek HTML sayfasında**, sunucu tarafında
 üretiliyor — JavaScript ile yüklenen gizli bölüm yok. HTTP 200, 239 180 bayt.

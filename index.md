@@ -1,7 +1,7 @@
 # Anatolia AI — Dizin (Index)
 
 Bu vault'taki tüm sayfaların kategorize dizini. Her ingest sonrası güncellenir.
-Son güncelleme: 2026-08-10.
+Son güncelleme: 2026-08-21.
 
 ## Sources
 - [[2026-06-16-teknofest-tyda-sartname-2-senaryo]] — TEKNOFEST TYDA Teknik Şartname (2. Senaryo) ingest özeti
@@ -13,9 +13,9 @@ Son güncelleme: 2026-08-10.
 > **Dizine alınmamış 3 kaynak sayfası var** (`sources/docs/` altında:
 > `2026-07-31-offline-kanit`, `2026-08-03-anatolia-ai-teknik-rapor`,
 > `2026-08-05-ablasyon`). Yarıda kalmış bir ingest'e aittirler: ürettikleri
-> ~45 türev sayfa (entity/concept/decision) hiç oluşturulmamış, dolayısıyla o
-> sayfalardan çıkan wikilink'ler kırık. **Bilerek** dizine alınmadılar;
-> kullanıcı kararı bekliyorlar. Silinmediler, taşınmadılar (hard rule #3).
+> ~45 türev sayfa (entity/concept/decision) hiç oluşturulmamış. 2026-08-21'de
+> kırık wikilink'leri düz metne indirildi ve üçü `status: taslak` yapıldı;
+> türev sayfalar hâlâ yazılmayı bekliyor. Silinmediler (hard rule #3).
 
 ## Entities
 - [[teknofest]] — yarışma organizasyonu
@@ -66,6 +66,8 @@ Son güncelleme: 2026-08-10.
   edilir; kör dize değiştirme (replace) yapılmaz
 - [[orkestrasyon-yetki-asimetrisi]] — ajanlar önerir, hakem yalnız reddeder;
   LLM ajanlarının yazma yetkisi yok
+- [[juri-sunumu-bes-slayt]] — şartname §10 4 dk verir; 15 slaytlık sunum 5
+  slaytlık yönetici seviyesi sunumla değiştirildi, eskisi arşivlendi
 
 ## Sorunlar
 - [[standart-veri-formati-eksikligi]] — standart format yok
@@ -73,6 +75,9 @@ Son güncelleme: 2026-08-10.
 - [[farkli-ifade-bicimleri]] — aynı değer farklı yazım
 - [[manuel-karsilastirma-zorlugu]] — manuel kıyas zorluğu
 - [[gold-round1-csvden-yeniden-uretilemiyor]] — derleme komutu belgesizdi (`--pre .v2`), ÇÖZÜLDÜ; tahkim kararları CSV'lere taşındı
+- [[turkce-buyuk-harf-yerel-duyarliligi]] — `text-transform:uppercase` yerel-duyarlı; `lang` yoksa noktasız-İ hataları («ÜRETIMDE»), çözüm `kok.lang = "tr"`
+- [[sunum-slayt-sigdirma-olcek-cokusu]] — taşan slayt tek katsayıyla 0,75'e küçülüyordu; içerik 1080px'e sığana kadar sıkıştırıldı
+- [[next-dev-proxy-econnreset-yanlis-alarmi]] — «Sunucu 500» ürün hatası değil, Next dev proxy'sinin ölü keep-alive soketi (`ECONNRESET`); yanlış alarm
 
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller
@@ -80,4 +85,5 @@ Son güncelleme: 2026-08-10.
 - [[teslim-ve-degerlendirme-rehberi]] — teslimler + puanlama (çelişki notu içerir)
 
 ## Archive
-_(arşivlenmiş sayfa yok)_
+- `archive/_plan-rakip-ustunluk.md` — 12 Ağu tarihli rakip analizi çalışma
+  notu (gitignore'lu; geçerli sürüm `app/_plan-rakip-ustunluk.md`)

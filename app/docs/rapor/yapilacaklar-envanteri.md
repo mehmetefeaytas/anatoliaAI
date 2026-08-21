@@ -1,11 +1,11 @@
 ---
 title: "Yapılacaklar Envanteri"
 tags: [envanter, yapilacaklar, teknofest]
-date: 2026-08-03
+date: 2026-08-21
 status: taslak
 ---
 
-# Yapılacaklar Envanteri — 2026-08-03
+# Yapılacaklar Envanteri — 2026-08-03 (son tazeleme: 2026-08-21)
 
 Bu belge, depodaki **yapılmamış / yarım / test edilmemiş / doğrulanmamış** her işin
 tek dosyalık envanteridir. Amaç bir yol haritası sunmak değil; **eksiklerin
@@ -18,7 +18,9 @@ ya da bu oturumda **koşturulmuş bir komutun çıktısına** dayanır. Doğrula
 Yol gösterimleri depo köküne (`/Users/mehmetefeaytas/anatoliaaI`) göredir.
 
 **Takvim baskısı:** Şartname §3 (s.4) "Yarışma Çevrimiçi Süreci: 27 Temmuz –
-26 Ağustos" diyor. Bugün 3 Ağustos → **kalan 23 gün**.
+26 Ağustos" diyor. Bugün 21 Ağustos → **kalan 5 gün**. (Envanterin ilk
+yazıldığı 3 Ağustos'ta kalan 23 gündü; bu satır 2026-08-21 tazelemesinde
+güncellendi.)
 
 ---
 
@@ -134,9 +136,28 @@ Konuya göre:
 Model Başarısı %30 ölçüm zinciri (T-010…T-014), 2'si jürinin göreceği demonun
 korpusu (T-037, T-038).
 
+> ℹ️ Yukarıdaki sayım tabloları **3 Ağustos kesitine** aittir (73 madde;
+> T-074 ile 74 oldu). 2026-08-21 tazelemesinde G bölümüne **T-075…T-079**
+> eklendi → toplam **79 madde**. Kesit tabloları bilerek yeniden sayılmadı.
+
 ---
 
 ## Ana tablo
+
+> 🔄 **2026-08-21 TAZELEMESİ (canlı ölçüm).** Aşağıdaki tablolarda durumu o gün
+> doğrulanan kalemler satır içinde güncellendi (hiçbir kalem silinmedi):
+>
+> | task | 2026-08-21 durumu | kanıt |
+> |---|---|---|
+> | T-015 | ✅ KAPANDI | `docs/rapor/zor-vaka-kurleme.md` (2026-08-05, 218 satır); `gold.v2.json` içinde `"hard": true` **40** kayıt (ölçüt ≥30 sağlandı) |
+> | T-016 | ✅ KAPANDI | `docs/rapor/ablasyon.md:171` hibrit halüsinasyon **0,163** vs kural **0,102**; `:716` tam kol tablosu |
+> | T-017 | 🟠 kısmen | `eval/calibration.py` VAR (14,9 KB; ECE/MCE/güvenilirlik tablosu; kök README ECE **0,188** yayımlıyor) — ama CI/Makefile'da çağrılmıyor, `reports/` altında kalıcı çıktı yok |
+> | T-039 | ✅ KAPANDI | `docs/offline-proof/tam-yigin-agsiz-transcript-20260821-135114.log` — postgres+api+api-postgres+ollama+web, izole ağ, commit `ded2486c`; 3/3 koşum · 39/39 adım |
+> | T-041 | ❌ AÇIK — **tek açık on-prem kalemi, öncelik yüksek** | tüm ölçümler arm64 (`OFFLINE-KANIT.md:196,1052`); bu makinede koşulamıyor |
+> | T-042 | 🟠 kısmen | BERTurk sha256 yayımlandı (`OFFLINE-KANIT.md:975`, `KUNYE.json` ile çapraz doğrulanmış); eksik olan ağırlığın **dağıtım kanalı** |
+> | T-044 | ✅ büyük ölçüde | Ollama tam yığın ağsız koşumda ayakta (T-039 transkripti); `docs/rapor/llm-uretim-devreye-alma.md` 8 hücrelik A100 ablasyonu koştu · ⏳ Trendyol-LLM-8B özelinde koşum kanıtı yok |
+> | T-047 | ✅ KAPANDI | `app/web/tests/` **9** test dosyası; `package.json:11` `"test": "node --test"`; CI `ci.yml:435-464` web işi `npm test` koşuyor |
+> | T-052 | 🔄 sayılar tazelendi | güncel gerçek **3.605 toplanan / 3.552 geçen** (envanterdeki "gerçek 890" bayatladı); `ci.yml:50` yorumundaki "2.586" da bayat — ayrı oturumda düzeltiliyor |
 
 ### A. Şartname uyumu — teslim zorunlulukları
 
@@ -181,9 +202,9 @@ korpusu (T-037, T-038).
 | T-012 | Değerlendirme | yapılmamış | kritik | `build_gold.py` → `split_gold.py` ile gold'u üret, TEST bölmesini dondur ve sha256'la | `app/scripts/split_gold.py:279` *"Bölme henüz üretilmemiş. Önce --gold ile koşun."*; `app/data/gold/` altında yalnızca `gold.sample.json` (**3 kayıt**) var | T-011 |
 | T-013 | Değerlendirme | yapılmamış | kritik | Alan bazında P/R/F1 + makro-F1 + %95 bootstrap güven aralığı üret; `metrics.json` hiç üretilmemiş | `find app -name "metrics.json" -o -name "per_field.csv" -o -name "env.json"` → **0 sonuç**; `app/eval/reports/` içeriği yalnızca 30 Tem tarihli `violations-*.jsonl` (4 dosya); `app/docs/rapor/anatolia-ai-teknik-rapor.md:1079` *"⏳ SAYI YOK … `metrics.json` hiç üretilmedi"*; 3 örneklik duman testi `mikro-F1 1.000 [1.000–1.000] (n=3 belge)` veriyor ve 12 alanın 9'u `ATL` (atlandı) | T-012 |
 | T-014 | Değerlendirme | yapılmamış | kritik | Ablasyonu koş: kural-only / LLM-only / hibrit / hibrit-verify + McNemar; hibridin üstünlüğü şu an **iddia** | `app/docs/rapor/olcumler.md:125` "Ablasyon … ⏳ koşulmadı"; `app/eval/ablation.py` (19,2 KB) yazılı ama sonucu yok | T-012, T-044 |
-| T-015 | Değerlendirme | yapılmamış | yüksek | "Zor vakalar" alt kümesini kürle ve ayrı metrik yayımla (`app/CLAUDE.md:113` bunu jüri için en ikna edici artefakt sayıyor) | `app/docs/rapor/olcumler.md:126` "Zor-vaka alt kümesi metriği ⏳ kürlenmedi"; `app/data/gold/gold.sample.json` içinde `"hard": true` yalnız 2 sentetik kayıt | T-012 |
-| T-016 | Değerlendirme | yapılmamış | yüksek | Halüsinasyon oranını ölç (`absent_fields` hattı kurulu ama koşulmadı) | `app/docs/rapor/olcumler.md:123` "Halüsinasyon oranı ⏳ yok (`absent_fields` hattı hazır)" | T-013 |
-| T-017 | Değerlendirme | yapılmamış | yüksek | Güven skoru kalibrasyonunu yaz ve koş — `eval/calibration.py` **dosya olarak yok**, ama kod onu vaat ediyor | `app/src/extraction/rules/confidence.py:32-35` *"Skorlar kalibre edilmemiştir … gerçek kalibrasyon `eval/calibration.py`'de … yapılacak"*; `ls app/eval/` → `calibration.py` yok | T-012 |
+| T-015 | Değerlendirme | ✅ **KAPANDI** (doğrulandı 2026-08-21: `docs/rapor/zor-vaka-kurleme.md` + `gold.v2.json`'da 40 `"hard": true` kayıt) | yüksek | "Zor vakalar" alt kümesini kürle ve ayrı metrik yayımla (`app/CLAUDE.md:113` bunu jüri için en ikna edici artefakt sayıyor) | `app/docs/rapor/olcumler.md:126` "Zor-vaka alt kümesi metriği ⏳ kürlenmedi"; `app/data/gold/gold.sample.json` içinde `"hard": true` yalnız 2 sentetik kayıt | T-012 |
+| T-016 | Değerlendirme | ✅ **KAPANDI** (doğrulandı 2026-08-21: `docs/rapor/ablasyon.md:171` hibrit 0,163 vs kural 0,102; `:716` tam kol tablosu) | yüksek | Halüsinasyon oranını ölç (`absent_fields` hattı kurulu ama koşulmadı) | `app/docs/rapor/olcumler.md:123` "Halüsinasyon oranı ⏳ yok (`absent_fields` hattı hazır)" | T-013 |
+| T-017 | Değerlendirme | 🟠 **kısmen** (2026-08-21: dosya+ölçüm var — `eval/calibration.py` 14,9 KB, ECE 0,188 kök README'de — ama CI kapısı yok, kalıcı rapor yok) | yüksek | Güven skoru kalibrasyonunu yaz ve koş — `eval/calibration.py` **dosya olarak yok**, ama kod onu vaat ediyor | `app/src/extraction/rules/confidence.py:32-35` *"Skorlar kalibre edilmemiştir … gerçek kalibrasyon `eval/calibration.py`'de … yapılacak"*; `ls app/eval/` → `calibration.py` yok | T-012 |
 | T-018 | Değerlendirme | doğrulanmamış | yüksek | LLM katmanının korpusa gerçekten alan katıp katmadığını ölç — bugüne dek **0 alan** kattı | `app/docs/rapor/anatolia-ai-teknik-rapor.md:1120` *"LLM kolu korpusa hiç alan katmadı (2.204/2.204 = kural)"* | T-044 |
 
 ### C. Çıkarım / RAG-Chatbot / Karşılaştırma — kalite açıkları
@@ -215,15 +236,15 @@ korpusu (T-037, T-038).
 
 | Task No | Konu | Durum | Önem | İçerik | Kanıt | Bağımlılık |
 |---|---|---|---|---|---|---|
-| T-039 | CI-Dağıtım | doğrulanmamış | yüksek | Tam `docker compose up` (postgres + api + web, `--network none`) koş ve transkriptini sakla — bugüne dek yalnız API konteyneri kanıtlandı | `app/docs/OFFLINE-KANIT.md:529` *"`docker compose up` tam yığın (postgres + api + web) ⏳ koşturulmadı"* | T-037 |
+| T-039 | CI-Dağıtım | ✅ **KAPANDI** (doğrulandı 2026-08-21: `docs/offline-proof/tam-yigin-agsiz-transcript-20260821-135114.log` — postgres+api+api-postgres+ollama+web, izole ağ, commit `ded2486c`, 3/3 koşum · 39/39 adım) | yüksek | Tam `docker compose up` (postgres + api + web, `--network none`) koş ve transkriptini sakla — bugüne dek yalnız API konteyneri kanıtlandı | `app/docs/OFFLINE-KANIT.md:529` *"`docker compose up` tam yığın (postgres + api + web) ⏳ koşturulmadı"* | T-037 |
 | T-040 | CI-Dağıtım | doğrulanmamış | yüksek | pgvector/Postgres'in ağsız ayağa kalktığını ölç — imajın çekilip çekildiğine bile bakılmamış | `app/docs/OFFLINE-KANIT.md:530` *"pgvector / Postgres ağsız başlatma ⏳ ölçülmedi — İmaj çekildi mi diye bakılmadı"* | T-039 |
-| T-041 | CI-Dağıtım | doğrulanmamış | yüksek | x86_64 / amd64 mimarisinde doğrula — tüm ölçümler arm64 host'ta yapıldı, jüri makinesi büyük olasılıkla amd64 | `app/docs/OFFLINE-KANIT.md:533` *"x86_64 (amd64) mimarisi ⏳ ölçülmedi — Host arm64 … **doğrulanmadı**"* | T-039 |
-| T-042 | On-Prem | yapılmamış | orta | Model ağırlıklarının SHA-256 tablosunu doldur — prosedür yazıldı, tablo boş | `app/docs/OFFLINE-KANIT.md:473` *"⏳ KOŞTURULMADI — sebep: bu ortamda model ağırlıkları indirilmedi"*, `:481-483` üç satır da `⏳` | T-044 |
+| T-041 | CI-Dağıtım | ❌ **AÇIK — tek açık on-prem kalemi, öncelik yüksek** (2026-08-21: tüm ölçümler hâlâ arm64, `OFFLINE-KANIT.md:196,1052`) | yüksek | x86_64 / amd64 mimarisinde doğrula — tüm ölçümler arm64 host'ta yapıldı, jüri makinesi büyük olasılıkla amd64 | `app/docs/OFFLINE-KANIT.md:533` *"x86_64 (amd64) mimarisi ⏳ ölçülmedi — Host arm64 … **doğrulanmadı**"* | T-039 |
+| T-042 | On-Prem | 🟠 **kısmen** (2026-08-21: BERTurk sha256 yayımlandı — `OFFLINE-KANIT.md:975`, `KUNYE.json` ile çapraz doğrulanmış; eksik olan ağırlığın dağıtım kanalı) | orta | Model ağırlıklarının SHA-256 tablosunu doldur — prosedür yazıldı, tablo boş | `app/docs/OFFLINE-KANIT.md:473` *"⏳ KOŞTURULMADI — sebep: bu ortamda model ağırlıkları indirilmedi"*, `:481-483` üç satır da `⏳` | T-044 |
 | T-043 | On-Prem | yapılmamış | orta | GPU profillerini (B: CPU+GGUF, C: RTX 4090, D: A100/H100) ölç veya "donanım yok" gerekçesini sunuma açıkça taşı | `app/docs/kaynak-tuketimi.md:27-29` üç profil de `⏳ ölçülmedi`; `:120-129` ve `:144-154` boş tablolar | — |
-| T-044 | On-Prem | yapılmamış | yüksek | vLLM + Trendyol-LLM-8B-T1 (ve Ollama + Qwen3-4B GGUF) uçtan uca koşusunu yap — hibrit yolun gerçek gecikmesi ve katkısı hiç ölçülmedi | `app/docs/OFFLINE-KANIT.md:523-525` üç satır `⏳ ölçülmedi`; `app/docker-compose.yml:130` `--model Trendyol/Trendyol-LLM-8B-T1` (profil `gpu`) | — |
+| T-044 | On-Prem | ✅ **büyük ölçüde KAPANDI** (2026-08-21: Ollama tam yığın ağsız koşumda ayakta — T-039 transkripti; `docs/rapor/llm-uretim-devreye-alma.md` 8 hücrelik A100 ablasyonu koştu · ⏳ Trendyol-LLM-8B özelinde koşum kanıtı yok, alt kalem açık) | yüksek | vLLM + Trendyol-LLM-8B-T1 (ve Ollama + Qwen3-4B GGUF) uçtan uca koşusunu yap — hibrit yolun gerçek gecikmesi ve katkısı hiç ölçülmedi | `app/docs/OFFLINE-KANIT.md:523-525` üç satır `⏳ ölçülmedi`; `app/docker-compose.yml:130` `--model Trendyol/Trendyol-LLM-8B-T1` (profil `gpu`) | — |
 | T-045 | CI-Dağıtım | doğrulanmamış | orta | `trafilatura` GPL riskini doğrula veya bağımlılığı kalıcı olarak düş | `app/docs/model-license-audit.md:126-135` *"⚠️ belirsiz · ⏳ AÇIK RİSK … **bu doğrulanmadı**"*; `app/requirements.txt:24` satırı zaten yorum (`# trafilatura>=1.8`) | — |
 | T-046 | CI-Dağıtım | yapılmamış | yüksek | CI'ya Postgres servisi (`ANATOLIA_TEST_DATABASE_URL`) ve FastAPI bağımlılıklı bir iş ekle — 53 test **hiçbir ortamda** koşmuyor | Sistem python3: `OK (skipped=62)`; `.venv` (fastapi var, Postgres yok): `OK (skipped=53)`; `pytest -rs` → 53 atlamanın **tamamı** tek nedenden: `Postgres yok — ANATOLIA_TEST_DATABASE_URL tanımlı değil` (`test_pgvector_repository` 26 · `test_api_backend` 14 · `test_repo_parity` 13); `.github/workflows/ci.yml:45-48` üçüncü parti paket kurulmadığını doğruluyor | — |
-| T-047 | Test | yapılmamış | yüksek | Frontend testi ekle — `app/web` altında 2.595 satır TSX/TS var, tek test dosyası ve `test` script'i yok | `app/web/package.json` script'leri: yalnız `dev`, `build`, `start`, `lint`; `app/web/app/**` içinde `*.test.*` / `*.spec.*` **yok** | — |
+| T-047 | Test | ✅ **KAPANDI** (doğrulandı 2026-08-21: `app/web/tests/` 9 test dosyası; `package.json:11` `"test": "node --test"`; CI `ci.yml:435-464` web işi `npm test` koşuyor) | yüksek | Frontend testi ekle — `app/web` altında 2.595 satır TSX/TS var, tek test dosyası ve `test` script'i yok | `app/web/package.json` script'leri: yalnız `dev`, `build`, `start`, `lint`; `app/web/app/**` içinde `*.test.*` / `*.spec.*` **yok** | — |
 | T-048 | Test | yapılmamış | orta | `pytest`'i ya gerçekten kur ya dokümanlardan çıkar — 3 yerde `pytest` deniyor, `requirements.txt:64` ilan ediyor, hiçbir ortamda kurulu değil ve 39 dosya `unittest` | `python3 -m pytest --version` → `No such file or directory`; `.venv/bin/python -m pytest` → `No module named pytest`; `app/requirements.txt:64` `pytest>=8.0`; `app/CLAUDE.md:259`, `app/README.md:54`, `README.md` kurulum bölümü | — |
 | T-049 | Test | yapılmamış | orta | Testi olmayan modüllere test yaz — AST eşlemesiyle hiçbir testten import edilmeyen ≈1.784 satır: `src/scraping/{harvest,harvest_products,discover,run}.py`, `src/extraction/run.py`, `eval/report.py`, `scripts/{latency_bench,preannotate,report_iaa}.py` | Modül ↔ test eşlemesi: her biri için **0 test dosyası**; `scripts/latency_bench.py` 378 satır, `preannotate.py` 366, `report_iaa.py` 286, `eval/report.py` 260, `src/scraping/harvest.py` 198, `harvest_products.py` 165 | — |
 | T-069 | Test | yapılmamış | orta | `pyproject.toml`'a pytest yapılandırması ve **kapsam (coverage) eşiği** ekle veya `unittest`'i tek yol ilan et — şu an ne marker, ne `testpaths`, ne kapsam ölçümü var | `app/pyproject.toml` (78 satır) yalnız `[tool.ruff*]` bölümleri içeriyor; `[tool.pytest.ini_options]` **yok**; `pytest.ini`/`setup.cfg`/`tox.ini`/`conftest.py` **yok**; `pytest-cov`/`coverage` ne requirements'ta ne `.venv`'de | T-048 |
@@ -239,7 +260,7 @@ korpusu (T-037, T-038).
 
 | Task No | Konu | Durum | Önem | İçerik | Kanıt | Bağımlılık |
 |---|---|---|---|---|---|---|
-| T-052 | Dokümantasyon | yapılmamış | yüksek | Test sayısını 6 farklı yerde tek doğru değere (**890**) eşitle | `app/docs/rapor/olcumler.md:373-382` tablosu: kök `README.md` 54 · `log.md` 129 · `app/README.md` + CI yorumu 345 · `OFFLINE-KANIT.md` 607 · `sartname-kod-eslesme.md:8` 695 · `veri-katmani.md` 835; bugün ölçülen: `Ran 890 tests` | — |
+| T-052 | Dokümantasyon | 🔄 **sayılar tazelendi** (2026-08-21: güncel gerçek **3.605 toplanan / 3.552 geçen** — bu kalemin kendi "gerçek 890"ı da bayatlamıştı; `ci.yml:50` yorumundaki "2.586" da bayat, ayrı oturumda düzeltiliyor) | yüksek | Test sayısını 6 farklı yerde tek doğru değere (3 Ağustos ölçümüyle **890**; 2026-08-21 gerçeği **3.552**) eşitle | `app/docs/rapor/olcumler.md:373-382` tablosu: kök `README.md` 54 · `log.md` 129 · `app/README.md` + CI yorumu 345 · `OFFLINE-KANIT.md` 607 · `sartname-kod-eslesme.md:8` 695 · `veri-katmani.md` 835; bugün ölçülen: `Ran 890 tests` | — |
 | T-053 | Dokümantasyon | yapılmamış | yüksek | `sartname-kod-eslesme.md`'nin iç çelişkisini gider: §5.7 tablosu 5. ölçütü ✅ derken rubrik satırı "eksik", pgvector satırı "henüz kullanılmıyor" diyor | `app/docs/sartname-kod-eslesme.md:191` (✅) ↔ `:316` *"§5.7'nin 5. ölçütü eksik"* ve `:317` *"⚠️ pgvector henüz kullanılmıyor"*; oysa `git log` → `4739f57`, `e16f320` (§5.7) ve `8c3066e` (pgvector) | — |
 | T-054 | Dokümantasyon | yapılmamış | orta | `.env.example`'daki "Trendyol BLOKELİ" notunu düzelt — `docker-compose.yml` o modeli başlatıyor ve lisans zinciri doğrulandı | `app/.env.example:26` *"Trendyol-LLM-8B-T1 BLOKELİ — taban model zinciri doğrulanana dek kullanılmaz"* ↔ `app/docker-compose.yml:127,130` *"license: Apache-2.0; zincir Qwen3-8B-Base -> … -> Trendyol-LLM-8B-T1"* + `--model Trendyol/Trendyol-LLM-8B-T1` | — |
 | T-055 | Dokümantasyon | yapılmamış | yüksek | `log.md`'deki boşluğu kapat — son girdi **27 Temmuz**, git'te 31 Temmuz tarihli 25+ commit var; vault kuralı "her ingest sonrası log" | `grep -n "^## \[" log.md` → en yeni girdi `## [2026-07-27]`; `git log --format="%ad" --date=short -12` → hepsi `2026-07-31`; `CLAUDE.md:108` ingest adım 8 | — |
@@ -263,11 +284,25 @@ korpusu (T-037, T-038).
 | T-068 | Dashboard | yapılmamış | düşük | Kullanılmayan iki API ucunu (`/health`, `/banks`) ya arayüze bağla ya kaldır — `/banks` yarım kalmış banka filtresi izlenimi veriyor | `app/src/api/main.py:340` `/health`, `:351` `/banks`; `app/web/app/lib/api.ts:229-256` 11 uçtan 9'unu tüketiyor, bu ikisini kullanmıyor | — |
 
 > T-069…T-074 numaraları D bölümünde (test/CI kalemleriyle birlikte) yer alıyor.
-> Toplam **74 madde**, numaralar T-001…T-074 arası kesintisizdir.
+> T-001…T-074 arası kesintisizdir; **T-075…T-079 aşağıdaki G bölümünde**
+> (2026-08-21 tazelemesinde eklendi) → toplam **79 madde**.
 >
 > **T-074 2026-08-16'da eklendi:** şartnamenin 7 sütunlu kıyas tablosu satırı
 > "✅ üretilebiliyor" işaretliydi; ölçüm bunu çürüttü (`/compare` tek alanlı,
 > «Kampanya Avantajı» alanı hiç yok). Satır ❌ + "karar bekliyor"a taşındı.
+
+### G. 2026-08-21 tazelemesinde eklenen kalemler
+
+Hepsi 2026-08-21 canlı ölçümüne dayanır; "ertelendi" durumundakiler bilinçli
+kararla teslim sonrasına bırakılmıştır — unutulmuş iş değildir.
+
+| Task No | Konu | Durum | Önem | İçerik | Kanıt | Bağımlılık |
+|---|---|---|---|---|---|---|
+| T-075 | CI-Dağıtım | ertelendi (bilinçli) | düşük | Git geçmişindeki videoları LFS'e veya GitHub Release'e taşı — **karar: teslim öncesi git geçmişine dokunulmayacak**, gelecek iş | **5 `.mp4` / 78,9 MB** git geçmişinde izleniyor, LFS yok; geçmiş yeniden yazımı teslim arifesinde riskli | — |
+| T-076 | Yapısal borç | ertelendi (bilinçli) | orta | `app/pyproject.toml`'a `[project]`/`[build-system]` ekle ve `sys.path.insert` çağrılarını kaldır | `[project]`/`[build-system]` yok → izlenen dosyalarda **256** `sys.path.insert` (dağılım: tests 191 · scripts 51 · eval 8 · src 3 · docs 1) | — |
+| T-077 | Yapısal borç | ertelendi (bilinçli) | orta | Tanrı dosyalarını böl | `structured.py` 2.032 · `compare.py` 1.820 · `router.py` 1.212 · `api.ts` 1.264 · `ChatPanel.tsx` 1.041 satır; `api/main.py` `build_app()` içinde **14** iç fonksiyon | — |
+| T-078 | Yapısal borç | ertelendi (bilinçli) | orta | `harvest*` ailesini `harvest.py` alt komutlarına birleştir ve test yaz | 4 modül / **876** satır; `harvest_products.py` hiçbir yerden import edilmiyor; `harvest_products` + `harvest_extra` testsiz | — |
+| T-079 | Şartname uyumu | yapılmamış | yüksek | HF gold paketini yenile — yayımlanan paket ↔ depo gold'u ayrıştı | HF paketi **2026-08-15 kesiti**; depo gold'u 08-21'de değişti (mikro-F1 **0,793 → 0,795**) | — |
 
 ---
 
@@ -281,7 +316,7 @@ Rubriğin en ağır maddesi Model Başarısı %30 ve bu maddenin **tek** girdisi
 etiketli gold settir. Anotasyon hattının tamamı hazır (`preannotations.json` 2,5 MB,
 8 CSV, 3.406 satırlık kılavuz + şema kodu) ama **doldurulmuş satır sayısı 0**. Bu
 zincir seridir: anotasyon → IAA → gold dondurma → metrik → ablasyon → sunum. Bir gün
-gecikme zincirin tamamını kaydırır ve 23 günde sığmaz.
+gecikme zincirin tamamını kaydırır ve 3 Ağustos'ta kalan 23 güne sığmazdı.
 **Doğrulama:** `csv.DictReader` ile 8 CSV'de `verdict` veya `gold_value` dolu satır
 sayısı; şu an `0/3.422`. Hedef: kalibrasyon turu için ≥1.040 satır (4×260).
 
@@ -302,7 +337,8 @@ işaretli satır bulunması.
 
 `_atama.md:22` bu adımın atlanmasının sonucunu açıkça yazıyor: "ana turdaki
 uyuşmazlıkların yarısı kılavuz belirsizliğinden çıkar ve gold yeniden yapılır".
-Yani atlanırsa T-010 ikinci kez yapılır — 23 günde bu telafi edilemez. Ayrıca
+Yani atlanırsa T-010 ikinci kez yapılır — 3 Ağustos'ta kalan 23 günde bu telafi
+edilemezdi. Ayrıca
 `app/CLAUDE.md:272` Cohen's kappa'yı raporlanacak metrikler arasında sayıyor.
 **Doğrulama:** `python3 -m scripts.report_iaa …` çıktısında κ değeri; eşik 0,67.
 
@@ -414,6 +450,9 @@ hibridin özellikle zor vakalarda kazandığını göstermek. Alt küme kürlenm
 ablasyonun en güçlü hikâyesi anlatılamaz.
 **Doğrulama:** Gold set içinde `hard=true` etiketli ≥30 gerçek (sentetik değil)
 kayıt + o alt küme için ayrı P/R/F1.
+**✅ KAPANDI (doğrulandı 2026-08-21):** `docs/rapor/zor-vaka-kurleme.md`
+(2026-08-05, 218 satır) kürasyonu belgeliyor; `gold.v2.json` içinde
+`"hard": true` **40 kayıt** — ölçüt (≥30) sağlandı.
 
 ### T-016 · Halüsinasyon oranı (yüksek)
 
@@ -421,6 +460,9 @@ kayıt + o alt küme için ayrı P/R/F1.
 karşısında doğru sonuç üretebilmesi". `app/CLAUDE.md:68` halüsinasyonu "en büyük
 risk" ilan ediyor. `absent_fields` ayrımı kodda var, sayı yok.
 **Doğrulama:** Gold'da alanın **yok** olduğu vakalarda modelin değer üretme oranı.
+**✅ KAPANDI (doğrulandı 2026-08-21):** halüsinasyon hattı koşuldu ve yayımlandı —
+`docs/rapor/ablasyon.md:171` hibrit halüsinasyon **0,163** vs kural **0,102**;
+`:716`'da tam kol tablosu.
 
 ### T-017 · Güven skoru kalibrasyonu — dosya yok (yüksek)
 
@@ -430,6 +472,10 @@ arayüzde ve API'de gösterilen güven skorları sıralayıcıdır, olasılık d
 jüri "0,87 güven" görürse bunu olasılık sanar.
 **Doğrulama:** `app/eval/calibration.py` var olması + ECE ve reliability diagram
 çıktısı; ya da kalibre olmadığının arayüzde açıkça yazılması.
+**🟠 KISMEN (doğrulandı 2026-08-21):** `eval/calibration.py` artık **VAR**
+(14,9 KB; ECE/MCE/güvenilirlik tablosu üretiyor) ve kök README ECE **0,188**
+yayımlıyor. Açık kalan: CI'da/Makefile'da çağrılmıyor ve `reports/` altında
+kalıcı çıktı yok — yani "dosya+ölçüm var, CI kapısı yok".
 
 ### T-018 · LLM katmanının katkısı sıfır (yüksek)
 
@@ -492,6 +538,13 @@ host'ta yapıldı. Jüri makinesi amd64 ise "çalışıyor" iddiası doğrulanma
 **Doğrulama:** `docker compose --profile postgres up` çıktısı ağsız modda +
 `docker inspect` ile amd64 platform kaydı + transkriptin `app/docs/offline-proof/`
 altına yazılması.
+**Güncelleme (doğrulandı 2026-08-21):** T-039 ✅ **KAPANDI** —
+`docs/offline-proof/tam-yigin-agsiz-transcript-20260821-135114.log`
+(postgres + api + api-postgres + ollama + web, izole ağ, commit `ded2486c`;
+3/3 koşum · 39/39 adım). Transkript postgres'in izole ağda ayağa kalkışını da
+içeriyor (T-040'ın çekirdeği). T-041 (amd64) ise **hâlâ açık** — tüm ölçümler
+arm64 (`OFFLINE-KANIT.md:196,1052`), bu makinede koşulamıyor; **tek açık
+on-prem kalemi, öncelik yüksek**.
 
 ### T-044 · vLLM / Ollama koşusu hiç yapılmadı (yüksek)
 
@@ -501,6 +554,10 @@ Trendyol zincirini doğruluyor, ama hiçbiri bir kez bile ayağa kalkmadı. Bu; 
 maddelerinin **hepsinin** ön koşulu.
 **Doğrulama:** `docker compose --profile ollama up` sonrası bir çıkarım isteğinin
 `extractor='llm'` alan döndürmesi.
+**✅ BÜYÜK ÖLÇÜDE KAPANDI (doğrulandı 2026-08-21):** Ollama tam yığın ağsız
+koşumda ayakta (T-039 transkripti);
+`docs/rapor/llm-uretim-devreye-alma.md`'deki **8 hücrelik A100 ablasyonu**
+koştu. ⏳ Açık kalan alt kalem: **Trendyol-LLM-8B özelinde** koşum kanıtı yok.
 
 ### T-046 · 53 test hiçbir ortamda koşmuyor (yüksek)
 
@@ -523,6 +580,9 @@ script'i de yok. Demo tamamen bu arayüz üzerinden yapılacak; T-036 (markdown
 render) ve T-019 (span sızması) gibi hatalar bu boşluğun doğrudan sonucudur.
 **Doğrulama:** `npm test` komutunun var olması ve en az `ComparePanel`,
 `ChatPanel`, `ExtractLive` için render + hata durumu testleri.
+**✅ KAPANDI (doğrulandı 2026-08-21):** `app/web/tests/` altında **9 test
+dosyası**; `package.json:11` → `"test": "node --test"`; CI web işi
+(`ci.yml:435-464`) `npm test` koşuyor.
 
 ### T-052 · Test sayısı altı yerde farklı (yüksek)
 
@@ -532,6 +592,10 @@ belge, 0 ihlal, p99 gecikme) da güvenilmez. Düzeltme maliyeti düşük, etkisi
 yüksek.
 **Doğrulama:** `grep -rn "345\|607\|695\|835" --include="*.md"` sonucunun test
 sayısı bağlamında boş dönmesi.
+**🔄 SAYILAR TAZELENDİ (doğrulandı 2026-08-21):** bu kalemin kendi "gerçek 890"
+değeri de bayatlamıştı — güncel gerçek **3.605 toplanan / 3.552 geçen**.
+`ci.yml:50` yorumundaki "2.586" da bayattı; ayrı oturumda düzeltiliyor.
+Ders aynı: kapı dışındaki her sayı sessizce bayatlıyor.
 
 ### T-053 · `sartname-kod-eslesme.md` kendisiyle çelişiyor (yüksek)
 

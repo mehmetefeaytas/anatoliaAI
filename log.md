@@ -2,6 +2,197 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-21] lint | tam-denetim
+
+Tam lint (mekanik + semantik) koşuldu, `lint-report.md` baştan yazıldı (önceki
+rapor 2026-06-16 tarihliydi ve 37 sayfalık vault'u anlatıyordu).
+
+Mekanik: 59 içerik sayfası, 498 wikilink, **kırık link 0** (bugünkü düz-metne
+indirme doğrulandı), orphan 6 (index.md sayılınca 4), `taslak` 3, frontmatter'ı
+eksik 1 (`archive/_plan-rakip-ustunluk`), duplicate title 0, log kronolojisi
+doğru, bayat (90+ gün) sayfa yok. Bugün eklenen 4 sayfa dizinde ve çift yönlü
+bağlı — doğrulandı.
+
+Semantik: (1) `decisions/ner-fine-tune-yerine-kural-few-shot` (`stable`) ile
+`sources/docs/2026-08-05-ablasyon` ("hibrit KAYBETTİ", kural 10-1, p=0,0117)
+arasında **işaretlenmemiş çelişki**; (2) "hibrit" terimi çıkarım ve chatbot
+için iki farklı anlamda kullanılıyor; (3) korpus büyüklüğü 5 farklı değerle
+geçiyor (güncel DB 2.708; bayat: 1759 iki `stable` sayfada, 849, 1.774, 1.782);
+(4) 3+ sayfada geçip sayfası olmayan kavramlar: gold küme (9), RAG (8), F1 (7),
+Ollama (6), ablasyon (5); (5) index.md'de 3 drift (Archive "boş" diyor ama
+sayfa var; yarım-ingest notu "linkler kırık" derken artık kırık yok).
+
+Kural gereği **hiçbir düzeltme yapılmadı**; 10 önerilen aksiyon raporda sıralı.
+
+Dokunulan dosyalar:
+- lint-report.md (baştan yazıldı)
+- log.md (bu giriş)
+
+## [2026-08-21] ingest | inceleme-duzeltmeleri-vault
+
+21 Ağustos sunum kararı ve iki teknik sorun (+ bir yanlış alarm) vault'a
+işlendi; üç yarım-ingest kaynak sayfasındaki kırık wikilinkler düz metne
+indirildi ve sayfalar taslak statüsüne alındı; log.md kronolojisi onarıldı
+("en yeni en üstte" beyanına uygun sıraya getirildi); kök CLAUDE.md'ye
+klasör şeması ekleri, isimlendirme kapsam daraltması, app/docs ↔ vault sınırı
+bölümü ve CLAUDE/AGENTS ikizlik kuralı yazıldı; izlenen dosyalardaki
+`invariants.md` atıflarına vitrin-dalı notu, HF veri seti kartına kesit
+uyarısı eklendi.
+
+Dokunulan dosyalar:
+- log.md (kronoloji onarımı: 2026-08-05 girişi doğru yerine, iki 2026-08-21
+  girişi en üste taşındı + bu giriş)
+- decisions/juri-sunumu-bes-slayt.md (yeni)
+- sorun/turkce-buyuk-harf-yerel-duyarliligi.md (yeni)
+- sorun/sunum-slayt-sigdirma-olcek-cokusu.md (yeni)
+- sorun/next-dev-proxy-econnreset-yanlis-alarmi.md (yeni)
+- index.md (son güncelleme tarihi + 4 yeni sayfa dizine eklendi)
+- sources/docs/2026-08-05-ablasyon.md (23 kırık link düz metne; status: taslak)
+- sources/docs/2026-08-03-anatolia-ai-teknik-rapor.md (23 kırık link düz
+  metne; status: taslak; invariants vitrin-dalı notu)
+- sources/docs/2026-07-31-offline-kanit.md (26 kırık link düz metne;
+  status: taslak)
+- sources/tcmb/2026-08-07-terimler-sozlugu.md (köşeli parantezli CLAUDE.md
+  wikilink'i → düz metin)
+- app/docs/rapor/banka-siteleri-veri-kaynagi-haritasi.md (3 göreli-yollu
+  wikilink slug biçimine çevrildi)
+- CLAUDE.md ve AGENTS.md (yukarıdaki kılavuz güncellemeleri; ikiz tutuldu,
+  tek fark satır 63)
+- app/docs/kod-haritasi/testler.md · app/docs/rapor/NOTEBOOKLM-YUKLEME.md
+  (invariants.md atıfına vitrin-dalı notu)
+- app/data/yayin/anatolia-ai-gold/README.md (kesit uyarısı, 2026-08-15
+  paketi vs 2026-08-21 gold onarımı)
+
+## [2026-08-21] duzeltme | gold derleme komutu bulundu, tahkim CSV'lere tasindi
+
+Aynı gün açtığım `sorun/gold-round1-csvden-yeniden-uretilemiyor` sayfasının
+teşhisi YANLIŞTI. Gold kaynaktan üretilebiliyor; eksik olan hangi ön-anotasyon
+havuzunun kullanıldığı bilgisiydi: `--pre data/gold/preannotations.v2.json`.
+Ben üç kombinasyon deneyip 57 kayıtta kalınca kusur ilan etmişim; 4. tur
+Teknik Mimari jürisi dördüncü havuzu deneyip 134'e ulaşmış.
+
+Gerçek boşluk ikincisiydi ve kapandı: HAKEM-05 + S1 kararları (27 satır)
+kaynak CSV'lere yazıldı. Beşi YENİ SATIR olarak eklendi — o belgelerde
+`finansman_tutari` inceleme kuyruğuna hiç girmemişti çünkü model o alanda bir
+şey üretmemişti; kuyruk model çıktısına göre kuruluyor, yani modelin görmediği
+alanda anotatörün kararını kaydedecek yer yoktu.
+
+Yol boyunca kendi hatamı buldum: S1 betiğinde `r.setdefault("fields", {}) or {}`
+yazmışım. Boş sözlükte `or` kopuk bir sözlük döndürüyor ve yazılan değer
+kayboluyor. `lc-waikiki` kaydı bu yüzden boş kalmış. Bir denetim bunu "support
+daralması" diye okumuştu; onarımdan sonra gerçek sayı 22 -> 18 (17 değil).
+
+Ölçüm: round1 manşet 0,793 -> 0,795 · finansman_tutari F1 1,000 destek 18.
+
+Dokunulan dosyalar:
+- sorun/gold-round1-csvden-yeniden-uretilemiyor.md (teşhis düzeltildi)
+- index.md · README.md (derleme komutu + sayılar)
+- app/data/gold/review/round1_{A,B,main_C,main_D}.csv (27 satır)
+- app/data/gold/gold.round1.json (kaybolan hücre onarıldı)
+
+## [2026-08-21] sorun | gold.round1 kaynaktan yeniden üretilemiyor
+
+4. tur Yenilikçilik jürisi bir sözümüzü tutmadığımızı buldu: HAKEM-05 paketinde
+"bu boşluk `sorun/` altına yazılmalı" yazmışız ve yazmamışız. Bulgu haklıydı,
+sayfa açıldı.
+
+Ölçüm: `gold.round1.json` 134 kayıt taşıyor, dört anotasyon CSV'sinden derleme
+yalnız 57 veriyor. Düşen 77'nin kırılımı: 46 `D`, 30 `A`+`B`, 1 `D`+`HAKEM-04`.
+İki aday kök neden var ve ikisi de kayıtsız — derleme komutu hiçbir yerde yazılı
+değil, ve CSV'ler gold üretildikten sonra iki turda (hakemlik, şema onarımı)
+değişti.
+
+Bu turda kapatılmadı ve sebebi yazılı: iş ölçüm tabanına dokunuyor, yanlış
+sırada yapılırsa `gold.round1` ölçümleri (0,793 / 0,284) yeniden üretilemez
+hâle gelir. Çevrimiçi süreç 26 Ağustos'ta bitiyor.
+
+Dokunulan dosyalar:
+- sorun/gold-round1-csvden-yeniden-uretilemiyor.md (yeni)
+- index.md (Sorunlar bölümü)
+- log.md (bu giriş)
+
+## [2026-08-21] karar | jüri sunumu 15 slayttan 5 slayta indirildi
+
+Şartname §10 sunum süresini **4 dakika** veriyor. 16 Ağustos'ta üretilen 15
+slaytlık sunum o sürede sunulamıyordu; sahnede konuşulan bir ikna metni değil,
+okunan bir savunma dokümanı gibi davranıyordu. Yerine yönetici seviyesinde
+**5 slaytlık** bir sunum yazıldı. Hedef kitle karma: teknik jüri + katılım
+bankacılığı uzmanları + banka yöneticileri.
+
+**Eski sürüm silinmedi** (HARD RULE 3): `app/docs/archive/sunum-15-slayt-2026-08-21.html`,
+başında neden arşivlendiği ve bilinen iki sapması yazılı. Savunma derinliği
+(κ asimetrisi, ölçüp geri adım atılan kararlar, halüsinasyon payda tanımı)
+konuşmacı notlarındaki **jüri soru bankasına** taşındı.
+
+### Ölçüp düzelttiğimiz üç sapma
+
+| Sapma | Kanıt | Ne yapıldı |
+|---|---|---|
+| Eski deck slayt 03 manşeti **%3,9** diyor, kendi kanıt satırı **146 / 2.708** diyor | 146/2708 = **%5,39** (`select count(distinct campaign_id) … kar_payi_orani`) | yeni deck **%5,4** yazıyor |
+| `docs-ekran/ss/*.png` kareleri **1.774 belge** rozetiyle çekilmiş (12 Ağu) | `data/demo.db` bugün **2.708** belge · 7.032 alan | sunum kareleri canlı arayüzden **yeniden çekildi**; betik her koşumda rozeti okuyup teyit ediyor |
+| Eski deck slayt 14 tam yığın ağsız kanıtı «sıradaki» sayıyor | tam yığın **3/3 koşum · 39/39 adım · 0 beklenmedik** ölçülmüş | yeni deck kazanılmış kanıt olarak yazıyor |
+
+### Ölçüp slayttan ÇIKARDIĞIMIZ iki iddia
+
+- **«758 PDF»** — kaynağı `docs/rapor/aile-kapsami-hasadi.md` (hasat raporu, 758
+  benzersiz PDF · 5.410 sayfa). `kanit_tazeligi` kapsamında değil ve DB'de
+  `.pdf` biten kayıt **969**; iki farklı tanım. Slayta konmadı.
+- **«masrafsız denip aynı metinde tahsis ücreti belirtilmesi»** — dedektörün en
+  bilinen kuralı ve panelin kendi giriş metninde «en güçlü örnek» diye
+  adlandırılıyor, ama **bugünkü korpusta ateşlenmiyor**. 20 bulgunun dağılımı:
+  17 süresi dolmuş kampanya · 2 çakışan tutar bandı · 1 çelişen bitiş tarihi.
+  Slayt 5 bu yüzden gerçekten var olan bulguyu alıntılıyor (Kuveyt Türk · Taşıt
+  Finansmanı · belge #801). Kural var, bulgu bugün yok; ikisi karıştırılmadı.
+
+### Yol boyunca kapatılan iki teknik sorun
+
+- **Türkçe büyük harf.** `text-transform:uppercase` yerel-duyarlıdır; dosya
+  `<meta charset>` ile başladığı için örtük `<html>`'in `lang`'i yoktu ve mono
+  etiketler «ÜRETIMDE», «BIÇIM VARYANTI», «KURUM IÇINDE» diye basılıyordu.
+  Deck'in kendi betiği artık `kok.lang = "tr"` veriyor; PDF/PPTX de doğru
+  eşlemeyi alıyor. **Arşivlenen 15 slaytlık sürümde bu hata duruyor.**
+- **Sığdırma.** `uret-sunum.py` taşan slaytı tek katsayıyla küçültüyor. İlk
+  taslakta beş slaytın beşi de taşıyordu ve ölçek 0,75'e kadar düşüyordu —
+  tipografi okunmaz oluyordu. İçerik, beş slayt da **1080px'e kendi başına**
+  sığana kadar sıkıştırıldı (taşma raporu boş). Tasarım sistemine üç yoğun
+  yerleşim değiştiricisi eklendi (`.zaman.sik`, `.akis.dar`, `.kart.sik`).
+- **Yanlış alarm:** çelişki sekmesi çekim sırasında «Sunucu 500 döndü» bastı.
+  Ürün hatası değil: API'yi Next dev sunucusu ayaktayken yeniden başlatınca
+  proxy ölü keep-alive soketini yeniden kullanıyor (`ECONNRESET`). Web
+  sunucusu tazelenince geçti; not `docs/sunum/ekranlar/README.md`'de.
+
+### Dokunulan dosyalar
+
+- `app/docs/sunum/anatolia-ai-sunum.html` — **yeniden yazıldı** (5 slayt; tasarım
+  sistemi arşivlenen sürümden birebir devralındı, sıfırdan tasarım yapılmadı)
+- `app/docs/sunum/anatolia-ai-sunum.pdf` · `.pptx` — yeniden üretildi
+  (5 sayfa / 5 slayt, 1440×810 pt, metin katmanı vektör)
+- `app/docs/archive/sunum-15-slayt-2026-08-21.html` — **yeni** (taşınan eski deck)
+- `app/docs/sunum/cek-juri-4dk.py` — **yeni**; deck'in kareleri için hedefli
+  Playwright betiği. `docs-ekran/ekran_cek.py` 42 kareyi birden çekip
+  `manifest.json`'la eşleşmek zorunda olduğu için o hat tetiklenmedi.
+  40 zor vakayı tarayıp en çok alan çıkanı kendisi seçiyor
+  (ölçüt kasten «en çok alan», «en az uyuşmazlık» değil).
+- `app/docs/sunum/gom-ekranlar.py` — **yeni**; kareleri HTML'e yerinde gömer,
+  `--denetle` ile bayat kare bildirir
+- `app/docs/sunum/ekranlar/` — **yeni**; 12 kare + kullanılmayan adayların
+  gerekçesini yazan README
+- `app/docs/sunum/juri-4dk-konusmaci-notlari.md` — **yeni**; slayt başına
+  konuşma notu, ⟨kes⟩ işaretli süre payı, kriter eşleşme tablosu, 10 soruluk
+  jüri bankası
+- `app/docs/SARTNAME-UYUM.md` — satır 10/11 (15 sayfa/slayt → 5) ve slayt
+  sayısı notu gerçekle eşlendi; sayım bağımsız yeniden yapıldı
+- `app/docs/rapor/sunum-ve-demo-plani.md` — §C'ye «bu iskelet bayattır» notu
+
+`uret-sunum.py`, `docs-ekran/*` ve `manifest.json` **değişmedi**.
+
+### Doğrulama
+
+- `python -m scripts.kanit_tazeligi` → **15 iddia · 0 sapma · 0 kanıt eksik**
+- taşma raporu boş · PDF **5** sayfa · PPTX **5** slayt · `zipfile.testzip()` hatasız
+- PDF metin katmanı 4.387 karakter, `â 2` (mojibake yok)
+- deck açık ve koyu temada render edildi; yatay kaydırma yok
+
 ## [2026-08-10] bakım | index.md ve log.md geriye dönük tamamlandı
 
 İki ingest (2026-08-06 mentör terim sözlüğü, 2026-08-07 TCMB) **5 sayfa üretmiş
@@ -194,6 +385,37 @@ Notlar:
 - `sources/mentor/2026-08-06-mentor-terim-sozlugu.md` frontmatter'ında `source:`
   alanı **yok** (diğer tüm kaynak sayfalarında var). İçeriğe dokunulmadığı için
   düzeltilmedi; açık uç.
+
+## [2026-08-05] karar | masrafsizlik-celiskisi-kapsam-testi
+
+Yenilikçilik hedefi #2'nin ("masrafsız deyip tahsis ücreti alanı yakala") nasıl
+uygulanacağı ölçümle karara bağlandı. Naif tasarım ("tarifede ücret varsa
+çelişki") ölçüldüğünde çöktü: korpustan çıkan 33 ilan edilmiş tahsis ücreti
+kaydının 30'u tam olarak %0,5 — BDDK'nın konut finansmanı üst sınırı, yani
+sektörde fiilen tek fiyat. Naif test her masrafsızlık kampanyasını çelişki
+sayardı ve meşru muafiyetleri sahtekârlık gibi gösterirdi.
+
+Karar: test **kapsam** testidir. Muafiyet bir koşula bağlıysa (`kosullu_muafiyet`)
+çelişki değildir ama karşılaştırma tablosunda "masrafsız" yazılamaz — koşullu
+ifade gösterilir. Koşul yoksa (`kapsamsiz_iddia`) insan hakemliğine gider.
+
+Dokunulan dosyalar:
+- **decisions/** masrafsizlik-celiskisi-kapsam-testi.md (oluşturuldu)
+- **concepts/** urun-karsilastirma.md ("En Düşük Masraf" kriteri tek sayıya
+  indirilemez notu + çift yönlü bağ)
+- index.md (Decisions bölümüne eklendi)
+
+Kod tarafı (app/, ayrı depo alanı):
+- scripts/crosscheck_fees.py, tests/test_crosscheck_fees.py (oluşturuldu)
+- data/gold/fee_crosscheck.csv, .md (üretildi)
+- docs/rapor/zor-vaka-kurleme.md ("KURULDU" bölümü — açık uç kapandı)
+
+Notlar:
+- Bu bir belgeler ARASI kontroldür. Belge İÇİ çelişki korpusta pratik olarak yok
+  (13 adayın 12'si ücret tarifesiydi), o yüzden gold `celiskili` etiketiyle
+  aranamaz — ayrı betiğe ait.
+- Yan bulgu: Türkiye Emlak Katılım taşıt tahsis ücretini bir formda %0,5,
+  diğerinde %0,1 ilan ediyor (bankanın kendi içinde tutarsızlığı).
 
 ## [2026-07-27] kod+yöntem | Gün 1c: Veri modeli, gerçek güven, 12/12 alan, değişmez denetimi
 
@@ -480,82 +702,3 @@ Notlar:
 - Slug çakışması düzeltildi: decisions kararı
   `yapilandirilmis-veri-formati-zorunlulugu` olarak adlandırıldı (concept
   `yapilandirilmis-veri-formati` ile çakışmaması için).
-
-## [2026-08-05] karar | masrafsizlik-celiskisi-kapsam-testi
-
-Yenilikçilik hedefi #2'nin ("masrafsız deyip tahsis ücreti alanı yakala") nasıl
-uygulanacağı ölçümle karara bağlandı. Naif tasarım ("tarifede ücret varsa
-çelişki") ölçüldüğünde çöktü: korpustan çıkan 33 ilan edilmiş tahsis ücreti
-kaydının 30'u tam olarak %0,5 — BDDK'nın konut finansmanı üst sınırı, yani
-sektörde fiilen tek fiyat. Naif test her masrafsızlık kampanyasını çelişki
-sayardı ve meşru muafiyetleri sahtekârlık gibi gösterirdi.
-
-Karar: test **kapsam** testidir. Muafiyet bir koşula bağlıysa (`kosullu_muafiyet`)
-çelişki değildir ama karşılaştırma tablosunda "masrafsız" yazılamaz — koşullu
-ifade gösterilir. Koşul yoksa (`kapsamsiz_iddia`) insan hakemliğine gider.
-
-Dokunulan dosyalar:
-- **decisions/** masrafsizlik-celiskisi-kapsam-testi.md (oluşturuldu)
-- **concepts/** urun-karsilastirma.md ("En Düşük Masraf" kriteri tek sayıya
-  indirilemez notu + çift yönlü bağ)
-- index.md (Decisions bölümüne eklendi)
-
-Kod tarafı (app/, ayrı depo alanı):
-- scripts/crosscheck_fees.py, tests/test_crosscheck_fees.py (oluşturuldu)
-- data/gold/fee_crosscheck.csv, .md (üretildi)
-- docs/rapor/zor-vaka-kurleme.md ("KURULDU" bölümü — açık uç kapandı)
-
-Notlar:
-- Bu bir belgeler ARASI kontroldür. Belge İÇİ çelişki korpusta pratik olarak yok
-  (13 adayın 12'si ücret tarifesiydi), o yüzden gold `celiskili` etiketiyle
-  aranamaz — ayrı betiğe ait.
-- Yan bulgu: Türkiye Emlak Katılım taşıt tahsis ücretini bir formda %0,5,
-  diğerinde %0,1 ilan ediyor (bankanın kendi içinde tutarsızlığı).
-
-## [2026-08-21] sorun | gold.round1 kaynaktan yeniden üretilemiyor
-
-4. tur Yenilikçilik jürisi bir sözümüzü tutmadığımızı buldu: HAKEM-05 paketinde
-"bu boşluk `sorun/` altına yazılmalı" yazmışız ve yazmamışız. Bulgu haklıydı,
-sayfa açıldı.
-
-Ölçüm: `gold.round1.json` 134 kayıt taşıyor, dört anotasyon CSV'sinden derleme
-yalnız 57 veriyor. Düşen 77'nin kırılımı: 46 `D`, 30 `A`+`B`, 1 `D`+`HAKEM-04`.
-İki aday kök neden var ve ikisi de kayıtsız — derleme komutu hiçbir yerde yazılı
-değil, ve CSV'ler gold üretildikten sonra iki turda (hakemlik, şema onarımı)
-değişti.
-
-Bu turda kapatılmadı ve sebebi yazılı: iş ölçüm tabanına dokunuyor, yanlış
-sırada yapılırsa `gold.round1` ölçümleri (0,793 / 0,284) yeniden üretilemez
-hâle gelir. Çevrimiçi süreç 26 Ağustos'ta bitiyor.
-
-Dokunulan dosyalar:
-- sorun/gold-round1-csvden-yeniden-uretilemiyor.md (yeni)
-- index.md (Sorunlar bölümü)
-- log.md (bu giriş)
-
-## [2026-08-21] duzeltme | gold derleme komutu bulundu, tahkim CSV'lere tasindi
-
-Aynı gün açtığım `sorun/gold-round1-csvden-yeniden-uretilemiyor` sayfasının
-teşhisi YANLIŞTI. Gold kaynaktan üretilebiliyor; eksik olan hangi ön-anotasyon
-havuzunun kullanıldığı bilgisiydi: `--pre data/gold/preannotations.v2.json`.
-Ben üç kombinasyon deneyip 57 kayıtta kalınca kusur ilan etmişim; 4. tur
-Teknik Mimari jürisi dördüncü havuzu deneyip 134'e ulaşmış.
-
-Gerçek boşluk ikincisiydi ve kapandı: HAKEM-05 + S1 kararları (27 satır)
-kaynak CSV'lere yazıldı. Beşi YENİ SATIR olarak eklendi — o belgelerde
-`finansman_tutari` inceleme kuyruğuna hiç girmemişti çünkü model o alanda bir
-şey üretmemişti; kuyruk model çıktısına göre kuruluyor, yani modelin görmediği
-alanda anotatörün kararını kaydedecek yer yoktu.
-
-Yol boyunca kendi hatamı buldum: S1 betiğinde `r.setdefault("fields", {}) or {}`
-yazmışım. Boş sözlükte `or` kopuk bir sözlük döndürüyor ve yazılan değer
-kayboluyor. `lc-waikiki` kaydı bu yüzden boş kalmış. Bir denetim bunu "support
-daralması" diye okumuştu; onarımdan sonra gerçek sayı 22 -> 18 (17 değil).
-
-Ölçüm: round1 manşet 0,793 -> 0,795 · finansman_tutari F1 1,000 destek 18.
-
-Dokunulan dosyalar:
-- sorun/gold-round1-csvden-yeniden-uretilemiyor.md (teşhis düzeltildi)
-- index.md · README.md (derleme komutu + sayılar)
-- app/data/gold/review/round1_{A,B,main_C,main_D}.csv (27 satır)
-- app/data/gold/gold.round1.json (kaybolan hücre onarıldı)

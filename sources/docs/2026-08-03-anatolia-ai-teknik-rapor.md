@@ -3,8 +3,10 @@ title: "Anatolia AI Teknik Rapor ve Durum Değerlendirmesi (3 Ağustos 2026)"
 tags: [source, teknik-rapor, durum-degerlendirmesi, mimari, teslim, sartname-eslesme, ic-ek]
 source: "raw/docs/anatolia-ai-teknik-rapor.md"
 date: 2026-08-03
-status: stable
+status: taslak
 ---
+
+> Not (2026-08-21): sayfadaki bazı kavram linkleri hedef sayfa yazılmadığı için düz metne indirildi; sayfa taslak statüsündedir.
 
 # Anatolia AI Teknik Rapor ve Durum Değerlendirmesi
 
@@ -22,7 +24,7 @@ Raporun kendi tanımladığı iki amacı var ve **hedef kitleleri farklıdır**:
   ve on zorunlu başlığın tamamını kapsar.
 - **Bölüm E** iç ektir: eksikler, riskler, açık sorular, yol haritası, rakip
   analizi ve uzman toplantısı soruları. **Teslimde çıkarılır**
-  → [[rapor-a-d-juri-e-ic-ek]].
+  → rapor-a-d-juri-e-ic-ek.
 
 Raporun kendi koyduğu tek kural: *"her sayı ya bir komutun çıktısıdır ya da bir
 dosyaya referans verir. Ölçülmemiş şey ⏳ ile işaretlenir; tahmin yazılmaz."*
@@ -37,7 +39,7 @@ sebebi sayıyor ve rubriğin %30'u ölçüme dayanıyor.
 
 | | |
 |---|---|
-| Takım | Anatolia AI → [[anatolia-ai-takimi]] |
+| Takım | Anatolia AI → anatolia-ai-takimi |
 | Ekip | Mehmet Efe Aytaş (kaptan), Irmak Altay, Ayça Engindeniz, Ecegüneş Dağ |
 | Rapor tarihi | **3 Ağustos 2026** |
 | Teslim tarihi | **26 Ağustos 2026 — kalan 23 gün** |
@@ -56,12 +58,12 @@ olmadan (`docker run --network none`) ölçülmüş biçimde ayağa kalkıyor.
 **Rubriğin %70'i** (fonksiyonellik, teknik implementasyon, on-prem, yenilikçilik)
 ölçülmüş kanıta dayanıyor. **Rubriğin en ağır maddesi Model Başarısı %30 için
 hâlâ ölçülmüş bir precision/recall/F1 yok** — ölçüm altyapısının tamamı yazılmış
-ve test edilmiş, ama hiç koşulmamış. Detay → [[rubrik-agirlik-haritasi]].
+ve test edilmiş, ama hiç koşulmamış. Detay → rubrik-agirlik-haritasi.
 
 ### Uçtan uca mimari — 11 aşama, tek orkestrasyon
 
 Sistem tek bir fonksiyonda toplanır: `src/pipeline.py:149 run_pipeline()`
-→ [[run-pipeline]]. On bir aşama, her biri bağımsız test edilebilir bir modül:
+→ run-pipeline. On bir aşama, her biri bağımsız test edilebilir bir modül:
 
 | # | Aşama | Modül | Ana giriş noktası |
 |---|---|---|---|
@@ -83,17 +85,17 @@ kavramsal hattın **gerçekleşmiş** halidir; aradaki fark uzlaştırma (6) ve
 
 `src/pipeline.py:50-53` **dört çalışma modu** tanımlar — aynı kod yolu hem üç
 belgelik hızlı testte hem 849 belgelik tam korpusta koşar
-→ [[dort-calisma-modu]].
+→ dort-calisma-modu.
 
 ### İki veritabanı arka ucu ve ödenen bedel
 
 `src/db/base.py:38` `RepositoryProtocol` **13 metotlu tek bir sözleşme** tanımlar
-→ [[repository-protocol]]. SQLite ve PostgreSQL/pgvector bu sözleşmeyi ayrı ayrı
+→ repository-protocol. SQLite ve PostgreSQL/pgvector bu sözleşmeyi ayrı ayrı
 uygular; `create_repository()` `DATABASE_URL` doluysa Postgres'i, boşsa SQLite'ı
 seçer.
 
 Bedel ödendi: **depo katmanı dışında SQL yazmak yasaklandı**
-→ [[depo-katmani-disinda-sql-yasak]]. Önceden bir `rows()` kaçış kapısı vardı ve
+→ depo-katmani-disinda-sql-yasak. Önceden bir `rows()` kaçış kapısı vardı ve
 beş yerde ham SQL çağrılıyordu; SQLite `?`, PostgreSQL `%s` yer tutucusu
 kullandığı için bu beş çağrı Postgres'te `ProgrammingError` ile düşüyordu — yani
 soyutlama kağıt üstündeydi.
@@ -110,7 +112,7 @@ takılabilmelidir → [[on-premise-uygulanabilirlik]].
 Rapor A8'de on bir problem (P1–P11) kök neden + ölçülen etki + çözüm biçiminde
 sayılır ve kendi çıkardığı ders şudur: *"Ortak örüntü: dokuz hatanın hiçbiri
 çökme değildi. Hepsi sessizce yanlış değer üretiyordu."* Bu örüntü
-[[sessiz-hata]] kavram sayfasında toplandı. Ölçülen üç örnek:
+sessiz-hata kavram sayfasında toplandı. Ölçülen üç örnek:
 
 - `str.lower()` Türkçe `İ/I` tuzağı `masraf_durumu` alanını **ters** çeviriyordu
   (P1; projede **üç ayrı yerde** aynı tuzak).
@@ -125,7 +127,7 @@ dashboard bunu güvenle gösterdi."*
 ### Şartname madde bazında durum (§5.1–§5.10)
 
 On maddenin tamamı ✅ işaretli; iki maddede açık kalem var (§5.9 x86_64 ⏳,
-§5.10 `trafilatura` ⏳). Tam tablo → [[sartname-madde-kod-eslemesi]].
+§5.10 `trafilatura` ⏳). Tam tablo → sartname-madde-kod-eslemesi.
 
 ### Rubrik durumu (E1)
 
@@ -166,8 +168,8 @@ ihlali), bge-m3 vektör yolunun devreye alınması, `gliner` kolunun geliştiril
 ### Raporun kendisi üretilmiş bir artefakt
 
 Rapor elle yazılmadı; üç betikle üretildi (11 gerçek ekran görüntüsü, 12 SVG
-grafik, markdown → HTML → PDF) → [[teknik-rapor-uretim-hatti]] ve karar
-[[rapor-uretilir-elle-yazilmaz]]. **Yeni bağımlılık eklenmedi**; matplotlib /
+grafik, markdown → HTML → PDF) → teknik-rapor-uretim-hatti ve karar
+rapor-uretilir-elle-yazilmaz. **Yeni bağımlılık eklenmedi**; matplotlib /
 reportlab / pandoc kurmak §5.10 lisans denetimini yeniden açacaktı.
 
 ### Farklılaşma tezi ve kendi karşı-argümanı (E6)
@@ -217,7 +219,7 @@ Raporun kendi üretim hattı:
 - `app/docs/rapor/ekran_goruntuleri.py`, `grafikler.py`, `build_pdf.py`
 
 Raporun **bayat/çelişkili** olarak işaretlediği dosyalar
-(→ [[dokuman-tutarsizliklari-bayatlama]]):
+(→ dokuman-tutarsizliklari-bayatlama):
 
 - kök `README.md`, `app/README.md`, `CLAUDE.md §15`, `AGENTS.md`
 - `app/docs/sartname-kod-eslesme.md` (iç çelişki), `app/docs/veri-katmani.md`
@@ -228,11 +230,11 @@ Raporun **bayat/çelişkili** olarak işaretlediği dosyalar
 
 Bu kaynaktan çıkan ve `decisions/` altına açılan kararlar:
 
-- [[rapor-a-d-juri-e-ic-ek]] — rapor iki kısma bölünür; Bölüm E teslimde çıkarılır
-- [[depo-katmani-disinda-sql-yasak]] — depo katmanı dışında ham SQL yazmak yasak,
+- rapor-a-d-juri-e-ic-ek — rapor iki kısma bölünür; Bölüm E teslimde çıkarılır
+- depo-katmani-disinda-sql-yasak — depo katmanı dışında ham SQL yazmak yasak,
   `rows()` kaçış kapısı kaldırıldı
-- [[rapor-uretilir-elle-yazilmaz]] — rapor betiklerle üretilir, yeni bağımlılık eklenmez
-- [[demo-videosu-iki-format-birden]] — şartname içi süre çelişkisine karşı hem
+- rapor-uretilir-elle-yazilmaz — rapor betiklerle üretilir, yeni bağımlılık eklenmez
+- demo-videosu-iki-format-birden — şartname içi süre çelişkisine karşı hem
   ≤5 dk hem 1 dk hazırlanır
 
 Raporda teyit edilen, **daha önce kaydedilmiş** kararlar:
@@ -256,10 +258,10 @@ Raporda **bilinçli olarak alınmayan** karar:
 
 Bu kaynaktan çıkan ve `sorun/` altına açılan sorunlar:
 
-- [[dokuman-tutarsizliklari-bayatlama]] — E4'ün 14 kalemi; en görünürü test
+- dokuman-tutarsizliklari-bayatlama — E4'ün 14 kalemi; en görünürü test
   sayısının **altı ayrı yerde altı farklı** yazılması (54 / 129 / 345 / 607 /
   695 / 835; doğrusu **890**)
-- [[teslim-zorunlulari-eksik]] — E2'nin 4 açık zorunluluğu (veri seti indirme
+- teslim-zorunlulari-eksik — E2'nin 4 açık zorunluluğu (veri seti indirme
   bağlantısı §9, demo videosu §6.2, sunum PDF+PPTX §6.4, veri seti lisansı §8)
 
 Raporun kaydettiği, alan sorumluluğu **başka ajanlarda** olan açık kalemler
@@ -295,7 +297,8 @@ karşılanıyor.
   (kampanya türü ayrı sayılıyor). Rapor bunun çelişki değil "farklı denominatör"
   olduğunu söylüyor ama dokümanlarda açıklanması gerekiyor.
 - **Korpus büyüklüğü üç farklı sayı** (E4-11): 291 / 849 / 1.696. Rapor bunların
-  farklı dilimler olduğunu (invariants ilk koşu / `demo.db` / raw önbellek)
+  farklı dilimler olduğunu (invariants — dosyası vitrin dalında; `main`
+  klonunda bulunmaz — ilk koşu / `demo.db` / raw önbellek)
   söylüyor ama *"hiçbir belge ilişkiyi açıklamıyor"* diye ekliyor. Bu vault'ta da
   hangi sayının hangi bağlamda geçerli olduğu netleştirilmeli.
 - **`app/docs/` altındaki 7 doküman vault `index.md`'de yok** (E4-12): lint'in
@@ -320,13 +323,13 @@ karşılanıyor.
 ## Related
 
 - [[2026-06-16-teknofest-tyda-sartname-2-senaryo]] — bu raporun karşıladığı
-  şartnamenin kendisi; madde eşlemesi [[sartname-madde-kod-eslemesi]]
+  şartnamenin kendisi; madde eşlemesi sartname-madde-kod-eslemesi
 - [[teknik-cozum-mimarisi]] — şartnameden türetilmiş kavramsal hat; bu rapor onun
   **gerçekleşmiş** halini 11 aşama olarak veriyor
 - [[teslim-ve-degerlendirme-rehberi]] — teslim ve puanlama çerçevesi; bu raporun
   E1/E2 bölümleri o çerçevenin fiilî durumudur
 - [[yarisma-genel-bakis]] — takvim bağlamı (teslim 26 Ağustos 2026)
-- [[anatolia-ai-takimi]] — ekip ve anotasyon iş gücü
-- [[run-pipeline]] — 11 aşamalı orkestrasyon
-- [[rubrik-agirlik-haritasi]] — %30 / %20 / %20 / %20 / %10 kanıt durumu
-- [[sessiz-hata]] — raporun ortak örüntüsü ve en güçlü anlatısı
+- anatolia-ai-takimi — ekip ve anotasyon iş gücü
+- run-pipeline — 11 aşamalı orkestrasyon
+- rubrik-agirlik-haritasi — %30 / %20 / %20 / %20 / %10 kanıt durumu
+- sessiz-hata — raporun ortak örüntüsü ve en güçlü anlatısı

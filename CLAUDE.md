@@ -8,6 +8,10 @@ sentezler) zamanla bozulmayan, çapraz bağlı ve kaynaklı bir wiki olarak tutm
 Bu dosya, vault üzerinde çalışan her LLM/insan için **işletim kılavuzudur**.
 `llm-wiki` yaklaşımının Anatolia AI'a uyarlanmış halidir.
 
+> Bu dosyanın birebir ikizi `AGENTS.md`'dir (tek fark: Klasör Yapısı bloğunda
+> kendi adını yazan satır). Birini güncelleyen diğerini de güncellemek
+> zorundadır; CI `sed '63d'` diff kapısıyla denetler.
+
 ---
 
 ## Amaç
@@ -27,7 +31,11 @@ Bu dosya, vault üzerinde çalışan her LLM/insan için **işletim kılavuzudur
 
 ## İsimlendirme (Naming)
 
-- Tüm dosya adları **kebab-case** ve Türkçe.
+- Vault sayfalarının (entities/, concepts/, decisions/, sorun/, syntheses/,
+  sources/, archive/) tüm dosya adları **kebab-case** ve Türkçe. `app/`
+  altındaki isimlendirme bu kurala tabi değildir; orası `app/CLAUDE.md`'ye
+  bağlıdır. Kökteki `README.md`, `LICENSE`, `CLAUDE.md`, `AGENTS.md` kural
+  dışıdır.
 - Türkçe karakterler sadeleştirilir: `ş→s, ç→c, ı/i→i, ğ→g, ü→u, ö→o`
   (ör. "Kâr Payı Oranı" → `kar-payi-orani.md`).
 - Kaynak (source) sayfaları: `sources/<kaynak-klasoru>/YYYY-MM-DD-<slug>.md`.
@@ -46,11 +54,23 @@ decisions/      # Atomik mimari/ürün kararları (her biri tek karar)
 sorun/          # Sorunlar / problemler / düzeltmeler (kök neden + çözüm)
 syntheses/      # Yüksek seviyeli sentez / genel bakış sayfaları
 archive/        # Silinmeyen, geçerliliğini yitirmiş sayfalar buraya taşınır
+app/            # Uçtan uca NLP çözümü (kod projesi; kendi CLAUDE.md'si ve docs/'u var)
+docs-ekran/     # Panel ekran görüntüleri + 45 sayfalık PDF
+colab/          # Colab eğitim/ölçüm defterleri
 index.md        # Tüm sayfaların kategorize edilmiş dizini
 log.md          # Kronolojik ingest / değişiklik günlüğü
 lint-report.md  # Tutarlılık denetimi raporu
 CLAUDE.md       # Bu dosya
 ```
+
+## app/docs ↔ vault sınırı
+
+`app/docs` bağımsız mühendislik dokümantasyonudur (kod projesinin raporları,
+ADR'leri, kanıt paketleri); vault ise kaynaklı bilgi arşividir. Vault,
+`app/docs` dosyalarını **ham kaynak** gibi okuyup `sources/` sayfasına
+işleyebilir; `app/docs` vault kurallarına (kebab-case, frontmatter, wikilink)
+tabi değildir. Mükerrer bilgi kaçınılmazsa hangi tarafın güncel sayılacağı
+ilgili sayfada belirtilir.
 
 ## Sayfa Formatı
 
