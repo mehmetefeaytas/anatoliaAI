@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3456%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-3540%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -337,7 +337,7 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **3.509** birim/entegrasyon testi toplanıyor · **3.456 geçiyor** ·
+**Test:** **3.593** birim/entegrasyon testi toplanıyor · **3.540 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 40 arayüz testi
 (`cd web && npm run test`).
@@ -354,8 +354,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.509** | **3.456** | 53 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **3.509** | **3.456** | 53 | **0** (+1.623 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.593** | **3.540** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **3.593** | **3.540** | 53 | **0** (+1.689 subtest) |
 >
 > Yayımlanan manşet **unittest** sayısıdır, çünkü kanıt-tazeliği kapısı taze
 > artefakt varken onu okur; artefakt bayatsa `pytest --collect-only` yedeğine
@@ -388,7 +388,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **2.708 gerçek belge** (758 PDF dâhil), 10 katılım bankasından canlı toplandı (provenance: `source_url` + `scraped_at` + `content_hash`, 1.772/1.776 tam) |
-| Testler | ✅ **3.456 test yeşil** (3.509 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-21: `python -m pytest tests -q` → `3456 passed, 53 skipped, 1623 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
+| Testler | ✅ **3.540 test yeşil** (3.593 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananlar Postgres/pgvector isteyen testlerdir, CI'ın `test-with-deps` işinde koşar. Ölçüm 2026-08-21: `python -m pytest tests -q` → `3540 passed, 53 skipped, 1689 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
 | Değişmez (invariant) denetimi | ✅ **2.708 belgede 0 ihlal** — kapsam **%92,3** (2.499 belgede en az bir alan çıktı; 209 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-21: `python -m eval.properties --raw-dir data/raw` → çıkış kodu 0. **21 Ağustos'ta bu denetim 2 GERÇEK ihlal verdi ve CI'ı kırdı**: son PDF hasadındaki okunamaz bir Albaraka sözleşmesi (ToUnicode tablosu olmayan gömülü yazı tipi) çöp metni `kampanya_kosullari` kalemi olarak sunuyordu. Kök neden kodda değil veride olduğu için çözüm bir KAPI oldu (`_ortak.bozuk_metin`); ihlal gizlenmedi, sebebi burada yazılı |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-21, 2.708 belge — **28 çelişki: 8'i belgeler-arası** (6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı**), 20'si belge-içi. Kâr payı örneği manşetliktir: Albaraka aynı ürün için iki ayrı formda **%7,0 ve %1,0** yayımlamış — kesişmeyen iki oran. Komut: `python -m src.comparison.scan --raw-dir data/raw`. **İki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
@@ -702,7 +702,7 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 #### Halüsinasyon oranı: `gold.v2` ile `gold.round1` DOĞRUDAN KARŞILAŞTIRILAMAZ
 
 İki gold setin halüsinasyon oranı çok farklı görünüyor: `gold.v2` **0,034**,
-`gold.round1` **0,344**. Bu bir model kötüleşmesi **değildir** — paydanın
+`gold.round1` **0,297**. Bu bir model kötüleşmesi **değildir** — paydanın
 farklı tanımlı olmasıdır. Aşağıdaki sayılar iddiaya güvenilmeden, en yeni iki
 rapordan (`per_field.csv`, `kural;strict;all` satırları, 12 alan) elle
 toplanarak doğrulandı:
@@ -711,19 +711,19 @@ toplanarak doğrulandı:
 .venv/bin/python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 .venv/bin/python -m eval.run_eval --gold data/gold/gold.round1.json --config kural
 ```
-Kanıt: `eval/reports/20260820-224033/` (`gold.v2`) ve
-`eval/reports/20260820-224058/` (`gold.round1`).
+Kanıt: `eval/reports/20260821-122109/` (`gold.v2`) ve
+`eval/reports/20260821-122008/` (`gold.round1`, **HAKEM-05 sonrası**).
 
 | | `gold.v2` (n=48) | `gold.round1` (n=134) |
 |---|---:|---:|
-| halüsinasyon oranı | **0,034** (15/447) | **0,344** (21/61) |
-| payda (`absent_decisions` toplamı — gold'un "YOK" dediği karar sayısı, 12 alan) | **447** | **61** |
-| `skipped_undecided` toplamı (gold hiç karar vermemiş, metriğe hiç girmeyen alan-kararı) | 0 | **1.389** |
+| halüsinasyon oranı | **0,034** (15/447) | **0,297** (22/74) |
+| payda (`absent_decisions` toplamı — gold'un "YOK" dediği karar sayısı, 12 alan) | **447** | **74** |
+| `skipped_undecided` toplamı (gold hiç karar vermemiş, metriğe hiç girmeyen alan-kararı) | 0 | **1.380** |
 
-`gold.round1`'in paydası küçük çünkü anotatörler **1.389 alan-kararında hiç
+`gold.round1`'in paydası küçük çünkü anotatörler **1.380 alan-kararında hiç
 karar vermemiş**; bunlar metrik dışı kalıyor ve `absent_decisions`'a hiç
 girmiyor. `gold.v2`'de "YOK" kararı 447 kez verilmiş, `gold.round1`'de yalnız
-61 kez — küçük paydada tek kayıt oranın çok daha büyük bir dilimini taşır:
+74 kez — küçük paydada tek kayıt oranın çok daha büyük bir dilimini taşır:
 61'lik paydadaki 21 halüsinasyonun **10'u tek başına `vade_ay`** alanından
 geliyor (`per_field.csv`: `vade_ay` satırı `fp_hallucinated=10`), yani
 round1'in yüksek oranının ~%48'i tek bir alanın kararlarına yığılı.
