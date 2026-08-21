@@ -1,0 +1,685 @@
+==============================================================================
+ ANATOLIA AI — TAM YIGIN AGSIZ KOSUM (postgres + api + api-postgres + ollama + web)
+==============================================================================
+tarih         : 2026-08-21T10:51:14Z (UTC)
+calisma dizini: /Users/mehmetefeaytas/anatoliaaI/app
+proje adi     : anatolia-agsiz
+izole ag      : anatolia-agsiz-izole-ag
+transkript    : docs/offline-proof/tam-yigin-agsiz-transcript-20260821-135114.log
+host          : Darwin Mehmet-MacBook-Air.local 25.5.0 Darwin Kernel Version 25.5.0: Tue Jun  9 22:28:17 PDT 2026; root:xnu-12377.121.10~1/RELEASE_ARM64_T8142 arm64
+git commit    : ded2486c
+git durum     : 11 degisik dosya
+
+docker        : Docker version 29.5.3, build d1c06ef6b4
+daemon        : 29.6.1 (linux/aarch64)
+compose       : 5.3.0
+on-cekilmis imajlar: postgres+pgvector VE ollama yerelde mevcut (digest eslesti)
+
+------------------------------------------------------------------------------
+ADIM 1: Imaj derleme (docker compose build api api-postgres web db-check) — AG ACIK
+beklenti : cikis kodu 0
+komut    : docker compose -p anatolia-agsiz --profile postgres build api api-postgres web db-check
+------------------------------------------------------------------------------
+ Image anatolia-agsiz-api-postgres Building 
+ Image anatolia-agsiz-web Building 
+ Image anatolia-agsiz-db-check Building 
+ Image anatolia-agsiz-api Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.92kB done
+#1 DONE 0.0s
+
+#2 [web internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.65kB done
+#2 DONE 0.0s
+
+#3 [db-check internal] load build definition from Dockerfile.api
+#3 transferring dockerfile: 2.36kB done
+#3 DONE 0.0s
+
+#4 [api internal] load metadata for docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#4 ...
+
+#5 [web internal] load metadata for docker.io/library/node:20-alpine
+#5 DONE 1.8s
+
+#4 [api internal] load metadata for docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#4 DONE 1.8s
+
+#6 [web internal] load .dockerignore
+#6 transferring context: 308B done
+#6 DONE 0.0s
+
+#7 [api-postgres internal] load .dockerignore
+#7 transferring context: 937B done
+#7 DONE 0.0s
+
+#8 [web internal] load build context
+#8 transferring context: 1.07MB 0.0s done
+#8 DONE 0.0s
+
+#9 [db-check  1/10] FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#9 resolve docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93 0.0s done
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 1.05MB / 14.37MB 0.3s
+#9 sha256:391ef874fe2e0ae15c7ece42b9961db1260f333e9a2151e5269646d119f3e1b1 0B / 1.27MB 0.2s
+#9 sha256:26c1f77b2e7215faf96d9764895595c2cde9a080c696241deed63b5e0cdb49d2 0B / 250B 0.2s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 0B / 30.14MB 0.2s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 2.10MB / 14.37MB 0.5s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 5.24MB / 14.37MB 0.6s
+#9 sha256:26c1f77b2e7215faf96d9764895595c2cde9a080c696241deed63b5e0cdb49d2 250B / 250B 0.6s done
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 6.29MB / 14.37MB 0.8s
+#9 sha256:26c1f77b2e7215faf96d9764895595c2cde9a080c696241deed63b5e0cdb49d2 250B / 250B 0.6s done
+#9 sha256:391ef874fe2e0ae15c7ece42b9961db1260f333e9a2151e5269646d119f3e1b1 1.27MB / 1.27MB 0.8s done
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 7.34MB / 14.37MB 0.9s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 8.39MB / 14.37MB 1.1s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 2.10MB / 30.14MB 1.2s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 9.44MB / 14.37MB 1.4s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 10.49MB / 14.37MB 1.5s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 5.24MB / 30.14MB 1.5s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 11.53MB / 14.37MB 1.8s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 7.34MB / 30.14MB 2.0s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 9.44MB / 30.14MB 2.3s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 12.58MB / 14.37MB 2.4s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 11.53MB / 30.14MB 2.6s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 13.63MB / 30.14MB 2.9s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 15.73MB / 30.14MB 3.2s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 17.83MB / 30.14MB 3.5s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 13.63MB / 14.37MB 3.6s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 19.92MB / 30.14MB 3.8s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 22.02MB / 30.14MB 4.1s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 24.12MB / 30.14MB 4.4s
+#9 sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 14.37MB / 14.37MB 4.7s done
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 26.21MB / 30.14MB 4.7s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 28.31MB / 30.14MB 5.0s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 30.14MB / 30.14MB 5.3s
+#9 sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 30.14MB / 30.14MB 5.3s done
+#9 extracting sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075
+#9 extracting sha256:59f54fbcd984beca03fd8b78569fa57268ecf78d291c0b6fe1623c2467f5a075 1.5s done
+#9 extracting sha256:391ef874fe2e0ae15c7ece42b9961db1260f333e9a2151e5269646d119f3e1b1
+#9 extracting sha256:391ef874fe2e0ae15c7ece42b9961db1260f333e9a2151e5269646d119f3e1b1 0.1s done
+#9 extracting sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71
+#9 extracting sha256:2a62bb0a4e66546f1d746670a60e4a654b876719da3c955685825d396ce70e71 0.8s done
+#9 extracting sha256:26c1f77b2e7215faf96d9764895595c2cde9a080c696241deed63b5e0cdb49d2 0.0s done
+#9 DONE 7.8s
+
+#10 [api  2/10] WORKDIR /app
+#10 DONE 0.8s
+
+#11 [api-postgres internal] load build context
+#11 transferring context: 880.31MB 8.6s
+#11 ...
+
+#12 [web deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#12 resolve docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 0.0s done
+#12 sha256:cd322d0ddd02673e6c24a2158d1f12f6ec7c6fd9c0dc67123244d0f0eb0f8806 443B / 443B 0.2s done
+#12 sha256:13e45b12880fbbfe3554ecf6b70131ace701d0c2fd3e2fb9abb842ba2494cd40 1.26MB / 1.26MB 1.7s done
+#12 sha256:bda5d7ef971f8ede8ea80002d2ac886ef6807fe32cfe46c38704a7ba0429475d 43.55MB / 43.55MB 6.6s done
+#12 sha256:d17f077ada118cc762df373ff803592abf2dfa3ddafaa7381e364dd27a88fca7 4.20MB / 4.20MB 3.5s done
+#12 extracting sha256:d17f077ada118cc762df373ff803592abf2dfa3ddafaa7381e364dd27a88fca7 0.2s done
+#12 extracting sha256:bda5d7ef971f8ede8ea80002d2ac886ef6807fe32cfe46c38704a7ba0429475d 1.9s done
+#12 DONE 9.4s
+
+#11 [api-postgres internal] load build context
+#11 ...
+
+#12 [web deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#12 extracting sha256:13e45b12880fbbfe3554ecf6b70131ace701d0c2fd3e2fb9abb842ba2494cd40 0.0s done
+#12 extracting sha256:cd322d0ddd02673e6c24a2158d1f12f6ec7c6fd9c0dc67123244d0f0eb0f8806 0.0s done
+#12 DONE 9.5s
+
+#11 [api-postgres internal] load build context
+#11 ...
+
+#13 [web deps 2/4] WORKDIR /app
+#13 DONE 0.2s
+
+#14 [web deps 3/4] COPY package.json package-lock.json ./
+#14 DONE 0.1s
+
+#11 [api-postgres internal] load build context
+#11 transferring context: 1.18GB 11.5s done
+#11 DONE 11.5s
+
+#15 [api-postgres  3/10] COPY requirements-api.txt .
+#15 DONE 0.3s
+
+#16 [api  4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#16 1.357 Collecting fastapi==0.141.1 (from -r requirements-api.txt (line 23))
+#16 1.487   Downloading fastapi-0.141.1-py3-none-any.whl.metadata (27 kB)
+#16 1.531 Collecting uvicorn==0.52.0 (from -r requirements-api.txt (line 24))
+#16 1.552   Downloading uvicorn-0.52.0-py3-none-any.whl.metadata (6.6 kB)
+#16 1.658 Collecting pydantic==2.13.4 (from -r requirements-api.txt (line 25))
+#16 1.694   Downloading pydantic-2.13.4-py3-none-any.whl.metadata (109 kB)
+#16 1.764      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.4/109.4 kB 1.5 MB/s eta 0:00:00
+#16 1.795 Collecting beautifulsoup4==4.15.0 (from -r requirements-api.txt (line 40))
+#16 1.827   Downloading beautifulsoup4-4.15.0-py3-none-any.whl.metadata (3.8 kB)
+#16 1.857 Collecting psycopg==3.3.4 (from psycopg[binary]==3.3.4->-r requirements-api.txt (line 48))
+#16 1.875   Downloading psycopg-3.3.4-py3-none-any.whl.metadata (4.3 kB)
+#16 1.919 Collecting starlette>=0.46.0 (from fastapi==0.141.1->-r requirements-api.txt (line 23))
+#16 1.998   Downloading starlette-1.6.0-py3-none-any.whl.metadata (6.4 kB)
+#16 2.029 Collecting typing-extensions>=4.8.0 (from fastapi==0.141.1->-r requirements-api.txt (line 23))
+#16 2.047   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+#16 2.071 Collecting typing-inspection>=0.4.2 (from fastapi==0.141.1->-r requirements-api.txt (line 23))
+#16 2.090   Downloading typing_inspection-0.4.4-py3-none-any.whl.metadata (2.6 kB)
+#16 2.111 Collecting annotated-doc>=0.0.2 (from fastapi==0.141.1->-r requirements-api.txt (line 23))
+#16 2.129   Downloading annotated_doc-0.0.5-py3-none-any.whl.metadata (6.5 kB)
+#16 2.161 Collecting click>=7.0 (from uvicorn==0.52.0->-r requirements-api.txt (line 24))
+#16 2.180   Downloading click-8.4.2-py3-none-any.whl.metadata (2.6 kB)
+#16 2.201 Collecting h11>=0.8 (from uvicorn==0.52.0->-r requirements-api.txt (line 24))
+#16 2.219   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+#16 2.255 Collecting annotated-types>=0.6.0 (from pydantic==2.13.4->-r requirements-api.txt (line 25))
+#16 2.275   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+#16 3.616 Collecting pydantic-core==2.46.4 (from pydantic==2.13.4->-r requirements-api.txt (line 25))
+#16 3.787   Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl.metadata (6.6 kB)
+#16 3.833 Collecting soupsieve>=1.6.1 (from beautifulsoup4==4.15.0->-r requirements-api.txt (line 40))
+#16 3.852   Downloading soupsieve-2.9.2-py3-none-any.whl.metadata (4.6 kB)
+#16 6.135 Collecting psycopg-binary==3.3.4 (from psycopg[binary]==3.3.4->-r requirements-api.txt (line 48))
+#16 6.411   Downloading psycopg_binary-3.3.4-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl.metadata (2.7 kB)
+#16 6.482 Collecting anyio<5,>=3.6.2 (from starlette>=0.46.0->fastapi==0.141.1->-r requirements-api.txt (line 23))
+#16 6.502   Downloading anyio-4.14.2-py3-none-any.whl.metadata (4.6 kB)
+#16 6.933 Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette>=0.46.0->fastapi==0.141.1->-r requirements-api.txt (line 23))
+#16 6.956   Downloading idna-3.19-py3-none-any.whl.metadata (9.2 kB)
+#16 6.992 Downloading fastapi-0.141.1-py3-none-any.whl (131 kB)
+#16 7.008    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 132.0/132.0 kB 10.1 MB/s eta 0:00:00
+#16 7.027 Downloading uvicorn-0.52.0-py3-none-any.whl (79 kB)
+#16 7.037    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 79.1/79.1 kB 10.1 MB/s eta 0:00:00
+#16 7.057 Downloading pydantic-2.13.4-py3-none-any.whl (472 kB)
+#16 7.259    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 472.3/472.3 kB 2.3 MB/s eta 0:00:00
+#16 7.278 Downloading beautifulsoup4-4.15.0-py3-none-any.whl (109 kB)
+#16 7.296    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 109.9/109.9 kB 7.0 MB/s eta 0:00:00
+#16 7.316 Downloading psycopg-3.3.4-py3-none-any.whl (213 kB)
+#16 7.344    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 213.0/213.0 kB 8.2 MB/s eta 0:00:00
+#16 7.364 Downloading psycopg_binary-3.3.4-cp311-cp311-manylinux_2_27_aarch64.manylinux_2_28_aarch64.whl (6.8 MB)
+#16 ...
+
+#17 [web deps 4/4] RUN npm ci
+#17 8.016 npm warn deprecated next@14.2.5: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
+#17 ...
+
+#16 [api  4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#16 9.104    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.8/6.8 MB 3.9 MB/s eta 0:00:00
+#16 9.136 Downloading pydantic_core-2.46.4-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl (2.0 MB)
+#16 11.16    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 971.8 kB/s eta 0:00:00
+#16 11.18 Downloading annotated_doc-0.0.5-py3-none-any.whl (5.3 kB)
+#16 11.21 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+#16 11.26 Downloading click-8.4.2-py3-none-any.whl (119 kB)
+#16 11.64    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 119.2/119.2 kB 314.8 kB/s eta 0:00:00
+#16 11.66 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+#16 11.77 Downloading soupsieve-2.9.2-py3-none-any.whl (37 kB)
+#16 11.85 Downloading starlette-1.6.0-py3-none-any.whl (75 kB)
+#16 12.02    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 76.0/76.0 kB 443.3 kB/s eta 0:00:00
+#16 12.04 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#16 12.08    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 45.6/45.6 kB 1.2 MB/s eta 0:00:00
+#16 ...
+
+#17 [web deps 4/4] RUN npm ci
+#17 13.72 
+#17 13.72 added 27 packages, and audited 28 packages in 13s
+#17 13.72 
+#17 13.72 3 packages are looking for funding
+#17 13.72   run `npm fund` for details
+#17 13.82 
+#17 13.82 3 vulnerabilities (2 high, 1 critical)
+#17 13.82 
+#17 13.82 To address issues that do not require attention, run:
+#17 13.82   npm audit fix
+#17 13.82 
+#17 13.82 To address all issues, run:
+#17 13.82   npm audit fix --force
+#17 13.82 
+#17 13.82 Run `npm audit` for details.
+#17 13.82 npm notice
+#17 13.82 npm notice New major version of npm available! 10.8.2 -> 12.0.2
+#17 13.82 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+#17 13.82 npm notice To update run: npm install -g npm@12.0.2
+#17 13.82 npm notice
+#17 DONE 14.1s
+
+#16 [api  4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#16 12.16 Downloading typing_inspection-0.4.4-py3-none-any.whl (14 kB)
+#16 12.18 Downloading anyio-4.14.2-py3-none-any.whl (125 kB)
+#16 12.29    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 125.8/125.8 kB 1.2 MB/s eta 0:00:00
+#16 12.31 Downloading idna-3.19-py3-none-any.whl (68 kB)
+#16 12.35    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 68.5/68.5 kB 1.5 MB/s eta 0:00:00
+#16 12.43 Installing collected packages: typing-extensions, soupsieve, psycopg-binary, idna, h11, click, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, psycopg, beautifulsoup4, anyio, starlette, pydantic, fastapi
+#16 ...
+
+#18 [web build 3/5] COPY --from=deps /app/node_modules ./node_modules
+#18 DONE 0.5s
+
+#19 [web build 4/5] COPY . .
+#19 DONE 0.0s
+
+#16 [api  4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#16 13.05 Successfully installed annotated-doc-0.0.5 annotated-types-0.8.0 anyio-4.14.2 beautifulsoup4-4.15.0 click-8.4.2 fastapi-0.141.1 h11-0.16.0 idna-3.19 psycopg-3.3.4 psycopg-binary-3.3.4 pydantic-2.13.4 pydantic-core-2.46.4 soupsieve-2.9.2 starlette-1.6.0 typing-extensions-4.16.0 typing-inspection-0.4.4 uvicorn-0.52.0
+#16 13.05 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+#16 13.14 
+#16 13.14 [notice] A new release of pip is available: 24.0 -> 26.2.1
+#16 13.14 [notice] To update, run: pip install --upgrade pip
+#16 DONE 13.3s
+
+#20 [api-postgres  5/10] COPY src/ ./src/
+#20 DONE 0.0s
+
+#21 [api  6/10] COPY config/ ./config/
+#21 DONE 0.0s
+
+#22 [db-check  7/10] COPY data/ ./data/
+#22 DONE 5.5s
+
+#23 [db-check  8/10] COPY eval/ ./eval/
+#23 DONE 0.2s
+
+#24 [api  9/10] COPY tests/ ./tests/
+#24 DONE 0.0s
+
+#25 [api-postgres 10/10] COPY scripts/ ./scripts/
+#25 DONE 0.0s
+
+#26 [db-check] exporting to image
+#26 exporting layers
+#26 ...
+
+#27 [web build 5/5] RUN npm run build
+#27 0.238 
+#27 0.238 > anatolia-ai-web@0.1.0 build
+#27 0.238 > next build
+#27 0.238 
+#27 0.547   ▲ Next.js 14.2.5
+#27 0.547 
+#27 0.556    Creating an optimized production build ...
+#27 9.113  ✓ Compiled successfully
+#27 9.113    Linting and checking validity of types ...
+#27 11.85    Collecting page data ...
+#27 12.37    Generating static pages (0/4) ...
+#27 12.54    Generating static pages (1/4) 
+#27 12.54    Generating static pages (2/4) 
+#27 12.58    Generating static pages (3/4) 
+#27 12.58  ✓ Generating static pages (4/4)
+#27 12.81    Finalizing page optimization ...
+#27 12.81    Collecting build traces ...
+#27 14.89 
+#27 14.89 Route (app)                              Size     First Load JS
+#27 14.89 ┌ ○ /                                    60 kB           147 kB
+#27 14.89 └ ○ /_not-found                          871 B          87.9 kB
+#27 14.89 + First Load JS shared by all            87 kB
+#27 14.89   ├ chunks/23-cf1961322b61318a.js        31.5 kB
+#27 14.89   ├ chunks/fd9d1056-518e4c88e04eef2c.js  53.6 kB
+#27 14.89   └ other shared chunks (total)          1.88 kB
+#27 14.89 
+#27 14.89 
+#27 14.90 ○  (Static)  prerendered as static content
+#27 14.90 
+#27 14.91 npm notice
+#27 14.91 npm notice New major version of npm available! 10.8.2 -> 12.0.2
+#27 14.91 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.0.2
+#27 14.91 npm notice To update run: npm install -g npm@12.0.2
+#27 14.91 npm notice
+#27 DONE 15.1s
+
+#28 [api-postgres] exporting to image
+#28 ...
+
+#29 [web run 3/7] COPY --from=build /app/.next ./.next
+#29 DONE 0.1s
+
+#30 [api] exporting to image
+#30 ...
+
+#31 [web run 4/7] COPY --from=build /app/node_modules ./node_modules
+#31 DONE 0.5s
+
+#26 [db-check] exporting to image
+#26 ...
+
+#32 [web run 5/7] COPY --from=build /app/package.json ./package.json
+#32 DONE 0.0s
+
+#33 [web run 6/7] COPY --from=build /app/next.config.js ./next.config.js
+#33 DONE 0.0s
+
+#34 [web run 7/7] COPY --from=build /app/public ./public
+#34 DONE 0.0s
+
+#35 [web] exporting to image
+#35 exporting layers
+#35 exporting layers 5.1s done
+#35 exporting manifest sha256:e1da8710a49f9782a5ad91239e490d2ec6397862248186a5e79811e2a92c7232 done
+#35 exporting config sha256:8a7a44f06a4312d6c629d7b806b74bb27ecee81eff4a0f074b2f32f73061d4b5 done
+#35 exporting attestation manifest sha256:3812a61848280d6c12893b6ecf049cee50507200cd8af430fda32b428362b3bc done
+#35 exporting manifest list sha256:459a562d9da310f4f0a48bfaafb65cf4c29dd38427086236433fe673c230b52a done
+#35 naming to docker.io/library/anatolia-agsiz-web:latest done
+#35 unpacking to docker.io/library/anatolia-agsiz-web:latest
+#35 ...
+
+#28 [api-postgres] exporting to image
+#28 exporting layers 15.7s done
+#28 exporting manifest sha256:20813c420f85e1b41550ccb92a79aa1a66deeac22be3c6a908e592c4a413876c 0.0s done
+#28 exporting config sha256:478182f29ce9aaf6ccb0451b96cfb1ae3703c222e2d501f5583a7f353c2a58dc done
+#28 exporting attestation manifest sha256:a3ae2651799842543b790927eb67cf3d5d03992f7d16150c0415797a3045f196 0.0s done
+#28 exporting manifest list sha256:b90ddcaf44d967d9d7841305cc12db42d3a0afc0bea58cdd7ceec711d9d3c7bc done
+#28 naming to docker.io/library/anatolia-agsiz-api-postgres:latest done
+#28 unpacking to docker.io/library/anatolia-agsiz-api-postgres:latest
+#28 ...
+
+#35 [web] exporting to image
+#35 unpacking to docker.io/library/anatolia-agsiz-web:latest 2.0s done
+#35 DONE 7.2s
+
+#36 [web] resolving provenance for metadata file
+#36 DONE 0.0s
+
+#26 [db-check] exporting to image
+#26 exporting layers 15.7s done
+#26 exporting manifest sha256:e0d90f81709923a589402261d133df127732edd85f46f619bf5d95a66c51cb85 done
+#26 exporting config sha256:e3d51be35f0909e7277434cd11d0e20b0807ce1c38061e0f2dcce2dd815e3456 done
+#26 exporting attestation manifest sha256:0b33b4dd334f103a3fbf0de06dbe4c1dbb104dca5b07c300a447f4735801fb6a 0.0s done
+#26 exporting manifest list sha256:f1fc268f413f1e88dcf735149ce6555f62a1acd49ab006bc24774d2673dd9015 done
+#26 naming to docker.io/library/anatolia-agsiz-db-check:latest done
+#26 unpacking to docker.io/library/anatolia-agsiz-db-check:latest
+#26 unpacking to docker.io/library/anatolia-agsiz-db-check:latest 7.5s done
+#26 DONE 23.3s
+
+#30 [api] exporting to image
+#30 exporting layers 15.7s done
+#30 exporting manifest sha256:61e38f4d36fb4db6cd0b5766550158f8888fcb18a1449f753f553696308726a7 done
+#30 exporting config sha256:5d7bee004192c5c89d77f12c83158f1220eb493c0c09b1eee58c1311b43aa6dc done
+#30 exporting attestation manifest sha256:f746e3037f322473ef4f83023dd8984a52fa3e375de4d43bcdbf4a307d1af015 0.0s done
+#30 exporting manifest list sha256:7cb82dd502148a28d7d48c7629ebc56a9cfb4604ed11b38c67789a16bdf48d45 done
+#30 naming to docker.io/library/anatolia-agsiz-api:latest done
+#30 unpacking to docker.io/library/anatolia-agsiz-api:latest 7.5s done
+#30 DONE 23.3s
+
+#28 [api-postgres] exporting to image
+#28 unpacking to docker.io/library/anatolia-agsiz-api-postgres:latest 7.5s done
+#28 DONE 23.3s
+
+#37 [api] resolving provenance for metadata file
+#37 DONE 0.0s
+
+#38 [db-check] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#39 [api-postgres] resolving provenance for metadata file
+#39 DONE 0.0s
+ Image anatolia-agsiz-api Built 
+ Image anatolia-agsiz-api-postgres Built 
+ Image anatolia-agsiz-web Built 
+ Image anatolia-agsiz-db-check Built 
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=56873 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 2: Izole ag olustur (--internal, dis dunyaya rotasiz)
+beklenti : cikis kodu 0
+komut    : docker network create --internal anatolia-agsiz-izole-ag
+------------------------------------------------------------------------------
+2a84b9dfe18e969a150fc71e7d5ab57c5c200df6d50167bb2d70a260a6a2a4c9
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=50 ms  -> BEKLENDIGI GIBI
+override dosyasi: /var/folders/v_/vcr_n0s153d9mxt1fgnb2fyw0000gn/T/tam-yigin-agsiz-override-XXXXXX.S4CcRyTq7v.yml
+networks:
+  default:
+    name: anatolia-agsiz-izole-ag
+    external: true
+services:
+  postgres:
+    ports: !reset []
+  api:
+    ports: !reset []
+  api-postgres:
+    ports: !reset []
+  ollama:
+    ports: !reset []
+  web:
+    ports: !reset []
+
+------------------------------------------------------------------------------
+ADIM 3: Prob dogrulama: SIRADAN agda prob ULASMALI (metaKontrol)
+beklenti : cikis kodu 0
+komut    : docker run --rm anatolia-agsiz-api python -c 
+import socket, sys, urllib.request
+blocked, reached = [], []
+def probe(name, fn):
+    try:
+        fn()
+    except Exception as exc:
+        blocked.append(name)
+        print("  [ENGELLENDI] %-24s -> %s: %s" % (name, type(exc).__name__, str(exc)[:110]))
+    else:
+        reached.append(name)
+        print("  [ULASILDI]   %-24s -> AG ERISIMI VAR" % name)
+probe("DNS huggingface.co",   lambda: socket.getaddrinfo("huggingface.co", 443))
+probe("TCP 1.1.1.1:443",      lambda: socket.create_connection(("1.1.1.1", 443), timeout=5).close())
+probe("HTTPS huggingface.co", lambda: urllib.request.urlopen("https://huggingface.co", timeout=5).close())
+probe("HTTPS pypi.org",       lambda: urllib.request.urlopen("https://pypi.org/simple/", timeout=5).close())
+print(); print("engellenen: %d/4   ulasilan: %d/4" % (len(blocked), len(reached)))
+sys.exit(0 if reached else 3)
+
+------------------------------------------------------------------------------
+  [ULASILDI]   DNS huggingface.co       -> AG ERISIMI VAR
+  [ULASILDI]   TCP 1.1.1.1:443          -> AG ERISIMI VAR
+  [ULASILDI]   HTTPS huggingface.co     -> AG ERISIMI VAR
+  [ULASILDI]   HTTPS pypi.org           -> AG ERISIMI VAR
+
+engellenen: 0/4   ulasilan: 4/4
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=1510 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 4: TAM YIGIN ayaga kalkiyor (postgres+api+api-postgres+ollama+web) — izole ag
+beklenti : cikis kodu 0
+komut    : docker compose -p anatolia-agsiz -f docker-compose.yml -f /var/folders/v_/vcr_n0s153d9mxt1fgnb2fyw0000gn/T/tam-yigin-agsiz-override-XXXXXX.S4CcRyTq7v.yml --profile postgres --profile ollama up -d postgres api api-postgres ollama web
+------------------------------------------------------------------------------
+ Container anatolia-agsiz-postgres-1 Creating 
+ Container anatolia-agsiz-ollama-1 Creating 
+ Container anatolia-agsiz-api-1 Creating 
+ Container anatolia-agsiz-ollama-1 Created 
+ Container anatolia-agsiz-postgres-1 Created 
+ Container anatolia-agsiz-api-postgres-1 Creating 
+ Container anatolia-agsiz-api-postgres-1 Created 
+ Container anatolia-agsiz-api-1 Created 
+ Container anatolia-agsiz-web-1 Creating 
+ Container anatolia-agsiz-web-1 Created 
+ Container anatolia-agsiz-api-1 Starting 
+ Container anatolia-agsiz-postgres-1 Starting 
+ Container anatolia-agsiz-ollama-1 Starting 
+ Container anatolia-agsiz-api-1 Started 
+ Container anatolia-agsiz-web-1 Starting 
+ Container anatolia-agsiz-ollama-1 Started 
+ Container anatolia-agsiz-postgres-1 Started 
+ Container anatolia-agsiz-postgres-1 Waiting 
+ Container anatolia-agsiz-web-1 Started 
+ Container anatolia-agsiz-postgres-1 Healthy 
+ Container anatolia-agsiz-api-postgres-1 Starting 
+ Container anatolia-agsiz-api-postgres-1 Started 
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=6103 ms  -> BEKLENDIGI GIBI
+
+--- docker compose ps ---
+NAME                            IMAGE                                                                                            COMMAND                  SERVICE        CREATED         STATUS                   PORTS
+anatolia-agsiz-api-1            anatolia-agsiz-api                                                                               "uvicorn src.api.mai…"   api            6 seconds ago   Up 5 seconds             8000/tcp
+anatolia-agsiz-api-postgres-1   anatolia-agsiz-api-postgres                                                                      "uvicorn src.api.mai…"   api-postgres   6 seconds ago   Up Less than a second    8000/tcp
+anatolia-agsiz-ollama-1         ollama/ollama:latest@sha256:4dea9fb511947e24a84237bb636b0203abcb2ff0d3fbc7b4ff865deb91362131     "/bin/ollama serve"      ollama         6 seconds ago   Up 5 seconds             11434/tcp
+anatolia-agsiz-postgres-1       pgvector/pgvector:pg16@sha256:a36250871de0833b8757561c72f2477ef1ddd1101afa4e617fb552e0de514c6b   "docker-entrypoint.s…"   postgres       6 seconds ago   Up 5 seconds (healthy)   5432/tcp
+anatolia-agsiz-web-1            anatolia-agsiz-web                                                                               "docker-entrypoint.s…"   web            6 seconds ago   Up 5 seconds             3000/tcp
+
+------------------------------------------------------------------------------
+ADIM 5: NEGATIF KONTROL: izole agdaki 'api' konteyneri disariya ULASAMAZ
+beklenti : cikis kodu 0 DEGIL (negatif kontrol)
+komut    : docker exec a25b4b229be3ab6154ce798accb1dde0dc408b5b55000f40d9468b55a4b02c88 python -c 
+import socket, sys, urllib.request
+blocked, reached = [], []
+def probe(name, fn):
+    try:
+        fn()
+    except Exception as exc:
+        blocked.append(name)
+        print("  [ENGELLENDI] %-24s -> %s: %s" % (name, type(exc).__name__, str(exc)[:110]))
+    else:
+        reached.append(name)
+        print("  [ULASILDI]   %-24s -> AG ERISIMI VAR" % name)
+probe("DNS huggingface.co",   lambda: socket.getaddrinfo("huggingface.co", 443))
+probe("TCP 1.1.1.1:443",      lambda: socket.create_connection(("1.1.1.1", 443), timeout=5).close())
+probe("HTTPS huggingface.co", lambda: urllib.request.urlopen("https://huggingface.co", timeout=5).close())
+probe("HTTPS pypi.org",       lambda: urllib.request.urlopen("https://pypi.org/simple/", timeout=5).close())
+print(); print("engellenen: %d/4   ulasilan: %d/4" % (len(blocked), len(reached)))
+sys.exit(0 if reached else 3)
+
+------------------------------------------------------------------------------
+  [ENGELLENDI] DNS huggingface.co       -> gaierror: [Errno -3] Temporary failure in name resolution
+  [ENGELLENDI] TCP 1.1.1.1:443          -> OSError: [Errno 101] Network is unreachable
+  [ENGELLENDI] HTTPS huggingface.co     -> URLError: <urlopen error [Errno -3] Temporary failure in name resolution>
+  [ENGELLENDI] HTTPS pypi.org           -> URLError: <urlopen error [Errno -3] Temporary failure in name resolution>
+
+engellenen: 4/4   ulasilan: 0/4
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=3  sure=123 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 6: postgres hazir (pg_isready) — izole ag
+beklenti : cikis kodu 0
+komut    : _wait_healthy 8f7679acbb5636f3519c7fca25279ff7c4906ef7199289523696d7e789837431 postgres pg_isready -U anatolia
+------------------------------------------------------------------------------
+  postgres hazir (~0s)
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=88 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 7: api /health hazir — izole ag
+beklenti : cikis kodu 0
+komut    : _wait_healthy a25b4b229be3ab6154ce798accb1dde0dc408b5b55000f40d9468b55a4b02c88 api python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+------------------------------------------------------------------------------
+  api hazir (~0s)
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=130 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 8: api-postgres /health hazir (postgres backend) — izole ag
+beklenti : cikis kodu 0
+komut    : _wait_healthy 4fa56db7cb52afb6a31bf88ad4d529fb4b33094d15094f2e87e70a848a62832a api-postgres python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+------------------------------------------------------------------------------
+  api-postgres hazir (~0s)
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=105 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 9: ollama API hazir (/api/tags) — izole ag
+beklenti : cikis kodu 0
+komut    : _wait_healthy dcfc2fbb655b0beb1c7f96b17952a3137b129a2c93363ae87f9b64aacabb0089 ollama wget -q -O - http://127.0.0.1:11434/api/tags || ollama list
+------------------------------------------------------------------------------
+  ollama hazir (~0s)
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=105 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 10: web (Next.js) hazir — izole ag
+beklenti : cikis kodu 0
+komut    : _wait_healthy 63e69eb79247f6358567654e38473b260093076717627cf5897b3fe04507918c web wget -q -O /dev/null http://127.0.0.1:3000/
+------------------------------------------------------------------------------
+  web hazir (~0s)
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=186 ms  -> BEKLENDIGI GIBI
+
+--- api /health icerigi ---
+{"status":"ok","llm":false,"backend":"sqlite"}
+--- api-postgres /health icerigi ---
+{"status":"ok","llm":false,"backend":"postgres"}
+
+------------------------------------------------------------------------------
+ADIM 11: web konteyneri 'api' servisine ISIM ile ulasiyor (dahili DNS)
+beklenti : cikis kodu 0
+komut    : docker exec 63e69eb79247f6358567654e38473b260093076717627cf5897b3fe04507918c wget -q -O /dev/null http://api:8000/health
+------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=71 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 12: api-postgres konteyneri PostgreSQL'e gercekten yaziyor (repo.counts)
+beklenti : cikis kodu 0
+komut    : docker exec 4fa56db7cb52afb6a31bf88ad4d529fb4b33094d15094f2e87e70a848a62832a python -c import urllib.request,json; d=json.loads(urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=5).read()); print(d); assert d.get('backend')=='postgres', d
+------------------------------------------------------------------------------
+{'status': 'ok', 'llm': False, 'backend': 'postgres'}
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=94 ms  -> BEKLENDIGI GIBI
+
+------------------------------------------------------------------------------
+ADIM 13: db-check: pgvector paritesi + embeddings testi — izole ag, agsiz
+beklenti : cikis kodu 0
+komut    : docker compose -p anatolia-agsiz -f docker-compose.yml -f /var/folders/v_/vcr_n0s153d9mxt1fgnb2fyw0000gn/T/tam-yigin-agsiz-override-XXXXXX.S4CcRyTq7v.yml --profile postgres run --rm db-check
+------------------------------------------------------------------------------
+ Container anatolia-agsiz-postgres-1 Running 
+ Container anatolia-agsiz-postgres-1 Waiting 
+ Container anatolia-agsiz-postgres-1 Healthy 
+ Container anatolia-agsiz-db-check-run-37861226e20d Creating 
+ Container anatolia-agsiz-db-check-run-37861226e20d Created 
+test_database_url_varsa_postgres (tests.test_pgvector_repository.TestFactory.test_database_url_varsa_postgres) ... ok
+test_database_url_yoksa_sqlite (tests.test_pgvector_repository.TestFactory.test_database_url_yoksa_sqlite) ... ok
+test_backend_secimi (tests.test_pgvector_repository.TestPgVectorStore.test_backend_secimi) ... ok
+test_build_embeddings_uctan_uca (tests.test_pgvector_repository.TestPgVectorStore.test_build_embeddings_uctan_uca) ... ok
+test_model_kaydediliyor (tests.test_pgvector_repository.TestPgVectorStore.test_model_kaydediliyor)
+Hangi modelin ürettiği saklanmalı (karışık korpus tespiti). ... ok
+test_vector_retriever_postgres_uzerinde (tests.test_pgvector_repository.TestPgVectorStore.test_vector_retriever_postgres_uzerinde) ... ok
+test_yanlis_boyut_reddedilir (tests.test_pgvector_repository.TestPgVectorStore.test_yanlis_boyut_reddedilir) ... ok
+test_yaz_ve_kosinus_ara (tests.test_pgvector_repository.TestPgVectorStore.test_yaz_ve_kosinus_ara) ... ok
+test_yeniden_gomme_idempotent (tests.test_pgvector_repository.TestPgVectorStore.test_yeniden_gomme_idempotent) ... ok
+test_all_campaigns_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_all_campaigns_esit)
+`scraped_at` dâhil — ISO-8601 UTC dizesi iki tarafta da aynı olmalı. ... ok
+test_backend_etiketi (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_backend_etiketi) ... ok
+test_bozuk_offset_dogrulanmaz (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_bozuk_offset_dogrulanmaz)
+Saklanan offset metni göstermiyorsa span_verified False olmalı. ... ok
+test_campaign_text_ve_span_dogrulamasi_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_campaign_text_ve_span_dogrulamasi_esit)
+31 Tem'de eklenen span_start/span_end/span_verified Postgres'te de çalışmalı. ... ok
+test_campaigns_per_bank_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_campaigns_per_bank_esit) ... ok
+test_confidence_source_kalici (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_confidence_source_kalici) ... ok
+test_counts_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_counts_esit) ... ok
+test_field_coverage_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_field_coverage_esit) ... ok
+test_field_value_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_field_value_esit) ... ok
+test_gecersiz_on_nul_modu (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_gecersiz_on_nul_modu) ... ok
+test_migrate_idempotent (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_migrate_idempotent)
+`ensure_schema()` iki kez koşabilmeli (elle kurulmuş DB senaryosu). ... ok
+test_nul_bayti_acik_hata_verir (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_nul_bayti_acik_hata_verir)
+NUL baytı İKİ backend'de de ANLAŞILIR hata vermeli — parite. ... ok
+test_nul_strip_modu_uyarir (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_nul_strip_modu_uyarir)
+`on_nul='strip'` temizler ama SESSİZ kalmaz (offset kayması riski). ... ok
+test_olmayan_kampanya_none (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_olmayan_kampanya_none) ... ok
+test_query_fields_esit (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_query_fields_esit) ... ok
+test_span_gercekten_dogrulaniyor (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_span_gercekten_dogrulaniyor) ... ok
+test_upsert_bank_idempotent (tests.test_pgvector_repository.TestPostgresRepositoryParity.test_upsert_bank_idempotent) ... ok
+test_sebep_bos_degil (tests.test_pgvector_repository.TestSkipGorunurlugu.test_sebep_bos_degil) ... ok
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.758s
+
+OK
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=0  sure=1812 ms  -> BEKLENDIGI GIBI
+
+==============================================================================
+ OZET
+==============================================================================
+#   adim                                                       kod    sure(ms) sonuc
+------------------------------------------------------------------------------
+1   Imaj derleme (docker compose build api api-postgres web db 0      56873    BEKLENDIGI GIBI
+2   Izole ag olustur (--internal, dis dunyaya rotasiz)         0      50       BEKLENDIGI GIBI
+3   Prob dogrulama: SIRADAN agda prob ULASMALI (metaKontrol)   0      1510     BEKLENDIGI GIBI
+4   TAM YIGIN ayaga kalkiyor (postgres+api+api-postgres+ollama 0      6103     BEKLENDIGI GIBI
+5   NEGATIF KONTROL: izole agdaki 'api' konteyneri disariya UL 3      123      BEKLENDIGI GIBI
+6   postgres hazir (pg_isready) — izole ag                   0      88       BEKLENDIGI GIBI
+7   api /health hazir — izole ag                             0      130      BEKLENDIGI GIBI
+8   api-postgres /health hazir (postgres backend) — izole ag 0      105      BEKLENDIGI GIBI
+9   ollama API hazir (/api/tags) — izole ag                  0      105      BEKLENDIGI GIBI
+10  web (Next.js) hazir — izole ag                           0      186      BEKLENDIGI GIBI
+11  web konteyneri 'api' servisine ISIM ile ulasiyor (dahili D 0      71       BEKLENDIGI GIBI
+12  api-postgres konteyneri PostgreSQL'e gercekten yaziyor (re 0      94       BEKLENDIGI GIBI
+13  db-check: pgvector paritesi + embeddings testi — izole ag, 0      1812     BEKLENDIGI GIBI
+------------------------------------------------------------------------------
+adim sayisi        : 13
+beklenmedik sonuc  : 0
+transkript         : docs/offline-proof/tam-yigin-agsiz-transcript-20260821-135114.log
+
+SONUC: TUM ADIMLAR BEKLENDIGI GIBI.
+       postgres + api + api-postgres + ollama + web AYNI izole agda,
+       DIS DUNYAYA HICBIR ROTA OLMADAN, BIRLIKTE ayaga kalkti ve
+       birbirine servis-adi DNS'iyle eristi.
+
+temizlik: docker compose down (KEEP_UP=1 ile servisleri ayakta birakabilirsiniz)

@@ -12,7 +12,7 @@
 **imaj derlemesi internet ister**. Tam yığın (postgres+api+api-postgres+ollama+web)
 ağsız koşumu **2026-08-20'de denendi, host disk yetersizliği yüzünden
 TAMAMLANAMADI** — izolasyon mekanizması ayrı deneylerle doğrulandı ama
-`docker compose` ile birlikte koşum **2026-08-20'de ÖLÇÜLDÜ: 13/13 adım geçti** (§0-d). Kalan iki sınır: vLLM kolu (GPU) ve **kanıtın tekrarlanabilirliği** — 21 Ağustos'ta kırılganlığın kök nedeni bulunup giderildi ama 3/3 koşum host diski dolu olduğu için henüz yapılamadı (**§0-e**). Ayrıntı: **§0-b**.
+`docker compose` ile birlikte koşum **2026-08-20'de ÖLÇÜLDÜ: 13/13 adım geçti** (§0-d). Kanıtın **tekrarlanabilirliği** 21 Ağustos'ta ölçüldü: kırılganlığın kök nedeni (host portu yayımlama) giderildi ve **3/3 koşum, 39/39 adım, 0 beklenmedik** (**§0-e**). Kalan tek kapsam sınırı vLLM kolu (GPU). Ayrıntı: **§0-b**.
 
 > **Ağaç temizliği neden burada yazıyor.** Transkript başlığındaki satır
 > `git durum : 1 degisik dosya` der. O tek dosya **koşumun kendi
@@ -94,24 +94,42 @@ doğrulandı: çözülmüş yapılandırmada **tek bir `ports` satırı kalmıyo
 "Boş port seç" alternatifi denendi ve bilinçli reddedildi: yayımlanmayan port,
 rastgele seçilmiş bir porttan hem daha sade hem kanıt olarak daha güçlü.
 
-### Ne BEKLİYOR — açıkça yazılıyor
-
-Düzeltmenin **yapılandırma düzeyinde** doğru olduğu ölçüldü (`compose config`).
-Ama **3/3 ampirik koşum henüz yapılamadı**: bu makinede Docker daemon ayağa
-kalkmıyor, sebebi host diskinin %99 dolu olması (460 GiB'ın 413'ü; Docker'ın
-sanal disk imajı tek başına 28 GiB). Üç koşum denendi, üçü de daemon'a
-bağlanamadan düştü — transkriptler `20260821-1206*` damgasıyla duruyor ve
-`HATA: docker daemon'a baglanilamadi` satırını taşıyor.
-
-Bu boşluk **gizlenmiyor**: §0-d'deki 13/13 sonucu geçerli ve tarihli, ama
-"her koşumda tekrarlanır" iddiası henüz kanıtlanmadı. Disk açıldığında
-koşulacak tam komut:
+### 3/3 KOŞUM ÖLÇÜLDÜ — 2026-08-21
 
 ```bash
 cd app && for i in 1 2 3; do bash scripts/tam_yigin_agsiz.sh; done
 ```
 
-Beklenen: üç transkriptin üçünde de `SONUC: 13/13` ve `0 BEKLENMEDIK`.
+| koşum | transkript | adım | beklenmedik | sonuç |
+|---|---|---|---|---|
+| 1 | `tam-yigin-agsiz-transcript-20260821-135114.log` | 13 | **0** | TÜM ADIMLAR BEKLENDİĞİ GİBİ |
+| 2 | `tam-yigin-agsiz-transcript-20260821-135225.log` | 13 | **0** | TÜM ADIMLAR BEKLENDİĞİ GİBİ |
+| 3 | `tam-yigin-agsiz-transcript-20260821-135317.log` | 13 | **0** | TÜM ADIMLAR BEKLENDİĞİ GİBİ |
+
+**39/39 adım, 0 beklenmedik.** Jürinin "üç denemede yalnız biri tam yeşil"
+bulgusu kapandı.
+
+Süreler kök nedeni de doğruluyor: kırılgan koşumda adım 10 (`web` hazır)
+**127.803 ms** sürüp sonunda patlıyordu (konteyner hiç doğmadığı için 90 sn
+zaman aşımı + temizlik). Port çakışması kalktığında aynı adım **186 ms**.
+Adım 7 (`api /health`) 130 ms, adım 11 (`web` → `api` dahili DNS) 71 ms.
+
+### Başarısız DENEMELER de kayıtta — hiçbiri izolasyon kaynaklı değil
+
+Bu sonuca varmadan önce üç deneme düştü ve sebepleri kanıt açısından öğretici,
+bu yüzden transkriptleri silinmedi:
+
+| damga | düşme sebebi | izolasyonla ilgili mi |
+|---|---|---|
+| `20260821-110217` | host diski doldu (`No space left on device`) | HAYIR |
+| `20260821-1206*` (3 dosya) | Docker daemon ayağa kalkmıyordu (disk %100) | HAYIR |
+| `20260821-134459` | **gerekli imaj yerelde yok** — betik `docker pull` YAPMAYI REDDETTİ | HAYIR (tasarım gereği) |
+
+Üçüncüsü betiğin doğru davranışıdır ve altı çizilmeye değer: ön koşul imajı
+eksikken betik kendisi çekmiyor, çünkü çekmek "ağsız koşum" iddiasını
+geçersiz kılardı. Ağ VARKEN önceden çekilmesi gereken iki imaj
+`docker-compose.yml`de sha256 ile sabitlenmiş (`pgvector/pgvector:pg16`,
+`ollama/ollama:latest`) ve betik hangisinin eksik olduğunu adıyla söylüyor.
 
 ---
 
