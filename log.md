@@ -532,3 +532,30 @@ Dokunulan dosyalar:
 - sorun/gold-round1-csvden-yeniden-uretilemiyor.md (yeni)
 - index.md (Sorunlar bölümü)
 - log.md (bu giriş)
+
+## [2026-08-21] duzeltme | gold derleme komutu bulundu, tahkim CSV'lere tasindi
+
+Aynı gün açtığım `sorun/gold-round1-csvden-yeniden-uretilemiyor` sayfasının
+teşhisi YANLIŞTI. Gold kaynaktan üretilebiliyor; eksik olan hangi ön-anotasyon
+havuzunun kullanıldığı bilgisiydi: `--pre data/gold/preannotations.v2.json`.
+Ben üç kombinasyon deneyip 57 kayıtta kalınca kusur ilan etmişim; 4. tur
+Teknik Mimari jürisi dördüncü havuzu deneyip 134'e ulaşmış.
+
+Gerçek boşluk ikincisiydi ve kapandı: HAKEM-05 + S1 kararları (27 satır)
+kaynak CSV'lere yazıldı. Beşi YENİ SATIR olarak eklendi — o belgelerde
+`finansman_tutari` inceleme kuyruğuna hiç girmemişti çünkü model o alanda bir
+şey üretmemişti; kuyruk model çıktısına göre kuruluyor, yani modelin görmediği
+alanda anotatörün kararını kaydedecek yer yoktu.
+
+Yol boyunca kendi hatamı buldum: S1 betiğinde `r.setdefault("fields", {}) or {}`
+yazmışım. Boş sözlükte `or` kopuk bir sözlük döndürüyor ve yazılan değer
+kayboluyor. `lc-waikiki` kaydı bu yüzden boş kalmış. Bir denetim bunu "support
+daralması" diye okumuştu; onarımdan sonra gerçek sayı 22 -> 18 (17 değil).
+
+Ölçüm: round1 manşet 0,793 -> 0,795 · finansman_tutari F1 1,000 destek 18.
+
+Dokunulan dosyalar:
+- sorun/gold-round1-csvden-yeniden-uretilemiyor.md (teşhis düzeltildi)
+- index.md · README.md (derleme komutu + sayılar)
+- app/data/gold/review/round1_{A,B,main_C,main_D}.csv (27 satır)
+- app/data/gold/gold.round1.json (kaybolan hücre onarıldı)

@@ -81,6 +81,52 @@ class TestYonlendirme(unittest.TestCase):
         self.assertIsNone(r.filters.get("vade_ay_min"))
 
 
+class TestYilBirimi(unittest.TestCase):
+    """4. tur bulgusu: desen yalnız `ay` görüyordu, "3 yıl" düşüyordu.
+
+    Kusur 3. turda kapatılan "6 ay vadeli" hatasının İKİZİ: mekanizma doğru,
+    sözcük listesi dar. Çıkarım katmanı "yıl"ı zaten çeviriyordu; router
+    aynı standarda getirilmemişti.
+    """
+
+    def test_yil_aya_cevrilir(self) -> None:
+        for soru, beklenen in (("3 yıl vadeli kampanya var mı", 36),
+                               ("5 sene vadeli finansman", 60),
+                               ("1 yıl vadeli katılma hesabı", 12)):
+            with self.subTest(soru=soru):
+                self.assertEqual(route(soru).filters.get("vade_ay_esit"),
+                                 beklenen)
+
+    def test_yil_asgari_okumasi(self) -> None:
+        self.assertEqual(
+            route("en az 2 yıl vade veren konut finansmanı")
+            .filters.get("vade_ay_min"), 24)
+
+    def test_ay_birimi_bozulmadi(self) -> None:
+        self.assertEqual(route("6 ay vadeli kampanya")
+                         .filters.get("vade_ay_esit"), 6)
+        self.assertEqual(route("36 ay ve üzeri vade veren")
+                         .filters.get("vade_ay_min"), 36)
+
+    def test_takvim_yili_tuzagina_dusmez(self) -> None:
+        """"2026 yılı" bir SÜRE değil TARİH — 2026×12=24.312 ay olamaz.
+
+        Aynı tuzak `extraction.rules.vade._takvim_yili`'de ölçülmüş ve
+        orada 10 kayıt bozuyordu.
+        """
+        for soru in ("2026 yılı kampanyaları", "2025 yılı sonuna kadar"):
+            with self.subTest(soru=soru):
+                f = route(soru).filters
+                self.assertIsNone(f.get("vade_ay_esit"))
+                self.assertIsNone(f.get("vade_ay_min"))
+
+    def test_absurt_yil_reddedilir(self) -> None:
+        """80 yıl vadeli finansman diye bir şey yok — süzgeç kurulmaz."""
+        f = route("80 yıl vadeli finansman").filters
+        self.assertIsNone(f.get("vade_ay_esit"))
+        self.assertIsNone(f.get("vade_ay_min"))
+
+
 class TestSuzgecUygulaniyor(unittest.TestCase):
     """Süzgeç kurulup uygulanmazsa hiçbir şey değişmez."""
 

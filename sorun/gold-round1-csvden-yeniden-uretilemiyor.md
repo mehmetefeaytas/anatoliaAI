@@ -1,82 +1,109 @@
 ---
-title: "Sorun: gold.round1.json kaynak CSV'lerden yeniden üretilemiyor"
-tags: [sorun, gold, tekrar-uretilebilirlik, olcum]
+title: "Sorun: gold.round1.json derleme komutu belgesizdi (ÇÖZÜLDÜ)"
+tags: [sorun, gold, tekrar-uretilebilirlik, olcum, cozuldu]
 date: 2026-08-21
 status: stable
 ---
 
-# Sorun: `gold.round1.json` kaynak CSV'lerden yeniden üretilemiyor
+# Sorun: `gold.round1.json` derleme komutu belgesizdi
 
-**Belirti.** Ölçümün referansı olan `app/data/gold/gold.round1.json` 134 kayıt
-taşıyor. Aynı dosyayı üreten dört anotasyon CSV'sinden derleme yalnız **57**
-kayıt veriyor:
+> **DÜZELTME (2026-08-21, aynı gün).** Bu sayfa ilk hâlinde *"gold kaynaktan
+> yeniden üretilemiyor"* diyordu. **Teşhis yanlıştı.** Gold üretilebiliyor;
+> eksik olan hangi ön-anotasyon havuzunun kullanıldığı bilgisiydi. Yanlış
+> teşhisi silmiyorum — nasıl düzeltildiği aşağıda, çünkü yanlış bir kusur
+> kaydı da bir kayıttır.
+
+**İlk belirti.** Ölçümün referansı olan `app/data/gold/gold.round1.json` 134
+kayıt taşıyor. Dört anotasyon CSV'sinden derleme yalnız **57** kayıt veriyordu:
 
 ```bash
-cd app && .venv/bin/python -m scripts.build_gold \
+# EKSİK KOMUT — 57 kayıt verir
+.venv/bin/python -m scripts.build_gold \
   --csv data/gold/review/round1_A.csv --csv data/gold/review/round1_B.csv \
   --csv data/gold/review/round1_main_C.csv --csv data/gold/review/round1_main_D.csv \
   --out /tmp/deneme.json
-# -> kayıt: 57   (hedef: 134)
 ```
 
-Düşen 77 kaydın anotatör kırılımı: **46 `D`**, **30 `A`+`B`**, 1
-`D`+`HAKEM-04`. Yalnız `D`'den derleme 31 kayıt veriyor; `D` ile dörtlünün
-birleşimi hâlâ 57'de kalıyor, yani eksik kayıtlar CSV'lerin bugünkü hâlinde
-**yok**.
+Bundan "yeniden üretilemiyor" sonucunu çıkardım. Yanlıştı: `--pre` varsayılanı
+`data/gold/preannotations.json`'dır ve round1 o havuzdan değil **`.v2`**
+havuzundan üretilmişti.
 
-**Kök neden.** İki aday var ve ikisi de kayıtsız:
+**Kök neden.** `build_gold` bir kayıt üretmek için hem CSV satırını hem
+ön-anotasyon havuzundaki belgeyi ister; havuz eşleşmeyince kayıt sessizce
+düşer. Depoda dört havuz var (`preannotations.json`, `.v2`, `.v3`, `.zor`) ve
+hangisinin hangi gold'u ürettiği **hiçbir yerde yazılı değildi**.
 
-1. **Derleme komutu hiçbir yerde yazılı değil.** `build_gold.py` `--csv-dir`
-   ile `round*.csv` deseni kabul ediyor ama `gold.round1.json`'u hangi dosya
-   kümesiyle ve hangi bayraklarla ürettiğimiz ne README'de, ne `log.md`'de,
-   ne bir Makefile hedefinde duruyor. Deponun kendi kuralı ("her sayı bir
-   komutla yeniden üretilebilir") burada tutmuyor.
-2. **CSV'ler gold üretildikten SONRA değişti.** `data/gold/review/` altında
-   `round1_A.csv.yedek-hakemlik-round1` ve `.yedek-sema-onarimi-round1`
-   yedekleri var; yani hakemlik ve şema onarımı turları CSV'lere dokundu.
-   Gold JSON o turlardan önceki bir durumdan türemiş olabilir.
+**Doğru komut — ölçüldü, 134 kayıt veriyor:**
 
-**Etki.** Üç ayrı yerden vuruyor:
+```bash
+cd app && .venv/bin/python -m scripts.build_gold \
+  --pre data/gold/preannotations.v2.json \
+  --csv data/gold/review/round1_A.csv --csv data/gold/review/round1_B.csv \
+  --csv data/gold/review/round1_main_C.csv --csv data/gold/review/round1_main_D.csv \
+  --out /tmp/gold-round1-yeniden.json
+# -> kayıt: 134
+```
 
-- **Ölçüm tabanı denetlenemez.** Jüri "gold'u kim, hangi kararla doldurdu"
-  diye sorup CSV'den JSON'a giden yolu izleyemiyor.
-- **Tahkim kararları JSON'a yazılmak zorunda kaldı.** HAKEM-05'in 23 kararı
-  (anotatör onaylı, 2026-08-21) doğrudan `gold.round1.json`'a uygulandı;
-  CSV'lere işlenmedi. CSV'den türetmek bugün ölçüm tabanını 134'ten 57'ye
-  düşürür, yani düzeltme yaparken ölçümü bozar.
-- **Şartnamenin tekrar-üretilebilirlik beklentisi (Teknik İmplementasyon)
-  bu noktada karşılanmıyor.** Jüri 3. turda bunu bulmadı; 4. turda kendimiz
-  yazdık ve jüri "üç turdur aynı itiraf" diye not düştü.
+**Nasıl bulundu.** Ben bulamadım; 4. tur Teknik Mimari jürisi buldu. Ben üç
+kombinasyon deneyip (`--pre` varsayılan, `--csv-dir`, beşinci CSV) 57'de
+kalınca kusur ilan etmişim. Jüri dördüncü havuzu deneyip 134'e ulaşmış. Ders
+açık: "yeniden üretilemiyor" demek için tüketilmesi gereken arama uzayı, benim
+tükettiğimden büyüktü.
 
-**Çözüm — henüz UYGULANMADI, sıra ve gerekçe:**
+## Kararlar artık CSV'lerde — tahkim kaynağa taşındı
 
-1. **Kanıt yolunu tersten kur.** `gold.round1.json`'daki her kaydın hangi
-   CSV satırından geldiğini `doc_id` + `annotators` üzerinden eşle; eşleşmeyen
-   77 kaydı adlandır. Bu, hangi turun hangi kaydı ürettiğini gösterir.
-2. **Yedeklerle dene.** `*.yedek-hakemlik-round1` ve
-   `*.yedek-sema-onarimi-round1` dosyalarıyla derleme 134'ü veriyor mu?
-   Veriyorsa komut belgelenir ve iş biter.
-3. **Vermiyorsa JSON'u kaynak ilan et.** O zaman CSV'ler *tarihî kayıt*,
-   JSON *doğruluk kaynağı* olur; bu karar bir ADR'ye yazılır ve JSON'a
-   yazan tek meşru yol (`scripts/hakem_uygula.py` gibi bir betik, anotatör
-   onayı zorunlu) tanımlanır. Bugün o betik yok; HAKEM-05 kararları
-   scratchpad'deki geçici bir betikle uygulandı ve bu izlenebilirlik açığı.
-4. **Kayıt sayısını bir kapıya bağla.** `kanit_tazeligi` `gold_round1_kayit`
-   iddiasını zaten ölçüyor (134) ama *kaynaktan üretilebilirliği* ölçmüyor.
-   Bir test derlemeyi koşup kayıt sayısını karşılaştırmalı; ayrışırsa CI
-   düşmeli.
+İkinci ve gerçek boşluk şuydu: HAKEM-05 ve S1 kararları (23 + 4) doğrudan
+`gold.round1.json`'a uygulanmıştı, kaynak CSV'lere işlenmemişti. Yani gold
+kaynaktan üretilse tahkim kaybolurdu.
 
-**Neden şimdi kapatılmadı.** Yarışmanın çevrimiçi süreci 26 Ağustos'ta
-bitiyor ve bu iş ölçüm tabanına dokunuyor. Yanlış sırada yapılırsa
-`gold.round1` ölçümleri (mikro-F1 0,793, halüsinasyon 0,284) yeniden
-üretilemez hâle gelir. Boşluk gizlenmiyor: HAKEM-05 paketinde, kök
-README'de ve burada yazılı.
+Kararlar CSV'lere yazıldı — **27 satır**: 22'si mevcut satırın `verdict`/
+`gold_value` alanını değiştirdi, **5'i yeni satır olarak eklendi**. Beş satır
+eklenmesinin sebebi kayda değer: o belgelerde `finansman_tutari` inceleme
+kuyruğuna hiç girmemişti, çünkü model o alanda bir şey üretmemişti. Kuyruk
+model çıktısına göre kurulduğu için, modelin görmediği bir alanda anotatörün
+kararı kaydedilecek yer yoktu. Şimdi var.
+
+**Ölçülen sonuç:** doğru komutla derleme 134 kayıt veriyor ve `finansman_tutari`
+kararlarının **tamamı** yeniden üretimde görünüyor.
+
+## Kalan fark — gizlenmiyor
+
+Yeniden üretilen gold ile teslim edilen gold 134 kayıtta aynı kararları
+taşıyor ama **birebir aynı dosya değil**. Fark kanıt alıntılarında: yeniden
+üretim `field_spans`'ı CSV'nin `snippet` kolonundan alıyor, teslim edilen
+dosyada bazı alıntılar metinden birebir dilimlenmiş. Ölçüldü: yeniden üretimde
+kanıtsız (`span_supports` başarısız) hücre **18**, teslim edilende **15**.
+
+Bu yüzden teslim edilen JSON *artefakt*, yeniden üretim *denetim yolu* olarak
+duruyor. Karar denetlenebilir; alıntı kalitesi teslim edilende daha iyi.
+
+## Yol boyunca bulunan kendi hatam
+
+S1 kararlarını uygulayan betiğimde `r.setdefault("fields", {}) or {}` yazmışım.
+`fields` boş sözlükse `or` **yeni ve kopuk** bir sözlük döndürüyor; yazılan
+değer kayboluyor. Dört S1 hücresinden üçü başka alanlar da taşıdığı için
+tuttu, `lc-waikiki` kaydının `fields`'ı boş olduğu için düştü.
+
+Bunun ölçüme maliyeti vardı ve bir denetim onu "support daralması" diye
+okumuştu: destek 22 → **17** görünüyordu. Hücre onarıldıktan sonra gerçek sayı
+**18**. Yani daralmanın bir kısmı tahkim değil, benim hatamdı.
+
+  `finansman_tutari` F1 1,000 · TP 18 · FP 0 · FN 0 · destek 18 (öncesi 22)
+  round1 manşet mikro-F1 0,795 · halüsinasyon 0,284
+
+## Açık kalan
+
+Derleme komutu artık belgeli ama **bir kapıya bağlı değil**: `kanit_tazeligi`
+`gold_round1_kayit` iddiasını (134) ölçüyor, *kaynaktan üretilebilirliği*
+ölçmüyor. Bir test derlemeyi koşup kayıt sayısını ve `finansman_tutari`
+kararlarını karşılaştırmalı. Yapılmadı; çevrimiçi süreç 26 Ağustos'ta bitiyor
+ve bu test derleme başına ~1 dakika ekliyor.
 
 ## Sources
-- `app/data/gold/review/_hakem-turu-05-finansman-tutari-round1.md` — "KAPSAM
-  SINIRI ve YENİ KUSUR" bölümü, ölçümün yapıldığı yer
-- 4. tur Yenilikçilik jürisi — "kendi tespit ettiği kusuru kendi önerdiği
-  yere taşımamış" bulgusu; bu sayfa o bulgunun karşılığı
+- 4. tur Teknik Mimari jürisi — `--pre data/gold/preannotations.v2.json`
+  bulgusu; bu sayfanın ilk teşhisini çürüten ölçüm
+- `app/data/gold/review/_hakem-turu-05-finansman-tutari-round1.md` — CSV'lere
+  taşınan 27 kararın kaynağı
 
 ## Related
 - [[standart-veri-formati-eksikligi]] — aynı ailedeki veri disiplini sorunu

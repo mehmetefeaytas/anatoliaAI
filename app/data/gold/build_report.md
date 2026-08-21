@@ -2,8 +2,8 @@
 
 > `scripts/build_gold.py` üretti. Elle düzenlemeyin.
 
-- Çıktı: `/private/tmp/claude-501/-Users-mehmetefeaytas-anatoliaaI/c4a060e2-14c7-4d1c-973b-4d41e3231c45/scratchpad/deneme_v2pre.json`
-- SHA-256: `4d53fe6d4d11fb9b3be54b2f3a49fa8d748dba74f33f1e3a12f5e08eb3676616`
+- Çıktı: `/tmp/g3.json`
+- SHA-256: `7fc6d5d8e1860f7d3c3acc23440c159cc6e7295aa47b8a3108c88197ed4312f5`
 - Kayıt: **134**
 - Çift anote edilmiş kayıt: **44**
 - 12/12 alan karara bağlı (recall ÖLÇÜLEBİLİR): **0**
@@ -11,7 +11,7 @@
 - Çelişki (anotatörler ayrıştı): **11**
 - Hakemlik bekleyen kayıt: **11**
 - Hakemlikten/şema onarımından geçmiş kayıt (`adjudicated`): **38** — damgalar: `#hakemlik-round1`, `#sema-onarimi-round1`
-- Kanıtlı alan (`field_spans`): **129/148** (%87.2)
+- Kanıtlı alan (`field_spans`): **126/144** (%87.5)
 
 ## Protokol künyesi
 
@@ -22,7 +22,7 @@
 | `data/gold/review/round1_main_C.csv` | **v2** | karar verilmedi — gold'a GİRMEZ |
 | `data/gold/review/round1_main_D.csv` | **v2** | karar verilmedi — gold'a GİRMEZ |
 
-- v2'de karar verilmemiş satır: **1936** (A=504, B=500, C=540, D=392)
+- v2'de karar verilmemiş satır: **1931** (A=503, B=499, C=539, D=390)
 
 
 ## Ölçülebilirlik
@@ -32,8 +32,8 @@
 
 ## Kanıt (`field_spans`)
 
-- Kanıtlı: **129/148** alan
-- Kanıtsız: **19** alan — değer var, belgede birebir geçen alıntısı yok.
+- Kanıtlı: **126/144** alan
+- Kanıtsız: **18** alan — değer var, belgede birebir geçen alıntısı yok.
 
 > Bu hattın kanıtı `merge_gold_v2` hattınınkiyle **aynı ağırlıkta değildir.** Orada alıntıyı anotatör belgeyi kör okuyarak elle yazdı; burada çıkarıcının kaydettiği konumu anotatör onayladı (`verdict=ok`). İkisi de belgede birebir geçer, ikincisi bağımsız bir gözlem değildir.
 
@@ -44,7 +44,7 @@
 | Alan | değer | kanıtlı | yok (absent) | belirsiz |
 |---|---:|---:|---:|---:|
 | `kar_payi_orani` | 7 | 6 | 10 | 0 |
-| `finansman_tutari` | 22 | 15 | 5 | 3 |
+| `finansman_tutari` | 18 | 12 | 18 | 3 |
 | `vade_ay` | 33 | 27 | 30 | 4 |
 | `taksit_sayisi` | 16 | 16 | 2 | 0 |
 | `tahsis_ucreti` | 0 | 0 | 0 | 0 |
@@ -69,15 +69,14 @@
 | `albaraka--tatiliniz-icin-devre-mulk` | `vade_ay` |
 | `albaraka--tr-urun-ve-hizmet-ucretleri` | `masraf_durumu` |
 | `dunya-katilim--kredi-kartlari-paraf-platinum-kredi-karti` | `masraf_durumu` |
-| `hayat-finans--hesaplar-avantajli-hesap` | `finansman_tutari` |
-| `tom-katilim--urunlerimiz` | `finansman_tutari` |
 | `turkiye-emlak-katilim--katilma-hesaplari-zumrut-katilma-hesabi` | `vade_ay` |
-| `turkiye-finans--bireysel-gunluk-hesap` | `finansman_tutari` |
 | `turkiye-finans--bireysel-urun-hizmet-ucretleri` | `vade_ay` |
+| `turkiye-finans--kampanyalar-banka-calisanlarina-ozel-ihtiyac-finansmani` | `finansman_tutari` |
+| `turkiye-finans--kampanyalar-emekliler-haftasina-ozel-avantajlar` | `finansman_tutari` |
+| `turkiye-finans--kampanyalar-ihtiyac-finansmani-kampanyasi` | `finansman_tutari` |
 | `turkiye-finans--kampanyalar-turkiye-finans-avantajlariyla-mobilden-tanis` | `finansman_tutari` |
 | `turkiye-finans--kampanyalar-turkiye-finans-avantajlariyla-mobilden-tanis` | `kampanya_suresi` |
 | `turkiye-finans--katilma-hesaplari-e-katilma-hesabi` | `vade_ay` |
-| `turkiye-finans--kobi-kobi-icin-gunluk-hesap` | `finansman_tutari` |
 | `vakif-katilim--detay-igdas-finansman-kampanyasi` | `finansman_tutari` |
 
 ## Zor-vaka etiketleri

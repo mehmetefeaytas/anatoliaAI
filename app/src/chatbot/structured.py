@@ -71,10 +71,12 @@ from ..comparison.compare import (
     ASGARI_GUVEN,
     BILINMEYEN_TUR,
     DEFAULT_WEIGHTS,
+    ELEME_ALAN_YOK,
     ELEME_ARALIK,
     ELEME_BILINMIYOR,
     ELEME_DEGER_YOK,
     ELEME_DUSUK_GUVEN,
+    ELEME_ORAN_BAZI,
     ELEME_PARA_BIRIMI,
     ELEME_SAYISAL_DEGIL,
     ELEME_SURESI_DOLMUS,
@@ -793,6 +795,21 @@ _AZAMI_IPUCU = 3
 
 #: Eleme sebebi → sayım cümlesinde kullanılan sıfat/yüklem. Hem "üçü de X"
 #: hem "5 kampanya X" kalıbına oturacak biçimde yazılıdır.
+#: Eleme sebebi -> kullanıcıya gösterilen sıfat.
+#:
+#: SÖZLÜK TAM OLMAK ZORUNDA. `_sayim_cumlesi` buna `[kod]` ile erişiyor;
+#: eksik anahtar `KeyError` ve HTTP 500 demek. 4. tur Fonksiyonellik jürisi
+#: bunu CANLI buldu: "Ziraat Katılım'ın konut finansmanında en az 12 ay
+#: vadeli ve masrafsız kampanyası var mı?" sorusu 500 döndürüyordu, çünkü
+#: `compare.py` `ELEME_ALAN_YOK` üretiyor ama sözlükte karşılığı yoktu.
+#: `ELEME_ORAN_BAZI` de aynı durumdaydı; jüri onu görmedi, aynı sınıf
+#: olduğu için birlikte kapatıldı.
+#:
+#: Sessizce düşen bir koşuldan KÖTÜ bir kusur: kullanıcı hiç cevap almıyor.
+#: Çözüm iki katmanlı — sözlük tamamlandı VE
+#: `tests/test_eleme_sebebi_tam.py` `compare.ELEME_*` sabitlerinin
+#: tamamının burada karşılığı olduğunu denetliyor. Yeni bir eleme sebebi
+#: eklenirse test kırılır; sözlük bir daha sessizce eksik kalmaz.
 _SEBEP_SIFATI = {
     ELEME_SURESI_DOLMUS: "kapanmış",
     ELEME_DUSUK_GUVEN: "düşük çıkarım güveniyle işaretli",
@@ -801,6 +818,8 @@ _SEBEP_SIFATI = {
     ELEME_DEGER_YOK: "değeri boş",
     ELEME_PARA_BIRIMI: "TRY dışı para biriminde",
     ELEME_SAYISAL_DEGIL: "sayıya çevrilemeyen biçimde",
+    ELEME_ALAN_YOK: "bu alanı hiç taşımıyor",
+    ELEME_ORAN_BAZI: "farklı oran bazında ilan edilmiş (aylık ↔ yıllık)",
     ELEME_BILINMIYOR: "başka bir sebeple kıyas dışı",
 }
 

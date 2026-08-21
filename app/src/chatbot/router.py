@@ -1145,13 +1145,46 @@ def _detect_intent(q: str) -> Optional[str]:
     return None
 
 
+#: Vade eşiğinin BİRİMİ — ay ya da yıl.
+#:
+#: 4. tur Fonksiyonellik jürisi ölçtü: desen yalnız `ay` görüyordu, bu yüzden
+#: "3 yıl vadeli kredi kartı kampanyası var mı?" sorusunda vade koşulu
+#: SESSİZCE DÜŞÜYORDU ve 12 aylık kampanyalar dönüyordu. Kusur 3. turda
+#: kapatılan "6 ay vadeli" hatasının ikizi: mekanizma doğru, sözcük listesi
+#: dar. Çıkarım katmanı (`extraction.rules.vade`) "yıl"ı zaten doğru
+#: çeviriyordu; router aynı standarda getirilmemişti.
+#:
+#: `sene` de kabul ediliyor (konuşma dilinde yaygın). `yil` katlanmış
+#: (ascii) biçim — soru `tr_fold_ascii`'den geçmiş geliyor.
+_VADE_BIRIMI_RE = re.compile(r"(\d{1,3})\s*(ay|yil|yıl|sene)\b")
+
+#: Takvim yılı KORUMASI. `extraction.rules.vade._takvim_yili` ile aynı
+#: gerekçe: "2026 yılı" bir SÜRE değil TARİHTİR ve 2026 × 12 = 24.312 ay
+#: diye okunması ölçülmüş bir hatadır. Router'da desen `\d{1,3}` ile
+#: sınırlı olduğu için dört haneli yıl zaten eşleşmiyor; sınır yine de
+#: yazılı ki desen bir gün genişletilirse tuzak görünür kalsın.
+_VADE_YIL_AZAMI = 50
+
+
+def _vade_ay_cevir(m: "re.Match[str]") -> Optional[int]:
+    """Eşleşmeyi AY cinsine çevirir; makul değilse `None`."""
+    sayi = int(m.group(1))
+    birim = m.group(2)
+    ay = sayi * 12 if birim in ("yil", "yıl", "sene") else sayi
+    if birim in ("yil", "yıl", "sene") and sayi > _VADE_YIL_AZAMI:
+        return None
+    return ay if _VADE_MIN <= ay <= _VADE_AZAMI else None
+
+
 def _detect_filters(q: str) -> dict:
     filters: dict = {}
-    # "36 ay" gibi vade filtresi: "X ay veren/üzeri"
-    m = re.search(r"(\d{1,3})\s*ay", q)
+    # "36 ay" / "3 yıl" gibi vade filtresi: "X ay veren/üzeri"
+    m = _VADE_BIRIMI_RE.search(q)
     # q katlanmış (ascii) geldiği için eşik sözcükleri de katlanmış yazılır.
-    if m and any(s in q for s in ("veren", "uzeri", "ve uzeri", "en az")):
-        filters["vade_ay_min"] = int(m.group(1))
+    vade_ay = _vade_ay_cevir(m) if m else None
+    if vade_ay is not None and any(
+            s in q for s in ("veren", "uzeri", "ve uzeri", "en az")):
+        filters["vade_ay_min"] = vade_ay
     # "6 ay vadeli" — TAM vade. Jüri 3. turunda ölçülen kusur: bu çekim hiçbir
     # tetikleyici listede yoktu, bu yüzden "6 ay vadeli ve %0 kâr paylı"
     # sorusunda vade koşulu SESSİZCE DÜŞÜYOR ve yalnız kâr payı uygulanıyordu.
@@ -1161,8 +1194,8 @@ def _detect_filters(q: str) -> dict:
     # yerine YANLIŞ bir koşul koymak olurdu — aynı hatanın başka kılığı.
     # Sıra önemli: "en az 6 ay vadeli" hem "en az" hem "vadeli" taşır ve
     # ASGARİ okumasıdır; bu yüzden eşitlik yalnız asgari kurulmadıysa kurulur.
-    elif m and "vadeli" in q:
-        filters["vade_ay_esit"] = int(m.group(1))
+    elif vade_ay is not None and "vadeli" in q:
+        filters["vade_ay_esit"] = vade_ay
     # kampanya türü filtresi — önce alt dize sözlüğü, sonra sözcük desenleri.
     # Sıra önemli: "taşıt evrakları" sorusunda "taşıt" önce eşleşir ve yalın
     # "ev" deseni hiç denenmez.

@@ -177,9 +177,9 @@ karşılaştırır, ayrışırsa CI düşer. Ölçüm tarihi: **21 Ağustos 2026
 | Korpus | **2.708 belge** · 7.032 çıkarılan alan (ham arşivle eşit) | `python -m scripts.check_demo_db` |
 | AI özeti kapsaması | **2.634 üretildi (%97,3)** · 74 belge gerekçeli boş (29 metin boş · 41 terminoloji kapısı · 4 diğer) | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
-| Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `data/gold/gold.round1.json` |
-| **gold.round1 mikro-F1** | **0,793** · halüsinasyon **0,284** · makro **0,650** — HAKEM-05 sonrası (öncesi 0,738 / 0,344) | `python -m eval.run_eval --gold data/gold/gold.round1.json` |
-| gold.round1 `finansman_tutari` | **F1 1,000** (P 1,0 · R 1,0 · TP 17 · FP 0) — öncesi 0,500. **Destek 22 → 17:** artışın bir kısmı ölçümün DARALMASINDAN geliyor; ayrıntı aşağıda | *(aynı komut)* |
+| Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `python -m scripts.build_gold --pre data/gold/preannotations.v2.json --csv data/gold/review/round1_{A,B}.csv --csv data/gold/review/round1_main_{C,D}.csv` |
+| **gold.round1 mikro-F1** | **0,795** · halüsinasyon **0,284** · makro **0,650** — HAKEM-05 sonrası (öncesi 0,738 / 0,344) | `python -m eval.run_eval --gold data/gold/gold.round1.json` |
+| gold.round1 `finansman_tutari` | **F1 1,000** (P 1,0 · R 1,0 · TP 18 · FP 0) — öncesi 0,500. **Destek 22 → 18:** artışın bir kısmı ölçümün DARALMASINDAN geliyor; kaldırılan hücreler finansman tutarı DEĞİLDİ (temassız limit, mevduat limiti, vade kademesi eşiği) | *(aynı komut)* |
 | Yapılandırılmış alan mikro-F1 (gold.v2, 11 alan) | **0,8228** | `python -m eval.run_eval --gold data/gold/gold.v2.json` |
 | 12-alan mikro-F1 | **0,5702** *(ikili ölçüt — hedef 0,60'ın ALTINDA)* | *(aynı komut — farkı aşağıda açıklıyoruz)* |
 | Kalem düzeyi mikro-F1 (12 alan) | **0,6291** | *(aynı komut)* |
