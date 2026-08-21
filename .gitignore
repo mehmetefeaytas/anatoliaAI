@@ -1,5 +1,7 @@
 # OS
 .DS_Store
+# MS Office kilit dosyaları (açık belge bırakınca oluşur, içerik taşımaz)
+~$*
 
 # Telifli yarışma kaynağı — raw/ değişmez kuralı; repoya konmaz
 *.pdf
@@ -45,31 +47,55 @@ raw/**/*.md
 
 # Rakip analizi — bilinçli olarak push dışında (e05d004).
 # Yarışma stratejisi içerir; ölçüm ya da kod değildir.
+# Kalıp yolsuz olduğu için TÜM kopyaları dışlar: geçerli sürüm `app/` altında,
+# eski (12 Ağu) sürüm `archive/` altında.
 _plan-rakip-ustunluk.md
 
 # Dahili Claude oturum dökümü (proje dosyası değil)
 _oturum-devir.md
+
+# Dahili proje incelemesi (2026-08-21) — jüri teslimatı değil, çalışma notu.
+# _plan-rakip-ustunluk.md ile aynı gerekçe: strateji ve öz-eleştiri içerir.
+_inceleme-duzeltilecekler.md
+_inceleme-iyi-kotu.md
 
 # Python (kök seviyesi; app/.gitignore ayrıca geçerli)
 __pycache__/
 *.py[cod]
 .venv/
 venv/
+# pytest ve ruff kendi önbellek dizinlerine birer `.gitignore` yazıyor;
+# yine de araç sürümü değişirse diye burada açıkça dışlanır.
+.pytest_cache/
+.ruff_cache/
 
 # ortam
 .env
 
-# Playwright MCP gecici dosyalari (kesif oturumlarindan)
+# Playwright MCP geçici dosyaları (keşif oturumlarından)
 .playwright-mcp/
 
-# Ön-anotasyon ara ciktisi (2 MB, data/raw + scripts/preannotate.py'den
-# yeniden uretilebilir). Anotatorlerin ihtiyaci olan sey CSV ve
-# review/belgeler/ altindaki metinler; bu ara JSON degil.
+# Ön-anotasyon ara çıktısı (2 MB, data/raw + scripts/preannotate.py'den
+# yeniden üretilebilir). Anotatörlerin ihtiyacı olan şey CSV ve
+# review/belgeler/ altındaki metinler; bu ara JSON değil.
 app/data/gold/preannotations.json
 
-# Vitrin dokumanlari: `vitrin` dalinda tutulur, yayin zamani main'e
-# birlestirilir. main'e kazara girmesinler diye burada yok sayilir.
+# Vitrin dokümanları: `vitrin` dalında tutulur, yayın zamanı main'e
+# birleştirilir. main'e kazara girmesinler diye burada yok sayılır.
 app/docs/invariants.md
+
+# LLM sağlığı günlüğü: append-only, her sağlık koşusunda büyür (4.400+ satır,
+# 2 MB). İzlenirken ağacı sürekli kirli bırakıyordu — `.ikinci-tur-insan-
+# ilerleme.json` ile aynı gerekçe. Dosya diskte durur, özetleri raporlarda.
+app/eval/reports/llm-sagligi.jsonl
+
+# Sunum ekran kareleri ve üretim betikleri: yerelde üretilir, depoya girmez.
+# Kareler `gom-ekranlar.py` ile canlı panelden yeniden çekilebilir (5,4 MB);
+# konuşmacı notu dahili çalışma notudur.
+app/docs/sunum/ekranlar/
+app/docs/sunum/cek-juri-4dk.py
+app/docs/sunum/gom-ekranlar.py
+app/docs/sunum/juri-4dk-konusmaci-notlari.md
 
 # İnsan etiketleme turunun YARI YOLDA kalan durumu (`scripts/ikinci_etiketleyici
 # insan`). Alan alan diske yazılır ki iş yarıda bırakılıp sürdürülebilsin —

@@ -277,7 +277,7 @@ class BrowserFetcher:
                 try:
                     page.wait_for_selector(wait_selector, timeout=8000)
                 except Exception:
-                    pass
+                    pass  # seçici hiç gelmeyebilir (dinamik/boş sayfa); eldeki DOM ile devam
             html = page.content()
             status = resp.status if resp is not None else None
             return FetchResult(url, status=status, html=html, method=self.method,
@@ -290,7 +290,7 @@ class BrowserFetcher:
                 try:
                     page.close()
                 except Exception:
-                    pass
+                    pass  # sekme zaten kapanmış/koparılmış olabilir; kapanış hatası sonucu değiştirmez
 
     # Sayfalama denetimlerini bulan JS. Site başına özel kod YAZILMAZ; tek
     # genel mekanizma üç yaygın biçimi kapsar:
@@ -347,7 +347,7 @@ class BrowserFetcher:
             try:
                 page.wait_for_load_state("networkidle", timeout=8000)
             except Exception:
-                pass
+                pass  # networkidle'a hiç ulaşmayan sayfalar (canlı sohbet vb.) normal
             pages.append(page.content())
             try:
                 count = int(page.evaluate(self._PAGER_JS) or 0)
@@ -363,7 +363,7 @@ class BrowserFetcher:
                     try:
                         page.wait_for_load_state("networkidle", timeout=5000)
                     except Exception:
-                        pass
+                        pass  # tıklama sonrası networkidle gelmeyebilir; sabit 400 ms bekleme zaten var
                     page.wait_for_timeout(400)
                     html = page.content()
                     if html and html not in pages:
@@ -380,7 +380,7 @@ class BrowserFetcher:
                 try:
                     page.close()
                 except Exception:
-                    pass
+                    pass  # sekme zaten kapanmış/koparılmış olabilir; kapanış hatası sonucu değiştirmez
 
     def _close_quiet(self) -> None:
         for obj in (self._context, self._browser, self._pw):
@@ -388,7 +388,7 @@ class BrowserFetcher:
                 if obj is not None:
                     (obj.stop if hasattr(obj, "stop") else obj.close)()
             except Exception:
-                pass
+                pass  # kapanış temizliği asla hata fırlatmaz; nesne çoktan ölmüş olabilir
         self._context = self._browser = self._pw = None
 
     def close(self) -> None:

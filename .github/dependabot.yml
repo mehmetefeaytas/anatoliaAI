@@ -1,0 +1,19 @@
+# Bağımlılık güncelleme botu — haftalık, üç ekosistem.
+# Pinli sürüm disiplini (app/requirements.txt başlığı) elle takip yerine
+# burada otomatik PR'a bağlanır; PR'ı birleştiren SBOM'u da yeniden üretir.
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /app
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: npm
+    directory: /app/web
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

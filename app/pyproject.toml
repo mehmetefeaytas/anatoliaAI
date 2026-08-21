@@ -47,10 +47,12 @@ ignore = [
 #   UP    (pyupgrade)  — 247 bulgunun kaynağı. `Optional[X]` bu kod tabanında
 #                        tutarlı biçimde kullanılıyor; değiştirmek üslup
 #                        tercihi, hata düzeltmesi değil.
-#   S     (bandit)     — `try/except/pass` bulgularının hepsi gerekçeli
-#                        temizlik yolları (`_close_quiet`, `finally: page.close()`,
-#                        networkidle'a ulaşmayan sayfalar). Kural açılınca
-#                        meşru kodu susturmak için noqa yağmuru gerekirdi.
+#   S     (bandit)     — `try/except/pass` bulgularının hepsi temizlik
+#                        yolları (`_close_quiet`, `finally: page.close()`,
+#                        networkidle'a ulaşmayan sayfalar) ve 2026-08-21'den
+#                        beri her biri satır içi gerekçe yorumu taşıyor.
+#                        Kural açılınca meşru kodu susturmak için noqa
+#                        yağmuru gerekirdi.
 #   PLR   (refaktör)   — "çok fazla dal/argüman" gibi öneriler; çıkarım
 #                        kuralları doğası gereği dallı.
 #   ISC, SIM, FURB     — biçim/kısaltma tercihleri.

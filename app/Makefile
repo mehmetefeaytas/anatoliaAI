@@ -20,7 +20,6 @@
 # Bu yüzden her hedef mutlak `.venv` yolunu kullanır.
 
 PY      := .venv/bin/python
-PYTEST  := $(PY) -m pytest
 DOCS    := docs
 
 # Varsayılan hedef: ne yapılabileceğini göster. Yanlışlıkla `make` yazan biri
@@ -101,9 +100,9 @@ veri-seti:
 veri-seti-yukle:
 	@$(PY) -m scripts.veri_seti_yukle --dizin $(VERI_SETI)
 
-## test: test paketini koşar
+## test: test paketini koşar (CI ile aynı koşucu: unittest)
 test:
-	@$(PYTEST) tests/ -q
+	@$(PY) -m unittest discover -s tests
 
 ## baslat: tüm yığını kaldırır — API + panel + yerel model
 # Betik `bash` ile çağrılır, `./scripts/baslat.sh` ile değil: çalıştırma bitinin

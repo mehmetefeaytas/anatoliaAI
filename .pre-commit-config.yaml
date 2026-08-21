@@ -1,0 +1,28 @@
+# Yerel commit kapısı — CI'daki kapıların erken kopyası.
+# Kurulum: pip install pre-commit && pre-commit install
+# Sürümler CI ile AYNI tutulur (ci.yml ruff işi: ruff==0.16.3); birini
+# güncelleyen ikisini birlikte günceller.
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.3
+    hooks:
+      - id: ruff
+        args: [check]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # 78 MB'lık video emsali: büyük ikili dosya bir daha sessizce girmesin.
+      - id: check-added-large-files
+        args: [--maxkb=5000]
+      - id: check-merge-conflict
+
+  - repo: local
+    hooks:
+      # Finder ve MS Office artıkları — kök .gitignore'daki `.DS_Store` ve
+      # `~$*` kalıplarının commit-anı karşılığı.
+      - id: os-artiklari-yasak
+        name: .DS_Store / Office kilit dosyası commit edilemez
+        entry: bash -c 'echo "OS artığı commit edilemez:" "$@"; exit 1' --
+        language: system
+        files: '(^|/)(\.DS_Store|~\$[^/]*)$'

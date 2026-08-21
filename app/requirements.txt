@@ -17,10 +17,12 @@
 # yeniden üret, buradaki pini SBOM'la eşitle. Sessizce `>=`'ye dönmek
 # kapının varlık sebebini ortadan kaldırır.
 #
-# İKİ İSTİSNA — bilerek `>=` kaldı: `sentence-transformers` ve `black` bu
-# ortamda kurulu DEĞİL ve SBOM'da da yok, yani pinlenecek ölçülmüş bir sürüm
-# yok. Kurulu olmayan bir paket için sürüm yazmak, doğrulanmamış bir iddia
-# olur. Kurulduklarında SBOM'a girecek ve buraya da pinlenecekler.
+# TEK İSTİSNA — bilerek `>=` kaldı: `sentence-transformers` bu ortamda kurulu
+# DEĞİL ve SBOM'da da yok, yani pinlenecek ölçülmüş bir sürüm yok. Kurulu
+# olmayan bir paket için sürüm yazmak, doğrulanmamış bir iddia olur.
+# Kurulduğunda SBOM'a girecek ve buraya da pinlenecek. (`black` aynı
+# gerekçeyle `>=` taşıyordu; 2026-08-21'de hiç kullanılmadığı için tamamen
+# düşürüldü — bkz. geliştirme bölümü.)
 
 # --- çekirdek / şema ---
 pydantic==2.13.4            # LLM guided_json şemaları (MIT)
@@ -84,6 +86,7 @@ psycopg[binary]==3.3.4     # LGPL (dinamik bağlı istemci)
 # pgvector>=0.2          # PostgreSQL lisansı
 
 # --- geliştirme ---
-ruff==0.16.3                # MIT
-black>=24.0              # MIT
-pytest==9.1.1              # MIT
+ruff==0.16.3                # MIT — lint + format kapısı (black ve pytest
+                            # 2026-08-21'de düşürüldü: black hiç yapılandırılıp
+                            # koşulmadı; 210 test dosyasının hiçbiri pytest API'si
+                            # kullanmıyor ve CI unittest ile koşuyor)

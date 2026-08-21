@@ -22,19 +22,20 @@ venv/
 # (`src/scraping/harvest*.py`).
 #
 # NE KORUNUYOR: veri setinin kendisi ve provenance zinciri —
-#   `.txt`          çıkarılmış metin (1684 dosya, 12 MB)
+#   `.txt`          çıkarılmış metin (2.708 dosya — ölçüm 2026-08-21)
 #   `.txt.meta.json` source_url + scraped_at + content_hash + campaign_status
-#   `.pdf`          ücret tarifesi/bilgi formu asılları (112 dosya, 32 MB) —
-#                   tablo yapısı metne tam çevrilemediği için asıl tutulur
+#   `.pdf`          ücret tarifesi/bilgi formu asılları (999 dosya, ~356 MB —
+#                   ölçüm 2026-08-21); tablo yapısı metne tam çevrilemediği
+#                   için asıl tutulur
 #   `rates/*.jsonl` yapılandırılmış oran kayıtları
 data/raw/**/*.html
 data/raw/**/*.htm
-# ...AMA banka kokundeki TEST FIXTURE'lari haric.
+# ...AMA banka kökündeki TEST FIXTURE'ları hariç.
 # `data/raw/<slug>/*.html` fixture yoludur (src/pipeline.py: fixture modu `.html`
-# de okur); `data/raw/<slug>/<kova>/*.html` ise hasat cache'i. Bu ayrimi gozetmeyen
-# ilk kural `data/raw/albaraka/konut.html`'i depodan cikardi ve temiz bir klonda
-# 4 test kirmizi oluyordu (FIXTURE_DOCS=3 iken 2 belge yukleniyordu). Yerelde
-# gecmesinin tek sebebi dosyanin diskte TAKIPSIZ durmasiydi.
+# de okur); `data/raw/<slug>/<kova>/*.html` ise hasat cache'i. Bu ayrımı gözetmeyen
+# ilk kural `data/raw/albaraka/konut.html`'i depodan çıkardı ve temiz bir klonda
+# 4 test kırmızı oluyordu (FIXTURE_DOCS=3 iken 2 belge yükleniyordu). Yerelde
+# geçmesinin tek sebebi dosyanın diskte TAKİPSİZ durmasıydı.
 !data/raw/*/*.html
 !data/raw/*/*.htm
 
