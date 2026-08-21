@@ -5,6 +5,14 @@ durum: ölçüldü (2026-08-20), dürüstçe raporlandı
 girdi: data/snapshots/fark-2026-07-30_2026-08-03.json + git (c3f3b90, e05bc83)
 ---
 
+> **Güncelleme (2026-08-21):** bu belgedeki "0 belgeler-arası çelişki" sonucu
+> DEĞİŞTİRİLMEDİ (tarihli ölçüm olarak kalır) ama artık TEK ölçüm değil.
+> Farklı bir kod yolu (`src.comparison.scan`, tek anlık görüntü içinde
+> `product_key` gruplaması) aynı korpusta **8 gerçek belgeler-arası çelişki**
+> buldu — 6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı** (manşet:
+> Albaraka aynı ürün için %7,0 ve %1,0). Ayrıntı ve komut:
+> [`celiski-canli-atesleme-2026-08-21.md`](celiski-canli-atesleme-2026-08-21.md).
+
 # Çelişki tespiti — çift-snapshot canlı ateşleme kanıtı
 
 > Bu belge jüri bulgusuna cevaptır: *"Çelişki tespiti hâlâ 849 belgede SIFIR

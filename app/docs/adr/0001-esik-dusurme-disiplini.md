@@ -27,7 +27,7 @@ dosyayı açmayan biri yalnız düşmüş sayıyı görüyordu. Gerekçenin gör
 olması, meşru bir hamleyi meşru olmayanından ayırt edilemez kılar. Bu ADR o
 ayrımı dışa taşımak için var.
 
-### Düşürülen iki eşik (ölçüm künyeleriyle)
+### Düşürülen üç eşik (ölçüm künyeleriyle)
 
 **1. `kampanya_kosullari` — `alanlar`dan `alanlar_kalem`e taşındı.**
 
@@ -48,6 +48,42 @@ HAKEM-04 turu, kılavuz §4'ün chip-para/ADET kuralı gereği bir ParafPara
 ödülünün `odul_miktari` değil `alisveris_puani` olduğunu tespit etti; o kaydın
 desteği `absent_fields`e taşındı ve **kalan destek 1'e düştü**. Destek 1'de F1
 anlamsıza yakındır — tek bir kararın yönü metriği 0'dan 1'e taşır.
+
+**3. `masraf_durumu` — 0,714 → 0,65** (düşürüldü 2026-08-19, commit `c6db99dc`
+— bu ADR'den (2026-08-20) ÖNCE; gerekçe o gün yalnız `eval/esikler.json`
+`_degisiklik_gunlugu` alanına yazılmıştı ve **buraya sonradan taşınıyor** —
+jüri iki turdur bunun ana dokümanlarda görünmediğini yazdı).
+
+| | strict F1 | destek |
+|---|---|---|
+| önce (HAKEM-03 turu öncesi) | 0,714 | 6 |
+| sonra | **0,667** | **5** |
+
+Sebep bir ölçüt-mekanizması hatası değil, bir **gold düzeltmesiydi**: HAKEM-03
+turu (`data/gold/review/_hakem-turu-03-masraf-durumu.md`)
+`hayat-finans--…-gastroclub-ayricaliklari` kaydında `masraf_durumu`'nu
+`absent_fields`'a taşıdı — üçüncü taraf bir avantaj programı üyeliğinin
+ücretsiz olması ürünün finansman/hesap masrafı hakkında hiçbir şey söylemez
+(kılavuza yeni bir kapsam kuralı eklendi: sayılır — dosya masrafı, tahsis
+ücreti, hesap işletim ücreti, işlem komisyonu; sayılmaz — üçüncü taraf avantaj
+programı üyeliği). Aynı turda motor tarafı da düzeltildi
+(`_ALAN_DISI_OZNE_RE` club/kulüp kolu). Sonuç: o hücre TP kümesinden TN'e
+geçti; **TN F1'e girmediği için** ölçülen sayı düştü, oysa sistem o kayıtta
+artık gold ile birlikte **doğru** karara varıyor (önceden gold ile motor aynı
+yanlışı paylaşıyordu ve hücre karşılıklı olarak TP sayılıyordu).
+
+| # | kapı | kanıt |
+|---|---|---|
+| K1 | Ölçüt kusuru, başarım kusuru değil | Aynı turda motor da düzeldi (`_ALAN_DISI_OZNE_RE`); düşüş TN'in F1'e girmemesinden kaynaklanıyor — gerçek başarım kötüleşmedi, iyileşti. |
+| K2 | Mekanizma yazılı | `_hakem-turu-03-masraf-durumu.md` §"Gold'da ne değişti": kapsam kuralı, gold değişikliği, motor değişikliği satır satır yazılı. |
+| K3 | Bağımsız hakem turu | HAKEM-03 (LLM hakem, insan hakem değil — rapor bunu saklamıyor), 4 uyuşmazlık, 3/4'ünde gold doğru bulundu, 1/4'ünde gold düzeltildi; `adjudicated` kayıt sayısı 2 → 6. |
+| K4 | Eski sayı yayımda kalır | `eval/esikler.json` `_degisiklik_gunlugu` alanında 0,714 hâlâ yazılı, silinmedi. |
+
+**Bu vakanın ADR'den önce olması bir sorun değildir.** Aşağıdaki "kapsam
+sınırı" maddesi İLERİYE dönük yeni düşürme taleplerini sınırlıyor; bu üçüncü
+madde GERİYE dönük bir kayıt eklemesidir — 2026-08-19 düşürmesi zaten dört
+kapıyı kendi kanıtıyla geçiyordu, yalnız gerekçesi bir ADR'ye değil bir JSON
+yorumuna yazılmıştı.
 
 ---
 
@@ -120,10 +156,13 @@ kapıyı çalışır tutuyor.
 tamamen çökmedi" kapısıdır. Destek 1'de sayıya anlam yüklenmemelidir; kalıcı
 çözüm desteği büyütmektir.
 
-**Kapsam sınırı — bu ADR bir kez kullanılmak üzere yazıldı.** İki eşik
-düşürüldü, ikisinin de gerekçesi yukarıda. Üçüncü bir düşürme talebi geldiğinde
-bu ADR **gerekçe değildir**; yeni talep dört kapıyı kendi kanıtıyla yeniden
-geçmek zorundadır. Bir ADR emsal değil, kayıttır.
+**Kapsam sınırı — bu ADR bir kez kullanılmak üzere yazıldı.** Üç eşik
+düşürüldü (`kampanya_kosullari`, `odul_miktari`, `masraf_durumu`), üçünün de
+gerekçesi yukarıda — üçüncüsü (`masraf_durumu`) kronolojik olarak bu ADR'den
+önce düşürülmüş, kaydı buraya sonradan eklenmiştir (bkz. yukarıdaki 3. madde).
+Dördüncü bir düşürme talebi geldiğinde bu ADR **gerekçe değildir**; yeni talep
+dört kapıyı kendi kanıtıyla yeniden geçmek zorundadır. Bir ADR emsal değil,
+kayıttır.
 
 **Açık iş.** K1–K4 şu an **insan disiplini**yle uygulanıyor; makine
 denetiminde değil. Doğru sonraki adım, `esikler*.json` içindeki her düşürülmüş

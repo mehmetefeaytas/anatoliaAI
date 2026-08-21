@@ -232,6 +232,28 @@ services:
       # RAG retriever seçimi: keyword (varsayılan, üretim yolu) | auto | vector
       # bkz. src/chatbot/rag.build_retriever
       RAG_RETRIEVER: keyword
+      # --- kimlik doğrulama (GELEN istekler) — varsayılan BOŞ = KAPALI ---
+      # `${VAR:-}` deseni `DATABASE_URL`/`LLM_BACKEND` ile aynı gerekçe:
+      # kabuktan ya da `.env`den geçirilebilir olsun ama VARSAYILANI
+      # değiştirmesin. Jüri demosu ve `--network none` çevrimdışı kanıt koşumu
+      # anahtar dağıtımı beklemeden açılmalı; boş bırakıldığında API bugünkü
+      # gibi anahtarsız çalışır ve bu durumu açılışta log'a UYARI olarak yazar.
+      #
+      # Üretimde doldurulduğunda `/health` DIŞINDA tüm uçlar `X-API-Key` ya da
+      # `Authorization: Bearer` ister. `/health` bilerek muaf: bu compose
+      # dosyasının yukarıdaki doğrulama komutları ve konteyner sağlık probu onu
+      # ağsız ortamda, anahtarsız çağırıyor (docs/OFFLINE-KANIT.md adım 7-8).
+      #
+      # DİKKAT — `web` servisi: anahtar açıldığında panel de anahtar taşımak
+      # zorundadır. Anahtarı `NEXT_PUBLIC_*` ile geçirmek onu TARAYICIYA
+      # sızdırır; doğru yol kurumun ters vekil sunucusunun (reverse proxy)
+      # anahtarı sunucu tarafında enjekte etmesidir. Gerekçe ve seçenekler:
+      # docs/kimlik-dogrulama.md "Panel ve geçit".
+      API_KEYS: ${API_KEYS:-}
+      API_KEYS_READONLY: ${API_KEYS_READONLY:-}
+      # Dosya yolu verilirse API onu okur; VERİLİP okunamazsa açılışta DÜŞER
+      # (doğrulamasız açılmaktan iyidir).
+      API_KEYS_FILE: ${API_KEYS_FILE:-}
     ports:
       - "8000:8000"
     # `depends_on: postgres` YOK ve OLMAMALI: varsayılan profilde `api` SQLite
@@ -267,6 +289,12 @@ services:
       OLLAMA_URL: http://ollama:11434
       OLLAMA_MODEL: ${OLLAMA_MODEL:-qwen2.5:7b-instruct}
       RAG_RETRIEVER: keyword
+      # Kimlik doğrulama — `api` servisiyle BİREBİR aynı gerekçe (yukarı bkz.).
+      # İki servis AYNI imajı koşuyor; ayrışmaları, aynı kodun iki uçta farklı
+      # güvenlik davranışı göstermesi olurdu.
+      API_KEYS: ${API_KEYS:-}
+      API_KEYS_READONLY: ${API_KEYS_READONLY:-}
+      API_KEYS_FILE: ${API_KEYS_FILE:-}
     ports:
       - "8010:8000"
     depends_on:

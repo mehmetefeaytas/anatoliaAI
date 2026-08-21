@@ -399,7 +399,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Bağımlılık lisans envanteri | ✅ iki ayrı payda, ikisi de aynı `.venv` kesiti (2026-08-15 21:14 +03): **96 bileşen** = CycloneDX SBOM'un ortam taraması ([`docs/sbom.json`](docs/sbom.json), CI lisans kapısının OKUDUĞU dosya) · **91 paket** = `pip-licenses` insan-okur envanteri ([`docs/LISANSLAR.md`](docs/LISANSLAR.md)). Fark **tam olarak 5 pakettir** ve araç kaynaklıdır — aşağıya bakınız |
 | Şartname uyum matrisi | ✅ madde madde, kanıt komutlarıyla ([`docs/SARTNAME-UYUM.md`](docs/SARTNAME-UYUM.md)) |
 | Kanıt-tazeliği kapısı | ✅ yayımlanan sayı ile kanıt ayrışırsa CI düşer (`python -m scripts.kanit_tazeligi`) — **14 iddia · 0 sapma** (2026-08-20) |
-| Eşik düşürme disiplini | ✅ ADR'ye bağlı: bir regresyon eşiği yalnız **ölçüt kusuru** kanıtlanırsa düşürülebilir, dört kapı + iki imza ([`docs/adr/0001`](docs/adr/0001-esik-dusurme-disiplini.md)) |
+| Eşik düşürme disiplini | ✅ ADR'ye bağlı: bir regresyon eşiği yalnız **ölçüt kusuru** kanıtlanırsa düşürülebilir, dört kapı + iki imza ([`docs/adr/0001`](docs/adr/0001-esik-dusurme-disiplini.md)) — üç düşürme kayıtlı: `kampanya_kosullari`, `odul_miktari`, **`masraf_durumu` (0,714 → 0,65, 2026-08-19, gold düzeltmesi)** |
 
 #### 96 mı 91 mi — iki payda, iki farklı şey
 
@@ -533,6 +533,28 @@ korpusta bunların **üçü** tetikleniyor.
 > Teknik raporun §A9'u **849 belgede 1 çelişki** diyor. O sayı silinmedi; 3
 > Ağustos korpusuna çapalı ve raporun kendi künye kuralı gereği yerinde duruyor
 > — güncel ölçüm oraya **ayrı** bir blok olarak eklendi.
+
+#### Çelişki tespiti — canlı yeni örnek: 28 çelişki, dahil kâr payı uyuşmazlığı (ölçüm 2026-08-21)
+
+Üçüncü bir kod yolu (`src.comparison.scan`, tek anlık görüntü + `product_key`
+gruplaması) tam korpusta tarandı ve **28 çelişki** üretti:
+
+| tür | adet | kırılım |
+|---|---:|---|
+| belgeler-arası (`detect_across`) | **8** | 6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı** |
+| belge-içi (`detect`) | **20** | 17 süresi dolmuş kampanya + 2 çelişen tutar bandı + 1 çelişen bitiş |
+
+**Manşet örnek:** Albaraka Türk aynı ürün için iki ayrı formda **%7,0** ve
+**%1,0** kâr payı oranı yayımlamış — kesişmeyen iki oran, `detect_across()`
+tarafından üretim koduyla fiilen tespit edildi. Bu, kâr payı alanında canlı
+ateşlenen ilk dokümante edilmiş belgeler-arası çelişki örneğidir.
+
+```bash
+cd app && .venv/bin/python -m src.comparison.scan --raw-dir data/raw
+```
+
+Ayrıntı, önceki (2026-08-20) dual-snapshot ölçümüyle ilişkisi ve tam kırılım:
+[`docs/rapor/celiski-canli-atesleme-2026-08-21.md`](docs/rapor/celiski-canli-atesleme-2026-08-21.md).
 
 ### Ölçüm sonuçları
 
@@ -676,6 +698,39 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 
 **Tekrarlanan tek sayı halüsinasyon oranıdır** (~%10), payda 166'dan 444'e
 çıkarken korundu. İki protokolden de bağımsız çıkan tek metrik budur.
+
+#### Halüsinasyon oranı: `gold.v2` ile `gold.round1` DOĞRUDAN KARŞILAŞTIRILAMAZ
+
+İki gold setin halüsinasyon oranı çok farklı görünüyor: `gold.v2` **0,034**,
+`gold.round1` **0,344**. Bu bir model kötüleşmesi **değildir** — paydanın
+farklı tanımlı olmasıdır. Aşağıdaki sayılar iddiaya güvenilmeden, en yeni iki
+rapordan (`per_field.csv`, `kural;strict;all` satırları, 12 alan) elle
+toplanarak doğrulandı:
+
+```bash
+.venv/bin/python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
+.venv/bin/python -m eval.run_eval --gold data/gold/gold.round1.json --config kural
+```
+Kanıt: `eval/reports/20260820-224033/` (`gold.v2`) ve
+`eval/reports/20260820-224058/` (`gold.round1`).
+
+| | `gold.v2` (n=48) | `gold.round1` (n=134) |
+|---|---:|---:|
+| halüsinasyon oranı | **0,034** (15/447) | **0,344** (21/61) |
+| payda (`absent_decisions` toplamı — gold'un "YOK" dediği karar sayısı, 12 alan) | **447** | **61** |
+| `skipped_undecided` toplamı (gold hiç karar vermemiş, metriğe hiç girmeyen alan-kararı) | 0 | **1.389** |
+
+`gold.round1`'in paydası küçük çünkü anotatörler **1.389 alan-kararında hiç
+karar vermemiş**; bunlar metrik dışı kalıyor ve `absent_decisions`'a hiç
+girmiyor. `gold.v2`'de "YOK" kararı 447 kez verilmiş, `gold.round1`'de yalnız
+61 kez — küçük paydada tek kayıt oranın çok daha büyük bir dilimini taşır:
+61'lik paydadaki 21 halüsinasyonun **10'u tek başına `vade_ay`** alanından
+geliyor (`per_field.csv`: `vade_ay` satırı `fp_hallucinated=10`), yani
+round1'in yüksek oranının ~%48'i tek bir alanın kararlarına yığılı.
+
+**Sonuç:** iki oran ayrı ayrı doğru ölçülmüş ama yan yana konup "model
+round1'de kötüleşti" denemez. Payda 447'den 61'e küçülmesi bir **gold
+kapsama yoğunluğu artefaktıdır**, gerçek bir model kusuru değil.
 
 ### Ölçümle yanlışlanan hipotezler
 

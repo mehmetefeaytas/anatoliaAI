@@ -1,0 +1,241 @@
+==============================================================================
+ ANATOLIA AI — TAM YIGIN AGSIZ KOSUM (postgres + api + api-postgres + ollama + web)
+==============================================================================
+tarih         : 2026-08-21T08:02:17Z (UTC)
+calisma dizini: /Users/mehmetefeaytas/anatoliaaI/app
+proje adi     : anatolia-agsiz
+izole ag      : anatolia-agsiz-izole-ag
+transkript    : docs/offline-proof/tam-yigin-agsiz-transcript-20260821-110217.log
+host          : Darwin Mehmet-MacBook-Air.local 25.5.0 Darwin Kernel Version 25.5.0: Tue Jun  9 22:28:17 PDT 2026; root:xnu-12377.121.10~1/RELEASE_ARM64_T8142 arm64
+git commit    : 71de23c6
+git durum     : 3 degisik dosya
+
+docker        : Docker version 29.5.3, build d1c06ef6b4
+daemon        : 29.6.1 (linux/aarch64)
+compose       : 5.3.0
+on-cekilmis imajlar: postgres+pgvector VE ollama yerelde mevcut (digest eslesti)
+
+------------------------------------------------------------------------------
+ADIM 1: Imaj derleme (docker compose build api api-postgres web db-check) — AG ACIK
+beklenti : cikis kodu 0
+komut    : docker compose -p anatolia-agsiz --profile postgres build api api-postgres web db-check
+------------------------------------------------------------------------------
+ Image anatolia-agsiz-api-postgres Building 
+ Image anatolia-agsiz-web Building 
+ Image anatolia-agsiz-db-check Building 
+ Image anatolia-agsiz-api Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.92kB done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile.api
+#2 transferring dockerfile: 2.36kB 0.1s done
+#2 transferring dockerfile: 2.36kB 0.1s done
+#2 DONE 0.1s
+
+#3 [web internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.65kB 0.1s done
+#3 DONE 0.1s
+
+#4 [api internal] load metadata for docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#4 ...
+
+#5 [web internal] load metadata for docker.io/library/node:20-alpine
+#5 DONE 2.8s
+
+#4 [db-check internal] load metadata for docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#4 DONE 2.8s
+
+#6 [web internal] load .dockerignore
+#6 transferring context: 308B 0.0s done
+#6 DONE 0.0s
+
+#7 [api-postgres internal] load .dockerignore
+#7 transferring context: 937B 0.0s done
+#7 DONE 0.1s
+
+#8 [web internal] load build context
+#8 DONE 0.0s
+
+#9 [api internal] load build context
+#9 ...
+
+#10 [db-check  1/10] FROM docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93
+#10 resolve docker.io/library/python:3.11-slim@sha256:db3ff2e1800a8581e2c48a27c3995339d47bdf046da21c7627accd3d51053a93 1.0s done
+#10 DONE 1.0s
+
+#11 [web deps 1/4] FROM docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293
+#11 resolve docker.io/library/node:20-alpine@sha256:fb4cd12c85ee03686f6af5362a0b0d56d50c58a04632e6c0fb8363f609372293 1.0s done
+#11 DONE 1.0s
+
+#9 [api internal] load build context
+#9 ...
+
+#8 [web internal] load build context
+#8 transferring context: 4.17kB 0.0s done
+#8 DONE 0.1s
+
+#12 [web deps 2/4] WORKDIR /app
+#12 CACHED
+
+#13 [web deps 4/4] RUN npm ci
+#13 CACHED
+
+#14 [web build 3/5] COPY --from=deps /app/node_modules ./node_modules
+#14 CACHED
+
+#15 [web build 5/5] RUN npm run build
+#15 CACHED
+
+#16 [web run 6/7] COPY --from=build /app/next.config.js ./next.config.js
+#16 CACHED
+
+#17 [web run 3/7] COPY --from=build /app/.next ./.next
+#17 CACHED
+
+#18 [web run 4/7] COPY --from=build /app/node_modules ./node_modules
+#18 CACHED
+
+#19 [web build 4/5] COPY . .
+#19 CACHED
+
+#20 [web deps 3/4] COPY package.json package-lock.json ./
+#20 CACHED
+
+#21 [web run 5/7] COPY --from=build /app/package.json ./package.json
+#21 CACHED
+
+#22 [web run 7/7] COPY --from=build /app/public ./public
+#22 CACHED
+
+#9 [api internal] load build context
+#9 ...
+
+#23 [web] exporting to image
+#23 exporting layers 0.0s done
+#23 exporting manifest sha256:86299724d0014b0e207436e3e382ad2cfde49992b3b6af7d37b26adf6b01e191 0.1s done
+#23 exporting config sha256:dd2c26450c110ed70d2babb3ea9694895a28459e7b449d715786eec482cbfcd4 0.0s done
+#23 exporting attestation manifest sha256:3a14848e7fabf3e28a1ea4144e15bb46c04d4714c85eb94e372fcb2c58c25e1d 0.4s done
+#23 exporting manifest list sha256:2c30f5f4cb95ac40ade296a7b77a5ae0406cfd2aca229c40e3612e9a93ebf636 0.2s done
+#23 naming to docker.io/library/anatolia-agsiz-web:latest 0.0s done
+#23 unpacking to docker.io/library/anatolia-agsiz-web:latest 0.3s done
+#23 DONE 2.1s
+
+#9 [api internal] load build context
+#9 ...
+
+#24 [web] resolving provenance for metadata file
+#24 DONE 0.1s
+
+#9 [api internal] load build context
+#9 transferring context: 4.09MB 5.7s
+#9 transferring context: 5.08MB 7.1s done
+#9 DONE 7.9s
+
+#25 [db-check  2/10] WORKDIR /app
+#25 CACHED
+
+#26 [db-check  3/10] COPY requirements-api.txt .
+#26 CACHED
+
+#27 [db-check  4/10] RUN pip install --no-cache-dir -r requirements-api.txt
+#27 CACHED
+
+#28 [db-check  5/10] COPY src/ ./src/
+#28 DONE 0.4s
+
+#29 [api  6/10] COPY config/ ./config/
+#29 DONE 0.1s
+
+#30 [api  7/10] COPY data/ ./data/
+#30 DONE 243.7s
+
+#31 [api-postgres  8/10] COPY eval/ ./eval/
+#31 DONE 3.0s
+
+#32 [api  9/10] COPY tests/ ./tests/
+#32 DONE 0.8s
+
+#33 [api-postgres 10/10] COPY scripts/ ./scripts/
+#33 DONE 2.7s
+
+#34 [api-postgres] exporting to image
+#34 exporting layers
+#34 ...
+
+#35 [api] exporting to image
+#35 ...
+
+#36 [db-check] exporting to image
+#36 ...
+
+#35 [api] exporting to image
+#35 exporting layers 327.2s done
+#35 exporting manifest sha256:f5a23c92198dfea831383b096e3c87b067be7e3a60826868d6ddb467d71383e5 0.1s done
+#35 exporting config sha256:994d7b7d439cd3f9ce649eea2fa60b51cae53ce3a62d3b44cbfc7abf5707be7c
+#35 exporting config sha256:994d7b7d439cd3f9ce649eea2fa60b51cae53ce3a62d3b44cbfc7abf5707be7c 0.3s done
+#35 exporting attestation manifest sha256:23b7f841005bd495b6c083cf1cfd28c23016ccfe6f514140c7a6e67952ce0f05
+#35 exporting attestation manifest sha256:23b7f841005bd495b6c083cf1cfd28c23016ccfe6f514140c7a6e67952ce0f05 0.9s done
+#35 exporting manifest list sha256:29461e12b53f5d707aff1c8b1b79ec94d816398b8983d2eacd204074671c5996
+#35 exporting manifest list sha256:29461e12b53f5d707aff1c8b1b79ec94d816398b8983d2eacd204074671c5996 0.6s done
+#35 naming to docker.io/library/anatolia-agsiz-api:latest
+#35 naming to docker.io/library/anatolia-agsiz-api:latest 0.4s done
+#35 unpacking to docker.io/library/anatolia-agsiz-api:latest
+#35 ...
+
+#34 [api-postgres] exporting to image
+#34 exporting layers 327.9s done
+#34 exporting manifest sha256:999f159d3d3b2818734676889db87bd25f62c93025fc9b26909c4db4f10bacbd 0.1s done
+#34 exporting config sha256:8f4bbd53d0cf0c0486b6cac40b811dcb182622b9078af1d99692756735d2493c 0.3s done
+#34 exporting attestation manifest sha256:54bd770650e165fefa26c9293f9fa7b70c3d5a907055e7d3fe89704769f1a953 0.9s done
+#34 exporting manifest list sha256:dac5c934a5abd9d0be5b952a8fd86b089ae568c8ff66028df929e445a07aa536 0.7s done
+#34 naming to docker.io/library/anatolia-agsiz-api-postgres:latest 0.4s done
+#34 unpacking to docker.io/library/anatolia-agsiz-api-postgres:latest
+#34 ...
+
+#36 [db-check] exporting to image
+#36 exporting layers 327.5s done
+#36 exporting manifest sha256:fa375a2504fff481f7a13a8fd10bc32d3a6b009ea69255295cbbf922ecbe2582 0.1s done
+#36 exporting config sha256:0e01e1256dbf9d8c4cd61bff7d320c3c042d655abad104a30a92d8fda42819d8 0.2s done
+#36 exporting attestation manifest sha256:9421b20ec5baadded8bf70f559b0cf220a974ba4754571e23110b8154a4653c9 1.0s done
+#36 exporting manifest list sha256:ed817501992b6b9b997f98c13fb829df4975803148571359a17930cabcb58823 0.2s done
+#36 naming to docker.io/library/anatolia-agsiz-db-check:latest 0.5s done
+#36 unpacking to docker.io/library/anatolia-agsiz-db-check:latest
+#36 ...
+
+#34 [api-postgres] exporting to image
+#34 unpacking to docker.io/library/anatolia-agsiz-api-postgres:latest 235.3s done
+#34 ERROR: failed to extract layer sha256:cc2e1febcd4c41b929b9adba0d7805a3f5e81fb8ef1b67ced545e52485d76af8: write /var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/600/fs/app/data/raw/ziraat-katilim/live/kart-kampanyalari-ilk-ek-kredi-kartiniza-1000-tl-bankkart-lira-0.html: input/output error
+
+#35 [api] exporting to image
+#35 unpacking to docker.io/library/anatolia-agsiz-api:latest 235.4s done
+#35 ERROR: failed to extract layer sha256:cc2e1febcd4c41b929b9adba0d7805a3f5e81fb8ef1b67ced545e52485d76af8: write /var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/602/fs/app/data/raw/ziraat-katilim/live/kart-kampanyalari-ilk-bankkart-kredi-kartiniza-5000-tl-bankkart-lira.html: input/output error
+
+#36 [db-check] exporting to image
+#36 unpacking to docker.io/library/anatolia-agsiz-db-check:latest 235.7s done
+#36 ERROR: failed to extract layer sha256:cc2e1febcd4c41b929b9adba0d7805a3f5e81fb8ef1b67ced545e52485d76af8: write /var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/601/fs/app/data/raw/ziraat-katilim/live/kart-kampanyalari-istikbalde-7-taksit.html: input/output error
+------
+ > [api-postgres] exporting to image:
+------
+------
+ > [db-check] exporting to image:
+------
+------
+ > [api] exporting to image:
+------
+target db-check: failed to solve: failed to extract layer sha256:cc2e1febcd4c41b929b9adba0d7805a3f5e81fb8ef1b67ced545e52485d76af8: write /var/lib/desktop-containerd/daemon/io.containerd.snapshotter.v1.overlayfs/snapshots/601/fs/app/data/raw/ziraat-katilim/live/kart-kampanyalari-istikbalde-7-taksit.html: input/output error
+
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=1  sure=870382 ms  -> BEKLENMEDIK
+
+------------------------------------------------------------------------------
+ADIM 2: Izole ag olustur (--internal, dis dunyaya rotasiz)
+beklenti : cikis kodu 0
+komut    : docker network create --internal anatolia-agsiz-izole-ag
+------------------------------------------------------------------------------
+EOF
+------------------------------------------------------------------------------
+sonuc    : cikis kodu=1  sure=1143 ms  -> BEKLENMEDIK
+scripts/tam_yigin_agsiz.sh: line 252: /var/folders/v_/vcr_n0s153d9mxt1fgnb2fyw0000gn/T/tam-yigin-agsiz-override-XXXXXX.n0ZKCmhuJA.yml: No space left on device
+
+temizlik: docker compose down (KEEP_UP=1 ile servisleri ayakta birakabilirsiniz)

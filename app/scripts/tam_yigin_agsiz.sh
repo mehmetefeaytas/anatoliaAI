@@ -223,11 +223,48 @@ docker network rm "$NET_NAME" >/dev/null 2>&1 || true
 run_step "Izole ag olustur (--internal, dis dunyaya rotasiz)" pass -- \
   docker network create --internal "$NET_NAME"
 
+# HOST PORTLARI YAYIMLANMAZ — `ports: !reset []`.
+#
+# Neden: bu koşumun tek iddiası "servisler İZOLE AĞ üzerinden birbirini bulur
+# ve dışarıya çıkamaz". Her denetim adımı `docker exec` ile KONTEYNERİN İÇİNDEN
+# koşuyor; hiçbir adım host'a yayımlanmış bir porta bağlanmıyor. Dolayısıyla
+# host portu yayımlamak kanıta hiçbir şey EKLEMİYOR, ama iki zarar veriyordu:
+#
+#   1. KIRILGANLIK (ölçüldü, 2026-08-21): jüri betiği üç kez koşturdu, biri
+#      geçti. Kıran şey izolasyon değil, `ports: "3000:3000"` satırıydı —
+#      host'ta 3000'i başka bir süreç tutuyordu:
+#      "ports are not available: exposing port TCP 0.0.0.0:3000 … bind:
+#      address already in use". Zincirleme: adım 4 patlıyor, `web` konteyneri
+#      hiç doğmuyor, adım 10 ve 11 de boş konteyner kimliğiyle patlıyor —
+#      tek çakışma ÜÇ adımı düşürüyordu. Negatif kontrol (adım 5) o
+#      koşumlarda da doğru çalıştı: izolasyon hiç bozulmadı, ölçüm bozuldu.
+#   2. MANTIK ÇELİŞKİSİ: host'a port yayımlamak, "dış dünyaya rotası yok"
+#      denen bir ağda dış dünyaya bir kapı açmaktır. Kanıtın kendisi
+#      zayıflıyordu.
+#
+# `!reset` Compose spec etiketidir (v2.24+; bu makinede v5.3.0 ile doğrulandı):
+# `ports` dizisi override'da APPEND edilir, bu yüzden boş liste vermek
+# yetmez — etiket olmadan orijinal port eşlemesi silinmez.
+#
+# Port çakışmasına çözüm olarak "boş port seç" DENENMEDİ ve bilinçli
+# reddedildi: yayımlanmayan port, rastgele seçilmiş bir porttan hem daha
+# sade hem kanıt olarak daha güçlü.
 cat > "$OVERRIDE_FILE" <<EOF
 networks:
   default:
     name: ${NET_NAME}
     external: true
+services:
+  postgres:
+    ports: !reset []
+  api:
+    ports: !reset []
+  api-postgres:
+    ports: !reset []
+  ollama:
+    ports: !reset []
+  web:
+    ports: !reset []
 EOF
 echo "override dosyasi: $OVERRIDE_FILE"
 cat "$OVERRIDE_FILE"

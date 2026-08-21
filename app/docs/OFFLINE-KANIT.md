@@ -12,7 +12,7 @@
 **imaj derlemesi internet ister**. Tam yığın (postgres+api+api-postgres+ollama+web)
 ağsız koşumu **2026-08-20'de denendi, host disk yetersizliği yüzünden
 TAMAMLANAMADI** — izolasyon mekanizması ayrı deneylerle doğrulandı ama
-`docker compose` ile birlikte koşum **2026-08-20'de ÖLÇÜLDÜ: 13/13 adım geçti** (§0-d). Kalan tek kapsam sınırı vLLM kolu (GPU). Ayrıntı: **§0-b**.
+`docker compose` ile birlikte koşum **2026-08-20'de ÖLÇÜLDÜ: 13/13 adım geçti** (§0-d). Kalan iki sınır: vLLM kolu (GPU) ve **kanıtın tekrarlanabilirliği** — 21 Ağustos'ta kırılganlığın kök nedeni bulunup giderildi ama 3/3 koşum host diski dolu olduğu için henüz yapılamadı (**§0-e**). Ayrıntı: **§0-b**.
 
 > **Ağaç temizliği neden burada yazıyor.** Transkript başlığındaki satır
 > `git durum : 1 degisik dosya` der. O tek dosya **koşumun kendi
@@ -39,6 +39,79 @@ komuttan gelir. Koşturulmayan her kalem `⏳ ölçülmedi — sebep: ...` ile
 işaretlidir. Ara değer, tahmin, "olması beklenen" sayı yoktur.
 
 ---
+
+---
+
+## 0-e. Kanıtın KIRILGANLIĞI — kök neden bulundu ve giderildi (2026-08-21)
+
+**Durum: kök neden GİDERİLDİ, tekrarlanabilirlik koşumu BEKLİYOR.**
+
+Jüri 3. turu (21 Ağustos) §0-d'deki 13/13 sonucunu kabul etti ama **kanıtın
+tekrar üretilebilirliğini sınadı**: betiği iki kez yeniden koşturdu ve
+sonuçlar üç denemede yalnız birinde tam yeşil geldi. Bu haklı bir eleştiriydi
+ve burada kapatılıyor.
+
+### Kıran şey izolasyon DEĞİLDİ
+
+Jürinin başarısız koşumunun transkripti
+(`docs/offline-proof/tam-yigin-agsiz-transcript-20260821-003207.log`) tek bir
+satırı gösteriyor:
+
+```
+Error response from daemon: ports are not available: exposing port
+TCP 0.0.0.0:3000 -> 127.0.0.1:0: listen tcp 0.0.0.0:3000:
+bind: address already in use
+```
+
+Host'ta 3000 portunu başka bir süreç tutuyordu. Zincirleme şöyle işledi:
+adım 4 (`compose up`) patladı → `web` konteyneri **hiç doğmadı** → adım 10
+(`web` hazır) ve adım 11 (`web` → `api` DNS) boş konteyner kimliğiyle
+patladı. **Tek port çakışması ÜÇ adımı düşürdü.**
+
+Aynı koşumda **negatif kontrol (adım 5) doğru çalıştı: çıkış 3.** Yani izole
+ağın dış dünyaya rotasızlığı hiç bozulmadı; bozulan ölçümün kendisiydi. Bu
+ayrım önemli: kanıtın *iddiası* her koşumda doğruydu, *ölçüm aparatı*
+kırılgandı.
+
+### Düzeltme: host portları HİÇ yayımlanmıyor
+
+`scripts/tam_yigin_agsiz.sh` ürettiği geçici compose override dosyasına beş
+servis için `ports: !reset []` yazıyor. Gerekçe iki katmanlı:
+
+1. **Kanıta hiçbir şey eklemiyordu.** Bu koşumun 13 adımının tamamı
+   `docker exec` ile KONTEYNERİN İÇİNDEN koşuyor; hiçbir adım host'a
+   yayımlanmış bir porta bağlanmıyor. Port yayımlamak yalnız çakışma riski
+   getiriyordu.
+2. **Mantık çelişkisiydi.** "Dış dünyaya rotası yok" denen bir ağda host'a
+   port yayımlamak, kanıtın kendisiyle çelişen bir kapı açmaktır. Yayımlanan
+   port sayısının sıfır olması, iddiayı ZAYIFLATMIYOR — GÜÇLENDİRİYOR.
+
+Teknik not: Compose'da `ports` dizisi override'da **append** edilir; boş liste
+vermek orijinal eşlemeyi silmez. `!reset` etiketi gerekiyor (Compose spec
+v2.24+). Bu makinede v5.3.0 ile `docker compose config` çıktısı üzerinden
+doğrulandı: çözülmüş yapılandırmada **tek bir `ports` satırı kalmıyor**.
+
+"Boş port seç" alternatifi denendi ve bilinçli reddedildi: yayımlanmayan port,
+rastgele seçilmiş bir porttan hem daha sade hem kanıt olarak daha güçlü.
+
+### Ne BEKLİYOR — açıkça yazılıyor
+
+Düzeltmenin **yapılandırma düzeyinde** doğru olduğu ölçüldü (`compose config`).
+Ama **3/3 ampirik koşum henüz yapılamadı**: bu makinede Docker daemon ayağa
+kalkmıyor, sebebi host diskinin %99 dolu olması (460 GiB'ın 413'ü; Docker'ın
+sanal disk imajı tek başına 28 GiB). Üç koşum denendi, üçü de daemon'a
+bağlanamadan düştü — transkriptler `20260821-1206*` damgasıyla duruyor ve
+`HATA: docker daemon'a baglanilamadi` satırını taşıyor.
+
+Bu boşluk **gizlenmiyor**: §0-d'deki 13/13 sonucu geçerli ve tarihli, ama
+"her koşumda tekrarlanır" iddiası henüz kanıtlanmadı. Disk açıldığında
+koşulacak tam komut:
+
+```bash
+cd app && for i in 1 2 3; do bash scripts/tam_yigin_agsiz.sh; done
+```
+
+Beklenen: üç transkriptin üçünde de `SONUC: 13/13` ve `0 BEKLENMEDIK`.
 
 ---
 

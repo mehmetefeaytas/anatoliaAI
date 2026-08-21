@@ -43,6 +43,19 @@ ve "kim tetikledi" sorusu sistemden cevaplanamadı. Şema, ne kaydedilmediği,
 döndürme politikası ve "günlük yazımı isteği düşürmez" değişmezi
 `src/api/gunluk.py` modül başlığındadır.
 
+## Kimlik doğrulama — VARSAYILAN KAPALI, kurum kancası HAZIR
+
+`API_KEYS` (ve/veya `API_KEYS_READONLY` / `API_KEYS_FILE`) tanımlıysa her
+istek `X-API-Key` ya da `Authorization: Bearer` ile doğrulanır; iki rol var
+(`tam`, `salt-okuma`) ve salt-okuma anahtarı eylem uçlarında 403 alır. Hiç
+anahtar tanımlı değilse API anahtarsız çalışır (geriye uyum) ve bu durum
+AÇILIŞTA uyarı olarak log'a düşer — sessiz güvensizlik yok.
+
+`/health` bilerek muaftır: konteyner sağlık probu ve ağsız çevrimdışı kanıt
+koşumu onu anahtar dağıtımı olmadan çağırıyor. Tehdit modeli, muafiyet
+gerekçeleri, kurumun kendi kimlik sistemine bağlama yolu ve dış servis
+kullanılmama gerekçesi `src/api/kimlik.py` başlığı + docs/kimlik-dogrulama.md.
+
 ## `/summaries/*` — eksik özetleri üretir, AĞA ÇIKMAZ
 
 Özetler yerel modelle üretilir ve `campaigns.ozet`'e yazılır. `/refresh` ham
@@ -193,7 +206,7 @@ from ..scraping.tazeleme import TazelemeYoneticisi
 from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import OzetYoneticisi
 from ..tazeleme_sonrasi import alt_akis_kur
-from . import gunluk
+from . import gunluk, kimlik
 from .routers import ajan, denetim, isler, katalog, kiyas
 from .sabitler import FIELD_LABELS
 
@@ -297,6 +310,23 @@ def build_app():
             "pydantic kurulu değil. `pip install -r requirements.txt`")
 
     app = FastAPI(title="Anatolia AI — Katılım Bankacılığı Kampanya API")
+
+    # ----------------------------------------------------------------- #
+    # Kimlik doğrulama kancası — VARSAYILAN KAPALI, ama sessiz değil
+    # ----------------------------------------------------------------- #
+    # `API_KEYS` (ya da `API_KEYS_READONLY` / `API_KEYS_FILE`) tanımlıysa her
+    # istek `X-API-Key` / `Authorization: Bearer` ile doğrulanır; tanımlı
+    # değilse API bugünkü gibi anahtarsız çalışır ve bu durum AÇILIŞTA log'a
+    # düşer. Muaf uçlar, rol ayrımı ve neden dış bir kimlik servisi
+    # kullanılmadığı `src/api/kimlik.py` modül başlığında; kurum entegrasyonu
+    # docs/kimlik-dogrulama.md'de.
+    #
+    # SIRA BAĞLAYICI: bu çağrı CORS'tan ve işlem günlüğünden ÖNCE gelmek
+    # zorunda. Starlette'te en son eklenen ara katman en DIŞTA durur; kimlik
+    # en içte kalırsa (a) 401/403 yanıtları CORS başlıklarını alır — tarayıcı
+    # gerçek durum kodunu görebilir — ve (b) işlem günlüğü reddi de kaydeder.
+    kimlik.kur(app)
+
     app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"],
                        allow_headers=["*"])
 
