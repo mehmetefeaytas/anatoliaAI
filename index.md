@@ -72,6 +72,7 @@ Son güncelleme: 2026-08-10.
 - [[katilim-bankaciligi-terminoloji-farkliligi]] — terminoloji farkı
 - [[farkli-ifade-bicimleri]] — aynı değer farklı yazım
 - [[manuel-karsilastirma-zorlugu]] — manuel kıyas zorluğu
+- [[gold-round1-csvden-yeniden-uretilemiyor]] — ölçüm tabanı kaynaktan türetilemiyor (134 ↔ 57 kayıt), açık kusur
 
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller

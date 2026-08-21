@@ -511,3 +511,24 @@ Notlar:
   aranamaz — ayrı betiğe ait.
 - Yan bulgu: Türkiye Emlak Katılım taşıt tahsis ücretini bir formda %0,5,
   diğerinde %0,1 ilan ediyor (bankanın kendi içinde tutarsızlığı).
+
+## [2026-08-21] sorun | gold.round1 kaynaktan yeniden üretilemiyor
+
+4. tur Yenilikçilik jürisi bir sözümüzü tutmadığımızı buldu: HAKEM-05 paketinde
+"bu boşluk `sorun/` altına yazılmalı" yazmışız ve yazmamışız. Bulgu haklıydı,
+sayfa açıldı.
+
+Ölçüm: `gold.round1.json` 134 kayıt taşıyor, dört anotasyon CSV'sinden derleme
+yalnız 57 veriyor. Düşen 77'nin kırılımı: 46 `D`, 30 `A`+`B`, 1 `D`+`HAKEM-04`.
+İki aday kök neden var ve ikisi de kayıtsız — derleme komutu hiçbir yerde yazılı
+değil, ve CSV'ler gold üretildikten sonra iki turda (hakemlik, şema onarımı)
+değişti.
+
+Bu turda kapatılmadı ve sebebi yazılı: iş ölçüm tabanına dokunuyor, yanlış
+sırada yapılırsa `gold.round1` ölçümleri (0,793 / 0,284) yeniden üretilemez
+hâle gelir. Çevrimiçi süreç 26 Ağustos'ta bitiyor.
+
+Dokunulan dosyalar:
+- sorun/gold-round1-csvden-yeniden-uretilemiyor.md (yeni)
+- index.md (Sorunlar bölümü)
+- log.md (bu giriş)
