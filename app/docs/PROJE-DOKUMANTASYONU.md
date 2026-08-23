@@ -5,9 +5,9 @@ TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması, 2. Senaryo.
 sırayla karşılanır.
 
 **Ölçüm künyesi.** Buradaki her sayı 21 Ağustos 2026 tarihli temiz ağaç
-koşumlarından gelir (commit `03822c24`, `git_dirty: false`). Korpus sayıları
+koşumlarından gelir (commit `f6e76a08`, `git_dirty: false`). Korpus sayıları
 `data/demo.db` üzerinde doğrudan sayıldı; başarım sayıları
-`eval/reports/20260821-182450/` altındaki artefakttan okundu. Sayıların güncel
+`eval/reports/20260823-073019/` altındaki artefakttan okundu. Sayıların güncel
 hâli `app/README.md`'de tutulur; bu belge onunla aynı kesiti anlatır. Teknik
 raporun (`docs/rapor/anatolia-ai-teknik-rapor.md`) A bölümü daha eski bir
 korpusa (849 belge) çapalı ve tarihsel kayıt olarak yerinde duruyor.
@@ -600,7 +600,7 @@ curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fie
 ### Değerlendirme ve test komutları
 
 ```bash
-python3 -m unittest discover -s tests            # 3.605 test toplanır
+python3 -m unittest discover -s tests            # 3.632 test toplanır
 python -m eval.properties --raw-dir data/raw     # değişmez denetimi
 python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 python -m eval.ablation                          # kural / llm / hibrit / hibrit-verify
@@ -929,8 +929,8 @@ biçimde daraltır.
 ### Ölçülen sonuç
 
 `gold.v2` (n=48, kör etiketlenmiş), `strict` eşleştirici, belge düzeyi bootstrap
-1000 örnek, tohum 42. Artefakt: `eval/reports/20260821-182450/`, gold sha
-`e38a5276…`, commit `03822c24`, temiz ağaç.
+1000 örnek, tohum 42. Artefakt: `eval/reports/20260823-073019/`, gold sha
+`e38a5276…`, commit `f6e76a08`, temiz ağaç.
 
 | ölçüt | değer |
 |---|---|
@@ -1057,8 +1057,8 @@ yapıyor.
 
 | koşucu | toplanan | geçti | atlandı | başarısız |
 |---|---:|---:|---:|---:|
-| `unittest` (kanonik) | 3.605 | 3.552 | 53 | 0 |
-| `pytest` (çapraz doğrulama) | 3.605 | 3.552 | 53 | 0 |
+| `unittest` (kanonik) | 3.632 | 3.579 | 53 | 0 |
+| `pytest` (çapraz doğrulama) | 3.632 | 3.579 | 53 | 0 |
 
 Artefakt: `eval/reports/test-ozeti.json`, commit `03822c24`, `git_dirty: false`,
 Python 3.14.6. Atlanan 53 test Postgres/pgvector istiyor ve CI'ın

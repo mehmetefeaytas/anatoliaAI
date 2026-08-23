@@ -17,8 +17,9 @@ Katılım bankacılığı kampanya metinlerinden finansal bilgi çıkarımı, ka
 ## ⚠️ Ölçüm künyesi — hangi sayı ne zaman ölçüldü
 
 Bu raporun **A–D bölümlerindeki sayılar 3 Ağustos 2026 koşusuna aittir** ve o
-günün korpusuna (**849 belge**) çapalıdır. Korpus o tarihten sonra 1.782 belgeye
-çıktı; çıkarım kuralları ve RAG sıralaması değişti.
+günün korpusuna (**849 belge**) çapalıdır. Korpus o tarihten sonra **2.708
+belgeye** çıktı (16 Ağustos'ta 1.782'ydi); çıkarım kuralları ve RAG sıralaması
+değişti.
 
 **Eski sayılar bilerek olduğu gibi bırakıldı.** "849"u "1.782" ile değiştirmek
 tek satırlık bir iş olurdu ama o ölçümler yeniden koşulmadı: değiştirilmiş sayı,
@@ -26,11 +27,11 @@ tek satırlık bir iş olurdu ama o ölçümler yeniden koşulmadı: değiştiri
 bunu yasaklıyor. Aşağıdaki tablo güncel durumu **ayrı** verir; ikisi
 karıştırılmaz.
 
-| Ne | 3 Ağustos (rapor gövdesi) | 13 Ağustos | **16 Ağustos (en güncel, koşuldu)** |
+| Ne | 3 Ağustos (rapor gövdesi) | 13 Ağustos | 16 Ağustos (koşuldu) |
 |---|---|---|---|
 | Korpus | 849 belge | 1.782 satır / 1.677 farklı içerik | **1.782** (değişmedi) |
 | Banka | 10 | 10 katılım bankası + TKBB | aynı |
-| Test | 890 | 2.649 toplanan · 2.596 geçen | 🔄 **tazelenecek** — kirli ağaç koşumu `3.046 toplandı · 2.988 geçti · 53 atlandı · 5 başarısız`; kanıt sayılmaz, temiz ağaçta yeniden koşulacak (`python -m scripts.test_ozeti`) |
+| Test | 890 | 2.649 toplanan · 2.596 geçen | 3.046 toplanan (kirli ağaç — kanıt sayılmadı) · temiz koşum aşağıdaki güncel blokta |
 | Gold seti | `gold.v1` (20 kayıt) | `gold.v2` (48 kayıt) · v3 turu dağıtıma hazır (+26) | aynı · toplam **66 tekil** belge (v1 20 + v2 48, 2 örtüşme — ölçüldü) |
 | Yapılandırılmış alan mikro-F1 | ölçülmemişti | 0,646 | **0,671** |
 | 12-alan mikro-F1 | 0,400 | 0,452 [%95 GA 0,384–0,512] | **0,464** [%95 GA 0,398–0,522] |
@@ -43,6 +44,38 @@ karıştırılmaz.
 | Reddetme kararı doğruluğu | ölçülmemişti | **30/30** | yeniden ölçülmedi |
 | Güvenlik seti | ölçülmemişti | **29/30** · aşırı red 0/6 | yeniden ölçülmedi |
 | Anotatör uyumu | ölçülmemişti | Fleiss κ **0,302** · Krippendorff α 0,620 / 0,787 | yeniden ölçülmedi |
+
+### 🔄 23 Ağustos 2026 — EN GÜNCEL KESİT (yukarıdaki sütunların yerine geçmez, yanına durur)
+
+16 Ağustos sütunu **artık en güncel değildir**; korpus 1.782'den 2.708'e çıktı ve
+ölçüm hattı iki gold tabanına ayrıldı. Aşağıdaki sayıların tek kanonik kaynağı
+`app/README.md`'dir; bu tablo onun kesitini taşır ve `scripts.kanit_tazeligi`
+kapısı her koşumda ikisini karşılaştırır (16 iddia · 0 sapma).
+
+| Ne | 16 Ağustos | **23 Ağustos (koşuldu, temiz ağaç)** |
+|---|---|---|
+| Korpus | 1.782 belge | **2.708** belge · 7.022 çıkarılmış alan · 999 PDF |
+| Banka | 10 | **10/10** katılım bankası |
+| Test | 3.046 (kirli ağaç) | **3.632** toplanan · **3.579** geçti · 53 atlandı · **0** başarısız |
+| Gold seti | `gold.v2` (48) | `gold.v2` **48** + `gold.round1` **134** — iki ayrı taban, iki ayrı kapı |
+| Yapısal alan mikro-F1 | 0,671 | **0,823** (`gold.v2`) · 0,826 (`gold.round1`) |
+| 12-alan mikro-F1 | 0,464 | **0,570** (`gold.v2`) · 0,795 (`gold.round1`) |
+| Kalem düzeyi mikro-F1 | ölçülmemişti | **0,629** (`gold.v2`) · 0,779 (`gold.round1`) |
+| makro-F1 | 0,601 | **0,765** (`gold.v2`) · 0,650 (`gold.round1`) |
+| Halüsinasyon oranı | 0,047 [21/444] | **0,034** (`gold.v2`, payda 447) · 0,284 (`gold.round1`, payda 74) |
+| Anotatör uyumu | Fleiss κ 0,302 | Cohen κ **0,714** (2. tur) · **0,716** (insan turu) |
+
+**İki halüsinasyon sayısı niçin bu kadar farklı:** paydalar aynı şeyi saymıyor.
+`gold.v2`nin 447 `absent` kararı kasten zor seçilmiş bir sette dağılmıştır;
+`gold.round1`in 74 kararı ise **inceleme kuyruğundan** gelir — bir hücre oraya
+zaten model bir şey ürettiği için girer, yani düşmanca seçilmiş bir alt kümedir.
+Payda 447'den 74'e inince oran doğal olarak fırlar. İkisinden birini seçip
+manşete koymuyoruz; ikisi de yayımlanıyor (bkz. `eval/esikler-round1.json`
+`_halusinasyon_neden_YOK` bloğu).
+
+**Artefaktlar:** `eval/reports/20260823-073019/` (`gold.v2`) ve
+`eval/reports/20260823-073045/` (`gold.round1`), ikisi de `git_dirty: false`.
+Gold bütünlüğü: `make gold-butunluk` (sha256 tanığı + eşik künyesi).
 | Güven kalibrasyonu | ölçülmemişti | ECE **0,306** · MCE 0,550 · Brier 0,316 | yeniden ölçülmedi |
 | Gold kanıt zinciri | araç yoktu | **48/48** izlenebilir (45 birebir + 3 içerik kayması) | yeniden ölçülmedi |
 
@@ -595,7 +628,7 @@ skoru, güven kaynağı, hangi katman çıkardı, kesin offset, ve metindeki vur
 ```bash
 cd app
 docker compose up
-# → api  : http://localhost:8000  (SQLite, 849 belge, LLM kapalı)
+# → api  : http://localhost:8000  (SQLite, 2.708 belge, LLM kapalı)
 # → web  : http://localhost:3000  (dashboard + chatbot)
 ```
 
@@ -631,7 +664,7 @@ cd web && npm install && NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 npm run dev
 # Toplama ve çıkarım
 python -m src.scraping.harvest                      # banka sitelerinden topla
 python -m src.extraction.run --input data/processed/sample.txt
-python -m scripts.build_demo_db                     # data/demo.db üret (849 belge)
+python -m scripts.build_demo_db                     # data/demo.db üret (2.708 belge)
 python -m scripts.build_demo_db --database-url postgresql://…   # Postgres'e üret
 
 # Değerlendirme

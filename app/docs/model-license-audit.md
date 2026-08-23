@@ -95,6 +95,12 @@ kapsamıyordu. Zincirler bugün köke kadar takip edildi ve **ikisi de temiz ç�
 
 #### Qwen3.5-9B (`qwen3.5:9b-q4_K_M`) — yalnız ölçüm aracı
 
+> **Çelişki kaydı.** `docs/model-lisanslari/README.md` 15 Ağu 2026'da bu
+> bölümün tersini yazıyordu (*"adın yukarı akış karşılığını
+> doğrulayamıyoruz"*). Çelişki 5. tur On-Prem jürisi tarafından bulundu,
+> 23 Ağu 2026'da HuggingFace API'sinden canlı doğrulamayla **bu bölüm lehine
+> çözüldü** ve orada `## ÇELİŞKİ` başlığı altında kayda geçti.
+
 Önce **ad doğrulandı**: "Qwen3.5" gerçek bir aile mi, yoksa Ollama'daki etiket
 başka bir modelin yeniden adlandırılmış hâli mi? Aile **gerçek** ve HuggingFace'te
 Qwen'in kendi hesabı altında yayımlı; yerel künye ile üst kaynak künyesi

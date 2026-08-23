@@ -1,6 +1,11 @@
 # BERTurk İnce Ayar Planı — 8 Sınıflı Kampanya Türü Sınıflandırması
 
-**Durum:** plan — eğitim henüz koşulmadı, bu belgede hiçbir eğitim sonucu yok.
+**Durum:** KAPANDI — eğitim koşuldu (8 Ağu 2026, yerel MPS), ölçüldü ve
+**kabul kapısında KALDI**; model projeye alınmadı, kural sınıflandırıcısı
+korunuyor. Sonuç ve kök neden: §10. Künye:
+`models/berturk-kampanya-8sinif/KUNYE.json` (`kabul_kapisi: "KALDI"`).
+§1–§9 hipotezi ve tasarımı **koşum öncesi** hâliyle duruyor — plan
+geriye dönük düzeltilmedi ki hipotezin ölçümden önce ne olduğu okunabilsin.
 **Defter:** `notebooks/berturk_ince_ayar.ipynb` (Colab, ücretsiz katman, T4)
 **İlgili:** `CLAUDE.md` §4, §16, §19, §20 · `scripts/eval_classifier.py` ·
 `src/extraction/ner/classifier.py` · `docs/model-license-audit.md` ·
@@ -297,7 +302,11 @@ Bunların hiçbiri koşulmadı; sonuç raporlanırken açık risk olarak taşın
 
 ---
 
-## 10. SONUÇ (2026-08-07) — kabul kapısında KALDI, model alınmadı
+## 10. SONUÇ (2026-08-08) — kabul kapısında KALDI, model alınmadı
+
+> Bu başlık 23 Ağu 2026'da `2026-08-07`'den düzeltildi: künye eğitimi
+> `2026-08-08T08:48:21+00:00`'a tarihliyor ve bir sonuç koşumdan önce
+> olamaz. Sayılar değişmedi, yalnız tarih künyeyle hizalandı.
 
 Eğitim **yerelde** koşuldu (Apple Silicon / MPS), Colab'a gerek kalmadı.
 Bu bir yan kazanç: eğitim de teslim ortamında tekrarlanabilir, on-prem

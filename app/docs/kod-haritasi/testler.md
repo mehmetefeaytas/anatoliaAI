@@ -8,6 +8,47 @@
 
 ---
 
+> ## ⚠️ BU KESİT BAYAT — güncel sayılar aşağıda (23 Ağustos 2026)
+>
+> 5. tur teknik jürisi bu haritanın sayılarını gerçekle karşılaştırdı ve
+> **%87–116 sapma** buldu. Harita 9 Ağustos kesitidir; gövdesi o günün
+> gerçeğini anlatır ve **bilerek olduğu gibi bırakıldı** (yeniden koşulmamış
+> bir analizin sayılarını elle güncellemek, ölçülmemiş sayıyı ölçülmüş gibi
+> gösterirdi — bu deponun künye kuralı bunu yasaklar). Ama okuyucunun
+> gövdedeki sayıyı **bugünün sayısı** sanması da kabul edilemez; bu yüzden
+> güncel gerçek burada, girişte duruyor:
+>
+> | Ne | 9 Ağustos (gövde) | **23 Ağustos (ölçüldü)** | sapma |
+> |---|---|---|---|
+> | Test dosyası | 98 | **214** | +118% |
+> | Test satırı | 23.525 | **50.113** | +113% |
+> | AST test fonksiyonu | 1.926 | **3.632** | +89% |
+> | `import pytest` eden dosya | 0 | **0** | — |
+>
+> AST sayımı gövdeyle **aynı yöntemle** yapıldı (modül düzeyi + sınıf metodu,
+> adı `test` ile başlayan), yani sayılar birebir karşılaştırılabilir. Üstelik
+> bu sayı `unittest`in topladığıyla da örtüşüyor (3.632) — iki bağımsız
+> yöntem aynı sonucu veriyor.
+>
+> Yeniden üretim komutu (harita gövdesini tazelemek isteyen için):
+>
+> ```bash
+> python3 -c "import ast,pathlib; fs=sorted(pathlib.Path('tests').glob('*.py')); \
+>   print(sum(1 for f in fs for d in ast.walk(ast.parse(f.read_text())) \
+>   if isinstance(d,(ast.FunctionDef,ast.AsyncFunctionDef)) and d.name.startswith('test')), \
+>   len(fs), sum(len(f.read_text().splitlines()) for f in fs))"
+> ```
+>
+> **Kardeş haritalar da aynı sınıfta:** `extraction.md` (8 Ağu),
+> `scraping.md` · `api-chatbot-arayuz.md` (9 Ağu), `veri-katmani.md` (10 Ağu),
+> `betikler-ve-olcum.md` (7 Ağu). Hepsi tarihli kesittir; hiçbiri güncel
+> sayı kaynağı değildir. Güncel sayıların **tek kanonik yeri** `app/README.md`
+> ve `scripts.kanit_tazeligi` kapısıdır.
+
+---
+
+---
+
 ## 1. Tek cümlelik özet
 
 Bu paket, kural çıkarımından RAG'e ve arayüz metnine kadar sistemin her
