@@ -1,12 +1,12 @@
 {
-  "toplanan": 3646,
+  "toplanan": 3647,
   "toplanan_kaynagi": "alt sonuç toplamı",
-  "gecti": 3592,
+  "gecti": 3593,
   "atlandi": 54,
   "basarisiz": 0,
   "cikis_kodu": 0,
-  "git_sha": "4122f3d9337f5350782d5d5896ffd7cc9834f7cf",
+  "git_sha": "c7a9d1636a1961a7463b42bf71da92d820d947dc",
   "git_dirty": false,
-  "created_utc": "2026-08-23T09:01:36.186190+00:00",
+  "created_utc": "2026-08-23T09:16:34.355989+00:00",
   "python": "3.14.6"
 }
