@@ -21,13 +21,13 @@
 > | Ne | 9 Ağustos (gövde) | **23 Ağustos (ölçüldü)** | sapma |
 > |---|---|---|---|
 > | Test dosyası | 98 | **215** | +119% |
-> | Test satırı | 23.525 | **50.296** | +114% |
-> | AST test fonksiyonu | 1.926 | **3.646** | +89% |
+> | Test satırı | 23.525 | **50.334** | +114% |
+> | AST test fonksiyonu | 1.926 | **3.647** | +89% |
 > | `import pytest` eden dosya | 0 | **0** | — |
 >
 > AST sayımı gövdeyle **aynı yöntemle** yapıldı (modül düzeyi + sınıf metodu,
 > adı `test` ile başlayan), yani sayılar birebir karşılaştırılabilir. Üstelik
-> bu sayı `unittest`in topladığıyla da örtüşüyor (3.646) — iki bağımsız
+> bu sayı `unittest`in topladığıyla da örtüşüyor (3.647) — iki bağımsız
 > yöntem aynı sonucu veriyor.
 >
 > Yeniden üretim komutu (harita gövdesini tazelemek isteyen için):

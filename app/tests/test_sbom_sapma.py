@@ -120,8 +120,52 @@ class SurumKarsilastirilmaz(Zemin):
         self.assertEqual(self._kos({"cyclonedx-bom"}), 0)
 
 
+class BelirtecinKendisi(unittest.TestCase):
+    """Belirteç iki yönlü doğru olmalı; bu test o iki yönü ayırır.
+
+    İlk yazımda burada `assertIn(BELIRTEC, kurulu_paketler())` vardı ve
+    CI'ı KIRDI: geliştirici `.venv`'inde doğru, CI'da yanlış bir iddiaydı
+    (`cyclonedx-bom` orada kurulu değil — kurulu OLMAMASI zaten istenen
+    davranış). Kapının atlaması gereken ortamda testin koşmasını şart
+    koşmak, kapının kendi tasarımıyla çelişiyordu.
+
+    Doğru değişmez ORTAMDAN BAĞIMSIZDIR: belirteç, teslim edilen bağımlılık
+    beyanlarının hiçbirinde geçmemeli. Geçerse CI'ın `test-with-deps` işi
+    onu kurar, kapı orada koşar ve beş paketlik API alt kümesini 96 paketlik
+    geliştirici envanteriyle karşılaştırıp kırmızı yanar.
+    """
+
+    def test_belirtec_requirements_disinda(self):
+        kok = _ROOT
+        for ad in ("requirements.txt", "requirements-api.txt"):
+            yol = kok / ad
+            if not yol.exists():
+                continue
+            with self.subTest(dosya=ad):
+                satirlar = [s.split("#")[0].strip().lower()
+                            for s in yol.read_text(encoding="utf-8").splitlines()]
+                self.assertNotIn(
+                    S.BELIRTEC, [s.split("==")[0].split(">=")[0].split("[")[0]
+                                 for s in satirlar if s],
+                    f"`{S.BELIRTEC}` {ad}'te ilan edilmiş — belirteç olarak "
+                    f"kullanılamaz, çünkü CI onu kurar ve kapı yanlış "
+                    f"popülasyonu karşılaştırıp kırmızı yanar.")
+
+    def test_belirtec_bos_degil(self):
+        """Boş/None belirteç kapıyı her yerde atlatır — sessiz ölüm."""
+        self.assertTrue(S.BELIRTEC and S.BELIRTEC.strip())
+
+
+@unittest.skipUnless(S.BELIRTEC in S.kurulu_paketler(),
+                     f"`{S.BELIRTEC}` yok — bu ortam docs/sbom.json'u "
+                     f"üretemez, karşılaştırma kategori hatası olurdu")
 class DepoGercegi(unittest.TestCase):
-    """Sentetik zemin değil, TESLİM EDİLEN ortam."""
+    """Sentetik zemin değil, TESLİM EDİLEN ortam.
+
+    Yalnız envanteri ÜRETEBİLEN ortamda koşar (geliştirici `.venv`i).
+    CI'ın iki işi de atlar; orada 96 paketin yokluğu kusur değil, işin
+    tanımıdır.
+    """
 
     def test_depo_temiz(self):
         kod = S.main([])
@@ -131,12 +175,6 @@ class DepoGercegi(unittest.TestCase):
             "ayrışmış. `python -m scripts.sbom_sapma` çıktısına bakın — "
             "paket çalışma zamanı bağımlılığıysa requirements'a girer, "
             "tek seferlik üretim aracıysa yardımcı ortama kurulur.")
-
-    def test_belirtec_gercekten_kurulu(self):
-        """Belirteç yanlış seçilirse kapı sessizce hiç koşmaz."""
-        self.assertIn(S.BELIRTEC, S.kurulu_paketler(),
-                      f"`{S.BELIRTEC}` bu ortamda kurulu değil; belirteç "
-                      f"`requirements.txt` ile birlikte güncellenmeli.")
 
 
 if __name__ == "__main__":
