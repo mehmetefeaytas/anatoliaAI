@@ -21,6 +21,7 @@
     "Sessizce düşürmek, kapının varlık sebebini ortadan kaldırır."
   ],
   "gold": "data/gold/gold.v2.json",
+  "gold_sha256": "e38a52766cf55e5615b2af3ec1dc10bd81067a75cc6ecb8c8f4d3cd9bf1a4eff",
   "olculdu": "2026-08-20",
   "matcher": "strict",
   "split": "all",

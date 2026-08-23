@@ -44,6 +44,7 @@ help:
 	@echo "  make lisanslar      Bağımlılık lisans envanterini docs/LISANSLAR.md'ye yazar"
 	@echo "  make sbom           CycloneDX SBOM üretir → docs/sbom.json"
 	@echo "  make lisans-kapisi  İzin listesi dışı lisans varsa çıkış kodu 1 verir"
+	@echo "  make gold-butunluk   Gold sha256 tanığı + eşik künyesi sapmışsa çıkış kodu 1"
 	@echo "  make veri-seti      Yayın paketini üretir → $(VERI_SETI)"
 	@echo "  make veri-seti-yukle  Ne yükleneceğini LİSTELER (kuru koşu, ağa çıkmaz)"
 	@echo "  make test           Test paketini koşar"
@@ -77,6 +78,15 @@ lisans-kapisi:
 	@$(PY) -m scripts.lisans_kapisi \
 		--girdi $(DOCS)/sbom.json \
 		--istisnalar config/lisans_istisnalari.yaml
+
+## gold-butunluk: gold sha256 tanığı ve eşik künyesi gerçekle tutuyor mu
+# "Gold dondurulmuştur" bir iddiadır; tanığı `data/gold/*.json.sha256` ve
+# `eval/esikler*.json`'daki `gold_sha256` künyesidir. 20-21 Ağu 2026'da üç
+# hakemlik commit'i gold'u değiştirirken tanık tazelenmedi ve `shasum -c`
+# FAILED verecek duruma geldi — dondurma bozulmamıştı, TANIK bayatlamıştı.
+# Aradaki fark jüri karşısında ölçüm anlatısının tamamına mal olur.
+gold-butunluk:
+	@$(PY) -m scripts.gold_butunluk
 
 ## veri-seti: yayına hazır veri seti paketini üretir (JSONL + sızıntısız bölme + kart)
 # Şartname s.18 veri setini ZORUNLU teslim kalemi sayar. Paket türetilmiştir:

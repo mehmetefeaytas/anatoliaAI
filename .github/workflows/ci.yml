@@ -47,7 +47,7 @@ jobs:
           echo "Kurulu ucuncu parti paketler (bos olmali):"
           pip list --format=freeze | grep -v -E "^(pip|setuptools|wheel)==" || true
 
-      # 3.552 gecen test (2026-08-21 olcumu). Saf stdlib oldugu icin hizli.
+      # 3.579 gecen test (2026-08-23 olcumu). Saf stdlib oldugu icin hizli.
       #
       # Bu adim 4-12 Agustos arasi BES KOSU boyunca KIRMIZIYDI ve kimse
       # gormedi; kirmizi bir kapi, olmayan bir kapiyla ayni seydir. Iki kok
@@ -136,6 +136,24 @@ jobs:
       # kayit kirmizi yapar.
       - name: Gold kanit zinciri
         run: python -m scripts.kanit_zinciri --gold data/gold/gold.v2.json
+
+      # Kanit zinciri gold KAYDININ metnini ham arsive kadar izler; bu adim
+      # bambaska bir soruyu sorar: gold DOSYASININ kendi baytlari, "donduruldu"
+      # diyen tanikla tutuyor mu? Tanik iki yerde: `data/gold/*.json.sha256`
+      # kardes dosyasi ve `eval/esikler*.json` icindeki `gold_sha256` kunyesi.
+      #
+      # Bu adim 20-21 Agu 2026'da yasanan somut bir bosluga karsi eklendi:
+      # `gold.round1.json.sha256` `d6cb8018`de DOGRUYDU, sonra uc hakemlik
+      # commit'i (HAKEM-05, S1 kilavuz karari, Juri 4 duzeltmesi) gold'u
+      # degistirirken tanik tazelenmedi. Dondurma gizlice bozulmadi -- ucu de
+      # gerekcesi commit mesajinda yazili kararlardi -- ama `shasum -c` kosan
+      # biri FAILED gorur ve olcum anlatisinin tamami tek kalemde supheye
+      # duser. Kaybedilen dogruluk degil, DOGRULUGUN GOSTERILEBILIRLIGIYDI.
+      #
+      # Kapi eksik kunyeyi de ihlal sayar: esiklerin hangi gold uzerinde
+      # olculdugu yazili olmayan bir kapi neyi korudugunu soyleyemez.
+      - name: Gold butunluk kapisi
+        run: python -m scripts.gold_butunluk
 
       # Depo temizligi (izlenen .md sayisini dusurmek) linkleri SESSIZCE kirar:
       # `git rm --cached` dosyayi diskte birakir, bu yuzden temizligi yapanin
