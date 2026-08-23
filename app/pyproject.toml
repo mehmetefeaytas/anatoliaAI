@@ -75,6 +75,11 @@ ignore = [
 # tutuluyor; böylece gerçek defektler (bu turda bulunan B007, I001, RUF100)
 # yakalanmaya devam ediyor.
 "docs/sunum/*" = ["T20"]
+# Proje dokümantasyonu PDF üreticisi de aynı sınıf: elle koşulan CLI aracı
+# (`docs/rapor/build_pdf.py` altyapısını yeniden kullanıyor). Dizin geneline
+# değil dosyaya muafiyet veriliyor — `docs/` altındaki başka bir dosyaya print
+# sızarsa yakalanmaya devam etsin.
+"docs/build_dokumantasyon_pdf.py" = ["T20"]
 "src/scraping/run.py" = ["T20"]
 "src/scraping/harvest.py" = ["T20"]
 "src/scraping/harvest_products.py" = ["T20"]

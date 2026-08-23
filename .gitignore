@@ -27,6 +27,12 @@ raw/**/*.pdf
 # kalem yine karşılanıyordu ama atıf yanlıştı.
 !app/docs/rapor/anatolia-ai-teknik-rapor.pdf
 
+# İSTİSNA: proje dokümantasyonu PDF'i — ZORUNLU TESLİM KALEMİ (şartname s.13-14,
+# 10 başlıklı dokümantasyon). `.md` ve `.html` zaten izleniyordu; PDF yukarıdaki
+# `*.pdf` kuralına takılıp sessizce dışarıda kalıyordu — yani kalemin teslim
+# edilen biçimi depoda yoktu. Bu, sunum PDF'inde bir kez yaşanan hatanın aynısı.
+!app/docs/PROJE-DOKUMANTASYONU.pdf
+
 # Ham ekran görüntüleri PDF'in İÇİNDE zaten var — ikisini birden tutmak
 # aynı kanıtı iki kez, 36 MB olarak taşımak olurdu. PNG'ler `ekran_cek.py`
 # ile yeniden üretilebilir; PDF ise teslim edilen biçimdir.

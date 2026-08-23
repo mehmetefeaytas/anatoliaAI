@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8">
+<title>Anatolia AI — Proje Dokümantasyonu</title>
+<style>
+@page { size: A4; margin: 17mm 15mm 18mm 15mm; }
+
+:root {
+  --ink: #1a1d23; --muted: #5b6270; --line: #d8dce3; --surf: #f7f8fa;
+  --teal: #0f766e; --blue: #1d4ed8; --warn: #b45309; --danger: #b91c1c; --ok: #15803d;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font: 10.2pt/1.55 -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: var(--ink); margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+
+/* --- kapak --- */
+.cover {
+  height: 250mm; display: flex; flex-direction: column; justify-content: center;
+  page-break-after: always;   /* içindekiler kapağa taşmasın */
+}
+.cover .eyebrow { font-size: 9.5pt; letter-spacing: .13em; text-transform: uppercase; color: var(--teal); font-weight: 700; }
+.cover h1 { font-size: 31pt; line-height: 1.12; margin: 10mm 0 5mm; border: 0; padding: 0; }
+.cover .sub { font-size: 12.5pt; color: var(--muted); max-width: 145mm; line-height: 1.5; }
+.cover .rule { height: 3px; width: 46mm; background: var(--teal); margin: 9mm 0; }
+.cover table { width: auto; font-size: 10pt; }
+.cover table td { border: 0; padding: 2.1mm 9mm 2.1mm 0; }
+.cover table td:first-child { color: var(--muted); white-space: nowrap; }
+.cover .foot { margin-top: auto; font-size: 9pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 4mm; }
+
+/* --- içindekiler --- */
+.toc { page-break-after: always; }
+.toc h2 { border: 0; margin-top: 0; }
+.toc ol { list-style: none; padding: 0; margin: 0; counter-reset: t; }
+.toc li { padding: 1.5mm 0; border-bottom: 1px dotted var(--line); font-size: 10.2pt; }
+.toc li.l1 { font-weight: 700; margin-top: 3.5mm; border-bottom: 1px solid var(--line); }
+.toc li.l2 { padding-left: 7mm; color: #333; }
+.toc a { color: inherit; text-decoration: none; }
+
+/* --- başlıklar --- */
+h1 {
+  font-size: 19pt; line-height: 1.2; margin: 0 0 6mm;
+  padding-bottom: 3mm; border-bottom: 2.5px solid var(--teal);
+}
+h1.page-break { page-break-before: always; padding-top: 0; }
+h2 {
+  font-size: 14pt; margin: 8mm 0 3.5mm; padding-bottom: 1.6mm;
+  border-bottom: 1px solid var(--line); page-break-after: avoid;
+}
+h3 { font-size: 11.6pt; margin: 6mm 0 2.4mm; color: #23262e; page-break-after: avoid; }
+h4 { font-size: 10.4pt; margin: 4.5mm 0 2mm; color: var(--muted);
+     text-transform: uppercase; letter-spacing: .05em; page-break-after: avoid; }
+
+p { margin: 0 0 3.2mm; orphans: 3; widows: 3; }
+
+/* --- tablolar --- */
+.table-wrap { margin: 3.5mm 0 5mm; page-break-inside: avoid; }
+table { width: 100%; border-collapse: collapse; font-size: 8.9pt; }
+thead { background: var(--surf); }
+th, td { border: 1px solid var(--line); padding: 1.9mm 2.4mm; vertical-align: top; }
+th { font-weight: 700; font-size: 8.6pt; }
+tbody tr:nth-child(even) { background: #fbfcfd; }
+/* Uzun tablolar sayfayı aşarsa satır bütünlüğü korunur, başlık tekrar eder. */
+table tr { page-break-inside: avoid; }
+thead { display: table-header-group; }
+
+/* --- kod --- */
+code {
+  font: 8.7pt ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  background: #eef1f5; padding: .5mm 1.1mm; border-radius: 2px; color: #0b3b57;
+}
+pre {
+  background: #1e2229; color: #e6e9ef; padding: 3.5mm 4mm; border-radius: 4px;
+  font: 8.5pt/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  overflow-x: auto; page-break-inside: avoid; margin: 3mm 0 4.5mm;
+}
+pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+/* --- görseller --- */
+figure { margin: 4mm 0 6mm; page-break-inside: avoid; text-align: center; }
+figure img { max-width: 100%; border: 1px solid var(--line); border-radius: 4px; }
+figure figcaption { font-size: 8.4pt; color: var(--muted); margin-top: 1.8mm; font-style: italic; }
+/* Ekran görüntüleri uzun; sayfa yüksekliğini aşmasınlar. */
+figure img[src^="gorseller/"] { max-height: 215mm; object-fit: contain; }
+
+/* --- listeler --- */
+ul, ol { margin: 0 0 3.5mm; padding-left: 6.5mm; }
+li { margin-bottom: 1.5mm; }
+
+blockquote {
+  margin: 3.5mm 0; padding: 2.8mm 4mm; background: #fff8ec;
+  border-left: 3px solid var(--warn); font-size: 9.8pt; page-break-inside: avoid;
+}
+
+hr { border: 0; border-top: 1px solid var(--line); margin: 6mm 0; }
+a { color: var(--blue); text-decoration: none; }
+strong { font-weight: 700; }
+
+.cover h1 { font-size: 27pt; }
+.kunye { page-break-after: always; }
+.kunye h2 { border: 0; margin-top: 0; }
+h2 { page-break-before: auto; }
+
+/* Uzun URL ve JSON satirlari baskida kirpilmasin: yatay kaydirma kagitta yok. */
+pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+td, th { overflow-wrap: anywhere; }
+</style>
+</head><body>
+<section class="cover">
+  <div class="eyebrow">TEKNOFEST 2026 · Türkçe Yapay Zekâ Dil Ajanları Yarışması · 2. Senaryo</div>
+  <h1 style="border:0">Anatolia AI<br>Proje Dokümantasyonu</h1>
+  <div class="rule"></div>
+  <div class="sub">Katılım bankacılığı kampanya metinlerinden finansal bilgi çıkarımı,
+  bankalar arası karşılaştırma ve doğal dil arayüzü. Şartnamenin on dokümantasyon
+  kalemi, ölçülmüş sayılar ve açık eksiklerle.</div>
+  <table style="margin-top:12mm">
+    <tr><td>Takım</td><td><strong>Anatolia AI</strong></td></tr>
+    <tr><td>Ekip</td><td>Mehmet Efe Aytaş (kaptan) · Irmak Altay · Ayça Engindeniz · Ecegüneş Dağ</td></tr>
+    <tr><td>Belge tarihi</td><td>22 Ağustos 2026</td></tr>
+    <tr><td>Korpus</td><td>2.708 belge · 11 kaynak · 7.022 çıkarılmış alan</td></tr>
+    <tr><td>Kod durumu</td><td>3.552 test yeşil · 0 başarısız · commit <code>03822c24</code></td></tr>
+    <tr><td>Ölçüm</td><td>yapılandırılmış mikro-F1 0,823 · halüsinasyon 0,034</td></tr>
+    <tr><td>Lisans</td><td>Apache-2.0</td></tr>
+  </table>
+  <div class="foot">Her sayı bir komut çıktısına ya da artefakt dosyasına referans verir.
+  Ölçülmemiş kalemler <strong>Bölüm 10</strong>'un sonunda ayrı listede toplanır.</div>
+</section>
+
+<section class="toc">
+  <h2>İçindekiler</h2>
+  <ol><li class="l2"><a href="#1-sistem-mimarisi-ve-veri-akisi">1. Sistem mimarisi ve veri akışı</a></li><li class="l2"><a href="#2-nlp-yaklasimi">2. NLP yaklaşımı</a></li><li class="l2"><a href="#3-veri-seti">3. Veri seti</a></li><li class="l2"><a href="#4-on-isleme-adimlari">4. Ön işleme adımları</a></li><li class="l2"><a href="#5-model-ve-kural-yapisi">5. Model ve kural yapısı</a></li><li class="l2"><a href="#6-bankalar-arasi-karsilastirma">6. Bankalar arası karşılaştırma</a></li><li class="l2"><a href="#7-kurulum-ve-calistirma">7. Kurulum ve çalıştırma</a></li><li class="l2"><a href="#8-karsilasilan-problemler-ve-cozumler">8. Karşılaşılan problemler ve çözümler</a></li><li class="l2"><a href="#9-model-cikti-ornekleri">9. Model çıktı örnekleri</a></li><li class="l2"><a href="#10-basarim-degerlendirme-yontemi">10. Başarım değerlendirme yöntemi</a></li><li class="l2"><a href="#kaynaklar">Kaynaklar</a></li></ol>
+</section>
+<h2 id="1-sistem-mimarisi-ve-veri-akisi">1. Sistem mimarisi ve veri akışı</h2>
+<p>Sistem tek bir orkestrasyon fonksiyonunda toplanır: <code>src/pipeline.py</code> <code>run_pipeline()</code>. On bir aşama var; her biri bağımsız test edilen bir modül.</p>
+<pre><code>toplama → temizlik → ön işleme → sınıflandırma → kural çıkarımı
+   → (LLM katmanı: kodda var, üretimde kapalı) → uzlaştırma → normalizasyon
+   → çelişki tespiti → depolama → karşılaştırma → panel + sohbet</code></pre>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">#</th><th style="text-align:left">Aşama</th><th style="text-align:left">Modül</th><th style="text-align:left">Giriş noktası</th></tr></thead><tbody><tr><td style="text-align:left">1</td><td style="text-align:left">Veri toplama</td><td style="text-align:left"><code>src/scraping/</code></td><td style="text-align:left"><code>collector.py</code> <code>collect_live()</code>, <code>collect_from_fixtures()</code></td></tr><tr><td style="text-align:left">2</td><td style="text-align:left">Ön işleme</td><td style="text-align:left"><code>src/preprocessing/clean.py</code></td><td style="text-align:left"><code>normalize_text()</code>, <code>tr_fold()</code></td></tr><tr><td style="text-align:left">3</td><td style="text-align:left">Kampanya türü sınıflandırma</td><td style="text-align:left"><code>src/extraction/ner/classifier.py</code></td><td style="text-align:left"><code>RuleHintClassifier</code></td></tr><tr><td style="text-align:left">4</td><td style="text-align:left">Kural çıkarımı, 12 alan</td><td style="text-align:left"><code>src/extraction/rules/extract.py</code></td><td style="text-align:left"><code>extract_all()</code></td></tr><tr><td style="text-align:left">5</td><td style="text-align:left">LLM katmanı</td><td style="text-align:left"><code>src/extraction/llm/extractor.py</code></td><td style="text-align:left"><code>LLMExtractor.extract()</code></td></tr><tr><td style="text-align:left">6</td><td style="text-align:left">Uzlaştırma</td><td style="text-align:left"><code>src/extraction/reconcile.py</code></td><td style="text-align:left"><code>reconcile()</code></td></tr><tr><td style="text-align:left">7</td><td style="text-align:left">Normalizasyon</td><td style="text-align:left"><code>src/normalization/normalize.py</code></td><td style="text-align:left"><code>normalize_rate()</code>, <code>normalize_money()</code></td></tr><tr><td style="text-align:left">8</td><td style="text-align:left">Çelişki tespiti</td><td style="text-align:left"><code>src/comparison/contradiction.py</code></td><td style="text-align:left"><code>detect()</code>, <code>detect_across()</code></td></tr><tr><td style="text-align:left">9</td><td style="text-align:left">Depolama</td><td style="text-align:left"><code>src/db/factory.py</code></td><td style="text-align:left"><code>create_repository()</code></td></tr><tr><td style="text-align:left">10</td><td style="text-align:left">Karşılaştırma</td><td style="text-align:left"><code>src/comparison/compare.py</code></td><td style="text-align:left"><code>rank()</code>, <code>rank_advantageous_by_type()</code></td></tr><tr><td style="text-align:left">11</td><td style="text-align:left">Sunum</td><td style="text-align:left"><code>src/api/main.py</code> + <code>web/</code></td><td style="text-align:left"><code>build_app()</code></td></tr></tbody></table></div>
+<h3 id="dort-calisma-modu">Dört çalışma modu</h3>
+<p><code>MODE_FIXTURE</code> üç sabit belgeyle saniyenin altında koşar ve birim testleri besler. <code>MODE_CORPUS</code> tam korpusu tarar; teslim edilen demo veritabanını bu mod üretir. <code>MODE_LIVE</code> banka sitelerinden canlı toplar. <code>MODE_AUTO</code> eldeki veriye bakıp birini seçer. Aynı kod yolu dört modda da koşar, yani hızlı testle teslim koşumu arasında davranış farkı kalmaz.</p>
+<h3 id="iki-veritabani-arka-ucu">İki veritabanı arka ucu</h3>
+<p><code>src/db/base.py</code> içindeki <code>RepositoryProtocol</code> on üç metotlu tek bir sözleşme tanımlar. SQLite ve PostgreSQL/pgvector bu sözleşmeyi ayrı ayrı uygular; <code>create_repository()</code> <code>DATABASE_URL</code> doluysa Postgres&#x27;i, boşsa SQLite&#x27;ı seçer.</p>
+<p>Sözleşmenin bir bedeli vardı ve ödendi: depo katmanı dışında SQL yazmak yasaklandı. Eskiden bir <code>rows()</code> kaçış kapısı duruyordu ve beş yerden ham SQL çağrılıyordu. SQLite <code>?</code>, PostgreSQL <code>%s</code> yer tutucusu kullandığı için o beş çağrı Postgres&#x27;te <code>ProgrammingError</code> ile düşüyordu; soyutlama kâğıt üstünde kalmıştı. Beş sorgu sözleşme metotlarına taşındı, kaçış kapısı kapatıldı.</p>
+<p>Kurumun kendi PostgreSQL&#x27;ine takılabilmek şartname §7&#x27;nin &quot;kurum sistemlerine entegre edilebilir mimari&quot; maddesinin doğrudan karşılığı. Parite ölçüldü: <code>test_repo_parity.py</code> 26 test, <code>test_pgvector_repository.py</code> 27 test.</p>
+<hr>
+<h2 id="2-nlp-yaklasimi">2. NLP yaklaşımı</h2>
+<h3 id="uc-katman-acik-oncelik">Üç katman, açık öncelik</h3>
+<p><code>reconcile.py</code> içindeki <code>_PRIORITY</code> sabiti sırayı belirler: **kural (3) &gt; ner (2)</p>
+<blockquote>llm (1)**. Çoğu proje LLM&#x27;i merkeze koyar; burada tersi geçerli ve gerekçesi</blockquote>
+<p>bir bütçe hesabı.</p>
+<p>Anotasyon bütçesi 150–300 örnek. Bu bütçe NER ince ayarına harcanırsa 12 alan × 8 tür uzayında ezberleme riski büyür. Aynı bütçe gold/eval setine harcanırsa rubriğin %30&#x27;luk model başarımı kalemi ölçülebilir hâle gelir. İnce ayar bütçesi yalnız 8 sınıflı kampanya türü sınıflandırıcısına ayrıldı; orada dengeli 150–300 örnek yeterli olurdu. BERTurk ince ayarı koştu ve kabul kapısında kaldı (makro-F1 0,565, kural ipucu katmanı 0,762). Üretimde sınıflandırmayı <code>RuleHintClassifier</code> yapıyor. Karar kaydı: <code>../decisions/ner-fine-tune-yerine-kural-few-shot.md</code>, ölçüm: <code>docs/rapor/berturk-ince-ayar-plani.md</code>.</p>
+<h3 id="kurallar-neden-birincil">Kurallar neden birincil</h3>
+<p>Katılım bankacılığı metninde çıkarılacak alanların çoğu sayısal ve yapısal: oran, tutar, vade, taksit, ücret, tarih. Deterministik regex artı normalizasyon bu alanlarda dört somut avantaj verir.</p>
+<ul>
+<li>Değer uyduramaz. Kural bulamazsa <code>null</code> döner.</li>
+<li>Kaynak konumunu kesin verir. <code>span_start</code>/<code>span_end</code> doğrudan eşleşme konumundan gelir.</li>
+<li>Hızlı. Belge başına p50 = 1,03 ms.</li>
+<li>Tekrar üretilebilir. Sıcaklık, tohum ve model sürümü değişkeni yok.</li>
+</ul>
+<h3 id="llm-katmani-kodda-var-uretimde-kapali">LLM katmanı: kodda var, üretimde kapalı</h3>
+<p>LLM yalnız kuralların kaçırdığı örtük ifadeler için tasarlandı: &quot;ilk 3 ay ödemesiz&quot;, &quot;avantajlı kâr payı fırsatı&quot;, dolaylı oran anlatımları. Kısıtlı JSON çözümlemesi zorunlu; serbest metin hiç ayrıştırılmaz (<code>llm/schema.py</code> <code>guided_json_schema()</code>).</p>
+<p>Üretim yolundan çıkarma kararını ölçüm dayattı. 20 Ağustos 2026, <code>gold.v2</code> (48 kayıt, 40&#x27;ı zor), Ollama artı <code>qwen2.5:7b-instruct</code>, CPU, <code>LLM_STRICT=1</code>:</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">kol</th><th style="text-align:left">mikro-F1 (<code>strict</code>)</th><th style="text-align:left">halüsinasyon</th><th style="text-align:left">McNemar, <code>kural</code> karşısında</th></tr></thead><tbody><tr><td style="text-align:left"><strong>kural</strong></td><td style="text-align:left"><strong>0,4771</strong></td><td style="text-align:left"><strong>0,0425</strong></td><td style="text-align:left">—</td></tr><tr><td style="text-align:left">llm</td><td style="text-align:left">0,2545</td><td style="text-align:left">0,0582</td><td style="text-align:left">p = 0,00105</td></tr><tr><td style="text-align:left">hibrit</td><td style="text-align:left">0,4402</td><td style="text-align:left">0,1029</td><td style="text-align:left">p = 0,00050</td></tr><tr><td style="text-align:left">hibrit-verify</td><td style="text-align:left">0,3672</td><td style="text-align:left">0,0984</td><td style="text-align:left">p = 0,0000123</td></tr></tbody></table></div>
+<p>LLM sağlığı temiz: 384 çağrının 384&#x27;ü başarılı, parse hatası yok, şema ihlali yok. Yani düşük başarımın kaynağı teknik bir arıza olamaz. Model çağrıldı, geçerli JSON döndürdü ve yine kaybetti. Hibrit kol halüsinasyonu 2,4 katına çıkardı.</p>
+<p>Mekanizma yapısal. <code>reconcile.py</code> sözleşmesi LLM&#x27;e kuralın yanlış pozitiflerini düzeltme yetkisi vermez; yalnız kuralın boş bıraktığı alanlara değer ekleyebilir. Kazanç tavanı dar, kayıp tabanı geniş.</p>
+<p>Tablodaki <code>kural</code> sayısı (0,4771) o günün ağacına ait. Aynı gün iki tur kural iyileştirmesi koştu ve manşet 0,5702&#x27;ye çıktı; ablasyon o iyileştirmelerden önceki kesiti ölçüyor. Ayrıntı: <code>docs/rapor/ablasyon.md</code>.</p>
+<p>Teslim edilen korpusta LLM katmanı hiç alan üretmedi. 7.022 alanın tamamı <code>extractor = rule</code> etiketli.</p>
+<h3 id="sohbet-arayuzu-iki-yol-bir-yonlendirici">Sohbet arayüzü: iki yol, bir yönlendirici</h3>
+<p>Sohbet katmanı saf RAG değil. <code>chatbot/router.py</code> <code>route()</code> soruyu sınıflandırır. Sayısal ve karşılaştırmalı sorular (&quot;en düşük kâr payı hangi bankada&quot;) <code>extracted_fields</code> tablosu üzerinde yapısal sorguya gider. Koşul ve açıklama soruları (&quot;konut finansmanı kampanyasının koşulları neler&quot;) RAG koluna gider. Semantik benzerlik araması sıralama sorularına yapısı gereği zayıf cevap verir; &quot;en düşük&quot; ifadesi bir vektör uzayında sıralama yapmaz. Hangi yolun koştuğu cevabın yanında etiket olarak görünür.</p>
+<p>Bu yönlendirme alan çıkarımından bağımsız bir mekanizma. Ablasyon tablolarındaki &quot;hibrit&quot; sözcüğüyle karıştırılmaması gerekir.</p>
+<h3 id="guven-skoru-ve-kalibrasyon-siniri">Güven skoru ve kalibrasyon sınırı</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kaynak</th><th style="text-align:left">Hesap</th><th style="text-align:left">Etiket</th></tr></thead><tbody><tr><td style="text-align:left">Kural</td><td style="text-align:left">taban 0,70 artı tetikleyici kelimeye mesafe düzeltmesi</td><td style="text-align:left"><code>rule_heuristic</code></td></tr><tr><td style="text-align:left">LLM</td><td style="text-align:left"><code>exp(mean(logprob))</code>, değerin kapsadığı jetonlar üzerinden</td><td style="text-align:left"><code>logprob</code></td></tr></tbody></table></div>
+<p>Bu skorlar kalibre edilmedi. &quot;0,90 güven&quot; %90 doğruluk anlamına gelmez; skor bir sıralayıcı olarak iş görür ve aynı alan içinde hangi çıkarımın daha güvenilir olduğunu söyler. Her alan <code>confidence_source</code> taşır, böylece ayrım panelde ve denetimde görünür kalır. Teslim edilen 7.022 alanın tamamı <code>rule_heuristic</code>.</p>
+<hr>
+<h2 id="3-veri-seti">3. Veri seti</h2>
+<h3 id="kapsam">Kapsam</h3>
+<p>Kapsamı BDDK&#x27;nın katılım bankaları listesi belirler. <code>config/banks.yaml</code> on bankayı yapılandırma olarak tutar; yeni banka eklemek tek YAML bloğu, kod değişmez. TKBB (Türkiye Katılım Bankaları Birliği) terminoloji kaynağı olarak ayrıca toplanır.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Kaynak</th><th style="text-align:right">Belge</th></tr></thead><tbody><tr><td style="text-align:left">Kuveyt Türk</td><td style="text-align:right">885</td></tr><tr><td style="text-align:left">Albaraka Türk</td><td style="text-align:right">353</td></tr><tr><td style="text-align:left">Vakıf Katılım</td><td style="text-align:right">307</td></tr><tr><td style="text-align:left">Ziraat Katılım</td><td style="text-align:right">276</td></tr><tr><td style="text-align:left">T.O.M. Katılım</td><td style="text-align:right">260</td></tr><tr><td style="text-align:left">Türkiye Emlak Katılım</td><td style="text-align:right">227</td></tr><tr><td style="text-align:left">Türkiye Finans</td><td style="text-align:right">205</td></tr><tr><td style="text-align:left">Dünya Katılım</td><td style="text-align:right">110</td></tr><tr><td style="text-align:left">Hayat Finans</td><td style="text-align:right">72</td></tr><tr><td style="text-align:left">Adil Katılım</td><td style="text-align:right">11</td></tr><tr><td style="text-align:left">TKBB</td><td style="text-align:right">2</td></tr><tr><td style="text-align:left"><strong>Toplam</strong></td><td style="text-align:right"><strong>2.708</strong></td></tr></tbody></table></div>
+<p>Belge türü kırılımı: 1.726 kampanya sayfası, 982 sözleşme ve tarife belgesi (çoğu PDF&#x27;ten dönüştürülmüş). Durum kırılımı: 434 belge süresi dolmuş kampanya olarak işaretli.</p>
+<p>Dengesizlik açıkta duruyor. Adil Katılım 11, TKBB 2 belge veriyor; bu kurumların siteleri küçük ya da yapısı farklı. Dengesizliği raporluyoruz çünkü karşılaştırma sonucunu doğrudan etkiliyor: az belgeli bankanın &quot;en iyi&quot; çıkma olasılığı yapısal olarak düşük.</p>
+<h3 id="toplama-yontemi-ve-etik-sinirlar">Toplama yöntemi ve etik sınırlar</h3>
+<p><code>src/scraping/robots.py</code> <code>robots.txt</code> dosyasını ayrıştırır ve ona uyar; engellenen yollar <code>_products_report.json</code> içinde <code>blocked</code> listesine yazılır. <code>RateLimiter</code> alan adı başına varsayılan 3 saniye bekler. User-Agent açıklayıcı: <code>AnatoliaAI-Research/1.0</code>. JavaScript ile üretilen sayfalar için Playwright, statik sayfalar için requests artı BeautifulSoup koşar.</p>
+<p>Toplama dört turda yapıldı: aktif kampanyalar, ürün sayfaları (oran ve vade taşıyanlar), süresi dolmuş kampanya arşivi, PDF ücret tarifeleri ve sözleşme formları.</p>
+<h3 id="koken-kaydi">Köken kaydı</h3>
+<p>Her belge yanında bir <code>.txt.meta.json</code> dosyası taşır: <code>source_url</code>, <code>scraped_at</code>, <code>content_hash</code>, <code>collection_method</code>. Ölçülen doluluk: <code>source_url</code> 2.708/2.708, <code>scraped_at</code> 2.706/2.708 (eksik ikisi demo fikstürü).</p>
+<p>Zincir kesintisiz: alan → karakter konumu → belge → kaynak URL → toplama zamanı → içerik hash&#x27;i. Panelin denetim sekmesi bu zinciri uçtan uca gösterir.</p>
+<h3 id="kampanya-turu-dagilimi">Kampanya türü dağılımı</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Tür</th><th style="text-align:right">Belge</th></tr></thead><tbody><tr><td style="text-align:left">Kart</td><td style="text-align:right">901</td></tr><tr><td style="text-align:left">Finansman</td><td style="text-align:right">592</td></tr><tr><td style="text-align:left">Yatırım Ürünü</td><td style="text-align:right">526</td></tr><tr><td style="text-align:left">Konut Finansmanı</td><td style="text-align:right">118</td></tr><tr><td style="text-align:left">İhtiyaç Finansmanı</td><td style="text-align:right">112</td></tr><tr><td style="text-align:left">Taşıt Finansmanı</td><td style="text-align:right">68</td></tr><tr><td style="text-align:left">Alışveriş Puanı</td><td style="text-align:right">61</td></tr><tr><td style="text-align:left">Yeni Müşteri</td><td style="text-align:right">5</td></tr><tr><td style="text-align:left"><em>sınıflanamayan</em></td><td style="text-align:right"><em>325</em></td></tr></tbody></table></div>
+<p>Şartname §5.4&#x27;ün saydığı sekiz türün tamamı üretiliyor. 325 belge (%12,0) hiçbir türe girmiyor ve ayrı satır olarak raporlanıyor; zorlama etiket atanmıyor.</p>
+<h3 id="alan-kapsami-ve-en-buyuk-kisit">Alan kapsamı ve en büyük kısıt</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Alan</th><th style="text-align:right">Belge</th><th style="text-align:right">Pay</th></tr></thead><tbody><tr><td style="text-align:left"><code>kampanya_kosullari</code></td><td style="text-align:right">2.301</td><td style="text-align:right">%85,0</td></tr><tr><td style="text-align:left"><code>kampanya_suresi</code></td><td style="text-align:right">1.179</td><td style="text-align:right">%43,5</td></tr><tr><td style="text-align:left"><code>masraf_durumu</code></td><td style="text-align:right">814</td><td style="text-align:right">%30,1</td></tr><tr><td style="text-align:left"><code>hedef_kitle</code></td><td style="text-align:right">746</td><td style="text-align:right">%27,5</td></tr><tr><td style="text-align:left"><code>vade_ay</code></td><td style="text-align:right">627</td><td style="text-align:right">%23,2</td></tr><tr><td style="text-align:left"><code>taksit_sayisi</code></td><td style="text-align:right">426</td><td style="text-align:right">%15,7</td></tr><tr><td style="text-align:left"><code>odul_miktari</code></td><td style="text-align:right">331</td><td style="text-align:right">%12,2</td></tr><tr><td style="text-align:left"><code>alisveris_puani</code></td><td style="text-align:right">182</td><td style="text-align:right">%6,7</td></tr><tr><td style="text-align:left"><code>indirim_orani</code></td><td style="text-align:right">162</td><td style="text-align:right">%6,0</td></tr><tr><td style="text-align:left"><code>kar_payi_orani</code></td><td style="text-align:right"><strong>146</strong></td><td style="text-align:right"><strong>%5,4</strong></td></tr><tr><td style="text-align:left"><code>finansman_tutari</code></td><td style="text-align:right">75</td><td style="text-align:right">%2,8</td></tr><tr><td style="text-align:left"><code>tahsis_ucreti</code></td><td style="text-align:right">33</td><td style="text-align:right">%1,2</td></tr><tr><td style="text-align:left"><strong>Toplam alan</strong></td><td style="text-align:right"><strong>7.022</strong></td><td style="text-align:right"></td></tr></tbody></table></div>
+<p>Son satırdan bir tanesi projenin en önemli bulgusu. <strong>Kâr payı oranı yalnız 146 belgede geçiyor.</strong> Şartname §5.7&#x27;nin birinci karşılaştırma ölçütü (&quot;En Düşük Kâr Payı Oranı&quot;) tam bu alana dayanıyor.</p>
+<p>Sebep veri kaynağının doğasında. Katılım bankaları kampanya sayfalarında oranı çoğu zaman yazmıyor; &quot;avantajlı oran&quot;, &quot;özel oranlı finansman&quot; gibi nitel ifadeler kullanıyor. Sistem bu boşluğu doldurmuyor, <code>comparable=False</code> ile işaretliyor. PDF hasadı payı 60&#x27;tan 146&#x27;ya çıkardı, ama alan hâlâ seyrek.</p>
+<h3 id="bilinen-veri-kalitesi-sorunlari">Bilinen veri kalitesi sorunları</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Sorun</th><th style="text-align:left">Ölçülen büyüklük</th><th style="text-align:left">Durum</th></tr></thead><tbody><tr><td style="text-align:left">Menü ve gezinme metni kaynak penceresine sızıyor</td><td style="text-align:left">sohbet kaynak tablosunda gözle görülür</td><td style="text-align:left">açık</td></tr><tr><td style="text-align:left">Pazarlama metnindeki bağlamsız <code>%0</code> oranlar sıralamaya giriyor</td><td style="text-align:left">Kuveyt Türk API market sayfası vb.</td><td style="text-align:left">açık</td></tr><tr><td style="text-align:left">Okunamaz PDF (ToUnicode tablosu olmayan gömülü yazı tipi) çöp metni koşul kalemi olarak sunuyordu</td><td style="text-align:left">1 Albaraka sözleşmesi</td><td style="text-align:left">kapatıldı, <code>_ortak.bozuk_metin</code> kapısı</td></tr><tr><td style="text-align:left">İkili çöp belge: 352 NUL baytı, 0 alan</td><td style="text-align:left">1 belge</td><td style="text-align:left">kapatıldı, <code>NulByteInText</code></td></tr></tbody></table></div>
+<hr>
+<h2 id="4-on-isleme-adimlari">4. Ön işleme adımları</h2>
+<p><code>src/preprocessing/clean.py</code> yedi fonksiyon taşır.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Fonksiyon</th><th style="text-align:left">İş</th></tr></thead><tbody><tr><td style="text-align:left"><code>strip_html()</code></td><td style="text-align:left">BeautifulSoup ile etiket temizliği; script ve style atılır</td></tr><tr><td style="text-align:left"><code>normalize_text()</code></td><td style="text-align:left">boşluk sıkıştırma, tekrarlanan satır kaldırma</td></tr><tr><td style="text-align:left"><code>split_sentences()</code></td><td style="text-align:left">Türkçe cümle bölme, kısaltma listesi farkında</td></tr><tr><td style="text-align:left"><code>tr_fold()</code></td><td style="text-align:left">Türkçe-doğru küçük harf</td></tr><tr><td style="text-align:left"><code>tr_upper()</code></td><td style="text-align:left">Türkçe-doğru büyük harf</td></tr><tr><td style="text-align:left"><code>tr_fold_ascii()</code></td><td style="text-align:left">ASCII sadeleştirme, eşleşme için</td></tr><tr><td style="text-align:left"><code>slugify_tr()</code></td><td style="text-align:left">dosya adı üretimi</td></tr></tbody></table></div>
+<h3 id="tr-fold-neden-ayri-bir-fonksiyon"><code>tr_fold()</code> neden ayrı bir fonksiyon</h3>
+<p>Python&#x27;un <code>str.lower()</code> Türkçe için yanlış sonuç verir. <code>&#x27;İ&#x27;.lower()</code> kombine noktalı <code>i</code> üretir, <code>&#x27;I&#x27;.lower()</code> ise <code>&#x27;i&#x27;</code> verir; Türkçede <code>&#x27;ı&#x27;</code> olması gerekir. Sonuç:</p>
+<pre><code>&#x27;ÜCRETSİZ&#x27;.lower()  →  &#x27;ücretsi̇z&#x27;   # &#x27;ücretsiz&#x27; ile eşleşmiyor</code></pre>
+<p>Bu tek satırlık fark <code>masraf_durumu</code> alanını ters çeviriyordu: büyük harfle yazılmış &quot;ÜCRETSİZ&quot; tanınmayınca sistem &quot;masraf var&quot; diyordu. Aynı tuzak projede üç ayrı yerde hata üretti — masraf çıkarımı, güvenlik kapısının terim eşleşmesi, sınıflandırıcı ipuçları.</p>
+<p>Bunun üzerine P2 ortografik değişmezliği yazıldı: <code>çıkar(metin) == çıkar(BÜYÜK(metin))</code>. Denetim ilk koşuda bu sınıftan 104 ihlal buldu.</p>
+<h3 id="bs4-sapmasi">bs4 sapması</h3>
+<p>Teslim imajının ince bağımlılık listesi (<code>requirements-api.txt</code>) BeautifulSoup taşımıyordu. <code>strip_html()</code> bs4 yokken sessizce ham HTML&#x27;e düşüyordu.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Ortam</th><th style="text-align:right">Belge başına ortalama karakter</th></tr></thead><tbody><tr><td style="text-align:left">Geliştirme, bs4 var</td><td style="text-align:right">4.317</td></tr><tr><td style="text-align:left">Teslim imajı, bs4 yok</td><td style="text-align:right"><strong>6.232</strong></td></tr><tr><td style="text-align:left">Düzeltmeden sonra</td><td style="text-align:right">4.320</td></tr></tbody></table></div>
+<p>Teslim imajı %44 gürültüyle koşuyordu. Birim testler bs4&#x27;ün kurulu olduğu geliştirme ortamında koştuğu için hatayı görmedi, çünkü fonksiyon istisna fırlatmıyordu; sessizce kötü sonuç veriyordu. İmaj 406 KB büyüdü, gürültü kalmadı.</p>
+<hr>
+<h2 id="5-model-ve-kural-yapisi">5. Model ve kural yapısı</h2>
+<h3 id="her-alan-kendi-kanitini-tasir">Her alan kendi kanıtını taşır</h3>
+<p><code>src/schemas.py</code> <code>ExtractedField</code>:</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Alan</th><th style="text-align:left">İçerik</th></tr></thead><tbody><tr><td style="text-align:left"><code>raw_value</code></td><td style="text-align:left">metindeki hâli, <code>&quot;%1,89&quot;</code></td></tr><tr><td style="text-align:left"><code>canonical_value</code></td><td style="text-align:left">normalize edilmiş hâli, <code>1.89</code></td></tr><tr><td style="text-align:left"><code>confidence</code></td><td style="text-align:left">0–1 skor</td></tr><tr><td style="text-align:left"><code>confidence_source</code></td><td style="text-align:left"><code>rule_heuristic</code> | <code>logprob</code> | <code>self_reported</code></td></tr><tr><td style="text-align:left"><code>source_span</code></td><td style="text-align:left">±40 karakterlik bağlam penceresi</td></tr><tr><td style="text-align:left"><code>span_start</code> / <code>span_end</code></td><td style="text-align:left">kesin karakter konumu</td></tr><tr><td style="text-align:left"><code>extractor</code></td><td style="text-align:left"><code>rule</code> | <code>ner</code> | <code>llm</code></td></tr></tbody></table></div>
+<p><code>verify_span()</code> öz-denetim yapar: konumla kesilen metin gerçekten <code>raw_value</code> içeriyor mu? Teslim edilen korpusta 7.022 alanın 7.022&#x27;sinde konum dolu ve doğrulanmış.</p>
+<p>Bu konumlar bir dönem veritabanı sınırında kayboluyordu. API katmanı <code>str.find()</code> ile yeniden aramak zorunda kalıyor, aynı değer metinde iki kez geçtiğinde yanlış yeri gösteriyordu. Şimdi saklanan konum birincil, <code>str.find()</code> yalnız yedek.</p>
+<h3 id="on-iki-alan-ve-cikaricilari">On iki alan ve çıkarıcıları</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">#</th><th style="text-align:left">Alan</th><th style="text-align:left">Kanonik tip</th><th style="text-align:left">Çıkarıcı (<code>rules/extract.py</code>)</th></tr></thead><tbody><tr><td style="text-align:left">1</td><td style="text-align:left"><code>kar_payi_orani</code></td><td style="text-align:left"><code>number</code> | <code>{min,max}</code></td><td style="text-align:left"><code>extract_kar_payi()</code>, ileri kalıp, oran tablosu</td></tr><tr><td style="text-align:left">2</td><td style="text-align:left"><code>finansman_tutari</code></td><td style="text-align:left"><code>{value, currency:&quot;TRY&quot;}</code></td><td style="text-align:left"><code>extract_tutar()</code></td></tr><tr><td style="text-align:left">3</td><td style="text-align:left"><code>vade_ay</code></td><td style="text-align:left"><code>integer</code></td><td style="text-align:left"><code>extract_vade()</code></td></tr><tr><td style="text-align:left">4</td><td style="text-align:left"><code>taksit_sayisi</code></td><td style="text-align:left"><code>integer</code></td><td style="text-align:left"><code>extract_taksit()</code></td></tr><tr><td style="text-align:left">5</td><td style="text-align:left"><code>tahsis_ucreti</code></td><td style="text-align:left"><code>{value, currency}</code></td><td style="text-align:left"><code>extract_tahsis_ucreti()</code></td></tr><tr><td style="text-align:left">6</td><td style="text-align:left"><code>masraf_durumu</code></td><td style="text-align:left"><code>{has_fee, amount}</code></td><td style="text-align:left"><code>extract_masraf()</code></td></tr><tr><td style="text-align:left">7</td><td style="text-align:left"><code>odul_miktari</code></td><td style="text-align:left"><code>{value, currency}</code></td><td style="text-align:left"><code>extract_odul_miktari()</code></td></tr><tr><td style="text-align:left">8</td><td style="text-align:left"><code>indirim_orani</code></td><td style="text-align:left"><code>number</code> | <code>{min,max}</code></td><td style="text-align:left"><code>extract_indirim_orani()</code></td></tr><tr><td style="text-align:left">9</td><td style="text-align:left"><code>alisveris_puani</code></td><td style="text-align:left"><code>{kind, value}</code></td><td style="text-align:left"><code>extract_alisveris_puani()</code></td></tr><tr><td style="text-align:left">10</td><td style="text-align:left"><code>kampanya_suresi</code></td><td style="text-align:left">ISO-8601 <code>string</code></td><td style="text-align:left"><code>extract_kampanya_suresi()</code></td></tr><tr><td style="text-align:left">11</td><td style="text-align:left"><code>kampanya_kosullari</code></td><td style="text-align:left"><code>array[string]</code>, en çok 12</td><td style="text-align:left"><code>extract_kampanya_kosullari()</code></td></tr><tr><td style="text-align:left">12</td><td style="text-align:left"><code>hedef_kitle</code></td><td style="text-align:left"><code>array[enum]</code>, en çok 4</td><td style="text-align:left"><code>extract_hedef_kitle()</code></td></tr></tbody></table></div>
+<p>Kampanya türü şartname tablosunda on üçüncü alan olarak sayılır. Teknik olarak bir sınıflandırma çıktısı ve <code>campaigns.campaign_type</code> sütununda durur; bu yüzden çıkarım şeması 12, şartname tablosu 13 sayıyor. İki farklı payda, çelişki yok.</p>
+<h3 id="normalizasyon">Normalizasyon</h3>
+<p>Şartname §5.6&#x27;nın istediği tekilleştirmeyi <code>src/normalization/normalize.py</code> yapar.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Girdi</th><th style="text-align:left">Çıktı</th></tr></thead><tbody><tr><td style="text-align:left"><code>%2,05</code> · <code>% 2.05</code> · <code>2.05 %</code></td><td style="text-align:left"><code>2.05</code></td></tr><tr><td style="text-align:left"><code>500 TL</code> · <code>500₺</code> · <code>500 Türk Lirası</code></td><td style="text-align:left"><code>{value: 500, currency: &quot;TRY&quot;}</code></td></tr><tr><td style="text-align:left"><code>12 ay</code> · <code>1 yıl</code></td><td style="text-align:left"><code>12</code></td></tr><tr><td style="text-align:left"><code>31.12.2026</code> · <code>31 Aralık 2026</code></td><td style="text-align:left"><code>2026-12-31</code></td></tr><tr><td style="text-align:left"><code>1.500,00</code></td><td style="text-align:left"><code>1500.00</code></td></tr><tr><td style="text-align:left"><code>masrafsız</code> · <code>ücretsiz</code> · <code>dosya masrafı yok</code></td><td style="text-align:left"><code>{has_fee: false, amount: 0}</code></td></tr></tbody></table></div>
+<p>Dejenere aralıklar kanonik biçime indirgenir: <code>{min: 1.89, max: 1.89}</code> → <code>1.89</code> (<code>collapse_degenerate_range</code>). İndirgeme olmadan bu değer <code>comparable=False</code> sayılıyor ve sıralamadan sessizce düşüyordu; en iyi teklif kaybediliyordu.</p>
+<h3 id="zor-anlama-vakalari">Zor anlama vakaları</h3>
+<p>Beş vaka sınıfı açıkça ele alınır: değer aralıkları, birim karışması, negasyon, örtük hedef kitle, bilgi yokluğu. Örnek girdi:</p>
+<blockquote>&quot;İhtiyaç finansmanında kâr payı oranı %1,99 - %2,49 arasında, 36 aya kadar vade. İlk 3 ay ödemesiz seçeneği ile 24 taksit. Yeni müşterilerimize dosya masrafı yok.&quot;</blockquote>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Vaka</th><th style="text-align:left">Sonuç</th></tr></thead><tbody><tr><td style="text-align:left">Aralık</td><td style="text-align:left"><code>%1,99 – %2,49</code> aralık olarak korundu, ortalamaya indirgenmedi</td></tr><tr><td style="text-align:left">Birim karışması</td><td style="text-align:left">36 ay vade olarak alındı, oran sanılmadı</td></tr><tr><td style="text-align:left">Negasyon</td><td style="text-align:left">&quot;dosya masrafı yok&quot; → tahsis ücreti 0 TL, <code>null</code> değil</td></tr><tr><td style="text-align:left">Hedef kitle</td><td style="text-align:left">&quot;Yeni müşterilerimize&quot; → <code>yeni_musteri</code></td></tr><tr><td style="text-align:left">Bilgi yokluğu</td><td style="text-align:left">6 alan boş bırakıldı, panel bunu açıkça yazıyor</td></tr></tbody></table></div>
+<p>Açık kalan kısım: &quot;İlk 3 ay ödemesiz&quot; gibi zaman-koşullu ifadeler ayrı alan olarak çıkarılmıyor. Bu vaka sınıfı LLM katmanının işi, LLM ise üretimde kapalı.</p>
+<h3 id="sozcuk-siniri-zorunlulugu">Sözcük sınırı zorunluluğu</h3>
+<p>Sınıflandırıcı bir dönem alt-dize eşleşmesi kullanıyordu. <code>&quot;ev&quot;</code> ipucu <code>&quot;devam&quot;</code>, <code>&quot;seviye&quot;</code>, <code>&quot;evrak&quot;</code> kelimelerinin içinde eşleşiyordu. Sonuç: korpusun %48&#x27;i sahte &quot;Konut Finansmanı&quot; etiketi alıyordu. <code>synonyms.py</code> <code>keyword_pattern()</code> artık zorunlu sözcük sınırı (<code>\b</code>) uygular.</p>
+<p>Bu hata hiçbir testi kırmadı, hiçbir istisna fırlatmadı. Yarım korpusu yanlış etiketledi ve panel bunu güvenle gösterdi. En pahalı hatalar çökmüyor.</p>
+<hr>
+<h2 id="6-bankalar-arasi-karsilastirma">6. Bankalar arası karşılaştırma</h2>
+<h3 id="bes-olcut">Beş ölçüt</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Ölçüt</th><th style="text-align:left">Uygulama</th></tr></thead><tbody><tr><td style="text-align:left">En Düşük Kâr Payı Oranı</td><td style="text-align:left"><code>compare.py</code> <code>rank()</code>, <code>lower_is_better</code></td></tr><tr><td style="text-align:left">En Yüksek Ödül Miktarı</td><td style="text-align:left"><code>rank()</code>, <code>higher_is_better</code></td></tr><tr><td style="text-align:left">En Uzun Vade Seçeneği</td><td style="text-align:left"><code>rank()</code>, <code>higher_is_better</code></td></tr><tr><td style="text-align:left">En Düşük Masraf</td><td style="text-align:left"><code>rank()</code>, masraf <code>amount</code> üzerinden</td></tr><tr><td style="text-align:left">En Avantajlı Kampanya</td><td style="text-align:left"><code>rank_advantageous_by_type()</code>, tür içinde bileşik skor</td></tr></tbody></table></div>
+<h3 id="adil-kiyas-garantisi">Adil kıyas garantisi</h3>
+<p>Karşılaştırmada en kolay yapılan hata eksik alanı 0 puan saymak. Bu, veri toplanamamış bankayı &quot;en kötü&quot; gösterir ve sıralamayı sessizce yanıltır. Sistem dört kapı koyar.</p>
+<ul>
+<li>Eksik alan 0 sayılmıyor; satır <code>comparable=False</code> işaretlenip sebebi <code>note</code> alanına yazılıyor.</li>
+<li><code>MIN_COVERAGE = 0.5</code> — alan kapsamı %50&#x27;nin altındaki kampanya bileşik skora girmiyor.</li>
+<li>Aralık değerler doğrudan kıyaslanmıyor; <code>comparable=False</code> oluyor ama gizlenmiyor, notuyla listenin sonuna geçiyor.</li>
+<li><code>MIN_GROUP_SIZE = 3</code> — üçten az kampanyası olan tür sıralanmıyor, listede görünmeye devam ediyor.</li>
+</ul>
+<h3 id="bilesik-skor-agirliklari">Bileşik skor ağırlıkları</h3>
+<p>&quot;En Avantajlı Kampanya&quot; tek alandan çıkmaz. <code>DEFAULT_WEIGHTS</code> ve <code>WEIGHT_RATIONALE</code> birlikte kayıtlı:</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Alan</th><th style="text-align:right">Ağırlık</th><th style="text-align:left">Gerekçe</th></tr></thead><tbody><tr><td style="text-align:left">Kâr payı oranı</td><td style="text-align:right">0,40</td><td style="text-align:left">toplam maliyeti en çok belirleyen kalem</td></tr><tr><td style="text-align:left">Masraf durumu</td><td style="text-align:right">0,20</td><td style="text-align:left">doğrudan nakit çıkışı</td></tr><tr><td style="text-align:left">Ödül miktarı</td><td style="text-align:right">0,15</td><td style="text-align:left">tek seferlik kazanç</td></tr><tr><td style="text-align:left">Vade</td><td style="text-align:right">0,15</td><td style="text-align:left">esneklik göstergesi</td></tr><tr><td style="text-align:left">Finansman tutarı</td><td style="text-align:right">0,10</td><td style="text-align:left">erişilebilirlik göstergesi</td></tr></tbody></table></div>
+<p>Normalizasyon sıralama tabanlı. Min-max normalizasyon tek aykırı değere aşırı duyarlı; %50 kâr payı taşıyan bir belge tüm ölçeği bozar. Sıralama tabanlı yaklaşım bundan etkilenmiyor.</p>
+<p>Sıralama tür içinde yapılıyor. Konut finansmanıyla alışveriş puanı kampanyasını aynı ölçekte sıralamak anlamsız sonuç üretir.</p>
+<h3 id="skorlama-seffafligi">Skorlama şeffaflığı</h3>
+<p><code>GET /scoring?field=…</code> formülü, adımları ve ağırlık manifestosunu döndürür; panelin <code>ScoringExplainer</code> bileşeni bunu gösterir. &quot;Bu sıralama nasıl çıktı&quot; sorusunun cevabı bir API çıktısı.</p>
+<p>Tek alanlı sıralamalarda <code>composite_weights: null</code> döner ve şu not eklenir: kod tabanında alanlar arası ağırlıklı bileşik skor yok, sıralama tek alan üzerinden yapılıyor.</p>
+<h3 id="celiski-tespiti">Çelişki tespiti</h3>
+<p><code>src/comparison/contradiction.py</code> yedi çelişki türü tanımlar. Bugünkü korpusta üçü tetikleniyor.</p>
+<p>21 Ağustos 2026, tam korpus taraması (<code>python -m src.comparison.scan</code>):</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">tür</th><th style="text-align:right">adet</th><th style="text-align:left">kırılım</th></tr></thead><tbody><tr><td style="text-align:left">belgeler arası</td><td style="text-align:right">8</td><td style="text-align:left">6 çapraz bitiş tarihi, 2 çapraz kâr payı uyuşmazlığı</td></tr><tr><td style="text-align:left">belge içi</td><td style="text-align:right">20</td><td style="text-align:left">17 süresi dolmuş kampanya, 2 çelişen tutar bandı, 1 çelişen bitiş</td></tr><tr><td style="text-align:left"><strong>toplam</strong></td><td style="text-align:right"><strong>28</strong></td><td style="text-align:left"></td></tr></tbody></table></div>
+<p>Manşet örnek: Albaraka Türk aynı ürün için iki ayrı formda %7,0 ve %1,0 kâr payı oranı yayımlamış. Kesişmeyen iki oranı <code>detect_across()</code> üretim koduyla yakaladı.</p>
+<p>Çelişki sayısı hangi kod yolunun koştuğuna bağlı ve bu ayrım kayıtlı. Zaman bağımlı kural (<code>suresi_dolmus_kampanya</code>) yalnız <code>as_of</code> verildiğinde koşar. <code>run_pipeline</code> bunu geçmiyor, API geçiyor:</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">yol</th><th style="text-align:left"><code>as_of</code></th><th style="text-align:right">çelişki</th><th style="text-align:right">tür</th></tr></thead><tbody><tr><td style="text-align:left"><code>run_pipeline(mode=&quot;corpus&quot;)</code> — CLI</td><td style="text-align:left">yok</td><td style="text-align:right">3</td><td style="text-align:right">2</td></tr><tr><td style="text-align:left"><code>GET /contradictions</code> — panelin gösterdiği</td><td style="text-align:left">var</td><td style="text-align:right">20</td><td style="text-align:right">3</td></tr></tbody></table></div>
+<p>Yanlış negatif oranı ölçülmedi. 2.708 belgede 28 çelişki, mekanizmanın çalıştığını gösterir; kuralların ne kadar muhafazakâr olduğunu göstermez.</p>
+<hr>
+<h2 id="7-kurulum-ve-calistirma">7. Kurulum ve çalıştırma</h2>
+<p><strong>Python 3.11 veya üstü gerekir.</strong> Kod <code>zip(..., strict=)</code> gibi 3.10+ sözdizimi kullanıyor. Stok macOS <code>/usr/bin/python3</code> sürümü 3.9.6 ve orada komutlar <code>TypeError</code> ile düşer.</p>
+<h3 id="en-kisa-yol">En kısa yol</h3>
+<pre class="lang-bash"><code>cd app
+make baslat      # API + panel + yerel model, port sahipliği denetimiyle
+make durdur      # modeli bellekten indirir, süreçleri toplar</code></pre>
+<p><code>scripts/baslat.sh</code> altı ortam değişkenini kendisi kuruyor ve bitişte ölçülmüş durum çıktısı basıyor. Betik, elle başlatmanın somut bir arızasından doğdu: 8000 portunu LLM&#x27;siz açılmış eski bir <code>uvicorn</code> tutuyordu, panel doğru davranıp &quot;yerel model kapalı&quot; diyordu, model ise başka bir portta açıktı.</p>
+<h3 id="elle-kurulum">Elle kurulum</h3>
+<p>Veritabanı önce kurulur, sunucu sonra açılır.</p>
+<pre class="lang-bash"><code>cd app
+python3 -m venv .venv &amp;&amp; ./.venv/bin/pip install -r requirements.txt
+
+# 1) Demo veritabanını üret (~55 s, ölçüm 2026-08-21 arm64)
+python3 -m scripts.build_demo_db --out data/demo.db
+
+# 2) Özetleri geri yükle — bu adımı atlamayın
+python3 -m scripts.ozet_geri_yukle --db data/demo.db
+
+# 3) API
+DATABASE_PATH=data/demo.db LLM_BACKEND= \
+  ./.venv/bin/python -m uvicorn src.api.main:app --port 8000
+
+# 4) Panel
+cd web &amp;&amp; npm install &amp;&amp; NEXT_PUBLIC_API_URL=http://127.0.0.1:8000 npm run dev</code></pre>
+<p>İki uyarı, ikisi de sessiz düşüş üretir.</p>
+<p><code>DATABASE_PATH</code> verilmezse varsayılan <code>:memory:</code> devreye girer, <code>/stats</code> <code>campaigns: 3</code> döner ve panel 2.708 belge yerine üç fikstür gösterir. Hata mesajı çıkmaz.</p>
+<p><code>build_demo_db</code> <code>campaigns.ozet</code> sütununu bilmiyor ve boş bırakıyor. İkinci adım atlanırsa panel her belgede &quot;AI Özeti üretilmedi&quot; yazar. Özetler yerel modelle üretildi (~4 saat) ve <code>data/ozet-yedegi.json</code> içinde git&#x27;te izleniyor; geri yükleme saniyeler sürüyor ve model istemiyor. Kural tabanlı sahte özet basmak kodda yasak (<code>src/summarize/ozet.py</code>), bu yüzden yedek tek meşru yol. Ölçülen kapsam: 2.708 belgenin 2.634&#x27;ü özetli (%97,3); kalan 74&#x27;ün sebebi boş metin ya da terminoloji kapısının reddi.</p>
+<h3 id="docker">Docker</h3>
+<pre class="lang-bash"><code>cd app
+python3 -m scripts.build_demo_db --out data/demo.db   # derlemeden ÖNCE
+python3 -m scripts.ozet_geri_yukle --db data/demo.db
+docker compose up
+# api : http://localhost:8000   (SQLite, 2.708 belge, LLM kapalı)
+# web : http://localhost:3000   (panel + sohbet)</code></pre>
+<p><code>Dockerfile.api</code> <code>data/</code> dizinini derleme anında imaja kopyalıyor. <code>*.db</code> <code>.gitignore</code> içinde olduğu için temiz bir klonda o dosya yok; sıralama bozulursa API fikstürlere düşüyor.</p>
+<p>Diğer profiller:</p>
+<pre class="lang-bash"><code>docker compose --profile postgres up   # postgres + api-postgres(8010) + pgvector
+docker compose --profile gpu up        # vLLM (8001)
+docker compose --profile ollama up     # Ollama (11434), CPU yedeği</code></pre>
+<p>Tüm imajlar <code>@sha256:</code> digest ile pinli.</p>
+<h3 id="dogrulama">Doğrulama</h3>
+<pre class="lang-bash"><code>curl -s localhost:8000/health   # {&quot;status&quot;:&quot;ok&quot;,&quot;llm&quot;:false,&quot;backend&quot;:&quot;sqlite&quot;}
+curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fields: 7022</code></pre>
+<h3 id="degerlendirme-ve-test-komutlari">Değerlendirme ve test komutları</h3>
+<pre class="lang-bash"><code>python3 -m unittest discover -s tests            # 3.605 test toplanır
+python -m eval.properties --raw-dir data/raw     # değişmez denetimi
+python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
+python -m eval.ablation                          # kural / llm / hibrit / hibrit-verify
+python -m src.comparison.scan --raw-dir data/raw # çelişki taraması
+python -m scripts.kanit_tazeligi                 # yayımlanan sayı ↔ artefakt karşılaştırması
+bash scripts/offline_proof.sh                    # ağ izolasyonu kanıtı
+ruff check .</code></pre>
+<p>Kanonik test koşucusu <code>unittest</code>. <code>pytest</code> bağımlılık listesinden düşürüldü; hiçbir test dosyası pytest API&#x27;si kullanmıyor. Çapraz doğrulama isteyen <code>pip install pytest</code> ile aynı sayıyı üretir.</p>
+<h3 id="ortam-degiskenleri">Ortam değişkenleri</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Değişken</th><th style="text-align:left">Varsayılan</th><th style="text-align:left">Etki</th></tr></thead><tbody><tr><td style="text-align:left"><code>DATABASE_URL</code></td><td style="text-align:left">boş</td><td style="text-align:left">dolu → PostgreSQL, boş → SQLite</td></tr><tr><td style="text-align:left"><code>DATABASE_PATH</code></td><td style="text-align:left"><code>data/demo.db</code></td><td style="text-align:left">SQLite dosyası; <code>:memory:</code> üç fikstüre düşer</td></tr><tr><td style="text-align:left"><code>LLM_BACKEND</code></td><td style="text-align:left">boş</td><td style="text-align:left">boş → <code>NullLLMExtractor</code>, tam offline</td></tr><tr><td style="text-align:left"><code>LLM_STRICT</code></td><td style="text-align:left">boş</td><td style="text-align:left"><code>1</code> → LLM erişilemezse sessiz düşme yasak</td></tr><tr><td style="text-align:left"><code>RAG_RETRIEVER</code></td><td style="text-align:left"><code>keyword</code></td><td style="text-align:left"><code>keyword</code> | <code>auto</code> | <code>vector</code></td></tr></tbody></table></div>
+<h3 id="canli-toplama-icin-ek-adim">Canlı toplama için ek adım</h3>
+<p>Bankaların dördü (Adil Katılım, Hayat Finans, T.O.M., Türkiye Finans) sayfalarını JavaScript ile üretiyor. <code>pip install</code> yalnız Python paketini kuruyor, tarayıcı ikilisini indirmiyor:</p>
+<pre class="lang-bash"><code>python -m playwright install chromium   # ~95 MB, internet gerektirir</code></pre>
+<p>Teslim edilen sistem bu adım olmadan da tam çalışır; demo önceden doldurulmuş veritabanından okuyor. Tarayıcı yalnız yeni veri toplarken gerekiyor ve eksikse sistem o bankayı Türkçe bir açıklamayla atlayıp diğerlerini sürdürüyor.</p>
+<hr>
+<h2 id="8-karsilasilan-problemler-ve-cozumler">8. Karşılaşılan problemler ve çözümler</h2>
+<p>Ortak örüntü: aşağıdaki on bir hatanın hiçbiri çökme üretmedi. Hepsi sessizce yanlış değer veriyordu. Bölüm 10&#x27;daki değişmez denetimi tam bu yüzden yazıldı.</p>
+<h3 id="p1-turkce-kucuk-harf">P1 — Türkçe küçük harf</h3>
+<p>Kök neden: <code>str.lower()</code> <code>İ/I</code> çiftini yanlış çeviriyor. Etki: <code>masraf_durumu</code> ters çevriliyor; &quot;ÜCRETSİZ&quot; belge &quot;masraf var&quot; oluyor. Çözüm: <code>tr_fold()</code>, tüm eşleşmeler bundan geçiyor. Aynı tuzak üç ayrı yerde hata üretmişti. Doğrulama: P2 ortografik değişmezliği. Düzeltme geri alınınca denetim gerçekten ihlal veriyor.</p>
+<h3 id="p2-binlik-ayirici">P2 — Binlik ayırıcı</h3>
+<p>Kök neden: <code>float()</code> Türkçe sayı biçimini bilmiyor, <code>.</code> işaretini ondalık sanıyor. Etki: <code>&quot;1.500,00 TL&quot;</code> → <strong>1,0 TL</strong>. 1.500 liralık ücret 1 lira olarak kaydediliyor ve karşılaştırma tamamen bozuluyor. Çözüm: <code>parse_tr_number()</code>.</p>
+<h3 id="p3-hayali-tahsis-ucreti">P3 — Hayali tahsis ücreti</h3>
+<p>Kök neden: ücret çıkarıcısının arama penceresi cümle sınırını aşıp sonraki cümledeki tarih sayısını yakalıyordu. Etki: <code>&quot;ücret alınmaz. Kampanya 31 Aralık&quot;</code> → <strong>31 TL</strong>. Kural katmanının kendi halüsinasyonu. Çözüm: pencere cümle sınırına bağlandı, negasyona öncelik verildi.</p>
+<h3 id="p4-sahte-aralik">P4 — Sahte aralık</h3>
+<p>Kök neden: &quot;ile&quot; bağlacı aralık işareti sanılıyordu; vade sayısı oran aralığının üst sınırı oluyordu. Etki: <code>&quot;%1,89 ile 120 aya kadar&quot;</code> → <strong>%1,89–%120</strong>. Şartnamenin manşet örneği yanlış çıkarılıyordu. Çözüm: iki yönlü kâr payı çıkarımı, artı birim farkındalığı — <code>%</code> ile <code>ay</code> karışamaz.</p>
+<h3 id="p5-alt-dize-eslesmesi">P5 — Alt-dize eşleşmesi</h3>
+<p>Kök neden: <code>&quot;ev&quot;</code> ipucu <code>&quot;devam&quot;</code>, <code>&quot;seviye&quot;</code> içinde eşleşiyordu. Etki: korpusun %48&#x27;i sahte Konut Finansmanı etiketi alıyordu. Çözüm: <code>keyword_pattern()</code> zorunlu sözcük sınırı uyguluyor.</p>
+<h3 id="p6-terminoloji-boslugu">P6 — Terminoloji boşluğu</h3>
+<p>Kök neden: şartname §5.5&#x27;in beş kavramından ikisi (&quot;finansman maliyeti&quot;, &quot;katılım fonu&quot;) yalnız LLM istem metninde tanımlıydı; kural katmanı bu kavramları bilmiyordu. Etki: LLM kapalı teslim yapılandırmasında sistem 226 belgeyi kapsamıyordu. Çözüm: <code>TERMINOLOGY_TRIGGERS</code> kural katmanına taşındı.</p>
+<h3 id="p7-bs4-eksikligi">P7 — bs4 eksikliği</h3>
+<p>Ayrıntı Bölüm 4&#x27;te. Teslim imajı %44 gürültüyle koşuyordu: 4.317 → 6.232 → 4.320 karakter/belge.</p>
+<h3 id="p8-nul-bayti">P8 — NUL baytı</h3>
+<p>Kök neden: PDF&#x27;ten dönüştürülmüş bir belge 352 adet <code>0x00</code> baytı taşıyordu. SQLite kabul ediyor, PostgreSQL <code>TEXT</code> sütununa yazarken hata veriyor. Etki: iki arka uç arasında sessiz veri farkı; parite iddiası çürüyordu. Çözüm: <code>NulByteInText</code> istisnası, artı <code>ON_NUL_MODES</code> politikası.</p>
+<h3 id="p9-banka-filtresi-halusinasyonu">P9 — Banka filtresi halüsinasyonu</h3>
+<p>Kök neden: sohbetin RAG kolu banka adını filtrelemiyordu. Etki: &quot;Ziraat Katılım&#x27;ın konut kâr payı&quot; sorusu Kuveyt Türk&#x27;ün oranıyla cevaplanıyordu. Kullanıcıya doğru görünen, tamamen yanlış cevap. Çözüm: <code>detect_banks()</code>, <code>MIN_OVERLAP=2</code> kanıt eşiği ve <code>tr_fold</code> eşleşme.</p>
+<h3 id="p10-masraf-durumu-kesinligi">P10 — <code>masraf_durumu</code> kesinliği</h3>
+<p>Kök neden: çıplak &quot;tahsis ücreti&quot; ifadesi ücret kanıtı sayılıyordu; başlıkta ya da gezinme şeridinde geçmesi yetiyordu. Çözüm: ücret iddiası için sayısal değer ya da açık negasyon zorunlu kılındı. Etki: 370 alan → 248 alan. Kapsam düştü, doğruluk arttı; bilinçli takas.</p>
+<h3 id="p11-okunamaz-pdf">P11 — Okunamaz PDF</h3>
+<p>Kök neden: son PDF hasadındaki bir Albaraka sözleşmesi ToUnicode tablosu olmayan gömülü yazı tipi taşıyordu; dönüştürme çöp metin üretiyordu. Etki: çöp metin <code>kampanya_kosullari</code> kalemi olarak sunuluyordu. Değişmez denetimi bunu iki gerçek ihlal olarak yakaladı ve CI&#x27;ı kırdı. Çözüm: kök neden kodda değil veride olduğu için çözüm bir kapı oldu — <code>_ortak.bozuk_metin</code>. İhlal gizlenmedi, sebebi kayıtlı.</p>
+<h3 id="yan-kayit-sbom-sapmasi">Yan kayıt — SBOM sapması</h3>
+<p>Demo videosu seslendirmesinden kalan <code>edge-tts</code> ve yedi geçişli bağımlılığı <code>.venv</code>&#x27;e sızmıştı; envanter 96&#x27;dan 105&#x27;e çıkmıştı. Ölçüm gösterdi ki SBOM o hâliyle tazelenirse CI lisans kapısı düşüyordu: <code>edge-tts</code> LGPL-3.0-only lisanslı ve kapının copyleft kovasına giriyor. Dokuz paket kaldırıldı; ortam ile SBOM yeniden birebir örtüşüyor ve testler sıfır hatayla geçti.</p>
+<hr>
+<h2 id="9-model-cikti-ornekleri">9. Model çıktı örnekleri</h2>
+<p>Aşağıdaki satırlar <code>data/demo.db</code> içinden doğrudan okundu. Her biri gerçek bir belgeden, gerçek karakter konumuyla geliyor.</p>
+<h3 id="sayisal-oran-tek-deger">Sayısal oran, tek değer</h3>
+<pre class="lang-json"><code>{
+  &quot;banka&quot;: &quot;Kuveyt Türk&quot;,
+  &quot;alan&quot;: &quot;kar_payi_orani&quot;,
+  &quot;raw_value&quot;: &quot;%4.19&quot;,
+  &quot;canonical_value&quot;: &quot;4.19&quot;,
+  &quot;confidence&quot;: 0.85,
+  &quot;confidence_source&quot;: &quot;rule_heuristic&quot;,
+  &quot;span&quot;: [94, 99],
+  &quot;source_span&quot;: &quot;…Enerji Tasarrufu Haftasına Özel %4.19 Kar Oranı Fırsatı!…&quot;,
+  &quot;source_url&quot;: &quot;https://www.kuveytturk.com.tr/kampanyalar/kampanya-arsivi/bisiklet-finansmaninda-…&quot;
+}</code></pre>
+<h3 id="oran-tablosundan-aralik-cikarimi">Oran tablosundan aralık çıkarımı</h3>
+<p>Sayfa vadeye göre dört ayrı oran veriyor. Sistem tabloyu tek bir aralığa indiriyor ve aralığı ortalamaya düşürmüyor.</p>
+<pre class="lang-json"><code>{
+  &quot;banka&quot;: &quot;Kuveyt Türk&quot;,
+  &quot;alan&quot;: &quot;kar_payi_orani&quot;,
+  &quot;raw_value&quot;: &quot;Vade Kar Oranı&quot;,
+  &quot;canonical_value&quot;: {&quot;min&quot;: 3.23, &quot;max&quot;: 3.54},
+  &quot;confidence&quot;: 0.9,
+  &quot;span&quot;: [1325, 1339],
+  &quot;source_span&quot;: &quot;…Vade Kar Oranı 24 ay 3.54 36 ay 3.29 48 ay 3.23 60 ay…&quot;
+}</code></pre>
+<h3 id="negasyon-ucretsiz-sifir-degeri-uretir">Negasyon: &quot;ücretsiz&quot; sıfır değeri üretir</h3>
+<pre class="lang-json"><code>{
+  &quot;alan&quot;: &quot;masraf_durumu&quot;,
+  &quot;canonical_value&quot;: {&quot;has_fee&quot;: false, &quot;amount&quot;: 0.0},
+  &quot;confidence&quot;: 0.95,
+  &quot;span&quot;: [22, 114]
+}</code></pre>
+<p>Bu örnekte bilinen bir kusur görünüyor: <code>raw_value</code> gezinme şeridini (&quot;Ana Sayfa Kampanyalar Kampanya Arşivi&quot;) içine alıyor. Kanonik değer doğru, kaynak penceresi geniş. Açık kayıt, Bölüm 3&#x27;teki veri kalitesi tablosunda.</p>
+<h3 id="tarih-normalizasyonu">Tarih normalizasyonu</h3>
+<pre class="lang-json"><code>{
+  &quot;alan&quot;: &quot;kampanya_suresi&quot;,
+  &quot;raw_value&quot;: &quot;26.03.2026 - 31.05.2026&quot;,
+  &quot;canonical_value&quot;: &quot;2026-05-31&quot;,
+  &quot;confidence&quot;: 0.72
+}</code></pre>
+<h3 id="ortuk-hedef-kitle">Örtük hedef kitle</h3>
+<pre class="lang-json"><code>{
+  &quot;alan&quot;: &quot;hedef_kitle&quot;,
+  &quot;raw_value&quot;: &quot;müşterilerimize özel&quot;,
+  &quot;canonical_value&quot;: [&quot;mevcut_musteri&quot;],
+  &quot;confidence&quot;: 0.95,
+  &quot;source_span&quot;: &quot;…Akaryakıt istasyonu ve marketi olan müşterilerimize özel yeni yapılan başvurularda…&quot;
+}</code></pre>
+<h3 id="kosul-listesi">Koşul listesi</h3>
+<pre class="lang-json"><code>{
+  &quot;alan&quot;: &quot;kampanya_kosullari&quot;,
+  &quot;canonical_value&quot;: [
+    &quot;Müşteri olma aşamasında \&quot;Davet Kodu\&quot; alanına \&quot;KTOD2026\&quot; kodunun yazılması gerekmektedir.&quot;,
+    &quot;Paketiniz kapsamında yer alan içeriklere erişmek için TOD&#x27;a üye olunması gereklidir.&quot;,
+    &quot;Paket kodları yalnızca yurt içi TOD servisi için geçerlidir.&quot;,
+    &quot;Paket kodları nakde çevrilemez, para iadesi yapılamaz ve devredilemez.&quot;,
+    &quot;Kampanyadan sınırlı sayıda müşteri yararlanabilir.&quot;,
+    &quot;Kampanya kazanımı müşteri bazlıdır ve her müşteri yalnızca bir kez faydalanabilir.&quot;
+  ],
+  &quot;confidence&quot;: 0.85
+}</code></pre>
+<h3 id="odul-miktari">Ödül miktarı</h3>
+<pre class="lang-json"><code>{
+  &quot;alan&quot;: &quot;odul_miktari&quot;,
+  &quot;raw_value&quot;: &quot;500 TL&quot;,
+  &quot;canonical_value&quot;: {&quot;value&quot;: 500.0, &quot;currency&quot;: &quot;TRY&quot;},
+  &quot;confidence&quot;: 0.95,
+  &quot;source_span&quot;: &quot;…Kampanyadan maksimum kazanım tutarı 500 TL &#x27;dir…&quot;
+}</code></pre>
+<h3 id="celiski-ciktisi">Çelişki çıktısı</h3>
+<p>Girdi: <em>&quot;Taşıt finansmanı kampanyası! Kâr payı oranı %2,49, 48 aya kadar vade. Tamamen masrafsız başvuru. Tahsis ücreti 1.500,00 TL olarak tahsil edilir.&quot;</em></p>
+<p><code>1.500,00 TL</code> doğru okunuyor (1.500 TL) ve çelişki yakalanıyor: &quot;«masrafsız» belirtilmiş ancak tahsis ücreti var&quot; — <code>masraf_durumu</code> ile <code>tahsis_ucreti</code> arasında.</p>
+<h3 id="sohbet-ciktilari">Sohbet çıktıları</h3>
+<pre><code>Soru : Kuveyt Türk konut finansmanı oranı ve vadesi ne?
+Cevap: kâr payı oranı %1,89 · vade 120 ay
+       (koşullu oran uyarısı ve katılma hesabı ihtarı ekli)
+
+Soru : Kuveyt Türk mü avantajlı Ziraat Katılım mı?
+Cevap: kâr payı / vade / masraf / ek ödül boyutlarında &quot;çünkü …&quot; gerekçeli
+       madde madde karşılaştırma, 7 kaynak satırı
+
+Soru : XYZ Bankası konut finansmanı oranı ne?
+Cevap: &quot;Sorduğunuz bankayı veri setimde bulamadım&quot; + tanınan 10 bankanın listesi</code></pre>
+<p>Üçüncü örnek çekimserliği gösteriyor. Sistem tanımadığı bankaya karşılık başka bir bankanın verisini sunmuyor.</p>
+<hr>
+<h2 id="10-basarim-degerlendirme-yontemi">10. Başarım değerlendirme yöntemi</h2>
+<h3 id="olcum-altyapisi">Ölçüm altyapısı</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Modül</th><th style="text-align:left">İçerik</th></tr></thead><tbody><tr><td style="text-align:left"><code>eval/run_eval.py</code></td><td style="text-align:left">alan bazlı P/R/F1, mikro ve makro, <code>fp_wrong</code> ayrı sayım, zor-vaka dilimi</td></tr><tr><td style="text-align:left"><code>eval/matchers.py</code></td><td style="text-align:left"><code>strict_match</code> (tolerans 1e-9) ve <code>tolerant_match</code> (%1 bağıl)</td></tr><tr><td style="text-align:left"><code>eval/stats.py</code></td><td style="text-align:left">bootstrap güven aralığı (1000 yeniden örnekleme, tohum 42), eşleşmiş McNemar</td></tr><tr><td style="text-align:left"><code>eval/ablation.py</code></td><td style="text-align:left">dört kol: kural / llm / hibrit / hibrit-verify; eşleştirme birimi <code>(belge, alan)</code></td></tr><tr><td style="text-align:left"><code>eval/iaa.py</code></td><td style="text-align:left">Cohen κ, Fleiss κ, Krippendorff α</td></tr><tr><td style="text-align:left"><code>eval/properties.py</code></td><td style="text-align:left">metamorfik değişmez denetimi</td></tr></tbody></table></div>
+<p>Tüm ölçüm yolu yalnız Python standart kütüphanesiyle koşar. numpy, scipy ve sklearn bağımlılığı yok.</p>
+<h3 id="uc-hata-sinifi-ayri-olculur">Üç hata sınıfı ayrı ölçülür</h3>
+<p>Tek bir sayıya bakıp &quot;model kötü&quot; demek yerine hangi hatanın yapıldığını ayırıyoruz; üçü farklı düzeltme gerektiriyor.</p>
+<ul>
+<li><strong>Kaçırma</strong> — bilgi metinde var, model değer üretmedi. Kapsama sorunu.</li>
+<li><strong>Yanlış çıkarım</strong> (<code>fp_wrong</code>) — bilgi metinde var, model yanlış yerden aldı. Zeminleme sorunu; halüsinasyon sayılmıyor.</li>
+<li><strong>Halüsinasyon</strong> (<code>fp_hallucinated</code>) — bilgi metinde yok, model uydurdu. En tehlikelisi.</li>
+</ul>
+<p>Paydalar ayrı. Çıkarım hatası oranının paydası gold&#x27;da değer olan kararlar, halüsinasyon oranının paydası gold&#x27;un &quot;yok&quot; dediği kararlar. Aynı paydaya bölünürse iki sayı karşılaştırılamaz hâle gelir.</p>
+<h3 id="absent-fields-ayrimi"><code>absent_fields</code> ayrımı</h3>
+<p>Klasik gold biçimi &quot;gerçekten yok&quot; ile &quot;anote edilmedi&quot;yi ayırt edemez. Bu ayrım olmadan kesinlik tanımsız kalır: sistem bir değer üretti ve gold&#x27;da o alan yoksa, bu yanlış pozitif mi, yoksa anotatör oraya bakmadı mı?</p>
+<p><code>gold_schema.py</code> iki liste tutuyor. <code>fields</code> anote edilmiş ve değeri olan alanları, <code>absent_fields</code> ise anotatörün kontrol edip yokluğunu onayladığı alanları taşıyor. Sistem bir değer üretti ve o alan <code>absent_fields</code> içindeyse sonuç kesin halüsinasyon ve sayılabilir.</p>
+<h3 id="neden-bootstrap-ve-mcnemar">Neden bootstrap ve McNemar</h3>
+<p>&quot;F1 = 0,92&quot; bir iddia. 48 kayıtlık bir sette bu sayının belirsizliği ±0,07 mertebesinde olabilir; iki yaklaşımın farkı bu belirsizlikten küçükse fark yok. Bootstrap güven aralığı sayının ne kadar güvenilir olduğunu söyler. Eşleşmiş McNemar iki kolun farkını sınar; eşleşme kritik, çünkü aynı <code>(belge, alan)</code> çiftinde iki kol karşılaştırılıyor ve bağımsız örneklem varsayımı yapılmıyor.</p>
+<p>Güven aralığı belge düzeyinde küme bootstrap ile hesaplanıyor. Aynı belgeden çıkan 12 alan bağımsız olmadığı için alan düzeyinde örneklemek aralığı yapay biçimde daraltır.</p>
+<h3 id="olculen-sonuc">Ölçülen sonuç</h3>
+<p><code>gold.v2</code> (n=48, kör etiketlenmiş), <code>strict</code> eşleştirici, belge düzeyi bootstrap 1000 örnek, tohum 42. Artefakt: <code>eval/reports/20260821-182450/</code>, gold sha <code>e38a5276…</code>, commit <code>03822c24</code>, temiz ağaç.</p>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">ölçüt</th><th style="text-align:left">değer</th></tr></thead><tbody><tr><td style="text-align:left">yapılandırılmış alan mikro-F1 (11 alan)</td><td style="text-align:left"><strong>0,823</strong></td></tr><tr><td style="text-align:left">12-alan mikro-F1, ikili</td><td style="text-align:left"><strong>0,570</strong> · %95 GA [0,492–0,632]</td></tr><tr><td style="text-align:left">kalem düzeyi mikro-F1</td><td style="text-align:left">0,629</td></tr><tr><td style="text-align:left">makro-F1</td><td style="text-align:left">0,765</td></tr><tr><td style="text-align:left">zor dilim (40 belge) mikro-F1</td><td style="text-align:left">0,587</td></tr><tr><td style="text-align:left">zor + yapılandırılmış</td><td style="text-align:left">0,837</td></tr><tr><td style="text-align:left">halüsinasyon oranı</td><td style="text-align:left">0,034</td></tr></tbody></table></div>
+<p><strong>Hedef tutulmadı.</strong> İkili 12-alan mikro-F1 0,570, ilan edilen 0,60 hedefinin altında. Sayı iki turda 0,4771&#x27;den 0,5702&#x27;ye çıktı ve orada kaldı. Hedefi sonradan indirmek yerine tutulmadığını kaydediyoruz.</p>
+<h4 id="alan-bazinda">Alan bazında</h4>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">alan</th><th style="text-align:right">ikili F1</th><th style="text-align:left">not</th></tr></thead><tbody><tr><td style="text-align:left"><code>vade_ay</code></td><td style="text-align:right">1,000</td><td style="text-align:left"></td></tr><tr><td style="text-align:left"><code>kar_payi_orani</code></td><td style="text-align:right">1,000</td><td style="text-align:left">destek 3, F1 yorumlanamaz</td></tr><tr><td style="text-align:left"><code>finansman_tutari</code></td><td style="text-align:right">1,000</td><td style="text-align:left">destek 4</td></tr><tr><td style="text-align:left"><code>kampanya_suresi</code></td><td style="text-align:right">0,936</td><td style="text-align:left"></td></tr><tr><td style="text-align:left"><code>alisveris_puani</code></td><td style="text-align:right">0,933</td><td style="text-align:left"></td></tr><tr><td style="text-align:left"><code>taksit_sayisi</code></td><td style="text-align:right">0,909</td><td style="text-align:left"></td></tr><tr><td style="text-align:left"><code>odul_miktari</code></td><td style="text-align:right">0,727</td><td style="text-align:left"></td></tr><tr><td style="text-align:left"><code>masraf_durumu</code></td><td style="text-align:right">0,667</td><td style="text-align:left"></td></tr><tr><td style="text-align:left"><code>indirim_orani</code></td><td style="text-align:right">0,667</td><td style="text-align:left">destek 2</td></tr><tr><td style="text-align:left"><code>hedef_kitle</code></td><td style="text-align:right">0,571</td><td style="text-align:left">kalem düzeyinde 0,632</td></tr><tr><td style="text-align:left"><code>kampanya_kosullari</code></td><td style="text-align:right">0,000</td><td style="text-align:left">kalem düzeyinde 0,520</td></tr><tr><td style="text-align:left"><code>tahsis_ucreti</code></td><td style="text-align:right">—</td><td style="text-align:left">destek 0, tanımsız</td></tr></tbody></table></div>
+<h4 id="kampanya-kosullari-neden-0-000"><code>kampanya_kosullari</code> neden 0,000</h4>
+<p>İkili ölçüt tam küme eşitliği arıyor. Bir belgenin koşul listesi birebir eşleşmezse, kaç koşulun doğru çıkarıldığına bakılmadan sonuç TP=0, FP=1, FN=1 oluyor. Bu koşumda 137 kalemin 78&#x27;i doğru çıkarıldı (kalem P 0,479 · R 0,569 · F1 0,520) ama hiçbir kayıt birebir küme eşleşmesi vermedi.</p>
+<p>Serbest metin listesi döndüren bir alanda anlamlı ölçüt kalem düzeyi. İkili sayı yine yayımlanıyor; onu saklamak ölçütün zayıflığını değil sonucu saklamak olurdu. Üç görünüm birlikte duruyor ve hiçbiri diğerinin yerine geçmiyor. Yapılandırılmış kesit (11 alan) bu alanı dışlıyor, 0,823 sayısı oradan geliyor.</p>
+<h3 id="gold-setin-statusu">Gold setin statüsü</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">set</th><th style="text-align:right">n</th><th style="text-align:left">kim etiketledi</th><th style="text-align:left">hakemlik</th></tr></thead><tbody><tr><td style="text-align:left"><code>gold.v1</code></td><td style="text-align:right">20</td><td style="text-align:left">insan anotatör</td><td style="text-align:left">geçti, 2 kayıt düzeltildi</td></tr><tr><td style="text-align:left"><code>gold.v2</code></td><td style="text-align:right">48</td><td style="text-align:left">makine anotatör (M1–M4), her belge birebir alıntı kanıtıyla</td><td style="text-align:left">yok</td></tr><tr><td style="text-align:left"><code>gold.round1</code></td><td style="text-align:right">134</td><td style="text-align:left">makine anotatör (A–D), protokol v2</td><td style="text-align:left">makine kör hakem, 38 kayıt</td></tr></tbody></table></div>
+<p>Manşet 0,570 sayısı <code>gold.v2</code> üzerinde ölçüldü, yani insan hakemliğinden geçmemiş bir sette. Alternatifi <code>gold.v1</code>&#x27;in 0,677&#x27;sini manşete koymak olurdu ve o da modele çapalı bir protokolden geliyor. İkisi de kısıtlı, ikisi de kısıtıyla birlikte sunuluyor.</p>
+<p><code>gold.round1</code>&#x27;deki hakemlik makine hakemliği. 41 uyuşmazlık, yalnız kendi alanının kılavuz paragrafını gören ve birbirinden habersiz çalışan kör hakemlerce karara bağlandı; 18 hücre şema onarımından geçti. Protokol, hakemin A ya da B ile hem karar hem değer olarak örtüşmesini şart koşuyor. Yine de insan hakemliğinin yerine geçmiyor: <code>adjudicated: true</code> bayrağı &quot;hakemlikten geçti&quot; diyor, &quot;insan onayladı&quot; demiyor. <strong>Kapatılması gereken en öncelikli açık bu.</strong></p>
+<p>Senaryonun kalp alanı yeterince ölçülmedi. <code>kar_payi_orani</code> <code>gold.v2</code>&#x27;de yalnız üç karar destekli. Oradan çıkan F1 yorumlanamaz; üç karar bir F1 taşımaz. Alan korpusta 146/2.708 belgede (%5,4) geçiyor ve bu bir model kısıtı olarak okunmamalı — bankalar oranları kampanya sayfalarında büyük ölçüde yayımlamıyor.</p>
+<h3 id="halusinasyon-orani-iki-set-dogrudan-karsilastirilamaz">Halüsinasyon oranı: iki set doğrudan karşılaştırılamaz</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left"></th><th style="text-align:right"><code>gold.v2</code> (n=48)</th><th style="text-align:right"><code>gold.round1</code> (n=134)</th></tr></thead><tbody><tr><td style="text-align:left">halüsinasyon oranı</td><td style="text-align:right">0,034 (15/447)</td><td style="text-align:right">0,284 (21/74)</td></tr><tr><td style="text-align:left">payda (<code>absent_decisions</code>)</td><td style="text-align:right">447</td><td style="text-align:right">74</td></tr><tr><td style="text-align:left"><code>skipped_undecided</code></td><td style="text-align:right">0</td><td style="text-align:right">1.380</td></tr></tbody></table></div>
+<p><code>gold.round1</code>&#x27;in paydası küçük çünkü anotatörler 1.380 alan-kararında hiç karar vermemiş; bunlar metriğe girmiyor. Küçük paydada tek kayıt oranın büyük bir dilimini taşıyor: 21 halüsinasyonun 10&#x27;u tek başına <code>vade_ay</code> alanından geliyor. İki oran ayrı ayrı doğru ölçüldü, ama yan yana konup &quot;model round1&#x27;de kötüleşti&quot; denemez. Payda küçülmesi bir gold kapsama yoğunluğu artefaktı.</p>
+<h3 id="anotatorler-arasi-uyum">Anotatörler arası uyum</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">tur</th><th style="text-align:left">ölçüt</th><th style="text-align:right">değer</th><th style="text-align:left">not</th></tr></thead><tbody><tr><td style="text-align:left">v2</td><td style="text-align:left">Cohen κ</td><td style="text-align:right">0,714</td><td style="text-align:left">16 kayıt, 192 çift, ikinci etiketleyici LLM</td></tr><tr><td style="text-align:left">round0</td><td style="text-align:left">Fleiss κ</td><td style="text-align:right">0,302</td><td style="text-align:left">260 ortak satır, 4 anotatör, hakemlik sonrası</td></tr><tr><td style="text-align:left">round1</td><td style="text-align:left">Cohen κ</td><td style="text-align:right">0,274</td><td style="text-align:left">141 ortak karar, hakemlik öncesi</td></tr></tbody></table></div>
+<p>Üçü de kabul eşiğinin (κ≥0,80) altında. İlan edilen sonuç uygulandı: <code>masraf_durumu</code> alanının negatif κ&#x27;sı hakemlendi, gold ve kılavuz ile birlikte çıkarım motoru düzeltildi.</p>
+<h3 id="degismez-metamorfik-denetimi">Değişmez (metamorfik) denetimi</h3>
+<p>Gold set olmadan doğruluk nasıl denetlenir? Dört değişmez, korpusun tamamında koşuyor:</p>
+<ul>
+<li><strong>Ortografik değişmezlik</strong> — <code>çıkar(metin) == çıkar(BÜYÜK(metin))</code></li>
+<li><strong>Boşluk değişmezliği</strong> — fazladan boşluk sonucu değiştirmiyor</li>
+<li><strong>Konum tutarlılığı</strong> — <code>metin[span_start:span_end]</code> gerçekten <code>raw_value</code> içeriyor</li>
+<li><strong>Kanonik tip tutarlılığı</strong> — her alan şemasının tanımladığı tipi döndürüyor</li>
+</ul>
+<p>Ölçüm 2026-08-21: <strong>2.708 belgede 0 ihlal</strong>, kapsam %92,3 (2.499 belgede en az bir alan çıktı; 209 boş belgede denetim hiçbir şey sınamıyor). Komut <code>python -m eval.properties --raw-dir data/raw</code>, çıkış kodu 0.</p>
+<p>Denetleyicinin kendisi de sınanıyor. <code>tr_fold()</code> düzeltmesi geri alınınca denetim gerçekten ihlal üretiyor; ilk koşuda bu sınıftan 104 ihlal bulmuştu. 21 Ağustos&#x27;ta iki gerçek ihlal verip CI&#x27;ı kırdı (P11).</p>
+<h3 id="bolunmus-test-kumesi-disiplini">Bölünmüş test kümesi disiplini</h3>
+<p><code>scripts/split_gold.py</code> dev/test bölmesi üretiyor ve test bölmesini donduruyor. <code>--verify</code> bölmenin değişmediğini hash ile doğruluyor, <code>--record-access &quot;gerekçe&quot;</code> her erişimi kayda geçiriyor. Test setine bakıp modeli ona göre ayarlamak ölçümü değersiz kılar; erişim kaydı bu disiplini denetlenebilir yapıyor.</p>
+<h3 id="test-paketi">Test paketi</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">koşucu</th><th style="text-align:right">toplanan</th><th style="text-align:right">geçti</th><th style="text-align:right">atlandı</th><th style="text-align:right">başarısız</th></tr></thead><tbody><tr><td style="text-align:left"><code>unittest</code> (kanonik)</td><td style="text-align:right">3.605</td><td style="text-align:right">3.552</td><td style="text-align:right">53</td><td style="text-align:right">0</td></tr><tr><td style="text-align:left"><code>pytest</code> (çapraz doğrulama)</td><td style="text-align:right">3.605</td><td style="text-align:right">3.552</td><td style="text-align:right">53</td><td style="text-align:right">0</td></tr></tbody></table></div>
+<p>Artefakt: <code>eval/reports/test-ozeti.json</code>, commit <code>03822c24</code>, <code>git_dirty: false</code>, Python 3.14.6. Atlanan 53 test Postgres/pgvector istiyor ve CI&#x27;ın <code>test-with-deps</code> işinde koşuyor. Panel tarafında 224 arayüz testi (52 küme, 9 dosya).</p>
+<h3 id="hiz-ve-kaynak">Hız ve kaynak</h3>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Yol</th><th style="text-align:right">n</th><th style="text-align:right">p50</th><th style="text-align:right">p95</th><th style="text-align:right">p99</th><th style="text-align:right">maks</th></tr></thead><tbody><tr><td style="text-align:left">kural</td><td style="text-align:right">5.088</td><td style="text-align:right">1,03 ms</td><td style="text-align:right">4,80</td><td style="text-align:right">6,30</td><td style="text-align:right">37,63</td></tr><tr><td style="text-align:left">boru hattı, LLM kapalı</td><td style="text-align:right">5.088</td><td style="text-align:right">1,50 ms</td><td style="text-align:right">6,92</td><td style="text-align:right">8,86</td><td style="text-align:right">75,32</td></tr><tr><td style="text-align:left">sohbet</td><td style="text-align:right">504</td><td style="text-align:right">12,48 ms</td><td style="text-align:right">325,02</td><td style="text-align:right">351,36</td><td style="text-align:right">368,53</td></tr></tbody></table></div>
+<p>Verim 21.087 belge/dakika, tepe RSS 100,4 MB. Bu ölçüm 1.696 belgelik korpusta yapıldı; korpus 2.708&#x27;e çıktıktan sonra tekrarlanmadı. Sohbet p95/p99 yayılımı 26 kat ve kayıtlı bir performans borcu: RAG kolu tüm gövdede tarama yapıyor.</p>
+<p>Konteyner ile host ölçümü neredeyse aynı (kural 1,05 / boru hattı 1,67 ms), yani konteynerleştirmenin gecikme cezası pratikte yok.</p>
+<h3 id="guvenlik-degerlendirmesi">Güvenlik değerlendirmesi</h3>
+<p>İstem enjeksiyonu seti: 22 saldırının 22&#x27;si savuşturuldu, 4 kontrol sorusunun 4&#x27;ü doğru yanıtlandı. Hem kapılar tek başınayken hem RAG sentezi açıkken aynı sonuç. Kısıt: set n=26 ve sentez tarafı tek modelle (<code>qwen2.5:7b-instruct</code>) ölçüldü. Ayrıntı: <code>docs/rapor/guvenlik-llm-modu.md</code>.</p>
+<h3 id="kanit-tazeligi-kapisi">Kanıt tazeliği kapısı</h3>
+<p><code>python -m scripts.kanit_tazeligi</code> yayımlanan her sayıyı üreten artefaktla karşılaştırıyor. Sapma CI&#x27;ı kırıyor. Son koşum: <strong>16 iddia, 0 sapma</strong> (2026-08-21). Bayat bir manşet sayı belgede kaldığında kapı onu buluyor.</p>
+<h3 id="olculmeyen-ve-acik-kalanlar">Ölçülmeyen ve açık kalanlar</h3>
+<ul>
+<li>İnsan hakemliğinden geçmiş büyük gold set. En öncelikli açık.</li>
+<li>Çelişki tespitinin yanlış negatif oranı.</li>
+<li>Güven skorlarının kalibrasyonu.</li>
+<li>Gecikme ölçümünün 2.708 belgelik korpusta tekrarı.</li>
+<li><code>kar_payi_orani</code> alanı için anlamlı destekli ölçüm; alan korpusta seyrek olduğu için gold örneklemesi de seyrek kalıyor.</li>
+<li>Bağımlılık envanteri bir kesit, sözleşme değil. Python kilit dosyası yok (<code>requirements.txt</code> <code>&gt;=</code> pinleri taşıyor); ortama yeni paket girdiği anda sapma tekrar oluşabilir. Bunu <code>make lisans-kapisi</code> ve kanıt tazeliği kapısı yakalıyor.</li>
+</ul>
+<hr>
+<h2 id="kaynaklar">Kaynaklar</h2>
+<div class="table-wrap"><table><thead><tr><th style="text-align:left">Konu</th><th style="text-align:left">Belge</th></tr></thead><tbody><tr><td style="text-align:left">Şartname madde madde uyum matrisi</td><td style="text-align:left"><code>docs/SARTNAME-UYUM.md</code></td></tr><tr><td style="text-align:left">Ablasyon ve McNemar ayrıntısı</td><td style="text-align:left"><code>docs/rapor/ablasyon.md</code></td></tr><tr><td style="text-align:left">Offline / on-prem kanıt paketi</td><td style="text-align:left"><code>docs/OFFLINE-KANIT.md</code></td></tr><tr><td style="text-align:left">Model lisans zinciri</td><td style="text-align:left"><code>docs/model-license-audit.md</code>, <code>docs/LISANSLAR.md</code></td></tr><tr><td style="text-align:left">Güvenlik katmanı</td><td style="text-align:left"><code>docs/rapor/guvenlik-llm-modu.md</code></td></tr><tr><td style="text-align:left">Mimari kararlar</td><td style="text-align:left"><code>../decisions/</code> (16 atomik karar sayfası)</td></tr><tr><td style="text-align:left">Problem kayıtları</td><td style="text-align:left"><code>../sorun/</code></td></tr><tr><td style="text-align:left">Eşik düşürme disiplini</td><td style="text-align:left"><code>docs/adr/0001-esik-dusurme-disiplini.md</code></td></tr></tbody></table></div></body></html>
