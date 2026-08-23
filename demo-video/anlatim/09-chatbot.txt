@@ -1,0 +1,1 @@
+Chatbot hibrit çalışıyor. Sayısal ve karşılaştırmalı sorular yapısal sorguya, koşul ve açıklama soruları belge erişimli üretime yönlendiriliyor; hangi yolun kullanıldığı cevabın yanında yazıyor. Hangi bankada en düşük kâr payı oranı var diye soruyoruz; cevap kaynak dipnotlarıyla geliyor. Takip sorusunda önceki turun alanı ve süzgeci devralınıyor.

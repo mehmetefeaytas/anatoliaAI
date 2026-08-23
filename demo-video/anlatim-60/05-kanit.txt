@@ -1,0 +1,1 @@
+Kanıt defteri her sayıyı kaynak cümlesine bağlar.

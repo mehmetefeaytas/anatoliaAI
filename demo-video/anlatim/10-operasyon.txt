@@ -1,0 +1,1 @@
+Veri tazeleme ağa çıkan tek yüzey; bir bankayı yeniden toplayıp farkı gösteriyor. İşlem günlüğü sistemde ne olduğunu zaman damgasıyla tutuyor. Ayarlar ekranı ise bir vaat listesi değil, bir sözleşme belgesi: bu sürümde kapalı olan uçlar açıkça kapalı yazıyor.

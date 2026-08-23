@@ -1,0 +1,101 @@
+{
+  "baslik": "Anatolia AI — TEKNOFEST TYDA 2. Senaryo Demo Videosu",
+  "ses": {
+    "motor": "edge-tts",
+    "ses_adi": "tr-TR-AhmetNeural",
+    "hiz": "+11%"
+  },
+  "video": {
+    "kayit_en": 1600,
+    "kayit_boy": 900,
+    "cikti_en": 1920,
+    "cikti_boy": 1080,
+    "fps": 30
+  },
+  "sahneler": [
+    {
+      "id": "00-acilis",
+      "tur": "kart",
+      "kart": "acilis",
+      "anlatim": "Anatolia AI. TEKNOFEST Türkçe Yapay Zekâ Dil Ajanları Yarışması, ikinci senaryo. On bir katılım bankasının kampanya metinlerini topluyor, içindeki finansal bilgiyi otomatik çıkarıyor ve tek bir karşılaştırma zemininde buluşturuyoruz. Tamamı açık kaynak, tamamı yerelde."
+    },
+    {
+      "id": "01-panel",
+      "tur": "panel",
+      "sekme": "compare",
+      "anlatim": "Panel açıldığında ilk gördüğünüz şey bir iddia değil, bir sayı: iki bin yedi yüz sekiz belge, on bir banka, sekiz kampanya türü, on iki çıkarım alanı. Üst şeritteki yeşil işaretler servisin, veri tabanının ve yerel modelin ayakta olduğunu gösteriyor. Panel on iki ekrandan oluşuyor."
+    },
+    {
+      "id": "02-metin-girdisi",
+      "tur": "panel",
+      "sekme": "extract",
+      "anlatim": "Şartnamenin kalbi burada. Serbest metin kutusuna gerçek bir kampanya cümlesi giriyoruz ve çıkarımı çalıştırıyoruz. Sistem yapılandırılmış çıktı üretiyor: kâr payı oranı yüzde iki virgül kırk dokuz, vade otuz altı ay, finansman tutarı bir buçuk milyon lira, masraf durumu ücretsiz. Kampanya türü de sınıflandırılıyor: konut finansmanı, güven skoru sıfır virgül seksen. Her değerin yanında güven skoru, üreten katman ve metindeki karakter aralığı duruyor. Metinde olmayan alanlar uydurulmuyor, boş bırakılıyor."
+    },
+    {
+      "id": "03-zor-vaka",
+      "tur": "panel",
+      "sekme": "extract",
+      "anlatim": "Kolay örneklerle demo yapmak kolaydır. Bu yüzden ayrı bir zor vaka tezgâhı kurduk: kırk zor belge; terminoloji, biçim varyantı, eksik bilgi, çelişkili metin ve koşullu aralık olarak etiketli. Koşullu aralık içeren bir belge seçiyoruz ve çıkarımı başlatıyoruz. Sistemin ürettiği değer, elle anotasyonlanmış altın değerle yan yana çiziliyor; tutmayan yer de ekranda kalıyor."
+    },
+    {
+      "id": "04-kanit",
+      "tur": "panel",
+      "sekme": "audit",
+      "anlatim": "Kanıt defteri her değeri kaynağına bağlıyor: hangi belge, hangi cümle, hangi karakter aralığı, hangi katman üretti ve güven skoru ne. Ekranda gördüğünüz her sayı bir tık uzaklıkta doğrulanabilir. Bankacılıkta doğrulanamayan bir sayı, yanlış sayıdan daha tehlikelidir."
+    },
+    {
+      "id": "05-karsilastirma",
+      "tur": "panel",
+      "sekme": "compare",
+      "anlatim": "Karşılaştırma ekranı senaryonun ana çıktısı. Bir alan seçiyorsunuz ve bankalar aynı birime normalize edilmiş değerlerle sıralanıyor. Adil kıyas garantisi devrede: yalnızca aynı kampanya türü içindeki değerler yarışıyor, koşullu oranlar doğrudan kıyaslanamaz diye işaretleniyor, süresi dolmuş kampanya sıralamaya girmiyor. Şartnamenin istediği ürün tablosu da tek tıkla açılıyor."
+    },
+    {
+      "id": "06-isi-haritasi",
+      "tur": "panel",
+      "sekme": "isi",
+      "anlatim": "Isı haritası sıralama yapmaz, kapsamayı gösterir: on bir banka ile dokuz kampanya türünün kesişiminde bu alanı gerçekte nerede ölçebiliyoruz. Dolu hücre bir üstünlük değil, bir ölçümdür. Kapsama boşluğunu gizlemek yerine ekrana koyuyoruz."
+    },
+    {
+      "id": "07-avantaj-banka-delta",
+      "tur": "panel",
+      "sekme": "advantageous",
+      "anlatim": "En Avantajlı ekranı çok alanlı bileşik skorla kimin önde olduğunu söylüyor ve skorun nasıl hesaplandığını açıyor. Banka sayfası tek bir bankanın künyesini topluyor. Banka içi delta ise tek bir soruyu yanıtlıyor: bu banka nerede geride."
+    },
+    {
+      "id": "08-celiski",
+      "tur": "panel",
+      "sekme": "contradictions",
+      "anlatim": "Çelişki tespiti yenilikçilik tarafımızın en güçlü parçası. İki bin yedi yüz sekiz belgenin tamamı taranıyor; bir belge kendi içinde tutarsızsa yakalanıyor. Masrafsız deyip aynı sayfada tahsis ücreti belirtmek gibi. Sistem hangisinin doğru olduğunu söylemiyor: iki tarafı da kaynağıyla yan yana koyup kararı okuyana bırakıyor."
+    },
+    {
+      "id": "09-chatbot",
+      "tur": "panel",
+      "sekme": "chat",
+      "anlatim": "Chatbot hibrit çalışıyor. Sayısal ve karşılaştırmalı sorular yapısal sorguya, koşul ve açıklama soruları belge erişimli üretime yönlendiriliyor; hangi yolun kullanıldığı cevabın yanında yazıyor. Hangi bankada en düşük kâr payı oranı var diye soruyoruz; cevap kaynak dipnotlarıyla geliyor. Takip sorusunda önceki turun alanı ve süzgeci devralınıyor."
+    },
+    {
+      "id": "10-operasyon",
+      "tur": "panel",
+      "sekme": "tazele",
+      "anlatim": "Veri tazeleme ağa çıkan tek yüzey; bir bankayı yeniden toplayıp farkı gösteriyor. İşlem günlüğü sistemde ne olduğunu zaman damgasıyla tutuyor. Ayarlar ekranı ise bir vaat listesi değil, bir sözleşme belgesi: bu sürümde kapalı olan uçlar açıkça kapalı yazıyor."
+    },
+    {
+      "id": "11-mimari",
+      "tur": "kart",
+      "kart": "mimari",
+      "anlatim": "Mimari şu: önce kural, sonra yerel model. Kural katmanı deterministik alanları çıkarıyor, kalan boşlukları kısıtlı JSON üretimiyle yerel dil modeli dolduruyor. Ölçtük ve dürüstçe yazdık: kural katmanı yapılandırılmış alanlarda sıfır virgül seksen iki mikro F bir veriyor, halüsinasyon oranı yüzde üç virgül üç, ve denediğimiz yedi milyar parametreli model kuralı geçemedi. Bu yüzden sistem kural öncelikli koşuyor."
+    },
+    {
+      "id": "12-vizyon",
+      "tur": "kart",
+      "kart": "vizyon",
+      "anlatim": "Gelecek vizyonumuz üç başlıkta. Ölçüm: hedef kitle gibi açık uçlu alanlar cümle düzeyinde anlam istiyor; sıradaki tur bunları örnekli yönlendirmeyle dil modeli koluna taşımak. Kapsam: bugün yeni banka tek satırlık yapılandırmayla ekleniyor, yakın dönemde arayüzden banka ve kampanya ekleme uçları açılacak. Canlılık: elle tetiklenen tazeleme, zamanlanmış toplamaya ve değişiklik bildirimine dönüşecek."
+    },
+    {
+      "id": "13-kapanis",
+      "tur": "kart",
+      "kart": "kapanis",
+      "anlatim": "Anatolia AI. Ölçülen, kaynağı gösterilen, yerelde çalışan bir finansal bilgi çıkarım sistemi."
+    }
+  ]
+}

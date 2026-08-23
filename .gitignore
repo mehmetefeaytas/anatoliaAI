@@ -105,3 +105,32 @@ app/docs/sunum/juri-4dk-konusmaci-notlari.md
 # Bu satırın sebebi: izlenmeyen bir çalışma dosyası ağacı sürekli "kirli"
 # gösterip her eval raporunun `git_dirty` künyesini bozuyordu.
 app/data/gold/review/.ikinci-tur-insan-ilerleme.json
+
+# Demo videosunun TÜRETİLMİŞ katmanları. Kaynak olan üç şey — senaryo
+# (`senaryo.json`), kart işaretlemesi (`kart/*.html|css`) ve üretim betikleri —
+# izlenir; geri kalan her şey onlardan yeniden üretilir:
+#
+#   .venv/bin/python ../demo-video/uret_ses.py     # anlatım sesleri (edge-tts)
+#   .venv/bin/python ../demo-video/uret_kart.py    # kart PNG'leri
+#   .venv/bin/python ../demo-video/uret_sahne.py   # panel sahne kayıtları
+#   .venv/bin/python ../demo-video/montaj.py       # birleştirme
+#
+# Bitmiş mp4 de burada: 60 MB'lık bir ikili, git geçmişine girdiğinde geri
+# alınması pahalı ve her yeniden üretimde baştan sona değişiyor. Teslimde
+# video dosya olarak ayrıca yüklenir; depo onu üreten tarifi taşır.
+demo-video/ses/
+demo-video/kart/*.png
+demo-video/sahne/
+demo-video/cikti/
+demo-video/sesler.json
+# Bir dakikalık sürümün aynı katmanları (senaryo-60.json + uret_*60.py
+# izlenir). Etiket şeritlerinin HTML'i de türetilmiş: şablon betiğin içinde.
+demo-video/ses-60/
+demo-video/sahne-60/
+demo-video/etiket-60/
+demo-video/sesler-60.json
+
+# Jüri turu raporları (2026-08-23) — yayın kademesi 3, ekip içi.
+# _plan-rakip-ustunluk.md ve _inceleme-*.md ile aynı gerekçe: rakip puanlaması
+# ve öz-eleştiri içerir, jüri teslimatı değildir.
+_juri-turu-05/

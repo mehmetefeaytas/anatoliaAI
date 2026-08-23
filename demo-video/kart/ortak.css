@@ -1,0 +1,179 @@
+/* Kart sahnelerinin ortak görsel dili.
+ *
+ * Panelin kendi dilini taklit eder (açık zemin, lacivert vurgu, monospace
+ * künye) ki video içinde kart ile canlı ekran arasında kopuş olmasın.
+ * 1920x1080 sabit: kartlar video karesine birebir basılır, ölçeklenmez. */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --zemin: #fbfbfd;
+  --murekkep: #14161c;
+  --soluk: #5d6470;
+  --lacivert: #2b2f8f;
+  --lacivert-acik: #eceefb;
+  --turuncu: #b3541e;
+  --cizgi: #e3e5ec;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+}
+
+body {
+  background: var(--zemin);
+  color: var(--murekkep);
+  font-family: Inter, -apple-system, "Helvetica Neue", sans-serif;
+  font-size: 24px;
+  line-height: 1.45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Sol üstte ince lacivert şerit — her kartta aynı yerde, videoyu bir arada
+ * tutan tek sabit öğe. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 10px;
+  background: var(--lacivert);
+}
+
+.sahne {
+  width: 1560px;
+  padding: 0 40px;
+}
+
+.kunye {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--soluk);
+}
+
+h1 {
+  font-size: 104px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+h2 {
+  font-size: 60px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  font-size: 30px;
+  color: var(--soluk);
+  max-width: 1180px;
+}
+
+.sayilar {
+  display: flex;
+  gap: 64px;
+  margin-top: 8px;
+}
+
+.sayi .deger {
+  font-size: 62px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.sayi .etiket {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 18px;
+  color: var(--soluk);
+  letter-spacing: 0.08em;
+}
+
+.rozetler { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.rozet {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 19px;
+  padding: 9px 18px;
+  border: 1px solid var(--cizgi);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--soluk);
+}
+
+.rozet.vurgu {
+  background: var(--lacivert-acik);
+  border-color: #c9cdf2;
+  color: var(--lacivert);
+}
+
+/* Akış zinciri — mimari kartı */
+.akis { display: flex; align-items: stretch; gap: 0; margin-top: 14px; }
+
+.adim {
+  flex: 1;
+  background: #fff;
+  border: 1px solid var(--cizgi);
+  border-right: 0;
+  padding: 22px 20px;
+  text-align: center;
+}
+
+.akis .adim:last-child { border-right: 1px solid var(--cizgi); }
+.adim.birincil { background: var(--lacivert); border-color: var(--lacivert); color: #fff; }
+.adim.ikincil { background: var(--lacivert-acik); border-color: #c9cdf2; }
+
+.adim .ad { font-size: 25px; font-weight: 600; }
+.adim .alt {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 16px;
+  opacity: 0.72;
+  margin-top: 6px;
+}
+
+.olcum {
+  display: flex;
+  gap: 0;
+  margin-top: 34px;
+  border: 1px solid var(--cizgi);
+  background: #fff;
+}
+
+.olcum > div { flex: 1; padding: 24px 28px; border-right: 1px solid var(--cizgi); }
+.olcum > div:last-child { border-right: 0; }
+.olcum .deger { font-size: 46px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.olcum .etiket { font-family: "JetBrains Mono", monospace; font-size: 17px; color: var(--soluk); }
+
+/* Üç sütun — vizyon kartı */
+.sutunlar { display: flex; gap: 28px; margin-top: 40px; }
+
+.sutun {
+  flex: 1;
+  background: #fff;
+  border: 1px solid var(--cizgi);
+  border-top: 4px solid var(--lacivert);
+  padding: 32px 30px;
+}
+
+.sutun .no {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 17px;
+  color: var(--turuncu);
+  letter-spacing: 0.12em;
+}
+
+.sutun h3 { font-size: 36px; font-weight: 700; margin: 6px 0 14px; letter-spacing: -0.01em; }
+.sutun p { font-size: 23px; color: var(--soluk); }
+
+.bosluk-s { height: 18px; }
+.bosluk-m { height: 34px; }
+.bosluk-l { height: 54px; }

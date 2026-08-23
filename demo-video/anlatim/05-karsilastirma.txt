@@ -1,0 +1,1 @@
+Karşılaştırma ekranı senaryonun ana çıktısı. Bir alan seçiyorsunuz ve bankalar aynı birime normalize edilmiş değerlerle sıralanıyor. Adil kıyas garantisi devrede: yalnızca aynı kampanya türü içindeki değerler yarışıyor, koşullu oranlar doğrudan kıyaslanamaz diye işaretleniyor, süresi dolmuş kampanya sıralamaya girmiyor. Şartnamenin istediği ürün tablosu da tek tıkla açılıyor.

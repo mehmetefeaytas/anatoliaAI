@@ -1,0 +1,1 @@
+Kolay örneklerle demo yapmak kolaydır. Bu yüzden ayrı bir zor vaka tezgâhı kurduk: kırk zor belge; terminoloji, biçim varyantı, eksik bilgi, çelişkili metin ve koşullu aralık olarak etiketli. Koşullu aralık içeren bir belge seçiyoruz ve çıkarımı başlatıyoruz. Sistemin ürettiği değer, elle anotasyonlanmış altın değerle yan yana çiziliyor; tutmayan yer de ekranda kalıyor.

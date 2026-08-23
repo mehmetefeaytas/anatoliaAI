@@ -1,0 +1,192 @@
+{
+  "baslik": "Anatolia AI — 60 saniyelik tanıtım",
+  "notlar": [
+    "Beş dakikalık sürümün (senaryo.json) hızlı kardeşi. Amaç anlatmak değil,",
+    "GÖSTERMEK: panelin on iki ekranı da tek tek geçer, her sahnenin üstüne",
+    "hangi özelliği izlediğini söyleyen bir etiket şeridi biner.",
+    "Bekleme yok: çıkarımın sürdüğü saniyeler kayıttan kesilir, kalan hareket",
+    "montajda hızlandırılır.",
+    "Anlatım cümleleri kasıtlı olarak tek nefeslik: on yedi sahne altmış",
+    "saniyeye ancak sığıyor, uzun cümle burada bir ekranın kesilmesi demek.",
+    "",
+    "Panel sahnesi alanları:",
+    "  kaynak — sahne-60/ altındaki kayıt adı (iki sahne aynı kaydı kullanabilir)",
+    "  yer    — kesit kaydın hangi ucundan alınır: bas | son (varsayılan son)",
+    "  ofset  — 'bas' kesiti bu saniyeden başlar (sayfa yüklenmesini atlamak için)",
+    "  hiz    — oynatma hızı. 1.0 doğal. Sonuç tablosu gösteren sahneler düşük",
+    "           tutulur (okunması gerekir); çok ekran gezen sahneler yüksek."
+  ],
+  "ses": {
+    "motor": "edge-tts",
+    "ses_adi": "tr-TR-AhmetNeural",
+    "hiz": "+30%"
+  },
+  "video": {
+    "kayit_en": 1600,
+    "kayit_boy": 900,
+    "cikti_en": 1920,
+    "cikti_boy": 1080,
+    "fps": 30
+  },
+  "sahneler": [
+    {
+      "id": "00-acilis",
+      "tur": "kart",
+      "kart": "acilis",
+      "anlatim": "Anatolia AI: on bir katılım bankasının kampanyalarını karşılaştıran, tamamen yerel bir sistem."
+    },
+    {
+      "id": "01-panel",
+      "tur": "panel",
+      "kaynak": "01-panel",
+      "yer": "bas",
+      "hiz": 2.0,
+      "kicker": "PANEL",
+      "etiket": "Dashboard · canlı künye",
+      "anlatim": "Panel: iki bin yedi yüz sekiz belge, on iki ekran."
+    },
+    {
+      "id": "02-metin-girdisi",
+      "tur": "panel",
+      "kaynak": "02-cikarim",
+      "yer": "bas",
+      "ofset": 1.2,
+      "hiz": 2.4,
+      "kicker": "ANA ÖZELLİK",
+      "etiket": "Metin girdisi",
+      "anlatim": "Serbest metin kutusuna kampanya cümlesi giriyoruz."
+    },
+    {
+      "id": "03-yapilandirilmis-cikti",
+      "tur": "panel",
+      "kaynak": "02-cikarim",
+      "yer": "son",
+      "hiz": 1.4,
+      "kicker": "ANA ÖZELLİK",
+      "etiket": "Yapılandırılmış çıktı",
+      "anlatim": "Çıktı yapılandırılmış: yüzde iki virgül kırk dokuz kâr payı, otuz altı ay vade, her değerin kaynağı."
+    },
+    {
+      "id": "04-zor-vaka",
+      "tur": "panel",
+      "kaynak": "04-zor-vaka",
+      "yer": "son",
+      "hiz": 1.3,
+      "kicker": "YENİLİKÇİ",
+      "etiket": "Zor vaka tezgâhı · altın küme",
+      "anlatim": "Zor vaka tezgâhı: sonuç altın değerle yan yana."
+    },
+    {
+      "id": "05-kanit",
+      "tur": "panel",
+      "kaynak": "05-kanit",
+      "yer": "son",
+      "hiz": 1.6,
+      "kicker": "YENİLİKÇİ",
+      "etiket": "Kanıt zinciri",
+      "anlatim": "Kanıt defteri her sayıyı kaynak cümlesine bağlar."
+    },
+    {
+      "id": "06-karsilastirma",
+      "tur": "panel",
+      "kaynak": "06-karsilastirma",
+      "yer": "son",
+      "hiz": 1.5,
+      "kicker": "ANA ÖZELLİK",
+      "etiket": "Bankalar arası karşılaştırma",
+      "anlatim": "Karşılaştırma aynı birimde sıralar; yalnız aynı tür yarışır."
+    },
+    {
+      "id": "07-urun-tablosu",
+      "tur": "panel",
+      "kaynak": "07-urun-tablosu",
+      "yer": "son",
+      "hiz": 2.0,
+      "kicker": "ŞARTNAME · S.12",
+      "etiket": "Ürün karşılaştırma tablosu",
+      "anlatim": "Ürün karşılaştırma tablosu tek tıkla."
+    },
+    {
+      "id": "08-isi-haritasi",
+      "tur": "panel",
+      "kaynak": "08-isi-haritasi",
+      "yer": "son",
+      "hiz": 1.5,
+      "kicker": "YENİLİKÇİ",
+      "etiket": "Kapsama ısı haritası",
+      "anlatim": "Isı haritası kapsamayı gösterir, gizlemez."
+    },
+    {
+      "id": "09-avantajli",
+      "tur": "panel",
+      "kaynak": "09-avantajli",
+      "yer": "son",
+      "hiz": 1.6,
+      "kicker": "ANA ÖZELLİK",
+      "etiket": "En Avantajlı · bileşik skor",
+      "anlatim": "En Avantajlı: bileşik skorla öndeki banka."
+    },
+    {
+      "id": "10-banka",
+      "tur": "panel",
+      "kaynak": "10-banka",
+      "yer": "son",
+      "hiz": 1.8,
+      "kicker": "BANKA EKRANI",
+      "etiket": "Tek bankanın künyesi",
+      "anlatim": "Banka ekranı bir bankanın künyesini toplar."
+    },
+    {
+      "id": "11-delta",
+      "tur": "panel",
+      "kaynak": "11-delta",
+      "yer": "son",
+      "hiz": 1.6,
+      "kicker": "YENİLİKÇİ",
+      "etiket": "Banka içi delta",
+      "anlatim": "Delta ekranı sorar: bu banka nerede geride."
+    },
+    {
+      "id": "12-celiski",
+      "tur": "panel",
+      "kaynak": "12-celiski",
+      "yer": "son",
+      "hiz": 1.8,
+      "kicker": "YENİLİKÇİ",
+      "etiket": "Çelişki tespiti",
+      "anlatim": "Çelişki tespiti belge içi tutarsızlığı yakalar."
+    },
+    {
+      "id": "13-chatbot",
+      "tur": "panel",
+      "kaynak": "13-chatbot",
+      "yer": "son",
+      "hiz": 2.0,
+      "kicker": "ANA ÖZELLİK",
+      "etiket": "Chatbot · hibrit yönlendirme",
+      "anlatim": "Chatbot hibrit; cevaplar kaynak dipnotlu."
+    },
+    {
+      "id": "14-operasyon",
+      "tur": "panel",
+      "kaynak": "14-operasyon",
+      "yer": "son",
+      "hiz": 3.0,
+      "kicker": "OPERASYON",
+      "etiket": "Tazeleme · günlük · ayarlar",
+      "anlatim": "Tazeleme, işlem günlüğü ve ayarlar ekranı."
+    },
+    {
+      "id": "15-vizyon",
+      "tur": "kart",
+      "kart": "vizyon-60",
+      "anlatim": "Sırada: açık uçlu alanları ölçmek, arayüzden banka eklemek, toplamayı zamanlamak."
+    },
+    {
+      "id": "16-kapanis",
+      "tur": "kart",
+      "kart": "kapanis",
+      "anlatim": "Anatolia AI: ölçülen ve kaynaklı."
+    }
+  ]
+}

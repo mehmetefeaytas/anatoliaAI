@@ -1,0 +1,1 @@
+Anatolia AI. Ölçülen, kaynağı gösterilen, yerelde çalışan bir finansal bilgi çıkarım sistemi.

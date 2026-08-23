@@ -1,0 +1,1 @@
+En Avantajlı ekranı çok alanlı bileşik skorla kimin önde olduğunu söylüyor ve skorun nasıl hesaplandığını açıyor. Banka sayfası tek bir bankanın künyesini topluyor. Banka içi delta ise tek bir soruyu yanıtlıyor: bu banka nerede geride.

@@ -1,0 +1,1 @@
+Anatolia AI. TEKNOFEST Türkçe Yapay Zekâ Dil Ajanları Yarışması, ikinci senaryo. On bir katılım bankasının kampanya metinlerini topluyor, içindeki finansal bilgiyi otomatik çıkarıyor ve tek bir karşılaştırma zemininde buluşturuyoruz. Tamamı açık kaynak, tamamı yerelde.

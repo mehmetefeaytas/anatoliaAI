@@ -1,0 +1,1 @@
+Kanıt defteri her değeri kaynağına bağlıyor: hangi belge, hangi cümle, hangi karakter aralığı, hangi katman üretti ve güven skoru ne. Ekranda gördüğünüz her sayı bir tık uzaklıkta doğrulanabilir. Bankacılıkta doğrulanamayan bir sayı, yanlış sayıdan daha tehlikelidir.

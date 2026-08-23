@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<title>Anatolia AI — mimari</title>
+<link rel="stylesheet" href="ortak.css">
+</head>
+<body>
+<div class="sahne">
+  <p class="kunye">MİMARİ · ÖNCE KURAL, SONRA YEREL MODEL</p>
+  <div class="bosluk-s"></div>
+  <h2>Uçtan uca veri akışı</h2>
+  <div class="bosluk-m"></div>
+  <div class="akis">
+    <div class="adim"><div class="ad">Toplama</div><div class="alt">11 kaynak</div></div>
+    <div class="adim"><div class="ad">Temizleme</div><div class="alt">trafilatura</div></div>
+    <div class="adim birincil"><div class="ad">Kural katmanı</div><div class="alt">deterministik · birincil</div></div>
+    <div class="adim ikincil"><div class="ad">Yerel LLM</div><div class="alt">yalnız boşluklar · guided JSON</div></div>
+    <div class="adim"><div class="ad">Uzlaştırma</div><div class="alt">güven + kaynak aralığı</div></div>
+    <div class="adim"><div class="ad">Normalizasyon</div><div class="alt">oran · TRY · ay · ISO</div></div>
+    <div class="adim"><div class="ad">Panel + Chatbot</div><div class="alt">kıyas · RAG · SQL</div></div>
+  </div>
+  <div class="olcum">
+    <div><div class="deger">0,8228</div><div class="etiket">YAPISAL ALAN MİKRO-F1</div></div>
+    <div><div class="deger">0,7646</div><div class="etiket">MAKRO-F1</div></div>
+    <div><div class="deger">%3,36</div><div class="etiket">HALÜSİNASYON ORANI</div></div>
+    <div><div class="deger">48</div><div class="etiket">KÖR ETİKETLİ ALTIN KAYIT · 40'I ZOR</div></div>
+  </div>
+  <div class="bosluk-m"></div>
+  <div class="rozetler">
+    <span class="rozet vurgu">FastAPI + Next.js</span>
+    <span class="rozet vurgu">Ollama · qwen2.5-7b-instruct (Apache-2.0)</span>
+    <span class="rozet">tek komut: make baslat</span>
+    <span class="rozet">ablasyon + McNemar ile ölçüldü</span>
+  </div>
+</div>
+</body>
+</html>
