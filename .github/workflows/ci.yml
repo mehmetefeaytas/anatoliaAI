@@ -34,7 +34,7 @@ jobs:
     name: Testler + değişmez denetimi (bağımlılıksız)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # CLAUDE.md §7 asgari sürüm olarak Python 3.11 ilan ediyor.
       # Geliştirme makinesi 3.14 kullanıyor; asgari sürümü CI doğrular.
@@ -230,7 +230,7 @@ jobs:
     name: Testler (bagimliliklar kurulu) + API gercekten ayaga kalkiyor
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -336,7 +336,7 @@ jobs:
           --health-retries 10
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -418,7 +418,7 @@ jobs:
     name: ruff
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
@@ -447,7 +447,7 @@ jobs:
     name: Frontend testleri + derlemesi
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Node 20 DEGIL, ve bu surum secimi testlerin ON KOSULU:
       # `npm test` .ts dosyalarini dogrudan kosuyor (yeni test bagimliligi
