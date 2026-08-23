@@ -73,7 +73,7 @@ sentence-transformers>=2.7  # Apache-2.0 (bge-m3 embeddings)
 # NOT: teslim edilen API konteyneri bu dosyayı DEĞİL, requirements-api.txt'i
 # kurar (ince imaj). Bu dosya geliştirme ortamının tam listesidir.
 fastapi==0.141.1           # MIT
-uvicorn==0.52.0            # BSD
+uvicorn==0.52.4            # BSD
 # KULLANILIYOR (31 Tem 2026'dan beri): src/db/postgres.PostgresRepository +
 # src/rag/store.PgVectorStore. DATABASE_URL boşsa hiç import edilmez.
 psycopg[binary]==3.3.4     # LGPL (dinamik bağlı istemci)
