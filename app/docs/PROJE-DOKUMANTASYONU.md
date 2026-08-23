@@ -1057,8 +1057,8 @@ yapıyor.
 
 | koşucu | toplanan | geçti | atlandı | başarısız |
 |---|---:|---:|---:|---:|
-| `unittest` (kanonik) | 3.632 | 3.579 | 53 | 0 |
-| `pytest` (çapraz doğrulama) | 3.632 | 3.579 | 53 | 0 |
+| `unittest` (kanonik) | 3.632 | 3.578 | 54 | 0 |
+| `pytest` (çapraz doğrulama) | 3.632 | 3.578 | 54 | 0 |
 
 Artefakt: `eval/reports/test-ozeti.json`, commit `03822c24`, `git_dirty: false`,
 Python 3.14.6. Atlanan 53 test Postgres/pgvector istiyor ve CI'ın

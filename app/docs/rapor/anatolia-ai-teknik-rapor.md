@@ -56,7 +56,7 @@ kapısı her koşumda ikisini karşılaştırır (16 iddia · 0 sapma).
 |---|---|---|
 | Korpus | 1.782 belge | **2.708** belge · 7.022 çıkarılmış alan · 999 PDF |
 | Banka | 10 | **10/10** katılım bankası |
-| Test | 3.046 (kirli ağaç) | **3.632** toplanan · **3.579** geçti · 53 atlandı · **0** başarısız |
+| Test | 3.046 (kirli ağaç) | **3.632** toplanan · **3.578** geçti · 54 atlandı · **0** başarısız |
 | Gold seti | `gold.v2` (48) | `gold.v2` **48** + `gold.round1` **134** — iki ayrı taban, iki ayrı kapı |
 | Yapısal alan mikro-F1 | 0,671 | **0,823** (`gold.v2`) · 0,826 (`gold.round1`) |
 | 12-alan mikro-F1 | 0,464 | **0,570** (`gold.v2`) · 0,795 (`gold.round1`) |

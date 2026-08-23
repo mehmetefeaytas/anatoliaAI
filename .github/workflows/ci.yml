@@ -47,7 +47,7 @@ jobs:
           echo "Kurulu ucuncu parti paketler (bos olmali):"
           pip list --format=freeze | grep -v -E "^(pip|setuptools|wheel)==" || true
 
-      # 3.579 gecen test (2026-08-23 olcumu). Saf stdlib oldugu icin hizli.
+      # 3.578 gecen test (2026-08-23 olcumu). Saf stdlib oldugu icin hizli.
       #
       # Bu adim 4-12 Agustos arasi BES KOSU boyunca KIRMIZIYDI ve kimse
       # gormedi; kirmizi bir kapi, olmayan bir kapiyla ayni seydir. Iki kok
