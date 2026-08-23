@@ -47,7 +47,7 @@ from typing import Any, Optional
 
 from ..comparison.compare import RankRow, tekil_banka_urun
 from ..db.repository import Repository
-from ..preprocessing.clean import split_sentences, tr_fold
+from ..preprocessing.clean import split_sentences, tr_fold, tr_fold_ascii
 from . import safety
 from .dayanak import dayanaksiz_sayilar
 from .router import BANK_DISPLAY
@@ -337,6 +337,14 @@ class KeywordRetriever:
                 df[t] += 1
         self._index: dict[str, list[tuple[int, int]]] = dict(index)
         self._df: dict[str, int] = dict(df)
+        # ASCII köprüsü: diakritiksiz yazım -> dizindeki gerçek token'lar.
+        # Yalnız KARŞILIĞI OLMAYAN sorgu token'ları için kullanılır (bkz.
+        # `_cozumle`), bu yüzden dizinin kendisi ASCII'ye ÇÖKMEZ.
+        kopru: dict[str, set[str]] = defaultdict(set)
+        for tok in index:
+            kopru[tr_fold_ascii(tok)].add(tok)
+        self._ascii_kopru: dict[str, list[str]] = {
+            a: sorted(v) for a, v in kopru.items()}
         self._uzunluk: dict[int, int] = uzunluk
         self._N = len(self._indexed_docs)
         self._avgdl = (sum(uzunluk.values()) / self._N) if self._N else 1.0
@@ -348,10 +356,13 @@ class KeywordRetriever:
 
     def retrieve(self, query: str, k: int = 3) -> list[dict]:
         qtok = set(_tokenize(query))
-        overlaps = self._count_overlaps(qtok)
+        gruplar = self._cozumle(qtok)
+        overlaps = self._count_overlaps(gruplar)
+        # Eşik ORİJİNAL token kümesine dayanır: köprü bir soru sözcüğünü
+        # varyantlarına açar ama yeni bir soru sözcüğü ÜRETMEZ.
         esik = _etkin_esik(self.min_overlap, qtok)
 
-        bm25 = self._bm25_skorlari(qtok)
+        bm25 = self._bm25_skorlari(gruplar)
         scored = []
         # Belge indeksi sırası = korpus sırası; eşit skorlarda eski kodun
         # sıralamasını korumak için artan sırada geziyoruz.
@@ -386,7 +397,46 @@ class KeywordRetriever:
         scored.sort(key=lambda x: x["score"], reverse=True)
         return scored[:k]
 
-    def _bm25_skorlari(self, qtok: set[str]) -> dict[int, float]:
+    def _cozumle(self, qtok: set[str]) -> list[list[str]]:
+        """Her soru token'ını dizindeki ARAMA ANAHTARLARINA çözer.
+
+        Dönüş, soru token'ı BAŞINA bir liste taşır; örtüşme sayımı bu grupları
+        gezerek her soru sözcüğünü belge başına **bir kez** sayar (varyanta
+        bölünüp şişmesin).
+
+        ## Neden köprü var
+
+        `_tokenize` bilerek tam ASCII katlaması YAPMAZ: `ş ç ğ ı ö ü`
+        Türkçede ayırt edicidir ve dizini ASCII'ye çökertmek 'sac' ile 'saç'ı
+        birleştirirdi (bkz. `_tokenize` docstring'i). O karar duruyor.
+
+        Ama bedeli ölçüldü: Türkçe klavyesi olmayan ya da hızlı yazan
+        kullanıcı `Konut finansmani kampanyasinin kosullari neler?` diye
+        sorar; hiçbir token dizinde bulunmaz ve chatbot **"bu bilgi verimde
+        yok"** der. Aynı soru aksanlı yazılınca üç pasaj döner. Yani yapısal
+        kol diakritiksiz girdiyi işlerken RAG kolu işlemiyordu — asimetri.
+        Ağırlaştırıcı: projenin kendi dokümantasyonu RAG örneği olarak
+        birebir bu soruyu kullanıyor.
+
+        ## Niçin hassasiyeti bozmuyor
+
+        Köprü **yalnız dizinde hiç karşılığı olmayan** token için devreye
+        girer. `sac` korpusta gerçekten geçiyorsa `self._index` onu bulur ve
+        genişletme HİÇ olmaz — 'saç' ile karışmaz. Yani doğru yazılmış her
+        sorgunun davranışı birebir aynı kalır; gevşeme sadece "aksi hâlde
+        sıfır sonuç" durumunda oluşur ve orada 'sac'/'saç' karışması,
+        "bilgi yok" demekten kesinlikle daha iyi bir sonuçtur.
+        """
+        gruplar: list[list[str]] = []
+        for t in sorted(qtok):
+            if t in self._index:
+                gruplar.append([t])
+                continue
+            varyantlar = self._ascii_kopru.get(tr_fold_ascii(t))
+            gruplar.append(list(varyantlar) if varyantlar else [t])
+        return gruplar
+
+    def _bm25_skorlari(self, gruplar: list[list[str]]) -> dict[int, float]:
         """Aday belgelerin BM25 skorları (`K1`/`B` ölçülmüş değerler).
 
         Yalnız SIRALAMA için. Kapı (`min_overlap`) örtüşme SAYIMINDA kalır —
@@ -396,18 +446,34 @@ class KeywordRetriever:
         kanıt ve 54 soruluk regresyon seti o kanıta göre kalibre edilmiş.
         """
         skor: dict[int, float] = defaultdict(float)
-        for t in qtok:
-            df = self._df.get(t)
-            if not df:
-                continue
-            idf = math.log(1 + (self._N - df + 0.5) / (df + 0.5))
-            for i, tf in self._index.get(t, ()):
-                dl = self._uzunluk.get(i) or 1
-                skor[i] += idf * (tf * (BM25_K1 + 1)) / (
-                    tf + BM25_K1 * (1 - BM25_B + BM25_B * dl / self._avgdl))
+        # Grup içinde EN İYİ varyant alınır, varyantlar TOPLANMAZ. Bir soru
+        # sözcüğü bir birim kanıt taşır; köprü onu iki yazıma açtığında
+        # ikisini toplamak aynı sözcüğü çift saymak olurdu — `_count_overlaps`
+        # kapı tarafında zaten grup başına bir kez sayıyor, skorun ondan
+        # ayrışması sıralamayı köprülü sorgularda sessizce şişirirdi.
+        # Ölçüldü: `finansmani` korpusta iki yazıma çözülüyor (`finansmanı`
+        # ve noktasız-ı'lı `fınansmanı`); toplama sıralamayı oynatıyordu.
+        #
+        # Grup tek elemanlıysa (doğru yazılmış her sorgu) max == toplam,
+        # yani bu değişiklik köprüsüz yolda HİÇBİR ŞEYİ değiştirmez.
+        for grup in gruplar:
+            grup_skoru: dict[int, float] = {}
+            for t in grup:
+                df = self._df.get(t)
+                if not df:
+                    continue
+                idf = math.log(1 + (self._N - df + 0.5) / (df + 0.5))
+                for i, tf in self._index.get(t, ()):
+                    dl = self._uzunluk.get(i) or 1
+                    s = idf * (tf * (BM25_K1 + 1)) / (
+                        tf + BM25_K1 * (1 - BM25_B + BM25_B * dl / self._avgdl))
+                    if s > grup_skoru.get(i, 0.0):
+                        grup_skoru[i] = s
+            for i, s in grup_skoru.items():
+                skor[i] += s
         return skor
 
-    def _count_overlaps(self, qtok: set[str]) -> dict[int, int]:
+    def _count_overlaps(self, gruplar: list[list[str]]) -> dict[int, int]:
         """Belge indeksi -> soruyla örtüşen ANLAMLI token sayısı."""
         if self.min_overlap <= 0:
             # Eşik yoksa örtüşmesi 0 olan belgeler de sonuca girer (eski kod
@@ -416,11 +482,20 @@ class KeywordRetriever:
             overlaps = {i: 0 for i in self._indexed_docs}
         else:
             overlaps = {}
-        for t in qtok:
+        for grup in gruplar:
             # Gönderi listesi artık `(belge, tf)` taşıyor; örtüşme SAYIMI
             # frekanstan bağımsızdır (belge başına bir kez sayılır), yani
             # kapı semantiği dizin biçimi değişse de aynı kalır.
-            for i, _tf in self._index.get(t, ()):
+            #
+            # Grup = BİR soru sözcüğünün arama anahtarları (bkz. `_cozumle`).
+            # Belgeler önce grup içinde tekilleştirilir: bir soru sözcüğü iki
+            # varyanta çözülüp ikisi de aynı belgede geçiyorsa örtüşme yine
+            # 1 artar. Aksi hâlde köprü, kapıyı şişirerek delerdi.
+            gorulen: set[int] = set()
+            for t in grup:
+                for i, _tf in self._index.get(t, ()):
+                    gorulen.add(i)
+            for i in gorulen:
                 overlaps[i] = overlaps.get(i, 0) + 1
         return overlaps
 
