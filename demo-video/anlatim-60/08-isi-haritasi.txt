@@ -1,1 +1,1 @@
-Isı haritası kapsamayı gösterir, gizlemez.
+Isı haritası hangi kesişimde ölçebildiğimizi gösterir.

@@ -24,6 +24,23 @@ sahnenin sonunda oluşur). `yer: bas` ise eylemin başta olduğu sahneler için:
 panelin açılışı, metnin kutuya yazılması. `ofset` verilirse baş kesiti o
 saniyeden başlar — sayfa yüklenirken geçen ilk saniyeleri atmaya yarar.
 
+## İki sütunlu kadraj — ekran kesilmesin diye
+
+1080p'de tek sütun panelin ancak bir ekranını taşıyor: sayfanın devamı hep
+kadrajın dışında kalıyordu ve üç saniyelik bir sahnede kaydırarak yetişmek
+mümkün değil. `duzen: cift` sahnelerinde panel uzun bir kadrajda (1280×2304)
+kaydediliyor, montaj kareyi ortadan ikiye bölüp yan yana koyuyor: SOL sütun
+sayfanın üstü, SAĞ sütun hemen devamı. Böylece tek karede iki ekran dolusu
+içerik var ve kaydırma ilerledikçe içerik soldan yukarı çıkıp sağdan giriyor.
+
+Geniş matrisler (ısı haritası) bölünmeye uygun değil — onlar `duzen: tek` ile
+klasik 16:9 kayıttan geliyor.
+
+`duzen: yan` ise İKİ AYRI kaydı yan yana koyuyor (banka künyesi | banka içi
+delta). Akraba iki ekranı tek sahnede göstermek, on iki ekranı altmış saniyeye
+sığdırırken anlatımı da telgrafa çevirmemenin tek yolu oldu: iki sahne yerine
+bir sahne, ama iki ekran da görünüyor.
+
 ## Etiket bandı panelin ÜSTÜNE değil, ALTINA eklenir
 
 İlk turda şerit köşeye bindirildi ve tam da okunması gereken yeri kapattı
@@ -58,8 +75,9 @@ EN, BOY, FPS = V["cikti_en"], V["cikti_boy"], V["fps"]
 
 GECIS = 0.25        # kısa sürümde geçiş de kısa; 0,35 burada ağır duruyor
 AZAMI_HIZ = 3.2     # üstünde kaydırma okunmaz hâle geliyor — uyarı eşiği
-BANT = 86           # etiket bandının yüksekliği; etiket şablonuyla aynı olmalı
+BANT = 117          # etiket bandının yüksekliği; etiket şablonuyla aynı olmalı
 ZEMIN = "0xf0f1f5"  # panel görüntüsünün yanında kalan çerçeve rengi
+AYRAC = 6           # iki sütun arasındaki çizgi kalınlığı
 
 
 def kos(argumanlar: list[str]) -> None:
@@ -90,14 +108,12 @@ def kart_sahnesi(png: pathlib.Path, hedef: float, cikti: pathlib.Path) -> None:
          "-pix_fmt", "yuv420p", str(cikti)])
 
 
-def panel_sahnesi(sahne: dict, hedef: float, cikti: pathlib.Path) -> str:
-    """Kaydı hedef süreye oturtur, etiket şeridini bindirir.
+def kesit(sahne: dict, webm: pathlib.Path, istenen: float) -> tuple[list[str], str, float]:
+    """Kaydın hangi parçasının hangi hızla alınacağını hesaplar.
 
-    Dönen değer, ekrana basılacak kısa künye: hangi kesit hangi hızla alındı.
+    Dönenler: ffmpeg girdi argümanları, zaman süzgeci öneki, seçilen hız.
     """
-    webm = SAHNE_DIZIN / f"{sahne['kaynak']}.webm"
     ham = sure(webm)
-    istenen = hedef + GECIS
     hiz = float(sahne.get("hiz", 1.0))
     gereken = istenen * hiz                     # hızlandırma öncesi ham uzunluk
 
@@ -114,25 +130,76 @@ def panel_sahnesi(sahne: dict, hedef: float, cikti: pathlib.Path) -> str:
         # kapanır — yavaşlatmak kaydırmaları ağırlaştırıyordu.
         hiz = max(1.0, mevcut / istenen)
 
-    sonuc = mevcut / hiz
     zaman = f"setpts=PTS/{hiz:.6f},"
+    sonuc = mevcut / hiz
     if sonuc < istenen - 0.02:
         zaman += f"tpad=stop_mode=clone:stop_duration={istenen - sonuc + 0.5:.3f},"
+    return ["-ss", f"{basla:.3f}", "-i", str(webm)], zaman, hiz
 
-    girdi = ["-ss", f"{basla:.3f}", "-i", str(webm)]
-    # Panel 16:9 kaydı, bant için ayrılan pay çıkarıldıktan sonra kalan yüksek-
-    # liğe oranı bozulmadan oturtulur; yanlarda kalan boşluk zeminle dolar.
+
+def panel_sahnesi(sahne: dict, hedef: float, cikti: pathlib.Path) -> str:
+    """Kaydı hedef süreye oturtur, etiket şeridini bindirir.
+
+    Dönen değer, ekrana basılacak kısa künye: hangi kesit hangi hızla alındı.
+    """
+    kaynaklar = sahne.get("kaynaklar", [sahne.get("kaynak")])
+    webm = SAHNE_DIZIN / f"{kaynaklar[0]}.webm"
+    ham = sure(webm)
+    istenen = hedef + GECIS
+    girdi, zaman, hiz = kesit(sahne, webm, istenen)
+    basla = float(girdi[1])
     ic_boy = BOY - BANT
-    ic_en = round(ic_boy * 16 / 9 / 2) * 2
-    zincir = (
-        f"[0:v]{zaman}scale={ic_en}:{ic_boy}:flags=lanczos,"
-        f"pad={EN}:{BOY}:{(EN - ic_en) // 2}:0:color={ZEMIN},setsar=1,"
-        f"fps={FPS},format=yuv420p[v]"
-    )
+    kx, ken, kboy = V["sutun_kirp_x"], V["sutun_kirp_en"], V["sutun_boy"]
+    if sahne.get("duzen") == "yan":
+        # İki ayrı kayıt: her birinin ÜST sütunu alınır, yan yana konur.
+        ikinci = SAHNE_DIZIN / f"{kaynaklar[1]}.webm"
+        girdi2, zaman2, hiz2 = kesit(sahne, ikinci, istenen)
+        girdi = girdi + girdi2
+        zincir = (
+            f"[0:v]{zaman}fps={FPS},crop={ken}:{kboy}:{kx}:0[sol];"
+            f"[1:v]{zaman2}fps={FPS},crop={ken}:{kboy}:{kx}:0[sag];"
+            f"[sol][sag]hstack=inputs=2,"
+            f"scale={EN}:{ic_boy}:flags=lanczos,"
+            # İki sütun arasına ince bir zemin çizgisi: bitişik iki ekran
+            # tek sayfa gibi okunuyordu.
+            f"drawbox=x={(EN - AYRAC) // 2}:y=0:w={AYRAC}:h={ic_boy}:"
+            f"color={ZEMIN}:t=fill,"
+            f"pad={EN}:{BOY}:0:0:color={ZEMIN},setsar=1,format=yuv420p[v]"
+        )
+        hiz = max(hiz, hiz2)
+    elif sahne.get("duzen") == "cift":
+        # Uzun kayıt ortadan ikiye: üst yarı sol sütun, alt yarı sağ sütun.
+        # Kırpma main sütununu alıyor — sayfa kenarındaki boşluğu taşımanın
+        # anlamı yok, o pikseller okunacak içerik olabilirdi.
+        zincir = (
+            f"[0:v]{zaman}fps={FPS},split=2[a][b];"
+            f"[a]crop={ken}:{kboy}:{kx}:0[sol];"
+            f"[b]crop={ken}:{kboy}:{kx}:{kboy}[sag];"
+            f"[sol][sag]hstack=inputs=2,"
+            f"scale={EN}:{ic_boy}:flags=lanczos,"
+            # İki sütun arasına ince bir zemin çizgisi: bitişik iki ekran
+            # tek sayfa gibi okunuyordu.
+            f"drawbox=x={(EN - AYRAC) // 2}:y=0:w={AYRAC}:h={ic_boy}:"
+            f"color={ZEMIN}:t=fill,"
+            f"pad={EN}:{BOY}:0:0:color={ZEMIN},setsar=1,format=yuv420p[v]"
+        )
+    else:
+        # 16:9 kayıt: bant payı çıkınca kalan yüksekliğe oranı bozulmadan
+        # oturtulur, yanlarda kalan boşluk zeminle dolar.
+        ic_en = round(ic_boy * 16 / 9 / 2) * 2
+        zincir = (
+            f"[0:v]{zaman}scale={ic_en}:{ic_boy}:flags=lanczos,"
+            f"pad={EN}:{BOY}:{(EN - ic_en) // 2}:0:color={ZEMIN},setsar=1,"
+            f"fps={FPS},format=yuv420p[v]"
+        )
     etiket = ETIKET_DIZIN / f"{sahne['id']}.png"
     if etiket.exists():
+        # Etiketin girdi numarası kaynak sayısına bağlı: «yan» sahnelerde iki
+        # video girdisi var ve sabit [1:v] yazmak etiket yerine ikinci kaydı
+        # bindiriyordu — bant kayboluyor, ham kayıt karenin üstüne biniyordu.
         girdi += ["-i", str(etiket)]
-        zincir += ";[v][1:v]overlay=0:0:format=auto,format=yuv420p[o]"
+        zincir += (f";[v][{len(kaynaklar)}:v]overlay=0:0:format=auto,"
+                   f"format=yuv420p[o]")
         cikis = "[o]"
     else:
         cikis = "[v]"
@@ -145,8 +212,8 @@ def panel_sahnesi(sahne: dict, hedef: float, cikti: pathlib.Path) -> str:
     if hiz > AZAMI_HIZ:
         print(f"   ! {sahne['id']}: {hiz:.1f}× hız okunurluk eşiğinin üstünde",
               file=sys.stderr)
-    return (f"{sahne.get('yer', 'son'):>3} · {basla:4.1f}–{ham:4.1f} sn "
-            f"· {hiz:.1f}×")
+    return (f"{sahne.get('duzen', 'tek'):>4} · {sahne.get('yer', 'son')} "
+            f"{basla:4.1f}–{ham:4.1f} sn · {hiz:.1f}×")
 
 
 def srt_yaz(sahneler: list[dict], yol: pathlib.Path) -> None:

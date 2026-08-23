@@ -1,1 +1,1 @@
-Ürün karşılaştırma tablosu tek tıkla.
+Şartnamenin ürün tablosu: her hücre kaynak belgesine bağlı.

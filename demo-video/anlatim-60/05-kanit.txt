@@ -1,1 +1,1 @@
-Kanıt defteri her sayıyı kaynak cümlesine bağlar.
+Kanıt defteri her değeri belgeye, cümleye, karakter aralığına bağlar.

@@ -108,6 +108,32 @@ async def sekmeye_git(sayfa: Page, sekme: str, bekleme: int = 2200) -> None:
     await bekle(sayfa, bekleme)
 
 
+async def kadraja_al(sayfa: Page, hedef, pay: int = 360, bekleme: int = 900) -> bool:
+    """Öğeyi kadrajın ÜST kısmına getirir, altına da yer bırakarak.
+
+    `scroll_into_view_if_needed` öğeyi yalnız "görünür" yapar ve pratikte
+    ekranın en altına yapıştırır: aranan blok kadraja girer ama devamı —
+    tablo satırları, sayım kartları — dışarıda kalır. Burada öğe üstten `pay`
+    piksel aşağıya konumlanıyor, yani devamı da kadrajda.
+
+    Çift sütunlu düzende bunun ikinci bir faydası var: blok SOL sütunun
+    üstüne düşer, devamı sağ sütunda görünür.
+    """
+    try:
+        await hedef.scroll_into_view_if_needed(timeout=5000)
+        kutu = await hedef.bounding_box()
+        if kutu:
+            await sayfa.evaluate(
+                "d => window.scrollBy({top: d, behavior: 'smooth'})",
+                kutu["y"] - pay,
+            )
+        await bekle(sayfa, bekleme)
+        return True
+    except Exception as hata:  # noqa: BLE001
+        print("   ! kadraj atlandı:", str(hata).split("\n")[0][:80])
+        return False
+
+
 async def sonuca_kaydir(sayfa: Page) -> None:
     """Çıkarım sonucunu kadraja alır.
 

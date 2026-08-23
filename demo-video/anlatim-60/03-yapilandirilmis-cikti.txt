@@ -1,1 +1,1 @@
-Çıktı yapılandırılmış: yüzde iki virgül kırk dokuz kâr payı, otuz altı ay vade, her değerin kaynağı.
+Çıktı yapılandırılmış: her değerin güven skoru, katmanı ve karakter aralığı yanında.

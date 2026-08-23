@@ -1,1 +1,1 @@
-Tazeleme, işlem günlüğü ve ayarlar ekranı.
+Tazeleme tek ağ yüzeyi; günlük zaman damgalı; ayarlar kapalıları yazar.

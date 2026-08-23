@@ -8,6 +8,7 @@ Aynı hattan iki sürüm çıkıyor:
 | Tam | `cikti/anatolia-ai-demo.mp4` | **4 dk 54 sn** | Şartname teslimi: her ekranı anlatarak gösterir |
 | Kısa | `cikti/anatolia-ai-demo-60sn.mp4` | **1 dk 02 sn** | Tanıtım: on iki ekranı etiketleyip hızlı geçer |
 
+
 İkisi de 1920×1080, 30 fps, H.264 + AAC stereo, −16 LUFS. Altyazılar:
 `cikti/anatolia-ai-demo.tr.srt`, `cikti/anatolia-ai-demo-60sn.tr.srt`.
 
@@ -33,31 +34,53 @@ ayakta olan sistemin üzerinde Playwright ile gerçekten koşturuluyor. Canlı
 | Gelecek vizyonu | 04:20 – 04:46 |
 | Kapanış | 04:46 – 04:53 |
 
-## Kısa sürüm (1:02) — her ekran ayrı sahne
+## Kısa sürüm (1:02) — her ekran ayrı sahne, iki sütunlu kadraj
 
 Tam sürümde üç ekran tek sahnede geçiyor (En Avantajlı → Banka → Delta,
 Tazeleme → Günlük → Ayarlar). Kısa sürümde **her ekranın kendi sahnesi, kendi
 etiketi ve kendi cümlesi var** — on iki panel ekranı da tek tek görünür.
 
+Altmış saniyede özelliğin ANLAŞILMASI için üç kanal aynı anda çalışır:
+
+1. **Anlatım** — ne yaptığını söyler.
+2. **İki sütunlu kadraj** — panel uzun bir pencerede (1280×2304) kaydedilir,
+   montaj kareyi ortadan bölüp yan yana koyar: sol sütun sayfanın üstü, sağ
+   sütun hemen devamı. 1080p'de tek sütun ekranın ancak yarısını taşıyordu ve
+   üç saniyede kaydırarak yetişmek mümkün değildi.
+3. **Alt bant** — özelliğin adı ve altında sayılarla künyesi ekranda kalır
+   ("12 alan · güven skoru · üreten katman · karakter aralığı").
+
 | Sahne | Etiket | Zaman |
 |---|---|---|
-| Açılış kartı | — | 00:00 – 00:06 |
-| Karşılaştırma (üst künye) | PANEL · Dashboard | 00:06 – 00:09 |
-| Canlı çıkarım (kutuya yazma) | ANA ÖZELLİK · Metin girdisi | 00:09 – 00:12 |
-| Canlı çıkarım (alan tablosu) | ANA ÖZELLİK · Yapılandırılmış çıktı | 00:12 – 00:18 |
-| Zor vaka tezgâhı | YENİLİKÇİ · Altın küme | 00:18 – 00:22 |
-| Jüri audit paneli | YENİLİKÇİ · Kanıt zinciri | 00:22 – 00:25 |
-| Karşılaştırma (sıralama) | ANA ÖZELLİK · Bankalar arası karşılaştırma | 00:25 – 00:29 |
-| Ürün tablosu | ŞARTNAME s.12 | 00:29 – 00:32 |
-| Isı haritası | YENİLİKÇİ · Kapsama | 00:32 – 00:35 |
-| En Avantajlı | ANA ÖZELLİK · Bileşik skor | 00:35 – 00:38 |
-| Banka sayfası | BANKA EKRANI | 00:38 – 00:41 |
-| Banka içi delta | YENİLİKÇİ | 00:41 – 00:44 |
-| Çelişki tespiti | YENİLİKÇİ | 00:44 – 00:47 |
-| Chatbot | ANA ÖZELLİK · Hibrit yönlendirme | 00:47 – 00:51 |
-| Tazeleme · günlük · ayarlar | OPERASYON | 00:51 – 00:54 |
-| Gelecek vizyonu kartı | — | 00:54 – 00:59 |
+| Açılış kartı | — | 00:00 – 00:05 |
+| Karşılaştırma | PANEL · Dashboard, canlı künye | 00:05 – 00:09 |
+| Canlı çıkarım (kutuya yazma) | ANA ÖZELLİK · Metin girdisi | 00:09 – 00:13 |
+| Canlı çıkarım (alan tablosu) | ANA ÖZELLİK · Yapılandırılmış çıktı | 00:13 – 00:17 |
+| Zor vaka tezgâhı | YENİLİKÇİ · Altın küme | 00:17 – 00:21 |
+| Jüri audit paneli | YENİLİKÇİ · Kanıt zinciri | 00:21 – 00:24 |
+| Karşılaştırma (vade · Finansman) | ANA ÖZELLİK · Bankalar arası karşılaştırma | 00:24 – 00:27 |
+| Ürün tablosu (Kart) | ŞARTNAME s.12 | 00:27 – 00:31 |
+| Isı haritası (vade, 47/99 hücre) | YENİLİKÇİ · Kapsama | 00:31 – 00:34 |
+| En Avantajlı (Kart) | ANA ÖZELLİK · Bileşik skor | 00:34 – 00:38 |
+| Banka sayfası **+** banka içi delta | BANKA EKRANI (iki ekran yan yana) | 00:38 – 00:42 |
+| Çelişki tespiti | YENİLİKÇİ | 00:42 – 00:46 |
+| Chatbot (yapısal sorgu **+** RAG) | ANA ÖZELLİK | 00:46 – 00:52 |
+| Tazeleme · günlük · ayarlar | OPERASYON | 00:52 – 00:56 |
+| Gelecek vizyonu kartı | — | 00:56 – 00:59 |
 | Kapanış kartı | — | 00:59 – 01:02 |
+
+### Ekranlardaki veriler ölçülerek seçildi
+
+Boş bir tablo sistemin çalışmadığını değil, o kesişimde belge olmadığını
+gösterir — ama üç saniyelik bir sahnede kimse bu ayrımı yapmaz. `/compare` ve
+`/stats` uçları taranıp her ekran korpusun **en dolu** kesişimine ayarlandı:
+
+| Ekran | Seçim | Neden |
+|---|---|---|
+| Karşılaştırma, panel açılışı, ısı haritası | `vade (ay)` | 9 bankada dolu, 9'u da kıyaslanabilir; kâr payı × Konut Finansmanı yalnız 2 bankaydı |
+| Ürün tablosu, En Avantajlı, delta | `Kart` türü | 9 bankada dolu (28/45 hücre) |
+| Banka sayfası, kanıt zinciri | Kuveyt Türk | 885 belge, 12 alanın 12'si dolu; varsayılan banka 11 belgeyle boş ekran veriyordu |
+| Isı haritası alanı | `vade (ay)` | «Kampanya Süresi» 1.179 kayıtla dolu görünüyor ama haritada 0/99 hücre veriyor — harita kıyaslanabilir değerleri sayıyor, tarih alanı sıralamaya girmiyor |
 
 ## Yeniden üretme
 
@@ -116,10 +139,11 @@ yazar; hem sahne kaydı hem montaj bu süreleri okur. Metin değişip ses yenide
 
 ## Kararlar
 
-**Ses: `tr-TR-AhmetNeural`.** Tam sürümde hız +%11, kısa sürümde +%30. Tam
+**Ses: `tr-TR-AhmetNeural`.** Tam sürümde hız +%11, kısa sürümde +%42. Tam
 sürümde hız pazarlık sonucu: metinler +%8'de 5 dk 2 sn tutuyordu, bir kademe
-artırmak 4 dk 54 sn'ye indirdi. Kısa sürümde on yedi sahne için tek nefeslik
-cümleler yazıldı ve hız bir kademe daha yükseltildi.
+artırmak 4 dk 54 sn'ye indirdi. Kısa sürümde cümleler özelliğin künyesini
+taşıyacak kadar dolu ama tek nefeslik yazıldı; hız oradaki bütçenin
+kendisidir — aynı metinler +%36'da 69,6 saniye, +%42'de 61,5 saniye tutuyor.
 
 **Süreyi ses belirler.** Sahneler bilerek anlatımdan uzun kaydedilir; montaj
 fazlalığı hızlandırma ve sahnenin **başından** kırpma ile alır. Sondan
@@ -127,16 +151,30 @@ kırpmak, çıkarım sonuçlarının tam da göründüğü anı keserdi.
 
 **Kısa sürümde hız sahne başına seçilir.** Tek bir üst sınır işe yaramadı:
 sonuç tablosu okunacak sahneler 1,3–1,5× civarında kalır, tek sahnede üç ekran
-gezen operasyon turu 3× koşar. Değerler `senaryo-60.json` içindeki `hiz`
+gezen operasyon turu 2,4× koşar. Değerler `senaryo-60.json` içindeki `hiz`
 alanında; `yer` alanı kesitin kaydın hangi ucundan alınacağını söyler.
 Çıkarımın sürdüğü yirmi saniye kısa sürüme HİÇ girmiyor: aynı kaydın başı
 "metin girdisi", sonu "yapılandırılmış çıktı" sahnesi oluyor.
 
+**İki akraba ekran tek sahnede (`duzen: yan`).** Banka künyesi ile banka içi
+delta iki ayrı kayıttan gelip yan yana konuyor. On iki ekranı altmış saniyeye
+sığdırırken anlatımı telgrafa çevirmemenin yolu buydu: iki sahne yerine bir
+sahne, ama iki ekran da görünüyor.
+
+**Chatbot sahnesinde soru sırası bağlayıcı.** Koşul sorusu ÖNCE sorulur:
+bağlamı boş bir turda belge erişimine (RAG) düşüyor. Ters sırada ikinci soru
+önceki turun alanını (`vade_ay`) devralıyor — «Yeni konu» bile bu devri
+kesmiyor — ve o da yapısal sorguya gidiyor; ekranda aynı rozet iki kez
+çıkıyor, oysa sahnenin iddiası iki AYRI yol. Sayısal soru bağlam devralsa da
+yapısal kaldığı için bu sırada ikisi de garanti görünür.
+
 **Etiket köşede kutu değil, alt bant.** İlk tur sol alt köşeye bir kutu
 koydu ve tam da okunması gereken yeri kapattı (çıkarım künyesi, zor vaka
 sayımları, banka sayfasının bölüm başlığı). Şerit artık alt kenarda tam
-genişlikte; montaj panel görüntüsünü 1768×994'e indirip üste yaslıyor, yani
-panelden hiçbir piksel örtülmüyor.
+genişlikte ve iki satırlı; montaj panel görüntüsünü 963 piksele indirip üste
+yaslıyor, kalan 117 piksel bant oluyor — panelden hiçbir piksel örtülmüyor.
+İkinci satır (özelliğin sayılarla künyesi) üç saniyelik bir sahnede anlatımın
+söylemeye vakit bulamadığını taşıyor.
 
 **Kadrajlar elle doğrulandı.** Kayıt betiği bir bölüme "kaydır" dediğinde
 `scroll_into_view_if_needed` hedefi ekranın en ALTINA yapıştırıyor; üç sahnede

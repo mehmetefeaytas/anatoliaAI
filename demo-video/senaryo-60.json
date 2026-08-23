@@ -2,28 +2,43 @@
   "baslik": "Anatolia AI — 60 saniyelik tanıtım",
   "notlar": [
     "Beş dakikalık sürümün (senaryo.json) hızlı kardeşi. Amaç anlatmak değil,",
-    "GÖSTERMEK: panelin on iki ekranı da tek tek geçer, her sahnenin üstüne",
-    "hangi özelliği izlediğini söyleyen bir etiket şeridi biner.",
-    "Bekleme yok: çıkarımın sürdüğü saniyeler kayıttan kesilir, kalan hareket",
-    "montajda hızlandırılır.",
-    "Anlatım cümleleri kasıtlı olarak tek nefeslik: on yedi sahne altmış",
-    "saniyeye ancak sığıyor, uzun cümle burada bir ekranın kesilmesi demek.",
+    "GÖSTERMEK: panelin on iki ekranı da tek tek geçer.",
+    "",
+    "Altmış saniyede özelliğin ANLAŞILMASI için üç kanal aynı anda çalışır:",
+    "  1. anlatım — ne yaptığını söyler (tek nefeslik ama bilgi yüklü cümleler)",
+    "  2. iki sütunlu kadraj — sayfanın devamı sağda görünür, ekran kesilmez",
+    "  3. alt bant — özelliğin adı ve altında ölçülebilir künyesi yazılı kalır",
     "",
     "Panel sahnesi alanları:",
-    "  kaynak — sahne-60/ altındaki kayıt adı (iki sahne aynı kaydı kullanabilir)",
-    "  yer    — kesit kaydın hangi ucundan alınır: bas | son (varsayılan son)",
-    "  ofset  — 'bas' kesiti bu saniyeden başlar (sayfa yüklenmesini atlamak için)",
-    "  hiz    — oynatma hızı. 1.0 doğal. Sonuç tablosu gösteren sahneler düşük",
-    "           tutulur (okunması gerekir); çok ekran gezen sahneler yüksek."
+    "  kaynak    — sahne-60/ altındaki kayıt adı (iki sahne aynı kaydı kullanabilir)",
+    "  duzen     — cift: uzun kayıt ikiye bölünüp yan yana konur (sayfanın iki katı",
+    "              içerik tek karede). tek: 16:9 kayıt, geniş matrisler için.",
+    "              yan: İKİ AYRI EKRAN yan yana — akraba iki sayfayı tek sahnede",
+    "              göstermek altmış saniyeye sığmanın tek yolu oldu.",
+    "  yer       — kesit kaydın hangi ucundan alınır: bas | son (varsayılan son)",
+    "  ofset     — 'bas' kesiti bu saniyeden başlar (sayfa yüklenmesini atlamak için)",
+    "  hiz       — oynatma hızı. 1.0 doğal. Sonuç okunacak sahneler düşük tutulur.",
+    "  kicker    — bandın sol sütunu (özellik sınıfı)",
+    "  etiket    — bandın başlığı",
+    "  altetiket — bandın ikinci satırı: özelliğin künyesi, sayılarla",
+    "",
+    "Ekranlardaki veri seçimleri KASITLI olarak korpusun DOLU olduğu yerlerden:",
+    "vade × Finansman dokuz bankada dolu ve dokuzu da kıyaslanabilir (kâr payı ×",
+    "Konut Finansmanı yalnız iki bankada vardı), banka sayfası Kuveyt Türk (885",
+    "belge, 12 alan), ürün tablosu ve En Avantajlı Kart türünde (9 banka)."
   ],
   "ses": {
     "motor": "edge-tts",
     "ses_adi": "tr-TR-AhmetNeural",
-    "hiz": "+30%"
+    "hiz": "+42%"
   },
   "video": {
     "kayit_en": 1600,
     "kayit_boy": 900,
+    "sutun_en": 1280,
+    "sutun_boy": 1152,
+    "sutun_kirp_x": 66,
+    "sutun_kirp_en": 1148,
     "cikti_en": 1920,
     "cikti_boy": 1080,
     "fps": 30
@@ -33,160 +48,179 @@
       "id": "00-acilis",
       "tur": "kart",
       "kart": "acilis",
-      "anlatim": "Anatolia AI: on bir katılım bankasının kampanyalarını karşılaştıran, tamamen yerel bir sistem."
+      "anlatim": "Anatolia AI: katılım bankası kampanyalarını karşılaştıran, yerelde çalışan sistem."
     },
     {
       "id": "01-panel",
       "tur": "panel",
       "kaynak": "01-panel",
-      "yer": "bas",
-      "hiz": 2.0,
+      "duzen": "cift",
+      "yer": "son",
+      "hiz": 1.8,
       "kicker": "PANEL",
       "etiket": "Dashboard · canlı künye",
-      "anlatim": "Panel: iki bin yedi yüz sekiz belge, on iki ekran."
+      "altetiket": "2.708 belge · 11 banka · 12 alan · 8 kampanya türü · servis sağlığı canlı",
+      "anlatim": "İki bin yedi yüz sekiz belge, on bir banka, on iki alan; tek panel."
     },
     {
       "id": "02-metin-girdisi",
       "tur": "panel",
       "kaynak": "02-cikarim",
+      "duzen": "cift",
       "yer": "bas",
-      "ofset": 1.2,
-      "hiz": 2.4,
+      "ofset": 1.5,
+      "hiz": 2.2,
       "kicker": "ANA ÖZELLİK",
       "etiket": "Metin girdisi",
-      "anlatim": "Serbest metin kutusuna kampanya cümlesi giriyoruz."
+      "altetiket": "serbest metin → kural katmanı → boşluklarda yerel dil modeli",
+      "anlatim": "Serbest metin veriyoruz: kural çıkarır, boşluğu yerel model doldurur."
     },
     {
       "id": "03-yapilandirilmis-cikti",
       "tur": "panel",
       "kaynak": "02-cikarim",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 1.4,
+      "hiz": 1.3,
       "kicker": "ANA ÖZELLİK",
       "etiket": "Yapılandırılmış çıktı",
-      "anlatim": "Çıktı yapılandırılmış: yüzde iki virgül kırk dokuz kâr payı, otuz altı ay vade, her değerin kaynağı."
+      "altetiket": "12 alan · güven skoru · üreten katman · metindeki karakter aralığı",
+      "anlatim": "Çıktı yapılandırılmış: her değerin güven skoru, katmanı ve karakter aralığı yanında."
     },
     {
       "id": "04-zor-vaka",
       "tur": "panel",
       "kaynak": "04-zor-vaka",
+      "duzen": "cift",
       "yer": "son",
       "hiz": 1.3,
       "kicker": "YENİLİKÇİ",
-      "etiket": "Zor vaka tezgâhı · altın küme",
-      "anlatim": "Zor vaka tezgâhı: sonuç altın değerle yan yana."
+      "etiket": "Zor vaka tezgâhı",
+      "altetiket": "40 etiketli zor belge · altın kümeyle yan yana · uydurma ayrı sayılır",
+      "anlatim": "Kırk zor belge etiketli; sonuç altın değerle yan yana çizilir."
     },
     {
       "id": "05-kanit",
       "tur": "panel",
       "kaynak": "05-kanit",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 1.6,
+      "hiz": 1.5,
       "kicker": "YENİLİKÇİ",
       "etiket": "Kanıt zinciri",
-      "anlatim": "Kanıt defteri her sayıyı kaynak cümlesine bağlar."
+      "altetiket": "her değer → belge · cümle · karakter aralığı · katman · güven",
+      "anlatim": "Kanıt defteri her değeri belgeye, cümleye, karakter aralığına bağlar."
     },
     {
       "id": "06-karsilastirma",
       "tur": "panel",
       "kaynak": "06-karsilastirma",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 1.5,
+      "hiz": 1.4,
       "kicker": "ANA ÖZELLİK",
       "etiket": "Bankalar arası karşılaştırma",
-      "anlatim": "Karşılaştırma aynı birimde sıralar; yalnız aynı tür yarışır."
+      "altetiket": "vade · Finansman türü · 9 banka · aynı birime normalize · adil kıyas",
+      "anlatim": "Vade alanında dokuz banka aynı birimde sıralanır."
     },
     {
       "id": "07-urun-tablosu",
       "tur": "panel",
       "kaynak": "07-urun-tablosu",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 2.0,
+      "hiz": 1.8,
       "kicker": "ŞARTNAME · S.12",
       "etiket": "Ürün karşılaştırma tablosu",
-      "anlatim": "Ürün karşılaştırma tablosu tek tıkla."
+      "altetiket": "banka × ürün × alan · her hücre kaynak belgesine bağlı",
+      "anlatim": "Şartnamenin ürün tablosu: her hücre kaynak belgesine bağlı."
     },
     {
       "id": "08-isi-haritasi",
       "tur": "panel",
       "kaynak": "08-isi-haritasi",
+      "duzen": "tek",
       "yer": "son",
       "hiz": 1.5,
       "kicker": "YENİLİKÇİ",
       "etiket": "Kapsama ısı haritası",
-      "anlatim": "Isı haritası kapsamayı gösterir, gizlemez."
+      "altetiket": "11 banka × 9 tür · dolu hücre üstünlük değil, ölçüm demektir",
+      "anlatim": "Isı haritası hangi kesişimde ölçebildiğimizi gösterir."
     },
     {
       "id": "09-avantajli",
       "tur": "panel",
       "kaynak": "09-avantajli",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 1.6,
+      "hiz": 1.5,
       "kicker": "ANA ÖZELLİK",
-      "etiket": "En Avantajlı · bileşik skor",
-      "anlatim": "En Avantajlı: bileşik skorla öndeki banka."
+      "etiket": "En Avantajlı",
+      "altetiket": "çok alanlı bileşik skor · ağırlıklar ve gerekçeleri açık",
+      "anlatim": "En Avantajlı çok alanlı bileşik skor verir, ağırlıkları açar."
     },
     {
-      "id": "10-banka",
+      "id": "10-banka-delta",
       "tur": "panel",
-      "kaynak": "10-banka",
+      "kaynaklar": [
+        "10-banka",
+        "11-delta"
+      ],
+      "duzen": "yan",
       "yer": "son",
-      "hiz": 1.8,
+      "hiz": 1.4,
       "kicker": "BANKA EKRANI",
-      "etiket": "Tek bankanın künyesi",
-      "anlatim": "Banka ekranı bir bankanın künyesini toplar."
-    },
-    {
-      "id": "11-delta",
-      "tur": "panel",
-      "kaynak": "11-delta",
-      "yer": "son",
-      "hiz": 1.6,
-      "kicker": "YENİLİKÇİ",
-      "etiket": "Banka içi delta",
-      "anlatim": "Delta ekranı sorar: bu banka nerede geride."
+      "etiket": "Banka künyesi  +  banka içi delta",
+      "altetiket": "Kuveyt Türk · 885 belge · 12 alan  ·|·  bende ne eksik, rakipte ne var",
+      "anlatim": "Banka ekranı künyeyi toplar; delta bende ne eksik, rakipte ne var der."
     },
     {
       "id": "12-celiski",
       "tur": "panel",
       "kaynak": "12-celiski",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 1.8,
+      "hiz": 1.6,
       "kicker": "YENİLİKÇİ",
       "etiket": "Çelişki tespiti",
-      "anlatim": "Çelişki tespiti belge içi tutarsızlığı yakalar."
+      "altetiket": "2.708 belgenin tamamı taranır · iki taraf da kaynağıyla · karar okuyanın",
+      "anlatim": "Çelişki tespiti belge içi tutarsızlığı iki tarafın kaynağıyla gösterir."
     },
     {
       "id": "13-chatbot",
       "tur": "panel",
       "kaynak": "13-chatbot",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 2.0,
+      "hiz": 1.7,
       "kicker": "ANA ÖZELLİK",
-      "etiket": "Chatbot · hibrit yönlendirme",
-      "anlatim": "Chatbot hibrit; cevaplar kaynak dipnotlu."
+      "etiket": "Chatbot",
+      "altetiket": "sayısal soru → yapısal sorgu · koşul sorusu → belge erişimi · kaynak dipnotlu",
+      "anlatim": "Chatbot sayısal soruyu yapısal sorguya, koşul sorusunu belge erişimine yönlendirir; cevaplar kaynak dipnotlu."
     },
     {
       "id": "14-operasyon",
       "tur": "panel",
       "kaynak": "14-operasyon",
+      "duzen": "cift",
       "yer": "son",
-      "hiz": 3.0,
+      "hiz": 2.4,
       "kicker": "OPERASYON",
       "etiket": "Tazeleme · günlük · ayarlar",
-      "anlatim": "Tazeleme, işlem günlüğü ve ayarlar ekranı."
+      "altetiket": "tek ağ yüzeyi · zaman damgalı günlük · kapalı uçlar açıkça kapalı",
+      "anlatim": "Tazeleme tek ağ yüzeyi; günlük zaman damgalı; ayarlar kapalıları yazar."
     },
     {
       "id": "15-vizyon",
       "tur": "kart",
       "kart": "vizyon-60",
-      "anlatim": "Sırada: açık uçlu alanları ölçmek, arayüzden banka eklemek, toplamayı zamanlamak."
+      "anlatim": "Sırada: açık uçlu alanları ölçmek, arayüzden banka eklemek."
     },
     {
       "id": "16-kapanis",
       "tur": "kart",
       "kart": "kapanis",
-      "anlatim": "Anatolia AI: ölçülen ve kaynaklı."
+      "anlatim": "Ölçülen, kaynaklı, yerel."
     }
   ]
 }

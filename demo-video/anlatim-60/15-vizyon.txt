@@ -1,1 +1,1 @@
-Sırada: açık uçlu alanları ölçmek, arayüzden banka eklemek, toplamayı zamanlamak.
+Sırada: açık uçlu alanları ölçmek, arayüzden banka eklemek.

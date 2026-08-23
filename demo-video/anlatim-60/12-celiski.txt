@@ -1,1 +1,1 @@
-Çelişki tespiti belge içi tutarsızlığı yakalar.
+Çelişki tespiti belge içi tutarsızlığı iki tarafın kaynağıyla gösterir.

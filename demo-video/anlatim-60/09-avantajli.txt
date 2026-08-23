@@ -1,1 +1,1 @@
-En Avantajlı: bileşik skorla öndeki banka.
+En Avantajlı çok alanlı bileşik skor verir, ağırlıkları açar.

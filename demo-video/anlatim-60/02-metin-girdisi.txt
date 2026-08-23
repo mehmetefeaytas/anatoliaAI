@@ -1,1 +1,1 @@
-Serbest metin kutusuna kampanya cümlesi giriyoruz.
+Serbest metin veriyoruz: kural çıkarır, boşluğu yerel model doldurur.

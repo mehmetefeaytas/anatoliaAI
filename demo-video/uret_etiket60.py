@@ -15,6 +15,14 @@ sayfasının bölüm başlığı. Şerit artık alt kenarda tam genişlikte duru
 montaj panel görüntüsünü şeridin ÜSTÜNDE kalacak kadar küçültüyor — yani
 hiçbir piksel örtülmüyor, videoya bir alt bant ekleniyor.
 
+## Neden iki satır
+
+Üç saniyelik bir sahnede anlatım bir cümleye ancak yetiyor ve o cümle
+özelliğin ADINI söyleyince künyesine yer kalmıyordu. İkinci satır bu boşluğu
+dolduruyor: ekranda kalan, okunabilen, sayı taşıyan bir künye — "12 alan ·
+güven skoru · üreten katman · karakter aralığı". İzleyici anlatımı dinlerken
+onu okuyor; iki kanal aynı özelliğin farklı yüzünü taşıyor.
+
 ## Neden ffmpeg drawtext değil
 
 drawtext'e Türkçe metin vermek font dosyası aramak demek ve tipografi
@@ -44,49 +52,61 @@ SABLON = """<!doctype html>
   body { display: block; }
   body::before { display: none; }
   /* Bant yüksekliği montajdaki pay ile birebir aynı olmak zorunda:
-   * montaj panel görüntüsünü 994 piksele indirip üste yaslıyor, kalan 86
+   * montaj panel görüntüsünü 963 piksele indirip üste yaslıyor, kalan 117
    * piksel bu bant. Biri değişirse öteki de değişmeli. */
   .serit {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    height: 86px;
+    height: 117px;
     background: #2b2f8f;
     color: #fff;
     display: flex;
     align-items: center;
-    gap: 26px;
-    padding: 0 64px;
+    gap: 28px;
+    padding: 0 56px;
   }
   .serit .kicker {
     font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 20px;
+    font-size: 19px;
     letter-spacing: .18em;
     color: #ffd9c2;
-    padding-right: 26px;
+    padding-right: 28px;
     border-right: 2px solid rgba(255, 217, 194, .45);
     white-space: nowrap;
   }
   .serit .ad {
-    font-size: 42px;
+    font-size: 40px;
     font-weight: 700;
     letter-spacing: -0.02em;
+    white-space: nowrap;
+    line-height: 1.15;
+  }
+  .serit .kunye {
+    font-family: "JetBrains Mono", ui-monospace, monospace;
+    font-size: 21px;
+    color: rgba(255, 255, 255, .78);
+    margin-top: 4px;
     white-space: nowrap;
   }
 </style></head>
 <body><div class="serit">
   <div class="kicker">@KICKER@</div>
-  <div class="ad">@ETIKET@</div>
+  <div>
+    <div class="ad">@ETIKET@</div>
+    <div class="kunye">@ALTETIKET@</div>
+  </div>
 </div></body></html>
 """
 
 
-def sablonu_doldur(css: str, kicker: str, etiket: str) -> str:
+def sablonu_doldur(css: str, kicker: str, etiket: str, altetiket: str) -> str:
     return (
         SABLON.replace("@CSS@", css)
         .replace("@KICKER@", kicker)
         .replace("@ETIKET@", etiket)
+        .replace("@ALTETIKET@", altetiket)
     )
 
 
@@ -102,7 +122,8 @@ async def main() -> None:
         for sahne in etiketli:
             html = ETIKET_DIZIN / f"{sahne['id']}.html"
             html.write_text(
-                sablonu_doldur(css, sahne.get("kicker", ""), sahne["etiket"]),
+                sablonu_doldur(css, sahne.get("kicker", ""), sahne["etiket"],
+                               sahne.get("altetiket", "")),
                 encoding="utf-8",
             )
             await sayfa.goto(html.resolve().as_uri())
