@@ -294,11 +294,40 @@ def olc_korpus_pdf() -> float:
     Bu iddia kapıya 2026-08-21'de eklendi: «758 PDF» manşeti aylarca hiçbir
     kapıya takılmadan bayatladı, çünkü PDF sayısını denetleyen iddia yoktu.
     Kapı dışında kalan sayı sessizce bayatlar — bu ölçer o dersin kaydıdır.
+
+    ## SIFIR BİR ÖLÇÜM DEĞİL, ÖLÇEMEMEDİR
+
+    PDF asılları `app/.gitignore` ile BİLEREK depo dışında (999 dosya,
+    ~356 MB). Ama `data/raw` dizininin kendisi depoda var: `!data/raw/*/*.html`
+    istisnası fixture'ları izliyor. Yani CI'da dizin VAR, PDF YOK.
+
+    İlk sürüm bu durumda `0.0` döndürüyordu ve kapı onu bir ÖLÇÜM sayıp
+    «ölçülen 0 · README 999 diyor» diye sapma yazıyordu. 23 Ağu 2026'da
+    main'i kırmızıya çeviren iki nedenden biri buydu — üstelik iddia
+    yanlış değildi, ölçüm ortamı onu doğrulayamıyordu.
+
+    Ayrım kapının kendi felsefesinin merkezinde: bu betik zaten «kirli
+    ağaçta üretilmiş rapor kanıt değildir» diyor. Aynı mantıkla, asılların
+    bulunmadığı bir çıkışta sayılan sıfır da kanıt değildir. Sıfır
+    görüldüğünde `KanitYok` atılır; `--kanit-eksigi-uyari` ile koşan CI
+    bunu uyarı sayar, teslim öncesi kapı (bayrak YOK) ise yine kırmızı verir
+    ve asıllar orada bulunur.
+
+    Gerçek bir gerileme kaçmaz: PDF'lerin bulunduğu ortamda ölçüm koşar ve
+    999'dan düşüş sapma olarak yakalanır. Kaybedilen tek senaryo «tam olarak
+    hepsi silindi» ve o da uyarı olarak görünür kalır.
     """
     kok = KOK / "data" / "raw"
     if not kok.exists():
         raise KanitYok(f"{kok} yok")
-    return float(len(list(kok.rglob("*.pdf"))))
+    sayi = len(list(kok.rglob("*.pdf")))
+    if sayi == 0:
+        raise KanitYok(
+            f"{kok} altında hiç PDF yok — asıllar `.gitignore` ile depo "
+            f"dışında (999 dosya, ~356 MB). Bu çıkışta iddia doğrulanamaz; "
+            f"sıfır bir ölçüm değildir. Asılları getirmek için: "
+            f"`python -m src.scraping.harvest` ya da yayın veri seti paketi.")
+    return float(sayi)
 
 
 def olc_gold_kayit(dosya: str) -> Callable[[], float]:

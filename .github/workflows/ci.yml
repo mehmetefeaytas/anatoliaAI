@@ -450,11 +450,23 @@ jobs:
         # Yapilandirma ve kapsam app/pyproject.toml'dan okunur.
         run: ruff check .
       # CLAUDE.md ile AGENTS.md elle senkron IKIZ dosyalardir; tek mesru fark
-      # klasor semasinda kendi adini yazan satirdir (su an 63). Sessiz ayrisma
-      # bu kapiyla yakalanir; satir numarasi kayarsa iki dosyada birlikte
-      # guncellenir.
+      # klasor semasinda kendi adini yazan satirdir. Sessiz ayrisma bu kapiyla
+      # yakalanir.
+      #
+      # `working-directory: .` ZORUNLU: bu workflow'un varsayilani `app` ve iki
+      # ikiz dosya depo KOKUNDE. Kapi eklendiginde bu gozden kacti, `app/`
+      # icinde kosup `sed: can't read AGENTS.md` ile 23 Agu 2026'da main'i
+      # kirmiziya cevirdi -- yani kapi eklendigi gunden beri BIR KEZ BILE
+      # yesil kosmamisti. Kirmizi bir kapi, olmayan bir kapiyla ayni seydir.
+      #
+      # Ayrica satir numarasi yerine ICERIK esleniyor: onceki hal `sed '63d'`
+      # ile 63. satiri siliyordu ve dosyanin basina tek satir eklendiginde
+      # kapi yanlis satiri elemeye baslardi. `grep -v '^CLAUDE.md '` kendi
+      # adini yazan satiri NEREDE olursa olsun eler; ikisi de tam olarak bir
+      # satir eler (dogrulandi) ve gercek bir ayrisma yakalanmaya devam eder.
       - name: CLAUDE.md - AGENTS.md ikizlik kapisi
-        run: diff <(sed '63d' CLAUDE.md) <(sed '63d' AGENTS.md)
+        working-directory: .
+        run: diff <(grep -v '^CLAUDE\.md ' CLAUDE.md) <(grep -v '^AGENTS\.md ' AGENTS.md)
 
   web:
     # Bu is sadece derliyordu: `npm run build` gecerse yesil yaniyordu.

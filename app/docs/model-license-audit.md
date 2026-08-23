@@ -272,10 +272,46 @@ pip download trafilatura==<pin> --no-deps -d /tmp/tf && \
 | LibreOffice Impress (sunum) | MPL-2.0 | ✅ ücretsiz, §8 uyumlu |
 | OBS Studio (video) | GPL-2.0 | ✅ araç, teslim edilen ürünün parçası değil |
 | Shotcut / Kdenlive (kurgu) | GPL | ✅ aynı gerekçe |
+| **`edge-tts`** (demo videosu anlatım sesi) | **LGPL-3.0-or-later** (+1 dosya MIT) | ✅ araç — `.venv`'de **DURMAZ**, bkz. aşağıdaki not |
+| **`ffmpeg`** (montaj) | GPL/LGPL (derlemeye göre) | ✅ aynı gerekçe, harici ikili |
+| `python-pptx` (sunum PPTX) | MIT | ✅ yardımcı ortamda: `~/.cache/anatolia-ai/sunum-venv` |
+| `playwright` (ekran/PDF) | Apache-2.0 | ✅ proje `.venv`'inde, envanterde |
 
 **Not:** GPL lisanslı *araçlar* (OBS, Kdenlive) sorun değildir — bunlar teslim
 edilen yazılımın parçası değil, onu üretmekte kullanılan editörlerdir. Sorun
 yaratan, GPL kodun teslim edilen ürüne **linklenmesi**dir (trafilatura vakası).
+
+### `edge-tts` — beyan, iki gerileme ve kapı
+
+5. tur On-Prem jürisi haklı bir eksik buldu: bu araç kullanılıyordu ama
+**bu tabloda beyan edilmemişti**. Beyan artık yukarıda; altındaki üç şey de
+kayda geçiyor.
+
+**Neden `.venv`'de durmuyor.** `make sbom` KURULU ortamı tarar. `edge-tts`
+`.venv`'e girdiğinde envanter 96'dan 105'e çıkıyor ve lisans kapısı düşüyor:
+kendisi LGPL-3.0 kovasında, geçişli bağımlılığı `multidict`'in lisans alanı
+ise `cyclonedx-py` tarafından okunamıyor (gerçekte Apache-2.0). Yani sorun
+lisansın kendisi değil — araç olduğu için §3'ün gerekçesi ona da uyar —
+**envanteri kirletmesi**dir.
+
+**İki kez oldu.** 16 Ağu 2026'da dokuz paket (`edge-tts` + `aiohttp` ailesi +
+`tabulate`) kaldırıldı, 96'ya dönüldü ve karar `app/README.md`'ye yazıldı.
+23 Ağu 2026'da **aynı dokuz paket geri geldi** (1 dakikalık videonun
+seslendirmesi üretilirken) ve taze SBOM'la kapı yine düştü. Karar duruyordu
+ama onu **koruyan bir kapı yoktu** — yalnız bir belge vardı.
+
+**Kapı artık var:** `make sbom-sapma` (`scripts/sbom_sapma.py`, 10 test).
+Kurulu ortam ile commit'li `docs/sbom.json` ayrışırsa çıkış kodu 1 verir ve
+iki meşru çözümü adıyla söyler: gerçek bağımlılıksa `requirements.txt`,
+tek seferlik araçsa yardımcı ortam (emsal: `python-pptx`).
+
+**On-prem sınırı, lisanstan bağımsız.** `edge-tts` Microsoft'un Edge
+okuma-sesi **bulut** servisine çıkar. Teslim edilen yolun içine girmez ve
+girmediği ölçülüyor (`tam_yigin_agsiz.sh`: izole ağ, negatif kontrol 4/4
+engelli). Buluta giden tek şey **anlatım metnidir**
+(`demo-video/anlatim*/*.txt`, depoda açıkça duruyor); hiçbir banka verisi,
+korpus metni ya da gold kaydı gönderilmez. Ses dosyaları bir kez üretilip
+dosya olarak saklanıyor; ürün çalışırken hiçbir TTS çağrısı yapılmaz.
 
 ---
 

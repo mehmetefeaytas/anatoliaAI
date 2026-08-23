@@ -45,6 +45,7 @@ help:
 	@echo "  make sbom           CycloneDX SBOM üretir → docs/sbom.json"
 	@echo "  make lisans-kapisi  İzin listesi dışı lisans varsa çıkış kodu 1 verir"
 	@echo "  make gold-butunluk   Gold sha256 tanığı + eşik künyesi sapmışsa çıkış kodu 1"
+	@echo "  make sbom-sapma     Kurulu ortam ile commit'li SBOM ayrıştıysa çıkış kodu 1"
 	@echo "  make veri-seti      Yayın paketini üretir → $(VERI_SETI)"
 	@echo "  make veri-seti-yukle  Ne yükleneceğini LİSTELER (kuru koşu, ağa çıkmaz)"
 	@echo "  make test           Test paketini koşar"
@@ -87,6 +88,16 @@ lisans-kapisi:
 # Aradaki fark jüri karşısında ölçüm anlatısının tamamına mal olur.
 gold-butunluk:
 	@$(PY) -m scripts.gold_butunluk
+
+## sbom-sapma: kurulu ortam ile commit'li SBOM birebir tutuyor mu
+# `make lisans-kapisi` BİLEREK commit'li `docs/sbom.json`u okur (bağımlılıksız
+# CI işinde de koşsun diye) — ama o SBOM'un TAZE olduğunu kimse denetlemiyordu.
+# Boşluk iki kez ısırdı: 16 Ağu ve 23 Ağu 2026'da demo videosu seslendirmesi
+# `.venv`e dokuz paket soktu (96 -> 105) ve taze SBOM'la lisans kapısı DÜŞTÜ.
+# İlk seferinde paketler kaldırıldı ama kararı KORUYAN kapı yoktu; bu hedef o
+# kapıdır. Ortam projenin `.venv`i değilse atlar.
+sbom-sapma:
+	@$(PY) -m scripts.sbom_sapma
 
 ## veri-seti: yayına hazır veri seti paketini üretir (JSONL + sızıntısız bölme + kart)
 # Şartname s.18 veri setini ZORUNLU teslim kalemi sayar. Paket türetilmiştir:

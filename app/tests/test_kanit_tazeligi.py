@@ -533,3 +533,43 @@ class TestKodTazeligi(unittest.TestCase):
         head = sp.run(["git", "-C", str(K.DEPO), "rev-parse", "HEAD"],
                       capture_output=True, text=True, check=True).stdout.strip()
         self.assertIsNone(K._kod_degisti_mi(head))
+
+
+class TestKorpusPdfOlcememe(unittest.TestCase):
+    """PDF asılları depo dışındayken sıfır SAYILMAZ, KanitYok atılır.
+
+    23 Ağu 2026'da `main` iki nedenden kırmızıydı; biri buydu. `data/raw`
+    dizini CI'da VAR (`!data/raw/*/*.html` istisnası fixture'ları izliyor)
+    ama 999 PDF aslı `.gitignore` ile depo dışında. Ölçer o durumda `0.0`
+    döndürüyordu, kapı da bunu ölçüm sayıp «ölçülen 0 · README 999 diyor»
+    diye SAPMA yazıyordu — oysa iddia yanlış değildi, ortam onu
+    doğrulayamıyordu. İki hâl ayrı ayrı kilitleniyor ki ayrım geri gitmesin.
+    """
+
+    def _kok(self, tmp: str, *, pdf: int = 0) -> Path:
+        kok = Path(tmp)
+        raw = kok / "data" / "raw" / "albaraka"
+        raw.mkdir(parents=True)
+        # İzlenen fixture: dizin CI'da bu yüzden var.
+        (raw / "konut.html").write_text("<html></html>", encoding="utf-8")
+        for i in range(pdf):
+            (raw / f"tarife-{i}.pdf").write_bytes(b"%PDF-1.4")
+        return kok
+
+    def test_pdf_yoksa_KanitYok_atilir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(K, "KOK", self._kok(tmp)):
+                with self.assertRaises(K.KanitYok) as ctx:
+                    K.olc_korpus_pdf()
+        self.assertIn("hiç PDF yok", str(ctx.exception))
+
+    def test_pdf_varsa_sayilir(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(K, "KOK", self._kok(tmp, pdf=3)):
+                self.assertEqual(K.olc_korpus_pdf(), 3.0)
+
+    def test_data_raw_hic_yoksa_da_KanitYok(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            with mock.patch.object(K, "KOK", Path(tmp)):
+                with self.assertRaises(K.KanitYok):
+                    K.olc_korpus_pdf()
