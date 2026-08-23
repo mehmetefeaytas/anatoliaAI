@@ -62,7 +62,7 @@ pypdf==6.14.2               # BSD-3-Clause — PDF ücret tarifeleri + ürün bi
 # --- NLP / model (tamamlayıcı) ---
 # KULLANILMIYOR — 3 katmanlı mimarinin "tamamlayıcı NER" katmanı henüz yok.
 # gliner>=0.2            # Apache-2.0 (tamamlayıcı NER)
-transformers==5.14.1       # Apache-2.0 (BERTurk sınıflandırıcı)
+transformers==5.15.1       # Apache-2.0 (BERTurk sınıflandırıcı)
 # KULLANILIYOR (31 Tem 2026'dan beri): src/rag/embedding.BgeM3Embedder.
 # bge-m3 ağırlıkları MIT (docs/model-license-audit.md §4 ✅).
 # Ağırlık yoksa kod AÇIK hata verir ve sistem KeywordRetriever ile çalışır —
