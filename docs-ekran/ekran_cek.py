@@ -161,7 +161,16 @@ def main() -> int:
         cek(pg, "banka-ici-delta", yuk=1400)
         cek(pg, "delta-ekseni", capa=["h3:has-text('ALAN ALAN DELTA')"], yuk=1250)
 
-        # ──────────────────────────────── 6. Çelişki Tespiti
+        # ─────────────────────────── 6. Katılma Oranları
+        # Panel sırasıyla AYNI yerde duruyor (page.tsx: delta ile çelişki
+        # arasında). Kare sırası panel sırasından ayrılırsa PDF'i okuyan
+        # jüri ekranı ekranda bulamaz.
+        sekme(pg, "Katılma Oranları", 4500)
+        cek(pg, "katilma-oranlari",
+            capa=["h2:has-text('Katılma Hesabı Oranları')", "#katilma-baslik"],
+            yuk=1400)
+
+        # ──────────────────────────────── 7. Çelişki Tespiti
         sekme(pg, "Çelişki Tespiti", 5000)
         cek(pg, "celiski-tespiti", yuk=1400)
         # Kartın iki alıntısı <details> içinde katlı duruyor; kapalı hâli
@@ -215,9 +224,17 @@ def main() -> int:
         # kalmıştı.
         dene("çıkarımı çalıştır",
              lambda: pg.get_by_role("button", name="Çıkarımı çalıştır").click())
-        pg.wait_for_timeout(30000)
-        cek(pg, "zor-vaka-sonuc", capa=["h3:has-text('Model çıktısı')", "h3:has-text('MODEL ÇIKTISI')",
-                  "h2:has-text('Sonuç')", "h3:has-text('Sonuç')"], yuk=1400)
+        # 30 sn yetmiyordu: düğme tıklanıyor ama «Model çıktısı» başlığı
+        # gelmeden kare alınıyor ve `zor-vaka-sonuc` sessizce düşüyordu
+        # (ölçüldü 2026-08-24, iki ardışık koşumda da). CPU'da Ollama'nın
+        # kısıtlı JSON üretimi bu vakada 30 sn'yi aşıyor.
+        pg.wait_for_timeout(90000)
+        # Çapa YANLIŞ ETİKETTEYDİ: bileşen başlığı `<h2>Model çıktısı ↔ altın
+        # küme</h2>` (ExtractLive.tsx:407), betik ise `h3` arıyordu. Dört
+        # adayın dördü de tutmuyordu ve kare iki aydır sessizce düşüyordu —
+        # `cek()` hatayı yutup SIRA'yı geri aldığı için koşum yeşil görünüyor.
+        cek(pg, "zor-vaka-sonuc", capa=["h2:has-text('Model çıktısı')",
+                  "h2:has-text('Sonuç')", "h3:has-text('Model çıktısı')"], yuk=1400)
         cek(pg, "zor-vaka-altin-kume", capa=["h3:has-text('Altın küme')", "h3:has-text('ALTIN KÜME')",
                   "text=Altın küme"], yuk=1350)
 

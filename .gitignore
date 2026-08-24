@@ -37,6 +37,9 @@ raw/**/*.pdf
 # aynı kanıtı iki kez, 36 MB olarak taşımak olurdu. PNG'ler `ekran_cek.py`
 # ile yeniden üretilebilir; PDF ise teslim edilen biçimdir.
 docs-ekran/ss/
+# `ekran_cek.py` koşumunun kendi kaydı — hangi karelerin alındığı.
+# `ss/` gibi türetilmiş: manifest zaten teslim edilen listedir.
+docs-ekran/cekilen.json
 /*.png
 
 # raw/ altındaki sembolik linkler MAKİNEYE ÖZELDİR, repoya girmez.
