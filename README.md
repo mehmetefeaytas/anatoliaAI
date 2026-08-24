@@ -213,7 +213,7 @@ karşılaştırıldığında 36 sayısal alanın hiçbirinde sapma yok.
 | API kimlik doğrulama | `X-API-Key` / Bearer · tam ve salt-okuma rolü · **yeni bağımlılık 0** (harici JWKS on-prem'i çökertirdi) | `python -m pytest tests/test_api_kimlik_dogrulama.py` |
 | Test | **3.948** toplanan · 3.895 geçti · 53 atlandı (hepsi Postgres/pgvector — CI'da koşar) · 0 başarısız · 1.860 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-24 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
-| Kanıt-tazeliği kapısı | **16 iddia · 0 sapma · 0 kanıt eksik** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
+| Kanıt-tazeliği kapısı | **21 iddia · 0 sapma · 0 kanıt eksik** (21'incisi kapının KENDİ sayısı) — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 | Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
 
 <details>

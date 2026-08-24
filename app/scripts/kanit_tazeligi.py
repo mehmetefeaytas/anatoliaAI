@@ -806,6 +806,23 @@ def olc_katilma_guncel_kayit() -> float:
     return float(toplam)
 
 
+def olc_iddia_sayisi() -> float:
+    """Denetlenen iddia sayısı — kapının KENDİ sayısı.
+
+    Bu satırın hikâyesi kapının tezini kanıtlıyor: README «16 iddia» diyordu,
+    aynı gün liste 20'ye çıktı ve hiçbir şey uyarmadı (ölçüldü 2026-08-24).
+    Yayımlanan her sayı bir iddiaya bağlanmalı kuralı, kapının kendi
+    künyesini de kapsıyor.
+
+    Sayı KENDİSİNİ de içerir ve bu sabit noktadır: iddia eklendiği an sayı
+    kayar, kapı sapma verir, README düzeltilir. İstenen davranış tam bu.
+
+    Özyineleme yok: ölçer `denetle()` içinden, `iddialar()` listesi ZATEN
+    kurulduktan sonra çağrılıyor.
+    """
+    return float(len(iddialar()))
+
+
 def iddialar() -> list[Iddia]:
     """Denetlenen sayıların tek doğruluk kaynağı.
 
@@ -1051,6 +1068,15 @@ def iddialar() -> list[Iddia]:
                 ("README.md", r"\*\*([\d.]+) cari kayıt\*\*"),
             ),
             olcer=olc_katilma_guncel_kayit,
+            tolerans=0.5,
+        ),
+        Iddia(
+            ad="iddia_sayisi",
+            aciklama="Kapının denetlediği iddia sayısı (kendi künyesi)",
+            desenler=(
+                ("README.md", r"\*\*([\d.]+) iddia · 0 sapma"),
+            ),
+            olcer=olc_iddia_sayisi,
             tolerans=0.5,
         ),
     ]
