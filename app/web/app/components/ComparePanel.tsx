@@ -148,6 +148,7 @@ import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
 import FieldChips from "./FieldChips";
 import GrafikIskeleti from "./grafik/GrafikIskeleti";
+import KatilmaPanel from "./KatilmaPanel";
 import KapsamaCetveli, {
   kapsamaOzeti,
   satirHali,
@@ -367,7 +368,17 @@ export default function ComparePanel({
   // Anahtar ayrı bir SEKME değil çünkü ikisi aynı soruyu iki biçimde
   // cevaplıyor: «bankalar bu üründe ne veriyor». Ayrı sekme, kullanıcıya
   // bunları iki ayrı araç olarak sunardı.
-  const [gorunum, setGorunum] = useState<"alan" | "tablo">("alan");
+  //
+  // ÜÇÜNCÜ GÖRÜNÜM — katılma hesabı oranları (2026-08-24).
+  //
+  // Eskiden ayrı bir sekmeydi. Aynı gerekçe onu da buraya taşıdı: sorduğu
+  // soru bu panelinkiyle AYNI («hangi banka daha iyi veriyor»), yalnız
+  // kaynağı farklı — TKBB'nin haftalık yayını, kampanya korpusu değil.
+  // Ayrı sekme, kullanıcıya iki ayrı araç varmış izlenimi veriyordu.
+  //
+  // Kaynak farkı GİZLENMİYOR, seçeneğin adında yazıyor. İki büyüklüğün
+  // (getiri ↔ pay) karışmaması ise panelin kendi işi; ayrımı o basıyor.
+  const [gorunum, setGorunum] = useState<"alan" | "tablo" | "katilma">("alan");
 
   const gorunumSecici = (
     <div className="row-tight" role="group" aria-label="Görünüm">
@@ -392,8 +403,27 @@ export default function ComparePanel({
         />
         <span>Ürün tablosu (şartname s.12)</span>
       </label>
+      <label className="row-tight" htmlFor="gorunum-katilma">
+        <input
+          id="gorunum-katilma"
+          type="radio"
+          name="kiyas-gorunum"
+          checked={gorunum === "katilma"}
+          onChange={() => setGorunum("katilma")}
+        />
+        <span>Katılma hesabı oranları (TKBB)</span>
+      </label>
     </div>
   );
+
+  if (gorunum === "katilma") {
+    return (
+      <div className="stack">
+        {gorunumSecici}
+        <KatilmaPanel />
+      </div>
+    );
+  }
 
   if (gorunum === "tablo") {
     return (

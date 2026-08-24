@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import pathlib
+import subprocess
 import sys
 
 from playwright.sync_api import Page, sync_playwright
@@ -260,9 +261,30 @@ def main() -> int:
         sekme(pg, "Veri Tazeleme", 3500)
         cek(pg, "veri-tazeleme", yuk=1400)
         cek(pg, "toplama-taahhudu", capa=["h3:has-text('TOPLAMA TAAHH')"], yuk=1100)
+        # «Şimdi tazele» YALNIZ ön izlemeyi açar; o uç ağa çıkmaz
+        # (`routers/isler.py::refresh_preview`). TEHLİKE ön izlemenin KENDİSİ
+        # değil, açık kalmasıdır: kip pencere ekranı kaplarken bir sonraki
+        # `sekme()` tıklaması onay düğmesine düşebiliyor ve GERÇEK tazeleme
+        # başlıyor.
+        #
+        # Ölçülmüş hasar (2026-08-24, bu betiğin koşumu): iki `POST /refresh`
+        # ateşlendi (adil-katilim 19:39:07, vakif-katilim 19:39:45) ve 72
+        # ham dosya yeniden yazıldı. Yalnız `scraped_at` değişmedi —
+        # `expiry_stamp`, `campaign_status: expired`, `reextracted_at` ve
+        # `extraction_result` alanları KAYBOLDU. O damgalar çelişki
+        # tespitinin 20 bulgusundan 17'sini besliyor; yani ekran görüntüsü
+        # almak, kanıtın kendisini siliyordu. `git checkout` ile geri alındı.
+        #
+        # Bu yüzden kare alındıktan HEMEN SONRA pencere kapatılıyor.
         dene("şimdi tazele", lambda: pg.get_by_role("button", name="Şimdi tazele").nth(1).click())
         pg.wait_for_timeout(6000)
         cek(pg, "tazeleme-onizleme", capa=["h2:has-text('Başlatmadan önce')", "h3:has-text('Başlatmadan önce')"], yuk=1200)
+        # Kip pencereyi kapat — sonraki tıklama onay düğmesine düşmesin.
+        pg.keyboard.press("Escape")
+        pg.wait_for_timeout(1200)
+        dene("ön izlemeyi kapat",
+             lambda: pg.get_by_role("button", name="Vazgeç").first.click())
+        pg.wait_for_timeout(800)
 
         # ──────────────────────────────────────── 11. Ayarlar
         sekme(pg, "Ayarlar", 3500)
@@ -284,7 +306,38 @@ def main() -> int:
     (CIKTI.parent / "cekilen.json").write_text(
         json.dumps(KAYIT, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"\n{len(KAYIT)} kare alındı")
+    _ham_veri_bozulmadi_mi()
     return 0
+
+
+def _ham_veri_bozulmadi_mi() -> None:
+    """Koşum ham arşivi değiştirdiyse GÜRÜLTÜLÜ uyarır.
+
+    Ağ emniyeti: panelin Veri Tazeleme sekmesi canlı bir yeniden toplama
+    başlatabiliyor ve o toplama `expiry_stamp` gibi provenance alanlarını
+    siliyor (ayrıntı yukarıdaki blok yorumunda). Kip pencereyi kapatmak bu
+    yolu kapatıyor ama BAŞKA bir yol açılırsa sessiz kalmasın: kare almak,
+    kanıtı değiştirmemelidir.
+
+    Kontrol `git`e dayanıyor ve `git` yoksa sessizce atlanıyor — betiğin
+    kendisi bir kapı değil, uyarıcıdır.
+    """
+    kok = pathlib.Path(__file__).resolve().parents[1]
+    try:
+        cikti = subprocess.run(
+            ["git", "-C", str(kok), "status", "--porcelain", "app/data/raw"],
+            capture_output=True, text=True, timeout=30).stdout.strip()
+    except (OSError, subprocess.SubprocessError):    # pragma: no cover
+        return
+    if not cikti:
+        return
+    n = len(cikti.splitlines())
+    print(f"\n  ⚠️  UYARI: bu koşum {n} ham veri dosyasını DEĞİŞTİRDİ.\n"
+          f"      Ekran görüntüsü almak korpusu değiştirmemeli. Muhtemel sebep:\n"
+          f"      panelde canlı bir tazeleme tetiklendi ve provenance alanları\n"
+          f"      (expiry_stamp, campaign_status) silindi.\n"
+          f"      Geri almak için:  git -C {kok} checkout -- app/data/raw",
+          file=sys.stderr)
 
 
 if __name__ == "__main__":

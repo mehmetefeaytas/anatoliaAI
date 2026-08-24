@@ -1,0 +1,249 @@
+{
+ "surum": 1,
+ "korpus_imzasi": "v1:2708:2026-08-20T19:01:27+00:00",
+ "bulgu_sayisi": 20,
+ "bulgular": [
+  {
+   "bank": "kuveyt-turk",
+   "bank_name": "Kuveyt Türk",
+   "campaign_id": 643,
+   "campaign_type": "Yeni Müşteri",
+   "source_url": "https://www.kuveytturk.com.tr/hakkimizda/kuveyt-turk-hakkinda/bizden-haberler/kuveyt-turkten-genclere-biletcom-kampanyasi",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-12-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "kuveyt-turk",
+   "bank_name": "Kuveyt Türk",
+   "campaign_id": 801,
+   "campaign_type": "Taşıt Finansmanı",
+   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/togg-finansmani",
+   "kind": "celisen_tutar_bandi",
+   "detail": "Aynı sayfada %0 oranı için çakışan ama aynı olmayan iki tutar bandı yayımlanmış: 7.500.001 TL ve üzeri ve 7.000.001 TL ve üzeri.",
+   "fields": [
+    "finansman_tutari",
+    "kar_payi_orani"
+   ]
+  },
+  {
+   "bank": "kuveyt-turk",
+   "bank_name": "Kuveyt Türk",
+   "campaign_id": 801,
+   "campaign_type": "Taşıt Finansmanı",
+   "source_url": "https://www.kuveytturk.com.tr/kendim-icin/finansmanlar/arac-finansmanlari/togg-finansmani",
+   "kind": "celisen_tutar_bandi",
+   "detail": "Aynı sayfada %20 oranı için çakışan ama aynı olmayan iki tutar bandı yayımlanmış: 6.500.001–7.500.000 TL ve 6.000.001–7.000.000 TL.",
+   "fields": [
+    "finansman_tutari",
+    "kar_payi_orani"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1040,
+   "campaign_type": null,
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/kahve-keyfiniz-albarakadan",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-06-30 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1057,
+   "campaign_type": "Kart",
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-konaklama-harcamaniza-5-indirim-kazandiriyor",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-01-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1065,
+   "campaign_type": null,
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/arzumda-25-indirim",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-12-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1077,
+   "campaign_type": "Kart",
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/eflatunlulara-tum-banka-atmleri-ucretsiz",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-07-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1092,
+   "campaign_type": null,
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/madame-cocoda-350-tl-indirim",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-12-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1095,
+   "campaign_type": "Kart",
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/mtv-odemelerinize-vade-farksiz-3-taksit-10",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-07-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1102,
+   "campaign_type": null,
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/pocket-esimden-35-indirim",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-12-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1103,
+   "campaign_type": null,
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/roamy-esimden-50-indirim",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-12-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1106,
+   "campaign_type": "Kart",
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/saglik-harcamalarina-vade-farksiz-6-taksit-kampanyasi-1_1",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-07-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1117,
+   "campaign_type": "Kart",
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/temmuz-ayina-ozel-fatura-kampanyasi",
+   "kind": "celisen_kampanya_bitisi",
+   "detail": "Kampanyanın geçerlilik bitişi iki farklı tarihle veriliyor: 2026-07-31 ve 2027-07-31.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "albaraka",
+   "bank_name": "Albaraka Türk",
+   "campaign_id": 1119,
+   "campaign_type": "Kart",
+   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/trendlilere-tum-banka-atmleri-ucretsiz",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-07-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "turkiye-emlak-katilim",
+   "bank_name": "Türkiye Emlak Katılım",
+   "campaign_id": 2106,
+   "campaign_type": "Taşıt Finansmanı",
+   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/mtv-odemenizi-emlak-katilim-mobilden-yapin-500-tlye-varan-nakit-iade-kazanin",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-07-31 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "tom-katilim",
+   "bank_name": "T.O.M. Katılım",
+   "campaign_id": 2374,
+   "campaign_type": "Kart",
+   "source_url": "https://tombankhadi.com/kampanyalar/hadi-black-kredi-karti-ile-altin-birikimine-gumus-hediye",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-08-18 tarihinde bitmiş görünüyor ancak sayfa 2026-08-20 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "tom-katilim",
+   "bank_name": "T.O.M. Katılım",
+   "campaign_id": 2402,
+   "campaign_type": "Kart",
+   "source_url": "https://tombankhadi.com/kampanyalar/kahvelerin-hadi-kartindan",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-02-16 tarihinde bitmiş görünüyor ancak sayfa 2026-08-20 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "tom-katilim",
+   "bank_name": "T.O.M. Katılım",
+   "campaign_id": 2445,
+   "campaign_type": "Kart",
+   "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/hadi-black-kredi-karti-ile-altin-birikimine-gumus-hediye",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-08-18 tarihinde bitmiş görünüyor ancak sayfa 2026-08-20 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "tom-katilim",
+   "bank_name": "T.O.M. Katılım",
+   "campaign_id": 2463,
+   "campaign_type": "Kart",
+   "source_url": "https://tombankhadi.com/cok-kazananlar-kulubu-kampanya/kahvelerin-hadi-kartindan",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2025-02-16 tarihinde bitmiş görünüyor ancak sayfa 2026-08-20 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  },
+  {
+   "bank": "dunya-katilim",
+   "bank_name": "Dünya Katılım",
+   "campaign_id": 2633,
+   "campaign_type": "Kart",
+   "source_url": "https://dunyakatilim.com.tr/kampanyalar/tod-paraf",
+   "kind": "suresi_dolmus_kampanya",
+   "detail": "Kampanya 2026-01-29 tarihinde bitmiş görünüyor ancak sayfa 2026-08-03 itibarıyla yayında ve süresinin dolduğunu belirtmiyor.",
+   "fields": [
+    "kampanya_suresi"
+   ]
+  }
+ ]
+}

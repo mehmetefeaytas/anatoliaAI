@@ -220,15 +220,65 @@ def _segment_uyarisi(bankalar: set) -> Optional[str]:
         "segment adıyla da sorabilirsiniz.")
 
 
+#: Ürüne bağlanmadan, KURUM düzeyinde sorulmuş oran soruları.
+#:
+#: Ölçülmüş kusur (kullanıcı raporu 2026-08-24): *"katılım bankalarındaki kâr
+#: payı oranı ne kadar"* RAG'a düşüyordu ve uzak model kaynaksız, belirsiz bir
+#: paragraf üretiyordu ("...kesin bir değeri vermek mümkün değil") — oysa
+#: elimizde 9 bankanın TKBB oranı DURUYOR. Hesap izi zorunluluğu bu soruyu
+#: dışarıda bırakıyordu, çünkü soruda "hesap" sözcüğü hiç geçmiyor.
+_KURUM_IZI = re.compile(
+    r"katıl(?:ım|im)\s+bank\w*|katilim\s+bank\w*|"
+    r"\bhangi\s+katıl(?:ım|im)\s+bank\w*",
+    re.IGNORECASE)
+
+#: Soru bir ÜRÜNE bağlanmışsa kurum yolu KAPANIR.
+#:
+#: Ayrım şart: "katılım bankalarındaki kâr payı oranı" katılma hesabının
+#: getirisini sorar; "katılım bankalarında konut finansmanı kâr payı oranı"
+#: ise kampanya korpusundaki `kar_payi_orani` alanını sorar ve yapısal sorgu
+#: yoluna gitmek zorundadır. İkisi FARKLI büyüklüklerdir — biri kazandığınız,
+#: öteki ödediğiniz orandır — ve tek tabloda karışmaları kıyası anlamsız kılar.
+_URUN_IZI = re.compile(
+    r"\bkonut\b|\btaşıt\b|\btasit\b|\bihtiyaç\b|\bihtiyac\b|"
+    r"\bfinansman\w*|\bkredi\w*|\bkart\w*|\bkampanya\w*|"
+    r"\bpuan\w*|\bödül\w*|\bodul\w*|\bmasraf\w*|\btahsis\b|"
+    r"\btaksit\w*|\bindirim\w*|\balışveriş\b|\balisveris\b",
+    re.IGNORECASE)
+
 def katilma_sorusu_mu(soru: Optional[str]) -> bool:
     """Bu soru katılma hesabı ORANI mı istiyor?
 
-    İki koşul birlikte: hesap izi VAR ve oran izi VAR. Hesap izi olmadan
-    finansman ürünlerinin oran soruları bu yola düşerdi.
+    Oran izi HER İKİ yolda da zorunlu. Kalan koşul iki biçimden biri:
+
+    1. **Hesap izi** — "katılma hesabı", "vadeli hesap", "katılma oranı".
+       Bu yol dar ve kesin.
+    2. **Kurum izi + ürün izi YOK** — "katılım bankalarındaki kâr payı oranı".
+       Soru bir ürüne bağlanmadığı sürece kurum düzeyinde sorulan oran,
+       katılma hesabının getirisidir. Ürün adı geçtiği an bu yol kapanır ve
+       soru yapısal sorguya gider; ayrımın gerekçesi `_URUN_IZI`'nde.
+
+    İkinci yol olmadan elimizdeki 9 bankalık TKBB verisi görünmez kalıyor ve
+    soru RAG'a düşüp kaynaksız bir paragrafla cevaplanıyordu.
     """
     if not soru or not soru.strip():
         return False
-    return bool(_HESAP_IZI.search(soru)) and bool(_ORAN_IZI.search(soru))
+    if not _ORAN_IZI.search(soru):
+        return False
+    if _HESAP_IZI.search(soru):
+        return True
+    return bool(_KURUM_IZI.search(soru)) and not _URUN_IZI.search(soru)
+
+
+def kurum_yolundan_mi(soru: Optional[str]) -> bool:
+    """Soru DAR hesap izi olmadan, yalnız kurum izinden mi geldi?
+
+    Cevaba bir ayrım notu eklemek için: kurum yolundan gelen soru
+    belirsizdir ve kullanıcının hangi oranı sorduğunu SÖYLEMEK gerekir.
+    """
+    if not soru or not katilma_sorusu_mu(soru):
+        return False
+    return not _HESAP_IZI.search(soru)
 
 
 def _buyukluk_sec(soru: str) -> str:
@@ -425,6 +475,22 @@ def katilma_cevabi(soru: str, *,
         "hesabında getiri garanti edilemez ve anapara da güvence altında "
         "değildir (katılım bankacılığının kâr-zarar ortaklığı esası).",
     ]
+    # AYRIM NOTU — soru KURUM düzeyinde geldiyse.
+    #
+    # "Katılım bankalarındaki kâr payı oranı" iki şeyi birden sorabilir:
+    # katılma hesabının getirisi (yukarıdaki tablo) ya da bir finansman
+    # ürününün oranı. İkisi ters yönlü büyüklüktür — biri kazandığınız, öteki
+    # ödediğiniz. Hangisini cevapladığımızı SÖYLEMEDEN tablo basmak,
+    # kullanıcıyı yanlış okumaya bırakır.
+    if kurum_yolundan_mi(soru):
+        satirlar += [
+            "",
+            "Not: bu tablo **katılma hesabının** oranıdır — paranızı "
+            "yatırdığınızda kazandığınız oran. Bir finansman ürününün "
+            "(konut, taşıt, ihtiyaç) kâr payı oranını soruyorsanız ürün "
+            "adını yazın; o oran kampanya belgelerinden gelir ve ayrı "
+            "sıralanır.",
+        ]
     # SEGMENT UYARISI: merkezî veri tek değer taşıyor, banka segment bazında
     # farklı oran uyguluyor. Uyarı olmadan cevap, küçük bakiyeli kullanıcıya
     # erişemeyeceği bir oranı vaat ediyordu.

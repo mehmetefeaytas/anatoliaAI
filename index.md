@@ -98,6 +98,9 @@ Son güncelleme: 2026-08-21.
 - [[merkezi-veri-segment-ayrimini-gizliyor]] — TKBB tek oran, banka beş oran (Klasik %85 vs merkezî %92)
 - [[tcmb-sozlugu-terim-boslugunu-kapatmiyor]] — 314 terim ölçüldü, 'Finansman' yok, %22'si yasak kök taşıyor
 - [[evren-celiski-tespitinde-katki-vermedi]] — 230 belgede 0 bulgu; yol ölçülerek kapatıldı
+- [[celiski-tespiti-yavasti-ve-500-donuyordu]] — soğuk tarama 47,2 sn ölçüldü; artefaktla 0,001 sn'ye indi
+- [[ekran-cekimi-ham-veriyi-yeniden-topladi]] — kare almak canlı tazeleme başlattı, `expiry_stamp` damgaları silindi
+- [[banka-sayfasi-paydaya-sozlesme-katiyordu]] — «93 belge · %15 kapsama» yanlış evrenden; 42'si sözleşmeydi
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller
 - [[teknik-cozum-mimarisi]] — uçtan uca çözüm hattı

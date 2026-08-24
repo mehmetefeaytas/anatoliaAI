@@ -2,6 +2,47 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-24] fix | panel-dort-ariza
+
+Kullanıcı raporu dört arıza bildirdi; dördü de ölçüldü ve düzeltildi.
+
+**1. Chatbot yanlış yola gidiyordu.** *"Katılım bankalarındaki kâr payı oranı
+ne kadar"* RAG'a düşüyor ve uzak model kaynaksız bir paragraf üretiyordu
+(*"kesin bir değeri vermek mümkün değil"*), oysa 9 bankanın TKBB oranı elimizde
+duruyordu. `katilma_sorusu_mu` hesap izini ZORUNLU tutuyordu; soruda "hesap"
+sözcüğü hiç geçmiyor. Kurum yolu eklendi (`_KURUM_IZI` + ürün izi YOKSA) ve
+cevaba ayrım notu kondu: bu tablo katılma hesabının oranı, finansman ürününün
+değil. Cevap 15,5 sn'lik belirsiz paragraftan anlık kaynaklı tabloya döndü.
+
+**2. Çelişki Tespiti 47 sn sürüyor ve 500 dönüyordu.** Ayrıntı:
+[[celiski-tespiti-yavasti-ve-500-donuyordu]]. Önbellek + kilit + kalıcı
+artefakt; soğuk uç 47,9 sn → 0,001 sn, bulgu sayısı değişmedi (20).
+21 Ağustos'ta aynı belirti "yanlış alarm" diye kapatılmıştı; o teşhis
+düzeltildi.
+
+**3. Banka sayfası paydaya sözleşme katıyordu.** Ayrıntı:
+[[banka-sayfasi-paydaya-sozlesme-katiyordu]]. «93 belge · %15 kapsama»
+cümlesinde 93 tüm belgeler, %15 ise 51 kampanya belgesi üzerindendi. Payda
+kıyas evreniyle eşitlendi; çıkarılan sözleşme sayısı satırda yazılıyor.
+
+**4. Katılma Oranları ayrı sekmeydi.** Karşılaştırma sekmesinin görünüm
+anahtarına üçüncü seçenek olarak taşındı — sorduğu soru aynı, kaynağı farklı
+ve fark seçeneğin adında yazıyor.
+
+**Yan bulgu:** ekran çekimi koşumu canlı tazeleme tetiklemiş ve 72 ham dosyanın
+provenance damgalarını silmişti; geri alındı ve tekrarı engellendi
+([[ekran-cekimi-ham-veriyi-yeniden-topladi]]).
+
+**Ölçülüp eklenmeyen:** yerel model (qwen2.5:7b) ile boşluk doldurma sondajı
+30 belgede **0 kabul** verdi. İki kabul kapısı çalıştı; model kapılardan geçen
+hiçbir aday üretemedi. EVREN anahtarı olmadan bu yol kapalı.
+
+Dokunulan dosyalar: `src/chatbot/katilma_orani.py` · `src/api/routers/denetim.py`
+· `src/api/main.py` · `src/comparison/celiski_artefakti.py` (yeni) ·
+`scripts/celiski_tarama.py` (yeni) · `tests/test_celiski_artefakti.py` (yeni) ·
+`web/app/components/{ComparePanel,BankaSayfasi}.tsx` · `web/app/page.tsx` ·
+`docs-ekran/ekran_cek.py` · `sorun/` (3 yeni sayfa) · `index.md`
+
 ## [2026-08-24] feature | katilma-oranlari-panel-yuzeyi
 
 Katılma oranları chatbot'ta cevaplanıyordu ama panelde hiç yoktu; senaryo

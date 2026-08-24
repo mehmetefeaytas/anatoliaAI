@@ -714,6 +714,12 @@ def build_app():
             out = [{"kind": k.kind, "detail": k.detail, "fields": k.fields}
                    for k in detect_contradictions(c, as_of=scraped_at)]
         except Exception:  # pragma: no cover - çıkarım hatası UI'yı düşürmesin
+            # Yutuluyor ama SESSİZ değil. Bu blok bir belgeyi çelişki
+            # taramasının dışına çıkarır; iz bırakmazsa "0 çelişki" ile
+            # "tarama çöktü" ayırt edilemez hâle gelir ve tarama kapsamı
+            # olduğundan geniş görünür.
+            logger.debug("celiski taramasi dustu: kampanya=%s", campaign_id,
+                         exc_info=True)
             out = []
         _contra_cache[campaign_id] = out
         return out
@@ -852,6 +858,15 @@ def build_app():
         """
         for cid in kampanya_idleri:
             _view_cache.pop(cid, None)
+            _contra_cache.pop(cid, None)
+        # TAM TARAMA önbelleği de düşer. Belge düzeyinde `pop` yetmez:
+        # `/contradictions` sonucu tüm korpusun tek bir listesidir ve içindeki
+        # bir belge değiştiğinde liste bütün olarak bayatlar. İşlev denetim
+        # router'ı tarafından asılıyor (geç bağlama — router bu satırdan
+        # SONRA kuruluyor).
+        dus = getattr(app.state, "celiski_onbellegini_dus", None)
+        if callable(dus):
+            dus()
 
     def _tazeleme_sonrasi_ozet() -> dict:
         """Bayat özet düştükten sonra yerine yenisini üretecek işi başlatır.

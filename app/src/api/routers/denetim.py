@@ -36,8 +36,11 @@ sorulduğuna göre değişebilirdi.
 
 from __future__ import annotations
 
+import logging
+import threading
 from typing import Any, Callable, Optional
 
+from ...comparison import celiski_artefakti
 from .. import gelecek, gunluk
 
 # `Response` MODÜL GLOBAL'İNDE olmak zorunda — gerekçe modül başlığında.
@@ -153,9 +156,60 @@ def router_kur(
         """Gelecek faz: finansal ürün ekleme. Bu sürümde KAPALI (501)."""
         _kapali()
 
-    @r.get("/contradictions")
-    def contradictions():
-        """Tüm külliyatta otomatik yakalanan iç çelişkiler (CLAUDE.md §18 #2)."""
+    # ── Tam tarama önbelleği ────────────────────────────────────────────
+    #
+    # ## Ölçülmüş arıza (kullanıcı raporu 2026-08-24)
+    #
+    # Panelin Çelişki Tespiti sekmesi "yavaş" ve arada **500** veriyordu.
+    # Sebep uçların kendisinde: `/contradictions` korpusun TAMAMINI GÖVDESİYLE
+    # çekiyor (`all_campaigns()` varsayılanı `govde=True` — 2.708 belge,
+    # ölçülen 10,3 MB ham metin) ve `/contradictions/summary` aynı taramayı
+    # BİR KEZ DAHA yaptırıyordu. Panel iki ucu birlikte çağırdığı için her
+    # sekme açılışı iki tam gövde okuması demekti; Next dev sunucusunun
+    # `/api/*` proxy'si yavaş yanıtı 500'e çeviriyordu.
+    #
+    # ## Neden önbellek, neden sorguyu daraltmak değil
+    #
+    # Çelişki tespiti belgenin TAM metnine muhtaç ("masrafsız" der ve aynı
+    # metinde tahsis ücreti yazar) — gövdeyi SELECT dışına almak kuralı
+    # kördürürdü. Tarama sonucu ise korpus sabitken değişmez, yani doğru
+    # yer önbellektir.
+    #
+    # Geçersizleştirme `tazeleme_sonrasi_dus()` ile DIŞARIDAN yapılıyor:
+    # veri tazelendiğinde bayat bir tarama göstermek, yavaş olmaktan daha
+    # kötüdür.
+    # Kilit ŞART, önbellek tek başına yetmiyor. Panel `/contradictions` ile
+    # `/contradictions/summary`i AYNI ANDA çağırıyor; kilitsiz iki iş parçacığı
+    # da önbelleği boş bulup 48 saniyelik taramayı İKİ KEZ koşardı. Ölçülen
+    # 500'ün sebebi buydu: eşzamanlı iki tam tarama.
+    _tarama: list[dict] | None = None
+    _kilit = threading.Lock()
+
+    def _tam_tarama() -> list[dict]:
+        nonlocal _tarama
+        if _tarama is not None:
+            return _tarama
+        with _kilit:
+            # Çift denetim: kilidi bekleyen ikinci istek, birincinin yazdığı
+            # sonucu bulur ve taramayı tekrar etmez.
+            if _tarama is not None:
+                return _tarama
+            return _tara()
+
+    def _tara() -> list[dict]:
+        """Artefakt tazeyse ONDAN okur; değilse korpusu baştan tarar.
+
+        Artefakt yolu ölçülmüş bir kazanç: soğuk tarama 47,2 sn, artefakt
+        okuması milisaniye (`comparison/celiski_artefakti.py`). Artefakt bayat
+        ya da yoksa davranış eskisiyle AYNI — hiçbir şey kaybolmuyor, yalnız
+        beklemek gerekiyor.
+        """
+        nonlocal _tarama
+        imza = celiski_artefakti.korpus_imzasi(repo)
+        hazir = celiski_artefakti.oku(imza)
+        if hazir is not None:
+            _tarama = hazir
+            return hazir
         out = []
         for camp in repo.all_campaigns():
             text = camp.get("raw_text", "") or ""
@@ -170,14 +224,61 @@ def router_kur(
                     "source_url": camp.get("source_url"),
                     **k,
                 })
+        _tarama = out
         return out
+
+    def _onceden_isit() -> None:
+        """Taramayı arka planda, İSTEK GELMEDEN koşar.
+
+        Ölçüldü (2026-08-24): soğuk `/contradictions` **47,9 saniye** sürüyor —
+        2.708 belgenin tamamı gövdesiyle okunup her biri için çıkarım+tespit
+        koşuyor. Bu, panelin sekmesine ilk tıklandığında bekleniyor ve
+        tarayıcı ya da Next proxy'si o kadar beklemiyor; kullanıcının gördüğü
+        500 buydu.
+
+        Çözüm taramayı hızlandırmak değil ZAMANLAMASINI değiştirmek: iş
+        uygulama açılırken başlar, jüri sekmeye tıkladığında sonuç hazırdır.
+        Hazır değilse istek yine de doğru cevabı verir — kilit sayesinde
+        ikinci bir tarama başlamaz, birincinin bitmesi beklenir.
+
+        Hata YUTULUYOR ama sessiz değil: ısıtma başarısız olursa uç nokta
+        eskisi gibi çalışmaya devam etmeli, açılış düşmemeli.
+        """
+        try:
+            _tam_tarama()
+        except Exception:  # pragma: no cover - ısıtma açılışı düşürmemeli
+            logging.getLogger("anatolia.api").debug(
+                "celiski taramasi onceden isitilamadi", exc_info=True)
+
+    # `daemon=True`: ısıtma bitmemişse bile süreç kapanabilmeli.
+    threading.Thread(target=_onceden_isit, name="celiski-isitma",
+                     daemon=True).start()
+
+    def _tarama_onbellegini_dus() -> None:
+        """Veri tazelendikten sonra çağrılır; bir sonraki istek yeniden tarar."""
+        nonlocal _tarama
+        _tarama = None
+
+    # `main` bu işlevi tazeleme hattına bağlayabilsin diye uygulamaya asılıyor.
+    # Closure'a kapalı kalsaydı geçersizleştirme imkânsız olurdu.
+    app.state.celiski_onbellegini_dus = _tarama_onbellegini_dus
+
+    @r.get("/contradictions")
+    def contradictions():
+        """Tüm külliyatta otomatik yakalanan iç çelişkiler (CLAUDE.md §18 #2)."""
+        return _tam_tarama()
 
     @r.get("/contradictions/summary")
     def contradictions_summary():
-        """Çelişki taramasının kapsamı — "kaç belgede kaç bulgu" anlatısı."""
+        """Çelişki taramasının kapsamı — "kaç belgede kaç bulgu" anlatısı.
+
+        Kapsam sayısı gövdesiz sorgudan gelir; bulgular önbellekten. İkisini
+        ayrı tutmak şart: kapsam "kaç belge TARANDI"yı ölçer ve tarama hiç
+        bulgu üretmese bile doğru olmak zorundadır.
+        """
         # Yalnız sayım yapılıyor; ham gövdeye gerek yok (`govde=False`).
         camps = repo.all_campaigns(govde=False)
-        found = contradictions()
+        found = _tam_tarama()
         by_kind: dict[str, int] = {}
         for c in found:
             by_kind[c["kind"]] = by_kind.get(c["kind"], 0) + 1

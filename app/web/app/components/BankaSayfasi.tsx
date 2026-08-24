@@ -159,8 +159,26 @@ type TurSatiri = {
   /**
    * Bu bankanın BU TÜRDEKİ belge sayısı — yıldızın paydası.
    * `null` = belge listesi henüz gelmedi ("ölçtük, yok" DEĞİL).
+   *
+   * SÖZLEŞME BELGELERİ HARİÇ (2026-08-24). Gerekçe `sozlesme` alanında.
    */
   belge: number | null;
+  /**
+   * Bu türde paydanın DIŞINDA bırakılan sözleşme belgesi sayısı.
+   *
+   * ## Ölçülmüş yanlış okuma
+   *
+   * Kullanıcı raporu (2026-08-24): Vakıf Katılım · Finansman satırı
+   * «93 belge · veri kapsaması düşük (%15)» diyordu ve bu, doksan üç
+   * kampanya belgesinden ancak %15'inin ölçülebildiği gibi okunuyordu.
+   * Gerçek şuydu: 93'ün **42'si sözleşme** (GKS, tarife, çerçeve metni) ve
+   * kıyas motoru onları ZATEN dışlıyor (`main.py` `_tur_satirlari`,
+   * `base.kiyas_where()`). Yani payda ile hüküm FARKLI evrenlerden geliyordu.
+   *
+   * Sayı gizlenmiyor, ayrı yazılıyor: sözleşmede kâr payı oranı ya da ödül
+   * miktarı BULUNMAMASI beklenen bir şeydir, çıkarımın başarısızlığı değil.
+   */
+  sozlesme: number | null;
 };
 
 /**
@@ -174,6 +192,7 @@ function turSatirlari(
   turler: string[],
   bank: string,
   turBelgeleri: Map<string, number> | null,
+  turSozlesmeleri: Map<string, number> | null,
 ): TurSatiri[] {
   const adlar = Array.from(
     new Set([...Object.keys(veri.types), ...turler]),
@@ -181,9 +200,12 @@ function turSatirlari(
 
   const belgeSayisi = (ad: string) =>
     turBelgeleri === null ? null : (turBelgeleri.get(ad) ?? 0);
+  const sozlesmeSayisi = (ad: string) =>
+    turSozlesmeleri === null ? null : (turSozlesmeleri.get(ad) ?? 0);
 
   return adlar.map((ad) => {
     const belge = belgeSayisi(ad);
+    const sozlesme = sozlesmeSayisi(ad);
     const grup = veri.types[ad];
     if (!grup) {
       return {
@@ -192,6 +214,7 @@ function turSatirlari(
         sira: null,
         grupBuyuklugu: 0,
         belge,
+        sozlesme,
       };
     }
 
@@ -206,6 +229,7 @@ function turSatirlari(
         sira: null,
         grupBuyuklugu: 0,
         belge,
+        sozlesme,
       };
     }
 
@@ -224,6 +248,7 @@ function turSatirlari(
         sira: yer + 1,
         grupBuyuklugu: kiyaslanabilir.length,
         belge,
+        sozlesme,
       };
     }
 
@@ -237,6 +262,7 @@ function turSatirlari(
         sira: null,
         grupBuyuklugu: kiyaslanabilir.length,
         belge,
+        sozlesme,
       };
     }
 
@@ -246,6 +272,7 @@ function turSatirlari(
       sira: null,
       grupBuyuklugu: kiyaslanabilir.length,
       belge,
+      sozlesme,
     };
   });
 }
@@ -257,6 +284,18 @@ function turSatirlari(
  * listesi boşsa (ölçülemeyen tür) hiç cümle üretilmez — boş bir liste
  * hakkında konuşmak, ölçülmemiş bir şeyi anlatmak olurdu.
  */
+function sozlesmeNotu(sozlesme: number | null): ReactNode {
+  if (!sozlesme) return null;
+  return (
+    <>
+      {" "}
+      Bu türde ayrıca <b>{sozlesme} sözleşme belgesi</b> var; paydaya
+      girmiyorlar. Sözleşmede kâr payı oranı ya da ödül miktarı bulunmaması
+      BEKLENEN bir şeydir — çıkarımın başarısızlığı değil.
+    </>
+  );
+}
+
 function olcutCumlesi(
   skor: CompositeScore,
   etiket: (field: string) => string,
@@ -403,11 +442,33 @@ export default function BankaSayfasi({
     return fazla.length === 1 ? fazla[0] : null;
   }, [avantaj.data, campaignTypes]);
 
-  /** Tür → bu bankadaki belge sayısı. Liste gelmeden `null` (0 DEĞİL). */
+  /**
+   * Tür → bu bankadaki KIYASA GİREN belge sayısı. Liste gelmeden `null`.
+   *
+   * Sözleşme belgeleri paydanın DIŞINDA. Süzme, sunucudaki kıyas evreniyle
+   * birebir aynı olmak zorunda (`main.py` `_tur_satirlari`): *sözleşme hariç,
+   * türü BİLİNMEYEN dahil*. `=== "kampanya"` yazmak yanlış olurdu — türü
+   * belirlenememiş bir belge kıyasa girer ama o kontrolden geçemezdi ve
+   * payda, hükmün hesaplandığı kümeden küçük kalırdı.
+   */
   const turBelgeleri = useMemo(() => {
     if (!belgeler.data) return null;
     const m = new Map<string, number>();
     for (const c of belgeler.data) {
+      if (c.belge_turu === "sozlesme") continue;
+      const ad = c.campaign_type ?? tursuzKova;
+      if (!ad) continue;
+      m.set(ad, (m.get(ad) ?? 0) + 1);
+    }
+    return m;
+  }, [belgeler.data, tursuzKova]);
+
+  /** Tür → paydadan çıkarılan sözleşme sayısı. Gerekçe `TurSatiri.sozlesme`. */
+  const turSozlesmeleri = useMemo(() => {
+    if (!belgeler.data) return null;
+    const m = new Map<string, number>();
+    for (const c of belgeler.data) {
+      if (c.belge_turu !== "sozlesme") continue;
       const ad = c.campaign_type ?? tursuzKova;
       if (!ad) continue;
       m.set(ad, (m.get(ad) ?? 0) + 1);
@@ -439,9 +500,10 @@ export default function BankaSayfasi({
   const satirlar = useMemo(
     () =>
       avantaj.data && bank
-        ? turSatirlari(avantaj.data, campaignTypes, bank, turBelgeleri)
+        ? turSatirlari(avantaj.data, campaignTypes, bank, turBelgeleri,
+                       turSozlesmeleri)
         : [],
-    [avantaj.data, campaignTypes, bank, turBelgeleri],
+    [avantaj.data, campaignTypes, bank, turBelgeleri, turSozlesmeleri],
   );
 
   const etiket = useMemo(() => {
@@ -660,7 +722,12 @@ export default function BankaSayfasi({
                 belge={s.belge}
                 sira={s.sira}
                 grupBuyuklugu={s.grupBuyuklugu}
-                gerekce={olcutCumlesi(s.skor, etiket)}
+                gerekce={
+                  <>
+                    {olcutCumlesi(s.skor, etiket)}
+                    {sozlesmeNotu(s.sozlesme)}
+                  </>
+                }
                 /* Ağırlık TABLOSU kırılımın birinci paydası için gerekli:
                    bileşen listesi tablonun yalnız aktif alt kümesidir. Veri
                    `avantaj` isteğinde ZATEN var, yeni istek atılmıyor. Gelmemişse
@@ -679,6 +746,7 @@ export default function BankaSayfasi({
                 belge={s.belge}
                 sira={s.sira}
                 grupBuyuklugu={s.grupBuyuklugu}
+                gerekce={sozlesmeNotu(s.sozlesme)}
               />
             ))}
 
