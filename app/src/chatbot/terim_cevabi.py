@@ -79,15 +79,38 @@ _ALAN_IZLERI = re.compile(
     re.IGNORECASE)
 
 
+#: KESİN tanım kalıpları — alan izini geçersiz kılar.
+#:
+#: "nedir" belirsizdir: *"kâr payı oranı nedir"* bir DEĞER sorusudur ve
+#: yapısal sorgu yoluna gitmelidir. Ama *"tahsis ücreti ne demek"* tartışmasız
+#: bir TANIM sorusudur — alan adıyla çakıştığı için reddedilmesi, sözlükte
+#: kaydı olan bir terimi cevapsız bırakıyordu (ölçüldü 2026-08-24: 10
+#: operasyonel terim sözlüğe eklendikten sonra "tahsis ücreti nedir" hâlâ
+#: cevapsızdı).
+#:
+#: Güvenlik açısından daralma YOK: *"Bu üründe masraf durumu nedir, faiz
+#: uygulanır mı?"* sorusu "ne demek" taşımadığı için hâlâ alan yoluna gidiyor
+#: ve post-filter'dan geçiyor (`tests/test_safety.py`).
+_KESIN_TANIM_KALIBI = re.compile(
+    r"\bne\s+demek\b|\bne\s+anlama\s+gel\w*|\btanımı\s+ne\b|"
+    r"\bnasıl\s+tanımlan\w*",
+    re.IGNORECASE)
+
+
 def terim_sorusu_mu(soru: Optional[str]) -> bool:
     """Bu soru bir TERİM tanımı mı istiyor?
 
-    İki koşul birlikte: tanım kalıbı VAR ve alan/kıyas izi YOK. İkincisi
-    olmadan "Kuveyt Türk kâr payı oranı nedir" de terim sorusu sayılır ve
-    yapısal sorgu yolu devre dışı kalırdı (bkz. modül başlığı).
+    İki yol:
+      1. KESİN tanım kalıbı ("ne demek") → alan izi olsa da terim sorusudur.
+      2. Gevşek tanım kalıbı ("nedir") → yalnız alan/kıyas izi YOKSA.
+
+    İkinci koşul olmadan "Kuveyt Türk kâr payı oranı nedir" de terim sorusu
+    sayılır ve yapısal sorgu yolu devre dışı kalırdı (bkz. modül başlığı).
     """
     if not soru or not soru.strip():
         return False
+    if _KESIN_TANIM_KALIBI.search(soru):
+        return True
     if _ALAN_IZLERI.search(soru):
         return False
     return bool(_TANIM_KALIBI.search(soru))
@@ -101,7 +124,11 @@ def _sorulan_terim(soru: str, entries: Optional[Iterable[TermEntry]]
     iki yerin ayrışması demekti ve o ayrışma sessiz olurdu (ör. varyant
     listesi burada güncellenmeyip orada güncellenirdi).
     """
-    bulunan = relevant_terms(soru, limit=4, halk_dili=True, entries=entries)
+    # `genel_dahil=True`: "taksit ne demek" gibi sorular cevaplanabilmeli.
+    # O terimler yalnız KORPUS TARAMASINDA atlanıyor (gürültü olduğu için),
+    # doğrudan sorulduğunda değil (bkz. `terminology.GENEL_TERIMLER`).
+    bulunan = relevant_terms(soru, limit=4, halk_dili=True, entries=entries,
+                             genel_dahil=True)
     return bulunan[0] if bulunan else None
 
 

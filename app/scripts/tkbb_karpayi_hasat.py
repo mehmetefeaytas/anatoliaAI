@@ -48,6 +48,10 @@ yayın haftası da farklı (2026-08-24 ölçümü):
     BankAsya               veri yok (kapalı banka)
     Adil Katılım           TKBB veri setinde yok
 
+2026 verisinin bulunmaması bir eksik DEĞİL: arşiv tamamlanmış dönemleri
+yayınlıyor ve 2026 henüz sürüyor (kullanıcı bilgisi, 2026-08-24). Bankaların
+farklı tarihlerde durması ise bildirim sıklıklarının farklı olmasından.
+
 Yani bu veri TARİHSELDİR, güncel teklif değil. "Şu an en iyi oranı kim veriyor"
 sorusuna tek başına cevap OLAMAZ; güncel oran için `src/scraping/rates.py`
 banka uçları kullanılır. Bu ayrım cevap metninde de görünmek zorundadır.

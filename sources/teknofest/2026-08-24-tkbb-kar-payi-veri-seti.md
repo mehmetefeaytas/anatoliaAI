@@ -80,9 +80,13 @@ birebir** uyuştu. Sertifika doğrulanamadı ama İÇERİK doğrulandı.
 
 ## open-threads
 
-- **2026 tarihsel veri YOK.** Tarihsel uç Mayıs 2025'te durmuş; form yıl listesi
-  de 2025 ile bitiyor. İki bağımsız kanıt. Güncel uç bu boşluğu haftalık olarak
-  kapatıyor ama ARA DÖNEM (Haz 2025 – Ağu 2026) hiçbir uçta yok.
+- **2026 tarihsel veri yok — ama bu bir eksik DEĞİL.** Arşiv tamamlanmış
+  dönemleri yayınlıyor ve 2026 henüz sürüyor (kullanıcı bilgisi, 2026-08-24);
+  form yıl listesinin 2025'le bitmesi de bununla tutarlı. Bankaların farklı
+  tarihlerde durması (Albaraka 2024-09, Türkiye Finans 2025-05) bildirim
+  sıklıklarının farklı olmasından. Güncel uç içinde bulunulan haftayı
+  veriyor; iki uç arasındaki ARA DÖNEM (Haz 2025 – Ağu 2026) hiçbir uçta
+  bulunmuyor.
 - **BankAsya** tarihsel uçta boş yanıt veriyor (kapalı banka), **Adil Katılım**
   veri setinde hiç yok.
 - Panel `sheetIndex=2/3` (ara ödemeli hesap) tarihsel uçta hasat edildi; güncel

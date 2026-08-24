@@ -44,8 +44,25 @@ Banka PDF'i ayrıca hasat edildi (`scripts/kt_paylasim_pdf.py`, 144 kayıt) ve
 taşıyordu. Böylece iki granülerlik yan yana duruyor ve hangisinin
 kullanıldığı görünür.
 
-**Chatbot şu an TKBB verisini kullanıyor** (dokuz bankayı birlikte kapsayan
-tek kaynak). Segment ayrımı henüz cevaba girmiyor; bu açık bir sınır.
+**Segment ayrımı cevaba GİRDİ (2026-08-24).** `katilma_orani.py` iki yolla
+çalışıyor:
+
+1. Soru bir segment adı taşıyorsa (`klasik`, `gümüş`, `platin`, `segment`…)
+   cevap doğrudan bankanın kendi tablosundan üretilir — TKBB'nin tek değeri
+   orada yanlış cevap olurdu.
+2. Taşımıyorsa TKBB tablosu basılır ve sonuna **segment uyarısı** düşer:
+   *"ölçülmüş örnek (Kuveyt Türk, 1 ay, kâr paylaşım oranı): Klasik Hesabı
+   %85 · Yatırım Hesabı %95"*.
+
+Uyarı yalnız segment verisi ELİMİZDE olan bankalar cevapta göründüğünde
+basılıyor; genel bir "belki farklıdır" cümlesi gürültü olurdu.
+
+İki yerde de **aynı vade** kuralı uygulanıyor: vade söylenmemişse tek vadeye
+inilir. İlk sürüm 2-6 günlük %75 ile 12 aylık %95'i yan yana koyuyordu ve bu,
+segment farkını olduğundan büyük gösteriyordu (§17 adil kıyas).
+
+Kalan sınır: segment verisi yalnız **Kuveyt Türk** için tam (144 kayıt);
+Emlak'ta iki segment var (`quotes.jsonl`), öteki yedi bankada yok.
 
 ## Yan bulgu — kaynakta dizgi hatası
 

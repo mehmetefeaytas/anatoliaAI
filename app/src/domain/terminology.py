@@ -105,6 +105,22 @@ VARSAYILAN_BUTCE = 3000
 #: terminoloji tuzağı odur.
 _GURULTU: frozenset[str] = frozenset()
 
+#: KORPUS TARAMASINDA atlanan, DOĞRUDAN SORUDA cevaplanan terimler.
+#:
+#: "taksit", "vade", "limit", "masraf" katılım bankacılığına özgü değil; her
+#: perakende kampanyasında geçiyor. Sözlükte DURMALARI gerekiyor — kullanıcı
+#: "taksit ne demek" diye sorabilir ve bu terimlerin katılım bağlamında
+#: `degildir`/`risk_notu` alanları var. Ama bir kampanya metninde geçmeleri
+#: terminoloji kartı gerektirmiyor: ölçülmüş vaka *"Vatan'da Peşin Fiyatına 6
+#: Aya Varan Taksit Fırsatı"* — burada kart çekmek gürültüdür
+#: (`tests/test_terminology.py::test_perakende_kampanyasi_terim_cekmez`).
+#:
+#: `_GURULTU`dan FARKI: o küme terimi tamamen görünmez yapar; bu küme yalnız
+#: TARAMA yolunu kapatır, `genel_dahil=True` diyen çağıran (terim cevabı)
+#: terimi görür.
+GENEL_TERIMLER: frozenset[str] = frozenset(
+    {"taksit", "vade", "limit", "masraf"})
+
 
 @dataclass(frozen=True)
 class TermEntry:
@@ -349,6 +365,7 @@ def relevant_terms(text: str,
                    limit: int = 8,
                    halk_dili: bool = False,
                    entries: Optional[Iterable[TermEntry]] = None,
+                   genel_dahil: bool = False,
                    ) -> list[TermEntry]:
     """Metinde FİİLEN geçen terimler — deterministik, LLM yok.
 
@@ -365,6 +382,11 @@ def relevant_terms(text: str,
                if not _uslup_terimi(e)
                and any(a not in _GURULTU and matches(a, katli)
                        for a in e.anahtarlar(halk_dili))]
+    # Genel terimler KORPUS TARAMASINDA atlanır (bkz. `GENEL_TERIMLER`):
+    # "taksit" her perakende kampanyasında geçiyor ve orada kart çekmek
+    # gürültü. Doğrudan terim sorusu `genel_dahil=True` ile çağırır.
+    if not genel_dahil:
+        bulunan = [e for e in bulunan if e.id not in GENEL_TERIMLER]
     bulunan.sort(key=_oncelik)
 
     # Eş anlamlı çiftten yalnız önceliklisi kalır; liste zaten sıralı olduğu

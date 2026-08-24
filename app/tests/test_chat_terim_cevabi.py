@@ -110,6 +110,67 @@ class CevapTest(unittest.TestCase):
         self.assertIn("taksitle", c.lower())
 
 
+class TestOperasyonelTerimler(unittest.TestCase):
+    """Projenin kendi alan adlarıyla örtüşen 10 temel terim.
+
+    Ölçüldü (2026-08-24): sistem `tahsis_ucuceti` alanını çıkarıyordu ama
+    "tahsis ücreti ne demek" sorusuna cevap veremiyordu. Üç dış kaynak
+    denenmiş ve hiçbiri bu terimleri içermemişti (TCMB makroekonomi sözlüğü,
+    korpus sözleşmeleri, TKBB fıkhî sözlüğü); tanımlar bu yüzden PROJENİN
+    KENDİ kaydı olarak yazıldı ve `kaynak` alanı bunu açıkça söylüyor.
+    """
+
+    TERIMLER = ("Finansman", "vade", "taksit", "tahsis ücreti", "masraf",
+                "stopaj", "ekspertiz", "limit", "hesap işletim ücreti",
+                "dosya masrafı")
+
+    def test_hepsi_cevaplanir(self):
+        for a in self.TERIMLER:
+            with self.subTest(terim=a):
+                self.assertIsNotNone(terim_cevabi(f"{a} ne demek"))
+
+    def test_kaynak_KENDI_kaydi_oldugunu_soyluyor(self):
+        """Uydurma bir dış kaynak gösterilmiyor."""
+        c = terim_cevabi("tahsis ücreti ne demek")
+        self.assertIn("Anatolia AI proje sözlüğü", c)
+
+    def test_katilim_baglami_tasiniyor(self):
+        """Bu terimler konvansiyonel bankacılıkla karıştırılabilir; ayrım
+        cevapta görünmek zorunda."""
+        c = terim_cevabi("Finansman ne demek")
+        self.assertIn("Karıştırılmamalı", c)
+        self.assertIn("kredi", c.lower())
+        self.assertIn("⚠️", c)   # risk notu
+
+    def test_masrafsiz_ayrimi_yaziliyor(self):
+        """'Masrafsız' kâr payının sıfır olduğu anlamına GELMEZ."""
+        c = terim_cevabi("masraf ne demek")
+        self.assertIn("masrafsız", c.lower())
+
+    def test_stopaj_brut_net_ayrimi(self):
+        c = terim_cevabi("stopaj ne demek")
+        self.assertIn("net", c.lower())
+
+
+class TestKesinTanimKalibi(unittest.TestCase):
+    """"ne demek" alan izini geçersiz kılar, "nedir" kılmaz."""
+
+    def test_ne_demek_alan_izini_ASAR(self):
+        """'tahsis ücreti' bir ALAN adı ama 'ne demek' tartışmasız tanım ister."""
+        self.assertTrue(terim_sorusu_mu("tahsis ücreti ne demek"))
+        self.assertTrue(terim_sorusu_mu("kâr payı oranı ne anlama gelir"))
+
+    def test_nedir_alan_izinde_ELENIR(self):
+        """Değer sorusu yapısal sorgu yoluna gitmeli."""
+        self.assertFalse(terim_sorusu_mu("Kuveyt Türk kâr payı oranı nedir"))
+
+    def test_GUVENLIK_alan_sorusu_hala_elenir(self):
+        """Ölçülmüş sızıntı vakası: terim yolu post-filter'ı atlıyor, bu yüzden
+        alan soruları oraya DÜŞMEMELİ (tests/test_safety.py)."""
+        self.assertFalse(terim_sorusu_mu(
+            "Bu üründe masraf durumu nedir, faiz uygulanır mı?"))
+
+
 if __name__ == "__main__":
     unittest.main()
 

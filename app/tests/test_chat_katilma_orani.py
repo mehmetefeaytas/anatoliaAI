@@ -205,5 +205,97 @@ class TestBotEntegrasyonu(unittest.TestCase):
         self.assertEqual(bot.ask("Murabaha ne demek").handler, "terminoloji")
 
 
+def _s(slug, ad, seg, oran, *, ay=1, para="TRY"):
+    """Segment kaydı (bankanın kendi yayınından)."""
+    return {"bank_slug": slug, "bank_name": ad, "kind": "katilma",
+            "buyukluk": "pay", "segment": seg, "currency": para,
+            "term_months": ay, "term_label": f"{ay} Aylık",
+            "annual_rate": oran, "bank_share": 100 - oran,
+            "toplam": 100.0, "toplam_tutarsiz": False,
+            "source_url": "https://www.kuveytturk.com.tr/x",
+            "method": "banka-pdf"}
+
+
+SEGMENTLER = (
+    _s("kuveyt-turk", None, "Klasik Hesabı", 85.0),
+    _s("kuveyt-turk", None, "Gümüş Hesabı", 87.0),
+    _s("kuveyt-turk", None, "Platin+ Hesabı", 94.0),
+    _s("kuveyt-turk", None, "Klasik Hesabı", 75.0, ay=12),
+)
+
+
+class TestSegmentAyrimi(unittest.TestCase):
+    """Merkezî veri tek oran veriyor, banka segment bazında farklı oran uyguluyor.
+
+    Ölçüldü (2026-08-24): TKBB Kuveyt Türk TL paylaşımını 92/93/95/95 diye
+    yayınlıyor; bankanın PDF'i Klasik için 85/86/88/88. Yani Klasik hesap
+    müşterisi merkezî veride görünmeyen bir orana tabi.
+    """
+
+    def test_segment_sorusu_taninir(self):
+        from src.chatbot.katilma_orani import segment_sorusu_mu
+        for s in ("katılma hesabı platin segment paylaşım oranı",
+                  "kuveyt türk klasik hesap katılma oranı",
+                  "gümüş hesap kâr paylaşımı"):
+            with self.subTest(s=s):
+                self.assertTrue(segment_sorusu_mu(s))
+
+    def test_segment_izi_olmayan_soru(self):
+        from src.chatbot.katilma_orani import segment_sorusu_mu
+        self.assertFalse(segment_sorusu_mu(
+            "katılma hesabında en iyi kâr payı oranı"))
+
+    def test_segment_cevabi_AYNI_VADEDE_kiyaslar(self):
+        """Vade söylenmemişse tek vadeye inilmeli: farklı vadeler yan yana
+        gelirse fark segmentten mi vadeden mi geldiği anlaşılmaz (§17)."""
+        from src.chatbot.katilma_orani import _segment_cevabi
+        c = _segment_cevabi("katılma hesabı segment paylaşım oranı",
+                            kayitlar=SEGMENTLER)
+        self.assertIn("1 ay vade", c)
+        self.assertIn("85.00", c)
+        self.assertIn("94.00", c)
+        self.assertNotIn("75.00", c)   # 12 aylık satır aynı tabloya girmemeli
+
+    def test_segment_cevabi_bolusum_uyarisi_tasir(self):
+        from src.chatbot.katilma_orani import _segment_cevabi
+        c = _segment_cevabi("platin segment oranı", kayitlar=SEGMENTLER)
+        self.assertIn("bölüşüm", c)
+        self.assertIn("_Kaynak:_", c)
+
+    def test_slug_yerine_OKUNABILIR_ad(self):
+        """Banka PDF'i `bank_name` taşımıyor; cevapta slug basılmamalı."""
+        from src.chatbot.katilma_orani import _segment_cevabi
+        c = _segment_cevabi("platin segment oranı", kayitlar=SEGMENTLER)
+        self.assertIn("Kuveyt Türk", c)
+        self.assertNotIn("kuveyt-turk", c)
+
+    def test_segment_verisi_yoksa_None(self):
+        from src.chatbot.katilma_orani import _segment_cevabi
+        self.assertIsNone(_segment_cevabi("platin segment oranı", kayitlar=()))
+
+    def test_KAYNAK_tutarsizligi_gosterilir(self):
+        """PDF'te pay+banka payı 110 eden bir satır var; gizlenmez (§4)."""
+        from src.chatbot.katilma_orani import _segment_cevabi
+        bozuk = dict(SEGMENTLER[0])
+        bozuk.update({"annual_rate": 91.0, "bank_share": 19.0,
+                      "toplam": 110.0, "toplam_tutarsiz": True})
+        c = _segment_cevabi("segment oranı", kayitlar=(bozuk,))
+        self.assertIn("tutarsız", c.lower())
+        self.assertIn("110", c)
+
+    def test_ana_cevapta_segment_UYARISI(self):
+        """Uyarı olmadan cevap, küçük bakiyeli kullanıcıya erişemeyeceği bir
+        oranı vaat ediyordu."""
+        import pathlib
+
+        from src.chatbot.katilma_orani import katilma_cevabi
+        if not list(pathlib.Path("data/raw").glob(
+                "*/rates/kt-paylasim-pdf.jsonl")):
+            self.skipTest("segment verisi yok")
+        c = katilma_cevabi("katılma hesabında en iyi kâr payı oranı")
+        self.assertIn("tek temsili", c)
+        self.assertIn("segment", c.lower())
+
+
 if __name__ == "__main__":
     unittest.main()

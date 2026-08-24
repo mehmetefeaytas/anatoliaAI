@@ -68,9 +68,9 @@ kapı gevşetilmedi, tek satır işaretlendi.
 
 ## Kalan sınır — açıkça yazılıyor
 
-- **2026 tarihsel veri yok.** Arşiv Mayıs 2025'te duruyor; güncel uç yalnız
-  içinde bulunulan haftayı veriyor. Haziran 2025 – Ağustos 2026 arası hiçbir
-  uçta yok.
+- **Ara dönem boşluğu** (Haz 2025 – Ağu 2026): arşiv tamamlanmış dönemleri
+  yayınlıyor (2026 henüz sürüyor, bu yüzden orada yok), güncel uç ise yalnız
+  içinde bulunulan haftayı veriyor. Aradaki dönem hiçbir uçta bulunmuyor.
 - **Adil Katılım** TKBB veri setinde hiç yok; **BankAsya** kapalı.
 - Tarihsel arşiv (210.474 kayıt) hiçbir kod yolunda okunmuyor — trend/dönemsel
   kıyas için duruyor.

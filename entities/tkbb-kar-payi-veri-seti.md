@@ -13,7 +13,9 @@ yayınladığı **iki ayrı** uç. İkisi farklı sistemdir ve karıştırılmam
 
 ## 1. Tarihsel arşiv — `karpayi.tkbb.org.tr`
 
-- Kapsam **2012-01-02 → 2025-05-26**; bankaya göre bitiş farklı (Albaraka ve
+- Kapsam **2012-01-02 → 2025-05-26**. Arşiv TAMAMLANMIŞ dönemleri yayınlıyor;
+  2026'nın bulunmaması eksik değil, yıl henüz sürüyor (kullanıcı bilgisi).
+  Bankaya göre bitiş farklı — bildirim sıklıkları farklı (Albaraka ve
   Emlak 2024-09-30, Kuveyt Türk ve Vakıf 2024-10-07, TOM ve Ziraat 2024-12-23,
   Hayat Finans 2025-05-05, Türkiye Finans 2025-05-26).
 - Dört rapor: dağıtılan kâr payı, kâr paylaşım, ve ikisinin ara ödemeli hesap

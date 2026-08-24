@@ -6,13 +6,29 @@
     "kategori": "ilke",
     "resmi_tr": "Faiz",
     "en": "Riba / Interest",
-    "varyantlar": ["ribâ", "riba", "faiz"],
-    "halk_dili": ["faiz", "tefecilik", "paradan para kazanmak"],
+    "varyantlar": [
+      "ribâ",
+      "riba",
+      "faiz"
+    ],
+    "halk_dili": [
+      "faiz",
+      "tefecilik",
+      "paradan para kazanmak"
+    ],
     "tanim": "Bir borç ilişkisinde veya aynı cinsten malların değişiminde, karşılığı bulunmayan fazlalık. Katılım finansının temel yasağıdır.",
     "sade_aciklama": "Paranın vade karşılığında önceden belirlenmiş bir fazlalıkla geri alınması.",
-    "degildir": ["kâr payı", "kâr marjı", "kira bedeli"],
+    "degildir": [
+      "kâr payı",
+      "kâr marjı",
+      "kira bedeli"
+    ],
     "ayrim_notu": "Riba önceden garanti edilmiş ve bir ticari riske dayanmayan getiridir. Kâr payı ise gerçekleşmiş bir ticari faaliyetin sonucuna bağlıdır ve zarar ihtimali taşır. Bu ikisi asla eş anlamlı kullanılmamalıdır.",
-    "iliskili": ["kar-payi", "garar", "karz-i-hasen"],
+    "iliskili": [
+      "kar-payi",
+      "garar",
+      "karz-i-hasen"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları",
     "risk_notu": "Katılım bankası ürünleri anlatılırken 'faiz' kelimesi getiri anlamında kullanılmamalıdır; uyum ihlali sayılır."
   },
@@ -23,13 +39,26 @@
     "kategori": "ilke",
     "resmi_tr": "Aşırı belirsizlik",
     "en": "Gharar / Excessive uncertainty",
-    "varyantlar": ["garâr", "gharar"],
-    "halk_dili": ["belirsizlik", "riskli sözleşme"],
+    "varyantlar": [
+      "garâr",
+      "gharar"
+    ],
+    "halk_dili": [
+      "belirsizlik",
+      "riskli sözleşme"
+    ],
     "tanim": "Sözleşmenin konusu, bedeli veya teslim şartlarındaki, taraflardan birini zarara uğratabilecek düzeydeki belirsizlik.",
     "sade_aciklama": "Neyi, ne kadara, ne zaman aldığınızın net olmaması durumu.",
-    "degildir": ["ticari risk", "piyasa riski"],
+    "degildir": [
+      "ticari risk",
+      "piyasa riski"
+    ],
     "ayrim_notu": "Her risk garar değildir. Ticari faaliyetin doğal riski meşrudur; garar sözleşmenin esaslı unsurlarındaki bilinmezliktir.",
-    "iliskili": ["meysir", "riba", "selem"],
+    "iliskili": [
+      "meysir",
+      "riba",
+      "selem"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -39,13 +68,27 @@
     "kategori": "ilke",
     "resmi_tr": "Kumar",
     "en": "Maysir / Gambling",
-    "varyantlar": ["meysîr", "maysir", "kumar"],
-    "halk_dili": ["kumar", "şans oyunu", "bahis"],
+    "varyantlar": [
+      "meysîr",
+      "maysir",
+      "kumar"
+    ],
+    "halk_dili": [
+      "kumar",
+      "şans oyunu",
+      "bahis"
+    ],
     "tanim": "Bir tarafın kazancının diğerinin kaybına bağlı olduğu, tesadüfe dayalı sıfır toplamlı işlem.",
     "sade_aciklama": "Sonucu şansa bağlı, birinin kazancının diğerinin kaybı olduğu işlem.",
-    "degildir": ["ortaklık", "yatırım"],
+    "degildir": [
+      "ortaklık",
+      "yatırım"
+    ],
     "ayrim_notu": "Ortaklıkta taraflar aynı ticari sonucu paylaşır; meysirde taraflar birbirine karşı konumlanır.",
-    "iliskili": ["garar", "musaraka"],
+    "iliskili": [
+      "garar",
+      "musaraka"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -55,13 +98,26 @@
     "kategori": "ilke",
     "resmi_tr": "Sözleşme",
     "en": "Aqd / Contract",
-    "varyantlar": ["akd", "akit", "âkit", "akd-i", "ukud"],
-    "halk_dili": ["sözleşme", "anlaşma", "kontrat"],
+    "varyantlar": [
+      "akd",
+      "akit",
+      "âkit",
+      "akd-i",
+      "ukud"
+    ],
+    "halk_dili": [
+      "sözleşme",
+      "anlaşma",
+      "kontrat"
+    ],
     "tanim": "Tarafların irade beyanlarının hukuki sonuç doğuracak şekilde birleşmesi.",
     "sade_aciklama": "İki tarafın karşılıklı olarak kurduğu bağlayıcı anlaşma.",
     "degildir": [],
     "ayrim_notu": "'Âkit' (uzun a ile) sözleşmeyi yapan taraf anlamına da gelir; metinde hangisi olduğu bağlamdan çıkarılmalıdır.",
-    "iliskili": ["icap-kabul", "fesih"],
+    "iliskili": [
+      "icap-kabul",
+      "fesih"
+    ],
     "kaynak": "Türk Borçlar Kanunu / fıkhî muamelat"
   },
   {
@@ -71,13 +127,20 @@
     "kategori": "ilke",
     "resmi_tr": "Öneri ve kabul",
     "en": "Offer and acceptance",
-    "varyantlar": ["îcap", "icab ve kabul"],
-    "halk_dili": ["teklif ve onay"],
+    "varyantlar": [
+      "îcap",
+      "icab ve kabul"
+    ],
+    "halk_dili": [
+      "teklif ve onay"
+    ],
     "tanim": "Sözleşmenin kurulmasını sağlayan karşılıklı irade beyanları.",
     "sade_aciklama": "Bir tarafın teklifi, diğer tarafın bu teklifi kabul etmesi.",
     "degildir": [],
     "ayrim_notu": "'İcap' burada teklif demektir; günlük dildeki 'icap etmek' (gerekmek) fiiliyle karıştırılmamalıdır.",
-    "iliskili": ["akit"],
+    "iliskili": [
+      "akit"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -87,13 +150,27 @@
     "kategori": "ilke",
     "resmi_tr": "Teslim alma / zilyetlik",
     "en": "Qabd / Constructive possession",
-    "varyantlar": ["kabz", "kabd", "qabd"],
-    "halk_dili": ["teslim alma", "malı almak", "eline geçmesi"],
+    "varyantlar": [
+      "kabz",
+      "kabd",
+      "qabd"
+    ],
+    "halk_dili": [
+      "teslim alma",
+      "malı almak",
+      "eline geçmesi"
+    ],
     "tanim": "Malın fiilen veya hükmen alıcının tasarrufuna geçmesi. Birçok akitte geçerlilik şartıdır.",
     "sade_aciklama": "Malın gerçekten veya hukuken alıcının eline geçmiş olması.",
-    "degildir": ["mülkiyetin devri"],
+    "degildir": [
+      "mülkiyetin devri"
+    ],
     "ayrim_notu": "Mülkiyet ile kabz farklıdır: mal mülkiyete geçmiş ama henüz kabzedilmemiş olabilir. Murabahada bankanın malı satmadan önce mülkiyet ve risk üstlenmesi bu ilkeye dayanır.",
-    "iliskili": ["murabaha", "sarf", "mulkiyet"],
+    "iliskili": [
+      "murabaha",
+      "sarf",
+      "mulkiyet"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -103,13 +180,26 @@
     "kategori": "ilke",
     "resmi_tr": "Mülkiyet hakkı",
     "en": "Ownership",
-    "varyantlar": ["mülkiyet", "temellük"],
-    "halk_dili": ["sahiplik", "malın sahibi olmak"],
+    "varyantlar": [
+      "mülkiyet",
+      "temellük"
+    ],
+    "halk_dili": [
+      "sahiplik",
+      "malın sahibi olmak"
+    ],
     "tanim": "Bir mal üzerinde kullanma, semerelerinden yararlanma ve tasarruf etme yetkisinin tümü.",
     "sade_aciklama": "Bir şeyin hukuken sahibi olmak.",
-    "degildir": ["zilyetlik", "kullanım hakkı"],
+    "degildir": [
+      "zilyetlik",
+      "kullanım hakkı"
+    ],
     "ayrim_notu": "İcarede kiracıya geçen şey mülkiyet değil menfaattir (kullanım hakkı); bu ayrım icare ile satışı birbirinden ayırır.",
-    "iliskili": ["icare", "kabz", "menfaat"],
+    "iliskili": [
+      "icare",
+      "kabz",
+      "menfaat"
+    ],
     "kaynak": "Türk Medeni Kanunu"
   },
   {
@@ -119,13 +209,24 @@
     "kategori": "ilke",
     "resmi_tr": "Kullanım hakkı / yarar",
     "en": "Usufruct / Manfa'ah",
-    "varyantlar": ["menfaat", "menâfi"],
-    "halk_dili": ["kullanım hakkı", "yararlanma"],
+    "varyantlar": [
+      "menfaat",
+      "menâfi"
+    ],
+    "halk_dili": [
+      "kullanım hakkı",
+      "yararlanma"
+    ],
     "tanim": "Bir maldan, mülkiyetine sahip olmaksızın yararlanma hakkı.",
     "sade_aciklama": "Bir şeyi kullanma hakkı; sahibi olmadan ondan yararlanabilme.",
-    "degildir": ["mülkiyet"],
+    "degildir": [
+      "mülkiyet"
+    ],
     "ayrim_notu": "İcare akdinin konusu maldan değil, malın menfaatinden ibarettir.",
-    "iliskili": ["icare", "mulkiyet"],
+    "iliskili": [
+      "icare",
+      "mulkiyet"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -135,13 +236,27 @@
     "kategori": "ilke",
     "resmi_tr": "Meşru / gayrimeşru",
     "en": "Halal / Haram",
-    "varyantlar": ["helâl", "harâm", "helal", "haram"],
-    "halk_dili": ["caiz mi", "günah mı", "dinen uygun mu"],
+    "varyantlar": [
+      "helâl",
+      "harâm",
+      "helal",
+      "haram"
+    ],
+    "halk_dili": [
+      "caiz mi",
+      "günah mı",
+      "dinen uygun mu"
+    ],
     "tanim": "Bir fiilin veya kazancın fıkhen meşru veya yasaklanmış olması.",
     "sade_aciklama": "Dinen uygun olan ve olmayan.",
-    "degildir": ["yasal / yasadışı"],
+    "degildir": [
+      "yasal / yasadışı"
+    ],
     "ayrim_notu": "Yasal olan her işlem helal olmayabilir. Katılım finansında hem mevzuata hem fıkhî standartlara uygunluk ayrı ayrı aranır.",
-    "iliskili": ["danisma-kurulu", "fikhi-uygunluk"],
+    "iliskili": [
+      "danisma-kurulu",
+      "fikhi-uygunluk"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -151,13 +266,29 @@
     "kategori": "ilke",
     "resmi_tr": "Katılım finans ilkelerine uygunluk",
     "en": "Shariah compliance",
-    "varyantlar": ["şer'i uygunluk", "şer'î uygunluk", "seri uygunluk", "faizsizlik uygunluğu"],
-    "halk_dili": ["dine uygunluk", "faizsiz mi", "helal mi"],
+    "varyantlar": [
+      "şer'i uygunluk",
+      "şer'î uygunluk",
+      "seri uygunluk",
+      "faizsizlik uygunluğu"
+    ],
+    "halk_dili": [
+      "dine uygunluk",
+      "faizsiz mi",
+      "helal mi"
+    ],
     "tanim": "Bir ürün, işlem veya kurumun katılım finans ilkelerine ve ilgili fıkhî standartlara uygunluğunun tespiti.",
     "sade_aciklama": "Ürünün faizsiz bankacılık ilkelerine uygun olduğunun onaylanması.",
-    "degildir": ["mevzuata uygunluk", "compliance"],
+    "degildir": [
+      "mevzuata uygunluk",
+      "compliance"
+    ],
     "ayrim_notu": "Genel bankacılık uyumundan (BDDK mevzuatı) ayrı ve ek bir denetim katmanıdır.",
-    "iliskili": ["danisma-kurulu", "merkezi-danisma-kurulu", "helal-haram"],
+    "iliskili": [
+      "danisma-kurulu",
+      "merkezi-danisma-kurulu",
+      "helal-haram"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -167,13 +298,34 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Kurumsal / bireysel finansman desteği",
     "en": "Murabaha / Cost-plus sale",
-    "varyantlar": ["murâbaha", "murabahâ", "murabaha", "murabehe", "vadeli satış"],
-    "halk_dili": ["taksitli alışveriş", "kredi gibi", "banka alıp bana satıyor", "peşin alıp vadeli satmak"],
+    "varyantlar": [
+      "murâbaha",
+      "murabahâ",
+      "murabaha",
+      "murabehe",
+      "vadeli satış"
+    ],
+    "halk_dili": [
+      "taksitli alışveriş",
+      "kredi gibi",
+      "banka alıp bana satıyor",
+      "peşin alıp vadeli satmak"
+    ],
     "tanim": "Satıcının malı maliyeti ve üzerine eklediği kâr marjını açıklayarak satması. Katılım bankalarında banka malı satıcıdan peşin alır, müşteriye vadeli olarak kârlı satar.",
     "sade_aciklama": "Banka istediğiniz malı sizin adınıza peşin satın alır, üzerine kâr ekleyip size taksitle satar.",
-    "degildir": ["kredi", "nakit kredi", "borç verme", "tüketici kredisi"],
+    "degildir": [
+      "kredi",
+      "nakit kredi",
+      "borç verme",
+      "tüketici kredisi"
+    ],
     "ayrim_notu": "Kredide nakit verilir ve geri ödemede faiz eklenir; murabahada nakit değil MAL satılır ve fark faiz değil satış kârıdır. Bankanın malı gerçekten mülkiyetine alması ve riskini bir an için üstlenmesi geçerlilik şartıdır. Fiyat sözleşme anında sabitlenir, sonradan artırılamaz.",
-    "iliskili": ["kabz", "vade-farki", "teverruk", "kurumsal-finansman-destegi"],
+    "iliskili": [
+      "kabz",
+      "vade-farki",
+      "teverruk",
+      "kurumsal-finansman-destegi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 8; Bankaların Kredi İşlemlerine İlişkin Yönetmelik",
     "risk_notu": "Müşteriye anlatırken 'faiz oranı' değil 'kâr oranı / vade farkı' denmelidir."
   },
@@ -184,13 +336,25 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Kurumsal finansman desteği",
     "en": "Corporate murabaha facility",
-    "varyantlar": ["KFD", "kurumsal finansman"],
-    "halk_dili": ["şirkete kredi", "ticari kredi"],
+    "varyantlar": [
+      "KFD",
+      "kurumsal finansman"
+    ],
+    "halk_dili": [
+      "şirkete kredi",
+      "ticari kredi"
+    ],
     "tanim": "Katılım bankasının, işletmenin ihtiyaç duyduğu mal veya hizmeti satıcıdan alıp müşteriye vadeli satması yoluyla sağladığı finansman. Murabahanın mevzuattaki karşılığıdır.",
     "sade_aciklama": "İşletmelerin mal ve hizmet alımının banka tarafından vadeli olarak finanse edilmesi.",
-    "degildir": ["ticari kredi", "nakit kredi"],
+    "degildir": [
+      "ticari kredi",
+      "nakit kredi"
+    ],
     "ayrim_notu": "Bedel doğrudan müşteriye değil, satıcıya ödenir. Nakit kullandırım söz konusu değildir.",
-    "iliskili": ["murabaha", "bireysel-finansman-destegi"],
+    "iliskili": [
+      "murabaha",
+      "bireysel-finansman-destegi"
+    ],
     "kaynak": "Bankaların Kredi İşlemlerine İlişkin Yönetmelik"
   },
   {
@@ -200,13 +364,27 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Bireysel finansman desteği",
     "en": "Retail murabaha facility",
-    "varyantlar": ["BFD", "bireysel finansman"],
-    "halk_dili": ["ihtiyaç kredisi", "taşıt kredisi", "konut kredisi", "araba almak için kredi"],
+    "varyantlar": [
+      "BFD",
+      "bireysel finansman"
+    ],
+    "halk_dili": [
+      "ihtiyaç kredisi",
+      "taşıt kredisi",
+      "konut kredisi",
+      "araba almak için kredi"
+    ],
     "tanim": "Gerçek kişilerin ihtiyaç duyduğu mal veya hizmetin katılım bankasınca satın alınıp müşteriye vadeli satılması.",
     "sade_aciklama": "Konut, taşıt veya ihtiyaçlarınızın banka tarafından vadeli olarak finanse edilmesi.",
-    "degildir": ["ihtiyaç kredisi", "nakit kredi"],
+    "degildir": [
+      "ihtiyaç kredisi",
+      "nakit kredi"
+    ],
     "ayrim_notu": "Müşteriye nakit ödenmez; ödeme satıcı firmaya yapılır. 'Kredi' kelimesi mevzuatta genel kavram olarak geçse de ürün anlatımında kullanılmamalıdır.",
-    "iliskili": ["murabaha", "kurumsal-finansman-destegi"],
+    "iliskili": [
+      "murabaha",
+      "kurumsal-finansman-destegi"
+    ],
     "kaynak": "Bankaların Kredi İşlemlerine İlişkin Yönetmelik"
   },
   {
@@ -216,13 +394,28 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Vade farkı",
     "en": "Deferred payment mark-up",
-    "varyantlar": ["vade farki", "kâr marjı", "kar marji"],
-    "halk_dili": ["faiz farkı", "taksit farkı", "ne kadar fazla ödeyeceğim"],
+    "varyantlar": [
+      "vade farki",
+      "kâr marjı",
+      "kar marji"
+    ],
+    "halk_dili": [
+      "faiz farkı",
+      "taksit farkı",
+      "ne kadar fazla ödeyeceğim"
+    ],
     "tanim": "Peşin fiyat ile vadeli satış fiyatı arasındaki, satış anında sabitlenen fark.",
     "sade_aciklama": "Peşin fiyat ile taksitli fiyat arasındaki, baştan belli olan fark.",
-    "degildir": ["faiz", "gecikme faizi"],
+    "degildir": [
+      "faiz",
+      "gecikme faizi"
+    ],
     "ayrim_notu": "Vade farkı satış bedelinin bir parçasıdır ve sözleşme anında kesinleşir. Ödeme geciktiğinde artırılamaz; artırılırsa riba haline gelir.",
-    "iliskili": ["murabaha", "riba", "gecikme-cezasi"],
+    "iliskili": [
+      "murabaha",
+      "riba",
+      "gecikme-cezasi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 8"
   },
   {
@@ -232,13 +425,29 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Sermaye ortaklığı",
     "en": "Musharakah / Partnership",
-    "varyantlar": ["müşareke", "musharakah", "muşareke", "şirket-i inan"],
-    "halk_dili": ["ortaklık", "banka bana ortak oluyor", "birlikte yatırım"],
+    "varyantlar": [
+      "müşareke",
+      "musharakah",
+      "muşareke",
+      "şirket-i inan"
+    ],
+    "halk_dili": [
+      "ortaklık",
+      "banka bana ortak oluyor",
+      "birlikte yatırım"
+    ],
     "tanim": "İki veya daha fazla tarafın sermaye koyarak kurduğu, kârı anlaşılan oranda paylaştıkları, zararı ise sermaye payları oranında üstlendikleri ortaklık.",
     "sade_aciklama": "Banka ile birlikte sermaye koyup kârı da zararı da paylaştığınız ortaklık.",
-    "degildir": ["kredi", "mudaraba"],
+    "degildir": [
+      "kredi",
+      "mudaraba"
+    ],
     "ayrim_notu": "Muşarakada her iki taraf da sermaye koyar; mudarabada sermayeyi yalnızca bir taraf koyar. Zarar paylaşımı kâr paylaşımından farklı kuralla işler: kâr serbestçe anlaşılır, zarar mutlaka sermaye oranındadır.",
-    "iliskili": ["mudaraba", "azalan-musaraka", "kar-zarar-ortakligi"],
+    "iliskili": [
+      "mudaraba",
+      "azalan-musaraka",
+      "kar-zarar-ortakligi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 12"
   },
   {
@@ -248,13 +457,27 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Azalan ortaklık",
     "en": "Diminishing Musharakah",
-    "varyantlar": ["müşareke-i mütenakısa", "azalan müşareke", "diminishing musharaka"],
-    "halk_dili": ["yavaş yavaş kendi evim oluyor", "payını satın alma"],
+    "varyantlar": [
+      "müşareke-i mütenakısa",
+      "azalan müşareke",
+      "diminishing musharaka"
+    ],
+    "halk_dili": [
+      "yavaş yavaş kendi evim oluyor",
+      "payını satın alma"
+    ],
     "tanim": "Ortaklığın kurulmasından sonra taraflardan birinin, diğerinin payını periyodik olarak satın alarak ortaklığı tek başına devraldığı yapı. Konut finansmanında yaygındır.",
     "sade_aciklama": "Bankayla ortak aldığınız konutta bankanın payını taksitlerle satın alıp zamanla tam sahibi olmanız.",
-    "degildir": ["konut kredisi", "finansal kiralama"],
+    "degildir": [
+      "konut kredisi",
+      "finansal kiralama"
+    ],
     "ayrim_notu": "Pay devri ile kira ödemesi ayrı sözleşmelerdir ve birbirinin şartına bağlanamaz.",
-    "iliskili": ["musaraka", "icare", "icare-muntehiye"],
+    "iliskili": [
+      "musaraka",
+      "icare",
+      "icare-muntehiye"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 12"
   },
   {
@@ -264,13 +487,30 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Emek-sermaye ortaklığı",
     "en": "Mudarabah",
-    "varyantlar": ["mudârabe", "mudarebe", "mudharabah", "kırâz"],
-    "halk_dili": ["biri para koyar biri emek", "sermayedar ortaklık"],
+    "varyantlar": [
+      "mudârabe",
+      "mudarebe",
+      "mudharabah",
+      "kırâz"
+    ],
+    "halk_dili": [
+      "biri para koyar biri emek",
+      "sermayedar ortaklık"
+    ],
     "tanim": "Sermayenin bir taraftan (rabbü'l-mâl), işletme emeğinin diğer taraftan (mudârib) geldiği ortaklık. Kâr anlaşılan oranda paylaşılır; zarar kural olarak sermayedara aittir, mudârib emeğini kaybeder.",
     "sade_aciklama": "Bir tarafın parayı, diğer tarafın emeği koyduğu ve kârın paylaşıldığı ortaklık.",
-    "degildir": ["musaraka", "kredi", "iş sözleşmesi"],
+    "degildir": [
+      "musaraka",
+      "kredi",
+      "iş sözleşmesi"
+    ],
     "ayrim_notu": "Zarar asimetriktir: kusuru yoksa mudâribden zarar talep edilemez. Katılma hesabı yapısı bu akde dayanır; mudârib bankadır, rabbü'l-mâl hesap sahibidir.",
-    "iliskili": ["musaraka", "katilma-hesabi", "rabbul-mal", "mudarib"],
+    "iliskili": [
+      "musaraka",
+      "katilma-hesabi",
+      "rabbul-mal",
+      "mudarib"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 13"
   },
   {
@@ -280,13 +520,26 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Sermaye sahibi",
     "en": "Rabb al-mal / Capital provider",
-    "varyantlar": ["rabbul mal", "rabbülmal", "rab al-mal"],
-    "halk_dili": ["parayı koyan", "yatırımcı"],
+    "varyantlar": [
+      "rabbul mal",
+      "rabbülmal",
+      "rab al-mal"
+    ],
+    "halk_dili": [
+      "parayı koyan",
+      "yatırımcı"
+    ],
     "tanim": "Mudaraba akdinde sermayeyi sağlayan taraf.",
     "sade_aciklama": "Ortaklıkta parayı koyan taraf.",
-    "degildir": ["mudârib"],
+    "degildir": [
+      "mudârib"
+    ],
     "ayrim_notu": "Katılma hesabında rabbü'l-mâl müşteridir, banka değildir.",
-    "iliskili": ["mudaraba", "mudarib", "katilma-hesabi"],
+    "iliskili": [
+      "mudaraba",
+      "mudarib",
+      "katilma-hesabi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 13"
   },
   {
@@ -296,13 +549,26 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "İşletmeci / emek sahibi",
     "en": "Mudarib / Entrepreneur",
-    "varyantlar": ["mudarib", "mudârib", "müdarib"],
-    "halk_dili": ["işi yürüten", "işletmeci"],
+    "varyantlar": [
+      "mudarib",
+      "mudârib",
+      "müdarib"
+    ],
+    "halk_dili": [
+      "işi yürüten",
+      "işletmeci"
+    ],
     "tanim": "Mudaraba akdinde sermayeyi işleten taraf.",
     "sade_aciklama": "Ortaklıkta emeğini ve yönetimini koyan taraf.",
-    "degildir": ["rabbü'l-mâl"],
+    "degildir": [
+      "rabbü'l-mâl"
+    ],
     "ayrim_notu": "Katılma hesabında mudârib bankadır; topladığı fonu işletir ve kârdan pay alır.",
-    "iliskili": ["mudaraba", "rabbul-mal", "katilma-hesabi"],
+    "iliskili": [
+      "mudaraba",
+      "rabbul-mal",
+      "katilma-hesabi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 13"
   },
   {
@@ -312,13 +578,30 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Kiralama",
     "en": "Ijarah / Lease",
-    "varyantlar": ["îcâre", "icara", "ijara", "ijarah", "icar"],
-    "halk_dili": ["kiralama", "kiraya vermek"],
+    "varyantlar": [
+      "îcâre",
+      "icara",
+      "ijara",
+      "ijarah",
+      "icar"
+    ],
+    "halk_dili": [
+      "kiralama",
+      "kiraya vermek"
+    ],
     "tanim": "Bir malın menfaatinin veya bir kişinin emeğinin belirli bir bedel karşılığında belirli süreyle devredilmesi.",
     "sade_aciklama": "Bir malı satın almadan, bedel karşılığı belirli süre kullanma hakkı.",
-    "degildir": ["satış", "murabaha"],
+    "degildir": [
+      "satış",
+      "murabaha"
+    ],
     "ayrim_notu": "İcarede mülkiyet kiraya verende kalır; bu nedenle malın esaslı bakım, sigorta ve telef riski kural olarak mâlike aittir. Bu, icareyi faizli finansal kiralamadan ayıran temel noktadır.",
-    "iliskili": ["menfaat", "icare-muntehiye", "finansal-kiralama", "sukuk"],
+    "iliskili": [
+      "menfaat",
+      "icare-muntehiye",
+      "finansal-kiralama",
+      "sukuk"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 9"
   },
   {
@@ -328,13 +611,29 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Mülkiyet devri ile sonuçlanan kiralama",
     "en": "Ijarah Muntahia Bittamleek / Lease ending with ownership",
-    "varyantlar": ["icare muntehiye bittemlik", "IMB", "temlikli icare", "mülkiyetle sonuçlanan kiralama"],
-    "halk_dili": ["kirala sonra satın al", "leasing", "sonunda benim oluyor"],
+    "varyantlar": [
+      "icare muntehiye bittemlik",
+      "IMB",
+      "temlikli icare",
+      "mülkiyetle sonuçlanan kiralama"
+    ],
+    "halk_dili": [
+      "kirala sonra satın al",
+      "leasing",
+      "sonunda benim oluyor"
+    ],
     "tanim": "Kira süresi sonunda malın hibe veya satış yoluyla kiracıya devredildiği kiralama yapısı.",
     "sade_aciklama": "Kira ödemeleri bittiğinde malın size devredildiği kiralama.",
-    "degildir": ["taksitli satış", "faizli leasing"],
+    "degildir": [
+      "taksitli satış",
+      "faizli leasing"
+    ],
     "ayrim_notu": "Kira akdi ile devir akdi ayrı ve bağımsız olmalıdır; devir vaadi kira sözleşmesinin içine şart olarak konulamaz. Aksi halde tek akitte iki akit sorunu doğar.",
-    "iliskili": ["icare", "finansal-kiralama", "azalan-musaraka"],
+    "iliskili": [
+      "icare",
+      "finansal-kiralama",
+      "azalan-musaraka"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 9"
   },
   {
@@ -344,13 +643,25 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Finansal kiralama (leasing)",
     "en": "Financial leasing",
-    "varyantlar": ["leasing", "fin. kiralama"],
-    "halk_dili": ["leasing", "makine kiralama"],
+    "varyantlar": [
+      "leasing",
+      "fin. kiralama"
+    ],
+    "halk_dili": [
+      "leasing",
+      "makine kiralama"
+    ],
     "tanim": "Katılım bankasının müşterinin talebi üzerine satın aldığı taşınır veya taşınmazı, belirli süreyle kiraya vermesi ve süre sonunda devretmesi.",
     "sade_aciklama": "Bankanın sizin için aldığı ekipmanı kiralayıp süre sonunda size devretmesi.",
-    "degildir": ["murabaha", "operasyonel kiralama"],
+    "degildir": [
+      "murabaha",
+      "operasyonel kiralama"
+    ],
     "ayrim_notu": "Katılım bankalarının mevzuattaki fon kullandırma yöntemlerinden biridir ve icare/icare muntehiye bi't-temlîk esasına dayandırılır.",
-    "iliskili": ["icare", "icare-muntehiye"],
+    "iliskili": [
+      "icare",
+      "icare-muntehiye"
+    ],
     "kaynak": "6361 sayılı Finansal Kiralama, Faktoring ve Finansman Şirketleri Kanunu; Bankaların Kredi İşlemlerine İlişkin Yönetmelik"
   },
   {
@@ -360,13 +671,29 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Peşin ödemeli vadeli teslim satışı",
     "en": "Salam / Forward purchase",
-    "varyantlar": ["selem", "selef", "bey'u's-selem", "salam"],
-    "halk_dili": ["parayı şimdi ver malı sonra al", "hasat öncesi satış"],
+    "varyantlar": [
+      "selem",
+      "selef",
+      "bey'u's-selem",
+      "salam"
+    ],
+    "halk_dili": [
+      "parayı şimdi ver malı sonra al",
+      "hasat öncesi satış"
+    ],
     "tanim": "Bedelin peşin ödendiği, standart nitelikli malın ileri bir tarihte teslim edildiği satış. Tarım ve emtia finansmanında kullanılır.",
     "sade_aciklama": "Bedeli bugün ödeyip malı ileride teslim aldığınız satış.",
-    "degildir": ["vadeli işlem sözleşmesi", "futures", "istisna"],
+    "degildir": [
+      "vadeli işlem sözleşmesi",
+      "futures",
+      "istisna"
+    ],
     "ayrim_notu": "Bedelin akit anında tam ve peşin ödenmesi zorunludur; bu yönüyle futures'tan ayrılır. Mal standart/mislî olmalı, teslim tarihi ve nitelikleri kesin belirlenmelidir. İstisnadan farkı: selemde bedel peşindir ve mal imal edilmesi gerekmez.",
-    "iliskili": ["istisna", "garar", "paralel-selem"],
+    "iliskili": [
+      "istisna",
+      "garar",
+      "paralel-selem"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 10"
   },
   {
@@ -376,13 +703,18 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Paralel selem",
     "en": "Parallel Salam",
-    "varyantlar": ["paralel selem", "selem-i muvazi"],
+    "varyantlar": [
+      "paralel selem",
+      "selem-i muvazi"
+    ],
     "halk_dili": [],
     "tanim": "Selem yoluyla mal satın alan tarafın, aynı nitelikte malı üçüncü kişiye ayrı bir selem akdiyle satması.",
     "sade_aciklama": "Peşin alınan vadeli malın, başka bir sözleşmeyle üçüncü kişiye satılması.",
     "degildir": [],
     "ayrim_notu": "İki akit birbirinden hukuken bağımsız olmalıdır; birinin ifası diğerinin şartına bağlanamaz.",
-    "iliskili": ["selem"],
+    "iliskili": [
+      "selem"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 10"
   },
   {
@@ -392,13 +724,29 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Eser sözleşmesi / imalat sözleşmesi",
     "en": "Istisna / Manufacturing contract",
-    "varyantlar": ["istisnâ", "istisna'", "istisna akdi", "bey'u'l-istisna"],
-    "halk_dili": ["sipariş üzerine üretim", "inşaat sözleşmesi", "yaptırma"],
+    "varyantlar": [
+      "istisnâ",
+      "istisna'",
+      "istisna akdi",
+      "bey'u'l-istisna"
+    ],
+    "halk_dili": [
+      "sipariş üzerine üretim",
+      "inşaat sözleşmesi",
+      "yaptırma"
+    ],
     "tanim": "Belirli nitelikteki bir şeyin imal veya inşa edilerek teslim edilmesi üzerine kurulan akit. Proje ve inşaat finansmanında kullanılır.",
     "sade_aciklama": "Bir şeyin sizin için üretilmesi veya inşa edilmesi üzerine yapılan sözleşme.",
-    "degildir": ["selem", "murabaha"],
+    "degildir": [
+      "selem",
+      "murabaha"
+    ],
     "ayrim_notu": "Selemden farkı: bedelin peşin olması zorunlu değildir, taksitle ödenebilir; konusu mutlaka imal/inşa gerektiren bir iştir.",
-    "iliskili": ["selem", "paralel-istisna", "sukuk"],
+    "iliskili": [
+      "selem",
+      "paralel-istisna",
+      "sukuk"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 11"
   },
   {
@@ -408,13 +756,20 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Paralel eser sözleşmesi",
     "en": "Parallel Istisna",
-    "varyantlar": ["paralel istisna", "istisna-i muvazi"],
-    "halk_dili": ["taşerona yaptırma"],
+    "varyantlar": [
+      "paralel istisna",
+      "istisna-i muvazi"
+    ],
+    "halk_dili": [
+      "taşerona yaptırma"
+    ],
     "tanim": "İstisna akdiyle imalat taahhüdünde bulunan tarafın, aynı işi başka bir yükleniciye ayrı bir istisna akdiyle yaptırması.",
     "sade_aciklama": "Bankanın üstlendiği yapım işini ayrı bir sözleşmeyle yükleniciye yaptırması.",
     "degildir": [],
     "ayrim_notu": "İki akit bağımsızdır; müşteriye karşı sorumluluk bankada kalır.",
-    "iliskili": ["istisna"],
+    "iliskili": [
+      "istisna"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 11"
   },
   {
@@ -424,13 +779,29 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Nakit temini amaçlı emtia alım satımı",
     "en": "Tawarruq / Commodity murabaha",
-    "varyantlar": ["tevarruk", "teverrük", "tawarruq", "organize teverruk", "emtia murabahası"],
-    "halk_dili": ["nakit ihtiyacı", "elime para geçsin"],
+    "varyantlar": [
+      "tevarruk",
+      "teverrük",
+      "tawarruq",
+      "organize teverruk",
+      "emtia murabahası"
+    ],
+    "halk_dili": [
+      "nakit ihtiyacı",
+      "elime para geçsin"
+    ],
     "tanim": "Bir malın vadeli olarak satın alınıp, üçüncü bir kişiye peşin bedelle satılması suretiyle nakit elde edilmesi.",
     "sade_aciklama": "Vadeli alınan bir emtianın peşin satılarak nakde çevrilmesi yoluyla finansman sağlanması.",
-    "degildir": ["îne satışı", "nakit kredi"],
+    "degildir": [
+      "îne satışı",
+      "nakit kredi"
+    ],
     "ayrim_notu": "Îne satışından farkı, malın ilk satıcıya değil bağımsız bir üçüncü kişiye satılmasıdır. Organize teverruk fıkhî açıdan tartışmalıdır; bazı standartlar ancak zaruret ve sıkı şartlarla cevaz verir. Bu terim geçtiğinde kurumun Danışma Kurulu görüşü esas alınmalıdır.",
-    "iliskili": ["ine-satisi", "murabaha", "danisma-kurulu"],
+    "iliskili": [
+      "ine-satisi",
+      "murabaha",
+      "danisma-kurulu"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 30",
     "risk_notu": "Tartışmalı yapı. Model kesin cevaz hükmü vermemeli, kurum içi Danışma Kurulu kararına yönlendirmelidir."
   },
@@ -441,13 +812,27 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Geri alım şartlı satış",
     "en": "Bay' al-Inah / Sale and buy-back",
-    "varyantlar": ["ine", "îne", "bey'u'l-îne", "bay al-inah"],
-    "halk_dili": ["sat geri al"],
+    "varyantlar": [
+      "ine",
+      "îne",
+      "bey'u'l-îne",
+      "bay al-inah"
+    ],
+    "halk_dili": [
+      "sat geri al"
+    ],
     "tanim": "Bir malın vadeli satılıp aynı taraftan peşin bedelle geri satın alınması işlemi.",
     "sade_aciklama": "Aynı kişiye vadeli satıp ondan peşin geri almak suretiyle nakit sağlama.",
-    "degildir": ["teverruk", "murabaha"],
+    "degildir": [
+      "teverruk",
+      "murabaha"
+    ],
     "ayrim_notu": "Çoğunluk görüşe göre faize giden bir hîle (muvazaa) sayıldığından caiz görülmez. Teverruktan farkı, alıcı ve satıcının aynı kişi olmasıdır.",
-    "iliskili": ["teverruk", "muvazaa", "riba"],
+    "iliskili": [
+      "teverruk",
+      "muvazaa",
+      "riba"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar",
     "risk_notu": "Kural olarak kabul edilmeyen yapı. Ürün olarak sunulamaz."
   },
@@ -458,13 +843,30 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Vekâlet sözleşmesi",
     "en": "Wakalah / Agency",
-    "varyantlar": ["vekalet", "vekâlet", "wakala", "wakalah", "vekâleten"],
-    "halk_dili": ["adıma işlem yapması", "yetki vermek"],
+    "varyantlar": [
+      "vekalet",
+      "vekâlet",
+      "wakala",
+      "wakalah",
+      "vekâleten"
+    ],
+    "halk_dili": [
+      "adıma işlem yapması",
+      "yetki vermek"
+    ],
     "tanim": "Bir kişinin, başkasını belirli bir işi kendi adına yapmak üzere yetkilendirmesi. Yatırım vekâletinde vekil, müvekkilin fonunu belirlenen esaslarla yönetir.",
     "sade_aciklama": "Bir işi sizin adınıza yapması için başkasına yetki vermeniz.",
-    "degildir": ["mudaraba", "ortaklık"],
+    "degildir": [
+      "mudaraba",
+      "ortaklık"
+    ],
     "ayrim_notu": "Vekil ücret alır (kâr payı değil); mudâribden farklı olarak kârdan pay yerine sabit ücret hak eder. Vekil kusursuz zarardan sorumlu değildir ve anaparayı garanti edemez.",
-    "iliskili": ["mudaraba", "sukuk", "cuale", "tekaful"],
+    "iliskili": [
+      "mudaraba",
+      "sukuk",
+      "cuale",
+      "tekaful"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 23"
   },
   {
@@ -474,13 +876,27 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Ödül karşılığı iş sözleşmesi",
     "en": "Ju'alah",
-    "varyantlar": ["cuale", "cu'âle", "juala", "ju'ala"],
-    "halk_dili": ["başarırsan ödül", "sonuç odaklı ücret"],
+    "varyantlar": [
+      "cuale",
+      "cu'âle",
+      "juala",
+      "ju'ala"
+    ],
+    "halk_dili": [
+      "başarırsan ödül",
+      "sonuç odaklı ücret"
+    ],
     "tanim": "Belirli bir sonucun gerçekleştirilmesi karşılığında ödül vaadine dayalı akit.",
     "sade_aciklama": "İş sonuçlanırsa ödenecek ödül üzerine kurulan anlaşma.",
-    "degildir": ["icare", "hizmet sözleşmesi"],
+    "degildir": [
+      "icare",
+      "hizmet sözleşmesi"
+    ],
     "ayrim_notu": "İcarede emek/süre karşılığı ücret ödenir; cuâlede yalnızca sonuç gerçekleşirse ödeme yapılır.",
-    "iliskili": ["icare", "vekalet"],
+    "iliskili": [
+      "icare",
+      "vekalet"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 15"
   },
   {
@@ -490,13 +906,29 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Faizsiz ödünç",
     "en": "Qard al-Hasan / Benevolent loan",
-    "varyantlar": ["karz-ı hasen", "karzı hasen", "qard hasan", "karz"],
-    "halk_dili": ["faizsiz borç", "iyilik borcu", "verdiğini aynen geri alma"],
+    "varyantlar": [
+      "karz-ı hasen",
+      "karzı hasen",
+      "qard hasan",
+      "karz"
+    ],
+    "halk_dili": [
+      "faizsiz borç",
+      "iyilik borcu",
+      "verdiğini aynen geri alma"
+    ],
     "tanim": "Yalnızca anaparanın geri ödendiği, hiçbir fazlalık veya menfaat şartı içermeyen ödünç.",
     "sade_aciklama": "Verdiğiniz tutarın aynen geri alındığı, hiçbir fazlalık içermeyen borç.",
-    "degildir": ["kredi", "murabaha"],
+    "degildir": [
+      "kredi",
+      "murabaha"
+    ],
     "ayrim_notu": "Ticari bir ürün değil, sosyal amaçlı bir akittir. Borç veren lehine şart koşulan her menfaat riba sayılır. Özel cari hesap fıkhen bu esasa dayandırılır.",
-    "iliskili": ["ozel-cari-hesap", "riba", "teberru"],
+    "iliskili": [
+      "ozel-cari-hesap",
+      "riba",
+      "teberru"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 19"
   },
   {
@@ -506,13 +938,27 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Döviz / kıymetli maden alım satımı",
     "en": "Sarf / Currency exchange",
-    "varyantlar": ["sarf", "bey'u's-sarf"],
-    "halk_dili": ["döviz bozdurmak", "kur işlemi", "altın almak"],
+    "varyantlar": [
+      "sarf",
+      "bey'u's-sarf"
+    ],
+    "halk_dili": [
+      "döviz bozdurmak",
+      "kur işlemi",
+      "altın almak"
+    ],
     "tanim": "Para ve para hükmündeki kıymetlerin birbiriyle değişimi.",
     "sade_aciklama": "Döviz veya altın gibi kıymetlerin birbiriyle takas edilmesi.",
-    "degildir": ["forward işlem", "vadeli döviz"],
+    "degildir": [
+      "forward işlem",
+      "vadeli döviz"
+    ],
     "ayrim_notu": "Her iki bedelin de aynı mecliste peşin teslim edilmesi (kabz) şarttır; vadeli döviz işlemleri bu nedenle sorunludur. Aynı cinsler değişiyorsa (altın-altın) ayrıca eşit miktar şartı aranır.",
-    "iliskili": ["kabz", "riba", "altin-hesabi"],
+    "iliskili": [
+      "kabz",
+      "riba",
+      "altin-hesabi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 1"
   },
   {
@@ -522,13 +968,25 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Mal karşılığı vesaikin finansmanı",
     "en": "Financing against documents of title",
-    "varyantlar": ["vesaik finansmanı", "mal mukabili vesaik"],
-    "halk_dili": ["ithalat finansmanı", "belge karşılığı ödeme"],
+    "varyantlar": [
+      "vesaik finansmanı",
+      "mal mukabili vesaik"
+    ],
+    "halk_dili": [
+      "ithalat finansmanı",
+      "belge karşılığı ödeme"
+    ],
     "tanim": "Malı temsil eden belgelerin (konşimento vb.) devri karşılığında sağlanan finansman. Dış ticarette kullanılır.",
     "sade_aciklama": "Mala ait belgelerin devri karşılığında yapılan finansman.",
-    "degildir": ["akreditif", "nakit kredi"],
+    "degildir": [
+      "akreditif",
+      "nakit kredi"
+    ],
     "ayrim_notu": "Belge malın mülkiyetini temsil ettiği için işlem bir mal alım satımı olarak kurgulanır.",
-    "iliskili": ["murabaha", "kabz"],
+    "iliskili": [
+      "murabaha",
+      "kabz"
+    ],
     "kaynak": "Bankaların Kredi İşlemlerine İlişkin Yönetmelik"
   },
   {
@@ -538,13 +996,26 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Kâr/zarar ortaklığı yatırımı",
     "en": "Profit and loss sharing investment",
-    "varyantlar": ["kar zarar ortaklığı", "KZO", "kâr zarar ortaklığı yatırımı"],
-    "halk_dili": ["ortaklık yatırımı", "kârı da zararı da paylaşmak"],
+    "varyantlar": [
+      "kar zarar ortaklığı",
+      "KZO",
+      "kâr zarar ortaklığı yatırımı"
+    ],
+    "halk_dili": [
+      "ortaklık yatırımı",
+      "kârı da zararı da paylaşmak"
+    ],
     "tanim": "Katılım bankasının bir işletmenin faaliyetine sermaye koyarak kâr ve zarara ortak olduğu fon kullandırma yöntemi.",
     "sade_aciklama": "Bankanın işletmeye ortak olarak kâr ve zararı paylaşması.",
-    "degildir": ["murabaha", "kredi"],
+    "degildir": [
+      "murabaha",
+      "kredi"
+    ],
     "ayrim_notu": "Muşaraka ve mudaraba akitlerinin mevzuattaki karşılığıdır. Getirisi önceden sabitlenemez.",
-    "iliskili": ["musaraka", "mudaraba"],
+    "iliskili": [
+      "musaraka",
+      "mudaraba"
+    ],
     "kaynak": "Bankaların Kredi İşlemlerine İlişkin Yönetmelik"
   },
   {
@@ -554,13 +1025,28 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Katılım fonu",
     "en": "Participation funds / deposits",
-    "varyantlar": ["katilim fonu", "katılım fonu"],
-    "halk_dili": ["bankaya para yatırmak", "birikim", "mevduat"],
+    "varyantlar": [
+      "katilim fonu",
+      "katılım fonu"
+    ],
+    "halk_dili": [
+      "bankaya para yatırmak",
+      "birikim",
+      "mevduat"
+    ],
     "tanim": "Katılım bankalarının özel cari hesap ve katılma hesabı yoluyla topladığı fonların bankacılık mevzuatındaki adı.",
     "sade_aciklama": "Katılım bankasına yatırdığınız paraların genel adı.",
-    "degildir": ["mevduat", "yatırım fonu"],
+    "degildir": [
+      "mevduat",
+      "yatırım fonu"
+    ],
     "ayrim_notu": "DİKKAT — iki farklı anlamı var: (1) bankacılık mevzuatında katılım bankasının topladığı fon (mevduatın karşılığı), (2) günlük kullanımda faizsiz esaslı yatırım fonu. Bağlam ayrılmadan cevap verilmemelidir.",
-    "iliskili": ["ozel-cari-hesap", "katilma-hesabi", "faizsiz-yatirim-fonu", "tmsf"],
+    "iliskili": [
+      "ozel-cari-hesap",
+      "katilma-hesabi",
+      "faizsiz-yatirim-fonu",
+      "tmsf"
+    ],
     "kaynak": "5411 sayılı Bankacılık Kanunu m.3",
     "risk_notu": "Anlam çakışması var; sorgu genişletmede her iki anlam da değerlendirilmeli."
   },
@@ -571,13 +1057,28 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Özel cari hesap",
     "en": "Current account",
-    "varyantlar": ["özel cari", "cari hesap", "vadesiz hesap"],
-    "halk_dili": ["vadesiz hesap", "normal hesap", "günlük hesap"],
+    "varyantlar": [
+      "özel cari",
+      "cari hesap",
+      "vadesiz hesap"
+    ],
+    "halk_dili": [
+      "vadesiz hesap",
+      "normal hesap",
+      "günlük hesap"
+    ],
     "tanim": "İstenildiği anda kısmen veya tamamen geri çekilebilen, karşılığında hiçbir getiri ödenmeyen hesap.",
     "sade_aciklama": "İstediğiniz an çekebileceğiniz, getiri ödenmeyen hesap.",
-    "degildir": ["katılma hesabı", "vadeli hesap"],
+    "degildir": [
+      "katılma hesabı",
+      "vadeli hesap"
+    ],
     "ayrim_notu": "Getiri ödenmemesi kuraldır; getiri ödenirse karz-ı hasen üzerinden menfaat şartı doğar ve riba haline gelir. Anapara banka tarafından garanti edilir.",
-    "iliskili": ["karz-i-hasen", "katilma-hesabi", "katilim-fonu"],
+    "iliskili": [
+      "karz-i-hasen",
+      "katilma-hesabi",
+      "katilim-fonu"
+    ],
     "kaynak": "5411 sayılı Bankacılık Kanunu m.3"
   },
   {
@@ -587,13 +1088,34 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Katılma hesabı",
     "en": "Participation account / Profit sharing account",
-    "varyantlar": ["katılma hesabı", "katilma hesabi", "kar payı hesabı", "vadeli katılma hesabı"],
-    "halk_dili": ["vadeli hesap", "faizli hesap gibi", "param ne kazanır", "birikim hesabı"],
+    "varyantlar": [
+      "katılma hesabı",
+      "katilma hesabi",
+      "kar payı hesabı",
+      "vadeli katılma hesabı"
+    ],
+    "halk_dili": [
+      "vadeli hesap",
+      "faizli hesap gibi",
+      "param ne kazanır",
+      "birikim hesabı"
+    ],
     "tanim": "Yatırılan fonun kullandırılmasından doğan kâr veya zarara katılma sonucunu doğuran, önceden belirlenmiş bir getiri ödenmeyen ve anaparanın geri ödenmesi garanti edilmeyen hesap.",
     "sade_aciklama": "Paranızın bankaca işletilip elde edilen kârdan pay aldığınız, getirisi önceden belli olmayan hesap.",
-    "degildir": ["vadeli mevduat", "faizli hesap", "garantili yatırım"],
+    "degildir": [
+      "vadeli mevduat",
+      "faizli hesap",
+      "garantili yatırım"
+    ],
     "ayrim_notu": "İki kritik fark: (1) getiri oranı önceden GARANTİ EDİLMEZ, sadece kâr paylaşım oranı bellidir; (2) anapara hukuken garanti değildir (TMSF sigorta limiti ayrı bir konudur). Mudaraba akdine dayanır.",
-    "iliskili": ["mudaraba", "kar-payi", "havuz", "birim-hesap-degeri", "tmsf", "katilim-orani"],
+    "iliskili": [
+      "mudaraba",
+      "kar-payi",
+      "havuz",
+      "birim-hesap-degeri",
+      "tmsf",
+      "katilim-orani"
+    ],
     "kaynak": "5411 sayılı Bankacılık Kanunu m.3",
     "risk_notu": "'Faiz oranı' veya 'getiri garantisi' ifadeleri kullanılamaz."
   },
@@ -604,13 +1126,33 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Kâr payı",
     "en": "Profit share",
-    "varyantlar": ["kar payı", "kâr payı", "kar payi", "kârpayı"],
-    "halk_dili": ["faiz", "getiri", "kazanç", "ne kadar kazanırım", "faiz oranı"],
+    "varyantlar": [
+      "kar payı",
+      "kâr payı",
+      "kar payi",
+      "kârpayı"
+    ],
+    "halk_dili": [
+      "faiz",
+      "getiri",
+      "kazanç",
+      "ne kadar kazanırım",
+      "faiz oranı"
+    ],
     "tanim": "Katılma hesabı sahibine, fonun işletilmesinden doğan kârdan düşen pay.",
     "sade_aciklama": "Paranızın işletilmesinden elde edilen gelirden size düşen kısım.",
-    "degildir": ["faiz", "kupon ödemesi", "temettü"],
+    "degildir": [
+      "faiz",
+      "kupon ödemesi",
+      "temettü"
+    ],
     "ayrim_notu": "Faizden farkı: önceden bir ORAN garanti edilmez, sadece kârın paylaşım ORANI (ör. %80/%20) belirlenir; gerçekleşen kâr değişkendir ve zarar ihtimali vardır. Şirket ortaklığındaki temettüden de farklıdır.",
-    "iliskili": ["riba", "katilma-hesabi", "katilim-orani", "birim-hesap-degeri"],
+    "iliskili": [
+      "riba",
+      "katilma-hesabi",
+      "katilim-orani",
+      "birim-hesap-degeri"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları",
     "risk_notu": "Müşteri 'faiz' dese bile cevapta 'kâr payı' terimi kullanılmalı ve fark kısaca açıklanmalıdır."
   },
@@ -621,13 +1163,27 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Kâr/zarara katılım oranı",
     "en": "Profit sharing ratio",
-    "varyantlar": ["katılım oranı", "kar paylaşım oranı", "paylaşım oranı"],
-    "halk_dili": ["yüzde kaçını alıyorum", "banka ne kadar kesiyor"],
+    "varyantlar": [
+      "katılım oranı",
+      "kar paylaşım oranı",
+      "paylaşım oranı"
+    ],
+    "halk_dili": [
+      "yüzde kaçını alıyorum",
+      "banka ne kadar kesiyor"
+    ],
     "tanim": "Oluşan kârın hesap sahibi ile banka arasında hangi oranda paylaşılacağını gösteren, sözleşmede önceden belirlenen oran.",
     "sade_aciklama": "Elde edilen kârın ne kadarının size, ne kadarının bankaya ait olacağını gösteren oran.",
-    "degildir": ["faiz oranı", "getiri oranı"],
+    "degildir": [
+      "faiz oranı",
+      "getiri oranı"
+    ],
     "ayrim_notu": "Bu oran KÂRIN paylaşımına ilişkindir, ANAPARAYA uygulanan bir getiri oranı DEĞİLDİR. En sık karıştırılan noktadır.",
-    "iliskili": ["kar-payi", "katilma-hesabi", "mudaraba"],
+    "iliskili": [
+      "kar-payi",
+      "katilma-hesabi",
+      "mudaraba"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -637,13 +1193,27 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Katılma hesapları havuzu",
     "en": "Pool",
-    "varyantlar": ["havuz", "fon havuzu", "katılma hesapları havuzu"],
-    "halk_dili": ["paralar bir yerde toplanıyor", "ortak kasa"],
+    "varyantlar": [
+      "havuz",
+      "fon havuzu",
+      "katılma hesapları havuzu"
+    ],
+    "halk_dili": [
+      "paralar bir yerde toplanıyor",
+      "ortak kasa"
+    ],
     "tanim": "Aynı vade ve para cinsindeki katılma hesaplarının, birlikte işletilmek üzere toplandığı ve kâr/zararın ortak hesaplandığı yapı.",
     "sade_aciklama": "Aynı vadedeki birikimlerin bir arada işletildiği ortak fon.",
-    "degildir": ["banka özkaynağı", "yatırım fonu portföyü"],
+    "degildir": [
+      "banka özkaynağı",
+      "yatırım fonu portföyü"
+    ],
     "ayrim_notu": "Havuzlar birbirinden ve bankanın kendi kaynaklarından ayrı tutulur; bir havuzun zararı diğerinden karşılanamaz.",
-    "iliskili": ["katilma-hesabi", "birim-hesap-degeri", "kar-payi"],
+    "iliskili": [
+      "katilma-hesabi",
+      "birim-hesap-degeri",
+      "kar-payi"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -653,13 +1223,25 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Birim hesap değeri",
     "en": "Unit account value",
-    "varyantlar": ["BHD", "birim hesap değeri"],
-    "halk_dili": ["hesabın birim fiyatı"],
+    "varyantlar": [
+      "BHD",
+      "birim hesap değeri"
+    ],
+    "halk_dili": [
+      "hesabın birim fiyatı"
+    ],
     "tanim": "Bir havuzda toplanan fonun, hesap birimi başına düşen güncel değeri. Kâr payı hesaplaması bu değerin dönem başı ve dönem sonu farkına dayanır.",
     "sade_aciklama": "Havuzdaki her bir birimin güncel değeri; kazancınız bu değerin artışından hesaplanır.",
-    "degildir": ["fon fiyatı", "faiz oranı"],
+    "degildir": [
+      "fon fiyatı",
+      "faiz oranı"
+    ],
     "ayrim_notu": "Yatırım fonlarındaki 'birim pay değeri' ile benzer mantıkta ama farklı bir kavramdır; katılma hesabı muhasebesine özgüdür.",
-    "iliskili": ["havuz", "hesap-degeri", "kar-payi"],
+    "iliskili": [
+      "havuz",
+      "hesap-degeri",
+      "kar-payi"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -669,13 +1251,22 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Hesap değeri",
     "en": "Account value",
-    "varyantlar": ["hesap değeri"],
-    "halk_dili": ["hesabımdaki güncel tutar"],
+    "varyantlar": [
+      "hesap değeri"
+    ],
+    "halk_dili": [
+      "hesabımdaki güncel tutar"
+    ],
     "tanim": "Katılma hesabına yatırılan tutarın, ilgili birim hesap değerine bölünmesiyle bulunan birim sayısı ve bunun güncel karşılığı.",
     "sade_aciklama": "Hesabınızın havuzdaki güncel toplam karşılığı.",
-    "degildir": ["anapara"],
+    "degildir": [
+      "anapara"
+    ],
     "ayrim_notu": "Anapara sabittir; hesap değeri havuzun performansına göre değişir ve anaparanın altına da inebilir.",
-    "iliskili": ["birim-hesap-degeri", "katilma-hesabi"],
+    "iliskili": [
+      "birim-hesap-degeri",
+      "katilma-hesabi"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -685,13 +1276,27 @@
     "kategori": "fon_toplama",
     "resmi_tr": "TMSF",
     "en": "Savings Deposit Insurance Fund",
-    "varyantlar": ["TMSF", "mevduat sigortası", "katılım fonu sigortası"],
-    "halk_dili": ["param güvende mi", "devlet garantisi", "sigortalı mı"],
+    "varyantlar": [
+      "TMSF",
+      "mevduat sigortası",
+      "katılım fonu sigortası"
+    ],
+    "halk_dili": [
+      "param güvende mi",
+      "devlet garantisi",
+      "sigortalı mı"
+    ],
     "tanim": "Gerçek kişilere ait katılım fonunun belirli bir tutara kadar sigorta kapsamında olmasını sağlayan kurum ve mekanizma.",
     "sade_aciklama": "Belirli bir tutara kadar birikiminizin sigorta kapsamında olması.",
-    "degildir": ["anapara garantisi", "getiri garantisi"],
+    "degildir": [
+      "anapara garantisi",
+      "getiri garantisi"
+    ],
     "ayrim_notu": "Sigorta kapsamı, katılma hesabında anaparanın hukuken garanti edildiği anlamına GELMEZ; bu iki kavram ayrıdır. Sigorta limiti dönemsel olarak güncellenir, güncel tutar mevzuattan teyit edilmelidir.",
-    "iliskili": ["katilim-fonu", "katilma-hesabi"],
+    "iliskili": [
+      "katilim-fonu",
+      "katilma-hesabi"
+    ],
     "kaynak": "5411 sayılı Bankacılık Kanunu; TMSF düzenlemeleri",
     "risk_notu": "Limit tutarı değişkendir; modelin sabit bir rakam söylemesi engellenmelidir."
   },
@@ -702,13 +1307,33 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Kira sertifikası",
     "en": "Sukuk",
-    "varyantlar": ["sukûk", "sukük", "sak", "sukuk sertifikası", "kira sertifikası"],
-    "halk_dili": ["faizsiz tahvil", "devlet sukuku", "sertifika almak"],
+    "varyantlar": [
+      "sukûk",
+      "sukük",
+      "sak",
+      "sukuk sertifikası",
+      "kira sertifikası"
+    ],
+    "halk_dili": [
+      "faizsiz tahvil",
+      "devlet sukuku",
+      "sertifika almak"
+    ],
     "tanim": "Bir varlığın, varlık havuzunun veya projenin mülkiyetinden ya da gelirinden pay veren, eşit değerli sertifika. Türkiye mevzuatındaki adı kira sertifikasıdır.",
     "sade_aciklama": "Bir varlığın veya projenin gelirinden pay veren yatırım sertifikası.",
-    "degildir": ["tahvil", "bono", "borçlanma aracı", "hisse senedi"],
+    "degildir": [
+      "tahvil",
+      "bono",
+      "borçlanma aracı",
+      "hisse senedi"
+    ],
     "ayrim_notu": "Tahvil bir BORÇ senedidir ve faiz üretir; sukuk bir VARLIĞA dayanır, sahibine mülkiyet/gelir payı verir ve getirisi dayanak varlığın performansına bağlıdır. 'Faizsiz tahvil' ifadesi yanlıştır ve kullanılmamalıdır.",
-    "iliskili": ["kira-sertifikasi", "vks", "icare", "sukuk-turleri"],
+    "iliskili": [
+      "kira-sertifikasi",
+      "vks",
+      "icare",
+      "sukuk-turleri"
+    ],
     "kaynak": "SPK III-61.1 Kira Sertifikaları Tebliği; AAOIFI Şer'i Standart No. 17",
     "risk_notu": "Modelin sukuku tahvil gibi modellemesi en sık görülen ve en maliyetli hatadır."
   },
@@ -719,13 +1344,27 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Kira sertifikası",
     "en": "Lease certificate / Sukuk",
-    "varyantlar": ["kira sertifikasi", "kira sertifikası", "sukuk"],
-    "halk_dili": ["kira geliri veren sertifika", "faizsiz yatırım aracı"],
+    "varyantlar": [
+      "kira sertifikasi",
+      "kira sertifikası",
+      "sukuk"
+    ],
+    "halk_dili": [
+      "kira geliri veren sertifika",
+      "faizsiz yatırım aracı"
+    ],
     "tanim": "Varlık kiralama şirketinin, sahip olduğu veya yönettiği varlık ve haklardan elde edilen gelirleri sertifika sahiplerine payları oranında aktarmak üzere ihraç ettiği menkul kıymet.",
     "sade_aciklama": "Bir varlığın gelirinden pay almanızı sağlayan, borsada işlem görebilen yatırım aracı.",
-    "degildir": ["tahvil", "finansman bonosu"],
+    "degildir": [
+      "tahvil",
+      "finansman bonosu"
+    ],
     "ayrim_notu": "Sukukun Türkiye'deki resmî hukuki adıdır; ikisi eş anlamlıdır fakat resmî belgelerde 'kira sertifikası' tercih edilir.",
-    "iliskili": ["sukuk", "vks", "sukuk-turleri"],
+    "iliskili": [
+      "sukuk",
+      "vks",
+      "sukuk-turleri"
+    ],
     "kaynak": "SPK III-61.1 Kira Sertifikaları Tebliği"
   },
   {
@@ -735,13 +1374,27 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "VKŞ",
     "en": "Asset Leasing Company / SPV",
-    "varyantlar": ["VKŞ", "VKS", "varlık kiralama şirketi"],
-    "halk_dili": ["aracı şirket", "ihraççı şirket"],
+    "varyantlar": [
+      "VKŞ",
+      "VKS",
+      "varlık kiralama şirketi"
+    ],
+    "halk_dili": [
+      "aracı şirket",
+      "ihraççı şirket"
+    ],
     "tanim": "Yalnızca kira sertifikası ihraç etmek amacıyla kurulan, dayanak varlıkları devralan özel amaçlı şirket.",
     "sade_aciklama": "Kira sertifikası çıkarmak için kurulan, varlıkları elinde tutan özel amaçlı şirket.",
-    "degildir": ["yatırım ortaklığı", "banka"],
+    "degildir": [
+      "yatırım ortaklığı",
+      "banka"
+    ],
     "ayrim_notu": "Faaliyet konusu yalnızca ihraçla sınırlıdır; varlıklar kaynak kuruluşun iflas riskinden ayrıştırılmak üzere VKŞ'ye devredilir.",
-    "iliskili": ["kira-sertifikasi", "sukuk", "kaynak-kurulus"],
+    "iliskili": [
+      "kira-sertifikasi",
+      "sukuk",
+      "kaynak-kurulus"
+    ],
     "kaynak": "SPK III-61.1 Kira Sertifikaları Tebliği"
   },
   {
@@ -751,13 +1404,26 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Kaynak kuruluş",
     "en": "Originator",
-    "varyantlar": ["kaynak kuruluş", "originator", "fon kullanıcısı"],
-    "halk_dili": ["parayı kullanan şirket", "ihracı yaptıran"],
+    "varyantlar": [
+      "kaynak kuruluş",
+      "originator",
+      "fon kullanıcısı"
+    ],
+    "halk_dili": [
+      "parayı kullanan şirket",
+      "ihracı yaptıran"
+    ],
     "tanim": "Kira sertifikası ihracına konu varlık ve hakları varlık kiralama şirketine devreden, finansmandan yararlanan kuruluş.",
     "sade_aciklama": "Varlıklarını devrederek sukuk yoluyla finansman sağlayan şirket.",
-    "degildir": ["VKŞ", "yatırımcı"],
+    "degildir": [
+      "VKŞ",
+      "yatırımcı"
+    ],
     "ayrim_notu": "VKŞ ihraççıdır, kaynak kuruluş ise fonu fiilen kullanan taraftır; kredi riski esasen kaynak kuruluşta değerlendirilir.",
-    "iliskili": ["vks", "kira-sertifikasi"],
+    "iliskili": [
+      "vks",
+      "kira-sertifikasi"
+    ],
     "kaynak": "SPK III-61.1 Kira Sertifikaları Tebliği"
   },
   {
@@ -767,13 +1433,29 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Kira sertifikası türleri",
     "en": "Sukuk structures",
-    "varyantlar": ["sukuk türleri", "sahipliğe dayalı", "yönetim sözleşmesine dayalı", "alım satıma dayalı", "ortaklığa dayalı", "eser sözleşmesine dayalı"],
-    "halk_dili": ["sukuk çeşitleri"],
+    "varyantlar": [
+      "sukuk türleri",
+      "sahipliğe dayalı",
+      "yönetim sözleşmesine dayalı",
+      "alım satıma dayalı",
+      "ortaklığa dayalı",
+      "eser sözleşmesine dayalı"
+    ],
+    "halk_dili": [
+      "sukuk çeşitleri"
+    ],
     "tanim": "Mevzuatta tanımlanan başlıca yapılar: sahipliğe dayalı (icare), yönetim sözleşmesine dayalı (vekâlet), alım satıma dayalı (murabaha), ortaklığa dayalı (muşaraka/mudaraba) ve eser sözleşmesine dayalı (istisna).",
     "sade_aciklama": "Sukukun dayandığı sözleşme tipine göre ayrılan beş temel yapısı.",
     "degildir": [],
     "ayrim_notu": "Getiri profili ve devredilebilirliği yapıya göre değişir; örneğin alım satıma dayalı sukuk ikincil piyasada işlem görme açısından kısıtlıdır.",
-    "iliskili": ["sukuk", "icare", "vekalet", "murabaha", "musaraka", "istisna"],
+    "iliskili": [
+      "sukuk",
+      "icare",
+      "vekalet",
+      "murabaha",
+      "musaraka",
+      "istisna"
+    ],
     "kaynak": "SPK III-61.1 Kira Sertifikaları Tebliği"
   },
   {
@@ -783,13 +1465,27 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Katılım endeksi",
     "en": "Participation index",
-    "varyantlar": ["katılım endeksi", "katilim endeksi", "katılım 30", "katılım 50"],
-    "halk_dili": ["faizsiz hisseler", "helal hisse listesi"],
+    "varyantlar": [
+      "katılım endeksi",
+      "katilim endeksi",
+      "katılım 30",
+      "katılım 50"
+    ],
+    "halk_dili": [
+      "faizsiz hisseler",
+      "helal hisse listesi"
+    ],
     "tanim": "Faaliyet konusu ve finansal oranları katılım finans ilkelerine uygunluk kriterlerini sağlayan şirketlerden oluşan borsa endeksi.",
     "sade_aciklama": "Faizsiz yatırım ilkelerine uygun bulunan şirketlerden oluşan borsa endeksi.",
-    "degildir": ["BIST 100"],
+    "degildir": [
+      "BIST 100"
+    ],
     "ayrim_notu": "Endeks kapsamı periyodik olarak gözden geçirilir; bir hissenin geçmişte kapsamda olması bugün de olduğu anlamına gelmez.",
-    "iliskili": ["fikhi-uygunluk", "faizsiz-yatirim-fonu", "aritma"],
+    "iliskili": [
+      "fikhi-uygunluk",
+      "faizsiz-yatirim-fonu",
+      "aritma"
+    ],
     "kaynak": "Borsa İstanbul Katılım Endeksleri kuralları"
   },
   {
@@ -799,13 +1495,28 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Gelir arındırma",
     "en": "Purification / Cleansing",
-    "varyantlar": ["arındırma", "aritma", "tathir", "purification"],
-    "halk_dili": ["kirli kazancı temizlemek", "bağış yapmak"],
+    "varyantlar": [
+      "arındırma",
+      "aritma",
+      "tathir",
+      "purification"
+    ],
+    "halk_dili": [
+      "kirli kazancı temizlemek",
+      "bağış yapmak"
+    ],
     "tanim": "Portföydeki uygun olmayan gelir kısmının hesaplanarak bağış yoluyla portföyden çıkarılması.",
     "sade_aciklama": "Uygun olmayan gelirlerin hesaplanıp bağışlanarak kazançtan çıkarılması.",
-    "degildir": ["zekât", "vergi"],
+    "degildir": [
+      "zekât",
+      "vergi"
+    ],
     "ayrim_notu": "Zekât ibadet amaçlı ayrı bir yükümlülüktür; arındırma ise yalnızca uygun olmayan gelirin temizlenmesidir.",
-    "iliskili": ["katilim-endeksi", "zekat", "teberru"],
+    "iliskili": [
+      "katilim-endeksi",
+      "zekat",
+      "teberru"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 21"
   },
   {
@@ -815,13 +1526,28 @@
     "kategori": "sermaye_piyasasi",
     "resmi_tr": "Katılım esaslı yatırım fonu",
     "en": "Shariah-compliant mutual fund",
-    "varyantlar": ["katılım fonu", "faizsiz fon", "katılım yatırım fonu", "helal fon"],
-    "halk_dili": ["faizsiz fon", "helal yatırım fonu"],
+    "varyantlar": [
+      "katılım fonu",
+      "faizsiz fon",
+      "katılım yatırım fonu",
+      "helal fon"
+    ],
+    "halk_dili": [
+      "faizsiz fon",
+      "helal yatırım fonu"
+    ],
     "tanim": "Portföyü katılım finans ilkelerine uygun varlıklardan oluşan yatırım fonu.",
     "sade_aciklama": "Sadece faizsiz ilkelere uygun varlıklara yatırım yapan fon.",
-    "degildir": ["katılım fonu (mevduat anlamında)", "katılma hesabı"],
+    "degildir": [
+      "katılım fonu (mevduat anlamında)",
+      "katılma hesabı"
+    ],
     "ayrim_notu": "Bankacılık mevzuatındaki 'katılım fonu' (mevduat) ile karıştırılmamalıdır. Ayrıca katılma hesabından farklıdır: fon bir sermaye piyasası aracıdır, hesap değildir.",
-    "iliskili": ["katilim-fonu", "katilim-endeksi", "sukuk"],
+    "iliskili": [
+      "katilim-fonu",
+      "katilim-endeksi",
+      "sukuk"
+    ],
     "kaynak": "SPK yatırım fonları mevzuatı",
     "risk_notu": "Terim çakışması nedeniyle sorgu genişletmede her iki anlam da taranmalıdır."
   },
@@ -832,13 +1558,26 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Kıymetli maden katılma hesabı",
     "en": "Gold participation account",
-    "varyantlar": ["altın hesabı", "altin hesabi", "kıymetli maden hesabı"],
-    "halk_dili": ["altın biriktirmek", "bankada altın tutmak"],
+    "varyantlar": [
+      "altın hesabı",
+      "altin hesabi",
+      "kıymetli maden hesabı"
+    ],
+    "halk_dili": [
+      "altın biriktirmek",
+      "bankada altın tutmak"
+    ],
     "tanim": "Gram altın cinsinden açılan ve kâr payı da altın cinsinden hesaplanan katılma hesabı.",
     "sade_aciklama": "Altın cinsinden açılan ve getirisi de altın olarak hesaplanan hesap.",
-    "degildir": ["altın alım satımı", "vadesiz altın hesabı"],
+    "degildir": [
+      "altın alım satımı",
+      "vadesiz altın hesabı"
+    ],
     "ayrim_notu": "Altın alım satımında sarf kuralları (peşin teslim) geçerlidir; katılma hesabında ise fon işletmesi söz konusudur. İkisi ayrı işlemlerdir.",
-    "iliskili": ["katilma-hesabi", "sarf"],
+    "iliskili": [
+      "katilma-hesabi",
+      "sarf"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -848,13 +1587,30 @@
     "kategori": "sigorta",
     "resmi_tr": "Katılım sigortası",
     "en": "Takaful",
-    "varyantlar": ["tekafül", "tekâfül", "takaful", "katılım sigortacılığı"],
-    "halk_dili": ["faizsiz sigorta", "helal sigorta", "dayanışma sigortası"],
+    "varyantlar": [
+      "tekafül",
+      "tekâfül",
+      "takaful",
+      "katılım sigortacılığı"
+    ],
+    "halk_dili": [
+      "faizsiz sigorta",
+      "helal sigorta",
+      "dayanışma sigortası"
+    ],
     "tanim": "Katılımcıların karşılıklı dayanışma esasıyla oluşturdukları risk fonundan, zarara uğrayan katılımcıya tazminat ödenmesine dayalı sigorta modeli.",
     "sade_aciklama": "Katılımcıların ortak bir fona bağış yapıp zarar görene bu fondan ödeme yapıldığı sigorta.",
-    "degildir": ["konvansiyonel sigorta", "poliçe satışı"],
+    "degildir": [
+      "konvansiyonel sigorta",
+      "poliçe satışı"
+    ],
     "ayrim_notu": "Klasik sigortada prim bir bedel karşılığı ödenir ve şirket riski üstlenir; tekâfülde katkı payı bağış (teberru) niteliğindedir ve risk katılımcılar arasında paylaşılır. Şirket riski üstlenmez, fonu yönetir ve vekâlet ücreti alır.",
-    "iliskili": ["risk-fonu", "teberru", "katki-payi", "vekalet"],
+    "iliskili": [
+      "risk-fonu",
+      "teberru",
+      "katki-payi",
+      "vekalet"
+    ],
     "kaynak": "Katılım esasları çerçevesinde sigortacılık mevzuatı (SEDDK); AAOIFI Şer'i Standart No. 26"
   },
   {
@@ -864,13 +1620,27 @@
     "kategori": "sigorta",
     "resmi_tr": "Risk fonu",
     "en": "Takaful risk fund",
-    "varyantlar": ["risk fonu", "tekâfül fonu", "dayanışma fonu"],
-    "halk_dili": ["ortak havuz", "tazminat havuzu"],
+    "varyantlar": [
+      "risk fonu",
+      "tekâfül fonu",
+      "dayanışma fonu"
+    ],
+    "halk_dili": [
+      "ortak havuz",
+      "tazminat havuzu"
+    ],
     "tanim": "Katılımcıların katkı paylarından oluşan, tazminat ödemelerinin karşılandığı ve şirket varlıklarından ayrı tutulan fon.",
     "sade_aciklama": "Katılımcıların katkılarıyla oluşan ve zararların ödendiği ortak fon.",
-    "degildir": ["şirket özkaynağı", "teknik karşılık"],
+    "degildir": [
+      "şirket özkaynağı",
+      "teknik karşılık"
+    ],
     "ayrim_notu": "Fon katılımcılara aittir; şirketin malvarlığından ayrıdır. Dönem sonunda artan bakiye kural olarak katılımcılara aittir.",
-    "iliskili": ["tekaful", "katki-payi", "teberru"],
+    "iliskili": [
+      "tekaful",
+      "katki-payi",
+      "teberru"
+    ],
     "kaynak": "SEDDK katılım sigortacılığı düzenlemeleri"
   },
   {
@@ -880,13 +1650,26 @@
     "kategori": "sigorta",
     "resmi_tr": "Katkı payı",
     "en": "Contribution",
-    "varyantlar": ["katkı payı", "bağış payı", "tabarru"],
-    "halk_dili": ["prim", "sigorta ödemesi"],
+    "varyantlar": [
+      "katkı payı",
+      "bağış payı",
+      "tabarru"
+    ],
+    "halk_dili": [
+      "prim",
+      "sigorta ödemesi"
+    ],
     "tanim": "Katılımcının risk fonuna bağış esasıyla ödediği tutar.",
     "sade_aciklama": "Ortak fona yaptığınız düzenli katkı ödemesi.",
-    "degildir": ["prim"],
+    "degildir": [
+      "prim"
+    ],
     "ayrim_notu": "Hukuki niteliği primden farklıdır: bir hizmet bedeli değil, bağıştır. Bu nedenle geri talep hakkı prime göre farklı işler.",
-    "iliskili": ["tekaful", "risk-fonu", "teberru"],
+    "iliskili": [
+      "tekaful",
+      "risk-fonu",
+      "teberru"
+    ],
     "kaynak": "SEDDK katılım sigortacılığı düzenlemeleri"
   },
   {
@@ -896,13 +1679,30 @@
     "kategori": "ilke",
     "resmi_tr": "Bağış",
     "en": "Tabarru / Donation",
-    "varyantlar": ["teberru", "tabarru", "teberrû"],
-    "halk_dili": ["bağış", "karşılıksız verme", "hibe"],
+    "varyantlar": [
+      "teberru",
+      "tabarru",
+      "teberrû"
+    ],
+    "halk_dili": [
+      "bağış",
+      "karşılıksız verme",
+      "hibe"
+    ],
     "tanim": "Karşılık beklemeksizin mal veya para verme.",
     "sade_aciklama": "Karşılık beklemeden yapılan bağış.",
-    "degildir": ["ödeme", "prim", "borç"],
+    "degildir": [
+      "ödeme",
+      "prim",
+      "borç"
+    ],
     "ayrim_notu": "Ticari akitlerdeki bedelden farklıdır; teberru akitlerinde garar toleransı daha yüksektir. Tekâfül ve gecikme cezası uygulamalarının fıkhî dayanağıdır.",
-    "iliskili": ["tekaful", "gecikme-cezasi", "karz-i-hasen", "hibe"],
+    "iliskili": [
+      "tekaful",
+      "gecikme-cezasi",
+      "karz-i-hasen",
+      "hibe"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -912,13 +1712,27 @@
     "kategori": "ilke",
     "resmi_tr": "Bağışlama",
     "en": "Hibah / Gift",
-    "varyantlar": ["hibe", "hibah", "bağışlama"],
-    "halk_dili": ["hediye etmek", "bedelsiz vermek"],
+    "varyantlar": [
+      "hibe",
+      "hibah",
+      "bağışlama"
+    ],
+    "halk_dili": [
+      "hediye etmek",
+      "bedelsiz vermek"
+    ],
     "tanim": "Bir malın karşılıksız olarak mülkiyetinin devri.",
     "sade_aciklama": "Bir malın bedelsiz olarak başkasına verilmesi.",
-    "degildir": ["satış", "kâr payı"],
+    "degildir": [
+      "satış",
+      "kâr payı"
+    ],
     "ayrim_notu": "Karz-ı hasende borç verene önceden şart koşulan hibe riba sayılır; şartsız ve kendiliğinden yapılan hibe caizdir.",
-    "iliskili": ["teberru", "karz-i-hasen", "icare-muntehiye"],
+    "iliskili": [
+      "teberru",
+      "karz-i-hasen",
+      "icare-muntehiye"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -928,13 +1742,28 @@
     "kategori": "ilke",
     "resmi_tr": "Zekât",
     "en": "Zakat",
-    "varyantlar": ["zekat", "zekât", "zakat"],
-    "halk_dili": ["zekat vermek", "kırkta bir"],
+    "varyantlar": [
+      "zekat",
+      "zekât",
+      "zakat"
+    ],
+    "halk_dili": [
+      "zekat vermek",
+      "kırkta bir"
+    ],
     "tanim": "Nisap miktarına ulaşan malvarlığından, belirlenen oranda ve belirli yerlere yapılan malî ibadet.",
     "sade_aciklama": "Belirli bir servet düzeyine ulaşanların vermekle yükümlü olduğu malî ibadet.",
-    "degildir": ["vergi", "bağış", "arındırma"],
+    "degildir": [
+      "vergi",
+      "bağış",
+      "arındırma"
+    ],
     "ayrim_notu": "Vergiden ve gönüllü bağıştan ayrıdır; oranı, nisabı ve harcama yerleri belirlidir. Arındırma ile karıştırılmamalıdır.",
-    "iliskili": ["aritma", "teberru", "nisap"],
+    "iliskili": [
+      "aritma",
+      "teberru",
+      "nisap"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 35"
   },
   {
@@ -944,13 +1773,22 @@
     "kategori": "ilke",
     "resmi_tr": "Nisap miktarı",
     "en": "Nisab / Zakat threshold",
-    "varyantlar": ["nisap", "nisâb", "nisab"],
-    "halk_dili": ["zekat sınırı", "ne kadardan sonra zekat"],
+    "varyantlar": [
+      "nisap",
+      "nisâb",
+      "nisab"
+    ],
+    "halk_dili": [
+      "zekat sınırı",
+      "ne kadardan sonra zekat"
+    ],
     "tanim": "Zekât yükümlülüğünün doğması için gereken asgari malvarlığı eşiği.",
     "sade_aciklama": "Zekât vermenin gerekli hale geldiği alt sınır.",
     "degildir": [],
     "ayrim_notu": "Altın veya gümüş üzerinden hesaplanır ve güncel değere göre değişir; sabit bir TL tutarı verilmemelidir.",
-    "iliskili": ["zekat"],
+    "iliskili": [
+      "zekat"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 35",
     "risk_notu": "Güncel tutar değişkendir; model sabit rakam vermemelidir."
   },
@@ -961,13 +1799,28 @@
     "kategori": "kurum_standart",
     "resmi_tr": "Danışma Kurulu",
     "en": "Shariah Board / Advisory Board",
-    "varyantlar": ["danışma kurulu", "şer'i kurul", "fıkıh kurulu", "shariah board"],
-    "halk_dili": ["hocalar kurulu", "dini onay veren kurul"],
+    "varyantlar": [
+      "danışma kurulu",
+      "şer'i kurul",
+      "fıkıh kurulu",
+      "shariah board"
+    ],
+    "halk_dili": [
+      "hocalar kurulu",
+      "dini onay veren kurul"
+    ],
     "tanim": "Katılım bankasının ürün, işlem ve sözleşmelerinin katılım finans ilkelerine uygunluğunu değerlendiren ve karar veren kurul.",
     "sade_aciklama": "Bankanın ürünlerinin faizsizlik ilkelerine uygunluğunu onaylayan kurul.",
-    "degildir": ["yönetim kurulu", "denetim komitesi"],
+    "degildir": [
+      "yönetim kurulu",
+      "denetim komitesi"
+    ],
     "ayrim_notu": "Kararları banka içinde bağlayıcıdır. Fıkhî uygunluk denetimi, BDDK'nın mevzuat denetiminden ayrı bir katmandır.",
-    "iliskili": ["merkezi-danisma-kurulu", "fikhi-uygunluk", "tkbb"],
+    "iliskili": [
+      "merkezi-danisma-kurulu",
+      "fikhi-uygunluk",
+      "tkbb"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları; BDDK düzenlemeleri"
   },
   {
@@ -977,13 +1830,25 @@
     "kategori": "kurum_standart",
     "resmi_tr": "TKBB Merkezî Danışma Kurulu",
     "en": "Central Advisory Board",
-    "varyantlar": ["MDK", "merkezi danışma kurulu", "merkezî danışma kurulu"],
-    "halk_dili": ["üst kurul"],
+    "varyantlar": [
+      "MDK",
+      "merkezi danışma kurulu",
+      "merkezî danışma kurulu"
+    ],
+    "halk_dili": [
+      "üst kurul"
+    ],
     "tanim": "Türkiye Katılım Bankaları Birliği bünyesinde, sektör genelinde standart oluşturan ve bağlayıcı kararlar alan üst kurul.",
     "sade_aciklama": "Katılım bankacılığı sektöründe ortak standartları belirleyen merkezî kurul.",
-    "degildir": ["banka danışma kurulu"],
+    "degildir": [
+      "banka danışma kurulu"
+    ],
     "ayrim_notu": "Banka bazındaki Danışma Kurulu ile karıştırılmamalıdır; MDK sektör geneline yöneliktir ve kararları banka kurullarını bağlar.",
-    "iliskili": ["danisma-kurulu", "tkbb", "fikhi-uygunluk"],
+    "iliskili": [
+      "danisma-kurulu",
+      "tkbb",
+      "fikhi-uygunluk"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları"
   },
   {
@@ -993,13 +1858,24 @@
     "kategori": "kurum_standart",
     "resmi_tr": "Türkiye Katılım Bankaları Birliği",
     "en": "Participation Banks Association of Türkiye",
-    "varyantlar": ["TKBB", "Katılım Bankaları Birliği"],
-    "halk_dili": ["katılım bankaları birliği"],
+    "varyantlar": [
+      "TKBB",
+      "Katılım Bankaları Birliği"
+    ],
+    "halk_dili": [
+      "katılım bankaları birliği"
+    ],
     "tanim": "Türkiye'deki katılım bankalarının üyesi olduğu, sektörel standart ve ilkeleri belirleyen meslek kuruluşu.",
     "sade_aciklama": "Katılım bankalarının bağlı olduğu meslek birliği.",
-    "degildir": ["BDDK", "TBB"],
+    "degildir": [
+      "BDDK",
+      "TBB"
+    ],
     "ayrim_notu": "TBB (Türkiye Bankalar Birliği) mevduat bankalarının birliğidir; TKBB katılım bankalarına özgüdür.",
-    "iliskili": ["merkezi-danisma-kurulu", "bddk"],
+    "iliskili": [
+      "merkezi-danisma-kurulu",
+      "bddk"
+    ],
     "kaynak": "TKBB"
   },
   {
@@ -1009,13 +1885,25 @@
     "kategori": "kurum_standart",
     "resmi_tr": "Bankacılık Düzenleme ve Denetleme Kurumu",
     "en": "Banking Regulation and Supervision Agency",
-    "varyantlar": ["BDDK"],
-    "halk_dili": ["bankaları denetleyen kurum"],
+    "varyantlar": [
+      "BDDK"
+    ],
+    "halk_dili": [
+      "bankaları denetleyen kurum"
+    ],
     "tanim": "Bankaların ve katılım bankalarının düzenleme ve denetiminden sorumlu kamu otoritesi.",
     "sade_aciklama": "Bankaları düzenleyen ve denetleyen resmî kurum.",
-    "degildir": ["SPK", "TKBB", "Danışma Kurulu"],
+    "degildir": [
+      "SPK",
+      "TKBB",
+      "Danışma Kurulu"
+    ],
     "ayrim_notu": "Fıkhî uygunluk denetimi yapmaz; mevzuata uygunluk denetler. İki denetim katmanı ayrıdır.",
-    "iliskili": ["tkbb", "spk", "fikhi-uygunluk"],
+    "iliskili": [
+      "tkbb",
+      "spk",
+      "fikhi-uygunluk"
+    ],
     "kaynak": "5411 sayılı Bankacılık Kanunu"
   },
   {
@@ -1025,13 +1913,23 @@
     "kategori": "kurum_standart",
     "resmi_tr": "Sermaye Piyasası Kurulu",
     "en": "Capital Markets Board",
-    "varyantlar": ["SPK", "Sermaye Piyasası Kurulu"],
-    "halk_dili": ["borsayı düzenleyen kurum"],
+    "varyantlar": [
+      "SPK",
+      "Sermaye Piyasası Kurulu"
+    ],
+    "halk_dili": [
+      "borsayı düzenleyen kurum"
+    ],
     "tanim": "Sermaye piyasası araçlarının ihracı ve işlem görmesini düzenleyen kamu otoritesi. Kira sertifikası mevzuatı SPK tarafından çıkarılır.",
     "sade_aciklama": "Sermaye piyasalarını düzenleyen resmî kurum.",
-    "degildir": ["BDDK"],
+    "degildir": [
+      "BDDK"
+    ],
     "ayrim_notu": "Sukuk/kira sertifikası SPK mevzuatına, katılma hesabı BDDK mevzuatına tabidir.",
-    "iliskili": ["bddk", "kira-sertifikasi"],
+    "iliskili": [
+      "bddk",
+      "kira-sertifikasi"
+    ],
     "kaynak": "6362 sayılı Sermaye Piyasası Kanunu"
   },
   {
@@ -1041,13 +1939,24 @@
     "kategori": "kurum_standart",
     "resmi_tr": "İslami Finans Kuruluşları Muhasebe ve Denetim Kuruluşu",
     "en": "Accounting and Auditing Organization for Islamic Financial Institutions",
-    "varyantlar": ["AAOIFI", "aaoifi"],
-    "halk_dili": ["uluslararası standart kurumu"],
+    "varyantlar": [
+      "AAOIFI",
+      "aaoifi"
+    ],
+    "halk_dili": [
+      "uluslararası standart kurumu"
+    ],
     "tanim": "Bahreyn merkezli, katılım finansına ilişkin şer'i, muhasebe ve yönetişim standartlarını yayımlayan uluslararası kuruluş.",
     "sade_aciklama": "İslami finans standartlarını belirleyen uluslararası kuruluş.",
-    "degildir": ["IFSB", "TKBB"],
+    "degildir": [
+      "IFSB",
+      "TKBB"
+    ],
     "ayrim_notu": "AAOIFI ağırlıkla şer'i ve muhasebe standardı üretir; IFSB ise ihtiyatlılık/denetim standartları üretir.",
-    "iliskili": ["ifsb", "merkezi-danisma-kurulu"],
+    "iliskili": [
+      "ifsb",
+      "merkezi-danisma-kurulu"
+    ],
     "kaynak": "AAOIFI"
   },
   {
@@ -1057,13 +1966,20 @@
     "kategori": "kurum_standart",
     "resmi_tr": "İslami Finansal Hizmetler Kurulu",
     "en": "Islamic Financial Services Board",
-    "varyantlar": ["IFSB", "ifsb"],
+    "varyantlar": [
+      "IFSB",
+      "ifsb"
+    ],
     "halk_dili": [],
     "tanim": "Kuala Lumpur merkezli, katılım finans kuruluşları için sermaye yeterliliği, risk yönetimi ve yönetişim standartları geliştiren uluslararası kuruluş.",
     "sade_aciklama": "İslami finansta risk ve denetim standartları belirleyen uluslararası kurul.",
-    "degildir": ["AAOIFI"],
+    "degildir": [
+      "AAOIFI"
+    ],
     "ayrim_notu": "AAOIFI ile tamamlayıcı ilişkidedir; şer'i hüküm üretmez.",
-    "iliskili": ["aaoifi"],
+    "iliskili": [
+      "aaoifi"
+    ],
     "kaynak": "IFSB"
   },
   {
@@ -1073,13 +1989,29 @@
     "kategori": "operasyon",
     "resmi_tr": "Temerrüt tazminatı / gecikme cezası",
     "en": "Late payment charge",
-    "varyantlar": ["gecikme cezası", "temerrüt tazminatı", "gecikme bedeli"],
-    "halk_dili": ["gecikme faizi", "geç ödeme cezası"],
+    "varyantlar": [
+      "gecikme cezası",
+      "temerrüt tazminatı",
+      "gecikme bedeli"
+    ],
+    "halk_dili": [
+      "gecikme faizi",
+      "geç ödeme cezası"
+    ],
     "tanim": "Borcunu vadesinde ödemeyen müşteriden tahsil edilen ve katılım bankasınca gelir yazılmayıp bağışlanan tutar.",
     "sade_aciklama": "Geç ödemede alınan ve banka gelirine eklenmeyip bağışlanan tutar.",
-    "degildir": ["gecikme faizi", "vade farkı", "banka geliri"],
+    "degildir": [
+      "gecikme faizi",
+      "vade farkı",
+      "banka geliri"
+    ],
     "ayrim_notu": "Konvansiyonel gecikme faizinden temel farkı, bankanın bunu GELİR OLARAK KAYDETMEMESİ ve hayır kurumlarına bağışlamasıdır. Ödeme geciktiği için borcun aslı artırılamaz.",
-    "iliskili": ["temerrut", "teberru", "vade-farki", "riba"],
+    "iliskili": [
+      "temerrut",
+      "teberru",
+      "vade-farki",
+      "riba"
+    ],
     "kaynak": "TKBB Katılım Finans Standartları",
     "risk_notu": "'Gecikme faizi' ifadesi kullanılmamalıdır."
   },
@@ -1090,13 +2022,29 @@
     "kategori": "operasyon",
     "resmi_tr": "Borçlu temerrüdü",
     "en": "Default",
-    "varyantlar": ["temerrüt", "temerrut", "mütemerrit", "temerrüde düşmek"],
-    "halk_dili": ["ödemeyi aksatmak", "borcu geciktirmek", "taksiti kaçırmak"],
+    "varyantlar": [
+      "temerrüt",
+      "temerrut",
+      "mütemerrit",
+      "temerrüde düşmek"
+    ],
+    "halk_dili": [
+      "ödemeyi aksatmak",
+      "borcu geciktirmek",
+      "taksiti kaçırmak"
+    ],
     "tanim": "Borçlunun muaccel hale gelen borcunu zamanında ifa etmemesi.",
     "sade_aciklama": "Vadesi gelen ödemenin zamanında yapılmaması.",
-    "degildir": ["acze düşme", "iflas"],
+    "degildir": [
+      "acze düşme",
+      "iflas"
+    ],
     "ayrim_notu": "Temerrüt ödeme gecikmesidir; ödeme gücünün tamamen yitirilmesi (aciz/iflas) ayrı bir hukuki durumdur.",
-    "iliskili": ["gecikme-cezasi", "muaccel", "muacceliyet-kaydi"],
+    "iliskili": [
+      "gecikme-cezasi",
+      "muaccel",
+      "muacceliyet-kaydi"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -1106,13 +2054,26 @@
     "kategori": "operasyon",
     "resmi_tr": "Vadesi gelmiş / ödenebilir",
     "en": "Due / Payable",
-    "varyantlar": ["muaccel", "muacceliyet", "muaccel hale gelmek"],
-    "halk_dili": ["ödeme zamanı gelmiş", "artık ödenmesi gerekiyor"],
+    "varyantlar": [
+      "muaccel",
+      "muacceliyet",
+      "muaccel hale gelmek"
+    ],
+    "halk_dili": [
+      "ödeme zamanı gelmiş",
+      "artık ödenmesi gerekiyor"
+    ],
     "tanim": "Alacağın istenebilir ve ödenmesi gerekli hale gelmiş olması.",
     "sade_aciklama": "Ödemenin artık talep edilebilir hale gelmiş olması.",
-    "degildir": ["müeccel"],
+    "degildir": [
+      "müeccel"
+    ],
     "ayrim_notu": "'Müeccel'in tam zıddıdır. İkisi tek harf farkla yazıldığı için metinlerde sık karıştırılır; anlamları taban tabana zıttır.",
-    "iliskili": ["mueccel", "muacceliyet-kaydi", "temerrut"],
+    "iliskili": [
+      "mueccel",
+      "muacceliyet-kaydi",
+      "temerrut"
+    ],
     "kaynak": "Türk Borçlar Kanunu",
     "risk_notu": "Müeccel/muaccel karışması ciddi anlam tersine dönmesi yaratır; normalizasyonda ayrı token olarak korunmalıdır."
   },
@@ -1123,13 +2084,28 @@
     "kategori": "operasyon",
     "resmi_tr": "Vadeye bağlı / ertelenmiş",
     "en": "Deferred",
-    "varyantlar": ["müeccel", "mueccel", "te'cil", "tecil"],
-    "halk_dili": ["vadesi ileride", "sonra ödenecek", "ertelenmiş"],
+    "varyantlar": [
+      "müeccel",
+      "mueccel",
+      "te'cil",
+      "tecil"
+    ],
+    "halk_dili": [
+      "vadesi ileride",
+      "sonra ödenecek",
+      "ertelenmiş"
+    ],
     "tanim": "Alacağın veya borcun ileri bir tarihe bağlanmış, henüz istenebilir olmayan hali.",
     "sade_aciklama": "Ödeme zamanı henüz gelmemiş olan.",
-    "degildir": ["muaccel"],
+    "degildir": [
+      "muaccel"
+    ],
     "ayrim_notu": "'Muaccel'in zıddıdır. Murabahada satış bedeli müeccel, mal teslimi peşindir.",
-    "iliskili": ["muaccel", "murabaha", "vade-farki"],
+    "iliskili": [
+      "muaccel",
+      "murabaha",
+      "vade-farki"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -1139,13 +2115,26 @@
     "kategori": "operasyon",
     "resmi_tr": "Muacceliyet şartı",
     "en": "Acceleration clause",
-    "varyantlar": ["muacceliyet kaydı", "muacceliyet şartı", "muacceliyet hükmü"],
-    "halk_dili": ["tüm borcun bir anda istenmesi", "kalan taksitlerin hepsi"],
+    "varyantlar": [
+      "muacceliyet kaydı",
+      "muacceliyet şartı",
+      "muacceliyet hükmü"
+    ],
+    "halk_dili": [
+      "tüm borcun bir anda istenmesi",
+      "kalan taksitlerin hepsi"
+    ],
     "tanim": "Belirli bir ihlal halinde, vadesi gelmemiş tüm borcun muaccel hale geleceğini öngören sözleşme hükmü.",
     "sade_aciklama": "Bir taksit aksadığında kalan tüm borcun talep edilebilir hale gelmesini sağlayan madde.",
-    "degildir": ["fesih"],
+    "degildir": [
+      "fesih"
+    ],
     "ayrim_notu": "Katılım bankacılığında muacceliyet halinde peşin fiyata indirim (ıskonto) uygulaması gündeme gelir; kalan vade farkının aynen talebi tartışmalıdır.",
-    "iliskili": ["muaccel", "temerrut", "iskonto-indirimi"],
+    "iliskili": [
+      "muaccel",
+      "temerrut",
+      "iskonto-indirimi"
+    ],
     "kaynak": "Türk Borçlar Kanunu; TKBB standartları"
   },
   {
@@ -1155,13 +2144,27 @@
     "kategori": "operasyon",
     "resmi_tr": "Peşin ödeme indirimi",
     "en": "Early settlement rebate / Ibra",
-    "varyantlar": ["ibra", "ibrâ", "erken kapama indirimi", "peşin ödeme indirimi"],
-    "halk_dili": ["erken kapatırsam indirim olur mu", "borcu erken bitirmek"],
+    "varyantlar": [
+      "ibra",
+      "ibrâ",
+      "erken kapama indirimi",
+      "peşin ödeme indirimi"
+    ],
+    "halk_dili": [
+      "erken kapatırsam indirim olur mu",
+      "borcu erken bitirmek"
+    ],
     "tanim": "Borçlunun vadesinden önce ödeme yapması halinde, alacaklının kalan vade farkının bir kısmından feragat etmesi.",
     "sade_aciklama": "Borcu erken kapattığınızda kalan vade farkından yapılan indirim.",
-    "degildir": ["faiz iadesi"],
+    "degildir": [
+      "faiz iadesi"
+    ],
     "ayrim_notu": "Bu indirim sözleşmede borçlunun HAKKI olarak baştan şart koşulursa fıkhen sorun doğabilir; alacaklının ihtiyari feragati (ibra) olarak kurgulanması tercih edilir.",
-    "iliskili": ["ibra", "vade-farki", "muacceliyet-kaydi"],
+    "iliskili": [
+      "ibra",
+      "vade-farki",
+      "muacceliyet-kaydi"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 8"
   },
   {
@@ -1171,13 +2174,27 @@
     "kategori": "operasyon",
     "resmi_tr": "Borçtan kurtarma / aklama",
     "en": "Ibra / Release / Discharge",
-    "varyantlar": ["ibra", "ibrâ", "ibraname"],
-    "halk_dili": ["borçtan kurtarmak", "alacaktan vazgeçmek", "hesabı kapatmak"],
+    "varyantlar": [
+      "ibra",
+      "ibrâ",
+      "ibraname"
+    ],
+    "halk_dili": [
+      "borçtan kurtarmak",
+      "alacaktan vazgeçmek",
+      "hesabı kapatmak"
+    ],
     "tanim": "Alacaklının, borçluyu borcunun tamamından veya bir kısmından kurtarması.",
     "sade_aciklama": "Alacaklının alacağından vazgeçerek borçluyu serbest bırakması.",
-    "degildir": ["takas", "havale"],
+    "degildir": [
+      "takas",
+      "havale"
+    ],
     "ayrim_notu": "'İbraname' bu iradeyi belgeleyen yazılı metindir. Erken ödeme indiriminin fıkhî dayanağıdır.",
-    "iliskili": ["iskonto-indirimi", "teberru"],
+    "iliskili": [
+      "iskonto-indirimi",
+      "teberru"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -1187,13 +2204,29 @@
     "kategori": "operasyon",
     "resmi_tr": "Kefalet sözleşmesi",
     "en": "Kafalah / Guarantee",
-    "varyantlar": ["kefalet", "kefâlet", "kafala", "kefil", "müteselsil kefalet"],
-    "halk_dili": ["kefil olmak", "birine kefil olma"],
+    "varyantlar": [
+      "kefalet",
+      "kefâlet",
+      "kafala",
+      "kefil",
+      "müteselsil kefalet"
+    ],
+    "halk_dili": [
+      "kefil olmak",
+      "birine kefil olma"
+    ],
     "tanim": "Kefilin, borçlunun borcunu ifa etmemesi halinde bundan şahsen sorumlu olmayı taahhüt ettiği sözleşme.",
     "sade_aciklama": "Borçlu ödemezse borcu üstlenme taahhüdü.",
-    "degildir": ["rehin", "sigorta"],
+    "degildir": [
+      "rehin",
+      "sigorta"
+    ],
     "ayrim_notu": "Kefalet kural olarak teberru niteliğindedir; kefaletin kendisi için ücret alınması tartışmalıdır, yalnızca fiilî masraf yansıtılabilir. Rehinden farkı: kefalet şahsi, rehin aynî teminattır.",
-    "iliskili": ["rehin", "teberru", "musteselsil"],
+    "iliskili": [
+      "rehin",
+      "teberru",
+      "musteselsil"
+    ],
     "kaynak": "Türk Borçlar Kanunu; AAOIFI Şer'i Standart No. 5"
   },
   {
@@ -1203,13 +2236,26 @@
     "kategori": "operasyon",
     "resmi_tr": "Zincirleme sorumluluk",
     "en": "Joint and several liability",
-    "varyantlar": ["müteselsil", "musteselsil", "müteselsilen", "zincirleme sorumluluk"],
-    "halk_dili": ["hepsi ayrı ayrı sorumlu", "kime istersen gidebilirsin"],
+    "varyantlar": [
+      "müteselsil",
+      "musteselsil",
+      "müteselsilen",
+      "zincirleme sorumluluk"
+    ],
+    "halk_dili": [
+      "hepsi ayrı ayrı sorumlu",
+      "kime istersen gidebilirsin"
+    ],
     "tanim": "Birden fazla borçludan her birinin borcun tamamından sorumlu olması.",
     "sade_aciklama": "Borçlulardan her birinin borcun tamamından tek başına sorumlu olması.",
-    "degildir": ["adi kefalet", "müşterek sorumluluk"],
+    "degildir": [
+      "adi kefalet",
+      "müşterek sorumluluk"
+    ],
     "ayrim_notu": "Adi kefalette önce asıl borçluya başvurmak gerekir; müteselsil kefalette alacaklı doğrudan kefile gidebilir.",
-    "iliskili": ["kefalet"],
+    "iliskili": [
+      "kefalet"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -1219,13 +2265,30 @@
     "kategori": "operasyon",
     "resmi_tr": "Rehin hakkı",
     "en": "Rahn / Pledge / Collateral",
-    "varyantlar": ["rehin", "rehn", "rahn", "merhun", "rehin hakkı"],
-    "halk_dili": ["teminat", "ipotek", "malı teminat göstermek"],
+    "varyantlar": [
+      "rehin",
+      "rehn",
+      "rahn",
+      "merhun",
+      "rehin hakkı"
+    ],
+    "halk_dili": [
+      "teminat",
+      "ipotek",
+      "malı teminat göstermek"
+    ],
     "tanim": "Bir alacağın güvence altına alınması amacıyla, bir mal üzerinde alacaklı lehine kurulan aynî hak.",
     "sade_aciklama": "Borç ödenmezse satılıp alacağın karşılanacağı teminat malı.",
-    "degildir": ["kefalet", "mülkiyet devri"],
+    "degildir": [
+      "kefalet",
+      "mülkiyet devri"
+    ],
     "ayrim_notu": "Rehin mülkiyeti devretmez; alacaklı rehinli maldan yararlanamaz, aksi halde borç üzerinden menfaat (riba) doğar. Taşınmazlarda rehin 'ipotek' adını alır.",
-    "iliskili": ["ipotek", "kefalet", "riba"],
+    "iliskili": [
+      "ipotek",
+      "kefalet",
+      "riba"
+    ],
     "kaynak": "Türk Medeni Kanunu; AAOIFI Şer'i Standart No. 39"
   },
   {
@@ -1235,13 +2298,25 @@
     "kategori": "operasyon",
     "resmi_tr": "Taşınmaz rehni",
     "en": "Mortgage",
-    "varyantlar": ["ipotek", "gayrimenkul rehni", "taşınmaz rehni"],
-    "halk_dili": ["evi ipotek etmek", "tapuya şerh"],
+    "varyantlar": [
+      "ipotek",
+      "gayrimenkul rehni",
+      "taşınmaz rehni"
+    ],
+    "halk_dili": [
+      "evi ipotek etmek",
+      "tapuya şerh"
+    ],
     "tanim": "Bir alacağın teminatı olarak taşınmaz üzerinde kurulan rehin hakkı.",
     "sade_aciklama": "Borç için taşınmazınızın teminat gösterilmesi.",
-    "degildir": ["satış", "mülkiyet devri"],
+    "degildir": [
+      "satış",
+      "mülkiyet devri"
+    ],
     "ayrim_notu": "İpotek kurulması mülkiyeti bankaya geçirmez; taşınmaz sizde kalır, yalnızca tapuya teminat kaydı düşülür.",
-    "iliskili": ["rehin"],
+    "iliskili": [
+      "rehin"
+    ],
     "kaynak": "Türk Medeni Kanunu"
   },
   {
@@ -1251,13 +2326,27 @@
     "kategori": "operasyon",
     "resmi_tr": "Borcun nakli / havale",
     "en": "Hawalah / Transfer of debt",
-    "varyantlar": ["havale", "havâle", "hawala", "hawalah"],
-    "halk_dili": ["para göndermek", "borcu devretmek"],
+    "varyantlar": [
+      "havale",
+      "havâle",
+      "hawala",
+      "hawalah"
+    ],
+    "halk_dili": [
+      "para göndermek",
+      "borcu devretmek"
+    ],
     "tanim": "Bir borcun, borçlunun zimmetinden başka bir kişinin zimmetine nakledilmesi.",
     "sade_aciklama": "Borcun başka bir kişiye devredilmesi.",
-    "degildir": ["EFT/para transferi", "temlik"],
+    "degildir": [
+      "EFT/para transferi",
+      "temlik"
+    ],
     "ayrim_notu": "DİKKAT — günlük Türkçede 'havale' para transferi anlamındadır; fıkhî metinlerde ise borcun nakli akdini ifade eder. Bağlam ayrımı yapılmadan cevap verilmemelidir.",
-    "iliskili": ["temlik", "kefalet"],
+    "iliskili": [
+      "temlik",
+      "kefalet"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 7",
     "risk_notu": "Yüksek anlam çakışması. Sorgu genişletmede her iki anlam da değerlendirilmelidir."
   },
@@ -1268,13 +2357,24 @@
     "kategori": "operasyon",
     "resmi_tr": "Alacağın devri",
     "en": "Assignment",
-    "varyantlar": ["temlik", "alacağın temliki", "temellük"],
-    "halk_dili": ["alacağı devretmek", "başkasına geçirmek"],
+    "varyantlar": [
+      "temlik",
+      "alacağın temliki",
+      "temellük"
+    ],
+    "halk_dili": [
+      "alacağı devretmek",
+      "başkasına geçirmek"
+    ],
     "tanim": "Bir alacağın, alacaklı tarafından üçüncü kişiye devredilmesi.",
     "sade_aciklama": "Alacak hakkının başka birine devredilmesi.",
-    "degildir": ["havale"],
+    "degildir": [
+      "havale"
+    ],
     "ayrim_notu": "Temlikte ALACAK devredilir, havalede BORÇ nakledilir. Borç alacaklarının nominalin altında devri (borç ticareti) fıkhen kısıtlıdır.",
-    "iliskili": ["havale"],
+    "iliskili": [
+      "havale"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -1284,13 +2384,27 @@
     "kategori": "ilke",
     "resmi_tr": "Danışıklı işlem",
     "en": "Simulated transaction / Sham",
-    "varyantlar": ["muvazaa", "muvazaalı", "danışıklılık"],
-    "halk_dili": ["göstermelik işlem", "kağıt üzerinde", "danışıklı dövüş"],
+    "varyantlar": [
+      "muvazaa",
+      "muvazaalı",
+      "danışıklılık"
+    ],
+    "halk_dili": [
+      "göstermelik işlem",
+      "kağıt üzerinde",
+      "danışıklı dövüş"
+    ],
     "tanim": "Tarafların gerçek iradelerine uymayan, yalnızca üçüncü kişileri yanıltmak için görünürde yaptıkları işlem.",
     "sade_aciklama": "Gerçekte istenmeyen, sadece görüntüde yapılan işlem.",
-    "degildir": ["yapılandırılmış işlem"],
+    "degildir": [
+      "yapılandırılmış işlem"
+    ],
     "ayrim_notu": "Katılım finansta bir yapının 'gerçek bir alım satıma' dayanıp dayanmadığı sorusunun özüdür; muvazaalı murabaha, faizli kredi hükmündedir.",
-    "iliskili": ["ine-satisi", "murabaha", "hile"],
+    "iliskili": [
+      "ine-satisi",
+      "murabaha",
+      "hile"
+    ],
     "kaynak": "Türk Borçlar Kanunu; AAOIFI Şer'i Standartlar"
   },
   {
@@ -1300,13 +2414,26 @@
     "kategori": "ilke",
     "resmi_tr": "Şeklî çözüm / kanuna karşı hile",
     "en": "Hiyal / Legal stratagem",
-    "varyantlar": ["hile-i şer'iyye", "hiyel", "hile"],
-    "halk_dili": ["kılıfına uydurmak", "kağıt üzerinde uygun göstermek"],
+    "varyantlar": [
+      "hile-i şer'iyye",
+      "hiyel",
+      "hile"
+    ],
+    "halk_dili": [
+      "kılıfına uydurmak",
+      "kağıt üzerinde uygun göstermek"
+    ],
     "tanim": "Yasak bir sonuca, şeklen meşru görünen işlemler zinciriyle ulaşma girişimi.",
     "sade_aciklama": "Yasak bir sonuca görünürde uygun bir yolla ulaşmaya çalışmak.",
-    "degildir": ["meşru yapılandırma"],
+    "degildir": [
+      "meşru yapılandırma"
+    ],
     "ayrim_notu": "Meşru yapılandırma ile hîle arasındaki sınır, işlemin gerçek ticari içerik ve risk taşıyıp taşımadığıdır. Bu ayrımın takdiri Danışma Kuruluna aittir.",
-    "iliskili": ["muvazaa", "ine-satisi", "danisma-kurulu"],
+    "iliskili": [
+      "muvazaa",
+      "ine-satisi",
+      "danisma-kurulu"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar",
     "risk_notu": "Model kendiliğinden 'hîledir/değildir' hükmü vermemelidir."
   },
@@ -1317,13 +2444,26 @@
     "kategori": "operasyon",
     "resmi_tr": "Sözleşmenin sona erdirilmesi",
     "en": "Termination",
-    "varyantlar": ["fesih", "feshetmek", "infisah", "ikale"],
-    "halk_dili": ["sözleşmeyi bitirmek", "iptal etmek"],
+    "varyantlar": [
+      "fesih",
+      "feshetmek",
+      "infisah",
+      "ikale"
+    ],
+    "halk_dili": [
+      "sözleşmeyi bitirmek",
+      "iptal etmek"
+    ],
     "tanim": "Sözleşmenin ileriye etkili olarak sona erdirilmesi.",
     "sade_aciklama": "Sözleşmenin sona erdirilmesi.",
-    "degildir": ["iptal", "dönme"],
+    "degildir": [
+      "iptal",
+      "dönme"
+    ],
     "ayrim_notu": "'İkale' tarafların karşılıklı anlaşmasıyla sona erdirmedir; 'infisah' ise kendiliğinden sona ermedir. Fesih tek taraflı irade ile olur.",
-    "iliskili": ["akit"],
+    "iliskili": [
+      "akit"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
   },
   {
@@ -1333,13 +2473,21 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Bu",
     "en": "This / The present",
-    "varyantlar": ["işbu", "isbu"],
-    "halk_dili": ["bu"],
+    "varyantlar": [
+      "işbu",
+      "isbu"
+    ],
+    "halk_dili": [
+      "bu"
+    ],
     "tanim": "Sözleşme metinlerinde, o anda söz konusu olan belgeye işaret eden ifade.",
     "sade_aciklama": "Bu (sözleşme, belge).",
     "degildir": [],
     "ayrim_notu": "Anlam kaybı olmadan 'bu' ile sadeleştirilebilir. Kategori 2 (üslup) terimidir.",
-    "iliskili": ["mezkur", "keyfiyet"],
+    "iliskili": [
+      "mezkur",
+      "keyfiyet"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1349,13 +2497,23 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Adı geçen / söz konusu",
     "en": "Aforementioned",
-    "varyantlar": ["mezkur", "mezkûr", "salifüzzikr"],
-    "halk_dili": ["yukarıda yazan", "bahsedilen"],
+    "varyantlar": [
+      "mezkur",
+      "mezkûr",
+      "salifüzzikr"
+    ],
+    "halk_dili": [
+      "yukarıda yazan",
+      "bahsedilen"
+    ],
     "tanim": "Metinde daha önce anılan kişi, şey veya hükme atıf.",
     "sade_aciklama": "Yukarıda belirtilen.",
     "degildir": [],
     "ayrim_notu": "Kayıpsız sadeleştirilebilir. Kategori 2 (üslup) terimidir.",
-    "iliskili": ["isbu", "keyfiyet"],
+    "iliskili": [
+      "isbu",
+      "keyfiyet"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1365,13 +2523,24 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Durum / husus",
     "en": "The matter / situation",
-    "varyantlar": ["keyfiyet", "keyfiyetin"],
-    "halk_dili": ["durum", "konu"],
+    "varyantlar": [
+      "keyfiyet",
+      "keyfiyetin"
+    ],
+    "halk_dili": [
+      "durum",
+      "konu"
+    ],
     "tanim": "Söz konusu olan durum veya husus.",
     "sade_aciklama": "Durum, konu.",
-    "degildir": ["keyfilik"],
+    "degildir": [
+      "keyfilik"
+    ],
     "ayrim_notu": "'Keyfî' (rastgele, gelişigüzel) kelimesiyle hiçbir ilgisi yoktur; modelin sık yaptığı bir yanlış çağrışımdır.",
-    "iliskili": ["mezkur", "isbu"],
+    "iliskili": [
+      "mezkur",
+      "isbu"
+    ],
     "kaynak": "Sözleşme dili",
     "risk_notu": "'Keyfî' ile karıştırılması anlamı tamamen bozar."
   },
@@ -1382,13 +2551,25 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Ödeme",
     "en": "Payment",
-    "varyantlar": ["tediye", "tediyat", "tediye etmek"],
-    "halk_dili": ["ödeme", "para yatırmak"],
+    "varyantlar": [
+      "tediye",
+      "tediyat",
+      "tediye etmek"
+    ],
+    "halk_dili": [
+      "ödeme",
+      "para yatırmak"
+    ],
     "tanim": "Borcun para ile ifası.",
     "sade_aciklama": "Ödeme yapmak.",
-    "degildir": ["tahsil"],
+    "degildir": [
+      "tahsil"
+    ],
     "ayrim_notu": "'Tediye' ödeme yapmak, 'tahsil' ödemeyi almaktır; yön zıttır.",
-    "iliskili": ["tahsil", "ifa"],
+    "iliskili": [
+      "tahsil",
+      "ifa"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1398,13 +2579,24 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Alacağın toplanması",
     "en": "Collection",
-    "varyantlar": ["tahsil", "tahsilat", "tahsil etmek"],
-    "halk_dili": ["parayı almak", "toplama"],
+    "varyantlar": [
+      "tahsil",
+      "tahsilat",
+      "tahsil etmek"
+    ],
+    "halk_dili": [
+      "parayı almak",
+      "toplama"
+    ],
     "tanim": "Alacağın borçludan alınması.",
     "sade_aciklama": "Alacağın tahsil edilmesi, paranın alınması.",
-    "degildir": ["tediye"],
+    "degildir": [
+      "tediye"
+    ],
     "ayrim_notu": "Tediyenin karşı yönüdür; metinde hangi tarafın fiili olduğuna dikkat edilmelidir.",
-    "iliskili": ["tediye"],
+    "iliskili": [
+      "tediye"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1414,13 +2606,26 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Yerine getirme",
     "en": "Performance",
-    "varyantlar": ["ifa", "ifâ", "ifa etmek", "adem-i ifa"],
-    "halk_dili": ["yerine getirmek", "yapmak"],
+    "varyantlar": [
+      "ifa",
+      "ifâ",
+      "ifa etmek",
+      "adem-i ifa"
+    ],
+    "halk_dili": [
+      "yerine getirmek",
+      "yapmak"
+    ],
     "tanim": "Borcun konusunun gereği gibi yerine getirilmesi.",
     "sade_aciklama": "Yükümlülüğün yerine getirilmesi.",
-    "degildir": ["fesih"],
+    "degildir": [
+      "fesih"
+    ],
     "ayrim_notu": "'Adem-i ifa' ifa etmeme demektir; olumsuzluk eki gözden kaçarsa anlam tersine döner.",
-    "iliskili": ["temerrut", "tediye"],
+    "iliskili": [
+      "temerrut",
+      "tediye"
+    ],
     "kaynak": "Türk Borçlar Kanunu",
     "risk_notu": "'Adem-i' öneki normalizasyonda silinmemelidir; anlamı tersine çevirir."
   },
@@ -1431,13 +2636,24 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Düzenleme",
     "en": "Drawing up / Issuance",
-    "varyantlar": ["tanzim", "tanzim etmek", "tanzim tarihi"],
-    "halk_dili": ["belgeyi düzenlemek", "hazırlamak"],
+    "varyantlar": [
+      "tanzim",
+      "tanzim etmek",
+      "tanzim tarihi"
+    ],
+    "halk_dili": [
+      "belgeyi düzenlemek",
+      "hazırlamak"
+    ],
     "tanim": "Bir belgenin usulüne uygun olarak hazırlanması.",
     "sade_aciklama": "Belgenin düzenlenmesi.",
-    "degildir": ["tanzim (düzeltme) "],
+    "degildir": [
+      "tanzim (düzeltme) "
+    ],
     "ayrim_notu": "'Tanzim tarihi' belgenin düzenlendiği tarihtir, vade tarihi değildir.",
-    "iliskili": ["akit"],
+    "iliskili": [
+      "akit"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1447,13 +2663,21 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Kayıtsız şartsız",
     "en": "Unconditionally",
-    "varyantlar": ["bila kayd u şart", "bilakaydüşart", "kayıtsız ve şartsız"],
-    "halk_dili": ["hiçbir şart olmadan"],
+    "varyantlar": [
+      "bila kayd u şart",
+      "bilakaydüşart",
+      "kayıtsız ve şartsız"
+    ],
+    "halk_dili": [
+      "hiçbir şart olmadan"
+    ],
     "tanim": "Hiçbir kayıt veya şarta bağlı olmaksızın.",
     "sade_aciklama": "Kayıtsız şartsız, koşulsuz olarak.",
     "degildir": [],
     "ayrim_notu": "Kayıpsız sadeleştirilebilir. 'Bilâ' öneki 'olmaksızın' demektir ve olumsuzluk taşır.",
-    "iliskili": ["gayrikabili-rucu"],
+    "iliskili": [
+      "gayrikabili-rucu"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1463,13 +2687,25 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Dönülemez / geri alınamaz",
     "en": "Irrevocable",
-    "varyantlar": ["gayrikabili rücu", "gayri kabili rücu", "kabili rücu"],
-    "halk_dili": ["geri alınamaz", "vazgeçilemez"],
+    "varyantlar": [
+      "gayrikabili rücu",
+      "gayri kabili rücu",
+      "kabili rücu"
+    ],
+    "halk_dili": [
+      "geri alınamaz",
+      "vazgeçilemez"
+    ],
     "tanim": "Verildikten sonra geri alınamayan taahhüt veya yetki.",
     "sade_aciklama": "Geri alınamaz, dönülemez.",
-    "degildir": ["kabili rücu"],
+    "degildir": [
+      "kabili rücu"
+    ],
     "ayrim_notu": "'Gayri' öneki anlamı tersine çevirir: 'kabili rücu' geri alınabilir demektir. Önekin kaybı ciddi hata yaratır.",
-    "iliskili": ["bila-kayd-u-sart", "vekalet"],
+    "iliskili": [
+      "bila-kayd-u-sart",
+      "vekalet"
+    ],
     "kaynak": "Sözleşme dili",
     "risk_notu": "'Gayri' öneki normalizasyonda korunmalıdır."
   },
@@ -1480,11 +2716,19 @@
     "kategori": "hukuk_dili",
     "resmi_tr": "Delil / ispat",
     "en": "Evidence / Proof",
-    "varyantlar": ["beyyine", "beyyine yükü"],
-    "halk_dili": ["kanıt", "ispat"],
+    "varyantlar": [
+      "beyyine",
+      "beyyine yükü"
+    ],
+    "halk_dili": [
+      "kanıt",
+      "ispat"
+    ],
     "tanim": "Bir iddianın doğruluğunu ortaya koyan delil.",
     "sade_aciklama": "İddiayı kanıtlayan delil.",
-    "degildir": ["beyan"],
+    "degildir": [
+      "beyan"
+    ],
     "ayrim_notu": "'Beyan' açıklama, 'beyyine' delildir; benzer yazılışa rağmen farklıdır.",
     "iliskili": [],
     "kaynak": "Usul hukuku"
@@ -1496,13 +2740,27 @@
     "kategori": "fon_toplama",
     "resmi_tr": "Getiri / semere",
     "en": "Yield / Return",
-    "varyantlar": ["nema", "nemâ", "nemalandırma", "semere"],
-    "halk_dili": ["paranın getirisi", "kazanç", "değerlenme"],
+    "varyantlar": [
+      "nema",
+      "nemâ",
+      "nemalandırma",
+      "semere"
+    ],
+    "halk_dili": [
+      "paranın getirisi",
+      "kazanç",
+      "değerlenme"
+    ],
     "tanim": "Bir malvarlığının işletilmesinden doğan artış veya gelir.",
     "sade_aciklama": "Birikimin işletilmesinden doğan getiri.",
-    "degildir": ["faiz"],
+    "degildir": [
+      "faiz"
+    ],
     "ayrim_notu": "Nötr bir terimdir; faizli veya faizsiz her getiriyi kapsayabilir. Katılım bağlamında kâr payını ifade eder ama tek başına faizsizlik garantisi vermez.",
-    "iliskili": ["kar-payi", "riba"],
+    "iliskili": [
+      "kar-payi",
+      "riba"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1512,13 +2770,25 @@
     "kategori": "operasyon",
     "resmi_tr": "Borç sorumluluğu",
     "en": "Liability / Obligation",
-    "varyantlar": ["zimmet", "zimmet-i mâliye"],
-    "halk_dili": ["borcu üstünde olmak", "borç yükü"],
+    "varyantlar": [
+      "zimmet",
+      "zimmet-i mâliye"
+    ],
+    "halk_dili": [
+      "borcu üstünde olmak",
+      "borç yükü"
+    ],
     "tanim": "Kişinin borçlarla yükümlü olma ehliyeti ve borcun bağlandığı hukuki varlık.",
     "sade_aciklama": "Bir kişinin üzerindeki borç sorumluluğu.",
-    "degildir": ["zimmete geçirme", "zimmet suçu"],
+    "degildir": [
+      "zimmete geçirme",
+      "zimmet suçu"
+    ],
     "ayrim_notu": "DİKKAT — ceza hukukundaki 'zimmet' (görevi kötüye kullanarak mal edinme) suçuyla hiçbir ilgisi yoktur. Fıkhî metinlerde borç kapasitesini ifade eder.",
-    "iliskili": ["havale", "kefalet"],
+    "iliskili": [
+      "havale",
+      "kefalet"
+    ],
     "kaynak": "Fıkhî muamelat",
     "risk_notu": "Ceza hukuku anlamıyla karıştırılması ciddi hata yaratır."
   },
@@ -1529,13 +2799,25 @@
     "kategori": "ilke",
     "resmi_tr": "Standart / benzeriyle değiştirilebilir mal",
     "en": "Fungible goods",
-    "varyantlar": ["mislî", "misli mal", "misliyat"],
-    "halk_dili": ["standart ürün", "hepsi aynı olan mal"],
+    "varyantlar": [
+      "mislî",
+      "misli mal",
+      "misliyat"
+    ],
+    "halk_dili": [
+      "standart ürün",
+      "hepsi aynı olan mal"
+    ],
     "tanim": "Piyasada benzerleri bulunan, ölçü, tartı veya sayı ile belirlenen ve birbirinin yerine geçebilen mal.",
     "sade_aciklama": "Buğday, altın gibi birbirinin yerine geçebilen standart mallar.",
-    "degildir": ["kıyemî mal"],
+    "degildir": [
+      "kıyemî mal"
+    ],
     "ayrim_notu": "'Kıyemî mal' (her biri kendine özgü, ör. ikinci el bir araç) karşıtıdır. Selem akdinin konusu mislî olmak zorundadır.",
-    "iliskili": ["selem", "sarf"],
+    "iliskili": [
+      "selem",
+      "sarf"
+    ],
     "kaynak": "Fıkhî muamelat"
   },
   {
@@ -1545,13 +2827,29 @@
     "kategori": "ilke",
     "resmi_tr": "Emanet (vedîa)",
     "en": "Amanah / Wadiah / Trust",
-    "varyantlar": ["emanet", "emânet", "vedia", "vedîa", "amanah"],
-    "halk_dili": ["saklamaya vermek", "emanete bırakmak"],
+    "varyantlar": [
+      "emanet",
+      "emânet",
+      "vedia",
+      "vedîa",
+      "amanah"
+    ],
+    "halk_dili": [
+      "saklamaya vermek",
+      "emanete bırakmak"
+    ],
     "tanim": "Bir malın, sahibi adına saklanmak üzere bir başkasına bırakılması; emanetçi kusursuz telef halinde sorumlu değildir.",
     "sade_aciklama": "Bir malın korunmak üzere birine bırakılması.",
-    "degildir": ["karz", "borç"],
+    "degildir": [
+      "karz",
+      "borç"
+    ],
     "ayrim_notu": "Emanette mal kullanılamaz ve tüketilemez; karzda ise tüketilir ve misli iade edilir. Sorumluluk rejimleri farklıdır: emanetçi kusursuz zarardan sorumlu değildir, borçlu ise her halde iade ile yükümlüdür.",
-    "iliskili": ["karz-i-hasen", "ozel-cari-hesap", "vekalet"],
+    "iliskili": [
+      "karz-i-hasen",
+      "ozel-cari-hesap",
+      "vekalet"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar"
   },
   {
@@ -1561,13 +2859,27 @@
     "kategori": "ilke",
     "resmi_tr": "Kullanım ödüncü",
     "en": "Ariyah / Loan for use",
-    "varyantlar": ["ariyet", "âriyet", "iare"],
-    "halk_dili": ["ödünç almak", "kullanıp geri vermek"],
+    "varyantlar": [
+      "ariyet",
+      "âriyet",
+      "iare"
+    ],
+    "halk_dili": [
+      "ödünç almak",
+      "kullanıp geri vermek"
+    ],
     "tanim": "Bir malın, bedelsiz olarak kullanılmak ve aynen iade edilmek üzere verilmesi.",
     "sade_aciklama": "Bir eşyanın ücretsiz kullanılıp aynen geri verilmek üzere ödünç alınması.",
-    "degildir": ["icare", "karz"],
+    "degildir": [
+      "icare",
+      "karz"
+    ],
     "ayrim_notu": "İcarede bedel vardır, ariyette yoktur. Karzda mal tüketilir ve misli iade edilir; ariyette aynı mal iade edilir.",
-    "iliskili": ["icare", "karz-i-hasen", "emanet"],
+    "iliskili": [
+      "icare",
+      "karz-i-hasen",
+      "emanet"
+    ],
     "kaynak": "Fıkhî muamelat"
   },
   {
@@ -1577,13 +2889,28 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Kapora / peşinat",
     "en": "Urbun / Down payment",
-    "varyantlar": ["urbun", "urbûn", "arbun", "kapora"],
-    "halk_dili": ["kapora", "kaparo", "ön ödeme"],
+    "varyantlar": [
+      "urbun",
+      "urbûn",
+      "arbun",
+      "kapora"
+    ],
+    "halk_dili": [
+      "kapora",
+      "kaparo",
+      "ön ödeme"
+    ],
     "tanim": "Alıcının satın alma iradesini göstermek üzere ödediği, alımdan vazgeçmesi halinde satıcıda kalan ön ödeme.",
     "sade_aciklama": "Vazgeçilirse satıcıda kalan ön ödeme.",
-    "degildir": ["peşinat", "opsiyon primi"],
+    "degildir": [
+      "peşinat",
+      "opsiyon primi"
+    ],
     "ayrim_notu": "Peşinattan farkı, vazgeçme halinde iade edilmemesidir. Cevazı fıkhen tartışmalıdır; bazı standartlar şartlı olarak kabul eder.",
-    "iliskili": ["murabaha", "garar"],
+    "iliskili": [
+      "murabaha",
+      "garar"
+    ],
     "kaynak": "AAOIFI Şer'i Standartlar",
     "risk_notu": "Tartışmalı yapı; kurum Danışma Kurulu görüşü esas alınmalıdır."
   },
@@ -1594,13 +2921,28 @@
     "kategori": "finansman_yontemi",
     "resmi_tr": "Tek taraflı bağlayıcı vaat",
     "en": "Wa'd / Unilateral promise",
-    "varyantlar": ["vaad", "va'd", "vaat", "bağlayıcı vaat"],
-    "halk_dili": ["söz vermek", "taahhüt"],
+    "varyantlar": [
+      "vaad",
+      "va'd",
+      "vaat",
+      "bağlayıcı vaat"
+    ],
+    "halk_dili": [
+      "söz vermek",
+      "taahhüt"
+    ],
     "tanim": "Bir tarafın ileride belirli bir işlemi yapacağına dair tek taraflı taahhüdü.",
     "sade_aciklama": "İleride bir işlemi yapacağınıza dair verdiğiniz söz.",
-    "degildir": ["akit", "sözleşme"],
+    "degildir": [
+      "akit",
+      "sözleşme"
+    ],
     "ayrim_notu": "Vaad henüz akit değildir; bu ayrım murabahada kritiktir. Müşterinin alım vaadi, banka malı satın almadan önce alınır ve akit ancak mal bankanın mülkiyetine geçtikten sonra kurulur. İki taraflı bağlayıcı vaat (muvaade) ise akit hükmünde sayılabildiği için sorunludur.",
-    "iliskili": ["murabaha", "akit", "icare-muntehiye"],
+    "iliskili": [
+      "murabaha",
+      "akit",
+      "icare-muntehiye"
+    ],
     "kaynak": "AAOIFI Şer'i Standart No. 8 ve No. 49"
   },
   {
@@ -1610,13 +2952,24 @@
     "kategori": "operasyon",
     "resmi_tr": "İndirim / azaltma",
     "en": "Reduction / Discount",
-    "varyantlar": ["tenzil", "tenzilat"],
-    "halk_dili": ["indirim", "düşürmek"],
+    "varyantlar": [
+      "tenzil",
+      "tenzilat"
+    ],
+    "halk_dili": [
+      "indirim",
+      "düşürmek"
+    ],
     "tanim": "Bir tutarın azaltılması, indirilmesi.",
     "sade_aciklama": "Tutardan yapılan indirim.",
-    "degildir": ["iskonto (senet kırdırma)"],
+    "degildir": [
+      "iskonto (senet kırdırma)"
+    ],
     "ayrim_notu": "Senet kırdırma anlamındaki 'iskonto' faiz içerdiğinden katılım bankacılığında kullanılmaz; buradaki tenzil basit bir indirimdir.",
-    "iliskili": ["iskonto-indirimi", "ibra"],
+    "iliskili": [
+      "iskonto-indirimi",
+      "ibra"
+    ],
     "kaynak": "Sözleşme dili"
   },
   {
@@ -1626,13 +2979,300 @@
     "kategori": "operasyon",
     "resmi_tr": "Takas / düşme",
     "en": "Set-off / Offset",
-    "varyantlar": ["mahsup", "mahsuben", "takas"],
-    "halk_dili": ["borçtan düşmek", "karşılıklı silmek"],
+    "varyantlar": [
+      "mahsup",
+      "mahsuben",
+      "takas"
+    ],
+    "halk_dili": [
+      "borçtan düşmek",
+      "karşılıklı silmek"
+    ],
     "tanim": "Karşılıklı alacak ve borçların birbirinden düşülmesi.",
     "sade_aciklama": "Karşılıklı borç ve alacakların birbirinden düşülmesi.",
-    "degildir": ["ibra"],
+    "degildir": [
+      "ibra"
+    ],
     "ayrim_notu": "Mahsupta iki alacak birbirini söndürür; ibrada alacaklı tek taraflı feragat eder.",
-    "iliskili": ["ibra", "temlik"],
+    "iliskili": [
+      "ibra",
+      "temlik"
+    ],
     "kaynak": "Türk Borçlar Kanunu"
+  },
+  {
+    "id": "finansman",
+    "kanonik": "Finansman",
+    "tip": "urun",
+    "kategori": "temel",
+    "resmi_tr": "Finansman",
+    "en": "financing",
+    "varyantlar": [
+      "finansman kullandırımı"
+    ],
+    "halk_dili": [
+      "kredi çekmek"
+    ],
+    "tanim": "Katılım bankacılığında müşteriye kaynak sağlama biçiminin genel adı. Banka nakit ödünç vermez; müşterinin ihtiyaç duyduğu mal veya hizmeti satın alıp vadeli satar (murabaha), kiralar (icara) ya da ortaklık kurar (muşaraka/mudarebe).",
+    "sade_aciklama": "Banka size para vermez; istediğiniz şeyi alıp size vadeli satar ya da ortak olur.",
+    "degildir": [
+      "kredi",
+      "ödünç para",
+      "nakit borç"
+    ],
+    "ayrim_notu": "Konvansiyonel bankacılıktaki 'kredi'nin yerini alır ama aynı şey değildir: kredide para ödünç verilir ve faiz işler, finansmanda bir mal/hizmet alım-satımı veya ortaklık vardır.",
+    "iliskili": [
+      "murabaha",
+      "icare",
+      "musaraka"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır",
+    "risk_notu": "Müşteriye anlatırken 'kredi' denmemelidir; doğru terim 'finansman'dır."
+  },
+  {
+    "id": "vade",
+    "kanonik": "Vade",
+    "tip": "kavram",
+    "kategori": "temel",
+    "resmi_tr": "Vade",
+    "en": "maturity / term",
+    "varyantlar": [
+      "vade süresi",
+      "geri ödeme süresi"
+    ],
+    "halk_dili": [
+      "kaç ay",
+      "ne kadar sürede"
+    ],
+    "tanim": "Bir finansmanın geri ödeneceği ya da bir katılma hesabının işletileceği süre. Finansmanda ay, katılma hesabında çoğunlukla gün cinsinden belirtilir (ör. 32 gün, 91 gün).",
+    "sade_aciklama": "Borcun kaç ayda biteceği ya da paranın hesapta ne kadar kalacağı.",
+    "degildir": [],
+    "ayrim_notu": "Katılma hesabında vade dolmadan çekim, o döneme ait kâr payı hakkını düşürebilir.",
+    "iliskili": [
+      "katilma-hesabi",
+      "taksit"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır",
+    "risk_notu": ""
+  },
+  {
+    "id": "taksit",
+    "kanonik": "Taksit",
+    "tip": "kavram",
+    "kategori": "temel",
+    "resmi_tr": "Taksit",
+    "en": "installment",
+    "varyantlar": [
+      "taksit tutarı",
+      "aylık ödeme"
+    ],
+    "halk_dili": [
+      "aylık ödeme"
+    ],
+    "tanim": "Vadeli finansmanda toplam borcun bölündüğü ve düzenli aralıklarla ödenen eşit ya da değişken parçalardan her biri. Katılım bankacılığında taksit, anapara ile önceden ilan edilmiş kâr payının toplamıdır.",
+    "sade_aciklama": "Her ay ödediğiniz tutar; içinde hem anapara hem bankanın kâr payı vardır.",
+    "degildir": [
+      "faiz ödemesi"
+    ],
+    "ayrim_notu": "Taksit içindeki kâr payı, satış anında belirlenip sabitlenmiştir; konvansiyonel kredideki faiz gibi dönemsel işlemez.",
+    "iliskili": [
+      "vade",
+      "kar-payi",
+      "murabaha"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır",
+    "risk_notu": "Taksitin kâr payı bileşenine 'faiz' denmemelidir."
+  },
+  {
+    "id": "tahsis-ucreti",
+    "kanonik": "Tahsis Ücreti",
+    "tip": "ucret",
+    "kategori": "maliyet",
+    "resmi_tr": "Tahsis ücreti",
+    "en": "allocation fee",
+    "varyantlar": [
+      "finansman tahsis ücreti",
+      "kredi tahsis ücreti"
+    ],
+    "halk_dili": [
+      "dosya parası"
+    ],
+    "tanim": "Finansmanın kullandırılması sırasında bir defaya mahsus alınan ücret. Tutarı ya da oranı finansal tüketici mevzuatıyla sınırlandırılmıştır ve sözleşmede açıkça gösterilmesi gerekir.",
+    "sade_aciklama": "Finansman kullanırken bir kez ödenen işlem ücreti.",
+    "degildir": [
+      "kâr payı",
+      "kâr payı oranı"
+    ],
+    "ayrim_notu": "Kâr payı oranıyla KARIŞTIRILMAMALIDIR: kâr payı bankanın satıştan elde ettiği kazanç, tahsis ücreti ise ayrı bir masraf kalemidir. Toplam maliyet ikisinin toplamıdır.",
+    "iliskili": [
+      "masraf",
+      "dosya-masrafi"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır; BDDK Finansal Tüketicilerden Alınacak Ücretlere İlişkin Usul ve Esaslar Hakkında Yönetmelik",
+    "risk_notu": "Kıyaslamada tahsis ücreti kâr payı oranına eklenmeden 'en ucuz' iddiası yapılmamalıdır."
+  },
+  {
+    "id": "masraf",
+    "kanonik": "Masraf",
+    "tip": "ucret",
+    "kategori": "maliyet",
+    "resmi_tr": "Masraf",
+    "en": "charges / costs",
+    "varyantlar": [
+      "masraf durumu",
+      "masrafsız"
+    ],
+    "halk_dili": [
+      "ek ödeme",
+      "gizli masraf"
+    ],
+    "tanim": "Finansman ya da hesap işlemleri sırasında doğan ücret ve giderlerin genel adı: tahsis ücreti, ekspertiz, ipotek tesis, sigorta ve benzeri kalemler.",
+    "sade_aciklama": "Kâr payının dışında ödenen tüm ek ücretler.",
+    "degildir": [
+      "kâr payı"
+    ],
+    "ayrim_notu": "'Masrafsız' ifadesi bu kalemlerin alınmadığı anlamına gelir; kâr payının sıfır olduğu anlamına GELMEZ. Bu ayrım kampanya metinlerinde en sık karıştırılan noktalardandır.",
+    "iliskili": [
+      "tahsis-ucreti",
+      "ekspertiz",
+      "dosya-masrafi"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır; BDDK Finansal Tüketicilerden Alınacak Ücretlere İlişkin Usul ve Esaslar Hakkında Yönetmelik",
+    "risk_notu": "'Masrafsız' bir kampanyada kâr payı yine de alınır; cevapta bu ayrım korunmalıdır."
+  },
+  {
+    "id": "stopaj",
+    "kanonik": "Stopaj",
+    "tip": "vergi",
+    "kategori": "maliyet",
+    "resmi_tr": "Gelir vergisi tevkifatı (stopaj)",
+    "en": "withholding tax",
+    "varyantlar": [
+      "stopaj oranı",
+      "tevkifat"
+    ],
+    "halk_dili": [
+      "vergi kesintisi"
+    ],
+    "tanim": "Katılma hesabına dağıtılan kâr payından kaynağında kesilen gelir vergisi. Oran vade ve para birimine göre değişir; kesinti bankaca yapılıp vergi dairesine yatırılır.",
+    "sade_aciklama": "Kazancınızdan devlet payı olarak kesilen vergi; hesabınıza net tutar geçer.",
+    "degildir": [
+      "banka masrafı",
+      "bankanın kâr payı"
+    ],
+    "ayrim_notu": "Brüt kâr payı oranı ile net oran arasındaki fark stopajdan doğar. Bankalar çoğunlukla BRÜT oran ilan eder.",
+    "iliskili": [
+      "katilma-hesabi",
+      "kar-payi"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır; 193 sayılı Gelir Vergisi Kanunu (tevkifat esası)",
+    "risk_notu": "İlan edilen oran brütse, kullanıcıya net getiri sözü verilmemelidir."
+  },
+  {
+    "id": "ekspertiz",
+    "kanonik": "Ekspertiz",
+    "tip": "ucret",
+    "kategori": "maliyet",
+    "resmi_tr": "Değerleme (ekspertiz)",
+    "en": "appraisal",
+    "varyantlar": [
+      "ekspertiz ücreti",
+      "ekspertiz masrafı",
+      "değerleme raporu"
+    ],
+    "halk_dili": [
+      "evin değerine bakma"
+    ],
+    "tanim": "Finansmana konu taşınmaz veya taşıtın piyasa değerinin bağımsız uzmanca belirlenmesi ve bu hizmet için alınan ücret. Konut finansmanında teminat değerinin tespiti amacıyla yaygın olarak uygulanır.",
+    "sade_aciklama": "Alınacak evin ya da aracın değerinin uzmanca ölçülmesi ve bunun ücreti.",
+    "degildir": [
+      "kâr payı",
+      "tahsis ücreti"
+    ],
+    "ayrim_notu": "Tahsis ücretinden ayrı bir kalemdir ve genellikle üçüncü taraf değerleme kuruluşuna ödenir.",
+    "iliskili": [
+      "masraf"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır; BDDK Finansal Tüketicilerden Alınacak Ücretlere İlişkin Usul ve Esaslar Hakkında Yönetmelik",
+    "risk_notu": ""
+  },
+  {
+    "id": "limit",
+    "kanonik": "Limit",
+    "tip": "kavram",
+    "kategori": "temel",
+    "resmi_tr": "Limit",
+    "en": "limit",
+    "varyantlar": [
+      "finansman limiti",
+      "kart limiti"
+    ],
+    "halk_dili": [
+      "ne kadar çekebilirim"
+    ],
+    "tanim": "Bir müşteriye tahsis edilebilecek azami finansman tutarı ya da bir kartın azami harcama sınırı. Gelir, teminat ve risk değerlendirmesine göre belirlenir.",
+    "sade_aciklama": "Kullanabileceğiniz en yüksek tutar.",
+    "degildir": [
+      "kullandırılan tutar"
+    ],
+    "ayrim_notu": "Limit bir ÜST SINIRDIR; kampanyalarda geçen 'X TL'ye kadar' ifadesi limiti anlatır, herkese o tutarın verileceğini değil.",
+    "iliskili": [
+      "finansman"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır",
+    "risk_notu": "'X TL'ye kadar' ifadesi taahhüt değildir; cevapta üst sınır olduğu belirtilmelidir."
+  },
+  {
+    "id": "hesap-isletim-ucreti",
+    "kanonik": "Hesap İşletim Ücreti",
+    "tip": "ucret",
+    "kategori": "maliyet",
+    "resmi_tr": "Hesap işletim ücreti",
+    "en": "account maintenance fee",
+    "varyantlar": [
+      "hesap işletim gideri"
+    ],
+    "halk_dili": [
+      "hesap ücreti"
+    ],
+    "tanim": "Özel cari hesabın işletilmesi karşılığında dönemsel olarak alınabilen ücret. Finansal tüketici mevzuatı kapsamında tutarı ve alınma koşulları sınırlandırılmıştır.",
+    "sade_aciklama": "Hesabınızın açık tutulması için dönem dönem alınan ücret.",
+    "degildir": [
+      "kâr payı",
+      "stopaj"
+    ],
+    "ayrim_notu": "Katılma hesabı ile özel cari hesap ayrımı önemlidir: bu ücret, kâr payı dağıtılmayan cari hesaplarla ilişkilendirilir.",
+    "iliskili": [
+      "ozel-cari-hesap",
+      "masraf"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır; BDDK Finansal Tüketicilerden Alınacak Ücretlere İlişkin Usul ve Esaslar Hakkında Yönetmelik",
+    "risk_notu": ""
+  },
+  {
+    "id": "dosya-masrafi",
+    "kanonik": "Dosya Masrafı",
+    "tip": "ucret",
+    "kategori": "maliyet",
+    "resmi_tr": "Dosya masrafı",
+    "en": "file / processing fee",
+    "varyantlar": [
+      "dosya ücreti"
+    ],
+    "halk_dili": [
+      "dosya parası"
+    ],
+    "tanim": "Finansman başvuru ve tahsis sürecinin belge ve işlem maliyeti için alınan ücret. Finansal tüketici düzenlemeleri sonrasında bu kalem çoğunlukla tek bir 'tahsis ücreti' altında toplanmıştır.",
+    "sade_aciklama": "Başvuru ve evrak işlemleri için alınan ücret; bugün çoğunlukla tahsis ücretinin içindedir.",
+    "degildir": [
+      "kâr payı"
+    ],
+    "ayrim_notu": "Ayrı bir 'dosya masrafı' ile 'tahsis ücreti' aynı anda alınıyorsa bu bir çifte ücretlendirme işaretidir ve sorgulanmalıdır.",
+    "iliskili": [
+      "tahsis-ucreti",
+      "masraf"
+    ],
+    "kaynak": "Anatolia AI proje sözlüğü — genel bankacılık terminolojisi, katılım bankacılığı bağlamına uyarlanmıştır; BDDK Finansal Tüketicilerden Alınacak Ücretlere İlişkin Usul ve Esaslar Hakkında Yönetmelik",
+    "risk_notu": "'Masrafsız' iddiası varken dosya masrafı alınıyorsa çelişki olarak işaretlenmelidir."
   }
 ]
