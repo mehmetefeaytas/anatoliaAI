@@ -207,7 +207,15 @@ from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import OzetYoneticisi
 from ..tazeleme_sonrasi import alt_akis_kur
 from . import gunluk, kimlik
-from .routers import ajan, denetim, isler, katalog, katilma, kiyas
+from .routers import (
+    ajan,
+    denetim,
+    finansman_orani,
+    isler,
+    katalog,
+    katilma,
+    kiyas,
+)
 from .sabitler import FIELD_LABELS
 
 # `GUVENLIK_KAPILARI` / `GATE_LABELS` ve iki güvenlik yardımcısı da
@@ -742,6 +750,10 @@ def build_app():
     # hasat çıktısıdır — bu yüzden `repo` geçilmiyor. Chatbot aynı veriyi
     # zaten cevaplıyordu; panel görmüyordu (routers/katilma.py başlığı).
     app.include_router(katilma.router_kur())
+    # Finansman oranları: katılma ile AYNI desen, TERS yönlü büyüklük
+    # (katılmada yüksek iyi, finansmanda düşük iyi). İki uç ayrı
+    # tutuluyor ki tek bir sıralamada karışmasınlar.
+    app.include_router(finansman_orani.router_kur())
 
 
     @app.get("/campaigns/{campaign_id}/text")

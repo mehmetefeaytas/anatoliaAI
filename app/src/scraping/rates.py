@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import json
 import re
+from base64 import b64encode
 from dataclasses import dataclass, field
 from html import unescape
 from typing import Any, Iterable, Optional
@@ -279,7 +280,8 @@ class RateAdapter:
             self.failures.append({"url": url, "reason": "JSON ayristirilamadi"})
             return None
 
-    def _post_json(self, url: str, govde: dict[str, Any]) -> Optional[Any]:
+    def _post_json(self, url: str, govde: dict[str, Any], *,
+                   ek_basliklar: Optional[dict] = None) -> Optional[Any]:
         """JSON gövdesiyle POST. `_post_form`un kardeşi, gövde biçimi farklı.
 
         Hayat Finans'ın uçları `application/json` bekliyor; form kodlamasıyla
@@ -298,9 +300,11 @@ class RateAdapter:
         self.fetcher.limiter.wait(url)
         self.requests += 1
         try:
+            basliklar = {"Accept": "application/json",
+                         "Content-Type": "application/json"}
+            basliklar.update(ek_basliklar or {})
             resp = session.post(url, json=govde, timeout=self.fetcher.timeout,
-                                headers={"Accept": "application/json",
-                                         "Content-Type": "application/json"})
+                                headers=basliklar)
         except Exception as exc:
             self.failures.append({"url": url, "reason": "baglanti hatasi",
                                   "detail": f"{type(exc).__name__}: {exc}"[:150]})
@@ -1550,6 +1554,176 @@ class DunyaKatilimAdapter(RateAdapter):
         return t.group(1), sorted(gorulen.items(), key=lambda kv: kv[1])
 
 
+# --------------------------------------------------------------------------- #
+# T.O.M. Katılım — webintegration API (2026-08-25 doğrulandı)
+# --------------------------------------------------------------------------- #
+
+class TomKatilimAdapter(RateAdapter):
+    """`LoanCalculation/*` — aylık kâr oranı + ödeme planı.
+
+    ## Doğrulanmış yanıtlar (2026-08-25)
+
+        POST /webintegration/api/LoanCalculation/LoanRateList
+        {"ProductCode":"TKTCDGRFNS"}
+        → {"Data":{"LoanRateList":[{"InstallmentsCount":1,"LoanRate":3.99,…},…]},
+           "Success":true}
+
+        POST /webintegration/api/LoanCalculation/GetLoanPayBackPlan
+        {"CustomRate":3.99,"FundingAmount":100000,"InstallmentCount":12,…}
+        → {"Data":{"MonthlyProfitRate":"3,99","TotalCost":83.4613661,
+                   "TotalAmount":"136.822,12","CommisionAmount":0.0,…}}
+
+    ## KİMLİK BİLGİSİ KODA GÖMÜLMÜYOR
+
+    Bankanın kendi istemci betiği (`assets/js/calculation-tool-dynamic.js`)
+    Basic auth kimliğini açık metin taşıyor; sayfayı açan her tarayıcı onu
+    zaten gönderiyor. Buna rağmen kimlik **bu depoya yazılmıyor** ve çalışma
+    anında betikten okunuyor. İki sebep:
+
+    1. **Depoda sır bulunmaz** (CLAUDE.md §19). Bankanın kimliğini kendi
+       kaynağımıza kopyalamak, onu bizim sırrımız hâline getirirdi.
+    2. Banka kimliği döndürdüğünde gömülü kopya sessizce eskir ve adaptör
+       "banka oran vermiyor" der. Betikten okumak, rotasyonda kendiliğinden
+       düzelir.
+
+    Kimlik betikte bulunamazsa adaptör AÇIKÇA başarısız olur ve gerekçesini
+    yazar — sessizce boş liste dönmez.
+
+    ## `CustomRate` — uydurma oran kapısı
+
+    Ödeme planı ucu `CustomRate` alanını AYNEN kullanıyor; uydurma bir oran
+    gönderilirse plan onunla hesaplanıyor. Bu yüzden oran **her zaman**
+    `LoanRateList`ten geliyor (bankanın kendi tablosu) ve plan yanıtının
+    `MonthlyProfitRate` alanı geri okunup **doğrulanıyor**: uç bizim
+    gönderdiğimizden farklı bir oran yazarsa kayıt DÜŞÜRÜLÜR.
+
+    ## `TotalCost` yıllık maliyet ORANIDIR, tutar değil
+
+    83,46 = yıllık maliyet oranı (%). Toplam tutar `TotalAmount`ta ve TR
+    biçimli bir dizedir ("136.822,12"). İkisini karıştırmak, maliyet oranını
+    yüz binlerce liraya çevirirdi.
+    """
+
+    slug = "tom-katilim"
+    kinds = (KIND_FINANCING,)
+    BASE = "https://www.tombank.com.tr"
+    API = "https://webintegration.tombank.com.tr/webintegration/api/LoanCalculation"
+    JS_URL = f"{BASE}/assets/js/calculation-tool-dynamic.js"
+    ORAN_URL = f"{API}/LoanRateList"
+    PLAN_URL = f"{API}/GetLoanPayBackPlan"
+
+    URUN_KODU = "TKTCDGRFNS"
+    #: İnsan-okur ad bankanın oran PDF'inden; uçta yalnız kod var ve kodu
+    #: ürün adı diye basmak ekranda anlamsız görünürdü.
+    URUN_ADI = "Taksitli Alışveriş Finansmanı"
+
+    #: `btoa("KULLANICI" + ":" + "PAROLA")` — bankanın kendi betiğindeki biçim.
+    KIMLIK_DESENI = re.compile(
+        r'btoa\(\s*"([^"]+)"\s*\+\s*":"\s*\+\s*"([^"]+)"\s*\)')
+
+    #: Tutara göre vade tavanı — bankanın kendi istemci kuralı.
+    VADE_TAVANI = ((50000, 36), (100000, 24), (float("inf"), 12))
+
+    def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        baslik = self._kimlik_basligi()
+        if baslik is None:
+            return []
+        oranlar = self._oranlar(baslik)
+        if not oranlar:
+            return []
+        out: list[RateQuote] = []
+        sapma = 0
+        for amount in grid.financing_amounts:
+            tavan = next(v for sinir, v in self.VADE_TAVANI if amount <= sinir)
+            for term in grid.financing_terms:
+                if term > tavan or term not in oranlar:
+                    continue
+                if self.requests >= grid.max_requests:
+                    continue
+                oran = oranlar[term]
+                d = self._plan(baslik, amount, term, oran)
+                if d is None:
+                    continue
+                # Uç bizim gönderdiğimiz oranı AYNEN kullanıyor; geri okuyup
+                # doğrulamak, `CustomRate` yolunun sessizce başka bir sayı
+                # üretmediğini kanıtlıyor.
+                donen = _num(d.get("MonthlyProfitRate"))
+                if donen is not None and abs(donen - oran) > 0.005:
+                    sapma += 1
+                    continue
+                out.append(RateQuote(
+                    bank_slug=self.slug, kind=KIND_FINANCING,
+                    product_code=self.URUN_KODU, product_name=self.URUN_ADI,
+                    amount=float(amount), term_months=int(term),
+                    monthly_rate=oran,
+                    # `TotalCost` yıllık maliyet ORANI (%), tutar değil.
+                    annual_cost_rate=_num(d.get("TotalCost")),
+                    total_payment=_num(d.get("TotalAmount")),
+                    fees=_clean_fees({
+                        "komisyon": _num(d.get("CommisionAmount")),
+                        "sigorta": _num(d.get("InsuranceAmount")),
+                    }),
+                    source_url=self.PLAN_URL, collected_at=utc_now_iso(),
+                    method=METHOD_RATE_API,
+                    note=("oran bankanın kendi tablosundan (LoanRateList); "
+                          "plan yanıtı geri okunup doğrulandı")))
+        if sapma:
+            self.notes.append(
+                f"{self.slug}: {sapma} noktada plan yaniti GONDERILEN orandan "
+                f"sapti; kayit dusuruldu")
+        return out
+
+    def _kimlik_basligi(self) -> Optional[dict]:
+        """Basic auth başlığını bankanın kendi betiğinden ÇALIŞMA ANINDA okur."""
+        if not self._allowed(self.JS_URL):
+            return None
+        self.fetcher.limiter.wait(self.JS_URL)
+        self.requests += 1
+        sonuc = self.fetcher.fetch(self.JS_URL)
+        js = getattr(sonuc, "text", None) or getattr(sonuc, "html", None) or ""
+        m = self.KIMLIK_DESENI.search(js) if js else None
+        if m is None:
+            self.failures.append({
+                "url": self.JS_URL,
+                "reason": "istemci kimligi betikte bulunamadi",
+                "detail": ("banka betigi degistirmis olabilir; kimlik BILEREK "
+                           "koda gomulmuyor (bkz. sinif basligi)")})
+            return None
+        ham = f"{m.group(1)}:{m.group(2)}".encode("utf-8")
+        return {"Authorization": f"Basic {b64encode(ham).decode('ascii')}"}
+
+    def _oranlar(self, baslik: dict) -> dict[int, float]:
+        """{taksit sayısı: aylık oran} — bankanın kendi tablosu."""
+        veri = self._post_json(self.ORAN_URL, {"ProductCode": self.URUN_KODU},
+                               ek_basliklar=baslik)
+        if not isinstance(veri, dict):
+            return {}
+        liste = ((veri.get("Data") or {}).get("LoanRateList")) or []
+        out: dict[int, float] = {}
+        for satir in liste:
+            if not isinstance(satir, dict):
+                continue
+            n = satir.get("InstallmentsCount")
+            oran = _num(satir.get("LoanRate"))
+            if isinstance(n, int) and oran is not None and oran > 0:
+                out[n] = oran
+        if not out:
+            self.failures.append({"url": self.ORAN_URL,
+                                  "reason": "oran listesi bos"})
+        return out
+
+    def _plan(self, baslik: dict, amount: float, term: int,
+              oran: float) -> Optional[dict]:
+        veri = self._post_json(self.PLAN_URL, {
+            "CustomRate": oran, "FundingAmount": amount,
+            "InstallmentCount": term, "ProductCode": self.URUN_KODU,
+        }, ek_basliklar=baslik)
+        if not isinstance(veri, dict):
+            return None
+        d = veri.get("Data")
+        return d if isinstance(d, dict) else None
+
+
 class VakifKatilimBlockedAdapter(RateAdapter):
     """Vakıf Katılım oranları robots.txt ile ERİŞİLEMEZ — bu bir kayıt tutucudur.
 
@@ -1591,6 +1765,7 @@ RATE_ADAPTERS: dict[str, type[RateAdapter]] = {
     ZiraatKatilimAdapter.slug: ZiraatKatilimAdapter,
     HayatFinansAdapter.slug: HayatFinansAdapter,
     DunyaKatilimAdapter.slug: DunyaKatilimAdapter,
+    TomKatilimAdapter.slug: TomKatilimAdapter,
 }
 
 
