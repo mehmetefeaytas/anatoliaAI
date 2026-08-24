@@ -33,6 +33,42 @@ set -euo pipefail
 KOK="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$KOK"
 
+# ── .env YÜKLEME ────────────────────────────────────────────────────────
+#
+# Ölçülmüş boşluk (2026-08-24): anahtar `app/.env`e yazıldı ama yığın yine
+# yerel Ollama ile açıldı — çünkü bu betik ortam değişkenlerini KABUKTAN
+# okuyordu ve `.env`i kimse yüklemiyordu. Dosyaya yazıp "hallettim" sanmak,
+# tam olarak bu betiğin doğduğu sessiz arıza tipidir.
+#
+# İki kural:
+#
+# 1. **Kabukta ZATEN tanımlı değişken EZİLMEZ.** `LLM=0 make baslat` ya da
+#    tek seferlik `EVREN_API_KEY=... make baslat` çağrısı dosyayı yenmelidir;
+#    tersi olsaydı geçici bir deneme sessizce yok sayılırdı.
+# 2. **`source` KULLANILMAZ.** `.env` bir kabuk betiği değil; `source` onu
+#    çalıştırır ve dosyaya düşen bir komut satırı sessizce koşardı. Yalnız
+#    `ANAHTAR=değer` biçimindeki satırlar okunuyor.
+ORTAM_DOSYASI="$KOK/.env"
+if [ -f "$ORTAM_DOSYASI" ]; then
+  YUKLENEN=0
+  while IFS= read -r satir || [ -n "$satir" ]; do
+    case "$satir" in ''|'#'*) continue ;; esac
+    case "$satir" in *=*) ;; *) continue ;; esac
+    ad="${satir%%=*}"
+    deger="${satir#*=}"
+    # Ad geçerli bir değişken adı mı? Değilse satır atlanır (bozuk dosya
+    # betiği düşürmemeli).
+    case "$ad" in [A-Za-z_][A-Za-z0-9_]*) ;; *) continue ;; esac
+    # Kabukta zaten TANIMLI ise dokunma.
+    if [ -n "$(eval "printf '%s' \"\${$ad:-}\"")" ]; then continue; fi
+    # Kenar tırnakları soyulur: `.env` biçiminde yaygın ve değere ait değil.
+    deger="${deger%\"}"; deger="${deger#\"}"
+    deger="${deger%\'}"; deger="${deger#\'}"
+    export "$ad=$deger"
+    YUKLENEN=$((YUKLENEN + 1))
+  done < "$ORTAM_DOSYASI"
+fi
+
 PY="$KOK/.venv/bin/python"
 CALISMA="$KOK/.calisma"          # log + pid; `.gitignore`'da — türetilmiş, izlenmez
 API_PORT="${API_PORT:-8000}"

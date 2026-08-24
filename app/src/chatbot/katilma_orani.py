@@ -105,7 +105,13 @@ _ONBELLEK: Optional[tuple[dict, ...]] = None
 #: doğrudan o tablodan cevaplanır, taşımıyorsa TKBB cevabına segment uyarısı
 #: düşer. Uyarı olmadan cevap, küçük bakiyeli kullanıcıya erişemeyeceği bir
 #: oranı vaat ediyordu.
-_SEGMENT_DOSYALARI = ("kt-paylasim-pdf.jsonl", "quotes.jsonl")
+#: Banka kendi yayınından gelen SEGMENT bazlı oran dosyaları.
+#: `vakif-paylasim-pdf.jsonl` 2026-08-24'te eklendi: Vakıf Katılım oranları
+#: yalnız bir PDF'te yayımlıyor ve robots.txt o yolu engelliyor, bu yüzden
+#: belge şartname §5.1 gereği ELLE indirildi (scripts/vakif_paylasim_pdf.py).
+#: Segment ayrımı orada da gerçek: 250-99.999 TL → %85, 100.000+ → %90.
+_SEGMENT_DOSYALARI = ("kt-paylasim-pdf.jsonl", "vakif-paylasim-pdf.jsonl",
+                      "quotes.jsonl")
 _SEGMENT_ONBELLEK: Optional[tuple[dict, ...]] = None
 
 #: Soruda geçtiğinde belirli bir bakiye segmentinin sorulduğunu gösteren izler.
