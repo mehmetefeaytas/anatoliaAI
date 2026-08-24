@@ -245,6 +245,66 @@ export type CampaignSummary = {
   ozet_sebep?: string | null;
 };
 
+/**
+ * Bankanın KENDİ yayımladığı finansman oranı (kampanya korpusundan DEĞİL).
+ *
+ * Ayrı bir tip, `RankRow`un yanına eklenen bir alan değil: bu satırların
+ * kanıt zinciri farklı. Kampanya alanı bir belgenin span'ine dayanır; bu
+ * satır bankanın hesaplama aracına. İkisini tek tipte toplamak, ekranda
+ * "aynı güvenle ölçüldü" izlenimi verirdi.
+ */
+export type FinansmanOrani = {
+  bank_slug: string | null;
+  product_name: string | null;
+  product_code: string | null;
+  urun_ailesi: string;
+  /** Aylık kâr payı oranı (%). DÜŞÜK olan avantajlı. */
+  monthly_rate: number | null;
+  /** Yıllık toplam maliyet oranı (%). Banka yayımlamıyorsa `null` — uydurulmaz. */
+  annual_cost_rate: number | null;
+  term_months: number | null;
+  amount: number | null;
+  amount_max: number | null;
+  total_payment: number | null;
+  fees: Record<string, number> | null;
+  currency: string;
+  source_url: string | null;
+  collected_at: string | null;
+  method: string | null;
+  note: string | null;
+};
+
+export type FinansmanOranlari = {
+  /** `"dusuk_iyi"` — katılma hesabının TERSİ. Arayüz bunu varsaymaz, okur. */
+  yon: string;
+  yon_etiketi: string;
+  urun_ailesi: string | null;
+  term_months: number | null;
+  veri_yok: boolean;
+  rows: FinansmanOrani[];
+  urun_aileleri: string[];
+  vadeler: number[];
+  kapsam: { kayit: number; banka: number; banka_basina: Record<string, number> };
+  kaynak_notu: string;
+};
+
+/** Tek bankanın yayımladığı oranların özeti — banka sayfası için. */
+export type BankaFinansmanOzeti = {
+  bank_slug: string;
+  veri_yok: boolean;
+  gerekce?: string;
+  kayit?: number;
+  urun?: number;
+  en_dusuk_oran?: number;
+  en_yuksek_oran?: number;
+  kaynak?: string[];
+  aileler?: Record<string, {
+    kayit: number;
+    en_dusuk_oran: number;
+    urunler: string[];
+  }>;
+};
+
 /** `GET /campaigns` süzgeçleri. Hepsi opsiyonel; hiçbiri verilmezse tam liste. */
 export type CampaignParams = {
   /** Serbest metin — banka, tür, özet ve adreste arar (ham gövdede DEĞİL). */
@@ -1028,6 +1088,26 @@ export const api = {
    * kovalarının anlamı (özellikle `damgasiz` = `NULL`) veri katmanının
    * kuralıdır ve TSX'e kopyalansaydı iki yerde yaşardı.
    */
+  /**
+   * Bankaların kendi yayımladığı finansman oranları.
+   *
+   * Kampanya korpusundan gelmiyor: `kar_payi_orani` belgelerin yalnız
+   * %6,1'inde geçiyor ve bu bir çıkarım kusuru değil — bilgi o metinlerde YOK
+   * (ölçüldü: EVREN 60 belgede 0 kabul, yerel model 30 belgede 0).
+   */
+  finansmanOranlari: (p: { urun_ailesi?: string; term_months?: number;
+                           tum_kayitlar?: boolean } = {}) => {
+    const q = new URLSearchParams();
+    if (p.urun_ailesi) q.set("urun_ailesi", p.urun_ailesi);
+    if (p.term_months !== undefined) q.set("term_months", String(p.term_months));
+    if (p.tum_kayitlar) q.set("tum_kayitlar", "true");
+    const s = q.toString();
+    return request<FinansmanOranlari>(
+      `/api/finansman-oranlari${s ? `?${s}` : ""}`);
+  },
+  bankaFinansmanOzeti: (slug: string) =>
+    request<BankaFinansmanOzeti>(
+      `/api/finansman-oranlari/${encodeURIComponent(slug)}`),
   campaigns: (params: CampaignParams = {}) => {
     const p = new URLSearchParams();
     for (const [ad, deger] of Object.entries(params)) {

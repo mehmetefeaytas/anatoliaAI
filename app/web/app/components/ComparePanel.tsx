@@ -148,6 +148,7 @@ import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
 import FieldChips from "./FieldChips";
 import GrafikIskeleti from "./grafik/GrafikIskeleti";
+import FinansmanOranPanel from "./FinansmanOranPanel";
 import KatilmaPanel from "./KatilmaPanel";
 import KapsamaCetveli, {
   kapsamaOzeti,
@@ -378,7 +379,20 @@ export default function ComparePanel({
   //
   // Kaynak farkı GİZLENMİYOR, seçeneğin adında yazıyor. İki büyüklüğün
   // (getiri ↔ pay) karışmaması ise panelin kendi işi; ayrımı o basıyor.
-  const [gorunum, setGorunum] = useState<"alan" | "tablo" | "katilma">("alan");
+  //
+  // DÖRDÜNCÜ GÖRÜNÜM — yayımlanan finansman oranları (2026-08-25).
+  //
+  // Katılma oranlarıyla aynı gerekçe, TERS yönlü büyüklük: katılmada yüksek
+  // oran iyi (kazandığınız), finansmanda düşük oran iyi (ödediğiniz). İkisi
+  // ayrı görünüm çünkü tek tabloda karışmaları kıyası anlamsız kılar.
+  //
+  // Bu görünümün varlık sebebi ölçülmüş bir boşluk: `kar_payi_orani` kampanya
+  // belgelerinin yalnız %6,1'inde geçiyor ve bu bir çıkarım kusuru DEĞİL —
+  // EVREN 60 belgede 0, yerel model 30 belgede 0 kabul edilebilir değer
+  // üretti. Bilgi o metinlerde yok; bankalar onu hesaplama araçlarında
+  // yayımlıyor.
+  const [gorunum, setGorunum] =
+    useState<"alan" | "tablo" | "katilma" | "finansman">("alan");
 
   const gorunumSecici = (
     <div className="row-tight" role="group" aria-label="Görünüm">
@@ -403,6 +417,16 @@ export default function ComparePanel({
         />
         <span>Ürün tablosu (şartname s.12)</span>
       </label>
+      <label className="row-tight" htmlFor="gorunum-finansman">
+        <input
+          id="gorunum-finansman"
+          type="radio"
+          name="kiyas-gorunum"
+          checked={gorunum === "finansman"}
+          onChange={() => setGorunum("finansman")}
+        />
+        <span>Yayımlanan finansman oranları</span>
+      </label>
       <label className="row-tight" htmlFor="gorunum-katilma">
         <input
           id="gorunum-katilma"
@@ -415,6 +439,15 @@ export default function ComparePanel({
       </label>
     </div>
   );
+
+  if (gorunum === "finansman") {
+    return (
+      <div className="stack">
+        {gorunumSecici}
+        <FinansmanOranPanel />
+      </div>
+    );
+  }
 
   if (gorunum === "katilma") {
     return (

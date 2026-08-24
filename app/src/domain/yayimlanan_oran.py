@@ -47,6 +47,8 @@ import json
 import pathlib
 from typing import Iterable, Optional, Sequence
 
+from ..preprocessing.clean import tr_fold_ascii
+
 #: Oran dosyalarının adı — banka klasörlerinin altında.
 DOSYA_ADI = "quotes.jsonl"
 
@@ -107,17 +109,28 @@ def urun_aileleri(kayitlar: Optional[Iterable[dict]] = None) -> list[str]:
 #: Ürün adı → aile. Banka adları BİRBİRİNDEN FARKLI yazıyor ("Konut Yeni",
 #: "KONUT FINANSMANI (0-10.000.000 TL/1-120 AY))", "Konut Finansmanı (sıfır
 #: konut)") ve ham adla gruplamak aynı ürünü üç ayrı satıra bölerdi.
+#: İzler ASCII-katlanmış biçimde yazılıyor; eşleme `tr_fold_ascii` üzerinden.
+#:
+#: ## Niçin `casefold()` DEĞİL — ölçülmüş hata
+#:
+#: `"TAŞIT".casefold()` → **"taşit"** (noktasız ı yerine noktalı i), çünkü
+#: Python'un standart katlaması Türkçe I/ı ayrımını bilmez. Ziraat Katılım
+#: ürün adlarını TAMAMEN BÜYÜK HARFLE yayımlıyor ("TAŞIT FINANSMANI(1-48 AY)")
+#: ve bu yüzden bankanın bütün taşıt ürünleri aile eşlemesinden SESSİZCE
+#: düşüyordu — kıyas tablosunda hiç görünmüyorlardı.
+#:
+#: `tr_fold_ascii` hem Türkçe büyük/küçük harfi hem diyakritikleri
+#: normalleştiriyor, yani tek bir ASCII iz hem "TAŞIT" hem "taşıt" hem "tasit"
+#: yazımını yakalıyor. Aksanlı/aksansız çift yazma ihtiyacı da ortadan kalkıyor.
 _AILE_IZLERI: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("Konut Finansmanı", ("konut", "arsa", "prefabrik", "işyeri", "isyeri",
-                          "gayrimenkul", "kentsel")),
-    ("Taşıt Finansmanı", ("taşıt", "tasit", "araç", "arac", "togg",
-                          "motosiklet")),
-    ("İhtiyaç Finansmanı", ("ihtiyaç", "ihtiyac", "kolay fon", "tüketici",
-                            "tuketici", "eğitim", "egitim", "hac", "umre",
-                            "yurt", "engelsiz")),
-    ("Alışveriş Finansmanı", ("alışveriş", "alisveris", "taksitli",
-                              "veresiye", "bana bunu al", "cep telefonu",
-                              "teknoloji", "dijital", "ev/ofis")),
+    ("Konut Finansmanı", ("konut", "arsa", "prefabrik", "isyeri",
+                          "gayrimenkul", "kentsel", "ev/ofis")),
+    ("Taşıt Finansmanı", ("tasit", "arac", "togg", "motosiklet", "binek")),
+    ("İhtiyaç Finansmanı", ("ihtiyac", "kolay fon", "tuketici", "egitim",
+                            "hac", "umre", "yurt", "engelsiz")),
+    ("Alışveriş Finansmanı", ("alisveris", "taksitli", "veresiye",
+                              "bana bunu al", "cep telefonu", "teknoloji",
+                              "dijital")),
 )
 
 
@@ -127,8 +140,10 @@ def aile(urun_adi: str) -> str:
     Boş dönmek bilinçli: tanınmayan ürünü rastgele bir aileye koymak, kıyası
     sessizce yanlış yapardı. Çağıran onu «Diğer» olarak gösterebilir ama
     KARIŞTIRAMAZ.
+
+    Eşleme `tr_fold_ascii` üzerinden — gerekçe `_AILE_IZLERI` başlığında.
     """
-    d = (urun_adi or "").casefold()
+    d = tr_fold_ascii(urun_adi or "")
     for etiket, izler in _AILE_IZLERI:
         if any(iz in d for iz in izler):
             return etiket

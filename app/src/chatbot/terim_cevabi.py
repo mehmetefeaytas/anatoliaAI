@@ -71,6 +71,13 @@ _ALAN_IZLERI = re.compile(
     # yoluna gidiyordu. Terim yolu alıntı modunda çalıştığı için post-filter
     # atlanıyor ve kaynaktaki yasak terim ekrana sızıyordu
     # (`tests/test_safety.py::test_forbidden_term_in_source_is_filtered_out`).
+    # Finansman ÜRÜNÜNÜN oranı bir TERİM sorusu değil, bir DEĞER sorusudur ve
+    # `finansman_orani` yoluna gitmelidir (ölçüldü 2026-08-25: "taşıt
+    # finansmanı oranları nedir" terminolojiye düşüyor ve «Finansman» teriminin
+    # tanımıyla cevaplanıyordu — soru oranı soruyordu).
+    r"\b(?:konut|taşıt|tasit|araç|arac|ihtiyaç|ihtiyac|arsa|işyeri|isyeri|"
+    r"eğitim|egitim|alışveriş|alisveris)\s+finansman\w*\s+(?:kâr\s+payı\s+)?"
+    r"oran\w*|\bfinansman\s+oran\w*|"
     r"\bmasraf durumu\b|\bkâr payı oranı\b|\bkar payı oranı\b|"
     r"\btahsis ücreti\b|\bfinansman tutarı\b|\btaksit sayısı\b|"
     r"\bödül miktarı\b|\bvade\w*\b|\boranı nedir\b|"

@@ -53,6 +53,7 @@ from . import rag, safety, structured
 # Buradan yeniden dışa veriliyor: `sayilari_ayikla` bu modülden içe
 # aktarılıyordu (testler dâhil) ve o yol kırılmamalı.
 from .dayanak import sayilari_ayikla
+from .finansman_orani import finansman_cevabi
 from .katilma_orani import katilma_cevabi
 from .router import (
     BANK_DISPLAY,
@@ -398,9 +399,15 @@ class Chatbot:
         # `katilma_orani` da kaynaklı sayılır: gövde TKBB Veri Peteği
         # kaynağını ve veri dönemini metnin İÇİNDE yazıyor (kaynak satırı
         # koşulsuz basılır, bkz. `katilma_orani.katilma_cevabi`).
+        # `katilma_orani` ve `finansman_orani` gövdeleri `sources` listesi
+        # taşımaz ama kaynağı METNİN İÇİNDE yazar (`_Kaynak:` satırı koşulsuz
+        # basılır). Beyaz listede olmazlarsa kapı gerçek, kaynaklı bir tabloyu
+        # "Bu bilgi verimde yok" ile değiştiriyor — ölçüldü 2026-08-25:
+        # finansman yolu doğru yönlendiriliyordu ama cevabı buradan düşüyordu.
         kaynak_var = bool(d.sources) or d.handler in ("katalog",
                                                       "terminoloji",
-                                                      "katilma_orani")
+                                                      "katilma_orani",
+                                                      "finansman_orani")
         # `terminoloji` gövdesi kendi sözlüğümüzden bir ALINTIDIR; post-
         # filter onu yeniden yazarsa tanım bozulur (ölçüldü: Riba kaydının
         # "Faiz" karşılığı "Kâr payı" yapılıyordu ve tanım tersine
@@ -617,6 +624,32 @@ class Chatbot:
             # ailesinde kıyaslandığı + hangi ailelerde de kıyaslanabileceği).
             if r.alan_varsayildi and sources and not ans.cok_boyutlu:
                 govde = f"{govde}\n\n{_kapsam_notu(r.field)}"
+
+            # FİNANSMAN ORANI YEDEĞİ — yalnız yapısal sorgu BOŞ döndüyse.
+            #
+            # Bu yol bir ÖN ALMA değil, bir YEDEK. İlk denemede yapısal
+            # sorgudan önce koşuyordu ve cevaplanabilen soruları çalıyordu
+            # (ölçüldü: dört test düştü — "Konut finansmanı kâr payı
+            # oranlarını listele" yapısal yola ait, "Peki vade?" takip
+            # zincirini kırıyordu, güvenlik seti C03 tek banka sorusuna
+            # başka bankaların tablosunu bastırıyordu).
+            #
+            # Doğru yer burası: kampanya korpusu bir şey bulduysa O kazanır,
+            # çünkü onun kanıtı belgenin span'idir. Korpus boş döndüğünde ise
+            # susmak yerine bankanın KENDİ yayımladığı oranı göstermek
+            # kapsamı genişletiyor — `kar_payi_orani` belgelerin yalnız
+            # %6,1'inde dolu ve bu bir çıkarım kusuru değil, bilginin o
+            # metinlerde bulunmamasıdır (EVREN 60 belgede 0 kabul).
+            if not sources:
+                yedek = finansman_cevabi(question)
+                if yedek:
+                    return _Dagitim(
+                        "finansman_orani", r.field, yedek, [], True, r,
+                        {"attempted": False, "applied": False, "ms": None,
+                         "reason": ("finansman oranı yedeği — korpusta kayıt "
+                                    "yok, banka yayınlarından")},
+                        [])
+
             return _Dagitim("structured", r.field, govde, sources, has_rate,
                             r, soz, list(ans.rows))
         ans = rag.answer(self.repo, question, llm=self.llm,
