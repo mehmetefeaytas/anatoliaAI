@@ -768,7 +768,7 @@ curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fie
 ### Değerlendirme ve test komutları
 
 ```bash
-python3 -m unittest discover -s tests            # 4.027 test toplanır
+python3 -m unittest discover -s tests            # 4.043 test toplanır
 python -m eval.properties --raw-dir data/raw     # değişmez denetimi
 python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 python -m eval.ablation                          # kural / llm / hibrit / hibrit-verify
@@ -1225,8 +1225,8 @@ yapıyor.
 
 | koşucu | toplanan | geçti | atlandı | başarısız |
 |---|---:|---:|---:|---:|
-| `unittest` (kanonik) | 4.027 | 3.974 | 53 | 0 |
-| `pytest` (çapraz doğrulama) | 4.027 | 3.974 | 53 | 0 |
+| `unittest` (kanonik) | 4.043 | 3.990 | 53 | 0 |
+| `pytest` (çapraz doğrulama) | 4.043 | 3.990 | 53 | 0 |
 
 Artefakt: `eval/reports/test-ozeti.json`, commit `03822c24`, `git_dirty: false`,
 Python 3.14.6. Atlanan 53 test Postgres/pgvector istiyor ve CI'ın

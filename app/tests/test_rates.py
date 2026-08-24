@@ -543,17 +543,35 @@ class TestTurkiyeFinansTableAdapter(unittest.TestCase):
 class TestVakifBlockedAdapter(unittest.TestCase):
     """robots.txt engeli SESSİZ kalmamalı; gerekçe rapora yazılmalı."""
 
-    def test_kayit_uretmez_ama_gerekce_yazar(self):
-        a = VakifKatilimBlockedAdapter(_Fetcher(_Session({})), robots=_AllowAll())
-        self.assertEqual(a.quotes(RateGrid()), [])
-        self.assertEqual(a.requests, 0, "engelli kaynağa istek atılmamalı")
-        note = " ".join(a.notes)
-        self.assertIn("TOPLANMADI", note)
-        self.assertIn("/documents/", note, "engellenen yol belirtilmeli")
-        self.assertIn("manual/", note, "şartname §5.1 alternatifi belirtilmeli")
+    def test_katilma_toplanmaz_ama_gerekce_yazar(self):
+        """KATILMA tarafı hâlâ engelli; gerekçe SESSİZ kalmamalı.
 
-    def test_hicbir_tur_iddia_etmez(self):
-        self.assertEqual(VakifKatilimBlockedAdapter.kinds, ())
+        2026-08-25'te bu adaptör FİNANSMAN toplamaya başladı (ürün
+        sayfalarındaki tablo `Allow: /` kapsamında). Katılma tarafı için
+        engel aynen duruyor ve notu da öyle.
+        """
+        a = VakifKatilimBlockedAdapter(_Fetcher(_Session({})), robots=_AllowAll())
+        a.quotes(RateGrid())
+        note = " ".join(a.notes)
+        self.assertIn("toplanmadi", note.lower())
+        self.assertIn("/documents/", note, "engellenen yol belirtilmeli")
+        self.assertIn("vakif_paylasim_pdf", note,
+                      "şartname §5.1 ile elle indirildiği belirtilmeli")
+
+    def test_ENGELLI_yola_istek_ATILMAZ(self):
+        """Değişmez bu: `/documents/` altına HİÇBİR koşulda istek gitmez."""
+        f = _Fetcher(_Session({}))
+        a = VakifKatilimBlockedAdapter(f, robots=_AllowAll())
+        a.quotes(RateGrid())
+        istenen = [u for u, _ in getattr(f._session, "calls", [])]
+        self.assertFalse([u for u in istenen if "/documents/" in u],
+                         "robots.txt Disallow: /documents/ — dolanılmamalı")
+
+    def test_finansman_turu_iddia_eder(self):
+        """Artık finansman üretiyor; boş `kinds` ürettiği veriyi yalanlardı."""
+        from src.scraping.rates import KIND_FINANCING, KIND_PROFIT_SHARE
+        self.assertIn(KIND_FINANCING, VakifKatilimBlockedAdapter.kinds)
+        self.assertNotIn(KIND_PROFIT_SHARE, VakifKatilimBlockedAdapter.kinds)
 
 
 class TestRegistryAndSerialization(unittest.TestCase):

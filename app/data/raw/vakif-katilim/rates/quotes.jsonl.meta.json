@@ -1,0 +1,31 @@
+{
+  "bank_slug": "vakif-katilim",
+  "record_count": 6,
+  "collected_at": "2026-08-24T22:43:42+00:00",
+  "collection_method": "rate-round",
+  "requests": 2,
+  "grid": {
+    "financing_amounts": [
+      100000,
+      500000,
+      1000000
+    ],
+    "financing_terms": [
+      12,
+      36,
+      60,
+      120
+    ],
+    "deposit_amounts": [
+      50000,
+      250000
+    ],
+    "deposit_term_days": [
+      32,
+      92,
+      182,
+      365
+    ],
+    "max_requests": 20
+  }
+}

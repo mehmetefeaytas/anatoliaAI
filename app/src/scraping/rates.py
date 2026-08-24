@@ -1936,6 +1936,190 @@ def _tf_finansman_katalogu(self, grid: RateGrid) -> list[RateQuote]:
 TurkiyeFinansTableAdapter._finansman_katalogu = _tf_finansman_katalogu
 
 
+class VakifKatilimTableAdapter(RateAdapter):
+    """Ürün sayfalarındaki YAYIMLANMIŞ oran tablosu — robots'un izin verdiği yol.
+
+    ## Bu adaptör `VakifKatilimBlockedAdapter`'ın YERİNE geçmiyor, YANINA geliyor
+
+    O sınıfın kaydı **katılma hesabı** içindi ve hâlâ doğru: katılma oranları
+    yalnız `/documents/…kar-paylasim-oranlari.pdf` içinde ve `robots.txt`
+    `/documents/` yolunu engelliyor (o veri §5.1 gereği ELLE indirildi,
+    `scripts/vakif_paylasim_pdf.py`).
+
+    Ama **finansman** tarafı için o not YANLIŞTI: banka finansman oranını
+    ürün sayfalarında HTML tablosu olarak yayımlıyor ve o sayfalar `Allow: /`
+    kapsamında. Eksik, bankanın yayımlamaması değil, yanlış yere bakılmasıydı.
+
+    ## Canlı hesaplama ucuna GİDİLMİYOR — iki ayrı sebep
+
+    `POST /plugins/FinancingComputationExecute` daha zengin veri veriyor
+    (7 ürün, taksit, ekspertiz, ipotek). İki sebeple kullanılmıyor:
+
+    **1. robots.txt `Disallow: /plugins/` diyor.** Kural açık; tarayıcıyla
+    sürerek dolanmak, kuralın lafzını değil ruhunu çiğnemek olurdu.
+
+    **2. BEŞİNCİ uydurma tuzağı — ve en sinsisi.** Uç `profitRate`
+    parametresini `InvariantCulture` ile parse ediyor:
+
+        profitRate=9,99  (virgül) → yanıt 3,99  — SESSİZCE yok sayıldı
+        profitRate=9.99  (nokta)  → yanıt 9,99  — AYNEN geri döndü
+        profitRate=7     (tamsayı)→ yanıt 7,00  — AYNEN geri döndü
+
+    Tehlike, virgüllü denemenin "güvenli" görünmesi: uca "oran enjekte
+    edilemiyor" diye yanlış güven verir. Üstelik yanıtta bunu işaretleyen
+    HİÇBİR alan yok — iki durumun şeması birebir aynı. Tablo yolunda istemci
+    parametresi hiç gönderilmediği için tuzak yapısal olarak imkânsız.
+
+    ## ÇELİŞKİ — tablo ile canlı uç ayrışıyor, GİZLENMİYOR
+
+    Aynı ürün ve tutarda iki kaynak farklı oran veriyor (ölçüldü 2026-08-25):
+
+        vade   sayfa tablosu   canlı uç   fark
+        12 ay      %3,50         %3,39    −0,11
+        24 ay      %3,45         %3,29    −0,16
+        36 ay      %3,40         %3,19    −0,21
+        48 ay      %3,40         %3,19    −0,21
+
+    Canlı uç muhtemelen daha güncel (işlem yolu; tabloda geçerlilik damgası
+    yok). Ama o yola robots izin vermiyor, dolayısıyla kaydedebildiğimiz sayı
+    TABLONUNKİDİR ve bu her kayda `note` olarak yazılıyor. Çelişki
+    saklanmıyor; kullanıcı hangi sayıyı okuduğunu ve sınırını biliyor.
+    """
+
+    slug = "vakif-katilim-tablo"
+    kinds = (KIND_FINANCING,)
+    BASE = "https://www.vakifkatilim.com.tr"
+
+    #: (yol, ürün adı) — hepsi `Allow: /` kapsamında, hiçbiri `/documents/`
+    #: ya da `/plugins/` altında değil.
+    PAGES = (
+        ("/tr/kendim-icin/finansmanlar/tasit-finansmani", "Taşıt Finansmanı"),
+        ("/tr/kendim-icin/finansmanlar/kentsel-donusum-finansmani",
+         "Kentsel Dönüşüm Finansmanı"),
+    )
+
+    SATIR_DESENI = re.compile(r"<tr[\s\S]*?</tr>", re.IGNORECASE)
+    HUCRE_DESENI = re.compile(r"<t[dh][\s\S]*?</t[dh]>", re.IGNORECASE)
+    ETIKET_DESENI = re.compile(r"<[^>]+>")
+
+    CELISKI_NOTU = (
+        "sayfa tablosundan; bankanın canlı hesaplama ucu 0,11–0,21 puan DAHA "
+        "DÜŞÜK oran veriyor ama o uç robots.txt ile engelli (Disallow: "
+        "/plugins/). Çelişki gizlenmiyor: kaydedilen sayı TABLONUNKİDİR.")
+
+    def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        out: list[RateQuote] = []
+        for yol, ad in self.PAGES:
+            url = f"{self.BASE}{yol}"
+            if not self._allowed(url):
+                continue
+            self.fetcher.limiter.wait(url)
+            self.requests += 1
+            sonuc = self.fetcher.fetch(url)
+            html = getattr(sonuc, "text", None) or getattr(sonuc, "html", None) or ""
+            if not html:
+                self.failures.append({"url": url, "reason": "sayfa bos dondu"})
+                continue
+            n = len(out)
+            out.extend(self._tablodan(html, url, ad))
+            if len(out) == n:
+                # SESSİZ SIFIR KAPISI: sayfa geldi ama satır çıkmadıysa düzen
+                # değişmiş demektir; "banka yayımlamıyor" gibi görünmemeli.
+                self.failures.append({
+                    "url": url, "reason": "oran tablosu bulunamadi",
+                    "detail": "sayfa duzeni degismis olabilir"})
+        return out
+
+    def _tablodan(self, html: str, url: str, urun: str) -> list[RateQuote]:
+        out: list[RateQuote] = []
+        # Aynı (ürün, vade, oran) üçlüsü sayfada birden çok satırda geçebiliyor
+        # (kentsel dönüşümde tutar dilimi başına ayrı satır var ama oran aynı).
+        # Yinelenen kayıt kıyasta bankaya haksız ağırlık vermez — sıralama
+        # banka başına tek satır alır — ama JSONL'i şişirir ve "5 ürün" gibi
+        # yanlış bir kapsama izlenimi verir.
+        gorulen: set[tuple] = set()
+        for tr in self.SATIR_DESENI.findall(html):
+            hucreler = [" ".join(self.ETIKET_DESENI.sub(" ", h).split())
+                        for h in self.HUCRE_DESENI.findall(tr)]
+            hucreler = [h for h in hucreler if h]
+            if len(hucreler) < 3:
+                continue
+            metin = " | ".join(hucreler)
+            if "%" not in metin:
+                continue                     # başlık satırı ya da ilgisiz tablo
+            oran = _num(self._ilk_yuzde(hucreler))
+            vade = self._vade(metin)
+            if oran is None or oran <= 0 or vade is None:
+                continue
+            anahtar = (urun, vade, oran)
+            if anahtar in gorulen:
+                continue
+            gorulen.add(anahtar)
+            out.append(RateQuote(
+                bank_slug="vakif-katilim", kind=KIND_FINANCING,
+                product_name=urun,
+                amount=_num(self._tutar(hucreler)),
+                term_months=vade,
+                monthly_rate=oran,
+                # Yıllık maliyet oranı tabloda VAR ama bayat orana ait
+                # (bkz. sınıf başlığındaki çelişki tablosu). Onu canlı oranla
+                # aynı kayda koymak, oran ile maliyetin birbirini tutmadığı bir
+                # satır üretirdi — burada oran da tablodan geldiği için
+                # tutarlı ve taşınıyor.
+                annual_cost_rate=_num(self._maliyet(hucreler)),
+                fees=_clean_fees({"tahsis": _num(self._tahsis(hucreler))}),
+                source_url=url, collected_at=utc_now_iso(),
+                method=METHOD_RATE_TABLE,
+                note=self.CELISKI_NOTU))
+        return out
+
+    @staticmethod
+    def _ilk_yuzde(hucreler: list[str]) -> Optional[str]:
+        for h in hucreler:
+            m = re.search(r"%\s*([\d.,]+)", h)
+            # Yıllık maliyet oranı da yüzde; ondan AYIRT ETMEK için iki
+            # basamaklı ve 20'den küçük olan alınıyor (aylık kâr oranı).
+            if m:
+                deger = _num(m.group(1))
+                if deger is not None and 0 < deger < 20:
+                    return m.group(1)
+        return None
+
+    @staticmethod
+    def _maliyet(hucreler: list[str]) -> Optional[str]:
+        for h in hucreler:
+            m = re.search(r"%\s*([\d.,]+)", h)
+            if m:
+                deger = _num(m.group(1))
+                if deger is not None and deger >= 20:
+                    return m.group(1)
+        return None
+
+    @staticmethod
+    def _vade(metin: str) -> Optional[int]:
+        m = re.search(r"(\d{1,3})\s*[-–]?\s*(\d{1,3})?\s*Ay", metin, re.IGNORECASE)
+        if not m:
+            return None
+        # Aralık verilmişse ÜST sınır manşet vadedir.
+        return int(m.group(2) or m.group(1))
+
+    @staticmethod
+    def _tutar(hucreler: list[str]) -> Optional[str]:
+        for h in hucreler:
+            m = re.search(r"([\d.]{4,})\s*(?:TL|₺)", h)
+            if m:
+                return m.group(1)
+        return None
+
+    @staticmethod
+    def _tahsis(hucreler: list[str]) -> Optional[str]:
+        for h in hucreler:
+            m = re.search(r"([\d.]+)\s*₺", h)
+            if m:
+                return m.group(1)
+        return None
+
+
 class VakifKatilimBlockedAdapter(RateAdapter):
     """Vakıf Katılım oranları robots.txt ile ERİŞİLEMEZ — bu bir kayıt tutucudur.
 
@@ -1955,16 +2139,35 @@ class VakifKatilimBlockedAdapter(RateAdapter):
     """
 
     slug = "vakif-katilim"
-    kinds = ()
+    #: KATILMA hâlâ toplanmıyor (engelli PDF, §5.1 ile ELLE indirildi), ama
+    #: FİNANSMAN artık toplanıyor — ürün sayfalarındaki tablo `Allow: /`
+    #: kapsamında. Boş bırakmak, adaptörün ürettiği veriyi yalanlardı.
+    kinds = (KIND_FINANCING,)
     RATE_PDF = ("https://www.vakifkatilim.com.tr/documents/PerakendeBankacilik/"
                 "kar-paylasim-oranlari.pdf")
 
     def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        # KATILMA tarafı için not hâlâ geçerli: o oranlar yalnız engelli
+        # PDF'te ve §5.1 gereği ELLE indirildi (`scripts/vakif_paylasim_pdf.py`).
         self.notes.append(
-            f"{self.slug}: oran TOPLANMADI — oranlar yalnizca {self.RATE_PDF} "
+            f"{self.slug}: KATILMA orani toplanmadi — yalnizca {self.RATE_PDF} "
             f"belgesinde ve robots.txt '/documents/' yolunu acikca engelliyor. "
-            f"Sartname 5.1 geregi elle indirilip manual/ altina konabilir.")
-        return []
+            f"Sartname 5.1 geregi ELLE indirildi (scripts/vakif_paylasim_pdf.py).")
+        # FİNANSMAN tarafı için o not YANLIŞTI: banka finansman oranını ürün
+        # sayfalarında HTML tablosu olarak yayımlıyor ve o sayfalar `Allow: /`
+        # kapsamında. Kompozisyon — gerekçe `VakifKatilimTableAdapter`da.
+        alt = VakifKatilimTableAdapter(self.fetcher, robots=self.robots)
+        try:
+            kayitlar = alt.quotes(grid)
+        except Exception as exc:             # pragma: no cover - savunma
+            self.failures.append({"url": VakifKatilimTableAdapter.BASE,
+                                  "reason": "finansman tablosu dustu",
+                                  "detail": f"{type(exc).__name__}: {exc}"[:150]})
+            return []
+        self.requests += alt.requests
+        self.notes.extend(alt.notes)
+        self.failures.extend(alt.failures)
+        return kayitlar
 
 
 # Yeni banka eklemek = bir adaptör sınıfı + buraya bir satır (§18-3).

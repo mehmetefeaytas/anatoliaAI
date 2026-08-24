@@ -2,11 +2,11 @@
 
 > Otomatik üretildi: `python -m src.scraping.harvest_rates`. Elle düzenlemeyin — yeniden koşuda üzerine yazılır.
 
-- **Başlangıç:** 2026-08-24T22:32:45+00:00
-- **Bitiş:** 2026-08-24T22:32:51+00:00
+- **Başlangıç:** 2026-08-24T22:43:35+00:00
+- **Bitiş:** 2026-08-24T22:43:42+00:00
 - **Domain başına gecikme:** 2.0 sn (CLAUDE.md §14)
 - **robots.txt uyumu:** AÇIK (varsayılan)
-- **Toplam oran kaydı:** 375
+- **Toplam oran kaydı:** 6
 
 ## Neden bu tur var
 
@@ -16,30 +16,12 @@ Aylık kâr payı oranı HTML'de yok; değer istemci-taraflı hesaplama aracın�
 
 | Banka | Kayıt | Finansman | Katılma | Aylık oran aralığı | İstek | Başarısız |
 |---|---:|---:|---:|---|---:|---:|
-| `turkiye-finans` | 375 | 145 | 230 | %0.89–%6.1 | 3 | 0 |
+| `vakif-katilim` | 6 | 6 | 0 | %3.4–%3.5 | 2 | 0 |
 
 ## Kapsanan ürünler
 
-- **turkiye-finans** — Arsa Finansmanı Sigortalı — Arsa Finansman
-- **turkiye-finans** — Arsa Finansmanı Sigortasız — Arsa Finansman
-- **turkiye-finans** — Bankamız Gayrimenkulleri Konut — Banka Gayrimenkulleri Konut Finansmanı
-- **turkiye-finans** — Bankamız Gayrimenkulleri Ticari Mülk — Banka Gayrimenkulleri Ticari Mülk Finansmanı
-- **turkiye-finans** — Mevcut Konutu Olan / Sigortalı Konut Finansmanı — Mortgage Finansmanı
-- **turkiye-finans** — Mevcut Konutu Olan / Sigortasız Konut Finansmanı — Mortgage Finansmanı
-- **turkiye-finans** — Sigortalı Motosiklet Finansmanı — Sigortalı Motosiklet Finansmanı
-- **turkiye-finans** — Sigortalı Taşıt Finansmanı 0 km — Taşıt Finansmanı
-- **turkiye-finans** — Sigortalı Taşıt Finansmanı 2. El — Taşıt Finansmanı
-- **turkiye-finans** — Sigortasız Motosiklet Finansmanı — Sigortasız Motosiklet Finansmanı
-- **turkiye-finans** — Sigortasız Taşıt Finansmanı 0 km — Taşıt Finansmanı
-- **turkiye-finans** — Sigortasız Taşıt Finansmanı 2. El — Taşıt Finansmanı
-- **turkiye-finans** — Sigortasız İhtiyaç Finansmanı — Sigortasız İhtiyaç Finansmanı
-- **turkiye-finans** — Sigortasız İhtiyaç Finansmanı — Sigortasız İhtiyaç Finansmanı  
-- **turkiye-finans** — İhtiyaç Finansmanı — İhtiyaç Finansmanı
-- **turkiye-finans** — İhtiyaç Finansmanı — İhtiyaç Finansmanı  
-- **turkiye-finans** — İlk Konutunu Alan / Sigortalı Konut Finansmanı — Mortgage Finansmanı
-- **turkiye-finans** — İlk Konutunu Alan / Sigortasız Konut Finansmanı — Mortgage Finansmanı
-- **turkiye-finans** — İşyeri Finansmanı Sigortalı — İşyeri Finansman
-- **turkiye-finans** — İşyeri Finansmanı Sigortasız — İşyeri Finansman
+- **vakif-katilim** — Kentsel Dönüşüm Finansmanı
+- **vakif-katilim** — Taşıt Finansmanı
 
 ## Adaptörü olmayan bankalar
 
@@ -54,4 +36,4 @@ Başarısız istek yok.
 
 ## Notlar
 
-Not yok.
+- **vakif-katilim** — vakif-katilim: KATILMA orani toplanmadi — yalnizca https://www.vakifkatilim.com.tr/documents/PerakendeBankacilik/kar-paylasim-oranlari.pdf belgesinde ve robots.txt '/documents/' yolunu acikca engelliyor. Sartname 5.1 geregi ELLE indirildi (scripts/vakif_paylasim_pdf.py).
