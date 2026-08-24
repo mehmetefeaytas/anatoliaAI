@@ -1325,6 +1325,114 @@ DEFAULT_WEIGHTS: dict[str, float] = {
     "finansman_tutari": 0.10,
 }
 
+# --------------------------------------------------------------------------- #
+# Tür başına ölçüt kümesi — «ölçülemedi» salgınının kökü
+# --------------------------------------------------------------------------- #
+#
+# ## Ölçülmüş arıza (kullanıcı raporu 2026-08-25)
+#
+# Banka sayfasında türlerin neredeyse tamamı «ölçülemedi» diyordu. Korpus
+# genelinde 909 kampanyanın yalnız **58'i** kıyaslanabilirdi (%6,4).
+#
+# Sebep aritmetikti, veri değil. `DEFAULT_WEIGHTS` her tür için AYNI beş ölçütü
+# kullanıyor ve `MIN_COVERAGE = 0.5` ağırlıkça yarısının dolu olmasını istiyor.
+# Bir **kart** kampanyasında `kar_payi_orani` (0,40) ve `finansman_tutari`
+# (0,10) zaten BULUNMAZ — ölçüldü: kart belgelerinin %2'sinde ve %0'ında
+# geçiyor. Yani kartın ulaşabileceği en yüksek kapsama **0,50** ve eşiği ancak
+# kalan üç ölçütün ÜÇÜ birden doluysa geçiyor. 751 kart kampanyasının 448'i bu
+# yüzden düştü.
+#
+# Bu bir veri boşluğu değil, **kategori uyuşmazlığı**: kart kampanyasında
+# finansman oranı aramak, olmayan bir şeyin eksikliğinden ceza kesmektir.
+#
+# ## Ölçüm — hangi ölçüt hangi türde GERÇEKTEN var
+#
+# (kampanya belgeleri, tüm bankalar, 2026-08-25)
+#
+#     tür                belge   kar  masraf  ödül  vade  finans  taksit  indirim  puan
+#     Kart                 751    2%    31%   28%   15%     0%     39%     13%    11%
+#     Finansman            307    7%     9%    2%   29%     9%     12%      4%     1%
+#     Yatırım Ürünü        271    5%    17%    8%   28%     1%      4%      2%     4%
+#     İhtiyaç Finansmanı    99   16%    16%    1%   55%    24%     24%      0%     0%
+#     Alışveriş Puanı       60    0%    13%   28%    3%     0%      8%      5%    97%
+#     Taşıt Finansmanı      49   29%    33%    6%   61%    10%      0%      4%     4%
+#     Konut Finansmanı      47    6%    32%    6%   53%     6%     17%      6%     9%
+#     Yeni Müşteri           5    0%    40%   20%    0%     0%      0%      0%     0%
+#
+# İki sonuç açık: (1) finansman aileleri oran/vade/tutar üzerinden ölçülür,
+# (2) kart ve puan aileleri ödül/masraf/taksit/indirim üzerinden. `Alışveriş
+# Puanı` türünde belgelerin **%97'sinde** `alisveris_puani` dolu ve o alan
+# ağırlık tablosunda HİÇ YOKTU — türün tanımlayıcı ölçütü kıyasa girmiyordu.
+#
+# ## Karar
+#
+# Ölçüt KÜMESİ ölçümden, ağırlık DEĞERLERİ üründen gelir. Aşağıdaki tablo
+# ikisini birleştiriyor; `weights=` ile hâlâ geçersiz kılınabilir ve
+# `/scoring` ucundan okunabilir.
+#
+# ADİL KIYAS BOZULMUYOR: kıyas zaten TÜR İÇİNDE yapılıyor (§17,
+# `rank_advantageous_by_type`). Aynı tür içindeki tüm kampanyalar aynı ölçüt
+# kümesiyle ölçülüyor; değişen yalnız türden türe geçerken hangi ölçütlerin
+# UYGULANABİLİR olduğu.
+
+TUR_AGIRLIKLARI: dict[str, dict[str, float]] = {
+    # Finansman aileleri — oran/vade/tutar ekseni (varsayılanla aynı).
+    "Konut Finansmanı": dict(DEFAULT_WEIGHTS),
+    "Taşıt Finansmanı": dict(DEFAULT_WEIGHTS),
+    "İhtiyaç Finansmanı": dict(DEFAULT_WEIGHTS),
+    "Finansman": dict(DEFAULT_WEIGHTS),
+    # Kart — kâr payı ve finansman tutarı UYGULANMAZ (%2 ve %0).
+    "Kart": {
+        "odul_miktari": 0.30,
+        "masraf_durumu": 0.25,
+        "taksit_sayisi": 0.20,
+        "indirim_orani": 0.15,
+        "vade_ay": 0.10,
+    },
+    # Alışveriş Puanı — türün TANIMLAYICI ölçütü `alisveris_puani` (%97).
+    "Alışveriş Puanı": {
+        "alisveris_puani": 0.40,
+        "odul_miktari": 0.30,
+        "indirim_orani": 0.15,
+        "masraf_durumu": 0.15,
+    },
+    # Yatırım Ürünü — vade ve masraf ekseni; oran belgelerin %5'inde.
+    "Yatırım Ürünü": {
+        "vade_ay": 0.40,
+        "masraf_durumu": 0.35,
+        "odul_miktari": 0.25,
+    },
+    # Yeni Müşteri — yalnız iki ölçüt gerçekten var (%40 ve %20).
+    "Yeni Müşteri": {
+        "odul_miktari": 0.55,
+        "masraf_durumu": 0.45,
+    },
+    # Türü belirlenememiş belgeler: kart/puan ailesine benzer dağılım
+    # gösteriyor (masraf %34, ödül %20, indirim %20).
+    BILINMEYEN_TUR: {
+        "masraf_durumu": 0.35,
+        "odul_miktari": 0.25,
+        "indirim_orani": 0.25,
+        "taksit_sayisi": 0.15,
+    },
+}
+
+
+def tur_agirliklari(tur: Optional[str]) -> dict[str, float]:
+    """Bu kampanya türü için ölçüt ağırlıkları.
+
+    Tanımsız tür `DEFAULT_WEIGHTS` alır — yeni bir tür eklendiğinde sistem
+    sessizce boş ağırlıkla çalışmasın diye. Ağırlıklar toplamı 1,0 olacak
+    biçimde NORMALLEŞTİRİLİYOR: elle yazılan bir tablo zamanla 0,99 ya da
+    1,02'ye kayar ve o kayma kapsama eşiğini sessizce oynatırdı.
+    """
+    ham = TUR_AGIRLIKLARI.get(tur or BILINMEYEN_TUR) or DEFAULT_WEIGHTS
+    toplam = sum(ham.values())
+    if toplam <= 0:                          # pragma: no cover - savunma
+        return dict(DEFAULT_WEIGHTS)
+    return {k: v / toplam for k, v in ham.items()}
+
+
 WEIGHT_RATIONALE: dict[str, str] = {
     "kar_payi_orani":
         "Toplam maliyeti en çok belirleyen kalem: 100.000 TL / 36 ay sepetinde "
@@ -1722,8 +1830,13 @@ def rank_advantageous_by_type(
                          f"iddiası bilgi taşımaz."),
             }
             continue
+        # Ağırlık AÇIKÇA verilmediyse TÜRE ÖZEL tablo kullanılıyor — gerekçe
+        # `TUR_AGIRLIKLARI` başlığında. Çağıran `weights=` geçtiyse ona
+        # dokunulmaz: dışarıdan verilen tablo bir denetim aracıdır ve tür
+        # başına yeniden yazmak onu işlevsiz kılardı.
         out[tur] = {
-            "ranked": rank_advantageous(grup, weights=weights,
+            "ranked": rank_advantageous(grup,
+                                        weights=weights or tur_agirliklari(tur),
                                         min_coverage=min_coverage),
             "count": len(grup),
             "note": None,

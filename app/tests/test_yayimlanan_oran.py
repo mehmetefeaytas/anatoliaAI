@@ -134,12 +134,13 @@ class TestBankaOzeti(unittest.TestCase):
         """`None` "veri yok" demek; boş özet döndürmek 0 oran ima ederdi."""
         self.assertIsNone(Y.banka_ozeti("yok", kayitlar=KAYITLAR))
 
-    def test_aile_kirilimi(self) -> None:
+    def test_tur_kirilimi(self) -> None:
+        """Alan adı `turler` — projenin kanonik terimi «kampanya türü»."""
         o = Y.banka_ozeti("a", kayitlar=KAYITLAR)
         self.assertEqual(o["kayit"], 3)
         self.assertEqual(o["en_dusuk_oran"], 1.89)
-        self.assertIn("Konut Finansmanı", o["aileler"])
-        self.assertIn("İhtiyaç Finansmanı", o["aileler"])
+        self.assertIn("Konut Finansmanı", o["turler"])
+        self.assertIn("İhtiyaç Finansmanı", o["turler"])
 
 
 class TestSohbetYonlendirme(unittest.TestCase):

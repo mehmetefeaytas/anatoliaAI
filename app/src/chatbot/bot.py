@@ -63,7 +63,7 @@ from .router import (
     Route,
     route,
 )
-from .terim_cevabi import terim_cevabi
+from .terim_cevabi import alan_baglamli_mi, terim_cevabi
 
 logger = logging.getLogger(__name__)
 
@@ -415,7 +415,13 @@ class Chatbot:
         text, report = safety.guard_output(d.body, scr,
                                            has_sources=kaynak_var,
                                            has_rate=d.has_rate,
-                                           alinti=d.handler == "terminoloji")
+                                           # Alan adıyla çakışan terim
+                                           # sorusunda ALINTI modu kapanır ve
+                                           # post-filter normal koşar (bkz.
+                                           # `terim_cevabi.alan_baglamli_mi`).
+                                           alinti=(d.handler == "terminoloji"
+                                                   and not alan_baglamli_mi(
+                                                       question)))
         return ChatAnswer(text, d.handler, d.field, d.sources, report,
                           report.gates, context=_yeni_baglam(d),
                           inherited=list(d.route.inherited),

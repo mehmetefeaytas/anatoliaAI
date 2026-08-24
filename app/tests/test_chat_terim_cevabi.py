@@ -221,14 +221,44 @@ class GuvenlikSiziMasiTest(unittest.TestCase):
     """
 
     def test_alan_adi_gecen_soru_terim_yoluna_GITMEZ(self):
+        # «vade nedir» BU LİSTEDEN ÇIKARILDI (2026-08-25, kullanıcı raporu).
+        # Geniş `\bvade\w*\b` deseni onu da yakalıyordu ve soru RAG'a
+        # düşüyordu; model üç kampanya belgesinden derlediği bir paragrafla
+        # cevap veriyordu — tanım değil, örnek listesi. Oysa sözlükte tam kaydı
+        # var. Güvenlik daralmadı: alan bağlamı taşıyan terim sorusunda ALINTI
+        # modu artık KAPANIYOR ve post-filter normal koşuyor
+        # (`terim_cevabi.alan_baglamli_mi`), yani sızıntı yolu kapalı.
+        # Aşağıdaki dört vaka hâlâ terim yoluna GİTMEMELİ.
         for soru in ("Bu üründe masraf durumu nedir, faiz uygulanır mı?",
                      "kâr payı oranı nedir",
                      "tahsis ücreti nedir",
-                     "vade nedir",
                      "bu üründe masraf var mı"):
             with self.subTest(soru=soru):
                 self.assertFalse(terim_sorusu_mu(soru))
                 self.assertIsNone(terim_cevabi(soru))
+
+    def test_vade_nedir_TERIM_yoluna_gider(self) -> None:
+        """Alan adıyla çakışsa da bu bir TANIM sorusudur ve kaydı vardır."""
+        self.assertTrue(terim_sorusu_mu("vade nedir"))
+        c = terim_cevabi("vade nedir")
+        self.assertIsNotNone(c)
+        self.assertIn("Vade", c)
+
+    def test_alan_baglamli_terim_ALINTI_modunu_kullanmaz(self) -> None:
+        """Alan bağlamı varsa post-filter atlanmamalı — sızıntı yolu kapalı.
+
+        «tahsis ücreti ne demek» terim yoluna KESİN tanım kalıbıyla giriyor
+        (`_KESIN_TANIM_KALIBI`) ama alan adı da taşıyor; o gövde alıntı
+        modunda basılırsa post-filter atlanır. `alan_baglamli_mi` bu ayrımı
+        yapıyor ve `bot.py` alıntı modunu ona göre kapatıyor.
+
+        «vade nedir» ARTIK alan bağlamlı sayılmıyor: geniş `vade` deseni
+        daraltıldı ve o soru düz bir tanım sorusu hâline geldi.
+        """
+        from src.chatbot.terim_cevabi import alan_baglamli_mi
+        self.assertTrue(alan_baglamli_mi("tahsis ücreti ne demek"))
+        self.assertFalse(alan_baglamli_mi("murabaha ne demek"))
+        self.assertFalse(alan_baglamli_mi("vade nedir"))
 
     def test_ORAN_olmayan_terim_sorusu_hala_cevaplanir(self):
         """Ayrım "oranı" sözcüğünde: terim sorusu kaybolmamalı."""

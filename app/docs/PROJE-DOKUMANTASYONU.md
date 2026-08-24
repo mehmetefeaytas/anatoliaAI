@@ -281,8 +281,11 @@ ifadeler kullanıyor. Sistem bu boşluğu doldurmuyor, `comparable=False` ile
 işaretliyor. PDF hasadı payı 60'tan 146'ya, LLM boşluk doldurma koşumu
 146'dan 164'e çıkardı; alan yine de seyrek.
 
-Asıl çözüm başka yerden geldi: **oranı bankalar yayımlamıyor ama TKBB
-yayımlıyor.** Ayrıntı aşağıda, "Katılma hesabı oranları" başlığında.
+Asıl çözüm başka yerden geldi ve iki koldan: katılma hesabı getirisini
+**TKBB** ortak yayında açıklıyor, finansman oranını ise **bankalar kendi
+hesaplama araçlarında** yayımlıyor. Kampanya metninde olmayan bilgi, o metinden
+çıkarılmaya çalışılmak yerine yayımlandığı yerden alındı. Ayrıntı aşağıda, iki
+başlıkta.
 
 ### Katılma hesabı oranları — korpus dışı ikinci kaynak
 
@@ -298,6 +301,7 @@ korpusun yanına ayrı bir veri kolu eklendi.
 | TKBB Veri Peteği (cari hafta) | 9 banka × 4 rapor × 4 vade × 4 para birimi | **245** |
 | TKBB tarihsel arşiv (2012–2025) | aynı kırılım, haftalık seri | 210.474 |
 | Kuveyt Türk kendi yayını (PDF) | 7 bakiye segmenti × vade | 144 |
+| Vakıf Katılım kendi yayını (PDF) | 13 segment × vade, TRY/USD/EUR/XAU | **103** |
 
 Üretim yolunda **yalnız cari hafta** okunuyor. Tarihsel arşiv depoda gzip'li
 duruyor (89 MB → 1,3 MB) ama hiçbir kod yolu onu açmıyor: trend analizi bu
@@ -320,19 +324,114 @@ kaynakta birebir aynı çıktı: cari uç nokta, tarihsel arşiv ve bankanın ke
 yayımladığı PDF.
 
 **Bilinen boşluklar.** ① Haziran 2025 – Ağustos 2026 arası hiçbir uçta yok.
-② Segment kırılımı yalnız Kuveyt Türk'te tam (144 kayıt); Emlak'ta iki segment
-var, yedi bankada hiç yok — bankalar yayımlamıyor. ③ 2026 yılı tarihsel arşivde
+② Segment kırılımı iki bankada tam: Kuveyt Türk 144, Vakıf Katılım 103 kayıt;
+Emlak'ta iki segment var, altı bankada hiç yok — bankalar yayımlamıyor. ③ 2026 yılı tarihsel arşivde
 yok, çünkü yıl bitmedi; arşiv yıl kapandığında dolar.
 
-Yüzey: `GET /katilma-oranlari` ucu, panelin *Katılma Oranları* sekmesi ve
+**Vakıf Katılım: robots engelli, o yüzden elle indirildi.** Banka oranlarını
+HTML'de hiç yayımlamıyor; tek kaynak
+`/documents/PerakendeBankacilik/kar-paylasim-oranlari.pdf` ve bankanın
+`robots.txt`'i `/documents/` yolunu açıkça kapatıyor (yalnız `.jpg/.png/.jpeg`
+izinli). Şartname §5.1 böyle bir belge için elle toplamaya izin veriyor: PDF
+elle indirildi (`data/raw/vakif-katilim/manual/`) ve
+`scripts/vakif_paylasim_pdf.py` **yalnız yerel dosyayı** okuyor — ağa çıkmıyor,
+tarayıcı taklit etmiyor, robots kuralını dolanmıyor. Engellenen şey otomatik
+gezinmedir; belgenin kendisi kamuya açık bir yayın. Çıktı şeması
+`kt_paylasim_pdf.py` ile birebir aynı, böylece iki banka aynı yüzeyden okunuyor.
+
+Segment ayrımı burada da gerçek çıktı: 250–99.999 TL diliminde paylaşım oranı
+%85, 100.000 TL ve üzerinde %90. Küçük bakiyeli müşteri, merkezî TKBB verisinde
+görünen orandan beş puan düşük oran alıyor — aynı boşluk Kuveyt Türk'te de
+ölçülmüştü.
+
+Yüzey: `GET /katilma-oranlari` ucu, panelin *Katılma Oranları* görünümü ve
 sohbetin `katilma_orani` yolu. Hasat betikleri: `scripts/tkbb_guncel_hasat.py`,
-`scripts/tkbb_karpayi_hasat.py`, `scripts/kt_paylasim_pdf.py`.
+`scripts/tkbb_karpayi_hasat.py`, `scripts/kt_paylasim_pdf.py`,
+`scripts/vakif_paylasim_pdf.py`.
 
 > **TLS notu.** Tarihsel arşiv ucunun sertifikası süresi dolmuş durumda. Betik
 > doğrulamayı **sessizce atlamıyor**: `--sertifika-atla` bayrağı verilmezse 2
 > koduyla çıkıyor ve gerekçeyi yazıyor. Bayrakla toplanan her kayıt
 > `tls_dogrulama: "atlandi"` damgası taşıyor. İçerik ayrıca kullanıcının
 > tarayıcı çıktısıyla karşılaştırıldı: 7 bankada 7'si birebir tuttu.
+
+### Finansman oranları — bankaların kendi yayınları
+
+Yukarıdaki kısıtın ikinci yarısı burada kapanıyor. Katılma hesabı getirisi
+TKBB'nin ortak yayınındaydı; **finansman oranı** ise hiçbir ortak yayında yok.
+Bankalar onu kendi hesaplama araçlarında yayımlıyor: ürün sayfasında yalnız
+etiket duruyor, sayı istemci tarafında çağrılan bir orandan geliyor.
+
+**Bunun bir çıkarım kusuru olmadığı üç kez ölçüldü.** `kar_payi_orani` kampanya
+belgelerinin yalnız %6,1'inde geçiyor ve boşluk doldurulamıyor:
+
+| Kanıt | Sonuç |
+|---|---|
+| EVREN `llm-large` boşluk doldurma sondajı (2026-08-25) | 60 aday belge → **0 kabul** |
+| Yerel `qwen2.5:7b` sondajı (2026-08-24) | 30 belge → **0 kabul** |
+| Metnin kendisi | yakalanmayan yüzdelerin çoğu *gecikme kâr payı formülü* — "en yüksek cari kâr payı oranlarının %50 fazlası" — kampanyanın oranı değil |
+
+İki kabul kapısı (dayanak + alan, §5) çalıştı; modeller kapılardan geçen hiçbir
+aday üretemedi. Bu, yukarıdaki 146 → 164 artışıyla çelişmiyor: ilk boşluk
+doldurma koşumu (2026-08-24, 120 belge) alınabilecek 18 değeri zaten almıştı;
+25 Ağustos'ta tekrarlanan sondaj **yeni hiçbir kabul üretmedi**. Havuz tükendi.
+
+Yani bilgi o metinlerde **yok**. Aramaya devam etmek yerine yayımlandığı yerden
+alındı.
+
+Dört yeni adaptör yazıldı (`src/scraping/rates.py`) ve toplam yedi bankada oran
+toplanır hâle geldi:
+
+| Banka | Finansman kaydı |
+|---|---:|
+| Dünya Katılım | 56 |
+| Türkiye Emlak Katılım | 42 |
+| Ziraat Katılım | 31 |
+| Albaraka Türk | 16 |
+| Hayat Finans | 3 |
+| Kuveyt Türk | 3 |
+| T.O.M. Katılım | 3 |
+| **Toplam** | **154** |
+
+Kalan üç banka da kayıtlı, hiçbiri gizlenmiyor: **Vakıf Katılım** oranı yalnız
+robots-engelli PDF'te yayımlıyor ve o belgede finansman tarafı yok;
+**Türkiye Finans** yalnız katılma hesabı tablosu yayımlıyor; **Adil Katılım**
+hiç oran yayımlamıyor.
+
+**Bu kayıtlar `extracted_fields` tablosuna YAZILMIYOR — bilinçli.** Banka
+düzeyinde yayımlanmış bir oranı belirli bir kampanyanın çıkarılmış alanına
+yazmak, o belgenin söylemediği bir şeyi ona atfetmek olurdu; kaynak gösterme
+zinciri (span → belge) kırılırdı ve `kar_payi_orani` kapsaması yapay olarak
+şişerdi. Kaynak ayrı tutuluyor, ekranda ayrı etiketleniyor, kıyasa ayrı bir
+görünüm olarak giriyor. Aynı karar katılma oranlarında da verilmişti.
+
+**Yön ters: burada DÜŞÜK oran iyidir.** Katılma hesabında yüksek oran iyiydi
+(kazandığınız), finansmanda düşük oran iyi (ödediğiniz). İki yüzey aynı
+kelimeyi kullandığı için yön yanıt gövdesinde `yon` alanıyla açıkça
+söyleniyor; arayüz onu sabit yazmıyor. Sabit yazsaydık, sunucu yönü değiştirdiği
+gün ekran sessizce yanlış olurdu. Yıllık maliyet oranı da uydurulmuyor: banka
+yayımlamamışsa hücrede "yayımlanmadı" yazıyor.
+
+**Üç yüzey.** `GET /finansman-oranlari` ucu
+(`src/api/routers/finansman_orani.py`), panelin *Karşılaştırma* sekmesindeki
+dördüncü görünüm (*Yayımlanan finansman oranları*) ve sohbetin
+`finansman_orani` yolu (`src/chatbot/finansman_orani.py`). Veri katmanı ortak:
+`src/domain/yayimlanan_oran.py`.
+
+Sohbette bu yol **yedektir, ön alma değil**. İlk denemede yapısal sorgudan önce
+koşuyordu ve cevaplanabilen soruları çalıyordu; dört test düştü ve dördü de
+haklıydı — tek banka adı geçen sorular, takip zinciri ("peki vade?") ve güvenlik
+setinin yasakladığı ikame (Ziraat sorusuna başka bankaların tablosu). Doğru yer
+yapısal sorgunun sonrası: korpus bir şey bulduysa **o** kazanır, çünkü kanıtı
+belgenin span'i. Korpus boş döndüğünde susmak yerine bankanın kendi yayımladığı
+oranı göstermek kapsamı genişletiyor.
+
+> **Ölçülmüş bir kusur — Türkçe İ.** `"TAŞIT".casefold()` "taşit" veriyor,
+> "tasit" değil (noktasız ı yerine noktalı i). Ziraat Katılım ürün adlarını
+> tamamen büyük harfle yayımlıyor; bu yüzden bankanın bütün taşıt ürünleri
+> kampanya türü eşlemesinden **sessizce** düşüyor ve kıyas tablosunda hiç
+> görünmüyordu. `tr_fold_ascii()`e geçildi (§4) — Ziraat artık taşıt
+> sıralamasının başında (%3,29).
 
 ### Bilinen veri kalitesi sorunları
 
@@ -669,7 +768,7 @@ curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fie
 ### Değerlendirme ve test komutları
 
 ```bash
-python3 -m unittest discover -s tests            # 3.948 test toplanır
+python3 -m unittest discover -s tests            # 4.027 test toplanır
 python -m eval.properties --raw-dir data/raw     # değişmez denetimi
 python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 python -m eval.ablation                          # kural / llm / hibrit / hibrit-verify
@@ -1126,8 +1225,8 @@ yapıyor.
 
 | koşucu | toplanan | geçti | atlandı | başarısız |
 |---|---:|---:|---:|---:|
-| `unittest` (kanonik) | 3.948 | 3.895 | 53 | 0 |
-| `pytest` (çapraz doğrulama) | 3.948 | 3.895 | 53 | 0 |
+| `unittest` (kanonik) | 4.027 | 3.974 | 53 | 0 |
+| `pytest` (çapraz doğrulama) | 4.027 | 3.974 | 53 | 0 |
 
 Artefakt: `eval/reports/test-ozeti.json`, commit `03822c24`, `git_dirty: false`,
 Python 3.14.6. Atlanan 53 test Postgres/pgvector istiyor ve CI'ın

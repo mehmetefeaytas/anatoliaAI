@@ -41,3 +41,5 @@ gerekir — dağıtılan kâr payı (getiri) ile kâr paylaşım oranı (bölü�
 - [[bilgi-cikarimi]] — bu değerin çıkarılması
 - [[veri-normalizasyonu]] — değerin standartlaştırılması
 - [[farkli-ifade-bicimleri]] — ilgili sorun
+- [[kampanya-metninde-olmayan-oran-banka-yayinindan]] — finansman ayağı: oran
+  kampanya metninde değil bankaların hesaplama araçlarında yayımlanıyor

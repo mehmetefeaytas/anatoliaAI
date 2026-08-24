@@ -298,7 +298,7 @@ export type BankaFinansmanOzeti = {
   en_dusuk_oran?: number;
   en_yuksek_oran?: number;
   kaynak?: string[];
-  aileler?: Record<string, {
+  turler?: Record<string, {
     kayit: number;
     en_dusuk_oran: number;
     urunler: string[];

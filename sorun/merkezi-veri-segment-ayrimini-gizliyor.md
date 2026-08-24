@@ -87,3 +87,5 @@ atılmadı**: `toplam_tutarsiz: true` ile işaretlendi (CLAUDE.md HARD RULES §4
 - [[katilma-orani-iki-ayri-buyukluk]] — getiri/pay ayrımı
 - [[katilma-hesabi-orani-korpusta-yoktu]] — verinin geliş öyküsü
 - [[urun-karsilastirma]] — adil kıyas garantisi
+- [[kampanya-metninde-olmayan-oran-banka-yayinindan]] — aynı refleks, finansman
+  tarafı; Vakıf Katılım'ın 103 segment kaydı da orada anlatılıyor

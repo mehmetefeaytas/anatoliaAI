@@ -2,6 +2,92 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-25] doc | teslim-dokumanlari-yeni-veri-koluyla-tazelendi
+
+Teslim dokümanları yeni veri koluyla eşitlendi (kod değişmedi):
+
+- **README.md** — "Ölçülebilir Durum" tablosuna iki satır: yayımlanan finansman
+  oranı (154 kayıt · 7 banka) ve katılma segment kırılımı (247 kayıt · 2 banka).
+- **app/docs/PROJE-DOKUMANTASYONU.md** §3 — yeni alt bölüm *"Finansman
+  oranları — bankaların kendi yayınları"*; katılma bölümüne Vakıf Katılım
+  satırı, robots/elle indirme gerekçesi ve segment ayrımı eklendi; "bilinen
+  boşluklar ②" iki bankaya güncellendi.
+- **app/docs/sunum/anatolia-ai-sunum.html** — bayat sayılar tazelendi:
+  %5,4 → **%6,1**, 146 → **164** belge, 7.032 → **7.049** alan.
+- **Kanıt kapısı sapması kapatıldı:** PDF aslı sayısı üç belgede 999 yazıyordu,
+  ölçülen değer **1.000** (`find data/raw -name '*.pdf' | wc -l`). README.md,
+  app/README.md ve app/data/raw/README.md düzeltildi.
+
+Kalan sapma (kapatılmadı, çünkü ölçüm koşumu gerektirir): `test_toplanan`
+README'de 3.948, kapının ölçtüğü değer **4.027** — `python -m scripts.test_ozeti`
+yeniden koşulmalı; aynı koşum `test_gecti` / `test_atlandi` kanıtlarını da
+tazeler.
+
+Dokunulan dosyalar: `README.md` · `app/README.md` · `app/data/raw/README.md` ·
+`app/docs/PROJE-DOKUMANTASYONU.md` · `app/docs/sunum/anatolia-ai-sunum.html` ·
+`sorun/kampanya-metninde-olmayan-oran-banka-yayinindan.md` (yeni) ·
+`sources/teknofest/2026-08-25-yayimlanan-finansman-oranlari.md` (yeni) ·
+`index.md` · `log.md`
+
+## [2026-08-25] ingest + feature | yayimlanan-finansman-oranlari
+
+Kampanya korpusunda `kar_payi_orani` belgelerin yalnız **%6,1'inde** (164 /
+2.708) dolu ve şartname §5.7'nin birinci kıyas ölçütü tam bu alana dayanıyor.
+Önce bunun bir çıkarım kusuru olup olmadığı ölçüldü — değildi
+([[kampanya-metninde-olmayan-oran-banka-yayinindan]]):
+
+- EVREN `llm-large`, 60 aday belge → **0 kabul**
+- yerel `qwen2.5:7b`, 30 belge → **0 kabul** (24 Ağustos ölçümü)
+- metnin kendisi: yakalanmayan yüzdelerin çoğu *gecikme kâr payı formülü*
+  ("en yüksek cari kâr payı oranlarının %50 fazlası"), kampanyanın oranı değil
+
+Bilgi o belgelerde yok; bankalar onu **hesaplama araçlarında** yayımlıyor.
+Dört yeni adaptör yazıldı (`ZiraatKatilimAdapter`, `HayatFinansAdapter`,
+`DunyaKatilimAdapter`, `TomKatilimAdapter`); finansman oranı taşıyan banka
+sayısı **3 → 7**, toplam **154 kayıt** (Dünya 56 · Emlak 42 · Ziraat 31 ·
+Albaraka 16 · Hayat Finans / Kuveyt Türk / T.O.M. 3'er).
+
+**Kayıtlar `extracted_fields`e YAZILMIYOR.** Banka düzeyinde yayımlanmış bir
+oranı belirli bir kampanyanın alanına yazmak, o belgenin söylemediğini ona
+atfetmek olurdu; kapsama sayısı yalan söylemeye başlardı. Kaynak ayrı, etiket
+ayrı, görünüm ayrı — [[katilma-orani-iki-ayri-buyukluk]] kararının aynısı.
+
+**Vakıf Katılım segment oranları.** Banka oranı yalnız robots-engelli PDF'te
+yayımlıyor (`/documents/` yolu `robots.txt`'te açıkça kapalı). Şartname §5.1
+gereği PDF **elle** indirildi; `scripts/vakif_paylasim_pdf.py` yalnız yerel
+dosyayı okuyor, ağa çıkmıyor. **103 kayıt · 13 segment · TRY/USD/EUR/XAU.**
+Segment ayrımı gerçek: 250–99.999 TL → %85, 100.000+ → %90. Kuveyt Türk'ün 144
+kaydıyla birlikte segment verisi artık **iki bankada**
+([[merkezi-veri-segment-ayrimini-gizliyor]]).
+
+**Üç yüzey:** `GET /finansman-oranlari` ucu, *Karşılaştırma* sekmesinde
+dördüncü görünüm, sohbette `finansman_orani` yolu. Sohbette bu yol **yedek**,
+ön alma değil: ilk denemede yapısal sorgudan önce koşuyordu ve dört testi
+düşürdü (tek banka soruları, takip zinciri, güvenlik seti C03'ün yasakladığı
+ikame). Doğru yer yapısal sorgunun sonrası — korpus bir şey bulduysa o kazanır,
+çünkü kanıtı belgenin span'i.
+
+**Yan bulgu — Türkçe İ.** `"TAŞIT".casefold()` "taşit" veriyor, "tasit" değil.
+Ziraat Katılım ürün adlarını tamamen büyük harfle yayımladığı için bankanın
+bütün taşıt ürünleri kampanya türü eşlemesinden sessizce düşüyordu.
+`tr_fold_ascii()`e geçildi; Ziraat artık taşıt sıralamasının başında (%3,29).
+
+Dokunulan dosyalar:
+- `app/src/scraping/rates.py` — dört yeni adaptör
+- `app/src/domain/yayimlanan_oran.py` — yeni
+- `app/src/api/routers/finansman_orani.py` — yeni · `src/api/main.py`
+- `app/src/chatbot/finansman_orani.py` — yeni · `bot.py` · `terim_cevabi.py`
+- `app/web/app/components/FinansmanOranPanel.tsx` — yeni ·
+  `ComparePanel.tsx` · `lib/api.ts`
+- `app/scripts/vakif_paylasim_pdf.py` — yeni · `scripts/baslat.sh` (`.env`)
+- `app/data/raw/<banka>/rates/quotes.jsonl` (4 yeni banka) ·
+  `vakif-katilim/rates/vakif-paylasim-pdf.jsonl`
+- `app/tests/test_yayimlanan_oran.py` · `test_rates_yeni_adaptorler.py` ·
+  `test_vakif_paylasim_pdf.py`
+- `sources/teknofest/2026-08-25-yayimlanan-finansman-oranlari.md` (yeni),
+  `sorun/kampanya-metninde-olmayan-oran-banka-yayinindan.md` (yeni),
+  `index.md`, `log.md`
+
 ## [2026-08-24] fix | panel-dort-ariza
 
 Kullanıcı raporu dört arıza bildirdi; dördü de ölçüldü ve düzeltildi.

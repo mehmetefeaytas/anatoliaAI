@@ -105,3 +105,5 @@ birebir** uyuştu. Sertifika doğrulanamadı ama İÇERİK doğrulandı.
 - [[tkbb-kar-payi-veri-seti]] — hasat edilen varlık
 - [[kar-payi-orani]] — kavram; bu kaynak onun katılma hesabı ayağını besliyor
 - [[chatbot]] — veriyi kullanan bileşen
+- [[2026-08-25-yayimlanan-finansman-oranlari]] — kardeş veri kolu: finansman
+  oranları, bankaların kendi yayınlarından

@@ -150,6 +150,7 @@ import FieldChips from "./FieldChips";
 import GrafikIskeleti from "./grafik/GrafikIskeleti";
 import FinansmanOranPanel from "./FinansmanOranPanel";
 import KatilmaPanel from "./KatilmaPanel";
+import OranSeridi from "./OranSeridi";
 import KapsamaCetveli, {
   kapsamaOzeti,
   satirHali,
@@ -478,6 +479,11 @@ export default function ComparePanel({
   return (
     <div className="stack">
       {gorunumSecici}
+      {/* Kampanya DIŞI iki kaynağın manşeti. Varsayılan kıyası açan kişi
+          onların varlığını bile görmüyordu (kullanıcı raporu 2026-08-25).
+          Tam tablo değil MANŞET: üç ayrı kanıt zincirini tek ekranda eşit
+          ağırlıkta göstermek "hepsi aynı ölçümdür" izlenimi verirdi. */}
+      <OranSeridi />
       <section className="card">
         {/* Başlık artık «Karşılaştırma Paneli» değil: sekme adı bunu zaten
             söylüyordu ve başlığın taşıyabileceği en değerli iki bilgi —

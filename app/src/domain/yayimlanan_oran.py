@@ -193,9 +193,9 @@ def banka_ozeti(bank_slug: str, *,
              if k.get("bank_slug") == bank_slug]
     if not havuz:
         return None
-    aileler: dict[str, list[dict]] = {}
+    turler: dict[str, list[dict]] = {}
     for k in havuz:
-        aileler.setdefault(aile(k.get("product_name") or "") or "Diğer",
+        turler.setdefault(aile(k.get("product_name") or "") or "Diğer",
                            []).append(k)
     return {
         "bank_slug": bank_slug,
@@ -204,12 +204,12 @@ def banka_ozeti(bank_slug: str, *,
         "en_dusuk_oran": min(k["monthly_rate"] for k in havuz),
         "en_yuksek_oran": max(k["monthly_rate"] for k in havuz),
         "kaynak": sorted({k.get("source_url") for k in havuz if k.get("source_url")}),
-        "aileler": {
+        "turler": {
             ad: {
                 "kayit": len(v),
                 "en_dusuk_oran": min(x["monthly_rate"] for x in v),
                 "urunler": sorted({x.get("product_name") or "?" for x in v}),
-            } for ad, v in sorted(aileler.items())
+            } for ad, v in sorted(turler.items())
         },
     }
 

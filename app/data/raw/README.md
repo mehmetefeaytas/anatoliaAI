@@ -24,7 +24,7 @@ toplanmış metinler ve PDF asılları. Ölçüm tarihi: **2026-08-21**.
 | Toplam `.txt` | **2.708** | `find data/raw -name '*.txt' \| wc -l` |
 | Kazınmış belge | **2.706** | `live` / `products` / `archive` / `docs` / `manual` kovalarındaki `.txt` |
 | Demo fikstürü | **2** | Banka kökündeki `.txt`: `kuveyt-turk/konut.txt`, `turkiye-finans/tasit.txt` |
-| PDF aslı | **999** (~356 MB) | `find data/raw -name '*.pdf' \| wc -l` — ücret tarifesi / bilgi formu / sözleşme öncesi form asılları, `docs/` kovasında metne indirilmiş halleriyle birlikte |
+| PDF aslı | **1.000** (~356 MB) | `find data/raw -name '*.pdf' \| wc -l` — ücret tarifesi / bilgi formu / sözleşme öncesi form asılları, `docs/` kovasında metne indirilmiş halleriyle birlikte |
 | Kaynak dizini | **11** (10 banka + `tkbb`) | `data/raw/*/` dizinleri |
 
 ### Kaynak bazında dağılım (`.txt` / `.pdf`)

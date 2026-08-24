@@ -114,3 +114,5 @@ Doğrulandı (tarayıcıda): sekme açıldı, tablo render edildi, oran TR biçi
 - [[kiyas-cevabinda-iki-gosterim-hatasi]] — "değer belgede yok" ayrımının önceki örneği
 - [[terim-sorusuna-sozlukten-cevap-verilmiyordu]] — alan sorularını çalmama kuralı
 - [[kar-payi-orani]] — kavram
+- [[kampanya-metninde-olmayan-oran-banka-yayinindan]] — aynı boşluğun finansman
+  ayağı; bu kez kaynak TKBB değil bankaların kendi yayınları

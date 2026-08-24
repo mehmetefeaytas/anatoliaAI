@@ -80,7 +80,20 @@ _ALAN_IZLERI = re.compile(
     r"oran\w*|\bfinansman\s+oran\w*|"
     r"\bmasraf durumu\b|\bkâr payı oranı\b|\bkar payı oranı\b|"
     r"\btahsis ücreti\b|\bfinansman tutarı\b|\btaksit sayısı\b|"
-    r"\bödül miktarı\b|\bvade\w*\b|\boranı nedir\b|"
+    r"\bödül miktarı\b|\boranı nedir\b|"
+    # `\bvade\w*\b` FAZLA GENİŞTİ: "vade nedir" bir TANIM sorusudur ve
+    # sözlükte tam kaydı var (**Vade** — "bir finansmanın geri ödeneceği ya da
+    # bir katılma hesabının işletileceği süre"). Geniş desen yüzünden soru
+    # RAG'a düşüyor ve model üç kampanya belgesinden derlediği bir paragrafla
+    # cevap veriyordu — tanım değil, örnek listesi (kullanıcı raporu
+    # 2026-08-25).
+    #
+    # Alan sorusu OLAN biçimler ise burada kalıyor: sayı, kıyas ya da ürün
+    # bağlamı taşıyanlar. Ayrım "vade" sözcüğünün yalnız başına mı yoksa bir
+    # DEĞER isteğiyle mi geldiğidir.
+    r"\bvade\s+ay\b|\bvade_ay\b|\bkaç\s+ay\s+vade\b|\bvade\s+kaç\b|"
+    r"\bvadesi\s+kaç\b|\bvadesi\s+ne\s+kadar\b|\ben\s+(?:uzun|kısa)\s+vade\b|"
+    r"\bvade\s+seçenek\w*|\bvade\s+süres\w*|"
     # ürün sorgusu kalıpları — tanım değil, o üründe var mı sorusu
     r"\buygulanır mı\b|\balınır mı\b|\bvar mı\b|\bbu üründe\b",
     re.IGNORECASE)
@@ -121,6 +134,23 @@ def terim_sorusu_mu(soru: Optional[str]) -> bool:
     if _ALAN_IZLERI.search(soru):
         return False
     return bool(_TANIM_KALIBI.search(soru))
+
+
+def alan_baglamli_mi(soru: Optional[str]) -> bool:
+    """Soru bir ALAN adı bağlamı taşıyor mu (ör. "vade nedir")?
+
+    Çağıran bunu ALINTI modunu kapatmak için kullanıyor. Gerekçe ölçülmüş bir
+    güvenlik açığı: terim yolu alıntı modunda çalışır (post-filter ATLANIR),
+    çünkü sözlük gövdesi kendi kaynağımızdan bir alıntıdır ve filtre onu
+    bozuyordu — Riba kaydının `resmi_tr` alanı "Faiz"tir ve filtre onu "Kâr
+    payı" yapıp tanımı TERSİNE çeviriyordu.
+
+    Ama alan adıyla çakışan bir terim sorusunda ("vade nedir") alıntı modu
+    gereksiz bir risk: o kayıtların yasak terim taşımadığı ölçüldü, taşısaydı
+    bile filtrenin koşması gerekirdi. Bu yüzden alan bağlamı varsa alıntı
+    modu KAPANIYOR ve post-filter normal biçimde çalışıyor.
+    """
+    return bool(soru) and bool(_ALAN_IZLERI.search(soru))
 
 
 def _sorulan_terim(soru: str, entries: Optional[Iterable[TermEntry]]

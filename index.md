@@ -1,7 +1,7 @@
 # Anatolia AI — Dizin (Index)
 
 Bu vault'taki tüm sayfaların kategorize dizini. Her ingest sonrası güncellenir.
-Son güncelleme: 2026-08-21.
+Son güncelleme: 2026-08-25.
 
 ## Sources
 - [[2026-06-16-teknofest-tyda-sartname-2-senaryo]] — TEKNOFEST TYDA Teknik Şartname (2. Senaryo) ingest özeti
@@ -18,6 +18,7 @@ Son güncelleme: 2026-08-21.
 > türev sayfalar hâlâ yazılmayı bekliyor. Silinmediler (hard rule #3).
 - [[2026-08-24-ssb-evren-cikarim-servisi]] — SSB EVREN çıkarım servisi: duyuru + canlı ölçüm (10 model, 8×H200)
 - [[2026-08-24-tkbb-kar-payi-veri-seti]] — TKBB kâr payı: iki uç, 210.474 tarihsel + 245 güncel kayıt
+- [[2026-08-25-yayimlanan-finansman-oranlari]] — bankaların KENDİ yayımladığı finansman oranları: 7 banka, 154 kayıt + Vakıf Katılım 103 segment kaydı
 
 ## Entities
 - [[teknofest]] — yarışma organizasyonu
@@ -101,6 +102,7 @@ Son güncelleme: 2026-08-21.
 - [[celiski-tespiti-yavasti-ve-500-donuyordu]] — soğuk tarama 47,2 sn ölçüldü; artefaktla 0,001 sn'ye indi
 - [[ekran-cekimi-ham-veriyi-yeniden-topladi]] — kare almak canlı tazeleme başlattı, `expiry_stamp` damgaları silindi
 - [[banka-sayfasi-paydaya-sozlesme-katiyordu]] — «93 belge · %15 kapsama» yanlış evrenden; 42'si sözleşmeydi
+- [[kampanya-metninde-olmayan-oran-banka-yayinindan]] — finansman oranı korpusta yok (EVREN 60'ta 0, yerel 30'da 0); banka yayınından alındı, `extracted_fields`e YAZILMADI
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller
 - [[teknik-cozum-mimarisi]] — uçtan uca çözüm hattı

@@ -93,7 +93,8 @@ import type {
   CompositeScore,
   FieldMeta,
 } from "../lib/api";
-import { sayiIyelik } from "../lib/format";
+import { sayiIyelik, trNum } from "../lib/format";
+import type { BankaFinansmanOzeti } from "../lib/api";
 import { useAsync } from "../lib/useAsync";
 
 type Props = {
@@ -284,6 +285,37 @@ function turSatirlari(
  * listesi boşsa (ölçülemeyen tür) hiç cümle üretilmez — boş bir liste
  * hakkında konuşmak, ölçülmemiş bir şeyi anlatmak olurdu.
  */
+/**
+ * «Ölçülemedi» satırının altına bankanın KENDİ yayımladığı oranı koyar.
+ *
+ * Kampanya metninden ölçemediğimiz bir oranı banka başka bir yerde
+ * yayımlıyorsa, ekranda söylenmeli. Aksi hâlde kullanıcı «bu bankada oran
+ * yok» sanır — oysa var, yalnız başka bir kaynakta.
+ *
+ * Kaynak farkı GİZLENMİYOR: metin «bankanın kendi yayınından» diyor ve
+ * kampanya kıyasının parçası olmadığını söylüyor.
+ */
+function yayinOraniNotu(
+  ozet: BankaFinansmanOzeti | null | undefined,
+  tur: string,
+): ReactNode {
+  if (!ozet || ozet.veri_yok || !ozet.turler) return null;
+  const kirilim = ozet.turler[tur];
+  if (!kirilim) return null;
+  return (
+    <>
+      {" "}
+      <b>Ama banka bu türde oran yayımlıyor:</b> en düşük{" "}
+      <span className="mono">%{trNum(kirilim.en_dusuk_oran)}</span> aylık
+      {kirilim.urunler.length > 0 && <> ({kirilim.urunler[0]})</>}. Bu sayı
+      bankanın kendi yayınından geliyor, kampanya metninden çıkarılmadı; bu
+      yüzden yukarıdaki kampanya kıyasına girmiyor. Karşılaştırma sekmesindeki
+      «Yayımlanan finansman oranları» görünümünde tüm bankalarla birlikte
+      sıralanıyor.
+    </>
+  );
+}
+
 function sozlesmeNotu(sozlesme: number | null): ReactNode {
   if (!sozlesme) return null;
   return (
@@ -411,6 +443,22 @@ export default function BankaSayfasi({
    */
   const belgeler = useAsync<CampaignSummary[] | null>(
     () => (bank ? api.campaigns({ bank }) : Promise.resolve(null)),
+    [bank],
+  );
+
+  /**
+   * Bankanın KENDİ yayımladığı finansman oranlarının özeti.
+   *
+   * «Ölçülemedi» satırlarının altında kullanılıyor. Kampanya metninden bir
+   * oran çıkaramamış olmamız, o bankanın oranı OLMADIĞI anlamına gelmiyor:
+   * `kar_payi_orani` belgelerin yalnız %6,1'inde geçiyor ve bu bir çıkarım
+   * kusuru değil — bilgi o metinlerde YOK (ölçüldü: EVREN 60 belgede 0 kabul).
+   * Banka onu hesaplama aracında yayımlıyor ve biz topluyoruz.
+   *
+   * Ekranda «ölçülemedi» deyip susmak, elimizde duran bir cevabı saklamaktı.
+   */
+  const yayinOrani = useAsync(
+    () => (bank ? api.bankaFinansmanOzeti(bank) : Promise.resolve(null)),
     [bank],
   );
 
@@ -726,6 +774,7 @@ export default function BankaSayfasi({
                   <>
                     {olcutCumlesi(s.skor, etiket)}
                     {sozlesmeNotu(s.sozlesme)}
+                    {yayinOraniNotu(yayinOrani.data, s.tur)}
                   </>
                 }
                 /* Ağırlık TABLOSU kırılımın birinci paydası için gerekli:
@@ -746,7 +795,12 @@ export default function BankaSayfasi({
                 belge={s.belge}
                 sira={s.sira}
                 grupBuyuklugu={s.grupBuyuklugu}
-                gerekce={sozlesmeNotu(s.sozlesme)}
+                gerekce={
+                  <>
+                    {sozlesmeNotu(s.sozlesme)}
+                    {yayinOraniNotu(yayinOrani.data, s.tur)}
+                  </>
+                }
               />
             ))}
 

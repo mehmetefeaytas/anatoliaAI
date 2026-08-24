@@ -101,3 +101,5 @@ dokunur ve ölçülmeden yapılmamalı. **Açık bırakıldı, gizlenmedi.**
 
 - [[urun-baglami-alan-duzeyinde-tasinmali]] — aynı ailenin başka bir yüzü
 - [[llm-yalniz-kural-bosluklarini-doldurur]] — yanlış-alan kapısının gerekçesi
+- [[kampanya-metninde-olmayan-oran-banka-yayinindan]] — buradaki gecikme formülü
+  örnekleri, oranın metinde OLMADIĞININ üçüncü kanıtı olarak kullanıldı
