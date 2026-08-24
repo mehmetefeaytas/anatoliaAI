@@ -1802,6 +1802,27 @@ _AILE_IZLERI = {
     "Kart": r"kredi kart|bankakart|banka kart",
     "Yatırım Ürünü": r"katılma hesab|katilma hesab|altın hesab|yatırım fon",
     "Alışveriş Puanı": r"alışveriş puan|alisveris puan|puan kazan",
+    # Aşağıdaki üçü 2026-08-24'te ÖLÇÜLEREK eklendi. Gerekçe: kural %13,2 çok
+    # ürünlü buluyordu, EVREN'in bağımsız denetimi %18 demişti
+    # (`decisions/urun-baglami-alan-duzeyinde-tasinmali.md`) ve aradaki fark
+    # kaçan ailelerdi. Üçü eklendiğinde oran **%18,0** — EVREN ölçümüyle
+    # birebir. İki bağımsız yöntemin aynı sayıya varması, listenin artık
+    # korpusun gerçek ürün çeşitliliğini kapsadığına işaret ediyor.
+    #
+    # DAR TUTULDU: geniş desenler ölçülüp ELENDİ. `\bpos\b|üye işyeri` tek
+    # başına korpusun %23,2'sinde geçiyor ("pos" başka bağlamlara da denk
+    # geliyor) ve altı adayın tamamı eklendiğinde oran %32,5'e çıkıyordu —
+    # EVREN ölçümünün iki katı, yani aşırı işaretleme. `maaş müşterisi` (%0,2)
+    # ve `havale` (%8,0, her banka sayfasında ücret tablosu olarak geçiyor)
+    # de bu yüzden dışta.
+    #
+    # `Fatura/Ödeme Talimatı` ÖLÇÜLMÜŞ bir vakayı kapatıyor: `#761`
+    # (akademisyen paketi) konut finansmanı kıyasında *"Ek ödül: 200 TL"*
+    # satırı üretiyordu; o 200 TL "her bir fatura talimatı için 200 TL
+    # iade"ydi. Bu desenle #761 artık 2 değil 3 aile taşıyor.
+    "Fatura/Ödeme Talimatı": r"fatura talimat|otomatik ödeme talimat|fatura ödeme",
+    "Sigorta/Tekafül": r"tekafül|tekaful|sigorta ürün|hayat sigorta|kasko",
+    "Döviz/Kıymetli Maden": r"döviz alım|dolar hesab|euro hesab|gram altın al",
 }
 
 

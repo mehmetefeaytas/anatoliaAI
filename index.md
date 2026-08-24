@@ -97,6 +97,7 @@ Son güncelleme: 2026-08-21.
 
 - [[merkezi-veri-segment-ayrimini-gizliyor]] — TKBB tek oran, banka beş oran (Klasik %85 vs merkezî %92)
 - [[tcmb-sozlugu-terim-boslugunu-kapatmiyor]] — 314 terim ölçüldü, 'Finansman' yok, %22'si yasak kök taşıyor
+- [[evren-celiski-tespitinde-katki-vermedi]] — 230 belgede 0 bulgu; yol ölçülerek kapatıldı
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller
 - [[teknik-cozum-mimarisi]] — uçtan uca çözüm hattı

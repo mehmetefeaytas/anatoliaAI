@@ -79,5 +79,49 @@ class UyariTest(unittest.TestCase):
         self.assertIn("1827", u)
 
 
+class TestGenisletilmisAileListesi(unittest.TestCase):
+    """2026-08-24 ölçümüyle eklenen üç aile ve ELENEN geniş desenler.
+
+    Kural %13,2 çok ürünlü buluyordu, EVREN'in bağımsız denetimi %18 demişti.
+    Üç DAR desen eklendiğinde oran %18,0 oldu — iki bağımsız yöntem aynı
+    sayıya vardı. Geniş desenler ölçülüp elendi (hepsi eklenince %32,5).
+    """
+
+    def test_fatura_talimati_ailesi_TANINIR(self):
+        """`#761` vakası: 'her bir fatura talimatı için 200 TL iade'."""
+        from src.chatbot.structured import _cok_urunlu_mu
+        metin = ("Konut Finansmanı'nda 5 puan indirim ve her bir fatura "
+                 "talimatı için 200 TL iade fırsatı.")
+        self.assertTrue(_cok_urunlu_mu(metin))
+
+    def test_sigorta_ve_doviz_aileleri_TANINIR(self):
+        from src.chatbot.structured import _AILE_IZLERI
+        for ad in ("Fatura/Ödeme Talimatı", "Sigorta/Tekafül",
+                   "Döviz/Kıymetli Maden"):
+            with self.subTest(ad=ad):
+                self.assertIn(ad, _AILE_IZLERI)
+
+    def test_GENIS_desenler_DISTA(self):
+        """Ölçülüp elendi: 'pos' tek başına korpusun %23,2'sinde geçiyor ve
+        altı adayın tamamı eklenince oran EVREN ölçümünün iki katına çıkıyordu.
+        """
+        from src.chatbot.structured import _AILE_IZLERI
+        birlesik = " ".join(_AILE_IZLERI.values()).lower()
+        for kacinilan in ("\\bpos\\b", "üye işyeri", "havale", "maaş müşteri"):
+            with self.subTest(kacinilan=kacinilan):
+                self.assertNotIn(kacinilan, birlesik)
+
+    def test_tek_aile_cok_urunlu_YAPMAZ(self):
+        """Yeni desenler yanlış pozitif üretmemeli: yalnız fatura geçen bir
+        belge tek ailedir."""
+        from src.chatbot.structured import _cok_urunlu_mu
+        self.assertFalse(_cok_urunlu_mu(
+            "Fatura ödeme işlemlerinizde geçerli kampanya."))
+
+    def test_dokuz_aile(self):
+        from src.chatbot.structured import _AILE_IZLERI
+        self.assertEqual(len(_AILE_IZLERI), 9)
+
+
 if __name__ == "__main__":
     unittest.main()

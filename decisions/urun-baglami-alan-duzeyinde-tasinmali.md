@@ -91,8 +91,26 @@ atmak bilgi kaybı olurdu.
 Doğrulama (iki bilinen vaka): `#761` → 2 aile (Kart + Konut Finansmanı) ✓
 işaretlenir; `#626` → 1 aile ✓ işaretlenmez.
 
-**Ölçülen kapsam sınırı — açıkça yazılıyor:** kural korpusta **%9** çok ürünlü
-buluyor, EVREN denetimi **%18** diyor. Yani kural EVREN'in yarısını yakalıyor;
+### KAPSAM AÇIĞI KAPATILDI (2026-08-24, ölçüldü)
+
+Desen listesi 6 → 9 aile çıkarıldı ve oran **%13,2 → %18,0** oldu — EVREN'in
+bağımsız denetimiyle (%18) **birebir**. İki bağımsız yöntemin aynı sayıya
+varması, listenin korpusun gerçek ürün çeşitliliğini kapsadığına işaret ediyor.
+
+Eklenen üç DAR desen: `Fatura/Ödeme Talimatı` (%6,3), `Sigorta/Tekafül`
+(%4,1), `Döviz/Kıymetli Maden` (%1,3). İlki ölçülmüş bir vakayı kapatıyor:
+`#761` artık 2 değil **3** aile taşıyor (fatura talimatı yakalandı).
+
+GENİŞ desenler ölçülüp **elendi**: altı adayın tamamı eklendiğinde oran
+**%32,5** — EVREN ölçümünün iki katı, yani aşırı işaretleme. `\bpos\b|üye
+işyeri` tek başına korpusun %23,2'sinde geçiyor; `havale` %8,0 (her banka
+sayfasında ücret tablosu olarak); `maaş müşterisi` %0,2 (etkisiz).
+
+Test: `test_kiyas_cok_urunlu_uyarisi.py::TestGenisletilmisAileListesi` (5 test)
+elenen desenlerin geri sızmamasını da kilitliyor.
+
+**Eski ölçüm (tarihsel kayıt):** kural korpusta **%9** çok ürünlü
+buluyordu, EVREN denetimi **%18** diyordu. Yani kural EVREN'in yarısını yakalıyor;
 desen listesi 6 aile içeriyor, korpusta 8 var ("Finansman" ve "Yeni Müşteri"
 çok genel oldukları için bilerek dışta). Kaçan ~%9 için ya desen listesi
 genişletilmeli ya EVREN ile tam korpus taraması yapılıp sonuç bir kolona
