@@ -88,7 +88,7 @@ psycopg[binary]==3.3.4     # LGPL (dinamik bağlı istemci)
 # pgvector>=0.2          # PostgreSQL lisansı
 
 # --- geliştirme ---
-ruff==0.16.3                # MIT — lint + format kapısı (black ve pytest
+ruff==0.16.4                # MIT — lint + format kapısı (black ve pytest
                             # 2026-08-21'de düşürüldü: black hiç yapılandırılıp
                             # koşulmadı; 210 test dosyasının hiçbiri pytest API'si
                             # kullanmıyor ve CI unittest ile koşuyor)
