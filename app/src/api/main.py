@@ -207,7 +207,7 @@ from ..summarize.ozet import OZET_KAYNAK_LLM
 from ..summarize.ozet_isi import OzetYoneticisi
 from ..tazeleme_sonrasi import alt_akis_kur
 from . import gunluk, kimlik
-from .routers import ajan, denetim, isler, katalog, kiyas
+from .routers import ajan, denetim, isler, katalog, katilma, kiyas
 from .sabitler import FIELD_LABELS
 
 # `GUVENLIK_KAPILARI` / `GATE_LABELS` ve iki güvenlik yardımcısı da
@@ -731,6 +731,11 @@ def build_app():
         otorite_sluglari=_otorite_kaynak_sluglari,
         scoring_direction=scoring_direction,
     ))
+    # Katılma hesabı oranları (TKBB haftalık verisi). Bağımlılık YOK: veri
+    # `campaigns`/`extracted_fields` değil, `data/raw/*/rates/` altındaki
+    # hasat çıktısıdır — bu yüzden `repo` geçilmiyor. Chatbot aynı veriyi
+    # zaten cevaplıyordu; panel görmüyordu (routers/katilma.py başlığı).
+    app.include_router(katilma.router_kur())
 
 
     @app.get("/campaigns/{campaign_id}/text")

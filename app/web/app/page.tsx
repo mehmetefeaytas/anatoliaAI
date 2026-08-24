@@ -41,6 +41,7 @@ import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
 import GunlukPanel from "./components/GunlukPanel";
 import IsiPanel from "./components/IsiPanel";
+import KatilmaPanel from "./components/KatilmaPanel";
 import DurumSeridi, { ApiKapaliUyarisi } from "./components/DurumSeridi";
 import JuryModeToggle from "./components/JuryModeToggle";
 import KomutPaleti from "./components/KomutPaleti";
@@ -63,6 +64,7 @@ import { useAsync } from "./lib/useAsync";
 type TabKey =
   | "compare"
   | "isi"
+  | "katilma"
   | "advantageous"
   | "banka"
   | "delta"
@@ -95,6 +97,13 @@ const TABS: readonly SekmeTanimi<TabKey>[] = [
   { key: "advantageous", label: "En Avantajlı" },
   { key: "banka", label: "Banka Sayfası" },
   { key: "delta", label: "Banka İçi Delta" },
+  // Katılma oranları kıyas ailesinin SONUNDA: öteki sekmeler KAMPANYA
+  // metninden çıkarılmış alanları kıyaslıyor, bu sekme ise bankanın haftalık
+  // ilan ettiği hesap oranını gösteriyor — aynı soru tipi («hangi banka daha
+  // iyi») ama başka bir veri kaynağı (TKBB, kampanya korpusu değil). Çelişki
+  // tespitinden önce duruyor çünkü o sekme sistem hakkında bir SORU sorar,
+  // bu sekme hâlâ ürün hakkında bir cevap verir.
+  { key: "katilma", label: "Katılma Oranları" },
   { key: "contradictions", label: "Çelişki Tespiti" },
 ] as const;
 
@@ -378,6 +387,11 @@ function Dashboard() {
             <AuditPanel campaigns={rows} selectedId={auditTarget} />
           ))}
 
+        {/* Katılma oranları KENDİ verisini çeker: ortak `fields`/`campaigns`
+            isteklerine bağlı değil, çünkü kaynağı kampanya korpusu değil TKBB
+            haftalık tablosudur (components/KatilmaPanel.tsx başlığı). */}
+        {sekme === "katilma" && <KatilmaPanel />}
+
         {sekme === "contradictions" && <ContradictionAlert onInspect={inspect} />}
 
         {/* «Sistem gerçekten çalışıyor» ispatı (CLAUDE.md §11) — bir kampanya
@@ -459,6 +473,10 @@ function sohbetBaglami(sekme: TabKey): SohbetBaglami {
     // geçmiyor») tam olarak haritanın konusu. Genel kümeye düşürmek, tek bir
     // alanın kapsamasına bakan kişiye korpus geneli sorular göstermek olurdu.
     case "isi":
+      return "compare";
+    // Katılma oranları da kıyas kümesine düşüyor: sorduğu soru aynı tipte
+    // («hangi banka daha iyi veriyor»), yalnız veri kaynağı farklı.
+    case "katilma":
       return "compare";
     case "compare":
     case "advantageous":

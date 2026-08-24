@@ -65,7 +65,10 @@ birebir** uyuştu. Sertifika doğrulanamadı ama İÇERİK doğrulandı.
 - `app/src/chatbot/bot.py` — `katilma_orani` handler'ı
 - `app/data/raw/<banka>/rates/tkbb-karpayi.jsonl.gz` — 9 banka, 1,1 MB
 - `app/data/raw/<banka>/rates/tkbb-guncel.jsonl` — 9 banka, 152 KB
-- `app/tests/test_chat_katilma_orani.py` (20), `test_tkbb_hasat.py` (20)
+- `app/src/api/routers/katilma.py` — yeni (panel ucu)
+- `app/web/app/components/KatilmaPanel.tsx` — yeni; `page.tsx`, `lib/api.ts`
+- `app/tests/test_chat_katilma_orani.py` (20), `test_tkbb_hasat.py` (20),
+  `test_api_katilma.py` (17)
 
 ## decisions
 

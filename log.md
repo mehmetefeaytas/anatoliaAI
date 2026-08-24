@@ -2,6 +2,40 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-24] feature | katilma-oranlari-panel-yuzeyi
+
+Katılma oranları chatbot'ta cevaplanıyordu ama panelde hiç yoktu; senaryo
+dashboard ile chatbot'u BİRLİKTE istiyor (CLAUDE.md §5) ve sohbette görünen
+bir sıralamanın ekranda bulunamaması kapsam kaybıydı.
+
+`GET /katilma-oranlari` ucu (`src/api/routers/katilma.py`) ve «Katılma
+Oranları» sekmesi (`web/app/components/KatilmaPanel.tsx`) eklendi. İki
+büyüklük panelde de ayrı tutuluyor: büyüklük bir SÜZGEÇ, kolon değil
+([[katilma-orani-iki-ayri-buyukluk]]). Süzgeç seçenekleri veriden türetiliyor;
+boş sonuç `veri_yok: true` ile "oran sıfır" değil "veri toplanmadı" olarak
+gösteriliyor.
+
+Tarayıcıda doğrulandı: sekme açıldı, tablo render edildi, oran TR biçiminde
+(`%42,79`), vade her satırda yazılı.
+
+**Tarihsel arşiv için trend analizi YAPILMADI** — CLAUDE.md §18 trend
+analizini bilinçli olarak elemiş durumda (bütçe üç hedefe yığılıyor). Arşiv
+kaynağı kırılgan olduğu için depoda duruyor.
+
+Dokunulan dosyalar:
+- `app/src/api/routers/katilma.py` — yeni
+- `app/src/api/main.py` — router kaydı
+- `app/web/app/components/KatilmaPanel.tsx` — yeni
+- `app/web/app/page.tsx` — sekme, TabKey, soru kümesi eşlemesi
+- `app/web/app/lib/api.ts` — `KatilmaOranlari` tipi + `katilmaOranlari()`
+- `app/tests/test_api_katilma.py` (17 test)
+- `sorun/katilma-hesabi-orani-korpusta-yoktu.md`,
+  `sources/teknofest/2026-08-24-tkbb-kar-payi-veri-seti.md`,
+  `entities/tkbb-kar-payi-veri-seti.md`, `log.md`
+
+Ölçüm: **3.859 test / 0 hata / 53 atlanan** · web 224/224 · ruff temiz ·
+`next build` başarılı · vault 0 kırık link.
+
 ## [2026-08-24] ingest + feature | tkbb-kar-payi-veri-seti
 
 Kullanıcı raporu: *"Katılım hesabında en iyi kâr payı oranını hangi banka

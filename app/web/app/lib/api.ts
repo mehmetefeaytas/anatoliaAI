@@ -947,6 +947,48 @@ export type GunlukParams = {
   offset?: number;
 };
 
+/**
+ * Katılma hesabı oranı satırı — TKBB haftalık verisi.
+ *
+ * `term_months` satırın KENDİ vadesini taşır ve gösterilmek zorundadır: vade
+ * süzgeci verilmediğinde her banka kendi en iyi vadesiyle listelenir, yani
+ * vade gizlenirse farklı vadeler aynı kolonda kıyaslanmış olur.
+ */
+export type KatilmaSatiri = {
+  bank_slug: string;
+  bank_name: string;
+  annual_rate: number;
+  term_months: number;
+  currency: string;
+  period_date: string;
+  source_url: string;
+};
+
+/**
+ * `/katilma-oranlari` yanıtı.
+ *
+ * `buyukluk` iki değer alır ve İKİSİ AYNI LİSTEDE DÖNMEZ: `getiri`
+ * gerçekleşen yıllık getiri (%42), `pay` katılımcıya düşen bölüşüm (%90).
+ * Pay sayısal olarak getiriden büyüktür; tek listede "en iyi oran" yanlış
+ * bankayı gösterirdi (bkz. decisions/katilma-orani-iki-ayri-buyukluk.md).
+ *
+ * `mevcut` gerçekten VERİSİ OLAN seçenekleri taşır — sabit bir liste basmak
+ * verisi olmayan bir para birimini seçilebilir gösterirdi.
+ */
+export type KatilmaOranlari = {
+  buyukluk: "getiri" | "pay";
+  buyukluk_etiketi: string;
+  currency: string;
+  term_months: number | null;
+  period_date: string | null;
+  veri_yok: boolean;
+  rows: KatilmaSatiri[];
+  source_url: string;
+  source_label: string;
+  mevcut: { para_birimleri: string[]; vadeler: number[] };
+  uyari: string;
+};
+
 export const api = {
   /**
    * Sağlık yoklaması.
@@ -956,6 +998,27 @@ export const api = {
    * gösterir (bkz. lib/saglik.tsx).
    */
   health: () => request<Health>("/api/health"),
+  /**
+   * Katılma hesabı oranları — banka başına en iyi satır, azalan sırada.
+   *
+   * Sıralama SUNUCUDA yapılır: iki büyüklüğün ayrı tutulması bir veri katmanı
+   * kuralıdır ve TSX'e kopyalansaydı iki yerde yaşardı (`campaigns()` ile
+   * aynı gerekçe).
+   */
+  katilmaOranlari: (params: {
+    buyukluk?: "getiri" | "pay";
+    currency?: string;
+    term_months?: number | null;
+  } = {}) => {
+    const p = new URLSearchParams();
+    for (const [ad, deger] of Object.entries(params)) {
+      if (deger !== undefined && deger !== null && deger !== "") {
+        p.set(ad, String(deger));
+      }
+    }
+    const q = p.toString();
+    return request<KatilmaOranlari>(`/api/katilma-oranlari${q ? `?${q}` : ""}`);
+  },
   fields: () => request<FieldMeta[]>("/api/fields"),
   /**
    * Belge listesi — ÜSTVERİ. Ham gövde gelmez (`govde` sözleşmede duruyor ama

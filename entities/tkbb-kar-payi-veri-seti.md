@@ -45,6 +45,15 @@ T.O.M., Türkiye Finans, Vakıf, Ziraat ([[katilim-bankalari]]).
 **BankAsya** tarihsel uçta listede ama boş yanıt veriyor (kapalı banka).
 **Adil Katılım** hiçbir uçta yok.
 
+## Verinin kullanıldığı yerler
+
+- **Chatbot** — `katilma_orani` yolu, banka başına en iyi satır sıralaması
+- **Panel** — «Katılma Oranları» sekmesi, `GET /katilma-oranlari`
+
+Tarihsel arşiv şu an hiçbir kod yolunda okunmuyor: trend analizi bilinçli
+olarak elenmiş bir yol (CLAUDE.md §18). Arşiv yine de depoda duruyor çünkü
+kaynak kırılgan.
+
 ## Güvenilirlik
 
 Albaraka TL paylaşım oranı üç bağımsız kaynakta aynı çıktı (iki uç + bankanın

@@ -72,16 +72,35 @@ kapı gevşetilmedi, tek satır işaretlendi.
   içinde bulunulan haftayı veriyor. Haziran 2025 – Ağustos 2026 arası hiçbir
   uçta yok.
 - **Adil Katılım** TKBB veri setinde hiç yok; **BankAsya** kapalı.
-- Dashboard (web) bu veriyi henüz göstermiyor; yalnız chatbot kullanıyor.
 - Tarihsel arşiv (210.474 kayıt) hiçbir kod yolunda okunmuyor — trend/dönemsel
   kıyas için duruyor.
+
+## Panel yüzeyi de açıldı (aynı gün)
+
+Chatbot cevaplıyor ama panel görmüyordu; sohbette görünen bir sıralamanın
+ekranda bulunamaması kapsam kaybıydı (CLAUDE.md §5 — dashboard ve chatbot
+BİRLİKTE sunulur). `GET /katilma-oranlari` ucu ve «Katılma Oranları» sekmesi
+eklendi.
+
+İki büyüklük panelde de ayrı: büyüklük bir SÜZGEÇ, kolon değil. `pay`
+seçildiğinde bölüşüm uyarısı basılıyor. Süzgeç seçenekleri VERİDEN türetiliyor
+— sabit liste basmak, verisi olmayan bir para birimini seçilebilir gösterirdi.
+Boş sonuç `veri_yok: true` ile döner ve arayüz onu "oran sıfır" değil "veri
+toplanmadı" olarak gösterir.
+
+Doğrulandı (tarayıcıda): sekme açıldı, tablo render edildi, oran TR biçiminde
+(`%42,79`) ve vade her satırda yazılı.
 
 ## İlgili dosyalar
 
 - `app/src/chatbot/katilma_orani.py` — yeni
 - `app/src/chatbot/bot.py` — `katilma_orani` handler'ı, `kaynak_var` listesi
 - `app/scripts/tkbb_guncel_hasat.py` · `tkbb_karpayi_hasat.py` — yeni
-- `app/tests/test_chat_katilma_orani.py` (20) · `test_tkbb_hasat.py` (20)
+- `app/src/api/routers/katilma.py` — yeni (panel ucu)
+- `app/web/app/components/KatilmaPanel.tsx` — yeni · `page.tsx` (sekme) ·
+  `lib/api.ts` (tip + metot)
+- `app/tests/test_chat_katilma_orani.py` (20) · `test_tkbb_hasat.py` (20) ·
+  `test_api_katilma.py` (17)
 
 ## Sources
 
