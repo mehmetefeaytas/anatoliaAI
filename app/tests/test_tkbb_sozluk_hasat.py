@@ -14,6 +14,18 @@ import unittest
 
 from scripts.tkbb_sozluk_hasat import TABAN, ayristir
 
+# `bağımlılıksız` CI işi yalnız standart kütüphaneyle koşuyor ve bs4 orada
+# YOK. Bu iki dosyanın ayrıştırma testleri 24 Ağustos'ta main'i kırdı
+# (10 `ModuleNotFoundError`): testler yerelde geçiyordu çünkü .venv'de bs4
+# kurulu. Desen `test_rates.py:36-40` ile aynı — koşulan işte gerçekten
+# koşar, koşmayanda gerekçesiyle atlanır.
+try:  # pragma: no cover - ortama bağlı
+    import bs4  # noqa: F401
+    BS4_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    BS4_VAR = False
+
+
 # Gerçek sayfanın iskeleti: h1 = terim, p.text-siyah = tanım, Örnekler bloğu.
 HTML = """<html><body>
 <nav>Anasayfa Kurumsal</nav>
@@ -47,6 +59,8 @@ DUYURU_HTML = """<html><body>
 </div></body></html>"""
 
 
+@unittest.skipUnless(BS4_VAR,
+                     "beautifulsoup4 kurulu değil — sözlük sayfası ayrıştırma atlanıyor")
 class TestAyristirma(unittest.TestCase):
     def test_terim_tanim_ve_kaynak(self):
         k = ayristir(HTML, 344)

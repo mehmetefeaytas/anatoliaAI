@@ -16,6 +16,18 @@ import pathlib
 import tempfile
 import unittest
 
+# `bağımlılıksız` CI işi yalnız standart kütüphaneyle koşuyor ve bs4 orada
+# YOK. Bu iki dosyanın ayrıştırma testleri 24 Ağustos'ta main'i kırdı
+# (10 `ModuleNotFoundError`): testler yerelde geçiyordu çünkü .venv'de bs4
+# kurulu. Desen `test_rates.py:36-40` ile aynı — koşulan işte gerçekten
+# koşar, koşmayanda gerekçesiyle atlanır.
+try:  # pragma: no cover - ortama bağlı
+    import bs4  # noqa: F401
+    BS4_VAR = True
+except ModuleNotFoundError:  # pragma: no cover
+    BS4_VAR = False
+
+
 from scripts import tkbb_guncel_hasat as guncel
 from scripts import tkbb_karpayi_hasat as tarihsel
 
@@ -59,6 +71,8 @@ class TestTarih(unittest.TestCase):
         self.assertIsNone(tarihsel._tarih("2024", "Ocak", "32 Ocak Pazartesi"))
 
 
+@unittest.skipUnless(BS4_VAR,
+                     "beautifulsoup4 kurulu değil — TKBB tablo ayrıştırma atlanıyor")
 class TestTarihselAyristirma(unittest.TestCase):
     def test_kolon_duzeni_vade_dis_para_ic(self):
         k = list(tarihsel.kayitlar(_HTML, bank_slug="albaraka", sheet_index=0,
@@ -140,6 +154,8 @@ _PIVOT = {"data": [{"type": "data", "id": "DL-x", "attributes": {"rows": [
 ]}}]}
 
 
+@unittest.skipUnless(BS4_VAR,
+                     "beautifulsoup4 kurulu değil — TKBB tablo ayrıştırma atlanıyor")
 class TestGuncelAyristirma(unittest.TestCase):
     def test_kolon_adindan_vade_ve_para_birimi(self):
         k = list(guncel.kayitlar(_PIVOT, dashlet="DL-FFC6K484A682B8I",
