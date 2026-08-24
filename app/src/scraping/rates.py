@@ -229,6 +229,96 @@ class RateAdapter:
             self.failures.append({"url": url, "reason": "JSON ayristirilamadi"})
             return None
 
+    def _post_form(self, url: str, veri: dict[str, Any], *,
+                   ajax: bool = True) -> Optional[Any]:
+        """Form gövdesiyle POST eder ve JSON döndürür; JSON değilse `None`.
+
+        `_get_json`in kardeşi. Ayrı bir metot çünkü bazı bankalar oranı yalnız
+        POST arkasında veriyor (Ziraat Katılım `/ajax/get-vade`) ve GET ile
+        aynı uca gitmek 404 veriyor. Başarısızlık gerekçesi `failures`a
+        yazılıyor — sessiz `None` dönmek, "banka oran yayımlamıyor" ile
+        "isteğimiz düştü"yü ayırt edilemez yapardı.
+
+        `ajax=True` varsayılan: bu uçların çoğu `X-Requested-With` olmadan
+        HTML döndürüyor.
+        """
+        if not self._allowed(url):
+            return None
+        if not self.fetcher.available:
+            self.failures.append({"url": url, "reason": "requests kurulu degil"})
+            return None
+        session = getattr(self.fetcher, "_session", None)
+        if session is None:
+            self.failures.append({"url": url, "reason": "HTTP oturumu yok"})
+            return None
+        headers = {"Accept": "application/json, text/javascript, */*; q=0.01"}
+        if ajax:
+            headers["X-Requested-With"] = "XMLHttpRequest"
+        self.fetcher.limiter.wait(url)
+        self.requests += 1
+        try:
+            resp = session.post(url, data=veri, timeout=self.fetcher.timeout,
+                                headers=headers)
+        except Exception as exc:
+            self.failures.append({"url": url, "reason": "baglanti hatasi",
+                                  "detail": f"{type(exc).__name__}: {exc}"[:150]})
+            return None
+        if resp.status_code != 200:
+            self.failures.append({"url": url, "reason": f"HTTP {resp.status_code}"})
+            return None
+        ctype = (resp.headers.get("Content-Type") or "").lower()
+        if "json" not in ctype:
+            self.failures.append({
+                "url": url, "reason": "JSON degil",
+                "detail": f"content-type={ctype or 'yok'}"})
+            return None
+        try:
+            return resp.json()
+        except ValueError:
+            self.failures.append({"url": url, "reason": "JSON ayristirilamadi"})
+            return None
+
+    def _post_json(self, url: str, govde: dict[str, Any]) -> Optional[Any]:
+        """JSON gövdesiyle POST. `_post_form`un kardeşi, gövde biçimi farklı.
+
+        Hayat Finans'ın uçları `application/json` bekliyor; form kodlamasıyla
+        400 dönüyorlar. İki ayrı metot, tek metoda bayrak eklemekten yeğ:
+        çağıran tarafta hangi biçimin gittiği ADIYLA görünüyor.
+        """
+        if not self._allowed(url):
+            return None
+        if not self.fetcher.available:
+            self.failures.append({"url": url, "reason": "requests kurulu degil"})
+            return None
+        session = getattr(self.fetcher, "_session", None)
+        if session is None:
+            self.failures.append({"url": url, "reason": "HTTP oturumu yok"})
+            return None
+        self.fetcher.limiter.wait(url)
+        self.requests += 1
+        try:
+            resp = session.post(url, json=govde, timeout=self.fetcher.timeout,
+                                headers={"Accept": "application/json",
+                                         "Content-Type": "application/json"})
+        except Exception as exc:
+            self.failures.append({"url": url, "reason": "baglanti hatasi",
+                                  "detail": f"{type(exc).__name__}: {exc}"[:150]})
+            return None
+        if resp.status_code != 200:
+            self.failures.append({"url": url, "reason": f"HTTP {resp.status_code}",
+                                  "detail": str(govde)[:100]})
+            return None
+        ctype = (resp.headers.get("Content-Type") or "").lower()
+        if "json" not in ctype:
+            self.failures.append({"url": url, "reason": "JSON degil",
+                                  "detail": f"content-type={ctype or 'yok'}"})
+            return None
+        try:
+            return resp.json()
+        except ValueError:
+            self.failures.append({"url": url, "reason": "JSON ayristirilamadi"})
+            return None
+
     def quotes(self, grid: RateGrid) -> list[RateQuote]:  # pragma: no cover
         raise NotImplementedError
 
@@ -379,8 +469,24 @@ def _is_priced(data: dict[str, Any], amount: float) -> bool:
     KABUL EDİLEN SINIR: gerçek bir %0 kampanyalı finansman da toplam = ana para
     verirdi ve bu kapı onu da düşürür. Bilinçli tercih: bir oranı YANLIŞ
     kaydetmek, eksik kaydetmekten daha kötüdür.
+
+    ## Anahtar adı BÜYÜK/küçük harf duyarsız — ölçülmüş sessiz kayıp
+
+    Kapı `TotalInstallmentAmount` (PascalCase) arıyordu; Hayat Finans aynı
+    alanı `totalInstallmentAmount` (camelCase) döndürüyor. Sonuç: gerçek bir
+    %4,25'lik oran taşıyan yanıt "fiyatlanmamış" sayılıyor ve bankanın TÜM
+    finansman kayıtları düşüyordu (ölçüldü 2026-08-25: 20 kaydın 0'ı
+    finansman). Kapının kendisi doğruydu, anahtar eşlemesi dardı.
+
+    Aynı sitede iki konvansiyon bir arada olabiliyor (Hayat Finans'ta
+    finansman ucu camelCase, katılma ucu PascalCase), bu yüzden çözüm
+    "doğru yazımı seç" değil, HARFE BAKMAMAK.
     """
-    total = _num(data.get("TotalInstallmentAmount"))
+    total = None
+    for anahtar, deger in data.items():
+        if str(anahtar).lower() == "totalinstallmentamount":
+            total = _num(deger)
+            break
     if total is None:
         return False
     # 1 TL tolerans: yuvarlama farkı fiyatlanmış saymaya yetmez.
@@ -1026,6 +1132,283 @@ class TurkiyeFinansTableAdapter(RateAdapter):
         return None, False
 
 
+# --------------------------------------------------------------------------- #
+# Ziraat Katılım — /ajax/get-vade (2026-08-25 doğrulandı)
+# --------------------------------------------------------------------------- #
+
+class ZiraatKatilimAdapter(RateAdapter):
+    """`/ajax/get-vade` — ürün başına aylık kâr oranı, vade aralığı, tutar sınırı.
+
+    ## Niçin bu banka ayrıca gerekliydi
+
+    Ziraat Katılım korpusta 291 belge veriyor ama bu belgelerin yalnız **1'inde**
+    kâr payı oranı geçiyor (%0,3). Bu bir çıkarım kusuru DEĞİL: banka oranı
+    kampanya HTML'inde değil, hesaplama aracının arkasındaki uçta yayımlıyor.
+    Doğru cevap metinden daha iyi çıkarım yapmak değil, veriyi bankanın onu
+    GERÇEKTEN yayımladığı yerden almaktı.
+
+    ## Doğrulanmış yanıt (2026-08-25)
+
+        POST /ajax/get-vade   gövde: eid=25961206
+        {"status":true,"data":{"action":"remove","msg":"","range":[1,…,120],
+         "ratio":"3.19","maximum_amount":9999999,"minimum_amount":"1"}}
+
+    → KONUT FİNANSMANI, 1–120 ay, aylık **%3,19**.
+
+    ## Ödeme planı ucu BİLEREK KULLANILMIYOR
+
+    `/ajax/finansmanhesapla` taksit ve toplam da veriyor ama bir tuzağı var:
+    `finansman_is_bank_ratio=false` gönderilirse sunucu İSTEMCİNİN yolladığı
+    oranı kullanıyor ve yanıt gerçek bir banka oranıymış gibi görünüyor
+    (ölçüldü: `finans_kar_orani=0.10` → yanıt %0,10). Yani o uç, yanlış tek bir
+    parametreyle korpusa **uydurma oran** yazdırabilir.
+
+    Oran zaten `get-vade`den geliyor ve ürün başına SABİT — tutar/vade ile
+    değişmiyor (ölçüldü). Bu yüzden ikinci uca hiç gidilmiyor: alınmayan risk,
+    yönetilen riskten iyidir. Bedeli `installment`/`total_payment` alanlarının
+    boş kalması; onlar da uydurulmuyor, `None` bırakılıyor.
+
+    ## Ücretler yayımlanmıyor
+
+    Ne `get-vade` ne de ürün sayfaları tahsis/ekspertiz/komisyon veriyor;
+    `/urun-ve-hizmet-ucretleri` sayfasında HTML tablo yok, ücretler yalnız
+    PDF'te. `fees` bu yüzden BOŞ — halüsinasyon yasağı (CLAUDE.md §3).
+    """
+
+    slug = "ziraat-katilim"
+    kinds = (KIND_FINANCING,)
+    BASE = "https://www.ziraatkatilim.com.tr"
+    CALC_PAGE = f"{BASE}/finansal-hesaplama-araci"
+    VADE_URL = f"{BASE}/ajax/get-vade"
+
+    #: Ürün kimlikleri SABİT YAZILMIYOR, sayfadan okunuyor. Banka ürün
+    #: eklediğinde/çıkardığında sabit liste sessizce eskir ve yeni ürün hiç
+    #: toplanmaz — Emlak Katılım'da uydurma kodun sessizce %0 oran üretmesiyle
+    #: aynı sınıf hata.
+    SECIM_DESENI = re.compile(
+        r'<option[^>]*value="(\d{6,})"[^>]*>\s*([^<]{3,120}?)\s*</option>',
+        re.IGNORECASE)
+
+    def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        urunler = self._urunler()
+        if not urunler:
+            return []
+        out: list[RateQuote] = []
+        oransiz: list[str] = []
+        for eid, ad in urunler:
+            if self.requests >= grid.max_requests:
+                continue
+            veri = self._post_form(self.VADE_URL, {"eid": eid})
+            if veri is None:
+                continue                     # gerekçe `_post_form` içinde
+            if not isinstance(veri, dict) or not veri.get("status"):
+                self.failures.append({"url": self.VADE_URL,
+                                      "reason": "status=false",
+                                      "detail": f"eid={eid}"})
+                continue
+            d = veri.get("data") or {}
+            oran = _num(d.get("ratio"))
+            if oran is None or oran <= 0:
+                # Oran yoksa kayıt üretilmez. `%0` bir oran değil, ölçememedir.
+                oransiz.append(ad)
+                continue
+            aralik = [int(v) for v in (d.get("range") or []) if str(v).isdigit()]
+            azami = _num(d.get("maximum_amount"))
+            asgari = _num(d.get("minimum_amount"))
+            not_ = (d.get("msg") or "").strip() or None
+
+            # Vade: ızgaranın ürünün İZİN VERDİĞİ aralığa düşen noktaları.
+            # Aralık dışı vade göndermek anlamsız plan üretir; uç zaten
+            # `range` ile sınırı söylüyor.
+            vadeler = [t for t in grid.financing_terms if not aralik or t in aralik]
+            if not vadeler and aralik:
+                vadeler = [max(aralik)]      # ızgara hiç tutmuyorsa manşet vade
+            for vade in vadeler:
+                out.append(RateQuote(
+                    bank_slug=self.slug, kind=KIND_FINANCING,
+                    product_code=str(eid), product_name=ad,
+                    # `amount` BOŞ: oran tutara göre değişmiyor (ölçüldü), tek
+                    # bir tutar yazmak olmayan bir bağımlılığı ima ederdi.
+                    amount=None, amount_max=azami,
+                    term_months=int(vade),
+                    monthly_rate=oran,
+                    source_url=self.VADE_URL, collected_at=utc_now_iso(),
+                    method=METHOD_RATE_API,
+                    note=" · ".join(x for x in (
+                        not_,
+                        f"asgari tutar {asgari:,.0f}" if asgari else None,
+                        "oran ürün başına sabit; tutar/vade ile değişmiyor",
+                        "hesaplama bilgi amaçlıdır, bağlayıcı fiyat değildir "
+                        "(bankanın sayfa altı uyarısı)",
+                    ) if x)))
+        if oransiz:
+            self.notes.append(
+                f"{self.slug}: {len(oransiz)} urun oran DONDURMEDI "
+                f"({', '.join(oransiz[:3])}…); kayit uydurulmadi")
+        return out
+
+    def _urunler(self) -> list[tuple[str, str]]:
+        """Hesaplama sayfasının seçim listesinden (eid, ad) çiftleri."""
+        if not self._allowed(self.CALC_PAGE):
+            return []
+        self.fetcher.limiter.wait(self.CALC_PAGE)
+        self.requests += 1
+        sonuc = self.fetcher.fetch(self.CALC_PAGE)
+        html = getattr(sonuc, "text", None) or getattr(sonuc, "html", None) or ""
+        if not html:
+            self.failures.append({"url": self.CALC_PAGE,
+                                  "reason": "hesaplama sayfasi bos dondu"})
+            return []
+        gorulen: dict[str, str] = {}
+        for eid, ad in self.SECIM_DESENI.findall(html):
+            gorulen.setdefault(eid, " ".join(ad.split()))
+        if not gorulen:
+            self.failures.append({
+                "url": self.CALC_PAGE,
+                "reason": "urun secim listesi bulunamadi",
+                "detail": "sayfa duzeni degismis olabilir — desen guncellenmeli"})
+        return sorted(gorulen.items(), key=lambda kv: kv[1])
+
+
+# --------------------------------------------------------------------------- #
+# Hayat Finans — /api/integration/* (2026-08-25 doğrulandı)
+# --------------------------------------------------------------------------- #
+
+class HayatFinansAdapter(RateAdapter):
+    """Next.js BFF uçları: finansman hesaplayıcı + katılma hesabı oranı.
+
+    ## Doğrulanmış yanıtlar (2026-08-25)
+
+        POST /api/integration/calculateloansproduct
+        {"productTypeId":"BBACALCULATOR","loanMaturity":"12",
+         "calculationTypeId":"1","loanAmount":100000,"customRate":0}
+        → {"data":{"monthlyProfitRate":4.25,"annualSimpleProfitRate":51.0,
+                   "amount":11619.06,"totalInstallmentAmount":139428.69,…},
+           "isSuccessful":true}
+
+        POST /api/integration/calculateprofitsharerate
+        {"AccountType":0,"Maturity":1,"ProductGroup":2,"Money":100000,
+         "FEC":0,"MaturityTerm":365}
+        → {"data":{"grossProfitShareYearly":44.216…}}
+
+    ## `annualSimpleProfitRate` `annual_cost_rate` DEĞİLDİR
+
+    O alan yalnız `aylık × 12` (4,25 × 12 = 51,0). Bankanın kendi yayımladığı
+    yıllık toplam maliyet **%90,66** — çünkü aylık maliyet KKDF ve BSMV ile
+    %5,53'e çıkıyor ve bileşikleşiyor. İkisini aynı alana yazmak, maliyeti
+    olduğundan **kırk puan düşük** göstermek olurdu. Bu yüzden
+    `annual_cost_rate` BOŞ bırakılıyor; basit yıllık oran `note`a yazılıyor.
+
+    ## Ürün yelpazesi tek kalem — bu bir BULGU, eksik değil
+
+    Sitenin tamamında tek finansman hesaplayıcısı var (`BBACALCULATOR`).
+    Hayat Finans dijital bir banka ve bireysel konut/taşıt finansmanı
+    sunmuyor. "Oranı bulamadık" ile "banka o ürünü sunmuyor" farklı şeyler;
+    ikincisi burada geçerli.
+
+    ## Vade tavanı 18 ay — BİLEREK
+
+    Uç 19–24 ay için %4,79 döndürüyor ama bankanın yayımladığı maliyet
+    tablosu 18 ayda bitiyor ve ürün sayfasındaki taksit sınırı da 18. O
+    aralık ürün dışı ya da bayat bir segment; raporlamak, bankanın
+    yayımlamadığı bir oranı yayımlamak olurdu.
+    """
+
+    slug = "hayat-finans"
+    kinds = (KIND_FINANCING, KIND_PROFIT_SHARE)
+    BASE = "https://hayatfinans.com.tr"          # `www.` POST'ta 301 → gövde düşer
+    FIN_URL = f"{BASE}/api/integration/calculateloansproduct"
+    KATILMA_URL = f"{BASE}/api/integration/calculateprofitsharerate"
+
+    URUN_KODU = "BBACALCULATOR"
+    URUN_ADI = "Bana Bunu Al (alışveriş finansmanı)"
+    AZAMI_VADE = 18
+
+    #: `FEC` kodları — bankanın kendi numaralandırması.
+    PARA = ((0, "TRY"), (1, "USD"), (19, "EUR"))
+
+    def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        return self._finansman(grid) + self._katilma(grid)
+
+    def _finansman(self, grid: RateGrid) -> list[RateQuote]:
+        out: list[RateQuote] = []
+        fiyatsiz = 0
+        for amount in grid.financing_amounts:
+            for term in grid.financing_terms:
+                if term > self.AZAMI_VADE or self.requests >= grid.max_requests:
+                    continue
+                veri = self._post_json(self.FIN_URL, {
+                    "productTypeId": self.URUN_KODU,
+                    "loanMaturity": str(term),      # STRING zorunlu; int → 400
+                    "calculationTypeId": "1",
+                    "loanAmount": amount,
+                    "customRate": 0,                # 0 = bankanın kendi oranı
+                })
+                if veri is None:
+                    continue
+                if not isinstance(veri, dict) or not veri.get("isSuccessful"):
+                    self.failures.append({"url": self.FIN_URL,
+                                          "reason": "isSuccessful=false",
+                                          "detail": str(veri)[:120]})
+                    continue
+                d = veri.get("data") or {}
+                oran = _num(d.get("monthlyProfitRate"))
+                if oran is None or not _is_priced(d, float(amount)):
+                    # SESSİZ SIFIR: uç geçersiz girdide `isSuccessful:true` +
+                    # oran 0 + toplam = ana para döndürüyor (Emlak Katılım'daki
+                    # tuzağın aynısı). Kaydetmek %0 oran uydurmak olurdu.
+                    fiyatsiz += 1
+                    continue
+                basit = _num(d.get("annualSimpleProfitRate"))
+                out.append(RateQuote(
+                    bank_slug=self.slug, kind=KIND_FINANCING,
+                    product_code=self.URUN_KODU, product_name=self.URUN_ADI,
+                    amount=float(amount), term_months=int(term),
+                    monthly_rate=oran,
+                    # `annual_cost_rate` BOŞ — gerekçe sınıf başlığında.
+                    annual_cost_rate=None,
+                    installment=_num(d.get("amount")),
+                    total_payment=_num(d.get("totalInstallmentAmount")),
+                    source_url=self.FIN_URL, collected_at=utc_now_iso(),
+                    method=METHOD_RATE_API,
+                    note=(f"basit yıllık oran %{basit:.2f} (aylık×12) — yıllık "
+                          f"TOPLAM maliyet DEĞİL, KKDF+BSMV hariç"
+                          if basit else None)))
+        if fiyatsiz:
+            self.notes.append(
+                f"{self.slug}: {fiyatsiz} (tutar, vade) noktasi FIYATLANMAMIS "
+                f"yanit verdi (oran 0 + toplam = ana para); kayit UYDURULMADI")
+        return out
+
+    def _katilma(self, grid: RateGrid) -> list[RateQuote]:
+        out: list[RateQuote] = []
+        for amount in grid.deposit_amounts:
+            for fec, para in self.PARA:
+                for gun in grid.deposit_term_days:
+                    # FX'te 31 gün YOK (ölçüldü); istek atmak boş hata üretir.
+                    if para != "TRY" and gun < 91:
+                        continue
+                    if self.requests >= grid.max_requests:
+                        continue
+                    veri = self._post_json(self.KATILMA_URL, {
+                        "AccountType": 0, "Maturity": 1, "ProductGroup": 2,
+                        "Money": amount, "FEC": fec, "MaturityTerm": gun})
+                    if veri is None:
+                        continue
+                    d = (veri or {}).get("data") or {}
+                    brut = _num(d.get("grossProfitShareYearly"))
+                    if brut is None or brut <= 0:
+                        continue
+                    out.append(RateQuote(
+                        bank_slug=self.slug, kind=KIND_PROFIT_SHARE,
+                        product_name="Katılma Hesabı",
+                        amount=float(amount), term_days=int(gun),
+                        currency=para, gross_annual_rate=brut,
+                        source_url=self.KATILMA_URL, collected_at=utc_now_iso(),
+                        method=METHOD_RATE_API))
+        return out
+
+
 class VakifKatilimBlockedAdapter(RateAdapter):
     """Vakıf Katılım oranları robots.txt ile ERİŞİLEMEZ — bu bir kayıt tutucudur.
 
@@ -1064,6 +1447,8 @@ RATE_ADAPTERS: dict[str, type[RateAdapter]] = {
     EmlakKatilimAdapter.slug: EmlakKatilimAdapter,
     AlbarakaAdapter.slug: AlbarakaAdapter,
     KuveytTurkBrowserAdapter.slug: KuveytTurkBrowserAdapter,
+    ZiraatKatilimAdapter.slug: ZiraatKatilimAdapter,
+    HayatFinansAdapter.slug: HayatFinansAdapter,
 }
 
 
