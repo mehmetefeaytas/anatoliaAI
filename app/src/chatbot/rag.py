@@ -147,9 +147,26 @@ kadar sonra önce çok az ki ise ancak yani hem ya
 #   auto                 — VectorRetriever dene, olmazsa KeywordRetriever'a düş
 #                          (düşüş WARNING olarak loglanır).
 #   vector               — VectorRetriever ZORUNLU; yoksa hata yükselt.
+#   hibrit               — iki kolu RRF ile birleştirir (bkz.
+#                          `HybridRetriever`); vektör kolu yoksa GÖRÜNÜR
+#                          biçimde yalnız anahtar-kelimeye düşer.
 RETRIEVER_ENV = "RAG_RETRIEVER"
+
+#: Vektör aramasında hangi `belge_turu` değerlerine izin verilir
+#: (virgüllü). Boşsa süzgeç YOK — eski davranış.
+#:
+#: Ölçüldü (24 Ağu 2026): korpus 1.726 kampanya + 982 sözleşme içeriyor ama
+#: sözleşmeler çok uzun ve 51.556 gömme parçasının büyük kısmı onlardan
+#: geliyor. Jenerik hukuki metin her sorguya orta düzeyde benzediği için
+#: ham vektör aramasında öne çıkıyor — "en yüksek kâr payı oranı hangi
+#: bankada" sorgusu Genel Kredi Sözleşmesi pasajları döndürdü.
+BELGE_TURU_ENV = "RAG_BELGE_TURU"
+
+#: Süzgeç etkinken aday derinliği bu katsayıyla ayrıca çarpılır. Süzgeç,
+#: derinlik artmadan eklenemez: adayların hepsi elenip sonuç BOŞ dönerdi.
+SUZGEC_DERINLIK_KATI = 6
 DEFAULT_RETRIEVER_MODE = "keyword"
-RETRIEVER_MODES = ("keyword", "auto", "vector")
+RETRIEVER_MODES = ("keyword", "auto", "vector", "hibrit")
 
 
 @dataclass
@@ -500,6 +517,15 @@ class KeywordRetriever:
         return overlaps
 
 
+def _belge_turu_env() -> Optional[set[str]]:
+    """`RAG_BELGE_TURU` — boşsa `None` (süzgeç yok, eski davranış)."""
+    ham = os.environ.get(BELGE_TURU_ENV, "").strip()
+    if not ham:
+        return None
+    turler = {p.strip().lower() for p in ham.split(",") if p.strip()}
+    return turler or None
+
+
 class VectorRetrieverUnavailable(RuntimeError):
     """`VectorRetriever` kurulamadı: model yok ya da `embeddings` tablosu boş."""
 
@@ -543,6 +569,7 @@ class VectorRetriever:
     DEFAULT_MIN_SCORE = 0.5
 
     def __init__(self, repo: Repository, embedder=None, store=None,
+                 belge_turleri: Optional[set[str]] = None,
                  min_score: float = DEFAULT_MIN_SCORE,
                  require_embeddings: bool = True):
         # Tembel import: `src.chatbot.rag` modülünü import etmek, gömme
@@ -559,6 +586,8 @@ class VectorRetriever:
         if reason is not None:
             raise VectorRetrieverUnavailable(
                 f"Gömme modeli kullanılamıyor: {reason}")
+        self.belge_turleri = (belge_turleri if belge_turleri is not None
+                              else _belge_turu_env())
         if require_embeddings and self.store.count() == 0:
             raise VectorRetrieverUnavailable(
                 f"`embeddings` tablosu boş ({self.store.backend}). Önce "
@@ -599,9 +628,18 @@ class VectorRetriever:
         vector = self.embedder.encode([query])[0]
         # Parça bazında ara, kampanya bazında tekilleştir: aynı kampanyanın
         # üç parçası ilk üç sırayı kapatırsa kullanıcı tek bankayı görürdü.
-        hits = self.store.search(vector, k=max(k * 5, k))
+        derinlik = max(k * 5, k)
+        if self.belge_turleri:
+            derinlik *= SUZGEC_DERINLIK_KATI
+        hits = self.store.search(vector, k=derinlik)
         best: dict[int, Any] = {}
         for h in hits:
+            if self.belge_turleri is not None:
+                # Türü OLMAYAN kayıt da elenir: süzgeç açıkken "türü
+                # bilinmiyor" bir izin gerekçesi değildir.
+                tur = (self._meta.get(h.campaign_id) or {}).get("belge_turu")
+                if str(tur or "").lower() not in self.belge_turleri:
+                    continue
             if h.score < self.min_score:
                 continue
             if h.campaign_id in best and best[h.campaign_id].score >= h.score:
@@ -654,6 +692,101 @@ def resolve_retriever_mode(mode: Optional[str] = None) -> str:
     return value
 
 
+
+class HybridRetriever:
+    """Anahtar-kelime ve vektör sıralamalarını RRF ile birleştirir.
+
+    ## Niçin var — ölçülmüş zıtlık
+
+    Büyük erişim testi (24 Ağu 2026, 255 soru) iki soru tipinin ZIT yönde
+    sonuç verdiğini gösterdi:
+
+    | soru tipi | keyword | vector |
+    |---|---|---|
+    | özet-tabanlı sorgu (n=200) | **MRR 0,774** | MRR 0,559 |
+    | banka hedefleme (n=55) | 23/55 (%42) | **43/55 (%78)** |
+
+    Hiçbir tek kol iki tipte de iyi değil. Özet-tabanlı sorguların kelime
+    örtüşmesi yapay olarak yüksektir (sorgu belgenin kendi özetinden
+    türetiliyor) ve anahtar-kelime kolunu ödüllendirir; banka hedefleme gerçek
+    kullanıma daha yakındır ve orada vektör kolu belirgin öndedir.
+
+    ## Niçin RRF, niçin skor toplamı DEĞİL
+
+    İki kolun skorları aynı ölçekte değil: `KeywordRetriever` örtüşme sayısı
+    üretir (tamsayı, üst sınırsız), `VectorRetriever` kosinüs üretir (0–1).
+    Doğrudan toplamak, ölçeği büyük olan kolun ötekini EZMESİ demektir —
+    "birleşim" adı altında tek kol çalışırdı. RRF skoru değil SIRAYI kullanır
+    (`1/(RRF_K + rank)`) ve ölçekten bağımsızdır.
+
+    Aday derinliği `k`'dan büyük tutulur (`ADAY_KATI`): yalnız ilk `k`
+    alınırsa iki liste büyük ölçüde örtüşür ve birleştirmenin kazandıracağı
+    bir şey kalmaz.
+
+    ## Bir kol düşerse
+
+    Vektör kolu koşum ortasında düşebilir (gömme ucu, ağ). O durumda erişim
+    TÜMDEN durmaz: hata loglanır ve öteki kolun sıralaması kullanılır. Yarım
+    bir erişim, hiç erişim olmamasından iyidir — ve sessiz de değildir.
+    """
+
+    retriever_name = "hibrit"
+
+    #: RRF sabiti. 60, özgün RRF makalesinin değeri; küçük sıra farklarını
+    #: yumuşatır ve tek bir kolun ilk sırasının sonucu tek başına belirlemesini
+    #: engeller.
+    RRF_K = 60
+
+    #: Aday derinliği çarpanı — bkz. sınıf docstring'i.
+    ADAY_KATI = 4
+
+    def __init__(self, repo: Optional[Repository] = None, *, embedder=None,
+                 store=None, keyword=None, vector=None):
+        """`keyword`/`vector` doğrudan verilebilir — testler ağa çıkmasın diye."""
+        if keyword is None or vector is None:
+            if repo is None:
+                raise ValueError("repo ya da iki kol birlikte verilmeli")
+        self.keyword = keyword if keyword is not None else KeywordRetriever(repo)
+        self.vector = (vector if vector is not None
+                       else VectorRetriever(repo, embedder=embedder, store=store))
+
+    @property
+    def document_count(self) -> int:
+        return self.keyword.document_count
+
+    def _kol_sirasi(self, kol, query: str, derinlik: int) -> list[dict]:
+        try:
+            return list(kol.retrieve(query, k=derinlik))
+        except Exception as exc:
+            logger.warning("hibrit: %s kolu dustu (%s: %s) -> oteki kolla devam",
+                           getattr(kol, "retriever_name", type(kol).__name__),
+                           type(exc).__name__, exc)
+            return []
+
+    def retrieve(self, query: str, k: int = 3) -> list[dict]:
+        derinlik = max(k, k * self.ADAY_KATI)
+        listeler = [self._kol_sirasi(self.keyword, query, derinlik),
+                    self._kol_sirasi(self.vector, query, derinlik)]
+        skor: dict[Any, float] = {}
+        kayit: dict[Any, dict] = {}
+        for liste in listeler:
+            for sira, pasaj in enumerate(liste, start=1):
+                anahtar = pasaj.get("campaign_id")
+                if anahtar is None:
+                    continue
+                skor[anahtar] = skor.get(anahtar, 0.0) + 1.0 / (self.RRF_K + sira)
+                kayit.setdefault(anahtar, pasaj)
+        sirali = sorted(skor.items(), key=lambda x: -x[1])[:k]
+        cikti = []
+        for anahtar, rrf in sirali:
+            pasaj = dict(kayit[anahtar])
+            # `score` alanı RRF skorudur; kolların kendi skorları farklı
+            # ölçekte olduğu için burada anlamlı biçimde taşınamaz.
+            pasaj["score"] = rrf
+            cikti.append(pasaj)
+        return cikti
+
+
 def build_retriever(repo: Repository, mode: Optional[str] = None,
                     embedder=None, store=None):
     """Moda göre retriever kurar; `auto` modunda GÖRÜNÜR biçimde düşer.
@@ -664,6 +797,20 @@ def build_retriever(repo: Repository, mode: Optional[str] = None,
     resolved = resolve_retriever_mode(mode)
     if resolved == "keyword":
         return KeywordRetriever(repo)
+    if resolved == "hibrit":
+        try:
+            hibrit = HybridRetriever(repo, embedder=embedder, store=store)
+        except VectorRetrieverUnavailable as e:
+            # `vector` modunun aksine YÜKSELTMEZ: hibritin yarısı (anahtar
+            # kelime kolu) çalışıyor ve onu teslim etmek, hiç erişim
+            # vermemekten iyidir. Ama sessiz de değil — WARNING düşer.
+            logger.warning(
+                "hibrit istendi ama vektör kolu kurulamadı; yalnız "
+                "anahtar-kelime ile devam. Sebep: %s", e)
+            return KeywordRetriever(repo)
+        logger.info("HybridRetriever etkin (RRF, %s parça).",
+                    hibrit.vector.store.count())
+        return hibrit
     try:
         retriever = VectorRetriever(repo, embedder=embedder, store=store)
     except VectorRetrieverUnavailable as e:

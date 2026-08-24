@@ -23,6 +23,15 @@ olan mal veya hizmet üzerinden oluşan kâr payı oranı (şartname 5.5, s.9).
 İlgili diğer terimler: finansman maliyeti, katılım fonu, masrafsız finansman,
 avantajlı finansman (şartname 5.5).
 
+## Katılma hesabı ayağı (2026-08-24)
+
+Bu sayfa ağırlıkla **finansman** tarafındaki kâr payı oranını anlatıyor
+(murabaha kâr marjı). Katılma hesabı tarafı ayrı bir büyüklüktür ve verisi
+korpusta değil TKBB'nin haftalık tablolarındadır:
+[[tkbb-kar-payi-veri-seti]]. Orada **iki** oran vardır ve karıştırılmamaları
+gerekir — dağıtılan kâr payı (getiri) ile kâr paylaşım oranı (bölüşüm):
+[[katilma-orani-iki-ayri-buyukluk]].
+
 ## Sources
 - [[2026-06-16-teknofest-tyda-sartname-2-senaryo]] — 5.2 (s.7), 5.5 (s.9),
   5.7 (s.10)

@@ -77,7 +77,13 @@ def _db_kur(yol: Path, ozetler: list[str | None]) -> None:
     conn.executemany(
         "INSERT INTO campaigns (id, bank_id, raw_text, belge_turu, ozet) "
         "VALUES (?, 1, ?, 'kampanya', ?)",
-        [(i, f"Konut finansmanı kampanyası {i}. Kâr payı oranı %2,05.", oz)
+        # Kaynak metin, özetteki SAYIYI içermek zorunda: `ozetle()` artık bir
+        # sayı kapısı uyguluyor (`_sayi_ihlali`) ve özette geçip kaynakta
+        # bulunmayan finansal bir sayı özeti düşürüyor. Fikstür "500 TL"
+        # taşımadığı sürece bu dosyanın konusu (dil temizliği) hiç sınanmadan
+        # kapıda elenirdi.
+        [(i, f"Konut finansmanı kampanyası {i}. Kâr payı oranı %2,05. "
+             f"Müşteriye 500 TL nakit iade sağlanır.", oz)
          for i, oz in enumerate(ozetler, start=1)])
     conn.commit()
     conn.close()

@@ -17,10 +17,12 @@
 # yeniden üret, buradaki pini SBOM'la eşitle. Sessizce `>=`'ye dönmek
 # kapının varlık sebebini ortadan kaldırır.
 #
-# TEK İSTİSNA — bilerek `>=` kaldı: `sentence-transformers` bu ortamda kurulu
-# DEĞİL ve SBOM'da da yok, yani pinlenecek ölçülmüş bir sürüm yok. Kurulu
-# olmayan bir paket için sürüm yazmak, doğrulanmamış bir iddia olur.
-# Kurulduğunda SBOM'a girecek ve buraya da pinlenecek. (`black` aynı
+# `sentence-transformers` 2026-08-24'te KURULDU (yedek gömme yolu; birincil
+# yol artık EVREN'in `bge-m3-embed` ucu — src/rag/embedding.py) ve yukarıdaki
+# notun kendi talimatı gereği pinlendi: kurulu sürüm SBOM'a girdi, sürüm
+# buraya yazıldı. Artık istisna YOK.
+# `requirements-api.txt` onu hâlâ BİLEREK dışlıyor: torch + ağırlıklar ince
+# imajı GB'lara çıkarır ve §5.9 paket boyutu ölçümünü bozar. (`black` aynı
 # gerekçeyle `>=` taşıyordu; 2026-08-21'de hiç kullanılmadığı için tamamen
 # düşürüldü — bkz. geliştirme bölümü.)
 
@@ -67,7 +69,7 @@ transformers==5.14.1       # Apache-2.0 (BERTurk sınıflandırıcı)
 # bge-m3 ağırlıkları MIT (docs/model-license-audit.md §4 ✅).
 # Ağırlık yoksa kod AÇIK hata verir ve sistem KeywordRetriever ile çalışır —
 # sessizce boş sonuç dönmez.
-sentence-transformers>=2.7  # Apache-2.0 (bge-m3 embeddings)
+sentence-transformers==6.0.0  # Apache-2.0 (bge-m3 embeddings; yedek yol)
 
 # --- API / DB ---
 # NOT: teslim edilen API konteyneri bu dosyayı DEĞİL, requirements-api.txt'i

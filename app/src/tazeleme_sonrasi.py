@@ -174,7 +174,8 @@ def _rapor(degisen: int, eslesmeyen: list[dict[str, Any]],
 
 
 def alt_akis_kur(repo_ver: Callable[[], Any], *,
-                 unut: Optional[Callable[[list[int]], None]] = None
+                 unut: Optional[Callable[[list[int]], None]] = None,
+                 yeniden_ozetle: Optional[Callable[[], Any]] = None
                  ) -> Callable[[list[dict[str, Any]]], dict[str, Any]]:
     """`TazelemeYoneticisi(alt_akis=...)` için hazır geri çağrı üretir.
 
@@ -182,9 +183,41 @@ def alt_akis_kur(repo_ver: Callable[[], Any], *,
     aynı gerekçe: API'nin deposu uygulama ömrü boyunca yaşar ve iş parçacıkları
     arasında paylaşılır; sınıfı depoya sabitlemek testlerde sahte depo
     geçirmeyi imkânsız kılardı.
+
+    ## `yeniden_ozetle` — düşen özetin yerini doldurma
+
+    Bayat özeti düşürmek boşluğu DÜRÜST yapar ama DOLDURMAZ: panelde artık
+    yanlış bir cümle durmaz, ama hiçbir cümle de durmaz. Verilirse bu
+    çağrılabilir, özet düşürüldükten sonra bir özetleme işi başlatır.
+
+    Üç kural bilinçli:
+
+    1. **Yalnız özet DÜŞTÜYSE tetiklenir.** Hiç özet düşmediyse yapacak iş de
+       yoktur; boşuna bir iş başlatmak, jüri panelinde yapacak işi olmayan bir
+       koşumu "çalışıyor" diye göstermek olurdu.
+    2. **Bloklamaz.** Çağrılabilirin kendisi işi arka planda başlatmalıdır
+       (`OzetYoneticisi.baslat` öyle yapar). Bu geri çağrı ağ evresinden SONRA,
+       saniyenin altında koşan bir adımdır ve öyle kalmalı.
+    3. **Düşmesi tazelemeyi HATA'ya çevirmez.** Modül başlığındaki kuralın
+       aynısı: ham arşiv o noktada zaten doğru yazılmıştır ve onu "başarısız"
+       göstermek operatörü var olmayan bir veri kaybına inandırırdı. Hata
+       YUTULMAZ — rapora `yeniden_ozet_hata` olarak yazılır.
+
+    Tipik hata "şu anda başka bir özet işi koşuyor" (`OzetMesgul`) ya da "LLM
+    kapalı" (`LlmKapali`) olur; ikisi de operatörün görmesi gereken ama
+    tazelemeyi geçersiz kılmayan durumlardır.
     """
     def calistir(degisenler: list[dict[str, Any]]) -> dict[str, Any]:
-        return ozetleri_gecersizle(repo_ver(), degisenler, unut=unut)
+        rapor = ozetleri_gecersizle(repo_ver(), degisenler, unut=unut)
+        if yeniden_ozetle is None or not rapor.get("gecersizlenen_ozet"):
+            return rapor
+        try:
+            rapor["yeniden_ozet"] = yeniden_ozetle()
+        except Exception as exc:
+            rapor["yeniden_ozet_hata"] = f"{type(exc).__name__}: {exc}"
+            logger.warning("tazeleme sonrasi yeniden ozetleme baslatilamadi: %s",
+                           exc, exc_info=True)
+        return rapor
 
     return calistir
 

@@ -71,7 +71,17 @@ class TestKapiGeciriyor(unittest.TestCase):
     """Türkçenin gerçekten kullandığı hiçbir şey elenmemeli."""
 
     def _ozet(self, metin: str):
-        return O.ozetle(BELGE, SahteLLM(client=SahteIstemci({"ozet": metin})))
+        """Kaynak, özet metnini de KAPSAR — kasıtlı.
+
+        Bu sınıfın konusu ALFABE kapısıdır. Özet örnekleri `BELGE`de geçmeyen
+        sayılar taşıyor (`36 ay`, `1.500,00 ₺`) ve `ozetle()` artık bir sayı
+        kapısı uyguluyor (`_sayi_ihlali`): kaynak genişletilmezse bu özetler
+        alfabe kapısına hiç varmadan sayı kapısında elenir ve testin ölçtüğü
+        şey sessizce değişirdi. Kaynağa özet metnini eklemek yalnız SAYI
+        kapısını nötrleştirir, alfabe kapısını değil.
+        """
+        return O.ozetle(f"{BELGE} {metin}",
+                        SahteLLM(client=SahteIstemci({"ozet": metin})))
 
     def test_turkce_harfler_gecer(self) -> None:
         metin = "Çğıİöşü ÂÎÛ karakterleri taşıyan özet kabul edilir."

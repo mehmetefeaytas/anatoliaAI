@@ -30,3 +30,4 @@ veri).
 - [[on-premise-calistirilabilir-mimari]] — offline çalışma kararı
 - [[dashboard-ve-chatbot-arayuzu]] — demoda gösterilen arayüzler
 - [[teslim-ve-degerlendirme-rehberi]] — teslim sentezi
+- [[ssb-evren-cikarim-servisi]] — paylaşımlı uzak servis; bu kural gereği demo yolunda kullanılmaz

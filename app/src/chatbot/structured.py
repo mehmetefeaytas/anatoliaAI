@@ -62,8 +62,10 @@ bir iddia kurulmaz — damgasız belge "açık" demek değildir.
 
 from __future__ import annotations
 
+import logging
+import re
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from dataclasses import field as dc_field
 from typing import Any, Optional
 
@@ -633,6 +635,8 @@ _FIELD_LABEL = FIELD_DISPLAY
 
 
 #: Yüzde olarak okunan alanlar — değerin başına `%` gelir.
+logger = logging.getLogger(__name__)
+
 _ORAN_ALANLARI = frozenset({"kar_payi_orani", "indirim_orani"})
 
 #: Sayının birimi. Burada olmayan sayısal alan (ör. `alisveris_puani`) çıplak
@@ -1780,6 +1784,97 @@ def _agirlik_satiri() -> str:
     return " · ".join(parcalar)
 
 
+#: Yön niyetlerinin insan-okur karşılığı. `Route.intent` bu ikisinden biriyse
+#: kullanıcı AÇIK bir yön istemiştir.
+_YON_METNI = {"lowest": "en düşük", "highest": "en yüksek"}
+
+
+#: Ürün ailesi adının metindeki izleri. Kural tabanlı çok-ürünlülük tespiti
+#: bunları sayar. Liste EKSİK ve bu bilinçli olarak yazılı: korpusta 8 aile
+#: var, burada 6 tanesinin deseni duruyor ("Finansman" ve "Yeni Müşteri" çok
+#: genel ve her belgede eşleşirdi). Ölçülen sonuç: kural korpusta %9 çok
+#: ürünlü buluyor, EVREN ile yapılan 45 belgelik denetim %18 diyor — yani
+#: kural EVREN'in yarısını yakalıyor. Bu bir BAŞLANGIÇ, tam çözüm değil.
+_AILE_IZLERI = {
+    "Konut Finansmanı": r"konut finansman",
+    "Taşıt Finansmanı": r"taşıt finansman|tasit finansman|araç finansman",
+    "İhtiyaç Finansmanı": r"ihtiyaç finansman|ihtiyac finansman",
+    "Kart": r"kredi kart|bankakart|banka kart",
+    "Yatırım Ürünü": r"katılma hesab|katilma hesab|altın hesab|yatırım fon",
+    "Alışveriş Puanı": r"alışveriş puan|alisveris puan|puan kazan",
+}
+
+
+def _cok_urunlu_mu(metin: Optional[str]) -> bool:
+    """Belge birden fazla ürün ailesinden avantaj içeriyor mu?
+
+    ## Niçin gerekli — ölçülmüş yanlış kıyas
+
+    Belgeye TEK ürün ailesi atanıyor ve o belgeden çıkarılan TÜM alanlar o
+    aileye ait sayılıyor. Ölçüldü (kullanıcı raporu, 2026-08-24): `#761` bir
+    akademisyen paketi — konut, kart ve fatura avantajlarını birlikte içeriyor.
+    Konut finansmanı kıyasında *"Ek ödül: 200 TL"* satırı çıktı; o 200 TL
+    aslında "her bir fatura talimatı için 200 TL iade"ydi.
+
+    Aynı ailenin TEKRARI çok ürünlü yapmaz — sayılan şey FARKLI ailelerdir.
+    """
+    if not metin:
+        return False
+    bulunan = {ad for ad, desen in _AILE_IZLERI.items()
+               if re.search(desen, metin, re.IGNORECASE)}
+    return len(bulunan) >= 2
+
+
+def _cok_urunlu_uyarisi(kimlikler: list) -> Optional[str]:
+    """Çok ürünlü belgeden gelen satırlar için belirsizlik notu.
+
+    Belge kıyastan DIŞLANMAZ: `#761` gerçekten konut finansmanına değiniyor
+    (*"Konut Finansmanı'nda tanımlanmış 5 puan indirim"*) ve onu atmak bilgi
+    kaybı olur. Doğru davranış, alan atamasının belirsiz olduğunu SÖYLEMEK.
+    """
+    if not kimlikler:
+        return None
+    liste = ", ".join(f"#{k}" for k in kimlikler)
+    return (f"_Not: {liste} çok ürünlü belge(ler) — birden fazla ürün "
+            f"ailesinden avantaj içeriyor ve alanların hangi ürüne ait olduğu "
+            f"belge düzeyinde AYRIŞTIRILMIYOR. Bu satırlardaki değer başka bir "
+            f"ürünün avantajı olabilir; kaynağa bakmanız önerilir._")
+
+
+def _yon_uyarisi(intent: Optional[str], *, bilesige_dusuldu: bool
+                 ) -> Optional[str]:
+    """Kullanıcının istediği yön uygulanamadıysa bunu SÖYLEYEN not.
+
+    ## Niçin var — ölçülmüş sessizlik
+
+    Kullanıcı iki soruyu ayrı ayrı sordu (24 Ağu 2026) ve AYNI cevabı aldı:
+
+        "Hangi bankada en DÜŞÜK konut finansmanı var"
+        "Hangi bankada en YÜKSEK konut finansmanı var"
+
+    Sebep: birincil alan o ailede kıyaslanabilir değildi (Albaraka kâr payı
+    oranı DEĞERİNİ yayınlamıyor), sistem çok boyutlu bileşik skora düştü ve
+    bileşik skor TEK YÖNLÜDÜR (yüksek skor = daha avantajlı). Yön böylece
+    uygulanamadı.
+
+    Düşmenin kendisi doğru davranıştır; SÖYLENMEMESİ yanlıştır — kullanıcı
+    "en düşük" diye sordu ve yönünün yok sayıldığını bilmiyor. Bu modülün
+    kuralı zaten şu: kıyaslanamayan boyut sessizce düşmez, söylenir.
+
+    `None` döner: yön istenmemişse (liste/süzme niyeti) ya da yön gerçekten
+    uygulandıysa — o durumda uyarı gürültüdür.
+    """
+    if not bilesige_dusuldu:
+        return None
+    metin = _YON_METNI.get((intent or "").strip().lower())
+    if not metin:
+        return None
+    return (f"_Not: «{metin}» yönü bu ailede UYGULANAMADI — sorulan boyut "
+            f"kıyaslanabilir olmadığı için çok boyutlu bileşik skora düşüldü "
+            f"ve bileşik skor tek yönlüdür (yüksek skor = daha avantajlı). "
+            f"Tek bir boyutta {metin} sıralama için alan adını yazın._")
+
+
 def _ustunluk_basligi(tur: str, bilgi: dict) -> tuple[str, Optional[str]]:
     """(başlık satırı, bileşik skor notu). Sıralama yapılamadıysa SEBEBİ yazılır.
 
@@ -1841,7 +1936,11 @@ def _phrase_ustunluk_kiyasi(repo: Repository, r: Route
         if madde is None:
             continue
         satirlar.append(madde)
-        gosterilen.extend([x for x in grup if x.comparable][:2])
+        # Alan adı BURADA damgalanıyor: `gosterilen` boyut boyut
+        # dolduğu için satırın hangi alandan geldiği aşağı akmak
+        # zorunda (bkz. `RankRow.field`).
+        gosterilen.extend([replace(x, field=field)
+                           for x in grup if x.comparable][:2])
     if not satirlar:
         return None
 
@@ -1870,6 +1969,33 @@ def _phrase_ustunluk_kiyasi(repo: Repository, r: Route
     lines.append("_Alan söylenmediği için çok boyutlu bileşik skor esas "
                  "alındı; en ağırlıklı boyut **kâr payı oranı**. Tek bir "
                  "boyut isterseniz alan adını yazmanız yeterli._")
+    # Kullanıcının istediği YÖN uygulanamadıysa söylenir. Bu dal çok
+    # boyutlu bileşik skora düşmüş demektir ve bileşik skor tek yönlüdür;
+    # "en düşük" ile "en yüksek" burada AYNI cevabı verir. Ölçüldü
+    # (24 Ağu 2026): iki soru soruldu, aynı cevap geldi ve yönün yok
+    # sayıldığı hiç söylenmedi (bkz. `_yon_uyarisi`).
+    yon_notu = _yon_uyarisi(r.intent, bilesige_dusuldu=True)
+    if yon_notu:
+        lines.append(yon_notu)
+    # ÇOK ÜRÜNLÜ belge uyarısı: belgeye tek ürün ailesi atanıyor ve o belgeden
+    # çıkarılan tüm alanlar o aileye ait sayılıyor. Ölçüldü (#761, akademisyen
+    # paketi): konut kıyasında görünen "200 TL ödül" aslında fatura talimatı
+    # avantajıydı. Belge DIŞLANMAZ — gerçekten konut finansmanına değiniyor —
+    # ama belirsizlik söylenir (bkz. `_cok_urunlu_mu`).
+    try:
+        gosterilen_ids = {x.campaign_id for x in gosterilen
+                          if x.campaign_id is not None}
+        if gosterilen_ids:
+            isaretli = sorted(
+                int(kayit["id"]) for kayit in repo.all_campaigns()
+                if int(kayit["id"]) in gosterilen_ids
+                and _cok_urunlu_mu(kayit.get("clean_text")
+                                   or kayit.get("raw_text")))
+            uyari = _cok_urunlu_uyarisi(isaretli)
+            if uyari:
+                lines.append(uyari)
+    except Exception:            # uyarı bir EK'tir; cevabı düşürmemeli
+        logger.debug("cok urunlu belge kontrolu basarisiz", exc_info=True)
     return "\n".join(lines), gosterilen
 
 

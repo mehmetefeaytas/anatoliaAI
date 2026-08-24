@@ -16,6 +16,8 @@ Son güncelleme: 2026-08-21.
 > ~45 türev sayfa (entity/concept/decision) hiç oluşturulmamış. 2026-08-21'de
 > kırık wikilink'leri düz metne indirildi ve üçü `status: taslak` yapıldı;
 > türev sayfalar hâlâ yazılmayı bekliyor. Silinmediler (hard rule #3).
+- [[2026-08-24-ssb-evren-cikarim-servisi]] — SSB EVREN çıkarım servisi: duyuru + canlı ölçüm (10 model, 8×H200)
+- [[2026-08-24-tkbb-kar-payi-veri-seti]] — TKBB kâr payı: iki uç, 210.474 tarihsel + 245 güncel kayıt
 
 ## Entities
 - [[teknofest]] — yarışma organizasyonu
@@ -30,6 +32,8 @@ Son güncelleme: 2026-08-21.
 - [[klasik-banka-korpusu]] — `data/raw-classic`, klasik banka korpusu — **YARIŞMA
   KAPSAMI DIŞI**, yalnızca gümüş eğitim verisi
 - [[katilim-bankalari]] — hedef kuruluşlar
+- [[ssb-evren-cikarim-servisi]] — SSB'nin tüm takımlara açtığı ücretsiz çıkarım servisi
+- [[tkbb-kar-payi-veri-seti]] — TKBB'nin katılma hesabı oranı uçları (tarihsel arşiv + güncel hafta)
 
 ## Concepts
 - [[katilim-bankaciligi]] — alan
@@ -68,7 +72,12 @@ Son güncelleme: 2026-08-21.
   LLM ajanlarının yazma yetkisi yok
 - [[juri-sunumu-bes-slayt]] — şartname §10 4 dk verir; 15 slaytlık sunum 5
   slaytlık yönetici seviyesi sunumla değiştirildi, eskisi arşivlendi
+- [[evren-opsiyonel-kademe-olarak-entegrasyon]] — EVREN bağımlılık değil, kademe (fallback)
+- [[gomme-yolu-evren-ile-acildi]] — gömme yolu EVREN ile açıldı, yerel yedek
+- [[hibrit-erisim-rrf-ile-birlestirilir]] — erişimde RRF birleşimi; varsayılan değişmedi
+- [[urun-baglami-alan-duzeyinde-tasinmali]] — çok ürünlü belge uyarısı; alan-başına aile açık
 
+- [[katilma-orani-iki-ayri-buyukluk]] — getiri (%42) ile pay (%90) aynı kolonda yarışmaz
 ## Sorunlar
 - [[standart-veri-formati-eksikligi]] — standart format yok
 - [[katilim-bankaciligi-terminoloji-farkliligi]] — terminoloji farkı
@@ -78,6 +87,11 @@ Son güncelleme: 2026-08-21.
 - [[turkce-buyuk-harf-yerel-duyarliligi]] — `text-transform:uppercase` yerel-duyarlı; `lang` yoksa noktasız-İ hataları («ÜRETIMDE»), çözüm `kok.lang = "tr"`
 - [[sunum-slayt-sigdirma-olcek-cokusu]] — taşan slayt tek katsayıyla 0,75'e küçülüyordu; içerik 1080px'e sığana kadar sıkıştırıldı
 - [[next-dev-proxy-econnreset-yanlis-alarmi]] — «Sunucu 500» ürün hatası değil, Next dev proxy'sinin ölü keep-alive soketi (`ECONNRESET`); yanlış alarm
+- [[pazarlik-http-200-kisit-uygulanmadi]] — HTTP 200 ≠ kısıt uygulandı (sessiz hata)
+- [[ozet-sayisal-degeri-denetleyen-kapi-yoktu]] — özetteki sayı kaynakta yoktu; kapı eklendi
+- [[kiyas-cevabinda-iki-gosterim-hatasi]] — vade %120 basılıyordu; yön sessizce yok sayılıyordu
+- [[terim-sorusuna-sozlukten-cevap-verilmiyordu]] — 101 terimlik sözlük vardı, chatbot bakmıyordu
+- [[katilma-hesabi-orani-korpusta-yoktu]] — katılma getirisi kampanya metninde yok; TKBB'den geldi
 
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller

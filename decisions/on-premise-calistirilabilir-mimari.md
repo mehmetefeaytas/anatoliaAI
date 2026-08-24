@@ -30,3 +30,4 @@ bağımlılık, kurum sistemlerine entegre edilebilir mimari (s.15).
 - [[on-premise-uygulanabilirlik]] — kavram
 - [[acik-kaynak-yaklasimi]] — birlikte kısıt
 - [[teknik-cozum-mimarisi]] — mimari sentez
+- [[evren-opsiyonel-kademe-olarak-entegrasyon]] — bu kararı korumak için uzak çıkarım servisi bağımlılık değil kademe olarak kuruldu

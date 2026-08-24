@@ -63,8 +63,12 @@ logging.getLogger(_EXTRACTOR_LOGGER).setLevel(logging.CRITICAL)
 # --------------------------------------------------------------------------- #
 def detect_mode(payload: dict) -> str:
     """İstek gövdesinden hangi yapılandırılmış-çıktı modunun kullanıldığını okur."""
+    if "tools" in payload:
+        return "tool_calling"
     if "response_format" in payload:
-        return "json_schema"
+        # json_object da `response_format` kullanır; ayrım `type`ta.
+        tur = (payload["response_format"] or {}).get("type")
+        return "json_object" if tur == "json_object" else "json_schema"
     if "structured_outputs" in payload:
         return "structured_outputs"
     if "guided_json" in payload:

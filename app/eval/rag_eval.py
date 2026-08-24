@@ -430,6 +430,9 @@ def build_arg_parser() -> argparse.ArgumentParser:
     ap.add_argument("-k", type=int, default=5, help="ilk k sonuç (varsayılan 5)")
     ap.add_argument("--kiyas", action="store_true",
                     help="ikili örtüşme karşısında BM25'i de ölç")
+    ap.add_argument("--vektor", action="store_true",
+                    help="VectorRetriever'i de ölç (dolu `embeddings` "
+                         "tablosu + gömme modeli gerekir)")
     ap.add_argument("--json", metavar="DOSYA", help="sonucu JSON olarak yaz")
     return ap
 
@@ -458,6 +461,23 @@ def main(argv: list[str] | None = None) -> int:
         print("\n" + rapor(bs, bc, args.k, "bm25 (ÖLÇÜM — üretimde DEĞİL)",
                            belge))
         ciktilar.append(as_dict(bs, bc, args.k, "bm25"))
+
+    # Vektör kolu BİLEREK opsiyonel ve üretim yolundan AYRI raporlanıyor:
+    # `RAG_RETRIEVER` varsayılanı `keyword` ve o karar ölçülmeden
+    # değiştirilmemeli (src/chatbot/rag.py). Bu bayrak tam o ölçümü mümkün
+    # kılar — kolu açmaz, yalnız kıyaslar.
+    if args.vektor:
+        try:
+            from src.chatbot.rag import VectorRetriever
+            vek = VectorRetriever(repo)
+        except Exception as exc:                     # model yok / tablo boş
+            print(f"\nVEKTÖR KOLU ÖLÇÜLEMEDİ: {type(exc).__name__}: {exc}",
+                  file=sys.stderr)
+        else:
+            vs, vc = olc(repo, vek, args.k)
+            print("\n" + rapor(vs, vc, args.k,
+                               "vector (ÖLÇÜM — üretimde DEĞİL)", belge))
+            ciktilar.append(as_dict(vs, vc, args.k, "vector"))
 
     if args.json:
         Path(args.json).write_text(

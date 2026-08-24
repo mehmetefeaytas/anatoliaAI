@@ -31,6 +31,10 @@ from src.extraction.llm import clients
 class _Yedek:
     """İç taşımayı geçici olarak değiştirir; testler birbirini kirletmesin."""
 
+    # Taklit imzası `(u, p, t, *_)`: gerçek `_urllib_transport_ic`
+    # opsiyonel bir `api_key` argümanı da alıyor (uzak uçlar için
+    # `Bearer` başlığı — bkz. clients.bearer_transport). Buranın konusu
+    # duvar-saati sınırı olduğu için fazlalık argüman yutulur.
     def __init__(self, yeni):
         self.yeni = yeni
 
@@ -48,7 +52,7 @@ class TestDuvarSaatiSiniri(unittest.TestCase):
 
     def test_asili_cagri_SINIRDA_kesilir(self) -> None:
         """Soket zaman aşımı tetiklenmese bile çağrı geri dönmeli."""
-        with _Yedek(lambda u, p, t: time.sleep(30)):
+        with _Yedek(lambda u, p, t, *_: time.sleep(30)):
             t0 = time.time()
             with self.assertRaises(clients.LLMTransportError) as ctx:
                 clients._urllib_transport("http://ornek.invalid/x", {}, 0.4)
@@ -58,14 +62,14 @@ class TestDuvarSaatiSiniri(unittest.TestCase):
         self.assertIn("duvar-saati", str(ctx.exception))
 
     def test_normal_cagri_ETKILENMEZ(self) -> None:
-        with _Yedek(lambda u, p, t: {"ok": True}):
+        with _Yedek(lambda u, p, t, *_: {"ok": True}):
             self.assertEqual(
                 clients._urllib_transport("http://ornek.invalid/x", {}, 5.0),
                 {"ok": True})
 
     def test_hata_TURU_KORUNARAK_yayilir(self) -> None:
         """Sarmalayıcı hata sınıfını değiştirmemeli; üst katman ona bakıyor."""
-        def patla(u, p, t):
+        def patla(u, p, t, *_):
             raise clients.LLMHTTPError(500, "govde", "http://ornek.invalid/x")
 
         with _Yedek(patla):
@@ -79,7 +83,7 @@ class TestDuvarSaatiSiniri(unittest.TestCase):
         os.environ["LLM_DEADLINE_CARPANI"] = "0"
         try:
             self.assertEqual(clients._deadline(100.0), 0.0)
-            with _Yedek(lambda u, p, t: {"ok": True}):
+            with _Yedek(lambda u, p, t, *_: {"ok": True}):
                 self.assertEqual(
                     clients._urllib_transport("http://ornek.invalid/x", {}, 1.0),
                     {"ok": True})

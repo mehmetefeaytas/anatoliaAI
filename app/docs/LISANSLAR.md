@@ -2,11 +2,11 @@
 
 ## Künye
 
-- **Üretim tarihi:** 2026-08-15 21:14 +03
+- **Üretim tarihi:** 2026-08-24 12:25 +03
 - **Üreten komut:** `make lisanslar`
   (`scripts/lisans_envanteri.py` → `.venv/bin/python -m piplicenses --format=json --with-urls --with-authors`)
-- **Yorumlayıcı:** Python 3.14.6 (`/Users/mehmetefeaytas/anatoliaaI/app/.venv/bin/python`)
-- **Kapsam:** bu koşumun `.venv` envanteri — **91 paket**. Kurulu ortamda ne varsa o listelenmiştir; `requirements.txt`'te ilan edilen ama kurulu olmayan paketler burada YOKTUR, kurulu olup ilan edilmeyenler ise VARDIR.
+- **Yorumlayıcı:** Python 3.14.7 (`/Users/mehmetefeaytas/anatoliaaI/app/.venv/bin/python`)
+- **Kapsam:** bu koşumun `.venv` envanteri — **92 paket**. Kurulu ortamda ne varsa o listelenmiştir; `requirements.txt`'te ilan edilen ama kurulu olmayan paketler burada YOKTUR, kurulu olup ilan edilmeyenler ise VARDIR.
 - **Makine-okur eşi:** [`sbom.json`](sbom.json) — CycloneDX 1.6, `make sbom` ile üretilir.
 - **Kapı:** [`../scripts/lisans_kapisi.py`](../scripts/lisans_kapisi.py), `make lisans-kapisi` ile koşar.
 
@@ -20,11 +20,11 @@ Somut sonucu: `>=` pini bir sürüm aralığı açar ve **lisans sürümle deği
 
 | Hüküm | Paket sayısı |
 |---|---:|
-| ✅ izinli | 85 |
+| ✅ izinli | 86 |
 | ⚠️ listede yok | 3 |
 | ❓ bilinmiyor | 0 |
 | ⛔ yasak | 3 |
-| **toplam** | **91** |
+| **toplam** | **92** |
 
 Bunlardan **7** paket [`config/lisans_istisnalari.yaml`](../config/lisans_istisnalari.yaml) içinde **gerekçeli istisna** olarak kayıtlıdır; kapı onları bilerek geçirir. Gerekçesiz istisna kabul edilmez.
 
@@ -146,10 +146,11 @@ Yani SBOM, bu belgenin **üst kümesidir**. Lisans kapısı bilerek SBOM'u okur:
 | `rfc3987-syntax` | 1.1.0 | MIT | ✅ izinli | <https://github.com/willynilly/rfc3987-syntax> |
 | `rich` | 15.0.0 | MIT License | ✅ izinli | <https://github.com/Textualize/rich> |
 | `rpds-py` | 2026.6.3 | MIT | ✅ izinli | <https://github.com/crate-py/rpds> |
-| `ruff` | 0.16.1 | MIT | ✅ izinli | <https://docs.astral.sh/ruff> |
+| `ruff` | 0.16.3 | MIT | ✅ izinli | <https://docs.astral.sh/ruff> |
 | `safetensors` | 0.8.0 | Apache Software License | ✅ izinli | <https://github.com/huggingface/safetensors> |
 | `scikit-learn` | 1.9.0 | BSD-3-Clause | ✅ izinli | <https://scikit-learn.org> |
 | `scipy` | 1.18.0 | BSD License | ✅ izinli | <https://scipy.org/> |
+| `sentence-transformers` | 6.0.0 | Apache-2.0 | ✅ izinli | <https://www.SBERT.net> |
 | `shellingham` | 1.5.4 | ISC License (ISCL) | ✅ izinli | <https://github.com/sarugaku/shellingham> |
 | `six` | 1.17.0 | MIT License | ✅ izinli | <https://github.com/benjaminp/six> |
 | `sortedcontainers` | 2.4.0 | Apache Software License | ✅ izinli | <http://www.grantjenks.com/docs/sortedcontainers/> |

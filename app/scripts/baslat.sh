@@ -37,7 +37,16 @@ PY="$KOK/.venv/bin/python"
 CALISMA="$KOK/.calisma"          # log + pid; `.gitignore`'da — türetilmiş, izlenmez
 API_PORT="${API_PORT:-8000}"
 WEB_PORT="${WEB_PORT:-3000}"
-LLM="${LLM:-1}"                  # 1 = yerel model açık (varsayılan), 0 = kural-only
+LLM="${LLM:-1}"                  # 1 = model açık (varsayılan), 0 = kural-only
+                                 # yerel = Ollama'yı ZORLA, evren = EVREN'i ZORLA
+
+# Hangi LLM kademesi? `LLM=1` iken anahtar VARSA uzak EVREN kademesi seçilir ve
+# yerel Ollama hiç başlatılmaz — 4,7 GB'lık ağırlığı ve ~6 sn model yükleme
+# beklemesini gerektirmez. Anahtar yoksa eski davranış (Ollama) korunur.
+#
+# Seçim ÖRTÜK BIRAKILMAZ: hangisi seçildiği ekrana basılır. "LLM=1 dedim,
+# Ollama sanıyordum" durumu, sessizce kural-only'ye düşmek kadar pahalıdır.
+# Zorlamak için: LLM=yerel (Ollama) veya LLM=evren (anahtar yoksa hata).
 
 # Model etiketi `.env.example:56` ile BİREBİR aynı olmalı. Ollama kısaltma
 # çözmez: `qwen2.5:7b` kurulu değildir ve "model not found" verir. Bu ağırlık
@@ -53,6 +62,19 @@ mkdir -p "$CALISMA"
 kirmizi() { printf '\033[31m%s\033[0m\n' "$*" >&2; }
 yesil()   { printf '\033[32m%s\033[0m\n' "$*"; }
 soluk()   { printf '\033[2m%s\033[0m\n' "$*"; }
+
+LLM_KADEME=""
+case "$LLM" in
+  0)     LLM_KADEME="kapali" ;;
+  yerel) LLM_KADEME="ollama" ;;
+  evren)
+    [ -n "${EVREN_API_KEY:-}" ] || { kirmizi "LLM=evren istendi ama EVREN_API_KEY tanımlı değil.
+  çözüm: export EVREN_API_KEY=sk-evren-...   (repoya YAZILMAZ, bkz. docs/evren-servisi.md)
+  ya da yerel modelle koş: LLM=yerel make baslat"; exit 1; }
+    LLM_KADEME="evren" ;;
+  *)     if [ -n "${EVREN_API_KEY:-}" ]; then LLM_KADEME="evren"
+         else LLM_KADEME="ollama"; fi ;;
+esac
 
 # Komutu YENİ OTURUMDA (`setsid`) başlatır. İki işi birden yapar:
 #
@@ -110,7 +132,7 @@ fi
 # LLM=0 ise bu bölüm tümüyle atlanır: kural-only yol hiçbir ağırlığa bağlı
 # değildir ve öyle kalmalıdır.
 
-if [ "$LLM" = "1" ]; then
+if [ "$LLM_KADEME" = "ollama" ]; then
   command -v ollama >/dev/null 2>&1 || { kirmizi "ollama kurulu değil.
   çözüm: brew install ollama   —   ya da modelsiz koş: LLM=0 make baslat"; exit 1; }
 
@@ -188,9 +210,43 @@ API_ORTAM=(
   "DATABASE_PATH=data/demo.db"
   "BANKS_CONFIG=config/banks.yaml"
   "RAW_DIR=data/raw"
-  "RAG_RETRIEVER=keyword"
+  # Varsayılan bilerek `keyword`: vektör yolu ölçülmeden demoya
+  # konmaz (bkz. src/chatbot/rag.py). Ölçüm için: RAG=auto make baslat
+  "RAG_RETRIEVER=${RAG:-keyword}"
 )
-if [ "$LLM" = "1" ]; then
+if [ "$LLM_KADEME" = "evren" ]; then
+  # Uzak kademe: yerel ağırlık yok, model yükleme beklemesi yok. Ollama
+  # daemon'u AYAKTA ise ikinci kademe olarak zincire eklenir; değilse tek
+  # kademe kalır ve düştüğünde sistem kural-only'ye iner (hiçbir durumda
+  # EVREN'e BAĞLI değildir — şartname §5.9).
+  EVREN_ZINCIR="evren"
+  if curl -sf -m 2 "$OLLAMA_URL/api/tags" >/dev/null 2>&1; then
+    EVREN_ZINCIR="evren,ollama"
+    soluk "LLM kademesi: EVREN (yerel Ollama yedek olarak ayakta)"
+  else
+    soluk "LLM kademesi: EVREN (yerel yedek yok — düşerse kural-only)"
+  fi
+  LLM_BACKEND_OZET="$EVREN_ZINCIR"
+  # Model adı BURADA kabuk değişkenine de yazılıyor: aşağıdaki özet satırı
+  # (`LLM  EVREN uzak kademe (...)`) onu okuyor ve yalnız `API_ORTAM` dizisine
+  # yazıldığında `set -u` altında "unbound variable" ile düşüyordu — servisler
+  # ayakta olduğu hâlde betik hata koduyla çıkıyordu (ölçüldü, 2026-08-24).
+  EVREN_MODEL="${EVREN_MODEL:-llm-large}"
+  API_ORTAM+=(
+    "LLM_BACKEND=$EVREN_ZINCIR"
+    "EVREN_API_KEY=$EVREN_API_KEY"
+    "EVREN_URL=${EVREN_URL:-https://evren-llmapi.ssyz.org.tr}"
+    "EVREN_MODEL=$EVREN_MODEL"
+    "OLLAMA_URL=$OLLAMA_URL"
+    "OLLAMA_MODEL=$OLLAMA_MODEL"
+    "OLLAMA_KEEP_ALIVE=30m"
+    "OLLAMA_NUM_CTX=8192"
+    # Gömme: EVREN'in `bge-m3-embed` ucu yerel bge-m3 ile AYNI model (1024
+    # boyut), bu yüzden kademe vektör uzayını bozmaz (src/rag/embedding.py).
+    "EMBEDDING_BACKEND=evren,yerel"
+  )
+elif [ "$LLM_KADEME" = "ollama" ]; then
+  soluk "LLM kademesi: yerel Ollama ($OLLAMA_MODEL)"
   API_ORTAM+=(
     "LLM_BACKEND=ollama"
     "OLLAMA_URL=$OLLAMA_URL"
@@ -203,6 +259,7 @@ if [ "$LLM" = "1" ]; then
     "OLLAMA_NUM_CTX=8192"
   )
 else
+  soluk "LLM kademesi: KAPALI (kural-only)"
   API_ORTAM+=("LLM_BACKEND=")
 fi
 
@@ -269,7 +326,15 @@ echo
 yesil "Anatolia AI hazır"
 echo "  panel        http://localhost:$WEB_PORT"
 echo "  API          http://localhost:$API_PORT        (dokümanlar: /docs)"
-echo "  yerel model  $LLM_DURUM$([ "$LLM_DURUM" = "açık" ] && echo "  ($OLLAMA_MODEL)")"
+# Özet satırı KADEME farkındadır. Eskiden koşulsuz "yerel model" yazıyordu
+# ve EVREN kademesi seçiliyken bile `$OLLAMA_MODEL` basıyordu — yani ekran
+# çalışmayan bir modeli gösteriyordu. Bu betiğin başındaki uyarının aynısı:
+# "yerel model kapalı dedi ama LLM aslında AÇILMIŞTI".
+case "$LLM_KADEME" in
+  evren)  echo "  LLM          EVREN uzak kademe ($EVREN_MODEL)$([ "${LLM_BACKEND_OZET:-}" = "evren,ollama" ] && echo " · yedek: $OLLAMA_MODEL")" ;;
+  ollama) echo "  yerel model  $LLM_DURUM$([ "$LLM_DURUM" = "açık" ] && echo "  ($OLLAMA_MODEL)")" ;;
+  *)      echo "  LLM          kapalı (kural-only)" ;;
+esac
 echo "  depo         $DEPO"
 echo "  korpus       $KORPUS"
 if [ -n "$PROXY" ]; then

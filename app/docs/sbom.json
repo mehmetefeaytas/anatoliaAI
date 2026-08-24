@@ -2696,6 +2696,34 @@
       "version": "1.18.0"
     },
     {
+      "bom-ref": "sentence-transformers==6.0.0",
+      "description": "Embeddings, Retrieval, and Reranking",
+      "externalReferences": [
+        {
+          "comment": "from packaging metadata Project-URL: Repository",
+          "type": "vcs",
+          "url": "https://github.com/huggingface/sentence-transformers/"
+        },
+        {
+          "comment": "from packaging metadata Project-URL: Homepage",
+          "type": "website",
+          "url": "https://www.SBERT.net"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "acknowledgement": "declared",
+            "id": "Apache-2.0"
+          }
+        }
+      ],
+      "name": "sentence-transformers",
+      "purl": "pkg:pypi/sentence-transformers@6.0.0",
+      "type": "library",
+      "version": "6.0.0"
+    },
+    {
       "bom-ref": "setuptools==83.0.0",
       "description": "Most extensible Python build backend with support for C/C++ extension modules",
       "externalReferences": [
@@ -3035,6 +3063,20 @@
         }
       ],
       "name": "transformers",
+      "properties": [
+        {
+          "name": "cdx:python:package:required-extra",
+          "value": "audio"
+        },
+        {
+          "name": "cdx:python:package:required-extra",
+          "value": "video"
+        },
+        {
+          "name": "cdx:python:package:required-extra",
+          "value": "vision"
+        }
+      ],
       "purl": "pkg:pypi/transformers@5.14.1",
       "type": "library",
       "version": "5.14.1"
@@ -3489,7 +3531,7 @@
         "numpy==2.5.1",
         "pytest==9.1.1",
         "requests==2.34.2",
-        "ruff==0.16.1",
+        "ruff==0.16.3",
         "tqdm==4.70.0",
         "urllib3==2.7.0"
       ],
@@ -3544,7 +3586,7 @@
         "packaging==26.3",
         "pytest==9.1.1",
         "requests==2.34.2",
-        "ruff==0.16.1",
+        "ruff==0.16.3",
         "safetensors==0.8.0",
         "torch==2.13.0",
         "tqdm==4.70.0",
@@ -3556,7 +3598,7 @@
     {
       "dependsOn": [
         "pytest==9.1.1",
-        "ruff==0.16.1"
+        "ruff==0.16.3"
       ],
       "ref": "idna==3.18"
     },
@@ -3609,7 +3651,7 @@
       "dependsOn": [
         "boolean.py==5.0",
         "pytest==9.1.1",
-        "ruff==0.16.1"
+        "ruff==0.16.3"
       ],
       "ref": "license-expression==30.4.4"
     },
@@ -3673,7 +3715,7 @@
     {
       "dependsOn": [
         "prettytable==3.18.0",
-        "ruff==0.16.1"
+        "ruff==0.16.3"
       ],
       "ref": "pip-licenses==5.5.5"
     },
@@ -3828,7 +3870,7 @@
       "ref": "rpds-py==2026.6.3"
     },
     {
-      "ref": "ruff==0.16.1"
+      "ref": "ruff==0.16.3"
     },
     {
       "dependsOn": [
@@ -3836,7 +3878,7 @@
         "huggingface_hub==1.27.0",
         "numpy==2.5.1",
         "pytest==9.1.1",
-        "ruff==0.16.1",
+        "ruff==0.16.3",
         "torch==2.13.0"
       ],
       "ref": "safetensors==0.8.0"
@@ -3848,7 +3890,7 @@
         "numpy==2.5.1",
         "pytest==9.1.1",
         "rich==15.0.0",
-        "ruff==0.16.1",
+        "ruff==0.16.3",
         "scipy==1.18.0",
         "threadpoolctl==3.6.0"
       ],
@@ -3860,7 +3902,7 @@
         "mpmath==1.3.0",
         "numpy==2.5.1",
         "pytest==9.1.1",
-        "ruff==0.16.1",
+        "ruff==0.16.3",
         "threadpoolctl==3.6.0",
         "typing_extensions==4.16.0"
       ],
@@ -3868,11 +3910,26 @@
     },
     {
       "dependsOn": [
+        "huggingface_hub==1.27.0",
+        "numpy==2.5.1",
+        "pytest==9.1.1",
+        "scikit-learn==1.9.0",
+        "scipy==1.18.0",
+        "tokenizers==0.22.2",
+        "torch==2.13.0",
+        "tqdm==4.70.0",
+        "transformers==5.14.1",
+        "typing_extensions==4.16.0"
+      ],
+      "ref": "sentence-transformers==6.0.0"
+    },
+    {
+      "dependsOn": [
         "filelock==3.32.2",
         "packaging==26.3",
         "pip==26.1.2",
         "pytest==9.1.1",
-        "ruff==0.16.1"
+        "ruff==0.16.3"
       ],
       "ref": "setuptools==83.0.0"
     },
@@ -3914,7 +3971,7 @@
         "numpy==2.5.1",
         "pytest==9.1.1",
         "requests==2.34.2",
-        "ruff==0.16.1"
+        "ruff==0.16.3"
       ],
       "ref": "tokenizers==0.22.2"
     },
@@ -3951,7 +4008,7 @@
         "pytest==9.1.1",
         "regex==2026.7.19",
         "rich==15.0.0",
-        "ruff==0.16.1",
+        "ruff==0.16.3",
         "safetensors==0.8.0",
         "scikit-learn==1.9.0",
         "starlette==1.3.1",
@@ -4007,7 +4064,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2026-08-16T11:31:43.997250+00:00",
+    "timestamp": "2026-08-24T09:25:30.541609+00:00",
     "tools": {
       "components": [
         {
@@ -4111,7 +4168,7 @@
       ]
     }
   },
-  "serialNumber": "urn:uuid:fc54786a-2743-4733-9d61-aadbdac7331b",
+  "serialNumber": "urn:uuid:f2b8d4dd-16ef-4a45-aac4-85e1ce5eda78",
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.6.schema.json",
   "bomFormat": "CycloneDX",

@@ -1067,17 +1067,35 @@ def screen_input(question: str) -> InputScreening:
 
 
 def guard_output(body: str, scr: InputScreening, *, has_sources: bool,
-                 has_rate: bool = False) -> tuple[str, SafetyReport]:
+                 has_rate: bool = False,
+                 alinti: bool = False) -> tuple[str, SafetyReport]:
     """Yanıtı son kontrolden geçirir ve nihai metni kurar.
 
     Adımlar:
       1. Kaynak yoksa (KAPI 5) gövde dürüst çekimserlik metniyle değiştirilir.
-      2. Gövde sanitize edilir (KAPI 1 post-filter) — yasak terim yeniden yazılır.
+      2. Gövde sanitize edilir (KAPI 1 post-filter) — yasak terim yeniden
+         yazılır. `alinti=True` ise bu adım ATLANIR (aşağıya bakın).
       3. Düzeltme notları başa, feragatnameler sona eklenir.
       4. Oran içeren yanıtlara garanti ayrımı notu eklenir (KAPI 4).
 
     Notlar ve feragatnameler sanitize'dan SONRA eklenir; bunlar denetlenmiş
     sabit şablonlardır ve tasarımı gereği yasak terim içermezler.
+
+    ## `alinti` — sözlük alıntısı yeniden YAZILMAZ
+
+    Post-filter LLM üretimi için var: model yasak terim üretirse düzeltilir.
+    Ama terminoloji yolunun gövdesi LLM üretimi DEĞİL, kendi terim
+    sözlüğümüzden bir ALINTIDIR ve kaynağı metnin içinde yazılıdır.
+
+    Ölçüldü (2026-08-24): `Riba` kaydının `resmi_tr` alanı **Faiz**tir —
+    riba'nın Türkçe karşılığı gerçekten faizdir ve katılım finansının
+    YASAKLADIĞI şeydir. Post-filter onu "Kâr payı" yapıyor ve tanım
+    tersine dönüyordu: yasak olan şey meşru olanla değiştirilmiş oluyordu.
+    Alıntıyı yeniden yazmak kaynağı bozmaktır.
+
+    `alinti=True` YALNIZ bizim kontrolümüzdeki, denetlenmiş veri
+    kaynaklarından gelen gövdeler için kullanılır — model çıktısı için
+    ASLA.
     """
     report = SafetyReport(gates=list(scr.gates), notices=list(scr.notices))
 
@@ -1091,7 +1109,13 @@ def guard_output(body: str, scr: InputScreening, *, has_sources: bool,
         if GATE_ABSTENTION not in report.gates:
             report.gates.append(GATE_ABSTENTION)
 
-    clean, violations = sanitize_output(body)
+    if alinti:
+        # Alıntı yeniden YAZILMAZ (gerekçe docstring'de). Uyarılar yine
+        # hesaplanıyor: operatör sözlükte bir sorun varsa görmeli — ama
+        # metin değiştirilmiyor.
+        clean, violations = body, []
+    else:
+        clean, violations = sanitize_output(body)
     report.violations = violations
     report.warnings = soft_term_warnings(body)
 

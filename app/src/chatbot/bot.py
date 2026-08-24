@@ -53,6 +53,7 @@ from . import rag, safety, structured
 # Buradan yeniden dışa veriliyor: `sayilari_ayikla` bu modülden içe
 # aktarılıyordu (testler dâhil) ve o yol kırılmamalı.
 from .dayanak import sayilari_ayikla
+from .katilma_orani import katilma_cevabi
 from .router import (
     BANK_DISPLAY,
     FIELD_DISPLAY,
@@ -61,6 +62,7 @@ from .router import (
     Route,
     route,
 )
+from .terim_cevabi import terim_cevabi
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +71,7 @@ logger = logging.getLogger(__name__)
 class ChatAnswer:
     text: str
     handler: str           # 'structured' | 'rag' | 'safety'
+                           # | 'katalog' | 'terminoloji' | 'katilma_orani'
     field: Optional[str]
     sources: list          # kaynak satırları / pasajlar (açıklanabilirlik)
     # Geriye uyumlu ek alanlar: /chat uç noktası bunları görmezden gelebilir,
@@ -389,10 +392,23 @@ class Chatbot:
         # (KAPI 5) "kaynak yok" diye onu silmemeli; sentetik bir kaynak
         # UYDURMAK ise kapının kendisini kandırmak olurdu — bu yüzden istisna
         # BURADA, adıyla ve tek satırda duruyor.
-        kaynak_var = bool(d.sources) or d.handler == "katalog"
+        # `terminoloji` de kaynaklı sayılır: kaynak metnin İÇİNDE yazılı
+        # (AAOIFI standardı / BDDK yönetmeliği), ayrı bir kaynak satırı
+        # olarak dönmüyor. Aksi hâlde "kaynak yok" uyarısı basılırdı.
+        # `katilma_orani` da kaynaklı sayılır: gövde TKBB Veri Peteği
+        # kaynağını ve veri dönemini metnin İÇİNDE yazıyor (kaynak satırı
+        # koşulsuz basılır, bkz. `katilma_orani.katilma_cevabi`).
+        kaynak_var = bool(d.sources) or d.handler in ("katalog",
+                                                      "terminoloji",
+                                                      "katilma_orani")
+        # `terminoloji` gövdesi kendi sözlüğümüzden bir ALINTIDIR; post-
+        # filter onu yeniden yazarsa tanım bozulur (ölçüldü: Riba kaydının
+        # "Faiz" karşılığı "Kâr payı" yapılıyordu ve tanım tersine
+        # dönüyordu). Model çıktısı için ASLA kullanılmaz.
         text, report = safety.guard_output(d.body, scr,
                                            has_sources=kaynak_var,
-                                           has_rate=d.has_rate)
+                                           has_rate=d.has_rate,
+                                           alinti=d.handler == "terminoloji")
         return ChatAnswer(text, d.handler, d.field, d.sources, report,
                           report.gates, context=_yeni_baglam(d),
                           inherited=list(d.route.inherited),
@@ -504,6 +520,47 @@ class Chatbot:
                             {"attempted": False, "applied": False,
                              "ms": None, "reason": "katalog yolu"}, [])
 
+        # TERMİNOLOJİ — "Murabaha ne demek", "Riba nedir". Sözlükten KAYNAKLI
+        # tanım döner (`data/terminology/katilim-terim-sozlugu.json`: tanım,
+        # sade açıklama, AAOIFI/BDDK kaynağı, risk notu).
+        #
+        # Ölçüldü (kullanıcı raporu 2026-08-24): "Murabaha ne demek" RAG'a
+        # düşüp "Bu bilgi verimde yok" diyordu — oysa sözlükte tam kayıt
+        # vardı. Veri duruyordu, kimse bakmıyordu.
+        #
+        # KATALOG'dan sonra, tavsiye kapısından ÖNCE: terim sorusu ne bir
+        # tavsiye talebidir ne de alan sorusu. `terim_cevabi` alan/kıyas izi
+        # taşıyan soruları kendisi eler (bkz. `terim_sorusu_mu`), yani
+        # "Kuveyt Türk kâr payı oranı nedir" buradan geçip yapısal sorgu
+        # yoluna gider.
+        terim_metni = terim_cevabi(question)
+        if terim_metni:
+            return _Dagitim("terminoloji", None, terim_metni, [], False, r,
+                            {"attempted": False, "applied": False,
+                             "ms": None,
+                             "reason": "terminoloji yolu — sözlükten tanım"},
+                            [])
+
+        # KATILMA HESABI ORANI — TKBB haftalık oran tablolarından kaynaklı
+        # sıralama. Yapısal sorgu yolundan ÖNCE, çünkü bu veri
+        # `extracted_fields`te YOKTUR: kampanya metinleri katılma hesabı
+        # getirisini yayınlamıyor (ölçüldü, kullanıcı raporu 2026-08-24 —
+        # "Katılım hesabında en iyi kâr payı oranını hangi banka veriyor"
+        # cevaplanamıyordu). Alan/ürün sorularını ÇALMAZ: `katilma_sorusu_mu`
+        # hesap izini ZORUNLU tutar, yani "konut finansmanı kâr payı oranı"
+        # buradan geçip yapısal yola gider.
+        #
+        # Terminolojiden SONRA: "katılma hesabı ne demek" bir TANIM sorusudur
+        # ve sözlükten cevaplanmalıdır; oran izi taşımadığı için bu yol onu
+        # zaten almaz.
+        katilma_metni = katilma_cevabi(question)
+        if katilma_metni:
+            return _Dagitim("katilma_orani", None, katilma_metni, [], True, r,
+                            {"attempted": False, "applied": False,
+                             "ms": None,
+                             "reason": "katılma oranı yolu — TKBB haftalık veri"},
+                            [])
+
         # KAPI 3 — karşılaştırma ≠ tavsiye. "Hangi bankaya para yatırayım?"
         # sorusunda alan çıkarılamaz ve sistem RAG'a düşüp çekimser kalırdı.
         # Doğru davranış: tavsiye VERMEDEN karşılaştırmalı olgu tablosu sunmak.
@@ -532,6 +589,10 @@ class Chatbot:
             # "bağlantı yok" yazıyordu — belge denetlenebilirliği bu projenin
             # iddiası, ve tam da o iddia sessizce düşüyordu.
             sources = [{"bank": x.bank, "value": x.value,
+                        # Satırın kendi ALANI: bileşik cevap satırları
+                        # boyut boyut toplandığı için arayüz sorgunun
+                        # alanıyla biçimleyemez (bkz. RankRow.field).
+                        "field": x.field,
                         "source_span": x.source_span,
                         "campaign_id": x.campaign_id,
                         # Kampanyanın geçerlilik damgası: sohbette gösterilen

@@ -45,6 +45,17 @@ class RankRow:
     campaign_id: Optional[Any] = None
     campaign_type: Optional[str] = None
     #: Tekilleştirmede bu satırın TEMSİL ETTİĞİ, gösterilmeyen kampanya sayısı.
+    #: Satırın HANGİ ALANDAN geldiği. Tek alanlı sıralamada gereksizdir
+    #: (çağıran alanı zaten bilir) ama bileşik "en avantajlı" cevabı
+    #: satırları BOYUT BOYUT topluyor: vade, masraf, ödül… O cevapta alan
+    #: taşınmazsa arayüz her satırı SORGUNUN alanıyla biçimlemek zorunda
+    #: kalır. Ölçüldü (24 Ağu 2026): sorgu alanı `kar_payi_orani` iken
+    #: 120 aylık vade satırı ekrana **%120** diye basıldı. Sözlük değerler
+    #: (masraf, ödül) alan adına bakmayan dallara düştüğü için doğru
+    #: görünüyordu — hata yalnız çıplak sayısal alanlarda ortaya çıkıyor,
+    #: yani sessiz ve seçici.
+    field: Optional[str] = None
+
     #: `tekil_banka_urun()` doldurur; tekilleştirme yapılmamışsa 0'dır.
     other_count: int = 0
     #: Kampanyanın geçerlilik durumu (`'expired'` | `'active'` | `None`).

@@ -212,6 +212,82 @@ SEBEP_LLM_KAPALI = "llm_kapali"
 #: belgeyi sonsuza dek özetsiz bırakırdı.
 SEBEP_KAYNAK_DEGISTI = "kaynak_degisti"
 
+#: Özetteki finansal sayı kaynak metinde bulunamadı.
+#:
+#: Alfabe ve terminoloji kapılarının EŞİ ve aynı gerekçeyle var: `SISTEM_PROMPT`
+#: "yalnız metinde geçen bilgileri kullan" diyor, ama bu bir YÖNERGEDİR, kapı
+#: değil — model ona uymayabilir.
+#:
+#: Ölçüldü (2026-08-24, 14 gerçek kampanya, EVREN `llm-large`): uzak modelin
+#: özetleri mevcut özetlerin iki katı sayı içeriyordu ve bunların **%16'sı**
+#: kaynak metinde bulunamadı (mevcut yerel özetlerde oran %0). Uydurulmuş bir
+#: kâr payı oranı, finansal bir panelde jürinin ilk yakalayacağı hatadır ve
+#: CLAUDE.md §19'un halüsinasyon yasağının tam ihlalidir.
+#:
+#: KALICI DEĞİL: sıcaklık merdiveninde model aynı belgeyi sayı uydurmadan
+#: özetleyebilir. Kalıcı işaretlemek belgeyi sonsuza dek özetsiz bırakırdı.
+SEBEP_SAYI = "sayi_dogrulanmadi"
+
+#: ÖZET tarafında denetlenen desenler — yalnız FİNANSAL biçimli sayılar.
+#:
+#: Çıplak sayılar bilerek DIŞTA: "üç avantaj sunulur" cümlesindeki bir sayı ya
+#: da "31 Aralık" tarihindeki gün, kaynakta birebir aranmayı hak etmez ve
+#: aranırsa kapı geçerli özetleri düşürmeye başlar. Denetlenen şey paranın ve
+#: vadenin kendisidir: oran, tutar, süre.
+_FINANSAL_SAYI = re.compile(
+    r"%\s*\d+(?:[.,]\d+)*"                       # %1,89   % 1.89
+    r"|\d+(?:[.,]\d+)*\s*%"                      # 1,89%
+    # Binlik gruplu sayı. `(?!\d)` ZORUNLU: onsuz `01.04.2025` tarihindeki
+    # `4.202` parçası "binlik gruplu sayı" sanılıyordu. Ölçüldü (24 Ağu,
+    # `data/demo.db`): kapı 2.676 mevcut özetten 114'ünü (%4,3) bu yüzden
+    # düşürüyordu ve hepsi TARİHTİ — yani kapı hiç uydurma yakalamadan
+    # geçerli özetleri eliyordu.
+    r"|\d{1,3}(?:[.,]\d{3})+(?:[.,]\d+)?(?!\d)"  # 50.000   1.500.000
+    r"|\d+(?:[.,]\d+)*\s*(?:TL|₺|lira)"          # 500 TL
+    r"|\d+\s*(?:ay|yıl|gün|hafta)\b",            # 120 ay
+    re.IGNORECASE)
+
+#: KAYNAK tarafında toplanan desen — metindeki HER sayı.
+#:
+#: Asimetri kasıtlı: kaynakta bir oran tabloda çıplak dururken (`1,89`) özette
+#: yüzde işaretiyle geçebilir (`%1,89`) ve bu uydurma DEĞİLDİR. Kaynak tarafı
+#: da finansal desene daraltılsaydı kapı o özeti düşürürdü — yanlış eleme,
+#: yanlış kabulden pahalıdır.
+_HERHANGI_SAYI = re.compile(r"\d+(?:[.,]\d+)*")
+
+
+def _basamaklar(parca: str) -> str:
+    """Sayıyı çıplak basamak dizisine indirir: `%1,89` -> `189`.
+
+    Biçim BİLEREK atılıyor. İlk ölçümümüz `%3.54` ile `%3,54`yi farklı saydı ve
+    modeli %23 halüsinasyonla suçladı; oysa çıplak rakamlar kaynakta VARDI ve
+    fark yalnız ondalık ayırıcıdaydı (uzak model nokta yazıyor, Türkçe metin
+    virgül). Bu kapının işi sayının DOĞRULUĞU; biçim ayrı bir konudur.
+    """
+    return re.sub(r"\D", "", parca)
+
+
+def _sayi_ihlali(ozet: str, kaynak: str) -> Optional[str]:
+    """Özetteki bir finansal sayı kaynakta bulunamıyor mu?
+
+    Döner: ihlal eden ifade ya da `None`. İlk eşleşmede durur — sebep alanına
+    yazılacak tek bir etiket yeterlidir, envanter değil (`_terminoloji_ihlali`
+    ile aynı sözleşme).
+
+    `kaynak`, modelin GÖRDÜĞÜ metin olmalıdır (katlanmış ve gerekiyorsa
+    kırpılmış hâli). Model ancak gördüğünü kullanabilir; kırpılan kısımdaki bir
+    sayı özette geçiyorsa o sayı gerçekten uydurulmuştur.
+    """
+    if not ozet or not kaynak:
+        return None
+    havuz = {_basamaklar(m.group()) for m in _HERHANGI_SAYI.finditer(kaynak)}
+    havuz.discard("")
+    for m in _FINANSAL_SAYI.finditer(ozet):
+        basamak = _basamaklar(m.group())
+        if basamak and basamak not in havuz:
+            return m.group().strip()
+    return None
+
 #: Alfabe kapısına takılan çıktı için denenecek sıcaklıklar, sırayla.
 #: İlk basamak 0,0'dır: varsayılan yol değişmez ve belgelerin çoğu orada geçer.
 #: Değerler ölçümle seçildi (modül başlığındaki tablo); merdiven yalnız kapıya
@@ -388,6 +464,15 @@ def ozetle(text: str, llm: Any, *, cerceve: Optional[set[str]] = None,
         if ihlal:
             son = OzetSonucu(None, None,
                              sebep=f"{SEBEP_TERMINOLOJI}: {ihlal}",
+                             kirpildi=kirpildi, girdi_karakter=len(girdi))
+            continue
+        # SAYI KAPISI — ilk ikisinin eşi. Karşılaştırma `girdi` ile yapılıyor,
+        # ham `text` ile DEĞİL: model ancak gördüğünü kullanabilir ve kırpılan
+        # kısımdaki bir sayı özette geçiyorsa gerçekten uydurulmuştur.
+        sayi = _sayi_ihlali(ozet, girdi)
+        if sayi:
+            son = OzetSonucu(None, None,
+                             sebep=f"{SEBEP_SAYI}: {sayi}",
                              kirpildi=kirpildi, girdi_karakter=len(girdi))
             continue
         return OzetSonucu(ozet, OZET_KAYNAK_LLM, kirpildi=kirpildi,

@@ -848,8 +848,36 @@ def build_app():
         for cid in kampanya_idleri:
             _view_cache.pop(cid, None)
 
+    def _tazeleme_sonrasi_ozet() -> dict:
+        """Bayat özet düştükten sonra yerine yenisini üretecek işi başlatır.
+
+        `app.state.ozet_isi` üzerinden erişiliyor, closure'a yakalanan
+        nesneden DEĞİL: `ozet_isi` bu satırdan SONRA kuruluyor (geç bağlama
+        şart) ve testler sahte bir yönetici koyabilsin diye zaten uygulama
+        durumunda tutuluyor.
+
+        LLM kapalıyken iş başlatılmaz: her tazelemede "LLM kapalı" hatası
+        basmak, gerçek arızaların arasında kaybolan bir gürültü üretirdi.
+        Kapatma kapısı: `TAZELEME_SONRASI_OZET=0`.
+        """
+        ham = os.environ.get("TAZELEME_SONRASI_OZET", "1").strip().lower()
+        if ham in {"0", "false", "no", "off"}:
+            return {"atlandi": "TAZELEME_SONRASI_OZET kapali"}
+        isi = getattr(app.state, "ozet_isi", None)
+        if isi is None:                      # kurulum sırası bozulduysa sessiz kalma
+            return {"atlandi": "ozet_isi henuz kurulmadi"}
+        try:
+            if not (isi.sayim() or {}).get("llm_acik"):
+                return {"atlandi": "LLM kapali — ozet uretilemez"}
+        except Exception:                    # sayım düşse bile işi denemek yeğdir
+            logger.debug("ozet sayimi okunamadi; is yine de denenecek",
+                         exc_info=True)
+        return isi.baslat()
+
     tazeleme = TazelemeYoneticisi(
-        RAW_DIR, alt_akis=alt_akis_kur(lambda: repo, unut=_ozet_onbellegini_dus))
+        RAW_DIR, alt_akis=alt_akis_kur(lambda: repo,
+                                       unut=_ozet_onbellegini_dus,
+                                       yeniden_ozetle=_tazeleme_sonrasi_ozet))
     # Yönetici uygulama durumuna asılır: testler gerçek toplama katmanını
     # sahte bir işle değiştirebilsin diye. Kapanış (closure) içinden
     # erişilemeyen bir nesne, ancak ağa çıkılarak sınanabilirdi.

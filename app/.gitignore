@@ -154,3 +154,9 @@ docs/rapor/yayin-kademesi.md
 # `scripts/baslat.sh`ın çalışma dizini: log + pid dosyaları. Tümü türetilmiş ve
 # makineye özgüdür (pid'ler zaten başka bir makinede anlamsızdır).
 .calisma/
+
+# TKBB tarihsel arşivinin DÜZ hâli. Betik artık `.jsonl.gz` yazıyor
+# (`scripts/tkbb_karpayi_hasat.py::_yaz`): 14 yıllık haftalık seri dokuz banka
+# için 89 MB düz metin, gzip'le 1,1 MB. Sıkıştırılmış hâl COMMITLENİR (kaynak
+# kırılgan); düz hâli elle üretilirse depoya girmesin.
+data/raw/**/rates/tkbb-karpayi.jsonl

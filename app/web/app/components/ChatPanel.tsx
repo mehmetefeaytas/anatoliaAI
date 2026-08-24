@@ -898,7 +898,21 @@ function Kaynaklar({
                   {typeof s.bank === "string" ? s.bank : "—"}
                 </td>
                 <td data-label="Değer" className="num">
-                  {"value" in s ? formatValue(s.value, cevap.field ?? undefined) : "—"}
+                  {/* Satırın KENDİ alanı önce: bileşik "en avantajlı"
+                      cevabı satırları boyut boyut toplar (vade,
+                      masraf, ödül…) ve sorgunun alanıyla biçimlemek
+                      yanlış birim basar. Ölçüldü: sorgu alanı
+                      `kar_payi_orani` iken 120 aylık vade "%120"
+                      olarak görünüyordu. `cevap.field` yalnız satır
+                      alanını taşımayan eski yanıtlar için yedek. */}
+                  {"value" in s
+                    ? formatValue(
+                        s.value,
+                        (typeof s.field === "string" && s.field
+                          ? s.field
+                          : cevap.field) ?? undefined,
+                      )
+                    : "—"}
                 </td>
                 <td data-label="AI Özeti / kaynak metin" className="small muted">
                   <Parca kaynak={s} />

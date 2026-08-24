@@ -152,9 +152,10 @@ class OzetYoneticisi:
         acik = llm_hazir(llm)
         kayit["llm_acik"] = acik
         kayit["llm_notu"] = None if acik else (
-            "Yerel model kapalı olduğu için özet üretilemez. Kural tabanlı "
+            "Model kapalı olduğu için özet üretilemez. Kural tabanlı "
             "sahte bir özet BASILMAZ; açmak için sunucu ortamında "
-            "LLM_BACKEND=ollama verilmeli."
+            "LLM_BACKEND=ollama (yerel) ya da LLM_BACKEND=evren "
+            "(+ EVREN_API_KEY) verilmeli."
         )
         with self._kilit:
             kayit["calisan_is"] = self._calisan

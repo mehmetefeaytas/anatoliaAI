@@ -13,6 +13,10 @@
    yazılmaz ve kayıt raporda "eşleşmeyen" olarak görünür.
 4. **Görünüm önbelleği haberdar edilir.** Aksi hâlde panel, veri tabanında
    artık olmayan özeti göstermeye devam ederdi.
+5. **Düşen özetin yerine yenisi ÜRETİLİR.** Bayat özeti düşürmek boşluğu
+   dürüst yapar ama doldurmaz; tazeleme sonrası özetleme işi tetiklenir
+   (`yeniden_ozetle`). Tetikleme tazelemeyi BLOKLAMAZ ve düşerse tazelemeyi
+   HATA'ya çevirmez — ham arşiv o noktada zaten doğru yazılmıştır.
 
 Hiçbir test ağ kullanmaz ve GERÇEK `data/` altına dokunmaz: geçici dizinde
 kurulan bir SQLite deposu kullanılır.
@@ -144,6 +148,59 @@ class TestAltAkisKur(_Temel):
         rapor = alt_akis([{"source_url": URL, "onceki_metin": ESKI}])
         self.assertEqual(rapor["gecersizlenen_ozet"], 1)
         self.assertEqual(self._satir(cid)["ozet_sebep"], SEBEP_KAYNAK_DEGISTI)
+
+
+class TestYenidenOzetleme(_Temel):
+    """5. değişmez: düşen özetin yerine yenisi üretilmek üzere iş tetiklenir.
+
+    Tetikleyici `gecersizlenen_ozet > 0` koşuludur — hiç özet düşmediyse
+    özetleme işi başlatmak, yapacak işi olmayan bir koşumu jüri panelinde
+    "çalışıyor" diye göstermek olurdu.
+    """
+
+    def test_ozet_dusunce_yeniden_ozetleme_TETIKLENIR(self) -> None:
+        self._ekle(ESKI, "Bayat özet.")
+        cagrildi = []
+        alt_akis = alt_akis_kur(
+            lambda: self.repo,
+            yeniden_ozetle=lambda: cagrildi.append(1) or {"is_id": "X1"})
+        rapor = alt_akis([{"source_url": URL, "onceki_metin": ESKI}])
+        self.assertEqual(len(cagrildi), 1)
+        self.assertEqual(rapor["yeniden_ozet"], {"is_id": "X1"})
+
+    def test_ozet_DUSMEDIYSE_tetiklenmez(self) -> None:
+        """Metni değişen belgenin zaten özeti yoksa yapacak iş de yoktur."""
+        self._ekle(ESKI, None)
+        cagrildi = []
+        alt_akis = alt_akis_kur(lambda: self.repo,
+                               yeniden_ozetle=lambda: cagrildi.append(1))
+        rapor = alt_akis([{"source_url": URL, "onceki_metin": ESKI}])
+        self.assertEqual(rapor["gecersizlenen_ozet"], 0)
+        self.assertEqual(cagrildi, [])
+        self.assertNotIn("yeniden_ozet", rapor)
+
+    def test_geri_cagri_VERILMEZSE_eski_davranis(self) -> None:
+        self._ekle(ESKI, "Bayat özet.")
+        rapor = alt_akis_kur(lambda: self.repo)(
+            [{"source_url": URL, "onceki_metin": ESKI}])
+        self.assertEqual(rapor["gecersizlenen_ozet"], 1)
+        self.assertNotIn("yeniden_ozet", rapor)
+
+    def test_tetikleme_HATASI_tazelemeyi_bozmaz(self) -> None:
+        """Ham arşiv doğru yazıldı; onu "başarısız" göstermek yanlış olurdu.
+
+        Hata YUTULMAZ: rapora yazılır, operatör görür.
+        """
+        self._ekle(ESKI, "Bayat özet.")
+
+        def patla():
+            raise RuntimeError("özet işi meşgul")
+
+        rapor = alt_akis_kur(lambda: self.repo, yeniden_ozetle=patla)(
+            [{"source_url": URL, "onceki_metin": ESKI}])
+        self.assertEqual(rapor["gecersizlenen_ozet"], 1)     # asıl iş sağlam
+        self.assertIn("RuntimeError", rapor["yeniden_ozet_hata"])
+        self.assertIn("meşgul", rapor["yeniden_ozet_hata"])
 
 
 if __name__ == "__main__":

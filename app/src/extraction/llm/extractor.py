@@ -744,15 +744,64 @@ def _locate(text: str, span: Optional[str]) -> tuple[Optional[int], Optional[int
     return idx, idx + len(span)
 
 
+#: SSB EVREN çıkarım servisi — yarışmanın tüm takımlarına açık UZAK uç.
+#: Anahtar burada TUTULMAZ (§5.10; bkz. docs/evren-servisi.md); yalnız uç
+#: adresi ve model takma adı varsayılan olarak yazılıdır.
+EVREN_URL_VARSAYILAN = "https://evren-llmapi.ssyz.org.tr"
+EVREN_MODEL_VARSAYILAN = "llm-large"
+
+
+class _KademeAtlanir(Exception):
+    """Kademe kurulamadı ama bu bir HATA değil — atlanıp devam edilecek.
+
+    `evren` kademesi anahtarsız kaldığında olur. Teslim edilen kopyada
+    `EVREN_API_KEY` bulunmaz; orada zincirin yerel kademeye düşmesi BEKLENEN
+    davranıştır, kurulum hatası değil.
+    """
+
+
+def _kademe_kur(ad: str) -> Any:
+    """Tek bir kademenin istemcisini kurar (ağa çıkmaz; pazarlık tembeldir)."""
+    if ad == "ollama":
+        from .clients import OllamaClient
+        return OllamaClient()
+    if ad == "vllm":
+        from .clients import VLLMClient
+        return VLLMClient()
+    if ad == "evren":
+        from .clients import VLLMClient
+        anahtar = os.environ.get("EVREN_API_KEY", "").strip()
+        if not anahtar:
+            raise _KademeAtlanir("EVREN_API_KEY tanimli degil")
+        return VLLMClient(
+            base_url=(os.environ.get("EVREN_URL", "").strip()
+                      or EVREN_URL_VARSAYILAN),
+            model=(os.environ.get("EVREN_MODEL", "").strip()
+                   or EVREN_MODEL_VARSAYILAN),
+            api_key=anahtar)
+    raise ValueError(
+        f"bilinmeyen LLM_BACKEND kademesi: {ad!r} (evren|vllm|ollama)")
+
+
 def default_extractor(strict: Optional[bool] = None) -> LLMExtractor:
     """Ortama göre çıkarıcı seç.
 
-    `LLM_BACKEND` = 'vllm' | 'ollama' ise ilgili istemci kurulur. Kurulamazsa:
+    `LLM_BACKEND` virgülle ayrılmış bir KADEME LİSTESİ kabul eder:
+    `evren,ollama` = "EVREN'i dene, düşerse yerel Ollama devralsın"
+    (bkz. `cascade.CascadingClient`). Tek değer eski davranıştır ve zincire
+    SARILMAZ — böylece mevcut raporlardaki `client` alanı ve model adı biçim
+    değiştirmez.
+
+    Kurulamazsa:
     - hoşgörülü modda GEREKÇELİ log basılır ve NullLLMExtractor'a düşülür,
     - katı modda (`LLM_STRICT=1`) exception yükselir.
 
     Katı mod ablasyon için kritiktir: "LLM_BACKEND=vllm verdim ama sessizce
-    kural-only koştu" durumu jüriye yanlış tablo gösterir.
+    kural-only koştu" durumu jüriye yanlış tablo gösterir. Aynı gerekçe zincir
+    için de geçerli: TÜM kademeler atlanırsa katı modda yükseltilir.
+
+    Anahtarsız `evren` kademesi bunun istisnasıdır ve sessizce atlanır —
+    zincirde başka kademe varsa koşum onunla sürer (bkz. `_KademeAtlanir`).
     """
     strict_mode = _env_flag("LLM_STRICT") if strict is None else bool(strict)
     backend = os.environ.get("LLM_BACKEND", "").strip().lower()
@@ -761,14 +810,25 @@ def default_extractor(strict: Optional[bool] = None) -> LLMExtractor:
         logger.info("LLM_BACKEND bos -> NullLLMExtractor (kural-only, kasitli offline)")
         return NullLLMExtractor()
 
+    kademeler = [p.strip() for p in backend.split(",") if p.strip()]
     try:
-        if backend == "ollama":
-            from .clients import OllamaClient
-            return LLMExtractor(OllamaClient(), strict=strict_mode)
-        if backend == "vllm":
-            from .clients import VLLMClient
-            return LLMExtractor(VLLMClient(), strict=strict_mode)
-        raise ValueError(f"bilinmeyen LLM_BACKEND: {backend!r} (vllm|ollama)")
+        istemciler: list[Any] = []
+        atlanan: list[str] = []
+        for ad in kademeler:
+            try:
+                istemciler.append(_kademe_kur(ad))
+            except _KademeAtlanir as exc:
+                atlanan.append(f"{ad} ({exc})")
+                logger.info("LLM kademesi atlandi: %s -> %s", ad, exc)
+        if not istemciler:
+            raise ValueError(
+                "hicbir kademe kurulamadi; atlanan: " + ", ".join(atlanan))
+        if len(istemciler) == 1:
+            return LLMExtractor(istemciler[0], strict=strict_mode)
+        from .cascade import CascadingClient
+        logger.info("LLM zinciri kuruldu: %s",
+                    " -> ".join(type(c).__name__ for c in istemciler))
+        return LLMExtractor(CascadingClient(istemciler), strict=strict_mode)
     except Exception as exc:
         msg = (f"LLM_BACKEND={backend!r} istendi ama istemci kurulamadi: "
                f"{type(exc).__name__}: {exc}")

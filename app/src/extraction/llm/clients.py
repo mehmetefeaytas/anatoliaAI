@@ -22,7 +22,20 @@ yazılır ve süreç boyunca yeniden denenmez.
        ve TGI hepsi bunu tanır.
     2. `structured_outputs={"json": <schema>}`   — vLLM'in güncel yerel adı.
     3. `guided_json=<schema>`                    — eski ad, hâlâ kabul ediliyor.
-    4. `prompt_only`                             — şema prompt'a metin olarak
+    4. `tools=[...]` + `tool_choice`        — şema bir FONKSİYON İMZASI
+       olarak geçer. Ölçüldü (24 Ağu 2026, SSB EVREN): `response_format`
+       sarmalayıcısını HTTP 500 ile reddeden uç, AYNI şemayı tool calling
+       ile kabul etti ve 12 alanın tamamını doğru yapıda döndürdü. Yani
+       sorun şemanın kendisi değil, onu taşıyan alandı.
+       Çıktı `message.tool_calls[0].function.arguments` içinde gelir,
+       `content` boş kalır (bkz. `_yanit_metni`).
+    5. `response_format={"type":"json_object"}`
+       ŞEMA kısıtı yok ama JSON kısıtı VAR: sunucu geçerli bir JSON nesnesi
+       üretmeye zorlar, alanlar prompt'tan öğrenilir. Ölçüldü (24 Ağu 2026,
+       SSB EVREN `llm-large`): karmaşık şemamız `json_schema`da HTTP 500
+       veriyor, `guided_json` sessizce yok sayılıyor — bu mod ikisinin de
+       düştüğü yerde çalışan tek KISITLI seçenek.
+    6. `prompt_only`                             — şema prompt'a metin olarak
        gömülür, çıktı `parse.py` ile sökülür. Kısıt YOK; son çare.
 
 `self.structured_mode` dışarıdan okunabilir; eval raporuna ve smoke
@@ -40,6 +53,7 @@ ve internetsiz koşulabilir.
 from __future__ import annotations
 
 import json
+import logging
 import os
 import threading
 import urllib.error
@@ -47,10 +61,18 @@ import urllib.request
 from dataclasses import dataclass, field
 from typing import Any, Callable, Optional
 
+logger = logging.getLogger(__name__)
+
 # Denenme sırası — soldan sağa. Bkz. modül başlığı.
-STRUCTURED_MODES = ("json_schema", "structured_outputs", "guided_json", "prompt_only")
+STRUCTURED_MODES = ("json_schema", "structured_outputs", "guided_json",
+                    "tool_calling", "json_object", "prompt_only")
 
 Transport = Callable[[str, dict, float], dict]
+
+#: `tool_calling` modunda şemayı taşıyan fonksiyonun adı. Sabit tutulur:
+#: `tool_choice` ile birebir eşleşmek zorunda ve değişken bir ad hata
+#: ayıklamayı zorlaştırırdı.
+TOOL_ADI = "kampanya_cikarimi"
 
 
 class LLMError(Exception):
@@ -104,7 +126,8 @@ def _deadline(timeout: float) -> float:
     return timeout * carpan if carpan > 0 else 0.0
 
 
-def _urllib_transport(url: str, payload: dict, timeout: float) -> dict:
+def _urllib_transport(url: str, payload: dict, timeout: float,
+                      api_key: str = "") -> dict:
     """Varsayılan taşıma: saf stdlib POST + **duvar-saati sınırı**.
 
     ## Neden ayrı bir sınır gerekiyor — ölçülmüş donma
@@ -129,13 +152,14 @@ def _urllib_transport(url: str, payload: dict, timeout: float) -> dict:
     """
     sinir = _deadline(timeout)
     if sinir <= 0:                                     # sınır kapatılmış
-        return _urllib_transport_ic(url, payload, timeout)
+        return _urllib_transport_ic(url, payload, timeout, api_key)
 
     kutu: dict[str, Any] = {}
 
     def _kos() -> None:
         try:
-            kutu["sonuc"] = _urllib_transport_ic(url, payload, timeout)
+            kutu["sonuc"] = _urllib_transport_ic(url, payload, timeout,
+                                                 api_key)
         except BaseException as exc:
             kutu["hata"] = exc
 
@@ -153,11 +177,19 @@ def _urllib_transport(url: str, payload: dict, timeout: float) -> dict:
     return kutu["sonuc"]
 
 
-def _urllib_transport_ic(url: str, payload: dict, timeout: float) -> dict:
-    """Asıl POST. Hataları LLMError'a çevirir."""
+def _urllib_transport_ic(url: str, payload: dict, timeout: float,
+                         api_key: str = "") -> dict:
+    """Asıl POST. Hataları LLMError'a çevirir.
+
+    `api_key` boşsa `Authorization` başlığı HİÇ gönderilmez: yerel
+    vLLM/Ollama kimlik doğrulaması istemez ve gereksiz başlık geriye
+    uyumu bozar. Uzak OpenAI-uyumlu uçlar (SSB EVREN) ister.
+    """
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
-        url, data=data, headers={"Content-Type": "application/json"})
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+    req = urllib.request.Request(url, data=data, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
             return json.loads(resp.read().decode("utf-8"))
@@ -173,6 +205,80 @@ def _urllib_transport_ic(url: str, payload: dict, timeout: float) -> dict:
         raise LLMTransportError(f"{url} JSON olmayan yanit dondu: {exc}") from exc
     except OSError as exc:                         # timeout vb.
         raise LLMTransportError(f"{url} baglanti hatasi: {exc}") from exc
+
+
+def _yanit_metni(choice: dict) -> Optional[str]:
+    """Yanıt metnini çıkarır — `tool_calling` dâhil.
+
+    Tool calling'de model çıktıyı `tool_calls[0].function.arguments`
+    içine yazar ve `content` boş kalır. Yalnız `content`e bakan bir okuyucu
+    bunu "model boş cevap verdi" diye okur; üst katman da onu geçerli bir
+    "özetlenecek şey yok" cevabı sayıp çıkarımı SESSİZCE kaybeder.
+    """
+    mesaj = (choice or {}).get("message") or {}
+    icerik = mesaj.get("content")
+    if icerik:
+        return icerik
+    cagrilar = mesaj.get("tool_calls")
+    if isinstance(cagrilar, list) and cagrilar:
+        islev = (cagrilar[0] or {}).get("function") or {}
+        arg = islev.get("arguments")
+        if isinstance(arg, str):
+            return arg
+    return icerik
+
+
+def _kisit_uygulandi(ham: dict, mode: str = "") -> bool:
+    """Prob yanıtı kısıtlı decoding'in imzasını taşıyor mu?
+
+    Kısıtlı decoding'de ilk token `{` olmak ZORUNDADIR; kısıt yoksa model
+    kendi cümlesine başlar. Ölçüldü (2026-08-24, SSB EVREN `llm-large`):
+    `guided_json` gönderildiğinde sunucu HTTP 200 döndü ama kısıtı hiç
+    uygulamadı — prob yanıtı `'P'` ("Pong!") oldu.
+
+    İçerik BOŞSA ya da biçim tanınmazsa `True` döner: kararsızlık yanlış
+    elemeye yol açmamalı. Çalışan bir modu elemek, sistemi gereksizce
+    `prompt_only`a düşürür — yanlış eleme yanlış kabulden pahalıdır.
+    """
+    try:
+        mesaj = ham["choices"][0]["message"]
+    except (KeyError, IndexError, TypeError):
+        return True
+    # `tool_calling`: kısıt `tool_calls` içinde gelir ve `content` boş
+    # kalır. Onun varlığı kısıtın UYGULANDIĞININ kanıtıdır; aksi hâlde
+    # prob bu modu eler ve daha zayıf `json_object`a düşerdik.
+    if isinstance(mesaj, dict) and mesaj.get("tool_calls"):
+        return True
+    icerik = mesaj.get("content") if isinstance(mesaj, dict) else None
+    # Prob 1 TOKEN istiyor ve o tek token tool çağrısını TAMAMLAMAYA
+    # yetmez: sunucu `tool_calls`ı ayrıştıramaz, `content`e ham başlangıç
+    # işaretini (`<tool_call>`) bırakır. Ölçüldü (24 Ağu, EVREN): prob
+    # yanıtı tam olarak `'<tool_call>'` geldi ve `{` ile başlamadığı için
+    # mod ELENDİ — oysa o işaret kısıtın uygulandığının kanıtıydı. Sonuç:
+    # ablasyon yine kısıtsız `json_object` ile koşuyordu.
+    if (mode == "tool_calling" and isinstance(icerik, str)
+            and "tool_call" in icerik.lower()):
+        return True
+    if not isinstance(icerik, str):
+        return True
+    kirpik = icerik.strip()
+    if not kirpik:
+        return True
+    return kirpik.startswith("{")
+
+
+def bearer_transport(api_key: str) -> Transport:
+    """`Authorization: Bearer` ekleyen taşıma üreteci.
+
+    `Transport` imzası `(url, payload, timeout) -> dict` olarak SABİT:
+    onlarca test sahte taşıma enjekte ediyor ve imza değişse hepsi
+    kırılırdı. Anahtar bu yüzden bir closure'a kapatılır, imzaya
+    eklenmez.
+    """
+    def _t(url: str, payload: dict, timeout: float) -> dict:
+        return _urllib_transport(url, payload, timeout, api_key)
+
+    return _t
 
 
 def _schema_instruction(schema: dict) -> str:
@@ -208,11 +314,24 @@ class VLLMClient:
         temperature: float = 0.0,
         enable_thinking: bool = False,
         request_logprobs: bool = True,
+        api_key: Optional[str] = None,
+        kisit_probu: Optional[bool] = None,
+        model_dogrula: Optional[bool] = None,
     ):
         self.base_url = (base_url or os.environ.get(
             "VLLM_URL", "http://localhost:8001")).rstrip("/")
         self.model = model or os.environ.get("VLLM_MODEL", "Qwen/Qwen3-8B")
-        self.transport: Transport = transport or _urllib_transport
+        # Anahtar: argüman > env. Boşsa başlık hiç eklenmez (yerel uçlar).
+        # AÇIKÇA enjekte edilmiş `transport` her koşulda kazanır — ağsız
+        # CI'da sahte taşımayla koşan testler env'den etkilenmemeli.
+        self.api_key = (api_key if api_key is not None
+                        else os.environ.get("VLLM_API_KEY", "")).strip()
+        if transport is not None:
+            self.transport: Transport = transport
+        elif self.api_key:
+            self.transport = bearer_transport(self.api_key)
+        else:
+            self.transport = _urllib_transport
         self.timeout = timeout
         self.max_tokens = max_tokens
         self.temperature = temperature
@@ -228,8 +347,83 @@ class VLLMClient:
             raise ValueError(
                 f"bilinmeyen structured_mode: {self.structured_mode!r} "
                 f"(gecerli: {STRUCTURED_MODES})")
+        # Model adı sunucunun listesinde mi? Ölçüldü (24 Ağu, EVREN):
+        # bilinmeyen bir ad HTTP 200 ile KABUL ediliyor ve yanıtın `model`
+        # alanı o uydurma adı geri veriyor — yani sapma yanıta bakılarak
+        # anlaşılamıyor. Bir harf yanlış yazılan `VLLM_MODEL`, koşumu başka
+        # bir modelle yapar ve artefakt yanlış adı raporlar.
+        #
+        # AÇIK `transport` bunu KAPATIR: o, "burada gerçek sunucu yok"
+        # demenin kendisidir (onlarca test sahte taşımayla koşuyor).
+        # Anahtarsız yerel uçta da kapalı: tuzak yalnız uzak uçta ölçüldü
+        # ve yerel model adı HF yolu olabiliyor.
+        if model_dogrula is not None:
+            self.model_dogrula = bool(model_dogrula)
+        elif transport is not None:
+            self.model_dogrula = False
+        else:
+            ham_bayrak = os.environ.get("VLLM_MODEL_DOGRULA", "").strip().lower()
+            if ham_bayrak:
+                self.model_dogrula = ham_bayrak not in {"0", "false", "no", "off"}
+            else:
+                self.model_dogrula = bool(self.api_key)
+        self._model_dogrulandi = False
+
+        # Pazarlık probu kısıtın UYGULANDIĞINI da sınar mı? Kapatma kapısı
+        # bilerek var: sunucusunun boş prob yanıtı döndürdüğünü bilen biri
+        # eski davranışa dönebilsin (env: VLLM_KISIT_PROBU=0).
+        self.kisit_probu = (
+            kisit_probu if kisit_probu is not None
+            else os.environ.get("VLLM_KISIT_PROBU", "1").strip().lower()
+            not in {"0", "false", "no", "off"})
+
         # Pazarlıkta hangi mod neden elendi — rapora/loga düşer.
         self.negotiation_log: list[tuple[str, str]] = []
+
+    # ------------------------------------------------------------------ #
+    # Model adı doğrulaması
+    # ------------------------------------------------------------------ #
+    def model_listesi_al(self) -> list[str]:
+        """`GET /v1/models` — sunucunun tanıdığı model adları.
+
+        Ayrı bir metod, çünkü testler bunu değiştirerek ağa çıkmadan
+        doğrulama mantığını sınayabilsin. Hata YUTULMAZ; çağıran karar
+        verir (bkz. `_dogrula_model`).
+        """
+        istek = urllib.request.Request(
+            f"{self.base_url}/v1/models",
+            headers=({"Authorization": f"Bearer {self.api_key}"}
+                     if self.api_key else {}))
+        with urllib.request.urlopen(istek, timeout=30) as yanit:
+            ham = json.loads(yanit.read().decode("utf-8"))
+        veri = (ham or {}).get("data")
+        if not isinstance(veri, list):
+            return []
+        return [d.get("id") for d in veri if isinstance(d, dict) and d.get("id")]
+
+    def _dogrula_model(self) -> None:
+        """Model sunucunun listesinde mi? Bir kez koşar.
+
+        Liste ALINAMAZSA koşum DURMAZ: doğrulama bir güvencedir, ön koşul
+        değil. Geçici bir ağ dalgalanmasının tüm ablasyonu düşürmesi, onun
+        önlediği hatadan pahalı olurdu — uyarı loglanır, pazarlık sürer.
+        """
+        self._model_dogrulandi = True
+        try:
+            modeller = self.model_listesi_al()
+        except Exception as exc:
+            logger.warning("model listesi alinamadi (%s: %s) -> ad "
+                           "dogrulanmadan devam ediliyor",
+                           type(exc).__name__, exc)
+            return
+        if not modeller:                     # boş liste eleme yapmaz
+            return
+        if self.model not in modeller:
+            raise LLMError(
+                f"model {self.model!r} sunucunun listesinde YOK. Bu uc "
+                f"bilinmeyen adlari SESSIZCE kabul edip baska bir modele "
+                f"dusuruyor; koşum yanlis modelle yapilirdi. "
+                f"Gecerli adlar: {', '.join(sorted(modeller))}")
 
     # ------------------------------------------------------------------ #
     # İstek kurulumu
@@ -244,7 +438,9 @@ class VLLMClient:
         """Seçilen moda göre istek gövdesini kurar."""
         if mode not in STRUCTURED_MODES:
             raise ValueError(f"bilinmeyen mod: {mode!r}")
-        if mode == "prompt_only":
+        # `json_object` ŞEMAYI kısıtlamaz, yalnız JSON biçimini kısıtlar:
+        # alan adları prompt'tan öğrenilmek zorunda, tıpkı `prompt_only`da.
+        if mode in ("prompt_only", "json_object"):
             system = system + _schema_instruction(schema)
 
         payload: dict[str, Any] = {
@@ -270,6 +466,23 @@ class VLLMClient:
             payload["structured_outputs"] = {"json": schema}
         elif mode == "guided_json":
             payload["guided_json"] = schema
+        elif mode == "json_object":
+            payload["response_format"] = {"type": "json_object"}
+        elif mode == "tool_calling":
+            # Şema bir fonksiyon imzası olarak geçiyor; `tool_choice` ile
+            # model bu fonksiyonu çağırmaya ZORLANIYOR (yoksa serbest
+            # metinle cevap verip kısıtı atlayabilir).
+            payload["tools"] = [{
+                "type": "function",
+                "function": {
+                    "name": TOOL_ADI,
+                    "description": ("Belge metninden finansal alanlari "
+                                    "cikarir"),
+                    "parameters": schema,
+                },
+            }]
+            payload["tool_choice"] = {
+                "type": "function", "function": {"name": TOOL_ADI}}
 
         # Alan bazlı güven skoru logprob'lardan üretilir (confidence.py).
         want_logprobs = self.request_logprobs if logprobs is None else logprobs
@@ -290,6 +503,8 @@ class VLLMClient:
 
         Her mod 1 token'lık gerçek bir istekle denenir (ucuz ama gerçek).
         HTTP hatası = "bu parametreyi bilmiyorum" -> sıradaki mod.
+        HTTP 200 ama ilk token `{` DEĞİL = "parametreyi tanıdım, kısıtı
+        uygulamadım" -> sıradaki mod (bkz. `_kisit_uygulandi`).
         Taşıma hatası = "servis ayakta değil" -> hemen yükselt, tüm modları
         boşuna deneme.
 
@@ -297,6 +512,8 @@ class VLLMClient:
             LLMTransportError: sunucuya ulaşılamıyor.
             LLMHTTPError: sunucu ayakta ama hiçbir mod kabul edilmedi.
         """
+        if self.model_dogrula and not self._model_dogrulandi:
+            self._dogrula_model()
         if self.structured_mode and not force:
             return self.structured_mode
 
@@ -307,7 +524,7 @@ class VLLMClient:
                 system="ping", user="{}", schema=schema, mode=mode,
                 max_tokens=1, logprobs=False)
             try:
-                self.transport(self.endpoint, payload, self.timeout)
+                ham = self.transport(self.endpoint, payload, self.timeout)
             except LLMHTTPError as exc:
                 self.negotiation_log.append((mode, f"HTTP {exc.status}"))
                 last_http = exc
@@ -315,6 +532,14 @@ class VLLMClient:
             except LLMTransportError:
                 self.negotiation_log.append((mode, "servise ulasilamadi"))
                 raise
+            # HTTP 200 "parametreyi TANIDIM" demek; "UYGULADIM" demek
+            # değil. `prompt_only` proba tabi değildir: orada kısıt zaten
+            # yok, son çaredir ve elenirse hiç mod kalmaz.
+            if (self.kisit_probu and mode != "prompt_only"
+                    and not _kisit_uygulandi(ham, mode)):
+                self.negotiation_log.append(
+                    (mode, "HTTP 200 ama kisit UYGULANMADI"))
+                continue
             self.negotiation_log.append((mode, "OK"))
             self.structured_mode = mode
             return mode
@@ -340,7 +565,7 @@ class VLLMClient:
         raw = self.transport(self.endpoint, payload, self.timeout)
         try:
             choice = raw["choices"][0]
-            text = choice["message"]["content"]
+            text = _yanit_metni(choice)
         except (KeyError, IndexError, TypeError) as exc:
             raise LLMError(f"beklenmeyen yanit bicimi: {exc}; "
                            f"anahtarlar={list(raw) if isinstance(raw, dict) else raw}"

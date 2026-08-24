@@ -2,6 +2,470 @@
 
 Kronolojik ingest / değişiklik günlüğü. En yeni en üstte.
 
+## [2026-08-24] ingest + feature | tkbb-kar-payi-veri-seti
+
+Kullanıcı raporu: *"Katılım hesabında en iyi kâr payı oranını hangi banka
+veriyor"* cevaplanamıyordu. Kök neden bir çıkarım hatası DEĞİL — kampanya
+korpusu katılma hesabı getirisini hiç yayınlamıyor; bankalar bu oranı haftalık
+oran tablolarında duyuruyor ([[katilma-hesabi-orani-korpusta-yoktu]]).
+
+TKBB'nin **iki ayrı** kâr payı ucu bulundu ve hasat edildi
+([[tkbb-kar-payi-veri-seti]]):
+
+- `karpayi.tkbb.org.tr` — 2012-01-02 → 2025-05-26, dört rapor, **210.474
+  kayıt** (gzip 1,1 MB; düz hâli 89 MB). TLS sertifikası GEÇERSİZ, bu yüzden
+  hasat `--sertifika-atla` bayrağını açıkça ister.
+- `veri-petegi.tkbb.org.tr` — Turboard paneli, içinde bulunulan hafta, **245
+  kayıt**. `X-CSRFToken` başlığı zorunlu.
+
+**2026 tarihsel veri YOK**: arşiv Mayıs 2025'te duruyor ve form yıl listesi de
+2025 ile bitiyor (iki bağımsız kanıt). Güncel uç haftalık olarak devam ediyor.
+
+Üç bağımsız kaynak aynı değeri verdi (Albaraka TL paylaşımı 90/90/92/93): iki
+uç + Albaraka'nın kendi PDF'i. Ayrıca sertifika doğrulanmadan alınan değerler
+kullanıcının tarayıcısından gelenlerle **7/7 banka birebir** uyuştu.
+
+Chatbot'a `katilma_orani` yolu eklendi; getiri ile pay ayrı sıralanıyor
+([[katilma-orani-iki-ayri-buyukluk]]). Güncel sonuç (2026-08-24, TL): 1 ay
+T.O.M. %42,79 · 6 ay Hayat Finans %41,28 · 12 ay Albaraka %40,85.
+
+Dokunulan dosyalar:
+- `app/scripts/tkbb_karpayi_hasat.py` — yeni (tarihsel, gzip)
+- `app/scripts/tkbb_guncel_hasat.py` — yeni (güncel hafta)
+- `app/src/chatbot/katilma_orani.py` — yeni
+- `app/src/chatbot/bot.py` — `katilma_orani` handler'ı + `kaynak_var`
+- `app/.gitignore` — düz tarihsel arşiv kalıbı
+- `app/data/raw/<banka>/rates/tkbb-karpayi.jsonl.gz` (9) · `tkbb-guncel.jsonl` (9)
+- `app/tests/test_chat_katilma_orani.py` (20) · `app/tests/test_tkbb_hasat.py` (20)
+- `sources/teknofest/2026-08-24-tkbb-kar-payi-veri-seti.md`,
+  `entities/tkbb-kar-payi-veri-seti.md`,
+  `decisions/katilma-orani-iki-ayri-buyukluk.md`,
+  `sorun/katilma-hesabi-orani-korpusta-yoktu.md`, `index.md`, `log.md`
+
+Ölçüm: **3.842 test / 0 hata / 53 atlanan**, ruff temiz, jargon kapısı temiz
+(ihlal 0, muaf 46), vault 0 kırık link.
+
+## [2026-08-24] fix | terminoloji-yolu
+
+Kullanıcı raporu: *"Murabaha ne demek"* → "Bu bilgi verimde yok."
+**Oysa veri vardı** — `data/terminology/katilim-terim-sozlugu.json` 101 terim
+için tam kayıt tutuyor (tanım, sade anlatım, resmî karşılık, karıştırılmamalı,
+risk notu ve **kaynak**: Murabaha → AAOIFI Şer'i Standart No. 8).
+`domain/terminology.py` bu sözlüğü çıkarım ve güvenlik katmanlarında zaten
+kullanıyordu; yalnız chatbot cevap üretimi ona hiç bakmıyordu
+([[terim-sorusuna-sozlukten-cevap-verilmiyordu]]).
+
+`src/chatbot/terim_cevabi.py` yazıldı, `bot.py`'ye KATALOG seviyesinde
+bağlandı (`handler="terminoloji"`). Doğrulandı: Murabaha ✓, Riba ✓, Muşaraka ✓
+cevaplanıyor; *"Kuveyt Türk kâr payı oranı nedir"* doğru şekilde
+`structured`'a gidiyor. Bu, `rag_eval`'in "müşaraka nedir → isabetsiz"
+bulgusunu da açıklıyor: terim vardı, bakılmıyordu.
+
+**Uzak model DEĞİL sözlük** — bilinçli: terim tanımını modele ürettirmek
+kaynaksız bir iddia olurdu (§19). Sözlük AAOIFI/BDDK kaynağı taşıyor ve
+`risk_notu` gibi alanlar hiçbir genel modelin üretemeyeceği kurum bilgisidir.
+
+**İki tuzak ölçülerek bulundu:**
+
+1. **Çıktı koruması sözlük tanımını bozuyordu.** `Riba` kaydının resmî Türkçe
+   karşılığı **"Faiz"**tir (riba yasaklanan şeydir); `sanitize_output` onu
+   "Kâr payı" yapıyor ve tanım TERSİNE dönüyordu. `guard_output(...,
+   alinti=True)` eklendi — yalnız `handler == "terminoloji"` için, model
+   çıktısı için asla.
+2. **Terim yolu alan sorularını çalınca GÜVENLİK açığı doğuyordu.** "Bu
+   üründe masraf durumu nedir, faiz uygulanır mı?" sorusu `nedir` kalıbıyla
+   terim yoluna gidiyor, alıntı modu post-filter'ı atlıyor ve kaynaktaki
+   yasak terim sızıyordu (`test_safety.py` yakaladı). `_ALAN_IZLERI` alan
+   adlarıyla genişletildi; ayrım "oranı" sözcüğünde: "kâr payı ne demek"
+   terim sorusudur, "kâr payı ORANI nedir" alan sorusudur.
+
+**Kalan sınır:** "Finansman ne demek" hâlâ cevaplanmıyor — sözlük katılım
+bankacılığına ÖZGÜ terimleri içeriyor, genel bankacılık terimlerini değil.
+`tcmb-terimler.json` (314 terim, tanımlı, kaynak URL'li) kapsam dışında;
+şeması farklı ve katılım bağlamında `degildir`/`risk_notu` karşılıkları yok.
+
+Dokunulan dosyalar:
+
+- `sorun/terim-sorusuna-sozlukten-cevap-verilmiyordu.md` — yeni
+- `index.md` · `log.md`
+- `app/src/chatbot/terim_cevabi.py` — yeni
+- `app/src/chatbot/bot.py` — `terminoloji` handler, `alinti=True`
+- `app/src/chatbot/safety.py` — `guard_output(..., alinti=...)`
+- `app/tests/test_chat_terim_cevabi.py` — yeni, 13 test
+
+Test durumu: **3.749 geçti · 53 atlandı · 0 hata** · ruff temiz.
+
+## [2026-08-24] fix | kiyas-gosterim-hatalari-ve-urun-baglami
+
+Kullanıcı raporundan çıkan **üç hata** teşhis edildi; ikisi düzeltildi, biri
+kısmen (uyarı düzeyinde) kapatıldı. Üçünün de **EVREN'le ilgisi yoktu** —
+kullanıcının "belki EVREN çözer" varsayımı ölçümle yanlışlandı.
+
+**1. Vade `%120` olarak basılıyordu.** Bileşik "en avantajlı" cevabı satırları
+BOYUT BOYUT topluyor (vade, masraf, ödül…) ama `RankRow` hangi alandan
+geldiğini taşımıyordu; arayüz her satırı SORGUNUN alanıyla biçimlemek zorunda
+kalıyordu (`kar_payi_orani` bir oran alanı olduğu için `120` → `%120`).
+Hata SEÇİCİYDİ: masraf ve ödül sözlük dallarına düştüğü için doğru
+görünüyordu. Zincirin tamamı düzeltildi: `RankRow.field` →
+`replace(x, field=field)` → `bot.py` kaynak sözlüğü → `ChatPanel.tsx`.
+5 test.
+
+**2. "en düşük" ile "en yüksek" AYNI cevabı veriyordu.** Birincil alan o
+ailede kıyaslanabilir değil — ve bu bir VERİ GERÇEKLİĞİ: `#1212` (Albaraka)
+metninde kâr payı oranı DEĞERİ yayınlanmıyor (metin taranarak doğrulandı;
+ödeme planındaki "Kâr Payı" kolonu tutar, oran değil). Kural hattı
+kaçırmamış. Alan kıyaslanamaz olunca bileşik skora düşülüyor ve bileşik skor
+TEK YÖNLÜ. Düşmek doğru, SÖYLEMEMEK yanlıştı: `_yon_uyarisi` eklendi. 6 test.
+
+**3. Konut kıyasında "200 TL ödül" ilgisiz bir üründen geliyordu.** `#761` bir
+akademisyen paketi; gerçekten konut finansmanına değiniyor ama fatura ve kart
+avantajlarını da içeriyor. Belgeye TEK ürün ailesi atanıyor ve o belgeden
+çıkan TÜM alanlar o aileye sayılıyor
+([[urun-baglami-alan-duzeyinde-tasinmali]]).
+
+EVREN ile 45 belgede etiket denetimi yapıldı: birincil aile uyumu **%78**,
+uyuşmazlıkların **yarısı** gerçek hata değil (mevcut etiket EVREN'in
+`tum_aileler` listesinde), **çok ürünlü belge %18**. Yani toplu yeniden
+etiketleme için gerekçe zayıf; asıl sorun çok-ürünlülük. Kural tabanlı
+`_cok_urunlu_mu` + uyarı yazıldı (belge DIŞLANMIYOR, belirsizlik söyleniyor);
+`#761` ✓ işaretleniyor, `#626` ✓ işaretlenmiyor. Kapsam sınırı yazılı: kural
+%9, EVREN %18 — kural EVREN'in yarısını yakalıyor. 7 test.
+
+**`belge_turu` süzgeci eklendi ve ölçüldü — fark YOK.** Banka hedeflemede
+süzgeçsiz vektör 43/55 (%78), `kampanya` süzgeçli 43/55, `kampanya+sozlesme`
+43/55. Sözleşme baskınlığı bu soru tipinde sorun değil; onu içerik
+sorularında görmüştük ve o tip için altın etiketli set yok. Süzgeç kodda
+opsiyonel duruyor, açmak için ölçülmüş gerekçe yok. 11 test.
+
+**Dördüncü kez kendi ölçüm kurgumda hata:** etiket denetiminin ilk koşumu
+45 belgeden yalnız 20'sini ölçebildi (%56 hata). Neden: ölçüm şemasındaki
+`tum_aileler` dizisine `maxItems` koymamışım — kısıtlı decoding diziyi
+sonlandırmıyor, model aynı değeri tekrarlayıp `max_tokens`'ı dolduruyor ve
+JSON kesiliyor. Düzeltince 45/45, 0 hata. **Projenin kendi şeması bu tuzağı
+zaten biliyor** (`hedef_kitle` maxItems=4, `kampanya_kosullari` maxItems=12) —
+hata yalnız benim test şemamdaydı.
+
+Dokunulan dosyalar:
+
+- `sorun/kiyas-cevabinda-iki-gosterim-hatasi.md` — yeni
+- `decisions/urun-baglami-alan-duzeyinde-tasinmali.md` — yeni
+- `index.md` · `log.md`
+- `app/src/comparison/compare.py` — `RankRow.field`
+- `app/src/chatbot/structured.py` — `field` damgası, `_yon_uyarisi`,
+  `_cok_urunlu_mu`, `_cok_urunlu_uyarisi`
+- `app/src/chatbot/bot.py` — kaynak sözlüğünde `field`
+- `app/src/chatbot/rag.py` — `belge_turu` süzgeci, `SUZGEC_DERINLIK_KATI`
+- `app/web/app/components/ChatPanel.tsx` — satırın kendi alanıyla biçimleme
+- `app/tests/` — `test_chat_kaynak_alan_bilgisi.py` (5),
+  `test_chat_yon_uyarisi.py` (6), `test_kiyas_cok_urunlu_uyarisi.py` (7),
+  `test_rag_belge_turu_suzgeci.py` (11) — yeni
+
+## [2026-08-24] duzeltme | 262k-baglam-iddiasi-geri-cekildi
+
+"262k bağlam net kazanç" iddiası **geri çekildi**; hata bizim ölçümümüzdeydi
+ve iki katmanlıydı.
+
+1. **Alan anahtarı sayıldı, dolu değer değil.** Şema her alanı döndürür ve boş
+   olanı `{"value": null, ...}` biçiminde verir — boş bir sözlük olmadığı için
+   "dolu" sayıldı. "Tam metinde 12 alanın tamamı" bulgusu bu yüzden şişmişti.
+2. **Karşılaştırma yanlıştı.** Kırpık-vs-tam, LLM kolunun KENDİ İÇİNDE
+   kıyasıdır. Kural hattı regex tabanlı ve metnin TAMAMINI tarıyor; kırpma
+   (`OLLAMA_NUM_CTX=8192`) yalnız LLM yolunu etkiliyor. Nitekim 245 uzun
+   belgenin **243'ünde kural hattı zaten alan bulmuş** (741 alan) — o belgeler
+   boş değildi.
+
+Doğru ölçüm (6 en uzun belge, dolu DEĞER sayımı): kural **24** alan, EVREN
+(262k) **10** alan, ortak 10, EVREN'in ekstrası **0**. Bir belgede EVREN hiç
+alan bulamadı, kural 5 buldu.
+
+**Sonuç:** bu kalem üretime alınmamalı. Uzun bağlam bir yetenek olarak duruyor
+(45.959 token sorunsuz işlendi) ama çıkarım işimizde karşılığı yok — §3-c'deki
+tool_calling bulgusuyla aynı yön: EVREN'in çıkarım kolu kural hattının altında
+ve bu bir yapılandırma eksiği değil.
+
+Dokunulan dosyalar:
+
+- `app/docs/evren-servisi.md` §9 — yeniden yazıldı
+- `entities/ssb-evren-cikarim-servisi.md` — 262k satırı ✓✓ → ✗
+- `log.md`
+
+## [2026-08-24] olcum | evren-buyuk-erisim-testi-ve-guvenceler
+
+**Büyük erişim testi (255 soru).** `rag_eval`'in 25 sorusu karar için
+yetersizdi; iki bölümlü, otomatik altın etiketli bir test kuruldu ve iki soru
+tipi **zıt yönde** sonuç verdi:
+
+| kol | özet-tabanlı (n=200) | banka hedefleme (n=55) |
+|---|---|---|
+| keyword | **MRR 0,774** | 23/55 (**%42**) |
+| vector | MRR 0,559 | **43/55 (%78)** |
+| hibrit (RRF) | MRR 0,761 · **R@10 %92,5** | 39/55 (%71) |
+
+A bölümündeki keyword üstünlüğü YAPAY (sorgular belgenin kendi özetinden
+türetiliyor, kelime örtüşmesi şişiyor). B bölümü gerçek kullanıma yakın ve
+orada vektör kolu keyword'ü %42 → %78 ile geçiyor. Hiçbir tek kol iki tipte de
+iyi olmadığı için `HybridRetriever` yazıldı
+([[hibrit-erisim-rrf-ile-birlestirilir]]) — RRF ile, skor toplamıyla DEĞİL
+(kolların ölçekleri farklı; toplam biri ötekini ezer). Üretim varsayılanı
+bilerek `keyword` kaldı: ham vektör aramasında uzun sözleşmeler baskın
+çıkabiliyor.
+
+**Gömme uzay uyumu — kritik doğrulama.** `embeddings` tablosu EVREN ile
+dolduruldu ama teslimde sorgular yerel bge-m3 ile gömülecek. Aynı metin iki
+uçla gömülüp karşılaştırıldı: **kosinüs 0,99993** (çapraz kontrol 0,436).
+Uzaylar ayrışmıyor — tablo geçerli, kademe güvenli. Yan kanıt: erişim testi
+sırasında EVREN düştü, log'a `gomme kademesi dustu -> siradaki` yazıldı ve
+yerel model devraldı; ölçüm bozulmadı.
+
+**Prefix caching ÖLÇÜLDÜ: 5,1×.** İlk deneme 4.823 token'lık bağlamla
+yapılmıştı ve fark gürültü seviyesinde çıkmıştı. 45.959 token'lık gerçek
+sözleşmeyle: ilk çağrı 3,86 sn, sonrakiler 0,75/0,73/0,78 sn. Dokümantasyonun
+4,8× iddiası doğrulandı. Alan başına çağrı modunda aynı belge 12 kez
+gönderildiği için kazanç doğrudan oradadır.
+
+**Model adı doğrulaması — tuzak kapatıldı.** `GET /v1/models` listesine karşı
+bir kerelik kontrol. Liste alınamazsa koşum DURMAZ (güvence, ön koşul değil);
+açık `transport` ile kapanır (test izolasyonu); anahtarsız yerel uçta kapalı.
+Canlı doğrulandı. 9 test.
+
+**Özet yenileme koşuldu (kısmi).** 973 özet yenilendi, 7 aynı kaldı, 1.699
+üretilemedi (`llm_hatasi` 1.695 — DNS kesintisi, `bos_cikti` 4). **Veri kaybı
+YOK:** güvenli döngü gereği yeni özet üretilemeyen belgede eskiye
+dokunulmadı; boşalan özet 0, sayı kapısına takılan 0. Yedek:
+`data/ozet-yedek-20260824-evren-oncesi.json`. Kalan için koşum sürüyor.
+
+**Görsel boşluk ölçümü.** 40 sayfada 75 kampanya/banner görseli, 42'sinin alt
+metni BOŞ — yani içeriği hiç bilinmiyor. Potansiyel kapsam boşluğu var ama
+görseller indirilmemiş; gerçek kazanç ölçülmedi.
+
+**Teslim erişimi (takım beyanı).** Yarışma anında EVREN erişimi olacağı
+bildirildi ve belgeye işlendi — şu ayrımla: neyin açılacağına ÖLÇÜM karar
+verir, erişimin varlığı değil. Çıkarım kolu kural hattının altında olduğu için
+orada açılmıyor.
+
+Dokunulan dosyalar:
+
+- `decisions/hibrit-erisim-rrf-ile-birlestirilir.md` — yeni
+- `index.md` · `log.md`
+- `app/src/chatbot/rag.py` — `HybridRetriever`, `hibrit` modu
+- `app/src/extraction/llm/clients.py` — model adı doğrulaması
+- `app/tests/test_rag_hibrit_retriever.py` (10) ·
+  `app/tests/test_llm_model_dogrulama.py` (9) — yeni
+- `app/docs/evren-servisi.md` §6/§8/§14 · `app/.env.example`
+- `data/demo.db` — 973 özet yenilendi · `data/ozet-yedek-*.json` — yedek
+
+Test durumu: **3.705 geçti · 53 atlandı · 0 hata** · ruff temiz.
+
+## [2026-08-24] ingest | evren-resmi-dokumantasyon-ve-tool-calling
+
+`https://evren-teknofest.ssyz.org.tr` okundu ve **üç yeteneği yanlış test
+ettiğimiz** ortaya çıktı. Düzeltilen her biri yeni bir kapı açtı.
+
+| konu | ilk denememiz | doğrusu | sonuç |
+|---|---|---|---|
+| şema kısıtı | `response_format` → HTTP 500 | **tool calling** | ✓ 12 alanın tamamı |
+| görüntü | `vlm` → *"At most 0 image(s)"* | **`llm-large`** (max 2 görüntü) | ✓ tabloyu okudu |
+| sparse/ColBERT | `/v1/embeddings` → 501 | **`/pooling/<alias>`** | ✓ çalışıyor |
+
+**En değerli bulgu — `tool_calling` modu.** `json_schema` ve
+`structured_outputs` karmaşık şemamızda HTTP 500 veriyor, `guided_json` kısıtı
+sessizce yok sayıyor. Elde yalnız kısıtsız yollar kalmıştı ve ablasyon tam bu
+yüzden "gerçek şema kısıtı hiç devreye girmedi" uyarısı taşıyordu. Tool calling
+ile **aynı şema kabul edildi**; yani uç şemayı derleyebiliyor, kabul etmediği
+şey `response_format` sarmalayıcısıydı. Mod `STRUCTURED_MODES`'a kısıt gücüne
+göre eklendi (`guided_json` → **tool_calling** → `json_object`) ve
+`_yanit_metni` yazıldı: tool calling'de çıktı `tool_calls[0].function.arguments`
+içinde gelir, `content` boş kalır — yalnız `content`e bakan okuyucu çıkarımı
+sessizce kaybederdi. 10 test.
+
+**Ve hipotez çürüdü.** Ablasyon raporlarındaki "gerçek şema kısıtı hiç
+devreye girmedi" uyarısı bir hipotez taşıyordu; kısıt devreye sokulup **aynı
+gold'da** ölçüldü (`gold.v1`): `json_object` ile llm **0,331**, `tool_calling`
+ile **0,304** (hibrit 0,510 → 0,483). Kısıt kaliteyi artırmadı, hafifçe
+düşürdü — ama uydurmayı (23→18) ve yanlış pozitifi (46→41) azalttı, yani
+kısıtlı model daha muhafazakâr. Sonuç: EVREN çıkarım kolunun kural hattımızın
+altında kalması bir yapılandırma eksiği DEĞİL; fark modelin Türkçe finansal
+çıkarım kabiliyetinde. `evren` kademesinin teslimde kapalı kalması kararı
+güçlendi.
+
+**Görüntü (vision) çalışıyor:** `llm-large` panel kıyas tablosunu ekran
+görüntüsünden doğru okudu (Emlak %0 · Türkiye Finans %1,9 · Kuveyt Türk %3,49;
+konut %1,69/%1,89/%3,85–3,95/%2,95), 5,7 sn. Taranmış sözleşme sayfaları ve
+görsel afişler için açık bir kapı.
+
+**Özet yenileme — üçüncü ve doğru ölçüm (25 kampanya, gerçek hat, 6 ölçüt):**
+doğruluk %100 vs %100 · kapsama **%21 vs %15** · ondalık-nokta ihlali **5 vs 5
+(eşit)** · uzunluk 1,58× · retrieval R@1 %88 vs %92. İkinci karşı gerekçe
+(Türkçe biçim) de çürüdü. Kazanç kapsamada (%40 rölatif), kayıp retrieval'da
+bir belge. Net etki marjinal; karar ürün tercihi olarak bırakıldı.
+
+**TUZAK kaydedildi:** bilinmeyen model adı sessizce kabul ediliyor
+(`llm-buyuk-yanlis-ad` → HTTP 200). `EVREN_MODEL` yanlış yazılırsa koşum
+farklı modelle yapılır ve artefakt yanlış adı raporlar. Açık kalem: model adı
+`/v1/models` listesine karşı doğrulanabilir.
+
+**Ölçülemeyen:** prefix caching (belge 4,8× diyor; 4.823 token'lık bağlamda
+fark gürültü seviyesinde çıktı, `prompt_tokens_details: None`).
+
+Dokunulan dosyalar:
+
+- `app/src/extraction/llm/clients.py` — `tool_calling` modu, `TOOL_ADI`,
+  `_yanit_metni`, kısıt probunda `tool_calls` tanıma
+- `app/tests/test_llm_tool_calling.py` — yeni, 10 test
+- `app/tests/test_llm_client.py` · `test_llm_kisit_probu.py` — mod dedektörleri
+- `app/docs/evren-servisi.md` — §3-c (tool calling), §10 (doğru ölçüm), §14
+  (resmi dokümantasyon bulguları) → 15 bölüm
+- `app/.env.example` — mod listesi
+- `entities/ssb-evren-cikarim-servisi.md` — yanlış bilgiler düzeltildi
+
+Test durumu: **3.683 geçti · 53 atlandı · 0 hata** · ruff temiz.
+
+## [2026-08-24] fix | ozet-sayi-kapisi
+
+Özet hattına **sayı doğrulama kapısı** eklendi
+([[ozet-sayisal-degeri-denetleyen-kapi-yoktu]]): özetteki her finansal sayı
+kaynak metinde bulunmak zorunda. Alfabe ve terminoloji kapılarının eşi; sebep
+kodu `sayi_dogrulanmadi`, kalıcı değil (sıcaklık merdiveninde yeniden denenir).
+
+**Ölçülen etki:** ilk regex tarih tuzağına düştü ve 2.676 özetten 114'ünü
+(%4,3) düşürdü — hepsi TARİHTİ, yani hiç uydurma yakalamadan geçerli özetleri
+eliyordu (`01.04.2025` içindeki `4.202` parçası "binlik gruplu sayı" sanılıyordu).
+`(?!\d)` sıkılaştırmasıyla **9'a (%0,34)** indi ve dokuzu da elle doğrulandı,
+gerçekti: id=1123 özette `%50` derken kaynakta yalnız `300 TL` var, id=2528
+özette `5000 TL` derken kaynakta `5001 TL`. Dokuzu düşürüldü (`ozet_sebep`
+yazıldı) ve EVREN ile yeniden üretildi (15,4 sn); korpus artık kapıdan **0
+ihlalle** geçiyor.
+
+**Geri çekilen iddia:** kapı, EVREN'in özet yenilemede %16 doğrulanamayan sayı
+ürettiği ölçümünden doğmuştu. O ölçüm YANLIŞTI — prompt bizim basit test
+prompt'umuzdu, projenin `SISTEM_PROMPT`'u değil. Gerçek hatla 14/14 özet
+ihlalsiz üretildi (sıcaklık merdiveni kapalıyken de aynı, yani merdiven
+kurtarmıyor). "EVREN sayı uyduruyor" iddiası geri çekildi ve özet yenileme
+kararı yeniden açıldı.
+
+Dokunulan dosyalar:
+
+- `sorun/ozet-sayisal-degeri-denetleyen-kapi-yoktu.md` — yeni
+- `entities/ssb-evren-cikarim-servisi.md` · `index.md` · `log.md`
+- `app/src/summarize/ozet.py` — `_sayi_ihlali`, `SEBEP_SAYI`, `_basamaklar`
+- `app/tests/test_ozet_sayi_kapisi.py` — yeni, 11 test + 7 alt test
+- `app/tests/test_ozet_alfabe.py` · `app/tests/test_ozet_dil_temizligi.py` —
+  fikstürler kapıyı hesaplayacak şekilde güncellendi (davranış değişmedi)
+- `app/docs/evren-servisi.md` §10 — yanlış iddia düzeltildi
+- `data/demo.db` — 9 ihlalli özet düşürüldü ve yeniden üretildi
+
+Test durumu: **3.673 geçti · 53 atlandı · 0 hata** · ruff temiz.
+
+## [2026-08-24] ingest | evren-gomme-ve-otomatik-ozet
+
+EVREN'in tüm yetenekleri gerçek korpusla sınandı ve **işe yarayanlar
+kullanıma alındı**. Ölçüm hem kazançları hem kayıpları verdi.
+
+**Kullanıma alındı:**
+- **Gömme yolu açıldı** ([[gomme-yolu-evren-ile-acildi]]). `embeddings` tablosu
+  BOŞTU (`sentence-transformers` kurulu değildi) ve chatbot'un anlamsal kolu
+  hiç devrede değildi. `EvrenEmbedder` + `KademeliEmbedder` yazıldı (22 test);
+  2708/2708 kampanya, **51.556 chunk**, 647 sn, 0 hata. `eval/rag_eval.py`'ye
+  `--vektor` kolu eklendi: banka hedefleme **8/10 → 10/10**, toplam isabet
+  21/25 → **23/25**. Üretim varsayılanı (`RAG_RETRIEVER=keyword`) bilerek
+  DEĞİŞMEDİ — ham vektör aramasında uzun sözleşmeler baskın çıkabiliyor.
+- **Yedek yol kuruldu:** `sentence-transformers==6.0.0`, SBOM tazelendi, sürüm
+  pinlendi (requirements.txt'teki notun kendi talimatı), lisans kapısı GEÇTİ.
+  `requirements-api.txt` onu hâlâ bilerek dışlıyor (imaj boyutu).
+- **Başlatma kademesi:** `scripts/baslat.sh` artık `LLM=0|1|yerel|evren`
+  seçiyor ve seçimi EKRANA BASIYOR. `LLM=1` + anahtar → EVREN, Ollama hiç
+  başlatılmaz.
+- **Tazeleme → otomatik özet:** `alt_akis_kur(..., yeniden_ozetle=...)`.
+  Bayat özet düştükten sonra özetleme işi tetiklenir; bloklamaz, düşerse
+  tazelemeyi HATA'ya çevirmez. Kapı: `TAZELEME_SONRASI_OZET=0`.
+- **Eksik özetler:** 71 özetsiz belgeden 39'u EVREN ile üretildi (65 sn).
+  Kalan 32 dürüst gerekçeyle üretilemedi (`metin_bos` 29, `bos_cikti` 2,
+  `terminoloji_ihlali` 1).
+- **262k bağlam:** korpustaki 245 belge 8k sınırını aşıyor. Ölçüldü —
+  321.782 karakterlik sözleşmede kırpık sürüm 0 alan, TAM metin 12 alanın
+  tamamı (ücret tabloları belgenin sonunda).
+
+**Ölçüldü ve REDDEDİLDİ:**
+- `rerank` — gerçek korpusta MRR 0,68 → 0,29; her pasaj uzunluğunda kayıp.
+- `vlm` — görüntü desteği kapalı (`At most 0 image(s)`).
+- `bge-m3-sparse` / `bge-m3-colbert` — HTTP 501, uç yok.
+- `guard` — bizim enjeksiyon kapımızla anlamlı fark yok (5/26 vs 4/26; yanlış
+  alarm ikisinde de 0/23). İlk koşumdaki "%100" tamamen ağ hatasıydı.
+- `llm-fast` — `llm-large`'dan yavaş.
+- **Özet yenileme** — EVREN özetleri iki kat zengin ama %16'sı doğrulanamayan
+  sayı taşıyor (mevcut %0) ve Türkçe ondalık ayırıcıyı bozuyor. Kendi
+  ölçütümüzdeki hata da düzeltildi: ilk koşum `%3.54` ile `%3,54`yi farklı
+  saydığı için oran %23 çıkmıştı.
+
+Dokunulan dosyalar:
+
+- `decisions/gomme-yolu-evren-ile-acildi.md` — yeni
+- `entities/ssb-evren-cikarim-servisi.md` · `index.md` · `log.md`
+- `app/src/rag/embedding.py` — `EvrenEmbedder`, `KademeliEmbedder`, fabrika
+- `app/src/tazeleme_sonrasi.py` — `yeniden_ozetle` kancası
+- `app/src/api/main.py` — kancanın bağlanması (geç bağlama)
+- `app/src/summarize/ozet_isi.py` — LLM notu EVREN'i de anıyor
+- `app/scripts/baslat.sh` — `LLM=0|1|yerel|evren` kademe seçimi
+- `app/eval/rag_eval.py` — `--vektor` kolu
+- `app/requirements.txt` · `app/docs/sbom.json` · `app/docs/LISANSLAR.md`
+- `app/.env.example` — gömme kademesi + otomatik özet notları
+- `app/docs/evren-servisi.md` — §8–§13 (14 bölüm)
+- `app/tests/test_rag_evren_embedder.py` — yeni, 22 test
+- `app/tests/test_tazeleme_sonrasi.py` — +4 test
+
+Test durumu: **3.662 geçti · 53 atlandı · 0 hata** · ruff temiz · lisans kapısı GEÇTİ.
+
+## [2026-08-24] ingest | ssb-evren-cikarim-servisi
+
+SSB'nin TEKNOFEST 2026 kapsamında **tüm takımlara ücretsiz** açtığı EVREN
+çıkarım servisi (8×H200, 10 model, kotasız) ingest edildi ve **canlı ölçüldü**.
+Ölçüm hem servisi hem kendi kodumuzu sınadı.
+
+**Servis:** OpenAI-uyumlu uç, `llm-large` = Qwen3.5-122B-A10B (262k bağlam),
+`logprobs` var, `bge-m3-embed` **1024 boyut** (gömme katmanımızla birebir),
+`rerank` ucu çalışıyor. `vlm`/`guard`/`router`/sparse/colbert ve izole Qdrant
+sınanmadı.
+
+**Bizde bulunan gerçek hata:** yetenek pazarlığı bir modu "çalışıyor" saymak
+için yalnız HTTP 200'e bakıyordu. EVREN `guided_json`'u tanıyıp 200 dönüyor ama
+kısıtı **sessizce yok sayıyor** (prob yanıtı `'P'` = "Pong!"); pazarlık o modu
+seçiyor, çıktı serbest metin geliyor, üst katmanda "LLM alan bulamadı" olarak
+görünüyordu. Prob artık kısıtın uygulandığını da sınıyor; araya `json_object`
+modu eklendi.
+
+**Ölçüm (gold.v2, 48 kayıt, strict):** kural **0,570** · llm (EVREN) 0,329 ·
+hibrit 0,556. McNemar p=0,00051 → kural anlamlı biçimde kazanıyor. Alan başına
+çağrı (tek alanlık şema → `json_schema` kısıtı gerçekten çalışıyor) **aynı
+gold'da kazandırmadı**: `gold.v1`'de llm 0,331 → 0,323 ve çağrı 40 → 413.
+Yani kısıtın devreye girmesi tek başına yetmiyor; darboğaz başka yerde.
+
+**Karar:** EVREN teslim yoluna **bağımlılık değil kademe** olarak konur
+(`LLM_BACKEND=evren,ollama`); düşerse yerel yol, o da düşerse kural-only
+devralır. Fallback gerçek koşumla kanıtlandı. Şartname §5.9 (on-prem %20)
+korunuyor, §5.10 ihlali yok (servis ücretsiz ve yarışmanın kendisi); anahtar
+repoya girmiyor.
+
+Dokunulan dosyalar:
+
+- `sources/teknofest/2026-08-24-ssb-evren-cikarim-servisi.md` — yeni
+- `entities/ssb-evren-cikarim-servisi.md` — yeni
+- `decisions/evren-opsiyonel-kademe-olarak-entegrasyon.md` — yeni
+- `sorun/pazarlik-http-200-kisit-uygulanmadi.md` — yeni
+- `decisions/on-premise-calistirilabilir-mimari.md` — geri link
+- `decisions/demo-onceden-doldurulmus-db.md` — geri link
+- `concepts/bilgi-cikarimi.md` — geri link
+- `index.md`, `log.md`
+- `app/src/extraction/llm/cascade.py` — yeni (kademe zinciri)
+- `app/src/extraction/llm/clients.py` — bearer başlığı, kısıt probu, `json_object`
+- `app/src/extraction/llm/extractor.py` — `LLM_BACKEND` kademe listesi
+- `app/tests/test_llm_{bearer,kisit_probu,cascade,zincir_fabrikasi}.py` — yeni, 42 test
+- `app/tests/test_llm_deadline.py` — taklit imzası genişletildi
+- `app/docs/evren-servisi.md` — yeni (ölçüm + kapsam sınırları)
+- `app/docs/SARTNAME-UYUM.md` — §5.10 satırı EVREN alanını açıkça anıyor
+- `app/.env.example` — EVREN bloğu (anahtar boş), kademe zinciri notları
+
+Test durumu: **3.636 geçti · 53 atlandı · 0 hata** (önce +42 test).
+
 ## [2026-08-21] lint | tam-denetim
 
 Tam lint (mekanik + semantik) koşuldu, `lint-report.md` baştan yazıldı (önceki

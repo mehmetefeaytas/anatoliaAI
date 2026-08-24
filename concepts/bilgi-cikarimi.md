@@ -32,3 +32,4 @@ otomatik çıkarılması (şartname 5.3, s.7). [[nlp]] çözümünün çekirdek 
 - [[kar-payi-orani]] — çıkarılan kritik alan
 - [[yapilandirilmis-veri-formati]] — çıktının formatı
 - [[urun-karsilastirma]] — çıktının kullanımı
+- [[pazarlik-http-200-kisit-uygulanmadi]] — kısıtlı çıktı pazarlığında ölçülmüş sessiz hata
