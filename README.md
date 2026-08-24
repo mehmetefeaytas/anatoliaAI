@@ -9,7 +9,7 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3593%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Testler](https://img.shields.io/badge/testler-3895%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
@@ -27,7 +27,7 @@ bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaşt
 Sonucu bir dashboard ve iki yollu (yapısal sorgu ↔ RAG) bir chatbot ile
 sunuyor. Tamamı açık kaynak (Apache-2.0); on-premise ve internetsiz çalışıyor.
 
-> 2.708 gerçek belge · 10/10 katılım bankası · 999 PDF · 3.593 yeşil test ·
+> 2.708 gerçek belge · 10/10 katılım bankası · 999 PDF · 3.895 yeşil test ·
 > ağsız kanıt: tek konteyner 14/14, tam yığın **3/3 koşum · 39/39 adım** ·
 > yayımlanmış altın veri seti
 
@@ -183,7 +183,10 @@ karşılaştırıldığında 36 sayısal alanın hiçbirinde sapma yok.
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **2.708 belge** (ham arşivle eşit) · 7.022 çıkarılan alan — kurulum betiği güncel kodla bu sayıları üretir | `python -m scripts.check_demo_db` |
+| Korpus | **2.708 belge** (ham arşivle eşit) · 7.049 çıkarılan alan — kurulum betiği güncel kodla bu sayıları üretir | `python -m scripts.check_demo_db` |
+| Katılma hesabı oranı — cari hafta | **245 cari kayıt** · 9 banka × 4 vade × 4 para birimi, TKBB Veri Peteği | `python -m scripts.tkbb_guncel_hasat` |
+| Katılma hesabı oranı — tarihsel | 210.474 kayıt (2012–2025), gzip'li · hiçbir kod yolunda okunmuyor (trend analizi kapsam dışı) | `python -m scripts.tkbb_karpayi_hasat --sertifika-atla` |
+| Terminoloji | **587 terim** yükleniyor — 111 proje sözlüğü + 476 TKBB (ikincil, çakışmada proje kazanır) | `python -c "from src.domain.terminology import load_terminology as t; print(len(t()))"` |
 | AI özeti kapsaması | **2.634 üretildi (%97,3)** · 74 belge gerekçeli boş (29 metin boş · 41 terminoloji kapısı · 4 diğer) | `python -m scripts.build_summaries --db data/demo.db --devam` |
 | Gold — zor vaka seti | gold seti: `gold.v2.json` (48 kayıt), 40'ı kasten zor | `data/gold/gold.v2.json` |
 | Gold — geniş örneklem | `gold.round1` \| 134 \| protokol v2, 38'i hakemlikten geçti | `python -m scripts.build_gold --pre data/gold/preannotations.v2.json --csv data/gold/review/round1_{A,B}.csv --csv data/gold/review/round1_main_{C,D}.csv` |
@@ -204,11 +207,11 @@ karşılaştırıldığında 36 sayısal alanın hiçbirinde sapma yok.
 | Anotatör uyumu — round0 | Fleiss κ 0,302 · Krippendorff α 0,620 / 0,787 (hakemlik **sonrası**) | `python -m scripts.report_iaa data/gold/review/round0_kalibrasyon_{A,B,C,D}.csv --tur round0-kalibrasyon-v1` |
 | Anotatör uyumu — round1 | Cohen κ 0,274 (hakemlik **öncesi**, 141 ortak karar) | `python -m scripts.report_iaa data/gold/review/round1_{A,B}.csv --tur round1` |
 | Güven kalibrasyonu | ECE 0,188 · MCE 0,379 · Brier 0,201 (n=153) | `python -m eval.calibration --gold data/gold/gold.round1.json` |
-| Bağımlılık envanteri | 96 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
+| Bağımlılık envanteri | 97 paket, CycloneDX SBOM + lisans kapısı | `make sbom lisanslar lisans-kapisi` |
 | On-prem kanıtı — tek konteyner | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
 | On-prem kanıtı — **tam yığın** | **3/3 koşum · 39/39 adım · 0 beklenmedik** (postgres + api + api-postgres + ollama + web, izole ağda) | `for i in 1 2 3; do bash scripts/tam_yigin_agsiz.sh; done` |
 | API kimlik doğrulama | `X-API-Key` / Bearer · tam ve salt-okuma rolü · **yeni bağımlılık 0** (harici JWKS on-prem'i çökertirdi) | `python -m pytest tests/test_api_kimlik_dogrulama.py` |
-| Test | **3.647** toplanan · 3.593 geçti · 54 atlandı (Postgres, CI'da koşar) · 0 başarısız · 1.724 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-23 |
+| Test | **3.948** toplanan · 3.895 geçti · 53 atlandı (hepsi Postgres/pgvector — CI'da koşar) · 0 başarısız · 1.860 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-24 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | **16 iddia · 0 sapma · 0 kanıt eksik** — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 | Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
@@ -390,7 +393,7 @@ diğerlerinden habersiz çalışıyor. Şartname insan hakemliği şart koşmuyo
 **Ölçüm kapsamı iki yerde dar ve ikisi de veri kaynaklı.** `tahsis_ucreti` gold'da
 0 pozitif örnek taşıdığı için F1'i tanımsızdır: sistem değer üretmiyor, gold da
 beklemiyor. Bu "çalışmıyor" değil, ölçülemiyor. `kar_payi_orani` ise korpusun
-yalnız 146/2.708 belgede (%5,4) geçiyor, çünkü bankalar oranı HTML'de değil
+yalnız 164/2.708 belgede (%6,1) geçiyor, çünkü bankalar oranı HTML'de değil
 hesaplama ucunda yayımlıyor. Sınır veride, çıkarım katmanında.
 
 **On-prem kanıtının kapsamı.** İki ayrı kanıt var. Tek konteyner
@@ -491,7 +494,7 @@ kütüphanesiyle çalışıyor.
 | Servis orkestrasyonu | [`app/docker-compose.yml`](app/docker-compose.yml) | postgres + vllm/ollama + api + web, anahtarsız ve offline |
 
 **Makine-okur envanter:** [`app/docs/sbom.json`](app/docs/sbom.json) (CycloneDX
-1.6, 96 paket, geçişli bağımlılıklar dâhil) ve insan-okur
+1.6, 97 paket, geçişli bağımlılıklar dâhil) ve insan-okur
 [`app/docs/LISANSLAR.md`](app/docs/LISANSLAR.md). CI'da bir lisans kapısı koşuyor:
 izin listesi dışı ya da `UNKNOWN` lisanslı bir paket girerse build düşer. Muafiyet
 mümkün ama gerekçesiz muafiyeti kabul etmiyoruz
@@ -520,7 +523,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — 23 Ağu ölçümü: 3.647 toplandı, 3.593 geçti, 54 atlandı, 0 başarısız.
+# Tüm test paketi — 24 Ağu ölçümü: 3.948 toplandı, 3.895 geçti, 53 atlandı, 0 başarısız.
 # Atlananlar isteğe bağlı bağımlılık isteyenler (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değil ve tamamı offline koşuyor.
 python3 -m unittest discover -s tests
@@ -635,10 +638,10 @@ ds = load_dataset("mehmetefeaytas/katilim-bankaciligi-kampanya-gold")
 | `train / val / test` | 127 / 27 / 28 | iki setin birleşimi, belge düzeyinde bölme |
 
 **Sızıntı denetimi: 0 ihlal.** Bu risk teorik değildi, ölçtük: iki gold seti 5
-`source_url` paylaşıyor (aynı belge, iki hasat arasında değişmiş). Naif kayıt
-düzeyi bölme tam oradan sızardı, çünkü neredeyse aynı metin hem eğitimde hem
+`source_url` paylaşıyor (aynı belge, iki hasat arasında değişmiş). Basit bir kayıt
+düzeyi bölme işlemi tam oradan sızardı, çünkü neredeyse aynı metin hem eğitimde hem
 testte olurdu. Bölmeyi bu yüzden birleşim-bul ile belge düzeyinde yapıyoruz ve
-denetimi `tests/test_veri_seti_paketle.py` ile çitledik.
+denetimi `tests/test_veri_seti_paketle.py` ile güvence altına aldık.
 
 ⚠️ **Yayımlanan paket 2026-08-15 kesitidir.** 21 Ağustos'taki HAKEM-05/S1
 tahkim onarımı depodaki gold'u değiştirdi (round1 manşeti 0,793 → 0,795);
@@ -658,7 +661,7 @@ testle korunuyor: biri düşerse test kırılır.
 
 ```bash
 make veri-seti           # paketi gold'dan tek komutla üretir
-make veri-seti-yukle     # KURU koşu: ne yükleneceğini sha256 ile listeler
+make veri-seti-yukle     # DENEME koşusu: ne yükleneceğini sha256 ile listeler
 ```
 
 ### Veri toplama yöntemi ve kökeni (provenance)
@@ -669,7 +672,7 @@ make veri-seti-yukle     # KURU koşu: ne yükleneceğini sha256 ile listeler
   <https://www.bddk.org.tr/Kurulus/Liste/77>
 - Scraping etik kurallara uyuyor: robots.txt, domain başına rate-limit,
   açıklayıcı User-Agent, provenance ve timestamp cache'i. Site engellediğinde
-  şartnamenin izin verdiği manuel toplamaya düşüyoruz ve bunu dokümana yazıyoruz.
+  şartnamenin izin verdiği manuel toplamaya başvuruyoruz ve bunu dokümana yazıyoruz.
 - Ham HTML'i yayımlamıyoruz. Pakete çıkarılmış metin ve provenance alanları
   (`source_url`, `content_hash`) giriyor; "bu bilgiyi nereden aldınız" sorusunu
   cevaplamaya yetiyor.
@@ -706,7 +709,7 @@ denetliyor.
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
 │   │                            #   (+ 224 arayüz testi: web/tests/)
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
-│   ├── tests/                   #   3.593 birim/entegrasyon testi (offline)
+│   ├── tests/                   #   3.895 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
 │   ├── data/gold/               #   altın setler + anotasyon kılavuzu
 │   ├── docs/                    #   SBOM · lisans envanteri · offline kanıt

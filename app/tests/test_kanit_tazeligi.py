@@ -433,7 +433,7 @@ class TestDesenlerGERCEKTEN_Yakaliyor(unittest.TestCase):
                 set(iddia.kapsam()), {d for d, _ in iddia.desenler},
                 f"{iddia.ad}: kapsam ile desen listesi ayrışmış")
 
-    def test_sunum_BES_iddiada_kapsamda(self) -> None:
+    def test_sunum_ALTI_iddiada_kapsamda(self) -> None:
         """Sunum yayımlanan bir belgedir ve 19 Ağustos'ta kapsama alındı.
 
         Kapsamdan çıkarılırsa bu test düşer — sunumun sayıları bir kez daha
@@ -442,12 +442,16 @@ class TestDesenlerGERCEKTEN_Yakaliyor(unittest.TestCase):
         20 Ağustos'ta iki iddia eklendi: sunum yapısal mikro-F1'i ve κ'yı da
         yayımlıyordu, ikisi de denetim dışıydı ve **ikisi de bayatlamıştı**
         (0,717 ve 0,700).
+
+        24 Ağustos'ta altıncısı eklendi: sunum «96 paket SBOM» yazıyordu,
+        gerçek sayı 97'ydi. Aynı desen üçüncü kez tekrar etti — sunumda
+        yayımlanan ama hiçbir iddiaya bağlı olmayan sayı bayatlar.
         """
         kapsayan = [i.ad for i in K.iddialar()
                     if any("docs/sunum" in k for k in i.kapsam())]
         self.assertEqual(
             sorted(kapsayan),
-            ["kappa_ikinci_tur", "test_gecti", "v2_halusinasyon",
+            ["kappa_ikinci_tur", "sbom_paket", "test_gecti", "v2_halusinasyon",
              "v2_mikro_f1", "v2_yapisal_mikro_f1"],
             "sunumu denetleyen iddia kümesi değişmiş")
 

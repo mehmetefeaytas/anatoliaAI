@@ -201,7 +201,7 @@
   border-top: 1px solid var(--line-soft);
 }
 
-/* Ölçülemeyen satır bir kademe kısadır ama SİLİNMEZ: onbir satırın onbiri her
+/* Ölçülemeyen satır bir kademe kısadır ama SİLİNMEZ: on bir satırın on biri her
  * zaman çizilir. Yükseklik farkı bir hiyerarşi işaretidir, bir eleme değil. */
 .cetvel-satir-bos {
   min-height: 36px;

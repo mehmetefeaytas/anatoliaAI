@@ -29,7 +29,7 @@
  * yalnız Apache/MIT/BSD paket şartı koyuyor). Yukarıdaki üç maddelik gerekçe
  * onların dosya başlığından DEĞİL buradan okunur — silinen şey kod, karar değil.
  *
- * ## Onbir satırın onbiri her zaman çizilir
+ * ## On bir satırın on biri her zaman çizilir
  *
  * ÖLÇÜLDÜ: `kar_payi_orani` 1.774 belgenin 56'sında, 11 bankanın 6'sında var.
  * `/compare` yalnız değer TAŞIYAN satırları döndürür; cetveli doğrudan onunla

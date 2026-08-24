@@ -87,7 +87,7 @@ export default function FairnessNotice({ varyant = "tam", ek }: Props) {
     <details className="fairness-serit">
       <summary className="fairness-ozet">
         <span>
-          <b>Adil kıyas:</b> yalnız aynı birime normalize edilmiş,{" "}
+          <b>Adil kıyas:</b> Yalnız aynı birime normalize edilmiş,{" "}
           <b>aynı kampanya türü</b> içindeki değerler kıyaslanır ·{" "}
           <span className="mono">0</span> bir ceza değil, üründür · süresi
           dolmuş kampanya sıralamaya girmez

@@ -108,7 +108,7 @@ bu alanlarda dört somut avantaj verir.
 - Hızlı. Belge başına p50 = 1,03 ms.
 - Tekrar üretilebilir. Sıcaklık, tohum ve model sürümü değişkeni yok.
 
-### LLM katmanı: kodda var, üretimde kapalı
+### LLM katmanı: yalnız kural boşluklarını doldurur
 
 LLM yalnız kuralların kaçırdığı örtük ifadeler için tasarlandı: "ilk 3 ay
 ödemesiz", "avantajlı kâr payı fırsatı", dolaylı oran anlatımları. Kısıtlı JSON
@@ -138,8 +138,21 @@ Tablodaki `kural` sayısı (0,4771) o günün ağacına ait. Aynı gün iki tur 
 iyileştirmesi koştu ve manşet 0,5702'ye çıktı; ablasyon o iyileştirmelerden
 önceki kesiti ölçüyor. Ayrıntı: `docs/rapor/ablasyon.md`.
 
-Teslim edilen korpusta LLM katmanı hiç alan üretmedi. 7.022 alanın tamamı
-`extractor = rule` etiketli.
+**Bu tablo 20 Ağustos'ta LLM'i çıkarımın BİRİNCİL kolu olmaktan çıkardı;
+24 Ağustos'ta ise dar bir boşluk-doldurma rolüyle geri açtık.** Fark yetkide:
+LLM artık kuralla yarışmıyor, yalnız kuralın hiç değer üretmediği alanlara
+aday veriyor ve her aday iki kapıdan geçmek zorunda —
+
+1. **dayanak kapısı:** çıkarılan her sayı belge metninde birebir geçmeli,
+   yoksa aday düşer (`llm/dayanak.py`, `metinde_dogrula`);
+2. **alan kapısı:** kanıt penceresi alanın anlamıyla çelişmemeli — bir
+   `kar_payi_orani` adayının penceresinde "komisyon", "BSMV", "stopaj" gibi
+   izler varsa aday düşer (`YASAK_IZLER`).
+
+Ölçülen sonuç: 120 belgelik denetimde **0 yanlış pozitif**; korpus genelinde
+**27 alan** kabul edildi (18 `kar_payi_orani`, 9 `finansman_tutari`).
+Dolayısıyla teslim edilen korpusun katman kırılımı **7.022 `rule` + 27 `llm`
+= 7.049**'dur. Oran değişmiyor: alanların **%99,6**'sı hâlâ kural üretimi.
 
 ### Sohbet arayüzü: iki yol, bir yönlendirici
 
@@ -164,7 +177,8 @@ Bu yönlendirme alan çıkarımından bağımsız bir mekanizma. Ablasyon tablol
 Bu skorlar kalibre edilmedi. "0,90 güven" %90 doğruluk anlamına gelmez; skor bir
 sıralayıcı olarak iş görür ve aynı alan içinde hangi çıkarımın daha güvenilir
 olduğunu söyler. Her alan `confidence_source` taşır, böylece ayrım panelde ve
-denetimde görünür kalır. Teslim edilen 7.022 alanın tamamı `rule_heuristic`.
+denetimde görünür kalır. Teslim edilen 7.049 alanın 7.022'si `rule_heuristic`,
+27'si `logprob` taşıyor.
 
 ---
 
@@ -251,20 +265,74 @@ türe girmiyor ve ayrı satır olarak raporlanıyor; zorlama etiket atanmıyor.
 | `taksit_sayisi` | 426 | %15,7 |
 | `odul_miktari` | 331 | %12,2 |
 | `alisveris_puani` | 182 | %6,7 |
+| `kar_payi_orani` | **164** | **%6,1** |
 | `indirim_orani` | 162 | %6,0 |
-| `kar_payi_orani` | **146** | **%5,4** |
-| `finansman_tutari` | 75 | %2,8 |
+| `finansman_tutari` | 84 | %3,1 |
 | `tahsis_ucreti` | 33 | %1,2 |
-| **Toplam alan** | **7.022** | |
+| **Toplam alan** | **7.049** | |
 
-Son satırdan bir tanesi projenin en önemli bulgusu. **Kâr payı oranı yalnız 146
+Son satırdan bir tanesi projenin en önemli bulgusu. **Kâr payı oranı yalnız 164
 belgede geçiyor.** Şartname §5.7'nin birinci karşılaştırma ölçütü ("En Düşük Kâr
 Payı Oranı") tam bu alana dayanıyor.
 
 Sebep veri kaynağının doğasında. Katılım bankaları kampanya sayfalarında oranı
 çoğu zaman yazmıyor; "avantajlı oran", "özel oranlı finansman" gibi nitel
 ifadeler kullanıyor. Sistem bu boşluğu doldurmuyor, `comparable=False` ile
-işaretliyor. PDF hasadı payı 60'tan 146'ya çıkardı, ama alan hâlâ seyrek.
+işaretliyor. PDF hasadı payı 60'tan 146'ya, LLM boşluk doldurma koşumu
+146'dan 164'e çıkardı; alan yine de seyrek.
+
+Asıl çözüm başka yerden geldi: **oranı bankalar yayımlamıyor ama TKBB
+yayımlıyor.** Ayrıntı aşağıda, "Katılma hesabı oranları" başlığında.
+
+### Katılma hesabı oranları — korpus dışı ikinci kaynak
+
+Yukarıdaki kısıt (kâr payı oranı belgelerin yalnız %6,1'inde geçiyor) kampanya
+korpusundan çözülemez, çünkü bilgi orada YOK. Bankalar katılma hesabı oranını
+HTML kampanya sayfasında değil, TKBB'nin ortak yayınında açıklıyor. Bu yüzden
+korpusun yanına ayrı bir veri kolu eklendi.
+
+İki ayrı uç noktası hasat edildi:
+
+| Kaynak | Kapsam | Kayıt |
+|---|---|---:|
+| TKBB Veri Peteği (cari hafta) | 9 banka × 4 rapor × 4 vade × 4 para birimi | **245** |
+| TKBB tarihsel arşiv (2012–2025) | aynı kırılım, haftalık seri | 210.474 |
+| Kuveyt Türk kendi yayını (PDF) | 7 bakiye segmenti × vade | 144 |
+
+Üretim yolunda **yalnız cari hafta** okunuyor. Tarihsel arşiv depoda gzip'li
+duruyor (89 MB → 1,3 MB) ama hiçbir kod yolu onu açmıyor: trend analizi bu
+teslimin kapsamı dışında ve kullanılmayan bir veriyi "kullanıyoruz" gibi
+göstermek ölçüm dürüstlüğüne aykırı olurdu.
+
+**İki büyüklük asla aynı sıralamada yarışmaz.** TKBB iki ayrı sayı yayımlıyor
+ve ikisi de "kâr payı oranı" diye anılıyor:
+
+- **Dağıtılan kâr payı oranı** — gerçekleşen yıllık getiri (ör. %42,79).
+- **Kâr paylaşım oranı** — kârın katılımcıya düşen payı (ör. %90).
+
+Birini ötekiyle sıralamak, %90'lık bir bölüşüm oranını %42,79'luk bir getirinin
+üstüne koymak demektir; sonuç sayısal olarak "doğru" görünür ve tamamen
+anlamsızdır. Sistem her kaydı `buyukluk` alanıyla (`getiri` / `pay`)
+etiketliyor ve iki kümeyi ayrı tablolarda gösteriyor.
+
+**Doğrulama.** Albaraka'nın TL paylaşım oranları (90 / 90 / 92 / 93) üç bağımsız
+kaynakta birebir aynı çıktı: cari uç nokta, tarihsel arşiv ve bankanın kendi
+yayımladığı PDF.
+
+**Bilinen boşluklar.** ① Haziran 2025 – Ağustos 2026 arası hiçbir uçta yok.
+② Segment kırılımı yalnız Kuveyt Türk'te tam (144 kayıt); Emlak'ta iki segment
+var, yedi bankada hiç yok — bankalar yayımlamıyor. ③ 2026 yılı tarihsel arşivde
+yok, çünkü yıl bitmedi; arşiv yıl kapandığında dolar.
+
+Yüzey: `GET /katilma-oranlari` ucu, panelin *Katılma Oranları* sekmesi ve
+sohbetin `katilma_orani` yolu. Hasat betikleri: `scripts/tkbb_guncel_hasat.py`,
+`scripts/tkbb_karpayi_hasat.py`, `scripts/kt_paylasim_pdf.py`.
+
+> **TLS notu.** Tarihsel arşiv ucunun sertifikası süresi dolmuş durumda. Betik
+> doğrulamayı **sessizce atlamıyor**: `--sertifika-atla` bayrağı verilmezse 2
+> koduyla çıkıyor ve gerekçeyi yazıyor. Bayrakla toplanan her kayıt
+> `tls_dogrulama: "atlandi"` damgası taşıyor. İçerik ayrıca kullanıcının
+> tarayıcı çıktısıyla karşılaştırıldı: 7 bankada 7'si birebir tuttu.
 
 ### Bilinen veri kalitesi sorunları
 
@@ -344,8 +412,9 @@ kalmadı.
 | `extractor` | `rule` \| `ner` \| `llm` |
 
 `verify_span()` öz-denetim yapar: konumla kesilen metin gerçekten `raw_value`
-içeriyor mu? Teslim edilen korpusta 7.022 alanın 7.022'sinde konum dolu ve
-doğrulanmış.
+içeriyor mu? Teslim edilen korpusta 7.049 alanın 7.049'unda konum dolu ve
+doğrulanmış — LLM'in doldurduğu 27 alan dâhil, çünkü dayanak kapısı zaten
+metinde birebir geçen bir dizi arıyor.
 
 Bu konumlar bir dönem veritabanı sınırında kayboluyordu. API katmanı `str.find()`
 ile yeniden aramak zorunda kalıyor, aynı değer metinde iki kez geçtiğinde yanlış
@@ -600,7 +669,7 @@ curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11, fie
 ### Değerlendirme ve test komutları
 
 ```bash
-python3 -m unittest discover -s tests            # 3.647 test toplanır
+python3 -m unittest discover -s tests            # 3.948 test toplanır
 python -m eval.properties --raw-dir data/raw     # değişmez denetimi
 python -m eval.run_eval --gold data/gold/gold.v2.json --config kural
 python -m eval.ablation                          # kural / llm / hibrit / hibrit-verify
@@ -997,7 +1066,7 @@ diyor, "insan onayladı" demiyor. **Kapatılması gereken en öncelikli açık b
 
 Senaryonun kalp alanı yeterince ölçülmedi. `kar_payi_orani` `gold.v2`'de yalnız
 üç karar destekli. Oradan çıkan F1 yorumlanamaz; üç karar bir F1 taşımaz. Alan
-korpusta 146/2.708 belgede (%5,4) geçiyor ve bu bir model kısıtı olarak
+korpusta 164/2.708 belgede (%6,1) geçiyor ve bu bir model kısıtı olarak
 okunmamalı — bankalar oranları kampanya sayfalarında büyük ölçüde yayımlamıyor.
 
 ### Halüsinasyon oranı: iki set doğrudan karşılaştırılamaz
@@ -1057,8 +1126,8 @@ yapıyor.
 
 | koşucu | toplanan | geçti | atlandı | başarısız |
 |---|---:|---:|---:|---:|
-| `unittest` (kanonik) | 3.647 | 3.593 | 54 | 0 |
-| `pytest` (çapraz doğrulama) | 3.647 | 3.593 | 54 | 0 |
+| `unittest` (kanonik) | 3.948 | 3.895 | 53 | 0 |
+| `pytest` (çapraz doğrulama) | 3.948 | 3.895 | 53 | 0 |
 
 Artefakt: `eval/reports/test-ozeti.json`, commit `03822c24`, `git_dirty: false`,
 Python 3.14.6. Atlanan 53 test Postgres/pgvector istiyor ve CI'ın

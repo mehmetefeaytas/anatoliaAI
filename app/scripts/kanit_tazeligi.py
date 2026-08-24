@@ -735,6 +735,77 @@ class Sonuc:
     gerekce: str = ""
 
 
+def olc_sbom_paket() -> float:
+    """`docs/sbom.json` içindeki bileşen sayısı.
+
+    Bu iddia kapıya 2026-08-24'te eklendi ve eklenme sebebi ölçülmüş bir
+    sapmadır: SBOM 96'dan 97 paketse çıkmıştı ama README iki yerde hâlâ «96
+    paket» diyordu ve HİÇBİR kapı bunu görmedi. Bağımlılık sayısı on-prem
+    iddiasının parçası; yanlış olması «neyi çalıştırdığınızı bilmiyorsunuz»
+    demek.
+    """
+    yol = KOK / "docs" / "sbom.json"
+    if not yol.exists():
+        raise KanitYok(f"{yol} yok — `make sbom` gerekiyor")
+    veri = json.loads(yol.read_text(encoding="utf-8"))
+    bilesenler = veri.get("components")
+    if not isinstance(bilesenler, list):
+        raise KanitYok("sbom.json içinde `components` listesi yok")
+    return float(len(bilesenler))
+
+
+def olc_korpus_alan() -> float:
+    """`data/demo.db` içindeki çıkarılmış alan sayısı.
+
+    Belge sayısının kardeşi. LLM boşluk doldurma koşumu bu sayıyı değiştirir
+    (2026-08-24: 7.022 -> 7.049) ve belge sayısı sabit kaldığı için
+    `korpus_belge` iddiası o değişikliği GÖRMEZ.
+    """
+    db = KOK / "data" / "demo.db"
+    if not db.exists():
+        raise KanitYok(f"{db} yok — `python -m scripts.build_demo_db` gerekiyor")
+    with sqlite3.connect(f"file:{db}?mode=ro", uri=True) as baglanti:
+        return float(
+            baglanti.execute("SELECT COUNT(*) FROM extracted_fields").fetchone()[0])
+
+
+def olc_terim_sayisi() -> float:
+    """Yüklenen toplam terim sayısı — proje sözlüğü + TKBB ikincil kaynağı.
+
+    `load_terminology()` çağrılıyor, dosya satırı sayılmıyor: yayımlanan sayı
+    «sözlükte kaç satır var» değil «sistem kaç terim GÖRÜYOR»dur. İkisi
+    ayrışabilir (çakışan kayıtlar düşürülür) ve ayrıştığında doğru olan
+    ikincisidir.
+    """
+    try:
+        from src.domain.terminology import load_terminology
+    except ImportError as exc:                       # pragma: no cover
+        raise KanitYok(f"terminology modülü yüklenemedi: {exc}") from exc
+    return float(len(load_terminology()))
+
+
+def olc_katilma_guncel_kayit() -> float:
+    """TKBB cari hafta katılma hesabı oranı kayıt sayısı.
+
+    `data/raw/<banka>/rates/tkbb-guncel.jsonl` satırlarının toplamı. Tarihsel
+    arşiv (`tkbb-karpayi.jsonl.gz`) BİLEREK sayılmıyor: o dosyalar hiçbir kod
+    yolunda okunmuyor (trend analizi CLAUDE.md §18 ile kapsam dışı) ve
+    yayımlanan manşet cari haftanın kapsamıdır.
+    """
+    kok = KOK / "data" / "raw"
+    if not kok.exists():
+        raise KanitYok(f"{kok} yok")
+    dosyalar = sorted(kok.glob("*/rates/tkbb-guncel.jsonl"))
+    if not dosyalar:
+        raise KanitYok(
+            "tkbb-guncel.jsonl bulunamadı — `python -m scripts.tkbb_guncel_hasat`")
+    toplam = 0
+    for yol in dosyalar:
+        toplam += sum(
+            1 for satir in yol.read_text(encoding="utf-8").splitlines() if satir.strip())
+    return float(toplam)
+
+
 def iddialar() -> list[Iddia]:
     """Denetlenen sayıların tek doğruluk kaynağı.
 
@@ -937,6 +1008,50 @@ def iddialar() -> list[Iddia]:
                 ("README.md", r"κ \(İNSAN\) = \*\*([\d,]+)\*\*"),
             ),
             olcer=lambda: olc_kappa_ikinci_tur("ikinci-tur-insan.jsonl"),
+        ),
+        # ── 2026-08-24'te eklenen dört iddia ────────────────────────────
+        # Dördü de yayımlanmış ama KORUNMAYAN sayılardı; `sbom_paket` zaten
+        # sapmıştı (96 ↔ 97). Kapının kendi docstring'indeki kör nokta uyarısı
+        # ("korunan sayıların listesi yayımlananlardan küçükse kapı '0 sapma'
+        # derken yanılıyor olabilir") bu satırlarla bir adım daraltıldı.
+        Iddia(
+            ad="sbom_paket",
+            aciklama="SBOM'daki bağımlılık (bileşen) sayısı",
+            desenler=(
+                ("README.md", r"([\d.]+) paket, CycloneDX SBOM"),
+                ("README.md", r"1\.6, ([\d.]+) paket, geçişli"),
+                ("app/docs/sunum/anatolia-ai-sunum.html",
+                 r"· ([\d.]+) paket SBOM"),
+            ),
+            olcer=olc_sbom_paket,
+            tolerans=0.5,
+        ),
+        Iddia(
+            ad="korpus_alan",
+            aciklama="Korpustan çıkarılmış alan sayısı",
+            desenler=(
+                ("README.md", r"· ([\d.]+) çıkarılan alan"),
+            ),
+            olcer=olc_korpus_alan,
+            tolerans=0.5,
+        ),
+        Iddia(
+            ad="terim_sayisi",
+            aciklama="Yüklenen toplam terim sayısı (proje sözlüğü + TKBB)",
+            desenler=(
+                ("README.md", r"\*\*([\d.]+) terim\*\*"),
+            ),
+            olcer=olc_terim_sayisi,
+            tolerans=0.5,
+        ),
+        Iddia(
+            ad="katilma_guncel_kayit",
+            aciklama="TKBB cari hafta katılma hesabı oranı kaydı",
+            desenler=(
+                ("README.md", r"\*\*([\d.]+) cari kayıt\*\*"),
+            ),
+            olcer=olc_katilma_guncel_kayit,
+            tolerans=0.5,
         ),
     ]
 

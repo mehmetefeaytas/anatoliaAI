@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3593%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Testler](https://img.shields.io/badge/testler-3895%20ye%C5%9Fil-brightgreen.svg)](tests/)
 [![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
@@ -92,7 +92,7 @@ kırılım ve karşı-okumalar: [`docs/rapor/ablasyon.md`](docs/rapor/ablasyon.m
 > (Aynı gün erken bir koşum 4.709 vermişti; aradaki 5 alan sahte `%0` kâr payı
 > temizliğiyle düştü. O günkü `data/demo.db` de bu sayıyı taşıyordu.)
 > **Tazelenmiş ölçüm (2026-08-21 akşamı, PDF hasadı + günün kural
-> düzeltmelerinden sonra):** korpus 2.708 belge, çıkarılan **7.022** alanın
+> düzeltmelerinden sonra):** korpus 2.708 belge, çıkarılan **7.049** alanın
 > tamamı `rule`; `ner` ve `llm` yine **0**. Bağımsız doğrulama:
 > `sqlite3 data/demo.db "select count(*) from extracted_fields"` → **7022**. Katman
 > dağılımı hasatla DEĞİŞMEDİ — iddia büyüyen korpusta da geçerli.
@@ -344,14 +344,14 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **3.647** birim/entegrasyon testi toplanıyor · **3.593 geçiyor** ·
+**Test:** **3.948** birim/entegrasyon testi toplanıyor · **3.895 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 224 arayüz testi
 (`cd web && npm run test` — ölçüm 2026-08-21: 224 test / 52 küme / 9 dosya).
 
 ```bash
 python -m scripts.test_ozeti     # -> eval/reports/test-ozeti.json
-# 2026-08-23 (temiz ağaç): 3647 toplandı · 3593 geçti · 54 atlandı · 0 başarısız
+# 2026-08-24 (temiz ağaç): 3948 toplandı · 3895 geçti · 53 atlandı · 0 başarısız
 ```
 
 Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde koşar.
@@ -361,8 +361,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.647** | **3.593** | 54 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **3.647** | **3.593** | 54 | **0** (+1.724 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **3.948** | **3.895** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **3.948** | **3.895** | 53 | **0** (+1.860 subtest) |
 >
 > **Neden 54 ve niçin geliştirici makinesinde 53 görünür.** Bu sayı TEMİZ BİR
 > KLONDA ölçüldü (ayrı bir `git worktree`, `git_dirty: false`, commit
@@ -412,7 +412,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **2.708 gerçek belge** (999 PDF aslıyla birlikte), 10 katılım bankası + TKBB'den canlı toplandı; provenance her kayıtta: `source_url` 2.708/2.708, `scraped_at` 2.706/2.708 (eksik ikisi demo fikstürü) |
-| Testler | ✅ **3.593 test yeşil** (3.647 toplanan · 54 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlananların 53'ü Postgres/pgvector isteyen testlerdir (CI'ın `test-with-deps` işinde koşar), 54.'sü ise izlenmeyen bir anotatör `.xlsx` fixture'ına bağlıdır (aşağıdaki nota bakın). Ölçüm 2026-08-23: `python -m pytest tests -q` → `3593 passed, 54 skipped, 1724 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
+| Testler | ✅ **3.895 test yeşil** (3.948 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlamaların **tamamı** Postgres/pgvector isteyen testlerden geliyor (CI'ın `test-with-deps` işinde koşarlar). `pytest -rs` gerekçeleri tek tek listeliyor: 53 atlamanın 53'ü de aynı gerekçeyi taşıyor, başka sebep yok. Ölçüm 2026-08-24: `python -m pytest tests -q` → `3895 passed, 53 skipped, 1860 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
 | Değişmez (invariant) denetimi | ✅ **2.708 belgede 0 ihlal** — kapsam **%92,3** (2.499 belgede en az bir alan çıktı; 209 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-21: `python -m eval.properties --raw-dir data/raw` → çıkış kodu 0. **21 Ağustos'ta bu denetim 2 GERÇEK ihlal verdi ve CI'ı kırdı**: son PDF hasadındaki okunamaz bir Albaraka sözleşmesi (ToUnicode tablosu olmayan gömülü yazı tipi) çöp metni `kampanya_kosullari` kalemi olarak sunuyordu. Kök neden kodda değil veride olduğu için çözüm bir KAPI oldu (`_ortak.bozuk_metin`); ihlal gizlenmedi, sebebi burada yazılı |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-21, 2.708 belge — **28 çelişki: 8'i belgeler-arası** (6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı**), 20'si belge-içi. Kâr payı örneği manşetliktir: Albaraka aynı ürün için iki ayrı formda **%7,0 ve %1,0** yayımlamış — kesişmeyen iki oran. Komut: `python -m src.comparison.scan --raw-dir data/raw`. **İki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
@@ -715,8 +715,8 @@ doğrulandı) ama kanıt kapısı insan hakemliğinin yerine geçmez.
 
 > **Senaryonun kalp alanı yeterince ölçülmedi.** `kar_payi_orani` gold.v2'de
 > yalnız **3 karar** destekli (TP 2, FN 1). Oradan çıkan F1 = 0,800
-> **yorumlanamaz** — üç karar bir F1 taşımaz. Korpusta alan **146/2.708 belgede (%5,4)** var
-> (ölçüm 2026-08-21; PDF hasadı payı 60'tan 146'ya çıkardı). Önceki ölçüm: **60/1.782 (%3,4)**
+> **yorumlanamaz** — üç karar bir F1 taşımaz. Korpusta alan **164/2.708 belgede (%6,1)** var
+> (ölçüm 2026-08-24; PDF hasadı payı 60'tan 146'ya, LLM boşluk doldurma 146'dan 164'e çıkardı). Önceki ölçümler: **146/2.708 (%5,4)** · **60/1.782 (%3,4)**
 > (ölçüm 2026-08-16, sahte `%0` temizliğinden sonra; önceki yayımlanan değer 70/1.782 = %3,9 idi
 > ve içinde bağlamsız sıfırlar vardı) — bu bir
 > model kısıtı değil, **veri gerçeği**: bankalar oranları kampanya
