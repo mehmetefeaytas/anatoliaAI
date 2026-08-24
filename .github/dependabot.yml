@@ -1,19 +1,43 @@
 # Bağımlılık güncelleme botu — haftalık, üç ekosistem.
 # Pinli sürüm disiplini (app/requirements.txt başlığı) elle takip yerine
 # burada otomatik PR'a bağlanır; PR'ı birleştiren SBOM'u da yeniden üretir.
+#
+# ## MAJOR SÜRÜMLER YOK SAYILIYOR (2026-08-24)
+#
+# Botun ilk koşumu (23 Ağu) geride kalmış her şeyi tek seferde PR'ladı: 13 PR,
+# yarısı kırıcı sürüm atlaması — `next` 14→16, `react-dom` 18→19, `typescript`
+# 5→7, `@types/node` 20→26, GitHub Actions 4/5→7.
+#
+# Teslim yakınken major yükseltme, ölçülmüş bir kazanç getirmeden üç şeyi
+# birden riske atıyor: çalışan arayüz (App Router kırıcı değişiklikleri), CI
+# kapıları ve SBOM sapma kapısı (`make sbom-sapma`, envanter birebir tutmalı).
+#
+# `ignore` kuralı botu SUSTURMUYOR: yama ve küçük sürümler gelmeye devam
+# ediyor, yani güvenlik düzeltmeleri kaçmıyor. Yalnız kırıcı sürüm atlamaları
+# dışarıda kalıyor. Teslimden sonra bu blok kaldırılıp yükseltmeler tek tek
+# ölçülerek alınabilir.
 version: 2
 updates:
   - package-ecosystem: pip
     directory: /app
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: npm
     directory: /app/web
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
