@@ -40,7 +40,7 @@ from ...comparison.compare import (
     rank_advantageous_by_type,
     weight_manifest,
 )
-from .kiyas_toplama import bilesik_skor_kampanyalari
+from .kiyas_toplama import bilesik_skor_kampanyalari, yayin_satirlari
 
 
 def uc_ekle(r: Any, *, field_rows: Callable[..., list[dict]]):
@@ -55,7 +55,8 @@ def uc_ekle(r: Any, *, field_rows: Callable[..., list[dict]]):
 
     @r.get("/advantageous")
     def advantageous(type: Optional[str] = None,
-                     min_coverage: float = MIN_COVERAGE):
+                     min_coverage: float = MIN_COVERAGE,
+                     banka_yayini: bool = True):
         """§5.7 "En Avantajlı Kampanya" — ÇOK alanlı, ağırlıklı bileşik skor.
 
         Bu uç 2026-08-08'de eklendi. `compare.py`'deki bileşik skorlama
@@ -85,6 +86,29 @@ def uc_ekle(r: Any, *, field_rows: Callable[..., list[dict]]):
             DEFAULT_WEIGHTS, field_rows=_field_rows)
 
         satirlar = list(by_campaign.values())
+
+        # BANKA YAYINLARINDAN gelen satırlar da kıyasa giriyor.
+        #
+        # Yıldız cetvelinde 81 olası (banka × tür) hücrenin yalnız 37'sinde
+        # yıldız vardı; boş hücrelerin çoğu FİNANSMAN aileleriydi, yani
+        # `kar_payi_orani` gereken yerler. O oran kampanya metninde YOK
+        # (ölçüldü: EVREN 60 belgede 0 kabul) ama bankalar onu hesaplama
+        # araçlarında yayımlıyor.
+        #
+        # Satırlar `campaign_id=None` ve `kaynak="banka-yayini"` taşıyor;
+        # `extracted_fields`e YAZILMIYOR ve arayüz ayrı etiketliyor. Yıldızın
+        # sorusu zaten "bu banka bu ürün türünde ne kadar iyi" ve bankanın
+        # yayımladığı ürün o sorunun meşru kanıtıdır — şart, nereden geldiğinin
+        # yazılması.
+        # `banka_yayini=false` SALT KAMPANYA görünümü verir.
+        #
+        # Denetim için gerekli: "bu kıyasın ne kadarı kampanya belgesinden
+        # geliyor" sorusunun cevabı bir bayrakla alınabilmeli. Testler de bu
+        # bayrakla kampanya kapılarını (MIN_GROUP_SIZE gibi) yayın satırları
+        # popülasyonu değiştirmeden sınıyor.
+        if banka_yayini:
+            satirlar.extend(yayin_satirlari())
+
         if type:
             satirlar = [r for r in satirlar if r.get("campaign_type") == type]
 
@@ -92,6 +116,7 @@ def uc_ekle(r: Any, *, field_rows: Callable[..., list[dict]]):
         return {
             "min_group_size": MIN_GROUP_SIZE,
             "min_coverage": min_coverage,
+            "banka_yayini": banka_yayini,
             "weights": weight_manifest(),
             "fairness_note": (
                 "Sıralama kampanya TÜRÜ İÇİNDE yapılır; türler arası "

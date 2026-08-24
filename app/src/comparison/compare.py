@@ -228,6 +228,12 @@ _LOWER_IS_BETTER = {
 }
 _HIGHER_IS_BETTER = {
     "vade_ay", "finansman_tutari", "odul_miktari", "indirim_orani", "alisveris_puani",
+    # Katılma hesabının DAĞITILAN getirisi — `kar_payi_orani`nin TERSİ yönde.
+    # Ayrı bir alan adı ŞART: aynı alana yazılsaydı %42'lik bir getiri, %2'lik
+    # bir finansman oranının yanında "kötü" görünürdü. İki büyüklük ters
+    # yönlüdür ve tek kolonda yarışamaz
+    # (bkz. decisions/katilma-orani-iki-ayri-buyukluk.md).
+    "katilma_getirisi",
 }
 
 #: Kampanya türü boş (NULL) olan belgelerin grup adı. Belge GİZLENMEZ, kendi
@@ -1396,11 +1402,17 @@ TUR_AGIRLIKLARI: dict[str, dict[str, float]] = {
         "indirim_orani": 0.15,
         "masraf_durumu": 0.15,
     },
-    # Yatırım Ürünü — vade ve masraf ekseni; oran belgelerin %5'inde.
+    # Yatırım Ürünü — türün ASIL ölçütü katılma hesabının getirisi.
+    #
+    # Kampanya belgelerinde oran %5'te; ama bu türün gerçek ürünü katılma
+    # hesabıdır ve TKBB onun dağıtılan getirisini HER BANKA için haftalık
+    # yayımlıyor. O sayı olmadan "yatırım ürününde hangi banka iyi" sorusu
+    # vade ve masraf üzerinden cevaplanıyordu — ürünün kendisine bakmadan.
     "Yatırım Ürünü": {
-        "vade_ay": 0.40,
-        "masraf_durumu": 0.35,
-        "odul_miktari": 0.25,
+        "katilma_getirisi": 0.45,
+        "vade_ay": 0.25,
+        "masraf_durumu": 0.20,
+        "odul_miktari": 0.10,
     },
     # Yeni Müşteri — yalnız iki ölçüt gerçekten var (%40 ve %20).
     "Yeni Müşteri": {
@@ -1497,12 +1509,21 @@ class CompositeScore:
     #: Kampanyanın geçerlilik durumu — `RankRow.campaign_status` ile aynı
     #: gerekçe: rozet, nottan ayrı bir alandan okunur.
     campaign_status: Optional[str] = None
+    #: Satırın KAYNAĞI: `"kampanya"` (öntanım) ya da `"banka-yayini"`.
+    #:
+    #: Yıldız cetveline bankanın KENDİ yayımladığı oranlardan üretilen satırlar
+    #: da giriyor (bkz. `kiyas_toplama.yayin_satirlari`). O satırların kanıt
+    #: zinciri farklı: kampanya satırı bir belgenin span'ine dayanır, yayın
+    #: satırı bankanın hesaplama aracına. Ekranda AYRI etiketlenmeleri şart —
+    #: aynı rozetle göstermek "aynı güvenle ölçüldü" demek olurdu.
+    kaynak: str = "kampanya"
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "bank": self.bank,
             "bank_name": self.bank_name,
             "campaign_id": self.campaign_id,
+            "kaynak": self.kaynak,
             "score": self.score,
             "coverage": self.coverage,
             "comparable": self.comparable,
@@ -1688,7 +1709,8 @@ def rank_advantageous(rows: Iterable[dict],
                                note=(_durum_notu(r.get("campaign_status"))
                                      or "hiçbir ölçüt ölçülemedi"),
                                components=[],
-                               campaign_status=r.get("campaign_status"))
+                               campaign_status=r.get("campaign_status"),
+                               kaynak=r.get("kaynak") or "kampanya")
                 for r in rows]
 
     # 2) Alan içi sıralama normalizasyonu
@@ -1746,6 +1768,7 @@ def rank_advantageous(rows: Iterable[dict],
             campaign_id=r.get("campaign_id"), score=score, coverage=coverage,
             comparable=comparable, note=note, components=components,
             campaign_status=r.get("campaign_status"),
+            kaynak=r.get("kaynak") or "kampanya",
         ))
 
     ok = [c for c in out if c.comparable]

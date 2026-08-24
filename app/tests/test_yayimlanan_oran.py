@@ -215,3 +215,118 @@ class TestGuvenlikKapisiBeyazListesi(unittest.TestCase):
 
 if __name__ == "__main__":                   # pragma: no cover
     unittest.main()
+
+
+# --------------------------------------------------------------------------- #
+# Yıldız cetveline giren banka-yayını satırları
+# --------------------------------------------------------------------------- #
+
+class TestYayinSatirlari(unittest.TestCase):
+    """`/advantageous` girdisine eklenen (banka, tür) satırları.
+
+    ## Niçin bu satırlar var
+
+    Yıldız cetvelinde 81 olası (banka × tür) hücrenin yalnız **37'sinde**
+    yıldız vardı; boş hücrelerin çoğu finansman aileleriydi — `kar_payi_orani`
+    gereken yerler. O oran kampanya metninde YOK (EVREN 60 belgede 0 kabul)
+    ama bankalar onu hesaplama araçlarında yayımlıyor. 37 → 54 oldu.
+
+    ## Kilitlenen üç kural
+
+    1. `campaign_id=None` ve `kaynak="banka-yayini"` — kanıt zinciri ayrı.
+    2. Katılma getirisi `kar_payi_orani`ne YAZILMAZ; ters yönlü büyüklük.
+    3. Tanınmayan ürün ailesi satır ÜRETMEZ.
+    """
+
+    def setUp(self) -> None:
+        from src.api.routers.kiyas_toplama import yayin_satirlari
+        self.satirlar = yayin_satirlari()
+
+    def test_hepsi_banka_yayini_damgali(self) -> None:
+        self.assertTrue(self.satirlar)
+        self.assertEqual({s["kaynak"] for s in self.satirlar}, {"banka-yayini"})
+
+    def test_kampanya_kimligi_YOK(self) -> None:
+        """Bir kampanyaya bağlanmak, o belgenin söylemediğini ona atfetmekti."""
+        self.assertTrue(all(s["campaign_id"] is None for s in self.satirlar))
+
+    def test_kaynak_baglantisi_her_satirda(self) -> None:
+        self.assertTrue(all(s.get("source_url") for s in self.satirlar))
+
+    def test_turler_KAMPANYA_TURU_kumesinden(self) -> None:
+        """Uydurma bir tür açmak kıyası sessizce bozardı."""
+        from src.comparison.compare import TUR_AGIRLIKLARI
+        for s in self.satirlar:
+            self.assertIn(s["campaign_type"], TUR_AGIRLIKLARI, s["campaign_type"])
+
+    def test_katilma_getirisi_AYRI_alanda(self) -> None:
+        """%42'lik getiri, %2'lik finansman oranının yanında «kötü» görünürdü."""
+        yatirim = [s for s in self.satirlar
+                   if s["campaign_type"] == "Yatırım Ürünü"]
+        self.assertTrue(yatirim)
+        for s in yatirim:
+            self.assertIn("katilma_getirisi", s["fields"])
+            self.assertNotIn("kar_payi_orani", s["fields"])
+
+    def test_finansman_turlerinde_kar_payi_orani_var(self) -> None:
+        fin = [s for s in self.satirlar
+               if s["campaign_type"] != "Yatırım Ürünü"]
+        self.assertTrue(fin)
+        for s in fin:
+            self.assertIn("kar_payi_orani", s["fields"])
+            self.assertNotIn("katilma_getirisi", s["fields"])
+
+    def test_her_banka_turde_TEK_satir(self) -> None:
+        """Aynı bankanın onlarca ürünü tek türde listeyi boğardı."""
+        anahtarlar = [(s["bank"], s["campaign_type"]) for s in self.satirlar]
+        self.assertEqual(len(anahtarlar), len(set(anahtarlar)))
+
+    def test_genel_Finansman_turu_uretilir(self) -> None:
+        """Ürüne bağlanmamış «Finansman» kovasında banka temsil edilmeli."""
+        genel = {s["bank"] for s in self.satirlar
+                 if s["campaign_type"] == "Finansman"}
+        self.assertGreaterEqual(len(genel), 3)
+
+
+class TestKatilmaGetirisiYonu(unittest.TestCase):
+    def test_YUKSEK_iyi(self) -> None:
+        from src.comparison.compare import _HIGHER_IS_BETTER, _LOWER_IS_BETTER
+        self.assertIn("katilma_getirisi", _HIGHER_IS_BETTER)
+        self.assertNotIn("katilma_getirisi", _LOWER_IS_BETTER)
+
+    def test_kar_payi_orani_DUSUK_iyi(self) -> None:
+        """İki alanın yönü TERS; aynı kolonda yarışmamalarının sebebi bu."""
+        from src.comparison.compare import _LOWER_IS_BETTER
+        self.assertIn("kar_payi_orani", _LOWER_IS_BETTER)
+
+
+class TestTurAgirliklari(unittest.TestCase):
+    """«Ölçülemedi» salgınının kökü: her türe AYNI beş ölçüt uygulanıyordu."""
+
+    def test_kart_turunde_finansman_olcutleri_YOK(self) -> None:
+        """Kart belgelerinin %2'sinde kâr payı, %0'ında finansman tutarı var."""
+        from src.comparison.compare import tur_agirliklari
+        w = tur_agirliklari("Kart")
+        self.assertNotIn("kar_payi_orani", w)
+        self.assertNotIn("finansman_tutari", w)
+
+    def test_alisveris_puani_turunun_TANIMLAYICI_olcutu(self) -> None:
+        """Belgelerin %97'sinde dolu ve ağırlık tablosunda HİÇ YOKTU."""
+        from src.comparison.compare import tur_agirliklari
+        self.assertIn("alisveris_puani", tur_agirliklari("Alışveriş Puanı"))
+
+    def test_yatirim_urununde_katilma_getirisi_var(self) -> None:
+        from src.comparison.compare import tur_agirliklari
+        self.assertIn("katilma_getirisi", tur_agirliklari("Yatırım Ürünü"))
+
+    def test_agirliklar_1_0e_NORMALLESTIRILIR(self) -> None:
+        """Elle yazılan tablo zamanla kayar ve kayma eşiği sessizce oynatırdı."""
+        from src.comparison.compare import TUR_AGIRLIKLARI, tur_agirliklari
+        for tur in TUR_AGIRLIKLARI:
+            self.assertAlmostEqual(sum(tur_agirliklari(tur).values()), 1.0,
+                                   places=6, msg=tur)
+
+    def test_taninmayan_tur_varsayilani_alir(self) -> None:
+        """Yeni bir tür eklendiğinde sistem BOŞ ağırlıkla çalışmamalı."""
+        from src.comparison.compare import DEFAULT_WEIGHTS, tur_agirliklari
+        self.assertEqual(set(tur_agirliklari("Yepyeni Tür")), set(DEFAULT_WEIGHTS))

@@ -74,6 +74,171 @@ def sartname_kampanyalari(
     return kampanyalar
 
 
+def _katilma_satirlari() -> list[dict]:
+    """TKBB katılma hesabı getirilerinden «Yatırım Ürünü» satırları.
+
+    Yatırım Ürünü türünün GERÇEK ürünü katılma hesabıdır ve TKBB onun
+    dağıtılan getirisini her banka için haftalık yayımlıyor. O sayı olmadan
+    "yatırım ürününde hangi banka iyi" sorusu vade ve masraf üzerinden
+    cevaplanıyordu — ürünün kendisine bakmadan.
+
+    Getiri `katilma_getirisi` alanına yazılıyor, `kar_payi_orani`ne DEĞİL:
+    ikisi ters yönlü büyüklüktür ve aynı kolonda %42'lik bir getiri, %2'lik
+    bir finansman oranının yanında "kötü" görünürdü.
+
+    Yalnız `buyukluk == "getiri"` kayıtları alınıyor. Paylaşım oranı (%90 gibi
+    bir bölüşüm) getiri DEĞİLDİR; ikisini karıştırmak bu projede ayrı bir
+    karar sayfasıyla yasaklandı.
+    """
+    from ...chatbot.katilma_orani import kayitlari_yukle
+
+    try:
+        havuz = kayitlari_yukle()
+    except Exception:                        # pragma: no cover - veri yoksa
+        return []
+    en_iyi: dict[str, dict] = {}
+    for k in havuz:
+        if k.get("buyukluk") != "getiri" or k.get("currency") != "TRY":
+            continue
+        oran = k.get("annual_rate")
+        banka = k.get("bank_slug")
+        if not banka or oran is None:
+            continue
+        onceki = en_iyi.get(banka)
+        # Banka başına EN YÜKSEK getiri: yüksek oran avantajlı.
+        if onceki is None or oran > onceki["annual_rate"]:
+            en_iyi[banka] = k
+    out: list[dict] = []
+    for banka, k in sorted(en_iyi.items()):
+        alanlar: dict[str, Any] = {"katilma_getirisi": k["annual_rate"]}
+        if isinstance(k.get("term_months"), int):
+            alanlar["vade_ay"] = k["term_months"]
+        out.append({
+            "bank": banka, "bank_name": None,
+            "campaign_id": None,
+            "campaign_type": "Yatırım Ürünü",
+            "source_url": k.get("source_url"),
+            "campaign_status": None,
+            "kaynak": "banka-yayini",
+            "fields": alanlar,
+            "confidences": {},
+        })
+    return out
+
+
+def yayin_satirlari() -> list[dict]:
+    """Bankaların KENDİ yayımladığı oranlardan kıyas satırı üretir.
+
+    ## Niçin bu satırlar var — ölçülmüş yıldız boşluğu
+
+    Banka sayfasının yıldız cetvelinde 81 olası (banka × tür) hücrenin yalnız
+    **37'sinde** yıldız vardı; 23 hücrede banka o türde kampanya taşıyor ama
+    hiçbiri kıyaslanabilir değildi. Boş hücrelerin çoğu FİNANSMAN aileleri —
+    yani `kar_payi_orani` gereken yerler.
+
+    O oran kampanya metninde YOK ve bu bir çıkarım kusuru değil: EVREN
+    `llm-large` 60 aday belgede 0, yerel model 30 belgede 0 kabul edilebilir
+    değer üretti. Bankalar oranı hesaplama araçlarında yayımlıyor ve biz
+    154 kayıt topladık (7 banka).
+
+    ## Niçin bir KAMPANYA satırına yazılmıyor
+
+    Banka düzeyinde yayımlanmış bir oranı belirli bir kampanyanın
+    `extracted_fields` kaydına yazmak, o belgenin söylemediğini ona atfetmek
+    olurdu ve span → belge kanıt zinciri kırılırdı. Bunun yerine (banka, tür)
+    başına AYRI bir satır üretiliyor: `campaign_id=None`,
+    `kaynak="banka-yayini"`.
+
+    Yıldızın sorusu zaten "bu banka bu ürün türünde ne kadar iyi" — bankanın
+    yayımladığı ürün o sorunun meşru bir kanıtıdır. Şart, NEREDEN geldiğinin
+    yazılması; `kaynak` alanı bunu taşıyor ve arayüz ayrı etiketliyor.
+
+    ## Birim tutarlılığı
+
+    Korpustaki `kar_payi_orani` da AYLIK orandır (README örneği: «%2,99» →
+    2.99). Yayın kayıtlarındaki `monthly_rate` aynı birimde; bu yüzden ikisi
+    aynı kolonda sıralanabiliyor. Yıllık maliyet oranı (`annual_cost_rate`)
+    BİLEREK taşınmıyor — korpusta karşılığı yok ve farklı birimdeki iki sayıyı
+    aynı alana koymak §17 adil kıyası bozardı.
+    """
+    from ...domain import yayimlanan_oran as Y
+
+    # Ürün ailesi → KAMPANYA TÜRÜ (CLAUDE.md §12'nin sekiz sınıfı).
+    #
+    # `yayimlanan_oran.aile()` kendi etiketlerini üretiyor ve üçü kampanya
+    # türleriyle birebir örtüşüyor. «Alışveriş Finansmanı» örtüşmüyor:
+    # kampanya türü listesindeki «Alışveriş Puanı» PUAN kazandıran
+    # kampanyalardır, taksitli alışveriş FİNANSMANI değil. Onu genel
+    # «Finansman» türüne bağlamak doğru — uydurma bir tür açmak ya da puan
+    # türüne karıştırmak, kıyası sessizce bozardı.
+    TUR_ESLEMESI = {
+        "Konut Finansmanı": "Konut Finansmanı",
+        "Taşıt Finansmanı": "Taşıt Finansmanı",
+        "İhtiyaç Finansmanı": "İhtiyaç Finansmanı",
+        "Alışveriş Finansmanı": "Finansman",
+    }
+
+    en_iyi: dict[tuple[str, str], dict] = {}
+    for k in Y.yukle():
+        banka = k.get("bank_slug")
+        tur = TUR_ESLEMESI.get(Y.aile(k.get("product_name") or ""))
+        oran = k.get("monthly_rate")
+        if not banka or not tur or oran is None:
+            continue
+        anahtar = (banka, tur)
+        onceki = en_iyi.get(anahtar)
+        # Banka başına türün EN DÜŞÜK oranı: finansmanda düşük oran avantajlı
+        # ve bankanın en iyi teklifi o türdeki gücünü temsil eder.
+        if onceki is None or oran < onceki["monthly_rate"]:
+            en_iyi[anahtar] = k
+
+    # GENEL «Finansman» türü — bankanın EN İYİ finansman teklifi.
+    #
+    # `Finansman` kampanya türü, belirli bir ürüne bağlanmamış genel finansman
+    # kampanyalarının kovasıdır. Dünya, Emlak ve Ziraat'ın o kovadaki
+    # kampanyaları ölçülemiyordu (kâr payı oranı taşımıyorlar) ama üçü de
+    # konut/taşıt/ihtiyaç oranı YAYIMLIYOR. Bankanın en düşük yayımlanmış
+    # oranı, genel finansman kovasında onu temsil eden meşru bir kanıttır.
+    #
+    # Çifte sayım DEĞİL: sıralama tür İÇİNDE yapılıyor, yani aynı sayı iki ayrı
+    # ve birbirine karışmayan listede duruyor. Hangi üründen geldiği satırın
+    # `product_name`inde yazılı.
+    for banka in {b for b, _ in en_iyi}:
+        if (banka, "Finansman") in en_iyi:
+            continue                         # banka zaten genel oran yayımlıyor
+        adaylar = [v for (b, _), v in en_iyi.items() if b == banka]
+        if adaylar:
+            en_iyi[(banka, "Finansman")] = min(adaylar,
+                                               key=lambda x: x["monthly_rate"])
+
+    out: list[dict] = _katilma_satirlari()
+    for (banka, tur), k in sorted(en_iyi.items()):
+        alanlar: dict[str, Any] = {"kar_payi_orani": k["monthly_rate"]}
+        if isinstance(k.get("term_months"), int):
+            alanlar["vade_ay"] = k["term_months"]
+        # Tutar ÜST SINIRI bir kampanya tutarı değil; yalnız banka gerçekten
+        # bir üst sınır yayımlamışsa taşınıyor.
+        if k.get("amount_max"):
+            alanlar["finansman_tutari"] = k["amount_max"]
+        ucret = k.get("fees") or {}
+        tahsis = ucret.get("tahsis") or ucret.get("komisyon")
+        if tahsis is not None:
+            alanlar["tahsis_ucreti"] = tahsis
+        out.append({
+            "bank": banka, "bank_name": None,
+            "campaign_id": None,
+            "campaign_type": tur,
+            "source_url": k.get("source_url"),
+            # Yayımlanan oranın süre damgası YOK: banka onu güncel olarak
+            # yayımlıyor. `None` = damgasız, "süresi dolmuş" DEĞİL.
+            "campaign_status": None,
+            "kaynak": "banka-yayini",
+            "fields": alanlar,
+            "confidences": {},
+        })
+    return out
+
+
 def bilesik_skor_kampanyalari(
     alanlar,
     *,

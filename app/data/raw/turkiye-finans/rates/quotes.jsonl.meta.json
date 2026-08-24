@@ -1,9 +1,9 @@
 {
   "bank_slug": "turkiye-finans",
-  "record_count": 230,
-  "collected_at": "2026-08-03T19:13:22+00:00",
+  "record_count": 375,
+  "collected_at": "2026-08-24T22:32:51+00:00",
   "collection_method": "rate-round",
-  "requests": 2,
+  "requests": 3,
   "grid": {
     "financing_amounts": [
       100000,
@@ -26,6 +26,6 @@
       182,
       365
     ],
-    "max_requests": 120
+    "max_requests": 40
   }
 }

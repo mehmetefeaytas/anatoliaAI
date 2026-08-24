@@ -129,9 +129,17 @@ class UcCalisiyor(_DepoluTest):
         self.assertEqual(oran["value"], min(ORANLAR))
 
     def test_kucuk_grup_SIRALANMAZ_ama_gizlenmez(self):
-        """2 kampanyada 'en avantajlı' iddiası bilgi taşımaz — kapı görünür."""
+        """2 kampanyada 'en avantajlı' iddiası bilgi taşımaz — kapı görünür.
+
+        `banka_yayini=false` ile SALT KAMPANYA görünümü isteniyor: uç
+        2026-08-25'ten beri bankaların kendi yayımladığı oranlardan da satır
+        üretiyor (`kiyas_toplama.yayin_satirlari`) ve o satırlar fixture'ın
+        grubunu MIN_GROUP_SIZE'ın üstüne çıkarıyordu. Kapının kendisi
+        değişmedi; test yalnız onu YALIN popülasyonda sınıyor.
+        """
         _seed(self.repo, MIN_GROUP_SIZE - 1)
-        grup = self.client().get("/advantageous").json()["types"]["Konut Finansmanı"]
+        grup = (self.client().get("/advantageous?banka_yayini=false")
+                .json()["types"]["Konut Finansmanı"])
         self.assertEqual(grup["ranked"], [])
         self.assertEqual(grup["count"], MIN_GROUP_SIZE - 1)
         self.assertIn(str(MIN_GROUP_SIZE), grup["note"] or "",

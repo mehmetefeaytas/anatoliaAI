@@ -1009,14 +1009,26 @@ class TurkiyeFinansTableAdapter(RateAdapter):
     }
     OPEN_TERM_MARKERS = ("uzun vade", "üzeri", "uzeri")
 
+    #: Aynı slug için İKİNCİ adaptör — finansman tarafı.
+    #:
+    #: `RATE_ADAPTERS` slug başına tek sınıf tutuyor ve bu banka için iki ayrı
+    #: kaynak var: katılma HTML tablosu (burada) ve ana sayfaya gömülü
+    #: finansman kataloğu. Kayıt defterini çoklu-adaptöre çevirmek yerine
+    #: kompozisyon: bu adaptör kendi işini yapıp ötekini de çağırıyor.
+    #: Ayrım korunuyor — iki kaynak, iki sınıf, iki docstring.
+    FINANSMAN_ADAPTORU = "TurkiyeFinansCatalogAdapter"
+
     def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        # Finansman tarafı ÖNCE: katılma tablosu bs4 yokluğunda boş dönüyor ve
+        # o dal `return []` yapıyor; katalog ise saf JSON, bs4 gerektirmiyor.
+        # Sıra tersine olsaydı bağımlılıksız ortamda finansman da kaybolurdu.
+        out: list[RateQuote] = self._finansman_katalogu(grid)
         try:
             from bs4 import BeautifulSoup  # type: ignore
         except ModuleNotFoundError:
             self.notes.append(f"{self.slug}: beautifulsoup4 yok — tablo "
                               f"ayristirilamadi")
-            return []
-        out: list[RateQuote] = []
+            return out
         seen: set[tuple] = set()
         for path, label in self.PAGES:
             url = self.BASE + path
@@ -1722,6 +1734,206 @@ class TomKatilimAdapter(RateAdapter):
             return None
         d = veri.get("Data")
         return d if isinstance(d, dict) else None
+
+
+# --------------------------------------------------------------------------- #
+# Türkiye Finans — ana sayfaya gömülü oran kataloğu (2026-08-25 doğrulandı)
+# --------------------------------------------------------------------------- #
+
+class TurkiyeFinansCatalogAdapter(RateAdapter):
+    """`var financeCalculator = [...]` — 18 ürün, 145 vade bandı, TEK istek.
+
+    ## Niçin ayrı bir adaptör
+
+    `TurkiyeFinansTableAdapter` bu banka için zaten var ama yalnız **katılma**
+    tarafını topluyor (230 kayıt). Finansman oranı eksikti ve sebebi bankanın
+    yayımlamaması DEĞİLDİ: ürün sayfalarında (`konut-finansmani.aspx` vb.)
+    oran sayısal olarak yok, `Kar-Payi-Oranlari.aspx` yalnız katılmayı
+    içeriyor — oran **ana sayfaya gömülü katalogda** yayımlanıyor. Eksik,
+    yanlış sayfaya bakılmış olmasıydı.
+
+    ## Doğrulanmış yanıt (2026-08-25)
+
+        GET /tr-tr/Sayfalar/default.aspx
+        …<script>var financeCalculator = [
+          {"Title":"İlk Konutunu Alan / Sigortalı Konut Finansmanı",
+           "CreditID":16,"Code":"konut_kredisi",
+           "Items":[{"ParentID":16,"Title":"Mortgage Finansmanı","Currency":"TL",
+                     "Min":73,"Max":120,"Cost":54.19,"Value":2.88,…}],
+           "Rusf":0.0,"Bitt":0.0,"AllocationFee":0.005,
+           "MortgageFee":318.6,"ExpertiseFee":11000.0}, …]</script>
+
+    → Konut finansmanı (ilk konut, sigortalı), 73–120 ay, aylık **%2,88**,
+    yıllık maliyet %54,19.
+
+    ## HESAPLAMA ARACINA GİDİLMİYOR — ölçülmüş uydurma tuzağı
+
+    Sitenin ödeme planı sayfası `customRateCheck` / `customRate` çerez
+    alanlarını okuyor ve işaretliyse **istemcinin girdiği oranla** hesap
+    yapıyor. Ölçüldü (2026-08-25): çereze `customRate: 0.11` yazıldığında
+    resmî görünümlü özet tablo *"Kâr Oranı %0.11"* döndürdü — uydurulan sayı
+    banka oranıymış gibi geri geldi. Bu, projede dördüncü kez görülen aynı
+    tuzak sınıfı.
+
+    Katalogtan okurken hiçbir istemci parametresi gönderilmiyor, yani tuzak
+    YAPISAL OLARAK imkânsız. Çapraz doğrulama da yapıldı: hesaplama sayfası
+    temiz yüklendiğinde 120 ay için `%2,88` gösteriyor — katalogla birebir.
+
+    ## `/_vti_bin/` ucuna DOKUNULMUYOR
+
+    Aynı katalogu `FrontEndService.svc` de döndürüyor ama `robots.txt`
+    `Disallow: /_vti_bin/` diyor. Ana sayfadaki satır içi kopya aynı veriyi
+    yasaksız yoldan verdiği için o uca hiç ihtiyaç yok.
+
+    ## Tutar BOŞ bırakılıyor
+
+    Katalogdaki `TutarMin`/`TutarMax` 145 bandın **hepsinde 0**. Sıfırı bir
+    tutar sınırı gibi kaydetmek uydurma olurdu (CLAUDE.md §19).
+    """
+
+    slug = "turkiye-finans"
+    kinds = (KIND_FINANCING,)
+    BASE = "https://www.turkiyefinans.com.tr"
+    ANA_SAYFA = f"{BASE}/tr-tr/Sayfalar/default.aspx"
+
+    KATALOG_DESENI = re.compile(r"var\s+financeCalculator\s*=\s*(\[)", re.IGNORECASE)
+
+    def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        katalog = self._katalog()
+        if not katalog:
+            return []
+        out: list[RateQuote] = []
+        oransiz = 0
+        bantsiz = 0
+        for urun in katalog:
+            if not isinstance(urun, dict):
+                continue
+            ad = (urun.get("Title") or "").strip() or None
+            kod = urun.get("Code") or (str(urun.get("CreditID"))
+                                       if urun.get("CreditID") is not None else None)
+            ucret = _clean_fees({
+                # `AllocationFee` bir ORAN (0,005 = %0,5), TL tutarı değil.
+                # Aynı sözlüğe TL kalemleriyle birlikte yazmak birimi
+                # karıştırırdı; bu yüzden yüzdeye çevrilip ADIYLA ayrılıyor.
+                "tahsis_yuzde": (_num(urun.get("AllocationFee")) or 0) * 100 or None,
+                "ipotek": _num(urun.get("MortgageFee")),
+                "ekspertiz": _num(urun.get("ExpertiseFee")),
+            })
+            # Vade bantlarının anahtarı `FinanceCalculatorCreditList`.
+            # `Items` de deneniyor: kısaltılmış bir ada güvenip tek anahtara
+            # bağlanmak, banka şemayı değiştirdiğinde SESSİZCE 0 kayıt
+            # üretirdi (ölçüldü 2026-08-25 — tam olarak bu oldu).
+            bantlar = (urun.get("FinanceCalculatorCreditList")
+                       or urun.get("Items") or [])
+            if not bantlar:
+                bantsiz += 1
+            for band in bantlar:
+                if not isinstance(band, dict):
+                    continue
+                oran = _num(band.get("Value"))
+                if oran is None or oran <= 0:
+                    oransiz += 1
+                    continue
+                alt = band.get("Min")
+                ust = band.get("Max")
+                # Bandın ÜST sınırı manşet vade olarak kaydediliyor ve alt
+                # sınır nota yazılıyor: aralığın tamamı için ayrı satır
+                # üretmek aynı oranı onlarca kez tekrarlardı.
+                vade = int(ust) if isinstance(ust, (int, float)) and ust else None
+                out.append(RateQuote(
+                    bank_slug=self.slug, kind=KIND_FINANCING,
+                    product_code=str(kod) if kod else None,
+                    product_name=(f"{ad} — {band.get('Title')}"
+                                  if band.get("Title") and ad else
+                                  (ad or band.get("Title"))),
+                    # Tutar BOŞ — katalogda 145 bandın hepsinde 0 (bkz. başlık).
+                    amount=None,
+                    term_months=vade,
+                    currency="TRY" if (band.get("Currency") or "TL") == "TL"
+                             else str(band.get("Currency")),
+                    monthly_rate=oran,
+                    annual_cost_rate=_num(band.get("Cost")),
+                    fees=ucret,
+                    source_url=self.ANA_SAYFA, collected_at=utc_now_iso(),
+                    method=METHOD_RATE_CATALOG,
+                    note=(f"vade bandı {alt}-{ust} ay; oran band içinde sabit"
+                          if alt and ust else None)))
+        if oransiz:
+            self.notes.append(
+                f"{self.slug}: {oransiz} vade bandi oransiz geldi; kayit "
+                f"uydurulmadi")
+        if bantsiz:
+            # SESSİZ SIFIR KAPISI: hiçbir ürün bant taşımıyorsa şema değişmiş
+            # demektir ve adaptör "banka oran yayımlamıyor" gibi görünür.
+            self.failures.append({
+                "url": self.ANA_SAYFA,
+                "reason": f"{bantsiz}/{len(katalog)} urunde vade bandi YOK",
+                "detail": "katalog semasi degismis olabilir — anahtar adi kontrol edilmeli"})
+        return out
+
+    def _katalog(self) -> list:
+        """Ana sayfadaki satır içi JSON kataloğu.
+
+        Köşeli parantez DENGELENEREK kesiliyor: `financeCalculator` dizisi
+        iç içe nesneler taşıyor ve ilk `]` ile kesmek diziyi ortadan bölerdi.
+        """
+        if not self._allowed(self.ANA_SAYFA):
+            return []
+        self.fetcher.limiter.wait(self.ANA_SAYFA)
+        self.requests += 1
+        sonuc = self.fetcher.fetch(self.ANA_SAYFA)
+        html = getattr(sonuc, "text", None) or getattr(sonuc, "html", None) or ""
+        m = self.KATALOG_DESENI.search(html) if html else None
+        if m is None:
+            self.failures.append({
+                "url": self.ANA_SAYFA, "reason": "financeCalculator katalogu yok",
+                "detail": ("degisken adi ya da sayfa duzeni degismis olabilir; "
+                           "adaptor SESSIZ dusmuyor")})
+            return []
+        bas = m.start(1)
+        derinlik = 0
+        for i in range(bas, len(html)):
+            ch = html[i]
+            if ch == "[":
+                derinlik += 1
+            elif ch == "]":
+                derinlik -= 1
+                if derinlik == 0:
+                    try:
+                        return json.loads(html[bas:i + 1])
+                    except ValueError as exc:
+                        self.failures.append({
+                            "url": self.ANA_SAYFA,
+                            "reason": "katalog JSON ayristirilamadi",
+                            "detail": str(exc)[:120]})
+                        return []
+        self.failures.append({"url": self.ANA_SAYFA,
+                              "reason": "katalog dizisi kapanmadi"})
+        return []
+
+
+def _tf_finansman_katalogu(self, grid: RateGrid) -> list[RateQuote]:
+    """`TurkiyeFinansTableAdapter` için finansman kataloğunu çağırır.
+
+    Ayrı bir fonksiyon: kompozisyon bağı TEK satırda görünsün ve katalog
+    adaptörünün kendi hataları/notları çağıranın raporuna taşınsın — iki
+    kaynak tek bankada birleşiyor ama başarısızlıkları ayrı ayrı okunuyor.
+    """
+    alt = TurkiyeFinansCatalogAdapter(self.fetcher, robots=self.robots)
+    try:
+        kayitlar = alt.quotes(grid)
+    except Exception as exc:                 # pragma: no cover - savunma
+        self.failures.append({"url": TurkiyeFinansCatalogAdapter.ANA_SAYFA,
+                              "reason": "finansman katalogu dustu",
+                              "detail": f"{type(exc).__name__}: {exc}"[:150]})
+        return []
+    self.requests += alt.requests
+    self.notes.extend(alt.notes)
+    self.failures.extend(alt.failures)
+    return kayitlar
+
+
+TurkiyeFinansTableAdapter._finansman_katalogu = _tf_finansman_katalogu
 
 
 class VakifKatilimBlockedAdapter(RateAdapter):
