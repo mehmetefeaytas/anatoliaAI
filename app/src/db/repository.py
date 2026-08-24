@@ -346,6 +346,55 @@ class Repository:
         self.conn.commit()
         return cur.rowcount
 
+    def add_fields(self, campaign_id: int, fields: Any,
+                   *, ezme: bool = False) -> int:
+        """Var olan bir belgeye alan EKLER; eklenen satır sayısını döndürür.
+
+        ## Kural değeri EZİLMEZ
+
+        `ezme=False` (varsayılan) iken, o belgede aynı `field_name` için kayıt
+        varsa yeni değer ATLANIR. Bu, mimarinin çekirdek kuralıdır: kural
+        katmanı birincildir, LLM yalnız BOŞLUKLARI doldurur (CLAUDE.md §3).
+        Ezmeye izin veren bir varsayılan, ölçülmüş biçimde daha zayıf olan
+        çıkarım kolunun (F1 0,304 vs kural 0,469) daha güçlü olanı sessizce
+        bozmasına yol açardı.
+
+        `extractor` etiketi `base.extractor_dogrula()`'dan geçer —
+        `insert_campaign` ile aynı kapı, aynı gerekçe: diskteki `demo.db`
+        şemadaki CHECK kısıtını taşımıyor.
+        """
+        mevcut = {r[0] for r in self.conn.execute(
+            "SELECT DISTINCT field_name FROM extracted_fields "
+            "WHERE campaign_id = ?", (campaign_id,))}
+        satirlar = []
+        for f in fields:
+            ad = getattr(f, "field_name", None)
+            if ad is None:
+                continue
+            if not ezme and ad in mevcut:
+                continue
+            satirlar.append((
+                campaign_id, ad,
+                self._text(getattr(f, "raw_value", None),
+                           f"{ad}.raw_value", f"campaign={campaign_id}"),
+                json.dumps(getattr(f, "canonical_value", None),
+                           ensure_ascii=False),
+                getattr(f, "confidence", None),
+                self._text(getattr(f, "source_span", None),
+                           f"{ad}.source_span", f"campaign={campaign_id}"),
+                extractor_dogrula(getattr(f, "extractor", None)),
+                getattr(f, "span_start", None), getattr(f, "span_end", None),
+                getattr(f, "confidence_source", None)))
+        if not satirlar:
+            return 0
+        self.conn.executemany(
+            "INSERT INTO extracted_fields(campaign_id, field_name, raw_value, "
+            "canonical_value, confidence, source_span, extractor, "
+            "span_start, span_end, confidence_source) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?)", satirlar)
+        self.conn.commit()
+        return len(satirlar)
+
     def field_value(self, campaign_id: int, field_name: str) -> Any:
         row = self.conn.execute(
             "SELECT canonical_value FROM extracted_fields WHERE campaign_id=? "

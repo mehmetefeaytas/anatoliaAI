@@ -67,6 +67,32 @@ VARSAYILAN_YOL = os.path.join(
     os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
     "data", "terminology", "katilim-terim-sozlugu.json")
 
+#: İKİNCİL sözlük: TKBB Katılım Sözlüğü'nden hasat edilen terimler (JSONL).
+#:
+#: Proje sözlüğü 101 terim taşıyor ve elle bakımlı: `degildir`, `risk_notu`,
+#: `ayrim_notu` gibi alanlar hiçbir dış kaynakta yok ve terminoloji kaleminin
+#: kalbi onlar. TKBB sözlüğü ise ~509 terim, resmî ve katılım finansına özgü
+#: — ama yalnız terim + tanım taşıyor.
+#:
+#: Bu yüzden BİRLEŞTİRME DEĞİL, İKİNCİL YÜKLEME: çakışan terimde proje kaydı
+#: kazanır (ölçüldü: 54 çakışma, 455 yeni terim). Kaynak ayrı dosyada durur,
+#: proje sözlüğü elle bakımlı kalır.
+#:
+#: Alternatifi ölçüldü ve elendi: `tcmb-terimler.json` bir makroekonomi
+#: sözlüğüdür ("Finansman" kaydı yok, %22'sinin tanımında yasak kök var) —
+#: bkz. sorun/tcmb-sozlugu-terim-boslugunu-kapatmiyor.md
+#: İkincil kaynaktan ÇAKIŞMA yüzünden alınmayan kayıt sayısı — yol -> sayı.
+#:
+#: `DUSURULEN`den AYRI tutuluyor. O sayaç proje sözlüğünün SAĞLIĞINI ölçer
+#: (bozuk kayıt, mükerrer id) ve testte 0 olması bekleniyor. İkincil çakışma
+#: ise normal ve beklenen bir durumdur (54 terim iki kaynakta da var); ikisini
+#: aynı sayaçta toplamak sözlük sağlığı iddiasını görünmez ederdi.
+IKINCIL_CAKISMA: dict[str, int] = {}
+
+IKINCIL_YOL = os.path.join(
+    os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+    "data", "terminology", "tkbb-sozluk.jsonl")
+
 #: Kart üretiminde varsayılan karakter bütçesi (~8 kart).
 VARSAYILAN_BUTCE = 3000
 
@@ -173,17 +199,23 @@ def load_terminology(path: Optional[str] = None) -> tuple[TermEntry, ...]:
     # realpath: sembolik bağ çözülmezse aynı dosya iki önbellek girdisi
     # alır (macOS /var -> /private/var). Testte yakalandı.
     yol = os.path.realpath(path or VARSAYILAN_YOL)
-    if yol in _ONBELLEK:
-        return _ONBELLEK[yol]
+    # Önbellek anahtarı İKİNCİL BAYRAĞINI da taşır. `path=None` ile
+    # `path=VARSAYILAN_YOL` aynı dosyaya çözülüyor ama FARKLI sonuç döndürmesi
+    # gerekiyor (ilki ikincil kaynağı ekler, ikincisi eklemez). Tek anahtar
+    # kullanıldığında ilk çağrının sonucu ikinciye de dönüyordu — testle
+    # yakalandı (`577 not greater than 577`).
+    anahtar = (yol, path is None)
+    if anahtar in _ONBELLEK:
+        return _ONBELLEK[anahtar]
     try:
         with open(yol, encoding="utf-8") as fh:
             ham = json.load(fh)
     except (OSError, json.JSONDecodeError):
-        _ONBELLEK[yol] = ()
+        _ONBELLEK[anahtar] = ()
         DUSURULEN[yol] = 0
         return ()
     if not isinstance(ham, list):
-        _ONBELLEK[yol] = ()
+        _ONBELLEK[anahtar] = ()
         DUSURULEN[yol] = 0
         return ()
     girdiler: list[TermEntry] = []
@@ -196,15 +228,70 @@ def load_terminology(path: Optional[str] = None) -> tuple[TermEntry, ...]:
             continue
         gorulen_id.add(e.id)
         girdiler.append(e)
-    _ONBELLEK[yol] = tuple(girdiler)
+    # İKİNCİL kaynak yalnız VARSAYILAN yolda eklenir: `path` açıkça verildiğinde
+    # çağıran belirli bir dosyayı istiyordur (testler bunu yapıyor) ve oraya
+    # sessizce 509 terim daha katmak izolasyonu bozardı.
+    cakisma = 0
+    if path is None:
+        varolan = {tr_fold_ascii(e.kanonik) for e in girdiler}
+        varolan |= {e.id for e in girdiler}
+        for e in _ikincil_yukle(IKINCIL_YOL):
+            # ÇAKIŞMADA PROJE KAZANIR: `degildir`/`risk_notu` taşıyan kayıt,
+            # yalnız tanım taşıyan kayda feda edilmez.
+            if tr_fold_ascii(e.kanonik) in varolan or e.id in varolan:
+                cakisma += 1
+                continue
+            varolan.add(tr_fold_ascii(e.kanonik))
+            girdiler.append(e)
+    _ONBELLEK[anahtar] = tuple(girdiler)
     DUSURULEN[yol] = dusurulen
-    return _ONBELLEK[yol]
+    IKINCIL_CAKISMA[yol] = cakisma
+    return _ONBELLEK[anahtar]
+
+
+def _ikincil_yukle(yol: str) -> tuple[TermEntry, ...]:
+    """TKBB JSONL'ini `TermEntry`'ye çevirir. Dosya yoksa boş demet.
+
+    `ornekler` alanı BİLEREK taşınmıyor: `TermEntry`'de karşılığı yok ve şemayı
+    yalnız bunun için genişletmek, kullanılmayan bir alan eklemek olurdu.
+    Kullanım örnekleri hasat dosyasında duruyor; gerekirse ayrıca ele alınır.
+    """
+    girdiler: list[TermEntry] = []
+    try:
+        with open(yol, encoding="utf-8") as fh:
+            for satir in fh:
+                satir = satir.strip()
+                if not satir:
+                    continue
+                try:
+                    ham = json.loads(satir)
+                except json.JSONDecodeError:
+                    # Tek satırlık bozulma dosyanın tamamını düşürmemeli.
+                    continue
+                terim = (ham.get("terim") or "").strip()
+                tanim = (ham.get("tanim") or "").strip()
+                if not terim or len(tanim) < 25:
+                    continue
+                kurum = (ham.get("kaynak_kurum") or "TKBB").strip()
+                url = (ham.get("kaynak_url") or "").strip()
+                girdiler.append(TermEntry(
+                    id=str(ham.get("id") or f"tkbb-{terim}"),
+                    kanonik=terim,
+                    tanim=tanim,
+                    # `kategori` kaynağı işaretler: kart seçiminde ve denetimde
+                    # projeye özgü kayıtlarla ayrışabilmesi gerekiyor.
+                    kategori="tkbb-sozluk",
+                    kaynak=f"{kurum} — {url}" if url else kurum))
+    except OSError:
+        return ()
+    return tuple(girdiler)
 
 
 def onbellegi_temizle() -> None:
     """Testler için — sözlüğü diskten yeniden okumaya zorlar."""
     _ONBELLEK.clear()
     DUSURULEN.clear()
+    IKINCIL_CAKISMA.clear()
 
 
 # --------------------------------------------------------------------------- #

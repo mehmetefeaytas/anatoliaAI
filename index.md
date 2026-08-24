@@ -78,6 +78,8 @@ Son güncelleme: 2026-08-21.
 - [[urun-baglami-alan-duzeyinde-tasinmali]] — çok ürünlü belge uyarısı; alan-başına aile açık
 
 - [[katilma-orani-iki-ayri-buyukluk]] — getiri (%42) ile pay (%90) aynı kolonda yarışmaz
+- [[llm-yalniz-kural-bosluklarini-doldurur]] — iki kabul kapısı: dayanak + doğru alan
+- [[tkbb-sozlugu-ikincil-kaynak-olarak-baglanir]] — 101 → 577 terim; çakışmada proje kaydı kazanır
 ## Sorunlar
 - [[standart-veri-formati-eksikligi]] — standart format yok
 - [[katilim-bankaciligi-terminoloji-farkliligi]] — terminoloji farkı
@@ -93,6 +95,8 @@ Son güncelleme: 2026-08-21.
 - [[terim-sorusuna-sozlukten-cevap-verilmiyordu]] — 101 terimlik sözlük vardı, chatbot bakmıyordu
 - [[katilma-hesabi-orani-korpusta-yoktu]] — katılma getirisi kampanya metninde yok; TKBB'den geldi
 
+- [[merkezi-veri-segment-ayrimini-gizliyor]] — TKBB tek oran, banka beş oran (Klasik %85 vs merkezî %92)
+- [[tcmb-sozlugu-terim-boslugunu-kapatmiyor]] — 314 terim ölçüldü, 'Finansman' yok, %22'si yasak kök taşıyor
 ## Syntheses
 - [[yarisma-genel-bakis]] — yarışma çerçevesi, takvim, ödüller
 - [[teknik-cozum-mimarisi]] — uçtan uca çözüm hattı
