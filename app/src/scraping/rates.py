@@ -40,6 +40,7 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field
+from html import unescape
 from typing import Any, Iterable, Optional
 
 from .collector import utc_now_iso
@@ -1409,6 +1410,146 @@ class HayatFinansAdapter(RateAdapter):
         return out
 
 
+# --------------------------------------------------------------------------- #
+# Dünya Katılım — /LoanCheckRate (2026-08-25 doğrulandı)
+# --------------------------------------------------------------------------- #
+
+class DunyaKatilimAdapter(RateAdapter):
+    """`/LoanCheckRate` — ürün başına aylık kâr oranı + toplam geri ödeme.
+
+    ## Doğrulanmış yanıt (2026-08-25)
+
+        POST /LoanCheckRate?lang=tr
+        productCode=TUKETICIIHTIYAC&amount=100000&installment=12
+        &userSelected=false&userRate=0,00
+        → {"result":"SUCCESS","rate":3.99,"monthlyInterest":11401.85,
+           "totalPayment":136822.12,"paymentPlanHTML":"…"}
+
+    ## Antiforgery — token TEK BAŞINA yetmez
+
+    Her POST `__RequestVerificationToken` istiyor ve token yalnız kendisini
+    veren sayfanın ÇEREZİYLE geçerli (`.AspNetCore.Antiforgery.*`). İkisini
+    birlikte taşımak gerekiyor; `requests` oturumu çerezi kendisi tutuyor,
+    token ise sayfadan okunup gövdeye konuyor.
+
+    ## `userSelected` — uydurma oran kapısı
+
+    `userSelected=true` + `userRate=1,00` gönderilirse uç
+    `{"result":"SUCCESS","rate":1.0}` döndürüyor: yani KENDİ verdiğin oranı
+    bankanın oranı gibi geri veriyor. Bu yüzden ikisi de SABİT
+    (`false` / `0,00`) ve parametre olarak dışarı açılmıyor — açılsaydı bir
+    gün biri "deneme" için değiştirir ve korpusa uydurma oran girerdi.
+
+    ## Tutar biçimi — ölçülmüş sessiz hata
+
+    `amount=200,000` gönderilirse uç bunu **200 TL** okuyor ve yine `SUCCESS`
+    dönüyor (taksit 22,80 TL). Ayraçsız tamsayı zorunlu; `str(int(...))`
+    dışında bir biçim kullanılmıyor.
+
+    ## Ücretler burada YOK
+
+    Ödeme planı yalnız BSMV/KKDF veriyor. Tahsis/ipotek ücretleri ayrı bir
+    PDF'te yayımlanıyor ve `source_url`ü o PDF olmalı; bu adaptörün kaydına
+    yazmak, ücreti oran ucundan gelmiş gibi göstermek olurdu. `fees` boş.
+    """
+
+    slug = "dunya-katilim"
+    kinds = (KIND_FINANCING,)
+    BASE = "https://dunyakatilim.com.tr"        # `www.` POST'ta 308 → gövde düşer
+    KATALOG_SAYFA = f"{BASE}/kendim-icin/finansmanlar/ihtiyac-finansmani"
+    ORAN_URL = f"{BASE}/LoanCheckRate?lang=tr"
+
+    TOKEN_DESENI = re.compile(
+        r'name="__RequestVerificationToken"[^>]*value="([^"]+)"', re.IGNORECASE)
+    SECIM_DESENI = re.compile(
+        r'<select id="loanSelect".*?</select>', re.IGNORECASE | re.DOTALL)
+    URUN_DESENI = re.compile(
+        r'<option[^>]*value="([A-Z0-9]{4,40})"[^>]*>\s*([^<]{2,90}?)\s*</option>',
+        re.IGNORECASE)
+
+    def quotes(self, grid: RateGrid) -> list[RateQuote]:
+        token, urunler = self._katalog()
+        if not token or not urunler:
+            return []
+        out: list[RateQuote] = []
+        hatali: dict[str, int] = {}
+        for kod, ad in urunler:
+            for amount in grid.financing_amounts:
+                for term in grid.financing_terms:
+                    if self.requests >= grid.max_requests:
+                        continue
+                    veri = self._post_form(self.ORAN_URL, {
+                        "__RequestVerificationToken": token,
+                        "productCode": kod,
+                        # Ayraçsız TAMSAYI — gerekçe sınıf başlığında.
+                        "amount": str(int(amount)),
+                        "installment": str(int(term)),
+                        "userSelected": "false",   # SABİT — uydurma oran kapısı
+                        "userRate": "0,00",
+                        "productCategory": "",
+                    })
+                    if veri is None:
+                        continue
+                    if not isinstance(veri, dict):
+                        continue
+                    if veri.get("result") != "SUCCESS":
+                        # Uç geçersiz tutar/vadede AÇIKÇA `RATEERROR` diyor —
+                        # Emlak Katılım'daki sessiz %0 tuzağı burada YOK.
+                        hatali[kod] = hatali.get(kod, 0) + 1
+                        continue
+                    oran = _num(veri.get("rate"))
+                    if oran is None or oran <= 0:
+                        hatali[kod] = hatali.get(kod, 0) + 1
+                        continue
+                    out.append(RateQuote(
+                        bank_slug=self.slug, kind=KIND_FINANCING,
+                        product_code=kod, product_name=ad,
+                        amount=float(amount), term_months=int(term),
+                        monthly_rate=oran,
+                        total_payment=_num(veri.get("totalPayment")),
+                        source_url=self.ORAN_URL, collected_at=utc_now_iso(),
+                        method=METHOD_RATE_API,
+                        note="oran ürün başına sabit; tutar/vade ile değişmiyor"))
+        for kod, n in sorted(hatali.items()):
+            self.notes.append(
+                f"{self.slug}: {kod} — {n} (tutar, vade) noktasi RATEERROR/oransiz "
+                f"dondu (urun bandi disi); kayit uydurulmadi")
+        return out
+
+    def _katalog(self) -> tuple[Optional[str], list[tuple[str, str]]]:
+        """(antiforgery token, [(ürün kodu, ad)]) — ikisi de AYNI sayfadan.
+
+        Ürün kodları sabit yazılmıyor: banka ürün eklediğinde sabit liste
+        sessizce eskir. Token da her koşumda tazeleniyor; saklamak, süresi
+        dolmuş bir token'la 400 almak demekti.
+        """
+        if not self._allowed(self.KATALOG_SAYFA):
+            return None, []
+        self.fetcher.limiter.wait(self.KATALOG_SAYFA)
+        self.requests += 1
+        sonuc = self.fetcher.fetch(self.KATALOG_SAYFA)
+        html_ = getattr(sonuc, "text", None) or getattr(sonuc, "html", None) or ""
+        if not html_:
+            self.failures.append({"url": self.KATALOG_SAYFA,
+                                  "reason": "katalog sayfasi bos dondu"})
+            return None, []
+        t = self.TOKEN_DESENI.search(html_)
+        if t is None:
+            self.failures.append({
+                "url": self.KATALOG_SAYFA, "reason": "antiforgery token yok",
+                "detail": "sayfa duzeni degismis olabilir"})
+            return None, []
+        blok = self.SECIM_DESENI.search(html_)
+        if blok is None:
+            self.failures.append({"url": self.KATALOG_SAYFA,
+                                  "reason": "urun secim listesi bulunamadi"})
+            return t.group(1), []
+        gorulen: dict[str, str] = {}
+        for kod, ad in self.URUN_DESENI.findall(blok.group(0)):
+            gorulen.setdefault(kod, unescape(" ".join(ad.split())))
+        return t.group(1), sorted(gorulen.items(), key=lambda kv: kv[1])
+
+
 class VakifKatilimBlockedAdapter(RateAdapter):
     """Vakıf Katılım oranları robots.txt ile ERİŞİLEMEZ — bu bir kayıt tutucudur.
 
@@ -1449,6 +1590,7 @@ RATE_ADAPTERS: dict[str, type[RateAdapter]] = {
     KuveytTurkBrowserAdapter.slug: KuveytTurkBrowserAdapter,
     ZiraatKatilimAdapter.slug: ZiraatKatilimAdapter,
     HayatFinansAdapter.slug: HayatFinansAdapter,
+    DunyaKatilimAdapter.slug: DunyaKatilimAdapter,
 }
 
 

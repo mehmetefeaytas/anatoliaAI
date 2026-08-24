@@ -1,4 +1,4 @@
-"""Ziraat Katılım oran adaptörü — `/ajax/get-vade`.
+"""Ziraat Katılım ve Dünya Katılım oran adaptörleri.
 
 İlgili: ../src/scraping/rates.py (`ZiraatKatilimAdapter`, `RateAdapter._post_form`)
         test_rates.py (öteki adaptörlerin testleri, aynı sahte nesneler)
@@ -25,7 +25,12 @@ from __future__ import annotations
 import json
 import unittest
 
-from src.scraping.rates import KIND_FINANCING, RateGrid, ZiraatKatilimAdapter
+from src.scraping.rates import (
+    KIND_FINANCING,
+    DunyaKatilimAdapter,
+    RateGrid,
+    ZiraatKatilimAdapter,
+)
 
 
 class _Resp:
@@ -211,3 +216,101 @@ class TestRobots(unittest.TestCase):
 
 if __name__ == "__main__":                   # pragma: no cover
     unittest.main()
+
+
+# --------------------------------------------------------------------------- #
+# Dünya Katılım — antiforgery + uydurma oran kapısı
+# --------------------------------------------------------------------------- #
+
+
+DK_SAYFA = """<html><body>
+<input name="__RequestVerificationToken" type="hidden" value="TOKEN-123" />
+<select id="loanSelect" class="data-source" name="state">
+  <option value="TUKETICIIHTIYAC">T&#252;ketici &#304;htiya&#231; Finansman&#305;</option>
+  <option value="KONUTTUKETICI">Konut Yeni</option>
+</select></body></html>"""
+
+
+class _DKSession:
+    """Ürün koduna göre yanıt; gönderilen gövdeyi kaydeder."""
+
+    def __init__(self):
+        self.posts: list[dict] = []
+
+    def post(self, url, data=None, timeout=None, headers=None, **kw):
+        d = dict(data or {})
+        self.posts.append(d)
+        if d.get("productCode") == "KONUTTUKETICI":
+            return _Resp(200, {"result": "RATEERROR",
+                               "message": "Uygun bir oran tanım detayı yok"})
+        return _Resp(200, {"result": "SUCCESS", "rate": 3.99,
+                           "monthlyInterest": 11401.85, "totalPayment": 136822.12})
+
+    def get(self, url, timeout=None, headers=None, **kw):
+        return _Resp(404, "")
+
+
+def _dk(sayfa: str = DK_SAYFA, robots=_AllowAll):
+    return DunyaKatilimAdapter(_Fetcher(_DKSession(), sayfa), robots=robots())
+
+
+DK_IZGARA = RateGrid(financing_amounts=(100000,), financing_terms=(12,),
+                     deposit_amounts=(), deposit_term_days=(), max_requests=50)
+
+
+class TestDunyaKatalog(unittest.TestCase):
+    def test_token_ve_urunler_ayni_sayfadan(self) -> None:
+        token, urunler = _dk()._katalog()
+        self.assertEqual(token, "TOKEN-123")
+        self.assertEqual([k for k, _ in urunler],
+                         ["KONUTTUKETICI", "TUKETICIIHTIYAC"])
+
+    def test_urun_adi_HTML_escape_cozulur(self) -> None:
+        """Banka `&#252;` gibi kaçışlarla dönüyor; ham hâli ekranda bozuk görünürdü."""
+        _, urunler = _dk()._katalog()
+        self.assertIn("Tüketici İhtiyaç Finansmanı", dict(urunler).values())
+
+    def test_token_yoksa_istek_ATILMAZ(self) -> None:
+        a = _dk(sayfa="<html><body>düzen değişti</body></html>")
+        self.assertEqual(a.quotes(DK_IZGARA), [])
+        self.assertTrue(any("token yok" in f["reason"] for f in a.failures))
+
+
+class TestDunyaUydurmaOranKapisi(unittest.TestCase):
+    """`userSelected=true` gönderilirse uç KENDİ verdiğin oranı geri veriyor."""
+
+    def test_userSelected_HER_ZAMAN_false(self) -> None:
+        a = _dk()
+        a.quotes(DK_IZGARA)
+        for govde in a.fetcher._session.posts:
+            self.assertEqual(govde["userSelected"], "false")
+            self.assertEqual(govde["userRate"], "0,00")
+
+    def test_tutar_AYRACSIZ_tamsayi(self) -> None:
+        """`amount=200,000` uçta 200 TL olarak okunuyor ve SUCCESS dönüyor."""
+        a = _dk()
+        a.quotes(DK_IZGARA)
+        for govde in a.fetcher._session.posts:
+            self.assertEqual(govde["amount"], "100000")
+            self.assertNotIn(",", govde["amount"])
+            self.assertNotIn(".", govde["amount"])
+
+    def test_token_her_isteğe_konur(self) -> None:
+        a = _dk()
+        a.quotes(DK_IZGARA)
+        self.assertTrue(all(g["__RequestVerificationToken"] == "TOKEN-123"
+                            for g in a.fetcher._session.posts))
+
+
+class TestDunyaHataYolu(unittest.TestCase):
+    def test_RATEERROR_kayit_URETMEZ(self) -> None:
+        a = _dk()
+        q = a.quotes(DK_IZGARA)
+        self.assertEqual({x.product_code for x in q}, {"TUKETICIIHTIYAC"})
+        self.assertTrue(any("RATEERROR" in n for n in a.notes))
+
+    def test_basarili_kayit_dolu(self) -> None:
+        q = _dk().quotes(DK_IZGARA)
+        x = q[0]
+        self.assertEqual((x.monthly_rate, x.total_payment), (3.99, 136822.12))
+        self.assertFalse(x.fees, "banka ücreti bu uçtan gelmiyor — uydurulmamalı")
