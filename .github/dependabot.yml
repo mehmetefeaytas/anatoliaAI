@@ -16,12 +16,37 @@
 # ediyor, yani güvenlik düzeltmeleri kaçmıyor. Yalnız kırıcı sürüm atlamaları
 # dışarıda kalıyor. Teslimden sonra bu blok kaldırılıp yükseltmeler tek tek
 # ölçülerek alınabilir.
+#
+# ## BOT TAMAMEN DURAKLATILDI — 29 AĞUSTOS'A KADAR (2026-08-24)
+#
+# `open-pull-requests-limit: 0` botu susturur: tarama sürer ama PR AÇILMAZ.
+# `ignore` kuralı yeterli değildi — major'lar kesildikten sonra bot aynı
+# paketleri major-içi sürümlerle yeniden PR'ladı (ruff 0.16.4, typescript
+# 5.9.3, next 14.2.35, @types/node 20.19.43) ve haftalık koşum bunu tekrar
+# edecekti.
+#
+# Karar teslim tarihine bağlı: yarışma 29 Ağustos 2026. O güne kadar hiçbir
+# yükseltme ölçülmüş bir kazanç getirmiyor, buna karşılık her birleştirme
+# SBOM'un yeniden üretilmesini (97 paket) ve 3.948 testin yeniden koşmasını
+# gerektiriyor.
+#
+# BİLİNEN BEDELİ AÇIKÇA YAZIYORUZ: bu ayarla güvenlik yamaları da gelmiyor.
+# Bilinen ve KABUL EDİLEN tek açık `next` 14.2.5'tir (CVE-2025-55184 yüksek,
+# CVE-2025-55183 orta — ikisi de React Server Components katmanında). Panel
+# yalnız localhost'ta koşuyor ve depoda `middleware.ts` yok; risk bu koşullarda
+# kabul edildi. PR #17 aynı gerekçeyle kapatıldı.
+#
+# 29 AĞUSTOS'TAN SONRA: `open-pull-requests-limit` satırlarını sil, `ignore`
+# bloğunu da kaldırmayı değerlendir, `next` yamasını İLK alınacak yükseltme
+# olarak sıraya koy.
 version: 2
 updates:
   - package-ecosystem: pip
     directory: /app
     schedule:
       interval: weekly
+    # 0 = PR açma. 29 Ağustos'tan sonra bu satırı sil.
+    open-pull-requests-limit: 0
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
@@ -30,6 +55,8 @@ updates:
     directory: /app/web
     schedule:
       interval: weekly
+    # 0 = PR açma. 29 Ağustos'tan sonra bu satırı sil.
+    open-pull-requests-limit: 0
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
@@ -38,6 +65,8 @@ updates:
     directory: /
     schedule:
       interval: weekly
+    # 0 = PR açma. 29 Ağustos'tan sonra bu satırı sil.
+    open-pull-requests-limit: 0
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
