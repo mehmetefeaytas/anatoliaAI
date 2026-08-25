@@ -1,13 +1,23 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar",
-  "scraped_at": "2026-08-03T16:56:00+00:00",
-  "content_hash": "33c096060a45e5ee8a764c2b6996651c6c958b21f5d85f42af2ca5e6d3b95c0e",
+  "scraped_at": "2026-08-25T12:29:00+00:00",
+  "content_hash": "b2350fd2b206de06cf022683c867b69fb1542f04a14f60fdd6fe9ebbc1ff7ed7",
   "collection_method": "live",
   "title": "Kampanyalar | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 223180,
-  "text_chars": 3877,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 235303,
+  "text_chars": 4695,
+  "extraction_invalidated_at": "2026-08-25T12:29:00+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

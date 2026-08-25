@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/evidea",
-  "scraped_at": "2026-08-03T17:02:59+00:00",
-  "content_hash": "efea91cbe42d68148c4f854053e5a40a796949b90de50955c013c58786de9dea",
+  "scraped_at": "2026-08-25T12:15:39+00:00",
+  "content_hash": "e3451a7cf1f3cdac7ff2a319b980e2674e3237311e519a29758b63836ab5e7e8",
   "collection_method": "live",
   "title": "evidea | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504957,
-  "text_chars": 9595,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 31 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
-    "span_start": 805,
-    "span_end": 827,
-    "end_date": "2026-07-31",
+  "raw_bytes": 504967,
+  "text_chars": 9599,
+  "extraction_invalidated_at": "2026-08-25T12:15:39+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

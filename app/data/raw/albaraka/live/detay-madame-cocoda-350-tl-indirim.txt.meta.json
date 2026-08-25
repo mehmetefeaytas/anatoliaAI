@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/madame-cocoda-350-tl-indirim",
-  "scraped_at": "2026-08-03T16:36:20+00:00",
-  "content_hash": "aa542cb515f5e71b6e717213dc2d509add0122cfbf9ca17bb415aca1f0e8b742",
+  "scraped_at": "2026-08-25T12:12:58+00:00",
+  "content_hash": "ac324cbb192aeda36e1583d44429e765ad9bf1923d8db2358856130fe5614ab1",
   "collection_method": "live",
   "title": "Madame Coco'da 350 TL İndirim! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179350,
+  "raw_bytes": 182013,
   "text_chars": 1192,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

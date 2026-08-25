@@ -7,5 +7,12 @@
   "title": "Restoran harcamalarında her ay 10.000 TL’ye varan iade! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 103698,
-  "text_chars": 3418
+  "text_chars": 3418,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

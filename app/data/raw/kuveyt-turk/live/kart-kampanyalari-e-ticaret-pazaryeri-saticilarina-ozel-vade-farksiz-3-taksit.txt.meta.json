@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/e-ticaret-pazaryeri-saticilarina-ozel-vade-farksiz-3-taksit",
-  "scraped_at": "2026-08-03T16:29:43+00:00",
-  "content_hash": "142e2915453185e115254ba6ba492c62495c9bccbf05ed4c149913a83e8d54da",
+  "scraped_at": "2026-08-25T12:23:33+00:00",
+  "content_hash": "30a1179b0e618a19b51f5aa1d7eab1ef75a1003cf4a2f593e27f5679195a234d",
   "collection_method": "live",
   "title": "E-Ticaret Pazaryeri Satıcılarına Özel Vade Farksız 3 Taksit! | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 134214,
+  "raw_bytes": 134822,
   "text_chars": 3836,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

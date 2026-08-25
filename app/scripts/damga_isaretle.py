@@ -1,4 +1,5 @@
-"""Sayfada "sona ermiştir" damgası taşıyan `live/` belgelerini işaretler.
+"""`live/` belgelerini üç hâle ayırır: damgalı (bitmiş), temiz (aktif),
+belirsiz (karar verilmez).
 
 İlgili: src/scraping/expiry_stamp.py (damga deseni — TEK KAYNAK)
         src/scraping/reconcile_stale.py (ağ tabanlı kardeş geçiş)
@@ -17,14 +18,25 @@ yeniden toplanır, `kayip` kümesine hiç düşmez, dolayısıyla mutabakat onla
 açık damga taşıyor. Kapanmış kampanya açık kampanyayla aynı kolonda
 sıralandığı için bu, adil kıyası (CLAUDE.md §17) doğrudan bozar.
 
+## `active` ataması (eklendi, 2026-08-25)
+
+`collector.STATUS_ACTIVE` tanımlıydı ama hiçbir kod yolu tarafından hiç
+ATANMIYORDU — ölçüldü: dashboard'un "Kampanya Durumu" panelinde `aktif`
+sürekli **0** görünüyordu, korpus güncel olsa da. Bu geçiş boşluğu kapatır:
+"temiz" (bu hasatta çekildi, bitmişlik damgası yok) her belge, başka bir
+mekanizma (`reconcile_stale`, hasatçı) zaten bir `campaign_status` yazmadıysa
+`active` alır. "Belirsiz" (geniş desen ateşliyor ama damga değil) hâlâ karar
+almaz — aynı temkinli ilke burada da geçerli: emin olunmayan belgeye ne
+"bitmiş" ne "aktif" denir.
+
 ## Bu geçiş ne yapar / ne YAPMAZ
 
 - **Ağa çıkmaz.** Yalnız yerel temiz metni (`<slug>.txt`) okur; robots/hız
   sınırı gerektiren hiçbir şey yapmaz.
 - **Dosya taşımaz, silmez.** Karar `<slug>.txt.meta.json` içine yazılır.
 - **Provenance'a dokunmaz.** `source_url` / `scraped_at` / `content_hash`
-  olduğu gibi kalır; üstüne `campaign_status` + `expiry_stamp` kanıt bloğu
-  eklenir.
+  olduğu gibi kalır; üstüne `campaign_status` + `expiry_stamp` (bitmiş) ya da
+  `active_stamp` (aktif) kanıt bloğu eklenir.
 
 ### Neden taşıma değil işaretleme
 
@@ -62,7 +74,12 @@ from typing import Any, Optional
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from src.scraping.collector import LIVE_SUBDIR, STATUS_EXPIRED, utc_now_iso
+from src.scraping.collector import (
+    LIVE_SUBDIR,
+    STATUS_ACTIVE,
+    STATUS_EXPIRED,
+    utc_now_iso,
+)
 from src.scraping.expiry_stamp import ExpiryStamp, find_expiry_stamp
 
 #: `expiry_stamp` bloğunu kimin yazdığı. Yalnız KENDİ yazdığımız işareti
@@ -149,9 +166,15 @@ def tara(raw_dir: str | Path, *,
 
 
 def isaretle(bulgular: list[Bulgu], raw_dir: str | Path) -> list[Bulgu]:
-    """`damgali` bulguları `.meta.json`'a yazar; eskiyen işareti geri alır.
+    """`damgali`/`temiz` bulguları `.meta.json`'a yazar; eskiyen işareti geri alır.
 
-    Hiçbir dosya taşınmaz/silinmez. Yazma İDEMPOTENTtir: aynı damga ikinci kez
+    `damgali` → `campaign_status=expired` + `expiry_stamp` kanıtı.
+    `temiz`   → `campaign_status=active` + `active_stamp` kanıtı (yalnız
+                başka bir mekanizma zaten bir durum yazmamışsa).
+    `belirsiz` → hiçbir zaman yeni durum yazılmaz; ÖNCEDEN bizim yazdığımız
+                bir durum varsa geri alınır (belge belirsizleşti).
+
+    Hiçbir dosya taşınmaz/silinmez. Yazma İDEMPOTENTtir: aynı karar ikinci kez
     koşulduğunda dosya değişmez (`checked_at` dâhil), böylece gereksiz git
     gürültüsü çıkmaz.
     """
@@ -162,8 +185,13 @@ def isaretle(bulgular: list[Bulgu], raw_dir: str | Path) -> list[Bulgu]:
         if not meta_path.is_file():
             continue
         meta = _meta_oku(meta_path)
-        onceki = meta.get("expiry_stamp")
-        bizim = isinstance(onceki, dict) and onceki.get("marked_by") == ISARETLEYEN
+        onceki_damga = meta.get("expiry_stamp")
+        bizim_damga = (isinstance(onceki_damga, dict)
+                      and onceki_damga.get("marked_by") == ISARETLEYEN)
+        onceki_aktif = meta.get("active_stamp")
+        bizim_aktif = (isinstance(onceki_aktif, dict)
+                      and onceki_aktif.get("marked_by") == ISARETLEYEN)
+        bizim = bizim_damga or bizim_aktif
 
         if b.durum == "damgali":
             yeni = dict(b.stamp.to_json())
@@ -171,19 +199,57 @@ def isaretle(bulgular: list[Bulgu], raw_dir: str | Path) -> list[Bulgu]:
             yeni["source"] = "metin-damgasi"
             yeni["bucket"] = b.bucket
             # İdempotanlık: damga aynıysa `checked_at`'i koru, dosyaya dokunma.
-            if bizim and {k: onceki.get(k) for k in yeni} == yeni \
+            if bizim_damga and {k: onceki_damga.get(k) for k in yeni} == yeni \
                     and meta.get("campaign_status") == STATUS_EXPIRED:
                 continue
-            yeni["checked_at"] = (onceki.get("checked_at")
-                                  if bizim else None) or simdi
+            yeni["checked_at"] = (onceki_damga.get("checked_at")
+                                  if bizim_damga else None) or simdi
             meta["campaign_status"] = STATUS_EXPIRED
             meta["expiry_stamp"] = yeni
+            # Önceki turda "temiz" bulunup AKTİF işaretlenmiş olabilir —
+            # kampanya iki hasat arasında bitmiş demektir; eski işaret
+            # yanlış hâle geldi, kaldır.
+            meta.pop("active_stamp", None)
+            b.yazildi = True
+        elif b.durum == "temiz":
+            # Sayfa yayında (bu `live/` hasadında), bitmişlik damgası YOK.
+            # Bu, `reconcile_stale.py`nin kendi karar tablosundaki "200 +
+            # normal içerik → duruyor" satırının POZİTİF karşılığıdır: o
+            # satır şimdiye kadar hiçbir yerde `campaign_status` YAZMIYORDU
+            # (ölçüldü, 2026-08-25 — `collector.STATUS_ACTIVE` tanımlı ama
+            # hiçbir kod yolu tarafından hiç atanmıyordu, dashboard'da
+            # "aktif: 0" olarak görünüyordu). "Temiz" ile "aktif" arasındaki
+            # fark BİLEREK küçük tutuluyor: aktiflik burada "bu hasatta
+            # sayfa çekildi ve kendini bitmiş ilan etmiyor" demektir —
+            # "kullanıcı bugün başvurabilir" gibi daha güçlü bir iddia
+            # DEĞİLDİR (o iddia ağ tabanlı `reconcile_stale`'in işi).
+            if meta.get("campaign_status") is not None and not bizim:
+                # Başka bir mekanizma (hasatçı, reconcile_stale, elle) zaten
+                # bir durum yazmış — üstüne yazma, ona ait (bkz. testteki
+                # `test_baskasinin_isaretine_dokunulmaz`).
+                continue
+            if bizim_aktif and meta.get("campaign_status") == STATUS_ACTIVE:
+                continue  # idempotanlık: değişiklik yok, dosyaya dokunma
+            meta["campaign_status"] = STATUS_ACTIVE
+            meta["active_stamp"] = {
+                "marked_by": ISARETLEYEN,
+                "source": "hasat-damgasiz",
+                "bucket": b.bucket,
+                "checked_at": (onceki_aktif.get("checked_at")
+                               if bizim_aktif else None) or simdi,
+            }
+            # Önceki turda damgalıydı, bu turda damga kalktı: eski işareti
+            # de kaldır (yoksa iki çelişen alan bir arada kalırdı).
+            meta.pop("expiry_stamp", None)
             b.yazildi = True
         elif bizim:
-            # Belge yeniden hasat edilmiş ve damga kalkmış: KENDİ işaretimizi
-            # geri al. Başkasının yazdığı `campaign_status`'a dokunma.
+            # "belirsiz": karar verilmiyor (bkz. modül başlığı). Belge
+            # ÖNCEDEN bizim tarafımızdan damgalı/aktif işaretlenmişse, o
+            # işaret artık geçerli değil — geri alınır. Başkasının yazdığı
+            # `campaign_status`'a dokunulmaz.
             meta.pop("expiry_stamp", None)
-            if meta.get("campaign_status") == STATUS_EXPIRED:
+            meta.pop("active_stamp", None)
+            if meta.get("campaign_status") in (STATUS_EXPIRED, STATUS_ACTIVE):
                 meta.pop("campaign_status", None)
             b.geri_alindi = True
         else:
@@ -248,7 +314,8 @@ def render_report(bulgular: list[Bulgu], *, applied: bool,
         f"geniş desen ateşliyor ama damga değil → **karar verilmedi**, dokunulmadı |",
         f"| `temiz` | {toplam.belge - toplam.damgali - toplam.belirsiz} | "
         f"{oran(toplam.belge - toplam.damgali - toplam.belirsiz, toplam.belge)} | "
-        f"bitmişlik işareti yok |",
+        f"bitmişlik işareti yok → `campaign_status: active` "
+        f"(başka bir mekanizma zaten yazmadıysa) |",
         "",
         "`belirsiz` satırı bilerek ayrı: o belgelerde eşleşen şey menü "
         "bağlantısı, ihtar kalıbı ya da başka bir kampanyanın damgası olabilir. "

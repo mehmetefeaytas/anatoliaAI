@@ -11,5 +11,12 @@
   "content_status": "kabuk",
   "recollection_attempt": "2026-08-04",
   "recollection_method": "browser (Playwright, src/scraping/fetcher.BrowserFetcher)",
-  "recollection_result": "kurtarilamadi: tarayici render'i statik cekimle ayni metni verdi (247 -> 247 krkt); canli sayfada govde icerigi YOK (yalnizca baslik + kirinti yolu). Akordeon/sekme tiklamasi da icerik uretmedi."
+  "recollection_result": "kurtarilamadi: tarayici render'i statik cekimle ayni metni verdi (247 -> 247 krkt); canli sayfada govde icerigi YOK (yalnizca baslik + kirinti yolu). Akordeon/sekme tiklamasi da icerik uretmedi.",
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,0 +1,18 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/alisveris-kredisi-ile-a101-ekstrada-tum-kirtasiye-alisverislerinde-vade-farksiz-12-aya-varan-taksit",
+  "scraped_at": "2026-08-25T12:25:14+00:00",
+  "content_hash": "ee9e86d122be1fed31f011b3ae73b6c6b4a844c0f32bf36742db171649218ffd",
+  "collection_method": "browser",
+  "title": "Alışveriş Kredisi İle A101 Ekstra’da Tüm Kırtasiye Alışverişlerinde Vade Farksız 12 Aya Varan Taksit | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 102169,
+  "text_chars": 1892,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

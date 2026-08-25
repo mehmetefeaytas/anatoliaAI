@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/nakitpara-hayatpara-iade",
-  "scraped_at": "2026-08-20T16:46:23+00:00",
-  "content_hash": "fb5de854516b34537c7b46cebeda5f6e8e0958e3a6cfbf29df4747ab23085cdb",
+  "scraped_at": "2026-08-25T12:20:24+00:00",
+  "content_hash": "283db2939bfacb87a23c30fb1a1fd41dbc9921bcf6c5add63ee0674fc10cc5df",
   "collection_method": "browser",
   "title": "Harcamalarından %5 nakit iade + hayatpara kazan",
   "http_status": 200,
-  "raw_bytes": 29630,
-  "text_chars": 2986
+  "raw_bytes": 29648,
+  "text_chars": 2986,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

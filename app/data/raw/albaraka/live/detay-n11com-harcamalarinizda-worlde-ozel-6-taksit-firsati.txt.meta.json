@@ -7,5 +7,12 @@
   "title": "| Albaraka Türk",
   "http_status": 200,
   "raw_bytes": 191699,
-  "text_chars": 2235
+  "text_chars": 2235,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

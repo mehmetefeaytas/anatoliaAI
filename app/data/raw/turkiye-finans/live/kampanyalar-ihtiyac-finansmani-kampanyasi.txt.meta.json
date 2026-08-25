@@ -1,11 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/ihtiyac-finansmani-kampanyasi.aspx",
-  "scraped_at": "2026-08-11T16:16:44+00:00",
-  "content_hash": "ed5449b9d1b8af6e19331999ae823de51a2856d71f65d5b1ed376b31a1150953",
+  "scraped_at": "2026-08-25T12:37:46+00:00",
+  "content_hash": "a9f998d1883a98e83df1dab344d0fbd01c19e67dc7619c99af7e97a08c42e8ee",
   "collection_method": "browser",
   "title": "Mobilden Türkiye Finanslı Ol, Kâr Paysız 50.000 TL'ye Varan İhtiyaç Finansmanını Kaçırma! | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 221443,
+  "raw_bytes": 221520,
   "text_chars": 15272
 }

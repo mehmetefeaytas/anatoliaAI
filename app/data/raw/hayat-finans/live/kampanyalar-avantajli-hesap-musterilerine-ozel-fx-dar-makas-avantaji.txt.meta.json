@@ -6,11 +6,18 @@
   ],
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar/avantajli-hesap-musterilerine-ozel-fx-dar-makas-avantaji",
-  "scraped_at": "2026-08-20T16:44:32+00:00",
-  "content_hash": "83bf18534c2250d54a1174cd268f3eab436e528ccc39dafb6e935fec9f452fe7",
+  "scraped_at": "2026-08-25T12:18:43+00:00",
+  "content_hash": "2a3f2662b2e0442f161695988b1a970284033305b1173afcaa02894921fcc46e",
   "collection_method": "browser",
   "title": "Avantajlı Hesap Müşterilerine Özel FX Dar Makas Avantajı| Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 288183,
-  "text_chars": 2206
+  "raw_bytes": 288159,
+  "text_chars": 2206,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,11 +1,18 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/pasaport-harci.aspx",
-  "scraped_at": "2026-08-11T16:16:01+00:00",
-  "content_hash": "e3fc5d6dedc9a132a0a30b67d32956a827e856731166fe3010559a6ddf990516",
+  "scraped_at": "2026-08-25T12:35:45+00:00",
+  "content_hash": "e7d13c02b73b09e38835b0d013d1789468c353bd075ad4d5a382e6b484733c5c",
   "collection_method": "browser",
   "title": "Pasaport Harcı Ödemelerinize Kâr Paysız Taksit!",
   "http_status": 200,
-  "raw_bytes": 68096,
-  "text_chars": 3059
+  "raw_bytes": 68093,
+  "text_chars": 3058,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -7,5 +7,12 @@
   "title": "Wome Deluxe Hotel'de 9 Aya Varan Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17723,
-  "text_chars": 765
+  "text_chars": 765,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

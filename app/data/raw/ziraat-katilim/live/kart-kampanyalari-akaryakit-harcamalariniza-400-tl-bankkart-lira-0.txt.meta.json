@@ -1,15 +1,20 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/akaryakit-harcamalariniza-400-tl-bankkart-lira-0?IsArchived=true",
-  "scraped_at": "2026-08-03T16:41:56+00:00",
-  "content_hash": "42f572b2400d2d5187ebb06da8db10ebfc48ef9bca7815cbf27376ec31e20309",
+  "scraped_at": "2026-08-25T12:47:54+00:00",
+  "content_hash": "7c150a79b5fd1b9da9aae845732b9b97b16fd207dceb69bf4f6c4b7943726db5",
   "collection_method": "live",
   "title": "Akaryakıt Harcamalarınıza 400 TL Bankkart Lira! | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 486563,
+  "raw_bytes": 487073,
   "text_chars": 2392,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "extraction_invalidated_at": "2026-08-25T12:47:54+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Tarihinde Sona Ermiştir",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

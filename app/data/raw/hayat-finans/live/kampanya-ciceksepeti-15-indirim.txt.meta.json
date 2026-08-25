@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/ciceksepeti-15-indirim",
-  "scraped_at": "2026-08-20T16:46:54+00:00",
-  "content_hash": "bdf4743f06b4a16321a932644c6039e0606b1d9e0a8a48b70a796a2862893413",
+  "scraped_at": "2026-08-25T12:20:55+00:00",
+  "content_hash": "d7a5dd592602a3884fc5d374f22d08ccfc8e107725ea00abe99a50d5404c16dd",
   "collection_method": "browser",
   "title": "ÇiçekSepeti alışverişinde %15 indirim",
   "http_status": 200,
-  "raw_bytes": 24060,
-  "text_chars": 1311
+  "raw_bytes": 24054,
+  "text_chars": 1311,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/elektronik-ve-telekomunikasyon",
-  "scraped_at": "2026-08-03T16:40:38+00:00",
-  "content_hash": "ef16bf61cf231748401ca1cdb4e86468d7c2c2ece55b7765c05d2e3eaac4cbb5",
+  "scraped_at": "2026-08-25T12:45:47+00:00",
+  "content_hash": "8b5c3fd3fe7833ed2e76b1a35f96348328ab60a42abd4ac1a570f11dffc22eab",
   "collection_method": "live",
   "title": "Elektronik ve Telekomünikasyon | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 486086,
-  "text_chars": 1030,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 488700,
+  "text_chars": 1179,
+  "extraction_invalidated_at": "2026-08-25T12:45:47+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

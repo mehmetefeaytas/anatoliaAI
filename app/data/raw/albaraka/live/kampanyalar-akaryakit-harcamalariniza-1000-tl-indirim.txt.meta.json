@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/akaryakit-harcamalariniza-1000-tl-indirim",
-  "scraped_at": "2026-08-03T16:35:02+00:00",
-  "content_hash": "4efb939ef2cf82a4f1edb0551a9dcabe3f85db01e9e645a6a8fb49075985ba81",
+  "scraped_at": "2026-08-25T12:12:00+00:00",
+  "content_hash": "bd810bc340267b2b2c1b3db821361080d05b748bb3d4aab846d5fe78588cc88d",
   "collection_method": "live",
   "title": "Akaryakıt Harcamalarınıza 1000 TL İndirim | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179520,
+  "raw_bytes": 182183,
   "text_chars": 1497,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -7,5 +7,12 @@
   "title": "Kahvelerin Hadi Kartı’ndan! (GEÇMŞİ KAMPANYA) | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 102291,
-  "text_chars": 2355
+  "text_chars": 2355,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

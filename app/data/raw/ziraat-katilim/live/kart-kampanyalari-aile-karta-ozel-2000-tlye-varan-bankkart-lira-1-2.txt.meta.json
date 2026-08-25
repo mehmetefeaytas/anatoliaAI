@@ -1,0 +1,23 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/aile-karta-ozel-2000-tlye-varan-bankkart-lira-1?IsArchived=true",
+  "scraped_at": "2026-08-25T12:47:40+00:00",
+  "content_hash": "ba160b5825a001e3e2dd63bc1e309c6fcc86d7c6b6704426e2c4544920d0e75a",
+  "collection_method": "live",
+  "title": "Aile Kart&#039;a Özel 2.000 TL&#039;ye varan Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 491310,
+  "text_chars": 2951,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "a Özel 2.000 TL'ye varan Bankkart Lira! Kampanya 07-08-2026 Tarihinde Sona Ermiştir. 10 Temmuz– 7 Ağustos 2026 tarihleri arasında Ziraat Katılı",
+    "span_start": 453,
+    "span_end": 476,
+    "end_date": "2026-08-07",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

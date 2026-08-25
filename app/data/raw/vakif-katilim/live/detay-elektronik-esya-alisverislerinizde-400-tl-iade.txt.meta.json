@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/elektronik-esya-alisverislerinizde-400-tl-iade",
-  "scraped_at": "2026-08-03T16:53:31+00:00",
-  "content_hash": "7a3012791d27afff8d00c3bd0778dc3fd7c4f037518b676b912573d9024bd205",
+  "scraped_at": "2026-08-25T12:41:10+00:00",
+  "content_hash": "5dd4fcf44c8420e78e4555f7f5768a5be00e22244566b5878ba51a81870fdaa4",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139407,
-  "text_chars": 1997,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140974,
+  "text_chars": 1999,
+  "extraction_invalidated_at": "2026-08-25T12:41:10+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

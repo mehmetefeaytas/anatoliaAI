@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/seyahat-kampanyalari",
-  "scraped_at": "2026-08-03T16:30:43+00:00",
-  "content_hash": "ab6c8b34cfae316eb10bd41937dcf8e0365b83e5195db8be2c8e44be0a21554c",
+  "scraped_at": "2026-08-25T12:23:20+00:00",
+  "content_hash": "054bfe9245d72d60c171d0e02026c30158aeeba29a636edf986949a5912f3e7e",
   "collection_method": "live",
   "title": "Seyahat Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 131525,
+  "raw_bytes": 132133,
   "text_chars": 492,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

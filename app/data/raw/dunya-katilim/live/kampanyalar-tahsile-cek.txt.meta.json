@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/tahsile-cek",
-  "scraped_at": "2026-08-03T17:03:56+00:00",
-  "content_hash": "63648320c276957c1aa4900da5545e92f165882549ccb3a907342e3f82e38e22",
+  "scraped_at": "2026-08-25T12:17:01+00:00",
+  "content_hash": "e60cf9899f3819d09a9d7f8c1419626d644c60d45e623e376743d7bd8e689a36",
   "collection_method": "live",
   "title": "Tahsile &#xC7;ek | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 505138,
   "text_chars": 9908,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

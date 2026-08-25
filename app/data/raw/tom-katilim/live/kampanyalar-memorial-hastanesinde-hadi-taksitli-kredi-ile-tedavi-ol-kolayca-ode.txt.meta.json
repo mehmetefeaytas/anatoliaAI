@@ -7,5 +7,12 @@
   "title": "memorial-hastanesinde-hadi-taksitli-kredi-ile-tedavi-ol-kolayca-ode | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 102138,
-  "text_chars": 2123
+  "text_chars": 2123,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

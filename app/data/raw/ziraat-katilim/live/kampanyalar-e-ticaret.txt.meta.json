@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/e-ticaret",
-  "scraped_at": "2026-08-03T16:40:32+00:00",
-  "content_hash": "8ed80a0704328a53a4d3e1d042b4220fc39256b7479659dfe23f01404856b5a4",
+  "scraped_at": "2026-08-25T12:45:43+00:00",
+  "content_hash": "5b1f973ef0259a391de8b1a155aa538f8382e3ce753804f001b47449d6f278de",
   "collection_method": "live",
   "title": "E-Ticaret | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 505244,
-  "text_chars": 2454,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 511980,
+  "text_chars": 2843,
+  "extraction_invalidated_at": "2026-08-25T12:45:43+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

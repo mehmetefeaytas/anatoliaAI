@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/a101lerde-meyve-sebze-alisverislerinde-10-nakit-iade",
-  "scraped_at": "2026-08-20T16:38:14+00:00",
-  "content_hash": "b566fc70930a2e52576c2bd6a4bf5c6263571c7237233f3414904acc283b637a",
+  "scraped_at": "2026-08-25T12:25:04+00:00",
+  "content_hash": "e8a69e1d704b4cd1381b811cb0924e59bdfcffc87fa56899e2c1d7a899a014a4",
   "collection_method": "browser",
   "title": "A101’lerde meyve sebze alışverişlerinde %10 nakit iade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 102142,
-  "text_chars": 2468
+  "raw_bytes": 102347,
+  "text_chars": 2536,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

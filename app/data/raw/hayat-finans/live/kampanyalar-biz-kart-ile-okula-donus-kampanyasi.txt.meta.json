@@ -1,0 +1,18 @@
+{
+  "bank_slug": "hayat-finans",
+  "source_url": "https://hayatfinans.com.tr/kampanyalar/biz-kart-ile-okula-donus-kampanyasi",
+  "scraped_at": "2026-08-25T12:20:16+00:00",
+  "content_hash": "0e4299f5c4affe110d31d30b5e2e801e4bdef8df2d20afb89429d16e395183ad",
+  "collection_method": "browser",
+  "title": "Biz Kart ile Okula Dönüş Kampanyası | Hayat Finans",
+  "http_status": 200,
+  "raw_bytes": 290359,
+  "text_chars": 3657,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/ziraat-katilim-bankkart-kurban-bayrami-kampanyasi",
-  "scraped_at": "2026-08-03T16:41:29+00:00",
-  "content_hash": "efa6d73b8f8237898c867a462760afe31ca30ba094444e4427e775b240f97ecf",
+  "scraped_at": "2026-08-25T12:47:17+00:00",
+  "content_hash": "189a5ffc4bcc45f00292e258861caedccaacd4dccbaa762c4d07a74323ab6033",
   "collection_method": "live",
   "title": "Ziraat Katılım Bankkart Kurban Bayramı Kampanyası | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 470097,
+  "raw_bytes": 470611,
   "text_chars": 1385,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

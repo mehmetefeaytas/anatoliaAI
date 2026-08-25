@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/vatan-bilgisayar-ile-vade-farksiz-3-taksit-firsati-1602",
-  "scraped_at": "2026-08-12T08:32:02+00:00",
-  "content_hash": "30abf84834e3ad12de3dcdff7558d646c9dc25a50745873152b92ffc3ba76ee7",
+  "scraped_at": "2026-08-25T12:22:04+00:00",
+  "content_hash": "64bcf581ce8fd40725df05ddeb2608d219797996f18606422ca11a5a2fa3d64c",
   "collection_method": "live",
   "title": "Vatan Bilgisayar ile Vade Farksız 3 Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17468,
-  "text_chars": 799
+  "text_chars": 799,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

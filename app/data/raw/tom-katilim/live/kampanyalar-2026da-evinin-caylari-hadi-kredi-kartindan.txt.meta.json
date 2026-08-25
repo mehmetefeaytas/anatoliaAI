@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/2026da-evinin-caylari-hadi-kredi-kartindan",
-  "scraped_at": "2026-08-20T16:37:47+00:00",
-  "content_hash": "9b3becd8faac942d0a11a8c61ff7645284ac78553a1d767fbecc49e98f638959",
+  "scraped_at": "2026-08-25T12:24:45+00:00",
+  "content_hash": "9d72ec38d86bc3079170b333b45b51f66d00118a5d2c6ba2bc8d055950b746fd",
   "collection_method": "browser",
   "title": "2026’da Hadi Black Kredi Kartı ile evinin çayı bedava! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 101346,
-  "text_chars": 1867
+  "raw_bytes": 101551,
+  "text_chars": 1935,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

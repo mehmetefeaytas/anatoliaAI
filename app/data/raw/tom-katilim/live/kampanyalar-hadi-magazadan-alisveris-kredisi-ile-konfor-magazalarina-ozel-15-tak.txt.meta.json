@@ -7,5 +7,12 @@
   "title": "Hadi Mağazadan Alışveriş Kredisi ile Konfor Mağazalarına Özel 15 Taksit! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 101993,
-  "text_chars": 1507
+  "text_chars": 1507,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

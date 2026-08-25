@@ -209,10 +209,19 @@ class TestKorpusRegresyonu(unittest.TestCase):
     #: kampanya/` ağacının 80 mükerrer dosyası silindikten sonra **11**.
     #: (Mükerrerler `/kampanyalar/` ikizinin kopyasıydı; tek fark 50 baytlık
     #: kırıntı yolu. Kulübe özel TEK özgün belge silinmedi.)
-    #: Diğer üç bankanın sayısı bu turda DEĞİŞMEDİ — desenin sağlam olduğunun
+    #: Diğer üç bankanın sayısı o turda DEĞİŞMEDİ — desenin sağlam olduğunun
     #: kanıtı budur.
-    DAMGALI_BANKALAR = {"ziraat-katilim": 102, "vakif-katilim": 81,
-                        "dunya-katilim": 38, "tom-katilim": 11}
+    #:
+    #: **25 Ağustos 2026 yeniden ölçümü** — 10 bankanın tamamı canlı sitelerden
+    #: yeniden tarandı (`POST /refresh`, sırayla). `ziraat-katilim` 102 → 104
+    #: (iki yeni damgalı belge geldi), `dunya-katilim` 38 → 14 (kampanya
+    #: sayfası önemli ölçüde yenilendi, eski damgalı belgelerin çoğu siteden
+    #: kalktı). `vakif-katilim`/`tom-katilim` değişmedi — desenin kendisi
+    #: bozulmadı, korpus içeriği değişti (aynı gerekçe, yukarıdaki not).
+    #: KONTROL_BANKALAR altı bankada da hâlâ 0 (doğrulandı) — yanlış pozitif
+    #: riski yok.
+    DAMGALI_BANKALAR = {"ziraat-katilim": 104, "vakif-katilim": 81,
+                        "dunya-katilim": 14, "tom-katilim": 11}
 
     @classmethod
     def setUpClass(cls):

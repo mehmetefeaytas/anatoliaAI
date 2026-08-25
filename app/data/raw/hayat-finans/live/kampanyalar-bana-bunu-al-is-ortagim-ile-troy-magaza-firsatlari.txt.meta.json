@@ -3,11 +3,18 @@
   "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar/bana-bunu-al-is-ortagim-ile-troy-magaza-firsatlari",
-  "scraped_at": "2026-08-20T16:44:38+00:00",
-  "content_hash": "d2b2242eba690c1bfc1eb14b389f40d1f4a67d729ffe57a1e3e7ff05b7898c4c",
+  "scraped_at": "2026-08-25T12:19:02+00:00",
+  "content_hash": "121421784b07212a712bff48f465937fe6735cb26fc7e00b7918117d3295bfdb",
   "collection_method": "browser",
   "title": "Bana Bunu Al İş Ortağım ile Troy Mağazalarında Taksit Fırsatları | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 289127,
-  "text_chars": 2145
+  "raw_bytes": 289105,
+  "text_chars": 2145,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

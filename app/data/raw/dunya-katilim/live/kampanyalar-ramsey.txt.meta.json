@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/ramsey",
-  "scraped_at": "2026-08-03T17:03:53+00:00",
-  "content_hash": "652bc6abbecb64e46bf0bb10a629f209faa78ac200badbb60f450677242519e8",
+  "scraped_at": "2026-08-25T12:16:43+00:00",
+  "content_hash": "c9939d9e9c7338f4bce34d620ae798bf3892fc4b527d48a3ab253910ed4a9efa",
   "collection_method": "live",
   "title": "Ramsey | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 504828,
-  "text_chars": 9436,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 31 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
-    "span_start": 646,
-    "span_end": 668,
-    "end_date": "2026-07-31",
+  "raw_bytes": 504838,
+  "text_chars": 9440,
+  "extraction_invalidated_at": "2026-08-25T12:16:43+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

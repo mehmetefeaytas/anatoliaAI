@@ -1,0 +1,18 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/akaryakit-sektorunde-saglam-oran",
+  "scraped_at": "2026-08-25T12:23:26+00:00",
+  "content_hash": "90066a4787a59a29f617162e20ec5836ff5d49fa034a016847e8cfbbb66d65f9",
+  "collection_method": "live",
+  "title": "Akaryakıt Sektöründe Sağlam Oran! | Kuveyt Türk Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 132378,
+  "text_chars": 1429,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

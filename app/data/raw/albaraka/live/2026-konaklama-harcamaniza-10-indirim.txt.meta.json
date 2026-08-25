@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/konaklama-harcamaniza-10-indirim",
-  "scraped_at": "2026-08-03T16:35:17+00:00",
-  "content_hash": "a2abedaaf943aa0808629621c4dafe61e57fa2817f124fc2844b98f3499cb766",
+  "scraped_at": "2026-08-25T12:13:46+00:00",
+  "content_hash": "c5f8e1c5f3dda7a7ee8c4f2ad9480f0f2e3ef47c070117c14d5f58a766a28ff9",
   "collection_method": "live",
   "title": "Keyifli Konaklamanın Albaraka Hali! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181261,
+  "raw_bytes": 183924,
   "text_chars": 2372,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

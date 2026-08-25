@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/babalar-gunune-ozel-vkart-hatemoglu-indirimi",
-  "scraped_at": "2026-08-03T16:52:25+00:00",
-  "content_hash": "e48b381aece7d7f4b437beeefd15ff7e423169cb532e1894876eda432a798887",
+  "scraped_at": "2026-08-25T12:40:45+00:00",
+  "content_hash": "740784a66690463ff6ddb1fa8d20d3c8d7b771f7f0d72875496760d9d50ff4e0",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138941,
-  "text_chars": 1606,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140506,
+  "text_chars": 1608,
+  "extraction_invalidated_at": "2026-08-25T12:40:45+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

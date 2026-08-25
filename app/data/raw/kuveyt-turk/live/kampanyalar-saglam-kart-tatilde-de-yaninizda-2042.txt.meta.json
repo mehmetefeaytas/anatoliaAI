@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/saglam-kart-tatilde-de-yaninizda-2042",
-  "scraped_at": "2026-08-12T08:32:26+00:00",
-  "content_hash": "c8a9c61f38accffdd1e8482b65c2101d18ee55544603e57a3b1a2d8b14478ba1",
+  "scraped_at": "2026-08-25T12:22:29+00:00",
+  "content_hash": "6dfa3ef965e2e1440234352ace58503cf65745261eb60b953feb65d899088137",
   "collection_method": "live",
   "title": "Sağlam Kart ile Halalbooking Tatilde de Yanınızda! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 19594,
-  "text_chars": 1645
+  "raw_bytes": 19595,
+  "text_chars": 1656,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

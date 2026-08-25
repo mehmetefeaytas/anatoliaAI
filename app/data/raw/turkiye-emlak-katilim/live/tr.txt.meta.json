@@ -1,13 +1,23 @@
 {
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr",
-  "scraped_at": "2026-08-03T16:56:14+00:00",
-  "content_hash": "050cb787d2ea5f384a88425f4aa06c6112d8e6f1f077c1431127c1f02eb59b85",
+  "scraped_at": "2026-08-25T12:29:13+00:00",
+  "content_hash": "54b795f505209dd95ec7a33cf7ef27ba1a32e0a1e963c36665f9b3929f0aaa54",
   "collection_method": "live",
   "title": "T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 217694,
-  "text_chars": 2051,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 215757,
+  "text_chars": 1884,
+  "extraction_invalidated_at": "2026-08-25T12:29:13+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,11 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/diger-kampanyalar.aspx",
-  "scraped_at": "2026-08-11T16:16:26+00:00",
-  "content_hash": "1546cb80da7d9a8086cafe6efd5799f7449edcf03b64d2a0d9f58ea9de2b20a0",
+  "scraped_at": "2026-08-25T12:37:01+00:00",
+  "content_hash": "4d0d53d50ee1448625fb4dff3a0c0eba71d920af8ca617b276a879031ba1ede0",
   "collection_method": "browser",
   "title": "Diğer Kampanyalar | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 203507,
+  "raw_bytes": 202610,
   "text_chars": 6656
 }

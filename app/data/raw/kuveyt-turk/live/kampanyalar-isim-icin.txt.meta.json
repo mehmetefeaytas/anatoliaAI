@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin",
-  "scraped_at": "2026-08-12T08:32:36+00:00",
-  "content_hash": "2d3dd48b9f55178bc15f36892bc6777139da1f3362c9e89d965a3f1d740d3742",
+  "scraped_at": "2026-08-25T12:22:37+00:00",
+  "content_hash": "2bf639bb09bc88be132da6a49bee8d2a2118d2e33010af2e11107660a7c1d921",
   "collection_method": "live",
   "title": "İşim İçin | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 151155,
-  "text_chars": 2878
+  "raw_bytes": 151203,
+  "text_chars": 2799,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

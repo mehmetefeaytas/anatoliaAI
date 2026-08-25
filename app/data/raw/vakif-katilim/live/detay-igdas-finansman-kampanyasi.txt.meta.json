@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/igdas-finansman-kampanyasi",
-  "scraped_at": "2026-08-03T16:52:49+00:00",
-  "content_hash": "419f8483b2c3f35c5180bade40f724471f4141436382c8d8224a532e2345c8aa",
+  "scraped_at": "2026-08-25T12:41:52+00:00",
+  "content_hash": "e3239f5d6e0eba33ab43a93cbbfce6bbfcc03e06d378c6391a79f974289e4adb",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 144301,
-  "text_chars": 4440,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 145848,
+  "text_chars": 4442,
+  "extraction_invalidated_at": "2026-08-25T12:41:52+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/hadi-black-kredi-karti-ile-a101lerde-yapacagin-kirtasiye-harcamalarindan-10-hediye-bakiye-kazan",
+  "scraped_at": "2026-08-25T12:27:34+00:00",
+  "content_hash": "05c503d31d0f5abf4347eca5ecb8e9aa012f4a05d95da93297da70d65cf3bea6",
+  "collection_method": "browser",
+  "title": "Hadi Black Kredi Kartı ile A101’lerde yapacağın kırtasiye harcamalarından %10 hediye bakiye kazan! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103344,
+  "text_chars": 2995,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

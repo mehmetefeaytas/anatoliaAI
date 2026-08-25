@@ -1,13 +1,4 @@
 {
-  "bank_slug": "dunya-katilim",
-  "source_url": "https://dunyakatilim.com.tr/kampanyalar/lc-waikiki",
-  "scraped_at": "2026-08-03T17:04:53+00:00",
-  "content_hash": "67f9962ba06592de0189222e604ca72334fa22c41612842f387170b87ef9db35",
-  "collection_method": "live",
-  "title": "LC Waikiki | Dünya Katılım",
-  "http_status": 200,
-  "raw_bytes": 507524,
-  "text_chars": 11181,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
   "extraction_result": "degisim_yok",
   "campaign_status": "expired",
@@ -21,5 +12,14 @@
     "source": "metin-damgasi",
     "bucket": "live",
     "checked_at": "2026-08-10T10:45:44+00:00"
-  }
+  },
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/lc-waikiki",
+  "scraped_at": "2026-08-25T12:16:22+00:00",
+  "content_hash": "74f34e01a1e177e293466e385fdd4c8ad5379fec54007c3b0dc036679d849fc9",
+  "collection_method": "live",
+  "title": "LC Waikiki | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 507524,
+  "text_chars": 11181
 }

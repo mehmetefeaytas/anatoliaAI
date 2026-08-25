@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/kuveyt-turk-ile-e-ihracat-gonderilerinizde-mil-kazanin",
-  "scraped_at": "2026-08-03T16:29:28+00:00",
-  "content_hash": "c7d027fc717ee5b6acd88990311d6b71a06460a3b4a019f006769794033bb73c",
+  "scraped_at": "2026-08-25T12:23:35+00:00",
+  "content_hash": "f49c3447e60f75c81ca4a32eaa3aac036667f4c26e3e1bd99af105f9d2a4e053",
   "collection_method": "live",
   "title": "Kuveyt Türk ile E-İhracat Gönderilerinizde Mil Kazanın! | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132053,
+  "raw_bytes": 132661,
   "text_chars": 1950,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/isim-kampanyalar",
-  "scraped_at": "2026-08-20T16:44:23+00:00",
-  "content_hash": "898fd428478943c8fa011ca3a0b8e2197a0af3d7d45c6391400433a543a145cc",
+  "scraped_at": "2026-08-25T12:18:20+00:00",
+  "content_hash": "fb2cf6603305286d696fae63495fe2160addf6119840940f9254ae6820d815c8",
   "collection_method": "browser",
   "title": "Kampanyalar İsim| Hayat Finans",
   "http_status": 200,
   "raw_bytes": 287413,
-  "text_chars": 1529
+  "text_chars": 1529,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

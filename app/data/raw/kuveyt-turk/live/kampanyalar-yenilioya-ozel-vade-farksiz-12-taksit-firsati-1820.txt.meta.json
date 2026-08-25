@@ -7,5 +7,12 @@
   "title": "Yenilio'ya Özel Vade Farksız 12'ye Varan Taksit İmkanı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17708,
-  "text_chars": 804
+  "text_chars": 804,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/3-ay-ertelemeli-tasit-finansmani",
-  "scraped_at": "2026-08-03T16:53:28+00:00",
-  "content_hash": "5da40cfa310473b14774833d44d7c13afd4a949213268265f6f164570e92ac79",
+  "scraped_at": "2026-08-25T12:40:33+00:00",
+  "content_hash": "8d87bb6e47c85c53dbcb08150220fc17c0f4a3cb2f7d6e96fd97e46f445dcfcf",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139307,
-  "text_chars": 1655,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140860,
+  "text_chars": 1657,
+  "extraction_invalidated_at": "2026-08-25T12:40:33+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

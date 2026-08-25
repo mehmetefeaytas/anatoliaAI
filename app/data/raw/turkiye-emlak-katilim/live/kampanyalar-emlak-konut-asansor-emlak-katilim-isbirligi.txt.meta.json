@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/kurumsal/kampanyalar/emlak-konut-asansor-emlak-katilim-isbirligi",
-  "scraped_at": "2026-08-03T16:56:09+00:00",
-  "content_hash": "e21b2927e8f34a24143a9a9c8218e8f69b9acd9a093401d7f6a33a9d0744a375",
+  "scraped_at": "2026-08-25T12:29:09+00:00",
+  "content_hash": "b7da973a0adfe4ceaa45e896d6aa4876354dc580b04597a0929e2f3d10cdee9d",
   "collection_method": "live",
   "title": "Emlak Konut Asans&#246;r – Emlak Katılım İşbirliği | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 163707,
   "text_chars": 670,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

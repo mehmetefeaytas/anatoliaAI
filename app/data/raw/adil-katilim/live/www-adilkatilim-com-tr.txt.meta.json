@@ -1,11 +1,18 @@
 {
   "bank_slug": "adil-katilim",
   "source_url": "https://www.adilkatilim.com.tr/",
-  "scraped_at": "2026-08-15T21:54:15+00:00",
-  "content_hash": "478f5b70b3da4c35c3cc03d12a69b4cb5d2139a37ed424bb313e1480d2c096d9",
+  "scraped_at": "2026-08-25T12:11:23+00:00",
+  "content_hash": "4eb2518edf3685d7b7a5a41e7cd23f42bbc87d64c2f4ace6aaccd96d03d382cb",
   "collection_method": "browser",
   "title": "Anasayfa | Adil Katılım",
   "http_status": 200,
-  "raw_bytes": 1039352,
-  "text_chars": 3080
+  "raw_bytes": 1044204,
+  "text_chars": 3080,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

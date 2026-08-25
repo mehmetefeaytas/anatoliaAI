@@ -7,5 +7,12 @@
   "title": "Hadi Black Kredi Kartı ile MTV Ödemelerinde Vade Farksız 3 taksit fırsatını kaçırma! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 101747,
-  "text_chars": 2469
+  "text_chars": 2469,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

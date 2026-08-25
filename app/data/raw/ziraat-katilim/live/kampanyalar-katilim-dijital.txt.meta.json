@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/katilim-dijital",
-  "scraped_at": "2026-08-03T16:41:08+00:00",
-  "content_hash": "22aebd2b7a003d475d8a31520d4ef7e74c2265d284add1ae6b65954702c5ca32",
+  "scraped_at": "2026-08-25T12:46:54+00:00",
+  "content_hash": "d534aa0d056247c8419da3b0b7b7b2f4645c5610f1e1c71f1a92b1d242bc70c9",
   "collection_method": "live",
   "title": "Katılım Dijital | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 466664,
+  "raw_bytes": 467178,
   "text_chars": 900,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/ticari-kampanyalar.aspx",
-  "scraped_at": "2026-08-03T16:38:38+00:00",
-  "content_hash": "feb6a48c5871250888428f0c975f99e0c233b4a94c4b436f45cbc915ab3bcb7b",
-  "collection_method": "live",
+  "scraped_at": "2026-08-25T12:38:35+00:00",
+  "content_hash": "98643ca7af5142f3a11896dd9235c5365ced18a1b2bde079080cf758c2ad86f6",
+  "collection_method": "browser",
   "title": "Ticari Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 96611,
-  "text_chars": 5985,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 204150,
+  "text_chars": 6845,
+  "extraction_invalidated_at": "2026-08-25T12:38:35+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

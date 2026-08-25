@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/elektrikli-arac-sarjiniza-ozel-1000-tlye-varan-indirim-3130",
-  "scraped_at": "2026-08-12T08:32:17+00:00",
-  "content_hash": "34ae8ff2a720515616affefccfd79272842ffe613484ee2ff1ebd8b4dd373d96",
+  "scraped_at": "2026-08-25T12:22:17+00:00",
+  "content_hash": "b643c1d7d2bafe941e801b7da081b9c775352e704ed52442dce6b4c93adbc3f8",
   "collection_method": "live",
   "title": "Elektrikli Araç Şarjınıza Özel 750 TL'ye Varan İndirim! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 19092,
-  "text_chars": 1403
+  "raw_bytes": 19076,
+  "text_chars": 1411,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

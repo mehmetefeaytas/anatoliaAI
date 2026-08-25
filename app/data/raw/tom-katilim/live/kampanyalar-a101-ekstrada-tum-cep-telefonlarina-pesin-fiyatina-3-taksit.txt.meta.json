@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/a101-ekstrada-tum-cep-telefonlarina-pesin-fiyatina-3-taksit",
-  "scraped_at": "2026-08-20T16:38:41+00:00",
-  "content_hash": "c2e90f00fdb476def9e8fc146683459145bab9b5c9e89f2987335e2110453941",
+  "scraped_at": "2026-08-25T12:24:50+00:00",
+  "content_hash": "abd735f10816cc63e618777cafcadcd1cb668d2ab8997cf4275cfe6c651fa4a7",
   "collection_method": "browser",
   "title": "A101 Ekstra’da tüm cep telefonlarına Peşin Fiyatına 3 Taksit! 🤩 (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 102172,
-  "text_chars": 1989
+  "raw_bytes": 102377,
+  "text_chars": 2057
 }

@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-ile-gelir-vergisi-odemelerine-vade-farksiz-3-taksit",
-  "scraped_at": "2026-08-03T16:53:52+00:00",
-  "content_hash": "58299450bdfe54bdc7f100e86b0905c4b039c583db908ab10870eafba770b98a",
+  "scraped_at": "2026-08-25T12:42:00+00:00",
+  "content_hash": "22d2a587c891c32fd0e3853fa61b491d79bcbf6c73203f2e07410c61d194d35e",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139563,
-  "text_chars": 1867,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 141146,
+  "text_chars": 1869,
+  "extraction_invalidated_at": "2026-08-25T12:42:00+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

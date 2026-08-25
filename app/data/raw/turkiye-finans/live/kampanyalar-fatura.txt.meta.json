@@ -1,11 +1,18 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/fatura.aspx",
-  "scraped_at": "2026-08-11T16:15:55+00:00",
-  "content_hash": "d947719a7beae885caadba42799b4b5474340e49e27078f0b77648aa81e8b023",
+  "scraped_at": "2026-08-25T12:35:27+00:00",
+  "content_hash": "15dfca42d58941c2956947725316437b765dc162de78b0496e0de9b41333bbeb",
   "collection_method": "browser",
   "title": "Faturanıza 3 Aya Kadar Kâr Paysız Taksit!",
   "http_status": 200,
-  "raw_bytes": 68184,
-  "text_chars": 3334
+  "raw_bytes": 68181,
+  "text_chars": 3333,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

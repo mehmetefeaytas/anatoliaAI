@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/bireysel/kampanyalar/ziraat-katilim-bankkart-babalargunu-kampanyasi",
-  "scraped_at": "2026-08-03T16:41:27+00:00",
-  "content_hash": "2350d83318b41cedf00a423ec1d5ba9f431dc2ba73b8ff7f86e4dd3d6d2593b7",
+  "scraped_at": "2026-08-25T12:47:14+00:00",
+  "content_hash": "3bcef5a02b4d549fc9c23dfa3159654f3c48c2f0e113ab3244dc82824edd011c",
   "collection_method": "live",
   "title": "Ziraat Katılım Bankkart Babalar Günü Kampanyası | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 470516,
+  "raw_bytes": 471030,
   "text_chars": 1508,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

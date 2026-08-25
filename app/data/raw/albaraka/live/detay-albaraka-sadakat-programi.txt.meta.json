@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-sadakat-programi",
-  "scraped_at": "2026-08-03T16:35:46+00:00",
-  "content_hash": "e227a69f15d2b47871560eb6c09a325291dfacc4927de91bed7d041d6b1117d6",
+  "scraped_at": "2026-08-25T12:12:22+00:00",
+  "content_hash": "95fe79835c29b61b4ccd4b876ec42c4efa011dda1a33c3afee5e7453e98ec05c",
   "collection_method": "live",
   "title": "Albaraka Sadakat Programı | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 183465,
+  "raw_bytes": 186128,
   "text_chars": 3173,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

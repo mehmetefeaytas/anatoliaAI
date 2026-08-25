@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/guzelliginize-300-tlye-varan-altin-puan-dokunusu-3088",
-  "scraped_at": "2026-08-12T08:32:20+00:00",
-  "content_hash": "cb552d3297376147b2766f1b1a0d0da63a9dd97b8405303ebaeaa8b98a563f8e",
+  "scraped_at": "2026-08-25T12:22:20+00:00",
+  "content_hash": "55c4b76d461fa85bbe1d489430510ade8b7c3706bf5a7519634f2e87a8f31598",
   "collection_method": "live",
   "title": "300 TL'ye Varan Altın Puan Dokunuşu! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 19218,
-  "text_chars": 1544
+  "raw_bytes": 19202,
+  "text_chars": 1552,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

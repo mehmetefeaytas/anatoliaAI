@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/halalbookingcomda-her-100tl-icin-10-mil-1310",
-  "scraped_at": "2026-08-12T08:31:53+00:00",
-  "content_hash": "bdd291cd29913289b1f37335ef1f3f4f355245e08bf7a19605f6b8e1430a6578",
+  "scraped_at": "2026-08-25T12:21:53+00:00",
+  "content_hash": "6fdde7ca4b6f48a9623fba72db15ad91653cb35897661ecd335ca7515a2b6b18",
   "collection_method": "live",
   "title": "Halalbooking.com’da her 100 TL için 10 Mil ve 9'a Varan Taksit İmkanı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 19464,
-  "text_chars": 1677
+  "text_chars": 1677,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,0 +1,18 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/akaryakit-harcamalariniza-400-tl-parafpara",
+  "scraped_at": "2026-08-25T12:29:15+00:00",
+  "content_hash": "e5cf624d67cc2866d8bcd02feba5c471d3d66f58511e31e99814ca34f5c6a677",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 167907,
+  "text_chars": 2732,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

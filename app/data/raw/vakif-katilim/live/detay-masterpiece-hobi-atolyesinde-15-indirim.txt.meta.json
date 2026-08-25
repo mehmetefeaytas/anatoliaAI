@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/masterpiece-hobi-atolyesinde-15-indirim",
-  "scraped_at": "2026-08-03T16:54:49+00:00",
-  "content_hash": "6db8f894dd607eabc0f6dce74ede01e75d7e565477665b96a33aa8957dd3170e",
+  "scraped_at": "2026-08-25T12:42:22+00:00",
+  "content_hash": "8c4d2a80a50bafffb40b6e6fbd60baee1d25554716f2b2f9fd8743f573910c2e",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138907,
-  "text_chars": 1583,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140467,
+  "text_chars": 1585,
+  "extraction_invalidated_at": "2026-08-25T12:42:22+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

@@ -7,5 +7,12 @@
   "title": "Mobilya Harcamalarınıza 500 TL Altın Puan! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 19424,
-  "text_chars": 1697
+  "text_chars": 1697,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

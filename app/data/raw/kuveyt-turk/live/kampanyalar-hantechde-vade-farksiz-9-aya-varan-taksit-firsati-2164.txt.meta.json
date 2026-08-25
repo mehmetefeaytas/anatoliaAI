@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/hantechde-vade-farksiz-9-aya-varan-taksit-firsati-2164",
-  "scraped_at": "2026-08-12T08:31:56+00:00",
-  "content_hash": "daf667d8ddc30b1294e0523b80c37e150d736b1bf65a37f90fb0b9ee8e043629",
+  "scraped_at": "2026-08-25T12:21:56+00:00",
+  "content_hash": "2c8ba22beadc53f6055eff5e375a13ebfb8d946b6df1355f277abf9a587ed2d1",
   "collection_method": "live",
   "title": "Hantech’de Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17235,
-  "text_chars": 791
+  "text_chars": 791,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

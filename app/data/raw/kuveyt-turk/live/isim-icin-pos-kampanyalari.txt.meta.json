@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/pos-kampanyalari",
-  "scraped_at": "2026-08-03T16:30:28+00:00",
-  "content_hash": "537e12e4198f62a6af55565dd45669ec7ae18c83109f47f61efe54dd2ecb1757",
+  "scraped_at": "2026-08-25T12:23:09+00:00",
+  "content_hash": "463fbeaafcbe1a2988ed9b6a1a16d9d96c467065b4102ce786d5e32588bcf5b5",
   "collection_method": "live",
   "title": "POS Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135426,
+  "raw_bytes": 136034,
   "text_chars": 745,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

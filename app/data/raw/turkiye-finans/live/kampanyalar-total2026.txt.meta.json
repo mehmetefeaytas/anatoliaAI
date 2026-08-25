@@ -1,0 +1,18 @@
+{
+  "bank_slug": "turkiye-finans",
+  "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/total2026.aspx",
+  "scraped_at": "2026-08-25T12:36:11+00:00",
+  "content_hash": "0ffa312d44e0d3cb6640cfaa2da8f79885a8e47b15c1feb37cd947ef7349614f",
+  "collection_method": "browser",
+  "title": "Total Akaryakıt İstasyonlarında 400 TL Ekstre İndirimi!",
+  "http_status": 200,
+  "raw_bytes": 67683,
+  "text_chars": 3397,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

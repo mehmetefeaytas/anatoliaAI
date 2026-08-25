@@ -1,0 +1,18 @@
+{
+  "bank_slug": "kuveyt-turk",
+  "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/milesandsmiles-ile-1000-mile-varan-firsat-2204",
+  "scraped_at": "2026-08-25T12:21:59+00:00",
+  "content_hash": "84487f1e8f75e3ae39790a1182e2f5a5690a3cd98f7ff78ec5ef683ed52c28a0",
+  "collection_method": "live",
+  "title": "Miles&Smiles ile 1.000 Mil'e Varan Fırsat! | Kampanyalar | Miles&Smiles Kuveyt Türk",
+  "http_status": 200,
+  "raw_bytes": 17876,
+  "text_chars": 1311,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

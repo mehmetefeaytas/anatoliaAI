@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-damat-tweende-2000-tl-parafpara",
-  "scraped_at": "2026-08-03T16:57:40+00:00",
-  "content_hash": "7441f144910053ee96e1d852e4b31d45b4ff395d7f8da835dd7ce06506e2c438",
+  "scraped_at": "2026-08-25T12:31:42+00:00",
+  "content_hash": "4a9ff9a43bcfa27846197e53d532577465f3f6c37644a64cd6eb2f78b6a693dc",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 168415,
   "text_chars": 3077,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

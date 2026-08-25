@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/abdullah-kigilida-2-taksit",
-  "scraped_at": "2026-08-03T16:41:41+00:00",
-  "content_hash": "36942a6233f0992d288fbcd8780bf994003fb0f96b322a8ce94e2f9f5a601753",
+  "scraped_at": "2026-08-25T12:47:35+00:00",
+  "content_hash": "e80f7e8ec4c17a226d72d255b1f8fe65761d36c52dc3e29cdfb8f5515d208a6c",
   "collection_method": "live",
   "title": "Abdullah Kiğılı’da 2 Taksit | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 488238,
-  "text_chars": 1936,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 488754,
+  "text_chars": 1932,
+  "extraction_invalidated_at": "2026-08-25T12:47:35+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

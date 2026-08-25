@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/biletcomda-aile-etkinliklerinde-yuzde15-indirim",
-  "scraped_at": "2026-08-20T16:39:02+00:00",
-  "content_hash": "df3b6b867137c3aa4264a2ec81fa381c0c1978d58b063cce66460b716b2c9714",
+  "scraped_at": "2026-08-25T12:25:19+00:00",
+  "content_hash": "9848b13bec23a07202f23ca1c550378b4c97f1849c7b01c6594f5443f0d03094",
   "collection_method": "browser",
   "title": "Bilet.com’da Aile Etkinliklerinde %15 İndirim! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 102776,
-  "text_chars": 2103
+  "raw_bytes": 102981,
+  "text_chars": 2171
 }

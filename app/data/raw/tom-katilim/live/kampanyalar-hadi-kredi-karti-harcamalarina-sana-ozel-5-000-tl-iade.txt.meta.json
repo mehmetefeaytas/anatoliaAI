@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/hadi-kredi-karti-harcamalarina-sana-ozel-5-000-tl-iade",
-  "scraped_at": "2026-08-20T16:39:44+00:00",
-  "content_hash": "3bc99d8c073d0454f193527cc7110c1be273455ceaa00c19452b310d78679811",
+  "scraped_at": "2026-08-25T12:28:32+00:00",
+  "content_hash": "aa5fbea913c9b72744172cb1450de0d0806ef2d877268e7114105f229ced7271",
   "collection_method": "browser",
   "title": "Hadi Kredi Kartı harcamalarına sana özel 5.000 TL İade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 101420,
-  "text_chars": 1803
+  "raw_bytes": 101625,
+  "text_chars": 1871,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

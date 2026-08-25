@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/mastercard-business-kart-firsat.aspx",
-  "scraped_at": "2026-08-03T16:38:53+00:00",
-  "content_hash": "b948593a04543f8f4ef58f805e00810e6e6b59cf3a64909736ed316da3dd9687",
-  "collection_method": "live",
+  "scraped_at": "2026-08-25T12:38:14+00:00",
+  "content_hash": "be5e282be2c1fa5a98196ed449c5d6d09e06d8701596675841c345b9c81e8596",
+  "collection_method": "browser",
   "title": "Mastercard Business Kart’a özel fırsatlar MasterKOBİ’de! | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 97342,
-  "text_chars": 7572,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 205052,
+  "text_chars": 8554,
+  "extraction_invalidated_at": "2026-08-25T12:38:14+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

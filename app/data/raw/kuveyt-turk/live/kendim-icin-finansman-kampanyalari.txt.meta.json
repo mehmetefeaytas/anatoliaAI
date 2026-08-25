@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/kendim-icin/finansman-kampanyalari",
-  "scraped_at": "2026-08-03T16:34:17+00:00",
-  "content_hash": "a66879d07144e9560c3e9618e837b37a3fd907d04e5e59236148e8379ddafc87",
+  "scraped_at": "2026-08-25T12:23:10+00:00",
+  "content_hash": "979b3abec0b31e075a0c3a12397de64fbcfce680e322617e32466bffad06345a",
   "collection_method": "live",
   "title": "Finansman Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 135833,
+  "raw_bytes": 136441,
   "text_chars": 875,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

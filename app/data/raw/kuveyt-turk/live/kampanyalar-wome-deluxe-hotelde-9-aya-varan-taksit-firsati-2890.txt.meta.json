@@ -7,5 +7,12 @@
   "title": "Wome Deluxe Hotel’de 9 Aya Varan Taksit Fırsatı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 18621,
-  "text_chars": 1141
+  "text_chars": 1141,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

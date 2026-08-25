@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://www.tombank.com.tr/kampanyalar.html",
-  "scraped_at": "2026-08-20T16:44:00+00:00",
+  "scraped_at": "2026-08-25T12:24:40+00:00",
   "content_hash": "ffb9b35248b20a2180e0b95c59446edb6b10421b6c81359976c800c1ebb7430a",
   "collection_method": "browser",
   "title": "Kampanyalar | TOM Bank",
   "http_status": 200,
   "raw_bytes": 22853,
-  "text_chars": 5457
+  "text_chars": 5457,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

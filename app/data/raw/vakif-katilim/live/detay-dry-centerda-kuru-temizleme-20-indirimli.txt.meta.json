@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/dry-centerda-kuru-temizleme-20-indirimli",
-  "scraped_at": "2026-08-03T16:54:34+00:00",
-  "content_hash": "f886536fd3921a9990fe2c0bad94ff4c95c0816267666f744e7c405a5dd91685",
+  "scraped_at": "2026-08-25T12:41:03+00:00",
+  "content_hash": "4025c0b64f1515a356381e201bcd95a8f6370a1904193f16590d56c8a1236fc1",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138820,
-  "text_chars": 1524,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140381,
+  "text_chars": 1526,
+  "extraction_invalidated_at": "2026-08-25T12:41:03+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

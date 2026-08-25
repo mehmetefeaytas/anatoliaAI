@@ -7,5 +7,12 @@
   "title": "Tüm market harcamalarında seçimini yap %5 iade kazan! Çok kazananlar Kulübü Üyelerine Özel %10 İade! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 104121,
-  "text_chars": 3836
+  "text_chars": 3836,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

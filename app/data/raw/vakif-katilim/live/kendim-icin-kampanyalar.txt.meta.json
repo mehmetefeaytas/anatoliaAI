@@ -1,0 +1,11 @@
+{
+  "bank_slug": "vakif-katilim",
+  "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar",
+  "scraped_at": "2026-08-25T12:39:54+00:00",
+  "content_hash": "e13fce206cb99bdb8817bc39c738e36ea6f5f045ad6654030b67bd8b5a348a21",
+  "collection_method": "live",
+  "title": "Kampanyalar | Vakıf Katılım",
+  "http_status": 200,
+  "raw_bytes": 134654,
+  "text_chars": 619
+}

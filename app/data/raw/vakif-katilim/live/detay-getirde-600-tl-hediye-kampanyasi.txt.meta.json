@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/getirde-600-tl-hediye-kampanyasi",
-  "scraped_at": "2026-08-03T16:53:19+00:00",
-  "content_hash": "e38b41693f40c0d892f443a302cdd3e27fb26f2619fe84782caa5b0942479da5",
+  "scraped_at": "2026-08-25T12:41:34+00:00",
+  "content_hash": "dec761a1e24ada135f3102a722b3bde05592d23fd991df26b1b665cbbe1b6f1a",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139794,
-  "text_chars": 2285,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 141347,
+  "text_chars": 2287,
+  "extraction_invalidated_at": "2026-08-25T12:41:34+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

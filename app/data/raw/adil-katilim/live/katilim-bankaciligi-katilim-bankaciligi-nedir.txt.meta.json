@@ -1,11 +1,18 @@
 {
   "bank_slug": "adil-katilim",
   "source_url": "https://www.adilkatilim.com.tr/katilim-bankaciligi/katilim-bankaciligi-nedir",
-  "scraped_at": "2026-08-15T21:54:21+00:00",
+  "scraped_at": "2026-08-25T12:11:28+00:00",
   "content_hash": "e8934cbed9eee13182e70ecfbcb1b765800c6e41491ae7e023f9b07994add982",
   "collection_method": "browser",
   "title": "Katılım Bankacılığı Nedir? | Adil Katılım",
   "http_status": 200,
   "raw_bytes": 925577,
-  "text_chars": 3471
+  "text_chars": 3471,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

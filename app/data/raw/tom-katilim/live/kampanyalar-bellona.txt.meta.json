@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/bellona",
-  "scraped_at": "2026-08-20T16:37:44+00:00",
-  "content_hash": "553721bb0b98e99adb02d78e205cf2983b5741af055ff0b9319130776fb966ab",
+  "scraped_at": "2026-08-25T12:25:16+00:00",
+  "content_hash": "0f1060c2489be38efd245a5fefe8a782d153a4d7f09e3802daa87e92c0baa50b",
   "collection_method": "browser",
   "title": "Hadi Taksitli Alışveriş Kredisi ile Bellona Mağazalarında 36 Aya Varan Taksit! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 100538,
-  "text_chars": 1375
+  "raw_bytes": 100743,
+  "text_chars": 1443,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

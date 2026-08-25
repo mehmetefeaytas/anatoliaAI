@@ -1,11 +1,18 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/Happy-Bonus-ile-Vergi-Odemelerinize-Kar-Paysiz-Taksit.aspx",
-  "scraped_at": "2026-08-11T16:15:52+00:00",
-  "content_hash": "6dbddba4f4086106cdc57f3f115ad4037809c1f9d966ecea1af690d145c96022",
+  "scraped_at": "2026-08-25T12:35:18+00:00",
+  "content_hash": "acb091b379da57a3b5c4de975615cac128df238a3bce6c734a1b97ac2ebc52aa",
   "collection_method": "browser",
   "title": "Vergi Ödemelerinize Kâr Paysız Taksit!",
   "http_status": 200,
-  "raw_bytes": 68905,
-  "text_chars": 3214
+  "raw_bytes": 68902,
+  "text_chars": 3213,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

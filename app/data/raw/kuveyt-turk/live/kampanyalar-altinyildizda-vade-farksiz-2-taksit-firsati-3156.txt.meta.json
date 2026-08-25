@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/altinyildizda-vade-farksiz-2-taksit-firsati-3156",
-  "scraped_at": "2026-08-12T08:32:08+00:00",
-  "content_hash": "aaea2b0c72b917ddc7dd3809932d1b4065eb940df28b81b372d1337ef1f19916",
+  "scraped_at": "2026-08-25T12:22:08+00:00",
+  "content_hash": "535e823277d621478e75d1e2c3390dd07fb63420f95c7689f949eb0473e2ac04",
   "collection_method": "live",
   "title": "Altınyıldız Classics'te Vade Farksız 2 Taksit Fırsatı | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 18641,
-  "text_chars": 1160
+  "raw_bytes": 18625,
+  "text_chars": 1168,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

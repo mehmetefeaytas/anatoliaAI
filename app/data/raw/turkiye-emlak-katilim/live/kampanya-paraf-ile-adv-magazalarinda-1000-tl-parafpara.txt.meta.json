@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-adv-magazalarinda-1000-tl-parafpara",
-  "scraped_at": "2026-08-03T16:57:22+00:00",
-  "content_hash": "59374e6aa7d44ae117f13ea0f7deb8e157ab7fd55c8f8fc71bdb2dfb4793b9c4",
+  "scraped_at": "2026-08-25T12:31:26+00:00",
+  "content_hash": "50aee7733612c29eb36f5b96121e9d8ce11fc8ac0dadc7a8d01920983e85ccbd",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 168279,
   "text_chars": 3017,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

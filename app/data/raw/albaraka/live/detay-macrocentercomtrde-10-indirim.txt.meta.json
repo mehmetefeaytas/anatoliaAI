@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/macrocentercomtrde-10-indirim",
-  "scraped_at": "2026-08-03T16:36:17+00:00",
-  "content_hash": "14c9191004021883fddc2430a9e8d2b67ed724d265c3f86eca838db07533c2a0",
+  "scraped_at": "2026-08-25T12:12:55+00:00",
+  "content_hash": "053371a1f9216eff344a8c5a8922604f6cf2d4fae0064f810e330770937ed263",
   "collection_method": "live",
   "title": "Macrocenter.com.tr'de %10 İndirim! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180066,
+  "raw_bytes": 182729,
   "text_chars": 1811,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

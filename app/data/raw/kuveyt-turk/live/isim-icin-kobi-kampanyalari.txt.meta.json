@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kobi-kampanyalari",
-  "scraped_at": "2026-08-12T08:32:48+00:00",
-  "content_hash": "5495e98122dee155e87f47ace87d5331ff75655ec5491888fbbea28f83f1a3c8",
+  "scraped_at": "2026-08-25T12:22:49+00:00",
+  "content_hash": "fd46fe508977f226440f7c66b91ed8e531347cf7dfafb4aead4074ea13f2b195",
   "collection_method": "live",
   "title": "KOBİ Kampanyaları | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 142673,
-  "text_chars": 1800
+  "raw_bytes": 142870,
+  "text_chars": 1800,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

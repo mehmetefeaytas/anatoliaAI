@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/a101de-6-taksit",
-  "scraped_at": "2026-08-03T16:41:38+00:00",
-  "content_hash": "c7ecc40b7418f78d5ba1ef5a23ca57118e92780ec3011dabb41a66ff7c7eadee",
+  "scraped_at": "2026-08-25T12:47:26+00:00",
+  "content_hash": "5f9354e13fd28d1dc4c721d47decfda9d4b8f108554f285a15854b26cd689631",
   "collection_method": "live",
   "title": "A101&#039;de 6 Taksit | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 488276,
-  "text_chars": 1857,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 489033,
+  "text_chars": 1869,
+  "extraction_invalidated_at": "2026-08-25T12:47:26+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/eyt-finansmani",
-  "scraped_at": "2026-08-03T16:53:16+00:00",
-  "content_hash": "ee7708a865c45a3340511f2c5366261a58ccf8ff1a43b6ce32fa48202f447acd",
+  "scraped_at": "2026-08-25T12:41:14+00:00",
+  "content_hash": "985b3200a5cee5ca2ba2969c030d638919a75236f9bba1a2a3031582b809f433",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138465,
-  "text_chars": 1196,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140000,
+  "text_chars": 1198,
+  "extraction_invalidated_at": "2026-08-25T12:41:14+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

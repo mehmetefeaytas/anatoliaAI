@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/pocket-esimden-35-indirim",
-  "scraped_at": "2026-08-03T16:36:27+00:00",
-  "content_hash": "b735ee87625d45c484d48138c37fddf1a31d3a2102e28f78a0df6867e41f0101",
+  "scraped_at": "2026-08-25T12:13:03+00:00",
+  "content_hash": "a0803fbcf7ba874735d80c25c2c403119a1ef336f95460471d9747a50c965750",
   "collection_method": "live",
   "title": "Pocket eSIM’den %35 İndirim! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180300,
+  "raw_bytes": 182963,
   "text_chars": 1876,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

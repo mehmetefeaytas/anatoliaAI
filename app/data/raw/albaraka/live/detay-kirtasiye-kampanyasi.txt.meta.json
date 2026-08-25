@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/kirtasiye-kampanyasi",
-  "scraped_at": "2026-08-03T16:36:15+00:00",
-  "content_hash": "782d0ca44914e7dbc8c700e0ab05a8951d5e7373b990ad029fe7e293bcf24f32",
+  "scraped_at": "2026-08-25T12:12:53+00:00",
+  "content_hash": "a7f064e1d674f4ce12fca87a8797b409a5091038dda4b9eef406d95488f90f38",
   "collection_method": "live",
   "title": "Kırtasiye Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182258,
+  "raw_bytes": 184921,
   "text_chars": 2102,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

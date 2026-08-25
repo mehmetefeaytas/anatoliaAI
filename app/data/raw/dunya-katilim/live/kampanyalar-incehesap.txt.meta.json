@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/incehesap",
-  "scraped_at": "2026-08-03T17:03:14+00:00",
-  "content_hash": "3bf63b516bc785c67fc89fe4f54e9eb1ebfc4efa6f1ef52180ab71eb87e62522",
+  "scraped_at": "2026-08-25T12:16:01+00:00",
+  "content_hash": "8abf64e51e496742219a167bdf04efd59a0e2fd5de9c681bfa1e00f1b154a71c",
   "collection_method": "live",
   "title": "&#x130;ncehesap | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507049,
-  "text_chars": 11334,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 31 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
-    "span_start": 2544,
-    "span_end": 2566,
-    "end_date": "2026-07-31",
+  "raw_bytes": 507059,
+  "text_chars": 11338,
+  "extraction_invalidated_at": "2026-08-25T12:16:01+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/qcar-mobilitede-arac-kiralamada-40-indirim",
-  "scraped_at": "2026-08-20T16:46:43+00:00",
-  "content_hash": "b9dc4804dbbce382b1c64a617a363a6fc5cf1ad6e2c706ef63802e8d232658ca",
+  "scraped_at": "2026-08-25T12:20:45+00:00",
+  "content_hash": "f3c710d59f80e926396300adbac79e3a1654b66c67e419c61f0ea00cd35962a1",
   "collection_method": "browser",
   "title": "QCAR Mobilite’de araç kiralamada %40 indirim",
   "http_status": 200,
-  "raw_bytes": 30473,
-  "text_chars": 3452
+  "raw_bytes": 30471,
+  "text_chars": 3452,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

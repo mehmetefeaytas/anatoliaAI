@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/herfisine-20-hayatpara",
-  "scraped_at": "2026-08-20T16:46:31+00:00",
-  "content_hash": "81114e04b48d86fd931c0f14a9db20d3b3de3db5b45f8571d12709a945843780",
+  "scraped_at": "2026-08-25T12:20:33+00:00",
+  "content_hash": "4f4ce2b10c12f9ce6f9068afd29139ef4c1fa9c208b1ba9bddf9b406e7e4757e",
   "collection_method": "browser",
   "title": "Her fişine 20 hayatpara",
   "http_status": 200,
-  "raw_bytes": 29090,
-  "text_chars": 3303
+  "raw_bytes": 29381,
+  "text_chars": 3303,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/egitim-kitap-ve-kirtasiye",
-  "scraped_at": "2026-08-03T16:40:35+00:00",
-  "content_hash": "0afc55b64a8a5038649c9ee0c286b7a985b7ea6e6e538dc20c136083234e506e",
+  "scraped_at": "2026-08-25T12:45:45+00:00",
+  "content_hash": "7acebd62baf1e6b44a5b913099ea1270d395a879cbb4db9a31f231be2c3d84f5",
   "collection_method": "live",
   "title": "Eğitim, Kitap ve Kırtasiye | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 488641,
-  "text_chars": 1297,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 491365,
+  "text_chars": 1510,
+  "extraction_invalidated_at": "2026-08-25T12:45:45+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

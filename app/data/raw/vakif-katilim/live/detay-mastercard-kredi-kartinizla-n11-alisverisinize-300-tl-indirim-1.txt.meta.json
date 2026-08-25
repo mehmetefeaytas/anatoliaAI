@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-n11-alisverisinize-300-tl-indirim_1",
-  "scraped_at": "2026-07-30T18:41:31+00:00",
-  "content_hash": "97fabf99aaf722a2645daef37beab37f2a10d50912de8b8871cc34d0a98d885d",
+  "scraped_at": "2026-08-25T12:42:14+00:00",
+  "content_hash": "b6ab1f3dfe52b03b35fe58c216c556650f5f1cacba11ddb5a6025769a3089972",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 140024,
-  "text_chars": 2322,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 141404,
+  "text_chars": 2302,
+  "extraction_invalidated_at": "2026-08-25T12:42:14+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

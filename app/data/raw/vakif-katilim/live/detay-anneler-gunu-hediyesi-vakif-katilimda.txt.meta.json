@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/anneler-gunu-hediyesi-vakif-katilimda",
-  "scraped_at": "2026-08-03T16:55:07+00:00",
-  "content_hash": "5ff22072482607c7d12360fe389d746d5ea27f29389211eaf4b4238bb1bc5818",
+  "scraped_at": "2026-08-25T12:40:39+00:00",
+  "content_hash": "1a5f88d1467e6e94beaaddf3c806b2980772ebd88460f0419bbe630795d6d126",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139005,
-  "text_chars": 1442,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140563,
+  "text_chars": 1444,
+  "extraction_invalidated_at": "2026-08-25T12:40:39+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

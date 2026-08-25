@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/egitim-harcamalariniza-vade-farksiz-5-taksit",
-  "scraped_at": "2026-08-03T16:55:37+00:00",
-  "content_hash": "f6ac44845ba193b30d3b9912a66580eacdf819d2d598c77fe4a037b5f159ce8d",
+  "scraped_at": "2026-08-25T12:41:07+00:00",
+  "content_hash": "e297f60a7470accfea169e302e1c693d0f029b7583a43fb9ae18fdf9577d8b1e",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139134,
-  "text_chars": 1624,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140699,
+  "text_chars": 1626,
+  "extraction_invalidated_at": "2026-08-25T12:41:07+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

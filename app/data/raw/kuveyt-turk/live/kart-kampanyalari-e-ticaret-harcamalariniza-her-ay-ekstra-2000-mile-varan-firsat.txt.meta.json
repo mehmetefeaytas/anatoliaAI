@@ -1,13 +1,23 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://www.kuveytturk.com.tr/kampanyalar/isim-icin/kart-kampanyalari/e-ticaret-harcamalariniza-her-ay-ekstra-2000-mile-varan-firsat",
-  "scraped_at": "2026-08-03T16:29:07+00:00",
-  "content_hash": "b76223041ad8712698230e58100a1010b4a89f6d6998ec125392638b4d10bc79",
+  "scraped_at": "2026-08-25T12:23:28+00:00",
+  "content_hash": "bc6d441d9ccde58536342c9ab2a8353a36c33d6c7c59016d6f6319241fec2128",
   "collection_method": "live",
   "title": "E-Ticaret Harcamalarınıza Her Ay Ekstra 2.000 Mil'e Varan Fırsat! | Kuveyt Türk Katılım Bankası",
   "http_status": 200,
-  "raw_bytes": 132436,
+  "raw_bytes": 133049,
   "text_chars": 1391,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "extraction_invalidated_at": "2026-08-25T12:23:28+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

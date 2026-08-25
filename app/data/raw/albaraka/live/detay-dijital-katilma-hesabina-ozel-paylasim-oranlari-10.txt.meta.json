@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/dijital-katilma-hesabina-ozel-paylasim-oranlari-10",
-  "scraped_at": "2026-08-03T16:35:57+00:00",
-  "content_hash": "4d6dbdd7a420e946a483eac51f4419638d63124c5bf51876cb377b640203b806",
+  "scraped_at": "2026-08-25T12:12:40+00:00",
+  "content_hash": "7c228664eff079c01eb6a401345f7f8d6cd05a6d0cf1d654bb57a5e476b15a90",
   "collection_method": "live",
   "title": "Dijital Katılma Hesabı’na Özel Paylaşım Oranları! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 181874,
+  "raw_bytes": 184537,
   "text_chars": 1523,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/hepsiburada",
-  "scraped_at": "2026-08-03T17:03:08+00:00",
-  "content_hash": "5b1c2c0eeb57b944e4ecb554ca9db0c1ca3946c36fd88924bda1cad6e1d118d6",
+  "scraped_at": "2026-08-25T12:15:57+00:00",
+  "content_hash": "d1a4fcc692fd46ebd43286f012371841f8bc669294db5ecdd33bb9277177241c",
   "collection_method": "live",
   "title": "Hepsiburada | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 506959,
-  "text_chars": 11207,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 31 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
-    "span_start": 2417,
-    "span_end": 2439,
-    "end_date": "2026-07-31",
+  "raw_bytes": 506823,
+  "text_chars": 11083,
+  "extraction_invalidated_at": "2026-08-25T12:15:57+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

@@ -7,5 +7,12 @@
   "title": "TOM Bank Hadi'den Samsung S26 Fırsatı! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 100831,
-  "text_chars": 1464
+  "text_chars": 1464,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

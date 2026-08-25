@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/beyaz-esya-ve-ev-aletleri",
-  "scraped_at": "2026-08-03T16:40:26+00:00",
-  "content_hash": "b3047d6e7eea4d9ba9d1b16bea05b0e080cdfaa062b1043dea4a12a365a70d14",
+  "scraped_at": "2026-08-25T12:45:25+00:00",
+  "content_hash": "68b17189b4c4823b15a9d9ff1970b47e7bf500c3bb736be510315dc997269e2e",
   "collection_method": "live",
   "title": "Beyaz Eşya ve Ev Aletleri | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 496803,
-  "text_chars": 1946,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 501260,
+  "text_chars": 2194,
+  "extraction_invalidated_at": "2026-08-25T12:45:25+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,11 +1,18 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/yolcu360.aspx",
-  "scraped_at": "2026-08-11T16:16:13+00:00",
-  "content_hash": "b8b943a0c3c29aa2b4d384d0d4d910400df1b1d36464bfd8aea3bc609b34af45",
+  "scraped_at": "2026-08-25T12:36:25+00:00",
+  "content_hash": "c6332ac6d6e6920eaaf2d92b8b617edc879233c78675293be02ff6b634f20b24",
   "collection_method": "browser",
   "title": "Yolcu360'da Happy Kart'la Araç Kiralamak Daha Avantajlı",
   "http_status": 200,
-  "raw_bytes": 72909,
-  "text_chars": 4630
+  "raw_bytes": 72907,
+  "text_chars": 4630,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

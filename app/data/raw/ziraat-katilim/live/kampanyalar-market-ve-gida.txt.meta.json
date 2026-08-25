@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/market-ve-gida",
-  "scraped_at": "2026-08-03T16:40:53+00:00",
-  "content_hash": "868d5f5df1da6415c5b76181ac8d8a78b21cce42ddab8f544c900a510e71e395",
+  "scraped_at": "2026-08-25T12:46:39+00:00",
+  "content_hash": "794e8efc8a19005ccbdd6c1c4297e732c0a0b5188122896f384a8544d0daf5b8",
   "collection_method": "live",
   "title": "Market ve Gıda | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 503529,
-  "text_chars": 2442,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 508560,
+  "text_chars": 2832,
+  "extraction_invalidated_at": "2026-08-25T12:46:39+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

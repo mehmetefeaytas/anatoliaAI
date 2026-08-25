@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/a101lerde-sut-urunleri-harcamalarinda-50-hediye-bakiye-kazan",
-  "scraped_at": "2026-08-20T16:36:05+00:00",
-  "content_hash": "8770d5e4951debcee216cf90410c446201faa814e764b92a310797722655be10",
+  "scraped_at": "2026-08-25T12:25:08+00:00",
+  "content_hash": "260079c6c381f7da64e030e3b07be2f248e6457c79edcdbee2b2430a8ab78627",
   "collection_method": "browser",
   "title": "A101’lerde süt ürünleri harcamalarında %50 Hediye Bakiye kazan! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 104740,
-  "text_chars": 4582
+  "raw_bytes": 104945,
+  "text_chars": 4650,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/eve-alisverislerinde-10-nakit-iade",
-  "scraped_at": "2026-08-20T16:38:23+00:00",
-  "content_hash": "0a41b6e27dcd725ea32e44df53783c0310d03a8fcb8f2ac756b7ec4d71c7c2fa",
+  "scraped_at": "2026-08-25T12:25:38+00:00",
+  "content_hash": "e51571658f0c2b30a483072b206c6cbc554031a950b02d4c0dc88c41c59e091c",
   "collection_method": "browser",
   "title": "Eve alışverişlerinde %10 nakit iade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 101462,
-  "text_chars": 1781
+  "raw_bytes": 101667,
+  "text_chars": 1849,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

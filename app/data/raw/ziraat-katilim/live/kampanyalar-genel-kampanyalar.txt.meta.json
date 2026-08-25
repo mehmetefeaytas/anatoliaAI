@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/genel-kampanyalar",
-  "scraped_at": "2026-08-03T16:40:41+00:00",
-  "content_hash": "d34155ed480d48e5eae813cf4ef81110b4767a9f00b6ac9c21dbf02a9c68ace1",
+  "scraped_at": "2026-08-25T12:45:51+00:00",
+  "content_hash": "2f38a5e077fecb235d443da1a9860b10ef27741b1623786c9f1af61fcd896ac1",
   "collection_method": "live",
   "title": "Genel Kampanyalar | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 479787,
-  "text_chars": 540,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi"
+  "raw_bytes": 480293,
+  "text_chars": 1319,
+  "extraction_invalidated_at": "2026-08-25T12:45:51+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

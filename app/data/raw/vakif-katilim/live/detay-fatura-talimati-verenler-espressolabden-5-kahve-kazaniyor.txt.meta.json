@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/fatura-talimati-verenler-espressolabden-5-kahve-kazaniyor",
-  "scraped_at": "2026-08-03T16:55:25+00:00",
-  "content_hash": "80795c8e484e432af1d4047aa212352d6dcabf28e5c2f06775cf0d47945eec7c",
+  "scraped_at": "2026-08-25T12:41:20+00:00",
+  "content_hash": "54a34571678e3ce479ae3b5d29ff525cc2a2a16a27c367ef935d532ae2c03ab8",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 140491,
-  "text_chars": 2763,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 142069,
+  "text_chars": 2765,
+  "extraction_invalidated_at": "2026-08-25T12:41:20+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

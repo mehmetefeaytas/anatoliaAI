@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/enterprise-arac-kiralamalarinda-35-indirim-firsati",
-  "scraped_at": "2026-08-03T16:56:42+00:00",
-  "content_hash": "e88fe0ccaa50824a78b5f26071d5f8741ff2740f6184e96111abac593ece5c22",
+  "scraped_at": "2026-08-25T12:29:40+00:00",
+  "content_hash": "8b307083ec1324dc6a906daaf1aad84b2bf12afb9d2fc798984c5d3d993133c2",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 167256,
   "text_chars": 2058,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

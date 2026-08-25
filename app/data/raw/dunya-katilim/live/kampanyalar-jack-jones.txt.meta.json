@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/jack-jones",
-  "scraped_at": "2026-08-03T17:03:23+00:00",
-  "content_hash": "dd0ed19d65516520ba7adfd46a5f776aaaad8944c1b58fdb00340040d33866ce",
+  "scraped_at": "2026-08-25T12:16:10+00:00",
+  "content_hash": "23c371ca90a808f91fce5746251822fe9689e7d3cb3469d8cbc87e60fa67b572",
   "collection_method": "live",
   "title": "Jack Jones | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 505265,
-  "text_chars": 9676,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "mpanyayı sonlandırma hakkını saklı tutar. Kart Kampanyaları Sona erdi Bitiş Tarihi: 30 Nisan 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçil",
-    "span_start": 887,
-    "span_end": 909,
-    "end_date": "2026-04-30",
+  "raw_bytes": 505276,
+  "text_chars": 9681,
+  "extraction_invalidated_at": "2026-08-25T12:16:10+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

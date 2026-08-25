@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/500-tl-yukle-500-hayatpara-kazan",
-  "scraped_at": "2026-08-20T16:46:40+00:00",
-  "content_hash": "ced1c157e6b15de4dd7fc5d73a35b8e78397bbbfffdf10f744073e1a275cdce2",
+  "scraped_at": "2026-08-25T12:20:42+00:00",
+  "content_hash": "d8d5fe2262cb6a93d4c2abd58ef935e52cff8c8e6daef1d5f60edac0fe5f1547",
   "collection_method": "browser",
   "title": "500 TL yükle, 500 hayatpara kazan",
   "http_status": 200,
-  "raw_bytes": 25194,
-  "text_chars": 1565
+  "raw_bytes": 25208,
+  "text_chars": 1565,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

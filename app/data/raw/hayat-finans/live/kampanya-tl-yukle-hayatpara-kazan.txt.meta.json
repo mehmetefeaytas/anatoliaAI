@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/tl-yukle-hayatpara-kazan",
-  "scraped_at": "2026-08-20T16:46:28+00:00",
-  "content_hash": "7fdb5e8e223a8263c6c797ed9a068be0d8a88c0e33011fc5acaaaf5ed9918243",
+  "scraped_at": "2026-08-25T12:20:31+00:00",
+  "content_hash": "ec42ebac227c2f9585b1098dcf30f51ee875d739fd585aa1177f20001f0c963d",
   "collection_method": "browser",
   "title": "TL yükle hayatpara kazan",
   "http_status": 200,
-  "raw_bytes": 24597,
-  "text_chars": 1416
+  "raw_bytes": 24591,
+  "text_chars": 1416,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

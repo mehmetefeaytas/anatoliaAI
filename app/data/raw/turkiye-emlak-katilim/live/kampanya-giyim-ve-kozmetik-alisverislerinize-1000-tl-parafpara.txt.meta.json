@@ -9,5 +9,12 @@
   "raw_bytes": 169544,
   "text_chars": 3845,
   "recovered_from": "eb67e65",
-  "recovery_note": "2026-08-03 yeniden hasadi bu sayfada kabuk dondurdu (306 krkt); metin ve provenance Temmuz surumunden birlikte geri alindi"
+  "recovery_note": "2026-08-03 yeniden hasadi bu sayfada kabuk dondurdu (306 krkt); metin ve provenance Temmuz surumunden birlikte geri alindi",
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,0 +1,18 @@
+{
+  "bank_slug": "tom-katilim",
+  "source_url": "https://tombankhadi.com/kampanyalar/2-arkadasini-getir-bahara-kadar-hepinizin-netflix-uyeligin-bizden",
+  "scraped_at": "2026-08-25T12:24:41+00:00",
+  "content_hash": "33a771d7c76df2af888a911c8df8e59f4cc550e410bf9b6aba0d93ce4379c5fa",
+  "collection_method": "browser",
+  "title": "2 Arkadaşını Getir, Bahara Kadar Hepinizin Netflix Üyeliğin Bizden! | TOM Bank Hadi",
+  "http_status": 200,
+  "raw_bytes": 103601,
+  "text_chars": 3480,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

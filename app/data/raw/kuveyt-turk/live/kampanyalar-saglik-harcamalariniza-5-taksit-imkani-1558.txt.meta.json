@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/saglik-harcamalariniza-5-taksit-imkani-1558",
-  "scraped_at": "2026-08-12T08:32:32+00:00",
-  "content_hash": "e36105b84306f28673df7d3829459e2fc88e2b3e23cc76c15ae20ffc4e73d25d",
+  "scraped_at": "2026-08-25T12:22:33+00:00",
+  "content_hash": "fa6042afe873ebe8209bf7922d108adfbea262130014f4997b78d6720c79a61c",
   "collection_method": "live",
   "title": "Sağlık Harcamalarınıza 5 Taksit İmkanı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 19348,
-  "text_chars": 1839
+  "raw_bytes": 19349,
+  "text_chars": 1850,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

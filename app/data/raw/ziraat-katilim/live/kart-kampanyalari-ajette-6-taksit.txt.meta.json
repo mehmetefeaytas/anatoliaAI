@@ -1,15 +1,20 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/ajette-6-taksit?IsArchived=true",
-  "scraped_at": "2026-08-03T16:41:53+00:00",
-  "content_hash": "6b821602984fc979f10fcb1615250e4c98790b89c2886bc479dde260ab99cc49",
+  "scraped_at": "2026-08-25T12:47:50+00:00",
+  "content_hash": "442a8cb178e5491db8c9a666c128e7e04733f85279d4355238e1178e13ece165",
   "collection_method": "live",
   "title": "AJET&#039;te 6 Taksit | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 489529,
-  "text_chars": 2790,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 490014,
+  "text_chars": 2768,
+  "extraction_invalidated_at": "2026-08-25T12:47:50+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Tarihinde Sona Ermiştir",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

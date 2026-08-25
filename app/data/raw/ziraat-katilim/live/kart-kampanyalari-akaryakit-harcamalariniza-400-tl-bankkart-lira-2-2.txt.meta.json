@@ -1,0 +1,23 @@
+{
+  "bank_slug": "ziraat-katilim",
+  "source_url": "https://www.ziraatkatilim.com.tr/kart-kampanyalari/akaryakit-harcamalariniza-400-tl-bankkart-lira-2?IsArchived=true",
+  "scraped_at": "2026-08-25T12:48:01+00:00",
+  "content_hash": "1fcd783ceda40071e7a7b6c029ec3d64d3be729eacef08384b6503806539f306",
+  "collection_method": "live",
+  "title": "Akaryakıt Harcamalarınıza 400 TL Bankkart Lira! | Ziraat Katılım",
+  "http_status": 200,
+  "raw_bytes": 486994,
+  "text_chars": 2380,
+  "campaign_status": "expired",
+  "expiry_stamp": {
+    "phrase": "Tarihinde Sona Ermiştir",
+    "quote": "t Harcamalarınıza 400 TL Bankkart Lira! Kampanya 07-08-2026 Tarihinde Sona Ermiştir. Kampanya Koşulları: Ziraat Katılım Bankkart kredi kartınız",
+    "span_start": 449,
+    "span_end": 472,
+    "end_date": "2026-08-07",
+    "marked_by": "damga_isaretle",
+    "source": "metin-damgasi",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

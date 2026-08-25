@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/2026/kahve-keyfiniz-albarakadan",
-  "scraped_at": "2026-08-03T16:35:14+00:00",
-  "content_hash": "c23988028d73cc8da2e7de0e81e4305bdb3fa2f030ad3c5891608049f774e74b",
+  "scraped_at": "2026-08-25T12:13:42+00:00",
+  "content_hash": "e7e687bb04ec05198a98cb84ad53b54480bedd7797637dadc9a3e047f079085b",
   "collection_method": "live",
   "title": "Kahve Keyfiniz Albaraka’dan! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179854,
+  "raw_bytes": 182517,
   "text_chars": 1292,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

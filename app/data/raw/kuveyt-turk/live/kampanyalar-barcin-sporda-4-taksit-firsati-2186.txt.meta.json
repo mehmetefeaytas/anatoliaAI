@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/barcin-sporda-4-taksit-firsati-2186",
-  "scraped_at": "2026-08-12T08:31:47+00:00",
-  "content_hash": "373752ee6b4dfc4a5446a3fc5b683d5d3ea2fea36b60b19bd1728ef28aab84bd",
+  "scraped_at": "2026-08-25T12:21:47+00:00",
+  "content_hash": "2e84c225ac24bb00aed039113ffba0a536cb1c5110fa815adb031f8c74b883f8",
   "collection_method": "live",
   "title": "Barçın Spor’da 4 Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17039,
-  "text_chars": 742
+  "text_chars": 742,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

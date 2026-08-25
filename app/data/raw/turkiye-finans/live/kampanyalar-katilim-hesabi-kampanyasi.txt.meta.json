@@ -1,11 +1,11 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/katilim-hesabi-kampanyasi.aspx",
-  "scraped_at": "2026-08-11T16:16:54+00:00",
-  "content_hash": "1183175f65ec10840aea3f420bd81dd47d4fed70c4d7546603c776a42e928d34",
+  "scraped_at": "2026-08-25T12:38:03+00:00",
+  "content_hash": "726799bb93815fa336cac2844708f0678d27838eaf21e8aca3a8b7c0b12f6851",
   "collection_method": "browser",
   "title": "Katılım Hesabınızı Şimdi Açın, Daha Yüksek Getiri Oranlarından Yararlanın! | Kampanyalar | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 207558,
-  "text_chars": 9352
+  "raw_bytes": 205837,
+  "text_chars": 9346
 }

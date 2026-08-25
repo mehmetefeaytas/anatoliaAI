@@ -1,13 +1,16 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/dijitalden-musteri-ol-hisse-senedi-islemlerinde-75-komisyon-indirimi-kazan",
-  "scraped_at": "2026-08-03T16:54:25+00:00",
-  "content_hash": "edec75c2cbcd67eae2f16fa6d4478ecdc19420b49782f7f533a3f94cbe375e60",
+  "scraped_at": "2026-08-25T12:40:52+00:00",
+  "content_hash": "f41942be510fd25e3643fcb83003f184cab23c2ddc1fecd4e8147997361441fa",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "Hisse Senedi İşlemlerinde %75 Komisyon İndirimi | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139039,
-  "text_chars": 1312,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 140805,
+  "text_chars": 1314,
+  "extraction_invalidated_at": "2026-08-25T12:40:52+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

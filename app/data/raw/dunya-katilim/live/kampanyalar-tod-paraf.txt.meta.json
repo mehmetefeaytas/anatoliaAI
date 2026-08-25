@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/tod-paraf",
-  "scraped_at": "2026-08-03T17:03:59+00:00",
-  "content_hash": "9a5ab0eb93cd227460b7dfa74761a7ee51db9ea8764ffa785882f2dd09e923a6",
+  "scraped_at": "2026-08-25T12:17:01+00:00",
+  "content_hash": "2a12e307ab6d259f70ecdf5bcff089238980250dc5a41fe28ad5d7083d38ec24",
   "collection_method": "live",
   "title": "TOD Paraf | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 505943,
   "text_chars": 10274,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

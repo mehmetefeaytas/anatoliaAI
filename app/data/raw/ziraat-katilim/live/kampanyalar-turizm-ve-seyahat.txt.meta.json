@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/turizm-ve-seyahat",
-  "scraped_at": "2026-08-03T16:40:59+00:00",
-  "content_hash": "0856470c68e6b5d73e475b0b0307cba9604495b16746f37656bab79e2ce23e79",
+  "scraped_at": "2026-08-25T12:46:48+00:00",
+  "content_hash": "cbae41802180843f4f245836b28c970a4d9d37e3f18536e13446adf6b682029e",
   "collection_method": "live",
   "title": "Turizm ve Seyahat | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 509756,
-  "text_chars": 2976,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 516606,
+  "text_chars": 3407,
+  "extraction_invalidated_at": "2026-08-25T12:46:48+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

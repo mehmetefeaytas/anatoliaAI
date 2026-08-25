@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/pazarama-paraf",
-  "scraped_at": "2026-08-03T17:03:50+00:00",
-  "content_hash": "5c0496109451dcf1643a840cb96de894b5fe3a73ed019cd27cb3c7ea39c82c75",
+  "scraped_at": "2026-08-25T12:16:40+00:00",
+  "content_hash": "4ed560e195838c0c42215e8ac6ac9437e30b4bb1877305688b8a6a9d724a8e86",
   "collection_method": "live",
   "title": "Pazarama Paraf | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 505822,
-  "text_chars": 10218,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 31 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
-    "span_start": 1428,
-    "span_end": 1450,
-    "end_date": "2026-07-31",
+  "raw_bytes": 505832,
+  "text_chars": 10222,
+  "extraction_invalidated_at": "2026-08-25T12:16:40+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

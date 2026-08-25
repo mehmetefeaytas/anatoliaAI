@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/mastercard-kredi-kartinizla-200-tl-marti-kuponu",
-  "scraped_at": "2026-07-30T18:41:25+00:00",
-  "content_hash": "65842e2b61c0ea7c3c708f349f5dca2f2db50a6c7d59a9269770830415e4a585",
+  "scraped_at": "2026-08-25T12:42:08+00:00",
+  "content_hash": "e1b3ac147fb5292d9f2e2ca178917dc6b8c45be74845ce458364b9ac1be85b90",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 140343,
-  "text_chars": 2371,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 141707,
+  "text_chars": 2351,
+  "extraction_invalidated_at": "2026-08-25T12:42:08+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

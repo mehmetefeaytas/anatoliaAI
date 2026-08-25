@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/hac-ve-umre-finansmani",
-  "scraped_at": "2026-08-03T16:52:10+00:00",
-  "content_hash": "7941554fbbc0604674fb7c206039c2d506fb68e6588a6056a163f600112fc944",
+  "scraped_at": "2026-08-25T12:41:39+00:00",
+  "content_hash": "e3ac1c1b46ca7c98130c10faaca03511ebba123c233e2d5883c17f8164fd30de",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 138550,
-  "text_chars": 1201,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140093,
+  "text_chars": 1203,
+  "extraction_invalidated_at": "2026-08-25T12:41:39+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

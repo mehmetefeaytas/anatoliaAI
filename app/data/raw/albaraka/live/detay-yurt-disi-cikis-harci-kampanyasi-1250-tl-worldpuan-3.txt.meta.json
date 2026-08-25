@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/yurt-disi-cikis-harci-kampanyasi-1250-tl-worldpuan-3",
-  "scraped_at": "2026-08-03T16:37:03+00:00",
-  "content_hash": "ebafd8fb69f639170115e7fceca34876299df625109a835877a6f019d3ddf672",
+  "scraped_at": "2026-08-25T12:13:33+00:00",
+  "content_hash": "6c244a3c7b0ac8d8bc6efe2f12b8fef109f8d44729259bfef4024cb4df7a8091",
   "collection_method": "live",
   "title": "Yurt Dışı Çıkış Harcı Kampanyası | 1.250 TL Worldpuan! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182025,
+  "raw_bytes": 184688,
   "text_chars": 1851,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

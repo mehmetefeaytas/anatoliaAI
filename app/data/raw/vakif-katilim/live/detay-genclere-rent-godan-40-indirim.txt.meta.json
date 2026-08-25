@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/genclere-rent-godan-40-indirim",
-  "scraped_at": "2026-08-03T16:55:13+00:00",
-  "content_hash": "b85309c3dc5bfd8da21970431329cc173ce4fec53e35d2a4fd1bb3cd35b8e4e0",
+  "scraped_at": "2026-08-25T12:41:31+00:00",
+  "content_hash": "eceb212c9b8181924ab774c9746f71500547b994a4230f9e6300f1cbb68cff3d",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139473,
-  "text_chars": 2103,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 141024,
+  "text_chars": 2105,
+  "extraction_invalidated_at": "2026-08-25T12:41:31+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/igdas-fatura-odemelerine-vade-farksiz-2-taksit",
-  "scraped_at": "2026-08-03T16:54:40+00:00",
-  "content_hash": "44666387b1d80ab712c5930e29b622c79bb1103f0409f865fdf5e81a1a1be3fe",
+  "scraped_at": "2026-08-25T12:41:41+00:00",
+  "content_hash": "7872f45f70e9f16009b96771d33107ac1d024dc1ed9d32d1e77a5057c8f24a31",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139226,
-  "text_chars": 1726,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140793,
+  "text_chars": 1728,
+  "extraction_invalidated_at": "2026-08-25T12:41:41+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

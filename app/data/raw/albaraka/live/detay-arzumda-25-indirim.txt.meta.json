@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/arzumda-25-indirim",
-  "scraped_at": "2026-08-03T16:35:53+00:00",
-  "content_hash": "35b7b02bb728ff45e672050992f1f4d0530c0e506af4e556b1bb3af245ecd5c6",
+  "scraped_at": "2026-08-25T12:12:33+00:00",
+  "content_hash": "c99493a3f8f1156b6c1f506b833aa6e80f0f438153c0a60e473e1f9d5070f5e5",
   "collection_method": "live",
   "title": "Arzum’da %25 İndirim! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 179078,
+  "raw_bytes": 181741,
   "text_chars": 1034,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

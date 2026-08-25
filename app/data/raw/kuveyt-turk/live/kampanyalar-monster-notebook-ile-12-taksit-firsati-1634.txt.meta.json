@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/monster-notebook-ile-12-taksit-firsati-1634",
-  "scraped_at": "2026-08-12T08:31:59+00:00",
-  "content_hash": "ef2d2b9e075b48cb4b201218a8713593f35d2dc0449f7d138d777f11f89785f6",
+  "scraped_at": "2026-08-25T12:22:02+00:00",
+  "content_hash": "ac99c0b4de835f0b9f984b05dd95a2e34715d5653016e047381bfc0f781a44bc",
   "collection_method": "live",
   "title": "Monster Notebook ile 12 Aya Varan Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17586,
-  "text_chars": 982
+  "text_chars": 982,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

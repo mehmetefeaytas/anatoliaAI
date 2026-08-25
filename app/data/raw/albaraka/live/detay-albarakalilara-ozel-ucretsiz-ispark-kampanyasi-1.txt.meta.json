@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albarakalilara-ozel-ucretsiz-ispark-kampanyasi-1",
-  "scraped_at": "2026-08-03T16:35:51+00:00",
-  "content_hash": "ef040891f30533ed18d9e69aa42d258efef7919c3489957f78c398f8bfa597c2",
+  "scraped_at": "2026-08-25T12:12:31+00:00",
+  "content_hash": "41ac11b5c602bba1d159de0a4a9658a1dbad8b4d058c4cd08a5b817df6c0718f",
   "collection_method": "live",
   "title": "Ücretsiz İSPARK Otopark Kampanyası | Albarakalılara Özel | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 185342,
+  "raw_bytes": 188019,
   "text_chars": 4526,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

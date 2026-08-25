@@ -1,11 +1,18 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/Happy-Bonus-ile-Okul-Odemelerinize-7-Aya-Kadar-Kar-Paysiz-Taksit.aspx",
-  "scraped_at": "2026-08-11T16:15:49+00:00",
-  "content_hash": "010a7bbd5b4500c4b97eb735ff1f558c4f22e4f1c7ded2bc7ca7c5974c6a8797",
+  "scraped_at": "2026-08-25T12:35:10+00:00",
+  "content_hash": "8be0f579e35bb054e977d2daafd7eb0259f66d5af5cbea8cc892bcee55c8db40",
   "collection_method": "browser",
   "title": "Okul Ödemelerinize Kâr Paysız Taksit!",
   "http_status": 200,
-  "raw_bytes": 69428,
-  "text_chars": 3579
+  "raw_bytes": 69425,
+  "text_chars": 3578,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/dijital-platform-ve-yapay-zeka-odemelerinde-50-ye-varan-iade",
-  "scraped_at": "2026-08-20T16:37:54+00:00",
-  "content_hash": "ffc87c2238a6e14ed0f7cd3594c1709bb31410be72bd8ffa4f1f1dd93c14d2a2",
+  "scraped_at": "2026-08-25T12:25:33+00:00",
+  "content_hash": "5d5158148e6afba816d205b04968c8e8dc90f6d989922c45896631428b77f0a3",
   "collection_method": "browser",
   "title": "Dijital Platform ve Yapay Zeka Ödemelerinde %50'ye varan iade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 102658,
-  "text_chars": 2585
+  "raw_bytes": 102863,
+  "text_chars": 2653,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

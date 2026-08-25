@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/agustos-ayina-ozel-fatura-kampanyasi",
-  "scraped_at": "2026-08-03T16:37:12+00:00",
-  "content_hash": "3cf6e9e0b27e1f1dca7955b64515eace924be160bbb2e3b35a2a610e2b98c54b",
+  "scraped_at": "2026-08-25T12:12:10+00:00",
+  "content_hash": "4ef2fe94ecf9404c0482827b6f649c2d2d4f81457e368548271e8f41fbd5a849",
   "collection_method": "live",
   "title": "Ağustos Ayına Özel Fatura Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182461,
+  "raw_bytes": 185124,
   "text_chars": 2265,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

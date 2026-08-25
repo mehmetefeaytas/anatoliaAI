@@ -1,11 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/eczanelerde-hadi-saglik-kredisi-ile-0-vade-farki-ile-6-taksit",
-  "scraped_at": "2026-08-20T16:37:23+00:00",
-  "content_hash": "2de8eb5558cadb7bd62f904592372243975490d98d106e3e8375127271da21b7",
+  "scraped_at": "2026-08-25T12:25:35+00:00",
+  "content_hash": "04f48d8691460a5e588ce9c99d4ebb768f8dd6e979485245f35e74cc2cec771a",
   "collection_method": "browser",
   "title": "Eczanelerde Hadi Sağlık Kredisi ile %0 Vade Farkı ile 6 taksit! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 101669,
-  "text_chars": 1955
+  "raw_bytes": 101874,
+  "text_chars": 2023,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

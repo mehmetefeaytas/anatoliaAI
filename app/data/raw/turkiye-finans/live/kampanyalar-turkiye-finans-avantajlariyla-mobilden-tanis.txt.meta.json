@@ -1,13 +1,16 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.turkiyefinans.com.tr/tr-tr/kampanyalar/Sayfalar/turkiye-finans-avantajlariyla-mobilden-tanis.aspx",
-  "scraped_at": "2026-08-03T16:39:02+00:00",
-  "content_hash": "5fb9b853517f9276ccd8a24ca0b39948e8cedcf31558e9b65c3a4b0e21eaaf8b",
-  "collection_method": "live",
+  "scraped_at": "2026-08-25T12:38:42+00:00",
+  "content_hash": "708efd9390b288efedd85179529caf8ddd64b462b9322989e7edb0b4675ba7a7",
+  "collection_method": "browser",
   "title": "Türkiye Finans Avantajlarıyla Mobilden Tanışın | Türkiye Finans",
   "http_status": 200,
-  "raw_bytes": 109095,
-  "text_chars": 16452,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 218701,
+  "text_chars": 17309,
+  "extraction_invalidated_at": "2026-08-25T12:38:42+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ]
 }

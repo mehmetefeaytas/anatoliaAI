@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/giyim-ve-aksesuar",
-  "scraped_at": "2026-08-03T16:40:44+00:00",
-  "content_hash": "77c80d881215d38d5c2566728af9420719dd044b9d1d096d4c21d33d11ea1ed7",
+  "scraped_at": "2026-08-25T12:45:57+00:00",
+  "content_hash": "697cc9f3307ac6923da93700025004c0213ed3576e6fcf26370145ef42f7c63d",
   "collection_method": "live",
   "title": "Giyim ve Aksesuar | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 531943,
-  "text_chars": 4132,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 534755,
+  "text_chars": 4345,
+  "extraction_invalidated_at": "2026-08-25T12:45:57+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

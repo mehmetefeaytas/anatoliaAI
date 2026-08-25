@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/enerya-finansmani",
-  "scraped_at": "2026-08-03T17:02:56+00:00",
-  "content_hash": "a97fdb1f0a4e879e9a21d9eee8806a7cc0e15992b7f6493f3bc034e0ddee4741",
+  "scraped_at": "2026-08-25T12:15:32+00:00",
+  "content_hash": "afe0c07707a5423e31e447bfe75c577dc8fe82b9322b7f877da62a2cd3d58d80",
   "collection_method": "live",
   "title": "Enerya Finansman&#x131; | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 506406,
   "text_chars": 10452,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

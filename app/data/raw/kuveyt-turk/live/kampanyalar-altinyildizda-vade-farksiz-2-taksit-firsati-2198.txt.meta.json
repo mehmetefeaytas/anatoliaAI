@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/altinyildizda-vade-farksiz-2-taksit-firsati-2198",
-  "scraped_at": "2026-08-12T08:31:44+00:00",
-  "content_hash": "bc66987bc50050730a98c827803bbcfc8d7d681cdc10127472442a180b7fb7e7",
+  "scraped_at": "2026-08-25T12:21:44+00:00",
+  "content_hash": "c59deb47aa50582bebf6b7817436b2742ca3300f56da697200875fe99511488c",
   "collection_method": "live",
   "title": "Altınyıldız Classics'te Vade Farksız 2 Taksit Fırsatı | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17205,
-  "text_chars": 792
+  "text_chars": 792,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

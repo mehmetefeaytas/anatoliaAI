@@ -7,5 +7,12 @@
   "title": "Hafta sonu restoran harcamalarında %7,5 iade! Üstelik Çok kazananlar Kulübü’ne özel %15 iade! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 104132,
-  "text_chars": 3729
+  "text_chars": 3729,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

@@ -1,25 +1,25 @@
 {
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/casper-com-tr-de-pesin-fiyatina-6-taksit-firsati",
-  "scraped_at": "2026-08-03T17:02:38+00:00",
-  "content_hash": "0e3d50fc36484b3405d954e0f218a14572dbab658598e3482937c6f5ad8dffb5",
+  "scraped_at": "2026-08-25T12:15:04+00:00",
+  "content_hash": "fcab528c6be91805836ba9d2a5ac353f6afdecb468cb3c7394b4268e4c3b54dc",
   "collection_method": "live",
   "title": "Casper.com.tr&#x27;de Pe&#x15F;in Fiyat&#x131;na 6 Taksit F&#x131;rsat&#x131;! | Dünya Katılım",
   "http_status": 200,
-  "raw_bytes": 507571,
-  "text_chars": 11510,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
-  "campaign_status": "expired",
-  "expiry_stamp": {
-    "phrase": "Sona erdi Bitiş Tarihi",
-    "quote": "kampanyayı durdurma hakkını saklı tutar. Paraf Kampanyaları Sona erdi Bitiş Tarihi: 31 Temmuz 2026 Paylaş Diğer Kampanyalar Tüm site ziyaretçi",
-    "span_start": 2720,
-    "span_end": 2742,
-    "end_date": "2026-07-31",
+  "raw_bytes": 507585,
+  "text_chars": 11514,
+  "extraction_invalidated_at": "2026-08-25T12:15:04+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
     "marked_by": "damga_isaretle",
-    "source": "metin-damgasi",
+    "source": "hasat-damgasiz",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

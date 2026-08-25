@@ -1,0 +1,18 @@
+{
+  "bank_slug": "turkiye-emlak-katilim",
+  "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/emlak-katilim-paraf-5000-tl-ve-uzeri-harcamaniza-2500-tl-hediye",
+  "scraped_at": "2026-08-25T12:29:35+00:00",
+  "content_hash": "fb9c1c7bb644650255ced22a7612b042c9f37400a28c80247c481f40273a1959",
+  "collection_method": "live",
+  "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
+  "http_status": 200,
+  "raw_bytes": 170116,
+  "text_chars": 4180,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
+}

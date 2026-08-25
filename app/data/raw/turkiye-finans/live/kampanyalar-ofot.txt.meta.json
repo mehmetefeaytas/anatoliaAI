@@ -1,11 +1,18 @@
 {
   "bank_slug": "turkiye-finans",
   "source_url": "https://www.happycard.com.tr/kampanyalar/Sayfalar/ofot.aspx",
-  "scraped_at": "2026-08-11T16:15:58+00:00",
-  "content_hash": "9f4cc962add0f952dee18cfc8e07026b46b037285663c3cfb94bb678e113f5f9",
+  "scraped_at": "2026-08-25T12:35:38+00:00",
+  "content_hash": "1e21f572a9a1db698de9e30b431f96801f913aa1a63c0cf47558a33cda4ce9ff",
   "collection_method": "browser",
   "title": "Otomatik Ödeme Talimatınıza 500 TL'ye Varan Bonus!",
   "http_status": 200,
-  "raw_bytes": 67443,
-  "text_chars": 3262
+  "raw_bytes": 67440,
+  "text_chars": 3261,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

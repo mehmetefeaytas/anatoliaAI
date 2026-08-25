@@ -1,13 +1,23 @@
 {
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "icerik_kurtarildi",
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/kampanyalar",
-  "scraped_at": "2026-08-20T16:44:26+00:00",
-  "content_hash": "48d47b88b645189e6fb8cb211a36f6909a74c4e669522a40d15656e430d1f3c0",
+  "scraped_at": "2026-08-25T12:18:27+00:00",
+  "content_hash": "e234c5505db1c53ee1b23bdfbbdecb24514f589bf5b41fb9fbcdcaf3b642c899",
   "collection_method": "browser",
   "title": "En Güncel Banka Kampanyaları | Hayat Finans",
   "http_status": 200,
-  "raw_bytes": 324370,
-  "text_chars": 2104
+  "raw_bytes": 326842,
+  "text_chars": 2145,
+  "extraction_invalidated_at": "2026-08-25T12:18:27+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

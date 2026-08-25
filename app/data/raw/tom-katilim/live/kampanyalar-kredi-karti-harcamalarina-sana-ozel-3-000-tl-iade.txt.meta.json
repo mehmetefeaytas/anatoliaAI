@@ -7,5 +7,12 @@
   "title": "Hadi Kredi Kartı harcamalarına sana özel 3.000 TL İade! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 101368,
-  "text_chars": 1804
+  "text_chars": 1804,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

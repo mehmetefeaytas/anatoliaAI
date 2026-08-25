@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/barcin-sporda-4-taksit-firsati-3154",
-  "scraped_at": "2026-08-12T08:32:12+00:00",
-  "content_hash": "e15db50191e1a703634e07855c95f7f9b7732569b18634c5a43e15e922d1c6ce",
+  "scraped_at": "2026-08-25T12:22:11+00:00",
+  "content_hash": "39b20272753a525b0cb0fcc731469c2db6ca479a8dbf857c96cf42921ec62d83",
   "collection_method": "live",
   "title": "Barçın Spor’da 4 Taksit Fırsatı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 18472,
-  "text_chars": 1110
+  "raw_bytes": 18456,
+  "text_chars": 1118,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

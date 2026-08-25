@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/her-faturana-200-hayatpara",
-  "scraped_at": "2026-08-20T16:46:37+00:00",
-  "content_hash": "72cf22dfad5bdbd7e42b13fe7ef8f3d879facde4e3e6aeabb26154c21741da13",
+  "scraped_at": "2026-08-25T12:20:39+00:00",
+  "content_hash": "4663ae9932f849ee4998b527e94a7562521dc998a66c5e446ea69581605ce5e2",
   "collection_method": "browser",
   "title": "Her faturaya 200 hayatpara kazan",
   "http_status": 200,
-  "raw_bytes": 26200,
-  "text_chars": 1512
+  "raw_bytes": 25026,
+  "text_chars": 1512,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

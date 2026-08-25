@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/hantechde-vade-farksiz-9-aya-varan-taksit-firsati-3134",
-  "scraped_at": "2026-08-04T20:59:11+00:00",
-  "content_hash": "e4438d73528ff040da8a5ef432b094c3ec1ef493ce1e15d9a8b89ba301f136df",
+  "scraped_at": "2026-08-25T12:22:24+00:00",
+  "content_hash": "33883a61522aa5f33827bc1bd5e8d432f26dc97f134aa5f74c48dd91fc556df0",
   "collection_method": "live",
   "title": "Hantech’de Vade Farksız 9 Aya Varan Taksit Fırsatı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 18614,
-  "text_chars": 1167
+  "text_chars": 1167,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

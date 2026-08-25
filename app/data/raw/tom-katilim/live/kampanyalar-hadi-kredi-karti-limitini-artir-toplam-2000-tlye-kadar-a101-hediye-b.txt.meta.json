@@ -12,5 +12,12 @@
   "extraction_invalidated_keys": [
     "extraction_result",
     "reextracted_at"
-  ]
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

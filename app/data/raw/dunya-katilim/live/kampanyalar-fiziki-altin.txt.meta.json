@@ -1,13 +1,4 @@
 {
-  "bank_slug": "dunya-katilim",
-  "source_url": "https://dunyakatilim.com.tr/kampanyalar/fiziki-altin",
-  "scraped_at": "2026-08-03T17:03:02+00:00",
-  "content_hash": "ecaeda5971874b540591f46c46145f458ec734c111105a0d10f84578cd13fc08",
-  "collection_method": "live",
-  "title": "Fiziki Alt&#x131;n | Dünya Katılım",
-  "http_status": 200,
-  "raw_bytes": 510556,
-  "text_chars": 12692,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
   "extraction_result": "degisim_yok",
   "campaign_status": "expired",
@@ -21,5 +12,14 @@
     "source": "metin-damgasi",
     "bucket": "live",
     "checked_at": "2026-08-10T10:45:44+00:00"
-  }
+  },
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/fiziki-altin",
+  "scraped_at": "2026-08-25T12:15:44+00:00",
+  "content_hash": "88b21c8c53232d0663f64735239e2264e81a56fec7fc4ef1441bc13c2d032085",
+  "collection_method": "live",
+  "title": "Fiziki Alt&#x131;n | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 510556,
+  "text_chars": 12692
 }

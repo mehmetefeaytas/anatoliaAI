@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "turkiye-emlak-katilim",
   "source_url": "https://www.emlakkatilim.com.tr/tr/bireysel/kampanyalar/kampanya/paraf-ile-adv-magazalarinda-6-taksit",
-  "scraped_at": "2026-08-03T16:57:24+00:00",
-  "content_hash": "5bedbb4b4a95c4b5402f7a4febba969576672e57226ec6695c53c75b8f76b2c4",
+  "scraped_at": "2026-08-25T12:31:31+00:00",
+  "content_hash": "d9b8abbae4d704db0052d7bc53be034aff49bd50699c9fd2764f8bdf6e392f3b",
   "collection_method": "live",
   "title": "Kampanya | T&#252;rkiye Emlak Katılım Bankası",
   "http_status": 200,
   "raw_bytes": 165172,
   "text_chars": 962,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

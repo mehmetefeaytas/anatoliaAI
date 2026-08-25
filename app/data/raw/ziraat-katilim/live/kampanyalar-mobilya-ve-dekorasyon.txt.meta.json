@@ -1,13 +1,23 @@
 {
   "bank_slug": "ziraat-katilim",
   "source_url": "https://www.ziraatkatilim.com.tr/kampanyalar/mobilya-ve-dekorasyon",
-  "scraped_at": "2026-08-03T16:40:56+00:00",
-  "content_hash": "c2923d689978750deb2759710a828cf1104935fb60a850113e92c5e58e32ef5a",
+  "scraped_at": "2026-08-25T12:46:42+00:00",
+  "content_hash": "5774b2952ac15f2306ff4017075c206310494defa1f472982d4610eccff8204b",
   "collection_method": "live",
   "title": "Mobilya ve Dekorasyon | Ziraat Katılım",
   "http_status": 200,
-  "raw_bytes": 521625,
-  "text_chars": 3441,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "raw_bytes": 524314,
+  "text_chars": 3626,
+  "extraction_invalidated_at": "2026-08-25T12:46:42+00:00",
+  "extraction_invalidated_keys": [
+    "extraction_result",
+    "reextracted_at"
+  ],
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

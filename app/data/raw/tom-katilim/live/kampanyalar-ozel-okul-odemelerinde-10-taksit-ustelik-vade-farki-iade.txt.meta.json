@@ -7,5 +7,12 @@
   "title": "Özel okul ödemelerinde vade farksız tam 10 taksit! | TOM Bank Hadi",
   "http_status": 200,
   "raw_bytes": 105451,
-  "text_chars": 5227
+  "text_chars": 5227,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

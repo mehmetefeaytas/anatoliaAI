@@ -101,16 +101,76 @@ class TestIsaretle(unittest.TestCase):
             self.assertTrue((kok / "ziraat-katilim" / "live" / "a.txt").is_file())
             self.assertFalse((kok / "ziraat-katilim" / "archive").exists())
 
-    def test_belirsiz_ve_temiz_belgeye_yazilmaz(self):
+    def test_belirsiz_belgeye_yazilmaz(self):
+        """"Belirsiz" hiçbir zaman karar almaz — ne bitmiş ne aktif."""
         with tempfile.TemporaryDirectory() as tmp:
             kok = Path(tmp)
             b_p = _belge(kok, "vakif-katilim", "b", BELIRSIZ)
-            t_p = _belge(kok, "kuveyt-turk", "c", TEMIZ)
-            once = (b_p.read_text(encoding="utf-8"),
-                    t_p.read_text(encoding="utf-8"))
+            once = b_p.read_text(encoding="utf-8")
             di.isaretle(di.tara(kok), kok)
-            self.assertEqual(b_p.read_text(encoding="utf-8"), once[0])
-            self.assertEqual(t_p.read_text(encoding="utf-8"), once[1])
+            self.assertEqual(b_p.read_text(encoding="utf-8"), once)
+
+    def test_temiz_belge_aktif_isaretlenir(self):
+        """Damgasız/temiz + hiçbir mekanizma önceden durum yazmamışsa → active.
+
+        Ölçüldü (2026-08-25): `collector.STATUS_ACTIVE` tanımlıydı ama hiçbir
+        kod yolu tarafından atanmıyordu — dashboard'da "aktif: 0" hep
+        böyle görünüyordu. Bu test o boşluğun kapatıldığını doğrular.
+        """
+        with tempfile.TemporaryDirectory() as tmp:
+            kok = Path(tmp)
+            t_p = _belge(kok, "kuveyt-turk", "c", TEMIZ)
+            bulgular = di.isaretle(di.tara(kok), kok)
+            meta = json.loads(t_p.read_text(encoding="utf-8"))
+
+            self.assertEqual(meta["campaign_status"], di.STATUS_ACTIVE)
+            aktif = meta["active_stamp"]
+            self.assertEqual(aktif["marked_by"], di.ISARETLEYEN)
+            self.assertEqual(aktif["source"], "hasat-damgasiz")
+            self.assertIn("checked_at", aktif)
+            self.assertNotIn("expiry_stamp", meta)
+            # Provenance olduğu gibi
+            self.assertEqual(meta["content_hash"], "h1")
+            self.assertTrue(any(b.yazildi for b in bulgular))
+
+    def test_temiz_ikinci_kosu_dosyayi_degistirmez(self):
+        """İdempotanlık: `active` işareti de ikinci koşuda dosyayı değiştirmez."""
+        with tempfile.TemporaryDirectory() as tmp:
+            kok = Path(tmp)
+            t_p = _belge(kok, "kuveyt-turk", "c", TEMIZ)
+            di.isaretle(di.tara(kok), kok)
+            ilk = t_p.read_text(encoding="utf-8")
+            ikinci = di.isaretle(di.tara(kok), kok)
+            self.assertEqual(t_p.read_text(encoding="utf-8"), ilk)
+            self.assertFalse(any(b.yazildi for b in ikinci))
+
+    def test_aktif_belge_sonra_damgalanirsa_expired_olur(self):
+        """Aktif işaretli belge bir sonraki hasatta damga kazanırsa geçiş yapar."""
+        with tempfile.TemporaryDirectory() as tmp:
+            kok = Path(tmp)
+            meta_p = _belge(kok, "kuveyt-turk", "c", TEMIZ)
+            di.isaretle(di.tara(kok), kok)
+            # Yeniden hasat: kampanya bu turda bitmiş
+            (kok / "kuveyt-turk" / "live" / "c.txt").write_text(
+                DAMGALI, encoding="utf-8")
+            di.isaretle(di.tara(kok), kok)
+            meta = json.loads(meta_p.read_text(encoding="utf-8"))
+            self.assertEqual(meta["campaign_status"], di.STATUS_EXPIRED)
+            self.assertNotIn("active_stamp", meta)
+
+    def test_aktif_belge_belirsizlesirse_durum_silinir(self):
+        """Aktif işaretli belge belirsiz hâle gelirse (kendi) işareti geri alınır."""
+        with tempfile.TemporaryDirectory() as tmp:
+            kok = Path(tmp)
+            meta_p = _belge(kok, "kuveyt-turk", "c", TEMIZ)
+            di.isaretle(di.tara(kok), kok)
+            (kok / "kuveyt-turk" / "live" / "c.txt").write_text(
+                BELIRSIZ, encoding="utf-8")
+            bulgular = di.isaretle(di.tara(kok), kok)
+            meta = json.loads(meta_p.read_text(encoding="utf-8"))
+            self.assertNotIn("active_stamp", meta)
+            self.assertNotIn("campaign_status", meta)
+            self.assertTrue(any(b.geri_alindi for b in bulgular))
 
     def test_ikinci_kosu_dosyayi_degistirmez(self):
         """İdempotanlık: aynı korpusta ikinci koşu diski değiştirmemeli."""
@@ -123,7 +183,11 @@ class TestIsaretle(unittest.TestCase):
             self.assertEqual(meta_p.read_text(encoding="utf-8"), ilk)
             self.assertFalse(any(b.yazildi for b in ikinci))
 
-    def test_damga_kalkarsa_kendi_isaretimiz_geri_alinir(self):
+    def test_damga_kalkarsa_aktife_gecer(self):
+        """Damga kalkarsa (yeniden hasat "temiz" bulur) kendi eski işaretimiz
+        silinir VE belge `active` olur — "kampanya devam ediyor" burada
+        "hiçbir durum" değil, olumlu bir durumdur (bkz. modül başlığı,
+        2026-08-25 eklemesi)."""
         with tempfile.TemporaryDirectory() as tmp:
             kok = Path(tmp)
             meta_p = _belge(kok, "ziraat-katilim", "a", DAMGALI)
@@ -134,8 +198,8 @@ class TestIsaretle(unittest.TestCase):
             bulgular = di.isaretle(di.tara(kok), kok)
             meta = json.loads(meta_p.read_text(encoding="utf-8"))
             self.assertNotIn("expiry_stamp", meta)
-            self.assertNotIn("campaign_status", meta)
-            self.assertTrue(any(b.geri_alindi for b in bulgular))
+            self.assertEqual(meta["campaign_status"], di.STATUS_ACTIVE)
+            self.assertTrue(any(b.yazildi for b in bulgular))
 
     def test_baskasinin_isaretine_dokunulmaz(self):
         """`reconcile_stale` veya hasatçı `expired` yazmışsa geri alınmaz."""

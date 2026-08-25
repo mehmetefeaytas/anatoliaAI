@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/altin-kesemTicari",
-  "scraped_at": "2026-08-03T17:02:29+00:00",
-  "content_hash": "3c5fb83e46751cd256cc79a370c2b3b9df16c4526109cef5bd129f0954d06ef9",
+  "scraped_at": "2026-08-25T12:14:50+00:00",
+  "content_hash": "9fc062a0c32b85e41004cdcaf7bcc45b7022d3f253e28f032c6d38e5b4801d9a",
   "collection_method": "live",
   "title": "Alt&#x131;n Kesem | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 506603,
   "text_chars": 10945,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

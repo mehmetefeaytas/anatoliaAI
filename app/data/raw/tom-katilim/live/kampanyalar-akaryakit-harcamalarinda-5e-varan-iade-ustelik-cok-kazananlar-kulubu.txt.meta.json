@@ -1,16 +1,18 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/akaryakit-harcamalarinda-5e-varan-iade-ustelik-cok-kazananlar-kulubune-ozel-10-iade",
-  "scraped_at": "2026-08-20T16:36:26+00:00",
-  "content_hash": "545dce8da72cd805fa0ae86d36024ab358bcf2f681016c96ad6b4e40671f2bb6",
+  "scraped_at": "2026-08-25T12:25:11+00:00",
+  "content_hash": "0b53cd327ed6adc6d84b81c438ee352acc40d3904a714d3da1fa659a3fb30481",
   "collection_method": "browser",
   "title": "Tüm akaryakıt harcamalarında %5 iade kazan! Üstelik Çok Kazananlar Kulübü’ne Özel %10 iade! | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 104311,
-  "text_chars": 3709,
-  "extraction_invalidated_at": "2026-08-20T16:36:26+00:00",
-  "extraction_invalidated_keys": [
-    "extraction_result",
-    "reextracted_at"
-  ]
+  "raw_bytes": 104516,
+  "text_chars": 3777,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

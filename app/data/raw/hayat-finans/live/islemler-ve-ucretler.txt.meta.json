@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/islemler-ve-ucretler",
-  "scraped_at": "2026-08-20T16:45:06+00:00",
-  "content_hash": "5cba509fcdf1d124658b95f0b5e26b5e297f69b5f7039ae512067a87f1db7231",
+  "scraped_at": "2026-08-25T12:20:21+00:00",
+  "content_hash": "8caa1f543f50880579f0cadbbf77b94376c0a5340d1bfbfaf4f13d9dfdb60ab0",
   "collection_method": "browser",
   "title": "İşlemler ve Ücretler",
   "http_status": 200,
-  "raw_bytes": 54110,
-  "text_chars": 1202
+  "raw_bytes": 54811,
+  "text_chars": 1202,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

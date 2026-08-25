@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatfinans.com.tr/isim-kampanyalar/buluttahsilat",
-  "scraped_at": "2026-08-20T16:44:51+00:00",
-  "content_hash": "b0b7319f1afe9eca20cc11bc0b1cfcbc2b23a624ef3757ecd7cc4a02c988ed54",
+  "scraped_at": "2026-08-25T12:19:28+00:00",
+  "content_hash": "02c48d9c043f00ece16cd6cb1b915074c1151ba871d741d01fbc56a3b32d8ee3",
   "collection_method": "browser",
   "title": "BulutTahsilat ile Dijital Tahsilat Çözümü | Hayat Finans",
   "http_status": 200,
   "raw_bytes": 292396,
-  "text_chars": 2810
+  "text_chars": 2810,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

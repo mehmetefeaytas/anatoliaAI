@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/gaziantepte-ulasim-icin-troy-kullanilir",
-  "scraped_at": "2026-08-03T16:55:01+00:00",
-  "content_hash": "a404f04caac7ca05c4c476e2fb7fc1bfb681ae9d1a58e47bb9004bffa833f6cc",
+  "scraped_at": "2026-08-25T12:41:23+00:00",
+  "content_hash": "dceaa0ea038d969c8fbfccc496e1a3b45e8683514168d1a637df9c068f8ec718",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139363,
-  "text_chars": 1968,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 140923,
+  "text_chars": 1970,
+  "extraction_invalidated_at": "2026-08-25T12:41:23+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

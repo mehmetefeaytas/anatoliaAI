@@ -1,11 +1,11 @@
 {
   "bank_slug": "tom-katilim",
   "source_url": "https://tombankhadi.com/kampanyalar/derindondurucu-ve-klimalarda-pesin-fiyatina-3taksit",
-  "scraped_at": "2026-08-20T16:38:47+00:00",
-  "content_hash": "a051c38a830d13df51e1c6ce5b98b05a8c2f1d97a995dacb2e72a7abada346f8",
+  "scraped_at": "2026-08-25T12:25:28+00:00",
+  "content_hash": "f17fb48bc6fa83a7977aaf960303392820965fa240feccc938766d35bc3ed8b5",
   "collection_method": "browser",
   "title": "Hadi Taksitli Kredi ile derin dondurucu ve klimalarda PEŞİN FİYATINA 3 TAKSİT! (GEÇMİŞ KAMPANYA) | TOM Bank Hadi",
   "http_status": 200,
-  "raw_bytes": 101611,
-  "text_chars": 1575
+  "raw_bytes": 101816,
+  "text_chars": 1643
 }

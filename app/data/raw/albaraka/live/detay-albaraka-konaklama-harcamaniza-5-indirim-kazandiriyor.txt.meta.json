@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albaraka-konaklama-harcamaniza-5-indirim-kazandiriyor",
-  "scraped_at": "2026-08-03T16:35:29+00:00",
-  "content_hash": "0aaeb2db307c0ef445f30eb21dc45bd9403322dc8c6ada4a4d4781ec1306fbb2",
+  "scraped_at": "2026-08-25T12:12:12+00:00",
+  "content_hash": "60b83be0b5327c3def2609fdb7d69c1851d4f943e3bac8bc2ce383d0d4844551",
   "collection_method": "live",
   "title": "Albaraka Konaklama Harcamanıza %5 İndirim Kazandırıyor! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180918,
+  "raw_bytes": 183581,
   "text_chars": 2252,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

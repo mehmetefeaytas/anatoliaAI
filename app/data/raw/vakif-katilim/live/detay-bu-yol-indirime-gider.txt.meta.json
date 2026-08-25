@@ -1,15 +1,20 @@
 {
   "bank_slug": "vakif-katilim",
   "source_url": "https://www.vakifkatilim.com.tr/tr/kendim-icin/kampanyalar/detay/bu-yol-indirime-gider",
-  "scraped_at": "2026-08-03T16:52:16+00:00",
-  "content_hash": "a35ccbd67389009a1fedfc9c6019a21ac548370aa4e2104205cd7c345cdc9c2d",
+  "scraped_at": "2026-08-25T12:40:48+00:00",
+  "content_hash": "57196faa5b2e6617e3d51d8198270bc83bec0155f456778fd96625bfb84c1b7f",
   "collection_method": "live",
-  "title": "Detay | Vakıf Katılım",
+  "title": "detay | Vakıf Katılım",
   "http_status": 200,
-  "raw_bytes": 139894,
-  "text_chars": 2503,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok",
+  "raw_bytes": 141436,
+  "text_chars": 2505,
+  "extraction_invalidated_at": "2026-08-25T12:40:48+00:00",
+  "extraction_invalidated_keys": [
+    "campaign_status",
+    "expiry_stamp",
+    "extraction_result",
+    "reextracted_at"
+  ],
   "campaign_status": "expired",
   "expiry_stamp": {
     "phrase": "Kampanya Süresi Dolmuştur",
@@ -20,6 +25,6 @@
     "marked_by": "damga_isaretle",
     "source": "metin-damgasi",
     "bucket": "live",
-    "checked_at": "2026-08-10T10:45:44+00:00"
+    "checked_at": "2026-08-25T14:11:39+00:00"
   }
 }

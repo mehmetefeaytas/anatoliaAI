@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://saglamkart.kuveytturk.com.tr/kampanyalar/monsterdan-2000-tl-indirim-2748",
-  "scraped_at": "2026-08-12T08:32:23+00:00",
-  "content_hash": "60bc53b2ba59c2795f6190fc1fa0df8416e5d941151131ed3dfd54147b731bba",
+  "scraped_at": "2026-08-25T12:22:26+00:00",
+  "content_hash": "0668646e1d92aebf138b26d373396191bffa105b791ed1b3cc76b947c0c4e591",
   "collection_method": "live",
   "title": "Monster‘da Vade Farksız 12 Aya Varan Taksit Fırsatı! | Kampanyalar | Sağlam Kart Kuveyt Türk",
   "http_status": 200,
-  "raw_bytes": 18859,
-  "text_chars": 1337
+  "raw_bytes": 18843,
+  "text_chars": 1345,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

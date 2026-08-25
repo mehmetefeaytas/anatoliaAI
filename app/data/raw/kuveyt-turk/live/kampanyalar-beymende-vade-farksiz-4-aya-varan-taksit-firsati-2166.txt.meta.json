@@ -1,11 +1,18 @@
 {
   "bank_slug": "kuveyt-turk",
   "source_url": "https://milesandsmiles.kuveytturk.com.tr/kampanyalar/beymende-vade-farksiz-4-aya-varan-taksit-firsati-2166",
-  "scraped_at": "2026-08-12T08:31:50+00:00",
-  "content_hash": "a138abde381ed9034e792b44f9f74217c7094c517a441560f17b61c3bdd3229d",
+  "scraped_at": "2026-08-25T12:21:50+00:00",
+  "content_hash": "8bc4f4566694c8cf54cf1a2462a9c95748da0c4293e6d5f25c6958e3437bb33f",
   "collection_method": "live",
   "title": "Beymen’de Vade Farksız 4 Aya Varan Taksit Fırsatı! | Kampanyalar | Miles&Smiles Kuveyt Türk",
   "http_status": 200,
   "raw_bytes": 17585,
-  "text_chars": 1104
+  "text_chars": 1104,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

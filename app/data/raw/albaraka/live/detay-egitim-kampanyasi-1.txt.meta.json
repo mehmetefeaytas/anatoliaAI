@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/egitim-kampanyasi-1",
-  "scraped_at": "2026-08-03T16:36:09+00:00",
-  "content_hash": "8400767d25d8639712c14cb4a44c7ef4b02d9abcdd591a0d2e34f90548718069",
+  "scraped_at": "2026-08-25T12:12:47+00:00",
+  "content_hash": "523c21544a066b58ad9af122309ce4aebe8c5017d0cab1128d2bea2267a155b0",
   "collection_method": "live",
   "title": "Eğitim Harcamalarınıza Vade Farksız 6 Taksit Kampanyası | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 182895,
+  "raw_bytes": 185558,
   "text_chars": 2531,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

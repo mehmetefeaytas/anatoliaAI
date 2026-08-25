@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "dunya-katilim",
   "source_url": "https://dunyakatilim.com.tr/kampanyalar/davetetkazan",
-  "scraped_at": "2026-08-03T17:02:44+00:00",
-  "content_hash": "8903fb9ccfe48c90bb3307a5d2398913a7341975a9a1f8db6fd88c2e8ce0384a",
+  "scraped_at": "2026-08-25T12:15:20+00:00",
+  "content_hash": "e224a136ecc9976601705b73dacc08698543a09817c342368d37d7518d6f250e",
   "collection_method": "live",
   "title": "Davet Et Kazan | Dünya Katılım",
   "http_status": 200,
   "raw_bytes": 511062,
   "text_chars": 13796,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

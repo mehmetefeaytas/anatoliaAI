@@ -1,13 +1,4 @@
 {
-  "bank_slug": "dunya-katilim",
-  "source_url": "https://dunyakatilim.com.tr/kampanyalar/carter-s",
-  "scraped_at": "2026-08-03T17:02:35+00:00",
-  "content_hash": "c43dbab1b221042394bcb849e5b18e01b800a2381dd1d522c2cee397c5e7f772",
-  "collection_method": "live",
-  "title": "Carter&#x27;s | Dünya Katılım",
-  "http_status": 200,
-  "raw_bytes": 504913,
-  "text_chars": 9485,
   "reextracted_at": "2026-08-04T13:48:07+00:00",
   "extraction_result": "degisim_yok",
   "campaign_status": "expired",
@@ -21,5 +12,14 @@
     "source": "metin-damgasi",
     "bucket": "live",
     "checked_at": "2026-08-10T10:45:44+00:00"
-  }
+  },
+  "bank_slug": "dunya-katilim",
+  "source_url": "https://dunyakatilim.com.tr/kampanyalar/carter-s",
+  "scraped_at": "2026-08-25T12:14:59+00:00",
+  "content_hash": "353d55977bb292c0dfd88e4fec083a3f97834d6ca14e799f5a8588621fb63a89",
+  "collection_method": "live",
+  "title": "Carter&#x27;s | Dünya Katılım",
+  "http_status": 200,
+  "raw_bytes": 504913,
+  "text_chars": 9485
 }

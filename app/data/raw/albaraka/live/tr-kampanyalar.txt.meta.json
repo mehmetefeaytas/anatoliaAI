@@ -1,11 +1,11 @@
 {
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar",
-  "scraped_at": "2026-08-04T20:59:51+00:00",
-  "content_hash": "a26253647eb3c4692c39ba7b48745fbba7857a7ca302ebee913bc83f9dec9e69",
+  "scraped_at": "2026-08-25T12:12:02+00:00",
+  "content_hash": "fb4deb1412a0589caaeed982d35e31673e2e0c11d60ff6ffd49979c8013b5b60",
   "collection_method": "live",
   "title": "Size Özel Kampanyaları Hemen Keşfedin! - Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 217114,
-  "text_chars": 2144
+  "raw_bytes": 143619,
+  "text_chars": 2117
 }

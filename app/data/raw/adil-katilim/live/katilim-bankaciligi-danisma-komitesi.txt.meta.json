@@ -1,11 +1,18 @@
 {
   "bank_slug": "adil-katilim",
   "source_url": "https://www.adilkatilim.com.tr/katilim-bankaciligi/danisma-komitesi",
-  "scraped_at": "2026-08-15T21:54:27+00:00",
+  "scraped_at": "2026-08-25T12:11:34+00:00",
   "content_hash": "65671bcf0c31b0e2eb28ebe2a264272294ed98e9376ce773c4da0ed918c5fda0",
   "collection_method": "browser",
   "title": "Danışma Komitesi | Adil Katılım",
   "http_status": 200,
   "raw_bytes": 912921,
-  "text_chars": 3813
+  "text_chars": 3813,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

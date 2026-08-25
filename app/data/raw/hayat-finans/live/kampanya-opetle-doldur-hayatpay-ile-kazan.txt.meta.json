@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/opetle-doldur-hayatpay-ile-kazan",
-  "scraped_at": "2026-08-20T16:46:49+00:00",
-  "content_hash": "ac5574e30d991cc8d85cacc397475ea4649120659cae5848ccdff3917942e22e",
+  "scraped_at": "2026-08-25T12:20:51+00:00",
+  "content_hash": "f177af70443142c8c27b59e2dc2e86cdea59aa1f69bb0be16e31b29809b2d134",
   "collection_method": "browser",
   "title": "Opet’le doldur Hayat Pay ile kazan",
   "http_status": 200,
-  "raw_bytes": 26294,
-  "text_chars": 1862
+  "raw_bytes": 26671,
+  "text_chars": 1862,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

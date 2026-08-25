@@ -1,13 +1,20 @@
 {
+  "reextracted_at": "2026-08-04T13:48:07+00:00",
+  "extraction_result": "degisim_yok",
   "bank_slug": "albaraka",
   "source_url": "https://www.albaraka.com.tr/tr/kampanyalar/detay/albarakadan-ucuran-kampanya",
-  "scraped_at": "2026-08-03T16:35:47+00:00",
-  "content_hash": "cc59c5e1ccaaa8e1f1d4c7a249a7fddd1cb93358ae6dd720b43de17d856db1fd",
+  "scraped_at": "2026-08-25T12:12:27+00:00",
+  "content_hash": "59f6b7e443215bc3e6b7e05180fe8e0fe90c5154e744ba79df4d62d8639a6cf2",
   "collection_method": "live",
   "title": "Havalara Uçuran Kampanya! | Albaraka Türk",
   "http_status": 200,
-  "raw_bytes": 180776,
+  "raw_bytes": 183439,
   "text_chars": 2298,
-  "reextracted_at": "2026-08-04T13:48:07+00:00",
-  "extraction_result": "degisim_yok"
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }

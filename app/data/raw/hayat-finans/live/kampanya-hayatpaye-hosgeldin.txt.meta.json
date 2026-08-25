@@ -1,11 +1,18 @@
 {
   "bank_slug": "hayat-finans",
   "source_url": "https://hayatpay.com.tr/kampanya/hayatpaye-hosgeldin",
-  "scraped_at": "2026-08-20T16:46:46+00:00",
-  "content_hash": "7d6c293768edcd9f6f583ddc5db423173756166ef3a45a38428cc881dac2268d",
+  "scraped_at": "2026-08-25T12:20:47+00:00",
+  "content_hash": "fad9518d6f8795b0669b91386b553b635253db0c0dd40820767f8c0f80b0ce95",
   "collection_method": "browser",
   "title": "Hayat Pay’e Hoş Geldin Kampanyası",
   "http_status": 200,
-  "raw_bytes": 23505,
-  "text_chars": 1101
+  "raw_bytes": 23705,
+  "text_chars": 1101,
+  "campaign_status": "active",
+  "active_stamp": {
+    "marked_by": "damga_isaretle",
+    "source": "hasat-damgasiz",
+    "bucket": "live",
+    "checked_at": "2026-08-25T14:11:39+00:00"
+  }
 }
