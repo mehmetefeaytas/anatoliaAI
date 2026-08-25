@@ -145,6 +145,7 @@ import {
 import { useJuryMode } from "../lib/juryMode";
 import { turSecenekleri } from "../lib/turBudama";
 import { useAsync } from "../lib/useAsync";
+import BelgeyiIndir from "./BelgeyiIndir";
 import ConfidenceBadge from "./ConfidenceBadge";
 import { EmptyNotice, ErrorNotice, Loading } from "./ErrorNotice";
 import FairnessNotice from "./FairnessNotice";
@@ -843,9 +844,13 @@ export default function ComparePanel({
 
           {rows.data && rows.data.length > 0 && (
             <>
-              {/* CSV İNDİR — tablonun hemen üstünde, ayrı bir eylem şeridinde.
-                  Mevcut tablo render mantığına dokunmaz; yalnız EKRANDA ne
-                  varsa (`bolumler`) onu düz metne çevirip indirir. */}
+              {/* CSV İNDİR + PDF YAZDIR — tablonun hemen üstünde, ayrı bir eylem
+                  şeridinde. Mevcut tablo render mantığına dokunmaz; yalnız
+                  EKRANDA ne varsa (`bolumler`) onu indirir/yazdırır.
+                  PDF, `BelgeyiIndir`in ta kendisi: yeni kütüphane yok,
+                  `window.print()` + `styles/baski.css`nin `table.data` sayfa
+                  sonu kuralları zaten bu tabloyu kapsıyor (`className="data
+                  stackable"`, aşağıda). */}
               <div
                 className="row"
                 style={{ justifyContent: "flex-end", marginBottom: "var(--sp-2)" }}
@@ -858,6 +863,10 @@ export default function ComparePanel({
                 >
                   CSV indir
                 </button>
+                <BelgeyiIndir
+                  ad={`karsilastirma-${bugununTarihi()}`}
+                  etiket="PDF olarak yazdır"
+                />
               </div>
               <div className="table-wrap">
                 <table className="data stackable">

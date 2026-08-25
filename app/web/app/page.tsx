@@ -51,6 +51,7 @@ import SohbetCekmecesi, {
 } from "./components/SohbetCekmecesi";
 import SummaryCoverage from "./components/SummaryCoverage";
 import AyarlarPanel from "./components/AyarlarPanel";
+import SunumToggle from "./components/SunumToggle";
 import TazelemePanel from "./components/TazelemePanel";
 import TemaSecici from "./components/TemaSecici";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
@@ -58,6 +59,7 @@ import { api, type Stats } from "./lib/api";
 import { trNum } from "./lib/format";
 import { JuryModeProvider, useJuryMode } from "./lib/juryMode";
 import { SaglikProvider, useSaglik } from "./lib/saglik";
+import { SunumProvider } from "./lib/sunum";
 import { TemaProvider } from "./lib/tema";
 import { useTabState } from "./lib/tabState";
 import { useAsync } from "./lib/useAsync";
@@ -177,12 +179,18 @@ export default function Home() {
   return (
     <TemaProvider>
       <JuryModeProvider>
-        {/* Sağlık en dışta değil, en içte: tema ve jüri modu kullanıcı
-            tercihleri, sağlık ise sunucu olgusu — ikisi birbirine bağlı
-            değil ve sağlık yoklaması ilk ikisinin okunmasını beklemiyor. */}
-        <SaglikProvider>
-          <Dashboard />
-        </SaglikProvider>
+        {/* Sunum modu kalıcı bir tercih DEĞİL (bkz. lib/sunum.tsx) — bu
+            yüzden tema/jüri modunun aksine hiçbir depoya yazmıyor, ama aynı
+            "seçim `data-*` niteliğiyle taşınır" desenini paylaştığı için
+            burada, diğer ikisiyle aynı katmanda duruyor. */}
+        <SunumProvider>
+          {/* Sağlık en dışta değil, en içte: tema/jüri/sunum kullanıcı
+              tercihleri, sağlık ise sunucu olgusu — ikisi birbirine bağlı
+              değil ve sağlık yoklaması diğerlerinin okunmasını beklemiyor. */}
+          <SaglikProvider>
+            <Dashboard />
+          </SaglikProvider>
+        </SunumProvider>
       </JuryModeProvider>
     </TemaProvider>
   );
@@ -291,6 +299,10 @@ function Dashboard() {
       <div className="arac-cubugu">
         <JuryModeToggle />
         <TemaSecici />
+        {/* Tek tuşla sunum modu: tam ekrana geçer, yukarıdaki iki
+            geliştirici-yüzü anahtarını gizler (bkz. styles/sunum.css).
+            Kendisi GİZLENMEZ — sunumdan çıkışın tek yolu. */}
+        <SunumToggle />
         {/* Sunumda sunucu düştü ve arayüz bunu ancak paneller çökünce
             söyledi. Şerit artık kalıcı: API, depo, yerel model ve korpus
             ölçeği her ekranda okunuyor. */}

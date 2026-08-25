@@ -1,0 +1,24 @@
+/* Anatolia AI — sunum modu (tek tuşla).
+ *
+ * İlgili: ../lib/sunum.tsx, ../components/SunumToggle.tsx,
+ *         ./components.css (`.chip`, `.jury-bar`), ./tema.css (aynı desen:
+ *         seçim `data-*` niteliğiyle taşınır)
+ *
+ * Yalnız İKİ geliştirici-yüzü anahtarı gizlenir: jüri modu açma/kapama
+ * (`.jury-bar`) ve tema seçici (`.tema-secici`). İkisi de demo ORTASINDA
+ * karışıklığa yol açabilecek meta-kontroller, ürünün kendisi değil.
+ *
+ * Sohbet FAB'ı (`.sohbet-fab`) ve hesap makinesi FAB'ı (`.hesap-fab`)
+ * BİLEREK bu listede YOK: onlar tam da jüriye gösterilecek özellikler
+ * (yenilikçilik vitrini) — sunum modunun onları gizlemesi demoyu değil,
+ * demoyu ANLATAN kişiyi engellerdi.
+ *
+ * Durum şeridi (`.durum-serit`) de gizlenmiyor: CLAUDE.md §11 — sunucunun
+ * canlı/offline durumu bir kanıt, dekorasyon değil; sunum sırasında
+ * saklanacak bir "geliştirici detayı" değil.
+ */
+
+:root[data-sunum="acik"] .jury-bar,
+:root[data-sunum="acik"] .tema-secici {
+  display: none;
+}

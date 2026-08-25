@@ -12,6 +12,7 @@ import "./styles/banka.css";
 import "./styles/sohbet.css";
 import "./styles/hesap.css";
 import "./styles/bilgiler.css";
+import "./styles/sunum.css";
 import "./styles/baski.css";
 
 /**

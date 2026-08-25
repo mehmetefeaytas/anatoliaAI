@@ -111,11 +111,18 @@
 
   /* --- basılmayanlar ---
    * Etkileşim yüzeyleri kâğıtta işe yaramaz ve yer kaplar. Sekmeler,
-   * araç şeridi, yüzen sohbet düğmesi ve çekmeceler dışarıda kalır. */
+   * araç şeridi, yüzen sohbet/hesap düğmeleri ve çekmeceler dışarıda kalır.
+   *
+   * DÜZELTME (2026-08-25): bu kural `.sohbet-dugme` diye var olmayan bir
+   * sınıfı hedefliyordu — gerçek buton sınıfı `.sohbet-fab` (bkz.
+   * SohbetCekmecesi.tsx). Yazdırmada sohbet FAB'ı hiçbir zaman gizlenmemiş.
+   * Hesap makinesi FAB'ı (`.hesap-fab`) ve çekmecesi de aynı sebeple eklendi. */
   .tabs,
   .arac-cubugu,
-  .sohbet-dugme,
+  .sohbet-fab,
   .sohbet-cekmece,
+  .hesap-fab,
+  .hesap-cekmece,
   .kaynak-panel,
   .baski-gizle {
     display: none !important;
