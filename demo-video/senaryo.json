@@ -17,13 +17,13 @@
       "id": "00-acilis",
       "tur": "kart",
       "kart": "acilis",
-      "anlatim": "Anatolia AI. TEKNOFEST Türkçe Yapay Zekâ Dil Ajanları Yarışması, ikinci senaryo. On bir katılım bankasının kampanya metinlerini topluyor, içindeki finansal bilgiyi otomatik çıkarıyor ve tek bir karşılaştırma zemininde buluşturuyoruz. Tamamı açık kaynak, tamamı yerelde."
+      "anlatim": "Anatolia AI. TEKNOFEST Türkçe Yapay Zekâ Dil Ajanları Yarışması, ikinci senaryo. On katılım bankasının kampanya metinlerini topluyor, içindeki finansal bilgiyi otomatik çıkarıyor ve tek bir karşılaştırma zemininde buluşturuyoruz. Tamamı açık kaynak, tamamı yerelde."
     },
     {
       "id": "01-panel",
       "tur": "panel",
       "sekme": "compare",
-      "anlatim": "Panel açıldığında ilk gördüğünüz şey bir iddia değil, bir sayı: iki bin yedi yüz sekiz belge, on bir banka, sekiz kampanya türü, on iki çıkarım alanı. Üst şeritteki yeşil işaretler servisin, veri tabanının ve yerel modelin ayakta olduğunu gösteriyor. Panel on iki ekrandan oluşuyor."
+      "anlatim": "Panel açıldığında ilk gördüğünüz şey bir iddia değil, bir sayı: iki bin yedi yüz sekiz belge, on banka, sekiz kampanya türü, on iki çıkarım alanı. Üst şeritteki yeşil işaretler servisin, veri tabanının ve yerel modelin ayakta olduğunu gösteriyor. Panel on iki ekrandan oluşuyor."
     },
     {
       "id": "02-metin-girdisi",
@@ -53,7 +53,7 @@
       "id": "06-isi-haritasi",
       "tur": "panel",
       "sekme": "isi",
-      "anlatim": "Isı haritası sıralama yapmaz, kapsamayı gösterir: on bir banka ile dokuz kampanya türünün kesişiminde bu alanı gerçekte nerede ölçebiliyoruz. Dolu hücre bir üstünlük değil, bir ölçümdür. Kapsama boşluğunu gizlemek yerine ekrana koyuyoruz."
+      "anlatim": "Isı haritası sıralama yapmaz, kapsamayı gösterir: on bir kaynak ile dokuz kampanya türünün kesişiminde bu alanı gerçekte nerede ölçebiliyoruz. Dolu hücre bir üstünlük değil, bir ölçümdür. Kapsama boşluğunu gizlemek yerine ekrana koyuyoruz."
     },
     {
       "id": "07-avantaj-banka-delta",

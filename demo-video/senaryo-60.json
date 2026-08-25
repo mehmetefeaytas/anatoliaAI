@@ -59,8 +59,8 @@
       "hiz": 1.8,
       "kicker": "PANEL",
       "etiket": "Dashboard · canlı künye",
-      "altetiket": "2.708 belge · 11 banka · 12 alan · 8 kampanya türü · servis sağlığı canlı",
-      "anlatim": "İki bin yedi yüz sekiz belge, on bir banka, on iki alan; tek panel."
+      "altetiket": "2.708 belge · 10 banka · 12 alan · 8 kampanya türü · servis sağlığı canlı",
+      "anlatim": "İki bin yedi yüz sekiz belge, on banka, on iki alan; tek panel."
     },
     {
       "id": "02-metin-girdisi",
@@ -144,7 +144,7 @@
       "hiz": 1.5,
       "kicker": "YENİLİKÇİ",
       "etiket": "Kapsama ısı haritası",
-      "altetiket": "11 banka × 9 tür · dolu hücre üstünlük değil, ölçüm demektir",
+      "altetiket": "11 kaynak × 9 tür · dolu hücre üstünlük değil, ölçüm demektir",
       "anlatim": "Isı haritası hangi kesişimde ölçebildiğimizi gösterir."
     },
     {

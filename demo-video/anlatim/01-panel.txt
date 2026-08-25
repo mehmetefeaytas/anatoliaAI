@@ -1,1 +1,1 @@
-Panel açıldığında ilk gördüğünüz şey bir iddia değil, bir sayı: iki bin yedi yüz sekiz belge, on bir banka, sekiz kampanya türü, on iki çıkarım alanı. Üst şeritteki yeşil işaretler servisin, veri tabanının ve yerel modelin ayakta olduğunu gösteriyor. Panel on iki ekrandan oluşuyor.
+Panel açıldığında ilk gördüğünüz şey bir iddia değil, bir sayı: iki bin yedi yüz sekiz belge, on banka, sekiz kampanya türü, on iki çıkarım alanı. Üst şeritteki yeşil işaretler servisin, veri tabanının ve yerel modelin ayakta olduğunu gösteriyor. Panel on iki ekrandan oluşuyor.

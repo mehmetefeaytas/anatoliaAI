@@ -1,1 +1,1 @@
-Isı haritası sıralama yapmaz, kapsamayı gösterir: on bir banka ile dokuz kampanya türünün kesişiminde bu alanı gerçekte nerede ölçebiliyoruz. Dolu hücre bir üstünlük değil, bir ölçümdür. Kapsama boşluğunu gizlemek yerine ekrana koyuyoruz.
+Isı haritası sıralama yapmaz, kapsamayı gösterir: on bir kaynak ile dokuz kampanya türünün kesişiminde bu alanı gerçekte nerede ölçebiliyoruz. Dolu hücre bir üstünlük değil, bir ölçümdür. Kapsama boşluğunu gizlemek yerine ekrana koyuyoruz.
