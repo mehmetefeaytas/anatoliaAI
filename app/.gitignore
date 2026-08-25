@@ -125,6 +125,10 @@ web/tsconfig.tsbuildinfo
 
 # ortam
 .env
+# .env'in elle alınmış zaman damgalı yedekleri (ör. büyük bir değişiklikten
+# önce). Aynı gizli anahtarları taşır, `.env` ile AYNI muameleyi görmeli —
+# içerik anahtar taşımasa da adı `.env.yedek-*` ise izlenmez.
+.env.yedek-*
 
 # OS
 .DS_Store
