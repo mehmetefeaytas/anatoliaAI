@@ -114,7 +114,7 @@ cd app
 Tek bir sahneyi yeniden çekmek için adını ver (iki sürümde de çalışır):
 
 ```bash
-./.venv/bin/python ../demo-video/uret_sahne60.py 10-banka 14-operasyon
+./.venv/bin/python ../demo-video/uret_sahne60.py 07-banka 04-hesap-makinesi
 ```
 
 **Sıra bağlayıcıdır.** `uret_ses.py` her sahnenin süresini `sesler*.json`'a
@@ -188,9 +188,11 @@ arandığında sahne sessizce `goto` yedeğine düşüyor, sayfa yeniden yüklen
 ve 3× hızlandırılmış kayıtta ekran "yükleniyor" iskeletine denk geliyordu.
 
 **Kartlarda yazan her sayı ölçülmüştür.** `0,8228` / `0,7646` / `%3,36`
-`app/README.md` "Ölçüm sonuçları" bölümünden; `2.708 belge · 11 banka`
-canlı `/stats` ucundan. Ablasyon anlatısı da (yerel modelin kural katmanını
-geçemediği) tam sürümde dürüstçe söyleniyor — gizlenmiyor.
+`app/README.md` "Ölçüm sonuçları" bölümünden; `2.729 belge · 11 banka`
+canlı `/stats` ucundan (25 Ağustos'taki banka yeniden taramasından sonraki
+değer — v1'de `2.708` yazıyordu, kart o taramadan sonra yeniden basıldı).
+Ablasyon anlatısı da (yerel modelin kural katmanını geçemediği) tam sürümde
+dürüstçe söyleniyor — gizlenmiyor.
 
 **Serbest metin örneği sentetiktir**, korpustan alınmamıştır: "önceden
 hazırlanmış bir belgeyi tanıyor" itirazını kapatmak için. İçindeki beş alan

@@ -1,1 +1,0 @@
-Tazeleme tek ağ yüzeyi; günlük zaman damgalı; ayarlar kapalıları yazar.

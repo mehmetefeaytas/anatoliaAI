@@ -1,0 +1,1 @@
+Chatbot sesli karşılıyor, mikrofonla soru alıyor; sayısal soruyu sorguya, koşulu belgeye yönlendirip kaynaklı cevap veriyor.

@@ -1,0 +1,1 @@
+Hesap makinesi kampanya seçilince oranı, vadeyi dolduruyor; taksidi anında hesaplıyor.

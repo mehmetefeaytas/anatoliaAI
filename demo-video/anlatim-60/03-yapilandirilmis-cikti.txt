@@ -1,1 +1,0 @@
-Çıktı yapılandırılmış: her değerin güven skoru, katmanı ve karakter aralığı yanında.

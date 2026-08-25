@@ -1,0 +1,1 @@
+Bilgiler sekmesi alan kapsamını sayar; hedef kitle, taksit sayısı, tahsis ücreti artık ayrıca vitrinde.

@@ -1,1 +1,0 @@
-Chatbot sayısal soruyu yapısal sorguya, koşul sorusunu belge erişimine yönlendirir; cevaplar kaynak dipnotlu.
