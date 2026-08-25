@@ -9,8 +9,8 @@ Yürütücü: **Bilişim Vadisi**
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![Lisans](https://img.shields.io/badge/lisans-Apache--2.0-blue.svg)](app/LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3990%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
-[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](app/eval/properties.py)
+[![Testler](https://img.shields.io/badge/testler-3999%20ye%C5%9Fil-brightgreen.svg)](app/tests/)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2729%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](app/eval/properties.py)
 [![On-prem](https://img.shields.io/badge/on--prem-14%2F14%20a%C4%9Fs%C4%B1z%20ad%C4%B1m-success.svg)](app/docs/OFFLINE-KANIT.md)
 [![Veri seti](https://img.shields.io/badge/veri%20seti-Hugging%20Face-orange.svg)](https://huggingface.co/datasets/mehmetefeaytas/katilim-bankaciligi-kampanya-gold)
 [![SBOM](https://img.shields.io/badge/SBOM-CycloneDX%20·%2096%20paket-informational.svg)](app/docs/sbom.json)
@@ -27,7 +27,7 @@ bilgiyi normalize ediyor, sınıflandırıyor ve bankalar arasında karşılaşt
 Sonucu bir dashboard ve iki yollu (yapısal sorgu ↔ RAG) bir chatbot ile
 sunuyor. Tamamı açık kaynak (Apache-2.0); on-premise ve internetsiz çalışıyor.
 
-> 2.708 gerçek belge · 10/10 katılım bankası · 1.000 PDF · 3.990 yeşil test ·
+> 2.729 gerçek belge · 10/10 katılım bankası · 1.000 PDF · 3.999 yeşil test ·
 > ağsız kanıt: tek konteyner 14/14, tam yığın **3/3 koşum · 39/39 adım** ·
 > yayımlanmış altın veri seti
 
@@ -188,7 +188,7 @@ karşılaştırıldığında 36 sayısal alanın hiçbirinde sapma yok.
 | Ne | Değer | Üreten komut |
 |---|---|---|
 | Banka (config-driven) | **10 katılım bankası** + TKBB (şemsiye kuruluş) | `config/banks.yaml` |
-| Korpus | **2.708 belge** (ham arşivle eşit) · 7.049 çıkarılan alan — kurulum betiği güncel kodla bu sayıları üretir | `python -m scripts.check_demo_db` |
+| Korpus | **2.729 belge** (ham arşivle eşit) · 7.093 çıkarılan alan — kurulum betiği güncel kodla bu sayıları üretir | `python -m scripts.check_demo_db` |
 | Katılma hesabı oranı — cari hafta | **245 cari kayıt** · 9 banka × 4 vade × 4 para birimi, TKBB Veri Peteği | `python -m scripts.tkbb_guncel_hasat` |
 | Katılma hesabı oranı — tarihsel | 210.474 kayıt (2012–2025), gzip'li · hiçbir kod yolunda okunmuyor (trend analizi kapsam dışı) | `python -m scripts.tkbb_karpayi_hasat --sertifika-atla` |
 | **Finansman oranı — bankaların KENDİ yayını** | **305 kayıt · 9 banka** (Türkiye Finans 145 · Dünya 56 · Emlak 42 · Ziraat 31 · Albaraka 16 · Vakıf 6 · Hayat Finans / Kuveyt Türk / T.O.M. 3'er) — `extracted_fields`e YAZILMIYOR, ayrı kaynak ayrı etiket | `cat data/raw/*/rates/quotes.jsonl \| grep -c '"finansman"'` |
@@ -218,7 +218,7 @@ karşılaştırıldığında 36 sayısal alanın hiçbirinde sapma yok.
 | On-prem kanıtı — tek konteyner | 14/14 adım `--network none` içinde beklendiği gibi | `bash scripts/offline_proof.sh` |
 | On-prem kanıtı — **tam yığın** | **3/3 koşum · 39/39 adım · 0 beklenmedik** (postgres + api + api-postgres + ollama + web, izole ağda) | `for i in 1 2 3; do bash scripts/tam_yigin_agsiz.sh; done` |
 | API kimlik doğrulama | `X-API-Key` / Bearer · tam ve salt-okuma rolü · **yeni bağımlılık 0** (harici JWKS on-prem'i çökertirdi) | `python -m pytest tests/test_api_kimlik_dogrulama.py` |
-| Test | **4.043** toplanan · 3.990 geçti · 53 atlandı (hepsi Postgres/pgvector — CI'da koşar) · 0 başarısız · 1.861 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-25 |
+| Test | **4.052** toplanan · 3.999 geçti · 53 atlandı (hepsi Postgres/pgvector — CI'da koşar) · 0 başarısız · 1.861 alt-test | `python -m unittest discover -s tests` — ölçüm 2026-08-25 |
 | CI regresyon kapısı | iki taban (gold.v2 + round1), alan F1 + halüsinasyon tavanı | `python -m eval.run_eval --gold data/gold/gold.v2.json --esikler eval/esikler.json` |
 | Kanıt-tazeliği kapısı | **21 iddia · 0 sapma · 0 kanıt eksik** (21'incisi kapının KENDİ sayısı) — yayımlanan sayı ile kanıt ayrışırsa CI düşer | `python -m scripts.kanit_tazeligi` |
 | Eşik düşürme disiplini | ADR'ye bağlı — dört kapı + iki imza | [`app/docs/adr/0001`](app/docs/adr/0001-esik-dusurme-disiplini.md) |
@@ -541,7 +541,7 @@ cd anatoliaAI/app
 # Birim testler (normalizasyon + kural çıkarımı) — hiçbir kurulum gerekmez
 python3 -m unittest tests.test_normalize tests.test_extract
 
-# Tüm test paketi — 25 Ağu ölçümü: 4.043 toplandı, 3.990 geçti, 53 atlandı, 0 başarısız.
+# Tüm test paketi — 25 Ağu ölçümü: 4.052 toplandı, 3.999 geçti, 53 atlandı, 0 başarısız.
 # Atlananlar isteğe bağlı bağımlılık isteyenler (Postgres, FastAPI, model
 # indirmesi); çekirdek hiçbirine bağlı değil ve tamamı offline koşuyor.
 python3 -m unittest discover -s tests
@@ -727,7 +727,7 @@ denetliyor.
 │   ├── web/                     #   Next.js dashboard + chatbot arayüzü
 │   │                            #   (+ 224 arayüz testi: web/tests/)
 │   ├── eval/                    #   P/R/F1 · zor-vaka · ablasyon · kalibrasyon
-│   ├── tests/                   #   3.990 birim/entegrasyon testi (offline)
+│   ├── tests/                   #   3.999 birim/entegrasyon testi (offline)
 │   ├── scripts/                 #   ölçüm, denetim ve yayın araçları
 │   ├── data/gold/               #   altın setler + anotasyon kılavuzu
 │   ├── docs/                    #   SBOM · lisans envanteri · offline kanıt

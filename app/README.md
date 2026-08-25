@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml/badge.svg)](https://github.com/mehmetefeaytas/anatoliaAI/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Testler](https://img.shields.io/badge/testler-3990%20ye%C5%9Fil-brightgreen.svg)](tests/)
-[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2708%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
+[![Testler](https://img.shields.io/badge/testler-3999%20ye%C5%9Fil-brightgreen.svg)](tests/)
+[![Değişmez denetimi](https://img.shields.io/badge/de%C4%9Fi%C5%9Fmez%20denetimi-2729%20belge%20%C2%B7%200%20ihlal-brightgreen.svg)](eval/properties.py)
 
 TEKNOFEST 2026 Türkçe Yapay Zekâ Dil Ajanları Yarışması — 2. Senaryo
 (Bilişim Vadisi). Türkiye'deki katılım bankalarının kampanya/ürün metinlerinden
@@ -346,14 +346,14 @@ Varsayılan kuru koşudur; hiçbir dosya silinmez, yalnızca `archive/`'a taşı
 | Web | `web/` | ✅ Next.js dashboard + chatbot |
 | Eval | `eval/run_eval.py`, `eval/ablation.py` | ✅ P/R/F1 + zor-vaka + ablasyon |
 
-**Test:** **4.043** birim/entegrasyon testi toplanıyor · **3.990 geçiyor** ·
+**Test:** **4.052** birim/entegrasyon testi toplanıyor · **3.999 geçiyor** ·
 53 atlanıyor · **0 başarısız**, tamamı offline
 (`.venv/bin/python -m unittest discover -s tests`) + 224 arayüz testi
 (`cd web && npm run test` — ölçüm 2026-08-21: 224 test / 52 küme / 9 dosya).
 
 ```bash
 python -m scripts.test_ozeti     # -> eval/reports/test-ozeti.json
-# 2026-08-25 (temiz ağaç): 4043 toplandı · 3990 geçti · 53 atlandı · 0 başarısız
+# 2026-08-25 (temiz ağaç): 4052 toplandı · 3999 geçti · 53 atlandı · 0 başarısız
 ```
 
 Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde koşar.
@@ -363,8 +363,8 @@ Atlanan 53 test Postgres/pgvector gerektirir; CI'ın `test-with-deps` işinde ko
 >
 > | koşucu | toplanan | geçti | atlandı | başarısız |
 > |---|---:|---:|---:|---:|
-> | `unittest` (kanonik — `scripts.test_ozeti`) | **4.043** | **3.990** | 53 | **0** |
-> | `pytest` (`pytest tests/ -q`) | **4.043** | **3.990** | 53 | **0** (+1.861 subtest) |
+> | `unittest` (kanonik — `scripts.test_ozeti`) | **4.052** | **3.999** | 53 | **0** |
+> | `pytest` (`pytest tests/ -q`) | **4.052** | **3.999** | 53 | **0** (+1.861 subtest) |
 >
 > **Neden 54 ve niçin geliştirici makinesinde 53 görünür.** Bu sayı TEMİZ BİR
 > KLONDA ölçüldü (ayrı bir `git worktree`, `git_dirty: false`, commit
@@ -414,7 +414,7 @@ Bu bölüm bilinçli olarak **dürüst** tutulur: ölçülmemiş bir sayı buray
 | Kalem | Durum |
 |---|---|
 | Korpus | **2.708 gerçek belge** (1.000 PDF aslıyla birlikte), 10 katılım bankası + TKBB'den canlı toplandı; provenance her kayıtta: `source_url` 2.708/2.708, `scraped_at` 2.706/2.708 (eksik ikisi demo fikstürü) |
-| Testler | ✅ **3.990 test yeşil** (4.043 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlamaların **tamamı** Postgres/pgvector isteyen testlerden geliyor (CI'ın `test-with-deps` işinde koşarlar). `pytest -rs` gerekçeleri tek tek listeliyor: 53 atlamanın 53'ü de aynı gerekçeyi taşıyor, başka sebep yok. Ölçüm 2026-08-25: `python -m pytest tests -q` → `3990 passed, 53 skipped, 1861 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
+| Testler | ✅ **3.999 test yeşil** (4.052 toplanan · 53 atlanan · **0 başarısız**), ağ gerektirmeden koşuyor — atlamaların **tamamı** Postgres/pgvector isteyen testlerden geliyor (CI'ın `test-with-deps` işinde koşarlar). `pytest -rs` gerekçeleri tek tek listeliyor: 53 atlamanın 53'ü de aynı gerekçeyi taşıyor, başka sebep yok. Ölçüm 2026-08-25: `python -m pytest tests -q` → `3999 passed, 53 skipped, 1861 subtests passed`. İki koşucu birebir aynı. Kanıt tazeliği kapısı (`scripts.kanit_tazeligi`) bu sayıyı her koşumda artefaktla karşılaştırır; sapma CI'ı kırar |
 | Değişmez (invariant) denetimi | ✅ **2.708 belgede 0 ihlal** — kapsam **%92,3** (2.499 belgede en az bir alan çıktı; 209 boş belgede denetim hiçbir şey test etmez). Ölçüm 2026-08-21: `python -m eval.properties --raw-dir data/raw` → çıkış kodu 0. **21 Ağustos'ta bu denetim 2 GERÇEK ihlal verdi ve CI'ı kırdı**: son PDF hasadındaki okunamaz bir Albaraka sözleşmesi (ToUnicode tablosu olmayan gömülü yazı tipi) çöp metni `kampanya_kosullari` kalemi olarak sunuyordu. Kök neden kodda değil veride olduğu için çözüm bir KAPI oldu (`_ortak.bozuk_metin`); ihlal gizlenmedi, sebebi burada yazılı |
 | Çelişki tespiti (korpus geneli) | ✅ ölçüldü 2026-08-21, 2.708 belge — **28 çelişki: 8'i belgeler-arası** (6 çapraz bitiş tarihi + **2 çapraz kâr payı uyuşmazlığı**), 20'si belge-içi. Kâr payı örneği manşetliktir: Albaraka aynı ürün için iki ayrı formda **%7,0 ve %1,0** yayımlamış — kesişmeyen iki oran. Komut: `python -m src.comparison.scan --raw-dir data/raw`. **İki yol, iki sayı** (aşağıya bakınız) |
 | Kural katmanı kapsamı | ✅ şartnamenin **12/12** alanı |
