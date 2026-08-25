@@ -146,6 +146,56 @@ import { ErrorNotice } from "./ErrorNotice";
 import Markdown from "./ui/Markdown";
 
 /**
+ * Web Speech API — ELDE (minimal) tip tanımı.
+ *
+ * TypeScript'in `dom` lib'i bu API'yi tanımlamaz (yalnız Chromium/Safari
+ * öneki ile gelir, standart değildir) ve `@types/dom-speech-recognition`
+ * paketi kurmak CLAUDE.md §7'nin bağımlılık minimalizmi ilkesini (yalnız
+ * gerekliyse ekle, offline/anahtarsız kalsın) ihlal ederdi. Bu yüzden yalnız
+ * burada gerçekten kullanılan alanlar tanımlanır — W3C taslağının tamamı
+ * değil.
+ *
+ * ÖNEMLİ: bu bir arayüz KOLAYLIĞIDIR, backend çıkarım hattının on-prem/offline
+ * iddiasını (CLAUDE.md §1) ETKİLEMEZ — tanıma tamamen tarayıcıda/işletim
+ * sisteminde olur, sunucumuza hiçbir ses verisi gitmez. Karışmasın diye
+ * düğmenin `title`/`aria-label`'ı bunu açıkça söyler (aşağıda).
+ */
+interface KonusmaTaniSonucu {
+  readonly isFinal: boolean;
+  readonly length: number;
+  [index: number]: { readonly transcript: string };
+}
+
+interface KonusmaTaniOlayi {
+  readonly resultIndex: number;
+  readonly results: ArrayLike<KonusmaTaniSonucu>;
+}
+
+interface KonusmaTaniHatasi {
+  readonly error: string;
+}
+
+interface KonusmaTanima {
+  lang: string;
+  interimResults: boolean;
+  continuous: boolean;
+  start: () => void;
+  stop: () => void;
+  onresult: ((event: KonusmaTaniOlayi) => void) | null;
+  onerror: ((event: KonusmaTaniHatasi) => void) | null;
+  onend: (() => void) | null;
+}
+
+type KonusmaTanimaKurucu = new () => KonusmaTanima;
+
+declare global {
+  interface Window {
+    SpeechRecognition?: KonusmaTanimaKurucu;
+    webkitSpeechRecognition?: KonusmaTanimaKurucu;
+  }
+}
+
+/**
  * Hazır sorular. İlk beşi `router.py` anahtar kelimeleriyle yapısal sorguya
  * (toplama/sıralama), sonuncusu RAG'e (koşul/açıklama) düşecek şekilde yazıldı.
  */
@@ -155,7 +205,7 @@ const PRESETS = [
   "36 ay ve üzeri vade veren konut finansmanlarını listele",
   "En düşük tahsis ücreti hangi bankada?",
   "Masrafsız kampanya sunan bankalar hangileri?",
-  "Konut finansmanı kampanyasının koşulları neler?",
+  "Albaraka Türk konut finansmanının koşulları neler?",
 ];
 
 const HANDLER_LABELS: Record<string, string> = {
@@ -239,10 +289,20 @@ export default function ChatPanel({
   // Saklanan sohbet OKUNDU mu. Okunmadan yazmak, ilk render'daki boş listeyi
   // diske basıp geçmişi silerdi.
   const [hazir, setHazir] = useState(false);
+  // Tarayıcı Web Speech API'yi destekliyor mu. Sunucu render'ıyla istemci
+  // render'ı hidrasyon uyuşmazlığına düşmesin diye `useEffect` içinde okunur
+  // (aşağıdaki `hazir` deseniyle aynı mantık) — Firefox gibi desteklemeyen
+  // tarayıcıda düğme HİÇ basılmaz, hata vermez.
+  const [mikrofonVar, setMikrofonVar] = useState(false);
+  const [dinliyor, setDinliyor] = useState(false);
+  // Mikrofon izni reddedilirse ya da tanıma hata verirse kısa bir not.
+  const [mikrofonHata, setMikrofonHata] = useState<string | null>(null);
   const alanRef = useRef<HTMLTextAreaElement>(null);
   const sayacRef = useRef(0);
   /** Süren `/chat` isteğinin iptal kontrolü; boşta `null`. */
   const iptalRef = useRef<AbortController | null>(null);
+  /** Süren ses tanıma oturumu; boşta `null`. */
+  const taniRef = useRef<KonusmaTanima | null>(null);
 
   // Otomatik yükseklik: içerik büyüdükçe alan büyür, `max-height`e kadar.
   useEffect(() => {
@@ -268,6 +328,18 @@ export default function ChatPanel({
   useEffect(() => {
     if (hazir) oturumYaz(turlar, onceki);
   }, [turlar, onceki, hazir]);
+
+  // Özellik tespiti: yalnız API GERÇEKTEN varsa düğme basılır. Firefox gibi
+  // desteklemeyen bir tarayıcıda düğme sessizce yoktur — ne hata, ne kırık
+  // görünüm.
+  useEffect(() => {
+    setMikrofonVar(!!(window.SpeechRecognition || window.webkitSpeechRecognition));
+    // Bileşen kapanırken süren bir tanıma oturumu varsa durdur — arka planda
+    // asılı kalıp sonradan `setQ` çağırmasın.
+    return () => {
+      taniRef.current?.stop();
+    };
+  }, []);
 
   const ask = useCallback(
     async (question: string) => {
@@ -328,6 +400,61 @@ export default function ChatPanel({
   /** Süren isteği iptal eder; `ask`in `finally`si durumu toparlar. */
   const iptal = useCallback(() => {
     iptalRef.current?.abort();
+  }, []);
+
+  /**
+   * Ses tanımayı başlatır — soru kutusunun içeriğini DEĞİŞTİRİR, üstüne
+   * EKLEMEZ. Kullanıcı mikrofona basıp konuşunca kutu o anki söylediğiyle
+   * dolar; kutuda önceden yazılı bir şey varsa üzerine yazılır. Bu bilinçli:
+   * mikrofon bir "sesli not ekle" değil, "sesle sor" düğmesidir.
+   *
+   * `interimResults: true` ile kutu konuşma SÜRERKEN de güncellenir — final
+   * sonucu beklemek zorunlu değil, ama `onresult` yine de final metni yazar.
+   */
+  const mikrofonBaslat = useCallback(() => {
+    if (busy || dinliyor) return;
+    const Kurucu = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!Kurucu) return; // Düğme zaten gizli olmalı; çağrı yine de güvenli.
+
+    setMikrofonHata(null);
+    const tani = new Kurucu();
+    tani.lang = "tr-TR";
+    tani.interimResults = true;
+    tani.continuous = false;
+
+    tani.onresult = (event) => {
+      let metin = "";
+      for (let i = 0; i < event.results.length; i++) {
+        metin += event.results[i][0].transcript;
+      }
+      setQ(metin);
+    };
+
+    tani.onerror = (event) => {
+      if (event.error === "not-allowed") {
+        setMikrofonHata("Mikrofon izni verilmedi.");
+      } else {
+        // Yutulmaz: en azından konsola düşer. Kullanıcıya gösterilen metin
+        // teknik hata kodunu tekrarlamaz — okunmaz olurdu.
+        console.warn("Konuşma tanıma hatası:", event.error);
+        setMikrofonHata("Ses tanıma sırasında bir hata oluştu.");
+      }
+      setDinliyor(false);
+    };
+
+    tani.onend = () => {
+      setDinliyor(false);
+      taniRef.current = null;
+    };
+
+    taniRef.current = tani;
+    setDinliyor(true);
+    tani.start();
+  }, [busy, dinliyor]);
+
+  /** Süren ses tanımayı durdurur; `onend` görsel durumu toparlar. */
+  const mikrofonDurdur = useCallback(() => {
+    taniRef.current?.stop();
   }, []);
 
   /**
@@ -446,6 +573,47 @@ export default function ChatPanel({
           aria-label="Chatbot sorusu"
           aria-describedby="chat-ipucu"
         />
+        {/*
+          Yalnız API GERÇEKTEN varsa görünür (özellik tespiti yukarıda). Bu bir
+          on-prem/offline iddiası DEĞİL — tarayıcının kendi ses tanıma özelliği,
+          `title`/`aria-label` bunu açıkça söylüyor.
+        */}
+        {mikrofonVar && (
+          <button
+            type="button"
+            className={dinliyor ? "mikrofon-dugme mikrofon-dugme-dinliyor" : "mikrofon-dugme"}
+            onClick={dinliyor ? mikrofonDurdur : mikrofonBaslat}
+            disabled={busy}
+            aria-pressed={dinliyor}
+            title={
+              dinliyor
+                ? "Dinleniyor — durdurmak için tıklayın (tarayıcının konuşma tanıma özelliğini kullanır)"
+                : "Sesle soru sor — tarayıcının konuşma tanıma özelliğini kullanır"
+            }
+            aria-label={
+              dinliyor
+                ? "Sesli soruyu durdur"
+                : "Sesle soru sor (tarayıcının konuşma tanıma özelliğini kullanır)"
+            }
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z" />
+              <path d="M19 11a7 7 0 0 1-14 0" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <line x1="8" y1="22" x2="16" y2="22" />
+            </svg>
+          </button>
+        )}
         <button type="button" className="btn" onClick={() => ask(q)} disabled={busy}>
           {busy ? "…" : "Sor"}
         </button>
@@ -463,6 +631,14 @@ export default function ChatPanel({
           </button>
         )}
       </div>
+      {/* Mikrofon izni reddedildiyse ya da tanıma hata verdiyse burada
+          söylenir — konsola yutulmaz (yukarıda `console.warn`), ekranda da
+          sessiz kalınmaz. */}
+      {mikrofonHata && (
+        <p className="mikrofon-hata small" role="alert">
+          {mikrofonHata}
+        </p>
+      )}
       <div className="chat-araclar">
         <p id="chat-ipucu" className="small faint" style={{ margin: 0 }}>
           Enter gönderir · Shift+Enter yeni satır · en yeni cevap en üstte

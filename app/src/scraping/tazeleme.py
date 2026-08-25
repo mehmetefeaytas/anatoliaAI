@@ -76,6 +76,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import threading
 import uuid
 from dataclasses import dataclass, field
@@ -437,6 +438,115 @@ class TazelemeDurumu:
 
 
 # --------------------------------------------------------------------------- #
+# Son tazeleme özeti — "canlı takip" iddiasının kalıcı izi
+# --------------------------------------------------------------------------- #
+# `TazelemeDurumu` TAMAMEN bellek içidir: iş bitince süreç kapanınca kaybolur.
+# Panelde "en son ne zaman tazeleme yapıldı, kaç belge değişti/yeni geldi"
+# gösterebilmek için BİLİNÇLİ TASARIM KARARI: DB şema değişikliği YOK. SQLite
+# + Postgres iki backend'i etkileyen bir migration bu küçük ihtiyaç için
+# riskli ve gereksiz — basit bir JSON dosyası yeterli (`celiski_artefakti.py`
+# ile aynı desen: pahalı/geçici sonuç, artefakt olarak diske yazılır).
+#
+# Dosya "her banka için EN SON tazeleme özeti" tutar; banka anahtarıyla
+# ÜZERİNE YAZILIR, sınırsız büyümez. Sadece iş TAMAM olduğunda yazılır —
+# HATA/İPTAL'de ham arşive zaten hiçbir şey yazılmamış olabilir (modül
+# başlığı) ve eski geçerli özeti geçersiz bir kayıtla ezmek yanlış olurdu.
+
+#: Artefaktın deponun içindeki yeri. `data/` altında, `celiski-taramasi.json`
+#: ile aynı hizada — ikisi de türetilmiş/derived veri, kaynak değil.
+_SON_TAZELEME_AD = "son-tazeleme.json"
+
+#: Biçim sürümü. Alan adı değişirse bu artar; eski dosya `surum` uyuşmazsa
+#: (bu modülde şu an denetlenmiyor, ileride eklenmek istenirse buraya) yok
+#: sayılabilir. Şimdilik tek okuyucu (`/refresh/last-summary`) alan bazında
+#: `.get(...)` kullandığı için eksik alan sessizce `None`/varsayılan olur.
+_SON_TAZELEME_SURUM = 1
+
+
+def _son_tazeleme_yolu(kok: Optional[Path] = None) -> Path:
+    """Son tazeleme özet dosyasının yolu.
+
+    `kok` yalnız testler için: gerçek `data/` dizinine yazmadan bu dosyayı
+    geçici bir dizine yönlendirir. Üretimde `None` kalır ve depo köküne göre
+    sabit yol kullanılır (`comparison/celiski_artefakti.py::yol` ile aynı
+    desen) — `raw_dir`'den TÜRETİLMEZ, çünkü testler `raw_dir`'e düz bir
+    geçici dizin verir ve o dizinin "üstü" makinede rastgele bir yer olurdu.
+    """
+    taban = kok or Path(__file__).resolve().parents[2]
+    return taban / "data" / _SON_TAZELEME_AD
+
+
+def son_tazeleme_oku(*, kok: Optional[Path] = None) -> dict[str, dict[str, Any]]:
+    """Tüm bankalar için en son tazeleme özetini okur (banka slug'ı → özet).
+
+    Dosya hiç yoksa (hiç tazeleme yapılmamışsa) ya da bozuksa BOŞ sözlük
+    döner — hata fırlatmaz: panelin bu ucu her hâlde çizebilmesi gerekiyor.
+    """
+    yol = _son_tazeleme_yolu(kok)
+    if not yol.is_file():
+        return {}
+    try:
+        veri = json.loads(yol.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return {}
+    if not isinstance(veri, dict):
+        return {}
+    bankalar = veri.get("bankalar")
+    return bankalar if isinstance(bankalar, dict) else {}
+
+
+def son_tazeleme_yaz(durum: TazelemeDurumu, *, kok: Optional[Path] = None) -> None:
+    """Bir tazeleme işi TAMAM olduğunda banka özetini kalıcı dosyaya yazar.
+
+    Yalnız `durum.durum == DURUM_TAMAM` iken yazar; başka bir çağıran bunu
+    HATA/İPTAL'de çağırırsa sessizce hiçbir şey yapmaz — çağıran taraf bunu
+    kendi denetlemek zorunda kalmasın diye kontrol burada tekrarlanır.
+
+    Aynı bankanın eski kaydı ÜZERİNE YAZILIR, diğer bankaların kaydı KORUNUR.
+    `TazelemeYoneticisi` tek yuvalı olduğu için (aynı anda tek tazeleme koşar)
+    ekstra bir kilide gerek yok; yine de yarım/bozuk dosya bırakmamak için
+    önce geçici dosyaya yazılıp `os.replace` ile ATOMİK taşınır.
+    """
+    if durum.durum != DURUM_TAMAM:
+        return
+
+    degisen_belgeler = [
+        {"title": b.get("title"), "source_url": b.get("source_url")}
+        for b in durum.belgeler if b.get("durum") == BELGE_DEGISEN
+    ]
+
+    yol = _son_tazeleme_yolu(kok)
+    yol.parent.mkdir(parents=True, exist_ok=True)
+
+    bankalar = son_tazeleme_oku(kok=kok)
+    bankalar[durum.bank] = {
+        "bank": durum.bank,
+        "bank_name": durum.bank_name,
+        "is_id": durum.is_id,
+        "bitis": durum.bitis,
+        "yeni": durum.yeni,
+        "degisen": durum.degisen,
+        "ayni": durum.ayni,
+        "hata": durum.hata,
+        "degisen_belgeler": degisen_belgeler,
+    }
+
+    gecici = yol.with_name(f"{yol.name}.tmp-{uuid.uuid4().hex[:8]}")
+    try:
+        gecici.write_text(
+            json.dumps({"surum": _SON_TAZELEME_SURUM, "bankalar": bankalar},
+                       ensure_ascii=False, indent=1) + "\n",
+            encoding="utf-8")
+        os.replace(gecici, yol)
+    except OSError:
+        # Bu bir yan etkidir, asıl iş (ham arşive yazma) o ana kadar zaten
+        # bitmiş ve BAŞARILI. Diske ikinci kez yazamamak tazelemeyi HATA'ya
+        # çevirmemeli — panel geçmiş özeti eksik/bayat görür, veri kaybetmez.
+        logger.exception("son tazeleme özeti yazılamadı: %s", durum.bank)
+        gecici.unlink(missing_ok=True)
+
+
+# --------------------------------------------------------------------------- #
 # Ağ sayacı — "internet yok" ile "site engelledi" ayrımı
 # --------------------------------------------------------------------------- #
 # Ayrım operatöre farklı şeyler söyler ve farklı aksiyon gerektirir; ikisini
@@ -517,7 +627,8 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
            iptal: Optional[Callable[[], bool]] = None,
            alt_akis: Optional[Callable[[list[dict[str, Any]]],
                                        dict[str, Any]]] = None,
-           guncelle: Optional[Callable[..., None]] = None) -> TazelemeDurumu:
+           guncelle: Optional[Callable[..., None]] = None,
+           son_tazeleme_kok: Optional[Path] = None) -> TazelemeDurumu:
     """Bir bankayı tazeler: çek → karşılaştır → yaz → alt akışı uyar.
 
     `bundle` / `robots` enjekte edilebilir — testler ağa çıkmadan koşar.
@@ -528,6 +639,11 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
     başlığı). Değişmeyen ya da yeni belge için çağrılmaz: değişmeyen belgenin
     aşağı akışta düzeltilecek bir yanı yok, yeni belgenin ise veri tabanında
     henüz bir karşılığı yok.
+
+    `son_tazeleme_kok` yalnız testler için: iş TAMAM olduğunda `data/
+    son-tazeleme.json`'a yazılan kalıcı özetin (bkz. `son_tazeleme_yaz`)
+    kök dizinini değiştirir. `None` kalırsa depo köküne göre sabit yol
+    kullanılır — üretim akışı bunu hiç geçirmez.
     """
     gecikme = gecikmeyi_kirp(gecikme_sn)
     hedef_dizin = Path(raw_dir) / bank.slug / LIVE_SUBDIR
@@ -615,6 +731,7 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
         basarisiz = bool(sayac.ag_yok or hatalar or tani.get("skipped_reason"))
         yaz(durum=DURUM_HATA if basarisiz else DURUM_TAMAM,
             bitis=utc_now_iso(), asama="Tazeleme bitti.", mesaj=mesaj)
+        son_tazeleme_yaz(durum, kok=son_tazeleme_kok)
         return durum
 
     yaz(durum=DURUM_YAZILIYOR,
@@ -667,6 +784,7 @@ def tazele(bank: BankConfig, raw_dir: str | Path, durum: TazelemeDurumu, *,
     yaz(durum=DURUM_TAMAM, bitis=utc_now_iso(), asama="Tazeleme tamamlandı.",
         belgeler=belgeler, yeni=yeni, degisen=degisen, ayni=ayni,
         yazilan_dosya=len(yazilan), alt_akis=alt_rapor, mesaj=mesaj)
+    son_tazeleme_yaz(durum, kok=son_tazeleme_kok)
     return durum
 
 
@@ -687,7 +805,8 @@ class TazelemeYoneticisi:
                  azami_belge: int = VARSAYILAN_AZAMI_BELGE,
                  alt_akis: Optional[Callable[[list[dict[str, Any]]],
                                              dict[str, Any]]] = None,
-                 gecikme_sn: float = VARSAYILAN_GECIKME_SN) -> None:
+                 gecikme_sn: float = VARSAYILAN_GECIKME_SN,
+                 son_tazeleme_kok: Optional[Path] = None) -> None:
         self.raw_dir = str(raw_dir)
         self._calisma_fn = calisma_fn or tazele
         # Öntanım `None`: yöneticiyi alt akış olmadan kurmak GEÇERLİ bir
@@ -696,6 +815,10 @@ class TazelemeYoneticisi:
         self._alt_akis = alt_akis
         self.azami_belge = azami_belge
         self.gecikme_sn = gecikmeyi_kirp(gecikme_sn)
+        # `raw_dir`'DEN TÜRETİLMEZ (bkz. `_son_tazeleme_yolu`): testler
+        # `raw_dir`'e düz bir geçici dizin verir, bu yüzden `None` öntanımı
+        # depo köküne göre sabit `data/son-tazeleme.json` yolunu kullanır.
+        self._son_tazeleme_kok = son_tazeleme_kok
         self._kilit = threading.Lock()
         self._isler: dict[str, TazelemeDurumu] = {}
         self._aktif: Optional[str] = None
@@ -751,7 +874,8 @@ class TazelemeYoneticisi:
                                  azami_belge=self.azami_belge,
                                  gecikme_sn=self.gecikme_sn,
                                  alt_akis=self._alt_akis,
-                                 iptal=iptal_mi, guncelle=guncelle)
+                                 iptal=iptal_mi, guncelle=guncelle,
+                                 son_tazeleme_kok=self._son_tazeleme_kok)
             except Exception:  # iş parçacığı sessizce ölmemeli
                 logger.exception("tazeleme işi düştü: %s", bank.slug)
                 guncelle(durum=DURUM_HATA, bitis=utc_now_iso(),
@@ -784,6 +908,7 @@ class TazelemeYoneticisi:
 __all__ = [
     "TazelemeDurumu", "TazelemeMesgul", "TazelemeYoneticisi",
     "gecikmeyi_kirp", "onizleme", "tazele",
+    "son_tazeleme_oku", "son_tazeleme_yaz",
     "GECIKME_ALT_SN", "GECIKME_UST_SN", "VARSAYILAN_AZAMI_BELGE",
     "DURUM_BEKLIYOR", "DURUM_KESIF", "DURUM_CEKILIYOR", "DURUM_YAZILIYOR",
     "DURUM_TAMAM", "DURUM_HATA", "DURUM_IPTAL",

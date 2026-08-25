@@ -1,12 +1,15 @@
-/* Anatolia AI — sohbet çekmecesi, yüzen yuvarlak düğme (FAB), dipnot rozeti
- * ve konu sınırı stilleri.
+/* Anatolia AI — sohbet çekmecesi, yüzen yuvarlak düğme (FAB), dipnot rozeti,
+ * konu sınırı ve mikrofon düğmesi stilleri.
  *
  * İlgili: tokens.css, components.css (CHATBOT + SEKMELER bölümleri),
  *         ../components/SohbetCekmecesi.tsx, ../components/ChatPanel.tsx
  *
  * `components.css` chatbot'un TAM SAYFA hâlini zaten stilliyor. Burada yalnız
- * ÇEKMECE kabuğu, FAB, dipnot rozeti ve konu sınırı var; aynı bileşenin iki
- * yerleşimi olduğu için ayrı dosya, ikisini karıştırmamayı kolaylaştırıyor.
+ * ÇEKMECE kabuğu, FAB, dipnot rozeti, konu sınırı ve mikrofon düğmesi var;
+ * aynı bileşenin iki yerleşimi olduğu için ayrı dosya, ikisini karıştırmamayı
+ * kolaylaştırıyor. Mikrofon düğmesi istisna: her iki yerleşimde de
+ * (çekmece VE tam sayfa `genis` hâli) kullanılır, çünkü soru kutusu ikisinde
+ * de aynı `ChatPanel.tsx` gövdesinden gelir.
  *
  * SEKME ŞERİDİ BURADA DEĞİL: `.tabs` `components.css`'te tanımlıdır ve
  * base.css'in belgelediği kural geçerli — bir sınıfın davranışı, tanımlandığı
@@ -181,6 +184,33 @@
   flex-direction: column;
   gap: var(--sp-3);
   padding: var(--sp-4);
+}
+
+/* Sesli karşılamanın yazılı karşılığı — `.chat-a` (components.css) ile aynı
+ * aileden, ama gerçek bir sohbet turu değil, o yüzden kendi sınıfı var. */
+.sohbet-karsilama {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.sohbet-karsilama-ad {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+  margin-bottom: var(--sp-1);
+}
+
+.sohbet-karsilama-metin {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--fg);
+  line-height: var(--lh-normal);
 }
 
 /* Çekmece içindeki panel kart değil: kartın kenarlığı, gölgesi ve dolgusu
@@ -413,6 +443,71 @@
 }
 
 /* ===================================================================
+ * MİKROFON DÜĞMESİ — soru kutusunun tarayıcı ses tanıma kolaylığı
+ *
+ * Bu bir on-prem/offline iddiası DEĞİLDİR (CLAUDE.md §1 backend çıkarım
+ * hattı için geçerlidir): tanıma tamamen tarayıcıda/işletim sisteminde olur,
+ * sunucuya ses gitmez. Düğme yalnız API'nin GERÇEKTEN var olduğu tarayıcıda
+ * basılır (ChatPanel.tsx özellik tespiti) — Firefox gibi desteklemeyen bir
+ * tarayıcıda görünmez, hata vermez.
+ * ================================================================ */
+
+.mikrofon-dugme {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--sp-6) + var(--sp-2));
+  height: calc(var(--sp-6) + var(--sp-2));
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-full);
+  background: var(--bg);
+  color: var(--fg-dim);
+  cursor: pointer;
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease);
+}
+
+.mikrofon-dugme:hover:not(:disabled) {
+  color: var(--fg);
+  border-color: var(--accent);
+}
+
+.mikrofon-dugme:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+/* Dinlerken düğme `--bad` giyer: bu ürünün paletinde `--bad` PANİK/DURDURMA
+ * anlamına ayrılmıştır (durum.css:32) ve "mikrofon açık, konuşuyorsunuz"
+ * tam da o kayıt kırmızısı sinyalidir — yeni bir renk icat etmek yerine
+ * mevcut anlamı ödünç alır. Nabız `opacity` üzerinde (durum-nabiz ile aynı
+ * teknik), `transform`/boyut değiştirmez. */
+.mikrofon-dugme-dinliyor {
+  border-color: var(--bad);
+  background: var(--bad-wash);
+  color: var(--bad);
+  animation: mikrofon-nabiz 1200ms var(--ease) infinite;
+}
+
+@keyframes mikrofon-nabiz {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.mikrofon-hata {
+  margin: var(--sp-2) 0 0;
+  color: var(--bad);
+}
+
+/* ===================================================================
  * KIRILIMLAR + HAREKET TERCİHİ — dosyanın SONUNDA
  * ================================================================ */
 
@@ -428,6 +523,13 @@
   .sohbet-hazir-dugme,
   .sohbet-dipnot {
     transition: none;
+  }
+
+  /* Nabız da kapanır: dinleme durumu artık yalnız kenarlık/zemin rengiyle
+   * (statik) anlatılır, `opacity` titremesi vestibüler duyarlılığı olan
+   * kullanıcıyı etkilemez. */
+  .mikrofon-dugme-dinliyor {
+    animation: none;
   }
 }
 

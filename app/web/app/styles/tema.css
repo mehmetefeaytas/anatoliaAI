@@ -78,6 +78,18 @@
   --llm-wash: #f2e9fa;
   --mark-ring: #ffeb8a;
 
+  /* Bilgiler sekmesi donut grafiği — gerekçe tokens.css'te. Bu kopya
+   * `tests/test_tema_paleti.py` ile birebir bağlı (diğer token'larla aynı
+   * kural: koyu kaynaktaki her token iki seçimde de tanımlı olmalı). */
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-6: #008300;
+  --chart-7: #4a3aa7;
+  --chart-neutral: #c3c2b7;
+
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.05), 0 8px 24px rgba(0, 0, 0, 0.07);
 }
@@ -113,6 +125,16 @@
   --bad-wash: #33191a;
   --llm-wash: #2a1c3d;
   --mark-ring: #6b5a06;
+
+  /* Aynı yedi ton + nötr — gerekçe tokens.css'te. */
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+  --chart-6: #008300;
+  --chart-7: #9085e9;
+  --chart-neutral: #383835;
 
   --shadow-sm: none;
   --shadow-md: none;

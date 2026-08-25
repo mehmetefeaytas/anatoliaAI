@@ -75,6 +75,17 @@
     --bad-wash: #fceceb;
     --mark-ring: #ffeb8a;
 
+    /* Bilgiler sekmesi donut grafiği — gerekçe tokens.css'te. Baskıda hep
+     * AÇIK değerler (bu blok koşulsuz açık paleti zorluyor). */
+    --chart-1: #2a78d6;
+    --chart-2: #eb6834;
+    --chart-3: #1baf7a;
+    --chart-4: #eda100;
+    --chart-5: #e87ba4;
+    --chart-6: #008300;
+    --chart-7: #4a3aa7;
+    --chart-neutral: #c3c2b7;
+
     /* Gölge kâğıtta gri bir bulanıklığa dönüşür; yükseklik baskıda anlamsız. */
     --shadow-sm: none;
     --shadow-md: none;

@@ -1,0 +1,148 @@
+/* Anatolia AI — hesap makinesi çekmecesi (sol alt FAB + panel).
+ *
+ * İlgili: ../components/HesapCekmecesi.tsx, sohbet.css (aynı kabuk deseni,
+ *         ayna görüntüsü — burada yalnız SOL/SAĞ farkı ve forma özel
+ *         sınıflar var, kabuk mantığı tekrar açıklanmaz).
+ *
+ * Literal renk/boşluk YOK — hepsi tokens.css'ten.
+ */
+
+.hesap-fab {
+  position: fixed;
+  left: var(--sp-5);
+  bottom: var(--sp-5);
+  z-index: 41;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--sp-10) - var(--sp-2));
+  height: calc(var(--sp-10) - var(--sp-2));
+  padding: 0;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-full);
+  background: var(--accent);
+  color: var(--on-accent);
+  cursor: pointer;
+  box-shadow: var(--shadow-md);
+  transition:
+    background var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.hesap-fab:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent-soft);
+}
+
+.hesap-fab svg {
+  display: block;
+}
+
+.hesap-cekmece {
+  --hesap-genislik: 340px;
+  --hesap-fab-payi: calc(var(--sp-10) + var(--sp-6));
+
+  position: fixed;
+  left: var(--sp-5);
+  bottom: var(--hesap-fab-payi);
+  z-index: 40;
+  width: var(--hesap-genislik);
+  max-width: calc(100vw - var(--sp-8));
+  max-height: calc(100vh - (var(--hesap-fab-payi) + var(--sp-8)));
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  animation: sohbet-acilis var(--dur-base) var(--ease);
+}
+
+.hesap-cekmece-bas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.hesap-cekmece-ad {
+  font-weight: var(--fw-semibold);
+  color: var(--fg);
+}
+
+.hesap-cekmece-govde {
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.hesap-etiket {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  color: var(--fg-dim);
+  margin-bottom: var(--sp-1);
+}
+
+.hesap-satir {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+}
+
+.hesap-hata {
+  font-size: var(--fs-sm);
+  color: var(--bad);
+  margin: 0;
+}
+
+.hesap-sonuc {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  background: var(--bg);
+}
+
+.hesap-sonuc-vurgu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.hesap-sonuc-etiket {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: var(--track-caps);
+}
+
+.hesap-sonuc-deger {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-semibold);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--track-tight);
+}
+
+.hesap-sonuc-satir {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--fs-sm);
+  color: var(--fg-dim);
+}
+
+@media (max-width: 720px) {
+  /* Küçük ekranda iki FAB (sol hesap, sağ sohbet) aynı satırda çakışmaz —
+   * ikisi de kendi köşesinde kalır, genişlik sınırı yalnız çekmece için. */
+  .hesap-cekmece {
+    --hesap-genislik: calc(100vw - var(--sp-8));
+  }
+}

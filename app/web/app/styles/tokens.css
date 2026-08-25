@@ -127,6 +127,28 @@
   --llm-wash: #f2e9fa;
   --mark-ring: #ffeb8a;
 
+  /* --- grafik: kategorik seri (Bilgiler sekmesi, kampanya türü dağılımı) ---
+   * Bu ürün bilerek TEK doygun renk (--accent) kullanır (bkz. yukarıdaki
+   * bankalar-kendi-rengini-taşıyor gerekçesi) — ama "kaç kampanya hangi
+   * ürün ailesinde" gibi 5+ kategorili bir DAĞILIM tek renkle ayırt
+   * edilemez. Aşağıdaki 7 renk BANKA kıyası için KULLANILMAZ (§17 adil
+   * kıyas — banka rengi bankaya ait); yalnız ürün ailesi/kampanya türü gibi
+   * banka-bağımsız kategorilerde SVG `fill="var(--chart-N)"` olarak
+   * kullanılır, metin rengi olarak KULLANILMAZ (etiketler her zaman
+   * --fg/--fg-dim taşır — bkz. tokens.css "ÜÇ SES"). Sıra CVD-güvenlik
+   * mekanizmasıdır, kozmetik değil: bitişik dilimler arasında en kötü
+   * OKLab ΔE ≥ 8 hedefini karşılayan sabit bir sıralama.
+   * "Belirtilmemiş" (tür boş) kovası bu yedi rengin DIŞINDA, ayrı bir nötr
+   * gri (`--chart-neutral`) alır — bir kategori değil, "veri yok" sinyali. */
+  --chart-1: #2a78d6; /* mavi */
+  --chart-2: #eb6834; /* turuncu */
+  --chart-3: #1baf7a; /* deniz mavisi */
+  --chart-4: #eda100; /* sarı */
+  --chart-5: #e87ba4; /* eflatun */
+  --chart-6: #008300; /* yeşil */
+  --chart-7: #4a3aa7; /* mor */
+  --chart-neutral: #c3c2b7; /* "Belirtilmemiş" — kategori değil, veri yok */
+
   /* --- köşe ---
    * ÖLÇÜLDÜ (panel.png): 18px kart + tam yuvarlak (999px) düğme/çip bileşimi,
    * ekran görüntüsündeki en güçlü "tüketici uygulaması" sinyaliydi. Bu bir
@@ -250,6 +272,17 @@
     --bad-wash: #33191a;
     --llm-wash: #2a1c3d;
     --mark-ring: #6b5a06;
+
+    /* Aynı yedi ton, koyu zemin için basamaklandı (bkz. açık temadaki
+     * gerekçe) — sıra AYNI kalır, CVD-güvenliği sıraya bağlı. */
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-4: #c98500;
+    --chart-5: #d55181;
+    --chart-6: #008300;
+    --chart-7: #9085e9;
+    --chart-neutral: #383835;
 
     /* Koyu zeminde gölge görünmez; yükseklik kenarlıkla anlatılır. */
     --shadow-sm: none;

@@ -51,6 +51,8 @@ from src.scraping.tazeleme import (
     TazelemeYoneticisi,
     gecikmeyi_kirp,
     onizleme,
+    son_tazeleme_oku,
+    son_tazeleme_yaz,
     tazele,
 )
 
@@ -218,6 +220,10 @@ class TestTazeleAkisi(unittest.TestCase):
 
     def _kos(self, cekici: SahteCekici, **kwargs) -> TazelemeDurumu:
         durum = TazelemeDurumu(is_id="t1", bank=BANKA.slug, bank_name=BANKA.name)
+        # `son_tazeleme_kok` GEÇİCİ dizine sabitlenir: yoksa `tazele()` TAMAM
+        # olan her koşuda gerçek depo kökündeki `data/son-tazeleme.json`'a
+        # yazardı ve test koşusu gerçek dosyayı kirletirdi.
+        kwargs.setdefault("son_tazeleme_kok", Path(self.raw))
         return tazele(BANKA, self.raw, durum, bundle=_bundle(cekici),
                       robots=_robots(), **kwargs)
 
@@ -336,6 +342,8 @@ class TestAltAkis(unittest.TestCase):
 
     def _kos(self, cekici: SahteCekici, alt_akis=None, **kwargs) -> TazelemeDurumu:
         durum = TazelemeDurumu(is_id="t1", bank=BANKA.slug, bank_name=BANKA.name)
+        # Bkz. `TestTazeleAkisi._kos`: gerçek depo köküne yazmayı önler.
+        kwargs.setdefault("son_tazeleme_kok", Path(self.raw))
         return tazele(BANKA, self.raw, durum, bundle=_bundle(cekici),
                       robots=_robots(),
                       alt_akis=self._hook if alt_akis is None else alt_akis,
@@ -534,6 +542,76 @@ class TestYonetici(unittest.TestCase):
                 break
             time.sleep(0.01)
         self.assertTrue(gorulen.get("iptal"), "iptal isteği işe ulaşmadı")
+
+
+class TestSonTazelemeOzeti(unittest.TestCase):
+    """`data/son-tazeleme.json` — bellek içi `TazelemeDurumu`'nun kalıcı izi.
+
+    `TazelemeYoneticisi`/`tazele()` TAMAMEN bellek içidir; bu dosya "en son ne
+    zaman tazeleme yapıldı, kaç belge değişti/yeni geldi" iddiasının süreç
+    yeniden başlasa da hayatta kalan tek izidir. `kok` her testte geçici bir
+    dizine sabitlenir — gerçek depo kökü hiç dokunulmaz.
+    """
+
+    def setUp(self) -> None:
+        self._tmp = tempfile.TemporaryDirectory()
+        self.kok = Path(self._tmp.name)
+
+    def tearDown(self) -> None:
+        self._tmp.cleanup()
+
+    def test_dosya_yoksa_bos_sozluk_doner(self) -> None:
+        self.assertEqual(son_tazeleme_oku(kok=self.kok), {})
+
+    def test_tamam_olmayan_is_yazilmaz(self) -> None:
+        durum = TazelemeDurumu(is_id="t1", bank="ornek", bank_name="Örnek",
+                               durum=DURUM_HATA)
+        son_tazeleme_yaz(durum, kok=self.kok)
+        self.assertEqual(son_tazeleme_oku(kok=self.kok), {})
+        self.assertFalse((self.kok / "data" / "son-tazeleme.json").exists())
+
+    def test_tamam_is_yazilir_ve_okunur(self) -> None:
+        durum = TazelemeDurumu(
+            is_id="t1", bank="ornek", bank_name="Örnek", durum=DURUM_TAMAM,
+            bitis="2026-08-25T12:00:00Z", yeni=1, degisen=2, ayni=3, hata=0,
+            belgeler=[
+                {"source_url": "https://a", "title": "A", "durum": BELGE_DEGISEN},
+                {"source_url": "https://b", "title": "B", "durum": BELGE_YENI},
+            ])
+        son_tazeleme_yaz(durum, kok=self.kok)
+        ozet = son_tazeleme_oku(kok=self.kok)
+        self.assertIn("ornek", ozet)
+        kayit = ozet["ornek"]
+        self.assertEqual(kayit["bank_name"], "Örnek")
+        self.assertEqual(kayit["yeni"], 1)
+        self.assertEqual(kayit["degisen"], 2)
+        self.assertEqual(kayit["ayni"], 3)
+        # Yalnız DEĞİŞEN belge geçer — yeni/aynı belge listeye girmez.
+        self.assertEqual(kayit["degisen_belgeler"],
+                         [{"title": "A", "source_url": "https://a"}])
+
+    def test_ayni_banka_uzerine_yazar_digeri_korunur(self) -> None:
+        birinci = TazelemeDurumu(is_id="t1", bank="banka-a", bank_name="A",
+                                 durum=DURUM_TAMAM, yeni=1)
+        ikinci = TazelemeDurumu(is_id="t2", bank="banka-b", bank_name="B",
+                                durum=DURUM_TAMAM, yeni=2)
+        son_tazeleme_yaz(birinci, kok=self.kok)
+        son_tazeleme_yaz(ikinci, kok=self.kok)
+        guncellenen_a = TazelemeDurumu(is_id="t3", bank="banka-a", bank_name="A",
+                                       durum=DURUM_TAMAM, yeni=5)
+        son_tazeleme_yaz(guncellenen_a, kok=self.kok)
+        ozet = son_tazeleme_oku(kok=self.kok)
+        self.assertEqual(set(ozet), {"banka-a", "banka-b"})
+        self.assertEqual(ozet["banka-a"]["yeni"], 5,
+                         "aynı bankanın eski kaydı üzerine yazılmadı")
+        self.assertEqual(ozet["banka-b"]["yeni"], 2,
+                         "başka bankanın kaydı korunmadı")
+
+    def test_bozuk_dosya_bos_sozluk_doner(self) -> None:
+        yol = self.kok / "data" / "son-tazeleme.json"
+        yol.parent.mkdir(parents=True, exist_ok=True)
+        yol.write_text("{ bozuk json", encoding="utf-8")
+        self.assertEqual(son_tazeleme_oku(kok=self.kok), {})
 
 
 if __name__ == "__main__":

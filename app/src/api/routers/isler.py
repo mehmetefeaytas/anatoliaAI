@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from ...scraping.tazeleme import TazelemeMesgul
+from ...scraping.tazeleme import TazelemeMesgul, son_tazeleme_oku
 from ...scraping.tazeleme import onizleme as tazeleme_onizleme
 from ...summarize.ozet_isi import LlmKapali, OzetMesgul
 from .. import gunluk
@@ -160,6 +160,35 @@ def router_kur(
                             yazilan_dosya=kayit.get("yazilan_dosya"),
                             durum_adi=kayit.get("durum"))
         return kayit
+
+    @r.get("/refresh/last-summary")
+    def refresh_last_summary():
+        """Her banka için EN SON TAMAMLANMIŞ tazelemenin kalıcı özeti.
+
+        `TazelemeDurumu` tamamen bellek içidir (iş/süreç bitince kaybolur);
+        bu uç onun aksine `data/son-tazeleme.json`'dan okur — panelin "en son
+        ne zaman tazeleme yapıldı, kaç belge değişti/yeni geldi" iddiasını
+        süreç yeniden başlasa da göstermesi için (bkz. `tazeleme.py::
+        son_tazeleme_yaz`). DB şemasına dokunulmadı, bilinçli tercih.
+
+        Hiç tazeleme yapılmamışsa (dosya yok) BOŞ sözlük döner, 404 VERMEZ —
+        "henüz veri yok" bir hata değil.
+
+        Dönüş biçimi — banka slug'ı → özet:
+        ```json
+        {
+          "<banka-slug>": {
+            "bank": "<banka-slug>",
+            "bank_name": "<Banka Adı>",
+            "is_id": "<son iş kimliği>",
+            "bitis": "<ISO-8601 zaman damgası>",
+            "yeni": 0, "degisen": 0, "ayni": 0, "hata": 0,
+            "degisen_belgeler": [{"title": "...", "source_url": "..."}]
+          }
+        }
+        ```
+        """
+        return son_tazeleme_oku()
 
     # ----------------------------------------------------------------- #
     # Özet üretimi — yerel model, AĞA ÇIKMAZ, veri tabanına YAZAR

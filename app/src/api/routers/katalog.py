@@ -287,6 +287,15 @@ def router_kur(
         turler = sorted({c.get("campaign_type")
                          for c in repo.all_campaigns(govde=False)
                          if c.get("campaign_type")})
+        # Pasta grafiği (dashboard) için: yalnız KAMPANYA belgeleri (sözleşme
+        # hariç — `campaign_type` onlarda anlamsızdır). Tür boşsa "Belirtilmemiş"
+        # kovasına düşer; sessizce atmak, o belgeleri hiç yokmuş gibi
+        # göstermek olurdu (CLAUDE.md §19 halüsinasyon yasağının simetriği:
+        # bilgiyi UYDURMAMAK kadar, VARLIĞINI GİZLEMEMEK de gerekir).
+        tur_sayaci: dict[str, int] = {}
+        for c in repo.all_campaigns(govde=False, belge_turu="kampanya"):
+            etiket = c.get("campaign_type") or "Belirtilmemiş"
+            tur_sayaci[etiket] = tur_sayaci.get(etiket, 0) + 1
         return {
             "korpus": repo.counts(),
             "belge_turu": repo.belge_turu_counts(),
@@ -294,6 +303,7 @@ def router_kur(
             "banka_basina": repo.campaigns_per_bank(),
             "banka_kapsami": repo.bank_field_coverage(),
             "campaign_types": turler,
+            "campaign_type_counts": tur_sayaci,
             "alan_kapsami": repo.field_coverage(),
             "katman": repo.fields_by_extractor(),
             # `llm.available` `/health` ile AYNI kaynaktan okunur; arayüz

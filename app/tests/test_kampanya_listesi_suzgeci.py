@@ -366,8 +366,8 @@ class TestStatsUcu(UcTestBase):
         self.assertEqual(
             set(veri),
             {"korpus", "belge_turu", "campaign_status", "banka_basina",
-             "banka_kapsami", "campaign_types", "alan_kapsami", "katman",
-             "llm", "backend"})
+             "banka_kapsami", "campaign_types", "campaign_type_counts",
+             "alan_kapsami", "katman", "llm", "backend"})
 
     def test_depo_metotlarinin_BILESIMI_kendi_hesaplamaz(self) -> None:
         """Uç hiçbir sayıyı kendi üretmez; ürettiği an bilgi iki yerde yaşar."""

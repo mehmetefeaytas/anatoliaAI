@@ -408,6 +408,9 @@ export type Stats = {
   banka_kapsami: Record<string, BankaKapsami>;
   /** Korpusta geçen kampanya türleri, alfabetik ve tekrarsız. */
   campaign_types: string[];
+  /** Kampanya türü (ürün ailesi) → belge sayısı. Yalnız `belge_turu=kampanya`
+   *  (sözleşme hariç); tür boş olan belgeler `"Belirtilmemiş"` kovasında. */
+  campaign_type_counts: Record<string, number>;
   /** Alan adı → o alanın çıkarıldığı belge sayısı. */
   alan_kapsami: Record<string, number>;
   /** Çıkarıcı katman (`rule` / `ner` / `llm`) → üretilen alan sayısı. */
@@ -841,6 +844,35 @@ export type RefreshJob = {
   bitti: boolean;
 };
 
+/** `RefreshSonOzet.degisen_belgeler` içindeki tek bir kayıt. */
+export type RefreshDegisenBelge = {
+  title: string | null;
+  source_url: string | null;
+};
+
+/**
+ * Bir bankanın EN SON TAMAMLANMIŞ tazelemesinin kalıcı özeti.
+ *
+ * `RefreshJob` tamamen bellek içidir (iş/süreç bitince kaybolur); bu tip
+ * `data/son-tazeleme.json`'dan okunan `GET /refresh/last-summary` yanıtının
+ * şeklidir — "en son ne zaman tazeleme yapıldı, kaç belge değişti/yeni
+ * geldi" iddiasının süreç yeniden başlasa da hayatta kalan izidir.
+ */
+export type RefreshSonOzet = {
+  bank: string;
+  bank_name: string;
+  is_id: string;
+  bitis: string | null;
+  yeni: number;
+  degisen: number;
+  ayni: number;
+  hata: number;
+  degisen_belgeler: RefreshDegisenBelge[];
+};
+
+/** `GET /refresh/last-summary` yanıtı — banka slug'ı → en son özet. */
+export type RefreshSonOzetHaritasi = Record<string, RefreshSonOzet>;
+
 /** Kullanıcıya gösterilebilir, Türkçe API hatası. */
 export class ApiError extends Error {
   readonly status: number;
@@ -1262,6 +1294,12 @@ export const api = {
     request<RefreshJob>(`/api/refresh/cancel/${encodeURIComponent(jobId)}`, {
       method: "POST",
     }),
+  /**
+   * Her banka için en son tazelemenin kalıcı özeti (bkz. `RefreshSonOzet`).
+   * Hiç tazeleme yapılmamışsa boş bir nesne döner, hata FIRLATMAZ.
+   */
+  refreshLastSummary: () =>
+    request<RefreshSonOzetHaritasi>("/api/refresh/last-summary"),
 
   /**
    * Özet kapsam sayaçları. Model ÇAĞIRMAZ, ağa çıkmaz.

@@ -10,6 +10,8 @@ import "./styles/cetvel.css";
 import "./styles/kanit.css";
 import "./styles/banka.css";
 import "./styles/sohbet.css";
+import "./styles/hesap.css";
+import "./styles/bilgiler.css";
 import "./styles/baski.css";
 
 /**

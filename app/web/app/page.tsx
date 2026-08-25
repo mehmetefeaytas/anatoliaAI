@@ -34,12 +34,14 @@ import AdvantageousPanel from "./components/AdvantageousPanel";
 import AuditPanel from "./components/AuditPanel";
 import BankDeltaPanel from "./components/BankDeltaPanel";
 import BankaSayfasi from "./components/BankaSayfasi";
+import BilgilerPanel from "./components/BilgilerPanel";
 import ChatPanel from "./components/ChatPanel";
 import ComparePanel from "./components/ComparePanel";
 import ContradictionAlert from "./components/ContradictionAlert";
 import { ErrorNotice, Loading } from "./components/ErrorNotice";
 import ExtractLive from "./components/ExtractLive";
 import GunlukPanel from "./components/GunlukPanel";
+import HesapCekmecesi from "./components/HesapCekmecesi";
 import IsiPanel from "./components/IsiPanel";
 import DurumSeridi, { ApiKapaliUyarisi } from "./components/DurumSeridi";
 import JuryModeToggle from "./components/JuryModeToggle";
@@ -61,6 +63,7 @@ import { useTabState } from "./lib/tabState";
 import { useAsync } from "./lib/useAsync";
 
 type TabKey =
+  | "bilgiler"
   | "compare"
   | "isi"
   | "advantageous"
@@ -87,6 +90,12 @@ type TabKey =
  * render'da yeniden oluşan bir dizi olsaydı efektler sonsuz döngüye girerdi.
  */
 const TABS: readonly SekmeTanimi<TabKey>[] = [
+  // Genel bakış: korpusun tamamı hakkında (banka/kampanya kıyası değil).
+  // Karşılaştırmadan ÖNCE gelir — kullanıcı hangi bankayı sorgulamadan önce
+  // "elimde ne var" sorusuna cevap bulur (kampanya türü dağılımı, belge/
+  // durum/katman kırılımı). ComparePanel'in kendi felsefesi (§17 adil kıyas,
+  // tek tür çizer) burada YOK: bu sekme banka kıyaslamaz, korpusu tarif eder.
+  { key: "bilgiler", label: "Bilgiler" },
   { key: "compare", label: "Karşılaştırma" },
   // Isı haritası kıyasın HEMEN ARDINDA: kıyas «kim daha avantajlı» der, harita
   // «bunu nerede ölçebiliyoruz» der. İkincisi birincinin okunma koşulu — bir
@@ -323,6 +332,15 @@ function Dashboard() {
       )}
 
       <TabPanel sekme={sekme}>
+        {sekme === "bilgiler" && (
+          <BilgilerPanel
+            stats={stats.data}
+            yukleniyor={stats.loading}
+            fields={fields.data}
+            banks={banks.data}
+          />
+        )}
+
         {sekme === "compare" &&
           (fields.loading ? (
             <Loading label="Alan listesi yükleniyor…" />
@@ -424,6 +442,9 @@ function Dashboard() {
           Çekmece açıldığı ekranı biliyor ve hazır soruları ona göre veriyor;
           sabit liste her ekranda aynı altı soruyu gösteriyordu. */}
       <SohbetCekmecesi baglam={sohbetBaglami(sekme)} onInspect={inspect} />
+      {/* Sohbetin AYNASI, sol altta — jüri modundan/sekmeden bağımsız her
+          ekranda durur (bkz. HesapCekmecesi.tsx dosya başlığı). */}
+      <HesapCekmecesi campaigns={rows} />
 
       {/* Komut paleti (⌘K / Ctrl+K) — uygulamada hiç arama yoktu.
           1.774 belge tek bir <select> içindeydi ve bankaya, türe ya da

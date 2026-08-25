@@ -135,6 +135,8 @@ import type {
   PerBank,
 } from "../lib/api";
 import {
+  confidenceLevel,
+  confidenceSourceLabel,
   extractorClass,
   extractorLabel,
   formatValue,
@@ -244,6 +246,129 @@ function kapsamSatiri(row: CompareRow): boolean {
   return (row.campaign_id as number | null) === null;
 }
 
+/**
+ * CSV hücresi kaçışı — virgül, tırnak ya da yeni satır içeren değer tırnak
+ * içine alınır (RFC 4180'in basit hâli). Kütüphane KURULMADI (CLAUDE.md §21,
+ * bağımlılık minimalizmi); bu tablo için tek kural yeterli.
+ */
+function csvHucre(deger: string): string {
+  if (/[",\n\r]/.test(deger)) {
+    return `"${deger.replace(/"/g, '""')}"`;
+  }
+  return deger;
+}
+
+/**
+ * EKRANDA GÖRÜNEN kıyas tablosunu CSV metnine çevirir.
+ *
+ * `bolumler` çağıranın o anki süzgeç/sıralama/banka-başına seçimiyle ZATEN
+ * hesaplanmış hâldir — burada yeniden sorgu yapılmaz, ikinci bir tur atılmaz.
+ * Sütun sırası tablonun kendisiyle AYNI (Sıra, Banka, Kampanya türü, Alan,
+ * Değer, Ham ifade, [Güven — jüri modunda], Katman, Durum, Kaynak URL);
+ * «Kampanya türü» ve «Alan» tabloda ayrı birer sütun değil (bölüm başlığı /
+ * sayfa başlığı olarak durur) ama CSV tek düz metin olduğu için satır satır
+ * tekrarlanmaları gerekir — jüri dosyayı tablodan koparıp açtığında hangi
+ * türe ve hangi alana ait olduğunu hâlâ okuyabilsin diye.
+ */
+function karsilastirmaCsvMetni(
+  bolumler: { tur: string; satirlar: { row: CompareRow; sira: number | null }[] }[],
+  field: string,
+  alanEtiketi: string,
+  jury: boolean,
+): string {
+  const basliklar = [
+    "Sıra",
+    "Banka",
+    "Kampanya türü",
+    "Alan",
+    "Değer",
+    "Ham ifade",
+    ...(jury ? ["Güven"] : []),
+    "Katman",
+    "Durum",
+    "Kaynak URL",
+  ];
+  const satirlar: string[] = [basliklar.map(csvHucre).join(",")];
+
+  for (const bolum of bolumler) {
+    for (const { row, sira } of bolum.satirlar) {
+      // Durum hücresi tablodaki AYNI üç parçayı birleştirir (badge sırası):
+      // kıyaslanabilirlik/gerekçe, süresi dolmuş rozeti, çelişki sayacı.
+      const durumParcalari: string[] = [];
+      if (row.comparable) {
+        durumParcalari.push("kıyaslanabilir");
+      } else {
+        durumParcalari.push(
+          row.note ??
+            (satirHali(row) === "aralik"
+              ? "aralık — doğrudan kıyaslanamaz"
+              : "koşullu oran (kanal/müşteri/taban)"),
+        );
+      }
+      if (row.campaign_status === "expired") durumParcalari.push("süresi dolmuş");
+      if (row.contradiction_count > 0)
+        durumParcalari.push(`${trNum(row.contradiction_count)} çelişki`);
+
+      const guvenHucresi = () => {
+        const olculdu = row.confidence !== null && !Number.isNaN(row.confidence);
+        const skor = olculdu ? trNum(row.confidence as number) : "—";
+        const seviye = confidenceLevel(row.confidence).label;
+        const kaynak = confidenceSourceLabel(row.confidence_source);
+        return `${skor} (${seviye}) · kaynak: ${kaynak}`;
+      };
+
+      const hucreler = [
+        sira !== null ? String(sira) : "—",
+        row.bank_name || row.bank,
+        bolum.tur,
+        alanEtiketi,
+        formatValue(row.value, field),
+        row.raw_value ? `«${row.raw_value.trim()}»` : "ham ifade kaydedilmemiş",
+        ...(jury ? [guvenHucresi()] : []),
+        extractorLabel(row.extractor),
+        durumParcalari.join(" · "),
+        // Kapsam satırında (bankanın bu alanda kaydı yok) kaynak belge yoktur
+        // — `Satir` bileşenindeki AYNI ayrım: "#null" diye bir belge açtırma.
+        kapsamSatiri(row) ? "" : row.source_url ?? "",
+      ];
+      satirlar.push(hucreler.map(csvHucre).join(","));
+    }
+  }
+  // CRLF: Excel'in CSV ayrıştırıcısı satır sonu için bunu bekler.
+  return satirlar.join("\r\n");
+}
+
+/** Dosya adı için bugünün tarihi — yerel takvim, `YYYY-AA-GG`. */
+function bugununTarihi(): string {
+  const d = new Date();
+  const yyyy = d.getFullYear();
+  const ay = String(d.getMonth() + 1).padStart(2, "0");
+  const gun = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${ay}-${gun}`;
+}
+
+/**
+ * CSV metnini tarayıcıda indirir — sunucuya hiçbir istek atılmaz.
+ *
+ * BOM (`﻿`) içeriğin BAŞINA eklenir: Excel bu işaret olmadan UTF-8'i
+ * yanlış çözüyor ve Türkçe karakterler (ş,ç,ğ,ı,ö,ü) bozuk basılıyor —
+ * bilinen bir Excel kusuru. İndirme, görünmez bir `<a download>` elemanına
+ * programatik tıklatılarak yapılır.
+ */
+function csvIndir(icerik: string, dosyaAdi: string): void {
+  const BOM = "﻿";
+  const blob = new Blob([BOM + icerik], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = dosyaAdi;
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export default function ComparePanel({
   fields,
   campaignTypes,
@@ -292,7 +417,7 @@ export default function ComparePanel({
   // değiştirdiğinde `etkilesim()` uyarıyı önce siler, yanıt gelince bu etki
   // YENİ alanın uyarısını basar — yani ekranda her zaman en son ölçümün sözü
   // durur. Budama yapılmadıysa (yükleniyor/hata) seçim ASLA bozulmaz.
-  const listeAnahtari = turSecenek.liste.join(" ");
+  const listeAnahtari = JSON.stringify(turSecenek.liste);
   useEffect(() => {
     if (!turSecenek.budandi) return;
     if (!type || turSecenek.liste.includes(type)) return;
@@ -329,6 +454,16 @@ export default function ComparePanel({
   // Sütun sayısı: Sıra, Banka, Değer, Ham ifade, [Güven], Katman, Durum,
   // Kaynak.
   const sutunSayisi = jury ? 8 : 7;
+
+  // CSV İNDİR (2026-08-25). Jüri "bu tabloyu inceleyebilir miyim" diye
+  // sorduğunda anında elle taşınabilir bir dosya verebilmek için. EKRANDA NE
+  // VARSA O YAZILIR: `bolumler` kullanıcının o anki süzgeç/sıralama/banka-
+  // başına seçimiyle zaten hesaplanmış hâldir, indirme yeniden sorgu atmaz.
+  const csvIndirTiklandi = () => {
+    const alanEtiketi = meta?.label ?? field;
+    const icerik = karsilastirmaCsvMetni(bolumler, field, alanEtiketi, jury);
+    csvIndir(icerik, `anatolia-ai-karsilastirma-${bugununTarihi()}.csv`);
+  };
 
   // Grafiğe giden bölüm: tek tür seçiliyse o, «Tümü» ise en çok bankanın veri
   // taşıdığı tür (gerekçe dosya başlığında). Eşitlikte ilk gelen kazanır —
@@ -707,8 +842,25 @@ export default function ComparePanel({
           )}
 
           {rows.data && rows.data.length > 0 && (
-            <div className="table-wrap">
-              <table className="data stackable">
+            <>
+              {/* CSV İNDİR — tablonun hemen üstünde, ayrı bir eylem şeridinde.
+                  Mevcut tablo render mantığına dokunmaz; yalnız EKRANDA ne
+                  varsa (`bolumler`) onu düz metne çevirip indirir. */}
+              <div
+                className="row"
+                style={{ justifyContent: "flex-end", marginBottom: "var(--sp-2)" }}
+              >
+                <button
+                  type="button"
+                  className="btn btn-ghost"
+                  onClick={csvIndirTiklandi}
+                  title="Ekranda görünen kıyas satırlarını CSV olarak indirir (TR sayı biçimi, Excel uyumlu)"
+                >
+                  CSV indir
+                </button>
+              </div>
+              <div className="table-wrap">
+                <table className="data stackable">
                 <caption
                   className="small muted"
                   style={{
@@ -798,7 +950,8 @@ export default function ComparePanel({
                   })}
                 </tbody>
               </table>
-            </div>
+              </div>
+            </>
           )}
         </div>
       </section>
