@@ -91,13 +91,15 @@ kırılım ve karşı-okumalar: [`docs/rapor/ablasyon.md`](docs/rapor/ablasyon.m
 > ```
 > (Aynı gün erken bir koşum 4.709 vermişti; aradaki 5 alan sahte `%0` kâr payı
 > temizliğiyle düştü. O günkü `data/demo.db` de bu sayıyı taşıyordu.)
-> **Tazelenmiş ölçüm (2026-08-21 akşamı, PDF hasadı + günün kural
-> düzeltmelerinden sonra):** korpus 2.708 belge, çıkarılan **7.049** alanın
-> tamamı `rule`; `ner` ve `llm` yine **0**. Bağımsız doğrulama:
-> `sqlite3 data/demo.db "select count(*) from extracted_fields"` → **7022**. Katman
-> dağılımı hasatla DEĞİŞMEDİ — iddia büyüyen korpusta da geçerli.
-> (`llm` sayısının 0 olması LLM'in offline Null-fallback'te olmasındandır;
-> `ner` sayısının 0 olması ise **kodun kendisindendir** — o katman yok.)
+> **Tazelenmiş ölçüm (2026-08-25):** korpus 2.708 belge, çıkarılan **7.049**
+> alanın **7.022'si** `rule` (%99,6), **27'si** `llm`; `ner` yine **0**.
+> Bağımsız doğrulama:
+> `sqlite3 data/demo.db "select count(*) from extracted_fields"` → **7049**.
+> Kural katmanının payı hasatla DEĞİŞMEDİ — iddia büyüyen korpusta da geçerli.
+> (`llm` sayısı 2026-08-21'de 0'dı: model o gün offline Null-fallback'teydi.
+> Bugün 27 alan LLM kolundan geliyor ve katman her satırda yazılı, yani ayrım
+> denetlenebilir. `ner` sayısının 0 olması ise **kodun kendisindendir** — o
+> katman yok.)
 
 Detay: [`CLAUDE.md`](CLAUDE.md) §3–§6.
 
@@ -170,7 +172,7 @@ Doğrulama (ölçüldü 2026-08-20, bu komutlarla):
 
 ```bash
 curl -s localhost:8000/health   # {"status":"ok","llm":false,"backend":"sqlite"}
-curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11 (10 banka + TKBB), fields: 7022
+curl -s localhost:8000/stats    # campaigns: 2708, banks_with_campaigns: 11 (10 banka + TKBB), fields: 7049
 ```
 
 Şartnamenin s.12 referans senaryoları, aynı koşumda canlı doğrulandı:

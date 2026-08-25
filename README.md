@@ -186,7 +186,7 @@ karşılaştırıldığında 36 sayısal alanın hiçbirinde sapma yok.
 | Korpus | **2.708 belge** (ham arşivle eşit) · 7.049 çıkarılan alan — kurulum betiği güncel kodla bu sayıları üretir | `python -m scripts.check_demo_db` |
 | Katılma hesabı oranı — cari hafta | **245 cari kayıt** · 9 banka × 4 vade × 4 para birimi, TKBB Veri Peteği | `python -m scripts.tkbb_guncel_hasat` |
 | Katılma hesabı oranı — tarihsel | 210.474 kayıt (2012–2025), gzip'li · hiçbir kod yolunda okunmuyor (trend analizi kapsam dışı) | `python -m scripts.tkbb_karpayi_hasat --sertifika-atla` |
-| **Finansman oranı — bankaların KENDİ yayını** | **154 kayıt · 7 banka** (Dünya 56 · Emlak 42 · Ziraat 31 · Albaraka 16 · Hayat Finans / Kuveyt Türk / T.O.M. 3'er) — `extracted_fields`e YAZILMIYOR, ayrı kaynak ayrı etiket | `cat data/raw/*/rates/quotes.jsonl \| grep -c '"finansman"'` |
+| **Finansman oranı — bankaların KENDİ yayını** | **305 kayıt · 9 banka** (Türkiye Finans 145 · Dünya 56 · Emlak 42 · Ziraat 31 · Albaraka 16 · Vakıf 6 · Hayat Finans / Kuveyt Türk / T.O.M. 3'er) — `extracted_fields`e YAZILMIYOR, ayrı kaynak ayrı etiket | `cat data/raw/*/rates/quotes.jsonl \| grep -c '"finansman"'` |
 | Katılma hesabı oranı — segment kırılımı | **247 kayıt · 2 banka** (Kuveyt Türk 144 · Vakıf Katılım 103; 13 segment · TRY/USD/EUR/XAU) — merkezî TKBB verisinde görünmeyen kırılım | `wc -l data/raw/{kuveyt-turk/rates/kt,vakif-katilim/rates/vakif}-paylasim-pdf.jsonl` |
 | Terminoloji | **587 terim** yükleniyor — 111 proje sözlüğü + 476 TKBB (ikincil, çakışmada proje kazanır) | `python -c "from src.domain.terminology import load_terminology as t; print(len(t()))"` |
 | AI özeti kapsaması | **2.634 üretildi (%97,3)** · 74 belge gerekçeli boş (29 metin boş · 41 terminoloji kapısı · 4 diğer) | `python -m scripts.build_summaries --db data/demo.db --devam` |
@@ -586,7 +586,7 @@ docker-compose up             # postgres + vllm/ollama + api + web
 Doğrulama (iki sayı da gelmeli):
 
 ```bash
-curl -s localhost:8000/stats             # campaigns: 2708, fields: 7022
+curl -s localhost:8000/stats             # campaigns: 2708, fields: 7049
 curl -s localhost:8000/summaries/coverage # ozetli: 2634
 ```
 

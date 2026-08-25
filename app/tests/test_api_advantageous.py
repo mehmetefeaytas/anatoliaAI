@@ -116,8 +116,29 @@ class UcCalisiyor(_DepoluTest):
             self.assertIn(w["direction"], ("dusuk_iyi", "yuksek_iyi"))
 
     def test_siralama_uretilir_ve_en_dusuk_oran_kazanir(self):
+        """`banka_yayini=false` — iddia SALT KAMPANYA popülasyonu hakkında.
+
+        Kardeş testle aynı gerekçe: uç 2026-08-25'ten beri bankaların kendi
+        yayımladığı oranlardan da satır üretiyor. Bu test "en düşük oran
+        kazanır" diyor ama o iddia tek kaynaklı bir popülasyonda anlamlı;
+        karışık popülasyonda BİRİNCİLİK EŞİTLENEBİLİYOR.
+
+        Ölçüldü: fixture'a yayın satırları karışınca kampanya satırı
+        (kar_payi 1,89 · vade 36) ile Türkiye Finans yayın satırı
+        (kar_payi 0,89 · vade 12) BİREBİR aynı bileşik skoru alıyor —
+        0,7681818181818182, kapsama da eşit. Eşitlik gerçek ve anlamlı:
+        `kar_payi_orani` 0,40 ağırlıkla "düşük iyi", `vade_ay` 0,15 ağırlıkla
+        ters yönde çekiyor ve iki etki birbirini götürüyor.
+
+        Eşit skorda `ranked[0]`'ı belirleyen şey skor değil sıralamanın
+        KARARLILIĞI, yani satırların listeye giriş sırası. O sıra ortama göre
+        değişebiliyor: aynı commit'te (8b9a3f71) yerelde kampanya satırı
+        başa geçti ve test GEÇTİ, CI'da yayın satırı başa geçti ve test
+        `0.89 != 1.89` ile DÜŞTÜ. Kusur skorlamada değil, testin karışık bir
+        popülasyonda tek bir kazanan varsaymasındaydı.
+        """
         _seed(self.repo, MIN_GROUP_SIZE + 1)
-        d = self.client().get("/advantageous").json()
+        d = self.client().get("/advantageous?banka_yayini=false").json()
         grup = d["types"]["Konut Finansmanı"]
         self.assertIsNone(grup["note"])
         kiyaslanabilir = [c for c in grup["ranked"] if c["comparable"]]
