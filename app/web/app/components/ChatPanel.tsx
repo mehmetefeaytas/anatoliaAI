@@ -267,12 +267,22 @@ type Props = {
    * 420px'de dört satırlık bir lede, sorulacak kutuyu katlamanın altına iter.
    */
   genis?: boolean;
+  /**
+   * Dışarıdan (sunum turu) sordurulan soru — `SohbetCekmecesi.tsx` `turSorusu`.
+   *
+   * Aynı değer birden çok render'da tekrar gelebilir (örn. `busy` durumu
+   * değişip `ask` yeniden oluşturduğunda); `sorulanOtomatikRef` bunu METİN
+   * eşitliğiyle süzer, yani aynı soru İKİ KEZ gönderilmez. Yeni bir soru
+   * (öncekinden farklı metin) gelirse gönderilir.
+   */
+  otomatikSoru?: string | null;
 };
 
 export default function ChatPanel({
   onInspect,
   presets = PRESETS,
   genis = true,
+  otomatikSoru = null,
 }: Props) {
   const [q, setQ] = useState("");
   const [turlar, setTurlar] = useState<Tur[]>([]);
@@ -401,6 +411,21 @@ export default function ChatPanel({
   const iptal = useCallback(() => {
     iptalRef.current?.abort();
   }, []);
+
+  /**
+   * Sunum turu bir soru gönderdiğinde otomatik sorar — bkz. `Props.otomatikSoru`.
+   *
+   * `sorulanRef` METİN eşitliğiyle korur: `ask` her `busy` değişiminde yeniden
+   * oluştuğu için `otomatikSoru` PROP'u aynı kalsa da bu efekt yeniden
+   * çalışır; ref olmadan aynı soru tekrar tekrar gönderilirdi.
+   */
+  const sorulanRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (otomatikSoru && otomatikSoru !== sorulanRef.current) {
+      sorulanRef.current = otomatikSoru;
+      ask(otomatikSoru);
+    }
+  }, [otomatikSoru, ask]);
 
   /**
    * Ses tanımayı başlatır — soru kutusunun içeriğini DEĞİŞTİRİR, üstüne

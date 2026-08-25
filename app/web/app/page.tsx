@@ -52,6 +52,7 @@ import SohbetCekmecesi, {
 import SummaryCoverage from "./components/SummaryCoverage";
 import AyarlarPanel from "./components/AyarlarPanel";
 import SunumToggle from "./components/SunumToggle";
+import SunumTuruBandi from "./components/SunumTuruBandi";
 import TazelemePanel from "./components/TazelemePanel";
 import TemaSecici from "./components/TemaSecici";
 import Tabs, { TabPanel, type SekmeTanimi } from "./components/ui/Tabs";
@@ -59,7 +60,7 @@ import { api, type Stats } from "./lib/api";
 import { trNum } from "./lib/format";
 import { JuryModeProvider, useJuryMode } from "./lib/juryMode";
 import { SaglikProvider, useSaglik } from "./lib/saglik";
-import { SunumProvider } from "./lib/sunum";
+import { SunumProvider, useSunum } from "./lib/sunum";
 import { TemaProvider } from "./lib/tema";
 import { useTabState } from "./lib/tabState";
 import { useAsync } from "./lib/useAsync";
@@ -168,6 +169,96 @@ const TAB_KEYS = TABS.map((t) => t.key);
 const TAB_KEYS_JURI = TABS_JURI.map((t) => t.key);
 
 /**
+ * Sunum turu — sunum modu AÇILDIĞINDA otomatik başlayan rehberli gezinti.
+ *
+ * İlgili: ../lib/sunum.tsx (fullscreen + araç çubuğu sadeleştirme),
+ *         ./components/SunumTuruBandi.tsx (anlatım şeridi)
+ *
+ * ## Neden var
+ *
+ * Sunum modu ilk hâlinde yalnız tam ekrana geçip iki geliştirici anahtarını
+ * gizliyordu — kullanışlı ama PASİF. Kullanıcı "sayfaları açsın, chatbota
+ * soru sordursun, özellikleri tanıtsın" istedi: tek düğmenin gerçekten bir
+ * TANITIM yapması. Bu dizi o senaryoyu yürütür.
+ *
+ * ## Neden yalnız TEMEL altı sekmeden seçildi (jüri sekmesi YOK)
+ *
+ * `audit`/`extract`/`tazele`/`ayarlar` jüri modunu ZORLA açmayı gerektirirdi
+ * — sunum kendi başına ürünün TEZİNİ göstermeli (kampanya soruları), sistemin
+ * iç denetim yüzeylerini değil. Jüri isterse zaten kendi anahtarıyla açar;
+ * tur onu onun için karar vermez.
+ *
+ * ## `soru`/`hesapAc` neden birbirini dışlamıyor ama burada AYRI adımlar
+ *
+ * İkisini AYNI adımda birleştirmek (sohbet + hesap makinesi aynı anda açık)
+ * 420px'lik iki çekmecenin üst üste bineceği anlamına gelirdi — ikisi de
+ * ekranın aynı köşesine yakın. Ayrı adımlar, ayrı ayrı okunabilir kalır.
+ */
+type TurAdimi = {
+  baslik: string;
+  aciklama: string;
+  sekme: TabKey;
+  /** Bu adımda sohbet çekmecesinin sorması gereken soru — varsa açılır. */
+  soru?: string;
+  /** Bu adımda hesap makinesi çekmecesinin açılması istenir. */
+  hesapAc?: boolean;
+  /** Adımda kalınacak süre (ms). */
+  sure: number;
+};
+
+const TUR_ADIMLARI: readonly TurAdimi[] = [
+  {
+    baslik: "Korpus",
+    aciklama:
+      "11 kaynaktan toplanan binlerce kampanya, 12 çıkarım alanı — hiçbiri uydurulmadı, hepsi kaynaklı.",
+    sekme: "bilgiler",
+    sure: 7000,
+  },
+  {
+    baslik: "Karşılaştırma",
+    aciklama:
+      "Bankaları kâr payı oranına göre kıyaslıyoruz; ekrandaki her sayı bir kaynak dipnotu taşıyor.",
+    sekme: "compare",
+    sure: 7000,
+  },
+  {
+    baslik: "Isı Haritası",
+    aciklama:
+      "Hangi alanı hangi bankada ölçebildiğimizi şeffaf gösteriyoruz — ölçülemeyen alan gizlenmez, boş bırakılır.",
+    sekme: "isi",
+    sure: 6000,
+  },
+  {
+    baslik: "En Avantajlı",
+    aciklama: "Kampanya türüne göre bileşik skorla en avantajlı bankayı buluyoruz.",
+    sekme: "advantageous",
+    sure: 6000,
+  },
+  {
+    baslik: "Sohbet Asistanı",
+    aciklama:
+      "Anatolia'ya doğal dilde soruyoruz — cevabın her sayısı bir kaynak dipnotu taşır, taşımıyorsa üretilmez.",
+    sekme: "compare",
+    soru: "Hangi bankada en düşük kâr payı oranı var?",
+    sure: 11000,
+  },
+  {
+    baslik: "Hesap Makinesi",
+    aciklama:
+      "Bir kampanya seçildiğinde oran ve vade otomatik doluyor; taksit ve toplam maliyet anında hesaplanıyor.",
+    sekme: "compare",
+    hesapAc: true,
+    sure: 7000,
+  },
+  {
+    baslik: "Banka Sayfası",
+    aciklama: "Tek bir bankanın tüm künyesi ve alan kapsaması bir arada.",
+    sekme: "banka",
+    sure: 6000,
+  },
+] as const;
+
+/**
  * Jüri modu tüm sekmeleri sarar; ComparePanel içeriden okur.
  *
  * Tema sağlayıcısı da buradadır, kök yerleşimde değil: seçim `localStorage`'a
@@ -219,6 +310,51 @@ function Dashboard() {
   // öğesine düşer — sabit bir alan adı yazmak, `/fields` sırası değiştiğinde
   // sessizce var olmayan bir alanı sorardı.
   const [isiAlani, setIsiAlani] = useState<string | null>(null);
+
+  // SUNUM TURU — sunum modu (lib/sunum.tsx) AÇILDIĞINDA otomatik başlar.
+  // `turIndex === null` iken tur pasiftir (normal kullanım); dolu bir sayı
+  // `TUR_ADIMLARI`nın hangi adımında olunduğunu taşır.
+  const { acik: sunumAcik } = useSunum();
+  const [turIndex, setTurIndex] = useState<number | null>(null);
+  // Sohbet çekmecesine "bu adımda gösterilme" sinyali — artan bir sayaç.
+  // `SohbetCekmecesi`nin `turSorusu` deseninin ikizi: soru YOKSA çekmece
+  // kapanır, kullanıcı bir önceki adımdan açık kalan pencereyle kalmaz.
+  const [sohbetKapatIsareti, setSohbetKapatIsareti] = useState(0);
+
+  // Sunum modu AÇILDIĞINDA tur başlar, KAPANDIĞINDA (Esc dahil) durur.
+  // Yalnız `sunumAcik`e bağlı — `turIndex`i BAĞIMLILIĞA KATMA: tur kendi
+  // doğal sonuna gelip `turIndex`i `null`a çektiğinde (aşağıdaki efekt) bu
+  // efekt YENİDEN tetiklenip turu baştan başlatırdı (sunumAcik hâlâ true).
+  useEffect(() => {
+    if (sunumAcik) setTurIndex(0);
+    else {
+      setTurIndex(null);
+      setSohbetKapatIsareti((n) => n + 1);
+    }
+  }, [sunumAcik]);
+
+  // Adım ilerlemesi: sekmeyi değiştirir, süresi dolunca sıradaki adıma geçer.
+  // Dizi tükenince tur durur ama sunum modu (tam ekran + sade araç çubuğu)
+  // AÇIK KALIR — tanıtım bitince kontrol sunucuya geri döner, jüri sorusu
+  // gelirse elle gezinmeye devam edilir.
+  useEffect(() => {
+    if (turIndex === null) return;
+    const adim = TUR_ADIMLARI[turIndex];
+    if (!adim) {
+      setTurIndex(null);
+      return;
+    }
+    setSekme(adim.sekme);
+    // Bu adımda sohbet YOKSA önceki adımdan açık kalmış olabilecek çekmeceyi
+    // kapat. `soru` varsa dokunma — SohbetCekmecesi kendi soruyu görüp açar.
+    if (!adim.soru) setSohbetKapatIsareti((n) => n + 1);
+    const zamanlayici = setTimeout(() => {
+      setTurIndex((i) => (i === null ? null : i + 1));
+    }, adim.sure);
+    return () => clearTimeout(zamanlayici);
+  }, [turIndex, setSekme]);
+
+  const turAdimAktif = turIndex !== null ? TUR_ADIMLARI[turIndex] ?? null : null;
 
   // Jüri modu kapatılınca jüri sekmesinde kalmak boş bir panel bırakırdı;
   // görünmeyen bir sekmede durmak yerine varsayılana dönülür. Koruma artık
@@ -284,6 +420,17 @@ function Dashboard() {
 
   return (
     <main>
+      {/* Sunum turu ilerlerken üstte durur: hangi ekranın neden gösterildiğini
+          anlatır. Kunye/araç çubuğundan ÖNCE — tur adımı ilk okunacak şey. */}
+      {turAdimAktif && (
+        <SunumTuruBandi
+          baslik={turAdimAktif.baslik}
+          aciklama={turAdimAktif.aciklama}
+          adimNo={(turIndex ?? 0) + 1}
+          toplamAdim={TUR_ADIMLARI.length}
+        />
+      )}
+
       {/* Korpus künyesi başlığın hemen altında: kabuk (layout.tsx) TEZİ
           söylüyor, künye onun SAYISAL karşılığını veriyor. Sunucu bileşeni
           olan kabukta duramaz çünkü değerler `/stats` ve `/fields`ten iner. */}
@@ -453,10 +600,15 @@ function Dashboard() {
 
           Çekmece açıldığı ekranı biliyor ve hazır soruları ona göre veriyor;
           sabit liste her ekranda aynı altı soruyu gösteriyordu. */}
-      <SohbetCekmecesi baglam={sohbetBaglami(sekme)} onInspect={inspect} />
+      <SohbetCekmecesi
+        baglam={sohbetBaglami(sekme)}
+        onInspect={inspect}
+        turSorusu={turAdimAktif?.soru ?? null}
+        kapatIsareti={sohbetKapatIsareti}
+      />
       {/* Sohbetin AYNASI, sol altta — jüri modundan/sekmeden bağımsız her
           ekranda durur (bkz. HesapCekmecesi.tsx dosya başlığı). */}
-      <HesapCekmecesi campaigns={rows} />
+      <HesapCekmecesi campaigns={rows} acikGoster={turAdimAktif?.hesapAc ?? false} />
 
       {/* Komut paleti (⌘K / Ctrl+K) — uygulamada hiç arama yoktu.
           1.774 belge tek bir <select> içindeydi ve bankaya, türe ya da

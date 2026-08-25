@@ -41,6 +41,13 @@ import { trNum } from "../lib/format";
  *  ayrı bir çağrıyla (`campaignText`) çekilir; bkz. aşağıdaki `kampanyaSec`. */
 type Props = {
   campaigns?: CampaignSummary[];
+  /**
+   * Sunum turu (page.tsx `TUR_ADIMLARI`) bu adımda çekmeceyi göstermek
+   * istediğinde `true` olur — `SohbetCekmecesi.tsx`nin `turSorusu`
+   * deseninin aynası. Normal kullanımda hiç geçirilmediği için (`undefined`)
+   * elle açma/kapamaya karışmaz.
+   */
+  acikGoster?: boolean;
 };
 
 /** Aylık kâr payı oranının üst sınırı (%) — girdi doğrulaması için makul bir
@@ -123,11 +130,22 @@ function alanMetni(v: unknown): string | null {
   return typeof v === "number" && Number.isFinite(v) ? trNum(v) : null;
 }
 
-export default function HesapCekmecesi({ campaigns }: Props) {
+export default function HesapCekmecesi({ campaigns, acikGoster }: Props) {
   const [acik, setAcik] = useState(false);
   const dugmeRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const anaparaRef = useRef<HTMLInputElement>(null);
+
+  // Sunum turu bu adımda çekmeceyi açık/kapalı istiyor. `acikGoster`in
+  // sürekli AYNI değeri taşıdığı normal kullanımda (page.tsx her zaman
+  // `false` geçirir, tur dışında hiç değişmez) efekt yalnız MOUNT'ta bir kez
+  // çalışır ve zaten `false` olan `acik`e dokunmaz — elle açma/kapamaya
+  // karışmaz. Tur SIRASINDA `true`/`false` arasında değiştiğinde ise adımdan
+  // adıma geçişte çekmeceyi hem açar hem kapatır (sohbetin `kapatIsareti`
+  // deseninin ikizi, bkz. SohbetCekmecesi.tsx).
+  useEffect(() => {
+    if (acikGoster !== undefined) setAcik(acikGoster);
+  }, [acikGoster]);
 
   const [anapara, setAnapara] = useState("");
   const [oran, setOran] = useState("");

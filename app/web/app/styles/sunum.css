@@ -22,3 +22,39 @@
 :root[data-sunum="acik"] .tema-secici {
   display: none;
 }
+
+/* Anlatım şeridi — sunum turu ilerlerken üstte durur (bkz.
+ * SunumTuruBandi.tsx). `sticky` — `.site-header`i (layout.tsx, `main`in
+ * dışında) KAPATMAZ, altına akar ve kaydırıldığında viewport üstüne
+ * tutunur. Projektörden okunacak kadar büyük yazı: `--fs-xl`/`--fs-lg`. */
+.sunum-turu-bandi {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-4);
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: var(--sp-3) var(--sp-5);
+  margin-bottom: var(--sp-4);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+.sunum-turu-adim {
+  font-family: monospace;
+  font-size: var(--fs-sm);
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+.sunum-turu-baslik {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semibold);
+  flex-shrink: 0;
+}
+.sunum-turu-aciklama {
+  margin: 0;
+  font-size: var(--fs-lg);
+  line-height: var(--lh-tight);
+}

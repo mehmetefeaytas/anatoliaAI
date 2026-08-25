@@ -178,9 +178,27 @@ const BAGLAM_ADI: Record<SohbetBaglami, string> = {
 type Props = {
   baglam?: SohbetBaglami;
   onInspect?: (campaignId: number) => void;
+  /**
+   * Sunum turu (page.tsx `TUR_ADIMLARI`) bir soru sordurmak istediğinde dolar.
+   * Çekmece kendini açar ve soruyu `ChatPanel`e iletir — kullanıcı elle
+   * tıklamadan «gerçek» bir soru-cevap turu gösterilir.
+   */
+  turSorusu?: string | null;
+  /**
+   * Değiştiğinde (artan bir sayaç) çekmece kapanır. Sunum turunun "bu
+   * adımda sohbet gösterilmiyor" sinyali — normal kullanımda hiç
+   * değişmediği için (page.tsx yalnız tur SIRASINDA artırır) elle
+   * açma/kapamaya karışmaz.
+   */
+  kapatIsareti?: number;
 };
 
-export default function SohbetCekmecesi({ baglam = "genel", onInspect }: Props) {
+export default function SohbetCekmecesi({
+  baglam = "genel",
+  onInspect,
+  turSorusu = null,
+  kapatIsareti,
+}: Props) {
   const [acik, setAcik] = useState(false);
   const [karsilamaGoster, setKarsilamaGoster] = useState(false);
   const dugmeRef = useRef<HTMLButtonElement>(null);
@@ -237,6 +255,19 @@ export default function SohbetCekmecesi({ baglam = "genel", onInspect }: Props) 
   useEffect(() => {
     if (acik) panelRef.current?.focus();
   }, [acik]);
+
+  // Sunum turu bir soru gönderince çekmece kendini açar — karşılama akışıyla
+  // aynı `setAcik` yolunu KULLANMAZ çünkü bu açılış bir kullanıcı hareketi
+  // değil; karşılama sesi burada ÇALINMAZ (otomatik oynatma reddi zaten
+  // `dugmeTikla`nın gerekçesi, bkz. dosya başlığı).
+  useEffect(() => {
+    if (turSorusu) setAcik(true);
+  }, [turSorusu]);
+
+  // Sunum turunun "bu adımda sohbet yok" sinyali.
+  useEffect(() => {
+    if (kapatIsareti) setAcik(false);
+  }, [kapatIsareti]);
 
   return (
     <>
@@ -339,6 +370,7 @@ export default function SohbetCekmecesi({ baglam = "genel", onInspect }: Props) 
               genis={false}
               presets={HAZIR_SORULAR[baglam] ?? GENEL}
               onInspect={onInspect}
+              otomatikSoru={turSorusu}
             />
           </div>
         </div>
