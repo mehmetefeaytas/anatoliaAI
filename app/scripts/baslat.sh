@@ -352,7 +352,14 @@ DEPO="$(printf '%s' "$SAGLIK" | "$PY" -c 'import sys,json;print(json.load(sys.st
 # f-string KULLANILMIYOR: kabuk tek tırnağı içinde `\"` kaçışı Python'a bozuk
 # geliyor ve satır sessizce "okunamadı"ya düşüyordu. Binlik ayracı Türkçe
 # biçimde (1.782) — panelin gösterdiği sayıyla aynı görünsün.
-KORPUS="$(curl -sf -m 10 "http://127.0.0.1:$API_PORT/stats" 2>/dev/null | "$PY" -c \
+#
+# TIMEOUT 10 sn DEĞİL 45 sn (ölçüldü, 2026-08-25): `/stats`in İLK çağrısı
+# (soğuk, henüz ısınmamış SQLite sayfa önbelleği) ~27 sn sürüyor; sonraki
+# her çağrı 0,1 sn'nin altında. 10 sn'lik eski sınır burada koşulsuz
+# "okunamadı" basıyordu — sistem BOZUK DEĞİLDİ, ekran YALAN söylüyordu. Bu
+# satır ayrıca bilerek bir ISINDIRMA çağrısıdır: jürinin tarayıcısı panele
+# ulaşana kadar aynı soğuk maliyeti bu satır zaten ödemiş olur.
+KORPUS="$(curl -sf -m 45 "http://127.0.0.1:$API_PORT/stats" 2>/dev/null | "$PY" -c \
   'import sys,json
 k = json.load(sys.stdin)["korpus"]
 b = lambda n: format(n, ",").replace(",", ".")

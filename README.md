@@ -129,9 +129,14 @@ açık — ayrı bir tıklama gerekmez. Vurgu iki katmanlıdır: sarı, değerin
 çıkarıldığı ifade; mavi yıkama, kuralın gördüğü cümle bağlamı. Ölçülemeyen alan
 boş bırakılıyor ve boşluğun kendisi sayılıyor.
 
-Altı ürün sekmesinin ve beş denetim ekranının tamamı için 42 ekranlık görsel tur:
+Ürün sekmelerinin (artık yedi — 2026-08-25'te "Bilgiler" sekmesi eklendi) ve
+denetim ekranlarının 42 ekranlık görsel turu:
 [`docs-ekran/anatolia-ai-panel-ekranlari.pdf`](docs-ekran/anatolia-ai-panel-ekranlari.pdf)
 (45 sayfa, her ekranın altında ne işe yaradığı yazılı).
+**Bu PDF 25 Ağustos'taki eklemelerden ÖNCE üretildi**: "Bilgiler" sekmesi,
+hesap makinesi çekmecesi, chatbot sesli karşılama + mikrofon, karşılaştırma
+tablosunun CSV/PDF olarak indirilmesi ve tek tuşla otomatik sunum turu
+(aşağıdaki madde) henüz görselde yok — tur yeniden koşulup PDF tazelenmeli.
 
 ### 🏗️ Mimari
 
@@ -443,7 +448,7 @@ başarısız denemelerin transkriptleri:
 
 ## 🌟 Öne Çıkan Yönler
 
-Dört mekanizma projenin bel kemiğini oluşturuyor. Her biri ölçülmüş, kanıtı elde
+Beş mekanizma projenin bel kemiğini oluşturuyor. Her biri ölçülmüş, kanıtı elde
 ve bir CI kapısına bağlı — soyut bir vaat değil.
 
 #### 🔎 Alan bazlı güven skoru ve kaynak vurgulama
@@ -478,6 +483,17 @@ yapıyor: değer (belgedeki sayı = kanıttaki sayı) ve tazelik (kanıt güncel
 girdilerden mi üretilmiş). İkincisi olmadan birincisi kendini kandırır, çünkü
 bayat bir rapordan okunan bayat bir sayı bayat bir README ile mükemmel uyum
 gösterir.
+
+#### 🖥️ "Bilgiler" sekmesi ve tek tuşla sunum turu
+
+Ekstra çıkarım alanları (`tahsis_ucreti`, `hedef_kitle`, `taksit_sayisi`) artık
+kodda gizli değil: "Bilgiler" sekmesi kampanya türü dağılımını (donut grafik),
+alan bazlı kapsama tablosunu ve bu üç alanı açıkça vitrine çıkarıyor. Hesap
+makinesi çekmecesi bir kampanya seçildiğinde oran/vadeyi otomatik dolduruyor;
+karşılaştırma tablosu CSV ve (tarayıcının kendi yazdırma yoluyla, yeni
+kütüphane eklemeden) PDF olarak indirilebiliyor. "Sunum Modu" tek düğmeyle tam
+ekrana geçip yedi adımlık bir tanıtım turunu otomatik yürütüyor — sohbet
+asistanına gerçek bir soru sordurup gerçek, kaynak dipnotlu cevabı gösteriyor.
 
 ---
 
